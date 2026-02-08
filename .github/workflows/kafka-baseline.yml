@@ -35,7 +35,7 @@ jobs:
             --file docker/jvm/Dockerfile \
             --tag kafka-benchmark:latest \
             --load \
-            .
+            docker/
           END=$(date +%s)
           echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
 
