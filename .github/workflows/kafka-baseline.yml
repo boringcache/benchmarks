@@ -35,7 +35,7 @@ jobs:
           cp -r docker/jvm/* /tmp/kafka-docker/jvm/
           cp -r docker/resources /tmp/kafka-docker/jvm/resources
           cp docker/server.properties /tmp/kafka-docker/jvm/
-          cp core/build/distributions/kafka_*.tgz /tmp/kafka-docker/jvm/
+          cp core/build/distributions/kafka_*.tgz /tmp/kafka-docker/jvm/kafka.tgz
           docker buildx build \
             --file /tmp/kafka-docker/jvm/Dockerfile \
             --build-arg kafka_url="" \
