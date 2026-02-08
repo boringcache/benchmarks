@@ -63,6 +63,7 @@ jobs:
         run: |
           docker buildx build \
             --file /tmp/kafka-docker/jvm/Dockerfile \
+            --build-arg kafka_url="" \
             --tag kafka-benchmark:latest \
             --load \
             /tmp/kafka-docker/jvm/

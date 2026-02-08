@@ -38,6 +38,7 @@ jobs:
           cp core/build/distributions/kafka_*.tgz /tmp/kafka-docker/jvm/
           docker buildx build \
             --file /tmp/kafka-docker/jvm/Dockerfile \
+            --build-arg kafka_url="" \
             --tag kafka-benchmark:latest \
             --load \
             /tmp/kafka-docker/jvm/

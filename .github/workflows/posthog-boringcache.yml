@@ -24,21 +24,19 @@ jobs:
       - name: Get optimized Dockerfile
         run: curl -sSL https://raw.githubusercontent.com/boringcache/benchmarks/main/dockerfiles/posthog/Dockerfile.boringcache -o Dockerfile.boringcache
 
-      - name: Build with BoringCache (layer cache + dep cache inside build)
+      - name: Build with BoringCache (dep cache inside build)
         id: build
-        uses: boringcache/docker-action@v1
-        with:
-          workspace: boringcache/benchmarks
-          image: posthog-benchmark
-          tags: latest
-          dockerfile: Dockerfile.boringcache
-          push: false
-          load: true
-          cache-tag: posthog
-          secrets: |
-            id=boringcache_token,env=BORINGCACHE_API_TOKEN
-          build-args: |
-            BORINGCACHE_WORKSPACE=boringcache/benchmarks
+        run: |
+          START=$(date +%s)
+          DOCKER_BUILDKIT=1 docker build \
+            --file Dockerfile.boringcache \
+            --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
+            --build-arg BORINGCACHE_WORKSPACE=boringcache/benchmarks \
+            --tag posthog-benchmark:latest \
+            --progress=plain \
+            .
+          END=$(date +%s)
+          echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
@@ -48,6 +46,6 @@ jobs:
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
           echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Duration | ${{ steps.build.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
           echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Layer Cache Hit | ${{ steps.build.outputs.cache-hit }} |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Cache | BoringCache (layers + pnpm + Python deps) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | BoringCache (pnpm + Python deps) |" >> "$GITHUB_STEP_SUMMARY"
