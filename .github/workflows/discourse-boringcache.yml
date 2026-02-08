@@ -1,0 +1,55 @@
+name: "Discourse - BoringCache"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 0"
+
+env:
+  PROJECT_REPO: discourse/discourse
+  PROJECT_REF: "a1b2c3d4e5f6"  # TODO: pin to a recent commit
+
+jobs:
+  bundle-install:
+    name: Bundle Install (BoringCache)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpq-dev libxml2-dev libxslt1-dev
+
+      - name: Setup Ruby with BoringCache
+        uses: boringcache/ruby-action@v1
+        with:
+          workspace: boringcache/benchmarks
+          ruby-version: '3.3'
+          cache-tag: discourse-ruby
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Bundle install
+        id: install
+        run: |
+          START=$(date +%s)
+          bundle config set --local path vendor/bundle
+          bundle install --jobs 4
+          END=$(date +%s)
+          echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
+
+      - name: Report timing
+        run: |
+          echo "## Discourse Bundle Install - BoringCache" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Bundle Install | ${{ steps.install.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | BoringCache |" >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,61 @@
+name: "n8n - BoringCache"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 0"
+
+env:
+  PROJECT_REPO: n8n-io/n8n
+  PROJECT_REF: "a1b2c3d4e5f6"  # TODO: pin to a recent commit
+
+jobs:
+  pnpm-install:
+    name: pnpm Install + Build (BoringCache)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+
+      - name: Setup Node.js with BoringCache
+        uses: boringcache/nodejs-action@v1
+        with:
+          workspace: boringcache/benchmarks
+          node-version: '20'
+          cache-tag: n8n
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        id: install
+        run: |
+          START=$(date +%s)
+          pnpm install --frozen-lockfile
+          END=$(date +%s)
+          echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        id: build
+        run: |
+          START=$(date +%s)
+          pnpm build
+          END=$(date +%s)
+          echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
+
+      - name: Report timing
+        run: |
+          echo "## n8n Install + Build - BoringCache" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| pnpm install | ${{ steps.install.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| pnpm build | ${{ steps.build.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | BoringCache |" >> "$GITHUB_STEP_SUMMARY"

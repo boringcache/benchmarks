@@ -1,0 +1,58 @@
+name: "Cal.com - Baseline"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 0"
+
+env:
+  PROJECT_REPO: calcom/cal.com
+  PROJECT_REF: "a1b2c3d4e5f6"  # TODO: pin to a recent commit
+
+jobs:
+  install-build:
+    name: Install + Build (actions/cache)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Yarn
+        run: corepack enable
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            **/node_modules
+          key: calcom-deps-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            calcom-deps-
+
+      - name: Install dependencies
+        id: install
+        run: |
+          START=$(date +%s)
+          yarn install --frozen-lockfile
+          END=$(date +%s)
+          echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
+
+      - name: Report timing
+        run: |
+          echo "## Cal.com Install - Baseline (actions/cache)" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| yarn install | ${{ steps.install.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | actions/cache |" >> "$GITHUB_STEP_SUMMARY"

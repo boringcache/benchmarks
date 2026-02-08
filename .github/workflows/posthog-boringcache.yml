@@ -1,0 +1,58 @@
+name: "PostHog - BoringCache"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 0"
+
+env:
+  PROJECT_REPO: PostHog/posthog
+  PROJECT_REF: "4b47286e94e2e09df82e71adffe6140cc3f74a62"
+
+jobs:
+  docker-build:
+    name: Docker Build (BoringCache layers + deps)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout benchmarks repo
+        uses: actions/checkout@v4
+
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+          path: posthog
+
+      - name: Copy optimized Dockerfile
+        run: cp dockerfiles/posthog/Dockerfile.boringcache posthog/Dockerfile.boringcache
+
+      - name: Build with BoringCache (layer cache + dep cache inside build)
+        id: build
+        uses: boringcache/docker-action@v1
+        with:
+          workspace: boringcache/benchmarks
+          image: posthog-benchmark
+          tags: latest
+          context: posthog
+          dockerfile: posthog/Dockerfile.boringcache
+          push: false
+          load: true
+          cache-tag: posthog
+          secrets: |
+            boringcache_token=${{ secrets.BORINGCACHE_API_TOKEN }}
+          build-args: |
+            BORINGCACHE_WORKSPACE=boringcache/benchmarks
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Report timing
+        run: |
+          echo "## PostHog Docker Build - BoringCache" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Layer Cache Hit | ${{ steps.build.outputs.cache-hit }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | BoringCache (layers + pnpm + Python deps) |" >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,116 @@
+name: "Run All Benchmarks"
+
+on:
+  workflow_dispatch:
+    inputs:
+      category:
+        description: "Category to run"
+        required: false
+        default: "all"
+        type: choice
+        options:
+          - all
+          - docker
+          - rust
+          - ruby
+          - nodejs
+
+jobs:
+  trigger:
+    name: Trigger benchmark workflows
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Docker benchmarks
+        if: inputs.category == 'all' || inputs.category == 'docker'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const workflows = [
+              'posthog-baseline.yml', 'posthog-boringcache.yml',
+              'mastodon-docker-baseline.yml', 'mastodon-docker-boringcache.yml',
+              'grpc-baseline.yml', 'grpc-boringcache.yml',
+              'kafka-baseline.yml', 'kafka-boringcache.yml',
+              'immich-baseline.yml', 'immich-boringcache.yml',
+            ];
+            for (const wf of workflows) {
+              try {
+                await github.rest.actions.createWorkflowDispatch({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  workflow_id: wf,
+                  ref: 'main',
+                });
+                console.log(`Triggered ${wf}`);
+              } catch (e) {
+                console.log(`Failed to trigger ${wf}: ${e.message}`);
+              }
+            }
+
+      - name: Trigger Rust benchmarks
+        if: inputs.category == 'all' || inputs.category == 'rust'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const workflows = [
+              'zed-baseline.yml', 'zed-boringcache.yml',
+              'bevy-baseline.yml', 'bevy-boringcache.yml',
+            ];
+            for (const wf of workflows) {
+              try {
+                await github.rest.actions.createWorkflowDispatch({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  workflow_id: wf,
+                  ref: 'main',
+                });
+                console.log(`Triggered ${wf}`);
+              } catch (e) {
+                console.log(`Failed to trigger ${wf}: ${e.message}`);
+              }
+            }
+
+      - name: Trigger Ruby benchmarks
+        if: inputs.category == 'all' || inputs.category == 'ruby'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const workflows = [
+              'mastodon-ruby-baseline.yml', 'mastodon-ruby-boringcache.yml',
+              'discourse-baseline.yml', 'discourse-boringcache.yml',
+            ];
+            for (const wf of workflows) {
+              try {
+                await github.rest.actions.createWorkflowDispatch({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  workflow_id: wf,
+                  ref: 'main',
+                });
+                console.log(`Triggered ${wf}`);
+              } catch (e) {
+                console.log(`Failed to trigger ${wf}: ${e.message}`);
+              }
+            }
+
+      - name: Trigger Node.js benchmarks
+        if: inputs.category == 'all' || inputs.category == 'nodejs'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const workflows = [
+              'n8n-baseline.yml', 'n8n-boringcache.yml',
+              'calcom-baseline.yml', 'calcom-boringcache.yml',
+            ];
+            for (const wf of workflows) {
+              try {
+                await github.rest.actions.createWorkflowDispatch({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  workflow_id: wf,
+                  ref: 'main',
+                });
+                console.log(`Triggered ${wf}`);
+              } catch (e) {
+                console.log(`Failed to trigger ${wf}: ${e.message}`);
+              }
+            }

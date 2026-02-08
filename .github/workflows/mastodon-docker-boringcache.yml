@@ -1,0 +1,58 @@
+name: "Mastodon Docker - BoringCache"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 0"
+
+env:
+  PROJECT_REPO: mastodon/mastodon
+  PROJECT_REF: "6b3e6638e64c799e498b23b4fca77bca01d1ab1c"
+
+jobs:
+  docker-build:
+    name: Docker Build (BoringCache layers + deps)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout benchmarks repo
+        uses: actions/checkout@v4
+
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+          path: mastodon
+
+      - name: Copy optimized Dockerfile
+        run: cp dockerfiles/mastodon/Dockerfile.boringcache mastodon/Dockerfile.boringcache
+
+      - name: Build with BoringCache (layer cache + dep cache inside build)
+        id: build
+        uses: boringcache/docker-action@v1
+        with:
+          workspace: boringcache/benchmarks
+          image: mastodon-benchmark
+          tags: latest
+          context: mastodon
+          dockerfile: mastodon/Dockerfile.boringcache
+          push: false
+          load: true
+          cache-tag: mastodon
+          secrets: |
+            boringcache_token=${{ secrets.BORINGCACHE_API_TOKEN }}
+          build-args: |
+            BORINGCACHE_WORKSPACE=boringcache/benchmarks
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Report timing
+        run: |
+          echo "## Mastodon Docker Build - BoringCache" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Layer Cache Hit | ${{ steps.build.outputs.cache-hit }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | BoringCache (layers + libvips + ffmpeg + gems + yarn) |" >> "$GITHUB_STEP_SUMMARY"

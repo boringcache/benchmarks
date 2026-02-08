@@ -1,0 +1,46 @@
+name: "Immich - BoringCache"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 0"
+
+env:
+  PROJECT_REPO: immich-app/immich
+  PROJECT_REF: "a1b2c3d4e5f6"  # TODO: pin to a recent commit
+
+jobs:
+  docker-build:
+    name: Docker Build - Server (BoringCache)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+
+      - name: Build with BoringCache
+        id: build
+        uses: boringcache/docker-action@v1
+        with:
+          workspace: boringcache/benchmarks
+          image: immich-server-benchmark
+          tags: latest
+          dockerfile: server/Dockerfile
+          push: false
+          load: true
+          cache-tag: immich-server
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Report timing
+        run: |
+          echo "## Immich Server Docker Build - BoringCache" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache Hit | ${{ steps.build.outputs.cache-hit }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | BoringCache |" >> "$GITHUB_STEP_SUMMARY"

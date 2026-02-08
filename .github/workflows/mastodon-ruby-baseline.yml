@@ -1,0 +1,60 @@
+name: "Mastodon Ruby - Baseline"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 0"
+
+env:
+  PROJECT_REPO: mastodon/mastodon
+  PROJECT_REF: "6b3e6638e64c799e498b23b4fca77bca01d1ab1c"
+
+jobs:
+  bundle-install:
+    name: Bundle Install (actions/cache)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libicu-dev libidn-dev libpq-dev
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+
+      - name: Cache gems
+        uses: actions/cache@v4
+        with:
+          path: vendor/bundle
+          key: mastodon-gems-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: |
+            mastodon-gems-
+
+      - name: Bundle install
+        id: install
+        run: |
+          START=$(date +%s)
+          bundle config set --local path vendor/bundle
+          bundle install --jobs 4
+          END=$(date +%s)
+          echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
+
+      - name: Report timing
+        run: |
+          echo "## Mastodon Bundle Install - Baseline (actions/cache)" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Bundle Install | ${{ steps.install.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Gems in Gemfile.lock | ~150 |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | actions/cache |" >> "$GITHUB_STEP_SUMMARY"

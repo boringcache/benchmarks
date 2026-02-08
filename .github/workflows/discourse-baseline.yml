@@ -1,0 +1,61 @@
+name: "Discourse - Baseline"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 0"
+
+env:
+  PROJECT_REPO: discourse/discourse
+  PROJECT_REF: "a1b2c3d4e5f6"  # TODO: pin to a recent commit
+
+jobs:
+  bundle-install:
+    name: Bundle Install (actions/cache)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpq-dev libxml2-dev libxslt1-dev
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Cache gems
+        uses: actions/cache@v4
+        with:
+          path: vendor/bundle
+          key: discourse-gems-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: |
+            discourse-gems-
+
+      - name: Bundle install
+        id: install
+        run: |
+          START=$(date +%s)
+          bundle config set --local path vendor/bundle
+          bundle install --jobs 4
+          END=$(date +%s)
+          echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
+
+      - name: Report timing
+        run: |
+          echo "## Discourse Bundle Install - Baseline (actions/cache)" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Bundle Install | ${{ steps.install.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Gems in Gemfile.lock | ~300+ |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Gemfile.lock Size | 56 KB |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | actions/cache |" >> "$GITHUB_STEP_SUMMARY"
