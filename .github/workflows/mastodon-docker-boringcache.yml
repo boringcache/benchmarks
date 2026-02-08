@@ -15,18 +15,21 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - name: Checkout benchmarks repo
-        uses: actions/checkout@v4
-
       - name: Checkout target repo
         uses: actions/checkout@v4
         with:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
-          path: mastodon
+
+      - name: Get optimized Dockerfile
+        uses: actions/checkout@v4
+        with:
+          path: _benchmarks
+          sparse-checkout: dockerfiles/mastodon
+          sparse-checkout-cone-mode: false
 
       - name: Copy optimized Dockerfile
-        run: cp dockerfiles/mastodon/Dockerfile.boringcache mastodon/Dockerfile.boringcache
+        run: cp _benchmarks/dockerfiles/mastodon/Dockerfile.boringcache Dockerfile.boringcache
 
       - name: Build with BoringCache (layer cache + dep cache inside build)
         id: build
@@ -35,8 +38,7 @@ jobs:
           workspace: boringcache/benchmarks
           image: mastodon-benchmark
           tags: latest
-          context: mastodon
-          dockerfile: mastodon/Dockerfile.boringcache
+          dockerfile: Dockerfile.boringcache
           push: false
           load: true
           cache-tag: mastodon

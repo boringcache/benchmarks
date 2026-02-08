@@ -46,6 +46,8 @@ jobs:
           yarn install
           END=$(date +%s)
           echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: "false"
 
       - name: Report timing
         run: |
