@@ -22,14 +22,7 @@ jobs:
           ref: ${{ env.PROJECT_REF }}
 
       - name: Get optimized Dockerfile
-        uses: actions/checkout@v4
-        with:
-          path: _benchmarks
-          sparse-checkout: dockerfiles/posthog
-          sparse-checkout-cone-mode: false
-
-      - name: Copy optimized Dockerfile
-        run: cp _benchmarks/dockerfiles/posthog/Dockerfile.boringcache Dockerfile.boringcache
+        run: curl -sSL https://raw.githubusercontent.com/boringcache/benchmarks/main/dockerfiles/posthog/Dockerfile.boringcache -o Dockerfile.boringcache
 
       - name: Build with BoringCache (layer cache + dep cache inside build)
         id: build
