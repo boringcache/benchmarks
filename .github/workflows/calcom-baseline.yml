@@ -43,7 +43,7 @@ jobs:
         id: install
         run: |
           START=$(date +%s)
-          yarn install --frozen-lockfile
+          yarn install
           END=$(date +%s)
           echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
 

@@ -41,7 +41,7 @@ jobs:
           load: true
           cache-tag: posthog
           secrets: |
-            boringcache_token=${{ secrets.BORINGCACHE_API_TOKEN }}
+            id=boringcache_token,env=BORINGCACHE_API_TOKEN
           build-args: |
             BORINGCACHE_WORKSPACE=boringcache/benchmarks
         env:
