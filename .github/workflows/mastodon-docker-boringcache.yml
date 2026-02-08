@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: mastodon/mastodon
-  PROJECT_REF: "6b3e6638e64c799e498b23b4fca77bca01d1ab1c"
+  PROJECT_REF: "2e30044a374811bc94fd62a8159cb2c9ffe18a4d"
 
 jobs:
   docker-build:

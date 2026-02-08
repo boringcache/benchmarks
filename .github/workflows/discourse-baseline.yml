@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: discourse/discourse
-  PROJECT_REF: "a1b2c3d4e5f6"  # TODO: pin to a recent commit
+  PROJECT_REF: "26f3e2aa87a3abb35849183e0740fe7ab84cec67"  # TODO: pin to a recent commit
 
 jobs:
   bundle-install:

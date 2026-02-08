@@ -15,6 +15,9 @@ on:
           - ruby
           - nodejs
 
+permissions:
+  actions: write
+
 jobs:
   trigger:
     name: Trigger benchmark workflows

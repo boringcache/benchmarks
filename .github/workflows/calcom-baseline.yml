@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: calcom/cal.com
-  PROJECT_REF: "a1b2c3d4e5f6"  # TODO: pin to a recent commit
+  PROJECT_REF: "0b0a5478fb39e1ccd009ccdb7cbe2e7a93471a1f"  # TODO: pin to a recent commit
 
 jobs:
   install-build:

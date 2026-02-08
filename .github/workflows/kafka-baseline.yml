@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: apache/kafka
-  PROJECT_REF: "f13a0283e7902a5de56be387e7d2bb35f64f4edc"
+  PROJECT_REF: "2df7c75fd55c28e1465e4ed8dd4a348a8caa4bd6"
 
 jobs:
   docker-build:

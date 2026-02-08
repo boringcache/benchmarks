@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: grpc/grpc
-  PROJECT_REF: "0ef45a8e84e7daa7e723fd54e6fc8ced6c37f6fb"
+  PROJECT_REF: "4a3be9d1d41f5aa210288f481749bc543d875892"
 
 jobs:
   docker-build:
