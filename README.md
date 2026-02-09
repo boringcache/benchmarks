@@ -1,13 +1,11 @@
 # boringcache/benchmarks
 
-**Cache once. Reuse everywhere.**
-
-Real-world CI benchmarks showing BoringCache performance on popular open-source projects. Baselines run with **no cache** to show the full impact.
+Real-world CI builds. No cache vs BoringCache. Same code, same runners, same commits.
 
 ## Results
 
-| Project | Baseline (no cache) | BoringCache | Savings |
-|---------|-------------------|-------------|---------|
+| Project | No cache | BoringCache | Faster |
+|---------|----------|-------------|--------|
 | [grpc/grpc](https://github.com/grpc/grpc) | 26m 34s | 1m 46s | **93%** |
 | [mastodon/mastodon](https://github.com/mastodon/mastodon) (Docker) | 9m 24s | 0m 58s | **89%** |
 | [bevyengine/bevy](https://github.com/bevyengine/bevy) | 9m 10s | 1m 20s | **85%** |
@@ -15,63 +13,62 @@ Real-world CI benchmarks showing BoringCache performance on popular open-source 
 | [immich-app/immich](https://github.com/immich-app/immich) | 3m 58s | 1m 48s | **55%** |
 | [PostHog/posthog](https://github.com/PostHog/posthog) | 8m 6s | 6m 53s | **15%** |
 
-> Results are from the latest CI runs. Baselines use no caching. BoringCache numbers reflect warm-cache performance.
+Baselines build from scratch every time. BoringCache numbers reflect warm-cache runs.
 
-## Projects
+## What's being benchmarked
 
 ### Docker Builds
 
-| Project | Stars | What's cached | Action |
-|---------|-------|--------------|--------|
-| [PostHog/posthog](https://github.com/PostHog/posthog) | 31k | pnpm, Python, turbo, Playwright | `docker-action` + deps inside Dockerfile |
-| [mastodon/mastodon](https://github.com/mastodon/mastodon) | 50k | libvips, ffmpeg, gems, yarn | `docker-action` + deps inside Dockerfile |
-| [grpc/grpc](https://github.com/grpc/grpc) | 44k | Bazel build outputs | `docker-action` + deps inside Dockerfile |
-| [immich-app/immich](https://github.com/immich-app/immich) | 60k | pnpm store, mise tools | `docker-action` + deps inside Dockerfile |
-| [apache/kafka](https://github.com/apache/kafka) | 32k | Gradle caches, Docker layers | `action` + `docker-action` |
+Multi-stage Docker builds with dependencies cached inside the Dockerfile using the BoringCache CLI.
+
+| Project | What's cached |
+|---------|--------------|
+| [PostHog/posthog](https://github.com/PostHog/posthog) | pnpm store, Python runtime, turbo build cache, Playwright browsers |
+| [mastodon/mastodon](https://github.com/mastodon/mastodon) | libvips, ffmpeg, Ruby gems, yarn packages |
+| [grpc/grpc](https://github.com/grpc/grpc) | Bazel build outputs (5,500+ C++ compilation targets) |
+| [immich-app/immich](https://github.com/immich-app/immich) | pnpm store, mise tools |
+| [apache/kafka](https://github.com/apache/kafka) | Gradle caches + Docker layers |
 
 ### Rust
 
-| Project | Stars | What's cached | Action |
-|---------|-------|--------------|--------|
-| [bevyengine/bevy](https://github.com/bevyengine/bevy) | 44k | cargo registry, target, sccache | `rust-action` |
-| [zed-industries/zed](https://github.com/zed-industries/zed) | 75k | cargo registry, target, sccache | `rust-action` |
+Cargo builds with `rust-action` caching the registry, build target, and sccache.
+
+| Project | |
+|---------|--|
+| [bevyengine/bevy](https://github.com/bevyengine/bevy) | Game engine, ~2,500 crates |
+| [zed-industries/zed](https://github.com/zed-industries/zed) | Code editor, ~460 KB Cargo.lock |
 
 ### Ruby
 
-| Project | Stars | What's cached | Action |
-|---------|-------|--------------|--------|
-| [mastodon/mastodon](https://github.com/mastodon/mastodon) | 50k | gem bundle | `ruby-action` |
-| [discourse/discourse](https://github.com/discourse/discourse) | 46k | gem bundle | `ruby-action` |
+Bundle installs with `ruby-action`.
+
+| Project | |
+|---------|--|
+| [mastodon/mastodon](https://github.com/mastodon/mastodon) | ~150 gems |
+| [discourse/discourse](https://github.com/discourse/discourse) | ~300 gems |
 
 ### Node.js
 
-| Project | Stars | What's cached | Action |
-|---------|-------|--------------|--------|
-| [n8n-io/n8n](https://github.com/n8n-io/n8n) | 174k | pnpm store, node_modules, turbo | `nodejs-action` |
-| [calcom/cal.com](https://github.com/calcom/cal.com) | 40k | yarn cache, node_modules | `nodejs-action` |
+Install + build with `nodejs-action`. Turbo and pnpm caches are handled automatically.
 
-## How It Works
+| Project | |
+|---------|--|
+| [n8n-io/n8n](https://github.com/n8n-io/n8n) | 400+ packages, Turborepo monorepo |
+| [calcom/cal.com](https://github.com/calcom/cal.com) | Yarn monorepo |
 
-Each project has two workflow files:
+## How it works
 
-- `{project}-baseline.yml` — **No cache** (clean build from scratch)
-- `{project}-boringcache.yml` — Uses the appropriate [BoringCache action](https://github.com/boringcache)
+Each project has two workflows:
 
-Both workflows:
-1. Check out the target repo at a **pinned commit** (reproducible)
-2. Run the same build steps
-3. Record step-level timing
-4. Output results to workflow summary
+- **Baseline** — no cache, clean build from scratch
+- **BoringCache** — uses the appropriate [BoringCache action](https://github.com/boringcache)
 
-## Running Benchmarks
+Both check out the same pinned commit and run identical build steps on `ubuntu-latest`. The only difference is caching.
 
-Benchmarks run on a weekly schedule and can be triggered manually:
+Benchmarks run weekly and can be triggered manually:
 
 ```bash
-# Run a specific benchmark
 gh workflow run "PostHog - BoringCache"
-
-# Run all benchmarks
 gh workflow run "Run All Benchmarks"
 ```
 
