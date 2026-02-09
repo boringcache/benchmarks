@@ -150,7 +150,7 @@ RUN apt-get update && \
 FROM unit:1.33.0-python3.12
 WORKDIR /code
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
 
 ARG BORINGCACHE_WORKSPACE
 
@@ -169,7 +169,7 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/truste
     ACCEPT_EULA=Y apt-get install -y msodbcsql18 && \
     rm -rf /var/lib/apt/lists/*
 
-ENV NODE_VERSION 24.13.0
+ENV NODE_VERSION=24.13.0
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
     amd64) ARCH='x64';; \
