@@ -27,8 +27,6 @@ jobs:
           workspace: boringcache/benchmarks
           node-version: '20'
           cache-tag: calcom
-          build-cache-paths: |
-            yarn-cache:.yarn/cache
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 

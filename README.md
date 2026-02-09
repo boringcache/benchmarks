@@ -15,7 +15,7 @@ Real-world CI builds. No cache vs BoringCache. Same code, same runners, same com
 | [discourse/discourse](https://github.com/discourse/discourse) | 1m 48s | 0m 44s | **59%** |
 | [immich-app/immich](https://github.com/immich-app/immich) | 3m 52s | 1m 42s | **56%** |
 | [calcom/cal.com](https://github.com/calcom/cal.com) | 2m 57s | 2m 23s | **19%** |
-| [PostHog/posthog](https://github.com/PostHog/posthog) | 8m 6s | 6m 53s | **15%** |
+| [PostHog/posthog](https://github.com/PostHog/posthog) | 8m 6s | 4m 58s | **38%** |
 
 Baselines build from scratch every time. BoringCache numbers reflect warm-cache runs.
 
