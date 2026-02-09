@@ -8,10 +8,15 @@ Real-world CI builds. No cache vs BoringCache. Same code, same runners, same com
 |---------|----------|-------------|--------|
 | [grpc/grpc](https://github.com/grpc/grpc) | 26m 34s | 1m 46s | **93%** |
 | [mastodon/mastodon](https://github.com/mastodon/mastodon) (Docker) | 9m 24s | 0m 58s | **89%** |
-| [bevyengine/bevy](https://github.com/bevyengine/bevy) | 9m 10s | 1m 20s | **85%** |
-| [n8n-io/n8n](https://github.com/n8n-io/n8n) | 5m 22s | 0m 56s | **82%** |
-| [immich-app/immich](https://github.com/immich-app/immich) | 3m 58s | 1m 48s | **55%** |
+| [bevyengine/bevy](https://github.com/bevyengine/bevy) | 10m 7s | 1m 20s | **86%** |
+| [n8n-io/n8n](https://github.com/n8n-io/n8n) | 5m 37s | 0m 56s | **83%** |
+| [zed-industries/zed](https://github.com/zed-industries/zed) | 5m 18s | 1m 30s | **71%** |
+| [mastodon/mastodon](https://github.com/mastodon/mastodon) (Ruby) | 1m 37s | 0m 31s | **68%** |
+| [discourse/discourse](https://github.com/discourse/discourse) | 1m 48s | 0m 44s | **59%** |
+| [immich-app/immich](https://github.com/immich-app/immich) | 3m 52s | 1m 42s | **56%** |
+| [calcom/cal.com](https://github.com/calcom/cal.com) | 2m 57s | 2m 23s | **19%** |
 | [PostHog/posthog](https://github.com/PostHog/posthog) | 8m 6s | 6m 53s | **15%** |
+| [apache/kafka](https://github.com/apache/kafka) | 4m 51s | 4m 40s | **3%** |
 
 Baselines build from scratch every time. BoringCache numbers reflect warm-cache runs.
 
