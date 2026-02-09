@@ -58,8 +58,9 @@ jobs:
           context: /tmp/kafka-docker/jvm
           dockerfile: /tmp/kafka-docker/jvm/Dockerfile
           push: false
-          load: true
+          load: false
           cache-tag: kafka
+          cache-mode: min
           build-args: |
             kafka_url=
         env:

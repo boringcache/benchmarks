@@ -43,8 +43,9 @@ jobs:
           tags: latest
           dockerfile: Dockerfile.boringcache
           push: false
-          load: true
+          load: false
           cache-tag: mastodon
+          cache-mode: min
           secrets: |
             id=boringcache_token,env=BORINGCACHE_API_TOKEN
           build-args: |

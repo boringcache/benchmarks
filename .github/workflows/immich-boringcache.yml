@@ -30,8 +30,9 @@ jobs:
           tags: latest
           dockerfile: server/Dockerfile
           push: false
-          load: true
+          load: false
           cache-tag: immich-server
+          cache-mode: min
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 

@@ -30,9 +30,10 @@ jobs:
           image: grpc-benchmark
           tags: latest
           push: false
-          load: true
+          load: false
           dockerfile: examples/cpp/csm/Dockerfile.client
           cache-tag: grpc
+          cache-mode: min
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
