@@ -50,7 +50,7 @@ jobs:
 
       - name: Restore Turborepo cache
         run: |
-          boringcache restore boringcache/benchmarks "n8n-turbo:node_modules/.cache/turbo" || true
+          boringcache restore boringcache/benchmarks "n8n-turbo:.turbo/cache" || true
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
@@ -64,7 +64,7 @@ jobs:
 
       - name: Save Turborepo cache
         run: |
-          boringcache save boringcache/benchmarks "n8n-turbo:node_modules/.cache/turbo" || true
+          boringcache save boringcache/benchmarks "n8n-turbo:.turbo/cache" || true
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 

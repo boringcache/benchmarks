@@ -21,9 +21,6 @@ jobs:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Build Kafka JVM Docker image (cold)
         id: build
         run: |
@@ -37,11 +34,10 @@ jobs:
           cp docker/server.properties /tmp/kafka-docker/jvm/
           ls core/build/distributions/kafka_*.tgz
           cp "$(ls core/build/distributions/kafka_*.tgz | grep -v site-docs | head -1)" /tmp/kafka-docker/jvm/kafka.tgz
-          docker buildx build \
+          DOCKER_BUILDKIT=1 docker build \
             --file /tmp/kafka-docker/jvm/Dockerfile \
             --build-arg kafka_url="" \
             --tag kafka-benchmark:latest \
-            --load \
             /tmp/kafka-docker/jvm/
           END=$(date +%s)
           echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
