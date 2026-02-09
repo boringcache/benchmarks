@@ -11,7 +11,7 @@ env:
 
 jobs:
   pnpm-install:
-    name: pnpm Install + Build (actions/cache)
+    name: pnpm Install + Build (no cache)
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -28,16 +28,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.pnpm-store
-            node_modules
-          key: n8n-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            n8n-pnpm-
 
       - name: Install dependencies
         id: install
@@ -57,11 +47,11 @@ jobs:
 
       - name: Report timing
         run: |
-          echo "## n8n Install + Build - Baseline (actions/cache)" >> "$GITHUB_STEP_SUMMARY"
+          echo "## n8n Install + Build - Baseline (no cache)" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
           echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
           echo "| pnpm install | ${{ steps.install.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
           echo "| pnpm build | ${{ steps.build.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
           echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Cache | actions/cache |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | none |" >> "$GITHUB_STEP_SUMMARY"

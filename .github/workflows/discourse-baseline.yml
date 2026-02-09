@@ -11,7 +11,7 @@ env:
 
 jobs:
   bundle-install:
-    name: Bundle Install (actions/cache)
+    name: Bundle Install (no cache)
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -31,14 +31,6 @@ jobs:
         with:
           ruby-version: '3.3'
 
-      - name: Cache gems
-        uses: actions/cache@v4
-        with:
-          path: vendor/bundle
-          key: discourse-gems-${{ hashFiles('Gemfile.lock') }}
-          restore-keys: |
-            discourse-gems-
-
       - name: Bundle install
         id: install
         run: |
@@ -50,12 +42,10 @@ jobs:
 
       - name: Report timing
         run: |
-          echo "## Discourse Bundle Install - Baseline (actions/cache)" >> "$GITHUB_STEP_SUMMARY"
+          echo "## Discourse Bundle Install - Baseline (no cache)" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
           echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
           echo "| Bundle Install | ${{ steps.install.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Gems in Gemfile.lock | ~300+ |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Gemfile.lock Size | 56 KB |" >> "$GITHUB_STEP_SUMMARY"
           echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Cache | actions/cache |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | none |" >> "$GITHUB_STEP_SUMMARY"

@@ -11,7 +11,7 @@ env:
 
 jobs:
   cargo-build:
-    name: Cargo Build (actions/cache)
+    name: Cargo Build (no cache)
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -31,17 +31,6 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Cache cargo registry and target
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            target
-          key: bevy-cargo-${{ hashFiles('Cargo.lock') }}
-          restore-keys: |
-            bevy-cargo-
-
       - name: Build
         id: build
         run: |
@@ -52,10 +41,10 @@ jobs:
 
       - name: Report timing
         run: |
-          echo "## Bevy Cargo Build - Baseline (actions/cache)" >> "$GITHUB_STEP_SUMMARY"
+          echo "## Bevy Cargo Build - Baseline (no cache)" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
           echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
           echo "| Build Duration | ${{ steps.build.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
           echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Cache | actions/cache |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | none |" >> "$GITHUB_STEP_SUMMARY"

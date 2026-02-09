@@ -11,7 +11,7 @@ env:
 
 jobs:
   install-build:
-    name: Install + Build (actions/cache)
+    name: Install + Build (no cache)
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -29,16 +29,6 @@ jobs:
       - name: Setup Yarn
         run: corepack enable
 
-      - name: Cache node_modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-            **/node_modules
-          key: calcom-deps-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            calcom-deps-
-
       - name: Install dependencies
         id: install
         run: |
@@ -51,10 +41,10 @@ jobs:
 
       - name: Report timing
         run: |
-          echo "## Cal.com Install - Baseline (actions/cache)" >> "$GITHUB_STEP_SUMMARY"
+          echo "## Cal.com Install - Baseline (no cache)" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
           echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
           echo "| yarn install | ${{ steps.install.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
           echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Cache | actions/cache |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | none |" >> "$GITHUB_STEP_SUMMARY"
