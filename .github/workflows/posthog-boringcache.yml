@@ -35,7 +35,9 @@ jobs:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Copy boringcache binary to build context
-        run: cp "$(which boringcache)" ./boringcache-bin
+        run: |
+          cp "$(which boringcache)" ./boringcache-bin
+          echo '!boringcache-bin' >> .dockerignore
 
       - name: Get optimized Dockerfile
         run: curl -sSL https://raw.githubusercontent.com/boringcache/benchmarks/main/dockerfiles/posthog/Dockerfile.boringcache -o Dockerfile.boringcache
