@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: mastodon/mastodon
-  PROJECT_REF: "2e30044a374811bc94fd62a8159cb2c9ffe18a4d"
+  PROJECT_REF: "d3cef824018a79ba383deab85e09c31d2673d2c3"
 
 jobs:
   bundle-install:

@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: zed-industries/zed
-  PROJECT_REF: "809d54524ebe5cf654223b02260120c6e2138880"  # TODO: pin to a recent commit
+  PROJECT_REF: "44364ebd0362e01395db04797d684d496fc5764a"
 
 jobs:
   cargo-build:

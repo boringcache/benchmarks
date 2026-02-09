@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: immich-app/immich
-  PROJECT_REF: "354dd3cc3c110150ba4e22ec35a75cb44ea38eb5"  # TODO: pin to a recent commit
+  PROJECT_REF: "906c38273f04bbcf059f5e90775c4408e05cf1ef"
 
 jobs:
   docker-build:

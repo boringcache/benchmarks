@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: PostHog/posthog
-  PROJECT_REF: "e75553c9dd7c81d72b8bde9319f81ee7c61b423b"
+  PROJECT_REF: "de9c5d96cec60fea31bee224eaf895b785b65134"
 
 jobs:
   docker-build:

@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: n8n-io/n8n
-  PROJECT_REF: "3a35b687b8abf42291448759a8b1e345aecd11d2"  # TODO: pin to a recent commit
+  PROJECT_REF: "f08c004e0d202fb339b6bfa00674a65b2051df2b"
 
 jobs:
   pnpm-install:
