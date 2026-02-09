@@ -152,6 +152,8 @@ WORKDIR /code
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 ENV PYTHONUNBUFFERED 1
 
+ARG BORINGCACHE_WORKSPACE
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends --allow-downgrades \
     chromium chromium-driver gettext-base libpq-dev \
@@ -194,12 +196,17 @@ ENV PATH=/python-runtime/bin:$PATH \
 
 USER root
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
-RUN --mount=type=cache,id=playwright-browsers,target=/tmp/playwright-cache \
+RUN --mount=type=secret,id=boringcache_token \
+    --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
+    --mount=type=cache,id=playwright-browsers,target=/tmp/playwright-cache \
+    export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "posthog-playwright:/tmp/playwright-cache" || true && \
     PLAYWRIGHT_BROWSERS_PATH=/tmp/playwright-cache \
     /python-runtime/bin/python -m playwright install --with-deps chromium && \
     mkdir -p /ms-playwright && \
     cp -r /tmp/playwright-cache/* /ms-playwright/ && \
-    chown -R posthog:posthog /ms-playwright
+    chown -R posthog:posthog /ms-playwright && \
+    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "posthog-playwright:/tmp/playwright-cache" || true
 USER posthog
 
 COPY --from=frontend-build --chown=posthog:posthog /code/frontend/dist /code/frontend/dist
