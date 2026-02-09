@@ -24,11 +24,6 @@ SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
 ARG BORINGCACHE_WORKSPACE
 
-# Install BoringCache CLI
-RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates && \
-    curl -sSL https://install.boringcache.com/install.sh | sh && \
-    rm -rf /var/lib/apt/lists/*
-
 COPY turbo.json package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json ./
 COPY frontend/package.json frontend/
 COPY frontend/bin/ frontend/bin/
@@ -42,6 +37,7 @@ COPY docs/onboarding/ docs/onboarding/
 
 # Restore pnpm store from BoringCache, install, then save
 RUN --mount=type=secret,id=boringcache_token \
+    --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     --mount=type=cache,id=pnpm,target=/tmp/pnpm-store-v24 \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
     boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "posthog-pnpm:/tmp/pnpm-store-v24" || true && \
@@ -63,10 +59,6 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 ARG BORINGCACHE_WORKSPACE
 
-RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates && \
-    curl -sSL https://install.boringcache.com/install.sh | sh && \
-    rm -rf /var/lib/apt/lists/*
-
 COPY nodejs/src/scripts/ nodejs/src/scripts/
 RUN cd nodejs/src/scripts && npm install --omit=dev
 
@@ -77,6 +69,7 @@ COPY common/esbuilder/ common/esbuilder/
 COPY common/plugin_transpiler/ common/plugin_transpiler/
 
 RUN --mount=type=secret,id=boringcache_token \
+    --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     --mount=type=cache,id=pnpm,target=/tmp/pnpm-store-v24 \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
     boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "posthog-pnpm:/tmp/pnpm-store-v24" || true && \
@@ -101,18 +94,17 @@ ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
 ENV UV_PROJECT_ENVIRONMENT=/python-runtime
 
-# Install build deps + BoringCache CLI
+# Install build deps
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential git libpq-dev \
     "libxmlsec1=1.2.37-2" "libxmlsec1-dev=1.2.37-2" \
-    libffi-dev zlib1g-dev pkg-config \
-    curl ca-certificates && \
-    rm -rf /var/lib/apt/lists/* && \
-    curl -sSL https://install.boringcache.com/install.sh | sh
+    libffi-dev zlib1g-dev pkg-config && \
+    rm -rf /var/lib/apt/lists/*
 
 # Restore Python runtime from BoringCache, then sync
 RUN --mount=type=secret,id=boringcache_token \
+    --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     --mount=type=cache,id=uv-libxmlsec1.2.37-2,target=/root/.cache/uv \
     --mount=type=bind,source=uv.lock,target=uv.lock \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \

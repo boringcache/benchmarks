@@ -112,9 +112,6 @@ RUN \
   ca-certificates \
   ;
 
-# Install BoringCache CLI
-RUN curl -sSL https://install.boringcache.com/install.sh | sh
-
 
 # =============================================================
 # libvips - cached with BoringCache
@@ -130,6 +127,7 @@ WORKDIR /usr/local/libvips/src
 
 # Try to restore cached libvips build
 RUN --mount=type=secret,id=boringcache_token \
+  --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
   boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "libvips-${VIPS_VERSION}-${TARGETPLATFORM}:/usr/local/libvips" || true
 
@@ -149,6 +147,7 @@ RUN \
 
 # Save compiled libvips to BoringCache
 RUN --mount=type=secret,id=boringcache_token \
+  --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
   boringcache save --no-git "$BORINGCACHE_WORKSPACE" "libvips-${VIPS_VERSION}-${TARGETPLATFORM}:/usr/local/libvips" || true
 
@@ -167,6 +166,7 @@ WORKDIR /usr/local/ffmpeg/src
 
 # Try to restore cached ffmpeg build
 RUN --mount=type=secret,id=boringcache_token \
+  --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
   boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "ffmpeg-${FFMPEG_VERSION}-${TARGETPLATFORM}:/usr/local/ffmpeg" || true
 
@@ -196,6 +196,7 @@ RUN \
 
 # Save compiled ffmpeg to BoringCache
 RUN --mount=type=secret,id=boringcache_token \
+  --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
   boringcache save --no-git "$BORINGCACHE_WORKSPACE" "ffmpeg-${FFMPEG_VERSION}-${TARGETPLATFORM}:/usr/local/ffmpeg" || true
 
@@ -213,6 +214,7 @@ COPY Gemfile* /opt/mastodon/
 # Restore cached gems from BoringCache, then install
 RUN \
   --mount=type=secret,id=boringcache_token \
+  --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   --mount=type=cache,id=gem-cache-${TARGETPLATFORM},target=/usr/local/bundle/cache/,sharing=locked \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
   boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "mastodon-gems-${TARGETPLATFORM}:/usr/local/bundle" || true && \
@@ -241,6 +243,7 @@ RUN rm /usr/local/bin/yarn*; corepack enable; corepack prepare --activate;
 # Restore yarn cache and install
 RUN \
   --mount=type=secret,id=boringcache_token \
+  --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   --mount=type=cache,id=corepack-cache-${TARGETPLATFORM},target=/usr/local/share/.cache/corepack,sharing=locked \
   --mount=type=cache,id=yarn-cache-${TARGETPLATFORM},target=/usr/local/share/.cache/yarn,sharing=locked \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
