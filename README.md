@@ -16,7 +16,6 @@ Real-world CI builds. No cache vs BoringCache. Same code, same runners, same com
 | [immich-app/immich](https://github.com/immich-app/immich) | 3m 52s | 1m 42s | **56%** |
 | [calcom/cal.com](https://github.com/calcom/cal.com) | 2m 57s | 2m 23s | **19%** |
 | [PostHog/posthog](https://github.com/PostHog/posthog) | 8m 6s | 6m 53s | **15%** |
-| [apache/kafka](https://github.com/apache/kafka) | 4m 51s | 4m 40s | **3%** |
 
 Baselines build from scratch every time. BoringCache numbers reflect warm-cache runs.
 
@@ -32,7 +31,6 @@ Multi-stage Docker builds with dependencies cached inside the Dockerfile using t
 | [mastodon/mastodon](https://github.com/mastodon/mastodon) | libvips, ffmpeg, Ruby gems, yarn packages |
 | [grpc/grpc](https://github.com/grpc/grpc) | Bazel build outputs (5,500+ C++ compilation targets) |
 | [immich-app/immich](https://github.com/immich-app/immich) | pnpm store, mise tools |
-| [apache/kafka](https://github.com/apache/kafka) | Gradle caches + Docker layers |
 
 ### Rust
 

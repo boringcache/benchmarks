@@ -42,22 +42,20 @@ jobs:
       - name: Get optimized Dockerfile
         run: curl -sSL https://raw.githubusercontent.com/boringcache/benchmarks/main/dockerfiles/posthog/Dockerfile.boringcache -o Dockerfile.boringcache
 
-      - name: Build with BoringCache (layer cache min + dep cache inside build)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build with BoringCache (deps cached inside Dockerfile)
         id: build
-        uses: boringcache/docker-action@v1
-        with:
-          workspace: boringcache/benchmarks
-          image: posthog-benchmark
-          tags: latest
-          dockerfile: Dockerfile.boringcache
-          push: false
-          load: false
-          cache-tag: posthog
-          cache-mode: min
-          secrets: |
-            id=boringcache_token,env=BORINGCACHE_API_TOKEN
-          build-args: |
-            BORINGCACHE_WORKSPACE=boringcache/benchmarks
+        run: |
+          START=$(date +%s)
+          docker buildx build \
+            --file Dockerfile.boringcache \
+            --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
+            --build-arg BORINGCACHE_WORKSPACE=boringcache/benchmarks \
+            .
+          END=$(date +%s)
+          echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
@@ -67,6 +65,6 @@ jobs:
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
           echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Build Duration | ${{ steps.build.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
           echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Layer Cache Hit | ${{ steps.build.outputs.cache-hit }} |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Cache | BoringCache (min layers + pnpm + Python + turbo + Playwright) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | BoringCache (pnpm + Python + turbo + Playwright) |" >> "$GITHUB_STEP_SUMMARY"
