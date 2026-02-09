@@ -33,7 +33,7 @@ jobs:
         with:
           workspace: boringcache/benchmarks
           cache-tag: bevy
-          sccache: true
+          sccache: false
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 

@@ -36,12 +36,7 @@ jobs:
           cp -r docker/resources /tmp/kafka-docker/jvm/resources
           cp docker/server.properties /tmp/kafka-docker/jvm/
           ls core/build/distributions/kafka_*.tgz
-          cp "$(ls core/build/distributions/kafka_*.tgz | head -1)" /tmp/kafka-docker/jvm/kafka.tgz
-          echo "--- Debug: tgz contents ---"
-          ls -la core/build/distributions/
-          tar tzf /tmp/kafka-docker/jvm/kafka.tgz | head -30
-          ls -la /tmp/kafka-docker/jvm/
-          echo "--- End debug ---"
+          cp "$(ls core/build/distributions/kafka_*.tgz | grep -v site-docs | head -1)" /tmp/kafka-docker/jvm/kafka.tgz
           docker buildx build \
             --file /tmp/kafka-docker/jvm/Dockerfile \
             --build-arg kafka_url="" \
