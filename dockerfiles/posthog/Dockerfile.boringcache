@@ -46,7 +46,14 @@ RUN --mount=type=secret,id=boringcache_token \
     boringcache save --no-git "$BORINGCACHE_WORKSPACE" "posthog-pnpm:/tmp/pnpm-store-v24" || true
 
 COPY frontend/ frontend/
-RUN bin/turbo --filter=@posthog/frontend build
+
+# Restore turbo cache, build frontend, save turbo cache
+RUN --mount=type=secret,id=boringcache_token \
+    --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
+    export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "posthog-turbo:.turbo/cache" || true && \
+    bin/turbo --filter=@posthog/frontend build && \
+    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "posthog-turbo:.turbo/cache" || true
 
 
 # =============================================================
