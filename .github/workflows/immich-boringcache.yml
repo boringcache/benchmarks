@@ -11,7 +11,7 @@ env:
 
 jobs:
   docker-build:
-    name: Docker Build - Server (BoringCache)
+    name: Docker Build - Server (BoringCache layers + deps)
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -21,18 +21,37 @@ jobs:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
 
-      - name: Build with BoringCache
+      - name: Setup BoringCache CLI
+        uses: boringcache/setup-boringcache@v1
+        with:
+          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Copy boringcache binary to build context
+        run: |
+          cp "$(which boringcache)" ./boringcache-bin
+          echo '!boringcache-bin' >> .dockerignore
+
+      - name: Get optimized Dockerfile
+        run: curl -sSL https://raw.githubusercontent.com/boringcache/benchmarks/main/dockerfiles/immich/Dockerfile.boringcache -o Dockerfile.boringcache
+
+      - name: Build with BoringCache (layer cache min + deps inside build)
         id: build
         uses: boringcache/docker-action@v1
         with:
           workspace: boringcache/benchmarks
           image: immich-server-benchmark
           tags: latest
-          dockerfile: server/Dockerfile
+          dockerfile: Dockerfile.boringcache
           push: false
           load: false
           cache-tag: immich-server
           cache-mode: min
+          secrets: |
+            id=boringcache_token,env=BORINGCACHE_API_TOKEN
+          build-args: |
+            BORINGCACHE_WORKSPACE=boringcache/benchmarks
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
@@ -43,5 +62,5 @@ jobs:
           echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
           echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
           echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Cache Hit | ${{ steps.build.outputs.cache-hit }} |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Cache | BoringCache |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Layer Cache Hit | ${{ steps.build.outputs.cache-hit }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | BoringCache (min layers + pnpm + mise) |" >> "$GITHUB_STEP_SUMMARY"
