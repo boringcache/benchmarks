@@ -21,16 +21,11 @@ jobs:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
 
-      - name: Setup BoringCache CLI
-        uses: boringcache/setup-boringcache@v1
-        with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-
       - name: Restore Gradle cache
-        run: |
-          boringcache restore boringcache/benchmarks "gradle-home:~/.gradle/caches,gradle-wrapper:~/.gradle/wrapper" || true
+        uses: boringcache/action@v1
+        with:
+          workspace: boringcache/benchmarks
+          entries: gradle-home:~/.gradle/caches,gradle-wrapper:~/.gradle/wrapper
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
@@ -42,12 +37,6 @@ jobs:
           END=$(date +%s)
           echo "gradle_duration=$((END - START))" >> "$GITHUB_OUTPUT"
 
-      - name: Save Gradle cache
-        run: |
-          boringcache save boringcache/benchmarks "gradle-home:~/.gradle/caches,gradle-wrapper:~/.gradle/wrapper" || true
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-
       - name: Prepare Docker context
         run: |
           mkdir -p /tmp/kafka-docker/jvm
@@ -56,17 +45,25 @@ jobs:
           cp docker/server.properties /tmp/kafka-docker/jvm/
           ls core/build/distributions/kafka_*.tgz
           cp "$(ls core/build/distributions/kafka_*.tgz | grep -v site-docs | head -1)" /tmp/kafka-docker/jvm/kafka.tgz
-          # Remove JSA stage (server stop fails in Docker build, upstream issue)
-          sed -i '/^FROM.*AS build-jsa/,/^FROM/{/^FROM.*AS build-jsa/d;/^FROM/!d}' /tmp/kafka-docker/jvm/Dockerfile
-          sed -i '/COPY --from=build-jsa/d' /tmp/kafka-docker/jvm/Dockerfile
+          # Add procps so kafka-server-stop.sh can find the Kafka PID via ps ax
+          sed -i 's/apk add --no-cache bash/apk add --no-cache bash procps/' /tmp/kafka-docker/jvm/Dockerfile
 
       - name: Docker build
-        run: |
-          DOCKER_BUILDKIT=1 docker build \
-            --file /tmp/kafka-docker/jvm/Dockerfile \
-            --build-arg kafka_url="" \
-            --tag kafka-benchmark:latest \
-            /tmp/kafka-docker/jvm/
+        id: docker-build
+        uses: boringcache/docker-action@v1
+        with:
+          workspace: boringcache/benchmarks
+          image: kafka-benchmark
+          tags: latest
+          context: /tmp/kafka-docker/jvm
+          dockerfile: /tmp/kafka-docker/jvm/Dockerfile
+          push: false
+          load: true
+          cache-tag: kafka
+          build-args: |
+            kafka_url=
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Report timing
         run: |
@@ -76,4 +73,5 @@ jobs:
           echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
           echo "| Gradle Build | ${{ steps.gradle-build.outputs.gradle_duration }}s |" >> "$GITHUB_STEP_SUMMARY"
           echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Cache | BoringCache |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Layer Cache Hit | ${{ steps.docker-build.outputs.cache-hit }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | BoringCache (Gradle + Docker layers) |" >> "$GITHUB_STEP_SUMMARY"

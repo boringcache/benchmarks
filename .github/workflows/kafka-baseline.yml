@@ -34,9 +34,8 @@ jobs:
           cp docker/server.properties /tmp/kafka-docker/jvm/
           ls core/build/distributions/kafka_*.tgz
           cp "$(ls core/build/distributions/kafka_*.tgz | grep -v site-docs | head -1)" /tmp/kafka-docker/jvm/kafka.tgz
-          # Remove JSA stage (server stop fails in Docker build, upstream issue)
-          sed -i '/^FROM.*AS build-jsa/,/^FROM/{/^FROM.*AS build-jsa/d;/^FROM/!d}' /tmp/kafka-docker/jvm/Dockerfile
-          sed -i '/COPY --from=build-jsa/d' /tmp/kafka-docker/jvm/Dockerfile
+          # Add procps so kafka-server-stop.sh can find the Kafka PID via ps ax
+          sed -i 's/apk add --no-cache bash/apk add --no-cache bash procps/' /tmp/kafka-docker/jvm/Dockerfile
           DOCKER_BUILDKIT=1 docker build \
             --file /tmp/kafka-docker/jvm/Dockerfile \
             --build-arg kafka_url="" \

@@ -31,7 +31,7 @@ jobs:
         with:
           workspace: boringcache/benchmarks
           ruby-version: '3.3'
-          cache-tag: discourse-ruby
+          cache-tag-prefix: discourse-ruby
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 

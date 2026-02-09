@@ -33,13 +33,6 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
-      - name: Setup BoringCache CLI
-        uses: boringcache/setup-boringcache@v1
-        with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-
       - name: Install dependencies
         id: install
         run: |
@@ -48,12 +41,6 @@ jobs:
           END=$(date +%s)
           echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
 
-      - name: Restore Turborepo cache
-        run: |
-          boringcache restore boringcache/benchmarks "n8n-turbo:.turbo/cache" || true
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-
       - name: Build
         id: build
         run: |
@@ -61,12 +48,6 @@ jobs:
           pnpm build
           END=$(date +%s)
           echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
-
-      - name: Save Turborepo cache
-        run: |
-          boringcache save boringcache/benchmarks "n8n-turbo:.turbo/cache" || true
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Report timing
         run: |
