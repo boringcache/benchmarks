@@ -11,7 +11,7 @@ env:
 
 jobs:
   docker-build:
-    name: Docker Build (BoringCache deps)
+    name: Docker Build (BoringCache layers + deps)
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -42,20 +42,22 @@ jobs:
       - name: Get optimized Dockerfile
         run: curl -sSL https://raw.githubusercontent.com/boringcache/benchmarks/main/dockerfiles/posthog/Dockerfile.boringcache -o Dockerfile.boringcache
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build with BoringCache (deps cached inside Dockerfile)
+      - name: Build with BoringCache (layer cache + deps inside build)
         id: build
-        run: |
-          START=$(date +%s)
-          docker buildx build \
-            --file Dockerfile.boringcache \
-            --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
-            --build-arg BORINGCACHE_WORKSPACE=boringcache/benchmarks \
-            .
-          END=$(date +%s)
-          echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
+        uses: boringcache/docker-action@v1
+        with:
+          workspace: boringcache/benchmarks
+          image: posthog-benchmark
+          tags: latest
+          dockerfile: Dockerfile.boringcache
+          push: false
+          load: false
+          cache-tag: posthog
+
+          secrets: |
+            id=boringcache_token,env=BORINGCACHE_API_TOKEN
+          build-args: |
+            BORINGCACHE_WORKSPACE=boringcache/benchmarks
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
@@ -65,6 +67,6 @@ jobs:
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
           echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Build Duration | ${{ steps.build.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
           echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Cache | BoringCache (pnpm + Python + turbo + Playwright) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Layer Cache Hit | ${{ steps.build.outputs.cache-hit }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | BoringCache (layers + pnpm + Python + turbo + Playwright) |" >> "$GITHUB_STEP_SUMMARY"
