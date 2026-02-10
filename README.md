@@ -14,8 +14,8 @@ Real-world CI builds. No cache vs BoringCache. Same code, same runners, same com
 | [mastodon/mastodon](https://github.com/mastodon/mastodon) (Ruby) | 1m 37s | 0m 31s | **68%** |
 | [discourse/discourse](https://github.com/discourse/discourse) | 1m 48s | 0m 44s | **59%** |
 | [immich-app/immich](https://github.com/immich-app/immich) | 3m 52s | 1m 42s | **56%** |
+| [PostHog/posthog](https://github.com/PostHog/posthog) | 8m 6s | 3m 6s | **62%** |
 | [calcom/cal.com](https://github.com/calcom/cal.com) | 2m 57s | 2m 23s | **19%** |
-| [PostHog/posthog](https://github.com/PostHog/posthog) | 8m 6s | 4m 58s | **38%** |
 
 Baselines build from scratch every time. BoringCache numbers reflect warm-cache runs.
 
@@ -27,7 +27,7 @@ Multi-stage Docker builds with dependencies cached inside the Dockerfile using t
 
 | Project | What's cached |
 |---------|--------------|
-| [PostHog/posthog](https://github.com/PostHog/posthog) | pnpm store, Python runtime, turbo build cache, Playwright browsers |
+| [PostHog/posthog](https://github.com/PostHog/posthog) | Docker layers, pnpm store, Python runtime, turbo build cache, Playwright browsers |
 | [mastodon/mastodon](https://github.com/mastodon/mastodon) | libvips, ffmpeg, Ruby gems, yarn packages |
 | [grpc/grpc](https://github.com/grpc/grpc) | Bazel build outputs (5,500+ C++ compilation targets) |
 | [immich-app/immich](https://github.com/immich-app/immich) | pnpm store, mise tools |
