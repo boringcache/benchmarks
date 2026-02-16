@@ -28,12 +28,19 @@ RUN mkdir /artifacts
 
 COPY . .
 
-# Restore Bazel cache, build, then save
+# Restore Bazel cache from BoringCache
 RUN --mount=type=secret,id=boringcache_token \
     --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "grpc-bazel:/root/.cache/bazel" && \
-    tools/bazel build //examples/cpp/csm:csm_greeter_client && \
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "grpc-bazel:/root/.cache/bazel" || true
+
+# Build gRPC
+RUN tools/bazel build //examples/cpp/csm:csm_greeter_client
+
+# Save Bazel cache to BoringCache
+RUN --mount=type=secret,id=boringcache_token \
+    --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
+    export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
     boringcache save --no-git "$BORINGCACHE_WORKSPACE" "grpc-bazel:/root/.cache/bazel"
 
 RUN cp -rL /workdir/bazel-bin/examples/cpp/csm/csm_greeter_client /artifacts/
