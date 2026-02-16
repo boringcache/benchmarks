@@ -41,7 +41,6 @@ ENV CGO_ENABLED=1
 ENV GOPROXY=https://proxy.golang.org
 ENV GOCACHE=/root/.cache/go-build
 ENV GOMODCACHE=/go/pkg/mod
-ARG TARGETPLATFORM
 ARG BORINGCACHE_WORKSPACE
 
 # Download Alpine-compatible BoringCache CLI
@@ -51,12 +50,12 @@ RUN curl -sSL "https://github.com/boringcache/cli/releases/download/${BORINGCACH
 # Restore Go module cache from BoringCache
 RUN --mount=type=secret,id=boringcache_token \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "hugo-gomod-${TARGETPLATFORM}:/go/pkg/mod" || true
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "hugo-gomod:/go/pkg/mod" || true
 
 # Restore Go build cache from BoringCache
 RUN --mount=type=secret,id=boringcache_token \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "hugo-gobuild-${TARGETPLATFORM}:/root/.cache/go-build" || true
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "hugo-gobuild:/root/.cache/go-build" || true
 
 WORKDIR /go/src/github.com/gohugoio/hugo
 
@@ -70,12 +69,12 @@ EOT
 # Save Go module cache to BoringCache
 RUN --mount=type=secret,id=boringcache_token \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "hugo-gomod-${TARGETPLATFORM}:/go/pkg/mod"
+    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "hugo-gomod:/go/pkg/mod"
 
 # Save Go build cache to BoringCache
 RUN --mount=type=secret,id=boringcache_token \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "hugo-gobuild-${TARGETPLATFORM}:/root/.cache/go-build"
+    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "hugo-gobuild:/root/.cache/go-build"
 
 # dart-sass downloads the dart-sass runtime dependency
 FROM alpine:${ALPINE_VERSION} AS dart-sass
