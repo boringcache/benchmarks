@@ -1,0 +1,55 @@
+name: "PostHog - Actions Cache"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 0"
+
+env:
+  PROJECT_REPO: PostHog/posthog
+  PROJECT_REF: "de9c5d96cec60fea31bee224eaf895b785b65134"
+
+jobs:
+  docker-build:
+    name: Docker Build (GHA layer cache)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          sudo docker image prune --all --force
+          df -h /
+
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image (GHA cache)
+        id: build
+        run: |
+          START=$(date +%s)
+          docker buildx build \
+            --file Dockerfile \
+            --tag posthog-benchmark:latest \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
+            --progress=plain \
+            .
+          END=$(date +%s)
+          echo "duration=$((END - START))" >> "$GITHUB_OUTPUT"
+
+      - name: Report timing
+        run: |
+          echo "## PostHog Docker Build - Actions Cache" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Duration | ${{ steps.build.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | GHA layer cache (type=gha) |" >> "$GITHUB_STEP_SUMMARY"
