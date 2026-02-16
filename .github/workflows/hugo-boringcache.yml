@@ -21,16 +21,6 @@ jobs:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
 
-      - name: Setup BoringCache CLI
-        uses: boringcache/setup-boringcache@v1
-        with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-
-      - name: Copy boringcache binary to build context
-        run: cp "$(which boringcache)" ./boringcache-bin
-
       - name: Get optimized Dockerfile
         run: curl -sSL https://raw.githubusercontent.com/boringcache/benchmarks/main/dockerfiles/hugo/Dockerfile.boringcache -o Dockerfile.boringcache
 

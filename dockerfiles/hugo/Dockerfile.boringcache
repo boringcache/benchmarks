@@ -27,7 +27,7 @@ ARG BORINGCACHE_WORKSPACE="boringcache/benchmarks"
 
 FROM gobuild AS build
 
-RUN apk add clang lld
+RUN apk add clang lld curl
 
 # Set up cross-compilation helpers
 COPY --from=xx / /
@@ -36,6 +36,7 @@ ARG TARGETPLATFORM
 RUN xx-apk add musl-dev gcc g++
 
 ARG HUGO_BUILD_TAGS="extended"
+ARG BORINGCACHE_VERSION="v1.0.0"
 ENV CGO_ENABLED=1
 ENV GOPROXY=https://proxy.golang.org
 ENV GOCACHE=/root/.cache/go-build
@@ -43,15 +44,17 @@ ENV GOMODCACHE=/go/pkg/mod
 ARG TARGETPLATFORM
 ARG BORINGCACHE_WORKSPACE
 
+# Download Alpine-compatible BoringCache CLI
+RUN curl -sSL "https://github.com/boringcache/cli/releases/download/${BORINGCACHE_VERSION}/boringcache-alpine-amd64" \
+    -o /usr/local/bin/boringcache && chmod +x /usr/local/bin/boringcache
+
 # Restore Go module cache from BoringCache
 RUN --mount=type=secret,id=boringcache_token \
-    --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
     boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "hugo-gomod-${TARGETPLATFORM}:/go/pkg/mod" || true
 
 # Restore Go build cache from BoringCache
 RUN --mount=type=secret,id=boringcache_token \
-    --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
     boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "hugo-gobuild-${TARGETPLATFORM}:/root/.cache/go-build" || true
 
@@ -66,13 +69,11 @@ EOT
 
 # Save Go module cache to BoringCache
 RUN --mount=type=secret,id=boringcache_token \
-    --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
     boringcache save --no-git "$BORINGCACHE_WORKSPACE" "hugo-gomod-${TARGETPLATFORM}:/go/pkg/mod"
 
 # Save Go build cache to BoringCache
 RUN --mount=type=secret,id=boringcache_token \
-    --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
     boringcache save --no-git "$BORINGCACHE_WORKSPACE" "hugo-gobuild-${TARGETPLATFORM}:/root/.cache/go-build"
 
