@@ -1,11 +1,11 @@
 # boringcache/benchmarks
 
-Real-world CI builds. No cache vs BoringCache. Same code, same runners, same commits.
+Real-world CI builds. GitHub Actions cache vs BoringCache. Same code, same runners, same commits.
 
 ## Results
 
-| Project | No cache | BoringCache | Faster |
-|---------|----------|-------------|--------|
+| Project | Cold build | BoringCache warm | Faster |
+|---------|------------|------------------|--------|
 | [grpc/grpc](https://github.com/grpc/grpc) | 26m 34s | 1m 46s | **93%** |
 | [mastodon/mastodon](https://github.com/mastodon/mastodon) (Docker) | 9m 24s | 0m 58s | **89%** |
 | [bevyengine/bevy](https://github.com/bevyengine/bevy) | 10m 7s | 1m 20s | **86%** |
@@ -17,7 +17,7 @@ Real-world CI builds. No cache vs BoringCache. Same code, same runners, same com
 | [immich-app/immich](https://github.com/immich-app/immich) | 3m 52s | 1m 42s | **56%** |
 | [calcom/cal.com](https://github.com/calcom/cal.com) | 2m 57s | 1m 40s | **43%** |
 
-Baselines build from scratch every time. BoringCache numbers reflect warm-cache runs.
+Each benchmark workflow runs cold + warm1 + warm2 in sequence on `ubuntu-latest`.
 
 ## What's being benchmarked
 
@@ -63,10 +63,10 @@ Install + build with `nodejs-action`. Turbo and pnpm caches are handled automati
 
 Each project has two workflows:
 
-- **Baseline** — no cache, clean build from scratch
-- **BoringCache** — uses the appropriate [BoringCache action](https://github.com/boringcache)
+- **Actions Cache** — native GitHub Actions cache behavior
+- **BoringCache** — uses BoringCache for cache persistence and restores
 
-Both check out the same pinned commit and run identical build steps on `ubuntu-latest`. The only difference is caching.
+Both check out the same pinned commit and run identical build steps on `ubuntu-latest`.
 
 Benchmarks run weekly and can be triggered manually:
 

@@ -30,10 +30,10 @@ jobs:
         with:
           script: |
             const workflows = [
-              'posthog-baseline.yml', 'posthog-actions-cache.yml', 'posthog-boringcache.yml',
-              'mastodon-docker-baseline.yml', 'mastodon-docker-actions-cache.yml', 'mastodon-docker-boringcache.yml',
-              'grpc-baseline.yml', 'grpc-actions-cache.yml', 'grpc-boringcache.yml',
-              'immich-baseline.yml', 'immich-actions-cache.yml', 'immich-boringcache.yml',
+              'posthog-actions-cache.yml', 'posthog-boringcache.yml',
+              'mastodon-docker-actions-cache.yml', 'mastodon-docker-boringcache.yml',
+              'grpc-actions-cache.yml', 'grpc-boringcache.yml',
+              'immich-actions-cache.yml', 'immich-boringcache.yml',
             ];
             for (const wf of workflows) {
               try {
@@ -55,8 +55,8 @@ jobs:
         with:
           script: |
             const workflows = [
-              'bevy-baseline.yml', 'bevy-actions-cache.yml', 'bevy-boringcache.yml',
-              'zed-baseline.yml', 'zed-actions-cache.yml', 'zed-boringcache.yml',
+              'bevy-actions-cache.yml', 'bevy-boringcache.yml',
+              'zed-actions-cache.yml', 'zed-boringcache.yml',
             ];
             for (const wf of workflows) {
               try {
@@ -78,8 +78,8 @@ jobs:
         with:
           script: |
             const workflows = [
-              'mastodon-ruby-baseline.yml', 'mastodon-ruby-actions-cache.yml', 'mastodon-ruby-boringcache.yml',
-              'discourse-baseline.yml', 'discourse-actions-cache.yml', 'discourse-boringcache.yml',
+              'mastodon-ruby-actions-cache.yml', 'mastodon-ruby-boringcache.yml',
+              'discourse-actions-cache.yml', 'discourse-boringcache.yml',
             ];
             for (const wf of workflows) {
               try {
@@ -101,8 +101,8 @@ jobs:
         with:
           script: |
             const workflows = [
-              'n8n-baseline.yml', 'n8n-actions-cache.yml', 'n8n-boringcache.yml',
-              'calcom-baseline.yml', 'calcom-actions-cache.yml', 'calcom-boringcache.yml',
+              'n8n-actions-cache.yml', 'n8n-boringcache.yml',
+              'calcom-actions-cache.yml', 'calcom-boringcache.yml',
             ];
             for (const wf of workflows) {
               try {
@@ -124,7 +124,7 @@ jobs:
         with:
           script: |
             const workflows = [
-              'hugo-baseline.yml', 'hugo-actions-cache.yml', 'hugo-boringcache.yml',
+              'hugo-actions-cache.yml', 'hugo-boringcache.yml',
             ];
             for (const wf of workflows) {
               try {

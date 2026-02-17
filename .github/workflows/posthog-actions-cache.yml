@@ -13,6 +13,7 @@ env:
   PROJECT_REPO: PostHog/posthog
   PROJECT_REF: "9144e28e3c73b22603e91b23940459eaf15dd147"
   BENCHMARK_ID: posthog
+  BENCHMARK_WORKSPACE: boringcache/benchmarks
 
 jobs:
   docker-build:
@@ -39,6 +40,14 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
+      - name: Setup BoringCache CLI
+        uses: boringcache/setup-boringcache@v1
+        with:
+          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          platform: linux-amd64
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
       - name: Prepare deterministic benchmark Dockerfile
         run: |
           cp .benchmark-config/dockerfiles/posthog/Dockerfile.boringcache Dockerfile.boringcache
@@ -59,8 +68,8 @@ jobs:
           cache_scope="${BENCHMARK_ID}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
 
-      - name: Run cold + warm benchmark builds
-        id: build_runs
+      - name: Run cold build
+        id: cold_build
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
@@ -68,48 +77,125 @@ jobs:
         run: |
           set -euo pipefail
 
-          run_build() {
-            local label="$1"
-            local start end attempt status
+          start="$(date +%s)"
+          attempt=1
+          while true; do
+            set +e
+            DOCKER_BUILDKIT=1 docker buildx build \
+              --builder "$BUILDER" \
+              --file Dockerfile.boringcache \
+              --tag posthog-benchmark:latest \
+              --progress=plain \
+              --cache-from "type=gha,scope=${CACHE_SCOPE}" \
+              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
+              --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
+              --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
+              --build-arg BORINGCACHE_CACHE_PREFIX="${CACHE_SCOPE}-" \
+              .
+            status=$?
+            set -e
 
-            start="$(date +%s)"
-            attempt=1
-            while true; do
-              set +e
-              DOCKER_BUILDKIT=1 docker buildx build \
-                --builder "$BUILDER" \
-                --file Dockerfile.boringcache \
-                --tag posthog-benchmark:latest \
-                --progress=plain \
-                --cache-from "type=gha,scope=${CACHE_SCOPE}" \
-                --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
-                --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
-                --build-arg BORINGCACHE_WORKSPACE="boringcache/benchmarks" \
-                --build-arg BORINGCACHE_CACHE_PREFIX="${CACHE_SCOPE}-" \
-                .
-              status=$?
-              set -e
+            if [[ "$status" -eq 0 ]]; then
+              break
+            fi
 
-              if [[ "$status" -eq 0 ]]; then
-                break
-              fi
+            if [[ "$attempt" -ge 2 ]]; then
+              echo "Cold build failed after retry" >&2
+              exit "$status"
+            fi
 
-              if [[ "$attempt" -ge 2 ]]; then
-                echo "Build ${label} failed after retry" >&2
-                exit "$status"
-              fi
+            attempt=$((attempt + 1))
+            sleep 5
+          done
 
-              attempt=$((attempt + 1))
-              sleep 5
-            done
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
-            end="$(date +%s)"
-            echo "${label}_seconds=$((end - start))" >> "$GITHUB_OUTPUT"
-          }
+      - name: Run warm build #1
+        id: warm1_build
+        env:
+          BUILDER: ${{ steps.buildx.outputs.name }}
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
+          BORINGCACHE_API_TOKEN: benchmark-noop-token
+        run: |
+          set -euo pipefail
 
-          run_build cold
-          run_build warm1
-          run_build warm2
+          start="$(date +%s)"
+          attempt=1
+          while true; do
+            set +e
+            DOCKER_BUILDKIT=1 docker buildx build \
+              --builder "$BUILDER" \
+              --file Dockerfile.boringcache \
+              --tag posthog-benchmark:latest \
+              --progress=plain \
+              --cache-from "type=gha,scope=${CACHE_SCOPE}" \
+              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
+              --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
+              --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
+              --build-arg BORINGCACHE_CACHE_PREFIX="${CACHE_SCOPE}-" \
+              .
+            status=$?
+            set -e
+
+            if [[ "$status" -eq 0 ]]; then
+              break
+            fi
+
+            if [[ "$attempt" -ge 2 ]]; then
+              echo "Warm build #1 failed after retry" >&2
+              exit "$status"
+            fi
+
+            attempt=$((attempt + 1))
+            sleep 5
+          done
+
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Run warm build #2
+        id: warm2_build
+        env:
+          BUILDER: ${{ steps.buildx.outputs.name }}
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
+          BORINGCACHE_API_TOKEN: benchmark-noop-token
+        run: |
+          set -euo pipefail
+
+          start="$(date +%s)"
+          attempt=1
+          while true; do
+            set +e
+            DOCKER_BUILDKIT=1 docker buildx build \
+              --builder "$BUILDER" \
+              --file Dockerfile.boringcache \
+              --tag posthog-benchmark:latest \
+              --progress=plain \
+              --cache-from "type=gha,scope=${CACHE_SCOPE}" \
+              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
+              --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
+              --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
+              --build-arg BORINGCACHE_CACHE_PREFIX="${CACHE_SCOPE}-" \
+              .
+            status=$?
+            set -e
+
+            if [[ "$status" -eq 0 ]]; then
+              break
+            fi
+
+            if [[ "$attempt" -ge 2 ]]; then
+              echo "Warm build #2 failed after retry" >&2
+              exit "$status"
+            fi
+
+            attempt=$((attempt + 1))
+            sleep 5
+          done
+
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
       - name: Measure GHA cache storage usage
         id: cache_size
@@ -127,12 +213,32 @@ jobs:
             --strategy "actions-cache" \
             --project-repo "$PROJECT_REPO" \
             --project-ref "$PROJECT_REF" \
-            --cold-seconds "${{ steps.build_runs.outputs.cold_seconds }}" \
-            --warm1-seconds "${{ steps.build_runs.outputs.warm1_seconds }}" \
-            --warm2-seconds "${{ steps.build_runs.outputs.warm2_seconds }}" \
+            --cold-seconds "${{ steps.cold_build.outputs.seconds }}" \
+            --warm1-seconds "${{ steps.warm1_build.outputs.seconds }}" \
+            --warm2-seconds "${{ steps.warm2_build.outputs.seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \
             --hit-behavior-note "GitHub Actions cache type=gha"
+
+      - name: Save benchmark artifacts to BoringCache
+        id: save_artifacts
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          tag="${BENCHMARK_ID}-artifacts-actions-cache-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          boringcache save --no-git "$BENCHMARK_WORKSPACE" "${tag}:benchmark-results"
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+
+      - name: Verify benchmark artifact restore from BoringCache
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          restore_dir="/tmp/benchmark-results-restore"
+          rm -rf "$restore_dir"
+          mkdir -p "$restore_dir"
+          boringcache restore --no-git "$BENCHMARK_WORKSPACE" "${{ steps.save_artifacts.outputs.tag }}:${restore_dir}"
+          test -n "$(find "$restore_dir" -type f -name '*.json' -print -quit)"
+          test -n "$(find "$restore_dir" -type f -name '*.md' -print -quit)"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
