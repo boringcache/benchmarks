@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: calcom/cal.com
-  PROJECT_REF: "0a2d0854e74eee7e2d86bea60e8e6c4c47e105af"
+  PROJECT_REF: "4c73695d3ae3dd4dbb0b364aaf406a94fa65d699"
 
 jobs:
   install-build:

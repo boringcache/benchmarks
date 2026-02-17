@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: n8n-io/n8n
-  PROJECT_REF: "f08c004e0d202fb339b6bfa00674a65b2051df2b"
+  PROJECT_REF: "1bc307990d19a37639ec25736748dda1cd42c625"
 
 jobs:
   pnpm-install:

@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: PostHog/posthog
-  PROJECT_REF: "de9c5d96cec60fea31bee224eaf895b785b65134"
+  PROJECT_REF: "9144e28e3c73b22603e91b23940459eaf15dd147"
 
 jobs:
   docker-build:
@@ -27,6 +27,13 @@ jobs:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
 
+      - name: Checkout benchmark dockerfiles
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
       - name: Setup BoringCache CLI
         uses: boringcache/setup-boringcache@v1
         with:
@@ -41,7 +48,7 @@ jobs:
           echo '!boringcache-bin' >> .dockerignore
 
       - name: Get optimized Dockerfile
-        run: curl -sSL https://raw.githubusercontent.com/boringcache/benchmarks/main/dockerfiles/posthog/Dockerfile.boringcache -o Dockerfile.boringcache
+        run: cp .benchmark-config/dockerfiles/posthog/Dockerfile.boringcache Dockerfile.boringcache
 
       - name: Build with BoringCache (layer cache + deps inside build)
         id: build
@@ -54,7 +61,7 @@ jobs:
           push: false
           load: false
           cache-tag: posthog
-
+          cache-mode: min
           secrets: |
             id=boringcache_token,env=BORINGCACHE_API_TOKEN
           build-args: |

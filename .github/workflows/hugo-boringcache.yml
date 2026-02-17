@@ -21,6 +21,13 @@ jobs:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
 
+      - name: Checkout benchmark dockerfiles
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
       - name: Setup BoringCache CLI
         uses: boringcache/setup-boringcache@v1
         with:
@@ -35,7 +42,7 @@ jobs:
           echo '!boringcache-bin' >> .dockerignore
 
       - name: Get optimized Dockerfile
-        run: curl -sSL https://raw.githubusercontent.com/boringcache/benchmarks/main/dockerfiles/hugo/Dockerfile.boringcache -o Dockerfile.boringcache
+        run: cp .benchmark-config/dockerfiles/hugo/Dockerfile.boringcache Dockerfile.boringcache
 
       - name: Build with BoringCache (layer cache + dep cache inside build)
         id: build

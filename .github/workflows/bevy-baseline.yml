@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: bevyengine/bevy
-  PROJECT_REF: "d1c3557d119ad9f35feaa509d1a587a65821de14"
+  PROJECT_REF: "05cae875fe4dbcade81b7cfef13163532a884023"
 
 jobs:
   cargo-build:

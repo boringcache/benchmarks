@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: immich-app/immich
-  PROJECT_REF: "906c38273f04bbcf059f5e90775c4408e05cf1ef"
+  PROJECT_REF: "06d487782e902e896ac14271ae05785a4310694b"
 
 jobs:
   docker-build:

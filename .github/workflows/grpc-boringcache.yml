@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: grpc/grpc
-  PROJECT_REF: "4a3be9d1d41f5aa210288f481749bc543d875892"
+  PROJECT_REF: "456a47b64a009b92d8131cc9338ffd47ffeadad6"
 
 jobs:
   docker-build:
@@ -21,6 +21,13 @@ jobs:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
           submodules: true
+
+      - name: Checkout benchmark dockerfiles
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
 
       - name: Setup BoringCache CLI
         uses: boringcache/setup-boringcache@v1
@@ -36,7 +43,7 @@ jobs:
           echo '!boringcache-bin' >> .dockerignore
 
       - name: Get optimized Dockerfile
-        run: curl -sSL https://raw.githubusercontent.com/boringcache/benchmarks/main/dockerfiles/grpc/Dockerfile.boringcache -o Dockerfile.boringcache
+        run: cp .benchmark-config/dockerfiles/grpc/Dockerfile.boringcache Dockerfile.boringcache
 
       - name: Build with BoringCache (layer cache min + Bazel cache inside build)
         id: build

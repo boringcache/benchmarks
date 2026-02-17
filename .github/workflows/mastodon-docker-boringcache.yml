@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_REPO: mastodon/mastodon
-  PROJECT_REF: "d3cef824018a79ba383deab85e09c31d2673d2c3"
+  PROJECT_REF: "0b66e744263a4af1f14d03886ea2a9da4ca156db"
 
 jobs:
   docker-build:
@@ -21,6 +21,13 @@ jobs:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
 
+      - name: Checkout benchmark dockerfiles
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
       - name: Setup BoringCache CLI
         uses: boringcache/setup-boringcache@v1
         with:
@@ -33,7 +40,7 @@ jobs:
         run: cp "$(which boringcache)" ./boringcache-bin
 
       - name: Get optimized Dockerfile
-        run: curl -sSL https://raw.githubusercontent.com/boringcache/benchmarks/main/dockerfiles/mastodon/Dockerfile.boringcache -o Dockerfile.boringcache
+        run: cp .benchmark-config/dockerfiles/mastodon/Dockerfile.boringcache Dockerfile.boringcache
 
       - name: Build with BoringCache (layer cache + dep cache inside build)
         id: build
