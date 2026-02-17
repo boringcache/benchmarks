@@ -111,7 +111,7 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
-      - name: Run warm build #1
+      - name: Run warm build 1
         id: warm1_build
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
@@ -143,7 +143,7 @@ jobs:
             fi
 
             if [[ "$attempt" -ge 2 ]]; then
-              echo "Warm build #1 failed after retry" >&2
+              echo "Warm build 1 failed after retry" >&2
               exit "$status"
             fi
 
@@ -154,7 +154,7 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
-      - name: Run warm build #2
+      - name: Run warm build 2
         id: warm2_build
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
@@ -186,7 +186,7 @@ jobs:
             fi
 
             if [[ "$attempt" -ge 2 ]]; then
-              echo "Warm build #2 failed after retry" >&2
+              echo "Warm build 2 failed after retry" >&2
               exit "$status"
             fi
 
