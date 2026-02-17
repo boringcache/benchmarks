@@ -201,20 +201,24 @@ jobs:
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
         run: |
-          tag="${BENCHMARK_ID}-artifacts-boringcache-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-          boringcache save --no-git "$BENCHMARK_WORKSPACE" "${tag}:benchmark-results"
-          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+          base_tag="${BENCHMARK_ID}-artifacts-boringcache-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          json_tag="${base_tag}-json"
+          md_tag="${base_tag}-md"
+          boringcache save --no-git "$BENCHMARK_WORKSPACE" "${json_tag}:${{ steps.artifact_files.outputs.json_path }},${md_tag}:${{ steps.artifact_files.outputs.md_path }}"
+          echo "json_tag=${json_tag}" >> "$GITHUB_OUTPUT"
+          echo "md_tag=${md_tag}" >> "$GITHUB_OUTPUT"
 
       - name: Verify benchmark artifact restore from BoringCache
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
         run: |
-          restore_dir="/tmp/benchmark-results-restore"
-          rm -rf "$restore_dir"
-          mkdir -p "$restore_dir"
-          boringcache restore --no-git "$BENCHMARK_WORKSPACE" "${{ steps.save_artifacts.outputs.tag }}:${restore_dir}"
-          test -n "$(find "$restore_dir" -type f -name '*.json' -print -quit)"
-          test -n "$(find "$restore_dir" -type f -name '*.md' -print -quit)"
+          json_restore_dir="/tmp/benchmark-results-json-restore"
+          md_restore_dir="/tmp/benchmark-results-md-restore"
+          rm -rf "$json_restore_dir" "$md_restore_dir"
+          mkdir -p "$json_restore_dir" "$md_restore_dir"
+          boringcache restore --no-git "$BENCHMARK_WORKSPACE" "${{ steps.save_artifacts.outputs.json_tag }}:${json_restore_dir},${{ steps.save_artifacts.outputs.md_tag }}:${md_restore_dir}"
+          test -n "$(find "$json_restore_dir" -type f -name '*.json' -print -quit)"
+          test -n "$(find "$md_restore_dir" -type f -name '*.md' -print -quit)"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
