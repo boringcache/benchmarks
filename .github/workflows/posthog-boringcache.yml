@@ -150,6 +150,8 @@ jobs:
 
       - name: Measure BoringCache storage usage
         id: cache_size
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
         run: |
           tags_csv="${{ steps.scope.outputs.cache_prefix }}posthog-pnpm,${{ steps.scope.outputs.cache_prefix }}posthog-turbo,${{ steps.scope.outputs.cache_prefix }}posthog-python,${{ steps.scope.outputs.cache_prefix }}posthog-playwright,${{ steps.scope.outputs.cache_scope }}"
           bytes="$(.benchmark-config/scripts/sum-boringcache-check-sizes.sh "$BENCHMARK_WORKSPACE" "$tags_csv")"
