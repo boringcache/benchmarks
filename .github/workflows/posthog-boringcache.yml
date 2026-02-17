@@ -118,7 +118,7 @@ jobs:
                 --tag posthog-benchmark:latest \
                 --progress=plain \
                 --cache-from "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},registry.insecure=true" \
-                --cache-to "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},mode=min,registry.insecure=true" \
+                --cache-to "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},mode=max,registry.insecure=true" \
                 --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
                 --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
                 --build-arg BORINGCACHE_CACHE_PREFIX="$CACHE_PREFIX" \

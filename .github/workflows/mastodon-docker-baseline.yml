@@ -41,6 +41,7 @@ jobs:
           exit 0
           SH
           chmod +x ./boringcache-bin
+          echo '!boringcache-bin' >> .dockerignore
 
           cache_scope="${BENCHMARK_ID}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"

@@ -41,6 +41,7 @@ jobs:
           exit 0
           SH
           chmod +x ./boringcache-bin
+          echo '!boringcache-bin' >> .dockerignore
 
       - name: Set up Docker Buildx
         id: buildx
