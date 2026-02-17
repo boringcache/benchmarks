@@ -13,6 +13,8 @@ cache_storage_source=""
 bytes_uploaded=""
 bytes_downloaded=""
 hit_behavior_note=""
+internal_only_warm_seconds=""
+stale_docker_seconds=""
 output_dir="benchmark-results"
 
 while [[ $# -gt 0 ]]; do
@@ -65,6 +67,14 @@ while [[ $# -gt 0 ]]; do
       hit_behavior_note="$2"
       shift 2
       ;;
+    --internal-only-warm-seconds)
+      internal_only_warm_seconds="$2"
+      shift 2
+      ;;
+    --stale-docker-seconds)
+      stale_docker_seconds="$2"
+      shift 2
+      ;;
     --output-dir)
       output_dir="$2"
       shift 2
@@ -104,6 +114,12 @@ fi
 if [[ -n "$bytes_downloaded" ]] && ! [[ "$bytes_downloaded" =~ ^[0-9]+$ ]]; then
   bytes_downloaded=""
 fi
+if [[ -n "$internal_only_warm_seconds" ]] && ! [[ "$internal_only_warm_seconds" =~ ^[0-9]+$ ]]; then
+  internal_only_warm_seconds=""
+fi
+if [[ -n "$stale_docker_seconds" ]] && ! [[ "$stale_docker_seconds" =~ ^[0-9]+$ ]]; then
+  stale_docker_seconds=""
+fi
 
 warm_count=0
 warm_total=0
@@ -124,7 +140,50 @@ else
   improvement_pct="null"
 fi
 
+if [[ -n "$internal_only_warm_seconds" ]]; then
+  internal_only_improvement_pct=$(awk -v cold="$cold_seconds" -v warm="$internal_only_warm_seconds" 'BEGIN { if (cold <= 0) { print "0.00" } else { printf "%.2f", ((cold - warm) / cold) * 100 } }')
+else
+  internal_only_improvement_pct="null"
+fi
+
+if [[ -n "$stale_docker_seconds" ]]; then
+  stale_docker_improvement_pct=$(awk -v cold="$cold_seconds" -v stale="$stale_docker_seconds" 'BEGIN { if (cold <= 0) { print "0.00" } else { printf "%.2f", ((cold - stale) / cold) * 100 } }')
+else
+  stale_docker_improvement_pct="null"
+fi
+
 cache_storage_mib=$(awk -v bytes="$cache_storage_bytes" 'BEGIN { printf "%.2f", bytes / 1048576 }')
+
+to_md_value() {
+  local value="$1"
+  if [[ -z "$value" || "$value" == "null" ]]; then
+    echo "n/a"
+  else
+    echo "$value"
+  fi
+}
+
+to_md_percent() {
+  local value="$1"
+  if [[ -z "$value" || "$value" == "null" ]]; then
+    echo "n/a"
+  else
+    echo "${value}%"
+  fi
+}
+
+warm_avg_md="$(to_md_value "$warm_avg")"
+improvement_pct_md="$(to_md_percent "$improvement_pct")"
+stale_docker_improvement_pct_md="$(to_md_percent "$stale_docker_improvement_pct")"
+internal_only_improvement_pct_md="$(to_md_percent "$internal_only_improvement_pct")"
+warm1_seconds_md="$(to_md_value "$warm1_seconds")"
+warm2_seconds_md="$(to_md_value "$warm2_seconds")"
+stale_docker_seconds_md="$(to_md_value "$stale_docker_seconds")"
+internal_only_warm_seconds_md="$(to_md_value "$internal_only_warm_seconds")"
+if [[ "$warm1_seconds_md" != "n/a" ]]; then warm1_seconds_md="${warm1_seconds_md}s"; fi
+if [[ "$warm2_seconds_md" != "n/a" ]]; then warm2_seconds_md="${warm2_seconds_md}s"; fi
+if [[ "$stale_docker_seconds_md" != "n/a" ]]; then stale_docker_seconds_md="${stale_docker_seconds_md}s"; fi
+if [[ "$internal_only_warm_seconds_md" != "n/a" ]]; then internal_only_warm_seconds_md="${internal_only_warm_seconds_md}s"; fi
 
 mkdir -p "$output_dir"
 json_path="$output_dir/${benchmark}-${strategy}.json"
@@ -143,11 +202,20 @@ cat > "$json_path" <<JSON
   "runs": {
     "cold_seconds": $(json_num_or_null "$cold_seconds"),
     "warm1_seconds": $(json_num_or_null "$warm1_seconds"),
-    "warm2_seconds": $(json_num_or_null "$warm2_seconds")
+    "warm2_seconds": $(json_num_or_null "$warm2_seconds"),
+    "stale_docker_seconds": $(json_num_or_null "$stale_docker_seconds")
   },
   "speed": {
     "warm_average_seconds": $warm_avg,
     "warm_vs_cold_improvement_pct": $improvement_pct
+  },
+  "stale_docker_cache": {
+    "seconds": $(json_num_or_null "$stale_docker_seconds"),
+    "vs_cold_improvement_pct": $stale_docker_improvement_pct
+  },
+  "internal_only": {
+    "warm_no_docker_cache_seconds": $(json_num_or_null "$internal_only_warm_seconds"),
+    "warm_no_docker_cache_vs_cold_improvement_pct": $internal_only_improvement_pct
   },
   "cache": {
     "storage_bytes": $cache_storage_bytes,
@@ -173,10 +241,14 @@ cat > "$md_path" <<MD
 | Project | \`${project_repo}\` |
 | Commit | \`${project_ref}\` |
 | Cold build | ${cold_seconds}s |
-| Warm build #1 | ${warm1_seconds:-n/a}s |
-| Warm build #2 | ${warm2_seconds:-n/a}s |
-| Warm avg | ${warm_avg} |
-| Warm vs cold | ${improvement_pct}% |
+| Warm build #1 | ${warm1_seconds_md} |
+| Warm build #2 | ${warm2_seconds_md} |
+| Warm avg | ${warm_avg_md} |
+| Warm vs cold | ${improvement_pct_md} |
+| Stale Docker cache run | ${stale_docker_seconds_md} |
+| Stale Docker cache vs cold | ${stale_docker_improvement_pct_md} |
+| Internal-only warm (no Docker cache) | ${internal_only_warm_seconds_md} |
+| Internal-only vs cold | ${internal_only_improvement_pct_md} |
 | Bytes uploaded | ${bytes_uploaded:-n/a} |
 | Bytes downloaded | ${bytes_downloaded:-n/a} |
 | Cache storage | ${cache_storage_mib} MiB (${cache_storage_bytes} bytes) |

@@ -18,6 +18,10 @@ Real-world CI builds. GitHub Actions cache vs BoringCache. Same code, same runne
 | [calcom/cal.com](https://github.com/calcom/cal.com) | 2m 57s | 1m 40s | **43%** |
 
 Each benchmark workflow runs cold + warm1 + warm2 in sequence on `ubuntu-latest`.
+Docker benchmark workflows also include one extra stale Docker cache run (`--no-cache`) so we can compare:
+- warm cache speedup
+- internal-only speedup (BoringCache with Docker layer cache disabled)
+- stale/no-layer-cache behavior across AC vs BC
 
 Tag naming convention for benchmark Dockerfiles:
 - use logical cache tags only (`mastodon-gems`, `ffmpeg-8.0`, `posthog-pnpm`)
@@ -79,6 +83,20 @@ Benchmarks run weekly and can be triggered manually:
 gh workflow run "PostHog - BoringCache"
 gh workflow run "Run All Benchmarks"
 ```
+
+## Web index JSON
+
+This repository publishes a web-consumable benchmark index at:
+
+`data/latest/index.json`
+
+The `Publish Benchmark Index` workflow refreshes this file from the latest successful benchmark artifacts and commits changes to `main`.
+
+For Mastodon and PostHog, the index publisher also infers latest Depot `Benchmark` run timings from:
+- `depot/benchmark-mastodon`
+- `depot/benchmark-posthog`
+
+These are added as optional metadata fields in `index.json` for comparison use without changing the current card schema.
 
 ## License
 

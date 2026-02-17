@@ -197,6 +197,47 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
+      - name: Run stale Docker cache build
+        id: stale_docker_build
+        env:
+          BUILDER: ${{ steps.buildx.outputs.name }}
+          BORINGCACHE_API_TOKEN: benchmark-noop-token
+        run: |
+          set -euo pipefail
+
+          start="$(date +%s)"
+          attempt=1
+          while true; do
+            set +e
+            DOCKER_BUILDKIT=1 docker buildx build \
+              --builder "$BUILDER" \
+              --file Dockerfile.boringcache \
+              --tag posthog-benchmark:latest \
+              --progress=plain \
+              --no-cache \
+              --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
+              --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
+              --build-arg BORINGCACHE_CACHE_PREFIX="${{ steps.scope.outputs.cache_scope }}-" \
+              .
+            status=$?
+            set -e
+
+            if [[ "$status" -eq 0 ]]; then
+              break
+            fi
+
+            if [[ "$attempt" -ge 2 ]]; then
+              echo "Stale Docker cache build failed after retry" >&2
+              exit "$status"
+            fi
+
+            attempt=$((attempt + 1))
+            sleep 5
+          done
+
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
       - name: Measure GHA cache storage usage
         id: cache_size
         env:
@@ -216,33 +257,10 @@ jobs:
             --cold-seconds "${{ steps.cold_build.outputs.seconds }}" \
             --warm1-seconds "${{ steps.warm1_build.outputs.seconds }}" \
             --warm2-seconds "${{ steps.warm2_build.outputs.seconds }}" \
+            --stale-docker-seconds "${{ steps.stale_docker_build.outputs.seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \
-            --hit-behavior-note "GitHub Actions cache type=gha"
-
-      - name: Save benchmark artifacts to BoringCache
-        id: save_artifacts
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-        run: |
-          base_tag="${BENCHMARK_ID}-artifacts-actions-cache-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-          json_tag="${base_tag}-json"
-          md_tag="${base_tag}-md"
-          boringcache save --no-git "$BENCHMARK_WORKSPACE" "${json_tag}:${{ steps.artifact_files.outputs.json_path }},${md_tag}:${{ steps.artifact_files.outputs.md_path }}"
-          echo "json_tag=${json_tag}" >> "$GITHUB_OUTPUT"
-          echo "md_tag=${md_tag}" >> "$GITHUB_OUTPUT"
-
-      - name: Verify benchmark artifact restore from BoringCache
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-        run: |
-          json_restore_dir="/tmp/benchmark-results-json-restore"
-          md_restore_dir="/tmp/benchmark-results-md-restore"
-          rm -rf "$json_restore_dir" "$md_restore_dir"
-          mkdir -p "$json_restore_dir" "$md_restore_dir"
-          boringcache restore --no-git "$BENCHMARK_WORKSPACE" "${{ steps.save_artifacts.outputs.json_tag }}:${json_restore_dir},${{ steps.save_artifacts.outputs.md_tag }}:${md_restore_dir}"
-          test -n "$(find "$json_restore_dir" -type f -name '*.json' -print -quit)"
-          test -n "$(find "$md_restore_dir" -type f -name '*.md' -print -quit)"
+            --hit-behavior-note "GitHub Actions cache type=gha; stale Docker run uses --no-cache with boringcache no-op"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4

@@ -1,0 +1,67 @@
+{
+  "entries": [
+    {
+      "name": "gRPC",
+      "logo": "grpc",
+      "repo": "grpc/grpc",
+      "step": "Docker build (Bazel)",
+      "before": "26m 34s",
+      "after": "1m 46s",
+      "faster": "93"
+    },
+    {
+      "name": "Mastodon",
+      "logo": "mastodon",
+      "repo": "mastodon/mastodon",
+      "step": "Docker build (Ruby+Node)",
+      "before": "9m 24s",
+      "after": "0m 58s",
+      "faster": "89"
+    },
+    {
+      "name": "Bevy",
+      "logo": "bevy",
+      "repo": "bevyengine/bevy",
+      "step": "cargo build",
+      "before": "10m 7s",
+      "after": "1m 20s",
+      "faster": "86"
+    },
+    {
+      "name": "n8n",
+      "logo": "n8n",
+      "repo": "n8n-io/n8n",
+      "step": "Docker build (pnpm+turbo)",
+      "before": "5m 37s",
+      "after": "0m 56s",
+      "faster": "83"
+    },
+    {
+      "name": "Zed",
+      "logo": "zed",
+      "repo": "zed-industries/zed",
+      "step": "cargo build",
+      "before": "5m 18s",
+      "after": "1m 30s",
+      "faster": "71"
+    },
+    {
+      "name": "PostHog",
+      "logo": "posthog",
+      "repo": "PostHog/posthog",
+      "step": "Docker build (full stack)",
+      "before": "8m 6s",
+      "after": "3m 6s",
+      "faster": "62"
+    },
+    {
+      "name": "Discourse",
+      "logo": "discourse",
+      "repo": "discourse/discourse",
+      "step": "bundle install",
+      "before": "1m 48s",
+      "after": "0m 44s",
+      "faster": "59"
+    }
+  ]
+}
