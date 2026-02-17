@@ -18,124 +18,158 @@ on:
 
 permissions:
   actions: write
+  contents: read
 
 jobs:
-  trigger:
-    name: Trigger benchmark workflows
+  trigger-and-wait:
+    name: Trigger and wait for benchmark workflows
     runs-on: ubuntu-latest
+    timeout-minutes: 360
     steps:
-      - name: Trigger Docker benchmarks
-        if: inputs.category == 'all' || inputs.category == 'docker'
+      - name: Dispatch selected benchmark workflows
+        id: dispatch
         uses: actions/github-script@v7
         with:
           script: |
-            const workflows = [
-              'posthog-actions-cache.yml', 'posthog-boringcache.yml',
-              'mastodon-docker-actions-cache.yml', 'mastodon-docker-boringcache.yml',
-              'grpc-actions-cache.yml', 'grpc-boringcache.yml',
-              'immich-actions-cache.yml', 'immich-boringcache.yml',
-            ];
-            for (const wf of workflows) {
+            const category = '${{ inputs.category || 'all' }}';
+            const groups = {
+              docker: [
+                'posthog-actions-cache.yml', 'posthog-boringcache.yml',
+                'mastodon-docker-actions-cache.yml', 'mastodon-docker-boringcache.yml',
+                'grpc-actions-cache.yml', 'grpc-boringcache.yml',
+                'immich-actions-cache.yml', 'immich-boringcache.yml',
+              ],
+              rust: [
+                'bevy-actions-cache.yml', 'bevy-boringcache.yml',
+                'zed-actions-cache.yml', 'zed-boringcache.yml',
+              ],
+              ruby: [
+                'mastodon-ruby-actions-cache.yml', 'mastodon-ruby-boringcache.yml',
+                'discourse-actions-cache.yml', 'discourse-boringcache.yml',
+              ],
+              nodejs: [
+                'n8n-actions-cache.yml', 'n8n-boringcache.yml',
+                'calcom-actions-cache.yml', 'calcom-boringcache.yml',
+              ],
+              go: [
+                'hugo-actions-cache.yml', 'hugo-boringcache.yml',
+              ],
+            };
+
+            let selected = [];
+            if (category === 'all') {
+              selected = Object.values(groups).flat();
+            } else {
+              selected = groups[category] || [];
+            }
+            selected = [...new Set(selected)];
+
+            const startedAt = new Date().toISOString();
+            core.info(`Category: ${category}`);
+            core.info(`Dispatching ${selected.length} workflow(s)`);
+
+            for (const workflowId of selected) {
               try {
                 await github.rest.actions.createWorkflowDispatch({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  workflow_id: wf,
+                  workflow_id: workflowId,
                   ref: 'main',
                 });
-                console.log(`Triggered ${wf}`);
-              } catch (e) {
-                console.log(`Failed to trigger ${wf}: ${e.message}`);
+                core.info(`Triggered ${workflowId}`);
+              } catch (error) {
+                core.warning(`Failed to trigger ${workflowId}: ${error.message}`);
+                throw error;
               }
             }
 
-      - name: Trigger Rust benchmarks
-        if: inputs.category == 'all' || inputs.category == 'rust'
+            core.setOutput('workflows', JSON.stringify(selected));
+            core.setOutput('started_at', startedAt);
+            core.setOutput('category', category);
+
+      - name: Wait for all dispatched workflows to complete
         uses: actions/github-script@v7
+        env:
+          WORKFLOWS_JSON: ${{ steps.dispatch.outputs.workflows }}
+          STARTED_AT: ${{ steps.dispatch.outputs.started_at }}
         with:
           script: |
-            const workflows = [
-              'bevy-actions-cache.yml', 'bevy-boringcache.yml',
-              'zed-actions-cache.yml', 'zed-boringcache.yml',
-            ];
-            for (const wf of workflows) {
-              try {
-                await github.rest.actions.createWorkflowDispatch({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  workflow_id: wf,
-                  ref: 'main',
-                });
-                console.log(`Triggered ${wf}`);
-              } catch (e) {
-                console.log(`Failed to trigger ${wf}: ${e.message}`);
+            const workflows = JSON.parse(process.env.WORKFLOWS_JSON || '[]');
+            const startedAt = new Date(process.env.STARTED_AT);
+            const timeoutMs = 5 * 60 * 60 * 1000;
+            const pollMs = 30 * 1000;
+            const deadline = Date.now() + timeoutMs;
+
+            if (workflows.length === 0) {
+              core.info('No workflows selected. Nothing to wait for.');
+              return;
+            }
+
+            const runsByWorkflow = new Map();
+
+            async function latestTriggeredRun(workflowId) {
+              const response = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: workflowId,
+                event: 'workflow_dispatch',
+                branch: 'main',
+                per_page: 50,
+              });
+
+              const candidates = response.data.workflow_runs
+                .filter((run) => new Date(run.created_at) >= startedAt)
+                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+              return candidates[0] || null;
+            }
+
+            while (Date.now() < deadline) {
+              let allCompleted = true;
+              const statusLines = [];
+
+              for (const workflowId of workflows) {
+                const run = await latestTriggeredRun(workflowId);
+                if (!run) {
+                  allCompleted = false;
+                  statusLines.push(`${workflowId}: waiting for run to appear`);
+                  continue;
+                }
+
+                runsByWorkflow.set(workflowId, run);
+                statusLines.push(`${workflowId}: ${run.status}/${run.conclusion || 'pending'} (${run.html_url})`);
+
+                if (run.status !== 'completed') {
+                  allCompleted = false;
+                }
+              }
+
+              core.info(statusLines.join('\n'));
+
+              if (allCompleted) {
+                break;
+              }
+
+              await new Promise((resolve) => setTimeout(resolve, pollMs));
+            }
+
+            if (runsByWorkflow.size !== workflows.length) {
+              const missing = workflows.filter((workflowId) => !runsByWorkflow.has(workflowId));
+              core.setFailed(`Timed out waiting for workflow runs to appear: ${missing.join(', ')}`);
+              return;
+            }
+
+            const failed = [];
+            for (const workflowId of workflows) {
+              const run = runsByWorkflow.get(workflowId);
+              if (run.status !== 'completed' || run.conclusion !== 'success') {
+                failed.push(`${workflowId}: ${run.status}/${run.conclusion || 'pending'} (${run.html_url})`);
               }
             }
 
-      - name: Trigger Ruby benchmarks
-        if: inputs.category == 'all' || inputs.category == 'ruby'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const workflows = [
-              'mastodon-ruby-actions-cache.yml', 'mastodon-ruby-boringcache.yml',
-              'discourse-actions-cache.yml', 'discourse-boringcache.yml',
-            ];
-            for (const wf of workflows) {
-              try {
-                await github.rest.actions.createWorkflowDispatch({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  workflow_id: wf,
-                  ref: 'main',
-                });
-                console.log(`Triggered ${wf}`);
-              } catch (e) {
-                console.log(`Failed to trigger ${wf}: ${e.message}`);
-              }
+            if (failed.length > 0) {
+              core.setFailed(`One or more benchmark workflows failed:\n${failed.join('\n')}`);
+              return;
             }
 
-      - name: Trigger Node.js benchmarks
-        if: inputs.category == 'all' || inputs.category == 'nodejs'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const workflows = [
-              'n8n-actions-cache.yml', 'n8n-boringcache.yml',
-              'calcom-actions-cache.yml', 'calcom-boringcache.yml',
-            ];
-            for (const wf of workflows) {
-              try {
-                await github.rest.actions.createWorkflowDispatch({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  workflow_id: wf,
-                  ref: 'main',
-                });
-                console.log(`Triggered ${wf}`);
-              } catch (e) {
-                console.log(`Failed to trigger ${wf}: ${e.message}`);
-              }
-            }
-
-      - name: Trigger Go benchmarks
-        if: inputs.category == 'all' || inputs.category == 'go'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const workflows = [
-              'hugo-actions-cache.yml', 'hugo-boringcache.yml',
-            ];
-            for (const wf of workflows) {
-              try {
-                await github.rest.actions.createWorkflowDispatch({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  workflow_id: wf,
-                  ref: 'main',
-                });
-                console.log(`Triggered ${wf}`);
-              } catch (e) {
-                console.log(`Failed to trigger ${wf}: ${e.message}`);
-              }
-            }
+            core.info('All dispatched benchmark workflows completed successfully.');
