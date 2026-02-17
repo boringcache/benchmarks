@@ -19,6 +19,11 @@ Real-world CI builds. GitHub Actions cache vs BoringCache. Same code, same runne
 
 Each benchmark workflow runs cold + warm1 + warm2 in sequence on `ubuntu-latest`.
 
+Tag naming convention for benchmark Dockerfiles:
+- use logical cache tags only (`mastodon-gems`, `ffmpeg-8.0`, `posthog-pnpm`)
+- do not embed `${TARGETPLATFORM}` or values like `linux/amd64` in tag names
+- let BoringCache CLI append platform suffixes automatically
+
 ## What's being benchmarked
 
 ### Docker Builds
