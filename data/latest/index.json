@@ -14,9 +14,30 @@
       "logo": "mastodon",
       "repo": "mastodon/mastodon",
       "step": "Docker build (Ruby+Node)",
-      "before": "9m 24s",
-      "after": "0m 58s",
-      "faster": "89"
+      "before": "9m 55s",
+      "after": "0m 6s",
+      "faster": "99",
+      "before_seconds": 595.0,
+      "after_seconds": 5.5,
+      "metrics": {
+        "stale_docker_seconds": null,
+        "internal_only_warm_seconds": null
+      },
+      "depot": {
+        "repo": "depot/benchmark-mastodon",
+        "run_id": 22110641357,
+        "run_url": "https://github.com/depot/benchmark-mastodon/actions/runs/22110641357",
+        "docker_seconds": 31.0,
+        "docker_text": "0m 31s",
+        "docker_job_url": "https://github.com/depot/benchmark-mastodon/actions/runs/22110641357/job/63905625822",
+        "depot_seconds": 21.0,
+        "depot_text": "0m 21s",
+        "depot_job_url": "https://github.com/depot/benchmark-mastodon/actions/runs/22110641357/job/63905625807"
+      },
+      "comparison": {
+        "warm_vs_depot_docker_delta_seconds": 25.5,
+        "warm_vs_depot_docker_improvement_pct": 82.26
+      }
     },
     {
       "name": "Bevy",
@@ -50,9 +71,30 @@
       "logo": "posthog",
       "repo": "PostHog/posthog",
       "step": "Docker build (full stack)",
-      "before": "8m 6s",
-      "after": "3m 6s",
-      "faster": "62"
+      "before": "13m 12s",
+      "after": "0m 8s",
+      "faster": "99",
+      "before_seconds": 792.0,
+      "after_seconds": 7.5,
+      "metrics": {
+        "stale_docker_seconds": null,
+        "internal_only_warm_seconds": null
+      },
+      "depot": {
+        "repo": "depot/benchmark-posthog",
+        "run_id": 22114894923,
+        "run_url": "https://github.com/depot-demo-org/benchmark-posthog/actions/runs/22114894923",
+        "docker_seconds": 3698.0,
+        "docker_text": "61m 38s",
+        "docker_job_url": "https://github.com/depot-demo-org/benchmark-posthog/actions/runs/22114894923/job/63920331913",
+        "depot_seconds": 370.0,
+        "depot_text": "6m 10s",
+        "depot_job_url": "https://github.com/depot-demo-org/benchmark-posthog/actions/runs/22114894923/job/63920331790"
+      },
+      "comparison": {
+        "warm_vs_depot_docker_delta_seconds": 3690.5,
+        "warm_vs_depot_docker_improvement_pct": 99.8
+      }
     },
     {
       "name": "Discourse",
