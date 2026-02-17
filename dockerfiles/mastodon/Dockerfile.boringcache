@@ -133,7 +133,7 @@ WORKDIR /usr/local/libvips/src
 RUN --mount=type=secret,id=boringcache_token \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}libvips-${VIPS_VERSION}-${TARGETPLATFORM}:/usr/local/libvips" 
+  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}libvips-${VIPS_VERSION}:/usr/local/libvips"
 # Only build if not restored from cache
 RUN \
   if [ ! -f /usr/local/libvips/lib/libvips.so ]; then \
@@ -152,7 +152,7 @@ RUN \
 RUN --mount=type=secret,id=boringcache_token \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}libvips-${VIPS_VERSION}-${TARGETPLATFORM}:/usr/local/libvips" 
+  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}libvips-${VIPS_VERSION}:/usr/local/libvips"
 
 # =============================================================
 # ffmpeg - cached with BoringCache
@@ -171,7 +171,7 @@ WORKDIR /usr/local/ffmpeg/src
 RUN --mount=type=secret,id=boringcache_token \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}ffmpeg-${FFMPEG_VERSION}-${TARGETPLATFORM}:/usr/local/ffmpeg" 
+  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}ffmpeg-${FFMPEG_VERSION}:/usr/local/ffmpeg"
 # Only build if not restored from cache
 RUN \
   if [ ! -f /usr/local/ffmpeg/bin/ffmpeg ]; then \
@@ -200,7 +200,7 @@ RUN \
 RUN --mount=type=secret,id=boringcache_token \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}ffmpeg-${FFMPEG_VERSION}-${TARGETPLATFORM}:/usr/local/ffmpeg" 
+  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}ffmpeg-${FFMPEG_VERSION}:/usr/local/ffmpeg"
 
 # =============================================================
 # bundler - gems cached with BoringCache
@@ -219,13 +219,13 @@ RUN \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   --mount=type=cache,id=gem-cache-${TARGETPLATFORM},target=/usr/local/bundle/cache/,sharing=locked \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}mastodon-gems-${TARGETPLATFORM}:/usr/local/bundle" || true && \
+  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}mastodon-gems:/usr/local/bundle" || true && \
   bundle config set --global frozen "true" && \
   bundle config set --global cache_all "false" && \
   bundle config set --local without "development test" && \
   bundle config set silence_root_warning "true" && \
   bundle install -j"$(nproc)" && \
-  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}mastodon-gems-${TARGETPLATFORM}:/usr/local/bundle" 
+  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}mastodon-gems:/usr/local/bundle"
 
 # =============================================================
 # precompiler - yarn + asset pipeline
@@ -249,9 +249,9 @@ RUN \
   --mount=type=cache,id=corepack-cache-${TARGETPLATFORM},target=/usr/local/share/.cache/corepack,sharing=locked \
   --mount=type=cache,id=yarn-cache-${TARGETPLATFORM},target=/usr/local/share/.cache/yarn,sharing=locked \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}mastodon-yarn-${TARGETPLATFORM}:/opt/mastodon/node_modules" || true && \
+  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}mastodon-yarn:/opt/mastodon/node_modules" || true && \
   yarn workspaces focus --production @mastodon/mastodon && \
-  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}mastodon-yarn-${TARGETPLATFORM}:/opt/mastodon/node_modules" 
+  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}mastodon-yarn:/opt/mastodon/node_modules"
 COPY --from=libvips /usr/local/libvips/bin /usr/local/bin
 COPY --from=libvips /usr/local/libvips/lib /usr/local/lib
 COPY --from=bundler /opt/mastodon /opt/mastodon/
