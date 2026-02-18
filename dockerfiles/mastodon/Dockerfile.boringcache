@@ -135,7 +135,11 @@ WORKDIR /usr/local/libvips/src
 RUN --mount=type=secret,id=boringcache_token \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_LIBVIPS}:/usr/local/libvips"
+  rm -rf /tmp/boringcache-libvips && mkdir -p /tmp/boringcache-libvips && \
+  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_LIBVIPS}:/tmp/boringcache-libvips" || true && \
+  if [ -f /tmp/boringcache-libvips/lib/libvips.so ]; then \
+    mkdir -p /usr/local/libvips && cp -a /tmp/boringcache-libvips/. /usr/local/libvips/; \
+  fi
 # Only build if not restored from cache
 RUN \
   if [ ! -f /usr/local/libvips/lib/libvips.so ]; then \
@@ -173,7 +177,11 @@ WORKDIR /usr/local/ffmpeg/src
 RUN --mount=type=secret,id=boringcache_token \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_FFMPEG}:/usr/local/ffmpeg"
+  rm -rf /tmp/boringcache-ffmpeg && mkdir -p /tmp/boringcache-ffmpeg && \
+  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_FFMPEG}:/tmp/boringcache-ffmpeg" || true && \
+  if [ -f /tmp/boringcache-ffmpeg/bin/ffmpeg ]; then \
+    mkdir -p /usr/local/ffmpeg && cp -a /tmp/boringcache-ffmpeg/. /usr/local/ffmpeg/; \
+  fi
 # Only build if not restored from cache
 RUN \
   if [ ! -f /usr/local/ffmpeg/bin/ffmpeg ]; then \
@@ -221,7 +229,11 @@ RUN \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   --mount=type=cache,id=gem-cache-${TARGETPLATFORM},target=/usr/local/bundle/cache/,sharing=locked \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_GEMS}:/usr/local/bundle" || true && \
+  rm -rf /tmp/boringcache-bundle && mkdir -p /tmp/boringcache-bundle && \
+  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_GEMS}:/tmp/boringcache-bundle" || true && \
+  if [ -d /tmp/boringcache-bundle/gems ]; then \
+    cp -a /tmp/boringcache-bundle/. /usr/local/bundle/; \
+  fi && \
   bundle config set --global frozen "true" && \
   bundle config set --global cache_all "false" && \
   bundle config set --local without "development test" && \

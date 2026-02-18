@@ -48,7 +48,9 @@ RUN --mount=type=secret,id=boringcache_token \
     --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     --mount=type=cache,id=pnpm,target=/tmp/pnpm-store-v24 \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PNPM}:/tmp/pnpm-store-v24" && \
+    rm -rf /tmp/boringcache-pnpm-store && mkdir -p /tmp/boringcache-pnpm-store /tmp/pnpm-store-v24 && \
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PNPM}:/tmp/boringcache-pnpm-store" || true && \
+    cp -a /tmp/boringcache-pnpm-store/. /tmp/pnpm-store-v24/ 2>/dev/null || true && \
     corepack enable && pnpm --version && \
     CI=1 pnpm --filter=@posthog/frontend... install --frozen-lockfile --store-dir /tmp/pnpm-store-v24 && \
     boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PNPM}:/tmp/pnpm-store-v24"
@@ -90,7 +92,9 @@ RUN --mount=type=secret,id=boringcache_token \
     --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     --mount=type=cache,id=pnpm,target=/tmp/pnpm-store-v24 \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PNPM}:/tmp/pnpm-store-v24" && \
+    rm -rf /tmp/boringcache-pnpm-store && mkdir -p /tmp/boringcache-pnpm-store /tmp/pnpm-store-v24 && \
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PNPM}:/tmp/boringcache-pnpm-store" || true && \
+    cp -a /tmp/boringcache-pnpm-store/. /tmp/pnpm-store-v24/ 2>/dev/null || true && \
     corepack enable && \
     NODE_OPTIONS="--max-old-space-size=4096" CI=1 pnpm --filter=@posthog/plugin-transpiler... install --frozen-lockfile --store-dir /tmp/pnpm-store-v24 && \
     NODE_OPTIONS="--max-old-space-size=4096" bin/turbo --filter=@posthog/plugin-transpiler build
