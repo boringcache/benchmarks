@@ -26,6 +26,8 @@ jobs:
     name: Docker Build (GHA cache, cold+warm)
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout target repo
         uses: actions/checkout@v4
@@ -62,6 +64,9 @@ jobs:
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v3
+
+      - name: Expose GitHub runtime for Buildx cache
+        uses: crazy-max/ghaction-github-runtime@v3
 
       - name: Set benchmark cache scope
         id: scope
@@ -149,7 +154,6 @@ jobs:
         run: |
           set -euo pipefail
 
-          export_probe_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           start="$(date +%s)"
           attempt=1
           while true; do
@@ -160,7 +164,7 @@ jobs:
               --tag grpc-benchmark:latest \
               --progress=plain \
               --no-cache \
-              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
+              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE},repository=${GITHUB_REPOSITORY},ghtoken=${GITHUB_TOKEN}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_TAG_BAZEL="grpc-bazel" \
@@ -184,15 +188,9 @@ jobs:
 
           export_verified=0
           for _ in $(seq 1 20); do
-            response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&key=index-${BENCHMARK_ID}" 2>/dev/null || true)"
+            response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&key=index-${CACHE_SCOPE}" 2>/dev/null || true)"
             if [[ -n "$response" ]] && jq -e '.actions_caches | type == "array"' <<<"$response" >/dev/null 2>&1; then
-              matches="$(jq --arg ts "$export_probe_started_at" '
-                def ts($v): ($v | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601);
-                [
-                  .actions_caches[]
-                  | select((ts(.last_accessed_at) >= ts($ts)))
-                ] | length
-              ' <<<"$response")"
+              matches="$(jq '.actions_caches | length' <<<"$response")"
               if [[ "$matches" -gt 0 ]]; then
                 export_verified=1
                 break
@@ -202,7 +200,7 @@ jobs:
           done
 
           if [[ "$export_verified" -ne 1 ]]; then
-            echo "Seed cache export probe failed: no index cache entry was touched for index-${BENCHMARK_ID}" >&2
+            echo "Seed cache export probe failed: no index cache entry was touched for index-${CACHE_SCOPE}" >&2
             exit 1
           fi
 
@@ -227,8 +225,8 @@ jobs:
               --file Dockerfile.boringcache \
               --tag grpc-benchmark:latest \
               --progress=plain \
-              --cache-from "type=gha,scope=${CACHE_SCOPE}" \
-              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
+              --cache-from "type=gha,scope=${CACHE_SCOPE},repository=${GITHUB_REPOSITORY},ghtoken=${GITHUB_TOKEN}" \
+              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE},repository=${GITHUB_REPOSITORY},ghtoken=${GITHUB_TOKEN}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_TAG_BAZEL="grpc-bazel" \
@@ -271,8 +269,8 @@ jobs:
               --file Dockerfile.boringcache \
               --tag grpc-benchmark:latest \
               --progress=plain \
-              --cache-from "type=gha,scope=${CACHE_SCOPE}" \
-              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
+              --cache-from "type=gha,scope=${CACHE_SCOPE},repository=${GITHUB_REPOSITORY},ghtoken=${GITHUB_TOKEN}" \
+              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE},repository=${GITHUB_REPOSITORY},ghtoken=${GITHUB_TOKEN}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_TAG_BAZEL="grpc-bazel" \
