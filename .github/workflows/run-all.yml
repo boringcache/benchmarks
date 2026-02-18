@@ -6,15 +6,11 @@ on:
       category:
         description: "Category to run"
         required: false
-        default: "all"
+        default: "docker"
         type: choice
         options:
-          - all
           - docker
-          - rust
-          - ruby
-          - nodejs
-          - go
+          - all
 
 permissions:
   actions: write
@@ -36,23 +32,6 @@ jobs:
               docker: [
                 'posthog-actions-cache.yml', 'posthog-boringcache.yml',
                 'mastodon-docker-actions-cache.yml', 'mastodon-docker-boringcache.yml',
-                'grpc-actions-cache.yml', 'grpc-boringcache.yml',
-                'immich-actions-cache.yml', 'immich-boringcache.yml',
-              ],
-              rust: [
-                'bevy-actions-cache.yml', 'bevy-boringcache.yml',
-                'zed-actions-cache.yml', 'zed-boringcache.yml',
-              ],
-              ruby: [
-                'mastodon-ruby-actions-cache.yml', 'mastodon-ruby-boringcache.yml',
-                'discourse-actions-cache.yml', 'discourse-boringcache.yml',
-              ],
-              nodejs: [
-                'n8n-actions-cache.yml', 'n8n-boringcache.yml',
-                'calcom-actions-cache.yml', 'calcom-boringcache.yml',
-              ],
-              go: [
-                'hugo-actions-cache.yml', 'hugo-boringcache.yml',
               ],
             };
 

@@ -34,7 +34,10 @@ ARG GID="991"
 
 # BoringCache workspace for caching deps across builds
 ARG BORINGCACHE_WORKSPACE="boringcache/benchmarks"
-ARG BORINGCACHE_CACHE_PREFIX=""
+ARG BORINGCACHE_TAG_LIBVIPS="mastodon-libvips-8.18.0"
+ARG BORINGCACHE_TAG_FFMPEG="mastodon-ffmpeg-8.0"
+ARG BORINGCACHE_TAG_GEMS="mastodon-gems"
+ARG BORINGCACHE_TAG_YARN="mastodon-yarn"
 
 ENV \
   MASTODON_VERSION_PRERELEASE="${MASTODON_VERSION_PRERELEASE}" \
@@ -95,7 +98,6 @@ FROM ruby AS build
 
 ARG TARGETPLATFORM
 ARG BORINGCACHE_WORKSPACE
-ARG BORINGCACHE_CACHE_PREFIX
 
 # hadolint ignore=DL3008
 RUN \
@@ -123,7 +125,7 @@ FROM build AS libvips
 
 ARG TARGETPLATFORM
 ARG BORINGCACHE_WORKSPACE
-ARG BORINGCACHE_CACHE_PREFIX
+ARG BORINGCACHE_TAG_LIBVIPS
 ARG VIPS_VERSION=8.18.0
 ARG VIPS_URL=https://github.com/libvips/libvips/releases/download
 
@@ -133,7 +135,7 @@ WORKDIR /usr/local/libvips/src
 RUN --mount=type=secret,id=boringcache_token \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}libvips-${VIPS_VERSION}:/usr/local/libvips"
+  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_LIBVIPS}:/usr/local/libvips"
 # Only build if not restored from cache
 RUN \
   if [ ! -f /usr/local/libvips/lib/libvips.so ]; then \
@@ -152,7 +154,7 @@ RUN \
 RUN --mount=type=secret,id=boringcache_token \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}libvips-${VIPS_VERSION}:/usr/local/libvips"
+  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_LIBVIPS}:/usr/local/libvips"
 
 # =============================================================
 # ffmpeg - cached with BoringCache
@@ -161,7 +163,7 @@ FROM build AS ffmpeg
 
 ARG TARGETPLATFORM
 ARG BORINGCACHE_WORKSPACE
-ARG BORINGCACHE_CACHE_PREFIX
+ARG BORINGCACHE_TAG_FFMPEG
 ARG FFMPEG_VERSION=8.0
 ARG FFMPEG_URL=https://github.com/FFmpeg/FFmpeg/archive/refs/tags
 
@@ -171,7 +173,7 @@ WORKDIR /usr/local/ffmpeg/src
 RUN --mount=type=secret,id=boringcache_token \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}ffmpeg-${FFMPEG_VERSION}:/usr/local/ffmpeg"
+  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_FFMPEG}:/usr/local/ffmpeg"
 # Only build if not restored from cache
 RUN \
   if [ ! -f /usr/local/ffmpeg/bin/ffmpeg ]; then \
@@ -200,7 +202,7 @@ RUN \
 RUN --mount=type=secret,id=boringcache_token \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}ffmpeg-${FFMPEG_VERSION}:/usr/local/ffmpeg"
+  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_FFMPEG}:/usr/local/ffmpeg"
 
 # =============================================================
 # bundler - gems cached with BoringCache
@@ -209,7 +211,7 @@ FROM build AS bundler
 
 ARG TARGETPLATFORM
 ARG BORINGCACHE_WORKSPACE
-ARG BORINGCACHE_CACHE_PREFIX
+ARG BORINGCACHE_TAG_GEMS
 
 COPY Gemfile* /opt/mastodon/
 
@@ -219,13 +221,13 @@ RUN \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   --mount=type=cache,id=gem-cache-${TARGETPLATFORM},target=/usr/local/bundle/cache/,sharing=locked \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}mastodon-gems:/usr/local/bundle" || true && \
+  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_GEMS}:/usr/local/bundle" || true && \
   bundle config set --global frozen "true" && \
   bundle config set --global cache_all "false" && \
   bundle config set --local without "development test" && \
   bundle config set silence_root_warning "true" && \
   bundle install -j"$(nproc)" && \
-  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}mastodon-gems:/usr/local/bundle"
+  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_GEMS}:/usr/local/bundle"
 
 # =============================================================
 # precompiler - yarn + asset pipeline
@@ -234,7 +236,7 @@ FROM build AS precompiler
 
 ARG TARGETPLATFORM
 ARG BORINGCACHE_WORKSPACE
-ARG BORINGCACHE_CACHE_PREFIX
+ARG BORINGCACHE_TAG_YARN
 
 COPY . /opt/mastodon/
 COPY --from=node /usr/local/bin /usr/local/bin
@@ -249,9 +251,9 @@ RUN \
   --mount=type=cache,id=corepack-cache-${TARGETPLATFORM},target=/usr/local/share/.cache/corepack,sharing=locked \
   --mount=type=cache,id=yarn-cache-${TARGETPLATFORM},target=/usr/local/share/.cache/yarn,sharing=locked \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}mastodon-yarn:/opt/mastodon/node_modules" || true && \
+  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_YARN}:/opt/mastodon/node_modules" || true && \
   yarn workspaces focus --production @mastodon/mastodon && \
-  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}mastodon-yarn:/opt/mastodon/node_modules"
+  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_YARN}:/opt/mastodon/node_modules"
 COPY --from=libvips /usr/local/libvips/bin /usr/local/bin
 COPY --from=libvips /usr/local/libvips/lib /usr/local/lib
 COPY --from=bundler /opt/mastodon /opt/mastodon/

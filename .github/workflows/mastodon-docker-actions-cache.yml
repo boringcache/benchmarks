@@ -59,8 +59,12 @@ jobs:
       - name: Set benchmark cache scope
         id: scope
         run: |
-          cache_scope="${BENCHMARK_ID}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          cache_scope="${BENCHMARK_ID}r${GITHUB_RUN_ID}a${GITHUB_RUN_ATTEMPT}"
+          scope_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          gha_cache_key="index-${cache_scope}"
           echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
+          echo "scope_started_at=${scope_started_at}" >> "$GITHUB_OUTPUT"
+          echo "gha_cache_key=${gha_cache_key}" >> "$GITHUB_OUTPUT"
 
       - name: Run cold build
         id: cold_build
@@ -84,7 +88,6 @@ jobs:
               --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
-              --build-arg BORINGCACHE_CACHE_PREFIX="${CACHE_SCOPE}-" \
               .
             status=$?
             set -e
@@ -127,7 +130,6 @@ jobs:
               --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
-              --build-arg BORINGCACHE_CACHE_PREFIX="${CACHE_SCOPE}-" \
               .
             status=$?
             set -e
@@ -170,7 +172,6 @@ jobs:
               --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
-              --build-arg BORINGCACHE_CACHE_PREFIX="${CACHE_SCOPE}-" \
               .
             status=$?
             set -e
@@ -211,7 +212,6 @@ jobs:
               --no-cache \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
-              --build-arg BORINGCACHE_CACHE_PREFIX="${{ steps.scope.outputs.cache_scope }}-" \
               .
             status=$?
             set -e
@@ -237,7 +237,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bytes="$(.benchmark-config/scripts/sum-gha-cache-by-key.sh "${{ steps.scope.outputs.cache_scope }}")"
+          bytes="$(.benchmark-config/scripts/sum-gha-cache-by-key.sh "${{ steps.scope.outputs.gha_cache_key }}" "${{ steps.scope.outputs.scope_started_at }}")"
           echo "bytes=${bytes}" >> "$GITHUB_OUTPUT"
 
       - name: Write benchmark artifacts

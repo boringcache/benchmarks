@@ -12,9 +12,21 @@ fi
 tmp_file="$(mktemp)"
 trap 'rm -f "$tmp_file"' EXIT
 
-if ! boringcache check "$workspace" "$tags_csv" --no-git --json > "$tmp_file" 2>/dev/null; then
-  echo "0"
-  exit 0
-fi
+total=0
+IFS=',' read -r -a raw_tags <<< "$tags_csv"
 
-jq '[.results[] | (.compressed_size // .size // 0)] | add // 0' "$tmp_file"
+for tag in "${raw_tags[@]}"; do
+  clean_tag="$(echo "$tag" | xargs)"
+  if [[ -z "$clean_tag" ]]; then
+    continue
+  fi
+
+  if ! boringcache check "$workspace" "$clean_tag" --no-git --json > "$tmp_file" 2>/dev/null; then
+    continue
+  fi
+
+  entry_bytes="$(jq '[.results[] | (.compressed_size // .size // 0)] | add // 0' "$tmp_file")"
+  total=$((total + entry_bytes))
+done
+
+echo "$total"

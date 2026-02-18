@@ -14,7 +14,10 @@
 #     -f Dockerfile.boringcache .
 
 ARG BORINGCACHE_WORKSPACE="boringcache/benchmarks"
-ARG BORINGCACHE_CACHE_PREFIX=""
+ARG BORINGCACHE_TAG_PNPM="posthog-pnpm"
+ARG BORINGCACHE_TAG_TURBO="posthog-turbo"
+ARG BORINGCACHE_TAG_PYTHON="posthog-python"
+ARG BORINGCACHE_TAG_PLAYWRIGHT="posthog-playwright"
 
 # =============================================================
 # Frontend build - pnpm install cached with BoringCache
@@ -24,7 +27,8 @@ WORKDIR /code
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
 ARG BORINGCACHE_WORKSPACE
-ARG BORINGCACHE_CACHE_PREFIX
+ARG BORINGCACHE_TAG_PNPM
+ARG BORINGCACHE_TAG_TURBO
 
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
 
@@ -44,10 +48,10 @@ RUN --mount=type=secret,id=boringcache_token \
     --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     --mount=type=cache,id=pnpm,target=/tmp/pnpm-store-v24 \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}posthog-pnpm:/tmp/pnpm-store-v24" && \
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PNPM}:/tmp/pnpm-store-v24" && \
     corepack enable && pnpm --version && \
     CI=1 pnpm --filter=@posthog/frontend... install --frozen-lockfile --store-dir /tmp/pnpm-store-v24 && \
-    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}posthog-pnpm:/tmp/pnpm-store-v24"
+    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PNPM}:/tmp/pnpm-store-v24"
 
 COPY frontend/ frontend/
 
@@ -55,9 +59,9 @@ COPY frontend/ frontend/
 RUN --mount=type=secret,id=boringcache_token \
     --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}posthog-turbo:.turbo/cache" && \
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_TURBO}:.turbo/cache" && \
     bin/turbo --filter=@posthog/frontend build && \
-    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}posthog-turbo:.turbo/cache"
+    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_TURBO}:.turbo/cache"
 
 
 # =============================================================
@@ -69,7 +73,7 @@ SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 ARG BORINGCACHE_WORKSPACE
-ARG BORINGCACHE_CACHE_PREFIX
+ARG BORINGCACHE_TAG_PNPM
 
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
 
@@ -86,7 +90,7 @@ RUN --mount=type=secret,id=boringcache_token \
     --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     --mount=type=cache,id=pnpm,target=/tmp/pnpm-store-v24 \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}posthog-pnpm:/tmp/pnpm-store-v24" && \
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PNPM}:/tmp/pnpm-store-v24" && \
     corepack enable && \
     NODE_OPTIONS="--max-old-space-size=4096" CI=1 pnpm --filter=@posthog/plugin-transpiler... install --frozen-lockfile --store-dir /tmp/pnpm-store-v24 && \
     NODE_OPTIONS="--max-old-space-size=4096" bin/turbo --filter=@posthog/plugin-transpiler build
@@ -103,7 +107,7 @@ WORKDIR /code
 SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 
 ARG BORINGCACHE_WORKSPACE
-ARG BORINGCACHE_CACHE_PREFIX
+ARG BORINGCACHE_TAG_PYTHON
 
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
@@ -124,9 +128,9 @@ RUN --mount=type=secret,id=boringcache_token \
     --mount=type=bind,source=uv.lock,target=uv.lock \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}posthog-python:/python-runtime" && \
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PYTHON}:/python-runtime" && \
     uv sync --locked --no-dev --no-install-project --no-binary-package lxml --no-binary-package xmlsec && \
-    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}posthog-python:/python-runtime"
+    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PYTHON}:/python-runtime"
 
 ENV PATH=/python-runtime/bin:$PATH \
     PYTHONPATH=/python-runtime
@@ -168,7 +172,7 @@ SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
 ENV PYTHONUNBUFFERED=1
 
 ARG BORINGCACHE_WORKSPACE
-ARG BORINGCACHE_CACHE_PREFIX
+ARG BORINGCACHE_TAG_PLAYWRIGHT
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends --allow-downgrades \
@@ -216,13 +220,13 @@ RUN --mount=type=secret,id=boringcache_token \
     --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     --mount=type=cache,id=playwright-browsers,target=/tmp/playwright-cache \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}posthog-playwright:/tmp/playwright-cache" && \
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PLAYWRIGHT}:/tmp/playwright-cache" && \
     PLAYWRIGHT_BROWSERS_PATH=/tmp/playwright-cache \
     /python-runtime/bin/python -m playwright install --with-deps chromium && \
     mkdir -p /ms-playwright && \
     cp -r /tmp/playwright-cache/* /ms-playwright/ && \
     chown -R posthog:posthog /ms-playwright && \
-    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_CACHE_PREFIX}posthog-playwright:/tmp/playwright-cache"
+    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PLAYWRIGHT}:/tmp/playwright-cache"
 USER posthog
 
 COPY --from=frontend-build --chown=posthog:posthog /code/frontend/dist /code/frontend/dist
