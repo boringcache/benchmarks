@@ -31,6 +31,15 @@ DEFAULT_ENTRIES = [
     "faster" => "99"
   },
   {
+    "name" => "n8n",
+    "logo" => "n8n",
+    "repo" => "n8n-io/n8n",
+    "step" => "Install + build (pnpm+turbo)",
+    "before" => "5m 37s",
+    "after" => "0m 56s",
+    "faster" => "83"
+  },
+  {
     "name" => "Immich",
     "logo" => "immich",
     "repo" => "immich-app/immich",
@@ -47,33 +56,6 @@ DEFAULT_ENTRIES = [
     "before" => "8m 48s",
     "after" => "1m 27s",
     "faster" => "84"
-  },
-  {
-    "name" => "gRPC",
-    "logo" => "grpc",
-    "repo" => "grpc/grpc",
-    "step" => "Docker build (Bazel)",
-    "before" => "26m 34s",
-    "after" => "1m 46s",
-    "faster" => "93"
-  },
-  {
-    "name" => "n8n",
-    "logo" => "n8n",
-    "repo" => "n8n-io/n8n",
-    "step" => "Docker build (pnpm+turbo)",
-    "before" => "5m 37s",
-    "after" => "0m 56s",
-    "faster" => "83"
-  },
-  {
-    "name" => "Zed",
-    "logo" => "zed",
-    "repo" => "zed-industries/zed",
-    "step" => "cargo build",
-    "before" => "5m 18s",
-    "after" => "1m 30s",
-    "faster" => "71"
   }
 ].freeze
 
@@ -115,15 +97,6 @@ COMPARISON_WORKFLOWS = [
     "step" => "Docker build (Go)",
     "actions_workflow" => "Hugo - Actions Cache",
     "boringcache_workflow" => "Hugo - BoringCache"
-  },
-  {
-    "benchmark" => "grpc",
-    "name" => "gRPC",
-    "logo" => "grpc",
-    "repo" => "grpc/grpc",
-    "step" => "Docker build (Bazel)",
-    "actions_workflow" => "gRPC - Actions Cache",
-    "boringcache_workflow" => "gRPC - BoringCache"
   }
 ].freeze
 

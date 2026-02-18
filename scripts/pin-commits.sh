@@ -7,13 +7,8 @@ set -euo pipefail
 repo_pairs=(
   "posthog PostHog/posthog"
   "mastodon mastodon/mastodon"
-  "grpc grpc/grpc"
-  "kafka apache/kafka"
-  "zed zed-industries/zed"
-  "bevy bevyengine/bevy"
-  "discourse discourse/discourse"
+  "hugo gohugoio/hugo"
   "n8n n8n-io/n8n"
-  "calcom calcom/cal.com"
   "immich immich-app/immich"
 )
 

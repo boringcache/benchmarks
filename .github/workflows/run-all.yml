@@ -27,19 +27,16 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const category = '${{ inputs.category || 'all' }}';
+            const category = '${{ inputs.category || 'docker' }}';
             const groups = {
               docker: [
                 'posthog-actions-cache.yml', 'posthog-boringcache.yml',
                 'mastodon-docker-actions-cache.yml', 'mastodon-docker-boringcache.yml',
-                'grpc-actions-cache.yml', 'grpc-boringcache.yml',
                 'hugo-actions-cache.yml', 'hugo-boringcache.yml',
                 'immich-actions-cache.yml', 'immich-boringcache.yml',
-              ],
-              all: [
                 'n8n-actions-cache.yml', 'n8n-boringcache.yml',
-                'zed-actions-cache.yml', 'zed-boringcache.yml',
               ],
+              all: [],
             };
 
             let selected = [];
