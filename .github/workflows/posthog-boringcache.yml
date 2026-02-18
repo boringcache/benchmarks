@@ -237,6 +237,13 @@ jobs:
           SH
           chmod +x ./run-boringcache-build.sh
 
+      - name: Purge BoringCache benchmark tags
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          boringcache delete --no-git "$BENCHMARK_WORKSPACE" "${{ steps.scope.outputs.tags_csv }}" || true
+
       - name: Run cold baseline build
         id: cold_baseline_build
         env:
