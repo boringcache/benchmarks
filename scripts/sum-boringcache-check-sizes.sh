@@ -28,7 +28,7 @@ for tag in "${raw_tags[@]}"; do
   entry_bytes="$(jq -r '
     def to_num:
       if type == "number" then .
-      elif type == "string" then (capture("(?<n>[0-9]+)")?.n | tonumber? // 0)
+      elif type == "string" then (try (capture("(?<n>[0-9]+)").n | tonumber) catch 0)
       else 0 end;
 
     def primary_sum:
