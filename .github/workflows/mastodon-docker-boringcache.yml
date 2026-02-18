@@ -63,16 +63,25 @@ jobs:
           cp .benchmark-config/dockerfiles/mastodon/Dockerfile.boringcache Dockerfile.boringcache
 
           cache_scope="${BENCHMARK_ID}r${GITHUB_RUN_ID}a${GITHUB_RUN_ATTEMPT}"
+          run_suffix="r${GITHUB_RUN_ID}a${GITHUB_RUN_ATTEMPT}"
           libvips_tag="mastodon-libvips-8.18.0"
           ffmpeg_tag="mastodon-ffmpeg-8.0"
           gems_tag="mastodon-gems"
           yarn_tag="mastodon-yarn"
-          tags_csv="${libvips_tag},${ffmpeg_tag},${gems_tag},${yarn_tag},${cache_scope}"
+          libvips_cold_tag="${libvips_tag}-${run_suffix}"
+          ffmpeg_cold_tag="${ffmpeg_tag}-${run_suffix}"
+          gems_cold_tag="${gems_tag}-${run_suffix}"
+          yarn_cold_tag="${yarn_tag}-${run_suffix}"
+          tags_csv="${libvips_tag},${ffmpeg_tag},${gems_tag},${yarn_tag},${libvips_cold_tag},${ffmpeg_cold_tag},${gems_cold_tag},${yarn_cold_tag},${cache_scope}"
           echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
           echo "libvips_tag=${libvips_tag}" >> "$GITHUB_OUTPUT"
           echo "ffmpeg_tag=${ffmpeg_tag}" >> "$GITHUB_OUTPUT"
           echo "gems_tag=${gems_tag}" >> "$GITHUB_OUTPUT"
           echo "yarn_tag=${yarn_tag}" >> "$GITHUB_OUTPUT"
+          echo "libvips_cold_tag=${libvips_cold_tag}" >> "$GITHUB_OUTPUT"
+          echo "ffmpeg_cold_tag=${ffmpeg_cold_tag}" >> "$GITHUB_OUTPUT"
+          echo "gems_cold_tag=${gems_cold_tag}" >> "$GITHUB_OUTPUT"
+          echo "yarn_cold_tag=${yarn_cold_tag}" >> "$GITHUB_OUTPUT"
           echo "tags_csv=${tags_csv}" >> "$GITHUB_OUTPUT"
           cat > ./run-boringcache-build.sh <<'SH'
           #!/usr/bin/env bash
@@ -210,10 +219,10 @@ jobs:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BUILDER: ${{ steps.buildx.outputs.name }}
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
-          BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
-          BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
-          BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
-          BORINGCACHE_TAG_YARN: ${{ steps.scope.outputs.yarn_tag }}
+          BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_cold_tag }}
+          BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_cold_tag }}
+          BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_cold_tag }}
+          BORINGCACHE_TAG_YARN: ${{ steps.scope.outputs.yarn_cold_tag }}
           IMAGE_TAG: mastodon-benchmark:latest
         run: |
           set -euo pipefail
@@ -228,10 +237,10 @@ jobs:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BUILDER: ${{ steps.buildx.outputs.name }}
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
-          BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
-          BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
-          BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
-          BORINGCACHE_TAG_YARN: ${{ steps.scope.outputs.yarn_tag }}
+          BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_cold_tag }}
+          BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_cold_tag }}
+          BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_cold_tag }}
+          BORINGCACHE_TAG_YARN: ${{ steps.scope.outputs.yarn_cold_tag }}
           IMAGE_TAG: mastodon-benchmark:latest
         run: |
           set -euo pipefail
@@ -246,10 +255,10 @@ jobs:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BUILDER: ${{ steps.buildx.outputs.name }}
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
-          BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
-          BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
-          BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
-          BORINGCACHE_TAG_YARN: ${{ steps.scope.outputs.yarn_tag }}
+          BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_cold_tag }}
+          BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_cold_tag }}
+          BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_cold_tag }}
+          BORINGCACHE_TAG_YARN: ${{ steps.scope.outputs.yarn_cold_tag }}
           IMAGE_TAG: mastodon-benchmark:latest
         run: |
           set -euo pipefail
@@ -319,7 +328,7 @@ jobs:
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "boringcache-check" \
             --bytes-uploaded "${{ steps.cache_size.outputs.bytes }}" \
-            --hit-behavior-note "BoringCache registry proxy + lockfile/version keyed CAS dependency tags; stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target precompiler"
+            --hit-behavior-note "Cold+warm runs use run-scoped internal tags (fair AC-style cold); stale/internal metrics use stable lockfile/version keyed tags. Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target precompiler"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
