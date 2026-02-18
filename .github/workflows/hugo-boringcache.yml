@@ -70,10 +70,12 @@ jobs:
           cp .benchmark-config/dockerfiles/hugo/Dockerfile.boringcache Dockerfile.boringcache
 
           cache_scope="${BENCHMARK_ID}r${GITHUB_RUN_ID}a${GITHUB_RUN_ATTEMPT}"
+          docker_registry_tag="${BENCHMARK_ID}-docker-build"
           gomod_tag="hugo-gomod"
           gobuild_tag="hugo-gobuild"
-          tags_csv="${gomod_tag},${gobuild_tag},${cache_scope}"
+          tags_csv="${gomod_tag},${gobuild_tag},${cache_scope},${docker_registry_tag}"
           echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
+          echo "docker_registry_tag=${docker_registry_tag}" >> "$GITHUB_OUTPUT"
           echo "gomod_tag=${gomod_tag}" >> "$GITHUB_OUTPUT"
           echo "gobuild_tag=${gobuild_tag}" >> "$GITHUB_OUTPUT"
           echo "tags_csv=${tags_csv}" >> "$GITHUB_OUTPUT"
@@ -88,11 +90,12 @@ jobs:
           cache_export_pattern='expected sha256:.*got sha256:e3b0|error writing layer blob|400 Bad Request|broken pipe'
 
           mode="${1:-full}"
+          docker_registry_tag="${BORINGCACHE_TAG_DOCKER:-${BENCHMARK_ID}-docker-build}"
           proxy_pid=""
 
           start_proxy() {
             : > "$proxy_log"
-            RUST_LOG=debug boringcache docker-registry "$BENCHMARK_WORKSPACE" --host 0.0.0.0 --port "$proxy_port" --no-git --verbose > "$proxy_log" 2>&1 &
+            RUST_LOG=debug boringcache docker-registry "$BENCHMARK_WORKSPACE" "$docker_registry_tag" --host 0.0.0.0 --port "$proxy_port" --no-git --verbose > "$proxy_log" 2>&1 &
             proxy_pid=$!
           }
 

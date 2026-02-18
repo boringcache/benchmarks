@@ -70,6 +70,7 @@ jobs:
           cp .benchmark-config/dockerfiles/posthog/Dockerfile.boringcache Dockerfile.boringcache
 
           cache_scope="${BENCHMARK_ID}r${GITHUB_RUN_ID}a${GITHUB_RUN_ATTEMPT}"
+          docker_registry_tag="${BENCHMARK_ID}-docker-build"
           pnpm_tag="posthog-pnpm"
           turbo_tag="posthog-turbo"
           turbo_plugin_tag="posthog-turbo-plugin"
@@ -77,8 +78,9 @@ jobs:
           python_tag="posthog-python"
           staticfiles_tag="posthog-staticfiles"
           playwright_tag="posthog-playwright"
-          tags_csv="${pnpm_tag},${turbo_tag},${turbo_plugin_tag},${node_scripts_tag},${python_tag},${staticfiles_tag},${playwright_tag},${cache_scope}"
+          tags_csv="${pnpm_tag},${turbo_tag},${turbo_plugin_tag},${node_scripts_tag},${python_tag},${staticfiles_tag},${playwright_tag},${cache_scope},${docker_registry_tag}"
           echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
+          echo "docker_registry_tag=${docker_registry_tag}" >> "$GITHUB_OUTPUT"
           echo "pnpm_tag=${pnpm_tag}" >> "$GITHUB_OUTPUT"
           echo "turbo_tag=${turbo_tag}" >> "$GITHUB_OUTPUT"
           echo "turbo_plugin_tag=${turbo_plugin_tag}" >> "$GITHUB_OUTPUT"
@@ -98,11 +100,12 @@ jobs:
           cache_export_pattern='expected sha256:.*got sha256:e3b0|error writing layer blob|400 Bad Request|broken pipe'
 
           mode="${1:-full}"
+          docker_registry_tag="${BORINGCACHE_TAG_DOCKER:-${BENCHMARK_ID}-docker-build}"
           proxy_pid=""
 
           start_proxy() {
             : > "$proxy_log"
-            RUST_LOG=debug boringcache docker-registry "$BENCHMARK_WORKSPACE" --host 0.0.0.0 --port "$proxy_port" --no-git --verbose > "$proxy_log" 2>&1 &
+            RUST_LOG=debug boringcache docker-registry "$BENCHMARK_WORKSPACE" "$docker_registry_tag" --host 0.0.0.0 --port "$proxy_port" --no-git --verbose > "$proxy_log" 2>&1 &
             proxy_pid=$!
           }
 
