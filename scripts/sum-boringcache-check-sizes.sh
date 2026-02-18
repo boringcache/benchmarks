@@ -25,7 +25,41 @@ for tag in "${raw_tags[@]}"; do
     continue
   fi
 
-  entry_bytes="$(jq '[.results[] | (.compressed_size // .size // 0)] | add // 0' "$tmp_file")"
+  entry_bytes="$(jq -r '
+    def to_num:
+      if type == "number" then .
+      elif type == "string" then (capture("(?<n>[0-9]+)")?.n | tonumber? // 0)
+      else 0 end;
+
+    def primary_sum:
+      [
+        .results[]? |
+        (
+          .compressed_size //
+          .compressedSize //
+          .size_bytes //
+          .sizeBytes //
+          .bytes //
+          .size
+        ) | to_num
+      ] | add // 0;
+
+    def fallback_sum:
+      [
+        paths(scalars) as $p
+        | ($p[-1] | tostring) as $key
+        | getpath($p) as $value
+        | select($key | test("compressed.*size|size(_bytes)?|bytes"; "i"))
+        | ($value | to_num)
+      ] | add // 0;
+
+    (primary_sum) as $primary
+    | if $primary > 0 then $primary else fallback_sum end
+    | floor
+  ' "$tmp_file")"
+  if [[ -z "$entry_bytes" ]]; then
+    entry_bytes=0
+  fi
   total=$((total + entry_bytes))
 done
 
