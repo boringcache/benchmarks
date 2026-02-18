@@ -82,6 +82,7 @@ jobs:
           proxy_log="$(mktemp /tmp/boringcache-proxy.XXXXXX.log)"
           build_log="$(mktemp /tmp/boringcache-build.XXXXXX.log)"
           max_attempts=4
+          cache_export_pattern='expected sha256:.*got sha256:e3b0|error writing layer blob|400 Bad Request|broken pipe'
 
           mode="${1:-full}"
           proxy_pid=""
@@ -124,7 +125,7 @@ jobs:
             if [[ "$mode" == "full" ]]; then
               cache_args=(
                 --cache-from "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},registry.insecure=true"
-                --cache-to "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},mode=max,registry.insecure=true"
+                --cache-to "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},mode=max,ignore-error=true,registry.insecure=true"
               )
             elif [[ "$mode" == "internal-only" ]]; then
               # Disable Docker layer cache to isolate BoringCache internal dependency caching.
@@ -166,6 +167,16 @@ jobs:
             set -e
 
             if [[ "$status" -eq 0 ]]; then
+              if [[ "$mode" == "full" ]] && grep -Eq "$cache_export_pattern" "$build_log"; then
+                stop_proxy
+                if [[ "$attempt" -lt "$max_attempts" ]]; then
+                  echo "Build succeeded but cache export was degraded (attempt ${attempt}/${max_attempts}); retrying to self-heal cache..." >&2
+                  attempt=$((attempt + 1))
+                  sleep $((attempt * 5))
+                  continue
+                fi
+                echo "Build succeeded but cache export still degraded after ${max_attempts} attempts; continuing run with best-effort cache state." >&2
+              fi
               break
             fi
 
@@ -178,7 +189,7 @@ jobs:
               exit "$status"
             fi
 
-            if grep -Eq "expected sha256:.*got sha256:e3b0|error writing layer blob|400 Bad Request" "$build_log"; then
+            if grep -Eq "$cache_export_pattern" "$build_log"; then
               echo "Detected registry blob finalize mismatch (attempt ${attempt}/${max_attempts}); restarting proxy and retrying..." >&2
             else
               echo "Build (${mode}) failed (attempt ${attempt}/${max_attempts}); retrying..." >&2
