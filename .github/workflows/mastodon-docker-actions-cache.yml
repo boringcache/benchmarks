@@ -67,10 +67,8 @@ jobs:
         run: |
           cache_scope="${BENCHMARK_ID}r${GITHUB_RUN_ID}a${GITHUB_RUN_ATTEMPT}"
           scope_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          gha_cache_key="index-${cache_scope}"
           echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
           echo "scope_started_at=${scope_started_at}" >> "$GITHUB_OUTPUT"
-          echo "gha_cache_key=${gha_cache_key}" >> "$GITHUB_OUTPUT"
 
       - name: Run cold baseline build
         id: cold_baseline_build
@@ -123,8 +121,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Hard reset remote cache scope to guarantee a true seed export.
-          key_prefix="index-${CACHE_SCOPE}"
+          # Hard reset benchmark index keys to guarantee a true seed export.
+          key_prefix="index-${BENCHMARK_ID}"
           page=1
           while true; do
             response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&page=${page}&key=${key_prefix}" 2>/dev/null || true)"
@@ -144,6 +142,7 @@ jobs:
             page=$((page + 1))
           done
 
+          export_probe_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           start="$(date +%s)"
           attempt=1
           while true; do
@@ -174,6 +173,31 @@ jobs:
             attempt=$((attempt + 1))
             sleep 5
           done
+
+          # Ensure GHA cache backend saw this seed export before continuing.
+          export_verified=0
+          for _ in $(seq 1 20); do
+            response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&key=index-${BENCHMARK_ID}" 2>/dev/null || true)"
+            if [[ -n "$response" ]] && jq -e '.actions_caches | type == "array"' <<<"$response" >/dev/null 2>&1; then
+              matches="$(jq --arg ts "$export_probe_started_at" '
+                def ts($v): ($v | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601);
+                [
+                  .actions_caches[]
+                  | select((ts(.last_accessed_at) >= ts($ts)))
+                ] | length
+              ' <<<"$response")"
+              if [[ "$matches" -gt 0 ]]; then
+                export_verified=1
+                break
+              fi
+            fi
+            sleep 3
+          done
+
+          if [[ "$export_verified" -ne 1 ]]; then
+            echo "Seed cache export probe failed: no index cache entry was touched for index-${BENCHMARK_ID}" >&2
+            exit 1
+          fi
 
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
@@ -352,7 +376,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bytes="$(.benchmark-config/scripts/sum-gha-cache-by-key.sh "${{ steps.scope.outputs.gha_cache_key }}" "${{ steps.scope.outputs.scope_started_at }}")"
+          bytes="$(.benchmark-config/scripts/sum-gha-cache-by-key.sh "$BENCHMARK_ID" "${{ steps.scope.outputs.scope_started_at }}")"
           echo "bytes=${bytes}" >> "$GITHUB_OUTPUT"
 
       - name: Write benchmark artifacts
