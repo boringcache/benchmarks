@@ -87,7 +87,7 @@ jobs:
           proxy_port=5000
           proxy_log="$(mktemp /tmp/boringcache-proxy.XXXXXX.log)"
           build_log="$(mktemp /tmp/boringcache-build.XXXXXX.log)"
-          max_attempts=4
+          max_attempts=2
           cache_export_pattern='expected sha256:.*got sha256:e3b0|error writing layer blob|400 Bad Request|broken pipe'
 
           mode="${1:-full}"
@@ -190,7 +190,7 @@ jobs:
                 if [[ "$attempt" -lt "$max_attempts" ]]; then
                   echo "Build succeeded but cache export was degraded (attempt ${attempt}/${max_attempts}); retrying to self-heal cache..." >&2
                   attempt=$((attempt + 1))
-                  sleep $((attempt * 5))
+                  sleep 3
                   continue
                 fi
                 echo "Build succeeded but cache export still degraded after ${max_attempts} attempts; continuing run with best-effort cache state." >&2
@@ -214,7 +214,7 @@ jobs:
             fi
 
             attempt=$((attempt + 1))
-            sleep $((attempt * 5))
+            sleep 3
           done
           SH
           chmod +x ./run-boringcache-build.sh

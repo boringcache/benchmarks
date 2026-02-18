@@ -207,7 +207,7 @@ RUN --mount=type=secret,id=boringcache_token \
         boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PYTHON}:/python-runtime"; \
       fi; \
     else \
-      uv sync --locked --no-dev --no-install-project --no-binary-package lxml --no-binary-package xmlsec && \
+      uv sync --locked --no-dev --no-install-project --no-binary-package lxml --no-binary-package xmlsec; \
     fi
 
 ENV PATH=/python-runtime/bin:$PATH \
