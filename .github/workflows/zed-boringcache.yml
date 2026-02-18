@@ -27,7 +27,9 @@ jobs:
           sudo apt-get install -y \
             libxkbcommon-dev libwayland-dev libvulkan-dev \
             libasound2-dev libfontconfig1-dev libfreetype6-dev \
-            libssl-dev pkg-config cmake
+            libssl-dev pkg-config cmake \
+            libx11-dev libx11-xcb-dev libxcb1-dev \
+            libxcursor-dev libxinerama-dev libxi-dev libxrandr-dev
 
       - name: Setup Rust with BoringCache
         uses: boringcache/rust-action@v1
