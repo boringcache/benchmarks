@@ -2,6 +2,12 @@ name: "PostHog - Actions Cache"
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/posthog-boringcache.yml"
+      - ".github/workflows/posthog-actions-cache.yml"
+      - "dockerfiles/posthog/**"
+      - "scripts/**"
   schedule:
     - cron: "0 6 * * 0"
 
@@ -238,6 +244,47 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
+      - name: Run internal cache warm build (targeted)
+        id: internal_only_build
+        env:
+          BUILDER: ${{ steps.buildx.outputs.name }}
+          BORINGCACHE_API_TOKEN: benchmark-noop-token
+        run: |
+          set -euo pipefail
+
+          start="$(date +%s)"
+          attempt=1
+          while true; do
+            set +e
+            DOCKER_BUILDKIT=1 docker buildx build \
+              --builder "$BUILDER" \
+              --file Dockerfile.boringcache \
+              --tag posthog-benchmark:latest \
+              --progress=plain \
+              --no-cache \
+              --target posthog-build \
+              --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
+              --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
+              .
+            status=$?
+            set -e
+
+            if [[ "$status" -eq 0 ]]; then
+              break
+            fi
+
+            if [[ "$attempt" -ge 2 ]]; then
+              echo "Internal cache warm build failed after retry" >&2
+              exit "$status"
+            fi
+
+            attempt=$((attempt + 1))
+            sleep 5
+          done
+
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
       - name: Measure GHA cache storage usage
         id: cache_size
         env:
@@ -258,9 +305,10 @@ jobs:
             --warm1-seconds "${{ steps.warm1_build.outputs.seconds }}" \
             --warm2-seconds "${{ steps.warm2_build.outputs.seconds }}" \
             --stale-docker-seconds "${{ steps.stale_docker_build.outputs.seconds }}" \
+            --internal-only-warm-seconds "${{ steps.internal_only_build.outputs.seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \
-            --hit-behavior-note "GitHub Actions cache type=gha; stale Docker run uses --no-cache with boringcache no-op"
+            --hit-behavior-note "GitHub Actions cache type=gha; stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target posthog-build with boringcache no-op"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4

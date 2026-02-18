@@ -2,6 +2,12 @@ name: "PostHog - BoringCache"
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/posthog-boringcache.yml"
+      - ".github/workflows/posthog-actions-cache.yml"
+      - "dockerfiles/posthog/**"
+      - "scripts/**"
   schedule:
     - cron: "0 6 * * 0"
 
@@ -65,13 +71,19 @@ jobs:
           cache_scope="${BENCHMARK_ID}r${GITHUB_RUN_ID}a${GITHUB_RUN_ATTEMPT}"
           pnpm_tag="posthog-pnpm"
           turbo_tag="posthog-turbo"
+          turbo_plugin_tag="posthog-turbo-plugin"
+          node_scripts_tag="posthog-node-scripts"
           python_tag="posthog-python"
+          staticfiles_tag="posthog-staticfiles"
           playwright_tag="posthog-playwright"
-          tags_csv="${pnpm_tag},${turbo_tag},${python_tag},${playwright_tag},${cache_scope}"
+          tags_csv="${pnpm_tag},${turbo_tag},${turbo_plugin_tag},${node_scripts_tag},${python_tag},${staticfiles_tag},${playwright_tag},${cache_scope}"
           echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
           echo "pnpm_tag=${pnpm_tag}" >> "$GITHUB_OUTPUT"
           echo "turbo_tag=${turbo_tag}" >> "$GITHUB_OUTPUT"
+          echo "turbo_plugin_tag=${turbo_plugin_tag}" >> "$GITHUB_OUTPUT"
+          echo "node_scripts_tag=${node_scripts_tag}" >> "$GITHUB_OUTPUT"
           echo "python_tag=${python_tag}" >> "$GITHUB_OUTPUT"
+          echo "staticfiles_tag=${staticfiles_tag}" >> "$GITHUB_OUTPUT"
           echo "playwright_tag=${playwright_tag}" >> "$GITHUB_OUTPUT"
           echo "tags_csv=${tags_csv}" >> "$GITHUB_OUTPUT"
           cat > ./run-boringcache-build.sh <<'SH'
@@ -128,8 +140,11 @@ jobs:
                 --cache-to "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},mode=max,ignore-error=true,registry.insecure=true"
               )
             elif [[ "$mode" == "internal-only" ]]; then
-              # Disable Docker layer cache to isolate BoringCache internal dependency caching.
+              # Disable Docker layer cache for a full stale rebuild.
               cache_args=(--no-cache)
+            elif [[ "$mode" == "internal-target" ]]; then
+              # Isolate internal dependency/output cache impact without final-image OS package work.
+              cache_args=(--no-cache --target posthog-build)
             else
               echo "Unknown build mode: $mode" >&2
               exit 1
@@ -160,7 +175,10 @@ jobs:
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_TAG_PNPM="$BORINGCACHE_TAG_PNPM" \
               --build-arg BORINGCACHE_TAG_TURBO="$BORINGCACHE_TAG_TURBO" \
+              --build-arg BORINGCACHE_TAG_TURBO_PLUGIN="$BORINGCACHE_TAG_TURBO_PLUGIN" \
+              --build-arg BORINGCACHE_TAG_NODE_SCRIPTS="$BORINGCACHE_TAG_NODE_SCRIPTS" \
               --build-arg BORINGCACHE_TAG_PYTHON="$BORINGCACHE_TAG_PYTHON" \
+              --build-arg BORINGCACHE_TAG_STATICFILES="$BORINGCACHE_TAG_STATICFILES" \
               --build-arg BORINGCACHE_TAG_PLAYWRIGHT="$BORINGCACHE_TAG_PLAYWRIGHT" \
               . 2>&1 | tee "$build_log"
             status=${PIPESTATUS[0]}
@@ -209,7 +227,10 @@ jobs:
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
           BORINGCACHE_TAG_TURBO: ${{ steps.scope.outputs.turbo_tag }}
+          BORINGCACHE_TAG_TURBO_PLUGIN: ${{ steps.scope.outputs.turbo_plugin_tag }}
+          BORINGCACHE_TAG_NODE_SCRIPTS: ${{ steps.scope.outputs.node_scripts_tag }}
           BORINGCACHE_TAG_PYTHON: ${{ steps.scope.outputs.python_tag }}
+          BORINGCACHE_TAG_STATICFILES: ${{ steps.scope.outputs.staticfiles_tag }}
           BORINGCACHE_TAG_PLAYWRIGHT: ${{ steps.scope.outputs.playwright_tag }}
           IMAGE_TAG: posthog-benchmark:latest
         run: |
@@ -227,7 +248,10 @@ jobs:
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
           BORINGCACHE_TAG_TURBO: ${{ steps.scope.outputs.turbo_tag }}
+          BORINGCACHE_TAG_TURBO_PLUGIN: ${{ steps.scope.outputs.turbo_plugin_tag }}
+          BORINGCACHE_TAG_NODE_SCRIPTS: ${{ steps.scope.outputs.node_scripts_tag }}
           BORINGCACHE_TAG_PYTHON: ${{ steps.scope.outputs.python_tag }}
+          BORINGCACHE_TAG_STATICFILES: ${{ steps.scope.outputs.staticfiles_tag }}
           BORINGCACHE_TAG_PLAYWRIGHT: ${{ steps.scope.outputs.playwright_tag }}
           IMAGE_TAG: posthog-benchmark:latest
         run: |
@@ -245,7 +269,10 @@ jobs:
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
           BORINGCACHE_TAG_TURBO: ${{ steps.scope.outputs.turbo_tag }}
+          BORINGCACHE_TAG_TURBO_PLUGIN: ${{ steps.scope.outputs.turbo_plugin_tag }}
+          BORINGCACHE_TAG_NODE_SCRIPTS: ${{ steps.scope.outputs.node_scripts_tag }}
           BORINGCACHE_TAG_PYTHON: ${{ steps.scope.outputs.python_tag }}
+          BORINGCACHE_TAG_STATICFILES: ${{ steps.scope.outputs.staticfiles_tag }}
           BORINGCACHE_TAG_PLAYWRIGHT: ${{ steps.scope.outputs.playwright_tag }}
           IMAGE_TAG: posthog-benchmark:latest
         run: |
@@ -255,7 +282,7 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
-      - name: Run stale Docker cache build (internal cache only)
+      - name: Run stale Docker cache build (full build, no layer cache)
         id: stale_docker_build
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
@@ -263,13 +290,37 @@ jobs:
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
           BORINGCACHE_TAG_TURBO: ${{ steps.scope.outputs.turbo_tag }}
+          BORINGCACHE_TAG_TURBO_PLUGIN: ${{ steps.scope.outputs.turbo_plugin_tag }}
+          BORINGCACHE_TAG_NODE_SCRIPTS: ${{ steps.scope.outputs.node_scripts_tag }}
           BORINGCACHE_TAG_PYTHON: ${{ steps.scope.outputs.python_tag }}
+          BORINGCACHE_TAG_STATICFILES: ${{ steps.scope.outputs.staticfiles_tag }}
           BORINGCACHE_TAG_PLAYWRIGHT: ${{ steps.scope.outputs.playwright_tag }}
           IMAGE_TAG: posthog-benchmark:latest
         run: |
           set -euo pipefail
           start="$(date +%s)"
           ./run-boringcache-build.sh internal-only
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Run internal cache warm build (targeted)
+        id: internal_only_build
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BUILDER: ${{ steps.buildx.outputs.name }}
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
+          BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
+          BORINGCACHE_TAG_TURBO: ${{ steps.scope.outputs.turbo_tag }}
+          BORINGCACHE_TAG_TURBO_PLUGIN: ${{ steps.scope.outputs.turbo_plugin_tag }}
+          BORINGCACHE_TAG_NODE_SCRIPTS: ${{ steps.scope.outputs.node_scripts_tag }}
+          BORINGCACHE_TAG_PYTHON: ${{ steps.scope.outputs.python_tag }}
+          BORINGCACHE_TAG_STATICFILES: ${{ steps.scope.outputs.staticfiles_tag }}
+          BORINGCACHE_TAG_PLAYWRIGHT: ${{ steps.scope.outputs.playwright_tag }}
+          IMAGE_TAG: posthog-benchmark:latest
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-boringcache-build.sh internal-target
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
@@ -294,11 +345,11 @@ jobs:
             --warm1-seconds "${{ steps.warm1_build.outputs.seconds }}" \
             --warm2-seconds "${{ steps.warm2_build.outputs.seconds }}" \
             --stale-docker-seconds "${{ steps.stale_docker_build.outputs.seconds }}" \
-            --internal-only-warm-seconds "${{ steps.stale_docker_build.outputs.seconds }}" \
+            --internal-only-warm-seconds "${{ steps.internal_only_build.outputs.seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "boringcache-check" \
             --bytes-uploaded "${{ steps.cache_size.outputs.bytes }}" \
-            --hit-behavior-note "BoringCache registry proxy + lockfile/version keyed CAS dependency tags; stale Docker run uses --no-cache with internal tags enabled"
+            --hit-behavior-note "BoringCache registry proxy + lockfile/version keyed CAS dependency tags; stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target posthog-build"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
