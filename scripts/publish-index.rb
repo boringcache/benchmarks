@@ -13,13 +13,13 @@ MAX_CMD_RETRIES = ENV.fetch("BENCHMARKS_GH_RETRIES", "3").to_i
 
 DEFAULT_ENTRIES = [
   {
-    "name" => "gRPC",
-    "logo" => "grpc",
-    "repo" => "grpc/grpc",
-    "step" => "Docker build (Bazel)",
-    "before" => "26m 34s",
-    "after" => "1m 46s",
-    "faster" => "93"
+    "name" => "PostHog",
+    "logo" => "posthog",
+    "repo" => "PostHog/posthog",
+    "step" => "Docker build (full stack)",
+    "before" => "10m 50s",
+    "after" => "0m 8s",
+    "faster" => "99"
   },
   {
     "name" => "Mastodon",
@@ -31,13 +31,31 @@ DEFAULT_ENTRIES = [
     "faster" => "99"
   },
   {
-    "name" => "Bevy",
-    "logo" => "bevy",
-    "repo" => "bevyengine/bevy",
-    "step" => "cargo build",
-    "before" => "10m 7s",
-    "after" => "1m 20s",
-    "faster" => "86"
+    "name" => "Immich",
+    "logo" => "immich",
+    "repo" => "immich-app/immich",
+    "step" => "Docker build (server)",
+    "before" => "12m 14s",
+    "after" => "1m 38s",
+    "faster" => "87"
+  },
+  {
+    "name" => "Hugo",
+    "logo" => "hugo",
+    "repo" => "gohugoio/hugo",
+    "step" => "Docker build (Go)",
+    "before" => "8m 48s",
+    "after" => "1m 27s",
+    "faster" => "84"
+  },
+  {
+    "name" => "gRPC",
+    "logo" => "grpc",
+    "repo" => "grpc/grpc",
+    "step" => "Docker build (Bazel)",
+    "before" => "26m 34s",
+    "after" => "1m 46s",
+    "faster" => "93"
   },
   {
     "name" => "n8n",
@@ -56,28 +74,20 @@ DEFAULT_ENTRIES = [
     "before" => "5m 18s",
     "after" => "1m 30s",
     "faster" => "71"
-  },
-  {
-    "name" => "PostHog",
-    "logo" => "posthog",
-    "repo" => "PostHog/posthog",
-    "step" => "Docker build (full stack)",
-    "before" => "10m 50s",
-    "after" => "0m 8s",
-    "faster" => "99"
-  },
-  {
-    "name" => "Discourse",
-    "logo" => "discourse",
-    "repo" => "discourse/discourse",
-    "step" => "bundle install",
-    "before" => "1m 48s",
-    "after" => "0m 44s",
-    "faster" => "59"
   }
 ].freeze
 
 COMPARISON_WORKFLOWS = [
+  {
+    "benchmark" => "posthog",
+    "name" => "PostHog",
+    "logo" => "posthog",
+    "repo" => "PostHog/posthog",
+    "step" => "Docker build (full stack)",
+    "actions_workflow" => "PostHog - Actions Cache",
+    "boringcache_workflow" => "PostHog - BoringCache",
+    "depot_repo" => "depot/benchmark-posthog"
+  },
   {
     "benchmark" => "mastodon-docker",
     "name" => "Mastodon",
@@ -89,14 +99,31 @@ COMPARISON_WORKFLOWS = [
     "depot_repo" => "depot/benchmark-mastodon"
   },
   {
-    "benchmark" => "posthog",
-    "name" => "PostHog",
-    "logo" => "posthog",
-    "repo" => "PostHog/posthog",
-    "step" => "Docker build (full stack)",
-    "actions_workflow" => "PostHog - Actions Cache",
-    "boringcache_workflow" => "PostHog - BoringCache",
-    "depot_repo" => "depot/benchmark-posthog"
+    "benchmark" => "immich",
+    "name" => "Immich",
+    "logo" => "immich",
+    "repo" => "immich-app/immich",
+    "step" => "Docker build (server)",
+    "actions_workflow" => "Immich - Actions Cache",
+    "boringcache_workflow" => "Immich - BoringCache"
+  },
+  {
+    "benchmark" => "hugo",
+    "name" => "Hugo",
+    "logo" => "hugo",
+    "repo" => "gohugoio/hugo",
+    "step" => "Docker build (Go)",
+    "actions_workflow" => "Hugo - Actions Cache",
+    "boringcache_workflow" => "Hugo - BoringCache"
+  },
+  {
+    "benchmark" => "grpc",
+    "name" => "gRPC",
+    "logo" => "grpc",
+    "repo" => "grpc/grpc",
+    "step" => "Docker build (Bazel)",
+    "actions_workflow" => "gRPC - Actions Cache",
+    "boringcache_workflow" => "gRPC - BoringCache"
   }
 ].freeze
 

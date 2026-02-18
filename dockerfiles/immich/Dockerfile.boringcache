@@ -14,10 +14,15 @@
 #     -f Dockerfile.boringcache .
 
 ARG BORINGCACHE_WORKSPACE="boringcache/benchmarks"
+ARG BORINGCACHE_TAG_PNPM="immich-pnpm"
+ARG BORINGCACHE_TAG_MISE="immich-mise"
+ARG BORINGCACHE_INTERNAL_CACHE_ENABLED="1"
 
 FROM ghcr.io/immich-app/base-server-dev:202601131104@sha256:8d907eb3fe10dba4a1e034fd0060ea68c01854d92fcc9debc6b868b98f888ba7 AS builder
 
 ARG BORINGCACHE_WORKSPACE
+ARG BORINGCACHE_TAG_PNPM
+ARG BORINGCACHE_INTERNAL_CACHE_ENABLED
 
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
   CI=1 \
@@ -33,12 +38,16 @@ RUN npm install --global corepack@latest && \
 RUN --mount=type=secret,id=boringcache_token \
     --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "immich-pnpm:/buildcache/pnpm-store"
+    if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
+      boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PNPM}:/buildcache/pnpm-store" || true; \
+    fi
 
 
 FROM builder AS server
 
 ARG BORINGCACHE_WORKSPACE
+ARG BORINGCACHE_TAG_PNPM
+ARG BORINGCACHE_INTERNAL_CACHE_ENABLED
 WORKDIR /usr/src/app
 COPY ./server ./server/
 
@@ -52,7 +61,9 @@ RUN --mount=type=secret,id=boringcache_token \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
     SHARP_IGNORE_GLOBAL_LIBVIPS=true pnpm --filter immich --frozen-lockfile build && \
     SHARP_FORCE_GLOBAL_LIBVIPS=true pnpm --filter immich --frozen-lockfile --prod --no-optional deploy /output/server-pruned && \
-    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "immich-pnpm:/buildcache/pnpm-store"
+    if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
+      boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PNPM}:/buildcache/pnpm-store"; \
+    fi
 
 
 FROM builder AS web
@@ -88,6 +99,8 @@ FROM builder AS plugins
 
 ARG TARGETPLATFORM
 ARG BORINGCACHE_WORKSPACE
+ARG BORINGCACHE_TAG_MISE
+ARG BORINGCACHE_INTERNAL_CACHE_ENABLED
 
 COPY --from=ghcr.io/jdx/mise:2026.1.1@sha256:a55c391f7582f34c58bce1a85090cd526596402ba77fc32b06c49b8404ef9c14 /usr/local/bin/mise /usr/local/bin/mise
 
@@ -100,9 +113,13 @@ ENV MISE_DATA_DIR=/buildcache/mise
 RUN --mount=type=secret,id=boringcache_token \
     --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "immich-mise:/buildcache/mise" && \
+    if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
+      boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_MISE}:/buildcache/mise" || true; \
+    fi && \
     mise install --cd plugins && \
-    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "immich-mise:/buildcache/mise"
+    if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
+      boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_MISE}:/buildcache/mise"; \
+    fi
 
 COPY ./plugins ./plugins/
 

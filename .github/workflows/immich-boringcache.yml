@@ -2,18 +2,30 @@ name: "Immich - BoringCache"
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/immich-boringcache.yml"
+      - ".github/workflows/immich-actions-cache.yml"
+      - "dockerfiles/immich/**"
+      - "scripts/**"
   schedule:
     - cron: "0 6 * * 0"
+
+permissions:
+  contents: read
+  actions: read
 
 env:
   PROJECT_REPO: immich-app/immich
   PROJECT_REF: "06d487782e902e896ac14271ae05785a4310694b"
+  BENCHMARK_ID: immich
+  BENCHMARK_WORKSPACE: boringcache/benchmarks
 
 jobs:
   docker-build:
-    name: Docker Build - Server (BoringCache layers + deps)
+    name: Docker Build (BoringCache, cold+warm)
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 180
     steps:
       - name: Checkout target repo
         uses: actions/checkout@v4
@@ -21,7 +33,7 @@ jobs:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
 
-      - name: Checkout benchmark dockerfiles
+      - name: Checkout benchmark config
         uses: actions/checkout@v4
         with:
           repository: ${{ github.repository }}
@@ -32,43 +44,320 @@ jobs:
         uses: boringcache/setup-boringcache@v1
         with:
           token: ${{ secrets.BORINGCACHE_API_TOKEN }}
-          platform: linux-amd64
+          platform: debian-bookworm-amd64
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
-      - name: Copy boringcache binary to build context
-        run: |
-          cp "$(which boringcache)" ./boringcache-bin
-          echo '!boringcache-bin' >> .dockerignore
-
-      - name: Get optimized Dockerfile
-        run: cp .benchmark-config/dockerfiles/immich/Dockerfile.boringcache Dockerfile.boringcache
-
-      - name: Build with BoringCache (layer cache min + deps inside build)
-        id: build
-        uses: boringcache/docker-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
         with:
-          workspace: boringcache/benchmarks
-          image: immich-server-benchmark
-          tags: latest
-          dockerfile: Dockerfile.boringcache
-          push: false
-          load: false
-          cache-tag: immich-server
-          cache-mode: min
-          secrets: |
-            id=boringcache_token,env=BORINGCACHE_API_TOKEN
-          build-args: |
-            BORINGCACHE_WORKSPACE=boringcache/benchmarks
+          driver-opts: |
+            network=host
+
+      - name: Prepare benchmark build inputs
+        id: scope
+        run: |
+          cp "$(which boringcache)" ./boringcache-bin-real
+          cat > ./boringcache-bin-noop <<'SH'
+          #!/usr/bin/env sh
+          exit 0
+          SH
+          chmod +x ./boringcache-bin-real ./boringcache-bin-noop
+          cp ./boringcache-bin-real ./boringcache-bin
+          echo '!boringcache-bin' >> .dockerignore
+          cp .benchmark-config/dockerfiles/immich/Dockerfile.boringcache Dockerfile.boringcache
+
+          cache_scope="${BENCHMARK_ID}r${GITHUB_RUN_ID}a${GITHUB_RUN_ATTEMPT}"
+          pnpm_tag="immich-pnpm"
+          mise_tag="immich-mise"
+          tags_csv="${pnpm_tag},${mise_tag},${cache_scope}"
+          echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
+          echo "pnpm_tag=${pnpm_tag}" >> "$GITHUB_OUTPUT"
+          echo "mise_tag=${mise_tag}" >> "$GITHUB_OUTPUT"
+          echo "tags_csv=${tags_csv}" >> "$GITHUB_OUTPUT"
+          cat > ./run-boringcache-build.sh <<'SH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          proxy_port=5000
+          proxy_log="$(mktemp /tmp/boringcache-proxy.XXXXXX.log)"
+          build_log="$(mktemp /tmp/boringcache-build.XXXXXX.log)"
+          max_attempts=2
+          cache_export_pattern='expected sha256:.*got sha256:e3b0|error writing layer blob|400 Bad Request|broken pipe'
+
+          mode="${1:-full}"
+          proxy_pid=""
+
+          start_proxy() {
+            : > "$proxy_log"
+            RUST_LOG=debug boringcache docker-registry "$BENCHMARK_WORKSPACE" --host 0.0.0.0 --port "$proxy_port" --no-git --verbose > "$proxy_log" 2>&1 &
+            proxy_pid=$!
+          }
+
+          stop_proxy() {
+            if [[ -n "${proxy_pid:-}" ]] && kill -0 "$proxy_pid" >/dev/null 2>&1; then
+              kill "$proxy_pid" >/dev/null 2>&1 || true
+              wait "$proxy_pid" 2>/dev/null || true
+            fi
+            proxy_pid=""
+          }
+
+          wait_proxy_ready() {
+            local ready=0
+            for _ in $(seq 1 60); do
+              code="$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:${proxy_port}/v2/" || true)"
+              if [[ "$code" == "200" || "$code" == "401" ]]; then
+                ready=1
+                break
+              fi
+              sleep 1
+            done
+            [[ "$ready" -eq 1 ]]
+          }
+
+          cleanup() {
+            stop_proxy
+          }
+          trap cleanup EXIT
+
+          attempt=1
+          while true; do
+            cache_args=()
+            internal_cache_enabled="1"
+            if [[ "$mode" == "full" ]]; then
+              cache_args=(
+                --cache-from "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},registry.insecure=true"
+                --cache-to "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},mode=max,ignore-error=true,registry.insecure=true"
+              )
+              internal_cache_enabled="0"
+            elif [[ "$mode" == "cold-baseline" ]]; then
+              cache_args=(--no-cache)
+              internal_cache_enabled="0"
+            elif [[ "$mode" == "seed-cache" ]]; then
+              cache_args=(
+                --no-cache
+                --cache-to "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},mode=max,ignore-error=true,registry.insecure=true"
+              )
+              internal_cache_enabled="0"
+            elif [[ "$mode" == "internal-only" ]]; then
+              cache_args=(--no-cache)
+            elif [[ "$mode" == "internal-target" ]]; then
+              cache_args=(--no-cache --target server)
+            else
+              echo "Unknown build mode: $mode" >&2
+              exit 1
+            fi
+
+            if [[ "$mode" == "full" || "$mode" == "cold-baseline" || "$mode" == "seed-cache" ]]; then
+              cp ./boringcache-bin-noop ./boringcache-bin
+            else
+              cp ./boringcache-bin-real ./boringcache-bin
+            fi
+
+            start_proxy
+            if ! wait_proxy_ready; then
+              echo "Registry proxy did not become ready (attempt ${attempt}/${max_attempts})" >&2
+              tail -n 200 "$proxy_log" || true
+              if [[ "$attempt" -ge "$max_attempts" ]]; then
+                exit 1
+              fi
+              stop_proxy
+              attempt=$((attempt + 1))
+              sleep 3
+              continue
+            fi
+
+            : > "$build_log"
+            set +e
+            DOCKER_BUILDKIT=1 docker buildx build \
+              --builder "$BUILDER" \
+              --file Dockerfile.boringcache \
+              --tag "$IMAGE_TAG" \
+              --progress=plain \
+              "${cache_args[@]}" \
+              --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
+              --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
+              --build-arg BORINGCACHE_TAG_PNPM="$BORINGCACHE_TAG_PNPM" \
+              --build-arg BORINGCACHE_TAG_MISE="$BORINGCACHE_TAG_MISE" \
+              --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="$internal_cache_enabled" \
+              . 2>&1 | tee "$build_log"
+            status=${PIPESTATUS[0]}
+            set -e
+
+            if [[ "$status" -eq 0 ]]; then
+              if [[ "$mode" =~ ^(full|seed-cache)$ ]] && grep -Eq "$cache_export_pattern" "$build_log"; then
+                stop_proxy
+                if [[ "$attempt" -lt "$max_attempts" ]]; then
+                  echo "Build succeeded but cache export was degraded (attempt ${attempt}/${max_attempts}); retrying to self-heal cache..." >&2
+                  attempt=$((attempt + 1))
+                  sleep 3
+                  continue
+                fi
+                echo "Build succeeded but cache export still degraded after ${max_attempts} attempts; continuing run with best-effort cache state." >&2
+              fi
+              break
+            fi
+
+            stop_proxy
+
+            if [[ "$attempt" -ge "$max_attempts" ]]; then
+              echo "Build (${mode}) failed after ${max_attempts} attempts" >&2
+              tail -n 200 "$build_log" || true
+              tail -n 400 "$proxy_log" || true
+              exit "$status"
+            fi
+
+            if grep -Eq "$cache_export_pattern" "$build_log"; then
+              echo "Detected registry blob finalize mismatch (attempt ${attempt}/${max_attempts}); restarting proxy and retrying..." >&2
+            else
+              echo "Build (${mode}) failed (attempt ${attempt}/${max_attempts}); retrying..." >&2
+            fi
+
+            attempt=$((attempt + 1))
+            sleep 3
+          done
+          SH
+          chmod +x ./run-boringcache-build.sh
+
+      - name: Purge BoringCache benchmark tags
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-
-      - name: Report timing
         run: |
-          echo "## Immich Server Docker Build - BoringCache" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
-          echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Layer Cache Hit | ${{ steps.build.outputs.cache-hit }} |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Cache | BoringCache (min layers + pnpm + mise) |" >> "$GITHUB_STEP_SUMMARY"
+          set -euo pipefail
+          boringcache delete --no-git "$BENCHMARK_WORKSPACE" "${{ steps.scope.outputs.tags_csv }}" || true
+
+      - name: Run cold baseline build
+        id: cold_baseline_build
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BUILDER: ${{ steps.buildx.outputs.name }}
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
+          BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
+          BORINGCACHE_TAG_MISE: ${{ steps.scope.outputs.mise_tag }}
+          IMAGE_TAG: immich-server-benchmark:latest
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-boringcache-build.sh cold-baseline
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Seed cache build
+        id: seed_cache_build
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BUILDER: ${{ steps.buildx.outputs.name }}
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
+          BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
+          BORINGCACHE_TAG_MISE: ${{ steps.scope.outputs.mise_tag }}
+          IMAGE_TAG: immich-server-benchmark:latest
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-boringcache-build.sh seed-cache
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Run warm build 1
+        id: warm1_build
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BUILDER: ${{ steps.buildx.outputs.name }}
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
+          BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
+          BORINGCACHE_TAG_MISE: ${{ steps.scope.outputs.mise_tag }}
+          IMAGE_TAG: immich-server-benchmark:latest
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-boringcache-build.sh
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Run warm build 2
+        id: warm2_build
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BUILDER: ${{ steps.buildx.outputs.name }}
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
+          BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
+          BORINGCACHE_TAG_MISE: ${{ steps.scope.outputs.mise_tag }}
+          IMAGE_TAG: immich-server-benchmark:latest
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-boringcache-build.sh
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Run stale Docker cache build (full build, no layer cache)
+        id: stale_docker_build
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BUILDER: ${{ steps.buildx.outputs.name }}
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
+          BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
+          BORINGCACHE_TAG_MISE: ${{ steps.scope.outputs.mise_tag }}
+          IMAGE_TAG: immich-server-benchmark:latest
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-boringcache-build.sh internal-only
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Run internal cache warm build (targeted)
+        id: internal_only_build
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BUILDER: ${{ steps.buildx.outputs.name }}
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
+          BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
+          BORINGCACHE_TAG_MISE: ${{ steps.scope.outputs.mise_tag }}
+          IMAGE_TAG: immich-server-benchmark:latest
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-boringcache-build.sh internal-target
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Measure BoringCache storage usage
+        id: cache_size
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          tags_csv="${{ steps.scope.outputs.tags_csv }}"
+          bytes="$(.benchmark-config/scripts/sum-boringcache-check-sizes.sh "$BENCHMARK_WORKSPACE" "$tags_csv")"
+          echo "bytes=${bytes}" >> "$GITHUB_OUTPUT"
+
+      - name: Write benchmark artifacts
+        id: artifact_files
+        run: |
+          .benchmark-config/scripts/write-benchmark-artifacts.sh \
+            --benchmark "$BENCHMARK_ID" \
+            --strategy "boringcache" \
+            --project-repo "$PROJECT_REPO" \
+            --project-ref "$PROJECT_REF" \
+            --cold-seconds "${{ steps.cold_baseline_build.outputs.seconds }}" \
+            --warm1-seconds "${{ steps.warm1_build.outputs.seconds }}" \
+            --warm2-seconds "${{ steps.warm2_build.outputs.seconds }}" \
+            --stale-docker-seconds "${{ steps.stale_docker_build.outputs.seconds }}" \
+            --internal-only-warm-seconds "${{ steps.internal_only_build.outputs.seconds }}" \
+            --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
+            --cache-storage-source "boringcache-check" \
+            --bytes-uploaded "${{ steps.cache_size.outputs.bytes }}" \
+            --hit-behavior-note "Cold baseline runs --no-cache without remote cache export and with no-op boringcache binary. Seed-cache run uses --no-cache + cache-to via BoringCache registry proxy (mode=max). Warm runs use cache-from/cache-to via the same proxy (mode=max) with no-op boringcache binary; stale/internal metrics mount real boringcache with stable logical tags. Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target server"
+
+      - name: Upload benchmark artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-${{ env.BENCHMARK_ID }}-boringcache
+          path: |
+            ${{ steps.artifact_files.outputs.json_path }}
+            ${{ steps.artifact_files.outputs.md_path }}
+          if-no-files-found: error
+
+      - name: Publish summary
+        run: cat "${{ steps.artifact_files.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"

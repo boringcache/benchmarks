@@ -14,10 +14,14 @@
 #     -f Dockerfile.boringcache .
 
 ARG BORINGCACHE_WORKSPACE="boringcache/benchmarks"
+ARG BORINGCACHE_TAG_BAZEL="grpc-bazel"
+ARG BORINGCACHE_INTERNAL_CACHE_ENABLED="1"
 
 FROM python:3.9-slim-bookworm AS build
 
 ARG BORINGCACHE_WORKSPACE
+ARG BORINGCACHE_TAG_BAZEL
+ARG BORINGCACHE_INTERNAL_CACHE_ENABLED
 
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y build-essential clang curl ca-certificates
 
@@ -32,7 +36,9 @@ COPY . .
 RUN --mount=type=secret,id=boringcache_token \
     --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "grpc-bazel:/root/.cache/bazel" || true
+    if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
+      boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_BAZEL}:/root/.cache/bazel" || true; \
+    fi
 
 # Build gRPC
 RUN tools/bazel build //examples/cpp/csm:csm_greeter_client
@@ -41,7 +47,9 @@ RUN tools/bazel build //examples/cpp/csm:csm_greeter_client
 RUN --mount=type=secret,id=boringcache_token \
     --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "grpc-bazel:/root/.cache/bazel"
+    if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
+      boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_BAZEL}:/root/.cache/bazel"; \
+    fi
 
 RUN cp -rL /workdir/bazel-bin/examples/cpp/csm/csm_greeter_client /artifacts/
 
