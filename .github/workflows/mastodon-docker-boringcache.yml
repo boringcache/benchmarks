@@ -135,7 +135,10 @@ jobs:
                 --cache-to "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},mode=max,ignore-error=true,registry.insecure=true"
               )
               internal_cache_enabled="0"
-            elif [[ "$mode" == "cold-seed" ]]; then
+            elif [[ "$mode" == "cold-baseline" ]]; then
+              cache_args=(--no-cache)
+              internal_cache_enabled="0"
+            elif [[ "$mode" == "seed-cache" ]]; then
               cache_args=(
                 --no-cache
                 --cache-to "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},mode=max,ignore-error=true,registry.insecure=true"
@@ -152,7 +155,7 @@ jobs:
               exit 1
             fi
 
-            if [[ "$mode" == "full" || "$mode" == "cold-seed" ]]; then
+            if [[ "$mode" == "full" || "$mode" == "cold-baseline" || "$mode" == "seed-cache" ]]; then
               cp ./boringcache-bin-noop ./boringcache-bin
             else
               cp ./boringcache-bin-real ./boringcache-bin
@@ -191,7 +194,7 @@ jobs:
             set -e
 
             if [[ "$status" -eq 0 ]]; then
-              if [[ "$mode" =~ ^(full|cold-seed)$ ]] && grep -Eq "$cache_export_pattern" "$build_log"; then
+              if [[ "$mode" =~ ^(full|seed-cache)$ ]] && grep -Eq "$cache_export_pattern" "$build_log"; then
                 stop_proxy
                 if [[ "$attempt" -lt "$max_attempts" ]]; then
                   echo "Build succeeded but cache export was degraded (attempt ${attempt}/${max_attempts}); retrying to self-heal cache..." >&2
@@ -225,8 +228,8 @@ jobs:
           SH
           chmod +x ./run-boringcache-build.sh
 
-      - name: Run cold build
-        id: cold_build
+      - name: Run cold baseline build
+        id: cold_baseline_build
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BUILDER: ${{ steps.buildx.outputs.name }}
@@ -239,7 +242,25 @@ jobs:
         run: |
           set -euo pipefail
           start="$(date +%s)"
-          ./run-boringcache-build.sh cold-seed
+          ./run-boringcache-build.sh cold-baseline
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Seed cache build
+        id: seed_cache_build
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BUILDER: ${{ steps.buildx.outputs.name }}
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
+          BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
+          BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
+          BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
+          BORINGCACHE_TAG_YARN: ${{ steps.scope.outputs.yarn_tag }}
+          IMAGE_TAG: mastodon-benchmark:latest
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-boringcache-build.sh seed-cache
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
@@ -332,7 +353,7 @@ jobs:
             --strategy "boringcache" \
             --project-repo "$PROJECT_REPO" \
             --project-ref "$PROJECT_REF" \
-            --cold-seconds "${{ steps.cold_build.outputs.seconds }}" \
+            --cold-seconds "${{ steps.cold_baseline_build.outputs.seconds }}" \
             --warm1-seconds "${{ steps.warm1_build.outputs.seconds }}" \
             --warm2-seconds "${{ steps.warm2_build.outputs.seconds }}" \
             --stale-docker-seconds "${{ steps.stale_docker_build.outputs.seconds }}" \
@@ -340,7 +361,7 @@ jobs:
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "boringcache-check" \
             --bytes-uploaded "${{ steps.cache_size.outputs.bytes }}" \
-            --hit-behavior-note "Cold run uses BoringCache registry proxy with --no-cache + cache export (mode=max) and no-op boringcache binary so warm runs have seeded layer cache. Warm runs use cache-from/cache-to via the same proxy (mode=max) with no-op boringcache binary; stale/internal metrics mount real boringcache with stable logical tags. Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target precompiler"
+            --hit-behavior-note "Cold baseline runs --no-cache without remote cache export and with no-op boringcache binary. Seed-cache run uses --no-cache + cache-to via BoringCache registry proxy (mode=max). Warm runs use cache-from/cache-to via the same proxy (mode=max) with no-op boringcache binary; stale/internal metrics mount real boringcache with stable logical tags. Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target precompiler"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
