@@ -251,7 +251,6 @@ jobs:
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BUILDER: ${{ steps.buildx.outputs.name }}
-          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_cold_tag }}
           BORINGCACHE_TAG_TURBO: ${{ steps.scope.outputs.turbo_cold_tag }}
           BORINGCACHE_TAG_TURBO_PLUGIN: ${{ steps.scope.outputs.turbo_plugin_cold_tag }}
@@ -262,8 +261,42 @@ jobs:
           IMAGE_TAG: posthog-benchmark:latest
         run: |
           set -euo pipefail
+          cp ./boringcache-bin-noop ./boringcache-bin
           start="$(date +%s)"
-          ./run-boringcache-build.sh
+          attempt=1
+          while true; do
+            set +e
+            DOCKER_BUILDKIT=1 docker buildx build \
+              --builder "$BUILDER" \
+              --file Dockerfile.boringcache \
+              --tag "$IMAGE_TAG" \
+              --progress=plain \
+              --no-cache \
+              --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
+              --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
+              --build-arg BORINGCACHE_TAG_PNPM="$BORINGCACHE_TAG_PNPM" \
+              --build-arg BORINGCACHE_TAG_TURBO="$BORINGCACHE_TAG_TURBO" \
+              --build-arg BORINGCACHE_TAG_TURBO_PLUGIN="$BORINGCACHE_TAG_TURBO_PLUGIN" \
+              --build-arg BORINGCACHE_TAG_NODE_SCRIPTS="$BORINGCACHE_TAG_NODE_SCRIPTS" \
+              --build-arg BORINGCACHE_TAG_PYTHON="$BORINGCACHE_TAG_PYTHON" \
+              --build-arg BORINGCACHE_TAG_STATICFILES="$BORINGCACHE_TAG_STATICFILES" \
+              --build-arg BORINGCACHE_TAG_PLAYWRIGHT="$BORINGCACHE_TAG_PLAYWRIGHT" \
+              .
+            status=$?
+            set -e
+
+            if [[ "$status" -eq 0 ]]; then
+              break
+            fi
+
+            if [[ "$attempt" -ge 2 ]]; then
+              echo "Cold build failed after retry" >&2
+              exit "$status"
+            fi
+
+            attempt=$((attempt + 1))
+            sleep 5
+          done
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
@@ -376,7 +409,7 @@ jobs:
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "boringcache-check" \
             --bytes-uploaded "${{ steps.cache_size.outputs.bytes }}" \
-            --hit-behavior-note "Cold+warm runs mount a no-op boringcache binary (no internal save/restore), stale/internal metrics mount real boringcache with stable lockfile/version keyed tags. Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target posthog-build"
+            --hit-behavior-note "Cold run uses plain docker buildx --no-cache with no remote cache backend and no-op boringcache binary. Warm runs use BoringCache registry proxy cache (mode=max) with no-op boringcache binary; stale/internal metrics mount real boringcache with stable lockfile/version keyed tags. Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target posthog-build"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4

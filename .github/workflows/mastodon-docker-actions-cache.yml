@@ -76,7 +76,6 @@ jobs:
         id: cold_build
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
-          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_API_TOKEN: benchmark-noop-token
         run: |
           set -euo pipefail
@@ -90,8 +89,7 @@ jobs:
               --file Dockerfile.boringcache \
               --tag mastodon-benchmark:latest \
               --progress=plain \
-              --cache-from "type=gha,scope=${CACHE_SCOPE}" \
-              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
+              --no-cache \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               .
@@ -302,7 +300,7 @@ jobs:
             --internal-only-warm-seconds "${{ steps.internal_only_build.outputs.seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \
-            --hit-behavior-note "GitHub Actions cache type=gha; stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target precompiler with boringcache no-op"
+            --hit-behavior-note "Cold run uses plain docker buildx --no-cache with no remote cache backend. Warm runs use GitHub Actions cache type=gha (mode=max). Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target precompiler with boringcache no-op"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
