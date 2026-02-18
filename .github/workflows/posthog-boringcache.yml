@@ -64,7 +64,13 @@ jobs:
       - name: Prepare benchmark build inputs
         id: scope
         run: |
-          cp "$(which boringcache)" ./boringcache-bin
+          cp "$(which boringcache)" ./boringcache-bin-real
+          cat > ./boringcache-bin-noop <<'SH'
+          #!/usr/bin/env sh
+          exit 0
+          SH
+          chmod +x ./boringcache-bin-real ./boringcache-bin-noop
+          cp ./boringcache-bin-real ./boringcache-bin
           echo '!boringcache-bin' >> .dockerignore
           cp .benchmark-config/dockerfiles/posthog/Dockerfile.boringcache Dockerfile.boringcache
 
@@ -163,6 +169,12 @@ jobs:
             else
               echo "Unknown build mode: $mode" >&2
               exit 1
+            fi
+
+            if [[ "$mode" == "full" ]]; then
+              cp ./boringcache-bin-noop ./boringcache-bin
+            else
+              cp ./boringcache-bin-real ./boringcache-bin
             fi
 
             start_proxy
@@ -364,7 +376,7 @@ jobs:
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "boringcache-check" \
             --bytes-uploaded "${{ steps.cache_size.outputs.bytes }}" \
-            --hit-behavior-note "Cold+warm runs use run-scoped internal tags (fair AC-style cold); stale/internal metrics use stable lockfile/version keyed tags. Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target posthog-build"
+            --hit-behavior-note "Cold+warm runs mount a no-op boringcache binary (no internal save/restore), stale/internal metrics mount real boringcache with stable lockfile/version keyed tags. Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target posthog-build"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
