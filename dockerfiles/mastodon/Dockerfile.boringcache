@@ -38,6 +38,7 @@ ARG BORINGCACHE_TAG_LIBVIPS="mastodon-libvips-8.18.0"
 ARG BORINGCACHE_TAG_FFMPEG="mastodon-ffmpeg-8.0"
 ARG BORINGCACHE_TAG_GEMS="mastodon-gems"
 ARG BORINGCACHE_TAG_YARN="mastodon-yarn"
+ARG BORINGCACHE_INTERNAL_CACHE_ENABLED="1"
 
 ENV \
   MASTODON_VERSION_PRERELEASE="${MASTODON_VERSION_PRERELEASE}" \
@@ -126,6 +127,7 @@ FROM build AS libvips
 ARG TARGETPLATFORM
 ARG BORINGCACHE_WORKSPACE
 ARG BORINGCACHE_TAG_LIBVIPS
+ARG BORINGCACHE_INTERNAL_CACHE_ENABLED
 ARG VIPS_VERSION=8.18.0
 ARG VIPS_URL=https://github.com/libvips/libvips/releases/download
 
@@ -135,10 +137,12 @@ WORKDIR /usr/local/libvips/src
 RUN --mount=type=secret,id=boringcache_token \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  rm -rf /tmp/boringcache-libvips && mkdir -p /tmp/boringcache-libvips && \
-  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_LIBVIPS}:/tmp/boringcache-libvips" || true && \
-  if [ -f /tmp/boringcache-libvips/lib/libvips.so ]; then \
-    mkdir -p /usr/local/libvips && cp -a /tmp/boringcache-libvips/. /usr/local/libvips/; \
+  if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
+    rm -rf /tmp/boringcache-libvips && mkdir -p /tmp/boringcache-libvips && \
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_LIBVIPS}:/tmp/boringcache-libvips" || true && \
+    if [ -f /tmp/boringcache-libvips/lib/libvips.so ]; then \
+      mkdir -p /usr/local/libvips && cp -a /tmp/boringcache-libvips/. /usr/local/libvips/; \
+    fi; \
   fi
 # Only build if not restored from cache
 RUN \
@@ -158,7 +162,9 @@ RUN \
 RUN --mount=type=secret,id=boringcache_token \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_LIBVIPS}:/usr/local/libvips"
+  if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
+    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_LIBVIPS}:/usr/local/libvips"; \
+  fi
 
 # =============================================================
 # ffmpeg - cached with BoringCache
@@ -168,6 +174,7 @@ FROM build AS ffmpeg
 ARG TARGETPLATFORM
 ARG BORINGCACHE_WORKSPACE
 ARG BORINGCACHE_TAG_FFMPEG
+ARG BORINGCACHE_INTERNAL_CACHE_ENABLED
 ARG FFMPEG_VERSION=8.0
 ARG FFMPEG_URL=https://github.com/FFmpeg/FFmpeg/archive/refs/tags
 
@@ -177,10 +184,12 @@ WORKDIR /usr/local/ffmpeg/src
 RUN --mount=type=secret,id=boringcache_token \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  rm -rf /tmp/boringcache-ffmpeg && mkdir -p /tmp/boringcache-ffmpeg && \
-  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_FFMPEG}:/tmp/boringcache-ffmpeg" || true && \
-  if [ -f /tmp/boringcache-ffmpeg/bin/ffmpeg ]; then \
-    mkdir -p /usr/local/ffmpeg && cp -a /tmp/boringcache-ffmpeg/. /usr/local/ffmpeg/; \
+  if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
+    rm -rf /tmp/boringcache-ffmpeg && mkdir -p /tmp/boringcache-ffmpeg && \
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_FFMPEG}:/tmp/boringcache-ffmpeg" || true && \
+    if [ -f /tmp/boringcache-ffmpeg/bin/ffmpeg ]; then \
+      mkdir -p /usr/local/ffmpeg && cp -a /tmp/boringcache-ffmpeg/. /usr/local/ffmpeg/; \
+    fi; \
   fi
 # Only build if not restored from cache
 RUN \
@@ -210,7 +219,9 @@ RUN \
 RUN --mount=type=secret,id=boringcache_token \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_FFMPEG}:/usr/local/ffmpeg"
+  if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
+    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_FFMPEG}:/usr/local/ffmpeg"; \
+  fi
 
 # =============================================================
 # bundler - gems cached with BoringCache
@@ -220,6 +231,7 @@ FROM build AS bundler
 ARG TARGETPLATFORM
 ARG BORINGCACHE_WORKSPACE
 ARG BORINGCACHE_TAG_GEMS
+ARG BORINGCACHE_INTERNAL_CACHE_ENABLED
 
 COPY Gemfile* /opt/mastodon/
 
@@ -229,17 +241,21 @@ RUN \
   --mount=type=bind,source=boringcache-bin,target=/usr/local/bin/boringcache \
   --mount=type=cache,id=gem-cache-${TARGETPLATFORM},target=/usr/local/bundle/cache/,sharing=locked \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  rm -rf /tmp/boringcache-bundle && mkdir -p /tmp/boringcache-bundle && \
-  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_GEMS}:/tmp/boringcache-bundle" || true && \
-  if [ -d /tmp/boringcache-bundle/gems ]; then \
-    cp -a /tmp/boringcache-bundle/. /usr/local/bundle/; \
+  if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
+    rm -rf /tmp/boringcache-bundle && mkdir -p /tmp/boringcache-bundle && \
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_GEMS}:/tmp/boringcache-bundle" || true && \
+    if [ -d /tmp/boringcache-bundle/gems ]; then \
+      cp -a /tmp/boringcache-bundle/. /usr/local/bundle/; \
+    fi; \
   fi && \
   bundle config set --global frozen "true" && \
   bundle config set --global cache_all "false" && \
   bundle config set --local without "development test" && \
   bundle config set silence_root_warning "true" && \
   bundle install -j"$(nproc)" && \
-  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_GEMS}:/usr/local/bundle"
+  if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
+    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_GEMS}:/usr/local/bundle"; \
+  fi
 
 # =============================================================
 # precompiler - yarn + asset pipeline
@@ -249,6 +265,7 @@ FROM build AS precompiler
 ARG TARGETPLATFORM
 ARG BORINGCACHE_WORKSPACE
 ARG BORINGCACHE_TAG_YARN
+ARG BORINGCACHE_INTERNAL_CACHE_ENABLED
 
 COPY . /opt/mastodon/
 COPY --from=node /usr/local/bin /usr/local/bin
@@ -263,9 +280,13 @@ RUN \
   --mount=type=cache,id=corepack-cache-${TARGETPLATFORM},target=/usr/local/share/.cache/corepack,sharing=locked \
   --mount=type=cache,id=yarn-cache-${TARGETPLATFORM},target=/usr/local/share/.cache/yarn,sharing=locked \
   export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-  boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_YARN}:/opt/mastodon/node_modules" || true && \
+  if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
+    boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_YARN}:/opt/mastodon/node_modules" || true; \
+  fi && \
   yarn workspaces focus --production @mastodon/mastodon && \
-  boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_YARN}:/opt/mastodon/node_modules"
+  if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
+    boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_YARN}:/opt/mastodon/node_modules"; \
+  fi
 COPY --from=libvips /usr/local/libvips/bin /usr/local/bin
 COPY --from=libvips /usr/local/libvips/lib /usr/local/lib
 COPY --from=bundler /opt/mastodon /opt/mastodon/

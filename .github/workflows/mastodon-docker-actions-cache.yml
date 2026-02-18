@@ -92,6 +92,7 @@ jobs:
               --no-cache \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
+              --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="0" \
               .
             status=$?
             set -e
@@ -134,6 +135,7 @@ jobs:
               --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
+              --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="0" \
               .
             status=$?
             set -e
@@ -176,6 +178,7 @@ jobs:
               --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
+              --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="0" \
               .
             status=$?
             set -e
@@ -216,6 +219,7 @@ jobs:
               --no-cache \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
+              --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="0" \
               .
             status=$?
             set -e
@@ -257,6 +261,7 @@ jobs:
               --target precompiler \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
+              --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="0" \
               .
             status=$?
             set -e
