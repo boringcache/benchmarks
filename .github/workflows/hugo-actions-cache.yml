@@ -165,7 +165,7 @@ jobs:
               --tag hugo-benchmark:latest \
               --progress=plain \
               --no-cache \
-              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE},repository=${GITHUB_REPOSITORY},ghtoken=${GITHUB_TOKEN}" \
+              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_TAG_GOMOD="hugo-gomod" \
@@ -227,8 +227,8 @@ jobs:
               --file Dockerfile.boringcache \
               --tag hugo-benchmark:latest \
               --progress=plain \
-              --cache-from "type=gha,scope=${CACHE_SCOPE},repository=${GITHUB_REPOSITORY},ghtoken=${GITHUB_TOKEN}" \
-              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE},repository=${GITHUB_REPOSITORY},ghtoken=${GITHUB_TOKEN}" \
+              --cache-from "type=gha,scope=${CACHE_SCOPE}" \
+              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_TAG_GOMOD="hugo-gomod" \
@@ -272,8 +272,8 @@ jobs:
               --file Dockerfile.boringcache \
               --tag hugo-benchmark:latest \
               --progress=plain \
-              --cache-from "type=gha,scope=${CACHE_SCOPE},repository=${GITHUB_REPOSITORY},ghtoken=${GITHUB_TOKEN}" \
-              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE},repository=${GITHUB_REPOSITORY},ghtoken=${GITHUB_TOKEN}" \
+              --cache-from "type=gha,scope=${CACHE_SCOPE}" \
+              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_TAG_GOMOD="hugo-gomod" \
