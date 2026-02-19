@@ -146,8 +146,8 @@ jobs:
             internal_cache_enabled="1"
             if [[ "$mode" == "full" ]]; then
               cache_args=(
-                --cache-from "type=registry,ref=127.0.0.1:${proxy_port}/${docker_registry_tag},registry.insecure=true"
-                --cache-to "type=registry,ref=127.0.0.1:${proxy_port}/${docker_registry_tag},mode=max,ignore-error=true,registry.insecure=true"
+                --cache-from "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},registry.insecure=true"
+                --cache-to "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},mode=max,registry.insecure=true"
               )
               internal_cache_enabled="0"
             elif [[ "$mode" == "cold-baseline" ]]; then
@@ -159,7 +159,7 @@ jobs:
               # registry proxy, so the proxy never uploads to BC backend.
               cache_args=(
                 --no-cache
-                --cache-to "type=registry,ref=127.0.0.1:${proxy_port}/${docker_registry_tag},mode=max,ignore-error=true,registry.insecure=true"
+                --cache-to "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},mode=max,registry.insecure=true"
               )
               internal_cache_enabled="0"
             elif [[ "$mode" == "internal-only" ]]; then
@@ -267,7 +267,7 @@ jobs:
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BUILDER: ${{ steps.buildx.outputs.name }}
-
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
           BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
           BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
@@ -288,7 +288,7 @@ jobs:
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BUILDER: ${{ steps.buildx.outputs.name }}
-
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
           BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
           BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
@@ -309,7 +309,7 @@ jobs:
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BUILDER: ${{ steps.buildx.outputs.name }}
-
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
           BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
           BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
@@ -327,7 +327,7 @@ jobs:
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BUILDER: ${{ steps.buildx.outputs.name }}
-
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
           BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
           BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
@@ -345,7 +345,7 @@ jobs:
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BUILDER: ${{ steps.buildx.outputs.name }}
-
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
           BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
           BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
@@ -363,7 +363,7 @@ jobs:
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BUILDER: ${{ steps.buildx.outputs.name }}
-
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
           BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
           BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
