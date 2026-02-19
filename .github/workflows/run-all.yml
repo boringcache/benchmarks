@@ -10,6 +10,7 @@ on:
         type: choice
         options:
           - docker
+          - sccache
           - all
 
 permissions:
@@ -36,7 +37,9 @@ jobs:
                 'immich-actions-cache.yml', 'immich-boringcache.yml',
                 'n8n-actions-cache.yml', 'n8n-boringcache.yml',
               ],
-              all: [],
+              sccache: [
+                'zed-sccache-actions-cache.yml', 'zed-sccache-boringcache.yml',
+              ],
             };
 
             let selected = [];

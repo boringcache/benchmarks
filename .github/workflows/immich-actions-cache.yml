@@ -82,24 +82,27 @@ jobs:
         run: |
           set -euo pipefail
 
-          key_prefix="index-${BENCHMARK_ID}"
-          page=1
-          while true; do
-            response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&page=${page}&key=${key_prefix}" 2>/dev/null || true)"
-            if [[ -z "$response" ]] || ! jq -e '.actions_caches | type == "array"' <<<"$response" >/dev/null 2>&1; then
-              break
-            fi
+          # Purge both index manifests and buildkit blobs to avoid
+          # "failed to reserve cache" conflicts from previous runs.
+          for key_prefix in "index-${BENCHMARK_ID}" "buildkit-blob-"; do
+            page=1
+            while true; do
+              response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&page=${page}&key=${key_prefix}" 2>/dev/null || true)"
+              if [[ -z "$response" ]] || ! jq -e '.actions_caches | type == "array"' <<<"$response" >/dev/null 2>&1; then
+                break
+              fi
 
-            mapfile -t cache_ids < <(jq -r '.actions_caches[].id' <<<"$response")
-            for cache_id in "${cache_ids[@]}"; do
-              gh api -X DELETE "/repos/${GITHUB_REPOSITORY}/actions/caches/${cache_id}" >/dev/null 2>&1 || true
+              mapfile -t cache_ids < <(jq -r '.actions_caches[].id' <<<"$response")
+              for cache_id in "${cache_ids[@]}"; do
+                gh api -X DELETE "/repos/${GITHUB_REPOSITORY}/actions/caches/${cache_id}" >/dev/null 2>&1 || true
+              done
+
+              count="$(jq '.actions_caches | length' <<<"$response")"
+              if [[ "$count" -lt 100 ]]; then
+                break
+              fi
+              page=$((page + 1))
             done
-
-            count="$(jq '.actions_caches | length' <<<"$response")"
-            if [[ "$count" -lt 100 ]]; then
-              break
-            fi
-            page=$((page + 1))
           done
 
       - name: Run cold baseline build
@@ -164,8 +167,7 @@ jobs:
               --file Dockerfile.boringcache \
               --tag immich-server-benchmark:latest \
               --progress=plain \
-              --no-cache \
-              --cache-to "type=gha,mode=min,scope=${CACHE_SCOPE}" \
+              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_TAG_PNPM="immich-pnpm" \
@@ -228,7 +230,7 @@ jobs:
               --tag immich-server-benchmark:latest \
               --progress=plain \
               --cache-from "type=gha,scope=${CACHE_SCOPE}" \
-              --cache-to "type=gha,mode=min,scope=${CACHE_SCOPE}" \
+              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_TAG_PNPM="immich-pnpm" \
@@ -273,7 +275,7 @@ jobs:
               --tag immich-server-benchmark:latest \
               --progress=plain \
               --cache-from "type=gha,scope=${CACHE_SCOPE}" \
-              --cache-to "type=gha,mode=min,scope=${CACHE_SCOPE}" \
+              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_TAG_PNPM="immich-pnpm" \
@@ -409,7 +411,7 @@ jobs:
             --internal-only-warm-seconds "${{ steps.internal_only_build.outputs.seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \
-            --hit-behavior-note "Cold baseline runs --no-cache without remote cache export and with no-op boringcache binary. Seed-cache run uses --no-cache + cache-to type=gha (mode=min). Warm runs use cache-from/cache-to type=gha (mode=min). Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target server with boringcache no-op"
+            --hit-behavior-note "Cold baseline runs --no-cache without remote cache export and with no-op boringcache binary. Seed-cache run reuses buildx builder cache from cold build + cache-to type=gha (mode=max). Warm runs use cache-from/cache-to type=gha (mode=max). Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target server with boringcache no-op"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
@@ -422,3 +424,38 @@ jobs:
 
       - name: Publish summary
         run: cat "${{ steps.artifact_files.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Storage comparison with BoringCache
+        if: always() && steps.cache_size.outputs.bytes
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          gha_bytes="${{ steps.cache_size.outputs.bytes }}"
+
+          # Query BC API for Immich entries (skip if no token)
+          if [[ -z "${BORINGCACHE_API_TOKEN}" ]]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "_Storage comparison skipped (BORINGCACHE_API_TOKEN not set)_" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          response="$(curl -sf \
+            -H "Authorization: Bearer ${BORINGCACHE_API_TOKEN}" \
+            -H "User-Agent: BoringCache-CLI/1.0.0" \
+            -H "X-BoringCache-Client-Type: CLI" \
+            "https://api.boringcache.com/v1/workspaces/${BENCHMARK_WORKSPACE}/caches?limit=100" 2>/dev/null)" || {
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "_Storage comparison skipped (BC API unreachable)_" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          }
+
+          bc_bytes="$(echo "$response" | jq '[.entries[] | select(.tag != null and (.tag | startswith("immich"))) | .total_size_bytes] | add // 0')"
+          bc_count="$(echo "$response" | jq '[.entries[] | select(.tag != null and (.tag | startswith("immich")))] | length')"
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Storage comparison" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | Immich storage | Notes |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| GitHub Actions | $(numfmt --to=iec-i --suffix=B "${gha_bytes}") | Repo total (buildkit blobs shared across projects) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| BoringCache | $(numfmt --to=iec-i --suffix=B "${bc_bytes}") | ${bc_count} Immich entries (content-addressed, deduped across branches) |" >> "$GITHUB_STEP_SUMMARY"
