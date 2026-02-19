@@ -1,0 +1,277 @@
+name: "Measure Cache Storage"
+
+# Measures GHA cache storage growth across branches for Docker layer cache.
+#
+# How it works:
+# 1. Clears all GHA cache
+# 2. Dispatches measure-storage-build.yml on main → measures storage (baseline)
+# 3. Creates PR branches, dispatches builds on each → measures cumulative growth
+#
+# GHA cache is scoped by branch ref (JWT token). Identical buildkit blobs
+# (same sha256 digest) create SEPARATE entries per branch — no content dedup.
+# This workflow proves that by measuring the linear storage growth.
+#
+# Compare with BoringCache: content-addressed dedup means same deps across
+# all branches are stored once. Storage stays flat regardless of branch count.
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_count:
+        description: "Number of PR branches to simulate"
+        required: true
+        type: choice
+        options:
+          - "1"
+          - "2"
+          - "3"
+        default: "2"
+
+permissions:
+  contents: write
+  actions: write
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  measure:
+    name: "Measure PostHog Docker cache dedup"
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Query BoringCache storage (reference)
+        id: bc_storage
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          if [[ -z "${BORINGCACHE_API_TOKEN}" ]]; then
+            echo "bc_bytes=0" >> "$GITHUB_OUTPUT"
+            echo "bc_count=0" >> "$GITHUB_OUTPUT"
+            echo "bc_available=false" >> "$GITHUB_OUTPUT"
+            echo "_(BORINGCACHE_API_TOKEN not set — BC comparison skipped)_" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          # Query BC API for PostHog entries in the benchmarks workspace
+          response="$(curl -sf \
+            -H "Authorization: Bearer ${BORINGCACHE_API_TOKEN}" \
+            -H "User-Agent: BoringCache-CLI/1.0.0" \
+            -H "X-BoringCache-Client-Type: CLI" \
+            "https://api.boringcache.com/v1/workspaces/boringcache/benchmarks/caches?limit=100")"
+
+          # Sum total_size_bytes for PostHog-related entries only
+          bc_bytes="$(echo "$response" | jq '[.entries[] | select(.tag != null and (.tag | startswith("posthog"))) | .total_size_bytes] | add // 0')"
+          bc_count="$(echo "$response" | jq '[.entries[] | select(.tag != null and (.tag | startswith("posthog")))] | length')"
+
+          echo "bc_bytes=${bc_bytes}" >> "$GITHUB_OUTPUT"
+          echo "bc_count=${bc_count}" >> "$GITHUB_OUTPUT"
+          echo "bc_available=true" >> "$GITHUB_OUTPUT"
+
+      - name: Clear all GHA cache
+        run: |
+          echo "## PostHog Docker Cache — Branch Dedup Test" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          page=1
+          deleted=0
+          while true; do
+            ids="$(gh api "repos/${{ github.repository }}/actions/caches?per_page=100&page=${page}" --jq '.actions_caches[].id' 2>/dev/null)"
+            if [[ -z "$ids" ]]; then break; fi
+            for id in $ids; do
+              gh api -X DELETE "repos/${{ github.repository }}/actions/caches/${id}" 2>/dev/null || true
+              deleted=$((deleted + 1))
+            done
+            page=$((page + 1))
+          done
+
+          echo "Cleared ${deleted} cache entries"
+          sleep 15
+
+          usage="$(gh api repos/${{ github.repository }}/actions/cache/usage --jq '.active_caches_size_in_bytes')"
+          echo "Cleared ${deleted} entries. Residual: $(numfmt --to=iec-i --suffix=B ${usage})" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Build on main (baseline)
+        id: main_build
+        run: |
+          # Record latest run ID before dispatch
+          before_id="$(gh run list --workflow "measure-storage-build.yml" --branch main --limit 1 --json databaseId --jq '.[0].databaseId // 0' 2>/dev/null || echo 0)"
+
+          gh workflow run measure-storage-build.yml \
+            --repo "${{ github.repository }}" \
+            --ref main
+
+          # Wait for new run to appear
+          run_id=""
+          for i in $(seq 1 30); do
+            sleep 10
+            latest="$(gh run list --workflow "measure-storage-build.yml" --branch main --limit 1 --json databaseId --jq '.[0].databaseId // 0' 2>/dev/null || echo 0)"
+            if [[ "$latest" -gt "$before_id" ]]; then
+              run_id="$latest"
+              break
+            fi
+          done
+
+          if [[ -z "$run_id" ]]; then
+            echo "::error::Failed to find dispatched build run on main after 5 minutes"
+            exit 1
+          fi
+
+          echo "Main build: run ${run_id}"
+          echo "**Main build**: [run #${run_id}](https://github.com/${{ github.repository }}/actions/runs/${run_id})" >> "$GITHUB_STEP_SUMMARY"
+
+          gh run watch "${run_id}" --repo "${{ github.repository }}" --exit-status
+          sleep 15
+
+          # Measure total and per-branch
+          usage="$(gh api repos/${{ github.repository }}/actions/cache/usage --jq '.active_caches_size_in_bytes')"
+          total_count="$(gh api 'repos/${{ github.repository }}/actions/caches?per_page=1' --jq '.total_count')"
+          branch_count="$(gh api 'repos/${{ github.repository }}/actions/caches?per_page=1&ref=refs/heads/main' --jq '.total_count')"
+
+          echo "main_bytes=${usage}" >> "$GITHUB_OUTPUT"
+          echo "main_total_count=${total_count}" >> "$GITHUB_OUTPUT"
+          echo "main_branch_count=${branch_count}" >> "$GITHUB_OUTPUT"
+
+      - name: Simulate PR branches and measure growth
+        id: pr_builds
+        env:
+          MAIN_BYTES: ${{ steps.main_build.outputs.main_bytes }}
+          MAIN_TOTAL_COUNT: ${{ steps.main_build.outputs.main_total_count }}
+          MAIN_BRANCH_COUNT: ${{ steps.main_build.outputs.main_branch_count }}
+          BC_AVAILABLE: ${{ steps.bc_storage.outputs.bc_available }}
+          BC_BYTES: ${{ steps.bc_storage.outputs.bc_bytes }}
+          BC_COUNT: ${{ steps.bc_storage.outputs.bc_count }}
+        run: |
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Storage per branch" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          # Table header — include BC column if available
+          if [[ "${BC_AVAILABLE}" == "true" ]]; then
+            bc_size="$(numfmt --to=iec-i --suffix=B ${BC_BYTES})"
+            echo "| Branch | GHA storage | GHA entries | Branch entries | Growth | BC storage (deduped) |" >> "$GITHUB_STEP_SUMMARY"
+            echo "|---|---|---|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
+            echo "| main | $(numfmt --to=iec-i --suffix=B ${MAIN_BYTES}) | ${MAIN_TOTAL_COUNT} | ${MAIN_BRANCH_COUNT} | baseline | ${bc_size} (${BC_COUNT} entries) |" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "| Branch | GHA storage | GHA entries | Branch entries | Growth |" >> "$GITHUB_STEP_SUMMARY"
+            echo "|---|---|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
+            echo "| main | $(numfmt --to=iec-i --suffix=B ${MAIN_BYTES}) | ${MAIN_TOTAL_COUNT} | ${MAIN_BRANCH_COUNT} | baseline |" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          pr_count="${{ inputs.pr_count }}"
+          prev_bytes="${MAIN_BYTES}"
+
+          for i in $(seq 1 "$pr_count"); do
+            branch="storage-test-pr${i}"
+
+            # Create and push branch (identical to main)
+            git checkout -b "${branch}" 2>/dev/null || git checkout "${branch}"
+            git push origin "${branch}" --force
+
+            # Record latest run ID before dispatch
+            before_id="$(gh run list --workflow "measure-storage-build.yml" --branch "${branch}" --limit 1 --json databaseId --jq '.[0].databaseId // 0' 2>/dev/null || echo 0)"
+
+            gh workflow run measure-storage-build.yml \
+              --repo "${{ github.repository }}" \
+              --ref "${branch}"
+
+            # Wait for new run to appear
+            run_id=""
+            for attempt in $(seq 1 30); do
+              sleep 10
+              latest="$(gh run list --workflow "measure-storage-build.yml" --branch "${branch}" --limit 1 --json databaseId --jq '.[0].databaseId // 0' 2>/dev/null || echo 0)"
+              if [[ "$latest" -gt "$before_id" ]]; then
+                run_id="$latest"
+                break
+              fi
+            done
+
+            if [[ -z "$run_id" ]]; then
+              echo "::error::Failed to find dispatched build run on ${branch} after 5 minutes"
+              exit 1
+            fi
+
+            echo "PR${i} build: run ${run_id}"
+            echo "**PR #${i} build**: [run #${run_id}](https://github.com/${{ github.repository }}/actions/runs/${run_id})" >> "$GITHUB_STEP_SUMMARY"
+
+            gh run watch "${run_id}" --repo "${{ github.repository }}" --exit-status
+            sleep 15
+
+            # Measure total and per-branch
+            usage="$(gh api repos/${{ github.repository }}/actions/cache/usage --jq '.active_caches_size_in_bytes')"
+            total_count="$(gh api 'repos/${{ github.repository }}/actions/caches?per_page=1' --jq '.total_count')"
+            branch_count="$(gh api 'repos/${{ github.repository }}/actions/caches?per_page=1&ref=refs/heads/${branch}' --jq '.total_count')"
+            growth=$((usage - prev_bytes))
+
+            if [[ "${BC_AVAILABLE}" == "true" ]]; then
+              echo "| PR #${i} | $(numfmt --to=iec-i --suffix=B ${usage}) | ${total_count} | ${branch_count} | +$(numfmt --to=iec-i --suffix=B ${growth}) | ${bc_size} (same) |" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "| PR #${i} | $(numfmt --to=iec-i --suffix=B ${usage}) | ${total_count} | ${branch_count} | +$(numfmt --to=iec-i --suffix=B ${growth}) |" >> "$GITHUB_STEP_SUMMARY"
+            fi
+            prev_bytes="${usage}"
+          done
+
+          echo "final_bytes=${usage}" >> "$GITHUB_OUTPUT"
+          echo "final_count=${total_count}" >> "$GITHUB_OUTPUT"
+
+      - name: Cleanup test branches
+        if: always()
+        run: |
+          pr_count="${{ inputs.pr_count }}"
+          for i in $(seq 1 "$pr_count"); do
+            git push origin --delete "storage-test-pr${i}" 2>/dev/null || true
+          done
+
+      - name: Final summary
+        if: always()
+        env:
+          MAIN_BYTES: ${{ steps.main_build.outputs.main_bytes }}
+          FINAL_BYTES: ${{ steps.pr_builds.outputs.final_bytes }}
+          BC_AVAILABLE: ${{ steps.bc_storage.outputs.bc_available }}
+          BC_BYTES: ${{ steps.bc_storage.outputs.bc_bytes }}
+        run: |
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "---" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Analysis" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          pr_count="${{ inputs.pr_count }}"
+          total_branches=$((1 + pr_count))
+
+          if [[ -n "${MAIN_BYTES:-}" && "${MAIN_BYTES:-0}" -gt 0 && -n "${FINAL_BYTES:-}" ]]; then
+            multiplier="$(echo "scale=1; ${FINAL_BYTES} / ${MAIN_BYTES}" | bc)"
+            main_gb="$(echo "scale=2; ${MAIN_BYTES} / 1073741824" | bc)"
+            final_gb="$(echo "scale=2; ${FINAL_BYTES} / 1073741824" | bc)"
+
+            echo "**GitHub Actions cache** (no content-level dedup):" >> "$GITHUB_STEP_SUMMARY"
+            echo "- ${total_branches} branches, identical Docker image = **${multiplier}x storage** (${final_gb} GB)" >> "$GITHUB_STEP_SUMMARY"
+            echo "- Single branch baseline: ${main_gb} GB" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+
+            if [[ "${BC_AVAILABLE}" == "true" && "${BC_BYTES:-0}" -gt 0 ]]; then
+              bc_gb="$(echo "scale=2; ${BC_BYTES} / 1073741824" | bc)"
+              gha_vs_bc="$(echo "scale=1; ${FINAL_BYTES} / ${BC_BYTES}" | bc)"
+              echo "**BoringCache** (content-addressed dedup):" >> "$GITHUB_STEP_SUMMARY"
+              echo "- PostHog storage: **${bc_gb} GB** — same across all branches" >> "$GITHUB_STEP_SUMMARY"
+              echo "- GHA uses **${gha_vs_bc}x** more storage for ${total_branches} branches" >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "**BoringCache** (content-addressed dedup):" >> "$GITHUB_STEP_SUMMARY"
+              echo "- Same content across all branches stored once" >> "$GITHUB_STEP_SUMMARY"
+            fi
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+
+            echo "> **Why does GHA duplicate?** Cache entries are identified by" >> "$GITHUB_STEP_SUMMARY"
+            echo "> \`(branch_scope, key, version)\`. The branch scope comes from the" >> "$GITHUB_STEP_SUMMARY"
+            echo "> JWT token \`ac\` claim. Identical buildkit blobs create separate" >> "$GITHUB_STEP_SUMMARY"
+            echo "> entries per branch. No content dedup at the cache service level." >> "$GITHUB_STEP_SUMMARY"
+            echo ">" >> "$GITHUB_STEP_SUMMARY"
+            echo "> Sources: [moby/buildkit gha.go](https://github.com/moby/buildkit/blob/master/cache/remotecache/gha/gha.go)," >> "$GITHUB_STEP_SUMMARY"
+            echo "> [tonistiigi/go-actions-cache](https://github.com/tonistiigi/go-actions-cache)" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Measurement incomplete. Check build logs above for errors." >> "$GITHUB_STEP_SUMMARY"
+          fi
