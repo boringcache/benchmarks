@@ -139,7 +139,11 @@ jobs:
               cache_args=(--no-cache)
               internal_cache_enabled="0"
             elif [[ "$mode" == "seed-cache" ]]; then
+              # --no-cache is required for type=registry export: without it, buildx
+              # sees cached layers from the builder and skips pushing blobs to the
+              # registry proxy, so the proxy never uploads to BC backend.
               cache_args=(
+                --no-cache
                 --cache-to "type=registry,ref=127.0.0.1:${proxy_port}/${CACHE_SCOPE},mode=max,ignore-error=true,registry.insecure=true"
               )
               internal_cache_enabled="0"
@@ -351,7 +355,7 @@ jobs:
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "boringcache-check" \
             --bytes-uploaded "${{ steps.cache_size.outputs.bytes }}" \
-            --hit-behavior-note "Cold baseline runs --no-cache without remote cache export and with no-op boringcache binary. Seed-cache run reuses buildx builder cache from cold build + cache-to via BoringCache registry proxy (mode=max). Warm runs use cache-from/cache-to via the same proxy (mode=max) with no-op boringcache binary; stale/internal metrics mount real boringcache with stable logical tags. Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target server"
+            --hit-behavior-note "Cold baseline runs --no-cache without remote cache export and with no-op boringcache binary. Seed-cache run uses --no-cache + cache-to via BoringCache registry proxy (mode=max) to push all layer blobs. Warm runs use cache-from/cache-to via the same proxy (mode=max) with no-op boringcache binary; stale/internal metrics mount real boringcache with stable logical tags. Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target server"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
