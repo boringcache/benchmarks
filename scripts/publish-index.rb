@@ -459,8 +459,20 @@ def build_comparison_entry(metadata, actions_data, boringcache_data, pair, depot
   bc_warm = warm_steady_seconds(boringcache_metrics)
   return nil if ac_warm.nil? || bc_warm.nil?
 
-  display_before = ac_run_total || ac_warm
-  display_after = bc_run_total || bc_warm
+  # For Docker benchmarks, headline uses the "code changed" (stale Docker) scenario —
+  # that's the most common real-world CI build. run_total includes all benchmark
+  # scenarios (cold+seed+warm×2+stale+internal) and doesn't represent a single build.
+  ac_stale = actions_metrics[:stale_docker_seconds]
+  bc_stale = boringcache_metrics[:stale_docker_seconds]
+  is_docker_benchmark = ac_stale && bc_stale
+
+  if is_docker_benchmark
+    display_before = ac_stale
+    display_after = bc_stale
+  else
+    display_before = ac_run_total || ac_warm
+    display_after = bc_run_total || bc_warm
+  end
   display_faster_pct = percent_delta(display_before, display_after)
   warm_faster_pct = percent_delta(ac_warm, bc_warm)
   return nil if display_faster_pct.nil? || warm_faster_pct.nil?
@@ -470,6 +482,7 @@ def build_comparison_entry(metadata, actions_data, boringcache_data, pair, depot
     "logo" => metadata["logo"],
     "repo" => metadata["repo"],
     "step" => metadata["step"],
+    "headline_scenario" => is_docker_benchmark ? "stale_docker" : "run_total",
     "before" => seconds_to_text(display_before),
     "after" => seconds_to_text(display_after),
     "faster" => [display_faster_pct.round, 0].max.to_s,
@@ -487,15 +500,17 @@ def build_comparison_entry(metadata, actions_data, boringcache_data, pair, depot
       "actions_cache" => strategy_snapshot(actions_data),
       "boringcache" => strategy_snapshot(boringcache_data),
       "warm_delta_seconds" => (ac_warm - bc_warm).round(2),
-      "warm_improvement_pct" => warm_faster_pct.round(2),
-      "run_total_delta_seconds" => (display_before - display_after).round(2),
-      "run_total_improvement_pct" => display_faster_pct.round(2)
+      "warm_improvement_pct" => warm_faster_pct.round(2)
     }
   }
 
-  ac_stale = actions_metrics[:stale_docker_seconds]
-  bc_stale = boringcache_metrics[:stale_docker_seconds]
-  if ac_stale && bc_stale
+  # Run total (full benchmark workflow) — kept for reference, not used as headline
+  if ac_run_total && bc_run_total
+    entry["comparison"]["run_total_delta_seconds"] = (ac_run_total - bc_run_total).round(2)
+    entry["comparison"]["run_total_improvement_pct"] = percent_delta(ac_run_total, bc_run_total)&.round(2)
+  end
+
+  if is_docker_benchmark
     entry["comparison"]["stale_delta_seconds"] = (ac_stale - bc_stale).round(2)
     entry["comparison"]["stale_improvement_pct"] = percent_delta(ac_stale, bc_stale)&.round(2)
   end
