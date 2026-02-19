@@ -13,53 +13,89 @@ MAX_CMD_RETRIES = ENV.fetch("BENCHMARKS_GH_RETRIES", "3").to_i
 
 DEFAULT_ENTRIES = [
   {
-    "name" => "PostHog",
-    "logo" => "posthog",
-    "repo" => "PostHog/posthog",
-    "step" => "Docker build (full stack)",
-    "before" => "10m 50s",
-    "after" => "0m 8s",
-    "faster" => "99"
-  },
-  {
-    "name" => "Mastodon",
-    "logo" => "mastodon",
-    "repo" => "mastodon/mastodon",
-    "step" => "Docker build (Ruby+Node)",
-    "before" => "10m 11s",
-    "after" => "0m 6s",
-    "faster" => "99"
-  },
-  {
     "name" => "n8n",
     "logo" => "n8n",
     "repo" => "n8n-io/n8n",
-    "step" => "Install + build (pnpm+turbo)",
-    "before" => "5m 37s",
-    "after" => "0m 56s",
-    "faster" => "83"
+    "step" => "Docker build (pnpm+turbo)",
+    "before" => "6m 4s",
+    "after" => "1m 22s",
+    "faster" => "77"
   },
   {
     "name" => "Immich",
     "logo" => "immich",
     "repo" => "immich-app/immich",
     "step" => "Docker build (server)",
-    "before" => "12m 14s",
-    "after" => "1m 38s",
-    "faster" => "87"
+    "before" => "12m 36s",
+    "after" => "10m 40s",
+    "faster" => "15"
   },
   {
     "name" => "Hugo",
     "logo" => "hugo",
     "repo" => "gohugoio/hugo",
     "step" => "Docker build (Go)",
-    "before" => "8m 48s",
-    "after" => "1m 27s",
-    "faster" => "84"
+    "before" => "12m 36s",
+    "after" => "7m 32s",
+    "faster" => "40"
+  },
+  {
+    "name" => "Mastodon",
+    "logo" => "mastodon",
+    "repo" => "mastodon/mastodon",
+    "step" => "Docker build (Ruby+Node)",
+    "before" => "pending",
+    "after" => "22m 40s",
+    "faster" => "0"
+  },
+  {
+    "name" => "PostHog",
+    "logo" => "posthog",
+    "repo" => "PostHog/posthog",
+    "step" => "Docker build (full stack)",
+    "before" => "pending",
+    "after" => "26m 33s",
+    "faster" => "0"
+  },
+  {
+    "name" => "Friday Pulse",
+    "logo" => "fridaypulse",
+    "repo" => "FridayPulse/fridaypulse",
+    "step" => "Docker build",
+    "before" => "7m 20s",
+    "after" => "2m 39s",
+    "faster" => "64"
   }
 ].freeze
 
 COMPARISON_WORKFLOWS = [
+  {
+    "benchmark" => "n8n",
+    "name" => "n8n",
+    "logo" => "n8n",
+    "repo" => "n8n-io/n8n",
+    "step" => "Docker build (pnpm+turbo)",
+    "actions_workflow" => "n8n - Actions Cache",
+    "boringcache_workflow" => "n8n - BoringCache"
+  },
+  {
+    "benchmark" => "immich",
+    "name" => "Immich",
+    "logo" => "immich",
+    "repo" => "immich-app/immich",
+    "step" => "Docker build (server)",
+    "actions_workflow" => "Immich - Actions Cache",
+    "boringcache_workflow" => "Immich - BoringCache"
+  },
+  {
+    "benchmark" => "hugo",
+    "name" => "Hugo",
+    "logo" => "hugo",
+    "repo" => "gohugoio/hugo",
+    "step" => "Docker build (Go)",
+    "actions_workflow" => "Hugo - Actions Cache",
+    "boringcache_workflow" => "Hugo - BoringCache"
+  },
   {
     "benchmark" => "posthog",
     "name" => "PostHog",
@@ -79,24 +115,6 @@ COMPARISON_WORKFLOWS = [
     "actions_workflow" => "Mastodon Docker - Actions Cache",
     "boringcache_workflow" => "Mastodon Docker - BoringCache",
     "depot_repo" => "depot/benchmark-mastodon"
-  },
-  {
-    "benchmark" => "immich",
-    "name" => "Immich",
-    "logo" => "immich",
-    "repo" => "immich-app/immich",
-    "step" => "Docker build (server)",
-    "actions_workflow" => "Immich - Actions Cache",
-    "boringcache_workflow" => "Immich - BoringCache"
-  },
-  {
-    "benchmark" => "hugo",
-    "name" => "Hugo",
-    "logo" => "hugo",
-    "repo" => "gohugoio/hugo",
-    "step" => "Docker build (Go)",
-    "actions_workflow" => "Hugo - Actions Cache",
-    "boringcache_workflow" => "Hugo - BoringCache"
   }
 ].freeze
 
@@ -207,6 +225,16 @@ def job_duration_seconds(job)
   duration_seconds(started_at: job["startedAt"], completed_at: job["completedAt"])
 end
 
+def run_total_seconds(repo:, run_id:)
+  run = run_view(repo: repo, run_id: run_id)
+  jobs = Array(run["jobs"])
+  return nil if jobs.empty?
+
+  jobs.map { |job| job_duration_seconds(job) }.compact.max
+rescue StandardError
+  nil
+end
+
 def infer_depot_metrics(depot_repo)
   run_id = latest_successful_runs(repo: depot_repo, workflow_name: "Benchmark", limit: 10).first&.fetch("databaseId", nil)
   return nil unless run_id
@@ -292,15 +320,27 @@ end
 def load_strategy_data(temp_root:, run:, benchmark_id:, strategy:)
   run_id = run.fetch("databaseId")
   artifact_name = benchmark_artifact_name(run_id, benchmark_id, strategy)
-  return nil if artifact_name.nil?
+  run_total = run_total_seconds(repo: REPO, run_id: run_id)
+  return {
+    run: run,
+    run_total_seconds: run_total,
+    artifact_name: nil,
+    metrics: nil
+  } if artifact_name.nil?
 
   run_tmp = File.join(temp_root, "#{benchmark_id}-#{strategy}-#{run_id}")
   FileUtils.mkdir_p(run_tmp)
   payload = download_artifact_json(run_id, artifact_name, run_tmp)
-  return nil if payload.nil?
+  return {
+    run: run,
+    run_total_seconds: run_total,
+    artifact_name: artifact_name,
+    metrics: nil
+  } if payload.nil?
 
   {
     run: run,
+    run_total_seconds: run_total,
     artifact_name: artifact_name,
     metrics: extract_strategy_metrics(payload)
   }
@@ -342,9 +382,53 @@ def pick_run_pair(actions_runs:, boringcache_runs:)
   }
 end
 
+def build_run_duration_only_entry(metadata, pair, actions_data, boringcache_data)
+  ac_total = actions_data[:run_total_seconds]
+  bc_total = boringcache_data[:run_total_seconds]
+  return nil if ac_total.nil? || bc_total.nil?
+
+  faster_pct = percent_delta(ac_total, bc_total)
+  return nil if faster_pct.nil?
+
+  {
+    "name" => metadata["name"],
+    "logo" => metadata["logo"],
+    "repo" => metadata["repo"],
+    "step" => metadata["step"],
+    "before" => seconds_to_text(ac_total),
+    "after" => seconds_to_text(bc_total),
+    "faster" => [faster_pct.round, 0].max.to_s,
+    "before_seconds" => ac_total.round(2),
+    "after_seconds" => bc_total.round(2),
+    "comparison" => {
+      "baseline_strategy" => "actions-cache",
+      "candidate_strategy" => "boringcache",
+      "paired_on_head_sha" => pair.fetch(:paired_on_head_sha),
+      "pairing_head_sha" => pair.fetch(:pairing_head_sha),
+      "actions_cache" => {
+        "run_id" => pair.fetch(:actions)["databaseId"],
+        "run_url" => pair.fetch(:actions)["url"],
+        "head_sha" => pair.fetch(:actions)["headSha"],
+        "created_at" => pair.fetch(:actions)["createdAt"],
+        "run_total_seconds" => ac_total.round(2)
+      },
+      "boringcache" => {
+        "run_id" => pair.fetch(:boringcache)["databaseId"],
+        "run_url" => pair.fetch(:boringcache)["url"],
+        "head_sha" => pair.fetch(:boringcache)["headSha"],
+        "created_at" => pair.fetch(:boringcache)["createdAt"],
+        "run_total_seconds" => bc_total.round(2)
+      },
+      "run_total_delta_seconds" => (ac_total - bc_total).round(2),
+      "run_total_improvement_pct" => faster_pct.round(2)
+    }
+  }
+end
+
 def strategy_snapshot(data)
   metrics = data.fetch(:metrics)
   run = data.fetch(:run)
+  run_total_seconds = data[:run_total_seconds]
 
   {
     "run_id" => run["databaseId"],
@@ -358,6 +442,7 @@ def strategy_snapshot(data)
     "warm_steady_seconds" => warm_steady_seconds(metrics),
     "stale_docker_seconds" => metrics[:stale_docker_seconds],
     "internal_only_warm_seconds" => metrics[:internal_only_warm_seconds],
+    "run_total_seconds" => run_total_seconds,
     "storage_bytes" => metrics[:storage_bytes],
     "storage_source" => metrics[:storage_source],
     "two_warm_runs_succeeded" => metrics[:warm_runs_succeeded]
@@ -367,24 +452,29 @@ end
 def build_comparison_entry(metadata, actions_data, boringcache_data, pair, depot_metrics: nil)
   actions_metrics = actions_data.fetch(:metrics)
   boringcache_metrics = boringcache_data.fetch(:metrics)
+  ac_run_total = actions_data[:run_total_seconds]
+  bc_run_total = boringcache_data[:run_total_seconds]
 
   ac_warm = warm_steady_seconds(actions_metrics)
   bc_warm = warm_steady_seconds(boringcache_metrics)
   return nil if ac_warm.nil? || bc_warm.nil?
 
-  faster_pct = percent_delta(ac_warm, bc_warm)
-  return nil if faster_pct.nil?
+  display_before = ac_run_total || ac_warm
+  display_after = bc_run_total || bc_warm
+  display_faster_pct = percent_delta(display_before, display_after)
+  warm_faster_pct = percent_delta(ac_warm, bc_warm)
+  return nil if display_faster_pct.nil? || warm_faster_pct.nil?
 
   entry = {
     "name" => metadata["name"],
     "logo" => metadata["logo"],
     "repo" => metadata["repo"],
     "step" => metadata["step"],
-    "before" => seconds_to_text(ac_warm),
-    "after" => seconds_to_text(bc_warm),
-    "faster" => [faster_pct.round, 0].max.to_s,
-    "before_seconds" => ac_warm.round(2),
-    "after_seconds" => bc_warm.round(2),
+    "before" => seconds_to_text(display_before),
+    "after" => seconds_to_text(display_after),
+    "faster" => [display_faster_pct.round, 0].max.to_s,
+    "before_seconds" => display_before.round(2),
+    "after_seconds" => display_after.round(2),
     "metrics" => {
       "stale_docker_seconds" => boringcache_metrics[:stale_docker_seconds],
       "internal_only_warm_seconds" => boringcache_metrics[:internal_only_warm_seconds]
@@ -397,7 +487,9 @@ def build_comparison_entry(metadata, actions_data, boringcache_data, pair, depot
       "actions_cache" => strategy_snapshot(actions_data),
       "boringcache" => strategy_snapshot(boringcache_data),
       "warm_delta_seconds" => (ac_warm - bc_warm).round(2),
-      "warm_improvement_pct" => faster_pct.round(2)
+      "warm_improvement_pct" => warm_faster_pct.round(2),
+      "run_total_delta_seconds" => (display_before - display_after).round(2),
+      "run_total_improvement_pct" => display_faster_pct.round(2)
     }
   }
 
@@ -471,7 +563,17 @@ Dir.mktmpdir("benchmark-index-") do |tmp|
         benchmark_id: workflow.fetch("benchmark"),
         strategy: "boringcache"
       )
-      next if actions_data.nil? || boringcache_data.nil?
+      if actions_data.nil? || boringcache_data.nil?
+        fallback_entry = build_run_duration_only_entry(workflow, pair, actions_data || {}, boringcache_data || {})
+        entries_by_name[fallback_entry["name"]] = fallback_entry if fallback_entry
+        next
+      end
+
+      if actions_data[:metrics].nil? || boringcache_data[:metrics].nil?
+        fallback_entry = build_run_duration_only_entry(workflow, pair, actions_data, boringcache_data)
+        entries_by_name[fallback_entry["name"]] = fallback_entry if fallback_entry
+        next
+      end
 
       depot_metrics = workflow["depot_repo"] ? infer_depot_metrics(workflow["depot_repo"]) : nil
       dynamic_entry = build_comparison_entry(workflow, actions_data, boringcache_data, pair, depot_metrics: depot_metrics)
