@@ -515,12 +515,19 @@ def build_comparison_entry(metadata, actions_data, boringcache_data, pair, depot
 
   ac_storage = actions_metrics[:storage_bytes]
   bc_storage = boringcache_metrics[:storage_bytes]
-  if ac_storage && bc_storage && bc_storage > 0
+  ac_storage_source = actions_metrics[:storage_source].to_s
+  bc_storage_source = boringcache_metrics[:storage_source].to_s
+
+  # For Docker benchmarks, the AC script reports total repo cache (buildkit blobs
+  # are shared across projects and can't be attributed per-project). Only compute
+  # storage ratios when AC storage is clearly per-project (non-Docker benchmarks).
+  is_docker = actions_metrics[:stale_docker_seconds] || boringcache_metrics[:stale_docker_seconds]
+  ac_storage_is_per_project = !is_docker
+
+  if ac_storage && bc_storage && bc_storage > 0 && ac_storage_is_per_project
     entry["comparison"]["storage_saved_bytes"] = ac_storage - bc_storage
     entry["comparison"]["storage_improvement_pct"] = percent_delta(ac_storage.to_f, bc_storage.to_f)&.round(2)
     entry["comparison"]["storage_ratio_ac_div_bc"] = (ac_storage.to_f / bc_storage).round(2)
-  elsif ac_storage && bc_storage
-    entry["comparison"]["storage_saved_bytes"] = ac_storage - bc_storage
   end
 
   if depot_metrics
