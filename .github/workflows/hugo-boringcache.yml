@@ -101,7 +101,18 @@ jobs:
 
           stop_proxy() {
             if [[ -n "${proxy_pid:-}" ]] && kill -0 "$proxy_pid" >/dev/null 2>&1; then
-              kill "$proxy_pid" >/dev/null 2>&1 || true
+              # SIGINT triggers graceful shutdown (flush pending uploads)
+              kill -INT "$proxy_pid" >/dev/null 2>&1 || true
+              # Wait up to 120s for proxy to flush cache data to backend
+              local i=0
+              while kill -0 "$proxy_pid" >/dev/null 2>&1 && [[ $i -lt 120 ]]; do
+                sleep 1
+                i=$((i + 1))
+              done
+              # Force kill if still running
+              if kill -0 "$proxy_pid" >/dev/null 2>&1; then
+                kill -9 "$proxy_pid" >/dev/null 2>&1 || true
+              fi
               wait "$proxy_pid" 2>/dev/null || true
             fi
             proxy_pid=""
@@ -202,6 +213,11 @@ jobs:
                   continue
                 fi
                 echo "Build succeeded but cache export still degraded after ${max_attempts} attempts; continuing run with best-effort cache state." >&2
+              fi
+              # Stop proxy gracefully so it can flush pending uploads
+              if [[ "$mode" =~ ^(seed-cache|full)$ ]]; then
+                echo "Flushing proxy cache to backend..."
+                stop_proxy
               fi
               # Dump proxy log for diagnostics
               echo "=== Proxy log (${mode}, last 200 lines) ==="
