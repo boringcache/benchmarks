@@ -385,3 +385,25 @@ jobs:
 
       - name: Publish summary
         run: cat "${{ steps.artifact_files.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Storage comparison with GHA cache
+        if: always() && steps.cache_size.outputs.bytes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bc_bytes="${{ steps.cache_size.outputs.bytes }}"
+
+          # Query GHA cache usage for this repo
+          gha_bytes="$(gh api "repos/${GITHUB_REPOSITORY}/actions/cache/usage" --jq '.active_caches_size_in_bytes' 2>/dev/null)" || {
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "_Storage comparison skipped (GHA API unreachable)_" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          }
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Storage comparison" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | Storage | Notes |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| BoringCache | $(numfmt --to=iec-i --suffix=B "${bc_bytes}") | Mastodon benchmark tags (content-addressed, deduped across branches) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| GitHub Actions | $(numfmt --to=iec-i --suffix=B "${gha_bytes}") | Repo total (buildkit blobs shared across projects, no cross-branch dedup) |" >> "$GITHUB_STEP_SUMMARY"

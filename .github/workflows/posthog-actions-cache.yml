@@ -411,3 +411,38 @@ jobs:
 
       - name: Publish summary
         run: cat "${{ steps.artifact_files.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Storage comparison with BoringCache
+        if: always() && steps.cache_size.outputs.bytes
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          gha_bytes="${{ steps.cache_size.outputs.bytes }}"
+
+          # Query BC API for PostHog entries (skip if no token)
+          if [[ -z "${BORINGCACHE_API_TOKEN}" ]]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "_Storage comparison skipped (BORINGCACHE_API_TOKEN not set)_" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          response="$(curl -sf \
+            -H "Authorization: Bearer ${BORINGCACHE_API_TOKEN}" \
+            -H "User-Agent: BoringCache-CLI/1.0.0" \
+            -H "X-BoringCache-Client-Type: CLI" \
+            "https://api.boringcache.com/v1/workspaces/${BENCHMARK_WORKSPACE}/caches?limit=100" 2>/dev/null)" || {
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "_Storage comparison skipped (BC API unreachable)_" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          }
+
+          bc_bytes="$(echo "$response" | jq '[.entries[] | select(.tag != null and (.tag | startswith("posthog"))) | .total_size_bytes] | add // 0')"
+          bc_count="$(echo "$response" | jq '[.entries[] | select(.tag != null and (.tag | startswith("posthog")))] | length')"
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Storage comparison" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | PostHog storage | Notes |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| GitHub Actions | $(numfmt --to=iec-i --suffix=B "${gha_bytes}") | Repo total (buildkit blobs shared across projects) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| BoringCache | $(numfmt --to=iec-i --suffix=B "${bc_bytes}") | ${bc_count} PostHog entries (content-addressed, deduped across branches) |" >> "$GITHUB_STEP_SUMMARY"
