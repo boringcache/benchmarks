@@ -163,7 +163,7 @@ jobs:
               --tag posthog-benchmark:latest \
               --progress=plain \
               --no-cache \
-              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
+              --cache-to "type=gha,mode=min,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="0" \
@@ -225,7 +225,7 @@ jobs:
               --tag posthog-benchmark:latest \
               --progress=plain \
               --cache-from "type=gha,scope=${CACHE_SCOPE}" \
-              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
+              --cache-to "type=gha,mode=min,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="0" \
@@ -268,7 +268,7 @@ jobs:
               --tag posthog-benchmark:latest \
               --progress=plain \
               --cache-from "type=gha,scope=${CACHE_SCOPE}" \
-              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
+              --cache-to "type=gha,mode=min,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="0" \
@@ -398,7 +398,7 @@ jobs:
             --internal-only-warm-seconds "${{ steps.internal_only_build.outputs.seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \
-            --hit-behavior-note "Cold baseline runs --no-cache without remote cache export and with no-op boringcache binary. Seed-cache run uses --no-cache + cache-to type=gha (mode=max). Warm runs use cache-from/cache-to type=gha (mode=max). Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target posthog-build with boringcache no-op"
+            --hit-behavior-note "Cold baseline runs --no-cache without remote cache export and with no-op boringcache binary. Seed-cache run uses --no-cache + cache-to type=gha (mode=min). Warm runs use cache-from/cache-to type=gha (mode=min). Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target posthog-build with boringcache no-op"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
