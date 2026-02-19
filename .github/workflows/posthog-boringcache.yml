@@ -226,6 +226,10 @@ jobs:
                 fi
                 echo "Build succeeded but cache export still degraded after ${max_attempts} attempts; continuing run with best-effort cache state." >&2
               fi
+              # Dump proxy log for diagnostics
+              echo "=== Proxy log (${mode}, last 200 lines) ==="
+              tail -n 200 "$proxy_log" 2>/dev/null || true
+              echo "=== End proxy log ==="
               break
             fi
 
