@@ -70,7 +70,7 @@ jobs:
           cp .benchmark-config/dockerfiles/mastodon/Dockerfile.boringcache Dockerfile.boringcache
 
           cache_scope="${BENCHMARK_ID}r${GITHUB_RUN_ID}a${GITHUB_RUN_ATTEMPT}"
-          docker_registry_tag="${BENCHMARK_ID}-docker-build"
+          docker_registry_tag="mastodon-docker-build"
           libvips_tag="mastodon-libvips-8.18.0"
           ffmpeg_tag="mastodon-ffmpeg-8.0"
           gems_tag="mastodon-gems"
