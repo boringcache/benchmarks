@@ -148,6 +148,9 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
+      - name: Prune builder cache
+        run: docker buildx prune -f --builder "${{ steps.buildx.outputs.name }}"
+
       - name: Seed cache build
         id: seed_cache_build
         env:
@@ -167,6 +170,7 @@ jobs:
               --file Dockerfile.boringcache \
               --tag immich-server-benchmark:latest \
               --progress=plain \
+              --no-cache \
               --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
@@ -210,6 +214,9 @@ jobs:
 
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Prune builder cache
+        run: docker buildx prune -f --builder "${{ steps.buildx.outputs.name }}"
 
       - name: Run warm build 1
         id: warm1_build

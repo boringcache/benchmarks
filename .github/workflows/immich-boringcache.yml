@@ -250,6 +250,9 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
+      - name: Prune builder cache
+        run: docker buildx prune -f --builder "${{ steps.buildx.outputs.name }}"
+
       - name: Seed cache build
         id: seed_cache_build
         env:
@@ -265,6 +268,9 @@ jobs:
           ./run-boringcache-build.sh seed-cache
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Prune builder cache
+        run: docker buildx prune -f --builder "${{ steps.buildx.outputs.name }}"
 
       - name: Run warm build 1
         id: warm1_build

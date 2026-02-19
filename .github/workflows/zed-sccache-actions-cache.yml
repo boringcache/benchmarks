@@ -1,0 +1,276 @@
+name: "Zed sccache - Actions Cache"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/zed-sccache-boringcache.yml"
+      - ".github/workflows/zed-sccache-actions-cache.yml"
+      - "scripts/**"
+
+permissions:
+  contents: read
+  actions: write
+
+env:
+  PROJECT_REPO: zed-industries/zed
+  PROJECT_REF: "014bf4c332d58ae9e23166d658d594272588daad"
+  BENCHMARK_ID: zed-sccache
+  BENCHMARK_WORKSPACE: boringcache/benchmarks
+
+jobs:
+  sccache-build:
+    name: sccache build (actions/cache, cold+warm)
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+
+      - name: Checkout benchmark config
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libxkbcommon-dev libwayland-dev libvulkan-dev \
+            libasound2-dev libfontconfig1-dev libfreetype6-dev \
+            libssl-dev pkg-config cmake \
+            libx11-dev libx11-xcb-dev libxcb1-dev \
+            libxcursor-dev libxinerama-dev libxi-dev libxrandr-dev
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install sccache
+        run: |
+          set -euo pipefail
+          SCCACHE_VERSION="0.13.0"
+          ARCHIVE="sccache-v${SCCACHE_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+          URL="https://github.com/mozilla/sccache/releases/download/v${SCCACHE_VERSION}/${ARCHIVE}"
+          TMP_DIR="$(mktemp -d)"
+          trap 'rm -rf "$TMP_DIR"' EXIT
+          curl -sS --fail --location --output "${TMP_DIR}/${ARCHIVE}" "$URL"
+          tar -xzf "${TMP_DIR}/${ARCHIVE}" -C "$TMP_DIR"
+          sudo install -m 0755 "${TMP_DIR}/sccache-v${SCCACHE_VERSION}-x86_64-unknown-linux-musl/sccache" /usr/local/bin/sccache
+          sccache --version
+
+      - name: Prepare benchmark scope and helpers
+        id: scope
+        run: |
+          set -euo pipefail
+          cache_scope="${BENCHMARK_ID}r${GITHUB_RUN_ID}a${GITHUB_RUN_ATTEMPT}"
+          cache_key="index-${cache_scope}"
+          scope_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
+          echo "cache_key=${cache_key}" >> "$GITHUB_OUTPUT"
+          echo "scope_started_at=${scope_started_at}" >> "$GITHUB_OUTPUT"
+
+          cat > ./run-zed-sccache-phase.sh <<'SH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          mode="${1:-warm}"
+
+          run_cold_build() {
+            cargo build --release
+          }
+
+          run_cached_build() {
+            export SCCACHE_DIR="${HOME}/.cache/sccache"
+            export SCCACHE_CACHE_SIZE="10G"
+            export SCCACHE_IDLE_TIMEOUT="0"
+            export RUSTC_WRAPPER="sccache"
+            export CC="sccache cc"
+            export CXX="sccache c++"
+
+            sccache --start-server || true
+            cargo build --release
+            sccache --show-stats || true
+          }
+
+          apply_stale_change() {
+            local stale_file
+            stale_file="$(git ls-files '*.rs' | head -n1)"
+            if [[ -z "${stale_file}" ]]; then
+              echo "No Rust source file found for stale mutation" >&2
+              exit 1
+            fi
+
+            echo "// benchmark stale mutation ${GITHUB_RUN_ID:-local}-$(date +%s)" >> "${stale_file}"
+            echo "Applied stale change to ${stale_file}"
+          }
+
+          case "$mode" in
+            cold)
+              run_cold_build
+              ;;
+            warm)
+              run_cached_build
+              ;;
+            stale)
+              apply_stale_change
+              run_cached_build
+              ;;
+            *)
+              echo "Unknown mode: $mode" >&2
+              exit 1
+              ;;
+          esac
+          SH
+          chmod +x ./run-zed-sccache-phase.sh
+
+      - name: Run cold baseline build
+        id: cold_baseline_build
+        run: |
+          set -euo pipefail
+          rm -rf target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
+          mkdir -p target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
+
+          start="$(date +%s)"
+          ./run-zed-sccache-phase.sh cold
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Seed cache build
+        id: seed_cache_build
+        run: |
+          set -euo pipefail
+          rm -rf target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
+          mkdir -p target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
+
+          start="$(date +%s)"
+          ./run-zed-sccache-phase.sh warm
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Save seeded cache
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cache/sccache
+            target
+          key: ${{ steps.scope.outputs.cache_key }}
+
+      - name: Reset build state for warm build 1
+        run: |
+          set -euo pipefail
+          rm -rf target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
+          mkdir -p target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
+
+      - name: Restore cache for warm build 1
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cache/sccache
+            target
+          key: ${{ steps.scope.outputs.cache_key }}
+
+      - name: Run warm build 1
+        id: warm1_build
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-zed-sccache-phase.sh warm
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Reset build state for warm build 2
+        run: |
+          set -euo pipefail
+          rm -rf target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
+          mkdir -p target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
+
+      - name: Restore cache for warm build 2
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cache/sccache
+            target
+          key: ${{ steps.scope.outputs.cache_key }}
+
+      - name: Run warm build 2
+        id: warm2_build
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-zed-sccache-phase.sh warm
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Reset build state for stale build
+        run: |
+          set -euo pipefail
+          rm -rf target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
+          mkdir -p target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
+
+      - name: Restore cache for stale build
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cache/sccache
+            target
+          key: ${{ steps.scope.outputs.cache_key }}
+
+      - name: Run stale build
+        id: stale_docker_build
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-zed-sccache-phase.sh stale
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Measure GHA cache storage usage
+        id: cache_size
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bytes="$(.benchmark-config/scripts/sum-gha-cache-by-key.sh "${{ steps.scope.outputs.cache_key }}" "${{ steps.scope.outputs.scope_started_at }}")"
+          echo "bytes=${bytes}" >> "$GITHUB_OUTPUT"
+
+      - name: Write benchmark artifacts
+        id: artifact_files
+        run: |
+          .benchmark-config/scripts/write-benchmark-artifacts.sh \
+            --benchmark "$BENCHMARK_ID" \
+            --strategy "actions-cache" \
+            --project-repo "$PROJECT_REPO" \
+            --project-ref "$PROJECT_REF" \
+            --cold-seconds "${{ steps.cold_baseline_build.outputs.seconds }}" \
+            --warm1-seconds "${{ steps.warm1_build.outputs.seconds }}" \
+            --warm2-seconds "${{ steps.warm2_build.outputs.seconds }}" \
+            --stale-docker-seconds "${{ steps.stale_docker_build.outputs.seconds }}" \
+            --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
+            --cache-storage-source "github-actions-cache-api" \
+            --hit-behavior-note "Cold baseline runs without restore and without sccache wrapper. Seed run rebuilds from empty state with sccache enabled, then saves cargo registry/git, target, and sccache directories into one actions/cache key. Warm1/Warm2 restore that key before build. Stale run restores warm cache, mutates one Rust source file, then rebuilds."
+
+      - name: Upload benchmark artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache
+          path: |
+            ${{ steps.artifact_files.outputs.json_path }}
+            ${{ steps.artifact_files.outputs.md_path }}
+          if-no-files-found: error
+
+      - name: Publish summary
+        run: cat "${{ steps.artifact_files.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"
