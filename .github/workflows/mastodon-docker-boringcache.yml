@@ -271,6 +271,7 @@ jobs:
           BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
           BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
           BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
+          BORINGCACHE_TAG_DOCKER: ${{ steps.scope.outputs.docker_registry_tag }}
           BORINGCACHE_TAG_YARN: ${{ steps.scope.outputs.yarn_tag }}
           IMAGE_TAG: mastodon-benchmark:latest
         run: |
@@ -292,6 +293,7 @@ jobs:
           BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
           BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
           BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
+          BORINGCACHE_TAG_DOCKER: ${{ steps.scope.outputs.docker_registry_tag }}
           BORINGCACHE_TAG_YARN: ${{ steps.scope.outputs.yarn_tag }}
           IMAGE_TAG: mastodon-benchmark:latest
         run: |
@@ -313,6 +315,7 @@ jobs:
           BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
           BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
           BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
+          BORINGCACHE_TAG_DOCKER: ${{ steps.scope.outputs.docker_registry_tag }}
           BORINGCACHE_TAG_YARN: ${{ steps.scope.outputs.yarn_tag }}
           IMAGE_TAG: mastodon-benchmark:latest
         run: |
@@ -331,6 +334,7 @@ jobs:
           BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
           BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
           BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
+          BORINGCACHE_TAG_DOCKER: ${{ steps.scope.outputs.docker_registry_tag }}
           BORINGCACHE_TAG_YARN: ${{ steps.scope.outputs.yarn_tag }}
           IMAGE_TAG: mastodon-benchmark:latest
         run: |
@@ -349,6 +353,7 @@ jobs:
           BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
           BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
           BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
+          BORINGCACHE_TAG_DOCKER: ${{ steps.scope.outputs.docker_registry_tag }}
           BORINGCACHE_TAG_YARN: ${{ steps.scope.outputs.yarn_tag }}
           IMAGE_TAG: mastodon-benchmark:latest
         run: |
@@ -367,6 +372,7 @@ jobs:
           BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.libvips_tag }}
           BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.ffmpeg_tag }}
           BORINGCACHE_TAG_GEMS: ${{ steps.scope.outputs.gems_tag }}
+          BORINGCACHE_TAG_DOCKER: ${{ steps.scope.outputs.docker_registry_tag }}
           BORINGCACHE_TAG_YARN: ${{ steps.scope.outputs.yarn_tag }}
           IMAGE_TAG: mastodon-benchmark:latest
         run: |
