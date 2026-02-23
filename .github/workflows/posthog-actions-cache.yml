@@ -52,7 +52,6 @@ jobs:
         uses: boringcache/setup-boringcache@v1
         with:
           token: ${{ secrets.BORINGCACHE_API_TOKEN }}
-          version: v1.0.3
           platform: linux-amd64
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
