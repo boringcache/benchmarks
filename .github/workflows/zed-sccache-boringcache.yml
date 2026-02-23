@@ -46,7 +46,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            libxkbcommon-dev libwayland-dev libvulkan-dev \
+            libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev libvulkan-dev \
             libasound2-dev libfontconfig1-dev libfreetype6-dev \
             libssl-dev pkg-config cmake \
             libx11-dev libx11-xcb-dev libxcb1-dev \
