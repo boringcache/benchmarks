@@ -27,6 +27,7 @@ jobs:
           workspace: boringcache/benchmarks
           node-version: '20'
           cache-tag: n8n
+          turbo-remote-cache: true
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
@@ -58,4 +59,4 @@ jobs:
           echo "| pnpm install | ${{ steps.install.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
           echo "| pnpm build | ${{ steps.build.outputs.duration }}s |" >> "$GITHUB_STEP_SUMMARY"
           echo "| Commit | \`${{ env.PROJECT_REF }}\` |" >> "$GITHUB_STEP_SUMMARY"
-          echo "| Cache | BoringCache |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Cache | BoringCache (nodejs-action + native Turbo remote cache) |" >> "$GITHUB_STEP_SUMMARY"

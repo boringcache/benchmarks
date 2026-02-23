@@ -67,17 +67,31 @@ jobs:
           chmod +x ./boringcache-bin-real ./boringcache-bin-noop
           cp ./boringcache-bin-real ./boringcache-bin
           echo '!boringcache-bin' >> .dockerignore
+          echo '!libjxl-patches' >> .dockerignore
           cp .benchmark-config/dockerfiles/immich/Dockerfile.boringcache Dockerfile.boringcache
+          cp -r .benchmark-config/dockerfiles/immich/libjxl-patches ./libjxl-patches
 
           cache_scope="${BENCHMARK_ID}r${GITHUB_RUN_ID}a${GITHUB_RUN_ATTEMPT}"
           docker_registry_tag="${BENCHMARK_ID}-docker-build"
           pnpm_tag="immich-pnpm"
           mise_tag="immich-mise"
-          tags_csv="${pnpm_tag},${mise_tag},${cache_scope},${docker_registry_tag}"
+          tag_libheif="immich-libheif-1.20.2"
+          tag_libjxl="immich-libjxl-0.11.1"
+          tag_libraw="immich-libraw-0.22.0"
+          tag_imagemagick="immich-imagemagick-7.1.2-2"
+          tag_libvips="immich-libvips-8.17.3"
+          tag_ffmpeg="immich-ffmpeg-7.1.3-1"
+          tags_csv="${pnpm_tag},${mise_tag},${tag_libheif},${tag_libjxl},${tag_libraw},${tag_imagemagick},${tag_libvips},${tag_ffmpeg},${cache_scope},${docker_registry_tag}"
           echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
           echo "docker_registry_tag=${docker_registry_tag}" >> "$GITHUB_OUTPUT"
           echo "pnpm_tag=${pnpm_tag}" >> "$GITHUB_OUTPUT"
           echo "mise_tag=${mise_tag}" >> "$GITHUB_OUTPUT"
+          echo "tag_libheif=${tag_libheif}" >> "$GITHUB_OUTPUT"
+          echo "tag_libjxl=${tag_libjxl}" >> "$GITHUB_OUTPUT"
+          echo "tag_libraw=${tag_libraw}" >> "$GITHUB_OUTPUT"
+          echo "tag_imagemagick=${tag_imagemagick}" >> "$GITHUB_OUTPUT"
+          echo "tag_libvips=${tag_libvips}" >> "$GITHUB_OUTPUT"
+          echo "tag_ffmpeg=${tag_ffmpeg}" >> "$GITHUB_OUTPUT"
           echo "tags_csv=${tags_csv}" >> "$GITHUB_OUTPUT"
           cat > ./run-boringcache-build.sh <<'SH'
           #!/usr/bin/env bash
@@ -161,7 +175,7 @@ jobs:
             elif [[ "$mode" == "internal-only" ]]; then
               cache_args=(--no-cache)
             elif [[ "$mode" == "internal-target" ]]; then
-              cache_args=(--no-cache --target server)
+              cache_args=(--no-cache --target dev)
             else
               echo "Unknown build mode: $mode" >&2
               exit 1
@@ -198,6 +212,12 @@ jobs:
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_TAG_PNPM="$BORINGCACHE_TAG_PNPM" \
               --build-arg BORINGCACHE_TAG_MISE="$BORINGCACHE_TAG_MISE" \
+              --build-arg BORINGCACHE_TAG_LIBHEIF="$BORINGCACHE_TAG_LIBHEIF" \
+              --build-arg BORINGCACHE_TAG_LIBJXL="$BORINGCACHE_TAG_LIBJXL" \
+              --build-arg BORINGCACHE_TAG_LIBRAW="$BORINGCACHE_TAG_LIBRAW" \
+              --build-arg BORINGCACHE_TAG_IMAGEMAGICK="$BORINGCACHE_TAG_IMAGEMAGICK" \
+              --build-arg BORINGCACHE_TAG_LIBVIPS="$BORINGCACHE_TAG_LIBVIPS" \
+              --build-arg BORINGCACHE_TAG_FFMPEG="$BORINGCACHE_TAG_FFMPEG" \
               --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="$internal_cache_enabled" \
               . 2>&1 | tee "$build_log"
             status=${PIPESTATUS[0]}
@@ -262,6 +282,12 @@ jobs:
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
           BORINGCACHE_TAG_MISE: ${{ steps.scope.outputs.mise_tag }}
+          BORINGCACHE_TAG_LIBHEIF: ${{ steps.scope.outputs.tag_libheif }}
+          BORINGCACHE_TAG_LIBJXL: ${{ steps.scope.outputs.tag_libjxl }}
+          BORINGCACHE_TAG_LIBRAW: ${{ steps.scope.outputs.tag_libraw }}
+          BORINGCACHE_TAG_IMAGEMAGICK: ${{ steps.scope.outputs.tag_imagemagick }}
+          BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.tag_libvips }}
+          BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.tag_ffmpeg }}
           IMAGE_TAG: immich-server-benchmark:latest
         run: |
           set -euo pipefail
@@ -281,6 +307,12 @@ jobs:
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
           BORINGCACHE_TAG_MISE: ${{ steps.scope.outputs.mise_tag }}
+          BORINGCACHE_TAG_LIBHEIF: ${{ steps.scope.outputs.tag_libheif }}
+          BORINGCACHE_TAG_LIBJXL: ${{ steps.scope.outputs.tag_libjxl }}
+          BORINGCACHE_TAG_LIBRAW: ${{ steps.scope.outputs.tag_libraw }}
+          BORINGCACHE_TAG_IMAGEMAGICK: ${{ steps.scope.outputs.tag_imagemagick }}
+          BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.tag_libvips }}
+          BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.tag_ffmpeg }}
           IMAGE_TAG: immich-server-benchmark:latest
         run: |
           set -euo pipefail
@@ -300,6 +332,12 @@ jobs:
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
           BORINGCACHE_TAG_MISE: ${{ steps.scope.outputs.mise_tag }}
+          BORINGCACHE_TAG_LIBHEIF: ${{ steps.scope.outputs.tag_libheif }}
+          BORINGCACHE_TAG_LIBJXL: ${{ steps.scope.outputs.tag_libjxl }}
+          BORINGCACHE_TAG_LIBRAW: ${{ steps.scope.outputs.tag_libraw }}
+          BORINGCACHE_TAG_IMAGEMAGICK: ${{ steps.scope.outputs.tag_imagemagick }}
+          BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.tag_libvips }}
+          BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.tag_ffmpeg }}
           IMAGE_TAG: immich-server-benchmark:latest
         run: |
           set -euo pipefail
@@ -316,6 +354,12 @@ jobs:
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
           BORINGCACHE_TAG_MISE: ${{ steps.scope.outputs.mise_tag }}
+          BORINGCACHE_TAG_LIBHEIF: ${{ steps.scope.outputs.tag_libheif }}
+          BORINGCACHE_TAG_LIBJXL: ${{ steps.scope.outputs.tag_libjxl }}
+          BORINGCACHE_TAG_LIBRAW: ${{ steps.scope.outputs.tag_libraw }}
+          BORINGCACHE_TAG_IMAGEMAGICK: ${{ steps.scope.outputs.tag_imagemagick }}
+          BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.tag_libvips }}
+          BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.tag_ffmpeg }}
           IMAGE_TAG: immich-server-benchmark:latest
         run: |
           set -euo pipefail
@@ -332,6 +376,12 @@ jobs:
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
           BORINGCACHE_TAG_MISE: ${{ steps.scope.outputs.mise_tag }}
+          BORINGCACHE_TAG_LIBHEIF: ${{ steps.scope.outputs.tag_libheif }}
+          BORINGCACHE_TAG_LIBJXL: ${{ steps.scope.outputs.tag_libjxl }}
+          BORINGCACHE_TAG_LIBRAW: ${{ steps.scope.outputs.tag_libraw }}
+          BORINGCACHE_TAG_IMAGEMAGICK: ${{ steps.scope.outputs.tag_imagemagick }}
+          BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.tag_libvips }}
+          BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.tag_ffmpeg }}
           IMAGE_TAG: immich-server-benchmark:latest
         run: |
           set -euo pipefail
@@ -348,6 +398,12 @@ jobs:
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
           BORINGCACHE_TAG_MISE: ${{ steps.scope.outputs.mise_tag }}
+          BORINGCACHE_TAG_LIBHEIF: ${{ steps.scope.outputs.tag_libheif }}
+          BORINGCACHE_TAG_LIBJXL: ${{ steps.scope.outputs.tag_libjxl }}
+          BORINGCACHE_TAG_LIBRAW: ${{ steps.scope.outputs.tag_libraw }}
+          BORINGCACHE_TAG_IMAGEMAGICK: ${{ steps.scope.outputs.tag_imagemagick }}
+          BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.tag_libvips }}
+          BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.tag_ffmpeg }}
           IMAGE_TAG: immich-server-benchmark:latest
         run: |
           set -euo pipefail
@@ -381,7 +437,7 @@ jobs:
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "boringcache-check" \
             --bytes-uploaded "${{ steps.cache_size.outputs.bytes }}" \
-            --hit-behavior-note "Cold baseline runs --no-cache without remote cache export and with no-op boringcache binary. Seed-cache run uses --no-cache + cache-to via BoringCache registry proxy (mode=max) to push all layer blobs. Warm runs use cache-from/cache-to via the same proxy (mode=max) with no-op boringcache binary; stale/internal metrics mount real boringcache with stable logical tags. Stale Docker run uses --no-cache full build, internal-only run uses --no-cache --target server"
+            --hit-behavior-note "Cold baseline runs --no-cache without remote cache export and with no-op boringcache binary. Seed-cache run uses --no-cache + cache-to via BoringCache registry proxy (mode=max) to push all layer blobs. Warm runs use cache-from/cache-to via the same proxy (mode=max) with no-op boringcache binary; stale/internal metrics mount real boringcache with stable logical tags for native libs (libheif, libjxl, libraw, imagemagick, libvips, ffmpeg) and pnpm/mise. Stale Docker run uses --no-cache full build with internal BC cache, internal-only run uses --no-cache --target dev to measure native lib compilation savings"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4

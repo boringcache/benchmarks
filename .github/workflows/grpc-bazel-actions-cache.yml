@@ -1,0 +1,234 @@
+name: "gRPC Bazel - Actions Cache"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/grpc-bazel-boringcache.yml"
+      - ".github/workflows/grpc-bazel-actions-cache.yml"
+      - "scripts/**"
+
+permissions:
+  contents: read
+  actions: write
+
+env:
+  PROJECT_REPO: grpc/grpc
+  PROJECT_REF: "ca0a0c39f90b0f64b1852cf712797abb0c1fd7ee"
+  BENCHMARK_ID: grpc-bazel
+  BENCHMARK_WORKSPACE: boringcache/benchmarks
+  BAZEL_TARGET: "//examples/cpp/csm:csm_greeter_client"
+
+jobs:
+  bazel-build:
+    name: Bazel build (actions/cache, cold+warm)
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+          submodules: true
+
+      - name: Checkout benchmark config
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
+      - name: Setup Bazelisk
+        uses: bazelbuild/setup-bazelisk@v3
+
+      - name: Prepare benchmark scope
+        id: scope
+        run: |
+          set -euo pipefail
+          cache_scope="${BENCHMARK_ID}r${GITHUB_RUN_ID}a${GITHUB_RUN_ATTEMPT}"
+          cache_key="index-${cache_scope}"
+          scope_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
+          echo "cache_key=${cache_key}" >> "$GITHUB_OUTPUT"
+          echo "scope_started_at=${scope_started_at}" >> "$GITHUB_OUTPUT"
+
+          cat > ./run-grpc-bazel-build.sh <<'SH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          max_attempts=2
+          attempt=1
+          while true; do
+            if bazel build "$BAZEL_TARGET"; then
+              break
+            fi
+
+            if [[ "$attempt" -ge "$max_attempts" ]]; then
+              echo "Bazel build failed after ${max_attempts} attempts" >&2
+              exit 1
+            fi
+
+            echo "Bazel build failed (attempt ${attempt}/${max_attempts}); retrying..." >&2
+            attempt=$((attempt + 1))
+            sleep 5
+          done
+          SH
+          chmod +x ./run-grpc-bazel-build.sh
+
+      - name: Purge benchmark GHA cache keys
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          for key_prefix in "index-${BENCHMARK_ID}"; do
+            page=1
+            while true; do
+              response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&page=${page}&key=${key_prefix}" 2>/dev/null || true)"
+              if [[ -z "$response" ]] || ! jq -e '.actions_caches | type == "array"' <<<"$response" >/dev/null 2>&1; then
+                break
+              fi
+              mapfile -t cache_ids < <(jq -r '.actions_caches[].id' <<<"$response")
+              for cache_id in "${cache_ids[@]}"; do
+                gh api -X DELETE "/repos/${GITHUB_REPOSITORY}/actions/caches/${cache_id}" >/dev/null 2>&1 || true
+              done
+              count="$(jq '.actions_caches | length' <<<"$response")"
+              if [[ "$count" -lt 100 ]]; then
+                break
+              fi
+              page=$((page + 1))
+            done
+          done
+
+      - name: Run cold baseline build
+        id: cold_baseline_build
+        run: |
+          set -euo pipefail
+          bazel clean --expunge
+
+          start="$(date +%s)"
+          ./run-grpc-bazel-build.sh
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Clean Bazel for seed build
+        run: bazel clean --expunge
+
+      - name: Seed cache build
+        id: seed_cache_build
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-grpc-bazel-build.sh
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Save seeded Bazel cache
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.cache/bazel
+          key: ${{ steps.scope.outputs.cache_key }}
+
+      - name: Clean Bazel for warm build 1
+        run: bazel clean --expunge
+
+      - name: Restore cache for warm build 1
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.cache/bazel
+          key: ${{ steps.scope.outputs.cache_key }}
+
+      - name: Run warm build 1
+        id: warm1_build
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-grpc-bazel-build.sh
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Clean Bazel for warm build 2
+        run: bazel clean --expunge
+
+      - name: Restore cache for warm build 2
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.cache/bazel
+          key: ${{ steps.scope.outputs.cache_key }}
+
+      - name: Run warm build 2
+        id: warm2_build
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-grpc-bazel-build.sh
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Clean Bazel for stale build
+        run: bazel clean --expunge
+
+      - name: Restore cache for stale build
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.cache/bazel
+          key: ${{ steps.scope.outputs.cache_key }}
+
+      - name: Run stale build
+        id: stale_docker_build
+        run: |
+          set -euo pipefail
+
+          stale_file="examples/cpp/csm/csm_greeter_client.cc"
+          if [[ ! -f "$stale_file" ]]; then
+            stale_file="$(find examples -name '*.cc' | head -n1)"
+          fi
+          echo "// benchmark stale mutation ${GITHUB_RUN_ID:-local}-$(date +%s)" >> "${stale_file}"
+          echo "Applied stale change to ${stale_file}"
+
+          start="$(date +%s)"
+          ./run-grpc-bazel-build.sh
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Measure GHA cache storage usage
+        id: cache_size
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bytes="$(.benchmark-config/scripts/sum-gha-cache-by-key.sh "${{ steps.scope.outputs.cache_key }}" "${{ steps.scope.outputs.scope_started_at }}")"
+          echo "bytes=${bytes}" >> "$GITHUB_OUTPUT"
+
+      - name: Write benchmark artifacts
+        id: artifact_files
+        run: |
+          .benchmark-config/scripts/write-benchmark-artifacts.sh \
+            --benchmark "$BENCHMARK_ID" \
+            --strategy "actions-cache" \
+            --project-repo "$PROJECT_REPO" \
+            --project-ref "$PROJECT_REF" \
+            --cold-seconds "${{ steps.cold_baseline_build.outputs.seconds }}" \
+            --warm1-seconds "${{ steps.warm1_build.outputs.seconds }}" \
+            --warm2-seconds "${{ steps.warm2_build.outputs.seconds }}" \
+            --stale-docker-seconds "${{ steps.stale_docker_build.outputs.seconds }}" \
+            --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
+            --cache-storage-source "github-actions-cache-api" \
+            --hit-behavior-note "Cold baseline builds without any cache. Seed run builds from scratch and saves ~/.cache/bazel to actions/cache. bazel clean --expunge between every phase. Warm runs restore the cache key before building. Stale run restores cache, mutates one .cc source file, then rebuilds."
+
+      - name: Upload benchmark artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache
+          path: |
+            ${{ steps.artifact_files.outputs.json_path }}
+            ${{ steps.artifact_files.outputs.md_path }}
+          if-no-files-found: error
+
+      - name: Publish summary
+        run: cat "${{ steps.artifact_files.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"

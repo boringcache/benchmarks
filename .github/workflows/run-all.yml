@@ -11,6 +11,7 @@ on:
         options:
           - docker
           - sccache
+          - bazel
           - all
 
 permissions:
@@ -39,6 +40,9 @@ jobs:
               ],
               sccache: [
                 'zed-sccache-actions-cache.yml', 'zed-sccache-boringcache.yml',
+              ],
+              bazel: [
+                'grpc-bazel-actions-cache.yml', 'grpc-bazel-boringcache.yml',
               ],
             };
 
