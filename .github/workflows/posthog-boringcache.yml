@@ -422,7 +422,7 @@ jobs:
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "boringcache-check" \
             --bytes-uploaded "${{ steps.cache_size.outputs.bytes }}" \
-            --hit-behavior-note "Cold+seed run uses --no-cache + cache-to via the BoringCache registry proxy (mode=max) and records cold timing while priming remote cache. Warm runs use cache-from/cache-to with no-op boringcache binary. Stale Docker run mutates one Python source file and rebuilds via cache-from/cache-to with internal cache enabled to measure stage dedup + internal cache reuse. Internal-only run uses --no-cache --target posthog-build."
+            --hit-behavior-note "Cold+seed run uses --no-cache + cache-to via the BoringCache registry proxy (mode=max) and records cold timing while priming remote cache. Warm runs use cache-from/cache-to with no-op boringcache binary. Internal cache in Dockerfile uses BoringCache CLI save/restore for pnpm/python/staticfiles/playwright and native Turborepo remote cache via boringcache cache-registry (no .turbo/cache archive save/restore). Stale Docker run mutates one Python source file and rebuilds via cache-from/cache-to with internal cache enabled to measure stage dedup + internal cache reuse. Internal-only run uses --no-cache --target posthog-build."
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
