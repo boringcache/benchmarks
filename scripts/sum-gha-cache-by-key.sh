@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Measures GitHub Actions cache storage for a benchmark project.
 #
-# For non-Docker benchmarks (e.g., n8n-pnpm), sums entries matching the key prefix.
+# For non-Docker benchmarks (e.g., zed-sccache or grpc-bazel), sums entries matching the key prefix.
 # For Docker benchmarks, buildkit blobs are SHA-keyed and shared across all Docker
 # projects in the repo — they CANNOT be attributed per-project. Instead, we report
 # the total repo cache usage from the API (honest, verifiable).
@@ -39,7 +39,7 @@ fi
 is_docker_benchmark() {
   local prefix="$1"
   # Docker benchmark IDs: posthog, mastodon-docker, hugo, immich
-  # Non-docker: n8n-pnpm, zed-sccache, etc.
+  # Non-docker: zed-sccache, grpc-bazel, etc.
   case "$prefix" in
     index-posthog*|posthog*) return 0 ;;
     index-mastodon*|mastodon*) return 0 ;;
@@ -125,7 +125,7 @@ timestamp_filter='
     end and (parse_ts($ts) <= parse_ts($until));
 '
 
-# Sum entries matching the benchmark key prefix (e.g., n8n-pnpm-*)
+# Sum entries matching the benchmark key prefix (e.g., zed-sccache-*)
 prefix_sum="$(
   sum_for_query \
     "${benchmark_or_prefix}" \

@@ -17,7 +17,7 @@ permissions:
 
 env:
   PROJECT_REPO: immich-app/immich
-  PROJECT_REF: "06d487782e902e896ac14271ae05785a4310694b"
+  PROJECT_REF: "dd97395f3ac72975af2daec584ebd29dac1f7f66"
   BENCHMARK_ID: immich
   BENCHMARK_WORKSPACE: boringcache/benchmarks
 
@@ -72,7 +72,7 @@ jobs:
       - name: Set benchmark cache scope
         id: scope
         run: |
-          cache_scope="${BENCHMARK_ID}r${GITHUB_RUN_ID}a${GITHUB_RUN_ATTEMPT}"
+          cache_scope="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
           scope_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
           echo "scope_started_at=${scope_started_at}" >> "$GITHUB_OUTPUT"
@@ -106,54 +106,8 @@ jobs:
             done
           done
 
-      - name: Run cold baseline build
+      - name: Run cold + seed cache build
         id: cold_baseline_build
-        env:
-          BUILDER: ${{ steps.buildx.outputs.name }}
-          BORINGCACHE_API_TOKEN: benchmark-noop-token
-        run: |
-          set -euo pipefail
-
-          start="$(date +%s)"
-          attempt=1
-          while true; do
-            set +e
-            DOCKER_BUILDKIT=1 docker buildx build \
-              --builder "$BUILDER" \
-              --file Dockerfile.boringcache \
-              --tag immich-server-benchmark:latest \
-              --progress=plain \
-              --no-cache \
-              --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
-              --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
-              --build-arg BORINGCACHE_TAG_PNPM="immich-pnpm" \
-              --build-arg BORINGCACHE_TAG_MISE="immich-mise" \
-              --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="0" \
-              .
-            status=$?
-            set -e
-
-            if [[ "$status" -eq 0 ]]; then
-              break
-            fi
-
-            if [[ "$attempt" -ge 2 ]]; then
-              echo "Cold build failed after retry" >&2
-              exit "$status"
-            fi
-
-            attempt=$((attempt + 1))
-            sleep 5
-          done
-
-          end="$(date +%s)"
-          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
-
-      - name: Prune builder cache
-        run: docker buildx prune -f --builder "${{ steps.buildx.outputs.name }}"
-
-      - name: Seed cache build
-        id: seed_cache_build
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
@@ -187,7 +141,7 @@ jobs:
             fi
 
             if [[ "$attempt" -ge 2 ]]; then
-              echo "Seed cache build failed after retry" >&2
+              echo "Cold + seed cache build failed after retry" >&2
               exit "$status"
             fi
 
@@ -209,7 +163,7 @@ jobs:
           done
 
           if [[ "$export_verified" -ne 1 ]]; then
-            echo "Seed cache export probe failed: no index cache entry was touched for index-${CACHE_SCOPE}" >&2
+            echo "Cold + seed cache export probe failed: no index cache entry was touched for index-${CACHE_SCOPE}" >&2
             exit 1
           fi
 
@@ -313,9 +267,21 @@ jobs:
         id: stale_docker_build
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_API_TOKEN: benchmark-noop-token
         run: |
           set -euo pipefail
+
+          stale_file="$(find server web -type f \( -name '*.ts' -o -name '*.tsx' -o -name '*.js' \) | head -n1 || true)"
+          if [[ -z "${stale_file}" ]]; then
+            stale_file="README.md"
+          fi
+          if [[ ! -f "${stale_file}" ]]; then
+            echo "Could not find a file to mutate for stale build" >&2
+            exit 1
+          fi
+          printf '\n// benchmark stale mutation %s-%s\n' "${GITHUB_RUN_ID:-local}" "$(date +%s)" >> "${stale_file}"
+          echo "Applied stale mutation to ${stale_file}"
 
           start="$(date +%s)"
           attempt=1
@@ -326,7 +292,8 @@ jobs:
               --file Dockerfile.boringcache \
               --tag immich-server-benchmark:latest \
               --progress=plain \
-              --no-cache \
+              --cache-from "type=gha,scope=${CACHE_SCOPE}" \
+              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_TAG_PNPM="immich-pnpm" \
@@ -419,7 +386,7 @@ jobs:
             --internal-only-warm-seconds "${{ steps.internal_only_build.outputs.seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \
-            --hit-behavior-note "Cold baseline runs --no-cache without remote cache export and with no-op boringcache binary (native libs compile from source). Seed-cache run reuses buildx builder cache from cold build + cache-to type=gha (mode=max). Warm runs use cache-from/cache-to type=gha (mode=max). Stale Docker run uses --no-cache full build (rebuilds all native libs), internal-only run uses --no-cache --target dev with boringcache no-op"
+            --hit-behavior-note "Cold+seed run uses --no-cache + cache-to type=gha (mode=max) and records cold timing while priming remote cache. Warm runs use cache-from/cache-to type=gha (mode=max). Stale Docker run mutates one TS/JS source file and rebuilds with cache-from/cache-to to measure stage dedup under code changes. Internal-only run uses --no-cache --target dev with boringcache no-op."
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4

@@ -13,15 +13,6 @@ MAX_CMD_RETRIES = ENV.fetch("BENCHMARKS_GH_RETRIES", "3").to_i
 
 DEFAULT_ENTRIES = [
   {
-    "name" => "n8n",
-    "logo" => "n8n",
-    "repo" => "n8n-io/n8n",
-    "step" => "Docker build (pnpm+turbo)",
-    "before" => "6m 4s",
-    "after" => "1m 22s",
-    "faster" => "77"
-  },
-  {
     "name" => "Immich",
     "logo" => "immich",
     "repo" => "immich-app/immich",
@@ -45,7 +36,7 @@ DEFAULT_ENTRIES = [
     "repo" => "mastodon/mastodon",
     "step" => "Docker build (Ruby+Node)",
     "before" => "pending",
-    "after" => "22m 40s",
+    "after" => "pending",
     "faster" => "0"
   },
   {
@@ -54,36 +45,37 @@ DEFAULT_ENTRIES = [
     "repo" => "PostHog/posthog",
     "step" => "Docker build (full stack)",
     "before" => "pending",
-    "after" => "26m 33s",
+    "after" => "pending",
     "faster" => "0"
   },
   {
-    "name" => "Friday Pulse",
-    "logo" => "fridaypulse",
-    "repo" => "FridayPulse/fridaypulse",
-    "step" => "Docker build",
-    "before" => "7m 20s",
-    "after" => "2m 39s",
-    "faster" => "64"
+    "name" => "Zed",
+    "logo" => "zed",
+    "repo" => "zed-industries/zed",
+    "step" => "Rust build (sccache + target archive)",
+    "before" => "pending",
+    "after" => "pending",
+    "faster" => "0"
+  },
+  {
+    "name" => "gRPC",
+    "logo" => "grpc",
+    "repo" => "grpc/grpc",
+    "step" => "Bazel build (remote cache)",
+    "before" => "pending",
+    "after" => "pending",
+    "faster" => "0"
   }
 ].freeze
 
 COMPARISON_WORKFLOWS = [
-  {
-    "benchmark" => "n8n",
-    "name" => "n8n",
-    "logo" => "n8n",
-    "repo" => "n8n-io/n8n",
-    "step" => "Docker build (pnpm+turbo)",
-    "actions_workflow" => "n8n - Actions Cache",
-    "boringcache_workflow" => "n8n - BoringCache"
-  },
   {
     "benchmark" => "immich",
     "name" => "Immich",
     "logo" => "immich",
     "repo" => "immich-app/immich",
     "step" => "Docker build (server)",
+    "category" => "docker",
     "actions_workflow" => "Immich - Actions Cache",
     "boringcache_workflow" => "Immich - BoringCache"
   },
@@ -93,6 +85,7 @@ COMPARISON_WORKFLOWS = [
     "logo" => "hugo",
     "repo" => "gohugoio/hugo",
     "step" => "Docker build (Go)",
+    "category" => "docker",
     "actions_workflow" => "Hugo - Actions Cache",
     "boringcache_workflow" => "Hugo - BoringCache"
   },
@@ -102,6 +95,7 @@ COMPARISON_WORKFLOWS = [
     "logo" => "posthog",
     "repo" => "PostHog/posthog",
     "step" => "Docker build (full stack)",
+    "category" => "docker",
     "actions_workflow" => "PostHog - Actions Cache",
     "boringcache_workflow" => "PostHog - BoringCache",
     "depot_repo" => "depot/benchmark-posthog"
@@ -112,9 +106,30 @@ COMPARISON_WORKFLOWS = [
     "logo" => "mastodon",
     "repo" => "mastodon/mastodon",
     "step" => "Docker build (Ruby+Node)",
+    "category" => "docker",
     "actions_workflow" => "Mastodon Docker - Actions Cache",
     "boringcache_workflow" => "Mastodon Docker - BoringCache",
     "depot_repo" => "depot/benchmark-mastodon"
+  },
+  {
+    "benchmark" => "zed-sccache",
+    "name" => "Zed",
+    "logo" => "zed",
+    "repo" => "zed-industries/zed",
+    "step" => "Rust build (sccache + target archive)",
+    "category" => "rust",
+    "actions_workflow" => "Zed sccache - Actions Cache",
+    "boringcache_workflow" => "Zed sccache - BoringCache"
+  },
+  {
+    "benchmark" => "grpc-bazel",
+    "name" => "gRPC",
+    "logo" => "grpc",
+    "repo" => "grpc/grpc",
+    "step" => "Bazel build (remote cache)",
+    "category" => "bazel",
+    "actions_workflow" => "gRPC Bazel - Actions Cache",
+    "boringcache_workflow" => "gRPC Bazel - BoringCache"
   }
 ].freeze
 
@@ -454,6 +469,8 @@ def build_comparison_entry(metadata, actions_data, boringcache_data, pair, depot
   boringcache_metrics = boringcache_data.fetch(:metrics)
   ac_run_total = actions_data[:run_total_seconds]
   bc_run_total = boringcache_data[:run_total_seconds]
+  category = metadata["category"].to_s
+  docker_benchmark = category == "docker"
 
   ac_warm = warm_steady_seconds(actions_metrics)
   bc_warm = warm_steady_seconds(boringcache_metrics)
@@ -464,7 +481,7 @@ def build_comparison_entry(metadata, actions_data, boringcache_data, pair, depot
   # scenarios (cold+seed+warm×2+stale+internal) and doesn't represent a single build.
   ac_stale = actions_metrics[:stale_docker_seconds]
   bc_stale = boringcache_metrics[:stale_docker_seconds]
-  is_docker_benchmark = ac_stale && bc_stale
+  is_docker_benchmark = docker_benchmark && ac_stale && bc_stale
 
   if is_docker_benchmark
     display_before = ac_stale
@@ -536,8 +553,7 @@ def build_comparison_entry(metadata, actions_data, boringcache_data, pair, depot
   # For Docker benchmarks, the AC script reports total repo cache (buildkit blobs
   # are shared across projects and can't be attributed per-project). Only compute
   # storage ratios when AC storage is clearly per-project (non-Docker benchmarks).
-  is_docker = actions_metrics[:stale_docker_seconds] || boringcache_metrics[:stale_docker_seconds]
-  ac_storage_is_per_project = !is_docker
+  ac_storage_is_per_project = !docker_benchmark
 
   if ac_storage && bc_storage && bc_storage > 0 && ac_storage_is_per_project
     entry["comparison"]["storage_saved_bytes"] = ac_storage - bc_storage

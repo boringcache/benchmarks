@@ -1,39 +1,6 @@
 {
   "entries": [
     {
-      "name": "n8n",
-      "logo": "n8n",
-      "repo": "n8n-io/n8n",
-      "step": "Docker build (pnpm+turbo)",
-      "before": "6m 0s",
-      "after": "1m 17s",
-      "faster": "79",
-      "before_seconds": 360.0,
-      "after_seconds": 77.0,
-      "comparison": {
-        "baseline_strategy": "actions-cache",
-        "candidate_strategy": "boringcache",
-        "paired_on_head_sha": true,
-        "pairing_head_sha": "1daf87429e38afc55645196a347eb675f04572af",
-        "actions_cache": {
-          "run_id": 22158186778,
-          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/22158186778",
-          "head_sha": "1daf87429e38afc55645196a347eb675f04572af",
-          "created_at": "2026-02-18T21:23:59Z",
-          "run_total_seconds": 360.0
-        },
-        "boringcache": {
-          "run_id": 22158187247,
-          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/22158187247",
-          "head_sha": "1daf87429e38afc55645196a347eb675f04572af",
-          "created_at": "2026-02-18T21:24:00Z",
-          "run_total_seconds": 77.0
-        },
-        "run_total_delta_seconds": 283.0,
-        "run_total_improvement_pct": 78.61
-      }
-    },
-    {
       "name": "Immich",
       "logo": "immich",
       "repo": "immich-app/immich",
@@ -320,13 +287,22 @@
       }
     },
     {
-      "name": "Friday Pulse",
-      "logo": "fridaypulse",
-      "repo": "FridayPulse/fridaypulse",
-      "step": "Docker build",
-      "before": "7m 20s",
-      "after": "2m 39s",
-      "faster": "64"
+      "name": "Zed",
+      "logo": "zed",
+      "repo": "zed-industries/zed",
+      "step": "Rust build (sccache + target archive)",
+      "before": "pending",
+      "after": "pending",
+      "faster": "0"
+    },
+    {
+      "name": "gRPC",
+      "logo": "grpc",
+      "repo": "grpc/grpc",
+      "step": "Bazel build (remote cache)",
+      "before": "pending",
+      "after": "pending",
+      "faster": "0"
     }
   ]
 }

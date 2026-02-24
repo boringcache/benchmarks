@@ -14,7 +14,7 @@ permissions:
 
 env:
   PROJECT_REPO: grpc/grpc
-  PROJECT_REF: "ca0a0c39f90b0f64b1852cf712797abb0c1fd7ee"
+  PROJECT_REF: "93ab404fb2689edca91deb97f0dba449ac154379"
   BENCHMARK_ID: grpc-bazel
   BENCHMARK_WORKSPACE: boringcache/benchmarks
   BAZEL_TARGET: "//examples/cpp/csm:csm_greeter_client"
@@ -48,7 +48,7 @@ jobs:
         id: scope
         run: |
           set -euo pipefail
-          cache_scope="${BENCHMARK_ID}r${GITHUB_RUN_ID}a${GITHUB_RUN_ATTEMPT}"
+          cache_scope="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
           cache_key="index-${cache_scope}"
           scope_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
@@ -102,24 +102,12 @@ jobs:
             done
           done
 
-      - name: Run cold baseline build
+      - name: Run cold + seed cache build
         id: cold_baseline_build
         run: |
           set -euo pipefail
           bazel clean --expunge
 
-          start="$(date +%s)"
-          ./run-grpc-bazel-build.sh
-          end="$(date +%s)"
-          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
-
-      - name: Clean Bazel for seed build
-        run: bazel clean --expunge
-
-      - name: Seed cache build
-        id: seed_cache_build
-        run: |
-          set -euo pipefail
           start="$(date +%s)"
           ./run-grpc-bazel-build.sh
           end="$(date +%s)"
@@ -219,7 +207,7 @@ jobs:
             --stale-docker-seconds "${{ steps.stale_docker_build.outputs.seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \
-            --hit-behavior-note "Cold baseline builds without any cache. Seed run builds from scratch and saves ~/.cache/bazel to actions/cache. bazel clean --expunge between every phase. Warm runs restore the cache key before building. Stale run restores cache, mutates one .cc source file, then rebuilds."
+            --hit-behavior-note "Cold+seed run builds from scratch and immediately saves ~/.cache/bazel to actions/cache while recording cold timing. bazel clean --expunge between warm/stale phases. Warm runs restore the cache key before building. Stale run restores cache, mutates one .cc source file, then rebuilds."
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4

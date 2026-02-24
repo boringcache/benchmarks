@@ -14,7 +14,7 @@ permissions:
 
 env:
   PROJECT_REPO: zed-industries/zed
-  PROJECT_REF: "014bf4c332d58ae9e23166d658d594272588daad"
+  PROJECT_REF: "ca0fffb927b9bd94b884b7180f3d8779c3583a98"
   BENCHMARK_ID: zed-sccache
   BENCHMARK_WORKSPACE: boringcache/benchmarks
 
@@ -69,7 +69,7 @@ jobs:
         id: scope
         run: |
           set -euo pipefail
-          cache_scope="${BENCHMARK_ID}r${GITHUB_RUN_ID}a${GITHUB_RUN_ATTEMPT}"
+          cache_scope="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
           cache_key="index-${cache_scope}"
           scope_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
@@ -97,6 +97,8 @@ jobs:
             sccache --start-server || true
             cargo build --release
             sccache --show-stats || true
+            # Flush in-memory stats/artifacts so cache save captures stable state.
+            sccache --stop-server || true
           }
 
           apply_stale_change() {
@@ -130,20 +132,8 @@ jobs:
           SH
           chmod +x ./run-zed-sccache-phase.sh
 
-      - name: Run cold baseline build
+      - name: Run cold + seed cache build
         id: cold_baseline_build
-        run: |
-          set -euo pipefail
-          rm -rf target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
-          mkdir -p target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
-
-          start="$(date +%s)"
-          ./run-zed-sccache-phase.sh cold
-          end="$(date +%s)"
-          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
-
-      - name: Seed cache build
-        id: seed_cache_build
         run: |
           set -euo pipefail
           rm -rf target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
@@ -261,7 +251,7 @@ jobs:
             --stale-docker-seconds "${{ steps.stale_docker_build.outputs.seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \
-            --hit-behavior-note "Cold baseline runs without restore and without sccache wrapper. Seed run rebuilds from empty state with sccache enabled, then saves cargo registry/git, target, and sccache directories into one actions/cache key. Warm1/Warm2 restore that key before build. Stale run restores warm cache, mutates one Rust source file, then rebuilds."
+            --hit-behavior-note "Cold+seed run rebuilds from empty state with sccache enabled, then saves cargo registry/git, target, and sccache directories into one actions/cache key while recording cold timing. Warm1/Warm2 restore that key before build. Stale run restores warm cache, mutates one Rust source file, then rebuilds."
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4

@@ -1,6 +1,6 @@
 # boringcache/benchmarks
 
-Real-world Docker builds. GitHub Actions cache vs BoringCache. Same code, same runners, same commits.
+Real-world CI benchmarks across Docker, Rust (`sccache`), and Bazel. GitHub Actions cache vs BoringCache. Same code, same runners, same commits.
 
 ## Results
 
@@ -43,40 +43,65 @@ Targeted build stages that isolate dependency cache impact.
 
 ## What's being benchmarked
 
-| Project | What BC caches inside the Dockerfile |
-|---------|--------------------------------------|
-| [gohugoio/hugo](https://github.com/gohugoio/hugo) | Go modules, Go build cache |
-| [mastodon/mastodon](https://github.com/mastodon/mastodon) | libvips, ffmpeg, Ruby gems, yarn packages |
-| [immich-app/immich](https://github.com/immich-app/immich) | pnpm store, mise tools |
-| [PostHog/posthog](https://github.com/PostHog/posthog) | pnpm store, turbo build cache, Python runtime, Playwright browsers |
+| Ecosystem | Project | What is cached |
+|-----------|---------|----------------|
+| Docker | [gohugoio/hugo](https://github.com/gohugoio/hugo) | Go modules, Go build cache |
+| Docker | [mastodon/mastodon](https://github.com/mastodon/mastodon) | libvips, ffmpeg, Ruby gems, yarn packages |
+| Docker | [immich-app/immich](https://github.com/immich-app/immich) | pnpm store, mise tools |
+| Docker | [PostHog/posthog](https://github.com/PostHog/posthog) | pnpm store, turbo build cache, Python runtime, Playwright browsers |
+| Rust | [zed-industries/zed](https://github.com/zed-industries/zed) | `~/.cargo/registry`, `~/.cargo/git`, `target/`, native `sccache` |
+| Bazel | [grpc/grpc](https://github.com/grpc/grpc) | Bazel remote cache (action cache + CAS) |
 
-Both AC and BC also cache Docker layers externally (AC via `type=gha`, BC via `type=registry` through the BoringCache docker-registry proxy). The difference is that BC *also* caches dependencies inside the build, so they persist when layers are invalidated.
+For Docker benchmarks, both AC and BC cache layers externally (AC via `type=gha`, BC via `type=registry` through the BoringCache docker-registry proxy). BC additionally caches dependencies inside the build so they persist when layers are invalidated.
 
 ## How it works
 
-Each project has two workflows:
+Each benchmark has two workflows:
 
-- **Actions Cache** (`type=gha`) — Docker layer cache via GitHub Actions cache
-- **BoringCache** (`type=registry`) — Docker layer cache via BoringCache registry proxy + dependency caching inside Dockerfiles
+- **Actions Cache** baseline
+- **BoringCache** candidate
+
+Strategy by ecosystem:
+
+- Docker: Actions uses BuildKit `type=gha`; BoringCache uses a registry proxy (`type=registry`) plus internal dependency caches.
+- Rust (`zed-sccache`): Actions uses `actions/cache` for cargo/target/sccache; BoringCache saves cargo/target and uses native `sccache` via BoringCache cache-registry.
+- Bazel (`grpc-bazel`): Actions uses `actions/cache` for `~/.cache/bazel`; BoringCache uses `boringcache/bazel-action` remote cache.
 
 Both check out the same pinned commit and run identical build steps on `ubuntu-latest`.
 
-Each workflow runs these build phases in sequence:
+Source pinning model:
 
-1. **Cold baseline** — `--no-cache`, no remote cache. Measures raw build time.
-2. **Seed cache** — `--no-cache` + `cache-to`. Populates the remote cache.
-3. **Warm build 1** — `cache-from` + `cache-to`. Measures warm cache performance.
-4. **Warm build 2** — Same as warm 1. Measures consistency.
-5. **Stale Docker** — `--no-cache`, no layer cache, but BC internal deps cached. Simulates Dockerfile changes.
-6. **Internal only** — `--no-cache`, targeted build stage. Isolates dependency cache impact.
+- Target source is pinned by `PROJECT_REF` (commit SHA) in each workflow.
+- Benchmark logic/Dockerfiles are versioned in this repo for deterministic A/B comparisons across AC vs BC.
+- If you want Depot-style benchmark-harness pinning, treat benchmark repos as upstream inputs and pin their commit SHA explicitly when syncing benchmark Dockerfiles/scripts into this repo.
 
-Builder cache is pruned between seed and warm builds so warm hits come exclusively from the remote cache.
+Each workflow runs the same benchmark phases in sequence:
+
+1. **Cold + seed** — `--no-cache` + `cache-to`. Records cold timing and primes remote cache in one pass.
+2. **Warm build 1** — `cache-from` + `cache-to`. Measures warm cache performance.
+3. **Warm build 2** — Same as warm 1. Measures consistency.
+4. **Stale code change** — Mutates one source file and rebuilds with cache enabled. Measures stage dedup/partial warm behavior.
+5. **Internal only** — `--no-cache`, targeted build stage. Isolates dependency cache impact.
+
+Builder cache is pruned after cold+seed so warm hits come exclusively from remote cache.
+
+## Tag naming
+
+All BoringCache workflows publish a single `tags_csv` output and use it for purge + storage accounting.
+
+- Docker layer tag: `${BENCHMARK_ID}-docker-layers`
+- Run-scoped tag/cache scope: `${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}`
+- Internal dependency tags: `${BENCHMARK_ID}-<component>[-version]`
+
+This keeps tag discovery and storage reporting consistent across workflows.
 
 Benchmarks run weekly and can be triggered manually:
 
 ```bash
 gh workflow run "Run All Benchmarks"
 ```
+
+Run subsets by category (`docker`, `sccache`, `bazel`) or run everything with `all`.
 
 ## License
 

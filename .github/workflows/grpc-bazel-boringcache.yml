@@ -14,7 +14,7 @@ permissions:
 
 env:
   PROJECT_REPO: grpc/grpc
-  PROJECT_REF: "ca0a0c39f90b0f64b1852cf712797abb0c1fd7ee"
+  PROJECT_REF: "93ab404fb2689edca91deb97f0dba449ac154379"
   BENCHMARK_ID: grpc-bazel
   BENCHMARK_WORKSPACE: boringcache/benchmarks
   BAZEL_TARGET: "//examples/cpp/csm:csm_greeter_client"
@@ -57,7 +57,7 @@ jobs:
           set -euo pipefail
 
           scope_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          tag_bazel="grpc-bazel"
+          tag_bazel="${BENCHMARK_ID}-remote-cache"
           tags_csv="${tag_bazel}"
 
           echo "scope_started_at=${scope_started_at}" >> "$GITHUB_OUTPUT"
@@ -94,24 +94,12 @@ jobs:
           set -euo pipefail
           boringcache delete --no-git "$BENCHMARK_WORKSPACE" "${{ steps.scope.outputs.tags_csv }}" || true
 
-      - name: Run cold baseline build
+      - name: Run cold + seed cache build
         id: cold_baseline_build
         run: |
           set -euo pipefail
           bazel clean --expunge
 
-          start="$(date +%s)"
-          ./run-grpc-bazel-build.sh --remote_cache=
-          end="$(date +%s)"
-          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
-
-      - name: Clean Bazel for seed build
-        run: bazel clean --expunge
-
-      - name: Seed cache build
-        id: seed_cache_build
-        run: |
-          set -euo pipefail
           start="$(date +%s)"
           ./run-grpc-bazel-build.sh
           end="$(date +%s)"
@@ -184,7 +172,7 @@ jobs:
             --stale-docker-seconds "${{ steps.stale_docker_build.outputs.seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "boringcache-check" \
-            --hit-behavior-note "Cold baseline builds with --remote_cache= (disabled). boringcache/bazel-action starts cache-registry proxy and writes ~/.bazelrc with --remote_cache. bazel clean --expunge between every phase. Seed run populates the remote cache. Warm runs hit the proxy-backed remote cache for action cache + CAS. Stale run mutates one .cc source file before building with remote cache."
+            --hit-behavior-note "Cold+seed run builds from empty state with remote cache enabled and records cold timing while priming the proxy-backed cache. boringcache/bazel-action starts cache-registry proxy and writes ~/.bazelrc with --remote_cache. bazel clean --expunge between warm/stale phases. Warm runs hit the proxy-backed remote cache for action cache + CAS. Stale run mutates one .cc source file before building with remote cache."
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4

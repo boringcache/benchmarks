@@ -14,7 +14,7 @@ permissions:
 
 env:
   PROJECT_REPO: zed-industries/zed
-  PROJECT_REF: "014bf4c332d58ae9e23166d658d594272588daad"
+  PROJECT_REF: "ca0fffb927b9bd94b884b7180f3d8779c3583a98"
   BENCHMARK_ID: zed-sccache
   BENCHMARK_WORKSPACE: boringcache/benchmarks
 
@@ -74,13 +74,17 @@ jobs:
           set -euo pipefail
 
           scope_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          tag_cargo_registry="zed-cargo-registry"
-          tag_cargo_git="zed-cargo-git"
-          tag_target="zed-target"
-          tag_sccache="zed-sccache"
+          rust_release="$(rustc --version --verbose | awk '/^release:/{print $2}')"
+          rust_minor="$(echo "${rust_release}" | awk -F. '{print $1 "." $2}')"
+          tag_cargo_registry="${BENCHMARK_ID}-cargo-registry"
+          tag_cargo_git="${BENCHMARK_ID}-cargo-git"
+          tag_target="${BENCHMARK_ID}-target-rust${rust_minor}"
+          tag_sccache="${BENCHMARK_ID}-sccache-rust${rust_minor}"
           tags_csv="${tag_cargo_registry},${tag_cargo_git},${tag_target},${tag_sccache}"
 
           echo "scope_started_at=${scope_started_at}" >> "$GITHUB_OUTPUT"
+          echo "rust_release=${rust_release}" >> "$GITHUB_OUTPUT"
+          echo "rust_minor=${rust_minor}" >> "$GITHUB_OUTPUT"
           echo "tag_cargo_registry=${tag_cargo_registry}" >> "$GITHUB_OUTPUT"
           echo "tag_cargo_git=${tag_cargo_git}" >> "$GITHUB_OUTPUT"
           echo "tag_target=${tag_target}" >> "$GITHUB_OUTPUT"
@@ -213,20 +217,8 @@ jobs:
           set -euo pipefail
           boringcache delete --no-git "$BENCHMARK_WORKSPACE" "${{ steps.scope.outputs.tags_csv }}" || true
 
-      - name: Run cold baseline build
+      - name: Run cold + seed cache build
         id: cold_baseline_build
-        run: |
-          set -euo pipefail
-          rm -rf target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
-          mkdir -p target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
-
-          start="$(date +%s)"
-          ./run-zed-sccache-phase.sh cold
-          end="$(date +%s)"
-          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
-
-      - name: Seed cache build
-        id: seed_cache_build
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BORINGCACHE_TAG_SCCACHE: ${{ steps.scope.outputs.tag_sccache }}
@@ -316,7 +308,7 @@ jobs:
             --stale-docker-seconds "${{ steps.stale_docker_build.outputs.seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "boringcache-check" \
-            --hit-behavior-note "Cold baseline runs without restore and without sccache wrapper. Seed run starts boringcache cache-registry as native sccache WebDAV backend, rebuilds with sccache pointed at proxy, then saves cargo registry/git and target to BoringCache. sccache artifacts are stored natively via the proxy (no save/restore). Each phase clears local ~/.cache/sccache first so warm hits come from the proxy-backed cache. Warm1/Warm2 restore cargo caches and run with proxy-backed sccache. Stale run restores warm cache, mutates one Rust source file, then rebuilds."
+            --hit-behavior-note "Cold+seed run starts boringcache cache-registry as native sccache WebDAV backend, rebuilds from empty state with sccache pointed at proxy, then saves cargo registry/git and target to BoringCache while recording cold timing. sccache artifacts are stored natively via the proxy (no save/restore). Each phase clears local ~/.cache/sccache first so warm hits come from the proxy-backed cache. Warm1/Warm2 restore cargo caches and run with proxy-backed sccache. Stale run restores warm cache, mutates one Rust source file, then rebuilds."
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4

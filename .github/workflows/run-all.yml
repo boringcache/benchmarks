@@ -6,13 +6,13 @@ on:
       category:
         description: "Category to run"
         required: false
-        default: "docker"
+        default: "all"
         type: choice
         options:
+          - all
           - docker
           - sccache
           - bazel
-          - all
 
 permissions:
   actions: write
@@ -29,14 +29,13 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const category = '${{ inputs.category || 'docker' }}';
+            const category = '${{ inputs.category || 'all' }}';
             const groups = {
               docker: [
                 'posthog-actions-cache.yml', 'posthog-boringcache.yml',
                 'mastodon-docker-actions-cache.yml', 'mastodon-docker-boringcache.yml',
                 'hugo-actions-cache.yml', 'hugo-boringcache.yml',
                 'immich-actions-cache.yml', 'immich-boringcache.yml',
-                'n8n-actions-cache.yml', 'n8n-boringcache.yml',
               ],
               sccache: [
                 'zed-sccache-actions-cache.yml', 'zed-sccache-boringcache.yml',

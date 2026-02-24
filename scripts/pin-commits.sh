@@ -8,8 +8,9 @@ repo_pairs=(
   "posthog PostHog/posthog"
   "mastodon mastodon/mastodon"
   "hugo gohugoio/hugo"
-  "n8n n8n-io/n8n"
   "immich immich-app/immich"
+  "zed-sccache zed-industries/zed"
+  "grpc-bazel grpc/grpc"
 )
 
 for pair in "${repo_pairs[@]}"; do
