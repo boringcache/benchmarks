@@ -18,6 +18,7 @@ env:
   BENCHMARK_ID: grpc-bazel
   BENCHMARK_WORKSPACE: boringcache/benchmarks
   BAZEL_TARGET: "//examples/cpp/csm:csm_greeter_client"
+  BAZEL_REMOTE_CACHE_TAG: grpc-bazel-remote-cache
 
 jobs:
   bazel-build:
@@ -42,14 +43,10 @@ jobs:
       - name: Setup Bazelisk
         uses: bazelbuild/setup-bazelisk@v3
 
-      - name: Setup Bazel remote cache via BoringCache
-        id: bazel_cache
-        uses: boringcache/bazel-action@v1
+      - name: Setup BoringCache CLI
+        uses: boringcache/setup-boringcache@v1
         with:
-          workspace: ${{ env.BENCHMARK_WORKSPACE }}
-          cache-tag: grpc-bazel-remote-cache
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Prepare benchmark helpers
         id: scope
@@ -57,7 +54,7 @@ jobs:
           set -euo pipefail
 
           scope_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          tag_bazel="${BENCHMARK_ID}-remote-cache"
+          tag_bazel="${BAZEL_REMOTE_CACHE_TAG}"
           tags_csv="${tag_bazel}"
 
           echo "scope_started_at=${scope_started_at}" >> "$GITHUB_OUTPUT"
@@ -93,6 +90,16 @@ jobs:
         run: |
           set -euo pipefail
           boringcache delete --no-git "$BENCHMARK_WORKSPACE" "${{ steps.scope.outputs.tags_csv }}" || true
+
+      - name: Setup Bazel remote cache via BoringCache
+        id: bazel_cache
+        uses: boringcache/bazel-action@v1
+        with:
+          cli-version: skip
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cache-tag: ${{ env.BAZEL_REMOTE_CACHE_TAG }}
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Run cold + seed cache build
         id: cold_baseline_build
