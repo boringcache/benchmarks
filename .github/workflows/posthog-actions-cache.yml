@@ -87,9 +87,9 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Purge both index manifests and buildkit blobs to avoid
-          # "failed to reserve cache" conflicts from previous runs.
-          for key_prefix in "index-${BENCHMARK_ID}" "buildkit-blob-"; do
+          # Purge only this run's scoped index key to avoid cross-workflow
+          # interference when multiple benchmarks run concurrently.
+          for key_prefix in "index-${{ steps.scope.outputs.cache_scope }}"; do
             page=1
             while true; do
               response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&page=${page}&key=${key_prefix}" 2>/dev/null || true)"
@@ -195,7 +195,6 @@ jobs:
               --tag posthog-benchmark:latest \
               --progress=plain \
               --cache-from "type=gha,scope=${CACHE_SCOPE}" \
-              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="0" \
@@ -238,7 +237,6 @@ jobs:
               --tag posthog-benchmark:latest \
               --progress=plain \
               --cache-from "type=gha,scope=${CACHE_SCOPE}" \
-              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="0" \
@@ -292,7 +290,6 @@ jobs:
               --tag posthog-benchmark:latest \
               --progress=plain \
               --cache-from "type=gha,scope=${CACHE_SCOPE}" \
-              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="0" \
@@ -381,7 +378,7 @@ jobs:
             --internal-only-warm-seconds "${{ steps.internal_only_build.outputs.seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \
-            --hit-behavior-note "Cold+seed run uses --no-cache + cache-to type=gha (mode=max) and records cold timing while priming remote cache. Warm runs use cache-from/cache-to type=gha (mode=max). Stale Docker run mutates one Python source file and rebuilds with cache-from/cache-to to measure stage dedup under code changes. Internal-only run uses --no-cache --target posthog-build with boringcache no-op."
+            --hit-behavior-note "Cold+seed run uses --no-cache + cache-to type=gha (mode=max) and records cold timing while priming remote cache. Warm runs use cache-from only (seeded scope), with no cache-to writes, for stable read-only apples-to-apples comparison. Stale Docker run mutates one Python source file and rebuilds with cache-from only to measure stage dedup under code changes. Internal-only run uses --no-cache --target posthog-build with boringcache no-op."
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4

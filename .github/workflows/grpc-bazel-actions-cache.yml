@@ -49,10 +49,12 @@ jobs:
         run: |
           set -euo pipefail
           cache_scope="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
-          cache_key="index-${cache_scope}"
+          cache_key_primary="ac-${cache_scope}-seed1"
+          cache_key_fallback="ac-${cache_scope}-seed2"
           scope_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
-          echo "cache_key=${cache_key}" >> "$GITHUB_OUTPUT"
+          echo "cache_key_primary=${cache_key_primary}" >> "$GITHUB_OUTPUT"
+          echo "cache_key_fallback=${cache_key_fallback}" >> "$GITHUB_OUTPUT"
           echo "scope_started_at=${scope_started_at}" >> "$GITHUB_OUTPUT"
 
           cat > ./run-grpc-bazel-build.sh <<'SH'
@@ -83,7 +85,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          for key_prefix in "${{ steps.scope.outputs.cache_key }}"; do
+          for key_prefix in "${{ steps.scope.outputs.cache_key_primary }}" "${{ steps.scope.outputs.cache_key_fallback }}"; do
             page=1
             while true; do
               response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&page=${page}&key=${key_prefix}" 2>/dev/null || true)"
@@ -113,12 +115,63 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
-      - name: Save seeded Bazel cache
+      - name: Save seeded Bazel cache (primary key)
+        id: save_seed_primary
+        continue-on-error: true
         uses: actions/cache/save@v4
         with:
           path: |
             ~/.cache/bazel
-          key: ${{ steps.scope.outputs.cache_key }}
+          key: ${{ steps.scope.outputs.cache_key_primary }}
+
+      - name: Save seeded Bazel cache (fallback key)
+        id: save_seed_fallback
+        if: steps.save_seed_primary.outcome != 'success'
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.cache/bazel
+          key: ${{ steps.scope.outputs.cache_key_fallback }}
+
+      - name: Resolve seeded cache key
+        id: seed_cache_key
+        run: |
+          set -euo pipefail
+          key=""
+          if [[ "${{ steps.save_seed_primary.outcome }}" == "success" ]]; then
+            key="${{ steps.scope.outputs.cache_key_primary }}"
+          elif [[ "${{ steps.save_seed_fallback.outcome }}" == "success" ]]; then
+            key="${{ steps.scope.outputs.cache_key_fallback }}"
+          else
+            echo "Failed to save seeded cache with both primary and fallback keys" >&2
+            exit 1
+          fi
+          echo "key=${key}" >> "$GITHUB_OUTPUT"
+          echo "Using seeded cache key: ${key}"
+
+      - name: Wait for seeded cache index visibility
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          key="${{ steps.seed_cache_key.outputs.key }}"
+          ready=0
+          for _ in $(seq 1 20); do
+            response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&key=${key}" 2>/dev/null || true)"
+            if [[ -n "$response" ]] && jq -e '.actions_caches | type == "array"' <<<"$response" >/dev/null 2>&1; then
+              matches="$(jq '.actions_caches | length' <<<"$response")"
+              if [[ "$matches" -gt 0 ]]; then
+                ready=1
+                break
+              fi
+            fi
+            sleep 3
+          done
+          if [[ "$ready" -ne 1 ]]; then
+            echo "Seed cache key did not become visible in GHA cache API: ${key}" >&2
+            exit 1
+          fi
 
       - name: Clean Bazel for warm build 1
         run: bazel clean --expunge
@@ -128,7 +181,8 @@ jobs:
         with:
           path: |
             ~/.cache/bazel
-          key: ${{ steps.scope.outputs.cache_key }}
+          key: ${{ steps.seed_cache_key.outputs.key }}
+          fail-on-cache-miss: true
 
       - name: Run warm build 1
         id: warm1_build
@@ -147,7 +201,8 @@ jobs:
         with:
           path: |
             ~/.cache/bazel
-          key: ${{ steps.scope.outputs.cache_key }}
+          key: ${{ steps.seed_cache_key.outputs.key }}
+          fail-on-cache-miss: true
 
       - name: Run warm build 2
         id: warm2_build
@@ -166,7 +221,8 @@ jobs:
         with:
           path: |
             ~/.cache/bazel
-          key: ${{ steps.scope.outputs.cache_key }}
+          key: ${{ steps.seed_cache_key.outputs.key }}
+          fail-on-cache-miss: true
 
       - name: Run stale build
         id: stale_docker_build
@@ -198,7 +254,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bytes="$(.benchmark-config/scripts/sum-gha-cache-by-key.sh "${{ steps.scope.outputs.cache_key }}" "${{ steps.scope.outputs.scope_started_at }}")"
+          bytes="$(.benchmark-config/scripts/sum-gha-cache-by-key.sh "${{ steps.seed_cache_key.outputs.key }}" "${{ steps.scope.outputs.scope_started_at }}")"
           echo "bytes=${bytes}" >> "$GITHUB_OUTPUT"
 
       - name: Write benchmark artifacts
@@ -215,7 +271,7 @@ jobs:
             --stale-docker-seconds "${{ steps.stale_docker_build.outputs.seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \
-            --hit-behavior-note "Cold+seed run builds from scratch and immediately saves ~/.cache/bazel to actions/cache while recording cold timing. bazel clean --expunge between warm/stale phases. Warm runs restore the cache key before building. Stale run restores cache, mutates one .cc source file, then rebuilds."
+            --hit-behavior-note "Cold+seed run builds from scratch and saves ~/.cache/bazel to actions/cache (primary key with fallback key retry) while recording cold timing. Workflow waits for cache index visibility before warm phases. bazel clean --expunge between warm/stale phases. Warm runs require successful cache restore before building. Stale run restores cache, mutates one .cc source file, then rebuilds."
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
