@@ -136,42 +136,37 @@ jobs:
 
       - name: Resolve seeded cache key
         id: seed_cache_key
-        run: |
-          set -euo pipefail
-          key=""
-          if [[ "${{ steps.save_seed_primary.outcome }}" == "success" ]]; then
-            key="${{ steps.scope.outputs.cache_key_primary }}"
-          elif [[ "${{ steps.save_seed_fallback.outcome }}" == "success" ]]; then
-            key="${{ steps.scope.outputs.cache_key_fallback }}"
-          else
-            echo "Failed to save seeded cache with both primary and fallback keys" >&2
-            exit 1
-          fi
-          echo "key=${key}" >> "$GITHUB_OUTPUT"
-          echo "Using seeded cache key: ${key}"
-
-      - name: Wait for seeded cache index visibility
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          key="${{ steps.seed_cache_key.outputs.key }}"
-          ready=0
-          for _ in $(seq 1 20); do
-            response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&key=${key}" 2>/dev/null || true)"
-            if [[ -n "$response" ]] && jq -e '.actions_caches | type == "array"' <<<"$response" >/dev/null 2>&1; then
-              matches="$(jq '.actions_caches | length' <<<"$response")"
-              if [[ "$matches" -gt 0 ]]; then
-                ready=1
-                break
+          primary="${{ steps.scope.outputs.cache_key_primary }}"
+          fallback="${{ steps.scope.outputs.cache_key_fallback }}"
+          key=""
+
+          for candidate in "$primary" "$fallback"; do
+            for _ in $(seq 1 30); do
+              response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&key=${candidate}" 2>/dev/null || true)"
+              if [[ -n "$response" ]] && jq -e '.actions_caches | type == "array"' <<<"$response" >/dev/null 2>&1; then
+                matches="$(jq '.actions_caches | length' <<<"$response")"
+                if [[ "$matches" -gt 0 ]]; then
+                  key="$candidate"
+                  break 2
+                fi
               fi
-            fi
-            sleep 3
+              sleep 2
+            done
           done
-          if [[ "$ready" -ne 1 ]]; then
-            echo "Seed cache key not yet visible in GHA cache API: ${key}" >&2
-            echo "Proceeding; warm restore step enforces fail-on-cache-miss."
+
+          if [[ -z "$key" ]]; then
+            echo "Failed to verify seeded cache key in GHA cache API (likely cache save/read-only budget issue)." >&2
+            echo "Primary save outcome: ${{ steps.save_seed_primary.outcome }}" >&2
+            echo "Fallback save outcome: ${{ steps.save_seed_fallback.outcome }}" >&2
+            exit 1
           fi
+
+          echo "key=${key}" >> "$GITHUB_OUTPUT"
+          echo "Using seeded cache key: ${key}"
 
       - name: Clean Bazel for warm build 1
         run: bazel clean --expunge

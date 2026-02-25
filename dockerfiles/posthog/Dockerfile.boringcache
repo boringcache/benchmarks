@@ -61,8 +61,25 @@ RUN --mount=type=secret,id=boringcache_token \
       boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PNPM}:/tmp/boringcache-pnpm-store" || true; \
       cp -a /tmp/boringcache-pnpm-store/. /tmp/pnpm-store-v24/ 2>/dev/null || true; \
     fi && \
-    corepack enable && pnpm --version && \
-    CI=1 pnpm --filter=@posthog/frontend... install --frozen-lockfile --prefer-offline --store-dir /tmp/pnpm-store-v24 && \
+    retry_cmd() { \
+      local attempt=1; \
+      while true; do \
+        "$@" && return 0; \
+        if [[ "$attempt" -ge 5 ]]; then \
+          return 1; \
+        fi; \
+        sleep "$((attempt * 5))"; \
+        attempt=$((attempt + 1)); \
+      done; \
+    }; \
+    corepack enable && \
+    retry_cmd corepack prepare pnpm@10.29.3 --activate && \
+    pnpm --version && \
+    pnpm config set fetch-retries 6 && \
+    pnpm config set fetch-retry-factor 2 && \
+    pnpm config set fetch-retry-mintimeout 10000 && \
+    pnpm config set fetch-retry-maxtimeout 120000 && \
+    retry_cmd env CI=1 pnpm --filter=@posthog/frontend... install --frozen-lockfile --prefer-offline --store-dir /tmp/pnpm-store-v24 && \
     if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
       boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PNPM}:/tmp/pnpm-store-v24"; \
     fi
@@ -200,8 +217,24 @@ RUN --mount=type=secret,id=boringcache_token \
       fi; \
       export TURBO_API="http://127.0.0.1:${proxy_port}" TURBO_TOKEN="boringcache" TURBO_TEAM="team_boringcache"; \
     fi; \
+    retry_cmd() { \
+      local attempt=1; \
+      while true; do \
+        "$@" && return 0; \
+        if [[ "$attempt" -ge 5 ]]; then \
+          return 1; \
+        fi; \
+        sleep "$((attempt * 5))"; \
+        attempt=$((attempt + 1)); \
+      done; \
+    }; \
     corepack enable; \
-    NODE_OPTIONS="--max-old-space-size=4096" CI=1 pnpm --filter=@posthog/plugin-transpiler... install --frozen-lockfile --prefer-offline --store-dir /tmp/pnpm-store-v24; \
+    retry_cmd corepack prepare pnpm@10.29.3 --activate; \
+    pnpm config set fetch-retries 6; \
+    pnpm config set fetch-retry-factor 2; \
+    pnpm config set fetch-retry-mintimeout 10000; \
+    pnpm config set fetch-retry-maxtimeout 120000; \
+    retry_cmd env NODE_OPTIONS="--max-old-space-size=4096" CI=1 pnpm --filter=@posthog/plugin-transpiler... install --frozen-lockfile --prefer-offline --store-dir /tmp/pnpm-store-v24; \
     if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
       boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PNPM}:/tmp/pnpm-store-v24"; \
     fi; \

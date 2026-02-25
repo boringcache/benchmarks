@@ -399,9 +399,23 @@ ARG BORINGCACHE_INTERNAL_CACHE_ENABLED
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
   CI=1 \
   COREPACK_HOME=/tmp \
-  PNPM_STORE_DIR=/buildcache/pnpm-store
+  PNPM_STORE_DIR=/buildcache/pnpm-store \
+  PNPM_VERSION=10.30.0
 
-RUN corepack enable
+RUN set -eu && \
+    corepack enable && \
+    attempt=1 && \
+    while true; do \
+      if corepack prepare "pnpm@${PNPM_VERSION}" --activate && pnpm --version; then \
+        break; \
+      fi; \
+      if [ "$attempt" -ge 5 ]; then \
+        echo "Failed to activate pnpm ${PNPM_VERSION} after ${attempt} attempts" >&2; \
+        exit 1; \
+      fi; \
+      sleep "$((attempt * 5))" && \
+      attempt="$((attempt + 1))"; \
+    done
 
 # Restore shared pnpm store from BoringCache
 RUN --mount=type=secret,id=boringcache_token \
@@ -429,8 +443,23 @@ RUN --mount=type=secret,id=boringcache_token \
     --mount=type=bind,source=pnpm-workspace.yaml,target=pnpm-workspace.yaml \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
     pnpm config set store-dir "$PNPM_STORE_DIR" && \
-    SHARP_IGNORE_GLOBAL_LIBVIPS=true pnpm --filter immich --frozen-lockfile build && \
-    SHARP_FORCE_GLOBAL_LIBVIPS=true pnpm --filter immich --frozen-lockfile --prod --no-optional deploy /output/server-pruned && \
+    pnpm config set fetch-retries 6 && \
+    pnpm config set fetch-retry-factor 2 && \
+    pnpm config set fetch-retry-mintimeout 10000 && \
+    pnpm config set fetch-retry-maxtimeout 120000 && \
+    attempt=1 && \
+    while true; do \
+      if SHARP_IGNORE_GLOBAL_LIBVIPS=true pnpm --filter immich --frozen-lockfile build && \
+         SHARP_FORCE_GLOBAL_LIBVIPS=true pnpm --filter immich --frozen-lockfile --prod --no-optional deploy /output/server-pruned; then \
+        break; \
+      fi; \
+      if [ "$attempt" -ge 3 ]; then \
+        echo "pnpm server build failed after retries" >&2; \
+        exit 1; \
+      fi; \
+      sleep "$((attempt * 10))" && \
+      attempt="$((attempt + 1))"; \
+    done && \
     if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
       boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PNPM}:/buildcache/pnpm-store"; \
     fi
@@ -448,8 +477,23 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
     --mount=type=bind,source=pnpm-workspace.yaml,target=pnpm-workspace.yaml \
     pnpm config set store-dir "$PNPM_STORE_DIR" && \
-    SHARP_IGNORE_GLOBAL_LIBVIPS=true pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install && \
-    pnpm --filter @immich/sdk --filter immich-web build
+    pnpm config set fetch-retries 6 && \
+    pnpm config set fetch-retry-factor 2 && \
+    pnpm config set fetch-retry-mintimeout 10000 && \
+    pnpm config set fetch-retry-maxtimeout 120000 && \
+    attempt=1 && \
+    while true; do \
+      if SHARP_IGNORE_GLOBAL_LIBVIPS=true pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install && \
+         pnpm --filter @immich/sdk --filter immich-web build; then \
+        break; \
+      fi; \
+      if [ "$attempt" -ge 3 ]; then \
+        echo "pnpm web build failed after retries" >&2; \
+        exit 1; \
+      fi; \
+      sleep "$((attempt * 10))" && \
+      attempt="$((attempt + 1))"; \
+    done
 
 
 FROM builder AS cli
@@ -462,9 +506,24 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
     --mount=type=bind,source=pnpm-workspace.yaml,target=pnpm-workspace.yaml \
     pnpm config set store-dir "$PNPM_STORE_DIR" && \
-    pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install && \
-    pnpm --filter @immich/sdk --filter @immich/cli build && \
-    pnpm --filter @immich/cli --prod --no-optional deploy /output/cli-pruned
+    pnpm config set fetch-retries 6 && \
+    pnpm config set fetch-retry-factor 2 && \
+    pnpm config set fetch-retry-mintimeout 10000 && \
+    pnpm config set fetch-retry-maxtimeout 120000 && \
+    attempt=1 && \
+    while true; do \
+      if pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install && \
+         pnpm --filter @immich/sdk --filter @immich/cli build && \
+         pnpm --filter @immich/cli --prod --no-optional deploy /output/cli-pruned; then \
+        break; \
+      fi; \
+      if [ "$attempt" -ge 3 ]; then \
+        echo "pnpm cli build failed after retries" >&2; \
+        exit 1; \
+      fi; \
+      sleep "$((attempt * 10))" && \
+      attempt="$((attempt + 1))"; \
+    done
 
 
 FROM builder AS plugins
@@ -500,7 +559,18 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=.pnpmfile.cjs,target=.pnpmfile.cjs \
     --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
     --mount=type=bind,source=pnpm-workspace.yaml,target=pnpm-workspace.yaml \
-    cd plugins && mise run build
+    attempt=1 && \
+    while true; do \
+      if (cd plugins && mise run build); then \
+        break; \
+      fi; \
+      if [ "$attempt" -ge 3 ]; then \
+        echo "plugins build failed after retries" >&2; \
+        exit 1; \
+      fi; \
+      sleep "$((attempt * 10))" && \
+      attempt="$((attempt + 1))"; \
+    done
 
 
 # ==============================================================================
