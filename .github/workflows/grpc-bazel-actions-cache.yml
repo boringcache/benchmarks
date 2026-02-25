@@ -169,8 +169,8 @@ jobs:
             sleep 3
           done
           if [[ "$ready" -ne 1 ]]; then
-            echo "Seed cache key did not become visible in GHA cache API: ${key}" >&2
-            exit 1
+            echo "Seed cache key not yet visible in GHA cache API: ${key}" >&2
+            echo "Proceeding; warm restore step enforces fail-on-cache-miss."
           fi
 
       - name: Clean Bazel for warm build 1
