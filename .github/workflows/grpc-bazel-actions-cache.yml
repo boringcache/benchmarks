@@ -83,7 +83,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          for key_prefix in "index-${BENCHMARK_ID}"; do
+          for key_prefix in "${{ steps.scope.outputs.cache_key }}"; do
             page=1
             while true; do
               response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&page=${page}&key=${key_prefix}" 2>/dev/null || true)"
