@@ -70,9 +70,11 @@ jobs:
       - name: Set benchmark cache scope
         id: scope
         run: |
-          cache_scope="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
+          cache_scope_primary="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}-s1"
+          cache_scope_fallback="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}-s2"
           scope_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
+          echo "cache_scope_primary=${cache_scope_primary}" >> "$GITHUB_OUTPUT"
+          echo "cache_scope_fallback=${cache_scope_fallback}" >> "$GITHUB_OUTPUT"
           echo "scope_started_at=${scope_started_at}" >> "$GITHUB_OUTPUT"
 
       - name: Purge benchmark GHA cache keys
@@ -81,9 +83,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Purge only this run's scoped index key to avoid cross-workflow
-          # interference when multiple benchmarks run concurrently.
-          for key_prefix in "index-${{ steps.scope.outputs.cache_scope }}"; do
+          # Purge this run's scoped seed keys only.
+          for key_prefix in "index-${{ steps.scope.outputs.cache_scope_primary }}" "index-${{ steps.scope.outputs.cache_scope_fallback }}"; do
             page=1
             while true; do
               response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&page=${page}&key=${key_prefix}" 2>/dev/null || true)"
@@ -108,12 +109,14 @@ jobs:
         id: cold_baseline_build
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
-          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
+          CACHE_SCOPE_PRIMARY: ${{ steps.scope.outputs.cache_scope_primary }}
+          CACHE_SCOPE_FALLBACK: ${{ steps.scope.outputs.cache_scope_fallback }}
           BORINGCACHE_API_TOKEN: benchmark-noop-token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
 
+          selected_scope="$CACHE_SCOPE_PRIMARY"
           start="$(date +%s)"
           attempt=1
           while true; do
@@ -124,7 +127,7 @@ jobs:
               --tag mastodon-benchmark:latest \
               --progress=plain \
               --no-cache \
-              --cache-to "type=gha,mode=max,scope=${CACHE_SCOPE}" \
+              --cache-to "type=gha,mode=max,scope=${selected_scope}" \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="0" \
@@ -142,13 +145,17 @@ jobs:
             fi
 
             attempt=$((attempt + 1))
+            if [[ "$attempt" -eq 2 ]]; then
+              selected_scope="$CACHE_SCOPE_FALLBACK"
+              echo "Retrying cold seed with fallback cache scope: ${selected_scope}"
+            fi
             sleep 5
           done
 
           # Ensure GHA cache backend saw this seed export before continuing.
           export_verified=0
           for _ in $(seq 1 20); do
-            response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&key=index-${CACHE_SCOPE}" 2>/dev/null || true)"
+            response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&key=index-${selected_scope}" 2>/dev/null || true)"
             if [[ -n "$response" ]] && jq -e '.actions_caches | type == "array"' <<<"$response" >/dev/null 2>&1; then
               matches="$(jq '.actions_caches | length' <<<"$response")"
               if [[ "$matches" -gt 0 ]]; then
@@ -160,11 +167,12 @@ jobs:
           done
 
           if [[ "$export_verified" -ne 1 ]]; then
-            echo "Cold + seed cache export probe failed: no index cache entry was touched for index-${CACHE_SCOPE}" >&2
+            echo "Cold + seed cache export probe failed: no index cache entry was touched for index-${selected_scope}" >&2
             exit 1
           fi
 
           end="$(date +%s)"
+          echo "cache_scope=${selected_scope}" >> "$GITHUB_OUTPUT"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
       - name: Prune builder cache
@@ -174,7 +182,7 @@ jobs:
         id: warm1_build
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
-          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
+          CACHE_SCOPE: ${{ steps.cold_baseline_build.outputs.cache_scope }}
           BORINGCACHE_API_TOKEN: benchmark-noop-token
         run: |
           set -euo pipefail
@@ -216,7 +224,7 @@ jobs:
         id: warm2_build
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
-          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
+          CACHE_SCOPE: ${{ steps.cold_baseline_build.outputs.cache_scope }}
           BORINGCACHE_API_TOKEN: benchmark-noop-token
         run: |
           set -euo pipefail
@@ -258,7 +266,7 @@ jobs:
         id: stale_docker_build
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
-          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
+          CACHE_SCOPE: ${{ steps.cold_baseline_build.outputs.cache_scope }}
           BORINGCACHE_API_TOKEN: benchmark-noop-token
         run: |
           set -euo pipefail
