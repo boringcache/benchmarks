@@ -428,8 +428,9 @@ RUN --mount=type=secret,id=boringcache_token \
     --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
     --mount=type=bind,source=pnpm-workspace.yaml,target=pnpm-workspace.yaml \
     export BORINGCACHE_API_TOKEN="$(cat /run/secrets/boringcache_token)" && \
-    SHARP_IGNORE_GLOBAL_LIBVIPS=true pnpm --store-dir "$PNPM_STORE_DIR" --filter immich --frozen-lockfile build && \
-    SHARP_FORCE_GLOBAL_LIBVIPS=true pnpm --store-dir "$PNPM_STORE_DIR" --filter immich --frozen-lockfile --prod --no-optional deploy /output/server-pruned && \
+    pnpm config set store-dir "$PNPM_STORE_DIR" && \
+    SHARP_IGNORE_GLOBAL_LIBVIPS=true pnpm --filter immich --frozen-lockfile build && \
+    SHARP_FORCE_GLOBAL_LIBVIPS=true pnpm --filter immich --frozen-lockfile --prod --no-optional deploy /output/server-pruned && \
     if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
       boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PNPM}:/buildcache/pnpm-store"; \
     fi
@@ -446,8 +447,9 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=.pnpmfile.cjs,target=.pnpmfile.cjs \
     --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
     --mount=type=bind,source=pnpm-workspace.yaml,target=pnpm-workspace.yaml \
-    SHARP_IGNORE_GLOBAL_LIBVIPS=true pnpm --store-dir "$PNPM_STORE_DIR" --filter @immich/sdk --filter immich-web --frozen-lockfile --force install && \
-    pnpm --store-dir "$PNPM_STORE_DIR" --filter @immich/sdk --filter immich-web build
+    pnpm config set store-dir "$PNPM_STORE_DIR" && \
+    SHARP_IGNORE_GLOBAL_LIBVIPS=true pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install && \
+    pnpm --filter @immich/sdk --filter immich-web build
 
 
 FROM builder AS cli
@@ -459,9 +461,10 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=.pnpmfile.cjs,target=.pnpmfile.cjs \
     --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
     --mount=type=bind,source=pnpm-workspace.yaml,target=pnpm-workspace.yaml \
-    pnpm --store-dir "$PNPM_STORE_DIR" --filter @immich/sdk --filter @immich/cli --frozen-lockfile install && \
-    pnpm --store-dir "$PNPM_STORE_DIR" --filter @immich/sdk --filter @immich/cli build && \
-    pnpm --store-dir "$PNPM_STORE_DIR" --filter @immich/cli --prod --no-optional deploy /output/cli-pruned
+    pnpm config set store-dir "$PNPM_STORE_DIR" && \
+    pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install && \
+    pnpm --filter @immich/sdk --filter @immich/cli build && \
+    pnpm --filter @immich/cli --prod --no-optional deploy /output/cli-pruned
 
 
 FROM builder AS plugins
