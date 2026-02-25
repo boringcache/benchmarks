@@ -167,7 +167,11 @@ jobs:
 
           apply_stale_change() {
             local stale_file
-            stale_file="$(git ls-files '*.rs' | head -n1)"
+            stale_file=""
+            while IFS= read -r candidate; do
+              stale_file="${candidate}"
+              break
+            done < <(git ls-files -- '*.rs')
             if [[ -z "${stale_file}" ]]; then
               echo "No Rust source file found for stale mutation" >&2
               exit 1

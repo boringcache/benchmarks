@@ -175,7 +175,15 @@ jobs:
 
           stale_file="examples/cpp/csm/csm_greeter_client.cc"
           if [[ ! -f "$stale_file" ]]; then
-            stale_file="$(find examples -name '*.cc' | head -n1)"
+            stale_file=""
+            while IFS= read -r candidate; do
+              stale_file="${candidate}"
+              break
+            done < <(find examples -name '*.cc')
+          fi
+          if [[ -z "$stale_file" ]]; then
+            echo "No C++ source file found for stale mutation" >&2
+            exit 1
           fi
           echo "// benchmark stale mutation ${GITHUB_RUN_ID:-local}-$(date +%s)" >> "${stale_file}"
           echo "Applied stale change to ${stale_file}"
