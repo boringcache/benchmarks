@@ -111,6 +111,28 @@ jobs:
             done
           done
 
+      - name: Prepare AC write probe
+        run: |
+          set -euo pipefail
+          mkdir -p .bench-cache-probe
+          printf '%s\n' "probe-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-$(date +%s)" > .bench-cache-probe/probe.txt
+
+      - name: Verify Actions Cache write access
+        id: cache_write_probe
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            .bench-cache-probe
+          key: ac-${{ env.BENCHMARK_ID }}-write-probe-r${{ github.run_id }}-a${{ github.run_attempt }}
+
+      - name: Fail early if Actions Cache is read-only
+        if: steps.cache_write_probe.outcome != 'success'
+        run: |
+          echo "Actions Cache write probe failed (likely read-only budget/spending cap)." >&2
+          echo "Cannot produce reliable AC benchmark results until cache writes are enabled." >&2
+          exit 1
+
       - name: Run cold + seed cache build
         id: cold_baseline_build
         env:
