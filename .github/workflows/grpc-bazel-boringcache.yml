@@ -18,7 +18,10 @@ env:
   BENCHMARK_ID: grpc-bazel
   BENCHMARK_WORKSPACE: boringcache/benchmarks
   BAZEL_TARGET: "//examples/cpp/csm:csm_greeter_client"
-  BAZEL_REMOTE_CACHE_TAG: grpc-bazel-remote-cache
+  # Run-scoped tag ensures cold build starts with empty remote cache.
+  # boringcache delete can't purge cache-registry proxy data, so we
+  # use a unique tag per run instead.
+  BAZEL_REMOTE_CACHE_TAG: grpc-bazel-remote-cache-r${{ github.run_id }}-a${{ github.run_attempt }}
 
 jobs:
   bazel-build:

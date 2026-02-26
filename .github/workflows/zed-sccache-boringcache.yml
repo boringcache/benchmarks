@@ -79,7 +79,10 @@ jobs:
           tag_cargo_registry="${BENCHMARK_ID}-cargo-registry"
           tag_cargo_git="${BENCHMARK_ID}-cargo-git"
           tag_target="${BENCHMARK_ID}-target-rust${rust_minor}"
-          tag_sccache="${BENCHMARK_ID}-sccache-rust${rust_minor}"
+          # Run-scoped tag ensures cold build starts with empty remote cache.
+          # boringcache delete can't purge cache-registry proxy data, so we
+          # use a unique tag per run instead.
+          tag_sccache="${BENCHMARK_ID}-sccache-rust${rust_minor}-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
           tags_csv="${tag_cargo_registry},${tag_cargo_git},${tag_target},${tag_sccache}"
 
           echo "scope_started_at=${scope_started_at}" >> "$GITHUB_OUTPUT"
