@@ -334,7 +334,10 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
-      - name: Run internal cache warm build (targeted)
+      - name: Prune builder cache for layer-miss
+        run: docker buildx prune -f --builder "${{ steps.buildx.outputs.name }}"
+
+      - name: Run layer-miss build (no Docker cache, full image)
         id: internal_only_build
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
@@ -346,7 +349,7 @@ jobs:
         run: |
           set -euo pipefail
           start="$(date +%s)"
-          ./run-boringcache-build.sh internal-target
+          ./run-boringcache-build.sh internal-only
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 

@@ -335,7 +335,10 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
-      - name: Run internal cache warm build (targeted)
+      - name: Prune builder cache for layer-miss
+        run: docker buildx prune -f --builder "${{ steps.buildx.outputs.name }}"
+
+      - name: Run layer-miss build (no Docker cache, full image)
         id: internal_only_build
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
@@ -353,7 +356,6 @@ jobs:
               --tag posthog-benchmark:latest \
               --progress=plain \
               --no-cache \
-              --target posthog-build \
               --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
               --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
               --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="0" \
@@ -366,7 +368,7 @@ jobs:
             fi
 
             if [[ "$attempt" -ge 2 ]]; then
-              echo "Internal cache warm build failed after retry" >&2
+              echo "Layer-miss build failed after retry" >&2
               exit "$status"
             fi
 
