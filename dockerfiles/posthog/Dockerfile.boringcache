@@ -107,13 +107,12 @@ RUN --mount=type=secret,id=boringcache_token \
         sleep 1; \
       done; \
       if [ "$ready" != "1" ]; then \
-        echo "Turbo proxy did not become ready"; \
-        tail -n 200 "$proxy_log" || true; \
+        echo "Turbo proxy did not become ready (continuing without remote cache)"; \
         if kill -0 "$proxy_pid" >/dev/null 2>&1; then kill -9 "$proxy_pid" >/dev/null 2>&1 || true; fi; \
         wait "$proxy_pid" >/dev/null 2>&1 || true; \
-        exit 1; \
+      else \
+        export TURBO_API="http://127.0.0.1:${proxy_port}" TURBO_TOKEN="boringcache" TURBO_TEAM="team_boringcache"; \
       fi; \
-      export TURBO_API="http://127.0.0.1:${proxy_port}" TURBO_TOKEN="boringcache" TURBO_TEAM="team_boringcache"; \
     fi; \
     bin/turbo --filter=@posthog/frontend build; \
     if [ "$BORINGCACHE_INTERNAL_CACHE_ENABLED" = "1" ]; then \
@@ -209,13 +208,12 @@ RUN --mount=type=secret,id=boringcache_token \
         sleep 1; \
       done; \
       if [ "$ready" != "1" ]; then \
-        echo "Turbo proxy did not become ready"; \
-        tail -n 200 "$proxy_log" || true; \
+        echo "Turbo proxy did not become ready (continuing without remote cache)"; \
         if kill -0 "$proxy_pid" >/dev/null 2>&1; then kill -9 "$proxy_pid" >/dev/null 2>&1 || true; fi; \
         wait "$proxy_pid" >/dev/null 2>&1 || true; \
-        exit 1; \
+      else \
+        export TURBO_API="http://127.0.0.1:${proxy_port}" TURBO_TOKEN="boringcache" TURBO_TEAM="team_boringcache"; \
       fi; \
-      export TURBO_API="http://127.0.0.1:${proxy_port}" TURBO_TOKEN="boringcache" TURBO_TEAM="team_boringcache"; \
     fi; \
     retry_cmd() { \
       local attempt=1; \
