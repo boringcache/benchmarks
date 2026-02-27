@@ -492,7 +492,7 @@ def build_comparison_entry(metadata, actions_data, boringcache_data, pair, depot
   end
   display_faster_pct = percent_delta(display_before, display_after)
   warm_faster_pct = percent_delta(ac_warm, bc_warm)
-  return nil if display_faster_pct.nil? || warm_faster_pct.nil?
+  return nil if display_faster_pct.nil?
 
   entry = {
     "name" => metadata["name"],
@@ -517,7 +517,7 @@ def build_comparison_entry(metadata, actions_data, boringcache_data, pair, depot
       "actions_cache" => strategy_snapshot(actions_data),
       "boringcache" => strategy_snapshot(boringcache_data),
       "warm_delta_seconds" => (ac_warm - bc_warm).round(2),
-      "warm_improvement_pct" => warm_faster_pct.round(2)
+      "warm_improvement_pct" => warm_faster_pct&.round(2)
     }
   }
 
