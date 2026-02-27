@@ -58,13 +58,7 @@ jobs:
       - name: Prepare benchmark build inputs
         id: scope
         run: |
-          cp "$(which boringcache)" ./boringcache-bin-real
-          cat > ./boringcache-bin-noop <<'SH'
-          #!/usr/bin/env sh
-          exit 0
-          SH
-          chmod +x ./boringcache-bin-real ./boringcache-bin-noop
-          cp ./boringcache-bin-real ./boringcache-bin
+          cp "$(which boringcache)" ./boringcache-bin
           echo '!boringcache-bin' >> .dockerignore
           echo '!libjxl-patches' >> .dockerignore
           cp .benchmark-config/dockerfiles/immich/Dockerfile.boringcache Dockerfile.boringcache
@@ -179,12 +173,6 @@ jobs:
             else
               echo "Unknown build mode: $mode" >&2
               exit 1
-            fi
-
-            if [[ "$mode" == "full" || "$mode" == "seed-cache" ]]; then
-              cp ./boringcache-bin-noop ./boringcache-bin
-            else
-              cp ./boringcache-bin-real ./boringcache-bin
             fi
 
             start_proxy
@@ -426,7 +414,7 @@ jobs:
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "boringcache-check" \
             --bytes-uploaded "${{ steps.cache_size.outputs.bytes }}" \
-            --hit-behavior-note "Cold+seed run uses --no-cache + cache-to via the BoringCache registry proxy (mode=max) with internal restore/save disabled (no-op boringcache binary and BORINGCACHE_INTERNAL_CACHE_ENABLED=0) and records cold timing while priming remote cache. Warm1/Warm2 also run in full mode with internal restore/save disabled for apples-to-apples layer-cache comparison versus Actions Cache. Stale Docker run mutates one TS/JS source file and rebuilds with cache-from only (read-only, no layer export) with internal BC cache enabled to measure rebuild + internal cache reuse without layer-export overhead. Internal-only run uses --no-cache (full image, no Docker layers) with internal boringcache restore/save active."
+            --hit-behavior-note "Cold+seed run uses --no-cache + cache-to via the BoringCache registry proxy (mode=max) with internal restore/save disabled (BORINGCACHE_INTERNAL_CACHE_ENABLED=1 seeds both registry and internal caches) and records cold timing while priming remote cache. Warm1/Warm2 run in full mode with both registry layer cache and internal BC cache active. Stale Docker run mutates one TS/JS source file and rebuilds with cache-from only (read-only, no layer export) with internal BC cache enabled to measure rebuild + internal cache reuse without layer-export overhead. Internal-only run uses --no-cache (full image, no Docker layers) with internal boringcache restore/save active."
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
