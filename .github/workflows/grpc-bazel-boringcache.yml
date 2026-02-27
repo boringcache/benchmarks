@@ -104,6 +104,16 @@ jobs:
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
+      - name: Tune Bazel for remote cache performance
+        run: |
+          cat >> ~/.bazelrc <<'EOF'
+          # Benchmark tuning (will be set by bazel-action in future)
+          build --remote_download_minimal
+          build --jobs=2000
+          build --experimental_remote_cache_async
+          build --experimental_remote_cache_eviction_retries=5
+          EOF
+
       - name: Run cold + seed cache build
         id: cold_baseline_build
         run: |
@@ -111,7 +121,7 @@ jobs:
           bazel clean --expunge
 
           start="$(date +%s)"
-          ./run-grpc-bazel-build.sh --jobs=2000 --remote_download_minimal
+          ./run-grpc-bazel-build.sh
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
@@ -123,7 +133,7 @@ jobs:
         run: |
           set -euo pipefail
           start="$(date +%s)"
-          ./run-grpc-bazel-build.sh --jobs=2000 --remote_download_minimal --profile=/tmp/bazel-warm1-profile.gz
+          ./run-grpc-bazel-build.sh --profile=/tmp/bazel-warm1-profile.gz
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
@@ -135,7 +145,7 @@ jobs:
         run: |
           set -euo pipefail
           start="$(date +%s)"
-          ./run-grpc-bazel-build.sh --jobs=2000 --remote_download_minimal
+          ./run-grpc-bazel-build.sh
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
@@ -163,7 +173,7 @@ jobs:
           echo "Applied stale change to ${stale_file}"
 
           start="$(date +%s)"
-          ./run-grpc-bazel-build.sh --jobs=2000 --remote_download_minimal
+          ./run-grpc-bazel-build.sh
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
