@@ -68,7 +68,7 @@ jobs:
           #!/usr/bin/env bash
           set -euo pipefail
 
-          max_attempts=2
+          max_attempts=3
           attempt=1
           while true; do
             if bazel build "$@" "$BAZEL_TARGET"; then

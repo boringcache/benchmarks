@@ -83,7 +83,7 @@ jobs:
           proxy_port=5000
           proxy_log="$(mktemp /tmp/boringcache-proxy.XXXXXX.log)"
           build_log="$(mktemp /tmp/boringcache-build.XXXXXX.log)"
-          max_attempts=2
+          max_attempts=3
           cache_export_pattern='expected sha256:.*got sha256:e3b0|error writing layer blob|400 Bad Request|broken pipe'
 
           mode="${1:-full}"
