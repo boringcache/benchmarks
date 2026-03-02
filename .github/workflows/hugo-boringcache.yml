@@ -268,6 +268,22 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
+      - name: Prune builder for re-seed
+        run: docker buildx prune -f --builder "${{ steps.buildx.outputs.name }}"
+
+      - name: Re-seed with populated BC restore layers
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BUILDER: ${{ steps.buildx.outputs.name }}
+          CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
+          BORINGCACHE_TAG_GOMOD: ${{ steps.scope.outputs.gomod_tag }}
+          BORINGCACHE_TAG_GOBUILD: ${{ steps.scope.outputs.gobuild_tag }}
+          IMAGE_TAG: hugo-benchmark:latest
+        run: |
+          set -euo pipefail
+          echo "Re-seeding: BC entries now exist from pass 1, so restore layers will have populated caches"
+          ./run-boringcache-build.sh seed-cache
+
 
   scenario-builds:
     name: Scenario (${{ matrix.phase }}) (BoringCache)
