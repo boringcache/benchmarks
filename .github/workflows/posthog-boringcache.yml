@@ -584,7 +584,7 @@ jobs:
         run: |
           set -euo pipefail
           start="$(date +%s)"
-          ./run-boringcache-build.sh full
+          ./run-boringcache-build.sh partial-warm
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
@@ -606,7 +606,7 @@ jobs:
         run: |
           set -euo pipefail
           start="$(date +%s)"
-          ./run-boringcache-build.sh full
+          ./run-boringcache-build.sh partial-warm
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
