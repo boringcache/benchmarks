@@ -20,12 +20,16 @@ env:
   BAZEL_TARGET: "//examples/cpp/csm:csm_greeter_client"
 
 jobs:
-  bazel-build:
-    name: Bazel build (actions/cache, cold+warm)
+  seed-cache:
+    name: Bazel Seed (actions/cache, cold)
     runs-on: ubuntu-latest
     timeout-minutes: 300
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    outputs:
+      seed_cache_key: ${{ steps.seed_cache_key.outputs.key }}
+      cold_seconds: ${{ steps.cold_baseline_build.outputs.seconds }}
+      scope_started_at: ${{ steps.scope.outputs.scope_started_at }}
     steps:
       - name: Checkout target repo
         uses: actions/checkout@v4
@@ -190,19 +194,88 @@ jobs:
           echo "key=${key}" >> "$GITHUB_OUTPUT"
           echo "Using seeded cache key: ${key}"
 
+
+  scenario-builds:
+    name: Bazel Scenario (${{ matrix.phase }}) (actions/cache)
+    needs: seed-cache
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    strategy:
+      fail-fast: false
+      matrix:
+        phase: [warm1, warm2, stale]
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+          submodules: true
+
+      - name: Checkout benchmark config
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
+      - name: Setup Bazelisk
+        uses: bazelbuild/setup-bazelisk@v3
+
+      - name: Prepare benchmark scope
+        id: scope
+        run: |
+          set -euo pipefail
+          cache_scope="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
+          cache_key_primary="ac-${cache_scope}-seed1"
+          cache_key_fallback="ac-${cache_scope}-seed2"
+          scope_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
+          echo "cache_key_primary=${cache_key_primary}" >> "$GITHUB_OUTPUT"
+          echo "cache_key_fallback=${cache_key_fallback}" >> "$GITHUB_OUTPUT"
+          echo "scope_started_at=${scope_started_at}" >> "$GITHUB_OUTPUT"
+
+          cat > ./run-grpc-bazel-build.sh <<'SH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          max_attempts=3
+          attempt=1
+          while true; do
+            if bazel build "$BAZEL_TARGET"; then
+              break
+            fi
+
+            if [[ "$attempt" -ge "$max_attempts" ]]; then
+              echo "Bazel build failed after ${max_attempts} attempts" >&2
+              exit 1
+            fi
+
+            echo "Bazel build failed (attempt ${attempt}/${max_attempts}); retrying..." >&2
+            attempt=$((attempt + 1))
+            sleep 5
+          done
+          SH
+          chmod +x ./run-grpc-bazel-build.sh
+
       - name: Clean Bazel for warm build 1
+        if: matrix.phase == 'warm1'
         run: bazel clean --expunge
 
       - name: Restore cache for warm build 1
+        if: matrix.phase == 'warm1'
         uses: actions/cache/restore@v4
         with:
           path: |
             ~/.cache/bazel
-          key: ${{ steps.seed_cache_key.outputs.key }}
+          key: ${{ needs.seed-cache.outputs.seed_cache_key }}
           fail-on-cache-miss: true
 
       - name: Run warm build 1
         id: warm1_build
+        if: matrix.phase == 'warm1'
         run: |
           set -euo pipefail
           start="$(date +%s)"
@@ -211,18 +284,21 @@ jobs:
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
       - name: Clean Bazel for warm build 2
+        if: matrix.phase == 'warm2'
         run: bazel clean --expunge
 
       - name: Restore cache for warm build 2
+        if: matrix.phase == 'warm2'
         uses: actions/cache/restore@v4
         with:
           path: |
             ~/.cache/bazel
-          key: ${{ steps.seed_cache_key.outputs.key }}
+          key: ${{ needs.seed-cache.outputs.seed_cache_key }}
           fail-on-cache-miss: true
 
       - name: Run warm build 2
         id: warm2_build
+        if: matrix.phase == 'warm2'
         run: |
           set -euo pipefail
           start="$(date +%s)"
@@ -231,18 +307,21 @@ jobs:
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
       - name: Clean Bazel for stale build
+        if: matrix.phase == 'stale'
         run: bazel clean --expunge
 
       - name: Restore cache for stale build
+        if: matrix.phase == 'stale'
         uses: actions/cache/restore@v4
         with:
           path: |
             ~/.cache/bazel
-          key: ${{ steps.seed_cache_key.outputs.key }}
+          key: ${{ needs.seed-cache.outputs.seed_cache_key }}
           fail-on-cache-miss: true
 
       - name: Run stale build
         id: stale_docker_build
+        if: matrix.phase == 'stale'
         run: |
           set -euo pipefail
 
@@ -266,12 +345,95 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
+      - name: Capture scenario timing
+        id: phase_timing
+        run: |
+          set -euo pipefail
+          seconds=""
+          case "${{ matrix.phase }}" in
+            warm1)
+              seconds="${{ steps.warm1_build.outputs.seconds }}"
+              ;;
+            warm2)
+              seconds="${{ steps.warm2_build.outputs.seconds }}"
+              ;;
+            stale)
+              seconds="${{ steps.stale_docker_build.outputs.seconds }}"
+              ;;
+            *)
+              echo "Unknown phase: ${{ matrix.phase }}" >&2
+              exit 1
+              ;;
+          esac
+          if [[ -z "${seconds}" ]]; then
+            echo "No timing captured for phase ${{ matrix.phase }}" >&2
+            exit 1
+          fi
+          echo "seconds=${seconds}" >> "$GITHUB_OUTPUT"
+      - name: Persist scenario timing artifact
+        run: |
+          set -euo pipefail
+          mkdir -p benchmark-phase
+          cat > "benchmark-phase/${{ matrix.phase }}.env" <<EOF
+          phase=${{ matrix.phase }}
+          seconds=${{ steps.phase_timing.outputs.seconds }}
+          EOF
+      - name: Upload scenario timing artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-phase-${{ env.BENCHMARK_ID }}-actions-cache-${{ matrix.phase }}
+          path: benchmark-phase/${{ matrix.phase }}.env
+          if-no-files-found: error
+
+  finalize-benchmark:
+    name: Finalize benchmark artifacts
+    needs: [seed-cache, scenario-builds]
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - name: Checkout benchmark config
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
+      - name: Download scenario timing artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: benchmark-phase-${{ env.BENCHMARK_ID }}-actions-cache-*
+          path: benchmark-phase
+          merge-multiple: true
+      - name: Collect scenario timings
+        id: timings
+        run: |
+          set -euo pipefail
+          parse_phase() {
+            local phase="$1"
+            local file="benchmark-phase/${phase}.env"
+            if [[ ! -f "$file" ]]; then
+              echo "Missing timing artifact for phase ${phase}" >&2
+              ls -R benchmark-phase || true
+              exit 1
+            fi
+            local seconds
+            seconds="$(grep "^seconds=" "$file" | head -n1 | cut -d= -f2-)"
+            if [[ -z "${seconds}" ]]; then
+              echo "Timing artifact for phase ${phase} has empty seconds" >&2
+              cat "$file" >&2
+              exit 1
+            fi
+            echo "${phase}_seconds=${seconds}" >> "$GITHUB_OUTPUT"
+          }
+          parse_phase warm1
+          parse_phase warm2
+          parse_phase stale
       - name: Measure GHA cache storage usage
         id: cache_size
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bytes="$(.benchmark-config/scripts/sum-gha-cache-by-key.sh "${{ steps.seed_cache_key.outputs.key }}" "${{ steps.scope.outputs.scope_started_at }}")"
+          bytes="$(.benchmark-config/scripts/sum-gha-cache-by-key.sh "${{ needs.seed-cache.outputs.seed_cache_key }}" "${{ needs.seed-cache.outputs.scope_started_at }}")"
           echo "bytes=${bytes}" >> "$GITHUB_OUTPUT"
 
       - name: Write benchmark artifacts
@@ -282,13 +444,13 @@ jobs:
             --strategy "actions-cache" \
             --project-repo "$PROJECT_REPO" \
             --project-ref "$PROJECT_REF" \
-            --cold-seconds "${{ steps.cold_baseline_build.outputs.seconds }}" \
-            --warm1-seconds "${{ steps.warm1_build.outputs.seconds }}" \
-            --warm2-seconds "${{ steps.warm2_build.outputs.seconds }}" \
-            --stale-docker-seconds "${{ steps.stale_docker_build.outputs.seconds }}" \
+            --cold-seconds "${{ needs.seed-cache.outputs.cold_seconds }}" \
+            --warm1-seconds "${{ steps.timings.outputs.warm1_seconds }}" \
+            --warm2-seconds "${{ steps.timings.outputs.warm2_seconds }}" \
+            --stale-docker-seconds "${{ steps.timings.outputs.stale_seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \
-            --hit-behavior-note "Cold+seed run builds from scratch and saves ~/.cache/bazel to actions/cache (primary key with fallback key retry) while recording cold timing. Workflow waits for cache index visibility before warm phases. bazel clean --expunge between warm/stale phases. Warm runs require successful cache restore before building. Stale run restores cache, mutates one .cc source file, then rebuilds."
+            --hit-behavior-note "Cold+seed run builds from scratch and saves ~/.cache/bazel to actions/cache (primary key with fallback key retry) while recording cold timing. Workflow waits for cache index visibility before warm phases. bazel clean --expunge between warm/stale phases. Warm runs require successful cache restore before building. Stale run restores cache, mutates one .cc source file, then rebuilds. Warm1/Warm2/stale phases run as isolated matrix jobs on separate runners to avoid cross-phase local cache/state reuse."
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4

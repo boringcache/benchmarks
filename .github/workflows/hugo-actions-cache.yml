@@ -22,12 +22,16 @@ env:
   BENCHMARK_WORKSPACE: boringcache/benchmarks
 
 jobs:
-  docker-build:
-    name: Docker Build (GHA cache, cold+warm)
+  seed-cache:
+    name: Docker Seed (GHA cache, cold)
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    outputs:
+      cache_scope: ${{ steps.cold_baseline_build.outputs.cache_scope }}
+      cold_seconds: ${{ steps.cold_baseline_build.outputs.seconds }}
+      scope_started_at: ${{ steps.scope.outputs.scope_started_at }}
     steps:
       - name: Checkout target repo
         uses: actions/checkout@v4
@@ -198,14 +202,63 @@ jobs:
           echo "cache_scope=${selected_scope}" >> "$GITHUB_OUTPUT"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
-      - name: Prune builder cache
-        run: docker buildx prune -f --builder "${{ steps.buildx.outputs.name }}"
 
+  scenario-builds:
+    name: Scenario (${{ matrix.phase }}) (GHA cache)
+    needs: seed-cache
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        phase: [warm1, warm2, stale, layer_miss]
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+
+      - name: Checkout benchmark config
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
+      - name: Setup BoringCache CLI
+        uses: boringcache/setup-boringcache@v1
+        with:
+          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          platform: linux-amd64
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Prepare deterministic benchmark Dockerfile
+        run: |
+          cp .benchmark-config/dockerfiles/hugo/Dockerfile.boringcache Dockerfile.boringcache
+          cat > ./boringcache-bin <<'SH'
+          #!/usr/bin/env sh
+          exit 0
+          SH
+          chmod +x ./boringcache-bin
+          echo '!boringcache-bin' >> .dockerignore
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Expose GitHub runtime for Buildx cache
+        uses: crazy-max/ghaction-github-runtime@v3
+
+      - name: Prune builder cache for isolated scenario
+        run: docker buildx prune -f --builder "${{ steps.buildx.outputs.name }}"
       - name: Run warm build 1
         id: warm1_build
+        if: matrix.phase == 'warm1'
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
-          CACHE_SCOPE: ${{ steps.cold_baseline_build.outputs.cache_scope }}
+          CACHE_SCOPE: ${{ needs.seed-cache.outputs.cache_scope }}
           BORINGCACHE_API_TOKEN: benchmark-noop-token
         run: |
           set -euo pipefail
@@ -247,9 +300,10 @@ jobs:
 
       - name: Run warm build 2
         id: warm2_build
+        if: matrix.phase == 'warm2'
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
-          CACHE_SCOPE: ${{ steps.cold_baseline_build.outputs.cache_scope }}
+          CACHE_SCOPE: ${{ needs.seed-cache.outputs.cache_scope }}
           BORINGCACHE_API_TOKEN: benchmark-noop-token
         run: |
           set -euo pipefail
@@ -291,9 +345,10 @@ jobs:
 
       - name: Run stale Docker cache build
         id: stale_docker_build
+        if: matrix.phase == 'stale'
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
-          CACHE_SCOPE: ${{ steps.cold_baseline_build.outputs.cache_scope }}
+          CACHE_SCOPE: ${{ needs.seed-cache.outputs.cache_scope }}
           BORINGCACHE_API_TOKEN: benchmark-noop-token
         run: |
           set -euo pipefail
@@ -344,11 +399,9 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
-      - name: Prune builder cache for layer-miss
-        run: docker buildx prune -f --builder "${{ steps.buildx.outputs.name }}"
-
       - name: Run layer-miss build (no Docker cache, full image)
         id: internal_only_build
+        if: matrix.phase == 'layer_miss'
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
           BORINGCACHE_API_TOKEN: benchmark-noop-token
@@ -390,12 +443,99 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
+      - name: Capture scenario timing
+        id: phase_timing
+        run: |
+          set -euo pipefail
+          seconds=""
+          case "${{ matrix.phase }}" in
+            warm1)
+              seconds="${{ steps.warm1_build.outputs.seconds }}"
+              ;;
+            warm2)
+              seconds="${{ steps.warm2_build.outputs.seconds }}"
+              ;;
+            stale)
+              seconds="${{ steps.stale_docker_build.outputs.seconds }}"
+              ;;
+            layer_miss)
+              seconds="${{ steps.internal_only_build.outputs.seconds }}"
+              ;;
+            *)
+              echo "Unknown phase: ${{ matrix.phase }}" >&2
+              exit 1
+              ;;
+          esac
+          if [[ -z "${seconds}" ]]; then
+            echo "No timing captured for phase ${{ matrix.phase }}" >&2
+            exit 1
+          fi
+          echo "seconds=${seconds}" >> "$GITHUB_OUTPUT"
+      - name: Persist scenario timing artifact
+        run: |
+          set -euo pipefail
+          mkdir -p benchmark-phase
+          cat > "benchmark-phase/${{ matrix.phase }}.env" <<EOF
+          phase=${{ matrix.phase }}
+          seconds=${{ steps.phase_timing.outputs.seconds }}
+          EOF
+      - name: Upload scenario timing artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-phase-${{ env.BENCHMARK_ID }}-actions-cache-${{ matrix.phase }}
+          path: benchmark-phase/${{ matrix.phase }}.env
+          if-no-files-found: error
+
+  finalize-benchmark:
+    name: Finalize benchmark artifacts
+    needs: [seed-cache, scenario-builds]
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout benchmark config
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
+      - name: Download scenario timing artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: benchmark-phase-${{ env.BENCHMARK_ID }}-actions-cache-*
+          path: benchmark-phase
+          merge-multiple: true
+      - name: Collect scenario timings
+        id: timings
+        run: |
+          set -euo pipefail
+          parse_phase() {
+            local phase="$1"
+            local file="benchmark-phase/${phase}.env"
+            if [[ ! -f "$file" ]]; then
+              echo "Missing timing artifact for phase ${phase}" >&2
+              ls -R benchmark-phase || true
+              exit 1
+            fi
+            local seconds
+            seconds="$(grep "^seconds=" "$file" | head -n1 | cut -d= -f2-)"
+            if [[ -z "${seconds}" ]]; then
+              echo "Timing artifact for phase ${phase} has empty seconds" >&2
+              cat "$file" >&2
+              exit 1
+            fi
+            echo "${phase}_seconds=${seconds}" >> "$GITHUB_OUTPUT"
+          }
+          parse_phase warm1
+          parse_phase warm2
+          parse_phase stale
+          parse_phase layer_miss
       - name: Measure GHA cache storage usage
         id: cache_size
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bytes="$(.benchmark-config/scripts/sum-gha-cache-by-key.sh "$BENCHMARK_ID" "${{ steps.scope.outputs.scope_started_at }}")"
+          bytes="$(.benchmark-config/scripts/sum-gha-cache-by-key.sh "$BENCHMARK_ID" "${{ needs.seed-cache.outputs.scope_started_at }}")"
           echo "bytes=${bytes}" >> "$GITHUB_OUTPUT"
 
       - name: Write benchmark artifacts
@@ -406,14 +546,14 @@ jobs:
             --strategy "actions-cache" \
             --project-repo "$PROJECT_REPO" \
             --project-ref "$PROJECT_REF" \
-            --cold-seconds "${{ steps.cold_baseline_build.outputs.seconds }}" \
-            --warm1-seconds "${{ steps.warm1_build.outputs.seconds }}" \
-            --warm2-seconds "${{ steps.warm2_build.outputs.seconds }}" \
-            --stale-docker-seconds "${{ steps.stale_docker_build.outputs.seconds }}" \
-            --internal-only-warm-seconds "${{ steps.internal_only_build.outputs.seconds }}" \
+            --cold-seconds "${{ needs.seed-cache.outputs.cold_seconds }}" \
+            --warm1-seconds "${{ steps.timings.outputs.warm1_seconds }}" \
+            --warm2-seconds "${{ steps.timings.outputs.warm2_seconds }}" \
+            --stale-docker-seconds "${{ steps.timings.outputs.stale_seconds }}" \
+            --internal-only-warm-seconds "${{ steps.timings.outputs.layer_miss_seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \
-            --hit-behavior-note "Cold+seed run uses --no-cache + cache-to type=gha (mode=max) and records cold timing while priming remote cache. Warm runs use cache-from only (seeded scope), with no cache-to writes, for stable read-only apples-to-apples comparison. Stale Docker run mutates one Go source file and rebuilds with cache-from only to measure stage dedup under code changes. Internal-only run uses --no-cache (full image, no Docker layers) with BORINGCACHE_INTERNAL_CACHE_ENABLED=0."
+            --hit-behavior-note "Cold+seed run uses --no-cache + cache-to type=gha (mode=max) and records cold timing while priming remote cache. Warm runs use cache-from only (seeded scope), with no cache-to writes, for stable read-only apples-to-apples comparison. Stale Docker run mutates one Go source file and rebuilds with cache-from only to measure stage dedup under code changes. Internal-only run uses --no-cache (full image, no Docker layers) with BORINGCACHE_INTERNAL_CACHE_ENABLED=0. Warm1/Warm2/stale/layer-miss phases run as isolated matrix jobs and each phase prunes buildx before building to avoid cross-phase local layer reuse."
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
