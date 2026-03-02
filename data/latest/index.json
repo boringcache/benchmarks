@@ -193,19 +193,19 @@
         "internal_baseline_source": "actions-cache.internal_only",
         "internal_delta_seconds": 369.0,
         "internal_improvement_pct": 77.36,
-        "warm_vs_depot_docker_delta_seconds": 948.0,
-        "warm_vs_depot_docker_improvement_pct": 99.48
+        "warm_vs_depot_docker_delta_seconds": 925.0,
+        "warm_vs_depot_docker_improvement_pct": 99.46
       },
       "depot": {
         "repo": "depot/benchmark-mastodon",
-        "run_id": 22579607023,
-        "run_url": "https://github.com/depot/benchmark-mastodon/actions/runs/22579607023",
-        "docker_seconds": 953.0,
-        "docker_text": "15m 53s",
-        "docker_job_url": "https://github.com/depot/benchmark-mastodon/actions/runs/22579607023/job/65407744107",
-        "depot_seconds": 135.0,
-        "depot_text": "2m 15s",
-        "depot_job_url": "https://github.com/depot/benchmark-mastodon/actions/runs/22579607023/job/65407743994"
+        "run_id": 22582428184,
+        "run_url": "https://github.com/depot/benchmark-mastodon/actions/runs/22582428184",
+        "docker_seconds": 930.0,
+        "docker_text": "15m 30s",
+        "docker_job_url": "https://github.com/depot/benchmark-mastodon/actions/runs/22582428184/job/65417948159",
+        "depot_seconds": 123.0,
+        "depot_text": "2m 3s",
+        "depot_job_url": "https://github.com/depot/benchmark-mastodon/actions/runs/22582428184/job/65417948235"
       }
     },
     {
