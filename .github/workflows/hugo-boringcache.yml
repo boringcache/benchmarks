@@ -63,13 +63,16 @@ jobs:
           docker_registry_tag="${BENCHMARK_ID}-docker-layers"
           gomod_tag="hugo-gomod"
           gobuild_tag="hugo-gobuild"
-          purge_tags_csv="${gomod_tag},${gobuild_tag},${docker_registry_tag}"
+          internal_platform_suffix="alpine-3-x86_64"
+          purge_internal_tags_csv="${gomod_tag}-${internal_platform_suffix},${gobuild_tag}-${internal_platform_suffix}"
+          purge_registry_tags_csv="${docker_registry_tag}"
           tags_csv="${gomod_tag},${gobuild_tag},${cache_scope},${docker_registry_tag}"
           echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
           echo "docker_registry_tag=${docker_registry_tag}" >> "$GITHUB_OUTPUT"
           echo "gomod_tag=${gomod_tag}" >> "$GITHUB_OUTPUT"
           echo "gobuild_tag=${gobuild_tag}" >> "$GITHUB_OUTPUT"
-          echo "purge_tags_csv=${purge_tags_csv}" >> "$GITHUB_OUTPUT"
+          echo "purge_internal_tags_csv=${purge_internal_tags_csv}" >> "$GITHUB_OUTPUT"
+          echo "purge_registry_tags_csv=${purge_registry_tags_csv}" >> "$GITHUB_OUTPUT"
           echo "tags_csv=${tags_csv}" >> "$GITHUB_OUTPUT"
           cat > ./run-boringcache-build.sh <<'SH'
           #!/usr/bin/env bash
@@ -246,7 +249,8 @@ jobs:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
         run: |
           set -euo pipefail
-          boringcache delete --no-git "$BENCHMARK_WORKSPACE" "${{ steps.scope.outputs.purge_tags_csv }}" || true
+          boringcache delete --no-git "$BENCHMARK_WORKSPACE" "${{ steps.scope.outputs.purge_registry_tags_csv }}" || true
+          boringcache delete --no-platform --no-git "$BENCHMARK_WORKSPACE" "${{ steps.scope.outputs.purge_internal_tags_csv }}" || true
 
       - name: Run cold + seed cache build
         id: cold_baseline_build
@@ -307,13 +311,16 @@ jobs:
           docker_registry_tag="${BENCHMARK_ID}-docker-layers"
           gomod_tag="hugo-gomod"
           gobuild_tag="hugo-gobuild"
-          purge_tags_csv="${gomod_tag},${gobuild_tag},${docker_registry_tag}"
+          internal_platform_suffix="alpine-3-x86_64"
+          purge_internal_tags_csv="${gomod_tag}-${internal_platform_suffix},${gobuild_tag}-${internal_platform_suffix}"
+          purge_registry_tags_csv="${docker_registry_tag}"
           tags_csv="${gomod_tag},${gobuild_tag},${cache_scope},${docker_registry_tag}"
           echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
           echo "docker_registry_tag=${docker_registry_tag}" >> "$GITHUB_OUTPUT"
           echo "gomod_tag=${gomod_tag}" >> "$GITHUB_OUTPUT"
           echo "gobuild_tag=${gobuild_tag}" >> "$GITHUB_OUTPUT"
-          echo "purge_tags_csv=${purge_tags_csv}" >> "$GITHUB_OUTPUT"
+          echo "purge_internal_tags_csv=${purge_internal_tags_csv}" >> "$GITHUB_OUTPUT"
+          echo "purge_registry_tags_csv=${purge_registry_tags_csv}" >> "$GITHUB_OUTPUT"
           echo "tags_csv=${tags_csv}" >> "$GITHUB_OUTPUT"
           cat > ./run-boringcache-build.sh <<'SH'
           #!/usr/bin/env bash
