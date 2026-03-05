@@ -204,6 +204,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         phase: [warm1, warm2, stale]
     steps:

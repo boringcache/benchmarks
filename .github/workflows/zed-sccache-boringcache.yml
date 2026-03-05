@@ -252,6 +252,7 @@ jobs:
     timeout-minutes: 240
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         phase: [warm1, warm2, stale]
     steps:
