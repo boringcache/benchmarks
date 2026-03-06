@@ -114,7 +114,12 @@ jobs:
             echo "Applied stale change to ${stale_file}"
           }
 
+          if command -v mise >/dev/null 2>&1; then
+            eval "$(mise activate bash)"
+          fi
+
           corepack enable
+          corepack install
           pnpm --version
 
           if [[ "$mode" == "stale" ]]; then

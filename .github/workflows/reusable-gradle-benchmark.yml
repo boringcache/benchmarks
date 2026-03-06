@@ -139,6 +139,15 @@ jobs:
             enable_gradle_cache
           fi
 
+          if command -v mise >/dev/null 2>&1; then
+            eval "$(mise activate bash)"
+            java_home="$(mise where "java@${JAVA_VERSION}" 2>/dev/null || true)"
+            if [[ -n "${java_home}" ]]; then
+              export JAVA_HOME="${java_home}"
+              export PATH="${JAVA_HOME}/bin:${PATH}"
+            fi
+          fi
+
           if [[ "$mode" == "stale" ]]; then
             apply_stale_change
           fi
