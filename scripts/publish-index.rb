@@ -65,6 +65,33 @@ DEFAULT_ENTRIES = [
     "before" => "pending",
     "after" => "pending",
     "faster" => "0"
+  },
+  {
+    "name" => "n8n",
+    "logo" => "n8n",
+    "repo" => "n8n-io/n8n",
+    "step" => "Turbo build (pnpm monorepo)",
+    "before" => "pending",
+    "after" => "pending",
+    "faster" => "0"
+  },
+  {
+    "name" => "OpenTelemetry Java",
+    "logo" => "docker",
+    "repo" => "open-telemetry/opentelemetry-java",
+    "step" => "Gradle build (native HTTP cache)",
+    "before" => "pending",
+    "after" => "pending",
+    "faster" => "0"
+  },
+  {
+    "name" => "Spring AI",
+    "logo" => "docker",
+    "repo" => "spring-projects/spring-ai",
+    "step" => "Maven build (build-cache extension)",
+    "before" => "pending",
+    "after" => "pending",
+    "faster" => "0"
   }
 ].freeze
 
@@ -130,6 +157,36 @@ COMPARISON_WORKFLOWS = [
     "category" => "bazel",
     "actions_workflow" => "gRPC Bazel - Actions Cache",
     "boringcache_workflow" => "gRPC Bazel - BoringCache"
+  },
+  {
+    "benchmark" => "n8n",
+    "name" => "n8n",
+    "logo" => "n8n",
+    "repo" => "n8n-io/n8n",
+    "step" => "Turbo build (pnpm monorepo)",
+    "category" => "nodejs",
+    "actions_workflow" => "n8n - Actions Cache",
+    "boringcache_workflow" => "n8n - BoringCache"
+  },
+  {
+    "benchmark" => "otel-gradle",
+    "name" => "OpenTelemetry Java",
+    "logo" => "docker",
+    "repo" => "open-telemetry/opentelemetry-java",
+    "step" => "Gradle build (native HTTP cache)",
+    "category" => "gradle",
+    "actions_workflow" => "OpenTelemetry Java Gradle - Actions Cache",
+    "boringcache_workflow" => "OpenTelemetry Java Gradle - BoringCache"
+  },
+  {
+    "benchmark" => "spring-ai-maven",
+    "name" => "Spring AI",
+    "logo" => "docker",
+    "repo" => "spring-projects/spring-ai",
+    "step" => "Maven build (build-cache extension)",
+    "category" => "maven",
+    "actions_workflow" => "Spring AI Maven - Actions Cache",
+    "boringcache_workflow" => "Spring AI Maven - BoringCache"
   }
 ].freeze
 

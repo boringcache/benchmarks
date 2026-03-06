@@ -11,8 +11,11 @@ on:
         options:
           - all
           - docker
+          - nodejs
           - sccache
           - bazel
+          - gradle
+          - maven
 
 permissions:
   actions: write
@@ -37,11 +40,20 @@ jobs:
                 'hugo-actions-cache.yml', 'hugo-boringcache.yml',
                 'immich-actions-cache.yml', 'immich-boringcache.yml',
               ],
+              nodejs: [
+                'n8n-actions-cache.yml', 'n8n-boringcache.yml',
+              ],
               sccache: [
                 'zed-sccache-actions-cache.yml', 'zed-sccache-boringcache.yml',
               ],
               bazel: [
                 'grpc-bazel-actions-cache.yml', 'grpc-bazel-boringcache.yml',
+              ],
+              gradle: [
+                'opentelemetry-java-gradle-actions-cache.yml', 'opentelemetry-java-gradle-boringcache.yml',
+              ],
+              maven: [
+                'spring-ai-maven-actions-cache.yml', 'spring-ai-maven-boringcache.yml',
               ],
             };
 

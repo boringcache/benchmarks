@@ -1,0 +1,507 @@
+name: "Reusable Node Turbo Benchmark"
+
+on:
+  workflow_call:
+    inputs:
+      benchmark_id:
+        required: true
+        type: string
+      project_repo:
+        required: true
+        type: string
+      project_ref:
+        required: true
+        type: string
+      strategy:
+        required: true
+        type: string
+      benchmark_workspace:
+        required: false
+        type: string
+        default: boringcache/benchmarks
+      node_version:
+        required: true
+        type: string
+      install_command:
+        required: false
+        type: string
+        default: pnpm install --frozen-lockfile
+      build_command:
+        required: false
+        type: string
+        default: pnpm turbo run build --summarize
+
+env:
+  PROJECT_REPO: ${{ inputs.project_repo }}
+  PROJECT_REF: ${{ inputs.project_ref }}
+  BENCHMARK_ID: ${{ inputs.benchmark_id }}
+  BENCHMARK_WORKSPACE: ${{ inputs.benchmark_workspace }}
+  NODE_VERSION: ${{ inputs.node_version }}
+  INSTALL_COMMAND: ${{ inputs.install_command }}
+  BUILD_COMMAND: ${{ inputs.build_command }}
+  TURBO_PROXY_PORT: "4227"
+
+jobs:
+  seed-cache:
+    name: Turbo Seed (${{ inputs.strategy }}, cold)
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    outputs:
+      cold_seconds: ${{ steps.cold_baseline_build.outputs.seconds }}
+      scope_started_at: ${{ steps.scope.outputs.scope_started_at }}
+      tags_csv: ${{ steps.scope.outputs.tags_csv }}
+      seed_cache_key: ${{ steps.seed_cache_key.outputs.key }}
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+
+      - name: Checkout benchmark config
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
+      - name: Setup Node.js
+        if: inputs.strategy == 'actions-cache'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Prepare benchmark scope and helpers
+        id: scope
+        run: |
+          set -euo pipefail
+
+          scope_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          cache_scope="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
+          tag_turbo="${cache_scope}-turbo"
+          tag_pnpm="${tag_turbo}-pnpm-store"
+          tags_csv="${tag_turbo},${tag_pnpm}"
+          cache_key_primary="ac-${cache_scope}-seed1"
+          cache_key_fallback="ac-${cache_scope}-seed2"
+
+          echo "scope_started_at=${scope_started_at}" >> "$GITHUB_OUTPUT"
+          echo "tag_turbo=${tag_turbo}" >> "$GITHUB_OUTPUT"
+          echo "tag_pnpm=${tag_pnpm}" >> "$GITHUB_OUTPUT"
+          echo "tags_csv=${tags_csv}" >> "$GITHUB_OUTPUT"
+          echo "cache_key_primary=${cache_key_primary}" >> "$GITHUB_OUTPUT"
+          echo "cache_key_fallback=${cache_key_fallback}" >> "$GITHUB_OUTPUT"
+
+          cat > ./run-node-turbo-phase.sh <<'SH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          mode="${1:-warm}"
+          apply_stale_change() {
+            local stale_file=""
+            while IFS= read -r candidate; do
+              stale_file="${candidate}"
+              break
+            done < <(rg --files . -g '*.ts' -g '*.tsx' -g '*.js' -g '*.jsx' -g '*.vue')
+
+            if [[ -z "${stale_file}" ]]; then
+              echo "No JS/TS source file found for stale mutation" >&2
+              exit 1
+            fi
+
+            echo "// benchmark stale mutation ${GITHUB_RUN_ID:-local}-$(date +%s)" >> "${stale_file}"
+            echo "Applied stale change to ${stale_file}"
+          }
+
+          corepack enable
+          pnpm --version
+
+          if [[ "$mode" == "stale" ]]; then
+            apply_stale_change
+          fi
+
+          eval "$INSTALL_COMMAND"
+          eval "$BUILD_COMMAND"
+          SH
+          chmod +x ./run-node-turbo-phase.sh
+
+      - name: Resolve pnpm store directory
+        id: pnpm_store
+        if: inputs.strategy == 'actions-cache'
+        run: |
+          set -euo pipefail
+          corepack enable
+          echo "dir=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Node.js + BoringCache caches
+        if: inputs.strategy == 'boringcache'
+        uses: boringcache/nodejs-action@v1
+        with:
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cache-tag: ${{ steps.scope.outputs.tag_turbo }}
+          node-version: ${{ env.NODE_VERSION }}
+          working-directory: .
+          cache-node: 'false'
+          cache-modules: 'false'
+          cache-build: 'true'
+          turbo-remote-cache: 'true'
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Purge benchmark GHA cache keys
+        if: inputs.strategy == 'actions-cache'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          for key_prefix in "${{ steps.scope.outputs.cache_key_primary }}" "${{ steps.scope.outputs.cache_key_fallback }}"; do
+            page=1
+            while true; do
+              response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&page=${page}&key=${key_prefix}" 2>/dev/null || true)"
+              if [[ -z "$response" ]] || ! jq -e '.actions_caches | type == "array"' <<<"$response" >/dev/null 2>&1; then
+                break
+              fi
+              mapfile -t cache_ids < <(jq -r '.actions_caches[].id' <<<"$response")
+              for cache_id in "${cache_ids[@]}"; do
+                gh api -X DELETE "/repos/${GITHUB_REPOSITORY}/actions/caches/${cache_id}" >/dev/null 2>&1 || true
+              done
+              count="$(jq '.actions_caches | length' <<<"$response")"
+              if [[ "$count" -lt 100 ]]; then
+                break
+              fi
+              page=$((page + 1))
+            done
+          done
+
+      - name: Prepare AC write probe
+        if: inputs.strategy == 'actions-cache'
+        run: |
+          set -euo pipefail
+          mkdir -p .bench-cache-probe
+          printf '%s\n' "probe-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-$(date +%s)" > .bench-cache-probe/probe.txt
+
+      - name: Verify Actions Cache write access
+        if: inputs.strategy == 'actions-cache'
+        id: cache_write_probe
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            .bench-cache-probe
+          key: ac-${{ env.BENCHMARK_ID }}-write-probe-r${{ github.run_id }}-a${{ github.run_attempt }}
+
+      - name: Fail early if Actions Cache is read-only
+        if: inputs.strategy == 'actions-cache' && steps.cache_write_probe.outcome != 'success'
+        run: |
+          echo "Actions Cache write probe failed (likely read-only budget/spending cap)." >&2
+          echo "Cannot produce reliable AC benchmark results until cache writes are enabled." >&2
+          exit 1
+
+      - name: Run cold + seed cache build
+        id: cold_baseline_build
+        env:
+          PNPM_STORE_DIR: ${{ steps.pnpm_store.outputs.dir }}
+        run: |
+          set -euo pipefail
+          if [[ "${{ inputs.strategy }}" == "actions-cache" ]]; then
+            rm -rf .turbo node_modules "$PNPM_STORE_DIR"
+            mkdir -p "$PNPM_STORE_DIR"
+          else
+            rm -rf .turbo node_modules
+          fi
+
+          start="$(date +%s)"
+          ./run-node-turbo-phase.sh seed
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Save seeded cache (primary key)
+        if: inputs.strategy == 'actions-cache'
+        id: save_seed_primary
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ${{ steps.pnpm_store.outputs.dir }}
+            .turbo
+          key: ${{ steps.scope.outputs.cache_key_primary }}
+
+      - name: Save seeded cache (fallback key)
+        if: inputs.strategy == 'actions-cache' && steps.save_seed_primary.outcome != 'success'
+        id: save_seed_fallback
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ${{ steps.pnpm_store.outputs.dir }}
+            .turbo
+          key: ${{ steps.scope.outputs.cache_key_fallback }}
+
+      - name: Resolve seeded cache key
+        if: inputs.strategy == 'actions-cache'
+        id: seed_cache_key
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          primary="${{ steps.scope.outputs.cache_key_primary }}"
+          fallback="${{ steps.scope.outputs.cache_key_fallback }}"
+          key=""
+
+          for candidate in "$primary" "$fallback"; do
+            for _ in $(seq 1 30); do
+              response="$(gh api "/repos/${GITHUB_REPOSITORY}/actions/caches?per_page=100&key=${candidate}" 2>/dev/null || true)"
+              if [[ -n "$response" ]] && jq -e '.actions_caches | type == "array"' <<<"$response" >/dev/null 2>&1; then
+                matches="$(jq '.actions_caches | length' <<<"$response")"
+                if [[ "$matches" -gt 0 ]]; then
+                  key="$candidate"
+                  break 2
+                fi
+              fi
+              sleep 2
+            done
+          done
+
+          if [[ -z "$key" ]]; then
+            echo "Failed to verify seeded cache key in GHA cache API (likely cache save/read-only budget issue)." >&2
+            echo "Primary save outcome: ${{ steps.save_seed_primary.outcome }}" >&2
+            echo "Fallback save outcome: ${{ steps.save_seed_fallback.outcome }}" >&2
+            exit 1
+          fi
+
+          echo "key=${key}" >> "$GITHUB_OUTPUT"
+          echo "Using seeded cache key: ${key}"
+
+  scenario-builds:
+    name: Turbo Scenario (${{ matrix.phase }}) (${{ inputs.strategy }})
+    needs: seed-cache
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        phase: [warm1, warm2, stale]
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+
+      - name: Checkout benchmark config
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
+      - name: Setup Node.js
+        if: inputs.strategy == 'actions-cache'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Prepare benchmark scope and helpers
+        id: scope
+        run: |
+          set -euo pipefail
+
+          cache_scope="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
+          tag_turbo="${cache_scope}-turbo"
+          tag_pnpm="${tag_turbo}-pnpm-store"
+
+          echo "tag_turbo=${tag_turbo}" >> "$GITHUB_OUTPUT"
+          echo "tag_pnpm=${tag_pnpm}" >> "$GITHUB_OUTPUT"
+
+          cat > ./run-node-turbo-phase.sh <<'SH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          mode="${1:-warm}"
+          apply_stale_change() {
+            local stale_file=""
+            while IFS= read -r candidate; do
+              stale_file="${candidate}"
+              break
+            done < <(rg --files . -g '*.ts' -g '*.tsx' -g '*.js' -g '*.jsx' -g '*.vue')
+
+            if [[ -z "${stale_file}" ]]; then
+              echo "No JS/TS source file found for stale mutation" >&2
+              exit 1
+            fi
+
+            echo "// benchmark stale mutation ${GITHUB_RUN_ID:-local}-$(date +%s)" >> "${stale_file}"
+            echo "Applied stale change to ${stale_file}"
+          }
+
+          corepack enable
+          pnpm --version
+
+          if [[ "$mode" == "stale" ]]; then
+            apply_stale_change
+          fi
+
+          eval "$INSTALL_COMMAND"
+          eval "$BUILD_COMMAND"
+          SH
+          chmod +x ./run-node-turbo-phase.sh
+
+      - name: Resolve pnpm store directory
+        id: pnpm_store
+        if: inputs.strategy == 'actions-cache'
+        run: |
+          set -euo pipefail
+          corepack enable
+          echo "dir=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+
+      - name: Restore BoringCache Node.js caches
+        if: inputs.strategy == 'boringcache'
+        uses: boringcache/nodejs-action@v1
+        with:
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cache-tag: ${{ steps.scope.outputs.tag_turbo }}
+          node-version: ${{ env.NODE_VERSION }}
+          working-directory: .
+          cache-node: 'false'
+          cache-modules: 'false'
+          cache-build: 'true'
+          turbo-remote-cache: 'true'
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Restore seeded actions/cache
+        if: inputs.strategy == 'actions-cache'
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ${{ steps.pnpm_store.outputs.dir }}
+            .turbo
+          key: ${{ needs.seed-cache.outputs.seed_cache_key }}
+          fail-on-cache-miss: true
+
+      - name: Run scenario build
+        id: phase_build
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-node-turbo-phase.sh ${{ matrix.phase == 'stale' && 'stale' || 'warm' }}
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Persist scenario timing artifact
+        run: |
+          set -euo pipefail
+          mkdir -p benchmark-phase
+          cat > "benchmark-phase/${{ matrix.phase }}.env" <<EOF
+          phase=${{ matrix.phase }}
+          seconds=${{ steps.phase_build.outputs.seconds }}
+          EOF
+
+      - name: Upload scenario timing artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-phase-${{ env.BENCHMARK_ID }}-${{ inputs.strategy }}-${{ matrix.phase }}
+          path: benchmark-phase/${{ matrix.phase }}.env
+          if-no-files-found: error
+
+  finalize-benchmark:
+    name: Finalize benchmark artifacts
+    needs: [seed-cache, scenario-builds]
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout benchmark config
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
+      - name: Setup BoringCache CLI
+        if: inputs.strategy == 'boringcache'
+        uses: boringcache/setup-boringcache@v1
+        with:
+          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Download scenario timing artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: benchmark-phase-${{ env.BENCHMARK_ID }}-${{ inputs.strategy }}-*
+          path: benchmark-phase
+          merge-multiple: true
+
+      - name: Collect scenario timings
+        id: timings
+        run: |
+          set -euo pipefail
+          parse_phase() {
+            local phase="$1"
+            local file="benchmark-phase/${phase}.env"
+            if [[ ! -f "$file" ]]; then
+              echo "Missing timing artifact for phase ${phase}" >&2
+              ls -R benchmark-phase || true
+              exit 1
+            fi
+            local seconds
+            seconds="$(grep "^seconds=" "$file" | head -n1 | cut -d= -f2-)"
+            if [[ -z "${seconds}" ]]; then
+              echo "Timing artifact for phase ${phase} has empty seconds" >&2
+              cat "$file" >&2
+              exit 1
+            fi
+            echo "${phase}_seconds=${seconds}" >> "$GITHUB_OUTPUT"
+          }
+          parse_phase warm1
+          parse_phase warm2
+          parse_phase stale
+
+      - name: Measure BoringCache storage usage
+        if: inputs.strategy == 'boringcache'
+        id: bc_cache_size
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          tags_csv="${{ needs.seed-cache.outputs.tags_csv }}"
+          bytes="$(.benchmark-config/scripts/sum-boringcache-check-sizes.sh "$BENCHMARK_WORKSPACE" "$tags_csv")"
+          echo "bytes=${bytes}" >> "$GITHUB_OUTPUT"
+
+      - name: Measure GHA cache storage usage
+        if: inputs.strategy == 'actions-cache'
+        id: ac_cache_size
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bytes="$(.benchmark-config/scripts/sum-gha-cache-by-key.sh "${{ needs.seed-cache.outputs.seed_cache_key }}" "${{ needs.seed-cache.outputs.scope_started_at }}")"
+          echo "bytes=${bytes}" >> "$GITHUB_OUTPUT"
+
+      - name: Write benchmark artifacts
+        id: artifact_files
+        run: |
+          .benchmark-config/scripts/write-benchmark-artifacts.sh \
+            --benchmark "$BENCHMARK_ID" \
+            --strategy "${{ inputs.strategy }}" \
+            --project-repo "$PROJECT_REPO" \
+            --project-ref "$PROJECT_REF" \
+            --cold-seconds "${{ needs.seed-cache.outputs.cold_seconds }}" \
+            --warm1-seconds "${{ steps.timings.outputs.warm1_seconds }}" \
+            --warm2-seconds "${{ steps.timings.outputs.warm2_seconds }}" \
+            --stale-docker-seconds "${{ steps.timings.outputs.stale_seconds }}" \
+            --cache-storage-bytes "${{ inputs.strategy == 'boringcache' && steps.bc_cache_size.outputs.bytes || steps.ac_cache_size.outputs.bytes }}" \
+            --cache-storage-source "${{ inputs.strategy == 'boringcache' && 'boringcache-check' || 'github-actions-cache-api' }}" \
+            --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses boringcache/nodejs-action to seed an empty run-scoped Turbo remote-cache tag while archiving the pnpm store under the same cache-tag prefix. Warm1/Warm2 run on fresh runners, restore the pnpm store through the action, and hit the native Turbo remote-cache protocol. Stale run restores the same dependency state, mutates one JS/TS source file, then rebuilds against the same run-scoped Turbo cache.' || 'Cold+seed run builds from scratch and saves the pnpm store plus local .turbo cache to actions/cache under a run-scoped key while recording cold timing. Warm1/Warm2 and stale restore the same key on fresh runners. Stale run mutates one JS/TS source file before rebuilding against the restored local Turbo cache.' }}"
+
+      - name: Upload benchmark artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-${{ env.BENCHMARK_ID }}-${{ inputs.strategy }}
+          path: |
+            ${{ steps.artifact_files.outputs.json_path }}
+            ${{ steps.artifact_files.outputs.md_path }}
+          if-no-files-found: error
+
+      - name: Publish summary
+        run: cat "${{ steps.artifact_files.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"

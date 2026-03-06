@@ -1,0 +1,27 @@
+name: "n8n - BoringCache"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/n8n-boringcache.yml"
+      - ".github/workflows/n8n-actions-cache.yml"
+      - ".github/workflows/reusable-node-turbo-benchmark.yml"
+      - "scripts/**"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  benchmark:
+    uses: ./.github/workflows/reusable-node-turbo-benchmark.yml
+    with:
+      benchmark_id: n8n
+      project_repo: n8n-io/n8n
+      project_ref: 78b7f888467b87254fbce7974a0c4c545750174e
+      strategy: boringcache
+      node_version: "24.13.1"
+      install_command: CI=1 pnpm install --frozen-lockfile
+      build_command: CI=1 pnpm turbo run build --summarize
+    secrets: inherit
