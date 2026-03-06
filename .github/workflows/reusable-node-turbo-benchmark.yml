@@ -68,7 +68,6 @@ jobs:
           path: .benchmark-config
 
       - name: Setup Node.js
-        if: inputs.strategy == 'actions-cache'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -100,10 +99,9 @@ jobs:
           mode="${1:-warm}"
           apply_stale_change() {
             local stale_file=""
-            while IFS= read -r candidate; do
-              stale_file="${candidate}"
-              break
-            done < <(rg --files . -g '*.ts' -g '*.tsx' -g '*.js' -g '*.jsx' -g '*.vue')
+            local candidates=()
+            mapfile -t candidates < <(git ls-files -- '*.ts' '*.tsx' '*.js' '*.jsx' '*.vue')
+            stale_file="${candidates[0]:-}"
 
             if [[ -z "${stale_file}" ]]; then
               echo "No JS/TS source file found for stale mutation" >&2
@@ -114,12 +112,9 @@ jobs:
             echo "Applied stale change to ${stale_file}"
           }
 
-          if command -v mise >/dev/null 2>&1; then
-            eval "$(mise activate bash)"
-          fi
-
           corepack enable
           corepack install
+          pnpm() { corepack pnpm "$@"; }
           pnpm --version
 
           if [[ "$mode" == "stale" ]]; then
@@ -133,26 +128,17 @@ jobs:
 
       - name: Resolve pnpm store directory
         id: pnpm_store
-        if: inputs.strategy == 'actions-cache'
         run: |
           set -euo pipefail
           corepack enable
-          echo "dir=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+          corepack install
+          echo "dir=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
 
-      - name: Setup Node.js + BoringCache caches
+      - name: Setup BoringCache CLI
         if: inputs.strategy == 'boringcache'
-        uses: boringcache/nodejs-action@v1
+        uses: boringcache/setup-boringcache@v1
         with:
-          workspace: ${{ env.BENCHMARK_WORKSPACE }}
-          cache-tag: ${{ steps.scope.outputs.tag_turbo }}
-          node-version: ${{ env.NODE_VERSION }}
-          working-directory: .
-          cache-node: 'false'
-          cache-modules: 'false'
-          cache-build: 'true'
-          turbo-remote-cache: 'true'
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Purge benchmark GHA cache keys
         if: inputs.strategy == 'actions-cache'
@@ -209,17 +195,72 @@ jobs:
           PNPM_STORE_DIR: ${{ steps.pnpm_store.outputs.dir }}
         run: |
           set -euo pipefail
-          if [[ "${{ inputs.strategy }}" == "actions-cache" ]]; then
-            rm -rf .turbo node_modules "$PNPM_STORE_DIR"
-            mkdir -p "$PNPM_STORE_DIR"
-          else
-            rm -rf .turbo node_modules
+          rm -rf .turbo node_modules "$PNPM_STORE_DIR"
+          mkdir -p "$PNPM_STORE_DIR"
+
+          if [[ "${{ inputs.strategy }}" == "boringcache" ]]; then
+            proxy_log="${RUNNER_TEMP}/${BENCHMARK_ID}-seed-turbo-proxy.log"
+            rm -f "$proxy_log"
+            boringcache cache-registry "${BENCHMARK_WORKSPACE}" "${{ steps.scope.outputs.tag_turbo }}" \
+              --host 127.0.0.1 \
+              --port "${TURBO_PROXY_PORT}" \
+              --no-git \
+              --no-platform >"$proxy_log" 2>&1 &
+            proxy_pid=$!
+            cleanup() {
+              if kill -0 "$proxy_pid" >/dev/null 2>&1; then
+                kill -INT "$proxy_pid" >/dev/null 2>&1 || true
+                for _ in $(seq 1 30); do
+                  if ! kill -0 "$proxy_pid" >/dev/null 2>&1; then
+                    break
+                  fi
+                  sleep 1
+                done
+                if kill -0 "$proxy_pid" >/dev/null 2>&1; then
+                  kill -9 "$proxy_pid" >/dev/null 2>&1 || true
+                fi
+              fi
+              tail -n 120 "$proxy_log" >/dev/null 2>&1 || true
+            }
+            trap cleanup EXIT
+
+            ready=0
+            for _ in $(seq 1 30); do
+              if (echo >"/dev/tcp/127.0.0.1/${TURBO_PROXY_PORT}") >/dev/null 2>&1; then
+                ready=1
+                break
+              fi
+              if ! kill -0 "$proxy_pid" >/dev/null 2>&1; then
+                break
+              fi
+              sleep 1
+            done
+
+            if [[ "$ready" != "1" ]]; then
+              echo "Turbo proxy did not become ready" >&2
+              tail -n 200 "$proxy_log" >&2 || true
+              exit 1
+            fi
+
+            export TURBO_API="http://127.0.0.1:${TURBO_PROXY_PORT}"
+            export TURBO_TOKEN="boringcache"
+            export TURBO_TEAM="team_boringcache"
           fi
 
           start="$(date +%s)"
           ./run-node-turbo-phase.sh seed
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Save BoringCache pnpm store
+        if: inputs.strategy == 'boringcache'
+        uses: boringcache/save@v1
+        with:
+          cli-version: skip
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          entries: ${{ steps.scope.outputs.tag_pnpm }}:${{ steps.pnpm_store.outputs.dir }}
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Save seeded cache (primary key)
         if: inputs.strategy == 'actions-cache'
@@ -305,7 +346,6 @@ jobs:
           path: .benchmark-config
 
       - name: Setup Node.js
-        if: inputs.strategy == 'actions-cache'
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -329,10 +369,9 @@ jobs:
           mode="${1:-warm}"
           apply_stale_change() {
             local stale_file=""
-            while IFS= read -r candidate; do
-              stale_file="${candidate}"
-              break
-            done < <(rg --files . -g '*.ts' -g '*.tsx' -g '*.js' -g '*.jsx' -g '*.vue')
+            local candidates=()
+            mapfile -t candidates < <(git ls-files -- '*.ts' '*.tsx' '*.js' '*.jsx' '*.vue')
+            stale_file="${candidates[0]:-}"
 
             if [[ -z "${stale_file}" ]]; then
               echo "No JS/TS source file found for stale mutation" >&2
@@ -344,6 +383,8 @@ jobs:
           }
 
           corepack enable
+          corepack install
+          pnpm() { corepack pnpm "$@"; }
           pnpm --version
 
           if [[ "$mode" == "stale" ]]; then
@@ -357,26 +398,73 @@ jobs:
 
       - name: Resolve pnpm store directory
         id: pnpm_store
-        if: inputs.strategy == 'actions-cache'
         run: |
           set -euo pipefail
           corepack enable
-          echo "dir=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+          corepack install
+          echo "dir=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
 
-      - name: Restore BoringCache Node.js caches
+      - name: Setup BoringCache CLI
         if: inputs.strategy == 'boringcache'
-        uses: boringcache/nodejs-action@v1
+        uses: boringcache/setup-boringcache@v1
         with:
+          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Restore BoringCache pnpm store
+        if: inputs.strategy == 'boringcache'
+        uses: boringcache/restore@v1
+        with:
+          cli-version: skip
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
-          cache-tag: ${{ steps.scope.outputs.tag_turbo }}
-          node-version: ${{ env.NODE_VERSION }}
-          working-directory: .
-          cache-node: 'false'
-          cache-modules: 'false'
-          cache-build: 'true'
-          turbo-remote-cache: 'true'
+          entries: ${{ steps.scope.outputs.tag_pnpm }}:${{ steps.pnpm_store.outputs.dir }}
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Start BoringCache Turbo proxy
+        if: inputs.strategy == 'boringcache'
+        id: bc_proxy
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          proxy_log="${RUNNER_TEMP}/${BENCHMARK_ID}-${{ matrix.phase }}-turbo-proxy.log"
+          rm -f "$proxy_log"
+
+          boringcache cache-registry "${BENCHMARK_WORKSPACE}" "${{ steps.scope.outputs.tag_turbo }}" \
+            --host 127.0.0.1 \
+            --port "${TURBO_PROXY_PORT}" \
+            --no-git \
+            --no-platform >"$proxy_log" 2>&1 &
+          proxy_pid=$!
+
+          ready=0
+          for _ in $(seq 1 30); do
+            if (echo >"/dev/tcp/127.0.0.1/${TURBO_PROXY_PORT}") >/dev/null 2>&1; then
+              ready=1
+              break
+            fi
+            if ! kill -0 "$proxy_pid" >/dev/null 2>&1; then
+              break
+            fi
+            sleep 1
+          done
+
+          if [[ "$ready" != "1" ]]; then
+            echo "Turbo proxy did not become ready" >&2
+            tail -n 200 "$proxy_log" >&2 || true
+            if kill -0 "$proxy_pid" >/dev/null 2>&1; then
+              kill -9 "$proxy_pid" >/dev/null 2>&1 || true
+            fi
+            exit 1
+          fi
+
+          echo "pid=${proxy_pid}" >> "$GITHUB_OUTPUT"
+          echo "log_path=${proxy_log}" >> "$GITHUB_OUTPUT"
+          {
+            echo "TURBO_API=http://127.0.0.1:${TURBO_PROXY_PORT}"
+            echo "TURBO_TOKEN=boringcache"
+            echo "TURBO_TEAM=team_boringcache"
+          } >> "$GITHUB_ENV"
 
       - name: Restore seeded actions/cache
         if: inputs.strategy == 'actions-cache'
@@ -396,6 +484,30 @@ jobs:
           ./run-node-turbo-phase.sh ${{ matrix.phase == 'stale' && 'stale' || 'warm' }}
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Stop BoringCache Turbo proxy
+        if: always() && inputs.strategy == 'boringcache'
+        run: |
+          set -euo pipefail
+          proxy_pid="${{ steps.bc_proxy.outputs.pid }}"
+          proxy_log="${{ steps.bc_proxy.outputs.log_path }}"
+
+          if [[ -n "${proxy_pid}" ]] && kill -0 "${proxy_pid}" >/dev/null 2>&1; then
+            kill -INT "${proxy_pid}" >/dev/null 2>&1 || true
+            for _ in $(seq 1 30); do
+              if ! kill -0 "${proxy_pid}" >/dev/null 2>&1; then
+                break
+              fi
+              sleep 1
+            done
+            if kill -0 "${proxy_pid}" >/dev/null 2>&1; then
+              kill -9 "${proxy_pid}" >/dev/null 2>&1 || true
+            fi
+          fi
+
+          if [[ -n "${proxy_log}" && -f "${proxy_log}" ]]; then
+            tail -n 120 "${proxy_log}" || true
+          fi
 
       - name: Persist scenario timing artifact
         run: |
@@ -497,7 +609,7 @@ jobs:
             --stale-docker-seconds "${{ steps.timings.outputs.stale_seconds }}" \
             --cache-storage-bytes "${{ inputs.strategy == 'boringcache' && steps.bc_cache_size.outputs.bytes || steps.ac_cache_size.outputs.bytes }}" \
             --cache-storage-source "${{ inputs.strategy == 'boringcache' && 'boringcache-check' || 'github-actions-cache-api' }}" \
-            --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses boringcache/nodejs-action to seed an empty run-scoped Turbo remote-cache tag while archiving the pnpm store under the same cache-tag prefix. Warm1/Warm2 run on fresh runners, restore the pnpm store through the action, and hit the native Turbo remote-cache protocol. Stale run restores the same dependency state, mutates one JS/TS source file, then rebuilds against the same run-scoped Turbo cache.' || 'Cold+seed run builds from scratch and saves the pnpm store plus local .turbo cache to actions/cache under a run-scoped key while recording cold timing. Warm1/Warm2 and stale restore the same key on fresh runners. Stale run mutates one JS/TS source file before rebuilding against the restored local Turbo cache.' }}"
+            --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses actions/setup-node for the toolchain, starts an empty run-scoped BoringCache Turbo proxy, and then archives only the pnpm store with boringcache/save. Warm1/Warm2 and stale run on fresh runners, restore that same pnpm store through boringcache/restore, and hit the native Turbo remote-cache protocol against the same run-scoped tag.' || 'Cold+seed run builds from scratch and saves the pnpm store plus local .turbo cache to actions/cache under a run-scoped key while recording cold timing. Warm1/Warm2 and stale restore that same key on fresh runners. Stale run mutates one JS/TS source file before rebuilding against the restored local Turbo cache.' }}"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4

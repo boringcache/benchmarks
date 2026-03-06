@@ -120,10 +120,9 @@ jobs:
 
           apply_stale_change() {
             local stale_file=""
-            while IFS= read -r candidate; do
-              stale_file="${candidate}"
-              break
-            done < <(rg --files . -g '*.java')
+            local candidates=()
+            mapfile -t candidates < <(git ls-files -- '*.java')
+            stale_file="${candidates[0]:-}"
 
             if [[ -z "${stale_file}" ]]; then
               echo "No Java source file found for stale mutation" >&2
@@ -137,15 +136,6 @@ jobs:
           if [[ "${USE_REMOTE_CACHE:-0}" != "1" ]]; then
             configure_local_cache_only
             enable_gradle_cache
-          fi
-
-          if command -v mise >/dev/null 2>&1; then
-            eval "$(mise activate bash)"
-            java_home="$(mise where "java@${JAVA_VERSION}" 2>/dev/null || true)"
-            if [[ -n "${java_home}" ]]; then
-              export JAVA_HOME="${java_home}"
-              export PATH="${JAVA_HOME}/bin:${PATH}"
-            fi
           fi
 
           if [[ "$mode" == "stale" ]]; then
@@ -382,10 +372,9 @@ jobs:
 
           apply_stale_change() {
             local stale_file=""
-            while IFS= read -r candidate; do
-              stale_file="${candidate}"
-              break
-            done < <(rg --files . -g '*.java')
+            local candidates=()
+            mapfile -t candidates < <(git ls-files -- '*.java')
+            stale_file="${candidates[0]:-}"
 
             if [[ -z "${stale_file}" ]]; then
               echo "No Java source file found for stale mutation" >&2
