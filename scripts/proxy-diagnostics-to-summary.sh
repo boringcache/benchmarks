@@ -195,3 +195,72 @@ summary_file="${GITHUB_STEP_SUMMARY:-/dev/stdout}"
   fi
 
 } >> "$summary_file"
+
+# ---- 6. Write key metrics to GITHUB_OUTPUT (for step/job outputs) ----
+if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
+  {
+    echo "diag_phase=${phase}"
+    echo "diag_index_entries=${preload_entries:-0}"
+    echo "diag_prefetch_downloaded=${prefetch_downloaded:-0}"
+    echo "diag_prefetch_skipped=${prefetch_skipped:-0}"
+    echo "diag_prefetch_failed=${prefetch_failed:-0}"
+    echo "diag_prefetch_bytes=${prefetch_bytes:-0}"
+    echo "diag_prefetch_elapsed=${prefetch_elapsed:-unknown}"
+    echo "diag_error_count=${error_count:-0}"
+
+    # Request metrics if available
+    if [[ -n "$metrics_jsonl" && -f "$metrics_jsonl" ]] && command -v jq &>/dev/null; then
+      total_records=$(wc -l < "$metrics_jsonl" 2>/dev/null || echo "0")
+      failure_count=$(jq -r 'select(.error != null or ((.status // 0) >= 500)) | .operation' "$metrics_jsonl" 2>/dev/null | wc -l || echo "0")
+      retry_count=$(jq -r 'select((.retry_count // 0) > 0) | .operation' "$metrics_jsonl" 2>/dev/null | wc -l || echo "0")
+
+      # P95 for key operations
+      for op in cache_blobs_check cache_blobs_download_urls; do
+        durations=$(jq -r "select(.operation == \"${op}\") | .duration_ms // empty" "$metrics_jsonl" 2>/dev/null | sort -n)
+        count=$(echo "$durations" | grep -c . 2>/dev/null || echo "0")
+        if [[ "$count" -gt 0 ]]; then
+          p95_idx=$(( (count * 95 + 99) / 100 ))
+          p95=$(echo "$durations" | sed -n "${p95_idx}p")
+          safe_op=$(echo "$op" | tr '-' '_')
+          echo "diag_${safe_op}_count=${count}"
+          echo "diag_${safe_op}_p95_ms=${p95}"
+        fi
+      done
+
+      echo "diag_metrics_total=${total_records}"
+      echo "diag_metrics_failures=${failure_count}"
+      echo "diag_metrics_retries=${retry_count}"
+    fi
+  } >> "$GITHUB_OUTPUT"
+fi
+
+# ---- 7. Emit annotation with compact metrics (visible via check-runs API) ----
+prefetch_bytes_mib="n/a"
+if [[ -n "${prefetch_bytes:-}" && "${prefetch_bytes:-0}" != "0" ]]; then
+  prefetch_bytes_mib=$(awk -v b="$prefetch_bytes" 'BEGIN { printf "%.1f", b / 1048576 }')
+fi
+
+metrics_summary=""
+if [[ -n "$metrics_jsonl" && -f "$metrics_jsonl" ]] && command -v jq &>/dev/null; then
+  m_total=$(wc -l < "$metrics_jsonl" 2>/dev/null || echo "0")
+  m_failures=$(jq -r 'select(.error != null or ((.status // 0) >= 500)) | .operation' "$metrics_jsonl" 2>/dev/null | wc -l || echo "0")
+
+  check_p95=""
+  dl_p95=""
+  for op in cache_blobs_check cache_blobs_download_urls; do
+    durations=$(jq -r "select(.operation == \"${op}\") | .duration_ms // empty" "$metrics_jsonl" 2>/dev/null | sort -n)
+    count=$(echo "$durations" | grep -c . 2>/dev/null || echo "0")
+    if [[ "$count" -gt 0 ]]; then
+      p95_idx=$(( (count * 95 + 99) / 100 ))
+      p95=$(echo "$durations" | sed -n "${p95_idx}p")
+      if [[ "$op" == "cache_blobs_check" ]]; then
+        check_p95="${count}reqs,p95=${p95}ms"
+      else
+        dl_p95="${count}reqs,p95=${p95}ms"
+      fi
+    fi
+  done
+  metrics_summary=" | requests=${m_total} failures=${m_failures} check=[${check_p95:-n/a}] download=[${dl_p95:-n/a}]"
+fi
+
+echo "::notice title=Proxy Diagnostics (${benchmark_id}/${phase})::index=${preload_entries:-0} prefetch_dl=${prefetch_downloaded:-0} prefetch_skip=${prefetch_skipped:-0} prefetch_fail=${prefetch_failed:-0} bytes=${prefetch_bytes_mib}MiB elapsed=${prefetch_elapsed:-?} errors=${error_count:-0}${metrics_summary}"
