@@ -94,6 +94,9 @@ jobs:
             RUST_LOG=info \
             BORINGCACHE_OBSERVABILITY_INCLUDE_CACHE_OPS=1 \
             BORINGCACHE_REQUEST_METRICS_PATH="$proxy_metrics" \
+            BORINGCACHE_CACHE_PREFETCH_BATCH_MAX=10000 \
+            BORINGCACHE_CACHE_PREFETCH_MAX_BLOB_BYTES=104857600 \
+            BORINGCACHE_BLOB_PREFETCH_MAX_INFLIGHT_BYTES=2147483648 \
             boringcache docker-registry "$BENCHMARK_WORKSPACE" "$docker_registry_tag" --host 0.0.0.0 --port "$proxy_port" --no-git --verbose > "$proxy_log" 2>&1 &
             proxy_pid=$!
           }
@@ -375,6 +378,9 @@ jobs:
             RUST_LOG=info \
             BORINGCACHE_OBSERVABILITY_INCLUDE_CACHE_OPS=1 \
             BORINGCACHE_REQUEST_METRICS_PATH="$proxy_metrics" \
+            BORINGCACHE_CACHE_PREFETCH_BATCH_MAX=10000 \
+            BORINGCACHE_CACHE_PREFETCH_MAX_BLOB_BYTES=104857600 \
+            BORINGCACHE_BLOB_PREFETCH_MAX_INFLIGHT_BYTES=2147483648 \
             boringcache docker-registry "$BENCHMARK_WORKSPACE" "$docker_registry_tag" --host 0.0.0.0 --port "$proxy_port" --no-git --verbose > "$proxy_log" 2>&1 &
             proxy_pid=$!
           }

@@ -474,6 +474,9 @@ jobs:
           RUST_LOG=info \
           BORINGCACHE_OBSERVABILITY_INCLUDE_CACHE_OPS=1 \
           BORINGCACHE_REQUEST_METRICS_PATH="$proxy_metrics" \
+          BORINGCACHE_CACHE_PREFETCH_BATCH_MAX=10000 \
+          BORINGCACHE_CACHE_PREFETCH_MAX_BLOB_BYTES=104857600 \
+          BORINGCACHE_BLOB_PREFETCH_MAX_INFLIGHT_BYTES=2147483648 \
           boringcache cache-registry "${BENCHMARK_WORKSPACE}" "${{ steps.scope.outputs.tag_turbo }}" \
             --host 127.0.0.1 \
             --port "${TURBO_PROXY_PORT}" \
@@ -505,13 +508,27 @@ jobs:
 
           # Wait for preload to finish before starting the build
           echo "Waiting for proxy preload to complete..."
-          for _ in $(seq 1 30); do
+          for _ in $(seq 1 60); do
             if grep -q 'KV index preloaded:' "$proxy_log" 2>/dev/null || \
                grep -q 'KV index preload: no existing entries' "$proxy_log" 2>/dev/null || \
                grep -q 'KV index preload failed' "$proxy_log" 2>/dev/null || \
                grep -q 'KV index preload: skipped' "$proxy_log" 2>/dev/null; then
               echo "Preload completed:"
               grep -E 'KV index preload' "$proxy_log" || true
+              break
+            fi
+            sleep 1
+          done
+
+          # Wait for blob prefetch to complete (up to 120s)
+          echo "Waiting for blob prefetch to complete..."
+          for _ in $(seq 1 120); do
+            if grep -q 'KV blob preload: done' "$proxy_log" 2>/dev/null || \
+               grep -q 'KV blob preload: skipped' "$proxy_log" 2>/dev/null || \
+               grep -q 'prefetch_result=' "$proxy_log" 2>/dev/null || \
+               grep -q 'KV index preload: no existing entries' "$proxy_log" 2>/dev/null; then
+              echo "Blob prefetch status:"
+              grep -E 'blob preload|prefetch' "$proxy_log" || true
               break
             fi
             sleep 1

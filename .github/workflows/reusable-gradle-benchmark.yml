@@ -436,6 +436,9 @@ jobs:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           RUST_LOG: info
           BORINGCACHE_OBSERVABILITY_INCLUDE_CACHE_OPS: "1"
+          BORINGCACHE_CACHE_PREFETCH_BATCH_MAX: "10000"
+          BORINGCACHE_CACHE_PREFETCH_MAX_BLOB_BYTES: "104857600"
+          BORINGCACHE_BLOB_PREFETCH_MAX_INFLIGHT_BYTES: "2147483648"
 
       - name: Restore seeded actions/cache
         if: inputs.strategy == 'actions-cache'
