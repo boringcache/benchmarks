@@ -106,6 +106,8 @@ jobs:
           cache-tag: ${{ env.BAZEL_REMOTE_CACHE_TAG }}
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          RUST_LOG: info
+          BORINGCACHE_OBSERVABILITY_INCLUDE_CACHE_OPS: "1"
 
       - name: Tune Bazel for remote cache performance
         run: |
@@ -127,6 +129,18 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
+      - name: Verify seed cache entries exist
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="${{ steps.scope.outputs.tag_bazel }}"
+          echo "Verifying seed cache entries for tag: ${tag}"
+          if boringcache check --no-git "${BENCHMARK_WORKSPACE}" "${tag}"; then
+            echo "Seed cache entries confirmed visible in backend"
+          else
+            echo "WARNING: Seed cache entries NOT found - flush may not have completed before proxy shutdown" >&2
+          fi
 
   scenario-builds:
     name: Bazel Scenario (${{ matrix.phase }}) (BoringCache)
@@ -206,6 +220,8 @@ jobs:
           cache-tag: ${{ env.BAZEL_REMOTE_CACHE_TAG }}
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          RUST_LOG: info
+          BORINGCACHE_OBSERVABILITY_INCLUDE_CACHE_OPS: "1"
 
       - name: Tune Bazel for remote cache performance
         run: |

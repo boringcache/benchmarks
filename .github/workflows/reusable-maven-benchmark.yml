@@ -227,28 +227,36 @@ jobs:
           EOF
 
             proxy_log="${RUNNER_TEMP}/${BENCHMARK_ID}-seed-maven-proxy.log"
-            rm -f "$proxy_log"
+            proxy_metrics="${RUNNER_TEMP}/${BENCHMARK_ID}-seed-maven-proxy-metrics.jsonl"
+            rm -f "$proxy_log" "$proxy_metrics"
+            RUST_LOG=info \
+            BORINGCACHE_OBSERVABILITY_INCLUDE_CACHE_OPS=1 \
+            BORINGCACHE_REQUEST_METRICS_PATH="$proxy_metrics" \
             boringcache cache-registry "${BENCHMARK_WORKSPACE}" "${{ steps.scope.outputs.tag_remote }}" \
               --host 127.0.0.1 \
               --port "${PROXY_PORT}" \
               --no-git \
-              --no-platform >"$proxy_log" 2>&1 &
+              --no-platform \
+              --verbose >"$proxy_log" 2>&1 &
             proxy_pid=$!
             cleanup() {
               if kill -0 "$proxy_pid" >/dev/null 2>&1; then
                 kill -INT "$proxy_pid" >/dev/null 2>&1 || true
-                for _ in $(seq 1 30); do
+                for _ in $(seq 1 120); do
                   if ! kill -0 "$proxy_pid" >/dev/null 2>&1; then
                     break
                   fi
                   sleep 1
                 done
                 if kill -0 "$proxy_pid" >/dev/null 2>&1; then
+                  echo "Seed proxy did not exit within 120s; force killing" >&2
                   kill -9 "$proxy_pid" >/dev/null 2>&1 || true
                 fi
               fi
               if [[ -f "$proxy_log" ]]; then
-                tail -n 120 "$proxy_log" || true
+                echo "=== Seed proxy log (last 200 lines) ==="
+                tail -n 200 "$proxy_log" || true
+                echo "=== End seed proxy log ==="
               fi
             }
             trap cleanup EXIT
@@ -277,6 +285,30 @@ jobs:
           rm -rf "$HOME/.m2/repository/org/springframework/ai"
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Verify seed cache entries exist
+        if: inputs.strategy == 'boringcache'
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="${{ steps.scope.outputs.tag_remote }}"
+          echo "Verifying seed cache entries for tag: ${tag}"
+          if boringcache check --no-git "${BENCHMARK_WORKSPACE}" "${tag}"; then
+            echo "Seed cache entries confirmed visible in backend"
+          else
+            echo "WARNING: Seed cache entries NOT found - flush may not have completed before proxy shutdown" >&2
+          fi
+
+      - name: Upload seed proxy diagnostics
+        if: always() && inputs.strategy == 'boringcache'
+        uses: actions/upload-artifact@v4
+        with:
+          name: seed-proxy-diagnostics-${{ env.BENCHMARK_ID }}-${{ inputs.strategy }}
+          path: |
+            ${{ runner.temp }}/${{ env.BENCHMARK_ID }}-seed-maven-proxy.log
+            ${{ runner.temp }}/${{ env.BENCHMARK_ID }}-seed-maven-proxy-metrics.jsonl
+          if-no-files-found: warn
 
       - name: Save BoringCache Maven repository
         if: inputs.strategy == 'boringcache'
@@ -494,28 +526,36 @@ jobs:
           EOF
 
             proxy_log="${RUNNER_TEMP}/${BENCHMARK_ID}-${{ matrix.phase }}-maven-proxy.log"
-            rm -f "$proxy_log"
+            proxy_metrics="${RUNNER_TEMP}/${BENCHMARK_ID}-${{ matrix.phase }}-maven-proxy-metrics.jsonl"
+            rm -f "$proxy_log" "$proxy_metrics"
+            RUST_LOG=info \
+            BORINGCACHE_OBSERVABILITY_INCLUDE_CACHE_OPS=1 \
+            BORINGCACHE_REQUEST_METRICS_PATH="$proxy_metrics" \
             boringcache cache-registry "${BENCHMARK_WORKSPACE}" "${{ steps.scope.outputs.tag_remote }}" \
               --host 127.0.0.1 \
               --port "${PROXY_PORT}" \
               --no-git \
-              --no-platform >"$proxy_log" 2>&1 &
+              --no-platform \
+              --verbose >"$proxy_log" 2>&1 &
             proxy_pid=$!
             cleanup() {
               if kill -0 "$proxy_pid" >/dev/null 2>&1; then
                 kill -INT "$proxy_pid" >/dev/null 2>&1 || true
-                for _ in $(seq 1 30); do
+                for _ in $(seq 1 120); do
                   if ! kill -0 "$proxy_pid" >/dev/null 2>&1; then
                     break
                   fi
                   sleep 1
                 done
                 if kill -0 "$proxy_pid" >/dev/null 2>&1; then
+                  echo "Scenario proxy did not exit within 120s; force killing" >&2
                   kill -9 "$proxy_pid" >/dev/null 2>&1 || true
                 fi
               fi
               if [[ -f "$proxy_log" ]]; then
-                tail -n 120 "$proxy_log" || true
+                echo "=== Scenario proxy log (${{ matrix.phase }}, last 200 lines) ==="
+                tail -n 200 "$proxy_log" || true
+                echo "=== End scenario proxy log ==="
               fi
             }
             trap cleanup EXIT
@@ -543,6 +583,16 @@ jobs:
           ./run-maven-phase.sh ${{ matrix.phase == 'stale' && 'stale' || 'warm' }}
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Upload scenario proxy diagnostics
+        if: always() && inputs.strategy == 'boringcache'
+        uses: actions/upload-artifact@v4
+        with:
+          name: scenario-proxy-diagnostics-${{ env.BENCHMARK_ID }}-${{ inputs.strategy }}-${{ matrix.phase }}
+          path: |
+            ${{ runner.temp }}/${{ env.BENCHMARK_ID }}-${{ matrix.phase }}-maven-proxy.log
+            ${{ runner.temp }}/${{ env.BENCHMARK_ID }}-${{ matrix.phase }}-maven-proxy-metrics.jsonl
+          if-no-files-found: warn
 
       - name: Persist scenario timing artifact
         run: |
