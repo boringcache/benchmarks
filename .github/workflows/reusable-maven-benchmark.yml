@@ -257,6 +257,12 @@ jobs:
                 echo "=== Seed proxy log (last 200 lines) ==="
                 tail -n 200 "$proxy_log" || true
                 echo "=== End seed proxy log ==="
+                {
+                  echo "### Seed Proxy Log"
+                  echo '```'
+                  grep -E 'HEARTBEAT|preload|index|entries|error|Error|refresh|flush|breaker|published' "$proxy_log" | tail -n 100 || true
+                  echo '```'
+                } >> "$GITHUB_STEP_SUMMARY"
               fi
             }
             trap cleanup EXIT
@@ -556,6 +562,18 @@ jobs:
                 echo "=== Scenario proxy log (${{ matrix.phase }}, last 200 lines) ==="
                 tail -n 200 "$proxy_log" || true
                 echo "=== End scenario proxy log ==="
+                # Write diagnostics to step summary (accessible via API)
+                {
+                  echo "### Proxy Log (${{ matrix.phase }})"
+                  echo '```'
+                  grep -E 'HEARTBEAT|preload|index|entries|error|Error|refresh|flush|breaker|published' "$proxy_log" | tail -n 100 || true
+                  echo '```'
+                  echo ""
+                  echo "#### Full log (last 300 lines)"
+                  echo '```'
+                  tail -n 300 "$proxy_log" || true
+                  echo '```'
+                } >> "$GITHUB_STEP_SUMMARY"
               fi
             }
             trap cleanup EXIT

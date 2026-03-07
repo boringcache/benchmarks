@@ -229,6 +229,13 @@ jobs:
               echo "=== Seed proxy log (last 200 lines) ==="
               tail -n 200 "$proxy_log" 2>/dev/null || true
               echo "=== End seed proxy log ==="
+              # Write seed diagnostics to step summary
+              {
+                echo "### Seed Proxy Log"
+                echo '```'
+                grep -E 'HEARTBEAT|preload|index|entries|error|Error|refresh|flush|breaker|published' "$proxy_log" 2>/dev/null | tail -n 100 || true
+                echo '```'
+              } >> "$GITHUB_STEP_SUMMARY"
             }
             trap cleanup EXIT
 
@@ -496,6 +503,21 @@ jobs:
             exit 1
           fi
 
+          # Wait for preload to finish before starting the build
+          echo "Waiting for proxy preload to complete..."
+          for _ in $(seq 1 30); do
+            if grep -q 'KV index preloaded:' "$proxy_log" 2>/dev/null || \
+               grep -q 'KV index preload: no existing entries' "$proxy_log" 2>/dev/null || \
+               grep -q 'KV index preload failed' "$proxy_log" 2>/dev/null || \
+               grep -q 'KV index preload: skipped' "$proxy_log" 2>/dev/null; then
+              echo "Preload completed:"
+              grep -E 'KV index preload' "$proxy_log" || true
+              break
+            fi
+            sleep 1
+          done
+          echo "Proxy preload wait done"
+
           echo "pid=${proxy_pid}" >> "$GITHUB_OUTPUT"
           echo "log_path=${proxy_log}" >> "$GITHUB_OUTPUT"
           {
@@ -513,6 +535,27 @@ jobs:
             .turbo
           key: ${{ needs.seed-cache.outputs.seed_cache_key }}
           fail-on-cache-miss: true
+
+      - name: Verify cache entries visible from warm runner
+        if: inputs.strategy == 'boringcache'
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="${{ steps.scope.outputs.tag_turbo }}"
+          echo "Checking cache entries for tag: ${tag} (from warm runner)"
+          if boringcache check --no-git "${BENCHMARK_WORKSPACE}" "${tag}"; then
+            echo "Cache entries confirmed visible from warm runner"
+          else
+            echo "WARNING: Cache entries NOT visible from warm runner" >&2
+          fi
+          # Also check proxy preload status via /healthz or similar
+          if [[ -n "${TURBO_API:-}" ]]; then
+            echo "Checking proxy status..."
+            curl -s "http://127.0.0.1:${TURBO_PROXY_PORT}/_status" 2>/dev/null || echo "(no _status endpoint)"
+            # Give preload a moment to complete
+            sleep 3
+          fi
 
       - name: Run scenario build
         id: phase_build
@@ -548,6 +591,19 @@ jobs:
             echo "=== Scenario proxy log (${{ matrix.phase }}, last 200 lines) ==="
             tail -n 200 "${proxy_log}" || true
             echo "=== End scenario proxy log ==="
+
+            # Write key diagnostics to step summary (accessible via API)
+            {
+              echo "### Proxy Log (${{ matrix.phase }})"
+              echo '```'
+              grep -E 'HEARTBEAT|preload|index|entries|error|Error|refresh|flush|breaker|published' "${proxy_log}" | tail -n 100 || true
+              echo '```'
+              echo ""
+              echo "#### Full log (last 300 lines)"
+              echo '```'
+              tail -n 300 "${proxy_log}" || true
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload scenario proxy diagnostics
