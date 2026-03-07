@@ -229,13 +229,11 @@ jobs:
               echo "=== Seed proxy log (last 200 lines) ==="
               tail -n 200 "$proxy_log" 2>/dev/null || true
               echo "=== End seed proxy log ==="
-              # Write seed diagnostics to step summary
-              {
-                echo "### Seed Proxy Log"
-                echo '```'
-                grep -E 'HEARTBEAT|preload|index|entries|error|Error|refresh|flush|breaker|published' "$proxy_log" 2>/dev/null | tail -n 100 || true
-                echo '```'
-              } >> "$GITHUB_STEP_SUMMARY"
+              .benchmark-config/scripts/proxy-diagnostics-to-summary.sh \
+                --proxy-log "$proxy_log" \
+                --metrics-jsonl "$proxy_metrics" \
+                --phase seed \
+                --benchmark-id "$BENCHMARK_ID"
             }
             trap cleanup EXIT
 
@@ -609,18 +607,12 @@ jobs:
             tail -n 200 "${proxy_log}" || true
             echo "=== End scenario proxy log ==="
 
-            # Write key diagnostics to step summary (accessible via API)
-            {
-              echo "### Proxy Log (${{ matrix.phase }})"
-              echo '```'
-              grep -E 'HEARTBEAT|preload|index|entries|error|Error|refresh|flush|breaker|published' "${proxy_log}" | tail -n 100 || true
-              echo '```'
-              echo ""
-              echo "#### Full log (last 300 lines)"
-              echo '```'
-              tail -n 300 "${proxy_log}" || true
-              echo '```'
-            } >> "$GITHUB_STEP_SUMMARY"
+            proxy_metrics="${RUNNER_TEMP}/${BENCHMARK_ID}-${{ matrix.phase }}-turbo-proxy-metrics.jsonl"
+            .benchmark-config/scripts/proxy-diagnostics-to-summary.sh \
+              --proxy-log "${proxy_log}" \
+              --metrics-jsonl "${proxy_metrics}" \
+              --phase "${{ matrix.phase }}" \
+              --benchmark-id "$BENCHMARK_ID"
           fi
 
       - name: Upload scenario proxy diagnostics
