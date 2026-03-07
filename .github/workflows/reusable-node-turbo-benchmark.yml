@@ -200,27 +200,40 @@ jobs:
 
           if [[ "${{ inputs.strategy }}" == "boringcache" ]]; then
             proxy_log="${RUNNER_TEMP}/${BENCHMARK_ID}-seed-turbo-proxy.log"
-            rm -f "$proxy_log"
+            proxy_metrics="${RUNNER_TEMP}/${BENCHMARK_ID}-seed-turbo-proxy-metrics.jsonl"
+            rm -f "$proxy_log" "$proxy_metrics"
+            RUST_LOG=info \
+            BORINGCACHE_OBSERVABILITY_INCLUDE_CACHE_OPS=1 \
+            BORINGCACHE_REQUEST_METRICS_PATH="$proxy_metrics" \
             boringcache cache-registry "${BENCHMARK_WORKSPACE}" "${{ steps.scope.outputs.tag_turbo }}" \
               --host 127.0.0.1 \
               --port "${TURBO_PROXY_PORT}" \
               --no-git \
-              --no-platform >"$proxy_log" 2>&1 &
+              --no-platform \
+              --verbose >"$proxy_log" 2>&1 &
             proxy_pid=$!
             cleanup() {
               if kill -0 "$proxy_pid" >/dev/null 2>&1; then
                 kill -INT "$proxy_pid" >/dev/null 2>&1 || true
-                for _ in $(seq 1 30); do
+                for _ in $(seq 1 120); do
                   if ! kill -0 "$proxy_pid" >/dev/null 2>&1; then
                     break
                   fi
                   sleep 1
                 done
                 if kill -0 "$proxy_pid" >/dev/null 2>&1; then
+                  echo "Seed proxy did not exit within 120s; force killing" >&2
                   kill -9 "$proxy_pid" >/dev/null 2>&1 || true
                 fi
               fi
-              tail -n 120 "$proxy_log" >/dev/null 2>&1 || true
+              echo "=== Seed proxy log (last 200 lines) ==="
+              tail -n 200 "$proxy_log" 2>/dev/null || true
+              echo "=== End seed proxy log ==="
+              .benchmark-config/scripts/proxy-diagnostics-to-summary.sh \
+                --proxy-log "$proxy_log" \
+                --metrics-jsonl "$proxy_metrics" \
+                --phase seed \
+                --benchmark-id "$BENCHMARK_ID"
             }
             trap cleanup EXIT
 
@@ -251,6 +264,30 @@ jobs:
           ./run-node-turbo-phase.sh seed
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Verify seed cache entries exist
+        if: inputs.strategy == 'boringcache'
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="${{ steps.scope.outputs.tag_turbo }}"
+          echo "Verifying seed cache entries for tag: ${tag}"
+          if boringcache check --no-git "${BENCHMARK_WORKSPACE}" "${tag}"; then
+            echo "Seed cache entries confirmed visible in backend"
+          else
+            echo "WARNING: Seed cache entries NOT found - flush may not have completed before proxy shutdown" >&2
+          fi
+
+      - name: Upload seed proxy diagnostics
+        if: always() && inputs.strategy == 'boringcache'
+        uses: actions/upload-artifact@v4
+        with:
+          name: seed-proxy-diagnostics-${{ env.BENCHMARK_ID }}-${{ inputs.strategy }}
+          path: |
+            ${{ runner.temp }}/${{ env.BENCHMARK_ID }}-seed-turbo-proxy.log
+            ${{ runner.temp }}/${{ env.BENCHMARK_ID }}-seed-turbo-proxy-metrics.jsonl
+          if-no-files-found: warn
 
       - name: Save BoringCache pnpm store
         if: inputs.strategy == 'boringcache'
@@ -430,11 +467,20 @@ jobs:
           proxy_log="${RUNNER_TEMP}/${BENCHMARK_ID}-${{ matrix.phase }}-turbo-proxy.log"
           rm -f "$proxy_log"
 
+          proxy_metrics="${RUNNER_TEMP}/${BENCHMARK_ID}-${{ matrix.phase }}-turbo-proxy-metrics.jsonl"
+          rm -f "$proxy_metrics"
+          RUST_LOG=info \
+          BORINGCACHE_OBSERVABILITY_INCLUDE_CACHE_OPS=1 \
+          BORINGCACHE_REQUEST_METRICS_PATH="$proxy_metrics" \
+          BORINGCACHE_CACHE_PREFETCH_BATCH_MAX=10000 \
+          BORINGCACHE_CACHE_PREFETCH_MAX_BLOB_BYTES=104857600 \
+          BORINGCACHE_BLOB_PREFETCH_MAX_INFLIGHT_BYTES=2147483648 \
           boringcache cache-registry "${BENCHMARK_WORKSPACE}" "${{ steps.scope.outputs.tag_turbo }}" \
             --host 127.0.0.1 \
             --port "${TURBO_PROXY_PORT}" \
             --no-git \
-            --no-platform >"$proxy_log" 2>&1 &
+            --no-platform \
+            --verbose >"$proxy_log" 2>&1 &
           proxy_pid=$!
 
           ready=0
@@ -458,6 +504,35 @@ jobs:
             exit 1
           fi
 
+          # Wait for preload to finish before starting the build
+          echo "Waiting for proxy preload to complete..."
+          for _ in $(seq 1 60); do
+            if grep -q 'KV index preloaded:' "$proxy_log" 2>/dev/null || \
+               grep -q 'KV index preload: no existing entries' "$proxy_log" 2>/dev/null || \
+               grep -q 'KV index preload failed' "$proxy_log" 2>/dev/null || \
+               grep -q 'KV index preload: skipped' "$proxy_log" 2>/dev/null; then
+              echo "Preload completed:"
+              grep -E 'KV index preload' "$proxy_log" || true
+              break
+            fi
+            sleep 1
+          done
+
+          # Wait for blob prefetch to complete (up to 120s)
+          echo "Waiting for blob prefetch to complete..."
+          for _ in $(seq 1 120); do
+            if grep -q 'KV blob preload: done' "$proxy_log" 2>/dev/null || \
+               grep -q 'KV blob preload: skipped' "$proxy_log" 2>/dev/null || \
+               grep -q 'prefetch_result=' "$proxy_log" 2>/dev/null || \
+               grep -q 'KV index preload: no existing entries' "$proxy_log" 2>/dev/null; then
+              echo "Blob prefetch status:"
+              grep -E 'blob preload|prefetch' "$proxy_log" || true
+              break
+            fi
+            sleep 1
+          done
+          echo "Proxy preload wait done"
+
           echo "pid=${proxy_pid}" >> "$GITHUB_OUTPUT"
           echo "log_path=${proxy_log}" >> "$GITHUB_OUTPUT"
           {
@@ -475,6 +550,27 @@ jobs:
             .turbo
           key: ${{ needs.seed-cache.outputs.seed_cache_key }}
           fail-on-cache-miss: true
+
+      - name: Verify cache entries visible from warm runner
+        if: inputs.strategy == 'boringcache'
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="${{ steps.scope.outputs.tag_turbo }}"
+          echo "Checking cache entries for tag: ${tag} (from warm runner)"
+          if boringcache check --no-git "${BENCHMARK_WORKSPACE}" "${tag}"; then
+            echo "Cache entries confirmed visible from warm runner"
+          else
+            echo "WARNING: Cache entries NOT visible from warm runner" >&2
+          fi
+          # Also check proxy preload status via /healthz or similar
+          if [[ -n "${TURBO_API:-}" ]]; then
+            echo "Checking proxy status..."
+            curl -s "http://127.0.0.1:${TURBO_PROXY_PORT}/_status" 2>/dev/null || echo "(no _status endpoint)"
+            # Give preload a moment to complete
+            sleep 3
+          fi
 
       - name: Run scenario build
         id: phase_build
@@ -494,20 +590,40 @@ jobs:
 
           if [[ -n "${proxy_pid}" ]] && kill -0 "${proxy_pid}" >/dev/null 2>&1; then
             kill -INT "${proxy_pid}" >/dev/null 2>&1 || true
-            for _ in $(seq 1 30); do
+            for _ in $(seq 1 120); do
               if ! kill -0 "${proxy_pid}" >/dev/null 2>&1; then
                 break
               fi
               sleep 1
             done
             if kill -0 "${proxy_pid}" >/dev/null 2>&1; then
+              echo "Scenario proxy did not exit within 120s; force killing" >&2
               kill -9 "${proxy_pid}" >/dev/null 2>&1 || true
             fi
           fi
 
           if [[ -n "${proxy_log}" && -f "${proxy_log}" ]]; then
-            tail -n 120 "${proxy_log}" || true
+            echo "=== Scenario proxy log (${{ matrix.phase }}, last 200 lines) ==="
+            tail -n 200 "${proxy_log}" || true
+            echo "=== End scenario proxy log ==="
+
+            proxy_metrics="${RUNNER_TEMP}/${BENCHMARK_ID}-${{ matrix.phase }}-turbo-proxy-metrics.jsonl"
+            .benchmark-config/scripts/proxy-diagnostics-to-summary.sh \
+              --proxy-log "${proxy_log}" \
+              --metrics-jsonl "${proxy_metrics}" \
+              --phase "${{ matrix.phase }}" \
+              --benchmark-id "$BENCHMARK_ID"
           fi
+
+      - name: Upload scenario proxy diagnostics
+        if: always() && inputs.strategy == 'boringcache'
+        uses: actions/upload-artifact@v4
+        with:
+          name: scenario-proxy-diagnostics-${{ env.BENCHMARK_ID }}-${{ inputs.strategy }}-${{ matrix.phase }}
+          path: |
+            ${{ runner.temp }}/${{ env.BENCHMARK_ID }}-${{ matrix.phase }}-turbo-proxy.log
+            ${{ runner.temp }}/${{ env.BENCHMARK_ID }}-${{ matrix.phase }}-turbo-proxy-metrics.jsonl
+          if-no-files-found: warn
 
       - name: Persist scenario timing artifact
         run: |

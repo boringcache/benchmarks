@@ -90,7 +90,14 @@ jobs:
 
           start_proxy() {
             : > "$proxy_log"
-            RUST_LOG=info boringcache docker-registry "$BENCHMARK_WORKSPACE" "$docker_registry_tag" --host 0.0.0.0 --port "$proxy_port" --no-git --verbose > "$proxy_log" 2>&1 &
+            proxy_metrics="$(mktemp /tmp/boringcache-proxy-metrics.XXXXXX.jsonl)"
+            RUST_LOG=info \
+            BORINGCACHE_OBSERVABILITY_INCLUDE_CACHE_OPS=1 \
+            BORINGCACHE_REQUEST_METRICS_PATH="$proxy_metrics" \
+            BORINGCACHE_CACHE_PREFETCH_BATCH_MAX=10000 \
+            BORINGCACHE_CACHE_PREFETCH_MAX_BLOB_BYTES=104857600 \
+            BORINGCACHE_BLOB_PREFETCH_MAX_INFLIGHT_BYTES=2147483648 \
+            boringcache docker-registry "$BENCHMARK_WORKSPACE" "$docker_registry_tag" --host 0.0.0.0 --port "$proxy_port" --no-git --verbose > "$proxy_log" 2>&1 &
             proxy_pid=$!
           }
 
@@ -98,14 +105,15 @@ jobs:
             if [[ -n "${proxy_pid:-}" ]] && kill -0 "$proxy_pid" >/dev/null 2>&1; then
               # SIGINT triggers graceful shutdown (flush pending uploads)
               kill -INT "$proxy_pid" >/dev/null 2>&1 || true
-              # Wait up to 120s for proxy to flush cache data to backend
+              # Wait up to 300s for proxy to flush cache data to backend
               local i=0
-              while kill -0 "$proxy_pid" >/dev/null 2>&1 && [[ $i -lt 120 ]]; do
+              while kill -0 "$proxy_pid" >/dev/null 2>&1 && [[ $i -lt 300 ]]; do
                 sleep 1
                 i=$((i + 1))
               done
               # Force kill if still running
               if kill -0 "$proxy_pid" >/dev/null 2>&1; then
+                echo "Proxy did not exit within 300s; force killing" >&2
                 kill -9 "$proxy_pid" >/dev/null 2>&1 || true
               fi
               wait "$proxy_pid" 2>/dev/null || true
@@ -284,6 +292,18 @@ jobs:
           echo "Re-seeding: BC entries now exist from pass 1, so restore layers will have populated caches"
           ./run-boringcache-build.sh seed-cache
 
+      - name: Verify seed cache entries exist
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="${{ steps.scope.outputs.docker_registry_tag }}"
+          echo "Verifying seed cache entries for tag: ${tag}"
+          if boringcache check --no-git "${BENCHMARK_WORKSPACE}" "${tag}"; then
+            echo "Seed cache entries confirmed visible in backend"
+          else
+            echo "WARNING: Seed cache entries NOT found - flush may not have completed before proxy shutdown" >&2
+          fi
 
   scenario-builds:
     name: Scenario (${{ matrix.phase }}) (BoringCache)
@@ -354,7 +374,14 @@ jobs:
 
           start_proxy() {
             : > "$proxy_log"
-            RUST_LOG=info boringcache docker-registry "$BENCHMARK_WORKSPACE" "$docker_registry_tag" --host 0.0.0.0 --port "$proxy_port" --no-git --verbose > "$proxy_log" 2>&1 &
+            proxy_metrics="$(mktemp /tmp/boringcache-proxy-metrics.XXXXXX.jsonl)"
+            RUST_LOG=info \
+            BORINGCACHE_OBSERVABILITY_INCLUDE_CACHE_OPS=1 \
+            BORINGCACHE_REQUEST_METRICS_PATH="$proxy_metrics" \
+            BORINGCACHE_CACHE_PREFETCH_BATCH_MAX=10000 \
+            BORINGCACHE_CACHE_PREFETCH_MAX_BLOB_BYTES=104857600 \
+            BORINGCACHE_BLOB_PREFETCH_MAX_INFLIGHT_BYTES=2147483648 \
+            boringcache docker-registry "$BENCHMARK_WORKSPACE" "$docker_registry_tag" --host 0.0.0.0 --port "$proxy_port" --no-git --verbose > "$proxy_log" 2>&1 &
             proxy_pid=$!
           }
 
@@ -362,14 +389,15 @@ jobs:
             if [[ -n "${proxy_pid:-}" ]] && kill -0 "$proxy_pid" >/dev/null 2>&1; then
               # SIGINT triggers graceful shutdown (flush pending uploads)
               kill -INT "$proxy_pid" >/dev/null 2>&1 || true
-              # Wait up to 120s for proxy to flush cache data to backend
+              # Wait up to 300s for proxy to flush cache data to backend
               local i=0
-              while kill -0 "$proxy_pid" >/dev/null 2>&1 && [[ $i -lt 120 ]]; do
+              while kill -0 "$proxy_pid" >/dev/null 2>&1 && [[ $i -lt 300 ]]; do
                 sleep 1
                 i=$((i + 1))
               done
               # Force kill if still running
               if kill -0 "$proxy_pid" >/dev/null 2>&1; then
+                echo "Proxy did not exit within 300s; force killing" >&2
                 kill -9 "$proxy_pid" >/dev/null 2>&1 || true
               fi
               wait "$proxy_pid" 2>/dev/null || true
@@ -589,6 +617,13 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
+      - name: Upload scenario proxy diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scenario-proxy-diagnostics-${{ env.BENCHMARK_ID }}-boringcache-${{ matrix.phase }}
+          path: /tmp/boringcache-proxy.*.log
+          if-no-files-found: warn
       - name: Capture scenario timing
         id: phase_timing
         run: |
