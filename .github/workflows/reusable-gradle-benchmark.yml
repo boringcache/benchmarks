@@ -234,6 +234,7 @@ jobs:
         run: |
           set -euo pipefail
           find "$GRADLE_USER_HOME/caches" -maxdepth 1 -mindepth 1 -type d -name 'build-cache-*' -exec rm -rf {} + 2>/dev/null || true
+          rm -rf "$GRADLE_USER_HOME/build-scan-data" 2>/dev/null || true
 
       - name: Save BoringCache Gradle user home
         if: inputs.strategy == 'boringcache'
