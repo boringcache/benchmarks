@@ -9,6 +9,8 @@ Usage: collect-boringcache-diagnostics.sh \
   --tags TAGS \
   --phase PHASE \
   --cache-tag CACHE_TAG \
+  [--cli-source SOURCE] \
+  [--cli-ref REF] \
   [--proxy-port PORT] \
   [--proxy-log-path PATH] \
   [--cache-root PATH] \
@@ -22,6 +24,8 @@ workspace=""
 tags=""
 phase=""
 cache_tag=""
+cli_source=""
+cli_ref=""
 proxy_port=""
 proxy_log_path=""
 cache_root=""
@@ -47,6 +51,14 @@ while [[ $# -gt 0 ]]; do
       ;;
     --cache-tag)
       cache_tag="${2:-}"
+      shift 2
+      ;;
+    --cli-source)
+      cli_source="${2:-}"
+      shift 2
+      ;;
+    --cli-ref)
+      cli_ref="${2:-}"
       shift 2
       ;;
     --proxy-port)
@@ -94,9 +106,15 @@ mkdir -p "$output_dir"
   echo "workspace=${workspace}"
   echo "cache_tag=${cache_tag}"
   echo "tags=${tags}"
+  echo "cli_source=${cli_source}"
+  echo "cli_ref=${cli_ref}"
   echo "proxy_port=${proxy_port}"
   echo "proxy_log_path=${proxy_log_path}"
   date -u +"timestamp=%Y-%m-%dT%H:%M:%SZ"
+  if command -v boringcache >/dev/null 2>&1; then
+    echo "boringcache_path=$(command -v boringcache)"
+    echo "boringcache_version=$(boringcache --version 2>/dev/null | head -n1)"
+  fi
   echo "--- uname ---"
   uname -a
 } > "${output_dir}/metadata.txt"

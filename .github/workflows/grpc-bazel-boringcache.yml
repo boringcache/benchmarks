@@ -2,6 +2,11 @@ name: "gRPC Bazel - BoringCache"
 
 on:
   workflow_dispatch:
+    inputs:
+      cli_ref:
+        description: "Optional boringcache/cli ref to build and use instead of the released CLI"
+        required: false
+        type: string
   pull_request:
     paths:
       - ".github/workflows/grpc-bazel-boringcache.yml"
@@ -18,14 +23,85 @@ env:
   BENCHMARK_ID: grpc-bazel
   BENCHMARK_WORKSPACE: boringcache/benchmarks
   BAZEL_TARGET: "//examples/cpp/csm:csm_greeter_client"
+  CLI_RUST_VERSION: "1.89"
   # Run-scoped tag ensures cold build starts with empty remote cache.
   # boringcache delete can't purge cache-registry proxy data, so we
   # use a unique tag per run instead.
   BAZEL_REMOTE_CACHE_TAG: grpc-bazel-remote-cache-r${{ github.run_id }}-a${{ github.run_attempt }}
 
 jobs:
+  prepare-cli:
+    name: Prepare benchmark CLI
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    outputs:
+      use_custom_cli: ${{ steps.resolve.outputs.use_custom_cli }}
+      artifact_name: ${{ steps.resolve.outputs.artifact_name }}
+      cli_source: ${{ steps.metadata.outputs.cli_source }}
+      cli_ref: ${{ steps.metadata.outputs.cli_ref }}
+    steps:
+      - name: Resolve CLI source
+        id: resolve
+        run: |
+          set -euo pipefail
+          requested_ref="${{ github.event.inputs.cli_ref || '' }}"
+          if [[ -n "$requested_ref" ]]; then
+            echo "use_custom_cli=true" >> "$GITHUB_OUTPUT"
+            echo "artifact_name=boringcache-cli-linux-amd64" >> "$GITHUB_OUTPUT"
+          else
+            echo "use_custom_cli=false" >> "$GITHUB_OUTPUT"
+            echo "artifact_name=" >> "$GITHUB_OUTPUT"
+          fi
+          echo "requested_ref=${requested_ref}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout CLI repo
+        if: steps.resolve.outputs.use_custom_cli == 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: boringcache/cli
+          ref: ${{ steps.resolve.outputs.requested_ref }}
+
+      - name: Setup Rust for custom CLI build
+        if: steps.resolve.outputs.use_custom_cli == 'true'
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ env.CLI_RUST_VERSION }}
+
+      - name: Capture resolved CLI ref
+        if: steps.resolve.outputs.use_custom_cli == 'true'
+        id: resolved_ref
+        run: |
+          set -euo pipefail
+          echo "cli_ref=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Build custom CLI
+        if: steps.resolve.outputs.use_custom_cli == 'true'
+        run: cargo build --release --locked
+
+      - name: Upload custom CLI artifact
+        if: steps.resolve.outputs.use_custom_cli == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.resolve.outputs.artifact_name }}
+          path: target/release/boringcache
+          if-no-files-found: error
+          compression-level: 0
+
+      - name: Finalize CLI metadata
+        id: metadata
+        run: |
+          set -euo pipefail
+          if [[ "${{ steps.resolve.outputs.use_custom_cli }}" == "true" ]]; then
+            echo "cli_source=custom" >> "$GITHUB_OUTPUT"
+            echo "cli_ref=${{ steps.resolved_ref.outputs.cli_ref }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "cli_source=release" >> "$GITHUB_OUTPUT"
+            echo "cli_ref=" >> "$GITHUB_OUTPUT"
+          fi
+
   seed-cache:
     name: Bazel Seed (BoringCache, cold)
+    needs: prepare-cli
     runs-on: ubuntu-latest
     timeout-minutes: 300
     outputs:
@@ -53,6 +129,23 @@ jobs:
         uses: boringcache/setup-boringcache@v1
         with:
           token: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Download custom CLI artifact
+        if: needs.prepare-cli.outputs.use_custom_cli == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.prepare-cli.outputs.artifact_name }}
+          path: ${{ runner.temp }}/boringcache-cli-artifact
+
+      - name: Install custom CLI artifact
+        if: needs.prepare-cli.outputs.use_custom_cli == 'true'
+        run: |
+          set -euo pipefail
+          bash .benchmark-config/scripts/install-benchmark-cli.sh \
+            --artifact-dir "${RUNNER_TEMP}/boringcache-cli-artifact"
+
+      - name: Verify BoringCache CLI
+        run: boringcache --version
 
       - name: Prepare benchmark helpers
         id: scope
@@ -150,6 +243,8 @@ jobs:
             --tags "$BAZEL_REMOTE_CACHE_TAG" \
             --phase "seed" \
             --cache-tag "$BAZEL_REMOTE_CACHE_TAG" \
+            --cli-source "${{ needs.prepare-cli.outputs.cli_source }}" \
+            --cli-ref "${{ needs.prepare-cli.outputs.cli_ref }}" \
             --proxy-port "${{ steps.bazel_cache.outputs.proxy-port }}" \
             --proxy-log-path "${{ steps.bazel_cache.outputs.proxy-log-path }}" \
             --cache-root "$HOME/.cache/bazel" \
@@ -166,7 +261,7 @@ jobs:
 
   scenario-builds:
     name: Bazel Scenario (${{ matrix.phase }}) (BoringCache)
-    needs: seed-cache
+    needs: [prepare-cli, seed-cache]
     runs-on: ubuntu-latest
     timeout-minutes: 300
     strategy:
@@ -196,6 +291,23 @@ jobs:
         uses: boringcache/setup-boringcache@v1
         with:
           token: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Download custom CLI artifact
+        if: needs.prepare-cli.outputs.use_custom_cli == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.prepare-cli.outputs.artifact_name }}
+          path: ${{ runner.temp }}/boringcache-cli-artifact
+
+      - name: Install custom CLI artifact
+        if: needs.prepare-cli.outputs.use_custom_cli == 'true'
+        run: |
+          set -euo pipefail
+          bash .benchmark-config/scripts/install-benchmark-cli.sh \
+            --artifact-dir "${RUNNER_TEMP}/boringcache-cli-artifact"
+
+      - name: Verify BoringCache CLI
+        run: boringcache --version
 
       - name: Prepare benchmark helpers
         id: scope
@@ -353,6 +465,8 @@ jobs:
             --tags "$BAZEL_REMOTE_CACHE_TAG" \
             --phase "${{ matrix.phase }}" \
             --cache-tag "$BAZEL_REMOTE_CACHE_TAG" \
+            --cli-source "${{ needs.prepare-cli.outputs.cli_source }}" \
+            --cli-ref "${{ needs.prepare-cli.outputs.cli_ref }}" \
             --proxy-port "${{ steps.bazel_cache.outputs.proxy-port }}" \
             --proxy-log-path "${{ steps.bazel_cache.outputs.proxy-log-path }}" \
             --cache-root "$HOME/.cache/bazel" \
@@ -438,7 +552,7 @@ jobs:
 
   finalize-benchmark:
     name: Finalize benchmark artifacts
-    needs: [seed-cache, scenario-builds]
+    needs: [prepare-cli, seed-cache, scenario-builds]
     runs-on: ubuntu-latest
     timeout-minutes: 300
     steps:
@@ -453,6 +567,23 @@ jobs:
         uses: boringcache/setup-boringcache@v1
         with:
           token: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Download custom CLI artifact
+        if: needs.prepare-cli.outputs.use_custom_cli == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.prepare-cli.outputs.artifact_name }}
+          path: ${{ runner.temp }}/boringcache-cli-artifact
+
+      - name: Install custom CLI artifact
+        if: needs.prepare-cli.outputs.use_custom_cli == 'true'
+        run: |
+          set -euo pipefail
+          bash .benchmark-config/scripts/install-benchmark-cli.sh \
+            --artifact-dir "${RUNNER_TEMP}/boringcache-cli-artifact"
+
+      - name: Verify BoringCache CLI
+        run: boringcache --version
 
       - name: Download scenario timing artifacts
         uses: actions/download-artifact@v4
