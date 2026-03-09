@@ -21,11 +21,13 @@ env:
   # Run-scoped tag ensures cold build starts with empty remote cache.
   # boringcache delete can't purge cache-registry proxy data, so we
   # use a unique tag per run instead.
-  BAZEL_REMOTE_CACHE_TAG: grpc-bazel-remote-cache-r${{ github.run_id }}-a${{ github.run_attempt }}
+  # TEMP: pinned to successful seed from run 22843631840 for warm-only testing
+  BAZEL_REMOTE_CACHE_TAG: grpc-bazel-remote-cache-r22843631840-a1
 
 jobs:
   seed-cache:
     name: Bazel Seed (BoringCache, cold)
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 300
     outputs:
@@ -110,6 +112,7 @@ jobs:
           BORINGCACHE_MAX_SPOOL_BYTES: "2147483648"
           BORINGCACHE_KV_BLOB_UPLOAD_CONCURRENCY: "64"
           BORINGCACHE_FLUSH_BLOB_THRESHOLD: "2000"
+          BORINGCACHE_BLOB_DOWNLOAD_CONCURRENCY: "64"
 
       - name: Tune Bazel for remote cache performance
         run: |
@@ -191,7 +194,7 @@ jobs:
 
   scenario-builds:
     name: Bazel Scenario (${{ matrix.phase }}) (BoringCache)
-    needs: seed-cache
+    # needs: seed-cache  # TEMP: skipped for warm-only testing
     runs-on: ubuntu-latest
     timeout-minutes: 300
     strategy:
@@ -271,6 +274,7 @@ jobs:
           BORINGCACHE_MAX_SPOOL_BYTES: "2147483648"
           BORINGCACHE_KV_BLOB_UPLOAD_CONCURRENCY: "64"
           BORINGCACHE_FLUSH_BLOB_THRESHOLD: "2000"
+          BORINGCACHE_BLOB_DOWNLOAD_CONCURRENCY: "64"
 
       - name: Tune Bazel for remote cache performance
         run: |
