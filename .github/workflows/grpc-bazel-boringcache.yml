@@ -293,7 +293,7 @@ jobs:
         run: |
           set -euo pipefail
           start="$(date +%s)"
-          ./run-grpc-bazel-build.sh --profile=/tmp/bazel-warm1-profile.gz
+          ./run-grpc-bazel-build.sh --remote_upload_local_results=false --profile=/tmp/bazel-warm1-profile.gz
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
@@ -307,7 +307,7 @@ jobs:
         run: |
           set -euo pipefail
           start="$(date +%s)"
-          ./run-grpc-bazel-build.sh
+          ./run-grpc-bazel-build.sh --remote_upload_local_results=false
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
