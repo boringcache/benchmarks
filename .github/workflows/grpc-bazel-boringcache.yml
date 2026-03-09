@@ -104,15 +104,21 @@ jobs:
           cli-version: skip
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ env.BAZEL_REMOTE_CACHE_TAG }}
+          verbose: true
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_MAX_SPOOL_BYTES: "2147483648"
+          BORINGCACHE_KV_BLOB_UPLOAD_CONCURRENCY: "64"
+          BORINGCACHE_FLUSH_BLOB_THRESHOLD: "2000"
 
       - name: Tune Bazel for remote cache performance
         run: |
           cat >> ~/.bazelrc <<'EOF'
           # Benchmark tuning (will be set by bazel-action in future)
+          build --remote_cache_async=false
           build --remote_download_minimal
-          build --jobs=2000
+          build --jobs=256
+          build --remote_max_connections=64
           build --experimental_remote_cache_eviction_retries=5
           EOF
 
@@ -126,6 +132,61 @@ jobs:
           ./run-grpc-bazel-build.sh
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Flush Bazel server state
+        if: always()
+        run: bazel shutdown || true
+
+      - name: Collect BoringCache diagnostics
+        if: always()
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          out_dir="boringcache-diag-seed"
+          mkdir -p "$out_dir"
+
+          {
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "run_attempt=${GITHUB_RUN_ATTEMPT}"
+            echo "job=${GITHUB_JOB}"
+            echo "phase=seed"
+            echo "cache_tag=${BAZEL_REMOTE_CACHE_TAG}"
+            date -u +"timestamp=%Y-%m-%dT%H:%M:%SZ"
+            echo "--- uname ---"
+            uname -a
+          } > "${out_dir}/metadata.txt"
+
+          if [[ -f "$HOME/.bazelrc" ]]; then
+            cp "$HOME/.bazelrc" "${out_dir}/bazelrc.txt"
+          fi
+
+          if [[ -d "$HOME/.cache/bazel" ]]; then
+            du -sh "$HOME/.cache/bazel" > "${out_dir}/bazel-cache-size.txt" || true
+            find "$HOME/.cache/bazel" -maxdepth 3 -mindepth 1 -type d \
+              | head -n 200 > "${out_dir}/bazel-cache-tree.txt" || true
+          fi
+
+          if [[ -d "$HOME/.boringcache" ]]; then
+            find "$HOME/.boringcache" -maxdepth 6 -type f | sort > "${out_dir}/boringcache-files.txt" || true
+            while IFS= read -r file; do
+              rel="${file#${HOME}/}"
+              mkdir -p "${out_dir}/$(dirname "$rel")"
+              cp "$file" "${out_dir}/${rel}" || true
+            done < <(find "$HOME/.boringcache" -maxdepth 6 -type f \( -name '*.log' -o -iname '*metric*' \))
+          fi
+
+          boringcache ls --no-git "$BENCHMARK_WORKSPACE" "$BAZEL_REMOTE_CACHE_TAG" \
+            > "${out_dir}/remote-tag-ls.txt" 2>&1 || true
+
+      - name: Upload BoringCache diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: boringcache-diag-${{ env.BENCHMARK_ID }}-seed-boringcache
+          path: boringcache-diag-seed
+          if-no-files-found: warn
 
 
   scenario-builds:
@@ -204,15 +265,21 @@ jobs:
           cli-version: skip
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ env.BAZEL_REMOTE_CACHE_TAG }}
+          verbose: true
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_MAX_SPOOL_BYTES: "2147483648"
+          BORINGCACHE_KV_BLOB_UPLOAD_CONCURRENCY: "64"
+          BORINGCACHE_FLUSH_BLOB_THRESHOLD: "2000"
 
       - name: Tune Bazel for remote cache performance
         run: |
           cat >> ~/.bazelrc <<'EOF'
           # Benchmark tuning (will be set by bazel-action in future)
+          build --remote_cache_async=false
           build --remote_download_minimal
-          build --jobs=2000
+          build --jobs=256
+          build --remote_max_connections=64
           build --experimental_remote_cache_eviction_retries=5
           EOF
 
@@ -274,12 +341,67 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
+      - name: Flush Bazel server state
+        if: always()
+        run: bazel shutdown || true
+
       - name: Upload Bazel profile
         if: matrix.phase == 'warm1' && (always())
         uses: actions/upload-artifact@v4
         with:
           name: bazel-warm1-profile
           path: /tmp/bazel-warm1-profile.gz
+          if-no-files-found: warn
+
+      - name: Collect BoringCache diagnostics
+        if: always()
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          out_dir="boringcache-diag-${{ matrix.phase }}"
+          mkdir -p "$out_dir"
+
+          {
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "run_attempt=${GITHUB_RUN_ATTEMPT}"
+            echo "job=${GITHUB_JOB}"
+            echo "phase=${{ matrix.phase }}"
+            echo "cache_tag=${BAZEL_REMOTE_CACHE_TAG}"
+            date -u +"timestamp=%Y-%m-%dT%H:%M:%SZ"
+            echo "--- uname ---"
+            uname -a
+          } > "${out_dir}/metadata.txt"
+
+          if [[ -f "$HOME/.bazelrc" ]]; then
+            cp "$HOME/.bazelrc" "${out_dir}/bazelrc.txt"
+          fi
+
+          if [[ -d "$HOME/.cache/bazel" ]]; then
+            du -sh "$HOME/.cache/bazel" > "${out_dir}/bazel-cache-size.txt" || true
+            find "$HOME/.cache/bazel" -maxdepth 3 -mindepth 1 -type d \
+              | head -n 200 > "${out_dir}/bazel-cache-tree.txt" || true
+          fi
+
+          if [[ -d "$HOME/.boringcache" ]]; then
+            find "$HOME/.boringcache" -maxdepth 6 -type f | sort > "${out_dir}/boringcache-files.txt" || true
+            while IFS= read -r file; do
+              rel="${file#${HOME}/}"
+              mkdir -p "${out_dir}/$(dirname "$rel")"
+              cp "$file" "${out_dir}/${rel}" || true
+            done < <(find "$HOME/.boringcache" -maxdepth 6 -type f \( -name '*.log' -o -iname '*metric*' \))
+          fi
+
+          boringcache ls --no-git "$BENCHMARK_WORKSPACE" "$BAZEL_REMOTE_CACHE_TAG" \
+            > "${out_dir}/remote-tag-ls.txt" 2>&1 || true
+
+      - name: Upload BoringCache diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: boringcache-diag-${{ env.BENCHMARK_ID }}-${{ matrix.phase }}-boringcache
+          path: boringcache-diag-${{ matrix.phase }}
           if-no-files-found: warn
 
       - name: Capture scenario timing
