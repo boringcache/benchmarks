@@ -144,42 +144,16 @@ jobs:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
         run: |
           set -euo pipefail
-
-          out_dir="boringcache-diag-seed"
-          mkdir -p "$out_dir"
-
-          {
-            echo "run_id=${GITHUB_RUN_ID}"
-            echo "run_attempt=${GITHUB_RUN_ATTEMPT}"
-            echo "job=${GITHUB_JOB}"
-            echo "phase=seed"
-            echo "cache_tag=${BAZEL_REMOTE_CACHE_TAG}"
-            date -u +"timestamp=%Y-%m-%dT%H:%M:%SZ"
-            echo "--- uname ---"
-            uname -a
-          } > "${out_dir}/metadata.txt"
-
-          if [[ -f "$HOME/.bazelrc" ]]; then
-            cp "$HOME/.bazelrc" "${out_dir}/bazelrc.txt"
-          fi
-
-          if [[ -d "$HOME/.cache/bazel" ]]; then
-            du -sh "$HOME/.cache/bazel" > "${out_dir}/bazel-cache-size.txt" || true
-            find "$HOME/.cache/bazel" -maxdepth 3 -mindepth 1 -type d \
-              | head -n 200 > "${out_dir}/bazel-cache-tree.txt" || true
-          fi
-
-          if [[ -d "$HOME/.boringcache" ]]; then
-            find "$HOME/.boringcache" -maxdepth 6 -type f | sort > "${out_dir}/boringcache-files.txt" || true
-            while IFS= read -r file; do
-              rel="${file#${HOME}/}"
-              mkdir -p "${out_dir}/$(dirname "$rel")"
-              cp "$file" "${out_dir}/${rel}" || true
-            done < <(find "$HOME/.boringcache" -maxdepth 6 -type f \( -name '*.log' -o -iname '*metric*' \))
-          fi
-
-          boringcache ls --no-git "$BENCHMARK_WORKSPACE" "$BAZEL_REMOTE_CACHE_TAG" \
-            > "${out_dir}/remote-tag-ls.txt" 2>&1 || true
+          .benchmark-config/scripts/collect-boringcache-diagnostics.sh \
+            --output-dir "boringcache-diag-seed" \
+            --workspace "$BENCHMARK_WORKSPACE" \
+            --tags "$BAZEL_REMOTE_CACHE_TAG" \
+            --phase "seed" \
+            --cache-tag "$BAZEL_REMOTE_CACHE_TAG" \
+            --proxy-port "${{ steps.bazel_cache.outputs.proxy-port }}" \
+            --proxy-log-path "${{ steps.bazel_cache.outputs.proxy-log-path }}" \
+            --cache-root "$HOME/.cache/bazel" \
+            --cache-label "bazel-cache"
 
       - name: Upload BoringCache diagnostics
         if: always()
@@ -295,7 +269,7 @@ jobs:
         run: |
           set -euo pipefail
           start="$(date +%s)"
-          ./run-grpc-bazel-build.sh --profile=/tmp/bazel-warm1-profile.gz
+          ./run-grpc-bazel-build.sh --profile=/tmp/bazel-warm1-profile.gz 2>&1 | tee /tmp/bazel-warm1-build.log
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
@@ -361,42 +335,34 @@ jobs:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
         run: |
           set -euo pipefail
+          .benchmark-config/scripts/collect-boringcache-diagnostics.sh \
+            --output-dir "boringcache-diag-${{ matrix.phase }}" \
+            --workspace "$BENCHMARK_WORKSPACE" \
+            --tags "$BAZEL_REMOTE_CACHE_TAG" \
+            --phase "${{ matrix.phase }}" \
+            --cache-tag "$BAZEL_REMOTE_CACHE_TAG" \
+            --proxy-port "${{ steps.bazel_cache.outputs.proxy-port }}" \
+            --proxy-log-path "${{ steps.bazel_cache.outputs.proxy-log-path }}" \
+            --cache-root "$HOME/.cache/bazel" \
+            --cache-label "bazel-cache"
 
+      - name: Summarize Bazel miss profile
+        if: matrix.phase == 'warm1' && (always())
+        run: |
+          set -euo pipefail
           out_dir="boringcache-diag-${{ matrix.phase }}"
           mkdir -p "$out_dir"
-
-          {
-            echo "run_id=${GITHUB_RUN_ID}"
-            echo "run_attempt=${GITHUB_RUN_ATTEMPT}"
-            echo "job=${GITHUB_JOB}"
-            echo "phase=${{ matrix.phase }}"
-            echo "cache_tag=${BAZEL_REMOTE_CACHE_TAG}"
-            date -u +"timestamp=%Y-%m-%dT%H:%M:%SZ"
-            echo "--- uname ---"
-            uname -a
-          } > "${out_dir}/metadata.txt"
-
-          if [[ -f "$HOME/.bazelrc" ]]; then
-            cp "$HOME/.bazelrc" "${out_dir}/bazelrc.txt"
+          if [[ -f /tmp/bazel-warm1-build.log ]]; then
+            cp /tmp/bazel-warm1-build.log "${out_dir}/bazel-warm1-build.log"
           fi
-
-          if [[ -d "$HOME/.cache/bazel" ]]; then
-            du -sh "$HOME/.cache/bazel" > "${out_dir}/bazel-cache-size.txt" || true
-            find "$HOME/.cache/bazel" -maxdepth 3 -mindepth 1 -type d \
-              | head -n 200 > "${out_dir}/bazel-cache-tree.txt" || true
+          if [[ -f /tmp/bazel-warm1-profile.gz ]]; then
+            cp /tmp/bazel-warm1-profile.gz "${out_dir}/bazel-warm1-profile.gz"
+            python3 .benchmark-config/scripts/summarize-bazel-profile.py \
+              --profile /tmp/bazel-warm1-profile.gz \
+              --build-log /tmp/bazel-warm1-build.log \
+              --output-dir "$out_dir" \
+              --phase "${{ matrix.phase }}"
           fi
-
-          if [[ -d "$HOME/.boringcache" ]]; then
-            find "$HOME/.boringcache" -maxdepth 6 -type f | sort > "${out_dir}/boringcache-files.txt" || true
-            while IFS= read -r file; do
-              rel="${file#${HOME}/}"
-              mkdir -p "${out_dir}/$(dirname "$rel")"
-              cp "$file" "${out_dir}/${rel}" || true
-            done < <(find "$HOME/.boringcache" -maxdepth 6 -type f \( -name '*.log' -o -iname '*metric*' \))
-          fi
-
-          boringcache ls --no-git "$BENCHMARK_WORKSPACE" "$BAZEL_REMOTE_CACHE_TAG" \
-            > "${out_dir}/remote-tag-ls.txt" 2>&1 || true
 
       - name: Upload BoringCache diagnostics
         if: always()

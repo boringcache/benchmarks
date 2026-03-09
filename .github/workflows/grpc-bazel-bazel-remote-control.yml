@@ -1,0 +1,791 @@
+name: "gRPC Bazel - bazel-remote Control"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/grpc-bazel-bazel-remote-control.yml"
+      - ".github/workflows/grpc-bazel-boringcache.yml"
+      - ".github/workflows/grpc-bazel-actions-cache.yml"
+      - "scripts/**"
+
+permissions:
+  contents: read
+
+env:
+  PROJECT_REPO: grpc/grpc
+  PROJECT_REF: "93ab404fb2689edca91deb97f0dba449ac154379"
+  BENCHMARK_ID: grpc-bazel
+  BAZEL_TARGET: "//examples/cpp/csm:csm_greeter_client"
+  BAZEL_REMOTE_URL: http://127.0.0.1:9090
+  BAZEL_REMOTE_IMAGE: buchgr/bazel-remote-cache@sha256:59dd70f320d9a7bf8abf6e4b3acccf62dee356627ce51a6fd0d511326636ae01
+
+jobs:
+  seed-cache:
+    name: Bazel Seed (bazel-remote, cold)
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    outputs:
+      cold_seconds: ${{ steps.cold_baseline_build.outputs.seconds }}
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+          submodules: true
+
+      - name: Checkout benchmark config
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
+      - name: Setup Bazelisk
+        uses: bazelbuild/setup-bazelisk@v3
+
+      - name: Prepare benchmark helpers
+        run: |
+          set -euo pipefail
+
+          cat > ./run-grpc-bazel-build.sh <<'SH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          max_attempts=3
+          attempt=1
+          while true; do
+            if bazel build "$@" "$BAZEL_TARGET"; then
+              break
+            fi
+
+            if [[ "$attempt" -ge "$max_attempts" ]]; then
+              echo "Bazel build failed after ${max_attempts} attempts" >&2
+              exit 1
+            fi
+
+            echo "Bazel build failed (attempt ${attempt}/${max_attempts}); retrying..." >&2
+            attempt=$((attempt + 1))
+            sleep 5
+          done
+          SH
+          chmod +x ./run-grpc-bazel-build.sh
+
+      - name: Start bazel-remote
+        env:
+          CONTAINER_NAME: bazel-remote-seed
+        run: |
+          set -euo pipefail
+          mkdir -p bazel-remote-data
+          docker run -d \
+            --name "$CONTAINER_NAME" \
+            -u "$(id -u):$(id -g)" \
+            -v "$PWD/bazel-remote-data:/data" \
+            -p 127.0.0.1:9090:8080 \
+            "$BAZEL_REMOTE_IMAGE" \
+            --dir /data \
+            --max_size 20
+
+          for _ in $(seq 1 60); do
+            if curl -fsSL "$BAZEL_REMOTE_URL/status" >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "bazel-remote did not become ready" >&2
+          docker logs "$CONTAINER_NAME" || true
+          exit 1
+
+      - name: Configure Bazel remote cache
+        run: |
+          cat > ~/.bazelrc <<EOF
+          build --remote_cache=${BAZEL_REMOTE_URL}
+          build --remote_upload_local_results=true
+          build --remote_cache_async=false
+          build --remote_download_minimal
+          build --jobs=256
+          build --remote_max_connections=64
+          build --experimental_remote_cache_eviction_retries=5
+          EOF
+
+      - name: Run cold + seed cache build
+        id: cold_baseline_build
+        run: |
+          set -euo pipefail
+          bazel clean --expunge
+
+          start="$(date +%s)"
+          ./run-grpc-bazel-build.sh
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Flush Bazel server state
+        if: always()
+        run: bazel shutdown || true
+
+      - name: Collect bazel-remote diagnostics
+        if: always()
+        env:
+          CONTAINER_NAME: bazel-remote-seed
+        run: |
+          set -euo pipefail
+          .benchmark-config/scripts/collect-bazel-remote-diagnostics.sh \
+            --output-dir "bazel-remote-diag-seed" \
+            --phase "seed" \
+            --cache-tag "seed" \
+            --remote-url "$BAZEL_REMOTE_URL" \
+            --container-name "$CONTAINER_NAME" \
+            --cache-root "$HOME/.cache/bazel" \
+            --cache-label "bazel-cache"
+
+      - name: Stop bazel-remote
+        if: always()
+        env:
+          CONTAINER_NAME: bazel-remote-seed
+        run: |
+          docker stop "$CONTAINER_NAME" >/dev/null 2>&1 || true
+          docker rm "$CONTAINER_NAME" >/dev/null 2>&1 || true
+
+      - name: Upload bazel-remote data
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bazel-remote-data-${{ env.BENCHMARK_ID }}-seed
+          path: bazel-remote-data
+          if-no-files-found: error
+          compression-level: 0
+
+      - name: Upload bazel-remote diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bazel-remote-diag-${{ env.BENCHMARK_ID }}-seed-control
+          path: bazel-remote-diag-seed
+          if-no-files-found: warn
+
+  warm1-build:
+    name: Bazel Warm 1 (bazel-remote)
+    needs: seed-cache
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    outputs:
+      warm1_seconds: ${{ steps.warm1_build.outputs.seconds }}
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+          submodules: true
+
+      - name: Checkout benchmark config
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
+      - name: Download seeded bazel-remote data
+        uses: actions/download-artifact@v4
+        with:
+          name: bazel-remote-data-${{ env.BENCHMARK_ID }}-seed
+          path: .
+
+      - name: Setup Bazelisk
+        uses: bazelbuild/setup-bazelisk@v3
+
+      - name: Prepare benchmark helpers
+        run: |
+          set -euo pipefail
+
+          cat > ./run-grpc-bazel-build.sh <<'SH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          max_attempts=3
+          attempt=1
+          while true; do
+            if bazel build "$@" "$BAZEL_TARGET"; then
+              break
+            fi
+
+            if [[ "$attempt" -ge "$max_attempts" ]]; then
+              echo "Bazel build failed after ${max_attempts} attempts" >&2
+              exit 1
+            fi
+
+            echo "Bazel build failed (attempt ${attempt}/${max_attempts}); retrying..." >&2
+            attempt=$((attempt + 1))
+            sleep 5
+          done
+          SH
+          chmod +x ./run-grpc-bazel-build.sh
+
+      - name: Start bazel-remote
+        env:
+          CONTAINER_NAME: bazel-remote-warm1
+        run: |
+          set -euo pipefail
+          docker run -d \
+            --name "$CONTAINER_NAME" \
+            -u "$(id -u):$(id -g)" \
+            -v "$PWD/bazel-remote-data:/data" \
+            -p 127.0.0.1:9090:8080 \
+            "$BAZEL_REMOTE_IMAGE" \
+            --dir /data \
+            --max_size 20
+
+          for _ in $(seq 1 60); do
+            if curl -fsSL "$BAZEL_REMOTE_URL/status" >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "bazel-remote did not become ready" >&2
+          docker logs "$CONTAINER_NAME" || true
+          exit 1
+
+      - name: Configure Bazel remote cache
+        run: |
+          cat > ~/.bazelrc <<EOF
+          build --remote_cache=${BAZEL_REMOTE_URL}
+          build --remote_upload_local_results=true
+          build --remote_cache_async=false
+          build --remote_download_minimal
+          build --jobs=256
+          build --remote_max_connections=64
+          build --experimental_remote_cache_eviction_retries=5
+          EOF
+
+      - name: Clean Bazel for warm build 1
+        run: bazel clean --expunge
+
+      - name: Run warm build 1
+        id: warm1_build
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-grpc-bazel-build.sh --profile=/tmp/bazel-warm1-profile.gz 2>&1 | tee /tmp/bazel-warm1-build.log
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Flush Bazel server state
+        if: always()
+        run: bazel shutdown || true
+
+      - name: Collect bazel-remote diagnostics
+        if: always()
+        env:
+          CONTAINER_NAME: bazel-remote-warm1
+        run: |
+          set -euo pipefail
+          .benchmark-config/scripts/collect-bazel-remote-diagnostics.sh \
+            --output-dir "bazel-remote-diag-warm1" \
+            --phase "warm1" \
+            --cache-tag "warm1" \
+            --remote-url "$BAZEL_REMOTE_URL" \
+            --container-name "$CONTAINER_NAME" \
+            --cache-root "$HOME/.cache/bazel" \
+            --cache-label "bazel-cache"
+
+      - name: Summarize Bazel miss profile
+        if: always()
+        run: |
+          set -euo pipefail
+          out_dir="bazel-remote-diag-warm1"
+          mkdir -p "$out_dir"
+          if [[ -f /tmp/bazel-warm1-build.log ]]; then
+            cp /tmp/bazel-warm1-build.log "${out_dir}/bazel-warm1-build.log"
+          fi
+          if [[ -f /tmp/bazel-warm1-profile.gz && -f /tmp/bazel-warm1-build.log ]]; then
+            cp /tmp/bazel-warm1-profile.gz "${out_dir}/bazel-warm1-profile.gz"
+            python3 .benchmark-config/scripts/summarize-bazel-profile.py \
+              --profile /tmp/bazel-warm1-profile.gz \
+              --build-log /tmp/bazel-warm1-build.log \
+              --output-dir "$out_dir" \
+              --phase "warm1"
+          fi
+
+      - name: Stop bazel-remote
+        if: always()
+        env:
+          CONTAINER_NAME: bazel-remote-warm1
+        run: |
+          docker stop "$CONTAINER_NAME" >/dev/null 2>&1 || true
+          docker rm "$CONTAINER_NAME" >/dev/null 2>&1 || true
+
+      - name: Upload bazel-remote data
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bazel-remote-data-${{ env.BENCHMARK_ID }}-warm1
+          path: bazel-remote-data
+          if-no-files-found: error
+          compression-level: 0
+
+      - name: Upload Bazel profile
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bazel-remote-warm1-profile
+          path: /tmp/bazel-warm1-profile.gz
+          if-no-files-found: warn
+
+      - name: Upload bazel-remote diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bazel-remote-diag-${{ env.BENCHMARK_ID }}-warm1-control
+          path: bazel-remote-diag-warm1
+          if-no-files-found: warn
+
+      - name: Persist scenario timing artifact
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p benchmark-phase
+          cat > "benchmark-phase/warm1.env" <<EOF
+          phase=warm1
+          seconds=${{ steps.warm1_build.outputs.seconds }}
+          EOF
+
+      - name: Upload scenario timing artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-phase-${{ env.BENCHMARK_ID }}-bazel-remote-warm1
+          path: benchmark-phase/warm1.env
+          if-no-files-found: error
+
+  warm2-build:
+    name: Bazel Warm 2 (bazel-remote)
+    needs: warm1-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    outputs:
+      warm2_seconds: ${{ steps.warm2_build.outputs.seconds }}
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+          submodules: true
+
+      - name: Checkout benchmark config
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
+      - name: Download warm1 bazel-remote data
+        uses: actions/download-artifact@v4
+        with:
+          name: bazel-remote-data-${{ env.BENCHMARK_ID }}-warm1
+          path: .
+
+      - name: Setup Bazelisk
+        uses: bazelbuild/setup-bazelisk@v3
+
+      - name: Prepare benchmark helpers
+        run: |
+          set -euo pipefail
+
+          cat > ./run-grpc-bazel-build.sh <<'SH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          max_attempts=3
+          attempt=1
+          while true; do
+            if bazel build "$@" "$BAZEL_TARGET"; then
+              break
+            fi
+
+            if [[ "$attempt" -ge "$max_attempts" ]]; then
+              echo "Bazel build failed after ${max_attempts} attempts" >&2
+              exit 1
+            fi
+
+            echo "Bazel build failed (attempt ${attempt}/${max_attempts}); retrying..." >&2
+            attempt=$((attempt + 1))
+            sleep 5
+          done
+          SH
+          chmod +x ./run-grpc-bazel-build.sh
+
+      - name: Start bazel-remote
+        env:
+          CONTAINER_NAME: bazel-remote-warm2
+        run: |
+          set -euo pipefail
+          docker run -d \
+            --name "$CONTAINER_NAME" \
+            -u "$(id -u):$(id -g)" \
+            -v "$PWD/bazel-remote-data:/data" \
+            -p 127.0.0.1:9090:8080 \
+            "$BAZEL_REMOTE_IMAGE" \
+            --dir /data \
+            --max_size 20
+
+          for _ in $(seq 1 60); do
+            if curl -fsSL "$BAZEL_REMOTE_URL/status" >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "bazel-remote did not become ready" >&2
+          docker logs "$CONTAINER_NAME" || true
+          exit 1
+
+      - name: Configure Bazel remote cache
+        run: |
+          cat > ~/.bazelrc <<EOF
+          build --remote_cache=${BAZEL_REMOTE_URL}
+          build --remote_upload_local_results=true
+          build --remote_cache_async=false
+          build --remote_download_minimal
+          build --jobs=256
+          build --remote_max_connections=64
+          build --experimental_remote_cache_eviction_retries=5
+          EOF
+
+      - name: Clean Bazel for warm build 2
+        run: bazel clean --expunge
+
+      - name: Run warm build 2
+        id: warm2_build
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-grpc-bazel-build.sh
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Flush Bazel server state
+        if: always()
+        run: bazel shutdown || true
+
+      - name: Collect bazel-remote diagnostics
+        if: always()
+        env:
+          CONTAINER_NAME: bazel-remote-warm2
+        run: |
+          set -euo pipefail
+          .benchmark-config/scripts/collect-bazel-remote-diagnostics.sh \
+            --output-dir "bazel-remote-diag-warm2" \
+            --phase "warm2" \
+            --cache-tag "warm2" \
+            --remote-url "$BAZEL_REMOTE_URL" \
+            --container-name "$CONTAINER_NAME" \
+            --cache-root "$HOME/.cache/bazel" \
+            --cache-label "bazel-cache"
+
+      - name: Stop bazel-remote
+        if: always()
+        env:
+          CONTAINER_NAME: bazel-remote-warm2
+        run: |
+          docker stop "$CONTAINER_NAME" >/dev/null 2>&1 || true
+          docker rm "$CONTAINER_NAME" >/dev/null 2>&1 || true
+
+      - name: Upload bazel-remote data
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bazel-remote-data-${{ env.BENCHMARK_ID }}-warm2
+          path: bazel-remote-data
+          if-no-files-found: error
+          compression-level: 0
+
+      - name: Upload bazel-remote diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bazel-remote-diag-${{ env.BENCHMARK_ID }}-warm2-control
+          path: bazel-remote-diag-warm2
+          if-no-files-found: warn
+
+      - name: Persist scenario timing artifact
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p benchmark-phase
+          cat > "benchmark-phase/warm2.env" <<EOF
+          phase=warm2
+          seconds=${{ steps.warm2_build.outputs.seconds }}
+          EOF
+
+      - name: Upload scenario timing artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-phase-${{ env.BENCHMARK_ID }}-bazel-remote-warm2
+          path: benchmark-phase/warm2.env
+          if-no-files-found: error
+
+  stale-build:
+    name: Bazel Stale (bazel-remote)
+    needs: warm2-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    outputs:
+      stale_seconds: ${{ steps.stale_build.outputs.seconds }}
+      cache_size_bytes: ${{ steps.measure_cache_size.outputs.bytes }}
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PROJECT_REPO }}
+          ref: ${{ env.PROJECT_REF }}
+          submodules: true
+
+      - name: Checkout benchmark config
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
+      - name: Download warm2 bazel-remote data
+        uses: actions/download-artifact@v4
+        with:
+          name: bazel-remote-data-${{ env.BENCHMARK_ID }}-warm2
+          path: .
+
+      - name: Setup Bazelisk
+        uses: bazelbuild/setup-bazelisk@v3
+
+      - name: Prepare benchmark helpers
+        run: |
+          set -euo pipefail
+
+          cat > ./run-grpc-bazel-build.sh <<'SH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          max_attempts=3
+          attempt=1
+          while true; do
+            if bazel build "$@" "$BAZEL_TARGET"; then
+              break
+            fi
+
+            if [[ "$attempt" -ge "$max_attempts" ]]; then
+              echo "Bazel build failed after ${max_attempts} attempts" >&2
+              exit 1
+            fi
+
+            echo "Bazel build failed (attempt ${attempt}/${max_attempts}); retrying..." >&2
+            attempt=$((attempt + 1))
+            sleep 5
+          done
+          SH
+          chmod +x ./run-grpc-bazel-build.sh
+
+      - name: Start bazel-remote
+        env:
+          CONTAINER_NAME: bazel-remote-stale
+        run: |
+          set -euo pipefail
+          docker run -d \
+            --name "$CONTAINER_NAME" \
+            -u "$(id -u):$(id -g)" \
+            -v "$PWD/bazel-remote-data:/data" \
+            -p 127.0.0.1:9090:8080 \
+            "$BAZEL_REMOTE_IMAGE" \
+            --dir /data \
+            --max_size 20
+
+          for _ in $(seq 1 60); do
+            if curl -fsSL "$BAZEL_REMOTE_URL/status" >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "bazel-remote did not become ready" >&2
+          docker logs "$CONTAINER_NAME" || true
+          exit 1
+
+      - name: Configure Bazel remote cache
+        run: |
+          cat > ~/.bazelrc <<EOF
+          build --remote_cache=${BAZEL_REMOTE_URL}
+          build --remote_upload_local_results=true
+          build --remote_cache_async=false
+          build --remote_download_minimal
+          build --jobs=256
+          build --remote_max_connections=64
+          build --experimental_remote_cache_eviction_retries=5
+          EOF
+
+      - name: Clean Bazel for stale build
+        run: bazel clean --expunge
+
+      - name: Run stale build
+        id: stale_build
+        run: |
+          set -euo pipefail
+
+          stale_file="examples/cpp/csm/csm_greeter_client.cc"
+          if [[ ! -f "$stale_file" ]]; then
+            stale_file=""
+            while IFS= read -r candidate; do
+              stale_file="${candidate}"
+              break
+            done < <(find examples -name '*.cc')
+          fi
+          if [[ -z "$stale_file" ]]; then
+            echo "No C++ source file found for stale mutation" >&2
+            exit 1
+          fi
+          echo "// benchmark stale mutation ${GITHUB_RUN_ID:-local}-$(date +%s)" >> "${stale_file}"
+          echo "Applied stale change to ${stale_file}"
+
+          start="$(date +%s)"
+          ./run-grpc-bazel-build.sh
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Flush Bazel server state
+        if: always()
+        run: bazel shutdown || true
+
+      - name: Collect bazel-remote diagnostics
+        if: always()
+        env:
+          CONTAINER_NAME: bazel-remote-stale
+        run: |
+          set -euo pipefail
+          .benchmark-config/scripts/collect-bazel-remote-diagnostics.sh \
+            --output-dir "bazel-remote-diag-stale" \
+            --phase "stale" \
+            --cache-tag "stale" \
+            --remote-url "$BAZEL_REMOTE_URL" \
+            --container-name "$CONTAINER_NAME" \
+            --cache-root "$HOME/.cache/bazel" \
+            --cache-label "bazel-cache"
+
+      - name: Measure cache size
+        id: measure_cache_size
+        if: always()
+        run: |
+          set -euo pipefail
+          bytes="$(jq -r '.CurrSize // 0' bazel-remote-diag-stale/bazel-remote-status.json 2>/dev/null || echo 0)"
+          if ! [[ "$bytes" =~ ^[0-9]+$ ]]; then
+            bytes=0
+          fi
+          echo "bytes=${bytes}" >> "$GITHUB_OUTPUT"
+
+      - name: Stop bazel-remote
+        if: always()
+        env:
+          CONTAINER_NAME: bazel-remote-stale
+        run: |
+          docker stop "$CONTAINER_NAME" >/dev/null 2>&1 || true
+          docker rm "$CONTAINER_NAME" >/dev/null 2>&1 || true
+
+      - name: Upload bazel-remote diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bazel-remote-diag-${{ env.BENCHMARK_ID }}-stale-control
+          path: bazel-remote-diag-stale
+          if-no-files-found: warn
+
+      - name: Persist scenario timing artifact
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p benchmark-phase
+          cat > "benchmark-phase/stale.env" <<EOF
+          phase=stale
+          seconds=${{ steps.stale_build.outputs.seconds }}
+          EOF
+
+      - name: Upload scenario timing artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-phase-${{ env.BENCHMARK_ID }}-bazel-remote-stale
+          path: benchmark-phase/stale.env
+          if-no-files-found: error
+
+  finalize-benchmark:
+    name: Finalize benchmark artifacts
+    needs: [seed-cache, warm1-build, warm2-build, stale-build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - name: Checkout benchmark config
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.sha }}
+          path: .benchmark-config
+
+      - name: Download scenario timing artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: benchmark-phase-${{ env.BENCHMARK_ID }}-bazel-remote-*
+          path: benchmark-phase
+          merge-multiple: true
+
+      - name: Collect scenario timings
+        id: timings
+        run: |
+          set -euo pipefail
+          parse_phase() {
+            local phase="$1"
+            local file="benchmark-phase/${phase}.env"
+            if [[ ! -f "$file" ]]; then
+              echo "Missing timing artifact for phase ${phase}" >&2
+              ls -R benchmark-phase || true
+              exit 1
+            fi
+            local seconds
+            seconds="$(grep "^seconds=" "$file" | head -n1 | cut -d= -f2-)"
+            if [[ -z "${seconds}" ]]; then
+              echo "Timing artifact for phase ${phase} has empty seconds" >&2
+              cat "$file" >&2
+              exit 1
+            fi
+            echo "${phase}_seconds=${seconds}" >> "$GITHUB_OUTPUT"
+          }
+          parse_phase warm1
+          parse_phase warm2
+          parse_phase stale
+
+      - name: Write benchmark artifacts
+        id: artifact_files
+        run: |
+          .benchmark-config/scripts/write-benchmark-artifacts.sh \
+            --benchmark "$BENCHMARK_ID" \
+            --strategy "bazel-remote" \
+            --project-repo "$PROJECT_REPO" \
+            --project-ref "$PROJECT_REF" \
+            --cold-seconds "${{ needs.seed-cache.outputs.cold_seconds }}" \
+            --warm1-seconds "${{ steps.timings.outputs.warm1_seconds }}" \
+            --warm2-seconds "${{ steps.timings.outputs.warm2_seconds }}" \
+            --stale-docker-seconds "${{ steps.timings.outputs.stale_seconds }}" \
+            --cache-storage-bytes "${{ needs.stale-build.outputs.cache_size_bytes }}" \
+            --cache-storage-source "bazel-remote-status" \
+            --hit-behavior-note "Cold+seed run builds from scratch against a local bazel-remote HTTP cache and uploads the resulting bazel-remote data directory as an artifact. Warm1, Warm2, and stale jobs restore that remote cache state sequentially via artifacts so the control backend behaves like a persistent remote cache across isolated runners. Bazel uses the same target and tuning flags as the BoringCache benchmark, with warm1 additionally capturing a JSON trace profile and build log for miss classification."
+
+      - name: Upload benchmark artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-${{ env.BENCHMARK_ID }}-bazel-remote
+          path: |
+            ${{ steps.artifact_files.outputs.json_path }}
+            ${{ steps.artifact_files.outputs.md_path }}
+          if-no-files-found: error
+
+      - name: Publish summary
+        run: cat "${{ steps.artifact_files.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"

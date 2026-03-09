@@ -104,7 +104,7 @@ jobs:
           mode="${1:-warm}"
 
           proxy_port=5000
-          proxy_log="$(mktemp /tmp/boringcache-proxy.XXXXXX.log)"
+          proxy_log="/tmp/boringcache-proxy-${proxy_port}.log"
           proxy_pid=""
 
           start_proxy() {
@@ -244,6 +244,31 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
+      - name: Collect BoringCache diagnostics
+        if: always()
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          .benchmark-config/scripts/collect-boringcache-diagnostics.sh \
+            --output-dir "boringcache-diag-seed" \
+            --workspace "$BENCHMARK_WORKSPACE" \
+            --tags "${{ steps.scope.outputs.tags_csv }}" \
+            --phase "seed" \
+            --cache-tag "${{ steps.scope.outputs.tag_sccache }}" \
+            --proxy-port "5000" \
+            --proxy-log-path "/tmp/boringcache-proxy-5000.log" \
+            --cache-root "$HOME/.cache/sccache" \
+            --cache-label "sccache-cache"
+
+      - name: Upload BoringCache diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: boringcache-diag-${{ env.BENCHMARK_ID }}-seed-boringcache
+          path: boringcache-diag-seed
+          if-no-files-found: warn
+
 
   scenario-builds:
     name: sccache Scenario (${{ matrix.phase }}) (BoringCache)
@@ -333,7 +358,7 @@ jobs:
           mode="${1:-warm}"
 
           proxy_port=5000
-          proxy_log="$(mktemp /tmp/boringcache-proxy.XXXXXX.log)"
+          proxy_log="/tmp/boringcache-proxy-${proxy_port}.log"
           proxy_pid=""
 
           start_proxy() {
@@ -502,6 +527,31 @@ jobs:
           ./run-zed-sccache-phase.sh stale
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Collect BoringCache diagnostics
+        if: always()
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          .benchmark-config/scripts/collect-boringcache-diagnostics.sh \
+            --output-dir "boringcache-diag-${{ matrix.phase }}" \
+            --workspace "$BENCHMARK_WORKSPACE" \
+            --tags "${{ steps.scope.outputs.tags_csv }}" \
+            --phase "${{ matrix.phase }}" \
+            --cache-tag "${{ steps.scope.outputs.tag_sccache }}" \
+            --proxy-port "5000" \
+            --proxy-log-path "/tmp/boringcache-proxy-5000.log" \
+            --cache-root "$HOME/.cache/sccache" \
+            --cache-label "sccache-cache"
+
+      - name: Upload BoringCache diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: boringcache-diag-${{ env.BENCHMARK_ID }}-${{ matrix.phase }}-boringcache
+          path: boringcache-diag-${{ matrix.phase }}
+          if-no-files-found: warn
 
       - name: Capture scenario timing
         id: phase_timing
