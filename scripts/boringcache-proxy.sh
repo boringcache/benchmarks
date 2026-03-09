@@ -6,7 +6,7 @@ PID_FILE="/tmp/boringcache-proxy.pid"
 usage() {
   cat <<'EOF' >&2
 Usage:
-  boringcache-proxy.sh start --workspace WORKSPACE --tag TAG --port PORT [--host HOST] [--no-git] [--no-platform] [--verbose]
+  boringcache-proxy.sh start --workspace WORKSPACE --tag TAG --port PORT [--command COMMAND] [--host HOST] [--no-git] [--no-platform] [--verbose]
   boringcache-proxy.sh wait --port PORT [--pid PID] [--timeout-ms 300000]
   boringcache-proxy.sh stop [--pid PID]
 EOF
@@ -21,6 +21,7 @@ shift
 
 workspace=""
 tag=""
+proxy_command="cache-registry"
 host="127.0.0.1"
 port=""
 timeout_ms="300000"
@@ -37,6 +38,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --tag)
       tag="${2:-}"
+      shift 2
+      ;;
+    --command)
+      proxy_command="${2:-}"
       shift 2
       ;;
     --host)
@@ -107,7 +112,7 @@ start_proxy() {
   : > "$log_path"
 
   local -a args
-  args=(cache-registry "$workspace" "$tag")
+  args=("$proxy_command" "$workspace" "$tag")
   if [[ "$no_git" -eq 1 ]]; then
     args+=(--no-git)
   fi

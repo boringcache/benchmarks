@@ -237,6 +237,10 @@ jobs:
           SH
           chmod +x ./run-grpc-bazel-build.sh
 
+      - name: Capture bazel-remote setup start
+        id: proxy_setup_timer_start
+        run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+
       - name: Start bazel-remote
         env:
           CONTAINER_NAME: bazel-remote-warm1
@@ -263,6 +267,14 @@ jobs:
           echo "bazel-remote did not become ready" >&2
           docker logs "$CONTAINER_NAME" || true
           exit 1
+
+      - name: Capture bazel-remote ready timing
+        id: proxy_ready_timing
+        run: |
+          set -euo pipefail
+          start="${{ steps.proxy_setup_timer_start.outputs.started_at }}"
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
       - name: Configure Bazel remote cache
         run: |
@@ -366,6 +378,10 @@ jobs:
           cat > "benchmark-phase/warm1.env" <<EOF
           phase=warm1
           seconds=${{ steps.warm1_build.outputs.seconds }}
+          restore_seconds=0
+          proxy_ready_seconds=${{ steps.proxy_ready_timing.outputs.seconds }}
+          build_seconds=${{ steps.warm1_build.outputs.seconds }}
+          end_to_end_seconds=$(( ${{ steps.proxy_ready_timing.outputs.seconds }} + ${{ steps.warm1_build.outputs.seconds }} ))
           EOF
 
       - name: Upload scenario timing artifact
@@ -447,6 +463,10 @@ jobs:
           SH
           chmod +x ./run-grpc-bazel-build.sh
 
+      - name: Capture bazel-remote setup start
+        id: proxy_setup_timer_start
+        run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+
       - name: Start bazel-remote
         env:
           CONTAINER_NAME: bazel-remote-warm2
@@ -473,6 +493,14 @@ jobs:
           echo "bazel-remote did not become ready" >&2
           docker logs "$CONTAINER_NAME" || true
           exit 1
+
+      - name: Capture bazel-remote ready timing
+        id: proxy_ready_timing
+        run: |
+          set -euo pipefail
+          start="${{ steps.proxy_setup_timer_start.outputs.started_at }}"
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
       - name: Configure Bazel remote cache
         run: |
@@ -550,6 +578,10 @@ jobs:
           cat > "benchmark-phase/warm2.env" <<EOF
           phase=warm2
           seconds=${{ steps.warm2_build.outputs.seconds }}
+          restore_seconds=0
+          proxy_ready_seconds=${{ steps.proxy_ready_timing.outputs.seconds }}
+          build_seconds=${{ steps.warm2_build.outputs.seconds }}
+          end_to_end_seconds=$(( ${{ steps.proxy_ready_timing.outputs.seconds }} + ${{ steps.warm2_build.outputs.seconds }} ))
           EOF
 
       - name: Upload scenario timing artifact
@@ -632,6 +664,10 @@ jobs:
           SH
           chmod +x ./run-grpc-bazel-build.sh
 
+      - name: Capture bazel-remote setup start
+        id: proxy_setup_timer_start
+        run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+
       - name: Start bazel-remote
         env:
           CONTAINER_NAME: bazel-remote-stale
@@ -658,6 +694,14 @@ jobs:
           echo "bazel-remote did not become ready" >&2
           docker logs "$CONTAINER_NAME" || true
           exit 1
+
+      - name: Capture bazel-remote ready timing
+        id: proxy_ready_timing
+        run: |
+          set -euo pipefail
+          start="${{ steps.proxy_setup_timer_start.outputs.started_at }}"
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
       - name: Configure Bazel remote cache
         run: |
@@ -753,6 +797,10 @@ jobs:
           cat > "benchmark-phase/stale.env" <<EOF
           phase=stale
           seconds=${{ steps.stale_build.outputs.seconds }}
+          restore_seconds=0
+          proxy_ready_seconds=${{ steps.proxy_ready_timing.outputs.seconds }}
+          build_seconds=${{ steps.stale_build.outputs.seconds }}
+          end_to_end_seconds=$(( ${{ steps.proxy_ready_timing.outputs.seconds }} + ${{ steps.stale_build.outputs.seconds }} ))
           EOF
 
       - name: Upload scenario timing artifact
@@ -824,6 +872,15 @@ jobs:
             --cache-storage-source "bazel-remote-status" \
             --hit-behavior-note "Cold+seed run builds from scratch against a local bazel-remote HTTP cache and uploads the resulting bazel-remote data directory as an artifact. Warm1, Warm2, and stale jobs restore that remote cache state sequentially via artifacts so the control backend behaves like a persistent remote cache across isolated runners. Bazel uses the same target and tuning flags as the BoringCache benchmark, with warm1 additionally capturing a JSON trace profile and build log for miss classification."
 
+      - name: Write phase timing breakdown
+        id: phase_breakdown
+        run: |
+          python3 .benchmark-config/scripts/write-phase-timing-breakdown.py \
+            --benchmark "$BENCHMARK_ID" \
+            --strategy "bazel-remote" \
+            --phase-dir benchmark-phase \
+            --output-dir benchmark-results
+
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -831,7 +888,12 @@ jobs:
           path: |
             ${{ steps.artifact_files.outputs.json_path }}
             ${{ steps.artifact_files.outputs.md_path }}
+            ${{ steps.phase_breakdown.outputs.json_path }}
+            ${{ steps.phase_breakdown.outputs.md_path }}
           if-no-files-found: error
 
       - name: Publish summary
-        run: cat "${{ steps.artifact_files.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          cat "${{ steps.artifact_files.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"
+          printf '\n' >> "$GITHUB_STEP_SUMMARY"
+          cat "${{ steps.phase_breakdown.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"

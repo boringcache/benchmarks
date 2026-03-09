@@ -233,6 +233,10 @@ jobs:
           SH
           chmod +x ./run-grpc-bazel-build.sh
 
+      - name: Capture proxy setup start
+        id: proxy_setup_timer_start
+        run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+
       - name: Setup Bazel remote cache via BoringCache
         id: bazel_cache
         uses: boringcache/bazel-action@v1
@@ -247,6 +251,14 @@ jobs:
           BORINGCACHE_KV_BLOB_UPLOAD_CONCURRENCY: "64"
           BORINGCACHE_FLUSH_BLOB_THRESHOLD: "2000"
           BORINGCACHE_BLOB_DOWNLOAD_CONCURRENCY: "64"
+
+      - name: Capture proxy ready timing
+        id: proxy_ready_timing
+        run: |
+          set -euo pipefail
+          start="${{ steps.proxy_setup_timer_start.outputs.started_at }}"
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
       - name: Tune Bazel for remote cache performance
         run: |
@@ -376,27 +388,35 @@ jobs:
         id: phase_timing
         run: |
           set -euo pipefail
-          seconds=""
+          build_seconds=""
           case "${{ matrix.phase }}" in
             warm1)
-              seconds="${{ steps.warm1_build.outputs.seconds }}"
+              build_seconds="${{ steps.warm1_build.outputs.seconds }}"
               ;;
             warm2)
-              seconds="${{ steps.warm2_build.outputs.seconds }}"
+              build_seconds="${{ steps.warm2_build.outputs.seconds }}"
               ;;
             stale)
-              seconds="${{ steps.stale_docker_build.outputs.seconds }}"
+              build_seconds="${{ steps.stale_docker_build.outputs.seconds }}"
               ;;
             *)
               echo "Unknown phase: ${{ matrix.phase }}" >&2
               exit 1
               ;;
           esac
-          if [[ -z "${seconds}" ]]; then
+          if [[ -z "${build_seconds}" ]]; then
             echo "No timing captured for phase ${{ matrix.phase }}" >&2
             exit 1
           fi
+          restore_seconds=0
+          proxy_ready_seconds="${{ steps.proxy_ready_timing.outputs.seconds }}"
+          seconds="${build_seconds}"
+          end_to_end_seconds=$((restore_seconds + proxy_ready_seconds + build_seconds))
           echo "seconds=${seconds}" >> "$GITHUB_OUTPUT"
+          echo "restore_seconds=${restore_seconds}" >> "$GITHUB_OUTPUT"
+          echo "proxy_ready_seconds=${proxy_ready_seconds}" >> "$GITHUB_OUTPUT"
+          echo "build_seconds=${build_seconds}" >> "$GITHUB_OUTPUT"
+          echo "end_to_end_seconds=${end_to_end_seconds}" >> "$GITHUB_OUTPUT"
       - name: Persist scenario timing artifact
         run: |
           set -euo pipefail
@@ -404,6 +424,10 @@ jobs:
           cat > "benchmark-phase/${{ matrix.phase }}.env" <<EOF
           phase=${{ matrix.phase }}
           seconds=${{ steps.phase_timing.outputs.seconds }}
+          restore_seconds=${{ steps.phase_timing.outputs.restore_seconds }}
+          proxy_ready_seconds=${{ steps.phase_timing.outputs.proxy_ready_seconds }}
+          build_seconds=${{ steps.phase_timing.outputs.build_seconds }}
+          end_to_end_seconds=${{ steps.phase_timing.outputs.end_to_end_seconds }}
           EOF
       - name: Upload scenario timing artifact
         uses: actions/upload-artifact@v4
@@ -485,6 +509,15 @@ jobs:
             --cache-storage-source "boringcache-check" \
             --hit-behavior-note "Cold+seed run builds from empty state with remote cache enabled and records cold timing while priming the proxy-backed cache. boringcache/bazel-action starts cache-registry proxy and writes ~/.bazelrc with --remote_cache. bazel clean --expunge between warm/stale phases. Warm runs hit the proxy-backed remote cache for action cache + CAS. Stale run mutates one .cc source file before building with remote cache. Warm1/Warm2/stale phases run as isolated matrix jobs on separate runners to avoid cross-phase local cache/state reuse."
 
+      - name: Write phase timing breakdown
+        id: phase_breakdown
+        run: |
+          python3 .benchmark-config/scripts/write-phase-timing-breakdown.py \
+            --benchmark "$BENCHMARK_ID" \
+            --strategy "boringcache" \
+            --phase-dir benchmark-phase \
+            --output-dir benchmark-results
+
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -492,7 +525,12 @@ jobs:
           path: |
             ${{ steps.artifact_files.outputs.json_path }}
             ${{ steps.artifact_files.outputs.md_path }}
+            ${{ steps.phase_breakdown.outputs.json_path }}
+            ${{ steps.phase_breakdown.outputs.md_path }}
           if-no-files-found: error
 
       - name: Publish summary
-        run: cat "${{ steps.artifact_files.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          cat "${{ steps.artifact_files.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"
+          printf '\n' >> "$GITHUB_STEP_SUMMARY"
+          cat "${{ steps.phase_breakdown.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"

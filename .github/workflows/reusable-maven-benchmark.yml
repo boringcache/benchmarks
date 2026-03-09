@@ -226,46 +226,25 @@ jobs:
           </cache>
           EOF
 
-            proxy_log="${RUNNER_TEMP}/${BENCHMARK_ID}-seed-maven-proxy.log"
-            rm -f "$proxy_log"
-            boringcache cache-registry "${BENCHMARK_WORKSPACE}" "${{ steps.scope.outputs.tag_remote }}" \
+            proxy_log="/tmp/boringcache-proxy-${PROXY_PORT}.log"
+            bash .benchmark-config/scripts/boringcache-proxy.sh start \
+              --workspace "${BENCHMARK_WORKSPACE}" \
+              --tag "${{ steps.scope.outputs.tag_remote }}" \
+              --command cache-registry \
               --host 127.0.0.1 \
               --port "${PROXY_PORT}" \
               --no-git \
-              --no-platform >"$proxy_log" 2>&1 &
-            proxy_pid=$!
+              --no-platform >/tmp/boringcache-proxy-start.txt
+            proxy_pid="$(grep '^pid=' /tmp/boringcache-proxy-start.txt | cut -d= -f2-)"
             cleanup() {
-              if kill -0 "$proxy_pid" >/dev/null 2>&1; then
-                kill -INT "$proxy_pid" >/dev/null 2>&1 || true
-                for _ in $(seq 1 30); do
-                  if ! kill -0 "$proxy_pid" >/dev/null 2>&1; then
-                    break
-                  fi
-                  sleep 1
-                done
-                if kill -0 "$proxy_pid" >/dev/null 2>&1; then
-                  kill -9 "$proxy_pid" >/dev/null 2>&1 || true
-                fi
-              fi
+              bash .benchmark-config/scripts/boringcache-proxy.sh stop --pid "$proxy_pid" || true
               if [[ -f "$proxy_log" ]]; then
                 tail -n 120 "$proxy_log" || true
               fi
             }
             trap cleanup EXIT
 
-            ready=0
-            for _ in $(seq 1 30); do
-              if (echo >"/dev/tcp/127.0.0.1/${PROXY_PORT}") >/dev/null 2>&1; then
-                ready=1
-                break
-              fi
-              if ! kill -0 "$proxy_pid" >/dev/null 2>&1; then
-                break
-              fi
-              sleep 1
-            done
-
-            if [[ "$ready" != "1" ]]; then
+            if ! bash .benchmark-config/scripts/boringcache-proxy.sh wait --port "${PROXY_PORT}" --pid "$proxy_pid"; then
               echo "Maven proxy did not become ready" >&2
               tail -n 200 "$proxy_log" >&2 || true
               exit 1
@@ -493,46 +472,25 @@ jobs:
           </cache>
           EOF
 
-            proxy_log="${RUNNER_TEMP}/${BENCHMARK_ID}-${{ matrix.phase }}-maven-proxy.log"
-            rm -f "$proxy_log"
-            boringcache cache-registry "${BENCHMARK_WORKSPACE}" "${{ steps.scope.outputs.tag_remote }}" \
+            proxy_log="/tmp/boringcache-proxy-${PROXY_PORT}.log"
+            bash .benchmark-config/scripts/boringcache-proxy.sh start \
+              --workspace "${BENCHMARK_WORKSPACE}" \
+              --tag "${{ steps.scope.outputs.tag_remote }}" \
+              --command cache-registry \
               --host 127.0.0.1 \
               --port "${PROXY_PORT}" \
               --no-git \
-              --no-platform >"$proxy_log" 2>&1 &
-            proxy_pid=$!
+              --no-platform >/tmp/boringcache-proxy-start.txt
+            proxy_pid="$(grep '^pid=' /tmp/boringcache-proxy-start.txt | cut -d= -f2-)"
             cleanup() {
-              if kill -0 "$proxy_pid" >/dev/null 2>&1; then
-                kill -INT "$proxy_pid" >/dev/null 2>&1 || true
-                for _ in $(seq 1 30); do
-                  if ! kill -0 "$proxy_pid" >/dev/null 2>&1; then
-                    break
-                  fi
-                  sleep 1
-                done
-                if kill -0 "$proxy_pid" >/dev/null 2>&1; then
-                  kill -9 "$proxy_pid" >/dev/null 2>&1 || true
-                fi
-              fi
+              bash .benchmark-config/scripts/boringcache-proxy.sh stop --pid "$proxy_pid" || true
               if [[ -f "$proxy_log" ]]; then
                 tail -n 120 "$proxy_log" || true
               fi
             }
             trap cleanup EXIT
 
-            ready=0
-            for _ in $(seq 1 30); do
-              if (echo >"/dev/tcp/127.0.0.1/${PROXY_PORT}") >/dev/null 2>&1; then
-                ready=1
-                break
-              fi
-              if ! kill -0 "$proxy_pid" >/dev/null 2>&1; then
-                break
-              fi
-              sleep 1
-            done
-
-            if [[ "$ready" != "1" ]]; then
+            if ! bash .benchmark-config/scripts/boringcache-proxy.sh wait --port "${PROXY_PORT}" --pid "$proxy_pid"; then
               echo "Maven proxy did not become ready" >&2
               tail -n 200 "$proxy_log" >&2 || true
               exit 1

@@ -107,6 +107,15 @@ jobs:
           proxy_log="/tmp/boringcache-proxy-${proxy_port}.log"
           proxy_pid=""
           proxy_helper=".benchmark-config/scripts/boringcache-proxy.sh"
+          timing_file="${BENCHMARK_TIMING_FILE:-}"
+          proxy_ready_seconds=""
+          build_seconds=""
+
+          write_timing() {
+            if [[ -n "$timing_file" ]]; then
+              printf '%s=%s\n' "$1" "$2" >> "$timing_file"
+            fi
+          }
 
           start_proxy() {
             bash "$proxy_helper" start \
@@ -128,8 +137,12 @@ jobs:
             proxy_pid=""
           }
 
-          wait_proxy_ready() {
+          wait_for_proxy_ready() {
+            local started_at
+            started_at="$(date +%s)"
             bash "$proxy_helper" wait --port "$proxy_port" --pid "$proxy_pid"
+            proxy_ready_seconds=$(( $(date +%s) - started_at ))
+            write_timing proxy_ready_seconds "$proxy_ready_seconds"
           }
 
           cleanup() {
@@ -153,11 +166,15 @@ jobs:
             export CXX="sccache c++"
             mkdir -p "$SCCACHE_DIR"
 
+            local started_at
+            started_at="$(date +%s)"
             sccache --start-server || true
             cargo build --release
             sccache --show-stats || true
             # Stop sccache server so it flushes pending uploads to the proxy
             sccache --stop-server || true
+            build_seconds=$(( $(date +%s) - started_at ))
+            write_timing build_seconds "$build_seconds"
           }
 
           apply_stale_change() {
@@ -176,13 +193,17 @@ jobs:
             echo "Applied stale change to ${stale_file}"
           }
 
+          if [[ -n "$timing_file" ]]; then
+            : > "$timing_file"
+          fi
+
           case "$mode" in
             cold)
               run_cold_build
               ;;
             seed|warm)
               start_proxy
-              if ! wait_proxy_ready; then
+              if ! wait_for_proxy_ready; then
                 echo "Registry proxy did not become ready" >&2
                 tail -n 200 "$proxy_log" || true
                 exit 1
@@ -192,7 +213,7 @@ jobs:
               ;;
             stale)
               start_proxy
-              if ! wait_proxy_ready; then
+              if ! wait_for_proxy_ready; then
                 echo "Registry proxy did not become ready" >&2
                 tail -n 200 "$proxy_log" || true
                 exit 1
@@ -350,6 +371,15 @@ jobs:
           proxy_log="/tmp/boringcache-proxy-${proxy_port}.log"
           proxy_pid=""
           proxy_helper=".benchmark-config/scripts/boringcache-proxy.sh"
+          timing_file="${BENCHMARK_TIMING_FILE:-}"
+          proxy_ready_seconds=""
+          build_seconds=""
+
+          write_timing() {
+            if [[ -n "$timing_file" ]]; then
+              printf '%s=%s\n' "$1" "$2" >> "$timing_file"
+            fi
+          }
 
           start_proxy() {
             bash "$proxy_helper" start \
@@ -371,8 +401,12 @@ jobs:
             proxy_pid=""
           }
 
-          wait_proxy_ready() {
+          wait_for_proxy_ready() {
+            local started_at
+            started_at="$(date +%s)"
             bash "$proxy_helper" wait --port "$proxy_port" --pid "$proxy_pid"
+            proxy_ready_seconds=$(( $(date +%s) - started_at ))
+            write_timing proxy_ready_seconds "$proxy_ready_seconds"
           }
 
           cleanup() {
@@ -396,11 +430,15 @@ jobs:
             export CXX="sccache c++"
             mkdir -p "$SCCACHE_DIR"
 
+            local started_at
+            started_at="$(date +%s)"
             sccache --start-server || true
             cargo build --release
             sccache --show-stats || true
             # Stop sccache server so it flushes pending uploads to the proxy
             sccache --stop-server || true
+            build_seconds=$(( $(date +%s) - started_at ))
+            write_timing build_seconds "$build_seconds"
           }
 
           apply_stale_change() {
@@ -419,13 +457,17 @@ jobs:
             echo "Applied stale change to ${stale_file}"
           }
 
+          if [[ -n "$timing_file" ]]; then
+            : > "$timing_file"
+          fi
+
           case "$mode" in
             cold)
               run_cold_build
               ;;
             seed|warm)
               start_proxy
-              if ! wait_proxy_ready; then
+              if ! wait_for_proxy_ready; then
                 echo "Registry proxy did not become ready" >&2
                 tail -n 200 "$proxy_log" || true
                 exit 1
@@ -435,7 +477,7 @@ jobs:
               ;;
             stale)
               start_proxy
-              if ! wait_proxy_ready; then
+              if ! wait_for_proxy_ready; then
                 echo "Registry proxy did not become ready" >&2
                 tail -n 200 "$proxy_log" || true
                 exit 1
@@ -463,12 +505,18 @@ jobs:
           rm -rf target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
           mkdir -p target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
 
+          timing_file="/tmp/zed-sccache-${{ matrix.phase }}-timing.env"
           start="$(date +%s)"
+          restore_start="$(date +%s)"
           boringcache restore --no-git "$BENCHMARK_WORKSPACE" \
             "${{ steps.scope.outputs.tag_cargo_registry }}:${HOME}/.cargo/registry,${{ steps.scope.outputs.tag_cargo_git }}:${HOME}/.cargo/git,${{ steps.scope.outputs.tag_target }}:target"
-          ./run-zed-sccache-phase.sh warm
+          restore_end="$(date +%s)"
+          BENCHMARK_TIMING_FILE="$timing_file" ./run-zed-sccache-phase.sh warm
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+          echo "restore_seconds=$((restore_end - restore_start))" >> "$GITHUB_OUTPUT"
+          echo "proxy_ready_seconds=$(grep '^proxy_ready_seconds=' "$timing_file" | head -n1 | cut -d= -f2-)" >> "$GITHUB_OUTPUT"
+          echo "build_seconds=$(grep '^build_seconds=' "$timing_file" | head -n1 | cut -d= -f2-)" >> "$GITHUB_OUTPUT"
 
       - name: Run warm build 2
         id: warm2_build
@@ -481,12 +529,18 @@ jobs:
           rm -rf target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
           mkdir -p target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
 
+          timing_file="/tmp/zed-sccache-${{ matrix.phase }}-timing.env"
           start="$(date +%s)"
+          restore_start="$(date +%s)"
           boringcache restore --no-git "$BENCHMARK_WORKSPACE" \
             "${{ steps.scope.outputs.tag_cargo_registry }}:${HOME}/.cargo/registry,${{ steps.scope.outputs.tag_cargo_git }}:${HOME}/.cargo/git,${{ steps.scope.outputs.tag_target }}:target"
-          ./run-zed-sccache-phase.sh warm
+          restore_end="$(date +%s)"
+          BENCHMARK_TIMING_FILE="$timing_file" ./run-zed-sccache-phase.sh warm
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+          echo "restore_seconds=$((restore_end - restore_start))" >> "$GITHUB_OUTPUT"
+          echo "proxy_ready_seconds=$(grep '^proxy_ready_seconds=' "$timing_file" | head -n1 | cut -d= -f2-)" >> "$GITHUB_OUTPUT"
+          echo "build_seconds=$(grep '^build_seconds=' "$timing_file" | head -n1 | cut -d= -f2-)" >> "$GITHUB_OUTPUT"
 
       - name: Run stale build
         id: stale_docker_build
@@ -499,12 +553,18 @@ jobs:
           rm -rf target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
           mkdir -p target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
 
+          timing_file="/tmp/zed-sccache-${{ matrix.phase }}-timing.env"
           start="$(date +%s)"
+          restore_start="$(date +%s)"
           boringcache restore --no-git "$BENCHMARK_WORKSPACE" \
             "${{ steps.scope.outputs.tag_cargo_registry }}:${HOME}/.cargo/registry,${{ steps.scope.outputs.tag_cargo_git }}:${HOME}/.cargo/git,${{ steps.scope.outputs.tag_target }}:target"
-          ./run-zed-sccache-phase.sh stale
+          restore_end="$(date +%s)"
+          BENCHMARK_TIMING_FILE="$timing_file" ./run-zed-sccache-phase.sh stale
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+          echo "restore_seconds=$((restore_end - restore_start))" >> "$GITHUB_OUTPUT"
+          echo "proxy_ready_seconds=$(grep '^proxy_ready_seconds=' "$timing_file" | head -n1 | cut -d= -f2-)" >> "$GITHUB_OUTPUT"
+          echo "build_seconds=$(grep '^build_seconds=' "$timing_file" | head -n1 | cut -d= -f2-)" >> "$GITHUB_OUTPUT"
 
       - name: Collect BoringCache diagnostics
         if: always()
@@ -536,26 +596,42 @@ jobs:
         run: |
           set -euo pipefail
           seconds=""
+          restore_seconds=""
+          proxy_ready_seconds=""
+          build_seconds=""
           case "${{ matrix.phase }}" in
             warm1)
               seconds="${{ steps.warm1_build.outputs.seconds }}"
+              restore_seconds="${{ steps.warm1_build.outputs.restore_seconds }}"
+              proxy_ready_seconds="${{ steps.warm1_build.outputs.proxy_ready_seconds }}"
+              build_seconds="${{ steps.warm1_build.outputs.build_seconds }}"
               ;;
             warm2)
               seconds="${{ steps.warm2_build.outputs.seconds }}"
+              restore_seconds="${{ steps.warm2_build.outputs.restore_seconds }}"
+              proxy_ready_seconds="${{ steps.warm2_build.outputs.proxy_ready_seconds }}"
+              build_seconds="${{ steps.warm2_build.outputs.build_seconds }}"
               ;;
             stale)
               seconds="${{ steps.stale_docker_build.outputs.seconds }}"
+              restore_seconds="${{ steps.stale_docker_build.outputs.restore_seconds }}"
+              proxy_ready_seconds="${{ steps.stale_docker_build.outputs.proxy_ready_seconds }}"
+              build_seconds="${{ steps.stale_docker_build.outputs.build_seconds }}"
               ;;
             *)
               echo "Unknown phase: ${{ matrix.phase }}" >&2
               exit 1
               ;;
           esac
-          if [[ -z "${seconds}" ]]; then
+          if [[ -z "${seconds}" || -z "${restore_seconds}" || -z "${proxy_ready_seconds}" || -z "${build_seconds}" ]]; then
             echo "No timing captured for phase ${{ matrix.phase }}" >&2
             exit 1
           fi
           echo "seconds=${seconds}" >> "$GITHUB_OUTPUT"
+          echo "restore_seconds=${restore_seconds}" >> "$GITHUB_OUTPUT"
+          echo "proxy_ready_seconds=${proxy_ready_seconds}" >> "$GITHUB_OUTPUT"
+          echo "build_seconds=${build_seconds}" >> "$GITHUB_OUTPUT"
+          echo "end_to_end_seconds=${seconds}" >> "$GITHUB_OUTPUT"
       - name: Persist scenario timing artifact
         run: |
           set -euo pipefail
@@ -563,6 +639,10 @@ jobs:
           cat > "benchmark-phase/${{ matrix.phase }}.env" <<EOF
           phase=${{ matrix.phase }}
           seconds=${{ steps.phase_timing.outputs.seconds }}
+          restore_seconds=${{ steps.phase_timing.outputs.restore_seconds }}
+          proxy_ready_seconds=${{ steps.phase_timing.outputs.proxy_ready_seconds }}
+          build_seconds=${{ steps.phase_timing.outputs.build_seconds }}
+          end_to_end_seconds=${{ steps.phase_timing.outputs.end_to_end_seconds }}
           EOF
       - name: Upload scenario timing artifact
         uses: actions/upload-artifact@v4
@@ -644,6 +724,15 @@ jobs:
             --cache-storage-source "boringcache-check" \
             --hit-behavior-note "Cold+seed run starts boringcache cache-registry as native sccache WebDAV backend, rebuilds from empty state with sccache pointed at proxy, then saves cargo registry/git and target to BoringCache while recording cold timing. sccache artifacts are stored natively via the proxy (no save/restore). Each phase clears local ~/.cache/sccache first so warm hits come from the proxy-backed cache. Warm1/Warm2 restore cargo caches and run with proxy-backed sccache. Stale run restores warm cache, mutates one Rust source file, then rebuilds. Warm1/Warm2/stale phases run as isolated matrix jobs on separate runners to avoid cross-phase local cache/state reuse."
 
+      - name: Write phase timing breakdown
+        id: phase_breakdown
+        run: |
+          python3 .benchmark-config/scripts/write-phase-timing-breakdown.py \
+            --benchmark "$BENCHMARK_ID" \
+            --strategy "boringcache" \
+            --phase-dir benchmark-phase \
+            --output-dir benchmark-results
+
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -651,7 +740,12 @@ jobs:
           path: |
             ${{ steps.artifact_files.outputs.json_path }}
             ${{ steps.artifact_files.outputs.md_path }}
+            ${{ steps.phase_breakdown.outputs.json_path }}
+            ${{ steps.phase_breakdown.outputs.md_path }}
           if-no-files-found: error
 
       - name: Publish summary
-        run: cat "${{ steps.artifact_files.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          cat "${{ steps.artifact_files.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"
+          printf '\n' >> "$GITHUB_STEP_SUMMARY"
+          cat "${{ steps.phase_breakdown.outputs.md_path }}" >> "$GITHUB_STEP_SUMMARY"

@@ -200,45 +200,24 @@ jobs:
           mkdir -p "$PNPM_STORE_DIR"
 
           if [[ "${{ inputs.strategy }}" == "boringcache" ]]; then
-            proxy_log="${RUNNER_TEMP}/${BENCHMARK_ID}-seed-turbo-proxy.log"
-            rm -f "$proxy_log"
-            boringcache cache-registry "${BENCHMARK_WORKSPACE}" "${{ steps.scope.outputs.tag_turbo }}" \
+            proxy_log="/tmp/boringcache-proxy-${TURBO_PROXY_PORT}.log"
+            bash .benchmark-config/scripts/boringcache-proxy.sh start \
+              --workspace "${BENCHMARK_WORKSPACE}" \
+              --tag "${{ steps.scope.outputs.tag_turbo }}" \
+              --command cache-registry \
               --host 127.0.0.1 \
               --port "${TURBO_PROXY_PORT}" \
               --no-git \
-              --no-platform >"$proxy_log" 2>&1 &
-            proxy_pid=$!
+              --no-platform >/tmp/boringcache-proxy-start.txt
+            proxy_pid="$(grep '^pid=' /tmp/boringcache-proxy-start.txt | cut -d= -f2-)"
             cleanup() {
-              if kill -0 "$proxy_pid" >/dev/null 2>&1; then
-                kill -INT "$proxy_pid" >/dev/null 2>&1 || true
-                for _ in $(seq 1 30); do
-                  if ! kill -0 "$proxy_pid" >/dev/null 2>&1; then
-                    break
-                  fi
-                  sleep 1
-                done
-                if kill -0 "$proxy_pid" >/dev/null 2>&1; then
-                  kill -9 "$proxy_pid" >/dev/null 2>&1 || true
-                fi
-              fi
+              bash .benchmark-config/scripts/boringcache-proxy.sh stop --pid "$proxy_pid" || true
               echo "=== Seed proxy log (last 120 lines) ==="
               tail -n 120 "$proxy_log" || true
             }
             trap cleanup EXIT
 
-            ready=0
-            for _ in $(seq 1 30); do
-              if (echo >"/dev/tcp/127.0.0.1/${TURBO_PROXY_PORT}") >/dev/null 2>&1; then
-                ready=1
-                break
-              fi
-              if ! kill -0 "$proxy_pid" >/dev/null 2>&1; then
-                break
-              fi
-              sleep 1
-            done
-
-            if [[ "$ready" != "1" ]]; then
+            if ! bash .benchmark-config/scripts/boringcache-proxy.sh wait --port "${TURBO_PROXY_PORT}" --pid "$proxy_pid"; then
               echo "Turbo proxy did not become ready" >&2
               tail -n 200 "$proxy_log" >&2 || true
               exit 1
@@ -430,34 +409,21 @@ jobs:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
         run: |
           set -euo pipefail
-          proxy_log="${RUNNER_TEMP}/${BENCHMARK_ID}-${{ matrix.phase }}-turbo-proxy.log"
-          rm -f "$proxy_log"
-
-          boringcache cache-registry "${BENCHMARK_WORKSPACE}" "${{ steps.scope.outputs.tag_turbo }}" \
+          proxy_log="/tmp/boringcache-proxy-${TURBO_PROXY_PORT}.log"
+          bash .benchmark-config/scripts/boringcache-proxy.sh start \
+            --workspace "${BENCHMARK_WORKSPACE}" \
+            --tag "${{ steps.scope.outputs.tag_turbo }}" \
+            --command cache-registry \
             --host 127.0.0.1 \
             --port "${TURBO_PROXY_PORT}" \
             --no-git \
-            --no-platform >"$proxy_log" 2>&1 &
-          proxy_pid=$!
+            --no-platform >/tmp/boringcache-proxy-start.txt
+          proxy_pid="$(grep '^pid=' /tmp/boringcache-proxy-start.txt | cut -d= -f2-)"
 
-          ready=0
-          for _ in $(seq 1 30); do
-            if (echo >"/dev/tcp/127.0.0.1/${TURBO_PROXY_PORT}") >/dev/null 2>&1; then
-              ready=1
-              break
-            fi
-            if ! kill -0 "$proxy_pid" >/dev/null 2>&1; then
-              break
-            fi
-            sleep 1
-          done
-
-          if [[ "$ready" != "1" ]]; then
+          if ! bash .benchmark-config/scripts/boringcache-proxy.sh wait --port "${TURBO_PROXY_PORT}" --pid "$proxy_pid"; then
             echo "Turbo proxy did not become ready" >&2
             tail -n 200 "$proxy_log" >&2 || true
-            if kill -0 "$proxy_pid" >/dev/null 2>&1; then
-              kill -9 "$proxy_pid" >/dev/null 2>&1 || true
-            fi
+            bash .benchmark-config/scripts/boringcache-proxy.sh stop --pid "$proxy_pid" || true
             exit 1
           fi
 
@@ -495,17 +461,8 @@ jobs:
           proxy_pid="${{ steps.bc_proxy.outputs.pid }}"
           proxy_log="${{ steps.bc_proxy.outputs.log_path }}"
 
-          if [[ -n "${proxy_pid}" ]] && kill -0 "${proxy_pid}" >/dev/null 2>&1; then
-            kill -INT "${proxy_pid}" >/dev/null 2>&1 || true
-            for _ in $(seq 1 30); do
-              if ! kill -0 "${proxy_pid}" >/dev/null 2>&1; then
-                break
-              fi
-              sleep 1
-            done
-            if kill -0 "${proxy_pid}" >/dev/null 2>&1; then
-              kill -9 "${proxy_pid}" >/dev/null 2>&1 || true
-            fi
+          if [[ -n "${proxy_pid}" ]]; then
+            bash .benchmark-config/scripts/boringcache-proxy.sh stop --pid "${proxy_pid}" || true
           fi
 
           if [[ -n "${proxy_log}" && -f "${proxy_log}" ]]; then
