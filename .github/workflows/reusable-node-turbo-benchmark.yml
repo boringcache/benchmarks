@@ -100,7 +100,7 @@ jobs:
           apply_stale_change() {
             local stale_file=""
             local candidates=()
-            mapfile -t candidates < <(git ls-files -- '*.ts' '*.tsx' '*.js' '*.jsx' '*.vue')
+            mapfile -t candidates < <(git ls-files -- 'packages/*/src/**/*.ts' 'packages/*/src/**/*.tsx' 'src/**/*.ts' 'src/**/*.tsx' '*.ts' '*.tsx' '*.js' '*.jsx' '*.vue' | grep -v '\.github/' | grep -v '__tests__/' | grep -v '\.test\.' | grep -v '\.spec\.' | head -20)
             stale_file="${candidates[0]:-}"
 
             if [[ -z "${stale_file}" ]]; then
@@ -371,7 +371,7 @@ jobs:
           apply_stale_change() {
             local stale_file=""
             local candidates=()
-            mapfile -t candidates < <(git ls-files -- '*.ts' '*.tsx' '*.js' '*.jsx' '*.vue')
+            mapfile -t candidates < <(git ls-files -- 'packages/*/src/**/*.ts' 'packages/*/src/**/*.tsx' 'src/**/*.ts' 'src/**/*.tsx' '*.ts' '*.tsx' '*.js' '*.jsx' '*.vue' | grep -v '\.github/' | grep -v '__tests__/' | grep -v '\.test\.' | grep -v '\.spec\.' | head -20)
             stale_file="${candidates[0]:-}"
 
             if [[ -z "${stale_file}" ]]; then
