@@ -21,13 +21,11 @@ env:
   # Run-scoped tag ensures cold build starts with empty remote cache.
   # boringcache delete can't purge cache-registry proxy data, so we
   # use a unique tag per run instead.
-  # TEMP: pinned to successful seed from run 22843631840 for warm-only testing
-  BAZEL_REMOTE_CACHE_TAG: grpc-bazel-remote-cache-r22843631840-a1
+  BAZEL_REMOTE_CACHE_TAG: grpc-bazel-remote-cache-r${{ github.run_id }}-a${{ github.run_attempt }}
 
 jobs:
   seed-cache:
     name: Bazel Seed (BoringCache, cold)
-    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 300
     outputs:
@@ -194,7 +192,7 @@ jobs:
 
   scenario-builds:
     name: Bazel Scenario (${{ matrix.phase }}) (BoringCache)
-    # needs: seed-cache  # TEMP: skipped for warm-only testing
+    needs: seed-cache
     runs-on: ubuntu-latest
     timeout-minutes: 300
     strategy:
@@ -297,7 +295,7 @@ jobs:
         run: |
           set -euo pipefail
           start="$(date +%s)"
-          ./run-grpc-bazel-build.sh --remote_upload_local_results=false --profile=/tmp/bazel-warm1-profile.gz
+          ./run-grpc-bazel-build.sh --profile=/tmp/bazel-warm1-profile.gz
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
@@ -311,7 +309,7 @@ jobs:
         run: |
           set -euo pipefail
           start="$(date +%s)"
-          ./run-grpc-bazel-build.sh --remote_upload_local_results=false
+          ./run-grpc-bazel-build.sh
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 

@@ -220,7 +220,8 @@ jobs:
                   kill -9 "$proxy_pid" >/dev/null 2>&1 || true
                 fi
               fi
-              tail -n 120 "$proxy_log" >/dev/null 2>&1 || true
+              echo "=== Seed proxy log (last 120 lines) ==="
+              tail -n 120 "$proxy_log" || true
             }
             trap cleanup EXIT
 
