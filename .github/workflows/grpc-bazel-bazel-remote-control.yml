@@ -78,6 +78,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p bazel-remote-data
+          chmod -R u+rwX bazel-remote-data || true
           docker run -d \
             --name "$CONTAINER_NAME" \
             -u "$(id -u):$(id -g)" \
@@ -191,7 +192,20 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: bazel-remote-data-${{ env.BENCHMARK_ID }}-seed
-          path: .
+          path: bazel-remote-download
+
+      - name: Normalize seeded bazel-remote data
+        run: |
+          set -euo pipefail
+          rm -rf bazel-remote-data
+          mkdir -p bazel-remote-data
+          source_root="bazel-remote-download"
+          if [[ -d "${source_root}/bazel-remote-data" ]]; then
+            source_root="${source_root}/bazel-remote-data"
+          fi
+          shopt -s dotglob nullglob
+          mv "${source_root}"/* bazel-remote-data/ || true
+          chmod -R u+rwX bazel-remote-data || true
 
       - name: Setup Bazelisk
         uses: bazelbuild/setup-bazelisk@v3
@@ -228,6 +242,8 @@ jobs:
           CONTAINER_NAME: bazel-remote-warm1
         run: |
           set -euo pipefail
+          mkdir -p bazel-remote-data
+          chmod -R u+rwX bazel-remote-data || true
           docker run -d \
             --name "$CONTAINER_NAME" \
             -u "$(id -u):$(id -g)" \
@@ -386,7 +402,20 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: bazel-remote-data-${{ env.BENCHMARK_ID }}-warm1
-          path: .
+          path: bazel-remote-download
+
+      - name: Normalize warm1 bazel-remote data
+        run: |
+          set -euo pipefail
+          rm -rf bazel-remote-data
+          mkdir -p bazel-remote-data
+          source_root="bazel-remote-download"
+          if [[ -d "${source_root}/bazel-remote-data" ]]; then
+            source_root="${source_root}/bazel-remote-data"
+          fi
+          shopt -s dotglob nullglob
+          mv "${source_root}"/* bazel-remote-data/ || true
+          chmod -R u+rwX bazel-remote-data || true
 
       - name: Setup Bazelisk
         uses: bazelbuild/setup-bazelisk@v3
@@ -423,6 +452,8 @@ jobs:
           CONTAINER_NAME: bazel-remote-warm2
         run: |
           set -euo pipefail
+          mkdir -p bazel-remote-data
+          chmod -R u+rwX bazel-remote-data || true
           docker run -d \
             --name "$CONTAINER_NAME" \
             -u "$(id -u):$(id -g)" \
@@ -556,7 +587,20 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: bazel-remote-data-${{ env.BENCHMARK_ID }}-warm2
-          path: .
+          path: bazel-remote-download
+
+      - name: Normalize warm2 bazel-remote data
+        run: |
+          set -euo pipefail
+          rm -rf bazel-remote-data
+          mkdir -p bazel-remote-data
+          source_root="bazel-remote-download"
+          if [[ -d "${source_root}/bazel-remote-data" ]]; then
+            source_root="${source_root}/bazel-remote-data"
+          fi
+          shopt -s dotglob nullglob
+          mv "${source_root}"/* bazel-remote-data/ || true
+          chmod -R u+rwX bazel-remote-data || true
 
       - name: Setup Bazelisk
         uses: bazelbuild/setup-bazelisk@v3
@@ -593,6 +637,8 @@ jobs:
           CONTAINER_NAME: bazel-remote-stale
         run: |
           set -euo pipefail
+          mkdir -p bazel-remote-data
+          chmod -R u+rwX bazel-remote-data || true
           docker run -d \
             --name "$CONTAINER_NAME" \
             -u "$(id -u):$(id -g)" \
