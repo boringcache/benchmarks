@@ -99,12 +99,13 @@ jobs:
           mode="${1:-warm}"
           apply_stale_change() {
             local stale_file=""
-            local candidates=()
-            mapfile -t candidates < <(git ls-files -- 'packages/*/src/**/*.ts' 'packages/*/src/**/*.tsx' 'src/**/*.ts' 'src/**/*.tsx' '*.ts' '*.tsx' '*.js' '*.jsx' '*.vue' | grep -v '\.github/' | grep -v '__tests__/' | grep -v '\.test\.' | grep -v '\.spec\.' | head -20)
-            stale_file="${candidates[0]:-}"
+            for pattern in 'packages/*/src/**/*.ts' 'packages/*/src/**/*.tsx' 'src/**/*.ts' 'src/**/*.tsx'; do
+              stale_file="$(git ls-files -- "$pattern" | head -n1)" || true
+              if [[ -n "$stale_file" ]]; then break; fi
+            done
 
             if [[ -z "${stale_file}" ]]; then
-              echo "No JS/TS source file found for stale mutation" >&2
+              echo "No package source file found for stale mutation" >&2
               exit 1
             fi
 
@@ -370,12 +371,13 @@ jobs:
           mode="${1:-warm}"
           apply_stale_change() {
             local stale_file=""
-            local candidates=()
-            mapfile -t candidates < <(git ls-files -- 'packages/*/src/**/*.ts' 'packages/*/src/**/*.tsx' 'src/**/*.ts' 'src/**/*.tsx' '*.ts' '*.tsx' '*.js' '*.jsx' '*.vue' | grep -v '\.github/' | grep -v '__tests__/' | grep -v '\.test\.' | grep -v '\.spec\.' | head -20)
-            stale_file="${candidates[0]:-}"
+            for pattern in 'packages/*/src/**/*.ts' 'packages/*/src/**/*.tsx' 'src/**/*.ts' 'src/**/*.tsx'; do
+              stale_file="$(git ls-files -- "$pattern" | head -n1)" || true
+              if [[ -n "$stale_file" ]]; then break; fi
+            done
 
             if [[ -z "${stale_file}" ]]; then
-              echo "No JS/TS source file found for stale mutation" >&2
+              echo "No package source file found for stale mutation" >&2
               exit 1
             fi
 
