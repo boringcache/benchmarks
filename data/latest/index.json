@@ -5,15 +5,15 @@
       "logo": "immich",
       "repo": "immich-app/immich",
       "step": "Docker build (server)",
-      "headline_scenario": "stale_docker",
+      "headline_scenario": "stale",
       "before": "2m 29s",
       "after": "2m 1s",
       "faster": "19",
       "before_seconds": 149.0,
       "after_seconds": 121.0,
       "metrics": {
-        "stale_docker_seconds": 121.0,
-        "internal_only_warm_seconds": 203.0
+        "stale_seconds": 121.0,
+        "layer_miss_seconds": 203.0
       },
       "comparison": {
         "baseline_strategy": "actions-cache",
@@ -30,8 +30,8 @@
           "warm2_seconds": 3.0,
           "warm_average_seconds": 3.0,
           "warm_steady_seconds": 3.0,
-          "stale_docker_seconds": 149.0,
-          "internal_only_warm_seconds": 777.0,
+          "stale_seconds": 149.0,
+          "layer_miss_seconds": 777.0,
           "run_total_seconds": 1098.0,
           "storage_bytes": 114421361231,
           "storage_source": "github-actions-cache-api",
@@ -47,8 +47,8 @@
           "warm2_seconds": 6.0,
           "warm_average_seconds": 6.5,
           "warm_steady_seconds": 6.0,
-          "stale_docker_seconds": 121.0,
-          "internal_only_warm_seconds": 203.0,
+          "stale_seconds": 121.0,
+          "layer_miss_seconds": 203.0,
           "run_total_seconds": 1400.0,
           "storage_bytes": 2169768992,
           "storage_source": "boringcache-check",
@@ -60,9 +60,9 @@
         "run_total_improvement_pct": -27.5,
         "stale_delta_seconds": 28.0,
         "stale_improvement_pct": 18.79,
-        "internal_baseline_source": "actions-cache.internal_only",
-        "internal_delta_seconds": 574.0,
-        "internal_improvement_pct": 73.87
+        "layer_miss_baseline_source": "actions-cache.layer_miss",
+        "layer_miss_delta_seconds": 574.0,
+        "layer_miss_improvement_pct": 73.87
       }
     },
     {
@@ -70,15 +70,15 @@
       "logo": "hugo",
       "repo": "gohugoio/hugo",
       "step": "Docker build (Go)",
-      "headline_scenario": "stale_docker",
+      "headline_scenario": "stale",
       "before": "2m 29s",
       "after": "0m 41s",
       "faster": "72",
       "before_seconds": 149.0,
       "after_seconds": 41.0,
       "metrics": {
-        "stale_docker_seconds": 41.0,
-        "internal_only_warm_seconds": 36.0
+        "stale_seconds": 41.0,
+        "layer_miss_seconds": 36.0
       },
       "comparison": {
         "baseline_strategy": "actions-cache",
@@ -95,8 +95,8 @@
           "warm2_seconds": 169.0,
           "warm_average_seconds": 170.0,
           "warm_steady_seconds": 169.0,
-          "stale_docker_seconds": 149.0,
-          "internal_only_warm_seconds": 170.0,
+          "stale_seconds": 149.0,
+          "layer_miss_seconds": 170.0,
           "run_total_seconds": 276.0,
           "storage_bytes": 108496877705,
           "storage_source": "github-actions-cache-api",
@@ -112,8 +112,8 @@
           "warm2_seconds": 46.0,
           "warm_average_seconds": 40.5,
           "warm_steady_seconds": 46.0,
-          "stale_docker_seconds": 41.0,
-          "internal_only_warm_seconds": 36.0,
+          "stale_seconds": 41.0,
+          "layer_miss_seconds": 36.0,
           "run_total_seconds": 317.0,
           "storage_bytes": 694397433,
           "storage_source": "boringcache-check",
@@ -125,9 +125,9 @@
         "run_total_improvement_pct": -14.86,
         "stale_delta_seconds": 108.0,
         "stale_improvement_pct": 72.48,
-        "internal_baseline_source": "actions-cache.internal_only",
-        "internal_delta_seconds": 134.0,
-        "internal_improvement_pct": 78.82
+        "layer_miss_baseline_source": "actions-cache.layer_miss",
+        "layer_miss_delta_seconds": 134.0,
+        "layer_miss_improvement_pct": 78.82
       }
     },
     {
@@ -135,15 +135,15 @@
       "logo": "mastodon",
       "repo": "mastodon/mastodon",
       "step": "Docker build (Ruby+Node)",
-      "headline_scenario": "stale_docker",
+      "headline_scenario": "stale",
       "before": "1m 32s",
       "after": "1m 43s",
       "faster": "0",
       "before_seconds": 92.0,
       "after_seconds": 103.0,
       "metrics": {
-        "stale_docker_seconds": 103.0,
-        "internal_only_warm_seconds": 121.0
+        "stale_seconds": 103.0,
+        "layer_miss_seconds": 121.0
       },
       "comparison": {
         "baseline_strategy": "actions-cache",
@@ -160,8 +160,8 @@
           "warm2_seconds": 92.0,
           "warm_average_seconds": 99.5,
           "warm_steady_seconds": 92.0,
-          "stale_docker_seconds": 92.0,
-          "internal_only_warm_seconds": 504.0,
+          "stale_seconds": 92.0,
+          "layer_miss_seconds": 504.0,
           "run_total_seconds": 631.0,
           "storage_bytes": 110129359129,
           "storage_source": "github-actions-cache-api",
@@ -177,8 +177,8 @@
           "warm2_seconds": 108.0,
           "warm_average_seconds": 116.0,
           "warm_steady_seconds": 108.0,
-          "stale_docker_seconds": 103.0,
-          "internal_only_warm_seconds": 121.0,
+          "stale_seconds": 103.0,
+          "layer_miss_seconds": 121.0,
           "run_total_seconds": 817.0,
           "storage_bytes": 1216094639,
           "storage_source": "boringcache-check",
@@ -190,9 +190,9 @@
         "run_total_improvement_pct": -29.48,
         "stale_delta_seconds": -11.0,
         "stale_improvement_pct": -11.96,
-        "internal_baseline_source": "actions-cache.internal_only",
-        "internal_delta_seconds": 383.0,
-        "internal_improvement_pct": 75.99,
+        "layer_miss_baseline_source": "actions-cache.layer_miss",
+        "layer_miss_delta_seconds": 383.0,
+        "layer_miss_improvement_pct": 75.99,
         "warm_vs_depot_docker_delta_seconds": 928.0,
         "warm_vs_depot_docker_improvement_pct": 89.58
       },
@@ -213,15 +213,15 @@
       "logo": "posthog",
       "repo": "PostHog/posthog",
       "step": "Docker build (full stack)",
-      "headline_scenario": "stale_docker",
+      "headline_scenario": "stale",
       "before": "3m 45s",
       "after": "4m 23s",
       "faster": "0",
       "before_seconds": 225.0,
       "after_seconds": 263.0,
       "metrics": {
-        "stale_docker_seconds": 263.0,
-        "internal_only_warm_seconds": 277.0
+        "stale_seconds": 263.0,
+        "layer_miss_seconds": 277.0
       },
       "comparison": {
         "baseline_strategy": "actions-cache",
@@ -238,8 +238,8 @@
           "warm2_seconds": 7.0,
           "warm_average_seconds": 6.5,
           "warm_steady_seconds": 7.0,
-          "stale_docker_seconds": 225.0,
-          "internal_only_warm_seconds": 419.0,
+          "stale_seconds": 225.0,
+          "layer_miss_seconds": 419.0,
           "run_total_seconds": 1127.0,
           "storage_bytes": 114421361231,
           "storage_source": "github-actions-cache-api",
@@ -255,8 +255,8 @@
           "warm2_seconds": 10.0,
           "warm_average_seconds": 10.0,
           "warm_steady_seconds": 10.0,
-          "stale_docker_seconds": 263.0,
-          "internal_only_warm_seconds": 277.0,
+          "stale_seconds": 263.0,
+          "layer_miss_seconds": 277.0,
           "run_total_seconds": 1922.0,
           "storage_bytes": 7484686070,
           "storage_source": "boringcache-check",
@@ -268,9 +268,9 @@
         "run_total_improvement_pct": -70.54,
         "stale_delta_seconds": -38.0,
         "stale_improvement_pct": -16.89,
-        "internal_baseline_source": "actions-cache.internal_only",
-        "internal_delta_seconds": 142.0,
-        "internal_improvement_pct": 33.89,
+        "layer_miss_baseline_source": "actions-cache.layer_miss",
+        "layer_miss_delta_seconds": 142.0,
+        "layer_miss_improvement_pct": 33.89,
         "warm_vs_depot_docker_delta_seconds": 3741.0,
         "warm_vs_depot_docker_improvement_pct": 99.73
       },
@@ -316,8 +316,8 @@
       "before_seconds": 307.0,
       "after_seconds": 356.0,
       "metrics": {
-        "stale_docker_seconds": 115.0,
-        "internal_only_warm_seconds": null
+        "stale_seconds": 115.0,
+        "layer_miss_seconds": null
       },
       "comparison": {
         "baseline_strategy": "actions-cache",
@@ -334,8 +334,8 @@
           "warm2_seconds": 37.0,
           "warm_average_seconds": 37.0,
           "warm_steady_seconds": 37.0,
-          "stale_docker_seconds": 116.0,
-          "internal_only_warm_seconds": null,
+          "stale_seconds": 116.0,
+          "layer_miss_seconds": null,
           "run_total_seconds": 307.0,
           "storage_bytes": 550250050,
           "storage_source": "github-actions-cache-api",
@@ -351,8 +351,8 @@
           "warm2_seconds": 39.0,
           "warm_average_seconds": 38.0,
           "warm_steady_seconds": 39.0,
-          "stale_docker_seconds": 115.0,
-          "internal_only_warm_seconds": null,
+          "stale_seconds": 115.0,
+          "layer_miss_seconds": null,
           "run_total_seconds": 356.0,
           "storage_bytes": 507032086,
           "storage_source": "boringcache-check",
@@ -379,8 +379,8 @@
       "before_seconds": 977.0,
       "after_seconds": 675.0,
       "metrics": {
-        "stale_docker_seconds": 67.0,
-        "internal_only_warm_seconds": null
+        "stale_seconds": 67.0,
+        "layer_miss_seconds": null
       },
       "comparison": {
         "baseline_strategy": "actions-cache",
@@ -397,8 +397,8 @@
           "warm2_seconds": 73.0,
           "warm_average_seconds": 68.0,
           "warm_steady_seconds": 73.0,
-          "stale_docker_seconds": 76.0,
-          "internal_only_warm_seconds": null,
+          "stale_seconds": 76.0,
+          "layer_miss_seconds": null,
           "run_total_seconds": 977.0,
           "storage_bytes": 840053173,
           "storage_source": "github-actions-cache-api",
@@ -414,8 +414,8 @@
           "warm2_seconds": 72.0,
           "warm_average_seconds": 71.5,
           "warm_steady_seconds": 72.0,
-          "stale_docker_seconds": 67.0,
-          "internal_only_warm_seconds": null,
+          "stale_seconds": 67.0,
+          "layer_miss_seconds": null,
           "run_total_seconds": 675.0,
           "storage_bytes": 784013429,
           "storage_source": "boringcache-check",
@@ -442,8 +442,8 @@
       "before_seconds": 330.0,
       "after_seconds": 324.0,
       "metrics": {
-        "stale_docker_seconds": 40.0,
-        "internal_only_warm_seconds": null
+        "stale_seconds": 40.0,
+        "layer_miss_seconds": null
       },
       "comparison": {
         "baseline_strategy": "actions-cache",
@@ -460,8 +460,8 @@
           "warm2_seconds": 25.0,
           "warm_average_seconds": 26.5,
           "warm_steady_seconds": 25.0,
-          "stale_docker_seconds": 46.0,
-          "internal_only_warm_seconds": null,
+          "stale_seconds": 46.0,
+          "layer_miss_seconds": null,
           "run_total_seconds": 330.0,
           "storage_bytes": 994237269,
           "storage_source": "github-actions-cache-api",
@@ -477,8 +477,8 @@
           "warm2_seconds": 32.0,
           "warm_average_seconds": 30.5,
           "warm_steady_seconds": 32.0,
-          "stale_docker_seconds": 40.0,
-          "internal_only_warm_seconds": null,
+          "stale_seconds": 40.0,
+          "layer_miss_seconds": null,
           "run_total_seconds": 324.0,
           "storage_bytes": 972208224,
           "storage_source": "boringcache-check",
