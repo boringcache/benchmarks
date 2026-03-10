@@ -2,6 +2,11 @@ name: "n8n - BoringCache"
 
 on:
   workflow_dispatch:
+    inputs:
+      cli_ref:
+        description: "Optional boringcache/cli ref to build and use instead of the released CLI"
+        required: false
+        type: string
   pull_request:
     paths:
       - ".github/workflows/n8n-boringcache.yml"
