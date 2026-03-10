@@ -360,8 +360,8 @@ end
 def extract_strategy_metrics(payload)
   runs = payload.fetch("runs", {})
   speed = payload.fetch("speed", {})
-  stale = payload.fetch("stale_docker_cache", {})
-  internal_only = payload.fetch("internal_only", {})
+  stale = payload.fetch("stale", payload.fetch("stale_docker_cache", {}))
+  layer_miss = payload.fetch("layer_miss", payload.fetch("internal_only", {}))
   cache = payload.fetch("cache", {})
 
   warm1 = parse_number(runs["warm1_seconds"])
@@ -377,8 +377,8 @@ def extract_strategy_metrics(payload)
     warm1_seconds: warm1,
     warm2_seconds: warm2,
     warm_average_seconds: warm_avg,
-    stale_docker_seconds: parse_number(stale["seconds"]) || parse_number(runs["stale_docker_seconds"]),
-    internal_only_warm_seconds: parse_number(internal_only["warm_no_docker_cache_seconds"]),
+    stale_seconds: parse_number(stale["seconds"]) || parse_number(runs["stale_seconds"]) || parse_number(runs["stale_docker_seconds"]),
+    layer_miss_seconds: parse_number(layer_miss["seconds"]) || parse_number(runs["layer_miss_seconds"]) || parse_number(layer_miss["warm_no_docker_cache_seconds"]),
     storage_bytes: parse_number(cache["storage_bytes"])&.round&.to_i,
     storage_source: cache["storage_source"].to_s.strip,
     warm_runs_succeeded: payload.dig("hit_behavior", "two_consecutive_warm_runs_succeeded") == true
@@ -512,8 +512,8 @@ def strategy_snapshot(data)
     "warm2_seconds" => metrics[:warm2_seconds],
     "warm_average_seconds" => metrics[:warm_average_seconds],
     "warm_steady_seconds" => warm_steady_seconds(metrics),
-    "stale_docker_seconds" => metrics[:stale_docker_seconds],
-    "internal_only_warm_seconds" => metrics[:internal_only_warm_seconds],
+    "stale_seconds" => metrics[:stale_seconds],
+    "layer_miss_seconds" => metrics[:layer_miss_seconds],
     "run_total_seconds" => run_total_seconds,
     "storage_bytes" => metrics[:storage_bytes],
     "storage_source" => metrics[:storage_source],
@@ -533,11 +533,11 @@ def build_comparison_entry(metadata, actions_data, boringcache_data, pair, depot
   bc_warm = warm_steady_seconds(boringcache_metrics)
   return nil if ac_warm.nil? || bc_warm.nil?
 
-  # For Docker benchmarks, headline uses the "code changed" (stale Docker) scenario —
+  # For Docker benchmarks, headline uses the "code changed" (stale) scenario —
   # that's the most common real-world CI build. run_total includes all benchmark
-  # scenarios (cold+seed+warm×2+stale+internal) and doesn't represent a single build.
-  ac_stale = actions_metrics[:stale_docker_seconds]
-  bc_stale = boringcache_metrics[:stale_docker_seconds]
+  # scenarios (cold+seed+warm×2+stale+layer_miss) and doesn't represent a single build.
+  ac_stale = actions_metrics[:stale_seconds]
+  bc_stale = boringcache_metrics[:stale_seconds]
   is_docker_benchmark = docker_benchmark && ac_stale && bc_stale
 
   if is_docker_benchmark
@@ -556,15 +556,15 @@ def build_comparison_entry(metadata, actions_data, boringcache_data, pair, depot
     "logo" => metadata["logo"],
     "repo" => metadata["repo"],
     "step" => metadata["step"],
-    "headline_scenario" => is_docker_benchmark ? "stale_docker" : "run_total",
+    "headline_scenario" => is_docker_benchmark ? "stale" : "run_total",
     "before" => seconds_to_text(display_before),
     "after" => seconds_to_text(display_after),
     "faster" => [display_faster_pct.round, 0].max.to_s,
     "before_seconds" => display_before.round(2),
     "after_seconds" => display_after.round(2),
     "metrics" => {
-      "stale_docker_seconds" => boringcache_metrics[:stale_docker_seconds],
-      "internal_only_warm_seconds" => boringcache_metrics[:internal_only_warm_seconds]
+      "stale_seconds" => boringcache_metrics[:stale_seconds],
+      "layer_miss_seconds" => boringcache_metrics[:layer_miss_seconds]
     },
     "comparison" => {
       "baseline_strategy" => "actions-cache",
@@ -589,17 +589,17 @@ def build_comparison_entry(metadata, actions_data, boringcache_data, pair, depot
     entry["comparison"]["stale_improvement_pct"] = percent_delta(ac_stale, bc_stale)&.round(2)
   end
 
-  internal_baseline = actions_metrics[:internal_only_warm_seconds]
-  internal_baseline_source = "actions-cache.internal_only"
-  if internal_baseline.nil?
-    internal_baseline = actions_metrics[:stale_docker_seconds]
-    internal_baseline_source = "actions-cache.stale_docker"
+  layer_miss_baseline = actions_metrics[:layer_miss_seconds]
+  layer_miss_baseline_source = "actions-cache.layer_miss"
+  if layer_miss_baseline.nil?
+    layer_miss_baseline = actions_metrics[:stale_seconds]
+    layer_miss_baseline_source = "actions-cache.stale"
   end
-  bc_internal = boringcache_metrics[:internal_only_warm_seconds]
-  if internal_baseline && bc_internal
-    entry["comparison"]["internal_baseline_source"] = internal_baseline_source
-    entry["comparison"]["internal_delta_seconds"] = (internal_baseline - bc_internal).round(2)
-    entry["comparison"]["internal_improvement_pct"] = percent_delta(internal_baseline, bc_internal)&.round(2)
+  bc_layer_miss = boringcache_metrics[:layer_miss_seconds]
+  if layer_miss_baseline && bc_layer_miss
+    entry["comparison"]["layer_miss_baseline_source"] = layer_miss_baseline_source
+    entry["comparison"]["layer_miss_delta_seconds"] = (layer_miss_baseline - bc_layer_miss).round(2)
+    entry["comparison"]["layer_miss_improvement_pct"] = percent_delta(layer_miss_baseline, bc_layer_miss)&.round(2)
   end
 
   ac_storage = actions_metrics[:storage_bytes]

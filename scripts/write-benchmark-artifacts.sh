@@ -13,8 +13,8 @@ cache_storage_source=""
 bytes_uploaded=""
 bytes_downloaded=""
 hit_behavior_note=""
-internal_only_warm_seconds=""
-stale_docker_seconds=""
+layer_miss_seconds=""
+stale_seconds=""
 output_dir="benchmark-results"
 
 while [[ $# -gt 0 ]]; do
@@ -67,12 +67,12 @@ while [[ $# -gt 0 ]]; do
       hit_behavior_note="$2"
       shift 2
       ;;
-    --internal-only-warm-seconds)
-      internal_only_warm_seconds="$2"
+    --layer-miss-seconds|--internal-only-warm-seconds)
+      layer_miss_seconds="$2"
       shift 2
       ;;
-    --stale-docker-seconds)
-      stale_docker_seconds="$2"
+    --stale-seconds|--stale-docker-seconds)
+      stale_seconds="$2"
       shift 2
       ;;
     --output-dir)
@@ -114,11 +114,11 @@ fi
 if [[ -n "$bytes_downloaded" ]] && ! [[ "$bytes_downloaded" =~ ^[0-9]+$ ]]; then
   bytes_downloaded=""
 fi
-if [[ -n "$internal_only_warm_seconds" ]] && ! [[ "$internal_only_warm_seconds" =~ ^[0-9]+$ ]]; then
-  internal_only_warm_seconds=""
+if [[ -n "$layer_miss_seconds" ]] && ! [[ "$layer_miss_seconds" =~ ^[0-9]+$ ]]; then
+  layer_miss_seconds=""
 fi
-if [[ -n "$stale_docker_seconds" ]] && ! [[ "$stale_docker_seconds" =~ ^[0-9]+$ ]]; then
-  stale_docker_seconds=""
+if [[ -n "$stale_seconds" ]] && ! [[ "$stale_seconds" =~ ^[0-9]+$ ]]; then
+  stale_seconds=""
 fi
 
 warm_count=0
@@ -132,58 +132,32 @@ if [[ -n "$warm2_seconds" ]]; then
   warm_total=$((warm_total + warm2_seconds))
 fi
 
+pct_vs_cold() {
+  local value="$1"
+  awk -v cold="$cold_seconds" -v v="$value" 'BEGIN { if (cold <= 0) { print "0.00" } else { printf "%.2f", ((cold - v) / cold) * 100 } }'
+}
+
 if [[ $warm_count -gt 0 ]]; then
   warm_avg=$(awk -v total="$warm_total" -v count="$warm_count" 'BEGIN { printf "%.2f", total / count }')
-  improvement_pct=$(awk -v cold="$cold_seconds" -v warm="$warm_avg" 'BEGIN { if (cold <= 0) { print "0.00" } else { printf "%.2f", ((cold - warm) / cold) * 100 } }')
+  warm_improvement_pct=$(pct_vs_cold "$warm_avg")
 else
   warm_avg="null"
-  improvement_pct="null"
+  warm_improvement_pct="null"
 fi
 
-if [[ -n "$internal_only_warm_seconds" ]]; then
-  internal_only_improvement_pct=$(awk -v cold="$cold_seconds" -v warm="$internal_only_warm_seconds" 'BEGIN { if (cold <= 0) { print "0.00" } else { printf "%.2f", ((cold - warm) / cold) * 100 } }')
+if [[ -n "$layer_miss_seconds" ]]; then
+  layer_miss_improvement_pct=$(pct_vs_cold "$layer_miss_seconds")
 else
-  internal_only_improvement_pct="null"
+  layer_miss_improvement_pct="null"
 fi
 
-if [[ -n "$stale_docker_seconds" ]]; then
-  stale_docker_improvement_pct=$(awk -v cold="$cold_seconds" -v stale="$stale_docker_seconds" 'BEGIN { if (cold <= 0) { print "0.00" } else { printf "%.2f", ((cold - stale) / cold) * 100 } }')
+if [[ -n "$stale_seconds" ]]; then
+  stale_improvement_pct=$(pct_vs_cold "$stale_seconds")
 else
-  stale_docker_improvement_pct="null"
+  stale_improvement_pct="null"
 fi
 
 cache_storage_mib=$(awk -v bytes="$cache_storage_bytes" 'BEGIN { printf "%.2f", bytes / 1048576 }')
-
-to_md_value() {
-  local value="$1"
-  if [[ -z "$value" || "$value" == "null" ]]; then
-    echo "n/a"
-  else
-    echo "$value"
-  fi
-}
-
-to_md_percent() {
-  local value="$1"
-  if [[ -z "$value" || "$value" == "null" ]]; then
-    echo "n/a"
-  else
-    echo "${value}%"
-  fi
-}
-
-warm_avg_md="$(to_md_value "$warm_avg")"
-improvement_pct_md="$(to_md_percent "$improvement_pct")"
-stale_docker_improvement_pct_md="$(to_md_percent "$stale_docker_improvement_pct")"
-internal_only_improvement_pct_md="$(to_md_percent "$internal_only_improvement_pct")"
-warm1_seconds_md="$(to_md_value "$warm1_seconds")"
-warm2_seconds_md="$(to_md_value "$warm2_seconds")"
-stale_docker_seconds_md="$(to_md_value "$stale_docker_seconds")"
-internal_only_warm_seconds_md="$(to_md_value "$internal_only_warm_seconds")"
-if [[ "$warm1_seconds_md" != "n/a" ]]; then warm1_seconds_md="${warm1_seconds_md}s"; fi
-if [[ "$warm2_seconds_md" != "n/a" ]]; then warm2_seconds_md="${warm2_seconds_md}s"; fi
-if [[ "$stale_docker_seconds_md" != "n/a" ]]; then stale_docker_seconds_md="${stale_docker_seconds_md}s"; fi
-if [[ "$internal_only_warm_seconds_md" != "n/a" ]]; then internal_only_warm_seconds_md="${internal_only_warm_seconds_md}s"; fi
 
 mkdir -p "$output_dir"
 json_path="$output_dir/${benchmark}-${strategy}.json"
@@ -203,19 +177,20 @@ cat > "$json_path" <<JSON
     "cold_seconds": $(json_num_or_null "$cold_seconds"),
     "warm1_seconds": $(json_num_or_null "$warm1_seconds"),
     "warm2_seconds": $(json_num_or_null "$warm2_seconds"),
-    "stale_docker_seconds": $(json_num_or_null "$stale_docker_seconds")
+    "stale_seconds": $(json_num_or_null "$stale_seconds"),
+    "layer_miss_seconds": $(json_num_or_null "$layer_miss_seconds")
   },
   "speed": {
     "warm_average_seconds": $warm_avg,
-    "warm_vs_cold_improvement_pct": $improvement_pct
+    "warm_vs_cold_improvement_pct": $warm_improvement_pct
   },
-  "stale_docker_cache": {
-    "seconds": $(json_num_or_null "$stale_docker_seconds"),
-    "vs_cold_improvement_pct": $stale_docker_improvement_pct
+  "stale": {
+    "seconds": $(json_num_or_null "$stale_seconds"),
+    "vs_cold_improvement_pct": $stale_improvement_pct
   },
-  "internal_only": {
-    "warm_no_docker_cache_seconds": $(json_num_or_null "$internal_only_warm_seconds"),
-    "warm_no_docker_cache_vs_cold_improvement_pct": $internal_only_improvement_pct
+  "layer_miss": {
+    "seconds": $(json_num_or_null "$layer_miss_seconds"),
+    "vs_cold_improvement_pct": $layer_miss_improvement_pct
   },
   "cache": {
     "storage_bytes": $cache_storage_bytes,
@@ -233,29 +208,53 @@ cat > "$json_path" <<JSON
 }
 JSON
 
-cat > "$md_path" <<MD
-## ${benchmark} (${strategy})
+{
+  echo "## ${benchmark} (${strategy})"
+  echo ""
+  echo "| Phase | Time | vs Cold |"
+  echo "|-------|------|---------|"
+  echo "| Cold (no cache) | ${cold_seconds}s | — |"
 
-| Metric | Value |
-|---|---|
-| Project | \`${project_repo}\` |
-| Commit | \`${project_ref}\` |
-| Cold build | ${cold_seconds}s |
-| Warm build #1 | ${warm1_seconds_md} |
-| Warm build #2 | ${warm2_seconds_md} |
-| Warm avg | ${warm_avg_md} |
-| Warm vs cold | ${improvement_pct_md} |
-| Stale Docker cache run | ${stale_docker_seconds_md} |
-| Stale Docker cache vs cold | ${stale_docker_improvement_pct_md} |
-| Internal-only warm (no Docker cache) | ${internal_only_warm_seconds_md} |
-| Internal-only vs cold | ${internal_only_improvement_pct_md} |
-| Bytes uploaded | ${bytes_uploaded:-n/a} |
-| Bytes downloaded | ${bytes_downloaded:-n/a} |
-| Cache storage | ${cache_storage_mib} MiB (${cache_storage_bytes} bytes) |
-| Storage source | ${cache_storage_source} |
-| Hit behavior note | ${hit_behavior_note:-n/a} |
-| Two warm runs succeeded | $([[ -n "$warm1_seconds" && -n "$warm2_seconds" ]] && echo "yes" || echo "no") |
-MD
+  if [[ -n "$warm1_seconds" ]]; then
+    echo "| Warm #1 | ${warm1_seconds}s | -$(pct_vs_cold "$warm1_seconds")% |"
+  fi
+  if [[ -n "$warm2_seconds" ]]; then
+    echo "| Warm #2 | ${warm2_seconds}s | -$(pct_vs_cold "$warm2_seconds")% |"
+  fi
+  if [[ -n "$stale_seconds" ]]; then
+    echo "| Stale (code changed) | ${stale_seconds}s | -${stale_improvement_pct}% |"
+  fi
+  if [[ -n "$layer_miss_seconds" ]]; then
+    echo "| Layer miss (no layer cache) | ${layer_miss_seconds}s | -${layer_miss_improvement_pct}% |"
+  fi
+
+  echo ""
+  echo "| Metric | Value |"
+  echo "|--------|-------|"
+  echo "| Project | \`${project_repo}\` |"
+  echo "| Commit | \`${project_ref}\` |"
+
+  if [[ "$warm_avg" != "null" ]]; then
+    echo "| Warm avg | ${warm_avg}s (${warm_improvement_pct}% faster) |"
+  fi
+
+  if [[ "$cache_storage_bytes" != "0" ]]; then
+    echo "| Cache storage | ${cache_storage_mib} MiB |"
+    echo "| Storage source | ${cache_storage_source} |"
+  fi
+
+  if [[ -n "$bytes_uploaded" ]]; then
+    echo "| Bytes uploaded | ${bytes_uploaded} |"
+  fi
+  if [[ -n "$bytes_downloaded" ]]; then
+    echo "| Bytes downloaded | ${bytes_downloaded} |"
+  fi
+  if [[ -n "$hit_behavior_note" ]]; then
+    echo "| Note | ${hit_behavior_note} |"
+  fi
+
+  echo "| Two warm runs | $([[ -n "$warm1_seconds" && -n "$warm2_seconds" ]] && echo "yes" || echo "no") |"
+} > "$md_path"
 
 if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
   echo "json_path=$json_path" >> "$GITHUB_OUTPUT"

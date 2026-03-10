@@ -867,7 +867,7 @@ jobs:
             --cold-seconds "${{ needs.seed-cache.outputs.cold_seconds }}" \
             --warm1-seconds "${{ steps.timings.outputs.warm1_seconds }}" \
             --warm2-seconds "${{ steps.timings.outputs.warm2_seconds }}" \
-            --stale-docker-seconds "${{ steps.timings.outputs.stale_seconds }}" \
+            --stale-seconds "${{ steps.timings.outputs.stale_seconds }}" \
             --cache-storage-bytes "${{ needs.stale-build.outputs.cache_size_bytes }}" \
             --cache-storage-source "bazel-remote-status" \
             --hit-behavior-note "Cold+seed run builds from scratch against a local bazel-remote HTTP cache and uploads the resulting bazel-remote data directory as an artifact. Warm1, Warm2, and stale jobs restore that remote cache state sequentially via artifacts so the control backend behaves like a persistent remote cache across isolated runners. Bazel uses the same target and tuning flags as the BoringCache benchmark, with warm1 additionally capturing a JSON trace profile and build log for miss classification."

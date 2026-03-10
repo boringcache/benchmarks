@@ -756,8 +756,8 @@ jobs:
             --cold-seconds "${{ needs.seed-cache.outputs.cold_seconds }}" \
             --warm1-seconds "${{ steps.timings.outputs.warm1_seconds }}" \
             --warm2-seconds "${{ steps.timings.outputs.warm2_seconds }}" \
-            --stale-docker-seconds "${{ steps.timings.outputs.stale_seconds }}" \
-            --internal-only-warm-seconds "${{ steps.timings.outputs.layer_miss_seconds }}" \
+            --stale-seconds "${{ steps.timings.outputs.stale_seconds }}" \
+            --layer-miss-seconds "${{ steps.timings.outputs.layer_miss_seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "boringcache-check" \
             --bytes-uploaded "${{ steps.cache_size.outputs.bytes }}" \

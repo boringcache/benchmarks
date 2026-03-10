@@ -16,6 +16,10 @@ on:
           - bazel
           - gradle
           - maven
+      cli_ref:
+        description: "boringcache/cli ref to build (e.g. main, feature-branch). Leave empty for released CLI."
+        required: false
+        type: string
 
 permissions:
   actions: write
@@ -33,6 +37,7 @@ jobs:
         with:
           script: |
             const category = '${{ inputs.category || 'all' }}';
+            const cliRef = '${{ inputs.cli_ref || '' }}';
             const groups = {
               docker: [
                 'posthog-actions-cache.yml', 'posthog-boringcache.yml',
@@ -71,13 +76,18 @@ jobs:
 
             for (const workflowId of selected) {
               try {
+                const inputs = {};
+                if (cliRef && workflowId.endsWith('-boringcache.yml')) {
+                  inputs.cli_ref = cliRef;
+                }
                 await github.rest.actions.createWorkflowDispatch({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   workflow_id: workflowId,
                   ref: 'main',
+                  inputs,
                 });
-                core.info(`Triggered ${workflowId}`);
+                core.info(`Triggered ${workflowId}${inputs.cli_ref ? ` (cli_ref=${inputs.cli_ref})` : ''}`);
               } catch (error) {
                 core.warning(`Failed to trigger ${workflowId}: ${error.message}`);
                 throw error;
