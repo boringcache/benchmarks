@@ -193,19 +193,19 @@
         "internal_baseline_source": "actions-cache.internal_only",
         "internal_delta_seconds": 397.0,
         "internal_improvement_pct": 77.54,
-        "warm_vs_depot_docker_delta_seconds": 911.0,
-        "warm_vs_depot_docker_improvement_pct": 89.05
+        "warm_vs_depot_docker_delta_seconds": 888.0,
+        "warm_vs_depot_docker_improvement_pct": 88.8
       },
       "depot": {
         "repo": "depot/benchmark-mastodon",
-        "run_id": 22861056422,
-        "run_url": "https://github.com/depot/benchmark-mastodon/actions/runs/22861056422",
-        "docker_seconds": 1023.0,
-        "docker_text": "17m 3s",
-        "docker_job_url": "https://github.com/depot/benchmark-mastodon/actions/runs/22861056422/job/66314862720",
-        "depot_seconds": 151.0,
-        "depot_text": "2m 31s",
-        "depot_job_url": "https://github.com/depot/benchmark-mastodon/actions/runs/22861056422/job/66314862669"
+        "run_id": 22904465316,
+        "run_url": "https://github.com/depot/benchmark-mastodon/actions/runs/22904465316",
+        "docker_seconds": 1000.0,
+        "docker_text": "16m 40s",
+        "docker_job_url": "https://github.com/depot/benchmark-mastodon/actions/runs/22904465316/job/66459236627",
+        "depot_seconds": 140.0,
+        "depot_text": "2m 20s",
+        "depot_job_url": "https://github.com/depot/benchmark-mastodon/actions/runs/22904465316/job/66459236588"
       }
     },
     {
@@ -271,19 +271,19 @@
         "internal_baseline_source": "actions-cache.internal_only",
         "internal_delta_seconds": 69.0,
         "internal_improvement_pct": 17.51,
-        "warm_vs_depot_docker_delta_seconds": 4464.0,
-        "warm_vs_depot_docker_improvement_pct": 99.82
+        "warm_vs_depot_docker_delta_seconds": 6203.0,
+        "warm_vs_depot_docker_improvement_pct": 99.87
       },
       "depot": {
         "repo": "depot/benchmark-posthog",
-        "run_id": 22858470577,
-        "run_url": "https://github.com/depot-demo-org/benchmark-posthog/actions/runs/22858470577",
-        "docker_seconds": 4472.0,
-        "docker_text": "74m 32s",
-        "docker_job_url": "https://github.com/depot-demo-org/benchmark-posthog/actions/runs/22858470577/job/66305351586",
-        "depot_seconds": 272.0,
-        "depot_text": "4m 32s",
-        "depot_job_url": "https://github.com/depot-demo-org/benchmark-posthog/actions/runs/22858470577/job/66305351549"
+        "run_id": 22904441853,
+        "run_url": "https://github.com/depot-demo-org/benchmark-posthog/actions/runs/22904441853",
+        "docker_seconds": 6211.0,
+        "docker_text": "103m 31s",
+        "docker_job_url": "https://github.com/depot-demo-org/benchmark-posthog/actions/runs/22904441853/job/66459155103",
+        "depot_seconds": 257.0,
+        "depot_text": "4m 17s",
+        "depot_job_url": "https://github.com/depot-demo-org/benchmark-posthog/actions/runs/22904441853/job/66459155122"
       }
     },
     {
