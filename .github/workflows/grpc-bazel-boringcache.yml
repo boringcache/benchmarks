@@ -204,6 +204,7 @@ jobs:
           BORINGCACHE_KV_BLOB_UPLOAD_CONCURRENCY: "64"
           BORINGCACHE_FLUSH_BLOB_THRESHOLD: "2000"
           BORINGCACHE_BLOB_DOWNLOAD_CONCURRENCY: "64"
+          BORINGCACHE_PROXY_METADATA_HINTS: "project=grpc,phase=seed"
 
       - name: Tune Bazel for remote cache performance
         run: |
@@ -363,6 +364,7 @@ jobs:
           BORINGCACHE_KV_BLOB_UPLOAD_CONCURRENCY: "64"
           BORINGCACHE_FLUSH_BLOB_THRESHOLD: "2000"
           BORINGCACHE_BLOB_DOWNLOAD_CONCURRENCY: "64"
+          BORINGCACHE_PROXY_METADATA_HINTS: "project=grpc,phase=${{ matrix.phase }}"
 
       - name: Capture proxy ready timing
         id: proxy_ready_timing

@@ -195,6 +195,7 @@ jobs:
           set -euo pipefail
 
           mode="${1:-warm}"
+          phase_label="${BENCHMARK_PHASE_LABEL:-$mode}"
 
           proxy_port=5000
           proxy_log="/tmp/boringcache-proxy-${proxy_port}.log"
@@ -211,6 +212,7 @@ jobs:
           }
 
           start_proxy() {
+            export BORINGCACHE_PROXY_METADATA_HINTS="project=zed,phase=${phase_label}"
             bash "$proxy_helper" start \
               --workspace "$BENCHMARK_WORKSPACE" \
               --tag "$BORINGCACHE_TAG_SCCACHE" \
@@ -478,6 +480,7 @@ jobs:
           set -euo pipefail
 
           mode="${1:-warm}"
+          phase_label="${BENCHMARK_PHASE_LABEL:-$mode}"
 
           proxy_port=5000
           proxy_log="/tmp/boringcache-proxy-${proxy_port}.log"
@@ -494,6 +497,7 @@ jobs:
           }
 
           start_proxy() {
+            export BORINGCACHE_PROXY_METADATA_HINTS="project=zed,phase=${phase_label}"
             bash "$proxy_helper" start \
               --workspace "$BENCHMARK_WORKSPACE" \
               --tag "$BORINGCACHE_TAG_SCCACHE" \
@@ -623,7 +627,7 @@ jobs:
           boringcache restore --no-git "$BENCHMARK_WORKSPACE" \
             "${{ steps.scope.outputs.tag_cargo_registry }}:${HOME}/.cargo/registry,${{ steps.scope.outputs.tag_cargo_git }}:${HOME}/.cargo/git,${{ steps.scope.outputs.tag_target }}:target"
           restore_end="$(date +%s)"
-          BENCHMARK_TIMING_FILE="$timing_file" ./run-zed-sccache-phase.sh warm
+          BENCHMARK_PHASE_LABEL="${{ matrix.phase }}" BENCHMARK_TIMING_FILE="$timing_file" ./run-zed-sccache-phase.sh warm
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
           echo "restore_seconds=$((restore_end - restore_start))" >> "$GITHUB_OUTPUT"
@@ -647,7 +651,7 @@ jobs:
           boringcache restore --no-git "$BENCHMARK_WORKSPACE" \
             "${{ steps.scope.outputs.tag_cargo_registry }}:${HOME}/.cargo/registry,${{ steps.scope.outputs.tag_cargo_git }}:${HOME}/.cargo/git,${{ steps.scope.outputs.tag_target }}:target"
           restore_end="$(date +%s)"
-          BENCHMARK_TIMING_FILE="$timing_file" ./run-zed-sccache-phase.sh warm
+          BENCHMARK_PHASE_LABEL="${{ matrix.phase }}" BENCHMARK_TIMING_FILE="$timing_file" ./run-zed-sccache-phase.sh warm
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
           echo "restore_seconds=$((restore_end - restore_start))" >> "$GITHUB_OUTPUT"
@@ -671,7 +675,7 @@ jobs:
           boringcache restore --no-git "$BENCHMARK_WORKSPACE" \
             "${{ steps.scope.outputs.tag_cargo_registry }}:${HOME}/.cargo/registry,${{ steps.scope.outputs.tag_cargo_git }}:${HOME}/.cargo/git,${{ steps.scope.outputs.tag_target }}:target"
           restore_end="$(date +%s)"
-          BENCHMARK_TIMING_FILE="$timing_file" ./run-zed-sccache-phase.sh stale
+          BENCHMARK_PHASE_LABEL="${{ matrix.phase }}" BENCHMARK_TIMING_FILE="$timing_file" ./run-zed-sccache-phase.sh stale
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
           echo "restore_seconds=$((restore_end - restore_start))" >> "$GITHUB_OUTPUT"
