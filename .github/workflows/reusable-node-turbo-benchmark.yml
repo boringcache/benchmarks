@@ -71,6 +71,7 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
 
       - name: Prepare benchmark scope and helpers
         id: scope
@@ -330,6 +331,7 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
 
       - name: Prepare benchmark scope and helpers
         id: scope
