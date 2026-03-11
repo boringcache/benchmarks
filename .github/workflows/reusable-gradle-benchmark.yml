@@ -51,20 +51,20 @@ jobs:
       seed_cache_key: ${{ steps.seed_cache_key.outputs.key }}
     steps:
       - name: Checkout target repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
 
       - name: Checkout benchmark config
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
           path: .benchmark-config
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
@@ -194,7 +194,7 @@ jobs:
         if: inputs.strategy == 'actions-cache'
         id: cache_write_probe
         continue-on-error: true
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: |
             .bench-cache-probe
@@ -249,7 +249,7 @@ jobs:
         if: inputs.strategy == 'actions-cache'
         id: save_seed_primary
         continue-on-error: true
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: |
             ${{ github.workspace }}/.gradle-user-home
@@ -259,7 +259,7 @@ jobs:
         if: inputs.strategy == 'actions-cache' && steps.save_seed_primary.outcome != 'success'
         id: save_seed_fallback
         continue-on-error: true
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: |
             ${{ github.workspace }}/.gradle-user-home
@@ -312,20 +312,20 @@ jobs:
         phase: [warm1, warm2, stale]
     steps:
       - name: Checkout target repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
 
       - name: Checkout benchmark config
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
           path: .benchmark-config
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
@@ -422,7 +422,7 @@ jobs:
 
       - name: Restore seeded actions/cache
         if: inputs.strategy == 'actions-cache'
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: |
             ${{ github.workspace }}/.gradle-user-home
@@ -451,7 +451,7 @@ jobs:
           EOF
 
       - name: Upload scenario timing artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: benchmark-phase-${{ env.BENCHMARK_ID }}-${{ inputs.strategy }}-${{ matrix.phase }}
           path: benchmark-phase/${{ matrix.phase }}.env
@@ -464,7 +464,7 @@ jobs:
     timeout-minutes: 120
     steps:
       - name: Checkout benchmark config
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
@@ -477,7 +477,7 @@ jobs:
           token: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Download scenario timing artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           pattern: benchmark-phase-${{ env.BENCHMARK_ID }}-${{ inputs.strategy }}-*
           path: benchmark-phase
@@ -544,7 +544,7 @@ jobs:
             --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses boringcache/gradle-action to seed an empty run-scoped Gradle HTTP remote cache and then archives a sanitized Gradle user home via boringcache/save with local build-cache directories stripped. Warm1/Warm2 restore only that archived Gradle user home through boringcache/restore and then rely on the native remote build-cache protocol on fresh runners. Stale run restores dependency state, mutates one Java source file, then rebuilds against the same run-scoped remote cache.' || 'Cold+seed run builds from scratch with Gradle local build cache enabled and saves the entire Gradle user home, including local build-cache state, to actions/cache under a run-scoped key. Warm1/Warm2 and stale restore that same Gradle user home on fresh runners. Stale run mutates one Java source file before rebuilding against the restored local Gradle build cache.' }}"
 
       - name: Upload benchmark artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: benchmark-${{ env.BENCHMARK_ID }}-${{ inputs.strategy }}
           path: |

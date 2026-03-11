@@ -32,14 +32,14 @@ jobs:
       scope_started_at: ${{ steps.scope.outputs.scope_started_at }}
     steps:
       - name: Checkout target repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
           submodules: true
 
       - name: Checkout benchmark config
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
@@ -117,7 +117,7 @@ jobs:
       - name: Verify Actions Cache write access
         id: cache_write_probe
         continue-on-error: true
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: |
             .bench-cache-probe
@@ -144,7 +144,7 @@ jobs:
       - name: Save seeded Bazel cache (primary key)
         id: save_seed_primary
         continue-on-error: true
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: |
             ~/.cache/bazel
@@ -154,7 +154,7 @@ jobs:
         id: save_seed_fallback
         if: steps.save_seed_primary.outcome != 'success'
         continue-on-error: true
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: |
             ~/.cache/bazel
@@ -209,14 +209,14 @@ jobs:
         phase: [warm1, warm2, stale]
     steps:
       - name: Checkout target repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
           submodules: true
 
       - name: Checkout benchmark config
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
@@ -267,7 +267,7 @@ jobs:
 
       - name: Restore cache for warm build 1
         if: matrix.phase == 'warm1'
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: |
             ~/.cache/bazel
@@ -290,7 +290,7 @@ jobs:
 
       - name: Restore cache for warm build 2
         if: matrix.phase == 'warm2'
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: |
             ~/.cache/bazel
@@ -313,7 +313,7 @@ jobs:
 
       - name: Restore cache for stale build
         if: matrix.phase == 'stale'
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: |
             ~/.cache/bazel
@@ -380,7 +380,7 @@ jobs:
           seconds=${{ steps.phase_timing.outputs.seconds }}
           EOF
       - name: Upload scenario timing artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: benchmark-phase-${{ env.BENCHMARK_ID }}-actions-cache-${{ matrix.phase }}
           path: benchmark-phase/${{ matrix.phase }}.env
@@ -393,14 +393,14 @@ jobs:
     timeout-minutes: 300
     steps:
       - name: Checkout benchmark config
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
           path: .benchmark-config
 
       - name: Download scenario timing artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           pattern: benchmark-phase-${{ env.BENCHMARK_ID }}-actions-cache-*
           path: benchmark-phase
@@ -454,7 +454,7 @@ jobs:
             --hit-behavior-note "Cold+seed run builds from scratch and saves ~/.cache/bazel to actions/cache (primary key with fallback key retry) while recording cold timing. Workflow waits for cache index visibility before warm phases. bazel clean --expunge between warm/stale phases. Warm runs require successful cache restore before building. Stale run restores cache, mutates one .cc source file, then rebuilds. Warm1/Warm2/stale phases run as isolated matrix jobs on separate runners to avoid cross-phase local cache/state reuse."
 
       - name: Upload benchmark artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache
           path: |

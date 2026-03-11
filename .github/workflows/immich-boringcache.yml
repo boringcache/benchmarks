@@ -37,13 +37,13 @@ jobs:
       tags_csv: ${{ steps.scope.outputs.tags_csv }}
     steps:
       - name: Checkout target repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
 
       - name: Checkout benchmark config
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
@@ -252,7 +252,7 @@ jobs:
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
           driver-opts: |
             network=host
@@ -321,13 +321,13 @@ jobs:
         phase: [warm1, warm2, stale, layer_miss]
     steps:
       - name: Checkout target repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
 
       - name: Checkout benchmark config
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
@@ -536,7 +536,7 @@ jobs:
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
           driver-opts: |
             network=host
@@ -683,7 +683,7 @@ jobs:
           seconds=${{ steps.phase_timing.outputs.seconds }}
           EOF
       - name: Upload scenario timing artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: benchmark-phase-${{ env.BENCHMARK_ID }}-boringcache-${{ matrix.phase }}
           path: benchmark-phase/${{ matrix.phase }}.env
@@ -696,7 +696,7 @@ jobs:
     timeout-minutes: 180
     steps:
       - name: Checkout benchmark config
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
@@ -711,7 +711,7 @@ jobs:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Download scenario timing artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           pattern: benchmark-phase-${{ env.BENCHMARK_ID }}-boringcache-*
           path: benchmark-phase
@@ -769,7 +769,7 @@ jobs:
             --hit-behavior-note "Two-pass seed: pass 1 builds cold with --no-cache + cache-to via BC registry proxy (mode=max, BORINGCACHE_INTERNAL_CACHE_ENABLED=1) to create BC entries and record cold timing. Pass 2 prunes buildx and rebuilds with --no-cache + cache-to so BC restore layers find entries from pass 1 and exported layers have populated caches. Warm1/Warm2 use cache-from only (read-only, no layer export) with internal BC cache active. Stale Docker run mutates one TS/JS source file and rebuilds with cache-from only (read-only, no layer export) with internal BC cache enabled. Internal-only run uses --no-cache (full image, no Docker layers) with internal boringcache restore/save active. All scenario phases run as isolated matrix jobs on fresh runners with buildx pruned before building."
 
       - name: Upload benchmark artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: benchmark-${{ env.BENCHMARK_ID }}-boringcache
           path: |

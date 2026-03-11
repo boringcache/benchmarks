@@ -33,7 +33,7 @@ jobs:
     steps:
       - name: Dispatch selected benchmark workflows
         id: dispatch
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const category = '${{ inputs.category || 'all' }}';
@@ -99,7 +99,7 @@ jobs:
             core.setOutput('category', category);
 
       - name: Wait for all dispatched workflows to complete
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           WORKFLOWS_JSON: ${{ steps.dispatch.outputs.workflows }}
           STARTED_AT: ${{ steps.dispatch.outputs.started_at }}

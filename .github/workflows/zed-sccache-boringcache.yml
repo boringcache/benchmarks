@@ -51,7 +51,7 @@ jobs:
 
       - name: Checkout CLI repo
         if: steps.resolve.outputs.use_custom_cli == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: boringcache/cli
           ref: ${{ steps.resolve.outputs.requested_ref }}
@@ -75,7 +75,7 @@ jobs:
 
       - name: Upload custom CLI artifact
         if: steps.resolve.outputs.use_custom_cli == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ steps.resolve.outputs.artifact_name }}
           path: target/release/boringcache
@@ -104,13 +104,13 @@ jobs:
       cold_seconds: ${{ steps.cold_baseline_build.outputs.seconds }}
     steps:
       - name: Checkout target repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
 
       - name: Checkout benchmark config
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
@@ -123,7 +123,7 @@ jobs:
 
       - name: Download custom CLI artifact
         if: needs.prepare-cli.outputs.use_custom_cli == 'true'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: ${{ needs.prepare-cli.outputs.artifact_name }}
           path: ${{ runner.temp }}/boringcache-cli-artifact
@@ -370,7 +370,7 @@ jobs:
 
       - name: Upload BoringCache diagnostics
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: boringcache-diag-${{ env.BENCHMARK_ID }}-seed-boringcache
           path: boringcache-diag-seed
@@ -389,13 +389,13 @@ jobs:
         phase: [warm1, warm2, stale]
     steps:
       - name: Checkout target repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ env.PROJECT_REPO }}
           ref: ${{ env.PROJECT_REF }}
 
       - name: Checkout benchmark config
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
@@ -408,7 +408,7 @@ jobs:
 
       - name: Download custom CLI artifact
         if: needs.prepare-cli.outputs.use_custom_cli == 'true'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: ${{ needs.prepare-cli.outputs.artifact_name }}
           path: ${{ runner.temp }}/boringcache-cli-artifact
@@ -703,7 +703,7 @@ jobs:
 
       - name: Upload BoringCache diagnostics
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: boringcache-diag-${{ env.BENCHMARK_ID }}-${{ matrix.phase }}-boringcache
           path: boringcache-diag-${{ matrix.phase }}
@@ -763,7 +763,7 @@ jobs:
           end_to_end_seconds=${{ steps.phase_timing.outputs.end_to_end_seconds }}
           EOF
       - name: Upload scenario timing artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: benchmark-phase-${{ env.BENCHMARK_ID }}-boringcache-${{ matrix.phase }}
           path: benchmark-phase/${{ matrix.phase }}.env
@@ -776,7 +776,7 @@ jobs:
     timeout-minutes: 240
     steps:
       - name: Checkout benchmark config
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
@@ -789,7 +789,7 @@ jobs:
 
       - name: Download custom CLI artifact
         if: needs.prepare-cli.outputs.use_custom_cli == 'true'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: ${{ needs.prepare-cli.outputs.artifact_name }}
           path: ${{ runner.temp }}/boringcache-cli-artifact
@@ -805,7 +805,7 @@ jobs:
         run: boringcache --version
 
       - name: Download scenario timing artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           pattern: benchmark-phase-${{ env.BENCHMARK_ID }}-boringcache-*
           path: benchmark-phase
@@ -869,7 +869,7 @@ jobs:
             --output-dir benchmark-results
 
       - name: Upload benchmark artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: benchmark-${{ env.BENCHMARK_ID }}-boringcache
           path: |
