@@ -292,10 +292,18 @@ RUN --mount=type=secret,id=boringcache_token \
       lock_hash="$(sha256sum uv.lock | awk '{print $1}')" && \
       marker="/python-runtime/.boringcache-posthog-python-${lock_hash}" && \
       boringcache restore --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PYTHON}:/python-runtime" || true; \
-      if [ -f "$marker" ]; then \
+      if [ -f "$marker" ] && [ -x "/python-runtime/bin/python" ]; then \
         echo "python-runtime restored from BoringCache"; \
       else \
+        rm -rf /python-runtime && \
         uv sync --locked --no-dev --no-install-project --no-binary-package lxml --no-binary-package xmlsec && \
+        for link in /python-runtime/bin/python*; do \
+          if [ -L "$link" ]; then \
+            target="$(readlink -f "$link")" && \
+            rm "$link" && \
+            cp "$target" "$link"; \
+          fi; \
+        done && \
         touch "$marker" && \
         boringcache save --no-git "$BORINGCACHE_WORKSPACE" "${BORINGCACHE_TAG_PYTHON}:/python-runtime"; \
       fi; \
