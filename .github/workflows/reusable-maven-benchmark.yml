@@ -96,16 +96,31 @@ jobs:
           mode="${1:-warm}"
           apply_stale_change() {
             local stale_file=""
-            local candidates=()
-            mapfile -t candidates < <(git ls-files -- '*.java')
-            stale_file="${candidates[0]:-}"
+
+            # Prefer api/core/sdk modules — these have the most dependents
+            for pattern in \
+              'api/*/src/main/java/**/*.java' \
+              '*/api/src/main/java/**/*.java' \
+              '*-core/src/main/java/**/*.java' \
+              'core/*/src/main/java/**/*.java' \
+              '*-api/src/main/java/**/*.java' \
+              'sdk/*/src/main/java/**/*.java' \
+              '*/src/main/java/**/*.java' \
+              'src/main/java/**/*.java'; do
+              stale_file="$(git ls-files -- "$pattern" | grep -v 'package-info\.java' | head -n1)" || true
+              if [[ -n "$stale_file" ]]; then break; fi
+            done
 
             if [[ -z "${stale_file}" ]]; then
               echo "No Java source file found for stale mutation" >&2
               exit 1
             fi
 
-            echo "// benchmark stale mutation ${GITHUB_RUN_ID:-local}-$(date +%s)" >> "${stale_file}"
+            # Insert a real field that changes bytecode, before the last closing brace
+            local ts last_brace
+            ts="$(date +%s)"
+            last_brace="$(grep -n '}' "${stale_file}" | tail -1 | cut -d: -f1)"
+            sed -i "${last_brace}i\\    public static final long BENCHMARK_STALE_${ts} = ${ts}L;" "${stale_file}"
             echo "Applied stale change to ${stale_file}"
           }
 
@@ -373,16 +388,31 @@ jobs:
           mode="${1:-warm}"
           apply_stale_change() {
             local stale_file=""
-            local candidates=()
-            mapfile -t candidates < <(git ls-files -- '*.java')
-            stale_file="${candidates[0]:-}"
+
+            # Prefer api/core/sdk modules — these have the most dependents
+            for pattern in \
+              'api/*/src/main/java/**/*.java' \
+              '*/api/src/main/java/**/*.java' \
+              '*-core/src/main/java/**/*.java' \
+              'core/*/src/main/java/**/*.java' \
+              '*-api/src/main/java/**/*.java' \
+              'sdk/*/src/main/java/**/*.java' \
+              '*/src/main/java/**/*.java' \
+              'src/main/java/**/*.java'; do
+              stale_file="$(git ls-files -- "$pattern" | grep -v 'package-info\.java' | head -n1)" || true
+              if [[ -n "$stale_file" ]]; then break; fi
+            done
 
             if [[ -z "${stale_file}" ]]; then
               echo "No Java source file found for stale mutation" >&2
               exit 1
             fi
 
-            echo "// benchmark stale mutation ${GITHUB_RUN_ID:-local}-$(date +%s)" >> "${stale_file}"
+            # Insert a real field that changes bytecode, before the last closing brace
+            local ts last_brace
+            ts="$(date +%s)"
+            last_brace="$(grep -n '}' "${stale_file}" | tail -1 | cut -d: -f1)"
+            sed -i "${last_brace}i\\    public static final long BENCHMARK_STALE_${ts} = ${ts}L;" "${stale_file}"
             echo "Applied stale change to ${stale_file}"
           }
 

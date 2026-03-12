@@ -100,17 +100,40 @@ jobs:
           mode="${1:-warm}"
           apply_stale_change() {
             local stale_file=""
-            for pattern in 'packages/*/src/**/*.ts' 'packages/*/src/**/*.tsx' 'src/**/*.ts' 'src/**/*.tsx'; do
-              stale_file="$(git ls-files -- "$pattern" | head -n1)" || true
-              if [[ -n "$stale_file" ]]; then break; fi
-            done
+
+            # Find the most-depended-on workspace package for maximum cascade
+            local best_pkg="" best_count=0
+            while IFS= read -r pkg_json; do
+              local pkg_name count
+              pkg_name="$(jq -r '.name // empty' "$pkg_json" 2>/dev/null)" || continue
+              [[ -z "$pkg_name" ]] && continue
+              count="$(git grep -rl "\"${pkg_name}\"" -- 'packages/*/package.json' 'packages/@*/*/package.json' 2>/dev/null | grep -vc "^${pkg_json}$")" || count=0
+              if (( count > best_count )); then
+                best_count=$count
+                best_pkg="$(dirname "$pkg_json")"
+              fi
+            done < <(git ls-files -- 'packages/*/package.json' 'packages/@*/*/package.json')
+
+            if [[ -n "$best_pkg" ]]; then
+              stale_file="$(git ls-files -- "${best_pkg}/src/**/*.ts" "${best_pkg}/src/**/*.tsx" | grep -vE '\.(test|spec|d)\.(ts|tsx)$' | grep -v '__tests__' | head -n1)" || true
+            fi
+
+            # Fallback to any workspace source file
+            if [[ -z "$stale_file" ]]; then
+              for pattern in 'packages/*/src/**/*.ts' 'packages/@*/*/src/**/*.ts' 'src/**/*.ts' 'src/**/*.tsx'; do
+                stale_file="$(git ls-files -- "$pattern" | grep -vE '\.(test|spec|d)\.(ts|tsx)$' | grep -v '__tests__' | head -n1)" || true
+                if [[ -n "$stale_file" ]]; then break; fi
+              done
+            fi
 
             if [[ -z "${stale_file}" ]]; then
-              echo "No package source file found for stale mutation" >&2
+              echo "No TypeScript source file found for stale mutation" >&2
               exit 1
             fi
 
-            echo "// benchmark stale mutation ${GITHUB_RUN_ID:-local}-$(date +%s)" >> "${stale_file}"
+            local ts
+            ts="$(date +%s)"
+            printf '\nexport const _benchmarkStale%s = %s;\n' "$ts" "$ts" >> "${stale_file}"
             echo "Applied stale change to ${stale_file}"
           }
 
@@ -352,17 +375,40 @@ jobs:
           mode="${1:-warm}"
           apply_stale_change() {
             local stale_file=""
-            for pattern in 'packages/*/src/**/*.ts' 'packages/*/src/**/*.tsx' 'src/**/*.ts' 'src/**/*.tsx'; do
-              stale_file="$(git ls-files -- "$pattern" | head -n1)" || true
-              if [[ -n "$stale_file" ]]; then break; fi
-            done
+
+            # Find the most-depended-on workspace package for maximum cascade
+            local best_pkg="" best_count=0
+            while IFS= read -r pkg_json; do
+              local pkg_name count
+              pkg_name="$(jq -r '.name // empty' "$pkg_json" 2>/dev/null)" || continue
+              [[ -z "$pkg_name" ]] && continue
+              count="$(git grep -rl "\"${pkg_name}\"" -- 'packages/*/package.json' 'packages/@*/*/package.json' 2>/dev/null | grep -vc "^${pkg_json}$")" || count=0
+              if (( count > best_count )); then
+                best_count=$count
+                best_pkg="$(dirname "$pkg_json")"
+              fi
+            done < <(git ls-files -- 'packages/*/package.json' 'packages/@*/*/package.json')
+
+            if [[ -n "$best_pkg" ]]; then
+              stale_file="$(git ls-files -- "${best_pkg}/src/**/*.ts" "${best_pkg}/src/**/*.tsx" | grep -vE '\.(test|spec|d)\.(ts|tsx)$' | grep -v '__tests__' | head -n1)" || true
+            fi
+
+            # Fallback to any workspace source file
+            if [[ -z "$stale_file" ]]; then
+              for pattern in 'packages/*/src/**/*.ts' 'packages/@*/*/src/**/*.ts' 'src/**/*.ts' 'src/**/*.tsx'; do
+                stale_file="$(git ls-files -- "$pattern" | grep -vE '\.(test|spec|d)\.(ts|tsx)$' | grep -v '__tests__' | head -n1)" || true
+                if [[ -n "$stale_file" ]]; then break; fi
+              done
+            fi
 
             if [[ -z "${stale_file}" ]]; then
-              echo "No package source file found for stale mutation" >&2
+              echo "No TypeScript source file found for stale mutation" >&2
               exit 1
             fi
 
-            echo "// benchmark stale mutation ${GITHUB_RUN_ID:-local}-$(date +%s)" >> "${stale_file}"
+            local ts
+            ts="$(date +%s)"
+            printf '\nexport const _benchmarkStale%s = %s;\n' "$ts" "$ts" >> "${stale_file}"
             echo "Applied stale change to ${stale_file}"
           }
 
