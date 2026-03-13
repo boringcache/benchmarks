@@ -57,7 +57,7 @@ jobs:
     outputs:
       cold_seconds: ${{ steps.cold_baseline_build.outputs.seconds }}
       scope_started_at: ${{ steps.scope.outputs.scope_started_at }}
-      tags_csv: ${{ steps.resolved_boringcache_tags.outputs.tags_csv || steps.scope.outputs.tags_csv }}
+      tags_csv: ${{ steps.boringcache_one.outputs.resolved-tags || steps.scope.outputs.tags_csv }}
       seed_cache_key: ${{ steps.seed_cache_key.outputs.key }}
     steps:
       - name: Checkout target repo
@@ -194,35 +194,11 @@ jobs:
           working-directory: .
           entries: |
             ${{ steps.scope.outputs.tag_pnpm }}:${{ steps.pnpm_store.outputs.dir }}
+          verify: wait
           verbose: true
         env:
           BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-
-      - name: Resolve published BoringCache tags
-        if: inputs.strategy == 'boringcache'
-        id: resolved_boringcache_tags
-        env:
-          RUNTIME_TAG: ${{ steps.boringcache_one.outputs.runtime-cache-tag }}
-          RESOLVED_ENTRIES: ${{ steps.boringcache_one.outputs.resolved-entries }}
-        run: |
-          set -euo pipefail
-          declare -a tags=()
-
-          if [[ -n "${RUNTIME_TAG}" ]]; then
-            tags+=("${RUNTIME_TAG}")
-          fi
-
-          IFS=',' read -ra entries <<< "${RESOLVED_ENTRIES}"
-          for entry in "${entries[@]}"; do
-            tag="${entry%%:*}"
-            if [[ -n "${tag}" ]]; then
-              tags+=("${tag}")
-            fi
-          done
-
-          tags_csv="$(printf '%s\n' "${tags[@]}" | awk 'NF && !seen[$0]++' | paste -sd, -)"
-          echo "tags_csv=${tags_csv}" >> "$GITHUB_OUTPUT"
 
       - name: Purge benchmark GHA cache keys
         if: inputs.strategy == 'actions-cache'
@@ -485,6 +461,7 @@ jobs:
           read-only: true
           entries: |
             ${{ steps.scope.outputs.tag_pnpm }}:${{ steps.pnpm_store.outputs.dir }}
+          verify: check
           verbose: true
         env:
           BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
