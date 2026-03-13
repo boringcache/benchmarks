@@ -49,13 +49,14 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup BoringCache CLI
-        uses: boringcache/setup-boringcache@v1
+      - name: Install BoringCache CLI with boringcache/one
+        uses: boringcache/one@v1
         with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
-          platform: alpine-amd64
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          setup: none
+          mode: archive
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cli-platform: alpine-amd64
+          cache-runtime: false
 
       - name: Prepare benchmark build inputs
         id: scope
@@ -83,45 +84,17 @@ jobs:
           #!/usr/bin/env bash
           set -euo pipefail
 
-          proxy_port=5000
-          proxy_log="/tmp/boringcache-proxy-${proxy_port}.log"
+          proxy_port="${BORINGCACHE_PROXY_PORT:-5000}"
+          proxy_log="${BORINGCACHE_PROXY_LOG_PATH:-/tmp/boringcache-proxy-${proxy_port}.log}"
           build_log="$(mktemp /tmp/boringcache-build.XXXXXX.log)"
           max_attempts=3
           cache_export_pattern='expected sha256:.*got sha256:e3b0|error writing layer blob|400 Bad Request|broken pipe'
 
           mode="${1:-full}"
-          docker_registry_tag="${BORINGCACHE_TAG_DOCKER:-${BENCHMARK_ID}-docker-layers}"
-          proxy_pid=""
-          proxy_helper=".benchmark-config/scripts/boringcache-proxy.sh"
-
-          start_proxy() {
-            bash "$proxy_helper" start \
-              --workspace "$BENCHMARK_WORKSPACE" \
-              --tag "$docker_registry_tag" \
-              --command docker-registry \
-              --host 0.0.0.0 \
-              --port "$proxy_port" \
-              --no-git \
-              --verbose >/tmp/boringcache-proxy-start.txt
-            proxy_pid="$(grep '^pid=' /tmp/boringcache-proxy-start.txt | cut -d= -f2-)"
-          }
-
-          stop_proxy() {
-            if [[ -n "${proxy_pid:-}" ]]; then
-              bash "$proxy_helper" stop --pid "$proxy_pid" || true
-            else
-              bash "$proxy_helper" stop || true
-            fi
-            proxy_pid=""
-          }
-
-          wait_proxy_ready() {
-            bash "$proxy_helper" wait --port "$proxy_port" --pid "$proxy_pid"
-          }
-
-          cleanup() {
-            stop_proxy
-          }
+          start_proxy() { :; }
+          stop_proxy() { :; }
+          wait_proxy_ready() { return 0; }
+          cleanup() { :; }
           trap cleanup EXIT
 
           attempt=1
@@ -230,12 +203,24 @@ jobs:
           SH
           chmod +x ./run-boringcache-build.sh
 
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v4
+      - name: Configure boringcache/one for Docker
+        id: docker_cache
+        uses: boringcache/one@v1
         with:
+          cli-version: skip
+          setup: none
+          mode: docker
+          docker-command: setup
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cache-tag: ${{ steps.scope.outputs.cache_scope }}
+          registry-tag: ${{ steps.scope.outputs.docker_registry_tag }}
+          proxy-no-git: 'true'
           driver-opts: |
             network=host
+          verbose: true
+        env:
+          BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Purge BoringCache benchmark tags
         env:
@@ -249,7 +234,9 @@ jobs:
         id: cold_baseline_build
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-          BUILDER: ${{ steps.buildx.outputs.name }}
+          BORINGCACHE_PROXY_LOG_PATH: ${{ steps.docker_cache.outputs.proxy-log-path }}
+          BORINGCACHE_PROXY_PORT: ${{ steps.docker_cache.outputs.proxy-port }}
+          BUILDER: ${{ steps.docker_cache.outputs.buildx-name }}
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_GOMOD: ${{ steps.scope.outputs.gomod_tag }}
           BORINGCACHE_TAG_GOBUILD: ${{ steps.scope.outputs.gobuild_tag }}
@@ -262,12 +249,14 @@ jobs:
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
       - name: Prune builder for re-seed
-        run: docker buildx prune -f --builder "${{ steps.buildx.outputs.name }}"
+        run: docker buildx prune -f --builder "${{ steps.docker_cache.outputs.buildx-name }}"
 
       - name: Re-seed with populated BC restore layers
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-          BUILDER: ${{ steps.buildx.outputs.name }}
+          BORINGCACHE_PROXY_LOG_PATH: ${{ steps.docker_cache.outputs.proxy-log-path }}
+          BORINGCACHE_PROXY_PORT: ${{ steps.docker_cache.outputs.proxy-port }}
+          BUILDER: ${{ steps.docker_cache.outputs.buildx-name }}
           CACHE_SCOPE: ${{ steps.scope.outputs.cache_scope }}
           BORINGCACHE_TAG_GOMOD: ${{ steps.scope.outputs.gomod_tag }}
           BORINGCACHE_TAG_GOBUILD: ${{ steps.scope.outputs.gobuild_tag }}
@@ -301,13 +290,14 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup BoringCache CLI
-        uses: boringcache/setup-boringcache@v1
+      - name: Install BoringCache CLI with boringcache/one
+        uses: boringcache/one@v1
         with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
-          platform: alpine-amd64
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          setup: none
+          mode: archive
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cli-platform: alpine-amd64
+          cache-runtime: false
 
       - name: Prepare benchmark build inputs
         id: scope
@@ -335,45 +325,17 @@ jobs:
           #!/usr/bin/env bash
           set -euo pipefail
 
-          proxy_port=5000
-          proxy_log="/tmp/boringcache-proxy-${proxy_port}.log"
+          proxy_port="${BORINGCACHE_PROXY_PORT:-5000}"
+          proxy_log="${BORINGCACHE_PROXY_LOG_PATH:-/tmp/boringcache-proxy-${proxy_port}.log}"
           build_log="$(mktemp /tmp/boringcache-build.XXXXXX.log)"
           max_attempts=3
           cache_export_pattern='expected sha256:.*got sha256:e3b0|error writing layer blob|400 Bad Request|broken pipe'
 
           mode="${1:-full}"
-          docker_registry_tag="${BORINGCACHE_TAG_DOCKER:-${BENCHMARK_ID}-docker-layers}"
-          proxy_pid=""
-          proxy_helper=".benchmark-config/scripts/boringcache-proxy.sh"
-
-          start_proxy() {
-            bash "$proxy_helper" start \
-              --workspace "$BENCHMARK_WORKSPACE" \
-              --tag "$docker_registry_tag" \
-              --command docker-registry \
-              --host 0.0.0.0 \
-              --port "$proxy_port" \
-              --no-git \
-              --verbose >/tmp/boringcache-proxy-start.txt
-            proxy_pid="$(grep '^pid=' /tmp/boringcache-proxy-start.txt | cut -d= -f2-)"
-          }
-
-          stop_proxy() {
-            if [[ -n "${proxy_pid:-}" ]]; then
-              bash "$proxy_helper" stop --pid "$proxy_pid" || true
-            else
-              bash "$proxy_helper" stop || true
-            fi
-            proxy_pid=""
-          }
-
-          wait_proxy_ready() {
-            bash "$proxy_helper" wait --port "$proxy_port" --pid "$proxy_pid"
-          }
-
-          cleanup() {
-            stop_proxy
-          }
+          start_proxy() { :; }
+          stop_proxy() { :; }
+          wait_proxy_ready() { return 0; }
+          cleanup() { :; }
           trap cleanup EXIT
 
           attempt=1
@@ -482,21 +444,35 @@ jobs:
           SH
           chmod +x ./run-boringcache-build.sh
 
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v4
+      - name: Configure boringcache/one for Docker
+        id: docker_cache
+        uses: boringcache/one@v1
         with:
+          cli-version: skip
+          setup: none
+          mode: docker
+          docker-command: setup
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cache-tag: ${{ needs.seed-cache.outputs.cache_scope }}
+          registry-tag: ${{ steps.scope.outputs.docker_registry_tag }}
+          proxy-no-git: 'true'
+          read-only: true
           driver-opts: |
             network=host
+          verbose: true
+        env:
+          BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Prune builder cache for isolated scenario
-        run: docker buildx prune -f --builder "${{ steps.buildx.outputs.name }}"
+        run: docker buildx prune -f --builder "${{ steps.docker_cache.outputs.buildx-name }}"
       - name: Run warm build 1
         id: warm1_build
         if: matrix.phase == 'warm1'
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-          BUILDER: ${{ steps.buildx.outputs.name }}
+          BORINGCACHE_PROXY_LOG_PATH: ${{ steps.docker_cache.outputs.proxy-log-path }}
+          BORINGCACHE_PROXY_PORT: ${{ steps.docker_cache.outputs.proxy-port }}
+          BUILDER: ${{ steps.docker_cache.outputs.buildx-name }}
           CACHE_SCOPE: ${{ needs.seed-cache.outputs.cache_scope }}
           BORINGCACHE_TAG_GOMOD: ${{ steps.scope.outputs.gomod_tag }}
           BORINGCACHE_TAG_GOBUILD: ${{ steps.scope.outputs.gobuild_tag }}
@@ -513,7 +489,9 @@ jobs:
         if: matrix.phase == 'warm2'
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-          BUILDER: ${{ steps.buildx.outputs.name }}
+          BORINGCACHE_PROXY_LOG_PATH: ${{ steps.docker_cache.outputs.proxy-log-path }}
+          BORINGCACHE_PROXY_PORT: ${{ steps.docker_cache.outputs.proxy-port }}
+          BUILDER: ${{ steps.docker_cache.outputs.buildx-name }}
           CACHE_SCOPE: ${{ needs.seed-cache.outputs.cache_scope }}
           BORINGCACHE_TAG_GOMOD: ${{ steps.scope.outputs.gomod_tag }}
           BORINGCACHE_TAG_GOBUILD: ${{ steps.scope.outputs.gobuild_tag }}
@@ -530,7 +508,9 @@ jobs:
         if: matrix.phase == 'stale'
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-          BUILDER: ${{ steps.buildx.outputs.name }}
+          BORINGCACHE_PROXY_LOG_PATH: ${{ steps.docker_cache.outputs.proxy-log-path }}
+          BORINGCACHE_PROXY_PORT: ${{ steps.docker_cache.outputs.proxy-port }}
+          BUILDER: ${{ steps.docker_cache.outputs.buildx-name }}
           CACHE_SCOPE: ${{ needs.seed-cache.outputs.cache_scope }}
           BORINGCACHE_TAG_GOMOD: ${{ steps.scope.outputs.gomod_tag }}
           BORINGCACHE_TAG_GOBUILD: ${{ steps.scope.outputs.gobuild_tag }}
@@ -558,7 +538,9 @@ jobs:
         if: matrix.phase == 'layer_miss'
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-          BUILDER: ${{ steps.buildx.outputs.name }}
+          BORINGCACHE_PROXY_LOG_PATH: ${{ steps.docker_cache.outputs.proxy-log-path }}
+          BORINGCACHE_PROXY_PORT: ${{ steps.docker_cache.outputs.proxy-port }}
+          BUILDER: ${{ steps.docker_cache.outputs.buildx-name }}
           CACHE_SCOPE: ${{ needs.seed-cache.outputs.cache_scope }}
           BORINGCACHE_TAG_GOMOD: ${{ steps.scope.outputs.gomod_tag }}
           BORINGCACHE_TAG_GOBUILD: ${{ steps.scope.outputs.gobuild_tag }}
@@ -626,13 +608,14 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup BoringCache CLI
-        uses: boringcache/setup-boringcache@v1
+      - name: Install BoringCache CLI with boringcache/one
+        uses: boringcache/one@v1
         with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
-          platform: alpine-amd64
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          setup: none
+          mode: archive
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cli-platform: alpine-amd64
+          cache-runtime: false
 
       - name: Download scenario timing artifacts
         uses: actions/download-artifact@v5
