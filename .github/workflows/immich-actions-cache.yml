@@ -213,7 +213,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        phase: [warm1, warm2, stale, layer_miss]
+        phase: [warm1, warm2, stale-low, stale-mid, layer_miss]
     steps:
       - name: Checkout target repo
         uses: actions/checkout@v5
@@ -347,9 +347,9 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
-      - name: Run stale Docker cache build
-        id: stale_docker_build
-        if: matrix.phase == 'stale'
+      - name: "Run stale-low build (source file change, partial warm)"
+        id: stale_low_build
+        if: matrix.phase == 'stale-low'
         env:
           BUILDER: ${{ steps.buildx.outputs.name }}
           CACHE_SCOPE: ${{ needs.seed-cache.outputs.cache_scope }}
@@ -362,11 +362,11 @@ jobs:
             stale_file="README.md"
           fi
           if [[ ! -f "${stale_file}" ]]; then
-            echo "Could not find a file to mutate for stale build" >&2
+            echo "Could not find a file to mutate for stale-low build" >&2
             exit 1
           fi
           printf '\n// benchmark stale mutation %s-%s\n' "${GITHUB_RUN_ID:-local}" "$(date +%s)" >> "${stale_file}"
-          echo "Applied stale mutation to ${stale_file}"
+          echo "Applied stale-low mutation to ${stale_file}"
 
           start="$(date +%s)"
           attempt=1
@@ -392,7 +392,55 @@ jobs:
             fi
 
             if [[ "$attempt" -ge 2 ]]; then
-              echo "Stale Docker cache build failed after retry" >&2
+              echo "Stale-low build failed after retry" >&2
+              exit "$status"
+            fi
+
+            attempt=$((attempt + 1))
+            sleep 5
+          done
+
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: "Run stale-mid build (dep descriptor change, partial warm)"
+        id: stale_mid_build
+        if: matrix.phase == 'stale-mid'
+        env:
+          BUILDER: ${{ steps.buildx.outputs.name }}
+          CACHE_SCOPE: ${{ needs.seed-cache.outputs.cache_scope }}
+          BORINGCACHE_API_TOKEN: benchmark-noop-token
+        run: |
+          set -euo pipefail
+
+          jq --arg ts "$(date +%s)" '._benchmarkStale = $ts' package.json > package.json.tmp && mv package.json.tmp package.json
+          echo "Applied stale-mid mutation to package.json"
+
+          start="$(date +%s)"
+          attempt=1
+          while true; do
+            set +e
+            DOCKER_BUILDKIT=1 docker buildx build \
+              --builder "$BUILDER" \
+              --file Dockerfile.boringcache \
+              --tag immich-server-benchmark:latest \
+              --progress=plain \
+              --cache-from "type=gha,scope=${CACHE_SCOPE}" \
+              --secret id=boringcache_token,env=BORINGCACHE_API_TOKEN \
+              --build-arg BORINGCACHE_WORKSPACE="$BENCHMARK_WORKSPACE" \
+              --build-arg BORINGCACHE_TAG_PNPM="immich-pnpm" \
+              --build-arg BORINGCACHE_TAG_MISE="immich-mise" \
+              --build-arg BORINGCACHE_INTERNAL_CACHE_ENABLED="0" \
+              .
+            status=$?
+            set -e
+
+            if [[ "$status" -eq 0 ]]; then
+              break
+            fi
+
+            if [[ "$attempt" -ge 2 ]]; then
+              echo "Stale-mid build failed after retry" >&2
               exit "$status"
             fi
 
@@ -459,8 +507,11 @@ jobs:
             warm2)
               seconds="${{ steps.warm2_build.outputs.seconds }}"
               ;;
-            stale)
-              seconds="${{ steps.stale_docker_build.outputs.seconds }}"
+            stale-low)
+              seconds="${{ steps.stale_low_build.outputs.seconds }}"
+              ;;
+            stale-mid)
+              seconds="${{ steps.stale_mid_build.outputs.seconds }}"
               ;;
             layer_miss)
               seconds="${{ steps.internal_only_build.outputs.seconds }}"
@@ -528,11 +579,13 @@ jobs:
               cat "$file" >&2
               exit 1
             fi
-            echo "${phase}_seconds=${seconds}" >> "$GITHUB_OUTPUT"
+            local key="${phase//-/_}"
+            echo "${key}_seconds=${seconds}" >> "$GITHUB_OUTPUT"
           }
           parse_phase warm1
           parse_phase warm2
-          parse_phase stale
+          parse_phase stale-low
+          parse_phase stale-mid
           parse_phase layer_miss
       - name: Measure GHA cache storage usage
         id: cache_size
@@ -553,7 +606,8 @@ jobs:
             --cold-seconds "${{ needs.seed-cache.outputs.cold_seconds }}" \
             --warm1-seconds "${{ steps.timings.outputs.warm1_seconds }}" \
             --warm2-seconds "${{ steps.timings.outputs.warm2_seconds }}" \
-            --stale-seconds "${{ steps.timings.outputs.stale_seconds }}" \
+            --stale-low-seconds "${{ steps.timings.outputs.stale_low_seconds }}" \
+            --stale-mid-seconds "${{ steps.timings.outputs.stale_mid_seconds }}" \
             --layer-miss-seconds "${{ steps.timings.outputs.layer_miss_seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \

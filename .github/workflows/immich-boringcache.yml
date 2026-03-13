@@ -307,7 +307,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        phase: [warm1, warm2, stale, layer_miss]
+        phase: [warm1, warm2, stale-low, stale-mid, layer_miss]
     steps:
       - name: Checkout target repo
         uses: actions/checkout@v5
@@ -567,9 +567,9 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
-      - name: Run stale Docker cache build (code change, partial warm)
-        id: stale_docker_build
-        if: matrix.phase == 'stale'
+      - name: "Run stale-low build (source file change, partial warm)"
+        id: stale_low_build
+        if: matrix.phase == 'stale-low'
         env:
           BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BORINGCACHE_PROXY_LOG_PATH: ${{ steps.docker_cache.outputs.proxy-log-path }}
@@ -596,7 +596,35 @@ jobs:
             exit 1
           fi
           printf '\n// benchmark stale mutation %s-%s\n' "${GITHUB_RUN_ID:-local}" "$(date +%s)" >> "${stale_file}"
-          echo "Applied stale mutation to ${stale_file}"
+          echo "Applied stale-low mutation to ${stale_file}"
+
+          start="$(date +%s)"
+          ./run-boringcache-build.sh partial-warm
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: "Run stale-mid build (package.json change, partial warm)"
+        id: stale_mid_build
+        if: matrix.phase == 'stale-mid'
+        env:
+          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_PROXY_LOG_PATH: ${{ steps.docker_cache.outputs.proxy-log-path }}
+          BORINGCACHE_PROXY_PORT: ${{ steps.docker_cache.outputs.proxy-port }}
+          BUILDER: ${{ steps.docker_cache.outputs.buildx-name }}
+          CACHE_SCOPE: ${{ needs.seed-cache.outputs.cache_scope }}
+          BORINGCACHE_TAG_PNPM: ${{ steps.scope.outputs.pnpm_tag }}
+          BORINGCACHE_TAG_MISE: ${{ steps.scope.outputs.mise_tag }}
+          BORINGCACHE_TAG_LIBHEIF: ${{ steps.scope.outputs.tag_libheif }}
+          BORINGCACHE_TAG_LIBJXL: ${{ steps.scope.outputs.tag_libjxl }}
+          BORINGCACHE_TAG_LIBRAW: ${{ steps.scope.outputs.tag_libraw }}
+          BORINGCACHE_TAG_IMAGEMAGICK: ${{ steps.scope.outputs.tag_imagemagick }}
+          BORINGCACHE_TAG_LIBVIPS: ${{ steps.scope.outputs.tag_libvips }}
+          BORINGCACHE_TAG_FFMPEG: ${{ steps.scope.outputs.tag_ffmpeg }}
+          IMAGE_TAG: immich-server-benchmark:latest
+        run: |
+          set -euo pipefail
+          jq --arg ts "$(date +%s)" '._benchmarkStale = $ts' package.json > package.json.tmp && mv package.json.tmp package.json
+          echo "Applied stale-mid mutation to package.json"
 
           start="$(date +%s)"
           ./run-boringcache-build.sh partial-warm
@@ -640,8 +668,11 @@ jobs:
             warm2)
               seconds="${{ steps.warm2_build.outputs.seconds }}"
               ;;
-            stale)
-              seconds="${{ steps.stale_docker_build.outputs.seconds }}"
+            stale-low)
+              seconds="${{ steps.stale_low_build.outputs.seconds }}"
+              ;;
+            stale-mid)
+              seconds="${{ steps.stale_mid_build.outputs.seconds }}"
               ;;
             layer_miss)
               seconds="${{ steps.internal_only_build.outputs.seconds }}"
@@ -705,6 +736,7 @@ jobs:
           set -euo pipefail
           parse_phase() {
             local phase="$1"
+            local key="${phase//-/_}"
             local file="benchmark-phase/${phase}.env"
             if [[ ! -f "$file" ]]; then
               echo "Missing timing artifact for phase ${phase}" >&2
@@ -718,11 +750,12 @@ jobs:
               cat "$file" >&2
               exit 1
             fi
-            echo "${phase}_seconds=${seconds}" >> "$GITHUB_OUTPUT"
+            echo "${key}_seconds=${seconds}" >> "$GITHUB_OUTPUT"
           }
           parse_phase warm1
           parse_phase warm2
-          parse_phase stale
+          parse_phase stale-low
+          parse_phase stale-mid
           parse_phase layer_miss
       - name: Measure BoringCache storage usage
         id: cache_size
@@ -744,12 +777,13 @@ jobs:
             --cold-seconds "${{ needs.seed-cache.outputs.cold_seconds }}" \
             --warm1-seconds "${{ steps.timings.outputs.warm1_seconds }}" \
             --warm2-seconds "${{ steps.timings.outputs.warm2_seconds }}" \
-            --stale-seconds "${{ steps.timings.outputs.stale_seconds }}" \
+            --stale-low-seconds "${{ steps.timings.outputs.stale_low_seconds }}" \
+            --stale-mid-seconds "${{ steps.timings.outputs.stale_mid_seconds }}" \
             --layer-miss-seconds "${{ steps.timings.outputs.layer_miss_seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "boringcache-check" \
             --bytes-uploaded "${{ steps.cache_size.outputs.bytes }}" \
-            --hit-behavior-note "Two-pass seed: pass 1 builds cold with --no-cache + cache-to via BC registry proxy (mode=max, BORINGCACHE_INTERNAL_CACHE_ENABLED=1) to create BC entries and record cold timing. Pass 2 prunes buildx and rebuilds with --no-cache + cache-to so BC restore layers find entries from pass 1 and exported layers have populated caches. Warm1/Warm2 use cache-from only (read-only, no layer export) with internal BC cache active. Stale Docker run mutates one TS/JS source file and rebuilds with cache-from only (read-only, no layer export) with internal BC cache enabled. Internal-only run uses --no-cache (full image, no Docker layers) with internal boringcache restore/save active. All scenario phases run as isolated matrix jobs on fresh runners with buildx pruned before building."
+            --hit-behavior-note "Two-pass seed: pass 1 builds cold with --no-cache + cache-to via BC registry proxy (mode=max, BORINGCACHE_INTERNAL_CACHE_ENABLED=1) to create BC entries and record cold timing. Pass 2 prunes buildx and rebuilds with --no-cache + cache-to so BC restore layers find entries from pass 1 and exported layers have populated caches. Warm1/Warm2 use cache-from only (read-only, no layer export) with internal BC cache active. Stale-low mutates one TS/JS source file and rebuilds with cache-from only (read-only, no layer export) with internal BC cache enabled. Stale-mid mutates root package.json (invalidates pnpm install layer) and rebuilds with cache-from only (read-only, no layer export) with internal BC cache enabled. Internal-only run uses --no-cache (full image, no Docker layers) with internal boringcache restore/save active. All scenario phases run as isolated matrix jobs on fresh runners with buildx pruned before building."
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v5

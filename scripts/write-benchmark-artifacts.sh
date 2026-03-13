@@ -274,13 +274,13 @@ JSON
     echo "| Stale (code changed) | ${stale_seconds}s | -${stale_improvement_pct}% |"
   fi
   if [[ -n "$stale_low_seconds" ]]; then
-    echo "| Stale — low (leaf module) | ${stale_low_seconds}s | -${stale_low_improvement_pct}% |"
+    echo "| Stale — low | ${stale_low_seconds}s | -${stale_low_improvement_pct}% |"
   fi
   if [[ -n "$stale_mid_seconds" ]]; then
-    echo "| Stale — mid (impl module) | ${stale_mid_seconds}s | -${stale_mid_improvement_pct}% |"
+    echo "| Stale — mid | ${stale_mid_seconds}s | -${stale_mid_improvement_pct}% |"
   fi
   if [[ -n "$stale_high_seconds" ]]; then
-    echo "| Stale — high (root module) | ${stale_high_seconds}s | -${stale_high_improvement_pct}% |"
+    echo "| Stale — high | ${stale_high_seconds}s | -${stale_high_improvement_pct}% |"
   fi
   if [[ -n "$layer_miss_seconds" ]]; then
     echo "| Layer miss (no layer cache) | ${layer_miss_seconds}s | -${layer_miss_improvement_pct}% |"
