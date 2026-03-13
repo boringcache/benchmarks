@@ -506,11 +506,15 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup BoringCache CLI
+      - name: Install BoringCache CLI with boringcache/one
         if: inputs.strategy == 'boringcache'
-        uses: boringcache/setup-boringcache@v1
+        uses: boringcache/one@v1
         with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          setup: none
+          mode: archive
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cli-platform: linux-amd64
+          cache-runtime: false
 
       - name: Download scenario timing artifacts
         uses: actions/download-artifact@v5

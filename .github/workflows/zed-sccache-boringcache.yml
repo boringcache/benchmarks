@@ -125,10 +125,14 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup BoringCache CLI
-        uses: boringcache/setup-boringcache@v1
+      - name: Install BoringCache CLI with boringcache/one
+        uses: boringcache/one@v1
         with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          setup: none
+          mode: archive
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cli-platform: linux-amd64
+          cache-runtime: false
 
       - name: Download custom CLI artifact
         if: needs.prepare-cli.outputs.use_custom_cli == 'true'
@@ -457,10 +461,14 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup BoringCache CLI
-        uses: boringcache/setup-boringcache@v1
+      - name: Install BoringCache CLI with boringcache/one
+        uses: boringcache/one@v1
         with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          setup: none
+          mode: archive
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cli-platform: linux-amd64
+          cache-runtime: false
 
       - name: Download custom CLI artifact
         if: needs.prepare-cli.outputs.use_custom_cli == 'true'
@@ -933,10 +941,14 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup BoringCache CLI
-        uses: boringcache/setup-boringcache@v1
+      - name: Install BoringCache CLI with boringcache/one
+        uses: boringcache/one@v1
         with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          setup: none
+          mode: archive
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cli-platform: linux-amd64
+          cache-runtime: false
 
       - name: Download custom CLI artifact
         if: needs.prepare-cli.outputs.use_custom_cli == 'true'

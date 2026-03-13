@@ -52,6 +52,15 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
+      - name: Install BoringCache CLI with boringcache/one
+        uses: boringcache/one@v1
+        with:
+          setup: none
+          mode: archive
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cli-platform: debian-bookworm-amd64
+          cache-runtime: false
+
       - name: Prepare deterministic benchmark Dockerfile
         run: |
           cp .benchmark-config/dockerfiles/posthog/Dockerfile.boringcache Dockerfile.boringcache
@@ -228,6 +237,15 @@ jobs:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
           path: .benchmark-config
+
+      - name: Install BoringCache CLI with boringcache/one
+        uses: boringcache/one@v1
+        with:
+          setup: none
+          mode: archive
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cli-platform: debian-bookworm-amd64
+          cache-runtime: false
 
       - name: Prepare deterministic benchmark Dockerfile
         run: |
