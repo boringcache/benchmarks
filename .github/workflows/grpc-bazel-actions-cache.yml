@@ -45,8 +45,12 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup Bazelisk
-        uses: bazelbuild/setup-bazelisk@v3
+      - name: Setup Bazel with mise
+        uses: boringcache/one@v1
+        with:
+          setup: mise
+          mode: archive
+          cache-runtime: false
 
       - name: Prepare benchmark scope
         id: scope
@@ -222,8 +226,12 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup Bazelisk
-        uses: bazelbuild/setup-bazelisk@v3
+      - name: Setup Bazel with mise
+        uses: boringcache/one@v1
+        with:
+          setup: mise
+          mode: archive
+          cache-runtime: false
 
       - name: Prepare benchmark scope
         id: scope

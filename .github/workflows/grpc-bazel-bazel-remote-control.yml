@@ -42,8 +42,12 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup Bazelisk
-        uses: bazelbuild/setup-bazelisk@v3
+      - name: Setup Bazel with mise
+        uses: boringcache/one@v1
+        with:
+          setup: mise
+          mode: archive
+          cache-runtime: false
 
       - name: Prepare benchmark helpers
         run: |
@@ -207,8 +211,12 @@ jobs:
           mv "${source_root}"/* bazel-remote-data/ || true
           chmod -R u+rwX bazel-remote-data || true
 
-      - name: Setup Bazelisk
-        uses: bazelbuild/setup-bazelisk@v3
+      - name: Setup Bazel with mise
+        uses: boringcache/one@v1
+        with:
+          setup: mise
+          mode: archive
+          cache-runtime: false
 
       - name: Prepare benchmark helpers
         run: |
@@ -433,8 +441,12 @@ jobs:
           mv "${source_root}"/* bazel-remote-data/ || true
           chmod -R u+rwX bazel-remote-data || true
 
-      - name: Setup Bazelisk
-        uses: bazelbuild/setup-bazelisk@v3
+      - name: Setup Bazel with mise
+        uses: boringcache/one@v1
+        with:
+          setup: mise
+          mode: archive
+          cache-runtime: false
 
       - name: Prepare benchmark helpers
         run: |
@@ -634,8 +646,12 @@ jobs:
           mv "${source_root}"/* bazel-remote-data/ || true
           chmod -R u+rwX bazel-remote-data || true
 
-      - name: Setup Bazelisk
-        uses: bazelbuild/setup-bazelisk@v3
+      - name: Setup Bazel with mise
+        uses: boringcache/one@v1
+        with:
+          setup: mise
+          mode: archive
+          cache-runtime: false
 
       - name: Prepare benchmark helpers
         run: |
