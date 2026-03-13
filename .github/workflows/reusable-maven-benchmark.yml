@@ -27,6 +27,11 @@ on:
         required: false
         type: string
         default: ./mvnw --batch-mode -ntp clean install -DskipTests -Dmaven.javadoc.skip=true
+      stale_level:
+        required: false
+        type: string
+        default: mid
+        description: "Stale mutation scope: low (leaf module), mid (implementation module), high (root API module)"
 
 env:
   PROJECT_REPO: ${{ inputs.project_repo }}
@@ -35,6 +40,7 @@ env:
   BENCHMARK_WORKSPACE: ${{ inputs.benchmark_workspace }}
   JAVA_VERSION: ${{ inputs.java_version }}
   BUILD_COMMAND: ${{ inputs.build_command }}
+  STALE_LEVEL: ${{ inputs.stale_level }}
   PROXY_PORT: "5000"
 
 jobs:
@@ -95,33 +101,63 @@ jobs:
 
           mode="${1:-warm}"
           apply_stale_change() {
-            local stale_file=""
+            local stale_file="" level="${STALE_LEVEL:-mid}"
 
-            # Prefer api/core/sdk modules — these have the most dependents
-            for pattern in \
-              'api/*/src/main/java/**/*.java' \
-              '*/api/src/main/java/**/*.java' \
-              '*-core/src/main/java/**/*.java' \
-              'core/*/src/main/java/**/*.java' \
-              '*-api/src/main/java/**/*.java' \
-              'sdk/*/src/main/java/**/*.java' \
-              '*/src/main/java/**/*.java' \
-              'src/main/java/**/*.java'; do
-              stale_file="$(git ls-files -- "$pattern" | grep -v 'package-info\.java' | head -n1)" || true
-              if [[ -n "$stale_file" ]]; then break; fi
-            done
+            case "$level" in
+              low)
+                for pattern in \
+                  'exporters/*/src/main/java/**/*.java' \
+                  '*/exporters/*/src/main/java/**/*.java' \
+                  'extensions/*/src/main/java/**/*.java' \
+                  '*-contrib/src/main/java/**/*.java' \
+                  '*/contrib/src/main/java/**/*.java'; do
+                  stale_file="$(git ls-files -- "$pattern" | grep -vE 'package-info\.java|/all/' | head -n1)" || true
+                  if [[ -n "$stale_file" ]]; then break; fi
+                done
+                ;;
+              mid)
+                for pattern in \
+                  'sdk/trace/src/main/java/**/*.java' \
+                  'sdk/metrics/src/main/java/**/*.java' \
+                  '*-impl/src/main/java/**/*.java' \
+                  '*/impl/src/main/java/**/*.java' \
+                  'sdk/*/src/main/java/**/*.java'; do
+                  stale_file="$(git ls-files -- "$pattern" | grep -vE 'package-info\.java|/all/' | head -n1)" || true
+                  if [[ -n "$stale_file" ]]; then break; fi
+                done
+                ;;
+              high)
+                for pattern in \
+                  'api/*/src/main/java/**/*.java' \
+                  '*/api/src/main/java/**/*.java' \
+                  '*-core/src/main/java/**/*.java' \
+                  'core/*/src/main/java/**/*.java' \
+                  '*-api/src/main/java/**/*.java'; do
+                  stale_file="$(git ls-files -- "$pattern" | grep -v 'package-info\.java' | head -n1)" || true
+                  if [[ -n "$stale_file" ]]; then break; fi
+                done
+                ;;
+            esac
+
+            if [[ -z "$stale_file" ]]; then
+              for pattern in \
+                '*/src/main/java/**/*.java' \
+                'src/main/java/**/*.java'; do
+                stale_file="$(git ls-files -- "$pattern" | grep -vE 'package-info\.java|/all/' | head -n1)" || true
+                if [[ -n "$stale_file" ]]; then break; fi
+              done
+            fi
 
             if [[ -z "${stale_file}" ]]; then
               echo "No Java source file found for stale mutation" >&2
               exit 1
             fi
 
-            # Insert a real field that changes bytecode, before the last closing brace
             local ts last_brace
             ts="$(date +%s)"
             last_brace="$(grep -n '}' "${stale_file}" | tail -1 | cut -d: -f1)"
             sed -i "${last_brace}i\\    public static final long BENCHMARK_STALE_${ts} = ${ts}L;" "${stale_file}"
-            echo "Applied stale change to ${stale_file}"
+            echo "Applied stale change (level=$level) to ${stale_file}"
           }
 
           stale_flags=""
@@ -143,13 +179,13 @@ jobs:
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ steps.scope.outputs.tag_remote }}
           working-directory: .
+          read-only: true
           maven-local-repo: ~/.m2/repository
           entries: |
             ${{ steps.scope.outputs.tag_repo }}:~/.m2/repository
           verbose: true
         env:
           BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-          BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Purge benchmark GHA cache keys
         if: inputs.strategy == 'actions-cache'
@@ -318,33 +354,63 @@ jobs:
 
           mode="${1:-warm}"
           apply_stale_change() {
-            local stale_file=""
+            local stale_file="" level="${STALE_LEVEL:-mid}"
 
-            # Prefer api/core/sdk modules — these have the most dependents
-            for pattern in \
-              'api/*/src/main/java/**/*.java' \
-              '*/api/src/main/java/**/*.java' \
-              '*-core/src/main/java/**/*.java' \
-              'core/*/src/main/java/**/*.java' \
-              '*-api/src/main/java/**/*.java' \
-              'sdk/*/src/main/java/**/*.java' \
-              '*/src/main/java/**/*.java' \
-              'src/main/java/**/*.java'; do
-              stale_file="$(git ls-files -- "$pattern" | grep -v 'package-info\.java' | head -n1)" || true
-              if [[ -n "$stale_file" ]]; then break; fi
-            done
+            case "$level" in
+              low)
+                for pattern in \
+                  'exporters/*/src/main/java/**/*.java' \
+                  '*/exporters/*/src/main/java/**/*.java' \
+                  'extensions/*/src/main/java/**/*.java' \
+                  '*-contrib/src/main/java/**/*.java' \
+                  '*/contrib/src/main/java/**/*.java'; do
+                  stale_file="$(git ls-files -- "$pattern" | grep -vE 'package-info\.java|/all/' | head -n1)" || true
+                  if [[ -n "$stale_file" ]]; then break; fi
+                done
+                ;;
+              mid)
+                for pattern in \
+                  'sdk/trace/src/main/java/**/*.java' \
+                  'sdk/metrics/src/main/java/**/*.java' \
+                  '*-impl/src/main/java/**/*.java' \
+                  '*/impl/src/main/java/**/*.java' \
+                  'sdk/*/src/main/java/**/*.java'; do
+                  stale_file="$(git ls-files -- "$pattern" | grep -vE 'package-info\.java|/all/' | head -n1)" || true
+                  if [[ -n "$stale_file" ]]; then break; fi
+                done
+                ;;
+              high)
+                for pattern in \
+                  'api/*/src/main/java/**/*.java' \
+                  '*/api/src/main/java/**/*.java' \
+                  '*-core/src/main/java/**/*.java' \
+                  'core/*/src/main/java/**/*.java' \
+                  '*-api/src/main/java/**/*.java'; do
+                  stale_file="$(git ls-files -- "$pattern" | grep -v 'package-info\.java' | head -n1)" || true
+                  if [[ -n "$stale_file" ]]; then break; fi
+                done
+                ;;
+            esac
+
+            if [[ -z "$stale_file" ]]; then
+              for pattern in \
+                '*/src/main/java/**/*.java' \
+                'src/main/java/**/*.java'; do
+                stale_file="$(git ls-files -- "$pattern" | grep -vE 'package-info\.java|/all/' | head -n1)" || true
+                if [[ -n "$stale_file" ]]; then break; fi
+              done
+            fi
 
             if [[ -z "${stale_file}" ]]; then
               echo "No Java source file found for stale mutation" >&2
               exit 1
             fi
 
-            # Insert a real field that changes bytecode, before the last closing brace
             local ts last_brace
             ts="$(date +%s)"
             last_brace="$(grep -n '}' "${stale_file}" | tail -1 | cut -d: -f1)"
             sed -i "${last_brace}i\\    public static final long BENCHMARK_STALE_${ts} = ${ts}L;" "${stale_file}"
-            echo "Applied stale change to ${stale_file}"
+            echo "Applied stale change (level=$level) to ${stale_file}"
           }
 
           stale_flags=""
@@ -494,7 +560,7 @@ jobs:
             --stale-seconds "${{ steps.timings.outputs.stale_seconds }}" \
             --cache-storage-bytes "${{ inputs.strategy == 'boringcache' && steps.bc_cache_size.outputs.bytes || steps.ac_cache_size.outputs.bytes }}" \
             --cache-storage-source "${{ inputs.strategy == 'boringcache' && 'boringcache-check' || 'github-actions-cache-api' }}" \
-            --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses actions/setup-java for the toolchain, starts an empty run-scoped BoringCache Maven proxy, and archives only ~/.m2/repository through boringcache/save. Warm1/Warm2 and stale run on fresh runners, restore that same dependency repository through boringcache/restore, and hit the native Maven build-cache protocol against the same run-scoped remote cache.' || 'Cold+seed run builds from scratch and saves ~/.m2/repository plus ~/.m2/build-cache to actions/cache under a run-scoped key. Warm1/Warm2 and stale restore the same dependency repository and local Maven build-cache on fresh runners. Stale run mutates one Java source file before rebuilding against the restored local Maven build-cache.' }}"
+            --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses actions/setup-java for the toolchain and boringcache/one in mode=maven to start an empty run-scoped Maven proxy while archiving only ~/.m2/repository. Warm1/Warm2 and stale run on fresh runners, restore that same dependency repository through boringcache/one, and hit the native Maven build-cache protocol against the same run-scoped remote cache in read-only mode.' || 'Cold+seed run builds from scratch and saves ~/.m2/repository plus ~/.m2/build-cache to actions/cache under a run-scoped key. Warm1/Warm2 and stale restore the same dependency repository and local Maven build-cache on fresh runners. Stale run mutates one Java source file before rebuilding against the restored local Maven build-cache.' }}"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v5

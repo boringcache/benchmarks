@@ -30,6 +30,11 @@ on:
         required: false
         type: string
         default: pnpm turbo run build --summarize
+      stale_level:
+        required: false
+        type: string
+        default: mid
+        description: "Stale mutation scope: low (leaf package), mid (median dependents), high (most-depended-on package)"
 
 env:
   PROJECT_REPO: ${{ inputs.project_repo }}
@@ -39,6 +44,7 @@ env:
   NODE_VERSION: ${{ inputs.node_version }}
   INSTALL_COMMAND: ${{ inputs.install_command }}
   BUILD_COMMAND: ${{ inputs.build_command }}
+  STALE_LEVEL: ${{ inputs.stale_level }}
   TURBO_PROXY_PORT: "4227"
 
 jobs:
@@ -99,26 +105,37 @@ jobs:
 
           mode="${1:-warm}"
           apply_stale_change() {
-            local stale_file=""
+            local stale_file="" level="${STALE_LEVEL:-mid}"
 
-            # Find the most-depended-on workspace package for maximum cascade
-            local best_pkg="" best_count=0
+            # Rank workspace packages by dependent count
+            local -a ranked_pkgs=()
+            local -a ranked_counts=()
             while IFS= read -r pkg_json; do
               local pkg_name count
               pkg_name="$(jq -r '.name // empty' "$pkg_json" 2>/dev/null)" || continue
               [[ -z "$pkg_name" ]] && continue
               count="$(git grep -rl "\"${pkg_name}\"" -- 'packages/*/package.json' 'packages/@*/*/package.json' 2>/dev/null | grep -vc "^${pkg_json}$")" || count=0
-              if (( count > best_count )); then
-                best_count=$count
-                best_pkg="$(dirname "$pkg_json")"
-              fi
+              ranked_pkgs+=("$(dirname "$pkg_json")")
+              ranked_counts+=("$count")
             done < <(git ls-files -- 'packages/*/package.json' 'packages/@*/*/package.json')
 
-            if [[ -n "$best_pkg" ]]; then
-              stale_file="$(git ls-files -- "${best_pkg}/src/**/*.ts" "${best_pkg}/src/**/*.tsx" | grep -vE '\.(test|spec|d)\.(ts|tsx)$' | grep -v '__tests__' | head -n1)" || true
+            if (( ${#ranked_pkgs[@]} > 0 )); then
+              # Sort by count to pick by level
+              local sorted
+              sorted="$(for i in "${!ranked_pkgs[@]}"; do echo "${ranked_counts[$i]} ${ranked_pkgs[$i]}"; done | sort -n)"
+
+              local target_pkg="" total="${#ranked_pkgs[@]}"
+              case "$level" in
+                low)  target_pkg="$(echo "$sorted" | head -n1 | cut -d' ' -f2-)" ;;
+                mid)  target_pkg="$(echo "$sorted" | sed -n "$((total / 2 + 1))p" | cut -d' ' -f2-)" ;;
+                high) target_pkg="$(echo "$sorted" | tail -n1 | cut -d' ' -f2-)" ;;
+              esac
+
+              if [[ -n "$target_pkg" ]]; then
+                stale_file="$(git ls-files -- "${target_pkg}/src/**/*.ts" "${target_pkg}/src/**/*.tsx" | grep -vE '\.(test|spec|d)\.(ts|tsx)$' | grep -v '__tests__' | head -n1)" || true
+              fi
             fi
 
-            # Fallback to any workspace source file
             if [[ -z "$stale_file" ]]; then
               for pattern in 'packages/*/src/**/*.ts' 'packages/@*/*/src/**/*.ts' 'src/**/*.ts' 'src/**/*.tsx'; do
                 stale_file="$(git ls-files -- "$pattern" | grep -vE '\.(test|spec|d)\.(ts|tsx)$' | grep -v '__tests__' | head -n1)" || true
@@ -134,13 +151,11 @@ jobs:
             local ts
             ts="$(date +%s)"
             printf '\nexport const _benchmarkStale%s = %s;\n' "$ts" "$ts" >> "${stale_file}"
-            echo "Applied stale change to ${stale_file}"
+            echo "Applied stale change (level=$level) to ${stale_file}"
           }
 
           corepack enable
           corepack install
-          export PNPM_STORE_DIR="${PNPM_STORE_DIR:-$(pwd)/.pnpm-store}"
-          export NPM_CONFIG_STORE_DIR="${NPM_CONFIG_STORE_DIR:-$PNPM_STORE_DIR}"
           pnpm() { corepack pnpm "$@"; }
           pnpm --version
 
@@ -153,6 +168,14 @@ jobs:
           SH
           chmod +x ./run-node-turbo-phase.sh
 
+      - name: Resolve pnpm store directory
+        id: pnpm_store
+        run: |
+          set -euo pipefail
+          corepack enable
+          corepack install
+          echo "dir=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+
       - name: Configure boringcache/one
         if: inputs.strategy == 'boringcache'
         uses: boringcache/one@v1
@@ -162,12 +185,12 @@ jobs:
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ steps.scope.outputs.tag_turbo }}
           working-directory: .
+          read-only: true
           entries: |
-            ${{ steps.scope.outputs.tag_pnpm }}:.pnpm-store
+            ${{ steps.scope.outputs.tag_pnpm }}:${{ steps.pnpm_store.outputs.dir }}
           verbose: true
         env:
           BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-          BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Purge benchmark GHA cache keys
         if: inputs.strategy == 'actions-cache'
@@ -220,10 +243,12 @@ jobs:
 
       - name: Run cold + seed cache build
         id: cold_baseline_build
+        env:
+          PNPM_STORE_DIR: ${{ steps.pnpm_store.outputs.dir }}
         run: |
           set -euo pipefail
-          rm -rf .turbo node_modules .pnpm-store
-          mkdir -p .pnpm-store
+          rm -rf .turbo node_modules "$PNPM_STORE_DIR"
+          mkdir -p "$PNPM_STORE_DIR"
 
           start="$(date +%s)"
           ./run-node-turbo-phase.sh seed
@@ -237,7 +262,7 @@ jobs:
         uses: actions/cache/save@v5
         with:
           path: |
-            .pnpm-store
+            ${{ steps.pnpm_store.outputs.dir }}
             .turbo
           key: ${{ steps.scope.outputs.cache_key_primary }}
 
@@ -248,7 +273,7 @@ jobs:
         uses: actions/cache/save@v5
         with:
           path: |
-            .pnpm-store
+            ${{ steps.pnpm_store.outputs.dir }}
             .turbo
           key: ${{ steps.scope.outputs.cache_key_fallback }}
 
@@ -337,26 +362,37 @@ jobs:
 
           mode="${1:-warm}"
           apply_stale_change() {
-            local stale_file=""
+            local stale_file="" level="${STALE_LEVEL:-mid}"
 
-            # Find the most-depended-on workspace package for maximum cascade
-            local best_pkg="" best_count=0
+            # Rank workspace packages by dependent count
+            local -a ranked_pkgs=()
+            local -a ranked_counts=()
             while IFS= read -r pkg_json; do
               local pkg_name count
               pkg_name="$(jq -r '.name // empty' "$pkg_json" 2>/dev/null)" || continue
               [[ -z "$pkg_name" ]] && continue
               count="$(git grep -rl "\"${pkg_name}\"" -- 'packages/*/package.json' 'packages/@*/*/package.json' 2>/dev/null | grep -vc "^${pkg_json}$")" || count=0
-              if (( count > best_count )); then
-                best_count=$count
-                best_pkg="$(dirname "$pkg_json")"
-              fi
+              ranked_pkgs+=("$(dirname "$pkg_json")")
+              ranked_counts+=("$count")
             done < <(git ls-files -- 'packages/*/package.json' 'packages/@*/*/package.json')
 
-            if [[ -n "$best_pkg" ]]; then
-              stale_file="$(git ls-files -- "${best_pkg}/src/**/*.ts" "${best_pkg}/src/**/*.tsx" | grep -vE '\.(test|spec|d)\.(ts|tsx)$' | grep -v '__tests__' | head -n1)" || true
+            if (( ${#ranked_pkgs[@]} > 0 )); then
+              # Sort by count to pick by level
+              local sorted
+              sorted="$(for i in "${!ranked_pkgs[@]}"; do echo "${ranked_counts[$i]} ${ranked_pkgs[$i]}"; done | sort -n)"
+
+              local target_pkg="" total="${#ranked_pkgs[@]}"
+              case "$level" in
+                low)  target_pkg="$(echo "$sorted" | head -n1 | cut -d' ' -f2-)" ;;
+                mid)  target_pkg="$(echo "$sorted" | sed -n "$((total / 2 + 1))p" | cut -d' ' -f2-)" ;;
+                high) target_pkg="$(echo "$sorted" | tail -n1 | cut -d' ' -f2-)" ;;
+              esac
+
+              if [[ -n "$target_pkg" ]]; then
+                stale_file="$(git ls-files -- "${target_pkg}/src/**/*.ts" "${target_pkg}/src/**/*.tsx" | grep -vE '\.(test|spec|d)\.(ts|tsx)$' | grep -v '__tests__' | head -n1)" || true
+              fi
             fi
 
-            # Fallback to any workspace source file
             if [[ -z "$stale_file" ]]; then
               for pattern in 'packages/*/src/**/*.ts' 'packages/@*/*/src/**/*.ts' 'src/**/*.ts' 'src/**/*.tsx'; do
                 stale_file="$(git ls-files -- "$pattern" | grep -vE '\.(test|spec|d)\.(ts|tsx)$' | grep -v '__tests__' | head -n1)" || true
@@ -372,13 +408,11 @@ jobs:
             local ts
             ts="$(date +%s)"
             printf '\nexport const _benchmarkStale%s = %s;\n' "$ts" "$ts" >> "${stale_file}"
-            echo "Applied stale change to ${stale_file}"
+            echo "Applied stale change (level=$level) to ${stale_file}"
           }
 
           corepack enable
           corepack install
-          export PNPM_STORE_DIR="${PNPM_STORE_DIR:-$(pwd)/.pnpm-store}"
-          export NPM_CONFIG_STORE_DIR="${NPM_CONFIG_STORE_DIR:-$PNPM_STORE_DIR}"
           pnpm() { corepack pnpm "$@"; }
           pnpm --version
 
@@ -391,6 +425,14 @@ jobs:
           SH
           chmod +x ./run-node-turbo-phase.sh
 
+      - name: Resolve pnpm store directory
+        id: pnpm_store
+        run: |
+          set -euo pipefail
+          corepack enable
+          corepack install
+          echo "dir=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+
       - name: Configure boringcache/one
         if: inputs.strategy == 'boringcache'
         uses: boringcache/one@v1
@@ -401,7 +443,7 @@ jobs:
           cache-tag: ${{ steps.scope.outputs.tag_turbo }}
           working-directory: .
           entries: |
-            ${{ steps.scope.outputs.tag_pnpm }}:.pnpm-store
+            ${{ steps.scope.outputs.tag_pnpm }}:${{ steps.pnpm_store.outputs.dir }}
           verbose: true
         env:
           BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
@@ -412,7 +454,7 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           path: |
-            .pnpm-store
+            ${{ steps.pnpm_store.outputs.dir }}
             .turbo
           key: ${{ needs.seed-cache.outputs.seed_cache_key }}
           fail-on-cache-miss: true
@@ -526,7 +568,7 @@ jobs:
             --stale-seconds "${{ steps.timings.outputs.stale_seconds }}" \
             --cache-storage-bytes "${{ inputs.strategy == 'boringcache' && steps.bc_cache_size.outputs.bytes || steps.ac_cache_size.outputs.bytes }}" \
             --cache-storage-source "${{ inputs.strategy == 'boringcache' && 'boringcache-check' || 'github-actions-cache-api' }}" \
-            --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses actions/setup-node for the toolchain, starts an empty run-scoped BoringCache Turbo proxy, and then archives only the pnpm store with boringcache/save. Warm1/Warm2 and stale run on fresh runners, restore that same pnpm store through boringcache/restore, and hit the native Turbo remote-cache protocol against the same run-scoped tag.' || 'Cold+seed run builds from scratch and saves the pnpm store plus local .turbo cache to actions/cache under a run-scoped key while recording cold timing. Warm1/Warm2 and stale restore that same key on fresh runners. Stale run mutates one JS/TS source file before rebuilding against the restored local Turbo cache.' }}"
+            --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses actions/setup-node for the toolchain and boringcache/one in mode=turbo-proxy to start an empty run-scoped Turbo proxy while archiving only the pnpm store. Warm1/Warm2 and stale run on fresh runners, restore that same pnpm store through boringcache/one, and hit the native Turbo remote-cache protocol against the same run-scoped tag in read-only mode.' || 'Cold+seed run builds from scratch and saves the pnpm store plus local .turbo cache to actions/cache under a run-scoped key while recording cold timing. Warm1/Warm2 and stale restore that same key on fresh runners. Stale run mutates one JS/TS source file before rebuilding against the restored local Turbo cache.' }}"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v5

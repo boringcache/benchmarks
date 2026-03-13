@@ -27,6 +27,11 @@ on:
         required: false
         type: string
         default: ./gradlew --no-daemon build -x test -Porg.gradle.java.installations.auto-download=false
+      stale_level:
+        required: false
+        type: string
+        default: mid
+        description: "Stale mutation scope: low (leaf module), mid (implementation module), high (root API module)"
 
 env:
   PROJECT_REPO: ${{ inputs.project_repo }}
@@ -35,6 +40,7 @@ env:
   BENCHMARK_WORKSPACE: ${{ inputs.benchmark_workspace }}
   JAVA_VERSION: ${{ inputs.java_version }}
   BUILD_COMMAND: ${{ inputs.build_command }}
+  STALE_LEVEL: ${{ inputs.stale_level }}
   PROXY_PORT: "5000"
 
 jobs:
@@ -119,33 +125,67 @@ jobs:
           }
 
           apply_stale_change() {
-            local stale_file=""
+            local stale_file="" level="${STALE_LEVEL:-mid}"
 
-            # Prefer api/core/sdk modules — these have the most dependents
-            for pattern in \
-              'api/*/src/main/java/**/*.java' \
-              '*/api/src/main/java/**/*.java' \
-              '*-core/src/main/java/**/*.java' \
-              'core/*/src/main/java/**/*.java' \
-              '*-api/src/main/java/**/*.java' \
-              'sdk/*/src/main/java/**/*.java' \
-              '*/src/main/java/**/*.java' \
-              'src/main/java/**/*.java'; do
-              stale_file="$(git ls-files -- "$pattern" | grep -v 'package-info\.java' | head -n1)" || true
-              if [[ -n "$stale_file" ]]; then break; fi
-            done
+            case "$level" in
+              low)
+                # Leaf module: exporter, extension, or contrib — minimal cascade
+                for pattern in \
+                  'exporters/*/src/main/java/**/*.java' \
+                  '*/exporters/*/src/main/java/**/*.java' \
+                  'extensions/*/src/main/java/**/*.java' \
+                  '*-contrib/src/main/java/**/*.java' \
+                  '*/contrib/src/main/java/**/*.java'; do
+                  stale_file="$(git ls-files -- "$pattern" | grep -vE 'package-info\.java|/all/' | head -n1)" || true
+                  if [[ -n "$stale_file" ]]; then break; fi
+                done
+                ;;
+              mid)
+                # Mid-level module: sdk/trace, sdk/metrics, impl — moderate cascade
+                for pattern in \
+                  'sdk/trace/src/main/java/**/*.java' \
+                  'sdk/metrics/src/main/java/**/*.java' \
+                  '*-impl/src/main/java/**/*.java' \
+                  '*/impl/src/main/java/**/*.java' \
+                  'sdk/*/src/main/java/**/*.java'; do
+                  stale_file="$(git ls-files -- "$pattern" | grep -vE 'package-info\.java|/all/' | head -n1)" || true
+                  if [[ -n "$stale_file" ]]; then break; fi
+                done
+                ;;
+              high)
+                # Root module: api, core — maximum cascade (nearly full rebuild)
+                for pattern in \
+                  'api/*/src/main/java/**/*.java' \
+                  '*/api/src/main/java/**/*.java' \
+                  '*-core/src/main/java/**/*.java' \
+                  'core/*/src/main/java/**/*.java' \
+                  '*-api/src/main/java/**/*.java'; do
+                  stale_file="$(git ls-files -- "$pattern" | grep -v 'package-info\.java' | head -n1)" || true
+                  if [[ -n "$stale_file" ]]; then break; fi
+                done
+                ;;
+            esac
+
+            # Fallback: any Java source file
+            if [[ -z "$stale_file" ]]; then
+              for pattern in \
+                '*/src/main/java/**/*.java' \
+                'src/main/java/**/*.java'; do
+                stale_file="$(git ls-files -- "$pattern" | grep -vE 'package-info\.java|/all/' | head -n1)" || true
+                if [[ -n "$stale_file" ]]; then break; fi
+              done
+            fi
 
             if [[ -z "${stale_file}" ]]; then
               echo "No Java source file found for stale mutation" >&2
               exit 1
             fi
 
-            # Insert a real field that changes bytecode, before the last closing brace
             local ts last_brace
             ts="$(date +%s)"
             last_brace="$(grep -n '}' "${stale_file}" | tail -1 | cut -d: -f1)"
             sed -i "${last_brace}i\\    public static final long BENCHMARK_STALE_${ts} = ${ts}L;" "${stale_file}"
-            echo "Applied stale change to ${stale_file}"
+            echo "Applied stale change (level=$level) to ${stale_file}"
           }
 
           if [[ "${USE_REMOTE_CACHE:-0}" != "1" ]]; then
@@ -163,17 +203,24 @@ jobs:
           SH
           chmod +x ./run-gradle-phase.sh
 
-      - name: Setup BoringCache Gradle remote cache
+      - name: Configure boringcache/one
         if: inputs.strategy == 'boringcache'
-        uses: boringcache/gradle-action@v1
+        uses: boringcache/one@v1
         with:
+          setup: external
+          mode: gradle
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ steps.scope.outputs.tag_remote }}
+          working-directory: .
           gradle-home: ${{ github.workspace }}/.gradle-user-home
+          read-only: true
           proxy-no-git: 'true'
           proxy-no-platform: 'true'
+          entries: |
+            ${{ steps.scope.outputs.tag_home }}:${{ github.workspace }}/.gradle-user-home
+          verbose: true
         env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Purge benchmark GHA cache keys
         if: inputs.strategy == 'actions-cache'
@@ -244,7 +291,7 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
-      - name: Strip local Gradle build-cache directories before archive save
+      - name: Strip local Gradle build-cache directories before post-save
         if: inputs.strategy == 'boringcache'
         env:
           GRADLE_USER_HOME: ${{ github.workspace }}/.gradle-user-home
@@ -252,15 +299,6 @@ jobs:
           set -euo pipefail
           find "$GRADLE_USER_HOME/caches" -maxdepth 1 -mindepth 1 -type d -name 'build-cache-*' -exec rm -rf {} + 2>/dev/null || true
           rm -rf "$GRADLE_USER_HOME/build-scan-data" 2>/dev/null || true
-
-      - name: Save BoringCache Gradle user home
-        if: inputs.strategy == 'boringcache'
-        uses: boringcache/save@v1
-        with:
-          workspace: ${{ env.BENCHMARK_WORKSPACE }}
-          entries: ${{ steps.scope.outputs.tag_home }}:${{ github.workspace }}/.gradle-user-home
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Save seeded cache (primary key)
         if: inputs.strategy == 'actions-cache'
@@ -389,33 +427,63 @@ jobs:
           }
 
           apply_stale_change() {
-            local stale_file=""
+            local stale_file="" level="${STALE_LEVEL:-mid}"
 
-            # Prefer api/core/sdk modules — these have the most dependents
-            for pattern in \
-              'api/*/src/main/java/**/*.java' \
-              '*/api/src/main/java/**/*.java' \
-              '*-core/src/main/java/**/*.java' \
-              'core/*/src/main/java/**/*.java' \
-              '*-api/src/main/java/**/*.java' \
-              'sdk/*/src/main/java/**/*.java' \
-              '*/src/main/java/**/*.java' \
-              'src/main/java/**/*.java'; do
-              stale_file="$(git ls-files -- "$pattern" | grep -v 'package-info\.java' | head -n1)" || true
-              if [[ -n "$stale_file" ]]; then break; fi
-            done
+            case "$level" in
+              low)
+                for pattern in \
+                  'exporters/*/src/main/java/**/*.java' \
+                  '*/exporters/*/src/main/java/**/*.java' \
+                  'extensions/*/src/main/java/**/*.java' \
+                  '*-contrib/src/main/java/**/*.java' \
+                  '*/contrib/src/main/java/**/*.java'; do
+                  stale_file="$(git ls-files -- "$pattern" | grep -vE 'package-info\.java|/all/' | head -n1)" || true
+                  if [[ -n "$stale_file" ]]; then break; fi
+                done
+                ;;
+              mid)
+                for pattern in \
+                  'sdk/trace/src/main/java/**/*.java' \
+                  'sdk/metrics/src/main/java/**/*.java' \
+                  '*-impl/src/main/java/**/*.java' \
+                  '*/impl/src/main/java/**/*.java' \
+                  'sdk/*/src/main/java/**/*.java'; do
+                  stale_file="$(git ls-files -- "$pattern" | grep -vE 'package-info\.java|/all/' | head -n1)" || true
+                  if [[ -n "$stale_file" ]]; then break; fi
+                done
+                ;;
+              high)
+                for pattern in \
+                  'api/*/src/main/java/**/*.java' \
+                  '*/api/src/main/java/**/*.java' \
+                  '*-core/src/main/java/**/*.java' \
+                  'core/*/src/main/java/**/*.java' \
+                  '*-api/src/main/java/**/*.java'; do
+                  stale_file="$(git ls-files -- "$pattern" | grep -v 'package-info\.java' | head -n1)" || true
+                  if [[ -n "$stale_file" ]]; then break; fi
+                done
+                ;;
+            esac
+
+            if [[ -z "$stale_file" ]]; then
+              for pattern in \
+                '*/src/main/java/**/*.java' \
+                'src/main/java/**/*.java'; do
+                stale_file="$(git ls-files -- "$pattern" | grep -vE 'package-info\.java|/all/' | head -n1)" || true
+                if [[ -n "$stale_file" ]]; then break; fi
+              done
+            fi
 
             if [[ -z "${stale_file}" ]]; then
               echo "No Java source file found for stale mutation" >&2
               exit 1
             fi
 
-            # Insert a real field that changes bytecode, before the last closing brace
             local ts last_brace
             ts="$(date +%s)"
             last_brace="$(grep -n '}' "${stale_file}" | tail -1 | cut -d: -f1)"
             sed -i "${last_brace}i\\    public static final long BENCHMARK_STALE_${ts} = ${ts}L;" "${stale_file}"
-            echo "Applied stale change to ${stale_file}"
+            echo "Applied stale change (level=$level) to ${stale_file}"
           }
 
           if [[ "${USE_REMOTE_CACHE:-0}" != "1" ]]; then
@@ -433,26 +501,24 @@ jobs:
           SH
           chmod +x ./run-gradle-phase.sh
 
-      - name: Restore BoringCache Gradle user home
+      - name: Configure boringcache/one
         if: inputs.strategy == 'boringcache'
-        uses: boringcache/restore@v1
+        uses: boringcache/one@v1
         with:
-          workspace: ${{ env.BENCHMARK_WORKSPACE }}
-          entries: ${{ steps.scope.outputs.tag_home }}:${{ github.workspace }}/.gradle-user-home
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-
-      - name: Setup BoringCache Gradle remote cache
-        if: inputs.strategy == 'boringcache'
-        uses: boringcache/gradle-action@v1
-        with:
+          setup: external
+          mode: gradle
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ steps.scope.outputs.tag_remote }}
+          working-directory: .
           gradle-home: ${{ github.workspace }}/.gradle-user-home
           proxy-no-git: 'true'
           proxy-no-platform: 'true'
+          entries: |
+            ${{ steps.scope.outputs.tag_home }}:${{ github.workspace }}/.gradle-user-home
+          verbose: true
         env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Restore seeded actions/cache
         if: inputs.strategy == 'actions-cache'
@@ -575,7 +641,7 @@ jobs:
             --stale-seconds "${{ steps.timings.outputs.stale_seconds }}" \
             --cache-storage-bytes "${{ inputs.strategy == 'boringcache' && steps.bc_cache_size.outputs.bytes || steps.ac_cache_size.outputs.bytes }}" \
             --cache-storage-source "${{ inputs.strategy == 'boringcache' && 'boringcache-check' || 'github-actions-cache-api' }}" \
-            --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses boringcache/gradle-action to seed an empty run-scoped Gradle HTTP remote cache and then archives a sanitized Gradle user home via boringcache/save with local build-cache directories stripped. Warm1/Warm2 restore only that archived Gradle user home through boringcache/restore and then rely on the native remote build-cache protocol on fresh runners. Stale run restores dependency state, mutates one Java source file, then rebuilds against the same run-scoped remote cache.' || 'Cold+seed run builds from scratch with Gradle local build cache enabled and saves the entire Gradle user home, including local build-cache state, to actions/cache under a run-scoped key. Warm1/Warm2 and stale restore that same Gradle user home on fresh runners. Stale run mutates one Java source file before rebuilding against the restored local Gradle build cache.' }}"
+            --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses boringcache/one in mode=gradle to seed an empty run-scoped Gradle HTTP remote cache and then archive a sanitized Gradle user home with local build-cache directories stripped. Warm1/Warm2 restore only that archived Gradle user home through boringcache/one and then rely on the native remote build-cache protocol on fresh runners in read-only mode. Stale run restores dependency state, mutates one Java source file, then rebuilds against the same run-scoped remote cache.' || 'Cold+seed run builds from scratch with Gradle local build cache enabled and saves the entire Gradle user home, including local build-cache state, to actions/cache under a run-scoped key. Warm1/Warm2 and stale restore that same Gradle user home on fresh runners. Stale run mutates one Java source file before rebuilding against the restored local Gradle build cache.' }}"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v5
