@@ -435,34 +435,6 @@ jobs:
           corepack install
           echo "dir=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
 
-      - name: Setup BoringCache CLI
-        if: inputs.strategy == 'boringcache'
-        uses: boringcache/setup-boringcache@v1
-        with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
-
-      - name: Wait for seeded BoringCache tags to become visible
-        if: inputs.strategy == 'boringcache'
-        env:
-          TAGS_CSV: ${{ needs.seed-cache.outputs.tags_csv }}
-        run: |
-          set -euo pipefail
-          for attempt in $(seq 1 30); do
-            result="$(boringcache check "$BENCHMARK_WORKSPACE" "$TAGS_CSV" --no-git --json 2>/dev/null || true)"
-            hits="$(jq '[.results[]? | select((.status // "") == "hit")] | length' <<<"$result" 2>/dev/null || echo 0)"
-            total="$(jq '[.results[]?] | length' <<<"$result" 2>/dev/null || echo 0)"
-            if [[ "$total" -gt 0 && "$hits" -eq "$total" ]]; then
-              echo "Seed tags visible: ${hits}/${total}"
-              exit 0
-            fi
-            echo "Seed tags not fully visible yet (${hits}/${total}); retrying (${attempt}/30)..."
-            sleep 2
-          done
-
-          echo "Seeded BoringCache tags did not become visible in time" >&2
-          boringcache check "$BENCHMARK_WORKSPACE" "$TAGS_CSV" --no-git --json || true
-          exit 1
-
       - name: Configure one for actions-cache tooling
         if: inputs.strategy == 'actions-cache'
         uses: boringcache/one@v1
