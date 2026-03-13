@@ -58,9 +58,18 @@ jobs:
 
       - name: Setup Rust for custom CLI build
         if: steps.resolve.outputs.use_custom_cli == 'true'
-        uses: dtolnay/rust-toolchain@stable
+        uses: boringcache/one@v1
         with:
-          toolchain: ${{ env.CLI_RUST_VERSION }}
+          cli-version: skip
+          setup: mise
+          mode: rust-sccache
+          tools: rust@${{ env.CLI_RUST_VERSION }}
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          working-directory: .
+          cache-runtime: false
+          cache-cargo: false
+          cache-target: false
+          sccache: false
 
       - name: Capture resolved CLI ref
         if: steps.resolve.outputs.use_custom_cli == 'true'

@@ -63,9 +63,18 @@ jobs:
 
       - name: Setup Rust for custom CLI build
         if: steps.resolve.outputs.use_custom_cli == 'true'
-        uses: dtolnay/rust-toolchain@stable
+        uses: boringcache/one@v1
         with:
-          toolchain: ${{ env.CLI_RUST_VERSION }}
+          cli-version: skip
+          setup: mise
+          mode: rust-sccache
+          tools: rust@${{ env.CLI_RUST_VERSION }}
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          working-directory: .
+          cache-runtime: false
+          cache-cargo: false
+          cache-target: false
+          sccache: false
 
       - name: Capture resolved CLI ref
         if: steps.resolve.outputs.use_custom_cli == 'true'
@@ -121,9 +130,6 @@ jobs:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
           path: .benchmark-config
-
-      - name: Setup Bazelisk
-        uses: bazelbuild/setup-bazelisk@v3
 
       - name: Download custom CLI artifact
         if: needs.prepare-cli.outputs.use_custom_cli == 'true'
@@ -187,7 +193,7 @@ jobs:
         id: bazel_cache_release
         uses: boringcache/one@v1
         with:
-          setup: external
+          setup: mise
           mode: bazel
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ env.BAZEL_REMOTE_CACHE_TAG }}
@@ -207,7 +213,7 @@ jobs:
         uses: boringcache/one@v1
         with:
           cli-version: skip
-          setup: external
+          setup: mise
           mode: bazel
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ env.BAZEL_REMOTE_CACHE_TAG }}
@@ -300,9 +306,6 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup Bazelisk
-        uses: bazelbuild/setup-bazelisk@v3
-
       - name: Download custom CLI artifact
         if: needs.prepare-cli.outputs.use_custom_cli == 'true'
         uses: actions/download-artifact@v5
@@ -362,7 +365,7 @@ jobs:
         id: bazel_cache_release
         uses: boringcache/one@v1
         with:
-          setup: external
+          setup: mise
           mode: bazel
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ env.BAZEL_REMOTE_CACHE_TAG }}
@@ -378,7 +381,7 @@ jobs:
         uses: boringcache/one@v1
         with:
           cli-version: skip
-          setup: external
+          setup: mise
           mode: bazel
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ env.BAZEL_REMOTE_CACHE_TAG }}
