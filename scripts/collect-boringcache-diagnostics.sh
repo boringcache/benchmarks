@@ -6,9 +6,9 @@ usage() {
 Usage: collect-boringcache-diagnostics.sh \
   --output-dir DIR \
   --workspace WORKSPACE \
-  --tags TAGS \
   --phase PHASE \
-  --cache-tag CACHE_TAG \
+  [--tags TAGS] \
+  [--cache-tag CACHE_TAG] \
   [--cli-source SOURCE] \
   [--cli-ref REF] \
   [--proxy-port PORT] \
@@ -84,7 +84,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [[ -z "$output_dir" || -z "$workspace" || -z "$tags" || -z "$phase" || -z "$cache_tag" ]]; then
+if [[ -z "$output_dir" || -z "$workspace" || -z "$phase" ]]; then
   usage
 fi
 
@@ -142,12 +142,14 @@ if [[ -n "$proxy_log_path" && -f "$proxy_log_path" ]]; then
   cp "$proxy_log_path" "${output_dir}/$(basename "$proxy_log_path")"
 fi
 
-remote_check_json="${output_dir}/remote-tag-check.json"
-remote_check_stderr="${output_dir}/remote-tag-check.stderr.txt"
-if boringcache check "$workspace" "$tags" --no-git --json > "$remote_check_json" 2> "$remote_check_stderr"; then
-  if ! jq -e '.results | type == "array"' "$remote_check_json" >/dev/null 2>&1; then
-    mv "$remote_check_json" "${output_dir}/remote-tag-check.txt"
+if [[ -n "$tags" ]]; then
+  remote_check_json="${output_dir}/remote-tag-check.json"
+  remote_check_stderr="${output_dir}/remote-tag-check.stderr.txt"
+  if boringcache check "$workspace" "$tags" --no-git --json > "$remote_check_json" 2> "$remote_check_stderr"; then
+    if ! jq -e '.results | type == "array"' "$remote_check_json" >/dev/null 2>&1; then
+      mv "$remote_check_json" "${output_dir}/remote-tag-check.txt"
+    fi
+  else
+    rm -f "$remote_check_json"
   fi
-else
-  rm -f "$remote_check_json"
 fi

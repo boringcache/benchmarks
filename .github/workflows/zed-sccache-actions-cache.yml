@@ -62,10 +62,11 @@ jobs:
           tools: rust@${{ env.CLI_RUST_VERSION }}
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           working-directory: .
-          cache-runtime: true
+          cache-runtime: false
           cache-cargo: false
           cache-target: false
           sccache: true
+          sccache-version: 0.14.0
 
       - name: Prepare benchmark scope and helpers
         id: scope

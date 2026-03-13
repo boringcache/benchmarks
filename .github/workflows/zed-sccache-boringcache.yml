@@ -170,10 +170,11 @@ jobs:
           tools: rust@${{ env.CLI_RUST_VERSION }}
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           working-directory: .
-          cache-runtime: true
-          cache-cargo: true
-          cache-target: true
+          cache-runtime: false
+          cache-cargo: false
+          cache-target: false
           sccache: true
+          sccache-version: 0.14.0
           verbose: true
 
       - name: Prepare benchmark scope and helpers
@@ -385,6 +386,7 @@ jobs:
           cache-target: true
           tools: rust@${{ env.CLI_RUST_VERSION }}
           sccache: true
+          sccache-version: 0.14.0
           cargo-tag: ${{ steps.scope.outputs.tag_cargo_registry }}
           cargo-git-tag: ${{ steps.scope.outputs.tag_cargo_git }}
           target-tag: ${{ steps.scope.outputs.tag_target }}
@@ -505,10 +507,11 @@ jobs:
           tools: rust@${{ env.CLI_RUST_VERSION }}
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           working-directory: .
-          cache-runtime: true
-          cache-cargo: true
-          cache-target: true
+          cache-runtime: false
+          cache-cargo: false
+          cache-target: false
           sccache: true
+          sccache-version: 0.14.0
           verbose: true
 
       - name: Prepare benchmark scope and helpers
@@ -717,6 +720,7 @@ jobs:
           cache-target: true
           tools: rust@${{ env.CLI_RUST_VERSION }}
           sccache: true
+          sccache-version: 0.14.0
           cargo-tag: ${{ steps.scope.outputs.tag_cargo_registry }}
           cargo-git-tag: ${{ steps.scope.outputs.tag_cargo_git }}
           target-tag: ${{ steps.scope.outputs.tag_target }}

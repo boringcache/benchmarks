@@ -131,6 +131,27 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
+      - name: Patch gRPC Bazel dependency fallbacks
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("bazel/grpc_python_deps.bzl")
+          text = path.read_text()
+          old = '            url = "https://github.com/bazel-contrib/rules_python/releases/download/1.6.3/rules_python-1.6.3.tar.gz",'
+          new = '''            urls = [
+                        "https://github.com/bazel-contrib/rules_python/releases/download/1.6.3/rules_python-1.6.3.tar.gz",
+                        "https://github.com/bazel-contrib/rules_python/archive/refs/tags/1.6.3.tar.gz",
+                    ],'''
+          if old not in text:
+              raise SystemExit("rules_python source stanza not found")
+          path.write_text(text.replace(old, new, 1))
+          PY
+          cat >> "$HOME/.bazelrc" <<'EOF'
+          common --enable_bzlmod=false
+          common --enable_workspace=true
+          EOF
+
       - name: Download custom CLI artifact
         if: needs.prepare-cli.outputs.use_custom_cli == 'true'
         uses: actions/download-artifact@v5
@@ -305,6 +326,27 @@ jobs:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
           path: .benchmark-config
+
+      - name: Patch gRPC Bazel dependency fallbacks
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("bazel/grpc_python_deps.bzl")
+          text = path.read_text()
+          old = '            url = "https://github.com/bazel-contrib/rules_python/releases/download/1.6.3/rules_python-1.6.3.tar.gz",'
+          new = '''            urls = [
+                        "https://github.com/bazel-contrib/rules_python/releases/download/1.6.3/rules_python-1.6.3.tar.gz",
+                        "https://github.com/bazel-contrib/rules_python/archive/refs/tags/1.6.3.tar.gz",
+                    ],'''
+          if old not in text:
+              raise SystemExit("rules_python source stanza not found")
+          path.write_text(text.replace(old, new, 1))
+          PY
+          cat >> "$HOME/.bazelrc" <<'EOF'
+          common --enable_bzlmod=false
+          common --enable_workspace=true
+          EOF
 
       - name: Download custom CLI artifact
         if: needs.prepare-cli.outputs.use_custom_cli == 'true'
