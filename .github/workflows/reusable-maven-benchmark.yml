@@ -134,11 +134,22 @@ jobs:
           SH
           chmod +x ./run-maven-phase.sh
 
-      - name: Setup BoringCache CLI
+      - name: Configure boringcache/one
         if: inputs.strategy == 'boringcache'
-        uses: boringcache/setup-boringcache@v1
+        uses: boringcache/one@v1
         with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          setup: external
+          mode: maven
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cache-tag: ${{ steps.scope.outputs.tag_remote }}
+          working-directory: .
+          maven-local-repo: ~/.m2/repository
+          entries: |
+            ${{ steps.scope.outputs.tag_repo }}:~/.m2/repository
+          verbose: true
+        env:
+          BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Purge benchmark GHA cache keys
         if: inputs.strategy == 'actions-cache'
@@ -196,93 +207,11 @@ jobs:
           rm -rf "$HOME/.m2/repository" "$HOME/.m2/build-cache"
           mkdir -p "$HOME/.m2/repository"
 
-          if [[ "${{ inputs.strategy }}" == "boringcache" ]]; then
-            mkdir -p .mvn
-            extensions_path=".mvn/extensions.xml"
-            if [[ -f "$extensions_path" ]]; then
-              if ! grep -q '<artifactId>maven-build-cache-extension</artifactId>' "$extensions_path"; then
-                tmp_extensions="$(mktemp)"
-                awk '
-                  /<\/extensions>/ && !done {
-                    print "  <extension>"
-                    print "    <groupId>org.apache.maven.extensions</groupId>"
-                    print "    <artifactId>maven-build-cache-extension</artifactId>"
-                    print "    <version>1.2.2</version>"
-                    print "  </extension>"
-                    done=1
-                  }
-                  { print }
-                ' "$extensions_path" > "$tmp_extensions"
-                mv "$tmp_extensions" "$extensions_path"
-              fi
-            else
-              cat > "$extensions_path" <<'EOF'
-          <?xml version="1.0" encoding="UTF-8"?>
-          <extensions xmlns="http://maven.apache.org/EXTENSIONS/1.0.0"
-                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      xsi:schemaLocation="http://maven.apache.org/EXTENSIONS/1.0.0 https://maven.apache.org/xsd/core-extensions-1.0.0.xsd">
-            <extension>
-              <groupId>org.apache.maven.extensions</groupId>
-              <artifactId>maven-build-cache-extension</artifactId>
-              <version>1.2.2</version>
-            </extension>
-          </extensions>
-          EOF
-            fi
-
-            cat > .mvn/maven-build-cache-config.xml <<EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <cache xmlns="http://maven.apache.org/BUILD-CACHE-CONFIG/1.2.0"
-                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                 xsi:schemaLocation="http://maven.apache.org/BUILD-CACHE-CONFIG/1.2.0 https://maven.apache.org/xsd/build-cache-config-1.2.0.xsd">
-            <configuration>
-              <remote enabled="true" saveToRemote="true" transport="resolver" id="boringcache">
-                <url>http://127.0.0.1:${PROXY_PORT}</url>
-              </remote>
-            </configuration>
-          </cache>
-          EOF
-
-            proxy_log="/tmp/boringcache-proxy-${PROXY_PORT}.log"
-            bash .benchmark-config/scripts/boringcache-proxy.sh start \
-              --workspace "${BENCHMARK_WORKSPACE}" \
-              --tag "${{ steps.scope.outputs.tag_remote }}" \
-              --command cache-registry \
-              --host 127.0.0.1 \
-              --port "${PROXY_PORT}" \
-              --no-git \
-              --no-platform >/tmp/boringcache-proxy-start.txt
-            proxy_pid="$(grep '^pid=' /tmp/boringcache-proxy-start.txt | cut -d= -f2-)"
-            cleanup() {
-              bash .benchmark-config/scripts/boringcache-proxy.sh stop --pid "$proxy_pid" || true
-              if [[ -f "$proxy_log" ]]; then
-                tail -n 120 "$proxy_log" || true
-              fi
-            }
-            trap cleanup EXIT
-
-            if ! bash .benchmark-config/scripts/boringcache-proxy.sh wait --port "${PROXY_PORT}" --pid "$proxy_pid"; then
-              echo "Maven proxy did not become ready" >&2
-              tail -n 200 "$proxy_log" >&2 || true
-              exit 1
-            fi
-          fi
-
           start="$(date +%s)"
           ./run-maven-phase.sh seed
           rm -rf "$HOME/.m2/repository/org/springframework/ai"
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
-
-      - name: Save BoringCache Maven repository
-        if: inputs.strategy == 'boringcache'
-        uses: boringcache/save@v1
-        with:
-          cli-version: skip
-          workspace: ${{ env.BENCHMARK_WORKSPACE }}
-          entries: ${{ steps.scope.outputs.tag_repo }}:~/.m2/repository
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Save seeded cache (primary key)
         if: inputs.strategy == 'actions-cache'
@@ -428,21 +357,22 @@ jobs:
           SH
           chmod +x ./run-maven-phase.sh
 
-      - name: Setup BoringCache CLI
+      - name: Configure boringcache/one
         if: inputs.strategy == 'boringcache'
-        uses: boringcache/setup-boringcache@v1
+        uses: boringcache/one@v1
         with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
-
-      - name: Restore BoringCache Maven repository
-        if: inputs.strategy == 'boringcache'
-        uses: boringcache/restore@v1
-        with:
-          cli-version: skip
+          setup: external
+          mode: maven
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
-          entries: ${{ steps.scope.outputs.tag_repo }}:~/.m2/repository
+          cache-tag: ${{ steps.scope.outputs.tag_remote }}
+          working-directory: .
+          maven-local-repo: ~/.m2/repository
+          entries: |
+            ${{ steps.scope.outputs.tag_repo }}:~/.m2/repository
+          verbose: true
         env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Restore seeded actions/cache
         if: inputs.strategy == 'actions-cache'
@@ -458,78 +388,6 @@ jobs:
         id: phase_build
         run: |
           set -euo pipefail
-
-          if [[ "${{ inputs.strategy }}" == "boringcache" ]]; then
-            mkdir -p .mvn
-            extensions_path=".mvn/extensions.xml"
-            if [[ -f "$extensions_path" ]]; then
-              if ! grep -q '<artifactId>maven-build-cache-extension</artifactId>' "$extensions_path"; then
-                tmp_extensions="$(mktemp)"
-                awk '
-                  /<\/extensions>/ && !done {
-                    print "  <extension>"
-                    print "    <groupId>org.apache.maven.extensions</groupId>"
-                    print "    <artifactId>maven-build-cache-extension</artifactId>"
-                    print "    <version>1.2.2</version>"
-                    print "  </extension>"
-                    done=1
-                  }
-                  { print }
-                ' "$extensions_path" > "$tmp_extensions"
-                mv "$tmp_extensions" "$extensions_path"
-              fi
-            else
-              cat > "$extensions_path" <<'EOF'
-          <?xml version="1.0" encoding="UTF-8"?>
-          <extensions xmlns="http://maven.apache.org/EXTENSIONS/1.0.0"
-                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      xsi:schemaLocation="http://maven.apache.org/EXTENSIONS/1.0.0 https://maven.apache.org/xsd/core-extensions-1.0.0.xsd">
-            <extension>
-              <groupId>org.apache.maven.extensions</groupId>
-              <artifactId>maven-build-cache-extension</artifactId>
-              <version>1.2.2</version>
-            </extension>
-          </extensions>
-          EOF
-            fi
-
-            cat > .mvn/maven-build-cache-config.xml <<EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <cache xmlns="http://maven.apache.org/BUILD-CACHE-CONFIG/1.2.0"
-                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                 xsi:schemaLocation="http://maven.apache.org/BUILD-CACHE-CONFIG/1.2.0 https://maven.apache.org/xsd/build-cache-config-1.2.0.xsd">
-            <configuration>
-              <remote enabled="true" saveToRemote="true" transport="resolver" id="boringcache">
-                <url>http://127.0.0.1:${PROXY_PORT}</url>
-              </remote>
-            </configuration>
-          </cache>
-          EOF
-
-            proxy_log="/tmp/boringcache-proxy-${PROXY_PORT}.log"
-            bash .benchmark-config/scripts/boringcache-proxy.sh start \
-              --workspace "${BENCHMARK_WORKSPACE}" \
-              --tag "${{ steps.scope.outputs.tag_remote }}" \
-              --command cache-registry \
-              --host 127.0.0.1 \
-              --port "${PROXY_PORT}" \
-              --no-git \
-              --no-platform >/tmp/boringcache-proxy-start.txt
-            proxy_pid="$(grep '^pid=' /tmp/boringcache-proxy-start.txt | cut -d= -f2-)"
-            cleanup() {
-              bash .benchmark-config/scripts/boringcache-proxy.sh stop --pid "$proxy_pid" || true
-              if [[ -f "$proxy_log" ]]; then
-                tail -n 120 "$proxy_log" || true
-              fi
-            }
-            trap cleanup EXIT
-
-            if ! bash .benchmark-config/scripts/boringcache-proxy.sh wait --port "${PROXY_PORT}" --pid "$proxy_pid"; then
-              echo "Maven proxy did not become ready" >&2
-              tail -n 200 "$proxy_log" >&2 || true
-              exit 1
-            fi
-          fi
 
           start="$(date +%s)"
           ./run-maven-phase.sh ${{ matrix.phase == 'stale' && 'stale' || 'warm' }}
