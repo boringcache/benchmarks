@@ -208,7 +208,6 @@ jobs:
           cache-tag: ${{ steps.scope.outputs.tag_remote }}
           working-directory: .
           gradle-home: ${{ github.workspace }}/.gradle-user-home
-          read-only: true
           proxy-no-git: 'true'
           proxy-no-platform: 'true'
           entries: |
@@ -216,6 +215,7 @@ jobs:
           verbose: true
         env:
           BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Configure boringcache/one for actions-cache tooling
         if: inputs.strategy == 'actions-cache'
@@ -501,6 +501,34 @@ jobs:
           SH
           chmod +x ./run-gradle-phase.sh
 
+      - name: Setup BoringCache CLI
+        if: inputs.strategy == 'boringcache'
+        uses: boringcache/setup-boringcache@v1
+        with:
+          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Wait for seeded BoringCache tags to become visible
+        if: inputs.strategy == 'boringcache'
+        env:
+          TAGS_CSV: ${{ needs.seed-cache.outputs.tags_csv }}
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 30); do
+            result="$(boringcache check "$BENCHMARK_WORKSPACE" "$TAGS_CSV" --no-git --json 2>/dev/null || true)"
+            hits="$(jq '[.results[]? | select((.status // "") == "hit")] | length' <<<"$result" 2>/dev/null || echo 0)"
+            total="$(jq '[.results[]?] | length' <<<"$result" 2>/dev/null || echo 0)"
+            if [[ "$total" -gt 0 && "$hits" -eq "$total" ]]; then
+              echo "Seed tags visible: ${hits}/${total}"
+              exit 0
+            fi
+            echo "Seed tags not fully visible yet (${hits}/${total}); retrying (${attempt}/30)..."
+            sleep 2
+          done
+
+          echo "Seeded BoringCache tags did not become visible in time" >&2
+          boringcache check "$BENCHMARK_WORKSPACE" "$TAGS_CSV" --no-git --json || true
+          exit 1
+
       - name: Configure boringcache/one
         if: inputs.strategy == 'boringcache'
         uses: boringcache/one@v1
@@ -512,6 +540,7 @@ jobs:
           cache-tag: ${{ steps.scope.outputs.tag_remote }}
           working-directory: .
           gradle-home: ${{ github.workspace }}/.gradle-user-home
+          read-only: true
           proxy-no-git: 'true'
           proxy-no-platform: 'true'
           entries: |
@@ -519,7 +548,6 @@ jobs:
           verbose: true
         env:
           BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-          BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Configure boringcache/one for actions-cache tooling
         if: inputs.strategy == 'actions-cache'
@@ -659,7 +687,7 @@ jobs:
             --stale-high-seconds "${{ steps.timings.outputs.stale_high_seconds }}" \
             --cache-storage-bytes "${{ inputs.strategy == 'boringcache' && steps.bc_cache_size.outputs.bytes || steps.ac_cache_size.outputs.bytes }}" \
             --cache-storage-source "${{ inputs.strategy == 'boringcache' && 'boringcache-check' || 'github-actions-cache-api' }}" \
-            --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses boringcache/one in mode=gradle to seed an empty run-scoped Gradle HTTP remote cache and then archive a sanitized Gradle user home with local build-cache directories stripped. Warm1/Warm2 restore only that archived Gradle user home through boringcache/one and then rely on the native remote build-cache protocol on fresh runners in read-only mode. Stale run restores dependency state, mutates one Java source file, then rebuilds against the same run-scoped remote cache.' || 'Cold+seed run builds from scratch with Gradle local build cache enabled and saves the entire Gradle user home, including local build-cache state, to actions/cache under a run-scoped key. Warm1/Warm2 and stale restore that same Gradle user home on fresh runners. Stale run mutates one Java source file before rebuilding against the restored local Gradle build cache.' }}"
+            --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses boringcache/one in mode=gradle to write an empty run-scoped Gradle HTTP remote cache and archive a sanitized Gradle user home with local build-cache directories stripped. Each scenario waits for seeded tags to become visible, then restores only that archived Gradle user home through boringcache/one and uses the native remote build-cache protocol in read-only mode on a fresh runner. Stale runs mutate one Java source file before rebuilding against the same seeded remote cache.' || 'Cold+seed run builds from scratch with Gradle local build cache enabled and saves the entire Gradle user home, including local build-cache state, to actions/cache under a run-scoped key. Warm1/Warm2 and stale restore that same Gradle user home on fresh runners. Stale run mutates one Java source file before rebuilding against the restored local Gradle build cache.' }}"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v5
