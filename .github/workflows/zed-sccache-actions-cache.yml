@@ -17,7 +17,7 @@ env:
   PROJECT_REF: "ca0fffb927b9bd94b884b7180f3d8779c3583a98"
   BENCHMARK_ID: zed-sccache
   BENCHMARK_WORKSPACE: boringcache/benchmarks
-  CLI_RUST_VERSION: "1.89"
+  CLI_RUST_VERSION: "1.93"
 
 jobs:
   seed-cache:
@@ -98,7 +98,6 @@ jobs:
             export CC="sccache cc"
             export CXX="sccache c++"
 
-            sccache --start-server || true
             cargo build --release
             sccache --show-stats || true
             # Flush in-memory stats/artifacts so cache save captures stable state.
@@ -353,7 +352,6 @@ jobs:
             export CC="sccache cc"
             export CXX="sccache c++"
 
-            sccache --start-server || true
             cargo build --release
             sccache --show-stats || true
             # Flush in-memory stats/artifacts so cache save captures stable state.

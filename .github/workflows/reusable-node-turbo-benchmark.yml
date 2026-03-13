@@ -46,6 +46,7 @@ env:
   BUILD_COMMAND: ${{ inputs.build_command }}
   STALE_LEVEL: ${{ inputs.stale_level }}
   TURBO_PROXY_PORT: "4227"
+  PNPM_STORE_DIR: ${{ github.workspace }}/.pnpm-store
 
 jobs:
   seed-cache:
@@ -151,6 +152,8 @@ jobs:
           corepack enable
           corepack install
           pnpm() { corepack pnpm "$@"; }
+          mkdir -p "${PNPM_STORE_DIR}"
+          export npm_config_store_dir="${PNPM_STORE_DIR}"
           pnpm --version
 
           if [[ "$mode" == "stale" ]]; then
@@ -166,9 +169,8 @@ jobs:
         id: pnpm_store
         run: |
           set -euo pipefail
-          corepack enable
-          corepack install
-          echo "dir=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+          mkdir -p "${PNPM_STORE_DIR}"
+          echo "dir=${PNPM_STORE_DIR}" >> "$GITHUB_OUTPUT"
 
       - name: Configure boringcache/one for actions-cache tooling
         if: inputs.strategy == 'actions-cache'
@@ -418,6 +420,8 @@ jobs:
           corepack enable
           corepack install
           pnpm() { corepack pnpm "$@"; }
+          mkdir -p "${PNPM_STORE_DIR}"
+          export npm_config_store_dir="${PNPM_STORE_DIR}"
           pnpm --version
 
           if [[ "$mode" == "stale" ]]; then
@@ -433,9 +437,8 @@ jobs:
         id: pnpm_store
         run: |
           set -euo pipefail
-          corepack enable
-          corepack install
-          echo "dir=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+          mkdir -p "${PNPM_STORE_DIR}"
+          echo "dir=${PNPM_STORE_DIR}" >> "$GITHUB_OUTPUT"
 
       - name: Configure one for actions-cache tooling
         if: inputs.strategy == 'actions-cache'
