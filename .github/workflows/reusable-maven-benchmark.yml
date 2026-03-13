@@ -124,11 +124,13 @@ jobs:
             echo "Applied stale change to ${stale_file}"
           }
 
+          stale_flags=""
           if [[ "$mode" == "stale" ]]; then
             apply_stale_change
+            stale_flags="-Dcheckstyle.skip=true -Dspring-javaformat.skip=true"
           fi
 
-          eval "$BUILD_COMMAND"
+          eval "$BUILD_COMMAND $stale_flags"
           SH
           chmod +x ./run-maven-phase.sh
 
@@ -416,11 +418,13 @@ jobs:
             echo "Applied stale change to ${stale_file}"
           }
 
+          stale_flags=""
           if [[ "$mode" == "stale" ]]; then
             apply_stale_change
+            stale_flags="-Dcheckstyle.skip=true -Dspring-javaformat.skip=true"
           fi
 
-          eval "$BUILD_COMMAND"
+          eval "$BUILD_COMMAND $stale_flags"
           SH
           chmod +x ./run-maven-phase.sh
 

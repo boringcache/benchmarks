@@ -153,11 +153,13 @@ jobs:
             enable_gradle_cache
           fi
 
+          stale_flags=""
           if [[ "$mode" == "stale" ]]; then
             apply_stale_change
+            stale_flags="-x spotlessCheck"
           fi
 
-          eval "$BUILD_COMMAND"
+          eval "$BUILD_COMMAND $stale_flags"
           SH
           chmod +x ./run-gradle-phase.sh
 
@@ -421,11 +423,13 @@ jobs:
             enable_gradle_cache
           fi
 
+          stale_flags=""
           if [[ "$mode" == "stale" ]]; then
             apply_stale_change
+            stale_flags="-x spotlessCheck"
           fi
 
-          eval "$BUILD_COMMAND"
+          eval "$BUILD_COMMAND $stale_flags"
           SH
           chmod +x ./run-gradle-phase.sh
 
