@@ -125,11 +125,6 @@ jobs:
       - name: Setup Bazelisk
         uses: bazelbuild/setup-bazelisk@v3
 
-      - name: Setup BoringCache CLI
-        uses: boringcache/setup-boringcache@v1
-        with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
-
       - name: Download custom CLI artifact
         if: needs.prepare-cli.outputs.use_custom_cli == 'true'
         uses: actions/download-artifact@v5
@@ -143,9 +138,6 @@ jobs:
           set -euo pipefail
           bash .benchmark-config/scripts/install-benchmark-cli.sh \
             --artifact-dir "${RUNNER_TEMP}/boringcache-cli-artifact"
-
-      - name: Verify BoringCache CLI
-        run: boringcache --version
 
       - name: Prepare benchmark helpers
         id: scope
@@ -190,16 +182,39 @@ jobs:
           set -euo pipefail
           boringcache delete --no-git "$BENCHMARK_WORKSPACE" "${{ steps.scope.outputs.tags_csv }}" || true
 
-      - name: Setup Bazel remote cache via BoringCache
+      - name: Configure boringcache/one
+        if: needs.prepare-cli.outputs.use_custom_cli != 'true'
         id: bazel_cache
-        uses: boringcache/bazel-action@v1
+        uses: boringcache/one@v1
         with:
-          cli-version: skip
+          setup: external
+          mode: bazel
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ env.BAZEL_REMOTE_CACHE_TAG }}
           verbose: true
         env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_MAX_SPOOL_BYTES: "2147483648"
+          BORINGCACHE_KV_BLOB_UPLOAD_CONCURRENCY: "64"
+          BORINGCACHE_FLUSH_BLOB_THRESHOLD: "2000"
+          BORINGCACHE_BLOB_DOWNLOAD_CONCURRENCY: "64"
+          BORINGCACHE_PROXY_METADATA_HINTS: "project=grpc,phase=seed"
+
+      - name: Configure boringcache/one with custom CLI
+        if: needs.prepare-cli.outputs.use_custom_cli == 'true'
+        id: bazel_cache
+        uses: boringcache/one@v1
+        with:
+          cli-version: skip
+          setup: external
+          mode: bazel
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cache-tag: ${{ env.BAZEL_REMOTE_CACHE_TAG }}
+          verbose: true
+        env:
+          BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BORINGCACHE_MAX_SPOOL_BYTES: "2147483648"
           BORINGCACHE_KV_BLOB_UPLOAD_CONCURRENCY: "64"
           BORINGCACHE_FLUSH_BLOB_THRESHOLD: "2000"
@@ -288,11 +303,6 @@ jobs:
       - name: Setup Bazelisk
         uses: bazelbuild/setup-bazelisk@v3
 
-      - name: Setup BoringCache CLI
-        uses: boringcache/setup-boringcache@v1
-        with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
-
       - name: Download custom CLI artifact
         if: needs.prepare-cli.outputs.use_custom_cli == 'true'
         uses: actions/download-artifact@v5
@@ -306,9 +316,6 @@ jobs:
           set -euo pipefail
           bash .benchmark-config/scripts/install-benchmark-cli.sh \
             --artifact-dir "${RUNNER_TEMP}/boringcache-cli-artifact"
-
-      - name: Verify BoringCache CLI
-        run: boringcache --version
 
       - name: Prepare benchmark helpers
         id: scope
@@ -350,20 +357,35 @@ jobs:
         id: proxy_setup_timer_start
         run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
 
-      - name: Setup Bazel remote cache via BoringCache
+      - name: Configure boringcache/one
+        if: needs.prepare-cli.outputs.use_custom_cli != 'true'
         id: bazel_cache
-        uses: boringcache/bazel-action@v1
+        uses: boringcache/one@v1
         with:
-          cli-version: skip
+          setup: external
+          mode: bazel
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ env.BAZEL_REMOTE_CACHE_TAG }}
+          read-only: true
           verbose: true
         env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-          BORINGCACHE_MAX_SPOOL_BYTES: "2147483648"
-          BORINGCACHE_KV_BLOB_UPLOAD_CONCURRENCY: "64"
-          BORINGCACHE_FLUSH_BLOB_THRESHOLD: "2000"
-          BORINGCACHE_BLOB_DOWNLOAD_CONCURRENCY: "64"
+          BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_PROXY_METADATA_HINTS: "project=grpc,phase=${{ matrix.phase }}"
+
+      - name: Configure boringcache/one with custom CLI
+        if: needs.prepare-cli.outputs.use_custom_cli == 'true'
+        id: bazel_cache
+        uses: boringcache/one@v1
+        with:
+          cli-version: skip
+          setup: external
+          mode: bazel
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cache-tag: ${{ env.BAZEL_REMOTE_CACHE_TAG }}
+          read-only: true
+          verbose: true
+        env:
+          BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BORINGCACHE_PROXY_METADATA_HINTS: "project=grpc,phase=${{ matrix.phase }}"
 
       - name: Capture proxy ready timing
@@ -640,7 +662,7 @@ jobs:
             --stale-seconds "${{ steps.timings.outputs.stale_seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "boringcache-check" \
-            --hit-behavior-note "Cold+seed run builds from empty state with remote cache enabled and records cold timing while priming the proxy-backed cache. boringcache/bazel-action starts cache-registry proxy and writes ~/.bazelrc with --remote_cache. bazel clean --expunge between warm/stale phases. Warm runs hit the proxy-backed remote cache for action cache + CAS. Stale run mutates one .cc source file before building with remote cache. Warm1/Warm2/stale phases run as isolated matrix jobs on separate runners to avoid cross-phase local cache/state reuse."
+            --hit-behavior-note "Cold+seed run builds from empty state with remote cache enabled and records cold timing while priming the proxy-backed cache. boringcache/one in mode=bazel starts cache-registry proxy and writes ~/.bazelrc with --remote_cache. bazel clean --expunge between warm/stale phases. Warm runs hit the proxy-backed remote cache for action cache + CAS. Stale run mutates one .cc source file before building with remote cache. Warm1/Warm2/stale phases run as isolated matrix jobs on separate runners to avoid cross-phase local cache/state reuse."
 
       - name: Write phase timing breakdown
         id: phase_breakdown

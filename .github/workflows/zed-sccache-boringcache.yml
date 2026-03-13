@@ -332,6 +332,26 @@ jobs:
           set -euo pipefail
           boringcache delete --no-git "$BENCHMARK_WORKSPACE" "${{ steps.scope.outputs.tags_csv }}" || true
 
+      - name: Configure boringcache/one for Rust archives
+        uses: boringcache/one@v1
+        with:
+          cli-version: skip
+          setup: external
+          mode: rust-sccache
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          working-directory: .
+          cache-tag: ${{ env.BENCHMARK_ID }}
+          cache-cargo: true
+          cache-target: true
+          sccache: false
+          cargo-tag: ${{ steps.scope.outputs.tag_cargo_registry }}
+          cargo-git-tag: ${{ steps.scope.outputs.tag_cargo_git }}
+          target-tag: ${{ steps.scope.outputs.tag_target }}
+          verbose: true
+        env:
+          BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
       - name: Run cold + seed cache build
         id: cold_baseline_build
         env:
@@ -344,8 +364,6 @@ jobs:
 
           start="$(date +%s)"
           ./run-zed-sccache-phase.sh seed
-          boringcache save --no-git "$BENCHMARK_WORKSPACE" \
-            "${{ steps.scope.outputs.tag_cargo_registry }}:${HOME}/.cargo/registry,${{ steps.scope.outputs.tag_cargo_git }}:${HOME}/.cargo/git,${{ steps.scope.outputs.tag_target }}:target"
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
@@ -610,6 +628,37 @@ jobs:
           SH
           chmod +x ./run-zed-sccache-phase.sh
 
+      - name: Capture archive restore start
+        id: archive_restore_start
+        run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+
+      - name: Configure boringcache/one for Rust archives
+        uses: boringcache/one@v1
+        with:
+          cli-version: skip
+          setup: external
+          mode: rust-sccache
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          working-directory: .
+          cache-tag: ${{ env.BENCHMARK_ID }}
+          cache-cargo: true
+          cache-target: true
+          sccache: false
+          cargo-tag: ${{ steps.scope.outputs.tag_cargo_registry }}
+          cargo-git-tag: ${{ steps.scope.outputs.tag_cargo_git }}
+          target-tag: ${{ steps.scope.outputs.tag_target }}
+          verbose: true
+        env:
+          BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Capture archive restore timing
+        id: archive_restore_timing
+        run: |
+          set -euo pipefail
+          start="${{ steps.archive_restore_start.outputs.started_at }}"
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
       - name: Run warm build 1
         id: warm1_build
         if: matrix.phase == 'warm1'
@@ -623,14 +672,9 @@ jobs:
 
           timing_file="/tmp/zed-sccache-${{ matrix.phase }}-timing.env"
           start="$(date +%s)"
-          restore_start="$(date +%s)"
-          boringcache restore --no-git "$BENCHMARK_WORKSPACE" \
-            "${{ steps.scope.outputs.tag_cargo_registry }}:${HOME}/.cargo/registry,${{ steps.scope.outputs.tag_cargo_git }}:${HOME}/.cargo/git,${{ steps.scope.outputs.tag_target }}:target"
-          restore_end="$(date +%s)"
           BENCHMARK_PHASE_LABEL="${{ matrix.phase }}" BENCHMARK_TIMING_FILE="$timing_file" ./run-zed-sccache-phase.sh warm
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
-          echo "restore_seconds=$((restore_end - restore_start))" >> "$GITHUB_OUTPUT"
           echo "proxy_ready_seconds=$(grep '^proxy_ready_seconds=' "$timing_file" | head -n1 | cut -d= -f2-)" >> "$GITHUB_OUTPUT"
           echo "build_seconds=$(grep '^build_seconds=' "$timing_file" | head -n1 | cut -d= -f2-)" >> "$GITHUB_OUTPUT"
 
@@ -647,14 +691,9 @@ jobs:
 
           timing_file="/tmp/zed-sccache-${{ matrix.phase }}-timing.env"
           start="$(date +%s)"
-          restore_start="$(date +%s)"
-          boringcache restore --no-git "$BENCHMARK_WORKSPACE" \
-            "${{ steps.scope.outputs.tag_cargo_registry }}:${HOME}/.cargo/registry,${{ steps.scope.outputs.tag_cargo_git }}:${HOME}/.cargo/git,${{ steps.scope.outputs.tag_target }}:target"
-          restore_end="$(date +%s)"
           BENCHMARK_PHASE_LABEL="${{ matrix.phase }}" BENCHMARK_TIMING_FILE="$timing_file" ./run-zed-sccache-phase.sh warm
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
-          echo "restore_seconds=$((restore_end - restore_start))" >> "$GITHUB_OUTPUT"
           echo "proxy_ready_seconds=$(grep '^proxy_ready_seconds=' "$timing_file" | head -n1 | cut -d= -f2-)" >> "$GITHUB_OUTPUT"
           echo "build_seconds=$(grep '^build_seconds=' "$timing_file" | head -n1 | cut -d= -f2-)" >> "$GITHUB_OUTPUT"
 
@@ -671,14 +710,9 @@ jobs:
 
           timing_file="/tmp/zed-sccache-${{ matrix.phase }}-timing.env"
           start="$(date +%s)"
-          restore_start="$(date +%s)"
-          boringcache restore --no-git "$BENCHMARK_WORKSPACE" \
-            "${{ steps.scope.outputs.tag_cargo_registry }}:${HOME}/.cargo/registry,${{ steps.scope.outputs.tag_cargo_git }}:${HOME}/.cargo/git,${{ steps.scope.outputs.tag_target }}:target"
-          restore_end="$(date +%s)"
           BENCHMARK_PHASE_LABEL="${{ matrix.phase }}" BENCHMARK_TIMING_FILE="$timing_file" ./run-zed-sccache-phase.sh stale
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
-          echo "restore_seconds=$((restore_end - restore_start))" >> "$GITHUB_OUTPUT"
           echo "proxy_ready_seconds=$(grep '^proxy_ready_seconds=' "$timing_file" | head -n1 | cut -d= -f2-)" >> "$GITHUB_OUTPUT"
           echo "build_seconds=$(grep '^build_seconds=' "$timing_file" | head -n1 | cut -d= -f2-)" >> "$GITHUB_OUTPUT"
 
@@ -720,19 +754,19 @@ jobs:
           case "${{ matrix.phase }}" in
             warm1)
               seconds="${{ steps.warm1_build.outputs.seconds }}"
-              restore_seconds="${{ steps.warm1_build.outputs.restore_seconds }}"
+              restore_seconds="${{ steps.archive_restore_timing.outputs.seconds }}"
               proxy_ready_seconds="${{ steps.warm1_build.outputs.proxy_ready_seconds }}"
               build_seconds="${{ steps.warm1_build.outputs.build_seconds }}"
               ;;
             warm2)
               seconds="${{ steps.warm2_build.outputs.seconds }}"
-              restore_seconds="${{ steps.warm2_build.outputs.restore_seconds }}"
+              restore_seconds="${{ steps.archive_restore_timing.outputs.seconds }}"
               proxy_ready_seconds="${{ steps.warm2_build.outputs.proxy_ready_seconds }}"
               build_seconds="${{ steps.warm2_build.outputs.build_seconds }}"
               ;;
             stale)
               seconds="${{ steps.stale_docker_build.outputs.seconds }}"
-              restore_seconds="${{ steps.stale_docker_build.outputs.restore_seconds }}"
+              restore_seconds="${{ steps.archive_restore_timing.outputs.seconds }}"
               proxy_ready_seconds="${{ steps.stale_docker_build.outputs.proxy_ready_seconds }}"
               build_seconds="${{ steps.stale_docker_build.outputs.build_seconds }}"
               ;;
