@@ -106,12 +106,19 @@ jobs:
           }
 
           apply_stale_change() {
-            local stale_file
-            stale_file=""
+            local pattern="$1"
+            local fallback="${2:-}"
+            local stale_file=""
             while IFS= read -r candidate; do
               stale_file="${candidate}"
               break
-            done < <(git ls-files -- '*.rs')
+            done < <(eval "$pattern")
+            if [[ -z "${stale_file}" && -n "${fallback}" ]]; then
+              while IFS= read -r candidate; do
+                stale_file="${candidate}"
+                break
+              done < <(eval "$fallback")
+            fi
             if [[ -z "${stale_file}" ]]; then
               echo "No Rust source file found for stale mutation" >&2
               exit 1
@@ -128,8 +135,16 @@ jobs:
             warm)
               run_cached_build
               ;;
-            stale)
-              apply_stale_change
+            stale-low)
+              apply_stale_change "git ls-files -- 'crates/*/tests/**/*.rs' 'crates/storybook/**/*.rs' | head -n1" "git ls-files -- '*.rs' | head -n1"
+              run_cached_build
+              ;;
+            stale-mid)
+              apply_stale_change "git ls-files -- 'crates/editor/src/**/*.rs' 'crates/project/src/**/*.rs' | head -n1"
+              run_cached_build
+              ;;
+            stale-high)
+              apply_stale_change "git ls-files -- 'crates/gpui/src/**/*.rs' 'crates/settings/src/**/*.rs' | head -n1"
               run_cached_build
               ;;
             *)
@@ -269,7 +284,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        phase: [warm1, warm2, stale]
+        phase: [warm1, warm2, stale-low, stale-mid, stale-high]
     steps:
       - name: Checkout target repo
         uses: actions/checkout@v5
@@ -346,12 +361,19 @@ jobs:
           }
 
           apply_stale_change() {
-            local stale_file
-            stale_file=""
+            local pattern="$1"
+            local fallback="${2:-}"
+            local stale_file=""
             while IFS= read -r candidate; do
               stale_file="${candidate}"
               break
-            done < <(git ls-files -- '*.rs')
+            done < <(eval "$pattern")
+            if [[ -z "${stale_file}" && -n "${fallback}" ]]; then
+              while IFS= read -r candidate; do
+                stale_file="${candidate}"
+                break
+              done < <(eval "$fallback")
+            fi
             if [[ -z "${stale_file}" ]]; then
               echo "No Rust source file found for stale mutation" >&2
               exit 1
@@ -368,8 +390,16 @@ jobs:
             warm)
               run_cached_build
               ;;
-            stale)
-              apply_stale_change
+            stale-low)
+              apply_stale_change "git ls-files -- 'crates/*/tests/**/*.rs' 'crates/storybook/**/*.rs' | head -n1" "git ls-files -- '*.rs' | head -n1"
+              run_cached_build
+              ;;
+            stale-mid)
+              apply_stale_change "git ls-files -- 'crates/editor/src/**/*.rs' 'crates/project/src/**/*.rs' | head -n1"
+              run_cached_build
+              ;;
+            stale-high)
+              apply_stale_change "git ls-files -- 'crates/gpui/src/**/*.rs' 'crates/settings/src/**/*.rs' | head -n1"
               run_cached_build
               ;;
             *)
@@ -438,15 +468,15 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
-      - name: Reset build state for stale build
-        if: matrix.phase == 'stale'
+      - name: Reset build state for stale-low build
+        if: matrix.phase == 'stale-low'
         run: |
           set -euo pipefail
           rm -rf target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
           mkdir -p target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
 
-      - name: Restore cache for stale build
-        if: matrix.phase == 'stale'
+      - name: Restore cache for stale-low build
+        if: matrix.phase == 'stale-low'
         uses: actions/cache/restore@v5
         with:
           path: |
@@ -457,13 +487,71 @@ jobs:
           key: ${{ needs.seed-cache.outputs.seed_cache_key }}
           fail-on-cache-miss: true
 
-      - name: Run stale build
-        id: stale_docker_build
-        if: matrix.phase == 'stale'
+      - name: Run stale-low build
+        id: stale_low_build
+        if: matrix.phase == 'stale-low'
         run: |
           set -euo pipefail
           start="$(date +%s)"
-          ./run-zed-sccache-phase.sh stale
+          ./run-zed-sccache-phase.sh stale-low
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Reset build state for stale-mid build
+        if: matrix.phase == 'stale-mid'
+        run: |
+          set -euo pipefail
+          rm -rf target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
+          mkdir -p target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
+
+      - name: Restore cache for stale-mid build
+        if: matrix.phase == 'stale-mid'
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cache/sccache
+            target
+          key: ${{ needs.seed-cache.outputs.seed_cache_key }}
+          fail-on-cache-miss: true
+
+      - name: Run stale-mid build
+        id: stale_mid_build
+        if: matrix.phase == 'stale-mid'
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-zed-sccache-phase.sh stale-mid
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Reset build state for stale-high build
+        if: matrix.phase == 'stale-high'
+        run: |
+          set -euo pipefail
+          rm -rf target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
+          mkdir -p target "$HOME/.cargo/registry" "$HOME/.cargo/git" "$HOME/.cache/sccache"
+
+      - name: Restore cache for stale-high build
+        if: matrix.phase == 'stale-high'
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cache/sccache
+            target
+          key: ${{ needs.seed-cache.outputs.seed_cache_key }}
+          fail-on-cache-miss: true
+
+      - name: Run stale-high build
+        id: stale_high_build
+        if: matrix.phase == 'stale-high'
+        run: |
+          set -euo pipefail
+          start="$(date +%s)"
+          ./run-zed-sccache-phase.sh stale-high
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
@@ -479,8 +567,14 @@ jobs:
             warm2)
               seconds="${{ steps.warm2_build.outputs.seconds }}"
               ;;
-            stale)
-              seconds="${{ steps.stale_docker_build.outputs.seconds }}"
+            stale-low)
+              seconds="${{ steps.stale_low_build.outputs.seconds }}"
+              ;;
+            stale-mid)
+              seconds="${{ steps.stale_mid_build.outputs.seconds }}"
+              ;;
+            stale-high)
+              seconds="${{ steps.stale_high_build.outputs.seconds }}"
               ;;
             *)
               echo "Unknown phase: ${{ matrix.phase }}" >&2
@@ -532,6 +626,7 @@ jobs:
           set -euo pipefail
           parse_phase() {
             local phase="$1"
+            local key="${phase//-/_}"
             local file="benchmark-phase/${phase}.env"
             if [[ ! -f "$file" ]]; then
               echo "Missing timing artifact for phase ${phase}" >&2
@@ -545,11 +640,13 @@ jobs:
               cat "$file" >&2
               exit 1
             fi
-            echo "${phase}_seconds=${seconds}" >> "$GITHUB_OUTPUT"
+            echo "${key}_seconds=${seconds}" >> "$GITHUB_OUTPUT"
           }
           parse_phase warm1
           parse_phase warm2
-          parse_phase stale
+          parse_phase stale-low
+          parse_phase stale-mid
+          parse_phase stale-high
       - name: Measure GHA cache storage usage
         id: cache_size
         env:
@@ -569,10 +666,12 @@ jobs:
             --cold-seconds "${{ needs.seed-cache.outputs.cold_seconds }}" \
             --warm1-seconds "${{ steps.timings.outputs.warm1_seconds }}" \
             --warm2-seconds "${{ steps.timings.outputs.warm2_seconds }}" \
-            --stale-seconds "${{ steps.timings.outputs.stale_seconds }}" \
+            --stale-low-seconds "${{ steps.timings.outputs.stale_low_seconds }}" \
+            --stale-mid-seconds "${{ steps.timings.outputs.stale_mid_seconds }}" \
+            --stale-high-seconds "${{ steps.timings.outputs.stale_high_seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \
-            --hit-behavior-note "Cold+seed run rebuilds from empty state with sccache enabled, then saves cargo registry/git, target, and sccache directories to actions/cache (primary key with fallback key retry) while recording cold timing. Workflow waits for cache index visibility before warm phases. Warm1/Warm2 and stale require successful cache restore before build. Stale run restores warm cache, mutates one Rust source file, then rebuilds. Warm1/Warm2/stale phases run as isolated matrix jobs on separate runners to avoid cross-phase local cache/state reuse."
+            --hit-behavior-note "Cold+seed run rebuilds from empty state with sccache enabled, then saves cargo registry/git, target, and sccache directories to actions/cache (primary key with fallback key retry) while recording cold timing. Workflow waits for cache index visibility before warm phases. Warm1/Warm2 and stale require successful cache restore before build. Stale runs restore warm cache, mutate one Rust source file at the specified dependency level, then rebuild. Warm1/Warm2/stale phases run as isolated matrix jobs on separate runners to avoid cross-phase local cache/state reuse."
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v5

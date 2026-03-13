@@ -210,7 +210,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        phase: [warm1, warm2, stale]
+        phase: [warm1, warm2, stale-low, stale-mid, stale-high]
     steps:
       - name: Checkout target repo
         uses: actions/checkout@v5
@@ -315,12 +315,12 @@ jobs:
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
-      - name: Clean Bazel for stale build
-        if: matrix.phase == 'stale'
+      - name: Clean Bazel for stale-low build
+        if: matrix.phase == 'stale-low'
         run: bazel clean --expunge
 
-      - name: Restore cache for stale build
-        if: matrix.phase == 'stale'
+      - name: Restore cache for stale-low build
+        if: matrix.phase == 'stale-low'
         uses: actions/cache/restore@v5
         with:
           path: |
@@ -328,9 +328,9 @@ jobs:
           key: ${{ needs.seed-cache.outputs.seed_cache_key }}
           fail-on-cache-miss: true
 
-      - name: Run stale build
-        id: stale_docker_build
-        if: matrix.phase == 'stale'
+      - name: Run stale-low build
+        id: stale_low_build
+        if: matrix.phase == 'stale-low'
         run: |
           set -euo pipefail
 
@@ -343,11 +343,90 @@ jobs:
             done < <(find examples -name '*.cc')
           fi
           if [[ -z "$stale_file" ]]; then
-            echo "No C++ source file found for stale mutation" >&2
+            echo "No C++ example file found for stale-low mutation" >&2
             exit 1
           fi
-          echo "// benchmark stale mutation ${GITHUB_RUN_ID:-local}-$(date +%s)" >> "${stale_file}"
-          echo "Applied stale change to ${stale_file}"
+          echo "// benchmark stale-low mutation ${GITHUB_RUN_ID:-local}-$(date +%s)" >> "${stale_file}"
+          echo "Applied stale-low change to ${stale_file}"
+
+          start="$(date +%s)"
+          ./run-grpc-bazel-build.sh
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Clean Bazel for stale-mid build
+        if: matrix.phase == 'stale-mid'
+        run: bazel clean --expunge
+
+      - name: Restore cache for stale-mid build
+        if: matrix.phase == 'stale-mid'
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            ~/.cache/bazel
+          key: ${{ needs.seed-cache.outputs.seed_cache_key }}
+          fail-on-cache-miss: true
+
+      - name: Run stale-mid build
+        id: stale_mid_build
+        if: matrix.phase == 'stale-mid'
+        run: |
+          set -euo pipefail
+
+          stale_file=""
+          while IFS= read -r candidate; do
+            stale_file="${candidate}"
+            break
+          done < <(find src -name '*.cc' ! -path '*/examples/*')
+          if [[ -z "$stale_file" ]]; then
+            echo "No C++ source file found in src/ for stale-mid mutation" >&2
+            exit 1
+          fi
+          echo "// benchmark stale-mid mutation ${GITHUB_RUN_ID:-local}-$(date +%s)" >> "${stale_file}"
+          echo "Applied stale-mid change to ${stale_file}"
+
+          start="$(date +%s)"
+          ./run-grpc-bazel-build.sh
+          end="$(date +%s)"
+          echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
+
+      - name: Clean Bazel for stale-high build
+        if: matrix.phase == 'stale-high'
+        run: bazel clean --expunge
+
+      - name: Restore cache for stale-high build
+        if: matrix.phase == 'stale-high'
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            ~/.cache/bazel
+          key: ${{ needs.seed-cache.outputs.seed_cache_key }}
+          fail-on-cache-miss: true
+
+      - name: Run stale-high build
+        id: stale_high_build
+        if: matrix.phase == 'stale-high'
+        run: |
+          set -euo pipefail
+
+          stale_file=""
+          for dir in include/grpc include/grpcpp; do
+            if [[ -d "$dir" ]]; then
+              while IFS= read -r candidate; do
+                stale_file="${candidate}"
+                break
+              done < <(find "$dir" -name '*.h')
+              if [[ -n "$stale_file" ]]; then
+                break
+              fi
+            fi
+          done
+          if [[ -z "$stale_file" ]]; then
+            echo "No header file found in include/grpc[pp]/ for stale-high mutation" >&2
+            exit 1
+          fi
+          echo "// benchmark stale-high mutation ${GITHUB_RUN_ID:-local}-$(date +%s)" >> "${stale_file}"
+          echo "Applied stale-high change to ${stale_file}"
 
           start="$(date +%s)"
           ./run-grpc-bazel-build.sh
@@ -366,8 +445,14 @@ jobs:
             warm2)
               seconds="${{ steps.warm2_build.outputs.seconds }}"
               ;;
-            stale)
-              seconds="${{ steps.stale_docker_build.outputs.seconds }}"
+            stale-low)
+              seconds="${{ steps.stale_low_build.outputs.seconds }}"
+              ;;
+            stale-mid)
+              seconds="${{ steps.stale_mid_build.outputs.seconds }}"
+              ;;
+            stale-high)
+              seconds="${{ steps.stale_high_build.outputs.seconds }}"
               ;;
             *)
               echo "Unknown phase: ${{ matrix.phase }}" >&2
@@ -419,6 +504,7 @@ jobs:
           set -euo pipefail
           parse_phase() {
             local phase="$1"
+            local key="${phase//-/_}"
             local file="benchmark-phase/${phase}.env"
             if [[ ! -f "$file" ]]; then
               echo "Missing timing artifact for phase ${phase}" >&2
@@ -432,11 +518,13 @@ jobs:
               cat "$file" >&2
               exit 1
             fi
-            echo "${phase}_seconds=${seconds}" >> "$GITHUB_OUTPUT"
+            echo "${key}_seconds=${seconds}" >> "$GITHUB_OUTPUT"
           }
           parse_phase warm1
           parse_phase warm2
-          parse_phase stale
+          parse_phase stale-low
+          parse_phase stale-mid
+          parse_phase stale-high
       - name: Measure GHA cache storage usage
         id: cache_size
         env:
@@ -456,7 +544,9 @@ jobs:
             --cold-seconds "${{ needs.seed-cache.outputs.cold_seconds }}" \
             --warm1-seconds "${{ steps.timings.outputs.warm1_seconds }}" \
             --warm2-seconds "${{ steps.timings.outputs.warm2_seconds }}" \
-            --stale-seconds "${{ steps.timings.outputs.stale_seconds }}" \
+            --stale-low-seconds "${{ steps.timings.outputs.stale_low_seconds }}" \
+            --stale-mid-seconds "${{ steps.timings.outputs.stale_mid_seconds }}" \
+            --stale-high-seconds "${{ steps.timings.outputs.stale_high_seconds }}" \
             --cache-storage-bytes "${{ steps.cache_size.outputs.bytes }}" \
             --cache-storage-source "github-actions-cache-api" \
             --hit-behavior-note "Cold+seed run builds from scratch and saves ~/.cache/bazel to actions/cache (primary key with fallback key retry) while recording cold timing. Workflow waits for cache index visibility before warm phases. bazel clean --expunge between warm/stale phases. Warm runs require successful cache restore before building. Stale run restores cache, mutates one .cc source file, then rebuilds. Warm1/Warm2/stale phases run as isolated matrix jobs on separate runners to avoid cross-phase local cache/state reuse."
