@@ -148,21 +148,20 @@ jobs:
             libx11-dev libx11-xcb-dev libxcb1-dev \
             libxcursor-dev libxinerama-dev libxi-dev libxrandr-dev
 
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Install sccache
-        run: |
-          set -euo pipefail
-          SCCACHE_VERSION="0.13.0"
-          ARCHIVE="sccache-v${SCCACHE_VERSION}-x86_64-unknown-linux-musl.tar.gz"
-          URL="https://github.com/mozilla/sccache/releases/download/v${SCCACHE_VERSION}/${ARCHIVE}"
-          TMP_DIR="$(mktemp -d)"
-          trap 'rm -rf "$TMP_DIR"' EXIT
-          curl -sS --fail --location --output "${TMP_DIR}/${ARCHIVE}" "$URL"
-          tar -xzf "${TMP_DIR}/${ARCHIVE}" -C "$TMP_DIR"
-          sudo install -m 0755 "${TMP_DIR}/sccache-v${SCCACHE_VERSION}-x86_64-unknown-linux-musl/sccache" /usr/local/bin/sccache
-          sccache --version
+      - name: Configure boringcache/one for Rust toolchain and sccache
+        uses: boringcache/one@v1
+        with:
+          cli-version: skip
+          setup: mise
+          mode: rust-sccache
+          tools: rust@${{ env.CLI_RUST_VERSION }}
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          working-directory: .
+          cache-runtime: true
+          cache-cargo: true
+          cache-target: true
+          sccache: true
+          verbose: true
 
       - name: Prepare benchmark scope and helpers
         id: scope
@@ -336,14 +335,15 @@ jobs:
         uses: boringcache/one@v1
         with:
           cli-version: skip
-          setup: external
+          setup: mise
           mode: rust-sccache
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           working-directory: .
           cache-tag: ${{ env.BENCHMARK_ID }}
           cache-cargo: true
           cache-target: true
-          sccache: false
+          tools: rust@${{ env.CLI_RUST_VERSION }}
+          sccache: true
           cargo-tag: ${{ steps.scope.outputs.tag_cargo_registry }}
           cargo-git-tag: ${{ steps.scope.outputs.tag_cargo_git }}
           target-tag: ${{ steps.scope.outputs.tag_target }}
@@ -451,21 +451,20 @@ jobs:
             libx11-dev libx11-xcb-dev libxcb1-dev \
             libxcursor-dev libxinerama-dev libxi-dev libxrandr-dev
 
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Install sccache
-        run: |
-          set -euo pipefail
-          SCCACHE_VERSION="0.13.0"
-          ARCHIVE="sccache-v${SCCACHE_VERSION}-x86_64-unknown-linux-musl.tar.gz"
-          URL="https://github.com/mozilla/sccache/releases/download/v${SCCACHE_VERSION}/${ARCHIVE}"
-          TMP_DIR="$(mktemp -d)"
-          trap 'rm -rf "$TMP_DIR"' EXIT
-          curl -sS --fail --location --output "${TMP_DIR}/${ARCHIVE}" "$URL"
-          tar -xzf "${TMP_DIR}/${ARCHIVE}" -C "$TMP_DIR"
-          sudo install -m 0755 "${TMP_DIR}/sccache-v${SCCACHE_VERSION}-x86_64-unknown-linux-musl/sccache" /usr/local/bin/sccache
-          sccache --version
+      - name: Configure boringcache/one for Rust toolchain and sccache
+        uses: boringcache/one@v1
+        with:
+          cli-version: skip
+          setup: mise
+          mode: rust-sccache
+          tools: rust@${{ env.CLI_RUST_VERSION }}
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          working-directory: .
+          cache-runtime: true
+          cache-cargo: true
+          cache-target: true
+          sccache: true
+          verbose: true
 
       - name: Prepare benchmark scope and helpers
         id: scope
@@ -636,14 +635,15 @@ jobs:
         uses: boringcache/one@v1
         with:
           cli-version: skip
-          setup: external
+          setup: mise
           mode: rust-sccache
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           working-directory: .
           cache-tag: ${{ env.BENCHMARK_ID }}
           cache-cargo: true
           cache-target: true
-          sccache: false
+          tools: rust@${{ env.CLI_RUST_VERSION }}
+          sccache: true
           cargo-tag: ${{ steps.scope.outputs.tag_cargo_registry }}
           cargo-git-tag: ${{ steps.scope.outputs.tag_cargo_git }}
           target-tag: ${{ steps.scope.outputs.tag_target }}

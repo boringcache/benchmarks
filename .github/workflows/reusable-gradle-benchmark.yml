@@ -69,12 +69,6 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: ${{ env.JAVA_VERSION }}
-
       - name: Prepare benchmark scope and helpers
         id: scope
         run: |
@@ -207,8 +201,9 @@ jobs:
         if: inputs.strategy == 'boringcache'
         uses: boringcache/one@v1
         with:
-          setup: external
+          setup: mise
           mode: gradle
+          tools: java@${{ env.JAVA_VERSION }}
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ steps.scope.outputs.tag_remote }}
           working-directory: .
@@ -221,6 +216,17 @@ jobs:
           verbose: true
         env:
           BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Configure boringcache/one for actions-cache tooling
+        if: inputs.strategy == 'actions-cache'
+        uses: boringcache/one@v1
+        with:
+          setup: mise
+          mode: auto
+          tools: java@${{ env.JAVA_VERSION }}
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          working-directory: .
+          verbose: true
 
       - name: Purge benchmark GHA cache keys
         if: inputs.strategy == 'actions-cache'
@@ -379,12 +385,6 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: ${{ env.JAVA_VERSION }}
-
       - name: Prepare benchmark scope and helpers
         id: scope
         run: |
@@ -505,8 +505,9 @@ jobs:
         if: inputs.strategy == 'boringcache'
         uses: boringcache/one@v1
         with:
-          setup: external
+          setup: mise
           mode: gradle
+          tools: java@${{ env.JAVA_VERSION }}
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ steps.scope.outputs.tag_remote }}
           working-directory: .
@@ -519,6 +520,17 @@ jobs:
         env:
           BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Configure boringcache/one for actions-cache tooling
+        if: inputs.strategy == 'actions-cache'
+        uses: boringcache/one@v1
+        with:
+          setup: mise
+          mode: auto
+          tools: java@${{ env.JAVA_VERSION }}
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          working-directory: .
+          verbose: true
 
       - name: Restore seeded actions/cache
         if: inputs.strategy == 'actions-cache'

@@ -69,12 +69,6 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: ${{ env.JAVA_VERSION }}
-
       - name: Prepare benchmark scope and helpers
         id: scope
         run: |
@@ -174,8 +168,9 @@ jobs:
         if: inputs.strategy == 'boringcache'
         uses: boringcache/one@v1
         with:
-          setup: external
+          setup: mise
           mode: maven
+          tools: java@${{ env.JAVA_VERSION }}
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ steps.scope.outputs.tag_remote }}
           working-directory: .
@@ -186,6 +181,17 @@ jobs:
           verbose: true
         env:
           BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Configure boringcache/one for actions-cache tooling
+        if: inputs.strategy == 'actions-cache'
+        uses: boringcache/one@v1
+        with:
+          setup: mise
+          mode: auto
+          tools: java@${{ env.JAVA_VERSION }}
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          working-directory: .
+          verbose: true
 
       - name: Purge benchmark GHA cache keys
         if: inputs.strategy == 'actions-cache'
@@ -330,12 +336,6 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: ${{ env.JAVA_VERSION }}
-
       - name: Prepare benchmark scope and helpers
         id: scope
         run: |
@@ -427,8 +427,9 @@ jobs:
         if: inputs.strategy == 'boringcache'
         uses: boringcache/one@v1
         with:
-          setup: external
+          setup: mise
           mode: maven
+          tools: java@${{ env.JAVA_VERSION }}
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ steps.scope.outputs.tag_remote }}
           working-directory: .
@@ -439,6 +440,17 @@ jobs:
         env:
           BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
           BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+
+      - name: Configure boringcache/one for actions-cache tooling
+        if: inputs.strategy == 'actions-cache'
+        uses: boringcache/one@v1
+        with:
+          setup: mise
+          mode: auto
+          tools: java@${{ env.JAVA_VERSION }}
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          working-directory: .
+          verbose: true
 
       - name: Restore seeded actions/cache
         if: inputs.strategy == 'actions-cache'
@@ -567,7 +579,7 @@ jobs:
             --stale-high-seconds "${{ steps.timings.outputs.stale_high_seconds }}" \
             --cache-storage-bytes "${{ inputs.strategy == 'boringcache' && steps.bc_cache_size.outputs.bytes || steps.ac_cache_size.outputs.bytes }}" \
             --cache-storage-source "${{ inputs.strategy == 'boringcache' && 'boringcache-check' || 'github-actions-cache-api' }}" \
-            --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses actions/setup-java for the toolchain and boringcache/one in mode=maven to start an empty run-scoped Maven proxy while archiving only ~/.m2/repository. Warm1/Warm2 and stale run on fresh runners, restore that same dependency repository through boringcache/one, and hit the native Maven build-cache protocol against the same run-scoped remote cache in read-only mode.' || 'Cold+seed run builds from scratch and saves ~/.m2/repository plus ~/.m2/build-cache to actions/cache under a run-scoped key. Warm1/Warm2 and stale restore the same dependency repository and local Maven build-cache on fresh runners. Stale run mutates one Java source file before rebuilding against the restored local Maven build-cache.' }}"
+            --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses boringcache/one in mode=maven with setup=mise for tools and a run-scoped Maven cache tag, while archiving only ~/.m2/repository. Warm1/Warm2 and stale run on fresh runners, restore that same dependency repository through boringcache/one, and hit the native Maven build-cache protocol against the same run-scoped remote cache in read-only mode.' || 'Cold+seed run builds from scratch and saves ~/.m2/repository plus ~/.m2/build-cache to actions/cache under a run-scoped key. Warm1/Warm2 and stale restore the same dependency repository and local Maven build-cache on fresh runners. Stale run mutates one Java source file before rebuilding against the restored local Maven build-cache.' }}"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v5

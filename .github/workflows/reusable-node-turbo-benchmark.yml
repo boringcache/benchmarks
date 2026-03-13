@@ -73,12 +73,6 @@ jobs:
           ref: ${{ github.sha }}
           path: .benchmark-config
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          package-manager-cache: false
-
       - name: Prepare benchmark scope and helpers
         id: scope
         run: |
@@ -176,12 +170,24 @@ jobs:
           corepack install
           echo "dir=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
 
+      - name: Configure boringcache/one for actions-cache tooling
+        if: inputs.strategy == 'actions-cache'
+        uses: boringcache/one@v1
+        with:
+          setup: mise
+          mode: auto
+          tools: node@${{ env.NODE_VERSION }}
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          working-directory: .
+          verbose: true
+
       - name: Configure boringcache/one
         if: inputs.strategy == 'boringcache'
         uses: boringcache/one@v1
         with:
-          setup: external
+          setup: mise
           mode: turbo-proxy
+          tools: node@${{ env.NODE_VERSION }}
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ steps.scope.outputs.tag_turbo }}
           working-directory: .
@@ -248,7 +254,9 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf .turbo node_modules "$PNPM_STORE_DIR"
-          mkdir -p "$PNPM_STORE_DIR"
+          if [[ -n "$PNPM_STORE_DIR" ]]; then
+            mkdir -p "$PNPM_STORE_DIR"
+          fi
 
           start="$(date +%s)"
           ./run-node-turbo-phase.sh seed
@@ -337,12 +345,6 @@ jobs:
           repository: ${{ github.repository }}
           ref: ${{ github.sha }}
           path: .benchmark-config
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          package-manager-cache: false
 
       - name: Prepare benchmark scope and helpers
         id: scope
@@ -433,12 +435,24 @@ jobs:
           corepack install
           echo "dir=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
 
+      - name: Configure one for actions-cache tooling
+        if: inputs.strategy == 'actions-cache'
+        uses: boringcache/one@v1
+        with:
+          setup: mise
+          mode: auto
+          tools: node@${{ env.NODE_VERSION }}
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          working-directory: .
+          verbose: true
+
       - name: Configure boringcache/one
         if: inputs.strategy == 'boringcache'
         uses: boringcache/one@v1
         with:
-          setup: external
+          setup: mise
           mode: turbo-proxy
+          tools: node@${{ env.NODE_VERSION }}
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
           cache-tag: ${{ steps.scope.outputs.tag_turbo }}
           working-directory: .
@@ -575,7 +589,7 @@ jobs:
             --stale-high-seconds "${{ steps.timings.outputs.stale_high_seconds }}" \
             --cache-storage-bytes "${{ inputs.strategy == 'boringcache' && steps.bc_cache_size.outputs.bytes || steps.ac_cache_size.outputs.bytes }}" \
             --cache-storage-source "${{ inputs.strategy == 'boringcache' && 'boringcache-check' || 'github-actions-cache-api' }}" \
-            --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses actions/setup-node for the toolchain and boringcache/one in mode=turbo-proxy to start an empty run-scoped Turbo proxy while archiving only the pnpm store. Warm1/Warm2 and stale run on fresh runners, restore that same pnpm store through boringcache/one, and hit the native Turbo remote-cache protocol against the same run-scoped tag in read-only mode.' || 'Cold+seed run builds from scratch and saves the pnpm store plus local .turbo cache to actions/cache under a run-scoped key while recording cold timing. Warm1/Warm2 and stale restore that same key on fresh runners. Stale run mutates one JS/TS source file before rebuilding against the restored local Turbo cache.' }}"
+            --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses boringcache/one in mode=turbo-proxy with setup=mise for tooling and starts an empty run-scoped Turbo proxy while archiving only the pnpm store. Warm1/Warm2 and stale run on fresh runners, restore that same pnpm store through boringcache/one, and hit the native Turbo remote-cache protocol against the same run-scoped tag in read-only mode.' || 'Cold+seed run builds from scratch and saves the pnpm store plus local .turbo cache to actions/cache under a run-scoped key while recording cold timing. Warm1/Warm2 and stale restore that same key on fresh runners. Stale run mutates one JS/TS source file before rebuilding against the restored local Turbo cache.' }}"
 
       - name: Upload benchmark artifacts
         uses: actions/upload-artifact@v5
