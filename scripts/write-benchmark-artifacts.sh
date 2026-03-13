@@ -15,6 +15,9 @@ bytes_downloaded=""
 hit_behavior_note=""
 layer_miss_seconds=""
 stale_seconds=""
+stale_low_seconds=""
+stale_mid_seconds=""
+stale_high_seconds=""
 output_dir="benchmark-results"
 
 while [[ $# -gt 0 ]]; do
@@ -75,6 +78,18 @@ while [[ $# -gt 0 ]]; do
       stale_seconds="$2"
       shift 2
       ;;
+    --stale-low-seconds)
+      stale_low_seconds="$2"
+      shift 2
+      ;;
+    --stale-mid-seconds)
+      stale_mid_seconds="$2"
+      shift 2
+      ;;
+    --stale-high-seconds)
+      stale_high_seconds="$2"
+      shift 2
+      ;;
     --output-dir)
       output_dir="$2"
       shift 2
@@ -120,6 +135,15 @@ fi
 if [[ -n "$stale_seconds" ]] && ! [[ "$stale_seconds" =~ ^[0-9]+$ ]]; then
   stale_seconds=""
 fi
+if [[ -n "$stale_low_seconds" ]] && ! [[ "$stale_low_seconds" =~ ^[0-9]+$ ]]; then
+  stale_low_seconds=""
+fi
+if [[ -n "$stale_mid_seconds" ]] && ! [[ "$stale_mid_seconds" =~ ^[0-9]+$ ]]; then
+  stale_mid_seconds=""
+fi
+if [[ -n "$stale_high_seconds" ]] && ! [[ "$stale_high_seconds" =~ ^[0-9]+$ ]]; then
+  stale_high_seconds=""
+fi
 
 warm_count=0
 warm_total=0
@@ -157,6 +181,22 @@ else
   stale_improvement_pct="null"
 fi
 
+if [[ -n "$stale_low_seconds" ]]; then
+  stale_low_improvement_pct=$(pct_vs_cold "$stale_low_seconds")
+else
+  stale_low_improvement_pct="null"
+fi
+if [[ -n "$stale_mid_seconds" ]]; then
+  stale_mid_improvement_pct=$(pct_vs_cold "$stale_mid_seconds")
+else
+  stale_mid_improvement_pct="null"
+fi
+if [[ -n "$stale_high_seconds" ]]; then
+  stale_high_improvement_pct=$(pct_vs_cold "$stale_high_seconds")
+else
+  stale_high_improvement_pct="null"
+fi
+
 cache_storage_mib=$(awk -v bytes="$cache_storage_bytes" 'BEGIN { printf "%.2f", bytes / 1048576 }')
 
 mkdir -p "$output_dir"
@@ -178,6 +218,9 @@ cat > "$json_path" <<JSON
     "warm1_seconds": $(json_num_or_null "$warm1_seconds"),
     "warm2_seconds": $(json_num_or_null "$warm2_seconds"),
     "stale_seconds": $(json_num_or_null "$stale_seconds"),
+    "stale_low_seconds": $(json_num_or_null "$stale_low_seconds"),
+    "stale_mid_seconds": $(json_num_or_null "$stale_mid_seconds"),
+    "stale_high_seconds": $(json_num_or_null "$stale_high_seconds"),
     "layer_miss_seconds": $(json_num_or_null "$layer_miss_seconds")
   },
   "speed": {
@@ -186,7 +229,13 @@ cat > "$json_path" <<JSON
   },
   "stale": {
     "seconds": $(json_num_or_null "$stale_seconds"),
-    "vs_cold_improvement_pct": $stale_improvement_pct
+    "vs_cold_improvement_pct": $stale_improvement_pct,
+    "low_seconds": $(json_num_or_null "$stale_low_seconds"),
+    "low_vs_cold_improvement_pct": $stale_low_improvement_pct,
+    "mid_seconds": $(json_num_or_null "$stale_mid_seconds"),
+    "mid_vs_cold_improvement_pct": $stale_mid_improvement_pct,
+    "high_seconds": $(json_num_or_null "$stale_high_seconds"),
+    "high_vs_cold_improvement_pct": $stale_high_improvement_pct
   },
   "layer_miss": {
     "seconds": $(json_num_or_null "$layer_miss_seconds"),
@@ -223,6 +272,15 @@ JSON
   fi
   if [[ -n "$stale_seconds" ]]; then
     echo "| Stale (code changed) | ${stale_seconds}s | -${stale_improvement_pct}% |"
+  fi
+  if [[ -n "$stale_low_seconds" ]]; then
+    echo "| Stale — low (leaf module) | ${stale_low_seconds}s | -${stale_low_improvement_pct}% |"
+  fi
+  if [[ -n "$stale_mid_seconds" ]]; then
+    echo "| Stale — mid (impl module) | ${stale_mid_seconds}s | -${stale_mid_improvement_pct}% |"
+  fi
+  if [[ -n "$stale_high_seconds" ]]; then
+    echo "| Stale — high (root module) | ${stale_high_seconds}s | -${stale_high_improvement_pct}% |"
   fi
   if [[ -n "$layer_miss_seconds" ]]; then
     echo "| Layer miss (no layer cache) | ${layer_miss_seconds}s | -${layer_miss_improvement_pct}% |"

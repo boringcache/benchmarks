@@ -315,7 +315,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        phase: [warm1, warm2, stale]
+        phase: [warm1, warm2, stale-low, stale-mid, stale-high]
     steps:
       - name: Checkout target repo
         uses: actions/checkout@v5
@@ -452,11 +452,13 @@ jobs:
 
       - name: Run scenario build
         id: phase_build
+        env:
+          STALE_LEVEL: ${{ contains(matrix.phase, 'stale') && (endsWith(matrix.phase, '-low') && 'low' || endsWith(matrix.phase, '-high') && 'high' || 'mid') || '' }}
         run: |
           set -euo pipefail
 
           start="$(date +%s)"
-          ./run-maven-phase.sh ${{ matrix.phase == 'stale' && 'stale' || 'warm' }}
+          ./run-maven-phase.sh ${{ contains(matrix.phase, 'stale') && 'stale' || 'warm' }}
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
 
@@ -521,11 +523,14 @@ jobs:
               cat "$file" >&2
               exit 1
             fi
-            echo "${phase}_seconds=${seconds}" >> "$GITHUB_OUTPUT"
+            local key="${phase//-/_}"
+            echo "${key}_seconds=${seconds}" >> "$GITHUB_OUTPUT"
           }
           parse_phase warm1
           parse_phase warm2
-          parse_phase stale
+          parse_phase stale-low
+          parse_phase stale-mid
+          parse_phase stale-high
 
       - name: Measure BoringCache storage usage
         if: inputs.strategy == 'boringcache'
@@ -557,7 +562,9 @@ jobs:
             --cold-seconds "${{ needs.seed-cache.outputs.cold_seconds }}" \
             --warm1-seconds "${{ steps.timings.outputs.warm1_seconds }}" \
             --warm2-seconds "${{ steps.timings.outputs.warm2_seconds }}" \
-            --stale-seconds "${{ steps.timings.outputs.stale_seconds }}" \
+            --stale-low-seconds "${{ steps.timings.outputs.stale_low_seconds }}" \
+            --stale-mid-seconds "${{ steps.timings.outputs.stale_mid_seconds }}" \
+            --stale-high-seconds "${{ steps.timings.outputs.stale_high_seconds }}" \
             --cache-storage-bytes "${{ inputs.strategy == 'boringcache' && steps.bc_cache_size.outputs.bytes || steps.ac_cache_size.outputs.bytes }}" \
             --cache-storage-source "${{ inputs.strategy == 'boringcache' && 'boringcache-check' || 'github-actions-cache-api' }}" \
             --hit-behavior-note "${{ inputs.strategy == 'boringcache' && 'Cold+seed run uses actions/setup-java for the toolchain and boringcache/one in mode=maven to start an empty run-scoped Maven proxy while archiving only ~/.m2/repository. Warm1/Warm2 and stale run on fresh runners, restore that same dependency repository through boringcache/one, and hit the native Maven build-cache protocol against the same run-scoped remote cache in read-only mode.' || 'Cold+seed run builds from scratch and saves ~/.m2/repository plus ~/.m2/build-cache to actions/cache under a run-scoped key. Warm1/Warm2 and stale restore the same dependency repository and local Maven build-cache on fresh runners. Stale run mutates one Java source file before rebuilding against the restored local Maven build-cache.' }}"
