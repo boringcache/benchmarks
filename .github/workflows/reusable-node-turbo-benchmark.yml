@@ -139,6 +139,8 @@ jobs:
 
           corepack enable
           corepack install
+          export PNPM_STORE_DIR="${PNPM_STORE_DIR:-$(pwd)/.pnpm-store}"
+          export NPM_CONFIG_STORE_DIR="${NPM_CONFIG_STORE_DIR:-$PNPM_STORE_DIR}"
           pnpm() { corepack pnpm "$@"; }
           pnpm --version
 
@@ -151,19 +153,21 @@ jobs:
           SH
           chmod +x ./run-node-turbo-phase.sh
 
-      - name: Resolve pnpm store directory
-        id: pnpm_store
-        run: |
-          set -euo pipefail
-          corepack enable
-          corepack install
-          echo "dir=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
-
-      - name: Setup BoringCache CLI
+      - name: Configure boringcache/one
         if: inputs.strategy == 'boringcache'
-        uses: boringcache/setup-boringcache@v1
+        uses: boringcache/one@v1
         with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          setup: external
+          mode: turbo-proxy
+          workspace: ${{ env.BENCHMARK_WORKSPACE }}
+          cache-tag: ${{ steps.scope.outputs.tag_turbo }}
+          working-directory: .
+          entries: |
+            ${{ steps.scope.outputs.tag_pnpm }}:.pnpm-store
+          verbose: true
+        env:
+          BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Purge benchmark GHA cache keys
         if: inputs.strategy == 'actions-cache'
@@ -216,56 +220,15 @@ jobs:
 
       - name: Run cold + seed cache build
         id: cold_baseline_build
-        env:
-          PNPM_STORE_DIR: ${{ steps.pnpm_store.outputs.dir }}
         run: |
           set -euo pipefail
-          rm -rf .turbo node_modules "$PNPM_STORE_DIR"
-          mkdir -p "$PNPM_STORE_DIR"
-
-          if [[ "${{ inputs.strategy }}" == "boringcache" ]]; then
-            proxy_log="/tmp/boringcache-proxy-${TURBO_PROXY_PORT}.log"
-            bash .benchmark-config/scripts/boringcache-proxy.sh start \
-              --workspace "${BENCHMARK_WORKSPACE}" \
-              --tag "${{ steps.scope.outputs.tag_turbo }}" \
-              --command cache-registry \
-              --host 127.0.0.1 \
-              --port "${TURBO_PROXY_PORT}" \
-              --no-git \
-              --no-platform >/tmp/boringcache-proxy-start.txt
-            proxy_pid="$(grep '^pid=' /tmp/boringcache-proxy-start.txt | cut -d= -f2-)"
-            cleanup() {
-              bash .benchmark-config/scripts/boringcache-proxy.sh stop --pid "$proxy_pid" || true
-              echo "=== Seed proxy log (last 120 lines) ==="
-              tail -n 120 "$proxy_log" || true
-            }
-            trap cleanup EXIT
-
-            if ! bash .benchmark-config/scripts/boringcache-proxy.sh wait --port "${TURBO_PROXY_PORT}" --pid "$proxy_pid"; then
-              echo "Turbo proxy did not become ready" >&2
-              tail -n 200 "$proxy_log" >&2 || true
-              exit 1
-            fi
-
-            export TURBO_API="http://127.0.0.1:${TURBO_PROXY_PORT}"
-            export TURBO_TOKEN="boringcache"
-            export TURBO_TEAM="team_boringcache"
-          fi
+          rm -rf .turbo node_modules .pnpm-store
+          mkdir -p .pnpm-store
 
           start="$(date +%s)"
           ./run-node-turbo-phase.sh seed
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
-
-      - name: Save BoringCache pnpm store
-        if: inputs.strategy == 'boringcache'
-        uses: boringcache/save@v1
-        with:
-          cli-version: skip
-          workspace: ${{ env.BENCHMARK_WORKSPACE }}
-          entries: ${{ steps.scope.outputs.tag_pnpm }}:${{ steps.pnpm_store.outputs.dir }}
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Save seeded cache (primary key)
         if: inputs.strategy == 'actions-cache'
@@ -274,7 +237,7 @@ jobs:
         uses: actions/cache/save@v5
         with:
           path: |
-            ${{ steps.pnpm_store.outputs.dir }}
+            .pnpm-store
             .turbo
           key: ${{ steps.scope.outputs.cache_key_primary }}
 
@@ -285,7 +248,7 @@ jobs:
         uses: actions/cache/save@v5
         with:
           path: |
-            ${{ steps.pnpm_store.outputs.dir }}
+            .pnpm-store
             .turbo
           key: ${{ steps.scope.outputs.cache_key_fallback }}
 
@@ -414,6 +377,8 @@ jobs:
 
           corepack enable
           corepack install
+          export PNPM_STORE_DIR="${PNPM_STORE_DIR:-$(pwd)/.pnpm-store}"
+          export NPM_CONFIG_STORE_DIR="${NPM_CONFIG_STORE_DIR:-$PNPM_STORE_DIR}"
           pnpm() { corepack pnpm "$@"; }
           pnpm --version
 
@@ -426,69 +391,28 @@ jobs:
           SH
           chmod +x ./run-node-turbo-phase.sh
 
-      - name: Resolve pnpm store directory
-        id: pnpm_store
-        run: |
-          set -euo pipefail
-          corepack enable
-          corepack install
-          echo "dir=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
-
-      - name: Setup BoringCache CLI
+      - name: Configure boringcache/one
         if: inputs.strategy == 'boringcache'
-        uses: boringcache/setup-boringcache@v1
+        uses: boringcache/one@v1
         with:
-          token: ${{ secrets.BORINGCACHE_API_TOKEN }}
-
-      - name: Restore BoringCache pnpm store
-        if: inputs.strategy == 'boringcache'
-        uses: boringcache/restore@v1
-        with:
-          cli-version: skip
+          setup: external
+          mode: turbo-proxy
           workspace: ${{ env.BENCHMARK_WORKSPACE }}
-          entries: ${{ steps.scope.outputs.tag_pnpm }}:${{ steps.pnpm_store.outputs.dir }}
+          cache-tag: ${{ steps.scope.outputs.tag_turbo }}
+          working-directory: .
+          entries: |
+            ${{ steps.scope.outputs.tag_pnpm }}:.pnpm-store
+          verbose: true
         env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-
-      - name: Start BoringCache Turbo proxy
-        if: inputs.strategy == 'boringcache'
-        id: bc_proxy
-        env:
-          BORINGCACHE_API_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
-        run: |
-          set -euo pipefail
-          proxy_log="/tmp/boringcache-proxy-${TURBO_PROXY_PORT}.log"
-          bash .benchmark-config/scripts/boringcache-proxy.sh start \
-            --workspace "${BENCHMARK_WORKSPACE}" \
-            --tag "${{ steps.scope.outputs.tag_turbo }}" \
-            --command cache-registry \
-            --host 127.0.0.1 \
-            --port "${TURBO_PROXY_PORT}" \
-            --no-git \
-            --no-platform >/tmp/boringcache-proxy-start.txt
-          proxy_pid="$(grep '^pid=' /tmp/boringcache-proxy-start.txt | cut -d= -f2-)"
-
-          if ! bash .benchmark-config/scripts/boringcache-proxy.sh wait --port "${TURBO_PROXY_PORT}" --pid "$proxy_pid"; then
-            echo "Turbo proxy did not become ready" >&2
-            tail -n 200 "$proxy_log" >&2 || true
-            bash .benchmark-config/scripts/boringcache-proxy.sh stop --pid "$proxy_pid" || true
-            exit 1
-          fi
-
-          echo "pid=${proxy_pid}" >> "$GITHUB_OUTPUT"
-          echo "log_path=${proxy_log}" >> "$GITHUB_OUTPUT"
-          {
-            echo "TURBO_API=http://127.0.0.1:${TURBO_PROXY_PORT}"
-            echo "TURBO_TOKEN=boringcache"
-            echo "TURBO_TEAM=team_boringcache"
-          } >> "$GITHUB_ENV"
+          BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
+          BORINGCACHE_SAVE_TOKEN: ${{ secrets.BORINGCACHE_API_TOKEN }}
 
       - name: Restore seeded actions/cache
         if: inputs.strategy == 'actions-cache'
         uses: actions/cache/restore@v5
         with:
           path: |
-            ${{ steps.pnpm_store.outputs.dir }}
+            .pnpm-store
             .turbo
           key: ${{ needs.seed-cache.outputs.seed_cache_key }}
           fail-on-cache-miss: true
@@ -501,21 +425,6 @@ jobs:
           ./run-node-turbo-phase.sh ${{ matrix.phase == 'stale' && 'stale' || 'warm' }}
           end="$(date +%s)"
           echo "seconds=$((end - start))" >> "$GITHUB_OUTPUT"
-
-      - name: Stop BoringCache Turbo proxy
-        if: always() && inputs.strategy == 'boringcache'
-        run: |
-          set -euo pipefail
-          proxy_pid="${{ steps.bc_proxy.outputs.pid }}"
-          proxy_log="${{ steps.bc_proxy.outputs.log_path }}"
-
-          if [[ -n "${proxy_pid}" ]]; then
-            bash .benchmark-config/scripts/boringcache-proxy.sh stop --pid "${proxy_pid}" || true
-          fi
-
-          if [[ -n "${proxy_log}" && -f "${proxy_log}" ]]; then
-            tail -n 120 "${proxy_log}" || true
-          fi
 
       - name: Persist scenario timing artifact
         run: |
