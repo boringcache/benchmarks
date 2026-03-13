@@ -157,7 +157,7 @@ jobs:
           stale_flags=""
           if [[ "$mode" == "stale" ]]; then
             apply_stale_change
-            stale_flags="-Dcheckstyle.skip=true -Dspring-javaformat.skip=true"
+            stale_flags="-Dcheckstyle.skip=true -Dcheckstyle.failOnViolation=false -Dcheckstyle.failsOnError=false -Dspring-javaformat.skip=true"
           fi
 
           eval "$BUILD_COMMAND $stale_flags"
@@ -416,7 +416,7 @@ jobs:
           stale_flags=""
           if [[ "$mode" == "stale" ]]; then
             apply_stale_change
-            stale_flags="-Dcheckstyle.skip=true -Dspring-javaformat.skip=true"
+            stale_flags="-Dcheckstyle.skip=true -Dcheckstyle.failOnViolation=false -Dcheckstyle.failsOnError=false -Dspring-javaformat.skip=true"
           fi
 
           eval "$BUILD_COMMAND $stale_flags"
