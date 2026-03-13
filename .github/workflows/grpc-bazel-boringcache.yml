@@ -184,7 +184,7 @@ jobs:
 
       - name: Configure boringcache/one
         if: needs.prepare-cli.outputs.use_custom_cli != 'true'
-        id: bazel_cache
+        id: bazel_cache_release
         uses: boringcache/one@v1
         with:
           setup: external
@@ -203,7 +203,7 @@ jobs:
 
       - name: Configure boringcache/one with custom CLI
         if: needs.prepare-cli.outputs.use_custom_cli == 'true'
-        id: bazel_cache
+        id: bazel_cache_custom
         uses: boringcache/one@v1
         with:
           cli-version: skip
@@ -261,8 +261,8 @@ jobs:
             --cache-tag "$BAZEL_REMOTE_CACHE_TAG" \
             --cli-source "${{ needs.prepare-cli.outputs.cli_source }}" \
             --cli-ref "${{ needs.prepare-cli.outputs.cli_ref }}" \
-            --proxy-port "${{ steps.bazel_cache.outputs.proxy-port }}" \
-            --proxy-log-path "${{ steps.bazel_cache.outputs.proxy-log-path }}" \
+            --proxy-port "${{ steps.bazel_cache_release.outputs.proxy-port || steps.bazel_cache_custom.outputs.proxy-port }}" \
+            --proxy-log-path "${{ steps.bazel_cache_release.outputs.proxy-log-path || steps.bazel_cache_custom.outputs.proxy-log-path }}" \
             --cache-root "$HOME/.cache/bazel" \
             --cache-label "bazel-cache"
 
@@ -359,7 +359,7 @@ jobs:
 
       - name: Configure boringcache/one
         if: needs.prepare-cli.outputs.use_custom_cli != 'true'
-        id: bazel_cache
+        id: bazel_cache_release
         uses: boringcache/one@v1
         with:
           setup: external
@@ -374,7 +374,7 @@ jobs:
 
       - name: Configure boringcache/one with custom CLI
         if: needs.prepare-cli.outputs.use_custom_cli == 'true'
-        id: bazel_cache
+        id: bazel_cache_custom
         uses: boringcache/one@v1
         with:
           cli-version: skip
@@ -491,8 +491,8 @@ jobs:
             --cache-tag "$BAZEL_REMOTE_CACHE_TAG" \
             --cli-source "${{ needs.prepare-cli.outputs.cli_source }}" \
             --cli-ref "${{ needs.prepare-cli.outputs.cli_ref }}" \
-            --proxy-port "${{ steps.bazel_cache.outputs.proxy-port }}" \
-            --proxy-log-path "${{ steps.bazel_cache.outputs.proxy-log-path }}" \
+            --proxy-port "${{ steps.bazel_cache_release.outputs.proxy-port || steps.bazel_cache_custom.outputs.proxy-port }}" \
+            --proxy-log-path "${{ steps.bazel_cache_release.outputs.proxy-log-path || steps.bazel_cache_custom.outputs.proxy-log-path }}" \
             --cache-root "$HOME/.cache/bazel" \
             --cache-label "bazel-cache"
 
