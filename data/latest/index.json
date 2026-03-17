@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-17T16:12:04Z",
+  "generated_at": "2026-03-17T16:55:00Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -259,6 +259,71 @@
         "layer_miss_improvement_pct": 23.01,
         "storage_improvement_pct": 53.5,
         "storage_saved_bytes": 13922937065
+      }
+    },
+    {
+      "benchmark": "n8n",
+      "name": "n8n",
+      "logo": "n8n",
+      "repo": "n8n-io/n8n",
+      "source_repo": "boringcache/benchmark-n8n",
+      "category": "nodejs",
+      "step": "Turbo build (pnpm monorepo)",
+      "headline_scenario": "stale_mid",
+      "before": "4m 42s",
+      "after": "2m 54s",
+      "before_seconds": 282.0,
+      "after_seconds": 174.0,
+      "faster": "38",
+      "comparison": {
+        "paired_on_head_sha": true,
+        "pairing_head_sha": "06936182ce6ea1cb76623bad4d6b61e560ee9ad7",
+        "actions_cache": {
+          "run_id": 23203746232,
+          "run_url": "https://github.com/boringcache/benchmark-n8n/actions/runs/23203746232",
+          "head_sha": "06936182ce6ea1cb76623bad4d6b61e560ee9ad7",
+          "created_at": "2026-03-17T16:02:51Z",
+          "cold_seconds": 259.0,
+          "warm1_seconds": 274.0,
+          "warm2_seconds": 286.0,
+          "warm_average_seconds": 280.0,
+          "warm_steady_seconds": 286.0,
+          "stale_seconds": 282.0,
+          "stale_low_seconds": 284.0,
+          "stale_mid_seconds": 282.0,
+          "stale_high_seconds": 283.0,
+          "layer_miss_seconds": null,
+          "run_total_seconds": 364.0,
+          "storage_bytes": 515501539,
+          "storage_source": "github-actions-cache-api"
+        },
+        "boringcache": {
+          "run_id": 23203746203,
+          "run_url": "https://github.com/boringcache/benchmark-n8n/actions/runs/23203746203",
+          "head_sha": "06936182ce6ea1cb76623bad4d6b61e560ee9ad7",
+          "created_at": "2026-03-17T16:02:51Z",
+          "cold_seconds": 270.0,
+          "warm1_seconds": 39.0,
+          "warm2_seconds": 44.0,
+          "warm_average_seconds": 41.5,
+          "warm_steady_seconds": 44.0,
+          "stale_seconds": 174.0,
+          "stale_low_seconds": 34.0,
+          "stale_mid_seconds": 174.0,
+          "stale_high_seconds": 214.0,
+          "layer_miss_seconds": null,
+          "run_total_seconds": 338.0,
+          "storage_bytes": 573965921,
+          "storage_source": "boringcache-check"
+        },
+        "warm_improvement_pct": 84.62,
+        "cold_improvement_pct": -4.25,
+        "stale_low_improvement_pct": 88.03,
+        "stale_mid_improvement_pct": 38.3,
+        "stale_high_improvement_pct": 24.38,
+        "layer_miss_improvement_pct": null,
+        "storage_improvement_pct": -11.34,
+        "storage_saved_bytes": -58464382
       }
     }
   ]
