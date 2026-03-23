@@ -7,7 +7,9 @@ require "open3"
 require "time"
 require "tmpdir"
 
-OUTPUT_PATH = File.join("data", "latest", "index.json")
+OUTPUT_DIR = File.join("data", "latest")
+OUTPUT_PATH = File.join(OUTPUT_DIR, "index.json")
+DETAIL_OUTPUT_DIR = File.join(OUTPUT_DIR, "benchmarks")
 MAX_CMD_RETRIES = ENV.fetch("BENCHMARKS_GH_RETRIES", "3").to_i
 
 BENCHMARKS = [
@@ -144,6 +146,21 @@ def parse_number(value)
   Float(value)
 rescue ArgumentError, TypeError
   nil
+end
+
+def load_existing_entries
+  return {} unless File.exist?(OUTPUT_PATH)
+
+  payload = JSON.parse(File.read(OUTPUT_PATH))
+  Array(payload["entries"]).each_with_object({}) do |entry, acc|
+    benchmark = entry["benchmark"].to_s
+    next if benchmark.empty?
+
+    acc[benchmark] = entry
+  end
+rescue StandardError => e
+  warn "Ignoring existing index at #{OUTPUT_PATH}: #{e.message}"
+  {}
 end
 
 def seconds_to_text(value)
@@ -424,39 +441,69 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:)
   }
 end
 
-def write_index(entries)
+def write_index(entries, generated_at:)
   FileUtils.mkdir_p(File.dirname(OUTPUT_PATH))
   payload = {
-    "generated_at" => Time.now.utc.iso8601,
+    "generated_at" => generated_at,
     "entries" => entries
   }
   File.write(OUTPUT_PATH, JSON.pretty_generate(payload) + "\n")
   puts "Wrote #{OUTPUT_PATH} with #{entries.length} entries"
 end
 
+def write_detail_files(entries, generated_at:)
+  FileUtils.mkdir_p(DETAIL_OUTPUT_DIR)
+  Dir.glob(File.join(DETAIL_OUTPUT_DIR, "*.json")).each do |path|
+    FileUtils.rm_f(path)
+  end
+
+  entries.each do |entry|
+    benchmark_id = entry.fetch("benchmark")
+    detail_path = File.join(DETAIL_OUTPUT_DIR, "#{benchmark_id}.json")
+    payload = {
+      "generated_at" => generated_at,
+      "entry" => entry
+    }
+    File.write(detail_path, JSON.pretty_generate(payload) + "\n")
+    puts "Wrote #{detail_path}"
+  end
+end
+
+existing_entries = load_existing_entries
 entries = []
 
 Dir.mktmpdir("benchmark-index-") do |tmp|
   BENCHMARKS.each do |benchmark|
+    benchmark_id = benchmark.fetch("benchmark")
+    preserved_entry = existing_entries[benchmark_id]
+
     begin
       repo = benchmark.fetch("source_repo")
       actions_runs = latest_successful_runs(repo: repo, workflow_name: benchmark.fetch("actions_workflow"))
       boringcache_runs = latest_successful_runs(repo: repo, workflow_name: benchmark.fetch("boringcache_workflow"))
       pair = pick_run_pair(actions_runs: actions_runs, boringcache_runs: boringcache_runs)
-      next if pair.nil?
+      if pair.nil?
+        if preserved_entry
+          warn "Preserving #{benchmark['name']} from existing index: no successful run pair found"
+          entries << preserved_entry
+        else
+          warn "Skipping #{benchmark['name']}: no successful run pair found"
+        end
+        next
+      end
 
       actions_data = load_strategy_data(
         temp_root: tmp,
         repo: repo,
         run: pair.fetch(:actions),
-        benchmark_id: benchmark.fetch("benchmark"),
+        benchmark_id: benchmark_id,
         strategy: "actions-cache"
       )
       boringcache_data = load_strategy_data(
         temp_root: tmp,
         repo: repo,
         run: pair.fetch(:boringcache),
-        benchmark_id: benchmark.fetch("benchmark"),
+        benchmark_id: benchmark_id,
         strategy: "boringcache"
       )
       entry = build_entry(
@@ -465,11 +512,25 @@ Dir.mktmpdir("benchmark-index-") do |tmp|
         actions_data: actions_data,
         boringcache_data: boringcache_data
       )
-      entries << entry if entry
+      if entry
+        entries << entry
+      elsif preserved_entry
+        warn "Preserving #{benchmark['name']} from existing index: latest artifacts incomplete"
+        entries << preserved_entry
+      else
+        warn "Skipping #{benchmark['name']}: latest artifacts incomplete"
+      end
     rescue StandardError => e
-      warn "Skipping #{benchmark['name']}: #{e.message}"
+      if preserved_entry
+        warn "Preserving #{benchmark['name']} from existing index: #{e.message}"
+        entries << preserved_entry
+      else
+        warn "Skipping #{benchmark['name']}: #{e.message}"
+      end
     end
   end
 end
 
-write_index(entries)
+generated_at = Time.now.utc.iso8601
+write_index(entries, generated_at: generated_at)
+write_detail_files(entries, generated_at: generated_at)

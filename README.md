@@ -25,7 +25,9 @@ Each benchmark repo:
 This repo:
 
 - fetches the latest successful benchmark artifacts from those standalone repos
-- rebuilds `data/latest/index.json`
+- rebuilds one aggregate `data/latest/index.json` with one entry per benchmark
+- writes per-benchmark detail payloads under `data/latest/benchmarks/*.json`
+- preserves the previous entry for a benchmark if that benchmark's latest fetch fails
 - serves as the central website/index feed
 
 ## Local Usage
