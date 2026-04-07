@@ -30,6 +30,16 @@ This repo:
 - preserves the previous entry for a benchmark if that benchmark's latest fetch fails
 - serves as the central website/index feed
 
+## Public copy guardrails
+
+When benchmark data is used in public-facing copy:
+
+- use the aggregate feed as the source of truth
+- name the scenario, not just the percentage
+- keep mixed or negative results explicit
+- do not promote incomplete benchmark entries in hero copy until the source workflow is fixed
+- treat stale-layer Docker wins as a strong wedge, not as a promise about every workload
+
 ## Local Usage
 
 Regenerate the latest index locally:
