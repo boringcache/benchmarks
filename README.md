@@ -40,6 +40,15 @@ When benchmark data is used in public-facing copy:
 - do not promote incomplete benchmark entries in hero copy until the source workflow is fixed
 - treat stale-layer Docker wins as a strong wedge, not as a promise about every workload
 
+## Engineering learning log
+
+Performance and stability learnings are tracked in:
+
+- `data/performance-learning-log.md`
+
+Update this log when a benchmark regression is root-caused, when a cache behavior
+contract changes, or when a workflow knob is added/removed for fairness.
+
 ## Local Usage
 
 Regenerate the latest index locally:
