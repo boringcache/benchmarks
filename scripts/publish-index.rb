@@ -252,7 +252,11 @@ def download_artifact_json(repo:, run_id:, artifact_name:, temp_dir:)
     "--dir", temp_dir
   )
 
-  json_file = Dir.glob(File.join(temp_dir, "**", "*.json")).first
+  json_files = Dir.glob(File.join(temp_dir, "**", "*.json")).sort
+  expected_summary = "#{artifact_name.sub(/\Abenchmark-/, "")}.json"
+  json_file = json_files.find { |path| File.basename(path) == expected_summary }
+  json_file ||= json_files.find { |path| !File.basename(path).include?("phase-breakdown") }
+  json_file ||= json_files.first
   return nil unless json_file
 
   JSON.parse(File.read(json_file))
