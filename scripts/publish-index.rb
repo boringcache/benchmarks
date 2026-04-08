@@ -427,7 +427,7 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:)
     "after" => seconds_to_text(after_value),
     "before_seconds" => before_value.round(2),
     "after_seconds" => after_value.round(2),
-    "faster" => [faster_pct.round, 0].max.to_s,
+    "faster" => faster_pct.round.to_s,
     "comparison" => {
       "paired_on_head_sha" => pair[:paired_on_head_sha],
       "pairing_head_sha" => pair[:pairing_head_sha],
