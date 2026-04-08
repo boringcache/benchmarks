@@ -345,12 +345,7 @@ def pick_run_pair(actions_runs:, boringcache_runs:)
     }
   end
 
-  {
-    actions: actions_runs.first,
-    boringcache: boringcache_runs.first,
-    paired_on_head_sha: false,
-    pairing_head_sha: nil
-  }
+  nil
 end
 
 def strategy_snapshot(data)
