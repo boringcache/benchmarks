@@ -336,6 +336,15 @@ def lane_label(lane)
   end
 end
 
+def first_build_label(lane)
+  case lane.to_s
+  when "rolling"
+    "First build after upstream sync"
+  else
+    "Cold build"
+  end
+end
+
 def warm_steady_seconds(metrics)
   metrics[:warm2_seconds] || metrics[:warm_average_seconds] || metrics[:warm1_seconds]
 end
@@ -458,6 +467,7 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:, lane:)
   {
     "lane" => lane,
     "lane_label" => lane_label(lane),
+    "first_build_label" => first_build_label(lane),
     "benchmark" => benchmark["benchmark"],
     "name" => benchmark["name"],
     "logo" => benchmark["logo"],
@@ -513,25 +523,15 @@ def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_ru
   actions_by_head = actions_runs.each_with_object({}) do |run, acc|
     head = run["headSha"].to_s
     next if head.empty?
-    acc[head] ||= run
+    acc[head] ||= []
+    acc[head] << run
   end
 
   boringcache_runs.each do |bc_run|
     head = bc_run["headSha"].to_s
     next if head.empty?
-    ac_run = actions_by_head[head]
-    next if ac_run.nil?
-
-    actions_data = load_strategy_data(
-      temp_root: temp_root,
-      repo: benchmark.fetch("source_repo"),
-      run: ac_run,
-      benchmark_id: benchmark.fetch("benchmark"),
-      strategy: "actions-cache",
-      lane: lane,
-      cache: cache
-    )
-    next if actions_data[:metrics].nil?
+    ac_runs = actions_by_head[head]
+    next if ac_runs.nil? || ac_runs.empty?
 
     boringcache_data = load_strategy_data(
       temp_root: temp_root,
@@ -544,20 +544,33 @@ def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_ru
     )
     next if boringcache_data[:metrics].nil?
 
-    pair = {
-      actions: ac_run,
-      boringcache: bc_run,
-      paired_on_head_sha: true,
-      pairing_head_sha: head
-    }
+    ac_runs.each do |ac_run|
+      actions_data = load_strategy_data(
+        temp_root: temp_root,
+        repo: benchmark.fetch("source_repo"),
+        run: ac_run,
+        benchmark_id: benchmark.fetch("benchmark"),
+        strategy: "actions-cache",
+        lane: lane,
+        cache: cache
+      )
+      next if actions_data[:metrics].nil?
 
-    return build_entry(
-      benchmark: benchmark,
-      pair: pair,
-      actions_data: actions_data,
-      boringcache_data: boringcache_data,
-      lane: lane
-    )
+      pair = {
+        actions: ac_run,
+        boringcache: bc_run,
+        paired_on_head_sha: true,
+        pairing_head_sha: head
+      }
+
+      return build_entry(
+        benchmark: benchmark,
+        pair: pair,
+        actions_data: actions_data,
+        boringcache_data: boringcache_data,
+        lane: lane
+      )
+    end
   end
 
   nil
