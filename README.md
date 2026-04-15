@@ -18,8 +18,8 @@ individual projects. Those live in standalone benchmark repos:
 Each benchmark repo:
 
 - pins upstream source under `upstream/`
-- owns its own AC/BC workflows
-- runs on its own nightly schedule
+- owns its own upstream sync + AC/BC workflows
+- uses real upstream sync commits to drive cold + warm comparisons
 - publishes JSON benchmark artifacts
 
 This repo:
@@ -27,6 +27,7 @@ This repo:
 - fetches the latest successful benchmark artifacts from those standalone repos
 - rebuilds one aggregate `data/latest/index.json` with one entry per benchmark
 - writes per-benchmark detail payloads under `data/latest/benchmarks/*.json`
+- keeps one latest paired entry per benchmark so the aggregate feed stays stable even when source repos sync often
 - preserves the previous entry for a benchmark if that benchmark's latest fetch fails
 - serves as the central website/index feed
 
@@ -35,10 +36,10 @@ This repo:
 When benchmark data is used in public-facing copy:
 
 - use the aggregate feed as the source of truth
-- name the scenario, not just the percentage
+- keep the claim anchored to the current cold or warm comparison
 - keep mixed or negative results explicit
 - do not promote incomplete benchmark entries in hero copy until the source workflow is fixed
-- treat stale-layer Docker wins as a strong wedge, not as a promise about every workload
+- keep storage savings alongside timing, especially when BoringCache wins on footprint more than wall clock
 
 ## Engineering learning log
 

@@ -11,6 +11,7 @@ OUTPUT_DIR = File.join("data", "latest")
 OUTPUT_PATH = File.join(OUTPUT_DIR, "index.json")
 DETAIL_OUTPUT_DIR = File.join(OUTPUT_DIR, "benchmarks")
 MAX_CMD_RETRIES = ENV.fetch("BENCHMARKS_GH_RETRIES", "3").to_i
+RUN_HISTORY_LIMIT = ENV.fetch("BENCHMARKS_GH_RUN_LIMIT", "100").to_i
 
 BENCHMARKS = [
   {
@@ -185,7 +186,7 @@ def percent_delta(baseline, candidate)
   ((baseline.to_f - candidate.to_f) / baseline.to_f) * 100.0
 end
 
-def latest_successful_runs(repo:, workflow_name:, limit: 30)
+def latest_successful_runs(repo:, workflow_name:, limit: RUN_HISTORY_LIMIT)
   output = run_cmd(
     "gh", "run", "list",
     "--repo", repo,
@@ -302,6 +303,14 @@ def warm_steady_seconds(metrics)
   metrics[:warm2_seconds] || metrics[:warm_average_seconds] || metrics[:warm1_seconds]
 end
 
+def headline_candidates(actions_metrics:, boringcache_metrics:, actions_run_total:, boringcache_run_total:)
+  [
+    ["warm", warm_steady_seconds(actions_metrics), warm_steady_seconds(boringcache_metrics)],
+    ["cold", actions_metrics[:cold_seconds], boringcache_metrics[:cold_seconds]],
+    ["run_total", actions_run_total, boringcache_run_total]
+  ].select { |_, before_value, after_value| before_value && after_value }
+end
+
 def load_strategy_data(temp_root:, repo:, run:, benchmark_id:, strategy:)
   run_id = run.fetch("databaseId")
   artifact_name = benchmark_artifact_name(repo: repo, run_id: run_id, benchmark_id: benchmark_id, strategy: strategy)
@@ -373,26 +382,31 @@ def strategy_snapshot(data)
   }
 end
 
-def headline_metric_for(category:, actions_metrics:, boringcache_metrics:, actions_run_total:, boringcache_run_total:)
-  if category == "docker" && actions_metrics[:layer_miss_seconds] && boringcache_metrics[:layer_miss_seconds]
-    return ["layer_miss", actions_metrics[:layer_miss_seconds], boringcache_metrics[:layer_miss_seconds]]
+def headline_metric_for(actions_metrics:, boringcache_metrics:, actions_run_total:, boringcache_run_total:)
+  candidates = headline_candidates(
+    actions_metrics: actions_metrics,
+    boringcache_metrics: boringcache_metrics,
+    actions_run_total: actions_run_total,
+    boringcache_run_total: boringcache_run_total
+  )
+  return nil if candidates.empty?
+
+  winning_candidates = candidates.each_with_object([]) do |(scenario, before_value, after_value), acc|
+    improvement = percent_delta(before_value, after_value)
+    next unless improvement&.positive?
+
+    acc << [scenario, before_value, after_value, improvement]
   end
 
-  if actions_metrics[:stale_mid_seconds] && boringcache_metrics[:stale_mid_seconds]
-    return ["stale_mid", actions_metrics[:stale_mid_seconds], boringcache_metrics[:stale_mid_seconds]]
+  if winning_candidates.any?
+    scenario, before_value, after_value, = winning_candidates.max_by { |(_, _, _, improvement)| improvement }
+    return [scenario, before_value, after_value]
   end
 
-  ac_warm = warm_steady_seconds(actions_metrics)
-  bc_warm = warm_steady_seconds(boringcache_metrics)
-  if ac_warm && bc_warm
-    return ["warm", ac_warm, bc_warm]
-  end
+  cold_candidate = candidates.find { |scenario, _, _| scenario == "cold" }
+  return cold_candidate if cold_candidate
 
-  if actions_run_total && boringcache_run_total
-    return ["run_total", actions_run_total, boringcache_run_total]
-  end
-
-  nil
+  candidates.first
 end
 
 def build_entry(benchmark:, pair:, actions_data:, boringcache_data:)
@@ -401,7 +415,6 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:)
   return nil if actions_metrics.nil? || boringcache_metrics.nil?
 
   headline = headline_metric_for(
-    category: benchmark.fetch("category"),
     actions_metrics: actions_metrics,
     boringcache_metrics: boringcache_metrics,
     actions_run_total: actions_data[:run_total_seconds],
@@ -412,6 +425,7 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:)
   headline_scenario, before_value, after_value = headline
   faster_pct = percent_delta(before_value, after_value)
   return nil if faster_pct.nil?
+  faster_pct = [faster_pct, 0].max
 
   {
     "benchmark" => benchmark["benchmark"],
