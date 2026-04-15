@@ -12,6 +12,7 @@ OUTPUT_PATH = File.join(OUTPUT_DIR, "index.json")
 DETAIL_OUTPUT_DIR = File.join(OUTPUT_DIR, "benchmarks")
 MAX_CMD_RETRIES = ENV.fetch("BENCHMARKS_GH_RETRIES", "3").to_i
 RUN_HISTORY_LIMIT = ENV.fetch("BENCHMARKS_GH_RUN_LIMIT", "100").to_i
+LANE_IDS = %w[fresh rolling].freeze
 
 BENCHMARKS = [
   {
@@ -214,6 +215,25 @@ def benchmark_artifact_name(repo:, run_id:, benchmark_id:, strategy:)
   artifact && artifact["name"]
 end
 
+def lane_artifact_names(benchmark_id:, strategy:, lane:)
+  names = ["benchmark-#{benchmark_id}-#{strategy}-#{lane}"]
+  names << "benchmark-#{benchmark_id}-#{strategy}" if lane == "fresh"
+  names
+end
+
+def benchmark_artifact_name_for_lane(repo:, run_id:, benchmark_id:, strategy:, lane:)
+  output = run_cmd("gh", "api", "repos/#{repo}/actions/runs/#{run_id}/artifacts")
+  artifacts = JSON.parse(output).fetch("artifacts", [])
+  candidate_names = lane_artifact_names(benchmark_id: benchmark_id, strategy: strategy, lane: lane)
+
+  artifact = artifacts.find do |item|
+    name = item["name"].to_s
+    !item["expired"] && candidate_names.include?(name)
+  end
+
+  artifact && artifact["name"]
+end
+
 def run_view(repo:, run_id:)
   output = run_cmd(
     "gh", "run", "view", run_id.to_s,
@@ -269,6 +289,7 @@ def extract_strategy_metrics(payload)
   stale = payload.fetch("stale", payload.fetch("stale_docker_cache", {}))
   layer_miss = payload.fetch("layer_miss", payload.fetch("internal_only", {}))
   cache = payload.fetch("cache", {})
+  docker_cache = payload.fetch("docker_cache", {})
 
   warm1 = parse_number(runs["warm1_seconds"])
   warm2 = parse_number(runs["warm2_seconds"])
@@ -295,8 +316,24 @@ def extract_strategy_metrics(payload)
     stale_high_seconds: stale_high,
     layer_miss_seconds: parse_number(layer_miss["seconds"]) || parse_number(runs["layer_miss_seconds"]) || parse_number(layer_miss["warm_no_docker_cache_seconds"]),
     storage_bytes: parse_number(cache["storage_bytes"])&.round&.to_i,
-    storage_source: cache["storage_source"].to_s.strip
+    storage_source: cache["storage_source"].to_s.strip,
+    docker_cache_import_seconds: parse_number(docker_cache["import_seconds"]),
+    docker_cache_export_seconds: parse_number(docker_cache["export_seconds"])
   }
+end
+
+def payload_lane(payload)
+  lane = payload["lane"].to_s.strip
+  lane.empty? ? "fresh" : lane
+end
+
+def lane_label(lane)
+  case lane.to_s
+  when "rolling"
+    "Rolling historical"
+  else
+    "Fresh isolated"
+  end
 end
 
 def warm_steady_seconds(metrics)
@@ -311,50 +348,39 @@ def headline_candidates(actions_metrics:, boringcache_metrics:, actions_run_tota
   ].select { |_, before_value, after_value| before_value && after_value }
 end
 
-def load_strategy_data(temp_root:, repo:, run:, benchmark_id:, strategy:)
+def load_strategy_data(temp_root:, repo:, run:, benchmark_id:, strategy:, lane:, cache:)
   run_id = run.fetch("databaseId")
-  artifact_name = benchmark_artifact_name(repo: repo, run_id: run_id, benchmark_id: benchmark_id, strategy: strategy)
+  cache_key = [repo, run_id, benchmark_id, strategy, lane]
+  return cache[cache_key] if cache.key?(cache_key)
+
+  artifact_name = benchmark_artifact_name_for_lane(
+    repo: repo,
+    run_id: run_id,
+    benchmark_id: benchmark_id,
+    strategy: strategy,
+    lane: lane
+  )
   run_total = run_total_seconds(repo: repo, run_id: run_id)
 
-  return { run: run, run_total_seconds: run_total, metrics: nil } if artifact_name.nil?
+  if artifact_name.nil?
+    cache[cache_key] = { run: run, run_total_seconds: run_total, metrics: nil }
+    return cache[cache_key]
+  end
 
   run_tmp = File.join(temp_root, "#{benchmark_id}-#{strategy}-#{run_id}")
   FileUtils.mkdir_p(run_tmp)
   payload = download_artifact_json(repo: repo, run_id: run_id, artifact_name: artifact_name, temp_dir: run_tmp)
 
-  return { run: run, run_total_seconds: run_total, metrics: nil } if payload.nil?
+  if payload.nil? || payload_lane(payload) != lane
+    cache[cache_key] = { run: run, run_total_seconds: run_total, metrics: nil }
+    return cache[cache_key]
+  end
 
-  {
+  cache[cache_key] = {
     run: run,
     run_total_seconds: run_total,
     metrics: extract_strategy_metrics(payload)
   }
-end
-
-def pick_run_pair(actions_runs:, boringcache_runs:)
-  return nil if actions_runs.empty? || boringcache_runs.empty?
-
-  actions_by_head = actions_runs.each_with_object({}) do |run, acc|
-    head = run["headSha"].to_s
-    next if head.empty?
-    acc[head] ||= run
-  end
-
-  boringcache_runs.each do |bc_run|
-    head = bc_run["headSha"].to_s
-    next if head.empty?
-    ac_run = actions_by_head[head]
-    next if ac_run.nil?
-
-    return {
-      actions: ac_run,
-      boringcache: bc_run,
-      paired_on_head_sha: true,
-      pairing_head_sha: head
-    }
-  end
-
-  nil
 end
 
 def strategy_snapshot(data)
@@ -378,7 +404,9 @@ def strategy_snapshot(data)
     "layer_miss_seconds" => metrics[:layer_miss_seconds],
     "run_total_seconds" => data[:run_total_seconds],
     "storage_bytes" => metrics[:storage_bytes],
-    "storage_source" => metrics[:storage_source]
+    "storage_source" => metrics[:storage_source],
+    "docker_cache_import_seconds" => metrics[:docker_cache_import_seconds],
+    "docker_cache_export_seconds" => metrics[:docker_cache_export_seconds]
   }
 end
 
@@ -409,7 +437,7 @@ def headline_metric_for(actions_metrics:, boringcache_metrics:, actions_run_tota
   candidates.first
 end
 
-def build_entry(benchmark:, pair:, actions_data:, boringcache_data:)
+def build_entry(benchmark:, pair:, actions_data:, boringcache_data:, lane:)
   actions_metrics = actions_data[:metrics]
   boringcache_metrics = boringcache_data[:metrics]
   return nil if actions_metrics.nil? || boringcache_metrics.nil?
@@ -428,6 +456,8 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:)
   faster_pct = [faster_pct, 0].max
 
   {
+    "lane" => lane,
+    "lane_label" => lane_label(lane),
     "benchmark" => benchmark["benchmark"],
     "name" => benchmark["name"],
     "logo" => benchmark["logo"],
@@ -464,6 +494,75 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:)
   }
 end
 
+def merge_lane_entries(entries_by_lane)
+  return nil if entries_by_lane.empty?
+
+  default_lane = entries_by_lane.key?("fresh") ? "fresh" : entries_by_lane.keys.first
+  default_entry = JSON.parse(JSON.generate(entries_by_lane.fetch(default_lane)))
+  default_entry["default_lane"] = default_lane
+  default_entry["available_lanes"] = entries_by_lane.keys
+  default_entry["lanes"] = entries_by_lane.transform_values do |entry|
+    JSON.parse(JSON.generate(entry))
+  end
+  default_entry
+end
+
+def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_runs:, cache:)
+  return nil if actions_runs.empty? || boringcache_runs.empty?
+
+  actions_by_head = actions_runs.each_with_object({}) do |run, acc|
+    head = run["headSha"].to_s
+    next if head.empty?
+    acc[head] ||= run
+  end
+
+  boringcache_runs.each do |bc_run|
+    head = bc_run["headSha"].to_s
+    next if head.empty?
+    ac_run = actions_by_head[head]
+    next if ac_run.nil?
+
+    actions_data = load_strategy_data(
+      temp_root: temp_root,
+      repo: benchmark.fetch("source_repo"),
+      run: ac_run,
+      benchmark_id: benchmark.fetch("benchmark"),
+      strategy: "actions-cache",
+      lane: lane,
+      cache: cache
+    )
+    next if actions_data[:metrics].nil?
+
+    boringcache_data = load_strategy_data(
+      temp_root: temp_root,
+      repo: benchmark.fetch("source_repo"),
+      run: bc_run,
+      benchmark_id: benchmark.fetch("benchmark"),
+      strategy: "boringcache",
+      lane: lane,
+      cache: cache
+    )
+    next if boringcache_data[:metrics].nil?
+
+    pair = {
+      actions: ac_run,
+      boringcache: bc_run,
+      paired_on_head_sha: true,
+      pairing_head_sha: head
+    }
+
+    return build_entry(
+      benchmark: benchmark,
+      pair: pair,
+      actions_data: actions_data,
+      boringcache_data: boringcache_data,
+      lane: lane
+    )
+  end
+
+  nil
+end
+
 def write_index(entries, generated_at:)
   FileUtils.mkdir_p(File.dirname(OUTPUT_PATH))
   payload = {
@@ -494,6 +593,7 @@ end
 
 existing_entries = load_existing_entries
 entries = []
+strategy_data_cache = {}
 
 Dir.mktmpdir("benchmark-index-") do |tmp|
   BENCHMARKS.each do |benchmark|
@@ -505,8 +605,20 @@ Dir.mktmpdir("benchmark-index-") do |tmp|
       repo = benchmark.fetch("source_repo")
       actions_runs = latest_successful_runs(repo: repo, workflow_name: benchmark.fetch("actions_workflow"))
       boringcache_runs = latest_successful_runs(repo: repo, workflow_name: benchmark.fetch("boringcache_workflow"))
-      pair = pick_run_pair(actions_runs: actions_runs, boringcache_runs: boringcache_runs)
-      if pair.nil?
+      lane_entries = LANE_IDS.each_with_object({}) do |lane, acc|
+        lane_entry = load_lane_entry(
+          temp_root: tmp,
+          benchmark: benchmark,
+          lane: lane,
+          actions_runs: actions_runs,
+          boringcache_runs: boringcache_runs,
+          cache: strategy_data_cache
+        )
+        acc[lane] = lane_entry if lane_entry
+      end
+
+      entry = merge_lane_entries(lane_entries)
+      if entry.nil?
         if preserved_entry
           warn "Preserving #{benchmark['name']} from existing index: no successful run pair found"
           entries << preserved_entry
@@ -516,34 +628,7 @@ Dir.mktmpdir("benchmark-index-") do |tmp|
         next
       end
 
-      actions_data = load_strategy_data(
-        temp_root: tmp,
-        repo: repo,
-        run: pair.fetch(:actions),
-        benchmark_id: benchmark_id,
-        strategy: "actions-cache"
-      )
-      boringcache_data = load_strategy_data(
-        temp_root: tmp,
-        repo: repo,
-        run: pair.fetch(:boringcache),
-        benchmark_id: benchmark_id,
-        strategy: "boringcache"
-      )
-      entry = build_entry(
-        benchmark: benchmark,
-        pair: pair,
-        actions_data: actions_data,
-        boringcache_data: boringcache_data
-      )
-      if entry
-        entries << entry
-      elsif preserved_entry
-        warn "Preserving #{benchmark['name']} from existing index: latest artifacts incomplete"
-        entries << preserved_entry
-      else
-        warn "Skipping #{benchmark['name']}: latest artifacts incomplete"
-      end
+      entries << entry
     rescue StandardError => e
       if preserved_entry
         warn "Preserving #{benchmark['name']} from existing index: #{e.message}"
