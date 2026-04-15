@@ -1,6 +1,8 @@
 {
-  "generated_at": "2026-04-15T16:48:35Z",
+  "generated_at": "2026-04-15T17:29:21Z",
   "entry": {
+    "lane": "fresh",
+    "lane_label": "Fresh isolated",
     "benchmark": "hugo",
     "name": "Hugo",
     "logo": "hugo",
@@ -35,7 +37,9 @@
         "layer_miss_seconds": 162.0,
         "run_total_seconds": 237.0,
         "storage_bytes": 10047148086,
-        "storage_source": "github-actions-cache-api"
+        "storage_source": "github-actions-cache-api",
+        "docker_cache_import_seconds": null,
+        "docker_cache_export_seconds": null
       },
       "boringcache": {
         "run_id": 24463321414,
@@ -54,7 +58,9 @@
         "layer_miss_seconds": 25.0,
         "run_total_seconds": 231.0,
         "storage_bytes": 1366948430,
-        "storage_source": "boringcache-check"
+        "storage_source": "boringcache-check",
+        "docker_cache_import_seconds": null,
+        "docker_cache_export_seconds": null
       },
       "warm_improvement_pct": -50.0,
       "cold_improvement_pct": 2.71,
@@ -64,6 +70,84 @@
       "layer_miss_improvement_pct": 84.57,
       "storage_improvement_pct": 86.39,
       "storage_saved_bytes": 8680199656
+    },
+    "default_lane": "fresh",
+    "available_lanes": [
+      "fresh"
+    ],
+    "lanes": {
+      "fresh": {
+        "lane": "fresh",
+        "lane_label": "Fresh isolated",
+        "benchmark": "hugo",
+        "name": "Hugo",
+        "logo": "hugo",
+        "repo": "gohugoio/hugo",
+        "source_repo": "boringcache/benchmark-hugo",
+        "public": true,
+        "category": "docker",
+        "step": "Docker build (Go)",
+        "headline_scenario": "cold",
+        "before": "3m 41s",
+        "after": "3m 35s",
+        "before_seconds": 221.0,
+        "after_seconds": 215.0,
+        "faster": "3",
+        "comparison": {
+          "paired_on_head_sha": true,
+          "pairing_head_sha": "265f1551bf6bdde763822c9906eb23924340aab2",
+          "actions_cache": {
+            "run_id": 24463321410,
+            "run_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/24463321410",
+            "head_sha": "265f1551bf6bdde763822c9906eb23924340aab2",
+            "created_at": "2026-04-15T15:31:07Z",
+            "cold_seconds": 221.0,
+            "warm1_seconds": 2.0,
+            "warm2_seconds": null,
+            "warm_average_seconds": 2.0,
+            "warm_steady_seconds": 2.0,
+            "stale_seconds": null,
+            "stale_low_seconds": null,
+            "stale_mid_seconds": null,
+            "stale_high_seconds": null,
+            "layer_miss_seconds": 162.0,
+            "run_total_seconds": 237.0,
+            "storage_bytes": 10047148086,
+            "storage_source": "github-actions-cache-api",
+            "docker_cache_import_seconds": null,
+            "docker_cache_export_seconds": null
+          },
+          "boringcache": {
+            "run_id": 24463321414,
+            "run_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/24463321414",
+            "head_sha": "265f1551bf6bdde763822c9906eb23924340aab2",
+            "created_at": "2026-04-15T15:31:07Z",
+            "cold_seconds": 215.0,
+            "warm1_seconds": 3.0,
+            "warm2_seconds": null,
+            "warm_average_seconds": 3.0,
+            "warm_steady_seconds": 3.0,
+            "stale_seconds": null,
+            "stale_low_seconds": null,
+            "stale_mid_seconds": null,
+            "stale_high_seconds": null,
+            "layer_miss_seconds": 25.0,
+            "run_total_seconds": 231.0,
+            "storage_bytes": 1366948430,
+            "storage_source": "boringcache-check",
+            "docker_cache_import_seconds": null,
+            "docker_cache_export_seconds": null
+          },
+          "warm_improvement_pct": -50.0,
+          "cold_improvement_pct": 2.71,
+          "stale_low_improvement_pct": null,
+          "stale_mid_improvement_pct": null,
+          "stale_high_improvement_pct": null,
+          "layer_miss_improvement_pct": 84.57,
+          "storage_improvement_pct": 86.39,
+          "storage_saved_bytes": 8680199656
+        }
+      }
     }
   }
 }
