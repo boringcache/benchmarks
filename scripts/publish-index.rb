@@ -10,9 +10,13 @@ require "tmpdir"
 OUTPUT_DIR = File.join("data", "latest")
 OUTPUT_PATH = File.join(OUTPUT_DIR, "index.json")
 DETAIL_OUTPUT_DIR = File.join(OUTPUT_DIR, "benchmarks")
+REPORT_PATH = File.join(OUTPUT_DIR, "report.md")
+README_PATH = "README.md"
 MAX_CMD_RETRIES = ENV.fetch("BENCHMARKS_GH_RETRIES", "3").to_i
 RUN_HISTORY_LIMIT = ENV.fetch("BENCHMARKS_GH_RUN_LIMIT", "100").to_i
 LANE_IDS = %w[fresh rolling].freeze
+README_REPORT_START = "<!-- benchmark-report:start -->"
+README_REPORT_END = "<!-- benchmark-report:end -->"
 
 BENCHMARKS = [
   {
@@ -181,10 +185,67 @@ def seconds_to_text(value)
   "#{minutes}m #{seconds}s"
 end
 
+def markdown_escape(value)
+  value.to_s.gsub("|", "\\|")
+end
+
+def bytes_to_text(value)
+  return "—" if value.nil?
+
+  units = ["B", "KB", "MB", "GB", "TB"].freeze
+  size = value.to_f.abs
+  unit_index = 0
+
+  while size >= 1024 && unit_index < units.length - 1
+    size /= 1024.0
+    unit_index += 1
+  end
+
+  format("%<size>.2f %<unit>s", size: size, unit: units[unit_index])
+end
+
+def storage_summary_text(comparison)
+  saved_bytes = comparison["storage_saved_bytes"]
+  improvement_pct = comparison["storage_improvement_pct"]
+  return "—" if saved_bytes.nil?
+
+  if saved_bytes.to_f >= 0
+    "#{bytes_to_text(saved_bytes)} (#{improvement_pct}%)"
+  else
+    "#{bytes_to_text(saved_bytes)} more (#{improvement_pct}%)"
+  end
+end
+
 def percent_delta(baseline, candidate)
   return nil if baseline.nil? || candidate.nil? || baseline <= 0
 
   ((baseline.to_f - candidate.to_f) / baseline.to_f) * 100.0
+end
+
+def timing_result_bucket(before_value, after_value)
+  delta_pct = percent_delta(before_value, after_value)
+  return nil if delta_pct.nil?
+
+  delta_seconds = (before_value.to_f - after_value.to_f).abs
+  longest = [before_value.to_f, after_value.to_f].max
+  return :tie if delta_seconds <= 5 && longest <= 60
+  return :tie if delta_pct.abs < 3.0
+
+  delta_pct.positive? ? :faster : :slower
+end
+
+def timing_result_text(before_value, after_value)
+  delta_pct = percent_delta(before_value, after_value)
+  return "—" if delta_pct.nil?
+
+  case timing_result_bucket(before_value, after_value)
+  when :faster
+    "#{delta_pct.round}% faster"
+  when :slower
+    "#{delta_pct.abs.round}% slower"
+  else
+    "near tie"
+  end
 end
 
 def latest_successful_runs(repo:, workflow_name:, limit: RUN_HISTORY_LIMIT)
@@ -517,6 +578,157 @@ def merge_lane_entries(entries_by_lane)
   default_entry
 end
 
+def lane_report_row(entry, lane)
+  lane_entry = entry.dig("lanes", lane) || (entry["lane"] == lane ? entry : nil)
+  return nil if lane_entry.nil?
+
+  comparison = lane_entry.fetch("comparison", {})
+  actions = comparison.fetch("actions_cache", {})
+  boringcache = comparison.fetch("boringcache", {})
+  scenarios = [
+    ["cold", actions["cold_seconds"], boringcache["cold_seconds"]],
+    ["warm", actions["warm1_seconds"], boringcache["warm1_seconds"]],
+    ["layer miss", actions["layer_miss_seconds"], boringcache["layer_miss_seconds"]],
+    ["run total", actions["run_total_seconds"], boringcache["run_total_seconds"]]
+  ]
+  headline_scenario = lane_entry["headline_scenario"].to_s.tr("_", " ")
+  tiny_run = scenarios.all? { |_label, before_value, after_value| before_value.nil? || after_value.nil? || [before_value, after_value].max <= 60 }
+  faster_notes = []
+  slower_notes = []
+
+  scenarios.each do |label, before_value, after_value|
+    next if before_value.nil? || after_value.nil?
+    next if label == headline_scenario
+
+    case timing_result_bucket(before_value, after_value)
+    when :faster
+      faster_notes << label
+    when :slower
+      slower_notes << label
+    end
+  end
+
+  notes = []
+  if faster_notes.any? && slower_notes.any?
+    notes << "mixed: #{slower_notes.join(', ')} slower; #{faster_notes.join(', ')} faster"
+  elsif slower_notes.any?
+    notes << "#{slower_notes.join(', ')} slower"
+  elsif faster_notes.any?
+    notes << "#{faster_notes.join(', ')} faster"
+  end
+  notes << "tiny run; setup dominates" if tiny_run
+  notes << "BC used more storage" if comparison["storage_saved_bytes"].to_f < 0
+
+  {
+    benchmark: entry.fetch("name"),
+    scenario: headline_scenario.split.map(&:capitalize).join(" "),
+    actions: lane_entry["before"],
+    boringcache: lane_entry["after"],
+    result: timing_result_text(lane_entry["before_seconds"], lane_entry["after_seconds"]),
+    storage: storage_summary_text(comparison),
+    notes: notes.empty? ? "—" : notes.join("; ")
+  }
+end
+
+def coverage_cell(entry, lane)
+  return "yes" if entry.dig("lanes", lane)
+  return "yes" if entry["lane"] == lane
+
+  "—"
+end
+
+def markdown_table(headers, rows)
+  lines = []
+  lines << "| #{headers.map { |h| markdown_escape(h) }.join(' | ')} |"
+  lines << "| #{headers.map { '---' }.join(' | ')} |"
+  rows.each do |row|
+    lines << "| #{row.map { |cell| markdown_escape(cell) }.join(' | ')} |"
+  end
+  lines.join("\n")
+end
+
+def build_report(entries, generated_at:)
+  generated_label = Time.parse(generated_at).utc.strftime("%Y-%m-%d %H:%M UTC")
+  coverage_rows = entries.map do |entry|
+    [
+      entry.fetch("name"),
+      coverage_cell(entry, "fresh"),
+      coverage_cell(entry, "rolling")
+    ]
+  end
+
+  fresh_rows = entries.each_with_object([]) do |entry, rows|
+    row = lane_report_row(entry, "fresh")
+    next unless row
+
+    rows << [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage], row[:notes]]
+  end
+
+  rolling_rows = entries.map do |entry|
+    row = lane_report_row(entry, "rolling")
+    if row
+      [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage], row[:notes]]
+    else
+      [entry.fetch("name"), "—", "—", "—", "—", "—", "not published yet"]
+    end
+  end
+
+  [
+    "## Latest Benchmark Report",
+    "",
+    "Generated: #{generated_label}",
+    "",
+    "### Lane Coverage",
+    "",
+    markdown_table(["Benchmark", "Fresh", "Rolling"], coverage_rows),
+    "",
+    "### Fresh Isolated",
+    "",
+    markdown_table(["Benchmark", "Headline", "actions/cache", "BoringCache", "Result", "Storage Saved", "Notes"], fresh_rows),
+    "",
+    "### Rolling Historical",
+    "",
+    markdown_table(["Benchmark", "Headline", "actions/cache", "BoringCache", "Result", "Storage Saved", "Notes"], rolling_rows),
+    "",
+    "Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.",
+    "",
+    "Rolling shows the latest successful paired rolling lane when it has been published. A blank row means that lane has not landed yet in the aggregate feed.",
+    ""
+  ].join("\n")
+end
+
+def write_report(entries, generated_at:)
+  report = build_report(entries, generated_at: generated_at)
+  File.write(REPORT_PATH, report)
+  puts "Wrote #{REPORT_PATH}"
+  report
+end
+
+def update_readme(report)
+  readme = File.read(README_PATH)
+  replacement = [
+    README_REPORT_START,
+    "",
+    report.rstrip,
+    "",
+    README_REPORT_END
+  ].join("\n")
+
+  updated = if readme.include?(README_REPORT_START) && readme.include?(README_REPORT_END)
+    readme.sub(/#{Regexp.escape(README_REPORT_START)}.*?#{Regexp.escape(README_REPORT_END)}/m, replacement)
+  else
+    [
+      readme.rstrip,
+      "",
+      replacement,
+      ""
+    ].join("\n")
+  end
+
+  File.write(README_PATH, updated)
+  puts "Updated #{README_PATH}"
+end
+
 def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_runs:, cache:)
   return nil if actions_runs.empty? || boringcache_runs.empty?
 
@@ -656,3 +868,5 @@ end
 generated_at = Time.now.utc.iso8601
 write_index(entries, generated_at: generated_at)
 write_detail_files(entries, generated_at: generated_at)
+report = write_report(entries, generated_at: generated_at)
+update_readme(report)
