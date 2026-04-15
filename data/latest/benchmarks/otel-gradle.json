@@ -1,6 +1,8 @@
 {
-  "generated_at": "2026-04-15T16:48:35Z",
+  "generated_at": "2026-04-15T17:29:21Z",
   "entry": {
+    "lane": "fresh",
+    "lane_label": "Fresh isolated",
     "benchmark": "otel-gradle",
     "name": "OpenTelemetry Java",
     "logo": "docker",
@@ -35,7 +37,9 @@
         "layer_miss_seconds": null,
         "run_total_seconds": 641.0,
         "storage_bytes": 855438318,
-        "storage_source": "github-actions-cache-api"
+        "storage_source": "github-actions-cache-api",
+        "docker_cache_import_seconds": null,
+        "docker_cache_export_seconds": null
       },
       "boringcache": {
         "run_id": 24464836191,
@@ -54,7 +58,9 @@
         "layer_miss_seconds": null,
         "run_total_seconds": 693.0,
         "storage_bytes": 803663572,
-        "storage_source": "boringcache-check"
+        "storage_source": "boringcache-check",
+        "docker_cache_import_seconds": null,
+        "docker_cache_export_seconds": null
       },
       "warm_improvement_pct": -35.48,
       "cold_improvement_pct": -5.79,
@@ -64,6 +70,84 @@
       "layer_miss_improvement_pct": null,
       "storage_improvement_pct": 6.05,
       "storage_saved_bytes": 51774746
+    },
+    "default_lane": "fresh",
+    "available_lanes": [
+      "fresh"
+    ],
+    "lanes": {
+      "fresh": {
+        "lane": "fresh",
+        "lane_label": "Fresh isolated",
+        "benchmark": "otel-gradle",
+        "name": "OpenTelemetry Java",
+        "logo": "docker",
+        "repo": "open-telemetry/opentelemetry-java",
+        "source_repo": "boringcache/benchmark-opentelemetry-java",
+        "public": false,
+        "category": "gradle",
+        "step": "Gradle build (native HTTP cache)",
+        "headline_scenario": "cold",
+        "before": "10m 22s",
+        "after": "10m 58s",
+        "before_seconds": 622.0,
+        "after_seconds": 658.0,
+        "faster": "0",
+        "comparison": {
+          "paired_on_head_sha": true,
+          "pairing_head_sha": "898a5705881dcbf51d00f3b621550a1b192de5ad",
+          "actions_cache": {
+            "run_id": 24464836189,
+            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/24464836189",
+            "head_sha": "898a5705881dcbf51d00f3b621550a1b192de5ad",
+            "created_at": "2026-04-15T16:03:03Z",
+            "cold_seconds": 622.0,
+            "warm1_seconds": 31.0,
+            "warm2_seconds": null,
+            "warm_average_seconds": 31.0,
+            "warm_steady_seconds": 31.0,
+            "stale_seconds": null,
+            "stale_low_seconds": null,
+            "stale_mid_seconds": null,
+            "stale_high_seconds": null,
+            "layer_miss_seconds": null,
+            "run_total_seconds": 641.0,
+            "storage_bytes": 855438318,
+            "storage_source": "github-actions-cache-api",
+            "docker_cache_import_seconds": null,
+            "docker_cache_export_seconds": null
+          },
+          "boringcache": {
+            "run_id": 24464836191,
+            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/24464836191",
+            "head_sha": "898a5705881dcbf51d00f3b621550a1b192de5ad",
+            "created_at": "2026-04-15T16:03:03Z",
+            "cold_seconds": 658.0,
+            "warm1_seconds": 42.0,
+            "warm2_seconds": null,
+            "warm_average_seconds": 42.0,
+            "warm_steady_seconds": 42.0,
+            "stale_seconds": null,
+            "stale_low_seconds": null,
+            "stale_mid_seconds": null,
+            "stale_high_seconds": null,
+            "layer_miss_seconds": null,
+            "run_total_seconds": 693.0,
+            "storage_bytes": 803663572,
+            "storage_source": "boringcache-check",
+            "docker_cache_import_seconds": null,
+            "docker_cache_export_seconds": null
+          },
+          "warm_improvement_pct": -35.48,
+          "cold_improvement_pct": -5.79,
+          "stale_low_improvement_pct": null,
+          "stale_mid_improvement_pct": null,
+          "stale_high_improvement_pct": null,
+          "layer_miss_improvement_pct": null,
+          "storage_improvement_pct": 6.05,
+          "storage_saved_bytes": 51774746
+        }
+      }
     }
   }
 }

@@ -1,6 +1,8 @@
 {
-  "generated_at": "2026-04-15T16:48:35Z",
+  "generated_at": "2026-04-15T17:29:21Z",
   "entry": {
+    "lane": "fresh",
+    "lane_label": "Fresh isolated",
     "benchmark": "immich",
     "name": "Immich",
     "logo": "immich",
@@ -35,7 +37,9 @@
         "layer_miss_seconds": 736.0,
         "run_total_seconds": 1053.0,
         "storage_bytes": 32299107728,
-        "storage_source": "github-actions-cache-api"
+        "storage_source": "github-actions-cache-api",
+        "docker_cache_import_seconds": null,
+        "docker_cache_export_seconds": null
       },
       "boringcache": {
         "run_id": 24464317699,
@@ -54,7 +58,9 @@
         "layer_miss_seconds": 198.0,
         "run_total_seconds": 992.0,
         "storage_bytes": 4423844786,
-        "storage_source": "boringcache-check"
+        "storage_source": "boringcache-check",
+        "docker_cache_import_seconds": null,
+        "docker_cache_export_seconds": null
       },
       "warm_improvement_pct": 25.0,
       "cold_improvement_pct": 6.8,
@@ -64,6 +70,84 @@
       "layer_miss_improvement_pct": 73.1,
       "storage_improvement_pct": 86.3,
       "storage_saved_bytes": 27875262942
+    },
+    "default_lane": "fresh",
+    "available_lanes": [
+      "fresh"
+    ],
+    "lanes": {
+      "fresh": {
+        "lane": "fresh",
+        "lane_label": "Fresh isolated",
+        "benchmark": "immich",
+        "name": "Immich",
+        "logo": "immich",
+        "repo": "immich-app/immich",
+        "source_repo": "boringcache/benchmark-immich",
+        "public": true,
+        "category": "docker",
+        "step": "Docker build (server)",
+        "headline_scenario": "warm",
+        "before": "0m 4s",
+        "after": "0m 3s",
+        "before_seconds": 4.0,
+        "after_seconds": 3.0,
+        "faster": "25",
+        "comparison": {
+          "paired_on_head_sha": true,
+          "pairing_head_sha": "6fdd4d5482ff405b10c867b940e85e731a2dfa39",
+          "actions_cache": {
+            "run_id": 24464317700,
+            "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/24464317700",
+            "head_sha": "6fdd4d5482ff405b10c867b940e85e731a2dfa39",
+            "created_at": "2026-04-15T15:52:01Z",
+            "cold_seconds": 1029.0,
+            "warm1_seconds": 4.0,
+            "warm2_seconds": null,
+            "warm_average_seconds": 4.0,
+            "warm_steady_seconds": 4.0,
+            "stale_seconds": null,
+            "stale_low_seconds": null,
+            "stale_mid_seconds": null,
+            "stale_high_seconds": null,
+            "layer_miss_seconds": 736.0,
+            "run_total_seconds": 1053.0,
+            "storage_bytes": 32299107728,
+            "storage_source": "github-actions-cache-api",
+            "docker_cache_import_seconds": null,
+            "docker_cache_export_seconds": null
+          },
+          "boringcache": {
+            "run_id": 24464317699,
+            "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/24464317699",
+            "head_sha": "6fdd4d5482ff405b10c867b940e85e731a2dfa39",
+            "created_at": "2026-04-15T15:52:01Z",
+            "cold_seconds": 959.0,
+            "warm1_seconds": 3.0,
+            "warm2_seconds": null,
+            "warm_average_seconds": 3.0,
+            "warm_steady_seconds": 3.0,
+            "stale_seconds": null,
+            "stale_low_seconds": null,
+            "stale_mid_seconds": null,
+            "stale_high_seconds": null,
+            "layer_miss_seconds": 198.0,
+            "run_total_seconds": 992.0,
+            "storage_bytes": 4423844786,
+            "storage_source": "boringcache-check",
+            "docker_cache_import_seconds": null,
+            "docker_cache_export_seconds": null
+          },
+          "warm_improvement_pct": 25.0,
+          "cold_improvement_pct": 6.8,
+          "stale_low_improvement_pct": null,
+          "stale_mid_improvement_pct": null,
+          "stale_high_improvement_pct": null,
+          "layer_miss_improvement_pct": 73.1,
+          "storage_improvement_pct": 86.3,
+          "storage_saved_bytes": 27875262942
+        }
+      }
     }
   }
 }
