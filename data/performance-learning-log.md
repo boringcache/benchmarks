@@ -85,3 +85,84 @@ This should be tracked separately from the publish-correctness bug.
 - Are defaults consistent across CLI, one, and benchmark workflows?
 - Did we validate at least one real isolated-run benchmark (different runners)?
 - Did we record run IDs and outcome in this log?
+
+## 2026-04-09: `one` setup verification regression + gRPC workflow drift
+
+### What happened
+
+- Benchmark seed jobs started failing immediately in multiple repos after `one`
+  tag `v1` moved to `v1.12.32`:
+  - Hugo BC `24175323739` (failed)
+  - Immich BC `24175326645` (failed)
+  - Mastodon BC `24175329443` (failed)
+  - PostHog BC `24175337902` (failed)
+- Failure shape was identical:
+  - step: `Configure boringcache/one for Docker`
+  - error: timed out waiting for fresh run-scoped tags to exist before build
+
+### Root cause (confirmed)
+
+In `boringcache/one` docker setup mode (`mode: docker`, `docker-command: setup`),
+verification classification treated registry tags as immediate-verify tags.
+
+- With `verify=wait` default, restore step ran `boringcache check` before any
+  build/export happened, so new run-scoped tags could never pass.
+- This is orchestration correctness, not a product cache-miss condition.
+
+### Fix shipped
+
+- Repo: `boringcache/one`
+- Commit: `c5084f3ee4f536370e24001bcc62a48e0cf1a2dc`
+- Release: `v1.12.33` (and `v1` moved to this commit)
+- Change:
+  - Docker mode tags are now save-expected in write-capable runs, so setup mode
+    defers verification to post-save timing.
+  - Added regression coverage in `tests/product-modes.test.ts` to assert no
+    pre-build `boringcache check` in setup-only mode.
+
+### gRPC benchmark regression signal (workflow-side)
+
+- Faster BC run (commit `95673b4`): `24121998413`
+  - `cold=2215s, warm1=53s, warm2=78s, stale_low=44s, stale_mid=90s, stale_high=953s`
+- Slower BC runs (commit `85b8b25`): `24128606876`, `24170305015`
+  - `24128606876`: `cold=2196s, warm1=135s, warm2=189s, stale_high=1304s`
+  - `24170305015`: `cold=1678s, warm1=127s, warm2=276s, stale_high=1322s`
+- Key workflow delta in `85b8b25`:
+  - removed gRPC tuning overrides (proxy/CLI concurrency + Bazel rc tuning)
+  - moved to simplified defaults
+  - net result: materially slower warm/stale behavior in benchmark runs
+
+### Guardrail update
+
+- `one` default verification must distinguish setup/orchestration phases from
+  states that are expected to exist pre-build.
+- Benchmark workflow simplification must be validated against previous run
+  baselines before merge; record before/after phase deltas in this log.
+
+## 2026-04-09: Bazel sync-write default moved into product path (`one`)
+
+### What changed
+
+- Repo: `boringcache/one`
+- Commit: `76e0769e186ede367cd61695fc9428845ac4838e`
+- Release: `v1.12.34` (`v1` moved to this commit)
+- Behavior:
+  - Bazel mode now writes `build --remote_cache_async=false` by default in
+    generated `.bazelrc`.
+  - Existing defaults kept:
+    - `build --remote_download_minimal`
+    - `build --remote_max_connections=64` (adaptive override still available via
+      `BORINGCACHE_BAZEL_REMOTE_MAX_CONNECTIONS`)
+
+### Why
+
+- gRPC regressions showed workflow-only tuning was brittle and drift-prone.
+- Sync write behavior should be a product default for deterministic seed-to-warm
+  handoff in isolated-runner CI benchmarks, not a benchmark workflow patch.
+
+### Guardrail update
+
+- For Bazel integrations, do not rely on workflow-only `bazelrc-lines` for core
+  remote cache correctness defaults.
+- Keep workflow knobs for experiment-specific A/B only; product path should be
+  launch-safe without benchmark-local tuning.
