@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-16T16:58:25Z",
+  "generated_at": "2026-04-16T20:46:55Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh isolated",
@@ -164,31 +164,31 @@
         "category": "gradle",
         "step": "Gradle build (native HTTP cache)",
         "headline_scenario": "cold",
-        "before": "0m 38s",
+        "before": "0m 40s",
         "after": "8m 41s",
-        "before_seconds": 38.0,
+        "before_seconds": 40.0,
         "after_seconds": 521.0,
         "faster": "0",
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": "679cb0d83727b37ced669a38c0c8963da991ffcb",
           "actions_cache": {
-            "run_id": 24522002146,
-            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/24522002146",
+            "run_id": 24523823476,
+            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/24523823476",
             "head_sha": "679cb0d83727b37ced669a38c0c8963da991ffcb",
-            "created_at": "2026-04-16T16:33:23Z",
-            "cold_seconds": 38.0,
-            "warm1_seconds": 42.0,
+            "created_at": "2026-04-16T17:14:15Z",
+            "cold_seconds": 40.0,
+            "warm1_seconds": 40.0,
             "warm2_seconds": null,
-            "warm_average_seconds": 42.0,
-            "warm_steady_seconds": 42.0,
+            "warm_average_seconds": 40.0,
+            "warm_steady_seconds": 40.0,
             "stale_seconds": null,
             "stale_low_seconds": null,
             "stale_mid_seconds": null,
             "stale_high_seconds": null,
             "layer_miss_seconds": null,
-            "run_total_seconds": 59.0,
-            "storage_bytes": 1710739111,
+            "run_total_seconds": 62.0,
+            "storage_bytes": 1710759033,
             "storage_source": "github-actions-cache-api",
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null
@@ -214,14 +214,14 @@
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null
           },
-          "warm_improvement_pct": 0.0,
-          "cold_improvement_pct": -1271.05,
+          "warm_improvement_pct": -5.0,
+          "cold_improvement_pct": -1202.5,
           "stale_low_improvement_pct": null,
           "stale_mid_improvement_pct": null,
           "stale_high_improvement_pct": null,
           "layer_miss_improvement_pct": null,
-          "storage_improvement_pct": 53.01,
-          "storage_saved_bytes": 906945023
+          "storage_improvement_pct": 53.02,
+          "storage_saved_bytes": 906964945
         }
       }
     }
