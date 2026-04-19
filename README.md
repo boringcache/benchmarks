@@ -107,12 +107,50 @@ contract changes, or when a workflow knob is added/removed for fairness.
 
 ## Local Usage
 
+Print reusable investigation tables from the current aggregate index:
+
+```bash
+ruby scripts/benchmark-table.rb --latest
+```
+
+Print just the raw timing/storage matrix:
+
+```bash
+ruby scripts/benchmark-table.rb --latest --format raw
+```
+
+Pull a specific GitHub Actions cohort by run id without rewriting website data:
+
+```bash
+ruby scripts/benchmark-table.rb \
+  --pair posthog:fresh:24616102004:24616101993 \
+  --pair posthog:rolling:24616102817:24616102999
+```
+
+For larger investigations, keep a JSON or YAML cohort file with `pairs`:
+
+```json
+{
+  "pairs": [
+    { "benchmark": "posthog", "lane": "fresh", "actions_cache": 24616102004, "boringcache": 24616101993 },
+    { "benchmark": "posthog", "lane": "rolling", "actions_cache": 24616102817, "boringcache": 24616102999 }
+  ]
+}
+```
+
+Then run:
+
+```bash
+ruby scripts/benchmark-table.rb --cohort /path/to/cohort.json --output-md /tmp/benchmark-report.md
+```
+
 Regenerate the latest index locally:
 
 ```bash
 ruby scripts/publish-index.rb
 ```
 
-The script expects GitHub CLI authentication that can read workflow runs and artifacts
-from the standalone benchmark repos. It also refreshes `data/latest/report.md` and the
-generated report section in this README.
+Both scripts expect GitHub CLI authentication when they need to read workflow runs and
+artifacts from the standalone benchmark repos. `publish-index.rb` refreshes
+`data/latest/report.md` and the generated report section in this README;
+`benchmark-table.rb` is read-only unless `--output-md` or `--output-json` is passed.
