@@ -1,6 +1,6 @@
 ## Latest Benchmark Report
 
-Generated: 2026-04-18 20:46 UTC
+Generated: 2026-04-19 01:10 UTC
 
 ### Lane Coverage
 
@@ -20,24 +20,24 @@ Generated: 2026-04-18 20:46 UTC
 
 | Benchmark | Headline | actions/cache | BoringCache | Result | Storage Saved | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | Warm | 0m 7s | 0m 6s | near tie | 18.42 GB (93.54%) | layer miss faster |
+| Hugo | Run Total | 4m 25s | 3m 48s | 14% faster | 19.32 GB (93.82%) | cold, layer miss faster |
 | Immich | Cold | 16m 35s | 16m 1s | 3% faster | 27.61 GB (87.06%) | layer miss faster |
 | Mastodon | Warm | 0m 12s | 0m 9s | near tie | 28.73 GB (93.72%) | cold, layer miss, run total faster |
-| PostHog | Warm | 0m 23s | 0m 13s | 43% faster | 23.07 GB (67.95%) | cold, layer miss, run total faster |
+| PostHog | Cold | 21m 58s | 13m 15s | 40% faster | 19.67 GB (64.37%) | layer miss, run total faster |
 | OpenTelemetry Java | Cold | 8m 31s | 10m 42s | 26% slower | 49.28 MB (6.04%) | warm, run total slower |
 | Spring AI | Cold | 4m 23s | 4m 6s | 6% faster | 3.59 MB (0.36%) | run total faster |
 | gRPC | Cold | 32m 6s | 38m 5s | 19% slower | 362.66 MB (100.0%) | warm, run total slower |
-| Zed | Warm | 17m 52s | 17m 23s | near tie | 2.08 GB (74.99%) | cold, run total slower |
+| Zed | Warm | 18m 23s | 17m 50s | near tie | 2.08 GB (74.99%) | — |
 | n8n | Warm | 1m 7s | 1m 0s | 10% faster | 16.73 MB more (-2.56%) | run total slower; BC used more storage |
 
 ### Rolling Historical
 
 | Benchmark | Headline | actions/cache | BoringCache | Result | Storage Saved | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | Cold | 0m 21s | 0m 11s | 48% faster | 17.53 GB (91.67%) | run total faster; tiny run; setup dominates |
+| Hugo | Cold | 3m 43s | 1m 5s | 71% faster | 18.10 GB (91.91%) | run total faster |
 | Immich | Run Total | 0m 32s | 0m 20s | 38% faster | 25.49 GB (85.38%) | cold faster; tiny run; setup dominates |
 | Mastodon | Run Total | 0m 28s | 0m 20s | 29% faster | 28.07 GB (93.58%) | tiny run; setup dominates |
-| PostHog | Cold | 12m 47s | 15m 0s | 17% slower | 11.27 GB (35.56%) | run total slower |
+| PostHog | Cold | 10m 55s | 12m 14s | 12% slower | 9.55 GB (31.85%) | — |
 | OpenTelemetry Java | Cold | 0m 45s | 1m 4s | 42% slower | 939.33 MB (55.07%) | run total slower |
 | Spring AI | Cold | 0m 31s | 0m 34s | near tie | 1.30 GB (57.47%) | run total slower |
 | gRPC | Cold | 36m 50s | 24m 51s | 33% faster | 37.36 MB (3.32%) | run total faster |
