@@ -22,6 +22,8 @@ Each benchmark repo:
 - uses real upstream sync commits to drive cold + warm comparisons
 - publishes JSON benchmark artifacts
 
+Docker benchmark rows measure BuildKit's outer registry cache path. They build the upstream Dockerfile unchanged and do not call `boringcache restore`, `boringcache save`, or `boringcache run` inside Dockerfile `RUN` steps. A `layer_miss` scenario means no imported Docker layer cache on a fresh runner; upstream Dockerfile cache mounts stay native to BuildKit.
+
 This repo:
 
 - fetches the latest successful benchmark artifacts from those standalone repos
