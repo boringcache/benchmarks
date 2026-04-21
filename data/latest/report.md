@@ -1,6 +1,6 @@
 ## Latest Benchmark Report
 
-Generated: 2026-04-21 16:49 UTC
+Generated: 2026-04-21 20:48 UTC
 
 ### Lane Coverage
 
@@ -20,29 +20,29 @@ Generated: 2026-04-21 16:49 UTC
 
 | Benchmark | Headline | actions/cache | BoringCache | Result | Storage Saved | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | Run Total | 4m 0s | 3m 19s | 17% faster | 9.45 GB (93.44%) | cold faster |
-| Immich | Cold | 7m 58s | 4m 29s | 44% faster | 6.40 GB (58.73%) | run total faster |
-| Mastodon | Warm | 0m 18s | 0m 11s | 39% faster | 8.80 GB (81.25%) | cold, layer miss, run total faster |
-| PostHog | Cold | 22m 13s | 13m 53s | 38% faster | 3.29 GB (21.99%) | run total faster |
-| OpenTelemetry Java | Cold | 10m 26s | 10m 41s | near tie | 49.33 MB (6.05%) | warm, run total slower |
-| Spring AI | Cold | 4m 29s | 4m 49s | 7% slower | 2.45 MB (0.25%) | warm, run total slower |
-| gRPC | Warm | 36m 4s | 1m 52s | 95% faster | 740.29 MB more (-455.6%) | cold, run total faster; BC used more storage |
-| Zed | Run Total | 58m 29s | 51m 46s | 11% faster | 2.08 GB (74.98%) | cold faster |
-| n8n | Cold | 5m 13s | 5m 23s | 3% slower | 16.76 MB more (-2.55%) | warm, run total slower; BC used more storage |
+| Hugo | Run Total | 4m 7s | 3m 18s | 20% faster | 9.32 GB (93.36%) | mixed: warm slower; cold, layer miss faster |
+| Immich | Cold | 5m 58s | 4m 42s | 21% faster | 6.37 GB (58.58%) | mixed: warm, layer miss slower; run total faster |
+| Mastodon | Cold | 9m 40s | 9m 14s | 4% faster | 10.86 GB (100.0%) | mixed: warm slower; layer miss, run total faster |
+| PostHog | Run Total | 19m 42s | 15m 51s | 20% faster | 11.46 GB (100.0%) | mixed: warm slower; cold, layer miss faster |
+| OpenTelemetry Java | Cold | 10m 55s | 8m 21s | 24% faster | 49.28 MB (6.04%) | mixed: warm slower; run total faster |
+| Spring AI | Warm | 0m 34s | 0m 33s | near tie | 3.48 MB (0.36%) | run total slower |
+| gRPC | Warm | 36m 51s | 1m 12s | 97% faster | 744.28 MB more (-458.07%) | cold, run total slower; BC used more storage |
+| Zed | Cold | 48m 38s | 49m 46s | near tie | 2.77 GB (100.0%) | warm slower |
+| n8n | Cold | 5m 25s | 5m 29s | near tie | 16.79 MB more (-2.55%) | warm slower; BC used more storage |
 
 ### Rolling Historical
 
 | Benchmark | Headline | actions/cache | BoringCache | Result | Storage Saved | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | Cold | 0m 11s | 0m 11s | near tie | 9.07 GB (93.19%) | tiny run; setup dominates |
-| Immich | Cold | 5m 15s | 3m 10s | 40% faster | 5.33 GB (54.22%) | run total faster |
-| Mastodon | Cold | 2m 22s | 2m 8s | 10% faster | 7.95 GB (79.66%) | run total faster |
-| PostHog | Cold | 18m 43s | 10m 46s | 42% faster | 2.05 GB (15.45%) | run total faster |
-| OpenTelemetry Java | Cold | 8m 22s | 11m 40s | 39% slower | 1005.19 MB (56.74%) | run total slower |
-| Spring AI | Cold | 3m 29s | 3m 29s | near tie | 1.72 GB (60.58%) | run total slower |
-| gRPC | Cold | 36m 46s | 32m 7s | 13% faster | 581.80 MB more (-179.04%) | run total faster; BC used more storage |
-| Zed | Run Total | 29m 3s | 23m 56s | 18% faster | 10.77 GB (93.9%) | — |
-| n8n | Cold | 2m 34s | 2m 21s | 8% faster | 2.28 GB (77.64%) | run total faster |
+| Hugo | Cold | 0m 9s | 3m 13s | 2044% slower | 9.07 GB (93.19%) | run total slower |
+| Immich | Cold | 7m 8s | 4m 34s | 36% faster | 6.37 GB (58.58%) | run total faster |
+| Mastodon | Cold | 0m 11s | 8m 34s | 4573% slower | 7.96 GB (79.68%) | run total slower |
+| PostHog | Cold | 29m 4s | 14m 15s | 51% faster | 439.27 MB more (-3.82%) | run total faster; BC used more storage |
+| OpenTelemetry Java | Cold | 0m 52s | 11m 46s | 1258% slower | 1.02 GB (57.73%) | run total slower |
+| Spring AI | Run Total | 1m 6s | 0m 52s | 21% faster | 2.00 GB (67.88%) | — |
+| gRPC | Cold | 27m 56s | 36m 45s | 32% slower | 581.80 MB more (-179.04%) | run total slower; BC used more storage |
+| Zed | Cold | 49m 12s | 53m 21s | 8% slower | 4.85 GB (87.49%) | run total slower |
+| n8n | Cold | 1m 16s | 5m 28s | 332% slower | 2.29 GB (77.66%) | run total slower |
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
 
