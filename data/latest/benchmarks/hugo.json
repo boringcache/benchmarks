@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-21T05:18:56Z",
+  "generated_at": "2026-04-21T09:07:52Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh isolated",
@@ -164,20 +164,20 @@
         "category": "docker",
         "step": "Docker build (Go)",
         "headline_scenario": "cold",
-        "before": "2m 46s",
-        "after": "3m 3s",
-        "before_seconds": 166.0,
-        "after_seconds": 183.0,
+        "before": "0m 11s",
+        "after": "0m 11s",
+        "before_seconds": 11.0,
+        "after_seconds": 11.0,
         "faster": "0",
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": "dbda571228b00cec9295d350f5664bd72408dd44",
           "actions_cache": {
-            "run_id": 24682248074,
-            "run_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/24682248074",
+            "run_id": 24713367302,
+            "run_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/24713367302",
             "head_sha": "dbda571228b00cec9295d350f5664bd72408dd44",
-            "created_at": "2026-04-20T18:02:39Z",
-            "cold_seconds": 166.0,
+            "created_at": "2026-04-21T08:54:59Z",
+            "cold_seconds": 11.0,
             "warm1_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
@@ -187,18 +187,18 @@
             "stale_mid_seconds": null,
             "stale_high_seconds": null,
             "layer_miss_seconds": null,
-            "run_total_seconds": 175.0,
-            "storage_bytes": 10497933560,
+            "run_total_seconds": 22.0,
+            "storage_bytes": 10450457700,
             "storage_source": "github-actions-cache-api",
             "docker_cache_import_seconds": null,
-            "docker_cache_export_seconds": 14.8
+            "docker_cache_export_seconds": 3.0
           },
           "boringcache": {
-            "run_id": 24682249023,
-            "run_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/24682249023",
+            "run_id": 24713368097,
+            "run_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/24713368097",
             "head_sha": "dbda571228b00cec9295d350f5664bd72408dd44",
-            "created_at": "2026-04-20T18:02:40Z",
-            "cold_seconds": 183.0,
+            "created_at": "2026-04-21T08:55:00Z",
+            "cold_seconds": 11.0,
             "warm1_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
@@ -208,20 +208,20 @@
             "stale_mid_seconds": null,
             "stale_high_seconds": null,
             "layer_miss_seconds": null,
-            "run_total_seconds": 193.0,
-            "storage_bytes": 712171532,
+            "run_total_seconds": 22.0,
+            "storage_bytes": 712171012,
             "storage_source": "boringcache-check",
             "docker_cache_import_seconds": null,
-            "docker_cache_export_seconds": 11.3
+            "docker_cache_export_seconds": 2.3
           },
           "warm_improvement_pct": null,
-          "cold_improvement_pct": -10.24,
+          "cold_improvement_pct": 0.0,
           "stale_low_improvement_pct": null,
           "stale_mid_improvement_pct": null,
           "stale_high_improvement_pct": null,
           "layer_miss_improvement_pct": null,
-          "storage_improvement_pct": 93.22,
-          "storage_saved_bytes": 9785762028
+          "storage_improvement_pct": 93.19,
+          "storage_saved_bytes": 9738286688
         }
       }
     }
