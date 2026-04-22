@@ -1,6 +1,6 @@
 ## Latest Benchmark Report
 
-Generated: 2026-04-22 16:49 UTC
+Generated: 2026-04-22 20:47 UTC
 
 ### Lane Coverage
 
@@ -20,28 +20,28 @@ Generated: 2026-04-22 16:49 UTC
 
 | Benchmark | Headline | actions/cache | BoringCache | Result | Storage Saved | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | Cold | 4m 14s | 3m 16s | 23% faster | 9.40 GB (93.41%) | mixed: warm slower; run total faster |
-| Immich | Cold | 10m 43s | 4m 41s | 56% faster | 4.89 GB (51.86%) | mixed: warm, layer miss slower; run total faster |
-| Mastodon | Cold | 9m 56s | 9m 31s | 4% faster | 8.86 GB (81.36%) | mixed: warm slower; layer miss faster |
-| PostHog | Cold | 20m 58s | 13m 49s | 34% faster | 235.37 MB more (-2.0%) | mixed: warm slower; layer miss, run total faster; BC used more storage |
-| OpenTelemetry Java | Cold | 11m 29s | 10m 17s | 10% faster | 49.29 MB (6.04%) | mixed: warm slower; run total faster |
-| Spring AI | Cold | 4m 23s | 4m 15s | 3% faster | 3.47 MB (0.36%) | — |
+| Hugo | Cold | 3m 36s | 3m 23s | 6% faster | 9.12 GB (93.22%) | run total faster |
+| Immich | Cold | 6m 8s | 4m 54s | 20% faster | 5.44 GB (54.52%) | run total faster |
+| Mastodon | Cold | 11m 17s | 9m 4s | 20% faster | 8.69 GB (81.08%) | mixed: warm slower; run total faster |
+| PostHog | Cold | 28m 41s | 14m 34s | 49% faster | 1.65 GB more (-16.39%) | run total faster; BC used more storage |
+| OpenTelemetry Java | Cold | 9m 14s | 10m 30s | 14% slower | 49.26 MB (6.04%) | run total slower |
+| Spring AI | Cold | 4m 58s | 4m 32s | 9% faster | 1.70 MB (0.18%) | run total slower |
 | gRPC | Warm | 31m 28s | 1m 13s | 96% faster | 744.28 MB more (-458.06%) | cold, run total slower; BC used more storage |
-| Zed | Run Total | 53m 45s | 51m 52s | 4% faster | 2.09 GB (75.25%) | — |
-| n8n | Cold | 5m 21s | 6m 16s | 17% slower | 16.63 MB more (-2.52%) | warm, run total slower; BC used more storage |
+| Zed | Cold | 49m 24s | 49m 57s | near tie | 2.30 GB (82.59%) | run total slower |
+| n8n | Warm | 1m 10s | 0m 59s | 16% faster | 16.72 MB more (-2.54%) | cold, run total slower; BC used more storage |
 
 ### Rolling Historical
 
 | Benchmark | Headline | actions/cache | BoringCache | Result | Storage Saved | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | Cold | 3m 1s | 3m 0s | near tie | 9.06 GB (93.18%) | — |
-| Immich | Cold | 0m 37s | 4m 56s | 700% slower | 4.89 GB (51.89%) | run total slower |
-| Mastodon | Cold | 2m 10s | 9m 7s | 321% slower | 7.95 GB (79.66%) | run total slower |
-| PostHog | Run Total | 35m 1s | 14m 38s | 58% faster | 235.30 MB more (-2.0%) | cold faster; BC used more storage |
-| OpenTelemetry Java | Cold | 1m 40s | 10m 39s | 539% slower | 1.03 GB (57.99%) | run total slower |
+| Hugo | Run Total | 0m 21s | 0m 18s | near tie | 9.12 GB (93.22%) | tiny run; setup dominates |
+| Immich | Run Total | 0m 28s | 0m 20s | 29% faster | 5.32 GB (53.98%) | tiny run; setup dominates |
+| Mastodon | Run Total | 0m 37s | 0m 26s | 30% faster | 7.95 GB (79.67%) | tiny run; setup dominates |
+| PostHog | Cold | 23m 13s | 14m 17s | 38% faster | 2.52 GB (17.66%) | run total faster |
+| OpenTelemetry Java | Cold | 0m 50s | 10m 54s | 1208% slower | 1.03 GB (57.99%) | run total slower |
 | Spring AI | Cold | 0m 34s | 0m 37s | near tie | 2.00 GB (67.86%) | tiny run; setup dominates |
 | gRPC | Cold | 36m 46s | 37m 16s | near tie | 579.12 MB more (-178.21%) | BC used more storage |
-| Zed | Run Total | 44m 13s | 42m 28s | 4% faster | 9.73 GB (93.32%) | — |
+| Zed | Cold | 36m 39s | 37m 8s | near tie | 10.79 GB (93.94%) | — |
 | n8n | Cold | 4m 4s | 4m 15s | 5% slower | 2.78 GB (80.87%) | run total slower |
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
