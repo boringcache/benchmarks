@@ -209,6 +209,16 @@ def storage_summary_text(comparison)
   end
 end
 
+def normalize_storage_sample(bytes, source)
+  normalized_bytes = bytes&.round&.to_i
+  normalized_source = source.to_s.strip
+  normalized_source = nil if normalized_source.empty? || normalized_source == "unspecified"
+  return [nil, nil] if normalized_source.nil?
+  return [nil, nil] if normalized_bytes.nil? || normalized_bytes <= 0
+
+  [normalized_bytes, normalized_source]
+end
+
 def lane_label(lane)
   lane.to_s == "rolling" ? "Rolling historical" : "Fresh isolated"
 end
@@ -274,17 +284,38 @@ def run_total_seconds(run)
   jobs = Array(run["jobs"])
   return nil if jobs.empty?
 
-  jobs.map { |job| duration_seconds(started_at: job["startedAt"], completed_at: job["completedAt"]) }.compact.max
+  jobs.map do |job|
+    duration_seconds(
+      started_at: job["startedAt"] || job["started_at"],
+      completed_at: job["completedAt"] || job["completed_at"]
+    )
+  end.compact.max
 end
 
 def fetch_run(repo:, run_id:)
-  JSON.parse(
+  run = JSON.parse(
     run_cmd(
-      "gh", "run", "view", run_id.to_s,
-      "--repo", repo,
-      "--json", "databaseId,conclusion,status,url,jobs,createdAt,updatedAt,headSha"
+      "gh", "api",
+      "repos/#{repo}/actions/runs/#{run_id}"
     )
   )
+  jobs = JSON.parse(
+    run_cmd(
+      "gh", "api",
+      "repos/#{repo}/actions/runs/#{run_id}/jobs?per_page=100"
+    )
+  ).fetch("jobs", [])
+
+  {
+    "databaseId" => run["id"],
+    "conclusion" => run["conclusion"],
+    "status" => run["status"],
+    "url" => run["html_url"],
+    "jobs" => jobs,
+    "createdAt" => run["run_started_at"] || run["created_at"],
+    "updatedAt" => run["updated_at"],
+    "headSha" => run["head_sha"]
+  }
 end
 
 def lane_artifact_names(benchmark_id:, strategy:, lane:)
@@ -347,8 +378,6 @@ end
 def extract_strategy_metrics(payload)
   runs = payload.fetch("runs", {})
   speed = payload.fetch("speed", {})
-  stale = payload.fetch("stale", payload.fetch("stale_docker_cache", {}))
-  layer_miss = payload.fetch("layer_miss", payload.fetch("internal_only", {}))
   cache = payload.fetch("cache", {})
   docker_cache = payload.fetch("docker_cache", {})
   oci = payload.fetch("oci", {})
@@ -356,30 +385,24 @@ def extract_strategy_metrics(payload)
 
   warm1 = parse_number(runs["warm1_seconds"])
   warm2 = parse_number(runs["warm2_seconds"])
-  stale_low = parse_number(stale["low_seconds"]) || parse_number(runs["stale_low_seconds"])
-  stale_mid = parse_number(stale["mid_seconds"]) || parse_number(runs["stale_mid_seconds"])
-  stale_high = parse_number(stale["high_seconds"]) || parse_number(runs["stale_high_seconds"])
   warm_avg = parse_number(speed["warm_average_seconds"])
   if warm_avg.nil?
     warm_values = [warm1, warm2].compact
     warm_avg = warm_values.sum / warm_values.length if warm_values.any?
   end
 
-  stale_seconds = parse_number(stale["seconds"]) || parse_number(runs["stale_seconds"]) || parse_number(runs["stale_docker_seconds"])
-  stale_seconds ||= stale_mid || stale_low || stale_high
+  storage_bytes, storage_source = normalize_storage_sample(
+    parse_number(cache["storage_bytes"]),
+    cache["storage_source"]
+  )
 
   {
     cold_seconds: parse_number(runs["cold_seconds"]),
     warm1_seconds: warm1,
     warm2_seconds: warm2,
     warm_average_seconds: warm_avg,
-    stale_seconds: stale_seconds,
-    stale_low_seconds: stale_low,
-    stale_mid_seconds: stale_mid,
-    stale_high_seconds: stale_high,
-    layer_miss_seconds: parse_number(layer_miss["seconds"]) || parse_number(runs["layer_miss_seconds"]) || parse_number(layer_miss["warm_no_docker_cache_seconds"]),
-    storage_bytes: parse_number(cache["storage_bytes"])&.round&.to_i,
-    storage_source: cache["storage_source"].to_s.strip,
+    storage_bytes: storage_bytes,
+    storage_source: storage_source,
     docker_cache_import_seconds: parse_number(docker_cache["import_seconds"]),
     docker_cache_export_seconds: parse_number(docker_cache["export_seconds"]),
     oci: oci,
@@ -464,11 +487,6 @@ def strategy_snapshot(data)
     "warm2_seconds" => metrics[:warm2_seconds],
     "warm_average_seconds" => metrics[:warm_average_seconds],
     "warm_steady_seconds" => warm_steady_seconds(metrics),
-    "stale_seconds" => metrics[:stale_seconds],
-    "stale_low_seconds" => metrics[:stale_low_seconds],
-    "stale_mid_seconds" => metrics[:stale_mid_seconds],
-    "stale_high_seconds" => metrics[:stale_high_seconds],
-    "layer_miss_seconds" => metrics[:layer_miss_seconds],
     "run_total_seconds" => data[:run_total_seconds],
     "storage_bytes" => metrics[:storage_bytes],
     "storage_source" => metrics[:storage_source],
@@ -511,6 +529,37 @@ def headline_metric_for(actions_metrics:, boringcache_metrics:, actions_run_tota
   candidates.find { |scenario, _, _| scenario == "cold" } || candidates.first
 end
 
+def rolling_reseed_investigation?(lane:, benchmark:, classification:)
+  return false unless lane.to_s == "rolling"
+  return false unless benchmark["category"] == "docker"
+
+  reseed_count = classification["rolling_reseed_count"]
+  reseed_count = 1 if reseed_count.nil? && classification["rolling_reseed"] == true
+  reseed_count.to_i.positive?
+end
+
+def reporting_summary(lane:, benchmark:, classification:, sample_count:)
+  return { "comparative" => true } unless rolling_reseed_investigation?(
+    lane: lane,
+    benchmark: benchmark,
+    classification: classification
+  )
+
+  reseed_count = classification["rolling_reseed_count"]
+  reseed_count = 1 if reseed_count.nil? && classification["rolling_reseed"] == true
+  label = sample_count.to_i > 1 ? "reseeded #{reseed_count}/#{sample_count}" : "reseeded"
+
+  {
+    "comparative" => false,
+    "status" => "investigation_only",
+    "reason" => "rolling_reseed",
+    "headline_scenario" => "first_build",
+    "headline_label" => "First Build",
+    "result_text" => label,
+    "note" => "Rolling Docker reseeds are first-build investigation samples, not steady-state parity."
+  }
+end
+
 def build_entry(benchmark:, lane:, actions_data:, boringcache_data:)
   actions_metrics = actions_data.fetch(:metrics)
   boringcache_metrics = boringcache_data.fetch(:metrics)
@@ -527,6 +576,12 @@ def build_entry(benchmark:, lane:, actions_data:, boringcache_data:)
   actions_head = actions_data.dig(:run, "headSha").to_s
   boringcache_head = boringcache_data.dig(:run, "headSha").to_s
   paired_head = !actions_head.empty? && actions_head == boringcache_head
+  reporting = reporting_summary(
+    lane: lane,
+    benchmark: benchmark,
+    classification: boringcache_metrics[:classification] || {},
+    sample_count: 1
+  )
 
   {
     "lane" => lane,
@@ -538,26 +593,24 @@ def build_entry(benchmark:, lane:, actions_data:, boringcache_data:)
     "source_repo" => benchmark.fetch("source_repo"),
     "category" => benchmark.fetch("category"),
     "step" => benchmark.fetch("step"),
-    "headline_scenario" => headline_scenario,
+    "headline_scenario" => reporting["headline_scenario"] || headline_scenario,
     "before" => seconds_to_text(before_value),
     "after" => seconds_to_text(after_value),
     "before_seconds" => before_value.round(2),
     "after_seconds" => after_value.round(2),
-    "faster" => faster_pct.round.to_s,
+    "faster" => reporting["comparative"] ? faster_pct.round.to_s : nil,
     "comparison" => {
       "paired_on_head_sha" => paired_head,
       "pairing_head_sha" => paired_head ? actions_head : nil,
       "actions_cache" => strategy_snapshot(actions_data),
       "boringcache" => strategy_snapshot(boringcache_data),
+      "reporting" => reporting,
       "warm_improvement_pct" => percent_delta(
         warm_steady_seconds(actions_metrics),
         warm_steady_seconds(boringcache_metrics)
       )&.round(2),
       "cold_improvement_pct" => percent_delta(actions_metrics[:cold_seconds], boringcache_metrics[:cold_seconds])&.round(2),
-      "stale_low_improvement_pct" => percent_delta(actions_metrics[:stale_low_seconds], boringcache_metrics[:stale_low_seconds])&.round(2),
-      "stale_mid_improvement_pct" => percent_delta(actions_metrics[:stale_mid_seconds], boringcache_metrics[:stale_mid_seconds])&.round(2),
-      "stale_high_improvement_pct" => percent_delta(actions_metrics[:stale_high_seconds], boringcache_metrics[:stale_high_seconds])&.round(2),
-      "layer_miss_improvement_pct" => percent_delta(actions_metrics[:layer_miss_seconds], boringcache_metrics[:layer_miss_seconds])&.round(2),
+      "run_total_improvement_pct" => percent_delta(actions_data[:run_total_seconds], boringcache_data[:run_total_seconds])&.round(2),
       "storage_improvement_pct" => percent_delta(actions_metrics[:storage_bytes], boringcache_metrics[:storage_bytes])&.round(2),
       "storage_saved_bytes" => if actions_metrics[:storage_bytes] && boringcache_metrics[:storage_bytes]
         actions_metrics[:storage_bytes] - boringcache_metrics[:storage_bytes]
@@ -596,10 +649,10 @@ def lane_report_row(entry, lane)
   comparison = current.fetch("comparison", {})
   actions = comparison.fetch("actions_cache", {})
   boringcache = comparison.fetch("boringcache", {})
+  reporting = comparison.fetch("reporting", {})
   scenarios = [
     ["cold", actions["cold_seconds"], boringcache["cold_seconds"]],
     ["warm", actions["warm1_seconds"], boringcache["warm1_seconds"]],
-    ["layer miss", actions["layer_miss_seconds"], boringcache["layer_miss_seconds"]],
     ["run total", actions["run_total_seconds"], boringcache["run_total_seconds"]]
   ]
   headline_scenario = current["headline_scenario"].to_s.tr("_", " ")
@@ -607,15 +660,17 @@ def lane_report_row(entry, lane)
   faster_notes = []
   slower_notes = []
 
-  scenarios.each do |label, before_value, after_value|
-    next if before_value.nil? || after_value.nil?
-    next if label == headline_scenario
+  if reporting.fetch("comparative", true)
+    scenarios.each do |label, before_value, after_value|
+      next if before_value.nil? || after_value.nil?
+      next if label == headline_scenario
 
-    case timing_result_bucket(before_value, after_value)
-    when :faster
-      faster_notes << label
-    when :slower
-      slower_notes << label
+      case timing_result_bucket(before_value, after_value)
+      when :faster
+        faster_notes << label
+      when :slower
+        slower_notes << label
+      end
     end
   end
 
@@ -628,6 +683,7 @@ def lane_report_row(entry, lane)
     notes << "#{faster_notes.join(', ')} faster"
   end
   notes << "tiny run; setup dominates" if tiny_run
+  notes << "storage unavailable" if comparison["storage_saved_bytes"].nil?
   notes << "BC used more storage" if comparison["storage_saved_bytes"].to_f.negative?
   bc_classification = boringcache["classification"] || {}
   bc_oci = boringcache["oci"] || {}
@@ -648,13 +704,14 @@ def lane_report_row(entry, lane)
     label = strategy == "actions_cache" ? "AC" : "BC"
     notes << "#{label} run #{snapshot['run_id']} #{conclusion}"
   end
+  notes << reporting["note"] if reporting["note"]
 
   {
     benchmark: entry.fetch("name"),
-    scenario: headline_scenario.split.map(&:capitalize).join(" "),
+    scenario: reporting["headline_label"] || headline_scenario.split.map(&:capitalize).join(" "),
     actions: current["before"],
     boringcache: current["after"],
-    result: timing_result_text(current["before_seconds"], current["after_seconds"]),
+    result: reporting.fetch("comparative", true) ? timing_result_text(current["before_seconds"], current["after_seconds"]) : reporting["result_text"],
     storage: storage_summary_text(comparison),
     notes: notes.empty? ? "—" : notes.join("; ")
   }
@@ -673,8 +730,6 @@ def raw_row(entry, lane)
     seconds_to_text(boringcache["cold_seconds"]),
     seconds_to_text(actions["warm_steady_seconds"]),
     seconds_to_text(boringcache["warm_steady_seconds"]),
-    seconds_to_text(actions["layer_miss_seconds"]),
-    seconds_to_text(boringcache["layer_miss_seconds"]),
     seconds_to_text(actions["run_total_seconds"]),
     seconds_to_text(boringcache["run_total_seconds"]),
     bytes_to_text(actions["storage_bytes"]),
@@ -750,7 +805,7 @@ def build_markdown(entries, generated_at:, format:)
         "### #{lane_label(lane).split.map(&:capitalize).join(' ')} Raw",
         "",
         markdown_table(
-          ["Benchmark", "AC Cold", "BC Cold", "AC Warm", "BC Warm", "AC Layer Miss", "BC Layer Miss", "AC Total", "BC Total", "AC Storage", "BC Storage", "AC Run", "BC Run"],
+          ["Benchmark", "AC Cold", "BC Cold", "AC Warm", "BC Warm", "AC Total", "BC Total", "AC Storage", "BC Storage", "AC Run", "BC Run"],
           rows
         ),
         ""
