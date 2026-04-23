@@ -3,6 +3,11 @@
 This file is the durable engineering log for benchmark regressions and cache
 stability learnings. Keep entries factual and tied to concrete runs/commits.
 
+Current reporting standard:
+
+- public benchmark reports use fresh isolated (`cold` + one `warm1` rerun), rolling historical (first build after upstream sync), total workflow time, and storage footprint
+- older entries below may quote retired intermediate-phase names from archived investigations; treat those as historical notes, not current feed fields
+
 ## 2026-04-08: gRPC and Zed launch-blocking regression
 
 ### What happened
@@ -27,7 +32,7 @@ registry root tag flushes.
 - Net effect:
   - proxy exits before publish convergence
   - next runner restores from missing/empty remote tag
-  - warm/stale phases collapse toward cold behavior
+  - warm and archived intermediate phases collapse toward cold behavior
 
 ### Fix shipped
 
@@ -73,7 +78,7 @@ This should be tracked separately from the publish-correctness bug.
 ### benchmark repos
 
 - Workflows should orchestrate, not patch product internals.
-- Scenario patches are allowed only for workload-shape changes (`stale-*`), not
+- Scenario patches are allowed only for explicit workload-shape changes in archived investigations, not
   product behavior overrides.
 - Any benchmark-only workaround (for example upstream dependency mirror fallback)
   must be documented with reason + removal condition.
@@ -123,14 +128,14 @@ verification classification treated registry tags as immediate-verify tags.
 ### gRPC benchmark regression signal (workflow-side)
 
 - Faster BC run (commit `95673b4`): `24121998413`
-  - `cold=2215s, warm1=53s, warm2=78s, stale_low=44s, stale_mid=90s, stale_high=953s`
+  - `cold=2215s, warm1=53s, warm2=78s, archived_extra_phase_low=44s, archived_extra_phase_mid=90s, archived_extra_phase_high=953s`
 - Slower BC runs (commit `85b8b25`): `24128606876`, `24170305015`
-  - `24128606876`: `cold=2196s, warm1=135s, warm2=189s, stale_high=1304s`
-  - `24170305015`: `cold=1678s, warm1=127s, warm2=276s, stale_high=1322s`
+  - `24128606876`: `cold=2196s, warm1=135s, warm2=189s, archived_extra_phase_high=1304s`
+  - `24170305015`: `cold=1678s, warm1=127s, warm2=276s, archived_extra_phase_high=1322s`
 - Key workflow delta in `85b8b25`:
   - removed gRPC tuning overrides (proxy/CLI concurrency + Bazel rc tuning)
   - moved to simplified defaults
-  - net result: materially slower warm/stale behavior in benchmark runs
+  - net result: materially slower warm and archived extra-phase behavior in benchmark runs
 
 ### Guardrail update
 
@@ -193,9 +198,9 @@ Fresh, same-ref or latest paired numbers:
 - Latest same-ref PostHog fresh run:
   - BC `24528944310`
   - AC `24528944287`
-- BC cold and layer-miss were good, but warm was bad:
-  - BC `cold=792s, warm=234s, layer_miss=185s`
-  - AC `cold=1404s, warm=7s, layer_miss=349s`
+- BC cold and the archived extra Docker phase were good, but warm was bad:
+  - BC `cold=792s, warm=234s, archived_extra_docker_phase=185s`
+  - AC `cold=1404s, warm=7s, archived_extra_docker_phase=349s`
 - Warm-step log showed the BC scenario build used different Docker build args
   than the seed build. The seed passed `BORINGCACHE_ALLOW_EXTERNAL_SYMLINKS=1`;
   the scenario build omitted it.

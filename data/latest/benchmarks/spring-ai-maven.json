@@ -1,9 +1,10 @@
 {
-  "generated_at": "2026-04-23T12:51:22Z",
+  "generated_at": "2026-04-23T13:51:35Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh isolated",
     "first_build_label": "Cold build",
+    "sample_count": 3,
     "benchmark": "spring-ai-maven",
     "name": "Spring AI",
     "logo": "docker",
@@ -13,64 +14,92 @@
     "category": "maven",
     "step": "Maven build (build-cache extension)",
     "headline_scenario": "cold",
-    "before": "4m 14s",
-    "after": "4m 26s",
-    "before_seconds": 254.0,
-    "after_seconds": 266.0,
-    "faster": "0",
+    "before": "4m 31s",
+    "after": "4m 20s",
+    "before_seconds": 271.0,
+    "after_seconds": 260.0,
+    "faster": "4",
     "comparison": {
       "paired_on_head_sha": true,
-      "pairing_head_sha": "9cad71d5168b3003d2233cb36926d6035458a4a9",
+      "pairing_head_sha": null,
+      "pairing_head_shas": [
+        "645a5bafc6b243ab75b129a8577acf6bd5f8c7a8",
+        "0ab895ff26ee9f66fc3f5b3ddb020fcb489b022f",
+        "92d67fbb8bbb66f6926f78be637299f5b7599b2b"
+      ],
+      "sample_count": 3,
       "actions_cache": {
-        "run_id": 24835624305,
-        "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24835624305",
-        "head_sha": "9cad71d5168b3003d2233cb36926d6035458a4a9",
-        "created_at": "2026-04-23T12:37:42Z",
-        "cold_seconds": 254.0,
-        "warm1_seconds": 31.0,
+        "run_id": 24816280669,
+        "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24816280669",
+        "head_sha": "645a5bafc6b243ab75b129a8577acf6bd5f8c7a8",
+        "created_at": "2026-04-23T04:11:48Z",
+        "sample_count": 3,
+        "sample_run_ids": [
+          24816280669,
+          24772411096,
+          24567542807
+        ],
+        "sample_run_urls": [
+          "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24816280669",
+          "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24772411096",
+          "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24567542807"
+        ],
+        "head_shas": [
+          "645a5bafc6b243ab75b129a8577acf6bd5f8c7a8",
+          "0ab895ff26ee9f66fc3f5b3ddb020fcb489b022f",
+          "92d67fbb8bbb66f6926f78be637299f5b7599b2b"
+        ],
+        "cold_seconds": 271.0,
+        "warm1_seconds": 32.0,
         "warm2_seconds": null,
-        "warm_average_seconds": 31.0,
-        "warm_steady_seconds": 31.0,
-        "stale_seconds": null,
-        "stale_low_seconds": null,
-        "stale_mid_seconds": null,
-        "stale_high_seconds": null,
-        "layer_miss_seconds": null,
-        "run_total_seconds": 283.0,
-        "storage_bytes": 1016402372,
-        "storage_source": "github-actions-cache-api",
+        "warm_average_seconds": 32.0,
+        "warm_steady_seconds": 32.0,
+        "run_total_seconds": 299.6666666666667,
+        "storage_bytes": 1025559521,
         "docker_cache_import_seconds": null,
-        "docker_cache_export_seconds": null
+        "docker_cache_export_seconds": null,
+        "storage_source": "github-actions-cache-api"
       },
       "boringcache": {
-        "run_id": 24835624262,
-        "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24835624262",
-        "head_sha": "9cad71d5168b3003d2233cb36926d6035458a4a9",
-        "created_at": "2026-04-23T12:37:42Z",
-        "cold_seconds": 266.0,
-        "warm1_seconds": 34.0,
+        "run_id": 24816279851,
+        "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24816279851",
+        "head_sha": "645a5bafc6b243ab75b129a8577acf6bd5f8c7a8",
+        "created_at": "2026-04-23T04:11:46Z",
+        "sample_count": 3,
+        "sample_run_ids": [
+          24816279851,
+          24772563101,
+          24567542824
+        ],
+        "sample_run_urls": [
+          "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24816279851",
+          "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24772563101",
+          "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24567542824"
+        ],
+        "head_shas": [
+          "645a5bafc6b243ab75b129a8577acf6bd5f8c7a8",
+          "0ab895ff26ee9f66fc3f5b3ddb020fcb489b022f",
+          "92d67fbb8bbb66f6926f78be637299f5b7599b2b"
+        ],
+        "cold_seconds": 260.0,
+        "warm1_seconds": 47.333333333333336,
         "warm2_seconds": null,
-        "warm_average_seconds": 34.0,
-        "warm_steady_seconds": 34.0,
-        "stale_seconds": null,
-        "stale_low_seconds": null,
-        "stale_mid_seconds": null,
-        "stale_high_seconds": null,
-        "layer_miss_seconds": null,
-        "run_total_seconds": 292.0,
-        "storage_bytes": 1013100175,
-        "storage_source": "boringcache-check",
+        "warm_average_seconds": 47.333333333333336,
+        "warm_steady_seconds": 47.333333333333336,
+        "run_total_seconds": 287.6666666666667,
+        "storage_bytes": 1021871828,
         "docker_cache_import_seconds": null,
-        "docker_cache_export_seconds": null
+        "docker_cache_export_seconds": null,
+        "storage_source": "boringcache-check"
       },
-      "warm_improvement_pct": -9.68,
-      "cold_improvement_pct": -4.72,
-      "stale_low_improvement_pct": null,
-      "stale_mid_improvement_pct": null,
-      "stale_high_improvement_pct": null,
-      "layer_miss_improvement_pct": null,
-      "storage_improvement_pct": 0.32,
-      "storage_saved_bytes": 3302197
+      "reporting": {
+        "comparative": true
+      },
+      "warm_improvement_pct": -47.92,
+      "cold_improvement_pct": 4.06,
+      "run_total_improvement_pct": 4.0,
+      "storage_improvement_pct": 0.36,
+      "storage_saved_bytes": 3687693
     },
     "default_lane": "fresh",
     "available_lanes": [
@@ -82,6 +111,7 @@
         "lane": "fresh",
         "lane_label": "Fresh isolated",
         "first_build_label": "Cold build",
+        "sample_count": 3,
         "benchmark": "spring-ai-maven",
         "name": "Spring AI",
         "logo": "docker",
@@ -91,70 +121,99 @@
         "category": "maven",
         "step": "Maven build (build-cache extension)",
         "headline_scenario": "cold",
-        "before": "4m 14s",
-        "after": "4m 26s",
-        "before_seconds": 254.0,
-        "after_seconds": 266.0,
-        "faster": "0",
+        "before": "4m 31s",
+        "after": "4m 20s",
+        "before_seconds": 271.0,
+        "after_seconds": 260.0,
+        "faster": "4",
         "comparison": {
           "paired_on_head_sha": true,
-          "pairing_head_sha": "9cad71d5168b3003d2233cb36926d6035458a4a9",
+          "pairing_head_sha": null,
+          "pairing_head_shas": [
+            "645a5bafc6b243ab75b129a8577acf6bd5f8c7a8",
+            "0ab895ff26ee9f66fc3f5b3ddb020fcb489b022f",
+            "92d67fbb8bbb66f6926f78be637299f5b7599b2b"
+          ],
+          "sample_count": 3,
           "actions_cache": {
-            "run_id": 24835624305,
-            "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24835624305",
-            "head_sha": "9cad71d5168b3003d2233cb36926d6035458a4a9",
-            "created_at": "2026-04-23T12:37:42Z",
-            "cold_seconds": 254.0,
-            "warm1_seconds": 31.0,
+            "run_id": 24816280669,
+            "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24816280669",
+            "head_sha": "645a5bafc6b243ab75b129a8577acf6bd5f8c7a8",
+            "created_at": "2026-04-23T04:11:48Z",
+            "sample_count": 3,
+            "sample_run_ids": [
+              24816280669,
+              24772411096,
+              24567542807
+            ],
+            "sample_run_urls": [
+              "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24816280669",
+              "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24772411096",
+              "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24567542807"
+            ],
+            "head_shas": [
+              "645a5bafc6b243ab75b129a8577acf6bd5f8c7a8",
+              "0ab895ff26ee9f66fc3f5b3ddb020fcb489b022f",
+              "92d67fbb8bbb66f6926f78be637299f5b7599b2b"
+            ],
+            "cold_seconds": 271.0,
+            "warm1_seconds": 32.0,
             "warm2_seconds": null,
-            "warm_average_seconds": 31.0,
-            "warm_steady_seconds": 31.0,
-            "stale_seconds": null,
-            "stale_low_seconds": null,
-            "stale_mid_seconds": null,
-            "stale_high_seconds": null,
-            "layer_miss_seconds": null,
-            "run_total_seconds": 283.0,
-            "storage_bytes": 1016402372,
-            "storage_source": "github-actions-cache-api",
+            "warm_average_seconds": 32.0,
+            "warm_steady_seconds": 32.0,
+            "run_total_seconds": 299.6666666666667,
+            "storage_bytes": 1025559521,
             "docker_cache_import_seconds": null,
-            "docker_cache_export_seconds": null
+            "docker_cache_export_seconds": null,
+            "storage_source": "github-actions-cache-api"
           },
           "boringcache": {
-            "run_id": 24835624262,
-            "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24835624262",
-            "head_sha": "9cad71d5168b3003d2233cb36926d6035458a4a9",
-            "created_at": "2026-04-23T12:37:42Z",
-            "cold_seconds": 266.0,
-            "warm1_seconds": 34.0,
+            "run_id": 24816279851,
+            "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24816279851",
+            "head_sha": "645a5bafc6b243ab75b129a8577acf6bd5f8c7a8",
+            "created_at": "2026-04-23T04:11:46Z",
+            "sample_count": 3,
+            "sample_run_ids": [
+              24816279851,
+              24772563101,
+              24567542824
+            ],
+            "sample_run_urls": [
+              "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24816279851",
+              "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24772563101",
+              "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24567542824"
+            ],
+            "head_shas": [
+              "645a5bafc6b243ab75b129a8577acf6bd5f8c7a8",
+              "0ab895ff26ee9f66fc3f5b3ddb020fcb489b022f",
+              "92d67fbb8bbb66f6926f78be637299f5b7599b2b"
+            ],
+            "cold_seconds": 260.0,
+            "warm1_seconds": 47.333333333333336,
             "warm2_seconds": null,
-            "warm_average_seconds": 34.0,
-            "warm_steady_seconds": 34.0,
-            "stale_seconds": null,
-            "stale_low_seconds": null,
-            "stale_mid_seconds": null,
-            "stale_high_seconds": null,
-            "layer_miss_seconds": null,
-            "run_total_seconds": 292.0,
-            "storage_bytes": 1013100175,
-            "storage_source": "boringcache-check",
+            "warm_average_seconds": 47.333333333333336,
+            "warm_steady_seconds": 47.333333333333336,
+            "run_total_seconds": 287.6666666666667,
+            "storage_bytes": 1021871828,
             "docker_cache_import_seconds": null,
-            "docker_cache_export_seconds": null
+            "docker_cache_export_seconds": null,
+            "storage_source": "boringcache-check"
           },
-          "warm_improvement_pct": -9.68,
-          "cold_improvement_pct": -4.72,
-          "stale_low_improvement_pct": null,
-          "stale_mid_improvement_pct": null,
-          "stale_high_improvement_pct": null,
-          "layer_miss_improvement_pct": null,
-          "storage_improvement_pct": 0.32,
-          "storage_saved_bytes": 3302197
+          "reporting": {
+            "comparative": true
+          },
+          "warm_improvement_pct": -47.92,
+          "cold_improvement_pct": 4.06,
+          "run_total_improvement_pct": 4.0,
+          "storage_improvement_pct": 0.36,
+          "storage_saved_bytes": 3687693
         }
       },
       "rolling": {
         "lane": "rolling",
         "lane_label": "Rolling historical",
         "first_build_label": "First build after upstream sync",
+        "sample_count": 3,
         "benchmark": "spring-ai-maven",
         "name": "Spring AI",
         "logo": "docker",
@@ -164,64 +223,92 @@
         "category": "maven",
         "step": "Maven build (build-cache extension)",
         "headline_scenario": "cold",
-        "before": "0m 45s",
-        "after": "4m 25s",
-        "before_seconds": 45.0,
-        "after_seconds": 265.0,
+        "before": "1m 23s",
+        "after": "2m 48s",
+        "before_seconds": 83.33,
+        "after_seconds": 168.0,
         "faster": "0",
         "comparison": {
           "paired_on_head_sha": true,
-          "pairing_head_sha": "9cad71d5168b3003d2233cb36926d6035458a4a9",
+          "pairing_head_sha": null,
+          "pairing_head_shas": [
+            "042de53115766140f48c176a1a5d9624b75bbf1d",
+            "9cad71d5168b3003d2233cb36926d6035458a4a9",
+            "9d55911752f0a6fbf0cb87aab5a272ac65cfeb39"
+          ],
+          "sample_count": 3,
           "actions_cache": {
-            "run_id": 24835628481,
-            "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24835628481",
-            "head_sha": "9cad71d5168b3003d2233cb36926d6035458a4a9",
-            "created_at": "2026-04-23T12:37:46Z",
-            "cold_seconds": 45.0,
+            "run_id": 24837060941,
+            "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24837060941",
+            "head_sha": "042de53115766140f48c176a1a5d9624b75bbf1d",
+            "created_at": "2026-04-23T13:09:05Z",
+            "sample_count": 3,
+            "sample_run_ids": [
+              24837060941,
+              24835628481,
+              24830617900
+            ],
+            "sample_run_urls": [
+              "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24837060941",
+              "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24835628481",
+              "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24830617900"
+            ],
+            "head_shas": [
+              "042de53115766140f48c176a1a5d9624b75bbf1d",
+              "9cad71d5168b3003d2233cb36926d6035458a4a9",
+              "9d55911752f0a6fbf0cb87aab5a272ac65cfeb39"
+            ],
+            "cold_seconds": 83.33333333333333,
             "warm1_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "stale_seconds": null,
-            "stale_low_seconds": null,
-            "stale_mid_seconds": null,
-            "stale_high_seconds": null,
-            "layer_miss_seconds": null,
-            "run_total_seconds": 64.0,
-            "storage_bytes": 3161132741,
-            "storage_source": "github-actions-cache-api",
+            "run_total_seconds": 107.0,
+            "storage_bytes": 3161820167,
             "docker_cache_import_seconds": null,
-            "docker_cache_export_seconds": null
+            "docker_cache_export_seconds": null,
+            "storage_source": "github-actions-cache-api"
           },
           "boringcache": {
-            "run_id": 24835629425,
-            "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24835629425",
-            "head_sha": "9cad71d5168b3003d2233cb36926d6035458a4a9",
-            "created_at": "2026-04-23T12:37:48Z",
-            "cold_seconds": 265.0,
+            "run_id": 24837062057,
+            "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24837062057",
+            "head_sha": "042de53115766140f48c176a1a5d9624b75bbf1d",
+            "created_at": "2026-04-23T13:09:07Z",
+            "sample_count": 3,
+            "sample_run_ids": [
+              24837062057,
+              24835629425,
+              24830619050
+            ],
+            "sample_run_urls": [
+              "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24837062057",
+              "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24835629425",
+              "https://github.com/boringcache/benchmark-spring-ai/actions/runs/24830619050"
+            ],
+            "head_shas": [
+              "042de53115766140f48c176a1a5d9624b75bbf1d",
+              "9cad71d5168b3003d2233cb36926d6035458a4a9",
+              "9d55911752f0a6fbf0cb87aab5a272ac65cfeb39"
+            ],
+            "cold_seconds": 168.0,
             "warm1_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "stale_seconds": null,
-            "stale_low_seconds": null,
-            "stale_mid_seconds": null,
-            "stale_high_seconds": null,
-            "layer_miss_seconds": null,
-            "run_total_seconds": 293.0,
-            "storage_bytes": 1013088880,
-            "storage_source": "boringcache-check",
+            "run_total_seconds": 197.33333333333334,
+            "storage_bytes": 1013198043,
             "docker_cache_import_seconds": null,
-            "docker_cache_export_seconds": null
+            "docker_cache_export_seconds": null,
+            "storage_source": "boringcache-check"
+          },
+          "reporting": {
+            "comparative": true
           },
           "warm_improvement_pct": null,
-          "cold_improvement_pct": -488.89,
-          "stale_low_improvement_pct": null,
-          "stale_mid_improvement_pct": null,
-          "stale_high_improvement_pct": null,
-          "layer_miss_improvement_pct": null,
-          "storage_improvement_pct": 67.95,
-          "storage_saved_bytes": 2148043861
+          "cold_improvement_pct": -101.6,
+          "run_total_improvement_pct": -84.42,
+          "storage_improvement_pct": 67.96,
+          "storage_saved_bytes": 2148622124
         }
       }
     }
