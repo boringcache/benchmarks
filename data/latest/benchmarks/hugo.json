@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-25T16:49:26Z",
+  "generated_at": "2026-04-25T20:48:20Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh isolated",
@@ -269,50 +269,50 @@
         "category": "docker",
         "step": "Docker build (Go)",
         "headline_scenario": "first_build",
-        "before": "1m 7s",
-        "after": "1m 4s",
-        "before_seconds": 67.33,
-        "after_seconds": 64.33,
+        "before": "2m 14s",
+        "after": "2m 2s",
+        "before_seconds": 133.67,
+        "after_seconds": 122.33,
         "faster": null,
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": null,
           "pairing_head_shas": [
+            "93488d5dd1b942b0ce50386b40a3a76700aa0508",
             "9b7dc1cdf687306b4a4f796bbf7cd3f3335f079c",
-            "3bdcc2727b1cc6a57864c59f3d0ebd931b0c47b3",
-            "2981b3f7dcf5abdf6e6fbf79e49b2ab637c2af8f"
+            "3bdcc2727b1cc6a57864c59f3d0ebd931b0c47b3"
           ],
           "sample_count": 3,
           "actions_cache": {
-            "run_id": 24932769020,
-            "run_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/24932769020",
-            "head_sha": "9b7dc1cdf687306b4a4f796bbf7cd3f3335f079c",
-            "created_at": "2026-04-25T14:11:06Z",
+            "run_id": 24935721756,
+            "run_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/24935721756",
+            "head_sha": "93488d5dd1b942b0ce50386b40a3a76700aa0508",
+            "created_at": "2026-04-25T16:47:14Z",
             "sample_count": 3,
             "sample_run_ids": [
+              24935721756,
               24932769020,
-              24902026816,
-              24895919156
+              24902026816
             ],
             "sample_run_urls": [
+              "https://github.com/boringcache/benchmark-hugo/actions/runs/24935721756",
               "https://github.com/boringcache/benchmark-hugo/actions/runs/24932769020",
-              "https://github.com/boringcache/benchmark-hugo/actions/runs/24902026816",
-              "https://github.com/boringcache/benchmark-hugo/actions/runs/24895919156"
+              "https://github.com/boringcache/benchmark-hugo/actions/runs/24902026816"
             ],
             "head_shas": [
+              "93488d5dd1b942b0ce50386b40a3a76700aa0508",
               "9b7dc1cdf687306b4a4f796bbf7cd3f3335f079c",
-              "3bdcc2727b1cc6a57864c59f3d0ebd931b0c47b3",
-              "2981b3f7dcf5abdf6e6fbf79e49b2ab637c2af8f"
+              "3bdcc2727b1cc6a57864c59f3d0ebd931b0c47b3"
             ],
-            "cold_seconds": 67.33333333333333,
+            "cold_seconds": 123.33333333333333,
             "warm1_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "run_total_seconds": 77.0,
-            "storage_bytes": 10689167580,
+            "run_total_seconds": 133.66666666666666,
+            "storage_bytes": 10695789717,
             "docker_cache_import_seconds": null,
-            "docker_cache_export_seconds": 3.5,
+            "docker_cache_export_seconds": 7.666666666666667,
             "storage_source": "github-actions-cache-api",
             "classification": {
               "sample_count": 3,
@@ -321,51 +321,51 @@
             }
           },
           "boringcache": {
-            "run_id": 24932769434,
-            "run_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/24932769434",
-            "head_sha": "9b7dc1cdf687306b4a4f796bbf7cd3f3335f079c",
-            "created_at": "2026-04-25T14:11:07Z",
+            "run_id": 24935722018,
+            "run_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/24935722018",
+            "head_sha": "93488d5dd1b942b0ce50386b40a3a76700aa0508",
+            "created_at": "2026-04-25T16:47:16Z",
             "sample_count": 3,
             "sample_run_ids": [
+              24935722018,
               24932769434,
-              24902027754,
-              24895921222
+              24902027754
             ],
             "sample_run_urls": [
+              "https://github.com/boringcache/benchmark-hugo/actions/runs/24935722018",
               "https://github.com/boringcache/benchmark-hugo/actions/runs/24932769434",
-              "https://github.com/boringcache/benchmark-hugo/actions/runs/24902027754",
-              "https://github.com/boringcache/benchmark-hugo/actions/runs/24895921222"
+              "https://github.com/boringcache/benchmark-hugo/actions/runs/24902027754"
             ],
             "head_shas": [
+              "93488d5dd1b942b0ce50386b40a3a76700aa0508",
               "9b7dc1cdf687306b4a4f796bbf7cd3f3335f079c",
-              "3bdcc2727b1cc6a57864c59f3d0ebd931b0c47b3",
-              "2981b3f7dcf5abdf6e6fbf79e49b2ab637c2af8f"
+              "3bdcc2727b1cc6a57864c59f3d0ebd931b0c47b3"
             ],
-            "cold_seconds": 64.33333333333333,
+            "cold_seconds": 113.66666666666667,
             "warm1_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "run_total_seconds": 73.66666666666667,
-            "storage_bytes": 349444189,
+            "run_total_seconds": 122.33333333333333,
+            "storage_bytes": 356113978,
             "docker_cache_import_seconds": null,
-            "docker_cache_export_seconds": 5.2,
+            "docker_cache_export_seconds": 7.366666666666667,
             "oci": {
               "body_local_hits": 0.0,
-              "body_remote_fetches": 4.0,
+              "body_remote_fetches": 8.0,
               "body_local_bytes": 0.0,
-              "body_remote_bytes": 89746531.66666667,
+              "body_remote_bytes": 182065200.33333334,
               "body_local_duration_ms": 0.0,
-              "body_remote_duration_ms": 1802.3333333333333,
+              "body_remote_duration_ms": 3999.6666666666665,
               "startup_body_inserted": 0.0,
               "startup_body_failures": 0.0,
               "startup_body_cold_blobs": 60.0,
               "startup_body_duration_ms": 0.0,
-              "new_blob_count": 1.0,
-              "new_blob_bytes": 6674495.333333333,
-              "upload_requested_blobs": 19.5,
-              "upload_already_present": 18.0,
-              "upload_batch_seconds": 0.423,
+              "new_blob_count": 3.3333333333333335,
+              "new_blob_bytes": 33058013.666666668,
+              "upload_requested_blobs": 20.0,
+              "upload_already_present": 15.0,
+              "upload_batch_seconds": 0.6335,
               "hydration_policy": "metadata-only"
             },
             "storage_source": "boringcache-check",
@@ -385,10 +385,10 @@
             "note": "Rolling Docker reseeds are first-build investigation samples, not steady-state parity."
           },
           "warm_improvement_pct": null,
-          "cold_improvement_pct": 4.46,
-          "run_total_improvement_pct": 4.33,
-          "storage_improvement_pct": 96.73,
-          "storage_saved_bytes": 10339723391
+          "cold_improvement_pct": 7.84,
+          "run_total_improvement_pct": 8.48,
+          "storage_improvement_pct": 96.67,
+          "storage_saved_bytes": 10339675739
         }
       }
     }
