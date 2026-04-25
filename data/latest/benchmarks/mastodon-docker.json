@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-25T12:52:45Z",
+  "generated_at": "2026-04-25T16:49:26Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh isolated",
@@ -270,9 +270,9 @@
         "step": "Docker build (Ruby+Node)",
         "headline_scenario": "first_build",
         "before": "0m 18s",
-        "after": "6m 35s",
-        "before_seconds": 18.33,
-        "after_seconds": 395.33,
+        "after": "6m 39s",
+        "before_seconds": 17.67,
+        "after_seconds": 398.67,
         "faster": null,
         "comparison": {
           "paired_on_head_sha": true,
@@ -304,15 +304,15 @@
               "36ca4815d9f6302bd0627277aee4b283e5122d48",
               "1bc77837a919f0be59173a13cc8353be2cafbfa3"
             ],
-            "cold_seconds": 18.333333333333332,
+            "cold_seconds": 17.666666666666668,
             "warm1_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "run_total_seconds": 32.333333333333336,
-            "storage_bytes": 10958886072,
+            "run_total_seconds": 29.666666666666668,
+            "storage_bytes": 10958914987,
             "docker_cache_import_seconds": null,
-            "docker_cache_export_seconds": 5.5,
+            "docker_cache_export_seconds": 4.733333333333333,
             "storage_source": "github-actions-cache-api",
             "classification": {
               "sample_count": 3,
@@ -341,15 +341,15 @@
               "36ca4815d9f6302bd0627277aee4b283e5122d48",
               "1bc77837a919f0be59173a13cc8353be2cafbfa3"
             ],
-            "cold_seconds": 395.3333333333333,
+            "cold_seconds": 398.6666666666667,
             "warm1_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "run_total_seconds": 410.6666666666667,
-            "storage_bytes": 1089611809,
+            "run_total_seconds": 415.0,
+            "storage_bytes": 1089611628,
             "docker_cache_import_seconds": null,
-            "docker_cache_export_seconds": 57.96666666666667,
+            "docker_cache_export_seconds": 55.13333333333333,
             "oci": {
               "body_local_hits": 0.0,
               "body_remote_fetches": 1.0,
@@ -362,10 +362,10 @@
               "startup_body_cold_blobs": 40.0,
               "startup_body_duration_ms": 0.0,
               "new_blob_count": 21.333333333333332,
-              "new_blob_bytes": 640636059.0,
+              "new_blob_bytes": 640635878.3333334,
               "upload_requested_blobs": 40.0,
               "upload_already_present": 18.666666666666668,
-              "upload_batch_seconds": 13.090000000000002,
+              "upload_batch_seconds": 8.933666666666667,
               "hydration_policy": "metadata-only"
             },
             "storage_source": "boringcache-check",
@@ -385,10 +385,10 @@
             "note": "Rolling Docker reseeds are first-build investigation samples, not steady-state parity."
           },
           "warm_improvement_pct": null,
-          "cold_improvement_pct": -2056.36,
-          "run_total_improvement_pct": -1170.1,
+          "cold_improvement_pct": -2156.6,
+          "run_total_improvement_pct": -1298.88,
           "storage_improvement_pct": 90.06,
-          "storage_saved_bytes": 9869274263
+          "storage_saved_bytes": 9869303359
         }
       }
     }

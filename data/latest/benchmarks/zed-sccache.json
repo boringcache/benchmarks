@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-25T12:52:45Z",
+  "generated_at": "2026-04-25T16:49:26Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh isolated",
@@ -209,10 +209,10 @@
         "category": "rust",
         "step": "Rust build (sccache)",
         "headline_scenario": "cold",
-        "before": "22m 12s",
-        "after": "39m 46s",
-        "before_seconds": 1331.67,
-        "after_seconds": 2385.67,
+        "before": "22m 29s",
+        "after": "40m 15s",
+        "before_seconds": 1348.67,
+        "after_seconds": 2415.0,
         "faster": "0",
         "comparison": {
           "paired_on_head_sha": true,
@@ -244,13 +244,13 @@
               "dfeec704311183183aa85b268338baad86356ead",
               "07351be99d762a497d71b7718cfe7cde6b9f639e"
             ],
-            "cold_seconds": 1331.6666666666667,
+            "cold_seconds": 1348.6666666666667,
             "warm1_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "run_total_seconds": 1486.3333333333333,
-            "storage_bytes": 8397021315,
+            "run_total_seconds": 1499.0,
+            "storage_bytes": 8611481609,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
             "storage_source": "github-actions-cache-api"
@@ -276,13 +276,13 @@
               "dfeec704311183183aa85b268338baad86356ead",
               "07351be99d762a497d71b7718cfe7cde6b9f639e"
             ],
-            "cold_seconds": 2385.6666666666665,
+            "cold_seconds": 2415.0,
             "warm1_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "run_total_seconds": 2503.3333333333335,
-            "storage_bytes": 738182037,
+            "run_total_seconds": 2532.3333333333335,
+            "storage_bytes": 738179612,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
             "storage_source": "boringcache-check"
@@ -291,10 +291,10 @@
             "comparative": true
           },
           "warm_improvement_pct": null,
-          "cold_improvement_pct": -79.15,
-          "run_total_improvement_pct": -68.42,
-          "storage_improvement_pct": 91.21,
-          "storage_saved_bytes": 7658839278
+          "cold_improvement_pct": -79.07,
+          "run_total_improvement_pct": -68.93,
+          "storage_improvement_pct": 91.43,
+          "storage_saved_bytes": 7873301997
         }
       }
     }
