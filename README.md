@@ -172,13 +172,40 @@ Check a downloaded release-path proof bundle before using it for launch claims:
 ruby scripts/launch-proof.rb \
   --artifacts /path/to/downloaded/benchmark-artifacts \
   --diagnostics /path/to/downloaded/diagnostics \
+  --matrix config/launch-proof-matrix.json \
+  --evidence /path/to/launch-proof-evidence.json \
   --action-ref boringcache/one@v1
 ```
 
 The proof gate requires BoringCache artifacts to carry product refs, cache
 mode/lane, sample classification, Docker OCI counters where applicable, and
 `cache_session_summary` evidence from either embedded artifact JSON or attached
-request-metrics/status diagnostics.
+request-metrics/status diagnostics. With `--matrix`, it also requires explicit
+tool/surface/scenario coverage for CLI and action paths across archive, Docker,
+sccache, Go, Bazel, Gradle, Maven, Turbo, and Nx.
+
+Evidence manifests use stable path labels, so the failure says exactly what is
+missing:
+
+```json
+{
+  "evidence": [
+    {
+      "tool": "docker",
+      "surface": "action",
+      "scenario": "fresh_runner_rerun",
+      "status": "pass",
+      "run_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/123",
+      "artifact": "benchmark-hugo-boringcache-fresh.json"
+    }
+  ]
+}
+```
+
+The launch matrix distinguishes cold fresh runs, same-runner reruns,
+fresh-runner reruns, repeat fresh-after-purge runs, Docker same-ref rolling
+reruns, and Docker same-alias two-writer proof. That prevents a single warm
+sample on one runner from standing in for end-to-end coverage.
 
 Pin the current generated aggregate as the public snapshot:
 

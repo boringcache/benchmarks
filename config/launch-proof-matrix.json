@@ -1,0 +1,103 @@
+{
+  "schema": "boringcache.launch_proof_matrix.v1",
+  "scenarios": {
+    "fresh_cold": "Empty product cache root on a clean runner. Proves cold miss/save or proxy export without pre-existing remote state.",
+    "same_runner_rerun": "Repeat on the same machine or same job after clearing the tool's local output/cache directory. Proves behavior is not hidden by leftover build output.",
+    "fresh_runner_rerun": "Repeat the same ref on a fresh runner without purging the product cache root. Proves remote restore/import works for a customer-like warm CI run.",
+    "fresh_rerun_after_purge": "Purge the product cache root and repeat the fresh path. Proves the cold path is reproducible and catches one-off runner or setup flukes.",
+    "same_ref_rerun": "Run the same source ref and same workflow graph again without purge. Proves rolling steady-state behavior and avoids treating first reseed as parity.",
+    "same_alias_two_writers": "Publish two immutable run refs that promote the same alias. Proves stale promotion is rejected while immutable run refs remain readable."
+  },
+  "paths": [
+    {
+      "tool": "archive",
+      "surface": "cli",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    },
+    {
+      "tool": "archive",
+      "surface": "action",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    },
+    {
+      "tool": "docker",
+      "surface": "cli",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge", "same_ref_rerun", "same_alias_two_writers"]
+    },
+    {
+      "tool": "docker",
+      "surface": "action",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge", "same_ref_rerun", "same_alias_two_writers"]
+    },
+    {
+      "tool": "sccache",
+      "surface": "cli",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    },
+    {
+      "tool": "sccache",
+      "surface": "action",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    },
+    {
+      "tool": "go",
+      "surface": "cli",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    },
+    {
+      "tool": "go",
+      "surface": "action",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    },
+    {
+      "tool": "bazel",
+      "surface": "cli",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    },
+    {
+      "tool": "bazel",
+      "surface": "action",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    },
+    {
+      "tool": "gradle",
+      "surface": "cli",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    },
+    {
+      "tool": "gradle",
+      "surface": "action",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    },
+    {
+      "tool": "maven",
+      "surface": "cli",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    },
+    {
+      "tool": "maven",
+      "surface": "action",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    },
+    {
+      "tool": "turbo",
+      "surface": "cli",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    },
+    {
+      "tool": "turbo",
+      "surface": "action",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    },
+    {
+      "tool": "nx",
+      "surface": "cli",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    },
+    {
+      "tool": "nx",
+      "surface": "action",
+      "required_scenarios": ["fresh_cold", "same_runner_rerun", "fresh_runner_rerun", "fresh_rerun_after_purge"]
+    }
+  ]
+}

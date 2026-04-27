@@ -10,6 +10,8 @@ repo_root = Pathname.new(__dir__).join("..").expand_path
 options = {
   artifacts: [repo_root.join("data/latest/benchmarks").to_s],
   diagnostics: [],
+  evidence: [],
+  matrix: nil,
   expected_action_ref: "boringcache/one@v1",
   require_diagnostics: true,
   require_fresh_cache_import: true,
@@ -27,6 +29,14 @@ parser = OptionParser.new do |opts|
 
   opts.on("--diagnostics PATH", "Diagnostics file or directory containing request metrics/status output.") do |path|
     options[:diagnostics] << path
+  end
+
+  opts.on("--evidence PATH", "Launch proof evidence manifest JSON. Can be passed more than once.") do |path|
+    options[:evidence] << path
+  end
+
+  opts.on("--matrix PATH", "Launch proof matrix JSON requiring tool/surface/scenario coverage.") do |path|
+    options[:matrix] = path
   end
 
   opts.on("--action-ref REF", "Expected released action ref. Default: boringcache/one@v1") do |ref|
@@ -164,6 +174,119 @@ def embedded_session_summary?(payload)
   )
 end
 
+def proof_paths(payload)
+  raw_paths = []
+  raw_paths.concat(Array(payload["proof_paths"]))
+  raw_paths.concat(Array(payload["launch_proof_paths"]))
+  raw_paths << payload["proof_path"] if payload["proof_path"].is_a?(Hash)
+
+  launch_proof = payload["launch_proof"]
+  if launch_proof.is_a?(Hash)
+    raw_paths << launch_proof
+    raw_paths.concat(Array(launch_proof["paths"]))
+  end
+
+  raw_paths.filter_map do |raw_path|
+    next raw_path if raw_path.is_a?(Hash)
+    next unless raw_path.is_a?(String)
+
+    parts = raw_path.split("/")
+    next unless parts.length == 3
+
+    { "tool" => parts[0], "surface" => parts[1], "scenario" => parts[2] }
+  end
+end
+
+def load_evidence_entries(paths)
+  paths.flat_map do |raw_path|
+    path = Pathname.new(raw_path)
+    payload = parse_json_file(path)
+    next [] unless payload.is_a?(Hash)
+
+    entries = payload["evidence"] || payload["paths"] || []
+    unless entries.is_a?(Array)
+      warn "#{path}: evidence manifest has no evidence array"
+      next []
+    end
+
+    entries.filter_map do |entry|
+      next unless entry.is_a?(Hash)
+
+      entry.merge("_source" => path.to_s)
+    end
+  end
+end
+
+def artifact_evidence_entries(artifacts)
+  artifacts.flat_map do |path, payload|
+    proof_paths(payload).map do |proof_path|
+      proof_path.merge(
+        "status" => proof_path["status"] || "pass",
+        "artifact" => path.to_s,
+        "_source" => path.to_s
+      )
+    end
+  end
+end
+
+def successful_evidence?(entry)
+  status = entry["status"].to_s
+  status.empty? || %w[pass passed ok success valid].include?(status)
+end
+
+def evidence_matches?(entry, requirement, scenario)
+  return false unless successful_evidence?(entry)
+  return false unless entry["tool"].to_s == requirement["tool"].to_s
+  return false unless entry["surface"].to_s == requirement["surface"].to_s
+  return false unless entry["scenario"].to_s == scenario.to_s
+
+  true
+end
+
+def validate_matrix(path, evidence_entries, errors)
+  payload = parse_json_file(Pathname.new(path))
+  unless payload.is_a?(Hash)
+    errors << "launch proof matrix #{path} is missing or invalid JSON"
+    return
+  end
+
+  requirements = payload["paths"]
+  unless requirements.is_a?(Array)
+    errors << "launch proof matrix #{path} has no paths array"
+    return
+  end
+
+  requirements.each do |requirement|
+    unless requirement.is_a?(Hash)
+      errors << "launch proof matrix #{path} contains a non-object path"
+      next
+    end
+    next if requirement["required"] == false
+
+    tool = requirement["tool"]
+    surface = requirement["surface"]
+    if !present?(tool) || !present?(surface)
+      errors << "launch proof matrix #{path} has a path missing tool or surface"
+      next
+    end
+
+    scenarios = requirement["required_scenarios"]
+    if !scenarios.is_a?(Array) || scenarios.empty?
+      errors << "launch proof matrix #{path}: #{tool}/#{surface} has no required_scenarios"
+      next
+    end
+
+    scenarios.each do |scenario|
+      matches = evidence_entries.select { |entry| evidence_matches?(entry, requirement, scenario) }
+      min_count = requirement.fetch("min_counts", {})[scenario].to_i
+      min_count = 1 if min_count <= 0
+      next if matches.length >= min_count
+
+      errors << "missing launch proof path #{tool}/#{surface}/#{scenario} (need #{min_count}, found #{matches.length})"
+    end
+  end
+end
+
 def validate_product_refs(payload, path, options, errors)
   refs = payload["product_refs"]
   unless refs.is_a?(Hash)
@@ -277,10 +400,13 @@ end
 embedded_summary_count = artifacts.count { |_, payload| embedded_session_summary?(payload) }
 diagnostic_summary_count = diagnostics_summary_count(options[:diagnostics])
 summary_count = embedded_summary_count + diagnostic_summary_count
+evidence_entries = load_evidence_entries(options[:evidence]) + artifact_evidence_entries(artifacts)
 
 if options[:require_diagnostics] && summary_count.zero?
   errors << "missing cache_session_summary evidence; pass --diagnostics with request metrics/status artifacts or embed cache_session_summary in benchmark JSON"
 end
+
+validate_matrix(options[:matrix], evidence_entries, errors) if options[:matrix]
 
 if errors.any?
   warn "launch proof failed:"
@@ -288,4 +414,5 @@ if errors.any?
   exit 1
 end
 
-puts "launch proof passed: #{artifacts.length} BoringCache artifact(s), #{summary_count} cache_session_summary evidence item(s)"
+coverage_suffix = options[:matrix] ? ", #{evidence_entries.length} matrix evidence item(s)" : ""
+puts "launch proof passed: #{artifacts.length} BoringCache artifact(s), #{summary_count} cache_session_summary evidence item(s)#{coverage_suffix}"
