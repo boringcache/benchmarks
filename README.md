@@ -166,6 +166,20 @@ Regenerate the latest index locally:
 ruby scripts/publish-index.rb
 ```
 
+Check a downloaded release-path proof bundle before using it for launch claims:
+
+```bash
+ruby scripts/launch-proof.rb \
+  --artifacts /path/to/downloaded/benchmark-artifacts \
+  --diagnostics /path/to/downloaded/diagnostics \
+  --action-ref boringcache/one@v1
+```
+
+The proof gate requires BoringCache artifacts to carry product refs, cache
+mode/lane, sample classification, Docker OCI counters where applicable, and
+`cache_session_summary` evidence from either embedded artifact JSON or attached
+request-metrics/status diagnostics.
+
 Pin the current generated aggregate as the public snapshot:
 
 ```bash
