@@ -8,6 +8,7 @@ require "optparse"
 require "time"
 require "tmpdir"
 require "yaml"
+require_relative "benchmark-reporting"
 
 BENCHMARK_ROOT = File.expand_path("..", __dir__)
 DEFAULT_INDEX_PATH = File.join(BENCHMARK_ROOT, "data", "latest", "index.json")
@@ -529,50 +530,33 @@ def headline_metric_for(actions_metrics:, boringcache_metrics:, actions_run_tota
   candidates.find { |scenario, _, _| scenario == "cold" } || candidates.first
 end
 
-def rolling_reseed_investigation?(lane:, benchmark:, classification:)
-  return false unless lane.to_s == "rolling"
-  return false unless benchmark["category"] == "docker"
+def headline_for_scenario(scenario:, actions_metrics:, boringcache_metrics:, actions_run_total:, boringcache_run_total:)
+  before_value, after_value = BenchmarkReporting.scenario_pair(
+    scenario: scenario,
+    actions_cold: actions_metrics[:cold_seconds],
+    boringcache_cold: boringcache_metrics[:cold_seconds],
+    actions_warm: warm_steady_seconds(actions_metrics),
+    boringcache_warm: warm_steady_seconds(boringcache_metrics),
+    actions_run_total: actions_run_total,
+    boringcache_run_total: boringcache_run_total
+  )
+  return nil unless before_value && after_value
 
-  reseed_count = classification["rolling_reseed_count"]
-  reseed_count = 1 if reseed_count.nil? && classification["rolling_reseed"] == true
-  reseed_count.to_i.positive?
+  [scenario, before_value, after_value]
 end
 
 def reporting_summary(lane:, benchmark:, classification:, sample_count:)
-  return { "comparative" => true } unless rolling_reseed_investigation?(
+  BenchmarkReporting.reporting_summary(
     lane: lane,
-    benchmark: benchmark,
-    classification: classification
+    category: benchmark["category"],
+    classification: classification,
+    sample_count: sample_count
   )
-
-  reseed_count = classification["rolling_reseed_count"]
-  reseed_count = 1 if reseed_count.nil? && classification["rolling_reseed"] == true
-  label = sample_count.to_i > 1 ? "reseeded #{reseed_count}/#{sample_count}" : "reseeded"
-
-  {
-    "comparative" => false,
-    "status" => "investigation_only",
-    "reason" => "rolling_reseed",
-    "headline_scenario" => "first_build",
-    "headline_label" => "First Build",
-    "result_text" => label,
-    "note" => "Rolling Docker reseeds are first-build investigation samples, not steady-state parity."
-  }
 end
 
 def build_entry(benchmark:, lane:, actions_data:, boringcache_data:)
   actions_metrics = actions_data.fetch(:metrics)
   boringcache_metrics = boringcache_data.fetch(:metrics)
-  headline = headline_metric_for(
-    actions_metrics: actions_metrics,
-    boringcache_metrics: boringcache_metrics,
-    actions_run_total: actions_data[:run_total_seconds],
-    boringcache_run_total: boringcache_data[:run_total_seconds]
-  )
-  return nil unless headline
-
-  headline_scenario, before_value, after_value = headline
-  faster_pct = [percent_delta(before_value, after_value).to_f, 0].max
   actions_head = actions_data.dig(:run, "headSha").to_s
   boringcache_head = boringcache_data.dig(:run, "headSha").to_s
   paired_head = !actions_head.empty? && actions_head == boringcache_head
@@ -582,6 +566,23 @@ def build_entry(benchmark:, lane:, actions_data:, boringcache_data:)
     classification: boringcache_metrics[:classification] || {},
     sample_count: 1
   )
+  headline = headline_for_scenario(
+    scenario: reporting["headline_scenario"],
+    actions_metrics: actions_metrics,
+    boringcache_metrics: boringcache_metrics,
+    actions_run_total: actions_data[:run_total_seconds],
+    boringcache_run_total: boringcache_data[:run_total_seconds]
+  )
+  headline ||= headline_metric_for(
+    actions_metrics: actions_metrics,
+    boringcache_metrics: boringcache_metrics,
+    actions_run_total: actions_data[:run_total_seconds],
+    boringcache_run_total: boringcache_data[:run_total_seconds]
+  )
+  return nil unless headline
+
+  headline_scenario, before_value, after_value = headline
+  faster_pct = [percent_delta(before_value, after_value).to_f, 0].max
 
   {
     "lane" => lane,
@@ -686,6 +687,7 @@ def lane_report_row(entry, lane)
   notes << "storage unavailable" if comparison["storage_saved_bytes"].nil?
   notes << "BC used more storage" if comparison["storage_saved_bytes"].to_f.negative?
   bc_classification = boringcache["classification"] || {}
+  cache_import_status = bc_classification["cache_import_status"].to_s
   bc_oci = boringcache["oci"] || {}
   if bc_classification["rolling_reseed"] == true
     new_blob_count = bc_oci["new_blob_count"] || "unknown"
@@ -695,6 +697,7 @@ def lane_report_row(entry, lane)
   elsif bc_classification["steady_state_candidate"] == true
     notes << "BC steady-state candidate"
   end
+  notes << "BC cache import #{cache_import_status}" if !cache_import_status.empty? && cache_import_status != "ok"
 
   %w[actions_cache boringcache].each do |strategy|
     snapshot = comparison.fetch(strategy, {})
