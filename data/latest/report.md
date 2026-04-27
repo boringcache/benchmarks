@@ -1,6 +1,6 @@
 ## Latest Benchmark Report
 
-Generated: 2026-04-27 01:15 UTC
+Generated: 2026-04-27 05:42 UTC
 
 ### Lane Coverage
 
@@ -41,7 +41,7 @@ Generated: 2026-04-27 01:15 UTC
 | Spring AI | Cold | 0m 36s | 0m 56s | 55% slower | 2.22 GB (70.23%) | run total slower; 3 paired samples |
 | gRPC | Cold | 36m 43s | 31m 43s | 14% faster | 581.80 MB more (-179.04%) | run total faster; BC used more storage; 3 paired samples |
 | Zed | Cold | 19m 16s | 48m 32s | 152% slower | 7.43 GB (91.53%) | run total slower; 3 paired samples |
-| n8n | Cold | 3m 21s | 4m 27s | 33% slower | 4.18 GB (86.34%) | run total slower; 3 paired samples |
+| n8n | Cold | 2m 59s | 3m 7s | 5% slower | 4.22 GB (86.47%) | 3 paired samples |
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
 
