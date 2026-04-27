@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-27T09:26:36Z",
+  "generated_at": "2026-04-27T11:00:55Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh isolated",
@@ -90,7 +90,21 @@
         "storage_bytes": 803676115,
         "docker_cache_import_seconds": null,
         "docker_cache_export_seconds": null,
-        "storage_source": "boringcache-check"
+        "storage_source": "boringcache-check",
+        "classification": {
+          "sample_count": 3,
+          "sample_valid_count": 3,
+          "invalid_count": 0,
+          "investigation_only_count": 0,
+          "comparative_count": 3,
+          "reporting_mode": "comparative",
+          "reporting_reason": null,
+          "reporting_note": null,
+          "validity_reason": null,
+          "cache_import_status": null,
+          "rolling_reseed_count": 0,
+          "steady_state_candidate_count": 0
+        }
       },
       "reporting": {
         "comparative": true
@@ -197,7 +211,21 @@
             "storage_bytes": 803676115,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
-            "storage_source": "boringcache-check"
+            "storage_source": "boringcache-check",
+            "classification": {
+              "sample_count": 3,
+              "sample_valid_count": 3,
+              "invalid_count": 0,
+              "investigation_only_count": 0,
+              "comparative_count": 3,
+              "reporting_mode": "comparative",
+              "reporting_reason": null,
+              "reporting_note": null,
+              "validity_reason": null,
+              "cache_import_status": null,
+              "rolling_reseed_count": 0,
+              "steady_state_candidate_count": 0
+            }
           },
           "reporting": {
             "comparative": true
@@ -299,7 +327,21 @@
             "storage_bytes": 803779749,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
-            "storage_source": "boringcache-check"
+            "storage_source": "boringcache-check",
+            "classification": {
+              "sample_count": 3,
+              "sample_valid_count": 3,
+              "invalid_count": 0,
+              "investigation_only_count": 0,
+              "comparative_count": 3,
+              "reporting_mode": "comparative",
+              "reporting_reason": null,
+              "reporting_note": null,
+              "validity_reason": null,
+              "cache_import_status": null,
+              "rolling_reseed_count": 0,
+              "steady_state_candidate_count": 0
+            }
           },
           "reporting": {
             "comparative": true
