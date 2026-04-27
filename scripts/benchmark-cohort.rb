@@ -287,9 +287,18 @@ def result_text(before_value, after_value)
 end
 
 def rolling_reseed_investigation?(row)
-  row.fetch("lane") == "rolling" &&
-    row.fetch("category") == "docker" &&
-    row.dig("boringcache", "reseed_count").to_i.positive?
+  row.dig("reporting", "status") == "investigation_only"
+end
+
+def invalid_sample?(row)
+  row.dig("reporting", "status") == "invalid"
+end
+
+def most_common(values)
+  values = values.compact.reject { |value| value.to_s.empty? }
+  return nil if values.empty?
+
+  values.group_by(&:itself).max_by { |_, grouped| grouped.length }&.first
 end
 
 def markdown_table(headers, rows)
@@ -348,6 +357,16 @@ def aggregate_pairs(pairs)
     bc_export = average(boringcache.map { |snapshot| metric(snapshot, "docker_cache_export_seconds") })
     bc_new_blobs = average(boringcache.map { |snapshot| snapshot.dig("oci", "new_blob_count") })
     reseeds = boringcache.count { |snapshot| snapshot.dig("classification", "rolling_reseed") == true }
+    reporting_entries = entries.map { |entry| entry.dig("comparison", "reporting") || {} }
+    invalid_count = reporting_entries.count { |reporting| reporting["status"] == "invalid" }
+    investigation_count = reporting_entries.count { |reporting| reporting["status"] == "investigation_only" }
+    reporting_status = if invalid_count.positive?
+      "invalid"
+    elsif investigation_count.positive?
+      "investigation_only"
+    else
+      "comparative"
+    end
 
     {
       "benchmark" => benchmark_id,
@@ -372,6 +391,13 @@ def aggregate_pairs(pairs)
         "avg_oci_new_blob_count" => bc_new_blobs,
         "reseed_count" => reseeds
       },
+      "reporting" => {
+        "status" => reporting_status,
+        "invalid_count" => invalid_count,
+        "investigation_count" => investigation_count,
+        "result_text" => most_common(reporting_entries.map { |reporting| reporting["result_text"] }),
+        "note" => most_common(reporting_entries.map { |reporting| reporting["note"] })
+      },
       "improvement" => {
         "cold_pct" => percent_delta(ac_cold, bc_cold),
         "warm_pct" => percent_delta(ac_warm, bc_warm),
@@ -395,8 +421,10 @@ def build_report(aggregates, cohort)
 
   LANES.each do |lane|
     rows = aggregates.select { |row| row.fetch("lane") == lane }.map do |row|
-      cold_result = if rolling_reseed_investigation?(row)
-        "investigation only"
+      cold_result = if invalid_sample?(row)
+        row.dig("reporting", "result_text") || "invalid sample"
+      elsif rolling_reseed_investigation?(row)
+        row.dig("reporting", "result_text") || "investigation only"
       else
         result_text(row.dig("actions_cache", "avg_cold_seconds"), row.dig("boringcache", "avg_cold_seconds"))
       end
@@ -432,13 +460,21 @@ def build_report(aggregates, cohort)
   end
 
   docker_rows = aggregates.select { |row| row.fetch("category") == "docker" }.map do |row|
+    export_result = if invalid_sample?(row)
+      row.dig("reporting", "result_text") || "invalid sample"
+    elsif rolling_reseed_investigation?(row)
+      row.dig("reporting", "result_text") || "investigation only"
+    else
+      result_text(row.dig("actions_cache", "avg_docker_export_seconds"), row.dig("boringcache", "avg_docker_export_seconds"))
+    end
+
     [
       row.fetch("name"),
       row.fetch("lane"),
       row.fetch("pairs").to_s,
       seconds_text(row.dig("actions_cache", "avg_docker_export_seconds")),
       seconds_text(row.dig("boringcache", "avg_docker_export_seconds")),
-      result_text(row.dig("actions_cache", "avg_docker_export_seconds"), row.dig("boringcache", "avg_docker_export_seconds")),
+      export_result,
       row.dig("boringcache", "avg_oci_new_blob_count")&.round(1)&.to_s || "—",
       row.dig("boringcache", "reseed_count").to_s
     ]

@@ -6,6 +6,7 @@ require "json"
 require "open3"
 require "time"
 require "tmpdir"
+require_relative "benchmark-reporting"
 
 OUTPUT_DIR = File.join("data", "latest")
 OUTPUT_PATH = File.join(OUTPUT_DIR, "index.json")
@@ -539,43 +540,48 @@ def headline_metric_for(actions_metrics:, boringcache_metrics:, actions_run_tota
   candidates.first
 end
 
-def rolling_reseed_investigation?(lane:, benchmark:, classification:)
-  return false unless lane.to_s == "rolling"
-  return false unless benchmark["category"] == "docker"
+def headline_for_scenario(scenario:, actions_metrics:, boringcache_metrics:, actions_run_total:, boringcache_run_total:)
+  before_value, after_value = BenchmarkReporting.scenario_pair(
+    scenario: scenario,
+    actions_cold: actions_metrics[:cold_seconds],
+    boringcache_cold: boringcache_metrics[:cold_seconds],
+    actions_warm: warm_steady_seconds(actions_metrics),
+    boringcache_warm: warm_steady_seconds(boringcache_metrics),
+    actions_run_total: actions_run_total,
+    boringcache_run_total: boringcache_run_total
+  )
+  return nil unless before_value && after_value
 
-  reseed_count = classification["rolling_reseed_count"]
-  reseed_count = 1 if reseed_count.nil? && classification["rolling_reseed"] == true
-  reseed_count.to_i.positive?
+  [scenario, before_value, after_value]
 end
 
 def reporting_summary(lane:, benchmark:, classification:, sample_count:)
-  return { "comparative" => true } unless rolling_reseed_investigation?(
+  BenchmarkReporting.reporting_summary(
     lane: lane,
-    benchmark: benchmark,
-    classification: classification
+    category: benchmark["category"],
+    classification: classification,
+    sample_count: sample_count
   )
-
-  reseed_count = classification["rolling_reseed_count"]
-  reseed_count = 1 if reseed_count.nil? && classification["rolling_reseed"] == true
-  label = sample_count.to_i > 1 ? "reseeded #{reseed_count}/#{sample_count}" : "reseeded"
-
-  {
-    "comparative" => false,
-    "status" => "investigation_only",
-    "reason" => "rolling_reseed",
-    "headline_scenario" => "first_build",
-    "headline_label" => "First Build",
-    "result_text" => label,
-    "note" => "Rolling Docker reseeds are first-build investigation samples, not steady-state parity."
-  }
 end
 
 def build_entry(benchmark:, pair:, actions_data:, boringcache_data:, lane:)
   actions_metrics = actions_data[:metrics]
   boringcache_metrics = boringcache_data[:metrics]
   return nil if actions_metrics.nil? || boringcache_metrics.nil?
-
-  headline = headline_metric_for(
+  reporting = reporting_summary(
+    lane: lane,
+    benchmark: benchmark,
+    classification: boringcache_metrics[:classification] || {},
+    sample_count: 1
+  )
+  headline = headline_for_scenario(
+    scenario: reporting["headline_scenario"],
+    actions_metrics: actions_metrics,
+    boringcache_metrics: boringcache_metrics,
+    actions_run_total: actions_data[:run_total_seconds],
+    boringcache_run_total: boringcache_data[:run_total_seconds]
+  )
+  headline ||= headline_metric_for(
     actions_metrics: actions_metrics,
     boringcache_metrics: boringcache_metrics,
     actions_run_total: actions_data[:run_total_seconds],
@@ -587,12 +593,6 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:, lane:)
   faster_pct = percent_delta(before_value, after_value)
   return nil if faster_pct.nil?
   faster_pct = [faster_pct, 0].max
-  reporting = reporting_summary(
-    lane: lane,
-    benchmark: benchmark,
-    classification: boringcache_metrics[:classification] || {},
-    sample_count: 1
-  )
 
   {
     "lane" => lane,
@@ -686,15 +686,6 @@ def average_snapshot(snapshots)
   storage_source = most_common(snapshots.map { |snapshot| snapshot["storage_source"] })
   averaged["storage_source"] = storage_source if storage_source
 
-  classifications = snapshots.map { |snapshot| snapshot["classification"] || {} }
-  if classifications.any?(&:any?)
-    averaged["classification"] = {
-      "sample_count" => snapshots.length,
-      "rolling_reseed_count" => classifications.count { |classification| classification["rolling_reseed"] == true },
-      "steady_state_candidate_count" => classifications.count { |classification| classification["steady_state_candidate"] == true }
-    }
-  end
-
   averaged
 end
 
@@ -713,9 +704,30 @@ def average_lane_entries(entries, benchmark:, lane:)
 
   actions_snapshot = average_snapshot(entries.map { |entry| entry.dig("comparison", "actions_cache") })
   boringcache_snapshot = average_snapshot(entries.map { |entry| entry.dig("comparison", "boringcache") })
+  classifications = entries.map { |entry| entry.dig("comparison", "boringcache", "classification") || {} }
+  rolled_up_classification = BenchmarkReporting.rollup_classification(
+    lane: lane,
+    category: benchmark["category"],
+    classifications: classifications
+  )
+  boringcache_snapshot["classification"] = rolled_up_classification if rolled_up_classification
   actions_metrics = metrics_from_snapshot(actions_snapshot)
   boringcache_metrics = metrics_from_snapshot(boringcache_snapshot)
-  headline = headline_metric_for(
+  head_shas = entries.flat_map { |entry| Array(entry.dig("comparison", "pairing_head_shas") || entry.dig("comparison", "pairing_head_sha")) }.compact.uniq
+  reporting = reporting_summary(
+    lane: lane,
+    benchmark: benchmark,
+    classification: boringcache_snapshot["classification"] || {},
+    sample_count: entries.length
+  )
+  headline = headline_for_scenario(
+    scenario: reporting["headline_scenario"],
+    actions_metrics: actions_metrics,
+    boringcache_metrics: boringcache_metrics,
+    actions_run_total: actions_snapshot["run_total_seconds"],
+    boringcache_run_total: boringcache_snapshot["run_total_seconds"]
+  )
+  headline ||= headline_metric_for(
     actions_metrics: actions_metrics,
     boringcache_metrics: boringcache_metrics,
     actions_run_total: actions_snapshot["run_total_seconds"],
@@ -727,13 +739,6 @@ def average_lane_entries(entries, benchmark:, lane:)
   faster_pct = percent_delta(before_value, after_value)
   return nil if faster_pct.nil?
   faster_pct = [faster_pct, 0].max
-  head_shas = entries.flat_map { |entry| Array(entry.dig("comparison", "pairing_head_shas") || entry.dig("comparison", "pairing_head_sha")) }.compact.uniq
-  reporting = reporting_summary(
-    lane: lane,
-    benchmark: benchmark,
-    classification: boringcache_snapshot["classification"] || {},
-    sample_count: entries.length
-  )
 
   {
     "lane" => lane,
@@ -835,8 +840,12 @@ def lane_report_row(entry, lane)
   sample_count = comparison["sample_count"].to_i
   notes << "#{sample_count} paired samples" if sample_count > 1
   bc_classification = boringcache["classification"] || {}
+  invalid_count = bc_classification["invalid_count"].to_i
   reseed_count = bc_classification["rolling_reseed_count"].to_i
+  cache_import_status = bc_classification["cache_import_status"].to_s
+  notes << "BC invalid #{invalid_count}/#{sample_count}" if sample_count > 1 && invalid_count.positive?
   notes << "BC reseeded #{reseed_count}/#{sample_count}" if sample_count > 1 && reseed_count.positive?
+  notes << "BC cache import #{cache_import_status}" if !cache_import_status.empty? && cache_import_status != "ok"
   notes << reporting["note"] if reporting["note"]
 
   {
@@ -912,7 +921,7 @@ def build_report(entries, generated_at:)
     "",
     "Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.",
     "",
-    "Rows use the latest #{PAIR_COUNT} same-commit AC/BC pairs when enough samples are available. Rolling Docker rows marked reseeded are first-build investigation samples, not steady-state parity claims.",
+    "Rows use the latest #{PAIR_COUNT} same-commit AC/BC pairs when enough samples are available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling Docker reseeds or cache-import misses render as investigation-only.",
     ""
   ].join("\n")
 end
