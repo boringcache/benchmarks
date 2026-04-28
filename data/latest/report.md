@@ -1,6 +1,6 @@
 ## Latest Benchmark Report
 
-Generated: 2026-04-28 01:18 UTC
+Generated: 2026-04-28 05:44 UTC
 
 ### Lane Coverage
 
@@ -34,9 +34,9 @@ Generated: 2026-04-28 01:18 UTC
 | Benchmark | Headline | actions/cache | BoringCache | Result | Storage Saved | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
 | Hugo | First Build | 1m 12s | 2m 17s | reseeded 2/3 | 9.51 GB (96.63%) | 3 paired samples; BC reseeded 2/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| Immich | First Build | 1m 6s | 1m 18s | reseeded 1/3 | 7.32 GB (76.33%) | 3 paired samples; BC reseeded 1/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
+| Immich | First Build | 11m 0s | 18m 42s | reseeded 2/3 | 7.16 GB (75.93%) | 3 paired samples; BC reseeded 2/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
 | Mastodon | First Build | 1m 28s | 4m 19s | reseeded 2/3 | 9.15 GB (90.02%) | 3 paired samples; BC reseeded 2/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| PostHog | First Build | 13m 11s | 9m 51s | reseeded 3/3 | 4.77 GB (45.01%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
+| PostHog | First Build | 18m 13s | 10m 36s | reseeded 3/3 | 7.81 GB (56.91%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
 | OpenTelemetry Java | Cold | 1m 7s | 11m 6s | 890% slower | 1.03 GB (57.9%) | run total slower; 3 paired samples |
 | Spring AI | Cold | 1m 34s | 2m 20s | 48% slower | 2.16 GB (68.43%) | run total slower; 3 paired samples |
 | gRPC | Cold | 34m 32s | 22m 3s | 36% faster | 581.91 MB more (-179.07%) | run total faster; BC used more storage; 3 paired samples |
