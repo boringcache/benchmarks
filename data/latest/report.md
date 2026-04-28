@@ -1,6 +1,6 @@
 ## Latest Benchmark Report
 
-Generated: 2026-04-28 13:08 UTC
+Generated: 2026-04-28 17:11 UTC
 
 ### Lane Coverage
 
@@ -33,15 +33,15 @@ Generated: 2026-04-28 13:08 UTC
 
 | Benchmark | Headline | actions/cache | BoringCache | Result | Storage Saved | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | First Build | 2m 8s | 3m 22s | reseeded 3/3 | 8.68 GB (96.32%) | 3 paired samples; BC reseeded 3/3; BC cache import proxy_unreadable; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| Immich | First Build | 12m 15s | 20m 45s | reseeded 3/3 | 7.29 GB (76.27%) | 3 paired samples; BC reseeded 3/3; BC cache import proxy_unreadable; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| Mastodon | First Build | 2m 49s | 4m 40s | reseeded 3/3 | 8.94 GB (89.81%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| PostHog | First Build | 15m 7s | 11m 51s | reseeded 3/3 | 3.98 GB (40.88%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
+| Hugo | First Build | 3m 5s | 3m 11s | reseeded 3/3 | 8.02 GB (96.03%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
+| Immich | First Build | 5m 18s | 4m 59s | reseeded 3/3 | 8.28 GB (78.49%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
+| Mastodon | First Build | 5m 31s | 4m 45s | reseeded 3/3 | 9.39 GB (90.27%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
+| PostHog | First Build | 14m 57s | 11m 23s | reseeded 3/3 | 5.25 GB (47.67%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
 | OpenTelemetry Java | Cold | 1m 7s | 11m 6s | 890% slower | 1.03 GB (57.9%) | run total slower; 3 paired samples |
 | Spring AI | Cold | 1m 34s | 2m 20s | 48% slower | 2.16 GB (68.43%) | run total slower; 3 paired samples |
-| gRPC | Cold | 34m 32s | 22m 3s | 36% faster | 581.91 MB more (-179.07%) | run total faster; BC used more storage; 3 paired samples |
-| Zed | Cold | 38m 21s | 41m 20s | 8% slower | 7.05 GB (91.12%) | run total slower; 3 paired samples |
-| n8n | Run Total | 5m 43s | 5m 8s | 10% faster | 5.25 GB (88.29%) | cold faster; 3 paired samples |
+| gRPC | Cold | 36m 28s | 30m 39s | 16% faster | 581.80 MB more (-179.04%) | run total faster; BC used more storage; 3 paired samples |
+| Zed | Cold | 31m 10s | 32m 28s | 4% slower | 6.93 GB (90.97%) | 3 paired samples |
+| n8n | Run Total | 5m 3s | 4m 39s | 8% faster | 5.34 GB (88.48%) | 3 paired samples |
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
 
