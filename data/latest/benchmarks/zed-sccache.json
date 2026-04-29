@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-29T05:42:36Z",
+  "generated_at": "2026-04-29T07:30:43Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh isolated",
@@ -236,12 +236,12 @@
         "public": false,
         "category": "rust",
         "step": "Rust build (sccache)",
-        "headline_scenario": "cold",
-        "before": "19m 11s",
-        "after": "20m 12s",
-        "before_seconds": 1150.67,
-        "after_seconds": 1212.0,
-        "faster": "0",
+        "headline_scenario": "run_total",
+        "before": "22m 15s",
+        "after": "22m 3s",
+        "before_seconds": 1335.33,
+        "after_seconds": 1323.0,
+        "faster": "1",
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": null,
@@ -284,18 +284,18 @@
             "storage_source": "github-actions-cache-api"
           },
           "boringcache": {
-            "run_id": 25083788516,
-            "run_url": "https://github.com/boringcache/benchmark-zed/actions/runs/25083788516",
+            "run_id": 25094578508,
+            "run_url": "https://github.com/boringcache/benchmark-zed/actions/runs/25094578508",
             "head_sha": "7d59b61cb09feecff5bd77ee523f24808aa88d64",
-            "created_at": "2026-04-28T23:55:00Z",
+            "created_at": "2026-04-29T06:38:16Z",
             "sample_count": 3,
             "sample_run_ids": [
-              25083788516,
+              25094578508,
               25082224985,
               25081346114
             ],
             "sample_run_urls": [
-              "https://github.com/boringcache/benchmark-zed/actions/runs/25083788516",
+              "https://github.com/boringcache/benchmark-zed/actions/runs/25094578508",
               "https://github.com/boringcache/benchmark-zed/actions/runs/25082224985",
               "https://github.com/boringcache/benchmark-zed/actions/runs/25081346114"
             ],
@@ -304,12 +304,12 @@
               "2269e4fbefd7ef749370ea5fbbfeac04ca2ebde2",
               "fdc31e427800b8c43e5816df235c2e6e9a24f233"
             ],
-            "cold_seconds": 1212.0,
+            "cold_seconds": 1149.6666666666667,
             "warm1_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "run_total_seconds": 1337.0,
+            "run_total_seconds": 1323.0,
             "storage_bytes": 738124147,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
@@ -333,8 +333,8 @@
             "comparative": true
           },
           "warm_improvement_pct": null,
-          "cold_improvement_pct": -5.33,
-          "run_total_improvement_pct": -0.12,
+          "cold_improvement_pct": 0.09,
+          "run_total_improvement_pct": 0.92,
           "storage_improvement_pct": 94.01,
           "storage_saved_bytes": 11582895646
         }
