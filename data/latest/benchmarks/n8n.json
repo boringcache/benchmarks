@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-30T13:07:47Z",
+  "generated_at": "2026-04-30T14:30:34Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh isolated",
@@ -237,80 +237,80 @@
         "category": "nodejs",
         "step": "Turbo build (pnpm monorepo)",
         "headline_scenario": "run_total",
-        "before": "4m 55s",
-        "after": "3m 51s",
-        "before_seconds": 294.67,
-        "after_seconds": 231.0,
+        "before": "5m 10s",
+        "after": "4m 1s",
+        "before_seconds": 309.67,
+        "after_seconds": 241.0,
         "faster": "22",
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": null,
           "pairing_head_shas": [
-            "1ce9ec2cd465915bb98196d3f347fa0b962cdac1",
+            "239cd10f5df1f48d0ad27fe63ebace29bb0c428e",
             "fbd3647662fb0894802e5f0849ae77f383f246ce",
             "7bcfdbbdd21a49d8d6f68fab2d1753b6b5cff8d5"
           ],
           "sample_count": 3,
           "actions_cache": {
-            "run_id": 25166769755,
-            "run_url": "https://github.com/boringcache/benchmark-n8n/actions/runs/25166769755",
-            "head_sha": "1ce9ec2cd465915bb98196d3f347fa0b962cdac1",
-            "created_at": "2026-04-30T13:00:09Z",
+            "run_id": 25168876088,
+            "run_url": "https://github.com/boringcache/benchmark-n8n/actions/runs/25168876088",
+            "head_sha": "239cd10f5df1f48d0ad27fe63ebace29bb0c428e",
+            "created_at": "2026-04-30T13:44:13Z",
             "sample_count": 3,
             "sample_run_ids": [
-              25166769755,
+              25168876088,
               25163652554,
               25161929907
             ],
             "sample_run_urls": [
-              "https://github.com/boringcache/benchmark-n8n/actions/runs/25166769755",
+              "https://github.com/boringcache/benchmark-n8n/actions/runs/25168876088",
               "https://github.com/boringcache/benchmark-n8n/actions/runs/25163652554",
               "https://github.com/boringcache/benchmark-n8n/actions/runs/25161929907"
             ],
             "head_shas": [
-              "1ce9ec2cd465915bb98196d3f347fa0b962cdac1",
+              "239cd10f5df1f48d0ad27fe63ebace29bb0c428e",
               "fbd3647662fb0894802e5f0849ae77f383f246ce",
               "7bcfdbbdd21a49d8d6f68fab2d1753b6b5cff8d5"
             ],
-            "cold_seconds": 221.66666666666666,
+            "cold_seconds": 237.66666666666666,
             "warm1_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "run_total_seconds": 294.6666666666667,
-            "storage_bytes": 7606059937,
+            "run_total_seconds": 309.6666666666667,
+            "storage_bytes": 7623007535,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
             "storage_source": "github-actions-cache-api"
           },
           "boringcache": {
-            "run_id": 25166771215,
-            "run_url": "https://github.com/boringcache/benchmark-n8n/actions/runs/25166771215",
-            "head_sha": "1ce9ec2cd465915bb98196d3f347fa0b962cdac1",
-            "created_at": "2026-04-30T13:00:11Z",
+            "run_id": 25168877473,
+            "run_url": "https://github.com/boringcache/benchmark-n8n/actions/runs/25168877473",
+            "head_sha": "239cd10f5df1f48d0ad27fe63ebace29bb0c428e",
+            "created_at": "2026-04-30T13:44:15Z",
             "sample_count": 3,
             "sample_run_ids": [
-              25166771215,
+              25168877473,
               25163653628,
               25161930933
             ],
             "sample_run_urls": [
-              "https://github.com/boringcache/benchmark-n8n/actions/runs/25166771215",
+              "https://github.com/boringcache/benchmark-n8n/actions/runs/25168877473",
               "https://github.com/boringcache/benchmark-n8n/actions/runs/25163653628",
               "https://github.com/boringcache/benchmark-n8n/actions/runs/25161930933"
             ],
             "head_shas": [
-              "1ce9ec2cd465915bb98196d3f347fa0b962cdac1",
+              "239cd10f5df1f48d0ad27fe63ebace29bb0c428e",
               "fbd3647662fb0894802e5f0849ae77f383f246ce",
               "7bcfdbbdd21a49d8d6f68fab2d1753b6b5cff8d5"
             ],
-            "cold_seconds": 195.0,
+            "cold_seconds": 207.0,
             "warm1_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "run_total_seconds": 231.0,
-            "storage_bytes": 739025961,
+            "run_total_seconds": 241.0,
+            "storage_bytes": 739026077,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
             "storage_source": "boringcache-check",
@@ -333,10 +333,10 @@
             "comparative": true
           },
           "warm_improvement_pct": null,
-          "cold_improvement_pct": 12.03,
-          "run_total_improvement_pct": 21.61,
-          "storage_improvement_pct": 90.28,
-          "storage_saved_bytes": 6867033976
+          "cold_improvement_pct": 12.9,
+          "run_total_improvement_pct": 22.17,
+          "storage_improvement_pct": 90.31,
+          "storage_saved_bytes": 6883981458
         }
       }
     }
