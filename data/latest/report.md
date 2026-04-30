@@ -1,6 +1,6 @@
 ## Latest Benchmark Report
 
-Generated: 2026-04-30 13:07 UTC
+Generated: 2026-04-30 14:30 UTC
 
 ### Lane Coverage
 
@@ -34,15 +34,15 @@ Generated: 2026-04-30 13:07 UTC
 
 | Benchmark | Headline | actions/cache | BoringCache | Result | Storage Saved | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | First Build | 2m 1s | 3m 7s | reseeded 3/3 | 9.06 GB (96.46%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| Immich | First Build | 2m 10s | 2m 56s | reseeded 2/3 | 7.64 GB (77.11%) | 3 paired samples; BC reseeded 2/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
+| Hugo | First Build | 2m 1s | 3m 10s | reseeded 3/3 | 8.67 GB (96.31%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
+| Immich | First Build | 4m 35s | 4m 29s | reseeded 3/3 | 7.47 GB (76.72%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
 | Mastodon | First Build | 5m 34s | 4m 56s | reseeded 3/3 | 9.39 GB (90.27%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| PostHog | First Build | 20m 56s | 10m 55s | reseeded 3/3 | 4.64 GB (44.56%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| OpenTelemetry Java | Cold | 1m 41s | 7m 33s | 349% slower | 1.84 GB (70.46%) | run total slower; 3 paired samples |
-| Spring AI | Cold | 1m 43s | 4m 39s | 171% slower | 2.05 GB (64.96%) | run total slower; 3 paired samples |
-| gRPC | Cold | 34m 18s | 3m 2s | 91% faster | — | run total faster; storage unavailable; 3 paired samples |
+| PostHog | First Build | 23m 31s | 12m 46s | reseeded 3/3 | 6.34 GB (51.88%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
+| OpenTelemetry Java | Cold | 1m 0s | 7m 37s | 662% slower | 1.84 GB (70.44%) | run total slower; 3 paired samples |
+| Spring AI | Cold | 1m 55s | 3m 46s | 97% slower | 2.00 GB (63.25%) | run total slower; 3 paired samples |
+| gRPC | Cold | 35m 23s | 15m 23s | 57% faster | — | run total faster; storage unavailable; 3 paired samples |
 | Zed | Cold | 19m 41s | 31m 48s | 62% slower | 4.99 GB (87.9%) | run total slower; 3 paired samples |
-| n8n | Run Total | 4m 55s | 3m 51s | 22% faster | 6.40 GB (90.28%) | cold faster; 3 paired samples |
+| n8n | Run Total | 5m 10s | 4m 1s | 22% faster | 6.41 GB (90.31%) | cold faster; 3 paired samples |
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
 
