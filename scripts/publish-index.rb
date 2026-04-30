@@ -334,6 +334,48 @@ def benchmark_artifact_name_for_lane(repo:, run_id:, benchmark_id:, strategy:, l
   artifact && artifact["name"]
 end
 
+def list_run_artifacts(repo:, run_id:, cache:)
+  key = [repo, run_id]
+  return cache[key] if cache.key?(key)
+
+  output = run_cmd("gh", "api", "repos/#{repo}/actions/runs/#{run_id}/artifacts")
+  cache[key] = JSON.parse(output).fetch("artifacts", []).reject { |item| item["expired"] }
+rescue StandardError
+  cache[key] = []
+end
+
+def runs_by_head_grouped(runs)
+  runs.each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |run, acc|
+    head = run["headSha"].to_s
+    next if head.empty?
+
+    acc[head] << run
+  end
+end
+
+def latest_run_with_artifact(runs_for_head:, repo:, benchmark_id:, strategy:, lane:, artifacts_cache:)
+  return nil if runs_for_head.nil? || runs_for_head.empty?
+
+  candidate_names = lane_artifact_names(benchmark_id: benchmark_id, strategy: strategy, lane: lane)
+  sorted = runs_for_head.sort_by { |run| parse_timestamp(run["createdAt"]) || Time.at(0) }.reverse
+  sorted.find do |run|
+    artifacts = list_run_artifacts(repo: repo, run_id: run["databaseId"], cache: artifacts_cache)
+    artifacts.any? { |item| candidate_names.include?(item["name"].to_s) }
+  end
+end
+
+def head_complete_for_all_lanes?(head:, repo:, benchmark_id:, ac_runs_by_head:, bc_runs_by_head:, artifacts_cache:)
+  LANE_IDS.all? do |lane|
+    !latest_run_with_artifact(
+      runs_for_head: ac_runs_by_head[head], repo: repo, benchmark_id: benchmark_id,
+      strategy: "actions-cache", lane: lane, artifacts_cache: artifacts_cache
+    ).nil? && !latest_run_with_artifact(
+      runs_for_head: bc_runs_by_head[head], repo: repo, benchmark_id: benchmark_id,
+      strategy: "boringcache", lane: lane, artifacts_cache: artifacts_cache
+    ).nil?
+  end
+end
+
 def fetch_run_jobs(repo:, run_id:)
   output = run_cmd(
     "gh", "api",
@@ -977,16 +1019,45 @@ def paired_heads(actions_by_head, boringcache_by_head)
   end.reverse
 end
 
-def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_runs:, cache:)
+def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_runs:, cache:, artifacts_cache:)
   return nil if actions_runs.empty? || boringcache_runs.empty?
 
-  actions_by_head = latest_run_by_head(actions_runs)
-  boringcache_by_head = latest_run_by_head(boringcache_runs)
+  ac_runs_by_head = runs_by_head_grouped(actions_runs)
+  bc_runs_by_head = runs_by_head_grouped(boringcache_runs)
+  paired = (ac_runs_by_head.keys & bc_runs_by_head.keys).sort_by do |head|
+    [
+      ac_runs_by_head[head].map { |run| parse_timestamp(run["createdAt"]) || Time.at(0) }.max,
+      bc_runs_by_head[head].map { |run| parse_timestamp(run["createdAt"]) || Time.at(0) }.max
+    ].max
+  end.reverse
   entries = []
 
-  paired_heads(actions_by_head, boringcache_by_head).each do |head|
-    ac_run = actions_by_head.fetch(head)
-    bc_run = boringcache_by_head.fetch(head)
+  paired.each do |head|
+    next unless head_complete_for_all_lanes?(
+      head: head,
+      repo: benchmark.fetch("source_repo"),
+      benchmark_id: benchmark.fetch("benchmark"),
+      ac_runs_by_head: ac_runs_by_head,
+      bc_runs_by_head: bc_runs_by_head,
+      artifacts_cache: artifacts_cache
+    )
+
+    ac_run = latest_run_with_artifact(
+      runs_for_head: ac_runs_by_head[head],
+      repo: benchmark.fetch("source_repo"),
+      benchmark_id: benchmark.fetch("benchmark"),
+      strategy: "actions-cache",
+      lane: lane,
+      artifacts_cache: artifacts_cache
+    )
+    bc_run = latest_run_with_artifact(
+      runs_for_head: bc_runs_by_head[head],
+      repo: benchmark.fetch("source_repo"),
+      benchmark_id: benchmark.fetch("benchmark"),
+      strategy: "boringcache",
+      lane: lane,
+      artifacts_cache: artifacts_cache
+    )
 
     boringcache_data = load_strategy_data(
       temp_root: temp_root,
@@ -1074,6 +1145,7 @@ Dir.mktmpdir("benchmark-index-") do |tmp|
       repo = benchmark.fetch("source_repo")
       actions_runs = latest_successful_runs(repo: repo, workflow_name: benchmark.fetch("actions_workflow"))
       boringcache_runs = latest_successful_runs(repo: repo, workflow_name: benchmark.fetch("boringcache_workflow"))
+      artifacts_cache = {}
       lane_entries = LANE_IDS.each_with_object({}) do |lane, acc|
         lane_entry = load_lane_entry(
           temp_root: tmp,
@@ -1081,7 +1153,8 @@ Dir.mktmpdir("benchmark-index-") do |tmp|
           lane: lane,
           actions_runs: actions_runs,
           boringcache_runs: boringcache_runs,
-          cache: strategy_data_cache
+          cache: strategy_data_cache,
+          artifacts_cache: artifacts_cache
         )
         acc[lane] = lane_entry if lane_entry
       end
