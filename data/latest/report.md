@@ -1,6 +1,6 @@
 ## Latest Benchmark Report
 
-Generated: 2026-04-30 05:45 UTC
+Generated: 2026-04-30 09:20 UTC
 
 ### Lane Coverage
 
@@ -37,12 +37,12 @@ Generated: 2026-04-30 05:45 UTC
 | Hugo | First Build | 2m 1s | 2m 4s | reseeded 2/3 | 9.06 GB (96.46%) | 3 paired samples; BC reseeded 2/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
 | Immich | First Build | 0m 14s | 1m 59s | reseeded 1/3 | 7.59 GB (76.99%) | 3 paired samples; BC reseeded 1/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
 | Mastodon | First Build | 5m 34s | 4m 56s | reseeded 3/3 | 9.39 GB (90.27%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| PostHog | First Build | 19m 46s | 10m 14s | reseeded 3/3 | 7.35 GB (55.71%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
+| PostHog | First Build | 18m 36s | 14m 13s | reseeded 2/3 | 7.06 GB (55.05%) | 3 paired samples; BC reseeded 2/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
 | OpenTelemetry Java | Cold | 1m 41s | 4m 24s | 161% slower | 1.84 GB (70.46%) | run total slower; 3 paired samples |
 | Spring AI | Cold | 1m 43s | 3m 30s | 105% slower | 2.00 GB (63.27%) | run total slower; 3 paired samples |
-| gRPC | Cold | 33m 22s | 26m 7s | 22% faster | — | run total faster; storage unavailable; 3 paired samples |
+| gRPC | Cold | 34m 18s | 3m 35s | 90% faster | — | run total faster; storage unavailable; 3 paired samples |
 | Zed | Run Total | 27m 13s | 27m 9s | near tie | 8.80 GB (92.75%) | cold slower; 3 paired samples |
-| n8n | Run Total | 5m 26s | 3m 24s | 37% faster | 6.08 GB (89.68%) | cold faster; 3 paired samples |
+| n8n | Cold | 3m 26s | 3m 19s | 3% faster | 6.19 GB (90.0%) | run total slower; 3 paired samples |
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
 
