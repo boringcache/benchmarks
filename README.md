@@ -38,7 +38,7 @@ This repo:
 
 ## Latest Benchmark Report
 
-Generated: 2026-05-01 16:49 UTC
+Generated: 2026-05-01 20:49 UTC
 
 ### Lane Coverage
 
@@ -62,10 +62,10 @@ Generated: 2026-05-01 16:49 UTC
 | Immich | Cold | 5m 21s | 5m 8s | 4% faster | 8.40 GB (78.74%) | run total faster; 3 paired samples |
 | Mastodon | Cold | 10m 54s | 9m 28s | 13% faster | 9.82 GB (90.66%) | run total faster; 3 paired samples |
 | PostHog | Cold | 22m 28s | 15m 26s | 31% faster | 6.42 GB (51.42%) | run total faster; 3 paired samples |
-| OpenTelemetry Java | Cold | 10m 30s | 10m 43s | near tie | 49.74 MB (6.02%) | warm slower; 3 paired samples |
+| OpenTelemetry Java | Cold | 10m 13s | 10m 48s | 6% slower | 50.44 MB (6.11%) | warm, run total slower; 3 paired samples |
 | Spring AI | Cold | 4m 48s | 4m 21s | 9% faster | 165.87 MB more (-17.12%) | mixed: warm slower; run total faster; BC used more storage; 3 paired samples |
-| gRPC | Warm | 30m 34s | 2m 22s | 92% faster | — | storage unavailable; 3 paired samples |
-| Zed | Cold | 49m 14s | 50m 13s | near tie | 2.10 GB (75.32%) | run total slower; 3 paired samples |
+| gRPC | Warm | 21m 29s | 2m 41s | 87% faster | — | cold, run total faster; storage unavailable; 3 paired samples |
+| Zed | Cold | 49m 34s | 49m 12s | near tie | 2.10 GB (75.32%) | warm slower; 3 paired samples |
 | n8n | Warm | 1m 32s | 1m 9s | 25% faster | 16.60 MB more (-2.41%) | cold, run total faster; BC used more storage; 3 paired samples |
 
 ### Rolling Historical
@@ -76,10 +76,10 @@ Generated: 2026-05-01 16:49 UTC
 | Immich | First Build | 4m 49s | 5m 54s | reseeded 3/3 | 7.69 GB (77.23%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
 | Mastodon | First Build | 5m 34s | 4m 56s | reseeded 3/3 | 9.39 GB (90.27%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
 | PostHog | First Build | 15m 15s | 10m 54s | reseeded 3/3 | 4.82 GB (45.27%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| OpenTelemetry Java | Cold | 5m 6s | 9m 28s | 85% slower | 1.86 GB (71.07%) | run total slower; 3 paired samples |
-| Spring AI | Cold | 1m 34s | 1m 37s | near tie | 1.88 GB (58.6%) | run total slower; 3 paired samples |
-| gRPC | Cold | 33m 54s | 12m 10s | 64% faster | — | run total faster; storage unavailable; 3 paired samples |
-| Zed | Cold | 24m 15s | 29m 29s | 22% slower | 6.72 GB (90.71%) | run total slower; 3 paired samples |
+| OpenTelemetry Java | Cold | 1m 31s | 4m 12s | 177% slower | 1.89 GB (71.45%) | run total slower; 3 paired samples |
+| Spring AI | Cold | 0m 46s | 0m 49s | near tie | 1.82 GB (56.94%) | run total slower; 3 paired samples |
+| gRPC | Cold | 33m 38s | 23m 27s | 30% faster | — | run total faster; storage unavailable; 3 paired samples |
+| Zed | Cold | 29m 21s | 38m 35s | 31% slower | 6.35 GB (90.23%) | run total slower; 3 paired samples |
 | n8n | Cold | 3m 18s | 3m 48s | 15% slower | 6.79 GB (90.8%) | run total slower; 3 paired samples |
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
