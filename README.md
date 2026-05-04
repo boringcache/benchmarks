@@ -38,7 +38,7 @@ This repo:
 
 ## Latest Benchmark Report
 
-Generated: 2026-04-30 15:03 UTC
+Generated: 2026-05-04 07:57 UTC
 
 ### Lane Coverage
 
@@ -58,29 +58,29 @@ Generated: 2026-04-30 15:03 UTC
 
 | Benchmark | Headline | actions/cache | BoringCache | Result | Storage Saved | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | Warm | 0m 14s | 0m 9s | near tie | 8.97 GB (96.43%) | cold faster; 3 paired samples |
-| Immich | Cold | 5m 26s | 6m 15s | 15% slower | 7.54 GB (76.87%) | run total slower; 3 paired samples |
+| Hugo | Warm | 0m 14s | 0m 8s | 44% faster | 8.95 GB (96.42%) | cold faster; 3 paired samples |
+| Immich | Cold | 5m 47s | 5m 40s | near tie | 8.06 GB (78.04%) | 3 paired samples |
 | Mastodon | Cold | 10m 54s | 9m 28s | 13% faster | 9.82 GB (90.66%) | run total faster; 3 paired samples |
-| PostHog | Warm | 1m 25s | 0m 14s | 83% faster | 8.85 GB (59.41%) | cold, run total faster; 3 paired samples |
-| OpenTelemetry Java | Cold | 11m 12s | 11m 0s | near tie | 49.43 MB (5.99%) | warm slower; 3 paired samples |
-| Spring AI | Cold | 4m 9s | 4m 36s | 11% slower | 165.64 MB more (-17.13%) | warm, run total slower; BC used more storage; 3 paired samples |
-| gRPC | Warm | 36m 10s | 4m 10s | 88% faster | — | cold, run total faster; storage unavailable; 3 paired samples |
-| Zed | Run Total | 52m 51s | 50m 55s | 4% faster | 2.10 GB (75.33%) | warm slower; 3 paired samples |
-| n8n | Cold | 5m 21s | 5m 20s | near tie | 16.52 MB more (-2.4%) | warm slower; BC used more storage; 3 paired samples |
+| PostHog | Warm | 0m 52s | 0m 12s | 77% faster | 5.54 GB (47.71%) | cold, run total faster; 3 paired samples |
+| OpenTelemetry Java | Cold | 10m 13s | 10m 48s | 6% slower | 50.44 MB (6.11%) | warm, run total slower; 3 paired samples |
+| Spring AI | Warm | 0m 31s | 0m 28s | near tie | 165.88 MB more (-17.12%) | run total slower; BC used more storage; 3 paired samples |
+| gRPC | Cold | 26m 57s | 33m 51s | 26% slower | 567.46 MB more (-212.14%) | warm, run total slower; BC used more storage; 3 paired samples |
+| Zed | Run Total | 52m 54s | 51m 13s | 3% faster | 73.72 MB (2.58%) | warm slower; 3 paired samples |
+| n8n | Warm | 1m 32s | 1m 9s | 25% faster | 16.60 MB more (-2.41%) | cold, run total faster; BC used more storage; 3 paired samples |
 
 ### Rolling Historical
 
 | Benchmark | Headline | actions/cache | BoringCache | Result | Storage Saved | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | First Build | 2m 1s | 3m 7s | reseeded 3/3 | 9.06 GB (96.46%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| Immich | First Build | 4m 35s | 2m 53s | reseeded 2/3 | 7.46 GB (76.68%) | 3 paired samples; BC reseeded 2/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
+| Hugo | First Build | 2m 10s | 3m 16s | reseeded 3/3 | 9.04 GB (96.46%) | 3 paired samples; BC reseeded 3/3; BC cache import proxy_unreadable; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
+| Immich | First Build | 0m 12s | 3m 26s | reseeded 2/3 | 7.41 GB (76.56%) | 3 paired samples; BC reseeded 2/3; BC cache import proxy_unreadable; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
 | Mastodon | First Build | 5m 34s | 4m 56s | reseeded 3/3 | 9.39 GB (90.27%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| PostHog | First Build | 23m 31s | 12m 46s | reseeded 3/3 | 6.34 GB (51.88%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| OpenTelemetry Java | Cold | 1m 41s | 7m 27s | 344% slower | 1.85 GB (70.88%) | run total slower; 3 paired samples |
-| Spring AI | Cold | 1m 1s | 3m 25s | 236% slower | 2.00 GB (63.32%) | run total slower; 3 paired samples |
-| gRPC | Cold | 34m 18s | 3m 2s | 91% faster | — | run total faster; storage unavailable; 3 paired samples |
-| Zed | Cold | 19m 41s | 31m 48s | 62% slower | 4.99 GB (87.9%) | run total slower; 3 paired samples |
-| n8n | Run Total | 5m 19s | 4m 11s | 21% faster | 6.47 GB (90.39%) | cold faster; 3 paired samples |
+| PostHog | First Build | 16m 50s | 11m 0s | reseeded 3/3 | 7.53 GB (56.04%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
+| OpenTelemetry Java | Cold | 1m 31s | 4m 12s | 177% slower | 1.89 GB (71.45%) | run total slower; 3 paired samples |
+| Spring AI | Cold | 0m 51s | 1m 53s | 124% slower | 1.82 GB (56.95%) | run total slower; 3 paired samples |
+| gRPC | Cold | 12m 59s | 24m 0s | 85% slower | 317.92 MB more (-53.99%) | run total slower; BC used more storage; 3 paired samples |
+| Zed | Cold | 32m 11s | 33m 39s | 5% slower | 7.85 GB (68.43%) | 3 paired samples |
+| n8n | Cold | 3m 18s | 3m 48s | 15% slower | 6.79 GB (90.8%) | run total slower; 3 paired samples |
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
 
@@ -182,10 +182,15 @@ mode/lane, sample classification, Docker OCI counters where applicable, and
 `cache_session_summary` evidence from either embedded artifact JSON or attached
 request-metrics/status diagnostics. With `--matrix`, it also requires explicit
 tool/surface/scenario coverage for CLI and action paths across archive, Docker,
-sccache, Go, Bazel, Gradle, Maven, Turbo, and Nx.
+sccache, Go, Bazel, Gradle, Maven, Turbo, and Nx. The same matrix is now the
+launch-readiness gate for the P0 product paths: cache lifecycle retirement and
+cleanup, v2 save pressure, PR/main trust scopes, proxy readiness, auth and CLI
+token onboarding, billing quotas, diagnostics, and the new-user first-cache
+flow.
 
 Evidence manifests use stable path labels, so the failure says exactly what is
-missing:
+missing. Each evidence item must carry released product refs and the concrete
+fields required by its matrix row:
 
 ```json
 {
@@ -195,6 +200,25 @@ missing:
       "surface": "action",
       "scenario": "fresh_runner_rerun",
       "status": "pass",
+      "product_refs": {
+        "action_ref": "boringcache/one@v1",
+        "action_sha": "0123456789abcdef0123456789abcdef01234567",
+        "cli_version": "v1.12.86",
+        "web_revision": "89abcdef0123456789abcdef0123456789abcdef",
+        "api_url": "https://app.boringcache.com"
+      },
+      "workspace": "acme/web",
+      "cache_tag": "docker-default-main",
+      "run_uid": "gh-1234567890-1",
+      "mode": "docker",
+      "adapter": "oci",
+      "restore_result": "hit",
+      "save_result": "published",
+      "new_blob_count": 0,
+      "remote_fetches": 12,
+      "publish_status": "complete",
+      "session_summary": { "schema": "cache_session_summary.v2" },
+      "reporting_url": "https://app.boringcache.com/workspaces/acme/web/cache/sessions/abc123",
       "run_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/123",
       "artifact": "benchmark-hugo-boringcache-fresh.json"
     }
@@ -204,8 +228,17 @@ missing:
 
 The launch matrix distinguishes cold fresh runs, same-runner reruns,
 fresh-runner reruns, repeat fresh-after-purge runs, Docker same-ref rolling
-reruns, and Docker same-alias two-writer proof. That prevents a single warm
-sample on one runner from standing in for end-to-end coverage.
+reruns, Docker same-alias two-writer proof, cleanup interruption recovery,
+quota enforcement, save hot-path pressure, PR/fork trust cases, auth/billing
+controls, and customer-safe diagnostics. That prevents a single warm sample or
+local test from standing in for released-path evidence.
+
+An abbreviated example manifest lives at `config/launch-proof-evidence.example.json`.
+Validate the proof gate itself with:
+
+```bash
+ruby test/launch_proof_test.rb
+```
 
 Pin the current generated aggregate as the public snapshot:
 
