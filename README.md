@@ -22,7 +22,7 @@ Each benchmark repo:
 - uses real upstream sync commits to drive fresh (`cold` + `warm1`) and rolling (first-build) comparisons
 - publishes JSON benchmark artifacts
 
-Docker benchmark rows measure BuildKit's outer registry cache path. They build the upstream Dockerfile unchanged and do not call `boringcache restore`, `boringcache save`, or `boringcache run` inside Dockerfile `RUN` steps. Public reporting is now grounded on fresh isolated and rolling historical lanes, with total workflow time included beside cold and warm timings. Rolling Docker reseeds are investigation-only samples, not parity claims. The aggregate feed also suppresses incomplete storage probes instead of turning them into false savings rows.
+Docker benchmark rows measure BuildKit's outer registry cache path. They build the upstream Dockerfile unchanged and do not call `boringcache restore`, `boringcache save`, or `boringcache run` inside Dockerfile `RUN` steps. Public reporting is grounded on fresh isolated lanes and rolling continuous-commit first builds, with total workflow time included beside cold and warm timings. Rolling Docker import failures are investigation-only samples, not parity claims. The aggregate feed also suppresses incomplete storage probes instead of turning them into false savings rows.
 
 This repo:
 
@@ -84,7 +84,7 @@ Generated: 2026-05-05 17:06 UTC
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
 
-Rows use the latest 3 same-commit AC/BC pairs when enough samples are available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling Docker reseeds or cache-import misses render as investigation-only.
+Rows use the latest 3 same-commit AC/BC pairs when enough samples are available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling Docker cache-import misses render as investigation-only.
 
 <!-- benchmark-report:end -->
 
@@ -93,10 +93,10 @@ Rows use the latest 3 same-commit AC/BC pairs when enough samples are available.
 When benchmark data is used in public-facing copy:
 
 - use the aggregate feed as the source of truth
-- keep the claim anchored to the current fresh cold/warm comparison or rolling first-build investigation
+- keep the claim anchored to the current fresh cold/warm comparison or rolling first-build result
 - keep mixed or negative results explicit
 - do not promote incomplete benchmark entries in hero copy until the source workflow is fixed
-- do not present rolling Docker reseeds as parity wins
+- do not present rolling Docker import failures as parity wins
 - keep storage savings alongside timing, especially when BoringCache wins on footprint more than wall clock
 
 ## Engineering learning log
@@ -182,10 +182,15 @@ mode/lane, sample classification, Docker OCI counters where applicable, and
 `cache_session_summary` evidence from either embedded artifact JSON or attached
 request-metrics/status diagnostics. With `--matrix`, it also requires explicit
 tool/surface/scenario coverage for CLI and action paths across archive, Docker,
-sccache, Go, Bazel, Gradle, Maven, Turbo, and Nx.
+sccache, Go, Bazel, Gradle, Maven, Turbo, and Nx. The same matrix is now the
+launch-readiness gate for the P0 product paths: cache lifecycle retirement and
+cleanup, v2 save pressure, PR/main trust scopes, proxy readiness, auth and CLI
+token onboarding, billing quotas, diagnostics, and the new-user first-cache
+flow.
 
 Evidence manifests use stable path labels, so the failure says exactly what is
-missing:
+missing. Each evidence item must carry released product refs and the concrete
+fields required by its matrix row:
 
 ```json
 {
@@ -195,6 +200,25 @@ missing:
       "surface": "action",
       "scenario": "fresh_runner_rerun",
       "status": "pass",
+      "product_refs": {
+        "action_ref": "boringcache/one@v1",
+        "action_sha": "0123456789abcdef0123456789abcdef01234567",
+        "cli_version": "v1.12.86",
+        "web_revision": "89abcdef0123456789abcdef0123456789abcdef",
+        "api_url": "https://app.boringcache.com"
+      },
+      "workspace": "acme/web",
+      "cache_tag": "docker-default-main",
+      "run_uid": "gh-1234567890-1",
+      "mode": "docker",
+      "adapter": "oci",
+      "restore_result": "hit",
+      "save_result": "published",
+      "new_blob_count": 0,
+      "remote_fetches": 12,
+      "publish_status": "complete",
+      "session_summary": { "schema": "cache_session_summary.v2" },
+      "reporting_url": "https://app.boringcache.com/workspaces/acme/web/cache/sessions/abc123",
       "run_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/123",
       "artifact": "benchmark-hugo-boringcache-fresh.json"
     }
@@ -203,9 +227,18 @@ missing:
 ```
 
 The launch matrix distinguishes cold fresh runs, same-runner reruns,
-fresh-runner reruns, repeat fresh-after-purge runs, Docker same-ref rolling
-reruns, and Docker same-alias two-writer proof. That prevents a single warm
-sample on one runner from standing in for end-to-end coverage.
+fresh-runner reruns, repeat fresh-after-purge runs, Docker continuous rolling
+first-builds, Docker same-alias two-writer proof, cleanup interruption recovery,
+quota enforcement, save hot-path pressure, PR/fork trust cases, auth/billing
+controls, and customer-safe diagnostics. That prevents a single warm sample or
+local test from standing in for released-path evidence.
+
+An abbreviated example manifest lives at `config/launch-proof-evidence.example.json`.
+Validate the proof gate itself with:
+
+```bash
+ruby test/launch_proof_test.rb
+```
 
 Pin the current generated aggregate as the public snapshot:
 

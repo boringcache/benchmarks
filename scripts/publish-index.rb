@@ -20,6 +20,7 @@ CMD_TIMEOUT_SECONDS = ENV.fetch("BENCHMARKS_CMD_TIMEOUT", "120").to_i
 LANE_IDS = %w[fresh rolling].freeze
 README_REPORT_START = "<!-- benchmark-report:start -->"
 README_REPORT_END = "<!-- benchmark-report:end -->"
+PRODUCT_REF_KEYS = %w[cli_version action_ref action_sha web_revision api_url].freeze
 
 BENCHMARKS = [
   {
@@ -248,6 +249,50 @@ def normalize_storage_sample(bytes, source)
   [normalized_bytes, normalized_source]
 end
 
+def compact_hash(hash)
+  hash.each_with_object({}) do |(key, value), acc|
+    next if value.nil?
+    next if value.respond_to?(:empty?) && value.empty?
+
+    acc[key] = value
+  end
+end
+
+def normalized_product_refs(payload)
+  raw_refs = payload["product_refs"].is_a?(Hash) ? payload["product_refs"] : {}
+
+  PRODUCT_REF_KEYS.each_with_object({}) do |key, acc|
+    value = raw_refs[key]
+    value = payload[key] if value.nil? || value.to_s.empty?
+    next if value.nil? || value.to_s.empty?
+
+    acc[key] = value
+  end
+end
+
+def session_summary_from(payload)
+  payload["cache_session_summary"] ||
+    payload["session_summary"] ||
+    payload["summary_json"] ||
+    payload.dig("diagnostics", "cache_session_summary") ||
+    payload.dig("diagnostics", "summary_json")
+end
+
+def launch_proof_paths_from(payload)
+  paths = []
+  paths.concat(Array(payload["proof_paths"]))
+  paths.concat(Array(payload["launch_proof_paths"]))
+  paths << payload["proof_path"] if payload["proof_path"].is_a?(Hash)
+
+  launch_proof = payload["launch_proof"]
+  if launch_proof.is_a?(Hash)
+    paths << launch_proof
+    paths.concat(Array(launch_proof["paths"]))
+  end
+
+  paths.compact
+end
+
 def percent_delta(baseline, candidate)
   return nil if baseline.nil? || candidate.nil? || baseline <= 0
 
@@ -433,6 +478,10 @@ def extract_strategy_metrics(payload)
   docker_cache = payload.fetch("docker_cache", {})
   oci = payload.fetch("oci", {})
   classification = payload.fetch("classification", {})
+  product_refs = normalized_product_refs(payload)
+  session_summary = session_summary_from(payload)
+  summary_proxy = session_summary.is_a?(Hash) && session_summary["proxy"].is_a?(Hash) ? session_summary["proxy"] : {}
+  proxy = payload["proxy"].is_a?(Hash) ? payload["proxy"] : {}
 
   warm1 = parse_number(runs["warm1_seconds"])
   warm2 = parse_number(runs["warm2_seconds"])
@@ -449,15 +498,40 @@ def extract_strategy_metrics(payload)
 
   {
     cold_seconds: parse_number(runs["cold_seconds"]),
+    cold_build_seconds: parse_number(runs["cold_build_seconds"]),
+    cold_restore_or_setup_seconds: parse_number(runs["cold_restore_or_setup_seconds"]),
     warm1_seconds: warm1,
+    warm1_build_seconds: parse_number(runs["warm1_build_seconds"]),
+    warm1_restore_or_setup_seconds: parse_number(runs["warm1_restore_or_setup_seconds"]),
     warm2_seconds: warm2,
     warm_average_seconds: warm_avg,
+    rolling_first_build_seconds: parse_number(runs["rolling_first_build_seconds"]),
+    rolling_warm_seconds: parse_number(runs["rolling_warm_seconds"]),
     storage_bytes: storage_bytes,
     storage_source: storage_source,
     docker_cache_import_seconds: parse_number(docker_cache["import_seconds"]),
     docker_cache_export_seconds: parse_number(docker_cache["export_seconds"]),
     oci: oci,
-    classification: classification
+    classification: classification,
+    product_refs: product_refs,
+    product_refs_consistent: product_refs.any? ? true : nil,
+    launch_proof_paths: launch_proof_paths_from(payload),
+    workspace: payload["workspace"] || cache["workspace"],
+    cache_tag: payload["cache_tag"] || cache["tag"],
+    run_uid: payload["run_uid"] || payload["run_id"] || payload.dig("run", "uid"),
+    mode: payload["mode"] || cache["mode"] || payload["strategy"],
+    adapter: payload["adapter"] || payload["tool"] || payload["category"],
+    docker_cache_from_refs: payload["docker_cache_from_refs"] || docker_cache["from_refs"],
+    docker_cache_import_ready: payload["docker_cache_import_ready"] || docker_cache["import_ready"],
+    http_transport: payload["http_transport"] || proxy["http_transport"] || summary_proxy["http_transport"],
+    http2_enabled: payload["http2_enabled"] || proxy["http2_enabled"] || summary_proxy["http2_enabled"],
+    oci_stream_through_min_bytes: payload["oci_stream_through_min_bytes"] || oci["stream_through_min_bytes"] || summary_proxy["oci_stream_through_min_bytes"],
+    restore_result: payload["restore_result"],
+    save_result: payload["save_result"],
+    publish_status: payload["publish_status"] || classification["publish_status"],
+    session_summary: session_summary,
+    summary_schema: payload["summary_schema"] || payload["summary_schema_label"],
+    reporting_url: payload["reporting_url"] || payload.dig("diagnostics", "reporting_url")
   }
 end
 
@@ -541,17 +615,42 @@ def strategy_snapshot(data)
     "head_sha" => run["headSha"],
     "created_at" => run["createdAt"],
     "cold_seconds" => metrics[:cold_seconds],
+    "cold_build_seconds" => metrics[:cold_build_seconds],
+    "cold_restore_or_setup_seconds" => metrics[:cold_restore_or_setup_seconds],
     "warm1_seconds" => metrics[:warm1_seconds],
+    "warm1_build_seconds" => metrics[:warm1_build_seconds],
+    "warm1_restore_or_setup_seconds" => metrics[:warm1_restore_or_setup_seconds],
     "warm2_seconds" => metrics[:warm2_seconds],
     "warm_average_seconds" => metrics[:warm_average_seconds],
     "warm_steady_seconds" => warm_steady_seconds(metrics),
+    "rolling_first_build_seconds" => metrics[:rolling_first_build_seconds],
+    "rolling_warm_seconds" => metrics[:rolling_warm_seconds],
     "run_total_seconds" => data[:run_total_seconds],
     "storage_bytes" => metrics[:storage_bytes],
     "storage_source" => metrics[:storage_source],
     "docker_cache_import_seconds" => metrics[:docker_cache_import_seconds],
     "docker_cache_export_seconds" => metrics[:docker_cache_export_seconds],
     "oci" => metrics[:oci],
-    "classification" => metrics[:classification]
+    "classification" => metrics[:classification],
+    "product_refs" => metrics[:product_refs],
+    "product_refs_consistent" => metrics[:product_refs_consistent],
+    "launch_proof_paths" => metrics[:launch_proof_paths],
+    "workspace" => metrics[:workspace],
+    "cache_tag" => metrics[:cache_tag],
+    "run_uid" => metrics[:run_uid],
+    "mode" => metrics[:mode],
+    "adapter" => metrics[:adapter],
+    "docker_cache_from_refs" => metrics[:docker_cache_from_refs],
+    "docker_cache_import_ready" => metrics[:docker_cache_import_ready],
+    "http_transport" => metrics[:http_transport],
+    "http2_enabled" => metrics[:http2_enabled],
+    "oci_stream_through_min_bytes" => metrics[:oci_stream_through_min_bytes],
+    "restore_result" => metrics[:restore_result],
+    "save_result" => metrics[:save_result],
+    "publish_status" => metrics[:publish_status],
+    "session_summary" => metrics[:session_summary],
+    "summary_schema" => metrics[:summary_schema],
+    "reporting_url" => metrics[:reporting_url]
   }
 end
 
@@ -664,7 +763,12 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:, lane:)
         warm_steady_seconds(actions_metrics),
         warm_steady_seconds(boringcache_metrics)
       )&.round(2),
+      "warm_build_improvement_pct" => percent_delta(
+        actions_metrics[:warm1_build_seconds],
+        boringcache_metrics[:warm1_build_seconds]
+      )&.round(2),
       "cold_improvement_pct" => percent_delta(actions_metrics[:cold_seconds], boringcache_metrics[:cold_seconds])&.round(2),
+      "cold_build_improvement_pct" => percent_delta(actions_metrics[:cold_build_seconds], boringcache_metrics[:cold_build_seconds])&.round(2),
       "run_total_improvement_pct" => percent_delta(actions_data[:run_total_seconds], boringcache_data[:run_total_seconds])&.round(2),
       "storage_improvement_pct" => percent_delta(actions_metrics[:storage_bytes], boringcache_metrics[:storage_bytes])&.round(2),
       "storage_saved_bytes" => if actions_metrics[:storage_bytes] && boringcache_metrics[:storage_bytes]
@@ -694,6 +798,24 @@ def most_common(values)
   values.group_by(&:itself).max_by { |_, grouped| grouped.length }&.first
 end
 
+def stable_hash_signature(hash)
+  return nil unless hash.is_a?(Hash) && hash.any?
+
+  JSON.generate(hash.sort.to_h)
+end
+
+def most_common_hash(values)
+  signatures = values.map { |value| stable_hash_signature(value) }.compact
+  return nil if signatures.empty?
+
+  JSON.parse(most_common(signatures))
+end
+
+def product_refs_consistent?(snapshots)
+  signatures = snapshots.map { |snapshot| stable_hash_signature(snapshot["product_refs"]) }.compact.uniq
+  signatures.length <= 1
+end
+
 def average_snapshot(snapshots)
   snapshots = snapshots.compact
   return {} if snapshots.empty?
@@ -711,7 +833,10 @@ def average_snapshot(snapshots)
   }
 
   numeric_keys = %w[
-    cold_seconds warm1_seconds warm2_seconds warm_average_seconds warm_steady_seconds
+    cold_seconds cold_build_seconds cold_restore_or_setup_seconds
+    warm1_seconds warm1_build_seconds warm1_restore_or_setup_seconds
+    warm2_seconds warm_average_seconds warm_steady_seconds
+    rolling_first_build_seconds rolling_warm_seconds
     run_total_seconds storage_bytes docker_cache_import_seconds docker_cache_export_seconds
   ]
 
@@ -728,13 +853,33 @@ def average_snapshot(snapshots)
   storage_source = most_common(snapshots.map { |snapshot| snapshot["storage_source"] })
   averaged["storage_source"] = storage_source if storage_source
 
+  product_refs = most_common_hash(snapshots.map { |snapshot| snapshot["product_refs"] })
+  averaged["product_refs"] = product_refs if product_refs
+  averaged["product_refs_consistent"] = product_refs_consistent?(snapshots) if product_refs
+
+  launch_proof_paths = snapshots.flat_map { |snapshot| Array(snapshot["launch_proof_paths"]) }.compact
+  averaged["launch_proof_paths"] = launch_proof_paths.uniq if launch_proof_paths.any?
+
+  %w[
+    workspace cache_tag run_uid mode adapter docker_cache_from_refs docker_cache_import_ready
+    http_transport http2_enabled oci_stream_through_min_bytes restore_result save_result
+    publish_status session_summary summary_schema reporting_url
+  ].each do |key|
+    value = latest[key] || most_common(snapshots.map { |snapshot| snapshot[key] })
+    averaged[key] = value if value
+  end
+
   averaged
 end
 
 def metrics_from_snapshot(snapshot)
   {
     cold_seconds: snapshot["cold_seconds"],
+    cold_build_seconds: snapshot["cold_build_seconds"],
+    cold_restore_or_setup_seconds: snapshot["cold_restore_or_setup_seconds"],
     warm1_seconds: snapshot["warm1_seconds"],
+    warm1_build_seconds: snapshot["warm1_build_seconds"],
+    warm1_restore_or_setup_seconds: snapshot["warm1_restore_or_setup_seconds"],
     warm2_seconds: snapshot["warm2_seconds"],
     warm_average_seconds: snapshot["warm_average_seconds"],
     storage_bytes: snapshot["storage_bytes"]
@@ -813,7 +958,12 @@ def average_lane_entries(entries, benchmark:, lane:)
         warm_steady_seconds(actions_metrics),
         warm_steady_seconds(boringcache_metrics)
       )&.round(2),
+      "warm_build_improvement_pct" => percent_delta(
+        actions_metrics[:warm1_build_seconds],
+        boringcache_metrics[:warm1_build_seconds]
+      )&.round(2),
       "cold_improvement_pct" => percent_delta(actions_metrics[:cold_seconds], boringcache_metrics[:cold_seconds])&.round(2),
+      "cold_build_improvement_pct" => percent_delta(actions_metrics[:cold_build_seconds], boringcache_metrics[:cold_build_seconds])&.round(2),
       "run_total_improvement_pct" => percent_delta(actions_snapshot["run_total_seconds"], boringcache_snapshot["run_total_seconds"])&.round(2),
       "storage_improvement_pct" => percent_delta(actions_metrics[:storage_bytes], boringcache_metrics[:storage_bytes])&.round(2),
       "storage_saved_bytes" => if actions_metrics[:storage_bytes] && boringcache_metrics[:storage_bytes]
@@ -1130,60 +1280,64 @@ def write_detail_files(entries, generated_at:)
   end
 end
 
-existing_entries = load_existing_entries
-entries = []
-strategy_data_cache = {}
-raise "BENCHMARKS_PAIR_COUNT must be >= 1" if PAIR_COUNT < 1
+def main
+  existing_entries = load_existing_entries
+  entries = []
+  strategy_data_cache = {}
+  raise "BENCHMARKS_PAIR_COUNT must be >= 1" if PAIR_COUNT < 1
 
-Dir.mktmpdir("benchmark-index-") do |tmp|
-  BENCHMARKS.each do |benchmark|
-    benchmark_id = benchmark.fetch("benchmark")
-    preserved_entry = existing_entries[benchmark_id]
-    preserved_entry = preserved_entry.merge("public" => benchmark.fetch("public")) if preserved_entry
+  Dir.mktmpdir("benchmark-index-") do |tmp|
+    BENCHMARKS.each do |benchmark|
+      benchmark_id = benchmark.fetch("benchmark")
+      preserved_entry = existing_entries[benchmark_id]
+      preserved_entry = preserved_entry.merge("public" => benchmark.fetch("public")) if preserved_entry
 
-    begin
-      repo = benchmark.fetch("source_repo")
-      actions_runs = latest_successful_runs(repo: repo, workflow_name: benchmark.fetch("actions_workflow"))
-      boringcache_runs = latest_successful_runs(repo: repo, workflow_name: benchmark.fetch("boringcache_workflow"))
-      artifacts_cache = {}
-      lane_entries = LANE_IDS.each_with_object({}) do |lane, acc|
-        lane_entry = load_lane_entry(
-          temp_root: tmp,
-          benchmark: benchmark,
-          lane: lane,
-          actions_runs: actions_runs,
-          boringcache_runs: boringcache_runs,
-          cache: strategy_data_cache,
-          artifacts_cache: artifacts_cache
-        )
-        acc[lane] = lane_entry if lane_entry
-      end
+      begin
+        repo = benchmark.fetch("source_repo")
+        actions_runs = latest_successful_runs(repo: repo, workflow_name: benchmark.fetch("actions_workflow"))
+        boringcache_runs = latest_successful_runs(repo: repo, workflow_name: benchmark.fetch("boringcache_workflow"))
+        artifacts_cache = {}
+        lane_entries = LANE_IDS.each_with_object({}) do |lane, acc|
+          lane_entry = load_lane_entry(
+            temp_root: tmp,
+            benchmark: benchmark,
+            lane: lane,
+            actions_runs: actions_runs,
+            boringcache_runs: boringcache_runs,
+            cache: strategy_data_cache,
+            artifacts_cache: artifacts_cache
+          )
+          acc[lane] = lane_entry if lane_entry
+        end
 
-      entry = merge_lane_entries(lane_entries)
-      if entry.nil?
+        entry = merge_lane_entries(lane_entries)
+        if entry.nil?
+          if preserved_entry
+            warn "Preserving #{benchmark['name']} from existing index: no successful run pair found"
+            entries << preserved_entry
+          else
+            warn "Skipping #{benchmark['name']}: no successful run pair found"
+          end
+          next
+        end
+
+        entries << entry
+      rescue StandardError => e
         if preserved_entry
-          warn "Preserving #{benchmark['name']} from existing index: no successful run pair found"
+          warn "Preserving #{benchmark['name']} from existing index: #{e.message}"
           entries << preserved_entry
         else
-          warn "Skipping #{benchmark['name']}: no successful run pair found"
+          warn "Skipping #{benchmark['name']}: #{e.message}"
         end
-        next
-      end
-
-      entries << entry
-    rescue StandardError => e
-      if preserved_entry
-        warn "Preserving #{benchmark['name']} from existing index: #{e.message}"
-        entries << preserved_entry
-      else
-        warn "Skipping #{benchmark['name']}: #{e.message}"
       end
     end
   end
+
+  generated_at = Time.now.utc.iso8601
+  write_index(entries, generated_at: generated_at)
+  write_detail_files(entries, generated_at: generated_at)
+  report = write_report(entries, generated_at: generated_at)
+  update_readme(report)
 end
 
-generated_at = Time.now.utc.iso8601
-write_index(entries, generated_at: generated_at)
-write_detail_files(entries, generated_at: generated_at)
-report = write_report(entries, generated_at: generated_at)
-update_readme(report)
+main if __FILE__ == $PROGRAM_NAME

@@ -14,6 +14,7 @@ options = {
   matrix: nil,
   expected_action_ref: "boringcache/one@v1",
   require_diagnostics: true,
+  require_evidence_product_refs: true,
   require_fresh_cache_import: true,
   require_docker_oci: true,
   verbose: false
@@ -59,6 +60,10 @@ parser = OptionParser.new do |opts|
     options[:require_diagnostics] = false
   end
 
+  opts.on("--allow-evidence-without-product-refs", "Do not require every matrix evidence item to carry released product refs.") do
+    options[:require_evidence_product_refs] = false
+  end
+
   opts.on("--allow-missing-cache-import", "Do not require fresh warm BoringCache artifacts to report cache_import_status=ok.") do
     options[:require_fresh_cache_import] = false
   end
@@ -76,6 +81,56 @@ parser.parse!(ARGV)
 
 def present?(value)
   !value.nil? && !value.to_s.strip.empty?
+end
+
+def compact_hash(hash)
+  hash.reject { |_, value| value.nil? }
+end
+
+def normalized_product_refs(payload)
+  refs = payload["product_refs"].is_a?(Hash) ? payload["product_refs"].dup : {}
+  %w[cli_version action_ref action_sha web_revision api_url].each do |key|
+    refs[key] = payload[key] if !present?(refs[key]) && present?(payload[key])
+  end
+  refs
+end
+
+def field_value(payload, field_path)
+  field_path.to_s.split(".").reduce(payload) do |value, key|
+    value.is_a?(Hash) ? value[key] : nil
+  end
+end
+
+def field_present?(payload, field_spec)
+  case field_spec
+  when Array
+    field_spec.any? { |item| field_present?(payload, item) }
+  when Hash
+    if field_spec["any"].is_a?(Array)
+      field_spec["any"].any? { |item| field_present?(payload, item) }
+    else
+      false
+    end
+  else
+    field_spec.to_s.split("|").any? do |candidate|
+      present?(field_value(payload, candidate.strip))
+    end
+  end
+end
+
+def field_label(field_spec)
+  case field_spec
+  when Array
+    field_spec.join("|")
+  when Hash
+    Array(field_spec["any"]).join("|")
+  else
+    field_spec.to_s
+  end
+end
+
+def missing_required_fields(payload, field_specs)
+  field_specs.reject { |field_spec| field_present?(payload, field_spec) }.map { |field_spec| field_label(field_spec) }
 end
 
 def parse_json_file(path)
@@ -114,7 +169,7 @@ def aggregate_entries(payload)
 end
 
 def aggregate_boringcache_artifacts(payload)
-  aggregate_entries(payload).filter_map do |entry|
+  aggregate_entries(payload).map do |entry|
     boringcache = entry.dig("comparison", "boringcache")
     next unless boringcache.is_a?(Hash)
 
@@ -125,18 +180,33 @@ def aggregate_boringcache_artifacts(payload)
       "category" => entry["category"],
       "cache_mode" => entry["category"],
       "product_refs" => boringcache["product_refs"],
+      "product_refs_consistent" => boringcache["product_refs_consistent"],
       "classification" => boringcache["classification"],
       "oci" => boringcache["oci"],
       "docker_cache" => {
         "import_seconds" => boringcache["docker_cache_import_seconds"],
         "export_seconds" => boringcache["docker_cache_export_seconds"]
       },
+      "launch_proof_paths" => boringcache["launch_proof_paths"],
+      "workspace" => boringcache["workspace"],
+      "cache_tag" => boringcache["cache_tag"],
+      "run_uid" => boringcache["run_uid"],
+      "mode" => boringcache["mode"],
+      "adapter" => boringcache["adapter"],
+      "docker_cache_from_refs" => boringcache["docker_cache_from_refs"],
+      "docker_cache_import_ready" => boringcache["docker_cache_import_ready"],
+      "restore_result" => boringcache["restore_result"],
+      "save_result" => boringcache["save_result"],
+      "publish_status" => boringcache["publish_status"],
+      "session_summary" => boringcache["session_summary"],
+      "summary_schema" => boringcache["summary_schema"],
+      "reporting_url" => boringcache["reporting_url"],
       "runs" => {
         "cold_seconds" => boringcache["cold_seconds"],
         "warm1_seconds" => boringcache["warm1_seconds"]
       }
     }
-  end
+  end.compact
 end
 
 def docker_artifact?(payload)
@@ -186,7 +256,7 @@ def proof_paths(payload)
     raw_paths.concat(Array(launch_proof["paths"]))
   end
 
-  raw_paths.filter_map do |raw_path|
+  raw_paths.map do |raw_path|
     next raw_path if raw_path.is_a?(Hash)
     next unless raw_path.is_a?(String)
 
@@ -194,7 +264,7 @@ def proof_paths(payload)
     next unless parts.length == 3
 
     { "tool" => parts[0], "surface" => parts[1], "scenario" => parts[2] }
-  end
+  end.compact
 end
 
 def load_evidence_entries(paths)
@@ -209,20 +279,41 @@ def load_evidence_entries(paths)
       next []
     end
 
-    entries.filter_map do |entry|
+    entries.map do |entry|
       next unless entry.is_a?(Hash)
 
-      entry.merge("_source" => path.to_s)
-    end
+      enriched = entry.merge("_source" => path.to_s)
+      enriched["product_refs"] = normalized_product_refs(enriched)
+      enriched
+    end.compact
   end
 end
 
 def artifact_evidence_entries(artifacts)
   artifacts.flat_map do |path, payload|
     proof_paths(payload).map do |proof_path|
-      proof_path.merge(
+      summary = payload["cache_session_summary"] || payload["session_summary"] || payload["summary_json"] || payload.dig("diagnostics", "cache_session_summary") || {}
+      inferred = compact_hash(
+        "product_refs" => normalized_product_refs(payload),
+        "workspace" => payload["workspace"] || payload.dig("cache", "workspace"),
+        "cache_tag" => payload["cache_tag"] || payload.dig("cache", "tag"),
+        "run_uid" => payload["run_uid"] || payload["run_id"] || payload.dig("run", "uid"),
+        "mode" => cache_mode(payload),
+        "adapter" => payload["adapter"] || payload["tool"] || payload["category"],
+        "hydration_policy" => payload["hydration_policy"] || payload.dig("oci", "hydration_policy") || summary.dig("proxy", "hydration_policy"),
+        "http_transport" => payload["http_transport"] || payload.dig("proxy", "http_transport") || summary.dig("proxy", "http_transport"),
+        "http2_enabled" => payload["http2_enabled"] || payload.dig("proxy", "http2_enabled") || summary.dig("proxy", "http2_enabled"),
+        "oci_stream_through_min_bytes" => payload["oci_stream_through_min_bytes"] || payload.dig("oci", "stream_through_min_bytes") || summary.dig("proxy", "oci_stream_through_min_bytes"),
+        "new_blob_count" => payload.dig("oci", "new_blob_count"),
+        "remote_fetches" => payload.dig("oci", "remote_fetches") || payload.dig("diagnostics", "remote_fetches"),
+        "publish_status" => payload["publish_status"] || payload.dig("classification", "publish_status"),
+        "session_summary" => payload["cache_session_summary"] || payload["summary_json"] || payload.dig("diagnostics", "cache_session_summary"),
+        "reporting_url" => payload["reporting_url"] || payload.dig("diagnostics", "reporting_url")
+      )
+
+      inferred.merge(proof_path).merge(
         "status" => proof_path["status"] || "pass",
-        "artifact" => path.to_s,
+        "artifact" => proof_path["artifact"] || path.to_s,
         "_source" => path.to_s
       )
     end
@@ -241,6 +332,17 @@ def evidence_matches?(entry, requirement, scenario)
   return false unless entry["scenario"].to_s == scenario.to_s
 
   true
+end
+
+def required_fields_for(matrix_payload, requirement, scenario)
+  fields = []
+  fields.concat(Array(matrix_payload["default_required_fields"]))
+  fields.concat(Array(requirement["required_fields"]))
+
+  fields_by_scenario = requirement["required_fields_by_scenario"]
+  fields.concat(Array(fields_by_scenario[scenario])) if fields_by_scenario.is_a?(Hash)
+
+  fields
 end
 
 def validate_matrix(path, evidence_entries, errors)
@@ -277,21 +379,36 @@ def validate_matrix(path, evidence_entries, errors)
     end
 
     scenarios.each do |scenario|
-      matches = evidence_entries.select { |entry| evidence_matches?(entry, requirement, scenario) }
+      required_fields = required_fields_for(payload, requirement, scenario)
+      path_matches = evidence_entries.select { |entry| evidence_matches?(entry, requirement, scenario) }
+      matches = path_matches.select { |entry| missing_required_fields(entry, required_fields).empty? }
       min_count = requirement.fetch("min_counts", {})[scenario].to_i
       min_count = 1 if min_count <= 0
       next if matches.length >= min_count
 
-      errors << "missing launch proof path #{tool}/#{surface}/#{scenario} (need #{min_count}, found #{matches.length})"
+      if path_matches.any? && required_fields.any?
+        missing_examples = path_matches.first(3).map do |entry|
+          source = entry["_source"] || entry["artifact"] || "evidence"
+          missing = missing_required_fields(entry, required_fields)
+          "#{source} missing #{missing.join(", ")}"
+        end.join("; ")
+        errors << "missing launch proof path #{tool}/#{surface}/#{scenario} with required fields (need #{min_count}, found #{matches.length}; #{missing_examples})"
+      else
+        errors << "missing launch proof path #{tool}/#{surface}/#{scenario} (need #{min_count}, found #{matches.length})"
+      end
     end
   end
 end
 
 def validate_product_refs(payload, path, options, errors)
-  refs = payload["product_refs"]
-  unless refs.is_a?(Hash)
-    errors << "#{path}: missing product_refs"
+  refs = normalized_product_refs(payload)
+  unless refs.any?
+    errors << "#{path}: missing product_refs or release ref fields"
     return
+  end
+
+  if payload["product_refs_consistent"] == false
+    errors << "#{path}: product_refs are not consistent across rolled-up samples"
   end
 
   %w[cli_version action_ref action_sha web_revision api_url].each do |key|
@@ -313,6 +430,19 @@ def validate_product_refs(payload, path, options, errors)
     next if refs[ref_key] == expected
 
     errors << "#{path}: product_refs.#{ref_key}=#{refs[ref_key].inspect}, expected #{expected}"
+  end
+end
+
+def validate_evidence_product_refs(evidence_entries, options, errors)
+  return unless options[:require_evidence_product_refs]
+
+  evidence_entries.each do |entry|
+    next unless successful_evidence?(entry)
+    next unless present?(entry["tool"]) && present?(entry["surface"]) && present?(entry["scenario"])
+
+    source = entry["_source"] || entry["artifact"] || "evidence"
+    label = "#{source}: #{entry["tool"]}/#{entry["surface"]}/#{entry["scenario"]}"
+    validate_product_refs(entry, label, options, errors)
   end
 end
 
@@ -401,6 +531,7 @@ embedded_summary_count = artifacts.count { |_, payload| embedded_session_summary
 diagnostic_summary_count = diagnostics_summary_count(options[:diagnostics])
 summary_count = embedded_summary_count + diagnostic_summary_count
 evidence_entries = load_evidence_entries(options[:evidence]) + artifact_evidence_entries(artifacts)
+validate_evidence_product_refs(evidence_entries, options, errors)
 
 if options[:require_diagnostics] && summary_count.zero?
   errors << "missing cache_session_summary evidence; pass --diagnostics with request metrics/status artifacts or embed cache_session_summary in benchmark JSON"

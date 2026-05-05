@@ -1,0 +1,67 @@
+{
+  "evidence": [
+    {
+      "tool": "docker",
+      "surface": "action",
+      "scenario": "fresh_runner_rerun",
+      "status": "pass",
+      "product_refs": {
+        "action_ref": "boringcache/one@v1",
+        "action_sha": "0123456789abcdef0123456789abcdef01234567",
+        "cli_version": "v1.12.86",
+        "web_revision": "89abcdef0123456789abcdef0123456789abcdef",
+        "api_url": "https://app.boringcache.com"
+      },
+      "workspace": "acme/web",
+      "cache_tag": "docker-default-main",
+      "run_uid": "gh-1234567890-1",
+      "mode": "docker",
+      "adapter": "oci",
+      "docker_cache_from_refs": ["cache:docker-default-main"],
+      "docker_cache_import_ready": true,
+      "hydration_policy": "metadata-only",
+      "http_transport": "h1+h2c-auto",
+      "http2_enabled": true,
+      "oci_stream_through_min_bytes": 33554432,
+      "restore_result": "hit",
+      "save_result": "published",
+      "new_blob_count": 0,
+      "remote_fetches": 12,
+      "publish_status": "complete",
+      "session_summary": {
+        "schema": "cache_session_summary.v2",
+        "hit": true
+      },
+      "reporting_url": "https://app.boringcache.com/workspaces/acme/web/cache/sessions/abc123",
+      "run_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/1234567890",
+      "artifact": "benchmark-hugo-boringcache-fresh.json"
+    },
+    {
+      "tool": "v2_save",
+      "surface": "web",
+      "scenario": "many_small_blobs",
+      "status": "pass",
+      "product_refs": {
+        "action_ref": "boringcache/one@v1",
+        "action_sha": "0123456789abcdef0123456789abcdef01234567",
+        "cli_version": "v1.12.86",
+        "web_revision": "89abcdef0123456789abcdef0123456789abcdef",
+        "api_url": "https://app.boringcache.com"
+      },
+      "workspace": "acme/web",
+      "run_uid": "pressure-2000-descriptors-20260504",
+      "mode": "cas",
+      "adapter": "archive",
+      "stage_p95_ms": 180,
+      "publish_p95_ms": 95,
+      "restore_check_p95_ms": 40,
+      "publish_status": "complete",
+      "client_error_shape": "none",
+      "session_summary": {
+        "schema": "cache_session_summary.v2",
+        "publish": "complete"
+      },
+      "reporting_url": "https://app.boringcache.com/admin/cache_sessions/pressure-2000-descriptors-20260504"
+    }
+  ]
+}
