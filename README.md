@@ -38,7 +38,7 @@ This repo:
 
 ## Latest Benchmark Report
 
-Generated: 2026-05-05 17:06 UTC
+Generated: 2026-05-05 20:05 UTC
 
 ### Lane Coverage
 
@@ -63,10 +63,10 @@ Generated: 2026-05-05 17:06 UTC
 | Mastodon | Cold | 10m 54s | 9m 28s | 13% faster | 9.82 GB (90.66%) | run total faster; 3 paired samples |
 | PostHog | Cold | 22m 51s | 15m 39s | 32% faster | 5.45 GB (47.24%) | run total faster; 3 paired samples |
 | OpenTelemetry Java | Cold | 10m 51s | 10m 44s | near tie | 50.41 MB (6.11%) | warm, run total slower; 3 paired samples |
-| Spring AI | Warm | 0m 31s | 0m 30s | near tie | 165.88 MB more (-17.12%) | cold, run total slower; BC used more storage; 3 paired samples |
+| Spring AI | Cold | 4m 29s | 4m 40s | 4% slower | 165.61 MB more (-17.07%) | run total slower; BC used more storage; 3 paired samples |
 | gRPC | Cold | 35m 25s | 34m 16s | 3% faster | 496.10 MB more (-185.37%) | warm slower; BC used more storage; 3 paired samples |
-| Zed | Cold | 50m 0s | 50m 19s | near tie | — | warm, run total slower; storage unavailable; 3 paired samples |
-| n8n | Warm | 1m 35s | 1m 10s | 26% faster | 16.54 MB more (-2.4%) | cold, run total faster; BC used more storage; 3 paired samples |
+| Zed | Cold | 50m 16s | 49m 57s | near tie | — | warm, run total slower; storage unavailable; 3 paired samples |
+| n8n | Cold | 5m 21s | 5m 41s | 6% slower | 16.48 MB more (-2.39%) | warm, run total slower; BC used more storage; 3 paired samples |
 
 ### Rolling Historical
 
@@ -77,14 +77,14 @@ Generated: 2026-05-05 17:06 UTC
 | Mastodon | First Build | 5m 34s | 4m 56s | reseeded 3/3 | 9.39 GB (90.27%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
 | PostHog | First Build | 15m 30s | 11m 12s | reseeded 3/3 | 4.94 GB (45.81%) | 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
 | OpenTelemetry Java | Cold | 3m 19s | 4m 48s | 45% slower | 1.91 GB (71.6%) | run total slower; 3 paired samples |
-| Spring AI | Cold | 2m 28s | 2m 52s | 16% slower | 1.93 GB (60.29%) | run total slower; 3 paired samples |
+| Spring AI | Cold | 2m 24s | 2m 53s | 20% slower | 1.71 GB (53.25%) | run total slower; 3 paired samples |
 | gRPC | Cold | 0m 38s | 2m 22s | 270% slower | 292.30 MB more (-47.46%) | run total slower; BC used more storage; 3 paired samples |
-| Zed | Cold | 24m 31s | 41m 53s | 71% slower | 2.41 GB more (-30.85%) | run total slower; BC used more storage; 3 paired samples |
-| n8n | Run Total | 5m 23s | 4m 45s | 12% faster | 6.93 GB (90.97%) | cold faster; 3 paired samples |
+| Zed | Cold | 25m 27s | 41m 51s | 64% slower | 1.12 GB more (-12.03%) | run total slower; BC used more storage; 3 paired samples |
+| n8n | Run Total | 4m 47s | 3m 53s | 19% faster | 7.09 GB (91.15%) | 3 paired samples |
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
 
-Rows use the latest 3 same-commit AC/BC pairs when enough samples are available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling Docker cache-import misses render as investigation-only.
+Rows use the latest 3 same-commit AC/BC pairs when enough samples are available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling Docker reseeds or cache-import misses render as investigation-only.
 
 <!-- benchmark-report:end -->
 
