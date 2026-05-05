@@ -495,9 +495,15 @@ def extract_strategy_metrics(payload)
 
   {
     cold_seconds: parse_number(runs["cold_seconds"]),
+    cold_build_seconds: parse_number(runs["cold_build_seconds"]),
+    cold_restore_or_setup_seconds: parse_number(runs["cold_restore_or_setup_seconds"]),
     warm1_seconds: warm1,
+    warm1_build_seconds: parse_number(runs["warm1_build_seconds"]),
+    warm1_restore_or_setup_seconds: parse_number(runs["warm1_restore_or_setup_seconds"]),
     warm2_seconds: warm2,
     warm_average_seconds: warm_avg,
+    rolling_first_build_seconds: parse_number(runs["rolling_first_build_seconds"]),
+    rolling_warm_seconds: parse_number(runs["rolling_warm_seconds"]),
     storage_bytes: storage_bytes,
     storage_source: storage_source,
     docker_cache_import_seconds: parse_number(docker_cache["import_seconds"]),
@@ -603,10 +609,16 @@ def strategy_snapshot(data)
     "head_sha" => run["headSha"],
     "created_at" => run["createdAt"],
     "cold_seconds" => metrics[:cold_seconds],
+    "cold_build_seconds" => metrics[:cold_build_seconds],
+    "cold_restore_or_setup_seconds" => metrics[:cold_restore_or_setup_seconds],
     "warm1_seconds" => metrics[:warm1_seconds],
+    "warm1_build_seconds" => metrics[:warm1_build_seconds],
+    "warm1_restore_or_setup_seconds" => metrics[:warm1_restore_or_setup_seconds],
     "warm2_seconds" => metrics[:warm2_seconds],
     "warm_average_seconds" => metrics[:warm_average_seconds],
     "warm_steady_seconds" => warm_steady_seconds(metrics),
+    "rolling_first_build_seconds" => metrics[:rolling_first_build_seconds],
+    "rolling_warm_seconds" => metrics[:rolling_warm_seconds],
     "run_total_seconds" => data[:run_total_seconds],
     "storage_bytes" => metrics[:storage_bytes],
     "storage_source" => metrics[:storage_source],
@@ -742,7 +754,12 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:, lane:)
         warm_steady_seconds(actions_metrics),
         warm_steady_seconds(boringcache_metrics)
       )&.round(2),
+      "warm_build_improvement_pct" => percent_delta(
+        actions_metrics[:warm1_build_seconds],
+        boringcache_metrics[:warm1_build_seconds]
+      )&.round(2),
       "cold_improvement_pct" => percent_delta(actions_metrics[:cold_seconds], boringcache_metrics[:cold_seconds])&.round(2),
+      "cold_build_improvement_pct" => percent_delta(actions_metrics[:cold_build_seconds], boringcache_metrics[:cold_build_seconds])&.round(2),
       "run_total_improvement_pct" => percent_delta(actions_data[:run_total_seconds], boringcache_data[:run_total_seconds])&.round(2),
       "storage_improvement_pct" => percent_delta(actions_metrics[:storage_bytes], boringcache_metrics[:storage_bytes])&.round(2),
       "storage_saved_bytes" => if actions_metrics[:storage_bytes] && boringcache_metrics[:storage_bytes]
@@ -807,7 +824,10 @@ def average_snapshot(snapshots)
   }
 
   numeric_keys = %w[
-    cold_seconds warm1_seconds warm2_seconds warm_average_seconds warm_steady_seconds
+    cold_seconds cold_build_seconds cold_restore_or_setup_seconds
+    warm1_seconds warm1_build_seconds warm1_restore_or_setup_seconds
+    warm2_seconds warm_average_seconds warm_steady_seconds
+    rolling_first_build_seconds rolling_warm_seconds
     run_total_seconds storage_bytes docker_cache_import_seconds docker_cache_export_seconds
   ]
 
@@ -845,7 +865,11 @@ end
 def metrics_from_snapshot(snapshot)
   {
     cold_seconds: snapshot["cold_seconds"],
+    cold_build_seconds: snapshot["cold_build_seconds"],
+    cold_restore_or_setup_seconds: snapshot["cold_restore_or_setup_seconds"],
     warm1_seconds: snapshot["warm1_seconds"],
+    warm1_build_seconds: snapshot["warm1_build_seconds"],
+    warm1_restore_or_setup_seconds: snapshot["warm1_restore_or_setup_seconds"],
     warm2_seconds: snapshot["warm2_seconds"],
     warm_average_seconds: snapshot["warm_average_seconds"],
     storage_bytes: snapshot["storage_bytes"]
@@ -924,7 +948,12 @@ def average_lane_entries(entries, benchmark:, lane:)
         warm_steady_seconds(actions_metrics),
         warm_steady_seconds(boringcache_metrics)
       )&.round(2),
+      "warm_build_improvement_pct" => percent_delta(
+        actions_metrics[:warm1_build_seconds],
+        boringcache_metrics[:warm1_build_seconds]
+      )&.round(2),
       "cold_improvement_pct" => percent_delta(actions_metrics[:cold_seconds], boringcache_metrics[:cold_seconds])&.round(2),
+      "cold_build_improvement_pct" => percent_delta(actions_metrics[:cold_build_seconds], boringcache_metrics[:cold_build_seconds])&.round(2),
       "run_total_improvement_pct" => percent_delta(actions_snapshot["run_total_seconds"], boringcache_snapshot["run_total_seconds"])&.round(2),
       "storage_improvement_pct" => percent_delta(actions_metrics[:storage_bytes], boringcache_metrics[:storage_bytes])&.round(2),
       "storage_saved_bytes" => if actions_metrics[:storage_bytes] && boringcache_metrics[:storage_bytes]

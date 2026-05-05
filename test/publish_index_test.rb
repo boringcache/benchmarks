@@ -28,6 +28,12 @@ class PublishIndexTest < Minitest::Test
     assert_equal PRODUCT_REFS, snapshot["product_refs"]
     assert_equal true, snapshot["product_refs_consistent"]
     assert_equal "metadata-only", snapshot.dig("oci", "hydration_policy")
+    assert_equal 25, snapshot["cold_build_seconds"]
+    assert_equal 5, snapshot["cold_restore_or_setup_seconds"]
+    assert_equal 3, snapshot["warm1_build_seconds"]
+    assert_equal 1, snapshot["warm1_restore_or_setup_seconds"]
+    assert_equal 30, snapshot["rolling_first_build_seconds"]
+    assert_equal 4, snapshot["rolling_warm_seconds"]
     assert_equal ["docker/action/fresh_runner_rerun"], snapshot["launch_proof_paths"]
     assert_equal "boringcache/benchmarks", snapshot["workspace"]
     assert_equal "hugo-docker-main", snapshot["cache_tag"]
@@ -55,6 +61,10 @@ class PublishIndexTest < Minitest::Test
     assert_equal "v1.12.86", averaged.dig("product_refs", "cli_version")
     assert_equal false, averaged["product_refs_consistent"]
     assert_equal "metadata-only", averaged.dig("oci", "hydration_policy")
+    assert_equal 25, averaged["cold_build_seconds"]
+    assert_equal 3, averaged["warm1_build_seconds"]
+    assert_equal 30, averaged["rolling_first_build_seconds"]
+    assert_equal 4, averaged["rolling_warm_seconds"]
     assert_equal ["docker/action/fresh_runner_rerun"], averaged["launch_proof_paths"]
     assert_equal "boringcache/benchmarks", averaged["workspace"]
   end
@@ -66,7 +76,13 @@ class PublishIndexTest < Minitest::Test
       "strategy" => "boringcache",
       "runs" => {
         "cold_seconds" => 30,
-        "warm1_seconds" => 4
+        "cold_build_seconds" => 25,
+        "cold_restore_or_setup_seconds" => 5,
+        "warm1_seconds" => 4,
+        "warm1_build_seconds" => 3,
+        "warm1_restore_or_setup_seconds" => 1,
+        "rolling_first_build_seconds" => 30,
+        "rolling_warm_seconds" => 4
       },
       "speed" => {
         "warm_average_seconds" => 4
@@ -114,7 +130,13 @@ class PublishIndexTest < Minitest::Test
       "head_sha" => cli_version,
       "created_at" => cli_version == "v1.12.85" ? "2026-05-03T10:00:00Z" : "2026-05-04T10:00:00Z",
       "cold_seconds" => 30,
+      "cold_build_seconds" => 25,
+      "cold_restore_or_setup_seconds" => 5,
       "warm1_seconds" => 4,
+      "warm1_build_seconds" => 3,
+      "warm1_restore_or_setup_seconds" => 1,
+      "rolling_first_build_seconds" => 30,
+      "rolling_warm_seconds" => 4,
       "storage_bytes" => 1024,
       "product_refs" => refs,
       "launch_proof_paths" => ["docker/action/fresh_runner_rerun"],
