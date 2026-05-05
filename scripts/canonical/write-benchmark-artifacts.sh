@@ -41,7 +41,7 @@
 #   - JSON shape is a strict superset: all blocks every fork emitted
 #     are emitted here. New fields are nullable and never required
 #     by the aggregator. Build-only/setup splits and Docker rolling
-#     first-build fields are emitted with nullable warm fields.
+#     first-build/warm fields are emitted when callers provide the data.
 #
 set -euo pipefail
 
