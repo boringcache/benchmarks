@@ -399,9 +399,15 @@ def extract_strategy_metrics(payload)
 
   {
     cold_seconds: parse_number(runs["cold_seconds"]),
+    cold_build_seconds: parse_number(runs["cold_build_seconds"]),
+    cold_restore_or_setup_seconds: parse_number(runs["cold_restore_or_setup_seconds"]),
     warm1_seconds: warm1,
+    warm1_build_seconds: parse_number(runs["warm1_build_seconds"]),
+    warm1_restore_or_setup_seconds: parse_number(runs["warm1_restore_or_setup_seconds"]),
     warm2_seconds: warm2,
     warm_average_seconds: warm_avg,
+    rolling_first_build_seconds: parse_number(runs["rolling_first_build_seconds"]),
+    rolling_warm_seconds: parse_number(runs["rolling_warm_seconds"]),
     storage_bytes: storage_bytes,
     storage_source: storage_source,
     docker_cache_import_seconds: parse_number(docker_cache["import_seconds"]),
@@ -484,10 +490,16 @@ def strategy_snapshot(data)
     "status" => run["status"],
     "conclusion" => run["conclusion"],
     "cold_seconds" => metrics[:cold_seconds],
+    "cold_build_seconds" => metrics[:cold_build_seconds],
+    "cold_restore_or_setup_seconds" => metrics[:cold_restore_or_setup_seconds],
     "warm1_seconds" => metrics[:warm1_seconds],
+    "warm1_build_seconds" => metrics[:warm1_build_seconds],
+    "warm1_restore_or_setup_seconds" => metrics[:warm1_restore_or_setup_seconds],
     "warm2_seconds" => metrics[:warm2_seconds],
     "warm_average_seconds" => metrics[:warm_average_seconds],
     "warm_steady_seconds" => warm_steady_seconds(metrics),
+    "rolling_first_build_seconds" => metrics[:rolling_first_build_seconds],
+    "rolling_warm_seconds" => metrics[:rolling_warm_seconds],
     "run_total_seconds" => data[:run_total_seconds],
     "storage_bytes" => metrics[:storage_bytes],
     "storage_source" => metrics[:storage_source],
@@ -610,7 +622,12 @@ def build_entry(benchmark:, lane:, actions_data:, boringcache_data:)
         warm_steady_seconds(actions_metrics),
         warm_steady_seconds(boringcache_metrics)
       )&.round(2),
+      "warm_build_improvement_pct" => percent_delta(
+        actions_metrics[:warm1_build_seconds],
+        boringcache_metrics[:warm1_build_seconds]
+      )&.round(2),
       "cold_improvement_pct" => percent_delta(actions_metrics[:cold_seconds], boringcache_metrics[:cold_seconds])&.round(2),
+      "cold_build_improvement_pct" => percent_delta(actions_metrics[:cold_build_seconds], boringcache_metrics[:cold_build_seconds])&.round(2),
       "run_total_improvement_pct" => percent_delta(actions_data[:run_total_seconds], boringcache_data[:run_total_seconds])&.round(2),
       "storage_improvement_pct" => percent_delta(actions_metrics[:storage_bytes], boringcache_metrics[:storage_bytes])&.round(2),
       "storage_saved_bytes" => if actions_metrics[:storage_bytes] && boringcache_metrics[:storage_bytes]
@@ -759,6 +776,8 @@ def docker_detail_row(entry, lane)
     seconds_to_detail_text(actions["docker_cache_export_seconds"]),
     seconds_to_detail_text(boringcache["docker_cache_export_seconds"]),
     (boringcache.dig("oci", "hydration_policy") || "—"),
+    (boringcache["http_transport"] || "—"),
+    (boringcache["oci_stream_through_min_bytes"] || "—").to_s,
     (boringcache.dig("oci", "new_blob_count") || "—").to_s,
     bytes_to_text(boringcache.dig("oci", "new_blob_bytes")),
     bytes_to_text(boringcache.dig("oci", "body_remote_bytes"))
@@ -820,7 +839,7 @@ def build_markdown(entries, generated_at:, format:)
       sections += [
         "### Docker Cache Detail",
         "",
-        markdown_table(["Benchmark", "Lane", "AC Import", "BC Import", "AC Export", "BC Export", "BC OCI Hydration", "BC New Blobs", "BC New Blob Bytes", "BC Remote Body Bytes"], docker_rows),
+        markdown_table(["Benchmark", "Lane", "AC Import", "BC Import", "AC Export", "BC Export", "BC OCI Hydration", "BC HTTP", "BC Stream Min Bytes", "BC New Blobs", "BC New Blob Bytes", "BC Remote Body Bytes"], docker_rows),
         ""
       ]
     end

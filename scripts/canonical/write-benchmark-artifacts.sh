@@ -18,7 +18,7 @@
 #
 #   - 629-line variant (hugo, immich)
 #       adds Docker buildkit timings, OCI hydration / blob diagnostics,
-#       reseed classification (rolling_reseed/steady_state_candidate),
+#       rolling cache-update diagnostics (rolling_reseed/steady_state_candidate),
 #       fresh-warm cache-import-not-ok validity gating.
 #
 #   - 675-line variant (mastodon, posthog)
@@ -40,7 +40,8 @@
 #     before.
 #   - JSON shape is a strict superset: all blocks every fork emitted
 #     are emitted here. New fields are nullable and never required
-#     by the aggregator.
+#     by the aggregator. Build-only/setup splits and Docker rolling
+#     first-build fields are emitted with nullable warm fields.
 #
 set -euo pipefail
 
@@ -50,7 +51,9 @@ lane="fresh"
 project_repo=""
 project_ref=""
 cold_seconds=""
+cold_build_seconds=""
 warm1_seconds=""
+warm1_build_seconds=""
 cache_storage_bytes="0"
 cache_storage_source=""
 cache_storage_note=""
@@ -63,6 +66,24 @@ action_sha="${BENCHMARK_ACTION_SHA:-}"
 web_revision="${BENCHMARK_WEB_REVISION:-}"
 api_url="${BENCHMARK_API_URL:-${BORINGCACHE_API_URL:-https://api.boringcache.com}}"
 action_timings_json=""
+workspace="${BENCHMARK_WORKSPACE:-${BORINGCACHE_WORKSPACE:-}}"
+cache_tag="${BENCHMARK_CACHE_TAG:-${CACHE_SCOPE:-}}"
+run_uid="${BENCHMARK_RUN_UID:-}"
+mode="${BENCHMARK_MODE:-}"
+adapter="${BENCHMARK_ADAPTER:-}"
+restore_result="${BENCHMARK_RESTORE_RESULT:-}"
+save_result="${BENCHMARK_SAVE_RESULT:-}"
+publish_status="${BENCHMARK_PUBLISH_STATUS:-}"
+reporting_url="${BENCHMARK_REPORTING_URL:-}"
+docker_cache_from_refs="${BENCHMARK_DOCKER_CACHE_FROM_REFS:-${BORINGCACHE_CACHE_USED_FROM_REFS:-}}"
+docker_cache_import_ready="${BENCHMARK_DOCKER_CACHE_IMPORT_READY:-${BORINGCACHE_CACHE_IMPORT_READY:-}}"
+http_transport="${BENCHMARK_HTTP_TRANSPORT:-}"
+http2_enabled="${BENCHMARK_HTTP2_ENABLED:-}"
+oci_stream_through_min_bytes="${BENCHMARK_OCI_STREAM_THROUGH_MIN_BYTES:-}"
+cache_session_summary_json="${BENCHMARK_CACHE_SESSION_SUMMARY_JSON:-}"
+observability_jsonl="${BENCHMARK_OBSERVABILITY_JSONL:-${BORINGCACHE_OBSERVABILITY_JSONL_PATH:-}}"
+launch_proof_paths="${BENCHMARK_LAUNCH_PROOF_PATHS:-}"
+launch_proof_json="${BENCHMARK_LAUNCH_PROOF_JSON:-}"
 cache_import_status=""
 output_dir="benchmark-results"
 docker_cache_import_seconds=""
@@ -113,8 +134,16 @@ while [[ $# -gt 0 ]]; do
       cold_seconds="$2"
       shift 2
       ;;
+    --cold-build-seconds)
+      cold_build_seconds="$2"
+      shift 2
+      ;;
     --warm1-seconds)
       warm1_seconds="$2"
+      shift 2
+      ;;
+    --warm1-build-seconds)
+      warm1_build_seconds="$2"
       shift 2
       ;;
     --cache-storage-bytes)
@@ -161,6 +190,73 @@ while [[ $# -gt 0 ]]; do
       api_url="$2"
       shift 2
       ;;
+    --workspace)
+      workspace="$2"
+      shift 2
+      ;;
+    --cache-tag)
+      cache_tag="$2"
+      shift 2
+      ;;
+    --run-uid)
+      run_uid="$2"
+      shift 2
+      ;;
+    --mode)
+      mode="$2"
+      shift 2
+      ;;
+    --adapter)
+      adapter="$2"
+      shift 2
+      ;;
+    --restore-result)
+      restore_result="$2"
+      shift 2
+      ;;
+    --save-result)
+      save_result="$2"
+      shift 2
+      ;;
+    --publish-status)
+      publish_status="$2"
+      shift 2
+      ;;
+    --reporting-url)
+      reporting_url="$2"
+      shift 2
+      ;;
+    --docker-cache-from-refs)
+      docker_cache_from_refs="$2"
+      shift 2
+      ;;
+    --docker-cache-import-ready)
+      docker_cache_import_ready="$2"
+      shift 2
+      ;;
+    --cache-session-summary-json)
+      cache_session_summary_json="$2"
+      shift 2
+      ;;
+    --observability-jsonl)
+      observability_jsonl="$2"
+      shift 2
+      ;;
+    --launch-proof-path)
+      if [[ -n "$launch_proof_paths" ]]; then
+        launch_proof_paths+=","
+      fi
+      launch_proof_paths+="$2"
+      shift 2
+      ;;
+    --launch-proof-paths)
+      launch_proof_paths="$2"
+      shift 2
+      ;;
+    --launch-proof-json)
+      launch_proof_json="$2"
+      shift 2
+      ;;
     --cache-import-status)
       cache_import_status="$2"
       shift 2
@@ -175,6 +271,18 @@ while [[ $# -gt 0 ]]; do
       ;;
     --docker-cache-export-seconds)
       docker_cache_export_seconds="$2"
+      shift 2
+      ;;
+    --http-transport)
+      http_transport="$2"
+      shift 2
+      ;;
+    --http2-enabled)
+      http2_enabled="$2"
+      shift 2
+      ;;
+    --oci-stream-through-min-bytes)
+      oci_stream_through_min_bytes="$2"
       shift 2
       ;;
     --oci-hydration-policy)
@@ -304,6 +412,30 @@ json_string_or_null() {
   fi
 }
 
+json_bool_or_null() {
+  local v="$1"
+  case "$v" in
+    true|TRUE|1|yes|YES)
+      echo "true"
+      ;;
+    false|FALSE|0|no|NO)
+      echo "false"
+      ;;
+    *)
+      echo "null"
+      ;;
+  esac
+}
+
+json_array_from_csv_or_null() {
+  local v="$1"
+  if [[ -z "$v" ]]; then
+    echo "null"
+  else
+    jq -Rn --arg value "$v" '$value | split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))'
+  fi
+}
+
 sanitize_uint() {
   local v="$1"
   if [[ -n "$v" && "$v" =~ ^[0-9]+$ ]]; then
@@ -386,13 +518,109 @@ collect_default_product_refs() {
   fi
 }
 
+infer_default_launch_context() {
+  if [[ -z "$run_uid" && -n "${GITHUB_RUN_ID:-}" ]]; then
+    run_uid="gh-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT:-1}"
+  fi
+
+  if [[ -z "$mode" && "$strategy" == "boringcache" ]]; then
+    case "$benchmark" in
+      *hugo*|*immich*|*mastodon*|*posthog*)
+        mode="docker"
+        ;;
+      *grpc*|*bazel*)
+        mode="bazel"
+        ;;
+      *zed*|*sccache*)
+        mode="sccache"
+        ;;
+      *gradle*|*otel*)
+        mode="gradle"
+        ;;
+      *maven*|*spring*)
+        mode="maven"
+        ;;
+      *n8n*|*turbo*)
+        mode="turbo"
+        ;;
+      *go*)
+        mode="go"
+        ;;
+    esac
+  fi
+
+  if [[ -z "$adapter" && "$strategy" == "boringcache" ]]; then
+    case "$mode" in
+      docker|buildkit)
+        adapter="oci"
+        ;;
+      go)
+        adapter="gocache"
+        ;;
+      turbo)
+        adapter="turborepo"
+        ;;
+      *)
+        adapter="$mode"
+        ;;
+    esac
+  fi
+}
+
+session_summary_payload_from_inputs() {
+  if [[ -n "$cache_session_summary_json" ]]; then
+    if [[ ! -f "$cache_session_summary_json" ]]; then
+      echo "Missing cache session summary JSON: $cache_session_summary_json" >&2
+      exit 1
+    fi
+    jq -c '.' "$cache_session_summary_json"
+    return
+  fi
+
+  if [[ -n "$observability_jsonl" && -s "$observability_jsonl" ]]; then
+    local summary
+    summary="$(jq -c 'select(.operation == "cache_session_summary") | .summary // .details // .' "$observability_jsonl" 2>/dev/null | tail -n 1 || true)"
+    if [[ -n "$summary" ]]; then
+      printf '%s\n' "$summary"
+      return
+    fi
+  fi
+
+  echo "null"
+}
+
+launch_proof_paths_payload_from_inputs() {
+  if [[ -n "$launch_proof_json" ]]; then
+    if [[ ! -f "$launch_proof_json" ]]; then
+      echo "Missing launch proof JSON: $launch_proof_json" >&2
+      exit 1
+    fi
+    jq -c '.' "$launch_proof_json"
+    return
+  fi
+
+  if [[ -n "$launch_proof_paths" ]]; then
+    jq -Rn --arg value "$launch_proof_paths" '$value | split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))'
+    return
+  fi
+
+  echo "[]"
+}
+
 if [[ -n "$bytes_uploaded" ]] && ! [[ "$bytes_uploaded" =~ ^[0-9]+$ ]]; then
   bytes_uploaded=""
 fi
 if [[ -n "$bytes_downloaded" ]] && ! [[ "$bytes_downloaded" =~ ^[0-9]+$ ]]; then
   bytes_downloaded=""
 fi
+if [[ -n "$cold_build_seconds" ]] && ! [[ "$cold_build_seconds" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+  cold_build_seconds=""
+fi
+if [[ -n "$warm1_build_seconds" ]] && ! [[ "$warm1_build_seconds" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+  warm1_build_seconds=""
+fi
 cache_import_status="$(sanitize_token "$cache_import_status")"
+docker_cache_import_ready="$(sanitize_token "$docker_cache_import_ready")"
 
 if [[ -n "$docker_cache_import_seconds" ]] && ! [[ "$docker_cache_import_seconds" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
   docker_cache_import_seconds=""
@@ -422,6 +650,7 @@ tiny_metadata_churn_max_blobs="${tiny_metadata_churn_max_blobs:-1}"
 tiny_metadata_churn_max_bytes="$(sanitize_uint "$tiny_metadata_churn_max_bytes")"
 tiny_metadata_churn_max_bytes="${tiny_metadata_churn_max_bytes:-65536}"
 collect_default_product_refs
+infer_default_launch_context
 
 action_timings_payload="null"
 if [[ -n "$action_timings_json" ]]; then
@@ -431,6 +660,8 @@ if [[ -n "$action_timings_json" ]]; then
   fi
   action_timings_payload="$(jq -c '.' "$action_timings_json")"
 fi
+session_summary_payload="$(session_summary_payload_from_inputs)"
+launch_proof_paths_payload="$(launch_proof_paths_payload_from_inputs)"
 
 warm_count=0
 warm_total=0
@@ -454,6 +685,20 @@ fi
 
 cache_storage_mib=$(awk -v bytes="$cache_storage_bytes" 'BEGIN { printf "%.2f", bytes / 1048576 }')
 warm_rerun_succeeded=$([[ -n "$warm1_seconds" ]] && echo true || echo false)
+cold_setup_seconds=""
+warm1_setup_seconds=""
+if [[ -n "$cold_seconds" && -n "$cold_build_seconds" ]]; then
+  cold_setup_seconds="$(awk -v total="$cold_seconds" -v build="$cold_build_seconds" 'BEGIN { v = total - build; if (v < 0) { v = 0 }; printf "%.0f", v }')"
+fi
+if [[ -n "$warm1_seconds" && -n "$warm1_build_seconds" ]]; then
+  warm1_setup_seconds="$(awk -v total="$warm1_seconds" -v build="$warm1_build_seconds" 'BEGIN { v = total - build; if (v < 0) { v = 0 }; printf "%.0f", v }')"
+fi
+rolling_first_build_seconds=""
+rolling_warm_seconds=""
+if [[ "$lane" == "rolling" ]]; then
+  rolling_first_build_seconds="$cold_seconds"
+  rolling_warm_seconds="$warm1_seconds"
+fi
 sample_valid=true
 reporting_mode="comparative"
 reporting_reason=""
@@ -466,35 +711,25 @@ rolling_reseed_kind=""
 tiny_metadata_churn=false
 reseed_reason=""
 if [[ "$lane" == "rolling" && "$strategy" == "boringcache" ]]; then
-  if [[ -n "$oci_new_blob_count" ]]; then
-    if (( oci_new_blob_count > reseed_new_blob_threshold )); then
-      rolling_reseed="true"
+  if [[ -n "$cache_import_status" || -n "$oci_new_blob_count" ]]; then
+    if [[ -n "$cache_import_status" && "$cache_import_status" != "ok" ]]; then
+      rolling_reseed="null"
       steady_state_candidate="false"
-      if [[ "$cache_import_status" == "ok" && -n "$oci_new_blob_bytes" ]] \
-        && (( oci_new_blob_count <= tiny_metadata_churn_max_blobs )) \
-        && (( oci_new_blob_bytes <= tiny_metadata_churn_max_bytes )); then
-        rolling_reseed_kind="tiny_metadata_churn"
-        tiny_metadata_churn=true
-        blob_word="blobs"
-        if (( oci_new_blob_count == 1 )); then
-          blob_word="blob"
-        fi
-        reseed_reason="${oci_new_blob_count} tiny OCI metadata ${blob_word} changed (${oci_new_blob_bytes} bytes)"
-      else
-        rolling_reseed_kind="blob_reseed"
-        reseed_reason="${oci_new_blob_count} new OCI blobs exceeded threshold ${reseed_new_blob_threshold}"
-        if [[ -n "$oci_new_blob_bytes" ]]; then
-          reseed_reason+=" (${oci_new_blob_bytes} bytes)"
-        fi
-      fi
+      rolling_reseed_kind="cache_import_not_ok"
+      reseed_reason="rolling cache import status was ${cache_import_status}"
     else
       rolling_reseed="false"
       steady_state_candidate="true"
       rolling_reseed_kind="none"
-      reseed_reason="new OCI blob count did not exceed threshold ${reseed_new_blob_threshold}"
+      if [[ -n "$oci_new_blob_count" ]]; then
+        reseed_reason="rolling imported prior cache; ${oci_new_blob_count} new OCI blobs recorded as continuous-commit cache updates"
+        if [[ -n "$oci_new_blob_bytes" ]]; then
+          reseed_reason+=" (${oci_new_blob_bytes} bytes)"
+        fi
+      else
+        reseed_reason="rolling imported prior cache; OCI upload diagnostics unavailable"
+      fi
     fi
-  else
-    reseed_reason="OCI upload diagnostics unavailable"
   fi
 fi
 
@@ -505,14 +740,6 @@ if [[ "$strategy" == "boringcache" && "$lane" == "fresh" && -n "$warm1_seconds" 
   reporting_reason="fresh_warm_cache_import_not_ok"
   reporting_note="Fresh BoringCache warm reruns require a usable cache import; treat this run as invalid."
   validity_reason="fresh_warm_cache_import_not_ok"
-elif [[ "$strategy" == "boringcache" && "$lane" == "rolling" && "$rolling_reseed" == "true" && "$rolling_reseed_kind" == "tiny_metadata_churn" ]]; then
-  reporting_mode="investigation_only"
-  reporting_reason="rolling_metadata_churn"
-  reporting_note="Rolling Docker uploaded only tiny OCI metadata after a successful import; keep it separate from blob reseeds and do not treat it as steady-state parity."
-elif [[ "$strategy" == "boringcache" && "$lane" == "rolling" && "$rolling_reseed" == "true" ]]; then
-  reporting_mode="investigation_only"
-  reporting_reason="rolling_reseed"
-  reporting_note="Rolling Docker reseeds are first-build investigation samples, not steady-state parity."
 elif [[ "$strategy" == "boringcache" && "$lane" == "rolling" && -n "$cache_import_status" && "$cache_import_status" != "ok" ]]; then
   reporting_mode="investigation_only"
   reporting_reason="rolling_cache_import_not_ok"
@@ -566,10 +793,32 @@ cat > "$json_path" <<JSON
     "web_revision": $(json_string_or_null "$web_revision"),
     "api_url": $(json_string_or_null "$api_url")
   },
+  "workspace": $(json_string_or_null "$workspace"),
+  "cache_tag": $(json_string_or_null "$cache_tag"),
+  "run_uid": $(json_string_or_null "$run_uid"),
+  "mode": $(json_string_or_null "$mode"),
+  "adapter": $(json_string_or_null "$adapter"),
+  "docker_cache_from_refs": $(json_array_from_csv_or_null "$docker_cache_from_refs"),
+  "docker_cache_import_ready": $(json_bool_or_null "$docker_cache_import_ready"),
+  "http_transport": $(json_string_or_null "$http_transport"),
+  "http2_enabled": $(json_bool_or_null "$http2_enabled"),
+  "oci_stream_through_min_bytes": $(json_num_or_null "$oci_stream_through_min_bytes"),
+  "restore_result": $(json_string_or_null "$restore_result"),
+  "save_result": $(json_string_or_null "$save_result"),
+  "publish_status": $(json_string_or_null "$publish_status"),
+  "session_summary": $session_summary_payload,
+  "reporting_url": $(json_string_or_null "$reporting_url"),
+  "launch_proof_paths": $launch_proof_paths_payload,
   "generated_at": "$generated_at",
   "runs": {
     "cold_seconds": $(json_num_or_null "$cold_seconds"),
-    "warm1_seconds": $(json_num_or_null "$warm1_seconds")
+    "cold_build_seconds": $(json_num_or_null "$cold_build_seconds"),
+    "cold_restore_or_setup_seconds": $(json_num_or_null "$cold_setup_seconds"),
+    "warm1_seconds": $(json_num_or_null "$warm1_seconds"),
+    "warm1_build_seconds": $(json_num_or_null "$warm1_build_seconds"),
+    "warm1_restore_or_setup_seconds": $(json_num_or_null "$warm1_setup_seconds"),
+    "rolling_first_build_seconds": $(json_num_or_null "$rolling_first_build_seconds"),
+    "rolling_warm_seconds": $(json_num_or_null "$rolling_warm_seconds")
   },
   "speed": {
     "warm_average_seconds": $warm_avg,
@@ -664,6 +913,18 @@ JSON
   if [[ "$warm_avg" != "null" ]]; then
     echo "| Warm avg | ${warm_avg}s (${warm_improvement_pct}% faster) |"
   fi
+  if [[ -n "$cold_build_seconds" ]]; then
+    echo "| Cold build-only | ${cold_build_seconds}s |"
+  fi
+  if [[ -n "$cold_setup_seconds" ]]; then
+    echo "| Cold restore/setup | ${cold_setup_seconds}s |"
+  fi
+  if [[ -n "$warm1_build_seconds" ]]; then
+    echo "| Warm build-only | ${warm1_build_seconds}s |"
+  fi
+  if [[ -n "$warm1_setup_seconds" ]]; then
+    echo "| Warm restore/setup | ${warm1_setup_seconds}s |"
+  fi
   echo "| Reporting mode | ${reporting_mode} |"
   if [[ "$sample_valid" != "true" ]]; then
     echo "| Validity reason | ${validity_reason} |"
@@ -692,6 +953,12 @@ JSON
   if [[ -n "$oci_hydration_policy" ]]; then
     echo "| OCI hydration | ${oci_hydration_policy} |"
   fi
+  if [[ -n "$http_transport" ]]; then
+    echo "| HTTP transport | ${http_transport} |"
+  fi
+  if [[ -n "$oci_stream_through_min_bytes" ]]; then
+    echo "| OCI stream-through min bytes | ${oci_stream_through_min_bytes} |"
+  fi
   if [[ -n "$oci_body_remote_fetches" ]]; then
     echo "| OCI remote body fetches | ${oci_body_remote_fetches} |"
   fi
@@ -711,7 +978,7 @@ JSON
     echo "| New OCI blob bytes | ${oci_new_blob_bytes} |"
   fi
   if [[ "$rolling_reseed" != "null" ]]; then
-    rolling_label="steady-state candidate"
+    rolling_label="continuous-commit update"
     if [[ "$rolling_reseed" == "true" ]]; then
       if [[ "$tiny_metadata_churn" == "true" ]]; then
         rolling_label="tiny metadata churn"

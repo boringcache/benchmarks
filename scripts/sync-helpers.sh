@@ -65,13 +65,27 @@ if (( ${#helpers[@]} == 0 )); then
   exit 2
 fi
 
-declare -A only_set=()
+only_parts=()
 if [[ -n "$only" ]]; then
-  IFS=',' read -ra parts <<< "$only"
-  for part in "${parts[@]}"; do
-    only_set["$part"]=1
-  done
+  IFS=',' read -ra only_parts <<< "$only"
 fi
+
+selected_repo() {
+  local repo_name="$1"
+  local selected
+
+  if (( ${#only_parts[@]} == 0 )); then
+    return 0
+  fi
+
+  for selected in "${only_parts[@]}"; do
+    if [[ "$repo_name" == "$selected" ]]; then
+      return 0
+    fi
+  done
+
+  return 1
+}
 
 mode_label="dry-run"
 if (( apply == 1 )); then
@@ -94,7 +108,7 @@ for helper in "${helpers[@]}"; do
     [[ -d "$repo" ]] || continue
     repo_name="$(basename "$repo")"
 
-    if (( ${#only_set[@]} > 0 )) && [[ -z "${only_set[$repo_name]+x}" ]]; then
+    if ! selected_repo "$repo_name"; then
       continue
     fi
 
