@@ -995,7 +995,15 @@ def lane_report_row(entry, lane)
   comparison = lane_entry.fetch("comparison", {})
   actions = comparison.fetch("actions_cache", {})
   boringcache = comparison.fetch("boringcache", {})
-  reporting = comparison.fetch("reporting", {})
+  bc_classification = boringcache["classification"] || {}
+  sample_count = comparison["sample_count"].to_i
+  reporting = BenchmarkReporting.normalize_summary(
+    lane: lane,
+    category: entry["category"],
+    reporting: comparison.fetch("reporting", {}),
+    classification: bc_classification,
+    sample_count: sample_count
+  )
   scenarios = [
     ["cold", note_metric_label(lane, "cold"), actions["cold_seconds"], boringcache["cold_seconds"]],
     ["warm", note_metric_label(lane, "warm"), actions["warm1_seconds"], boringcache["warm1_seconds"]],
@@ -1031,9 +1039,7 @@ def lane_report_row(entry, lane)
   notes << "tiny run; setup dominates" if tiny_run
   notes << "storage unavailable" if comparison["storage_saved_bytes"].nil?
   notes << "BC used more storage" if comparison["storage_saved_bytes"].to_f < 0
-  sample_count = comparison["sample_count"].to_i
   notes << "#{sample_count} paired samples" if sample_count > 1
-  bc_classification = boringcache["classification"] || {}
   invalid_count = bc_classification["invalid_count"].to_i
   bootstrap_count = (bc_classification["rolling_bootstrap_count"] || bc_classification["rolling_reseed_count"]).to_i
   cache_import_status = bc_classification["cache_import_status"].to_s
@@ -1289,6 +1295,37 @@ def write_detail_files(entries, generated_at:)
   end
 end
 
+def normalize_lane_reporting!(lane_entry, category:)
+  comparison = lane_entry["comparison"]
+  return unless comparison.is_a?(Hash)
+
+  boringcache = comparison["boringcache"].is_a?(Hash) ? comparison["boringcache"] : {}
+  classification = boringcache["classification"].is_a?(Hash) ? boringcache["classification"] : {}
+  sample_count = comparison["sample_count"].to_i
+  reporting = BenchmarkReporting.normalize_summary(
+    lane: lane_entry["lane"],
+    category: category,
+    reporting: comparison["reporting"].is_a?(Hash) ? comparison["reporting"] : {},
+    classification: classification,
+    sample_count: sample_count
+  )
+
+  comparison["reporting"] = reporting
+  lane_entry["headline_scenario"] = reporting["headline_scenario"] || lane_entry["headline_scenario"]
+  lane_entry["headline_label"] = reporting["headline_label"] ||
+    BenchmarkReporting.headline_label(lane: lane_entry["lane"], scenario: lane_entry["headline_scenario"])
+end
+
+def normalize_entry_reporting(entry)
+  normalized = JSON.parse(JSON.generate(entry))
+  category = normalized["category"]
+  normalize_lane_reporting!(normalized, category: category)
+  normalized.fetch("lanes", {}).each_value do |lane_entry|
+    normalize_lane_reporting!(lane_entry, category: category)
+  end
+  normalized
+end
+
 def main
   existing_entries = load_existing_entries
   entries = []
@@ -1343,6 +1380,7 @@ def main
   end
 
   generated_at = Time.now.utc.iso8601
+  entries = entries.map { |entry| normalize_entry_reporting(entry) }
   write_index(entries, generated_at: generated_at)
   write_detail_files(entries, generated_at: generated_at)
   report = write_report(entries, generated_at: generated_at)

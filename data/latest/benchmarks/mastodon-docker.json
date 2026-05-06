@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T13:08:12Z",
+  "generated_at": "2026-05-06T14:44:36Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh isolated",
@@ -305,7 +305,8 @@
           "run_total_improvement_pct": 8.77,
           "storage_improvement_pct": 90.44,
           "storage_saved_bytes": 10274881531
-        }
+        },
+        "headline_label": "Warm Build"
       },
       "rolling": {
         "lane": "rolling",
@@ -454,11 +455,11 @@
           "reporting": {
             "comparative": false,
             "status": "investigation_only",
-            "reason": "rolling_reseed",
+            "reason": "rolling_cache_bootstrap",
             "headline_scenario": "first_build",
-            "headline_label": "First Build",
-            "result_text": "reseeded 2/2",
-            "note": "Rolling Docker reseeds are first-build investigation samples, not steady-state parity."
+            "headline_label": "Commit Build",
+            "result_text": "cache bootstrap 2/2",
+            "note": "Rolling cache was unavailable for 2/2 BoringCache samples; those samples populated the rolling cache and are excluded from parity claims."
           },
           "warm_improvement_pct": null,
           "warm_build_improvement_pct": null,
@@ -467,8 +468,10 @@
           "run_total_improvement_pct": 14.39,
           "storage_improvement_pct": 89.81,
           "storage_saved_bytes": 9572483202
-        }
+        },
+        "headline_label": "Commit Build"
       }
-    }
+    },
+    "headline_label": "Warm Build"
   }
 }
