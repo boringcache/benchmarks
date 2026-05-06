@@ -28,6 +28,9 @@ class PublishIndexTest < Minitest::Test
     assert_equal PRODUCT_REFS, snapshot["product_refs"]
     assert_equal true, snapshot["product_refs_consistent"]
     assert_equal "metadata-only", snapshot.dig("oci", "hydration_policy")
+    assert_equal 152_000, snapshot.dig("startup_prefetch", "duration_ms")
+    assert_equal 100, snapshot.dig("startup_prefetch", "concurrency")
+    assert_equal "many_small_blobs_rtt_bound", snapshot.dig("startup_prefetch", "concurrency_reason")
     assert_equal 25, snapshot["cold_build_seconds"]
     assert_equal 5, snapshot["cold_restore_or_setup_seconds"]
     assert_equal 3, snapshot["warm1_build_seconds"]
@@ -48,7 +51,7 @@ class PublishIndexTest < Minitest::Test
     assert_equal "hit", snapshot["restore_result"]
     assert_equal "published", snapshot["save_result"]
     assert_equal "complete", snapshot["publish_status"]
-    assert_equal({ "schema" => "cache_session_summary.v2" }, snapshot["session_summary"])
+    assert_equal "cache_session_summary.v2", snapshot.dig("session_summary", "schema")
     assert_equal "https://app.boringcache.com/workspaces/boringcache/benchmarks/cache/sessions/gh-123-1", snapshot["reporting_url"]
   end
 
@@ -64,6 +67,9 @@ class PublishIndexTest < Minitest::Test
     assert_equal "v1.12.86", averaged.dig("product_refs", "cli_version")
     assert_equal false, averaged["product_refs_consistent"]
     assert_equal "metadata-only", averaged.dig("oci", "hydration_policy")
+    assert_equal 152_000, averaged.dig("startup_prefetch", "duration_ms")
+    assert_equal 100, averaged.dig("startup_prefetch", "concurrency")
+    assert_equal "many_small_blobs_rtt_bound", averaged.dig("startup_prefetch", "concurrency_reason")
     assert_equal 25, averaged["cold_build_seconds"]
     assert_equal 3, averaged["warm1_build_seconds"]
     assert_equal 30, averaged["rolling_first_build_seconds"]
@@ -98,7 +104,7 @@ class PublishIndexTest < Minitest::Test
               "reason" => "rolling_cache_bootstrap",
               "headline_label" => "Commit Build",
               "result_text" => "cache bootstrap 1/3",
-              "note" => "Rolling cache was unavailable for 1/3 BoringCache samples; those samples populated the rolling cache and are excluded from parity claims."
+              "note" => "Rolling cache was unavailable for 1/3 samples; those samples populated the rolling cache and are excluded from parity claims."
             }
           )
         }
@@ -110,7 +116,7 @@ class PublishIndexTest < Minitest::Test
     assert_includes report, "### Fresh"
     assert_includes report, "### Rolling"
     assert_includes report, "| Benchmark | Metric | actions/cache | BoringCache | Result | Storage Delta | Notes |"
-    assert_includes report, "| Hugo | Commit Build | 0m 10s | 0m 8s | cache bootstrap 1/3 | 200.00 B (20.0%) | tiny run; setup dominates; 3 paired samples; BC cache bootstrap 1/3; Rolling cache was unavailable"
+    assert_includes report, "| Hugo | Commit Build | 0m 10s | 0m 8s | cache bootstrap 1/3 | 200.00 B (20.0%) | tiny run; setup dominates; 3 paired samples; cache bootstrap 1/3; Rolling cache was unavailable"
     refute_includes report, "Fresh Isolated"
     refute_includes report, "Rolling Historical"
     refute_includes report, "First Build"
@@ -132,7 +138,35 @@ class PublishIndexTest < Minitest::Test
     assert_equal "nx", metrics[:adapter]
   end
 
+  def test_comparative_entries_exclude_actions_cache_bootstrap
+    steady = paired_entry(
+      ac_classification: { "reporting_mode" => "comparative" },
+      bc_classification: { "reporting_mode" => "comparative" }
+    )
+    bootstrap = paired_entry(
+      ac_classification: {
+        "reporting_mode" => "investigation_only",
+        "reporting_reason" => "rolling_cache_import_not_ok",
+        "cache_import_status" => "actions_cache_miss"
+      },
+      bc_classification: { "reporting_mode" => "comparative" }
+    )
+
+    measured = comparative_entries([bootstrap, steady], lane: "rolling", category: "nodejs")
+
+    assert_equal [steady], measured
+  end
+
   private
+
+  def paired_entry(ac_classification:, bc_classification:)
+    {
+      "comparison" => {
+        "actions_cache" => { "classification" => ac_classification },
+        "boringcache" => { "classification" => bc_classification }
+      }
+    }
+  end
 
   def lane_entry(lane:, scenario:, label:, reporting: { "comparative" => true }, sample_count: 1, classification: {})
     {
@@ -212,7 +246,19 @@ class PublishIndexTest < Minitest::Test
       "restore_result" => "hit",
       "save_result" => "published",
       "cache_session_summary" => {
-        "schema" => "cache_session_summary.v2"
+        "schema" => "cache_session_summary.v2",
+        "startup_prefetch" => {
+          "startup_prefetch_duration_ms" => 152_000,
+          "startup_prefetch_target_blobs" => 16_555,
+          "startup_prefetch_target_bytes" => 865_049_699,
+          "startup_prefetch_concurrency" => 100,
+          "startup_prefetch_initial_concurrency" => 20,
+          "startup_prefetch_final_concurrency" => 100,
+          "startup_prefetch_max_observed_concurrency" => 100,
+          "startup_prefetch_concurrency_reason" => "many_small_blobs_rtt_bound",
+          "startup_prefetch_retries" => 1,
+          "startup_prefetch_failures" => 0
+        }
       },
       "reporting_url" => "https://app.boringcache.com/workspaces/boringcache/benchmarks/cache/sessions/gh-123-1"
     }
@@ -243,6 +289,11 @@ class PublishIndexTest < Minitest::Test
       "oci" => {
         "hydration_policy" => "metadata-only",
         "new_blob_count" => 0
+      },
+      "startup_prefetch" => {
+        "duration_ms" => 152_000,
+        "concurrency" => 100,
+        "concurrency_reason" => "many_small_blobs_rtt_bound"
       }
     }
   end

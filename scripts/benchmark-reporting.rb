@@ -19,7 +19,6 @@ module BenchmarkReporting
 
   def rolling_bootstrap_investigation?(lane:, category:, classification:)
     lane.to_s == "rolling" &&
-      category.to_s == "docker" &&
       rolling_bootstrap_count(classification).positive?
   end
 
@@ -160,11 +159,14 @@ module BenchmarkReporting
     end
 
     reporting_reason = most_common(classifications.map { |classification| normalize_reason(classification["reporting_reason"]) })
-    bootstrap_count = classifications.count { |classification| classification["rolling_reseed"] == true }
+    bootstrap_count = classifications.count do |classification|
+      classification["rolling_reseed"] == true ||
+        %w[rolling_cache_bootstrap rolling_cache_import_not_ok].include?(normalize_reason(classification["reporting_reason"]))
+    end
     reporting_note = case reporting_reason
     when "rolling_cache_bootstrap"
       if sample_count > 1 && bootstrap_count.positive?
-        "Rolling cache was unavailable for #{bootstrap_count}/#{sample_count} BoringCache samples; those samples populated the rolling cache and are excluded from parity claims."
+        "Rolling cache was unavailable for #{bootstrap_count}/#{sample_count} samples; those samples populated the rolling cache and are excluded from parity claims."
       else
         "Rolling cache was unavailable; this sample populated the rolling cache and is excluded from parity claims."
       end
@@ -243,7 +245,7 @@ module BenchmarkReporting
     when "rolling_cache_bootstrap"
       bootstrap_count = rolling_bootstrap_count(classification)
       if sample_count.to_i > 1 && bootstrap_count.positive?
-        "Rolling cache was unavailable for #{bootstrap_count}/#{sample_count} BoringCache samples; those samples populated the rolling cache and are excluded from parity claims."
+        "Rolling cache was unavailable for #{bootstrap_count}/#{sample_count} samples; those samples populated the rolling cache and are excluded from parity claims."
       else
         "Rolling cache was unavailable; this sample populated the rolling cache and is excluded from parity claims."
       end
