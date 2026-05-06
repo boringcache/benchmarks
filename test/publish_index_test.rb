@@ -86,6 +86,12 @@ class PublishIndexTest < Minitest::Test
             lane: "rolling",
             scenario: "cold",
             label: "Commit Build",
+            sample_count: 3,
+            classification: {
+              "reporting_reason" => "rolling_reseed",
+              "rolling_reseed_count" => 1,
+              "rolling_bootstrap_count" => 1
+            },
             reporting: {
               "comparative" => false,
               "status" => "investigation_only",
@@ -104,7 +110,7 @@ class PublishIndexTest < Minitest::Test
     assert_includes report, "### Fresh"
     assert_includes report, "### Rolling"
     assert_includes report, "| Benchmark | Metric | actions/cache | BoringCache | Result | Storage Delta | Notes |"
-    assert_includes report, "| Hugo | Commit Build | 0m 10s | 0m 8s | cache bootstrap 1/3 | 200.00 B (20.0%) | tiny run; setup dominates; Rolling cache was unavailable"
+    assert_includes report, "| Hugo | Commit Build | 0m 10s | 0m 8s | cache bootstrap 1/3 | 200.00 B (20.0%) | tiny run; setup dominates; 3 paired samples; BC cache bootstrap 1/3; Rolling cache was unavailable"
     refute_includes report, "Fresh Isolated"
     refute_includes report, "Rolling Historical"
     refute_includes report, "First Build"
@@ -113,7 +119,7 @@ class PublishIndexTest < Minitest::Test
 
   private
 
-  def lane_entry(lane:, scenario:, label:, reporting: { "comparative" => true })
+  def lane_entry(lane:, scenario:, label:, reporting: { "comparative" => true }, sample_count: 1, classification: {})
     {
       "lane" => lane,
       "name" => "Hugo",
@@ -124,7 +130,7 @@ class PublishIndexTest < Minitest::Test
       "before_seconds" => 10,
       "after_seconds" => 8,
       "comparison" => {
-        "sample_count" => 1,
+        "sample_count" => sample_count,
         "reporting" => reporting,
         "storage_saved_bytes" => 200,
         "storage_improvement_pct" => 20.0,
@@ -137,7 +143,7 @@ class PublishIndexTest < Minitest::Test
           "cold_seconds" => 8,
           "warm1_seconds" => 8,
           "run_total_seconds" => 8,
-          "classification" => {}
+          "classification" => classification
         }
       }
     }

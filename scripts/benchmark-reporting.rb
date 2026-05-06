@@ -83,6 +83,28 @@ module BenchmarkReporting
     end
   end
 
+  def normalize_summary(lane:, category:, reporting:, classification:, sample_count:)
+    summary = reporting.is_a?(Hash) ? reporting.dup : reporting_summary(lane: lane, category: category, classification: classification, sample_count: sample_count)
+    return summary if summary.fetch("comparative", true)
+
+    reason = normalize_reason(summary["reason"] || summary["reporting_reason"] || classification["reporting_reason"] || classification["validity_reason"])
+    status = summary["status"].to_s
+    mode = reporting_mode(lane: lane, category: category, classification: classification)
+
+    if status == "investigation_only" || mode == "investigation_only"
+      summary.merge(
+        "status" => "investigation_only",
+        "reason" => reason,
+        "headline_scenario" => investigation_headline_scenario(reason: reason, lane: lane),
+        "headline_label" => investigation_headline_label(reason: reason, lane: lane),
+        "result_text" => investigation_result_text(reason: reason, classification: classification, sample_count: sample_count),
+        "note" => investigation_note(reason: reason, lane: lane, classification: classification, sample_count: sample_count)
+      )
+    else
+      summary.merge("reason" => reason)
+    end
+  end
+
   def scenario_pair(scenario:, actions_cold:, boringcache_cold:, actions_warm:, boringcache_warm:, actions_run_total:, boringcache_run_total:)
     case scenario.to_s
     when "warm"

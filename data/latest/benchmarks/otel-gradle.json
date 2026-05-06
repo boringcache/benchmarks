@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T13:08:12Z",
+  "generated_at": "2026-05-06T14:44:36Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh isolated",
@@ -303,7 +303,8 @@
           "run_total_improvement_pct": -1.45,
           "storage_improvement_pct": 2.52,
           "storage_saved_bytes": 21405989
-        }
+        },
+        "headline_label": "Warm Build"
       },
       "rolling": {
         "lane": "rolling",
@@ -453,8 +454,10 @@
           "run_total_improvement_pct": -32.79,
           "storage_improvement_pct": 72.92,
           "storage_saved_bytes": 2107013414
-        }
+        },
+        "headline_label": "Commit Build"
       }
-    }
+    },
+    "headline_label": "Warm Build"
   }
 }

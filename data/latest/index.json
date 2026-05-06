@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T13:08:12Z",
+  "generated_at": "2026-05-06T14:44:36Z",
   "entries": [
     {
       "lane": "fresh",
@@ -330,7 +330,8 @@
             "run_total_improvement_pct": -3.05,
             "storage_improvement_pct": 94.73,
             "storage_saved_bytes": 6405799595
-          }
+          },
+          "headline_label": "Cold Build"
         },
         "rolling": {
           "lane": "rolling",
@@ -491,11 +492,11 @@
             "reporting": {
               "comparative": false,
               "status": "investigation_only",
-              "reason": "rolling_reseed",
+              "reason": "rolling_cache_bootstrap",
               "headline_scenario": "first_build",
-              "headline_label": "First Build",
-              "result_text": "reseeded 1/3",
-              "note": "Rolling Docker reseeds are first-build investigation samples, not steady-state parity."
+              "headline_label": "Commit Build",
+              "result_text": "cache bootstrap 1/3",
+              "note": "Rolling cache was unavailable for 1/3 BoringCache samples; those samples populated the rolling cache and are excluded from parity claims."
             },
             "warm_improvement_pct": null,
             "warm_build_improvement_pct": null,
@@ -504,9 +505,11 @@
             "run_total_improvement_pct": -23.17,
             "storage_improvement_pct": 94.73,
             "storage_saved_bytes": 6405800436
-          }
+          },
+          "headline_label": "Commit Build"
         }
-      }
+      },
+      "headline_label": "Cold Build"
     },
     {
       "lane": "fresh",
@@ -837,7 +840,8 @@
             "run_total_improvement_pct": 14.05,
             "storage_improvement_pct": 78.46,
             "storage_saved_bytes": 8877034536
-          }
+          },
+          "headline_label": "Cold Build"
         },
         "rolling": {
           "lane": "rolling",
@@ -1000,9 +1004,9 @@
               "status": "investigation_only",
               "reason": "rolling_cache_import_not_ok",
               "headline_scenario": "first_build",
-              "headline_label": "First Build",
-              "result_text": "cache import ok",
-              "note": "Rolling BoringCache did not find a prior rolling-scope OCI import. This run bootstraps the next continuous-commit sample and is not comparable as a cache-hit sample."
+              "headline_label": "Commit Build",
+              "result_text": "cache import unavailable",
+              "note": "Rolling cache import was unavailable, so this sample populated the rolling cache and is excluded from parity claims."
             },
             "warm_improvement_pct": null,
             "warm_build_improvement_pct": null,
@@ -1011,9 +1015,11 @@
             "run_total_improvement_pct": 3.6,
             "storage_improvement_pct": 76.65,
             "storage_saved_bytes": 7999401625
-          }
+          },
+          "headline_label": "Commit Build"
         }
-      }
+      },
+      "headline_label": "Cold Build"
     },
     {
       "lane": "fresh",
@@ -1320,7 +1326,8 @@
             "run_total_improvement_pct": 8.77,
             "storage_improvement_pct": 90.44,
             "storage_saved_bytes": 10274881531
-          }
+          },
+          "headline_label": "Warm Build"
         },
         "rolling": {
           "lane": "rolling",
@@ -1469,11 +1476,11 @@
             "reporting": {
               "comparative": false,
               "status": "investigation_only",
-              "reason": "rolling_reseed",
+              "reason": "rolling_cache_bootstrap",
               "headline_scenario": "first_build",
-              "headline_label": "First Build",
-              "result_text": "reseeded 2/2",
-              "note": "Rolling Docker reseeds are first-build investigation samples, not steady-state parity."
+              "headline_label": "Commit Build",
+              "result_text": "cache bootstrap 2/2",
+              "note": "Rolling cache was unavailable for 2/2 BoringCache samples; those samples populated the rolling cache and are excluded from parity claims."
             },
             "warm_improvement_pct": null,
             "warm_build_improvement_pct": null,
@@ -1482,9 +1489,11 @@
             "run_total_improvement_pct": 14.39,
             "storage_improvement_pct": 89.81,
             "storage_saved_bytes": 9572483202
-          }
+          },
+          "headline_label": "Commit Build"
         }
-      }
+      },
+      "headline_label": "Warm Build"
     },
     {
       "lane": "fresh",
@@ -1815,7 +1824,8 @@
             "run_total_improvement_pct": 38.83,
             "storage_improvement_pct": 39.95,
             "storage_saved_bytes": 4388183060
-          }
+          },
+          "headline_label": "Cold Build"
         },
         "rolling": {
           "lane": "rolling",
@@ -1983,9 +1993,11 @@
             "run_total_improvement_pct": 23.76,
             "storage_improvement_pct": 47.97,
             "storage_saved_bytes": 5827714454
-          }
+          },
+          "headline_label": "Commit Build"
         }
-      }
+      },
+      "headline_label": "Cold Build"
     },
     {
       "lane": "fresh",
@@ -2290,7 +2302,8 @@
             "run_total_improvement_pct": -1.45,
             "storage_improvement_pct": 2.52,
             "storage_saved_bytes": 21405989
-          }
+          },
+          "headline_label": "Warm Build"
         },
         "rolling": {
           "lane": "rolling",
@@ -2440,9 +2453,11 @@
             "run_total_improvement_pct": -32.79,
             "storage_improvement_pct": 72.92,
             "storage_saved_bytes": 2107013414
-          }
+          },
+          "headline_label": "Commit Build"
         }
-      }
+      },
+      "headline_label": "Warm Build"
     },
     {
       "lane": "fresh",
@@ -2747,7 +2762,8 @@
             "run_total_improvement_pct": -6.07,
             "storage_improvement_pct": 0.33,
             "storage_saved_bytes": 3287534
-          }
+          },
+          "headline_label": "Cold Build"
         },
         "rolling": {
           "lane": "rolling",
@@ -2897,9 +2913,11 @@
             "run_total_improvement_pct": 7.26,
             "storage_improvement_pct": 65.02,
             "storage_saved_bytes": 2247672024
-          }
+          },
+          "headline_label": "Workflow Total"
         }
-      }
+      },
+      "headline_label": "Cold Build"
     },
     {
       "lane": "fresh",
@@ -3204,7 +3222,8 @@
             "run_total_improvement_pct": -5.24,
             "storage_improvement_pct": -182.91,
             "storage_saved_bytes": -513334773
-          }
+          },
+          "headline_label": "Cold Build"
         },
         "rolling": {
           "lane": "rolling",
@@ -3354,9 +3373,11 @@
             "run_total_improvement_pct": -343.8,
             "storage_improvement_pct": -26.47,
             "storage_saved_bytes": -193228691
-          }
+          },
+          "headline_label": "Commit Build"
         }
-      }
+      },
+      "headline_label": "Cold Build"
     },
     {
       "lane": "fresh",
@@ -3661,7 +3682,8 @@
             "run_total_improvement_pct": -0.14,
             "storage_improvement_pct": 1.87,
             "storage_saved_bytes": 55670703
-          }
+          },
+          "headline_label": "Cold Build"
         },
         "rolling": {
           "lane": "rolling",
@@ -3811,9 +3833,11 @@
             "run_total_improvement_pct": 2.32,
             "storage_improvement_pct": 64.26,
             "storage_saved_bytes": 7896730485
-          }
+          },
+          "headline_label": "Workflow Total"
         }
-      }
+      },
+      "headline_label": "Cold Build"
     },
     {
       "lane": "fresh",
@@ -4118,7 +4142,8 @@
             "run_total_improvement_pct": 2.0,
             "storage_improvement_pct": -2.4,
             "storage_saved_bytes": -17340000
-          }
+          },
+          "headline_label": "Cold Build"
         },
         "rolling": {
           "lane": "rolling",
@@ -4268,9 +4293,11 @@
             "run_total_improvement_pct": 17.21,
             "storage_improvement_pct": 91.54,
             "storage_saved_bytes": 7999968986
-          }
+          },
+          "headline_label": "Workflow Total"
         }
-      }
+      },
+      "headline_label": "Cold Build"
     }
   ]
 }

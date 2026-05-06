@@ -668,7 +668,15 @@ def lane_report_row(entry, lane)
   comparison = current.fetch("comparison", {})
   actions = comparison.fetch("actions_cache", {})
   boringcache = comparison.fetch("boringcache", {})
-  reporting = comparison.fetch("reporting", {})
+  bc_classification = boringcache["classification"] || {}
+  sample_count = comparison["sample_count"].to_i
+  reporting = BenchmarkReporting.normalize_summary(
+    lane: lane,
+    category: entry["category"],
+    reporting: comparison.fetch("reporting", {}),
+    classification: bc_classification,
+    sample_count: sample_count
+  )
   scenarios = [
     ["cold", note_metric_label(lane, "cold"), actions["cold_seconds"], boringcache["cold_seconds"]],
     ["warm", note_metric_label(lane, "warm"), actions["warm1_seconds"], boringcache["warm1_seconds"]],
@@ -704,7 +712,6 @@ def lane_report_row(entry, lane)
   notes << "tiny run; setup dominates" if tiny_run
   notes << "storage unavailable" if comparison["storage_saved_bytes"].nil?
   notes << "BC used more storage" if comparison["storage_saved_bytes"].to_f.negative?
-  bc_classification = boringcache["classification"] || {}
   cache_import_status = bc_classification["cache_import_status"].to_s
   bc_oci = boringcache["oci"] || {}
   if bc_classification["rolling_reseed"] == true

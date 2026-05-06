@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T13:08:12Z",
+  "generated_at": "2026-05-06T14:44:36Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh isolated",
@@ -303,7 +303,8 @@
           "run_total_improvement_pct": 2.0,
           "storage_improvement_pct": -2.4,
           "storage_saved_bytes": -17340000
-        }
+        },
+        "headline_label": "Cold Build"
       },
       "rolling": {
         "lane": "rolling",
@@ -453,8 +454,10 @@
           "run_total_improvement_pct": 17.21,
           "storage_improvement_pct": 91.54,
           "storage_saved_bytes": 7999968986
-        }
+        },
+        "headline_label": "Workflow Total"
       }
-    }
+    },
+    "headline_label": "Cold Build"
   }
 }
