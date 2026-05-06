@@ -221,11 +221,11 @@ def normalize_storage_sample(bytes, source)
 end
 
 def lane_label(lane)
-  lane.to_s == "rolling" ? "Rolling historical" : "Fresh isolated"
+  lane.to_s == "rolling" ? "Rolling" : "Fresh"
 end
 
 def first_build_label(lane)
-  lane.to_s == "rolling" ? "First build after upstream sync" : "Cold build"
+  lane.to_s == "rolling" ? "Commit build" : "Cold build"
 end
 
 def warm_steady_seconds(metrics)
@@ -607,6 +607,7 @@ def build_entry(benchmark:, lane:, actions_data:, boringcache_data:)
     "category" => benchmark.fetch("category"),
     "step" => benchmark.fetch("step"),
     "headline_scenario" => reporting["headline_scenario"] || headline_scenario,
+    "headline_label" => reporting["headline_label"] || BenchmarkReporting.headline_label(lane: lane, scenario: reporting["headline_scenario"] || headline_scenario),
     "before" => seconds_to_text(before_value),
     "after" => seconds_to_text(after_value),
     "before_seconds" => before_value.round(2),
@@ -669,19 +670,19 @@ def lane_report_row(entry, lane)
   boringcache = comparison.fetch("boringcache", {})
   reporting = comparison.fetch("reporting", {})
   scenarios = [
-    ["cold", actions["cold_seconds"], boringcache["cold_seconds"]],
-    ["warm", actions["warm1_seconds"], boringcache["warm1_seconds"]],
-    ["run total", actions["run_total_seconds"], boringcache["run_total_seconds"]]
+    ["cold", note_metric_label(lane, "cold"), actions["cold_seconds"], boringcache["cold_seconds"]],
+    ["warm", note_metric_label(lane, "warm"), actions["warm1_seconds"], boringcache["warm1_seconds"]],
+    ["run_total", note_metric_label(lane, "run_total"), actions["run_total_seconds"], boringcache["run_total_seconds"]]
   ]
-  headline_scenario = current["headline_scenario"].to_s.tr("_", " ")
-  tiny_run = scenarios.all? { |_label, before_value, after_value| before_value.nil? || after_value.nil? || [before_value, after_value].compact.max.to_f <= 60 }
+  headline_scenario = current["headline_scenario"].to_s
+  tiny_run = scenarios.all? { |_scenario, _label, before_value, after_value| before_value.nil? || after_value.nil? || [before_value, after_value].compact.max.to_f <= 60 }
   faster_notes = []
   slower_notes = []
 
   if reporting.fetch("comparative", true)
-    scenarios.each do |label, before_value, after_value|
+    scenarios.each do |scenario, label, before_value, after_value|
       next if before_value.nil? || after_value.nil?
-      next if label == headline_scenario
+      next if scenario == headline_scenario
 
       case timing_result_bucket(before_value, after_value)
       when :faster
@@ -710,9 +711,9 @@ def lane_report_row(entry, lane)
     new_blob_count = bc_oci["new_blob_count"] || "unknown"
     new_blob_bytes = bc_oci["new_blob_bytes"]
     suffix = new_blob_bytes.nil? ? "" : " / #{bytes_to_text(new_blob_bytes)}"
-    notes << "BC reseed: #{new_blob_count} new OCI blobs#{suffix}"
+    notes << "BC cache bootstrap: #{new_blob_count} new OCI blobs#{suffix}"
   elsif bc_classification["steady_state_candidate"] == true
-    notes << "BC steady-state candidate"
+    notes << "BC rolling cache import ok"
   end
   notes << "BC cache import #{cache_import_status}" if !cache_import_status.empty? && cache_import_status != "ok"
 
@@ -728,13 +729,20 @@ def lane_report_row(entry, lane)
 
   {
     benchmark: entry.fetch("name"),
-    scenario: reporting["headline_label"] || headline_scenario.split.map(&:capitalize).join(" "),
+    scenario: current["headline_label"] || reporting["headline_label"] || BenchmarkReporting.headline_label(lane: lane, scenario: current["headline_scenario"]),
     actions: current["before"],
     boringcache: current["after"],
     result: reporting.fetch("comparative", true) ? timing_result_text(current["before_seconds"], current["after_seconds"]) : reporting["result_text"],
     storage: storage_summary_text(comparison),
     notes: notes.empty? ? "—" : notes.join("; ")
   }
+end
+
+def note_metric_label(lane, scenario)
+  return "commit build" if lane.to_s == "rolling" && scenario.to_s == "cold"
+  return "workflow total" if scenario.to_s == "run_total"
+
+  scenario.to_s.tr("_", " ")
 end
 
 def raw_row(entry, lane)
@@ -810,7 +818,7 @@ def build_markdown(entries, generated_at:, format:)
         "### #{lane_label(lane).split.map(&:capitalize).join(' ')}",
         "",
         markdown_table(
-          ["Benchmark", "Headline", "actions/cache", "BoringCache", "Result", "Storage Saved", "Notes"],
+          ["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "Storage Delta", "Notes"],
           rows.map { |row| [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage], row[:notes]] }
         ),
         ""

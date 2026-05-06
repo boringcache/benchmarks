@@ -286,7 +286,7 @@ def result_text(before_value, after_value)
   delta.positive? ? "#{delta.round}% faster" : "#{delta.abs.round}% slower"
 end
 
-def rolling_reseed_investigation?(row)
+def rolling_bootstrap_investigation?(row)
   row.dig("reporting", "status") == "investigation_only"
 end
 
@@ -356,7 +356,7 @@ def aggregate_pairs(pairs)
     ac_export = average(actions.map { |snapshot| metric(snapshot, "docker_cache_export_seconds") })
     bc_export = average(boringcache.map { |snapshot| metric(snapshot, "docker_cache_export_seconds") })
     bc_new_blobs = average(boringcache.map { |snapshot| snapshot.dig("oci", "new_blob_count") })
-    reseeds = boringcache.count { |snapshot| snapshot.dig("classification", "rolling_reseed") == true }
+    bootstraps = boringcache.count { |snapshot| snapshot.dig("classification", "rolling_reseed") == true }
     reporting_entries = entries.map { |entry| entry.dig("comparison", "reporting") || {} }
     invalid_count = reporting_entries.count { |reporting| reporting["status"] == "invalid" }
     investigation_count = reporting_entries.count { |reporting| reporting["status"] == "investigation_only" }
@@ -389,7 +389,7 @@ def aggregate_pairs(pairs)
         "avg_storage_bytes" => bc_storage,
         "avg_docker_export_seconds" => bc_export,
         "avg_oci_new_blob_count" => bc_new_blobs,
-        "reseed_count" => reseeds
+        "cache_bootstrap_count" => bootstraps
       },
       "reporting" => {
         "status" => reporting_status,
@@ -423,7 +423,7 @@ def build_report(aggregates, cohort)
     rows = aggregates.select { |row| row.fetch("lane") == lane }.map do |row|
       cold_result = if invalid_sample?(row)
         row.dig("reporting", "result_text") || "invalid sample"
-      elsif rolling_reseed_investigation?(row)
+      elsif rolling_bootstrap_investigation?(row)
         row.dig("reporting", "result_text") || "investigation only"
       else
         result_text(row.dig("actions_cache", "avg_cold_seconds"), row.dig("boringcache", "avg_cold_seconds"))
@@ -445,15 +445,15 @@ def build_report(aggregates, cohort)
             row.dig("actions_cache", "avg_storage_bytes") - row.dig("boringcache", "avg_storage_bytes")
           end
         ),
-        row.dig("boringcache", "reseed_count").to_s
+        row.dig("boringcache", "cache_bootstrap_count").to_s
       ]
     end
     next if rows.empty?
 
-    sections << "## #{lane == 'fresh' ? 'Fresh Isolated' : 'Rolling Historical'}"
+    sections << "## #{lane == 'fresh' ? 'Fresh' : 'Rolling'}"
     sections << ""
     sections << markdown_table(
-      ["Benchmark", "Category", "Pairs", "AC Cold", "BC Cold", "Cold Result", "AC Warm", "BC Warm", "AC Total", "BC Total", "Avg Storage Saved", "BC Reseeds"],
+      ["Benchmark", "Category", "Pairs", "AC Cold", "BC Cold", "Cold Result", "AC Warm", "BC Warm", "AC Total", "BC Total", "Avg Storage Delta", "BC Cache Bootstraps"],
       rows
     )
     sections << ""
@@ -462,7 +462,7 @@ def build_report(aggregates, cohort)
   docker_rows = aggregates.select { |row| row.fetch("category") == "docker" }.map do |row|
     export_result = if invalid_sample?(row)
       row.dig("reporting", "result_text") || "invalid sample"
-    elsif rolling_reseed_investigation?(row)
+    elsif rolling_bootstrap_investigation?(row)
       row.dig("reporting", "result_text") || "investigation only"
     else
       result_text(row.dig("actions_cache", "avg_docker_export_seconds"), row.dig("boringcache", "avg_docker_export_seconds"))
@@ -476,14 +476,14 @@ def build_report(aggregates, cohort)
       seconds_text(row.dig("boringcache", "avg_docker_export_seconds")),
       export_result,
       row.dig("boringcache", "avg_oci_new_blob_count")&.round(1)&.to_s || "—",
-      row.dig("boringcache", "reseed_count").to_s
+      row.dig("boringcache", "cache_bootstrap_count").to_s
     ]
   end
   if docker_rows.any?
     sections << "## Docker Export Detail"
     sections << ""
     sections << markdown_table(
-      ["Benchmark", "Lane", "Pairs", "AC Export", "BC Export", "Export Result", "Avg BC New Blobs", "BC Reseeds"],
+      ["Benchmark", "Lane", "Pairs", "AC Export", "BC Export", "Export Result", "Avg BC New Blobs", "BC Cache Bootstraps"],
       docker_rows
     )
     sections << ""

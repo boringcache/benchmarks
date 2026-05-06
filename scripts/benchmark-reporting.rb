@@ -11,16 +11,16 @@ module BenchmarkReporting
     values.group_by(&:itself).max_by { |_, grouped| grouped.length }&.first
   end
 
-  def rolling_reseed_count(classification)
-    reseed_count = classification["rolling_reseed_count"]
-    reseed_count = 1 if reseed_count.nil? && classification["rolling_reseed"] == true
-    reseed_count.to_i
+  def rolling_bootstrap_count(classification)
+    bootstrap_count = classification["rolling_bootstrap_count"] || classification["rolling_reseed_count"]
+    bootstrap_count = 1 if bootstrap_count.nil? && classification["rolling_reseed"] == true
+    bootstrap_count.to_i
   end
 
-  def legacy_rolling_reseed_investigation?(lane:, category:, classification:)
+  def rolling_bootstrap_investigation?(lane:, category:, classification:)
     lane.to_s == "rolling" &&
       category.to_s == "docker" &&
-      rolling_reseed_count(classification).positive?
+      rolling_bootstrap_count(classification).positive?
   end
 
   def invalid_sample?(classification)
@@ -38,15 +38,24 @@ module BenchmarkReporting
     mode = classification["reporting_mode"].to_s
     return mode unless mode.empty?
     return "invalid" if invalid_sample?(classification)
-    return "investigation_only" if legacy_rolling_reseed_investigation?(lane: lane, category: category, classification: classification)
+    return "investigation_only" if rolling_bootstrap_investigation?(lane: lane, category: category, classification: classification)
 
     "comparative"
+  end
+
+  def normalize_reason(reason)
+    case reason.to_s
+    when "rolling_reseed"
+      "rolling_cache_bootstrap"
+    else
+      reason
+    end
   end
 
   def reporting_summary(lane:, category:, classification:, sample_count:)
     case reporting_mode(lane: lane, category: category, classification: classification)
     when "invalid"
-      reason = classification["validity_reason"] || classification["reporting_reason"] || "invalid_sample"
+      reason = normalize_reason(classification["validity_reason"] || classification["reporting_reason"] || "invalid_sample")
       {
         "comparative" => false,
         "status" => "invalid",
@@ -57,7 +66,7 @@ module BenchmarkReporting
         "note" => classification["reporting_note"] || invalid_note(reason: reason, lane: lane)
       }
     when "investigation_only"
-      reason = classification["reporting_reason"] || "investigation_only"
+      reason = normalize_reason(classification["reporting_reason"] || "investigation_only")
       {
         "comparative" => false,
         "status" => "investigation_only",
@@ -65,7 +74,9 @@ module BenchmarkReporting
         "headline_scenario" => investigation_headline_scenario(reason: reason, lane: lane),
         "headline_label" => investigation_headline_label(reason: reason, lane: lane),
         "result_text" => investigation_result_text(reason: reason, classification: classification, sample_count: sample_count),
-        "note" => classification["reporting_note"] || investigation_note(reason: reason, lane: lane)
+        "note" => investigation_note(reason: reason, lane: lane, classification: classification, sample_count: sample_count) ||
+          classification["reporting_note"] ||
+          "This sample is investigation-only."
       }
     else
       { "comparative" => true }
@@ -82,6 +93,28 @@ module BenchmarkReporting
       [actions_run_total, boringcache_run_total]
     else
       [nil, nil]
+    end
+  end
+
+  def headline_label(lane:, scenario:)
+    if lane.to_s == "rolling"
+      case scenario.to_s
+      when "run_total"
+        return "Workflow Total"
+      when "warm"
+        return "Warm Build"
+      else
+        return "Commit Build"
+      end
+    end
+
+    case scenario.to_s
+    when "warm"
+      "Warm Build"
+    when "run_total"
+      "Workflow Total"
+    else
+      "Cold Build"
     end
   end
 
@@ -104,6 +137,21 @@ module BenchmarkReporting
       end
     end
 
+    reporting_reason = most_common(classifications.map { |classification| normalize_reason(classification["reporting_reason"]) })
+    bootstrap_count = classifications.count { |classification| classification["rolling_reseed"] == true }
+    reporting_note = case reporting_reason
+    when "rolling_cache_bootstrap"
+      if sample_count > 1 && bootstrap_count.positive?
+        "Rolling cache was unavailable for #{bootstrap_count}/#{sample_count} BoringCache samples; those samples populated the rolling cache and are excluded from parity claims."
+      else
+        "Rolling cache was unavailable; this sample populated the rolling cache and is excluded from parity claims."
+      end
+    when "rolling_cache_import_not_ok"
+      "Rolling cache import was unavailable, so this sample populated the rolling cache and is excluded from parity claims."
+    else
+      most_common(classifications.map { |classification| classification["reporting_note"] })
+    end
+
     {
       "sample_count" => sample_count,
       "sample_valid_count" => classifications.count { |classification| classification["sample_valid"] != false },
@@ -117,11 +165,12 @@ module BenchmarkReporting
       else
         "comparative"
       end,
-      "reporting_reason" => most_common(classifications.map { |classification| classification["reporting_reason"] }),
-      "reporting_note" => most_common(classifications.map { |classification| classification["reporting_note"] }),
-      "validity_reason" => most_common(classifications.map { |classification| classification["validity_reason"] }),
+      "reporting_reason" => reporting_reason,
+      "reporting_note" => reporting_note,
+      "validity_reason" => most_common(classifications.map { |classification| normalize_reason(classification["validity_reason"]) }),
       "cache_import_status" => most_common(classifications.map { |classification| classification["cache_import_status"] }),
-      "rolling_reseed_count" => classifications.count { |classification| classification["rolling_reseed"] == true },
+      "rolling_bootstrap_count" => bootstrap_count,
+      "rolling_reseed_count" => bootstrap_count,
       "steady_state_candidate_count" => classifications.count { |classification| classification["steady_state_candidate"] == true }
     }
   end
@@ -133,9 +182,7 @@ module BenchmarkReporting
   end
 
   def invalid_headline_label(reason:, lane:)
-    return "Warm Build" if invalid_headline_scenario(reason: reason, lane: lane) == "warm"
-
-    "First Build"
+    headline_label(lane: lane, scenario: invalid_headline_scenario(reason: reason, lane: lane))
   end
 
   def invalid_note(reason:, lane:)
@@ -152,28 +199,32 @@ module BenchmarkReporting
   end
 
   def investigation_headline_label(reason:, lane:)
-    lane.to_s == "rolling" ? "First Build" : "Cold Build"
+    headline_label(lane: lane, scenario: investigation_headline_scenario(reason: reason, lane: lane))
   end
 
   def investigation_result_text(reason:, classification:, sample_count:)
     case reason.to_s
-    when "rolling_reseed"
-      reseed_count = rolling_reseed_count(classification)
-      sample_count.to_i > 1 ? "reseeded #{reseed_count}/#{sample_count}" : "reseeded"
+    when "rolling_cache_bootstrap"
+      bootstrap_count = rolling_bootstrap_count(classification)
+      sample_count.to_i > 1 ? "cache bootstrap #{bootstrap_count}/#{sample_count}" : "cache bootstrap"
     when "rolling_cache_import_not_ok"
-      status = classification["cache_import_status"] || "not ok"
-      "cache import #{status}"
+      "cache import unavailable"
     else
       "investigation only"
     end
   end
 
-  def investigation_note(reason:, lane:)
+  def investigation_note(reason:, lane:, classification: {}, sample_count: nil)
     case reason.to_s
-    when "rolling_reseed"
-      "Rolling Docker reseeds are first-build investigation samples, not steady-state parity."
+    when "rolling_cache_bootstrap"
+      bootstrap_count = rolling_bootstrap_count(classification)
+      if sample_count.to_i > 1 && bootstrap_count.positive?
+        "Rolling cache was unavailable for #{bootstrap_count}/#{sample_count} BoringCache samples; those samples populated the rolling cache and are excluded from parity claims."
+      else
+        "Rolling cache was unavailable; this sample populated the rolling cache and is excluded from parity claims."
+      end
     when "rolling_cache_import_not_ok"
-      "Rolling BoringCache seed completed without a usable cache import; treat this as investigation-only."
+      "Rolling cache import was unavailable, so this sample populated the rolling cache and is excluded from parity claims."
     else
       lane.to_s == "rolling" ? "This rolling sample is investigation-only." : "This sample is investigation-only."
     end
