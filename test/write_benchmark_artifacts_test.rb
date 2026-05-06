@@ -39,15 +39,26 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     assert_equal "rolling_bootstrap_or_cache_evicted", payload.dig("classification", "rolling_reseed_kind")
   end
 
+  def test_native_tool_labels_are_inferred_for_actions_cache_artifacts
+    payload = write_artifact(
+      benchmark: "storybook",
+      strategy: "actions-cache",
+      lane: "rolling"
+    )
+
+    assert_equal "nx", payload["mode"]
+    assert_equal "nx", payload["adapter"]
+  end
+
   private
 
-  def write_artifact(*extra_args)
+  def write_artifact(*extra_args, benchmark: "hugo", strategy: "boringcache", lane: "rolling")
     Dir.mktmpdir("bc-artifacts") do |dir|
       command = [
         SCRIPT,
-        "--benchmark", "hugo",
-        "--strategy", "boringcache",
-        "--lane", "rolling",
+        "--benchmark", benchmark,
+        "--strategy", strategy,
+        "--lane", lane,
         "--project-repo", "gohugoio/hugo",
         "--project-ref", "abc",
         "--cold-seconds", "10",
@@ -59,7 +70,7 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
 
       stdout, stderr, status = Open3.capture3(*command)
       assert status.success?, "artifact writer failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
-      JSON.parse(File.read(File.join(dir, "hugo-boringcache-rolling.json")))
+      JSON.parse(File.read(File.join(dir, "#{benchmark}-#{strategy}-#{lane}.json")))
     end
   end
 end
