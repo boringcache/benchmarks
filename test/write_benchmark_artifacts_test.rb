@@ -50,6 +50,45 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     assert_equal "nx", payload["adapter"]
   end
 
+  def test_startup_prefetch_fields_are_written
+    payload = write_artifact(
+      "--startup-prefetch-duration-ms", "152000",
+      "--startup-prefetch-target-blobs", "16555",
+      "--startup-prefetch-target-bytes", "865049699",
+      "--startup-prefetch-concurrency", "100",
+      "--startup-prefetch-initial-concurrency", "20",
+      "--startup-prefetch-final-concurrency", "100",
+      "--startup-prefetch-max-observed-concurrency", "100",
+      "--startup-prefetch-concurrency-reason", "many_small_blobs_rtt_bound",
+      "--startup-prefetch-retries", "2",
+      "--startup-prefetch-failures", "0"
+    )
+
+    assert_equal 152_000, payload.dig("startup_prefetch", "duration_ms")
+    assert_equal 16_555, payload.dig("startup_prefetch", "target_blobs")
+    assert_equal 865_049_699, payload.dig("startup_prefetch", "target_bytes")
+    assert_equal 100, payload.dig("startup_prefetch", "concurrency")
+    assert_equal 20, payload.dig("startup_prefetch", "initial_concurrency")
+    assert_equal 100, payload.dig("startup_prefetch", "final_concurrency")
+    assert_equal 100, payload.dig("startup_prefetch", "max_observed_concurrency")
+    assert_equal "many_small_blobs_rtt_bound", payload.dig("startup_prefetch", "concurrency_reason")
+    assert_equal 2, payload.dig("startup_prefetch", "retries")
+    assert_equal 0, payload.dig("startup_prefetch", "failures")
+  end
+
+  def test_actions_cache_rolling_miss_is_investigation_only
+    payload = write_artifact(
+      "--cache-import-status", "actions_cache_miss",
+      benchmark: "storybook",
+      strategy: "actions-cache",
+      lane: "rolling"
+    )
+
+    assert_equal "investigation_only", payload.dig("classification", "reporting_mode")
+    assert_equal "rolling_cache_import_not_ok", payload.dig("classification", "reporting_reason")
+    assert_equal "actions_cache_miss", payload.dig("classification", "cache_import_status")
+  end
+
   private
 
   def write_artifact(*extra_args, benchmark: "hugo", strategy: "boringcache", lane: "rolling")

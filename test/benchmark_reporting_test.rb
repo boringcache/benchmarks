@@ -21,7 +21,7 @@ class BenchmarkReportingTest < Minitest::Test
     assert_equal "rolling_cache_bootstrap", summary["reason"]
     assert_equal "Commit Build", summary["headline_label"]
     assert_equal "cache bootstrap 2/3", summary["result_text"]
-    assert_equal "Rolling cache was unavailable for 2/3 BoringCache samples; those samples populated the rolling cache and are excluded from parity claims.", summary["note"]
+    assert_equal "Rolling cache was unavailable for 2/3 samples; those samples populated the rolling cache and are excluded from parity claims.", summary["note"]
   end
 
   def test_rollup_keeps_legacy_count_and_adds_bootstrap_count
@@ -36,7 +36,7 @@ class BenchmarkReportingTest < Minitest::Test
 
     assert_equal "comparative", rollup["reporting_mode"]
     assert_equal "rolling_cache_bootstrap", rollup["reporting_reason"]
-    assert_equal "Rolling cache was unavailable for 1/2 BoringCache samples; those samples populated the rolling cache and are excluded from parity claims.", rollup["reporting_note"]
+    assert_equal "Rolling cache was unavailable for 1/2 samples; those samples populated the rolling cache and are excluded from parity claims.", rollup["reporting_note"]
     assert_equal 1, rollup["rolling_bootstrap_count"]
     assert_equal 1, rollup["rolling_reseed_count"]
   end

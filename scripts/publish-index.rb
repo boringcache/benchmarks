@@ -310,6 +310,25 @@ def session_summary_from(payload)
     payload.dig("diagnostics", "summary_json")
 end
 
+def startup_prefetch_from(payload, session_summary)
+  summary = session_summary.is_a?(Hash) && session_summary["startup_prefetch"].is_a?(Hash) ? session_summary["startup_prefetch"] : {}
+  direct = payload["startup_prefetch"].is_a?(Hash) ? payload["startup_prefetch"] : {}
+  raw = summary.merge(compact_hash(direct))
+
+  compact_hash(
+    "duration_ms" => parse_number(raw["duration_ms"] || raw["startup_prefetch_duration_ms"]),
+    "target_blobs" => parse_number(raw["target_blobs"] || raw["startup_prefetch_target_blobs"]),
+    "target_bytes" => parse_number(raw["target_bytes"] || raw["startup_prefetch_target_bytes"]),
+    "concurrency" => parse_number(raw["concurrency"] || raw["startup_prefetch_concurrency"]),
+    "initial_concurrency" => parse_number(raw["initial_concurrency"] || raw["startup_prefetch_initial_concurrency"]),
+    "final_concurrency" => parse_number(raw["final_concurrency"] || raw["startup_prefetch_final_concurrency"]),
+    "max_observed_concurrency" => parse_number(raw["max_observed_concurrency"] || raw["startup_prefetch_max_observed_concurrency"]),
+    "concurrency_reason" => raw["concurrency_reason"] || raw["startup_prefetch_concurrency_reason"],
+    "retries" => parse_number(raw["retries"] || raw["startup_prefetch_retries"]),
+    "failures" => parse_number(raw["failures"] || raw["startup_prefetch_failures"])
+  )
+end
+
 def launch_proof_paths_from(payload)
   paths = []
   paths.concat(Array(payload["proof_paths"]))
@@ -519,6 +538,7 @@ def extract_strategy_metrics(payload)
   classification = payload.fetch("classification", {})
   product_refs = normalized_product_refs(payload)
   session_summary = session_summary_from(payload)
+  startup_prefetch = startup_prefetch_from(payload, session_summary)
   summary_proxy = session_summary.is_a?(Hash) && session_summary["proxy"].is_a?(Hash) ? session_summary["proxy"] : {}
   proxy = payload["proxy"].is_a?(Hash) ? payload["proxy"] : {}
 
@@ -554,6 +574,7 @@ def extract_strategy_metrics(payload)
     storage_source: storage_source,
     docker_cache_import_seconds: parse_number(docker_cache["import_seconds"]),
     docker_cache_export_seconds: parse_number(docker_cache["export_seconds"]),
+    startup_prefetch: startup_prefetch,
     oci: oci,
     classification: classification,
     product_refs: product_refs,
@@ -713,6 +734,7 @@ def strategy_snapshot(data)
     "storage_source" => metrics[:storage_source],
     "docker_cache_import_seconds" => metrics[:docker_cache_import_seconds],
     "docker_cache_export_seconds" => metrics[:docker_cache_export_seconds],
+    "startup_prefetch" => metrics[:startup_prefetch],
     "oci" => metrics[:oci],
     "classification" => metrics[:classification],
     "product_refs" => metrics[:product_refs],
@@ -875,6 +897,25 @@ def average_oci_payload(snapshots)
   end
 end
 
+def average_startup_prefetch_payload(snapshots)
+  payloads = snapshots.map { |snapshot| snapshot["startup_prefetch"] || {} }
+  keys = payloads.flat_map(&:keys).uniq
+  return {} if keys.empty?
+
+  keys.each_with_object({}) do |key, acc|
+    if key == "concurrency_reason"
+      value = most_common(payloads.map { |payload| payload[key] })
+      acc[key] = value if value
+      next
+    end
+
+    values = payloads.map { |payload| parse_number(payload[key]) }.compact
+    next if values.empty?
+
+    acc[key] = average(values)
+  end
+end
+
 def most_common(values)
   values = values.compact.reject { |value| value.to_s.empty? }
   return nil if values.empty?
@@ -934,6 +975,8 @@ def average_snapshot(snapshots)
   hydration_policy = most_common(snapshots.map { |snapshot| snapshot.dig("oci", "hydration_policy") })
   oci_payload["hydration_policy"] = hydration_policy if hydration_policy
   averaged["oci"] = oci_payload if oci_payload.any?
+  startup_prefetch_payload = average_startup_prefetch_payload(snapshots)
+  averaged["startup_prefetch"] = startup_prefetch_payload if startup_prefetch_payload.any?
   storage_source = most_common(snapshots.map { |snapshot| snapshot["storage_source"] })
   averaged["storage_source"] = storage_source if storage_source
 
@@ -973,7 +1016,7 @@ end
 def average_lane_entries(entries, benchmark:, lane:)
   return nil if entries.empty?
 
-  classifications = entries.map { |entry| entry.dig("comparison", "boringcache", "classification") || {} }
+  classifications = entries.map { |entry| pair_classification(entry, lane: lane, category: benchmark["category"]) }
   all_classification = BenchmarkReporting.rollup_classification(
     lane: lane,
     category: benchmark["category"],
@@ -982,7 +1025,7 @@ def average_lane_entries(entries, benchmark:, lane:)
 
   measured_entries = comparative_entries(entries, lane: lane, category: benchmark["category"])
   measured_entries = entries if measured_entries.empty?
-  measured_classifications = measured_entries.map { |entry| entry.dig("comparison", "boringcache", "classification") || {} }
+  measured_classifications = measured_entries.map { |entry| pair_classification(entry, lane: lane, category: benchmark["category"]) }
   measured_classification = BenchmarkReporting.rollup_classification(
     lane: lane,
     category: benchmark["category"],
@@ -1080,9 +1123,23 @@ end
 
 def comparative_entries(entries, lane:, category:)
   entries.select do |entry|
-    classification = entry.dig("comparison", "boringcache", "classification") || {}
-    BenchmarkReporting.reporting_mode(lane: lane, category: category, classification: classification) == "comparative"
+    BenchmarkReporting.reporting_mode(
+      lane: lane,
+      category: category,
+      classification: pair_classification(entry, lane: lane, category: category)
+    ) == "comparative"
   end
+end
+
+def pair_classification(entry, lane:, category:)
+  classifications = [
+    entry.dig("comparison", "actions_cache", "classification"),
+    entry.dig("comparison", "boringcache", "classification")
+  ].compact
+
+  classifications.find do |classification|
+    BenchmarkReporting.reporting_mode(lane: lane, category: category, classification: classification) != "comparative"
+  end || entry.dig("comparison", "boringcache", "classification") || entry.dig("comparison", "actions_cache", "classification") || {}
 end
 
 def merge_lane_entries(entries_by_lane)
@@ -1159,11 +1216,11 @@ def lane_report_row(entry, lane)
     notes << "#{sample_count} steady samples; #{excluded_sample_count}/#{source_sample_count} bootstrap samples excluded"
   else
     notes << "#{sample_count} paired samples" if sample_count > 1
-    notes << "BC cache bootstrap #{bootstrap_count}/#{sample_count}" if sample_count > 1 && bootstrap_count.positive?
+    notes << "cache bootstrap #{bootstrap_count}/#{sample_count}" if sample_count > 1 && bootstrap_count.positive?
   end
 
-  notes << "BC invalid #{invalid_count}/#{sample_count}" if sample_count > 1 && invalid_count.positive?
-  notes << "BC cache import #{cache_import_status}" if !cache_import_status.empty? && cache_import_status != "ok"
+  notes << "invalid #{invalid_count}/#{sample_count}" if sample_count > 1 && invalid_count.positive?
+  notes << "cache import #{cache_import_status}" if !cache_import_status.empty? && cache_import_status != "ok"
   notes << reporting["note"] if reporting["note"]
 
   {
@@ -1246,7 +1303,7 @@ def build_report(entries, generated_at:)
     "",
     "Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.",
     "",
-    "Rows use the latest #{PAIR_COUNT} same-commit AC/BC pairs when enough samples are available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling Docker cache-bootstrap samples are excluded from comparative rows when steady samples exist.",
+    "Rows use the latest #{PAIR_COUNT} same-commit AC/BC pairs when enough samples are available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling cache-bootstrap samples are excluded from comparative rows when steady samples exist.",
     ""
   ].join("\n")
 end
