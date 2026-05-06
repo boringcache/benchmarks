@@ -1,6 +1,6 @@
 ## Latest Benchmark Report
 
-Generated: 2026-05-06 15:45 UTC
+Generated: 2026-05-06 15:51 UTC
 
 ### Lane Coverage
 
@@ -26,7 +26,7 @@ Generated: 2026-05-06 15:45 UTC
 | Hugo Go | Cold Build | 1m 21s | 1m 20s | near tie | 452.40 MB more (-153.9%) | warm, workflow total slower; BC used more storage; 3 paired samples |
 | Immich | Cold Build | 8m 38s | 5m 8s | 41% faster | 7.55 GB (76.88%) | workflow total faster; 3 paired samples |
 | Mastodon | Cold Build | 11m 25s | 9m 27s | 17% faster | 9.34 GB (90.22%) | workflow total faster; 3 paired samples |
-| PostHog | Warm Build | 1m 56s | 0m 13s | 89% faster | 6.35 GB (50.9%) | cold, workflow total faster; 3 paired samples |
+| PostHog | Warm Build | 1m 56s | 0m 14s | 88% faster | 8.83 GB (59.0%) | cold, workflow total faster; 3 paired samples |
 | Storybook | Warm Build | 3m 30s | 0m 53s | 75% faster | 44.88 MB more (-6.15%) | BC used more storage; 3 paired samples |
 | OpenTelemetry Java | Warm Build | 3m 28s | 0m 56s | 73% faster | 20.41 MB (2.52%) | 3 paired samples |
 | Spring AI | Cold Build | 4m 6s | 4m 37s | 12% slower | 3.46 MB (0.36%) | workflow total slower; 3 paired samples |
@@ -42,7 +42,7 @@ Generated: 2026-05-06 15:45 UTC
 | Hugo Go | Commit Build | 0m 21s | 0m 53s | 158% slower | 226.95 MB (23.31%) | workflow total slower; 3 paired samples |
 | Immich | Commit Build | 6m 50s | 5m 12s | 24% faster | 7.40 GB (76.53%) | workflow total faster; 3 paired samples |
 | Mastodon | Commit Build | 3m 4s | 2m 39s | 14% faster | 8.94 GB (89.83%) | workflow total faster; 3 paired samples |
-| PostHog | Commit Build | 19m 6s | 12m 33s | 34% faster | 6.85 GB (53.5%) | workflow total faster; 3 paired samples |
+| PostHog | Commit Build | 20m 5s | 13m 21s | 34% faster | 8.72 GB (59.05%) | workflow total faster; 3 paired samples |
 | Storybook | Workflow Total | 3m 50s | 2m 46s | 28% faster | 793.40 MB (50.62%) | commit build faster; 3 paired samples |
 | OpenTelemetry Java | Commit Build | 0m 56s | 1m 25s | 52% slower | 1.96 GB (72.92%) | workflow total slower; 3 paired samples |
 | Spring AI | Workflow Total | 2m 9s | 2m 5s | 3% faster | 1.92 GB (59.72%) | 3 paired samples |
