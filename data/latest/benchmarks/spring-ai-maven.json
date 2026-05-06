@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-05-06T14:44:36Z",
+  "generated_at": "2026-05-06T14:52:47Z",
   "entry": {
     "lane": "fresh",
-    "lane_label": "Fresh isolated",
+    "lane_label": "Fresh",
     "first_build_label": "Cold build",
     "sample_count": 3,
     "benchmark": "spring-ai-maven",
@@ -14,6 +14,7 @@
     "category": "maven",
     "step": "Maven build (build-cache extension)",
     "headline_scenario": "cold",
+    "headline_label": "Cold Build",
     "before": "4m 28s",
     "after": "4m 35s",
     "before_seconds": 267.67,
@@ -134,6 +135,7 @@
           "reporting_note": null,
           "validity_reason": null,
           "cache_import_status": null,
+          "rolling_bootstrap_count": 0,
           "rolling_reseed_count": 0,
           "steady_state_candidate_count": 0
         }
@@ -157,7 +159,7 @@
     "lanes": {
       "fresh": {
         "lane": "fresh",
-        "lane_label": "Fresh isolated",
+        "lane_label": "Fresh",
         "first_build_label": "Cold build",
         "sample_count": 3,
         "benchmark": "spring-ai-maven",
@@ -169,6 +171,7 @@
         "category": "maven",
         "step": "Maven build (build-cache extension)",
         "headline_scenario": "cold",
+        "headline_label": "Cold Build",
         "before": "4m 28s",
         "after": "4m 35s",
         "before_seconds": 267.67,
@@ -289,6 +292,7 @@
               "reporting_note": null,
               "validity_reason": null,
               "cache_import_status": null,
+              "rolling_bootstrap_count": 0,
               "rolling_reseed_count": 0,
               "steady_state_candidate_count": 0
             }
@@ -303,13 +307,12 @@
           "run_total_improvement_pct": -6.07,
           "storage_improvement_pct": 0.33,
           "storage_saved_bytes": 3287534
-        },
-        "headline_label": "Cold Build"
+        }
       },
       "rolling": {
         "lane": "rolling",
-        "lane_label": "Rolling historical",
-        "first_build_label": "First build after upstream sync",
+        "lane_label": "Rolling",
+        "first_build_label": "Commit build",
         "sample_count": 3,
         "benchmark": "spring-ai-maven",
         "name": "Spring AI",
@@ -320,6 +323,7 @@
         "category": "maven",
         "step": "Maven build (build-cache extension)",
         "headline_scenario": "run_total",
+        "headline_label": "Workflow Total",
         "before": "2m 59s",
         "after": "2m 46s",
         "before_seconds": 179.0,
@@ -440,6 +444,7 @@
               "reporting_note": null,
               "validity_reason": null,
               "cache_import_status": null,
+              "rolling_bootstrap_count": 0,
               "rolling_reseed_count": 0,
               "steady_state_candidate_count": 0
             }
@@ -454,10 +459,8 @@
           "run_total_improvement_pct": 7.26,
           "storage_improvement_pct": 65.02,
           "storage_saved_bytes": 2247672024
-        },
-        "headline_label": "Workflow Total"
+        }
       }
-    },
-    "headline_label": "Cold Build"
+    }
   }
 }
