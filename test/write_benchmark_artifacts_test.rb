@@ -33,7 +33,7 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
 
     assert_equal "investigation_only", payload.dig("classification", "reporting_mode")
     assert_equal "rolling_cache_import_not_ok", payload.dig("classification", "reporting_reason")
-    assert_equal "cache_import_not_ok", payload.dig("classification", "rolling_reseed_kind")
+    assert_equal "rolling_bootstrap_or_cache_evicted", payload.dig("classification", "rolling_reseed_kind")
   end
 
   private
