@@ -1,6 +1,6 @@
 ## Latest Benchmark Report
 
-Generated: 2026-05-06 01:12 UTC
+Generated: 2026-05-06 05:41 UTC
 
 ### Lane Coverage
 
@@ -27,7 +27,7 @@ Generated: 2026-05-06 01:12 UTC
 | OpenTelemetry Java | Cold | 10m 53s | 10m 45s | near tie | 35.33 MB (4.28%) | warm, run total slower; 3 paired samples |
 | Spring AI | Cold | 4m 47s | 4m 23s | 8% faster | 165.07 MB more (-16.98%) | BC used more storage; 3 paired samples |
 | gRPC | Cold | 35m 25s | 34m 16s | 3% faster | 496.10 MB more (-185.37%) | warm slower; BC used more storage; 3 paired samples |
-| Zed | Run Total | 55m 47s | 55m 37s | near tie | 52.25 MB (1.84%) | warm slower; 3 paired samples |
+| Zed | Cold | 46m 44s | 49m 44s | 6% slower | 52.69 MB (1.86%) | warm slower; 3 paired samples |
 | n8n | Cold | 5m 18s | 5m 51s | 10% slower | 16.45 MB more (-2.39%) | warm, run total slower; BC used more storage; 3 paired samples |
 
 ### Rolling Historical
@@ -41,7 +41,7 @@ Generated: 2026-05-06 01:12 UTC
 | OpenTelemetry Java | Cold | 3m 17s | 7m 33s | 130% slower | 1.94 GB (71.16%) | run total slower; 3 paired samples |
 | Spring AI | Cold | 0m 41s | 0m 39s | near tie | 1.95 GB (60.6%) | 3 paired samples |
 | gRPC | Cold | 0m 38s | 2m 22s | 270% slower | 292.30 MB more (-47.46%) | run total slower; BC used more storage; 3 paired samples |
-| Zed | Cold | 33m 42s | 35m 58s | 7% slower | 493.35 MB more (-4.39%) | run total slower; BC used more storage; 3 paired samples |
+| Zed | Cold | 26m 11s | 26m 16s | near tie | 7.90 GB (69.02%) | 3 paired samples |
 | n8n | Run Total | 4m 13s | 3m 47s | 10% faster | 7.24 GB (91.31%) | cold slower; 3 paired samples |
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
