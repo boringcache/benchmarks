@@ -12,7 +12,7 @@
     "same_runner_rerun": "Repeat on the same machine or same job after clearing the tool's local output/cache directory. Proves behavior is not hidden by leftover build output.",
     "fresh_runner_rerun": "Repeat the same ref on a fresh runner without purging the product cache root. Proves remote restore/import works for a customer-like warm CI run.",
     "fresh_rerun_after_purge": "Purge the product cache root and repeat the fresh path. Proves the cold path is reproducible and catches one-off runner or setup flukes.",
-    "same_ref_rerun": "Run the same source ref and same workflow graph again without purge. Proves rolling steady-state behavior and avoids treating first reseed as parity.",
+    "same_ref_rerun": "Run the same source ref and same workflow graph again without purge. Proves rolling cache-import behavior and avoids treating cache bootstrap as parity.",
     "same_alias_two_writers": "Publish two immutable run refs that promote the same alias. Proves stale promotion is rejected while immutable run refs remain readable.",
     "archive_save_restore_delete_retire_cleanup": "Archive entry save, immediate restore, delete/retire, bounded cleanup, and post-retirement restore denial.",
     "cas_save_restore_retire_cleanup": "CAS entry save, immediate restore, retire, cleanup, and post-retirement restore denial.",
@@ -48,7 +48,7 @@
     "hard_cap_async_eviction": "Hard caps enqueue async eviction and explain retirement reason without corrupting cache state.",
     "downgrade_replication_byoc_blockers": "Downgrades block or explain replication and BYOC states that cannot fit the target plan.",
     "cache_session_summary_customer_safe": "Customer-safe session summaries are present and linkable from run evidence.",
-    "hit_miss_reason": "Hit, miss, partial hit, expected reseed, and failure reasons are legible without reading raw logs.",
+    "hit_miss_reason": "Hit, miss, partial hit, cache bootstrap, and failure reasons are legible without reading raw logs.",
     "backend_storage_tool_evidence": "Diagnostics separate CLI/action, backend API, storage, and adapter/tool evidence.",
     "datadog_slo_dashboard": "Launch SLO monitor and dashboard evidence is attached for the deployed revision.",
     "signup_to_first_cache_to_diagnostics": "A new user can sign up, connect, run first cache, and see proof/debug output."

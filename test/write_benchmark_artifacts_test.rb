@@ -20,6 +20,8 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     assert_nil payload.dig("classification", "reporting_reason")
     assert_equal false, payload.dig("classification", "rolling_reseed")
     assert_equal "none", payload.dig("classification", "rolling_reseed_kind")
+    assert_equal "Rolling", payload["lane_label"]
+    assert_equal "Commit build", payload["first_build_label"]
     assert_equal 10, payload.dig("runs", "rolling_first_build_seconds")
     assert_nil payload.dig("runs", "rolling_warm_seconds")
   end
@@ -33,6 +35,7 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
 
     assert_equal "investigation_only", payload.dig("classification", "reporting_mode")
     assert_equal "rolling_cache_import_not_ok", payload.dig("classification", "reporting_reason")
+    assert_equal "Rolling cache import was unavailable, so this sample populated the rolling cache and is excluded from parity claims.", payload.dig("classification", "reporting_note")
     assert_equal "rolling_bootstrap_or_cache_evicted", payload.dig("classification", "rolling_reseed_kind")
   end
 

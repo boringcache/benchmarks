@@ -75,7 +75,73 @@ class PublishIndexTest < Minitest::Test
     assert_equal 33_554_432, averaged["oci_stream_through_min_bytes"]
   end
 
+  def test_build_report_uses_current_lane_language
+    entries = [
+      {
+        "name" => "Hugo",
+        "lane" => "fresh",
+        "lanes" => {
+          "fresh" => lane_entry(lane: "fresh", scenario: "warm", label: "Warm Build"),
+          "rolling" => lane_entry(
+            lane: "rolling",
+            scenario: "cold",
+            label: "Commit Build",
+            reporting: {
+              "comparative" => false,
+              "status" => "investigation_only",
+              "reason" => "rolling_cache_bootstrap",
+              "headline_label" => "Commit Build",
+              "result_text" => "cache bootstrap 1/3",
+              "note" => "Rolling cache was unavailable for 1/3 BoringCache samples; those samples populated the rolling cache and are excluded from parity claims."
+            }
+          )
+        }
+      }
+    ]
+
+    report = build_report(entries, generated_at: "2026-05-06T10:00:00Z")
+
+    assert_includes report, "### Fresh"
+    assert_includes report, "### Rolling"
+    assert_includes report, "| Benchmark | Metric | actions/cache | BoringCache | Result | Storage Delta | Notes |"
+    assert_includes report, "| Hugo | Commit Build | 0m 10s | 0m 8s | cache bootstrap 1/3 | 200.00 B (20.0%) | tiny run; setup dominates; Rolling cache was unavailable"
+    refute_includes report, "Fresh Isolated"
+    refute_includes report, "Rolling Historical"
+    refute_includes report, "First Build"
+    refute_includes report, "Storage Saved"
+  end
+
   private
+
+  def lane_entry(lane:, scenario:, label:, reporting: { "comparative" => true })
+    {
+      "lane" => lane,
+      "name" => "Hugo",
+      "headline_scenario" => scenario,
+      "headline_label" => label,
+      "before" => "0m 10s",
+      "after" => "0m 8s",
+      "before_seconds" => 10,
+      "after_seconds" => 8,
+      "comparison" => {
+        "sample_count" => 1,
+        "reporting" => reporting,
+        "storage_saved_bytes" => 200,
+        "storage_improvement_pct" => 20.0,
+        "actions_cache" => {
+          "cold_seconds" => 10,
+          "warm1_seconds" => 10,
+          "run_total_seconds" => 10
+        },
+        "boringcache" => {
+          "cold_seconds" => 8,
+          "warm1_seconds" => 8,
+          "run_total_seconds" => 8,
+          "classification" => {}
+        }
+      }
+    }
+  end
 
   def raw_boringcache_artifact
     {

@@ -543,16 +543,16 @@ end
 def lane_label(lane)
   case lane.to_s
   when "rolling"
-    "Rolling historical"
+    "Rolling"
   else
-    "Fresh isolated"
+    "Fresh"
   end
 end
 
 def first_build_label(lane)
   case lane.to_s
   when "rolling"
-    "First build after upstream sync"
+    "Commit build"
   else
     "Cold build"
   end
@@ -748,6 +748,7 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:, lane:)
     "category" => benchmark["category"],
     "step" => benchmark["step"],
     "headline_scenario" => reporting["headline_scenario"] || headline_scenario,
+    "headline_label" => reporting["headline_label"] || BenchmarkReporting.headline_label(lane: lane, scenario: reporting["headline_scenario"] || headline_scenario),
     "before" => seconds_to_text(before_value),
     "after" => seconds_to_text(after_value),
     "before_seconds" => before_value.round(2),
@@ -941,6 +942,7 @@ def average_lane_entries(entries, benchmark:, lane:)
     "category" => benchmark["category"],
     "step" => benchmark["step"],
     "headline_scenario" => reporting["headline_scenario"] || headline_scenario,
+    "headline_label" => reporting["headline_label"] || BenchmarkReporting.headline_label(lane: lane, scenario: reporting["headline_scenario"] || headline_scenario),
     "before" => seconds_to_text(before_value),
     "after" => seconds_to_text(after_value),
     "before_seconds" => before_value.round(2),
@@ -995,19 +997,19 @@ def lane_report_row(entry, lane)
   boringcache = comparison.fetch("boringcache", {})
   reporting = comparison.fetch("reporting", {})
   scenarios = [
-    ["cold", actions["cold_seconds"], boringcache["cold_seconds"]],
-    ["warm", actions["warm1_seconds"], boringcache["warm1_seconds"]],
-    ["run total", actions["run_total_seconds"], boringcache["run_total_seconds"]]
+    ["cold", note_metric_label(lane, "cold"), actions["cold_seconds"], boringcache["cold_seconds"]],
+    ["warm", note_metric_label(lane, "warm"), actions["warm1_seconds"], boringcache["warm1_seconds"]],
+    ["run_total", note_metric_label(lane, "run_total"), actions["run_total_seconds"], boringcache["run_total_seconds"]]
   ]
-  headline_scenario = lane_entry["headline_scenario"].to_s.tr("_", " ")
-  tiny_run = scenarios.all? { |_label, before_value, after_value| before_value.nil? || after_value.nil? || [before_value, after_value].max <= 60 }
+  headline_scenario = lane_entry["headline_scenario"].to_s
+  tiny_run = scenarios.all? { |_scenario, _label, before_value, after_value| before_value.nil? || after_value.nil? || [before_value, after_value].max <= 60 }
   faster_notes = []
   slower_notes = []
 
   if reporting.fetch("comparative", true)
-    scenarios.each do |label, before_value, after_value|
+    scenarios.each do |scenario, label, before_value, after_value|
       next if before_value.nil? || after_value.nil?
-      next if label == headline_scenario
+      next if scenario == headline_scenario
 
       case timing_result_bucket(before_value, after_value)
       when :faster
@@ -1033,22 +1035,29 @@ def lane_report_row(entry, lane)
   notes << "#{sample_count} paired samples" if sample_count > 1
   bc_classification = boringcache["classification"] || {}
   invalid_count = bc_classification["invalid_count"].to_i
-  reseed_count = bc_classification["rolling_reseed_count"].to_i
+  bootstrap_count = (bc_classification["rolling_bootstrap_count"] || bc_classification["rolling_reseed_count"]).to_i
   cache_import_status = bc_classification["cache_import_status"].to_s
   notes << "BC invalid #{invalid_count}/#{sample_count}" if sample_count > 1 && invalid_count.positive?
-  notes << "BC reseeded #{reseed_count}/#{sample_count}" if sample_count > 1 && reseed_count.positive?
+  notes << "BC cache bootstrap #{bootstrap_count}/#{sample_count}" if sample_count > 1 && bootstrap_count.positive?
   notes << "BC cache import #{cache_import_status}" if !cache_import_status.empty? && cache_import_status != "ok"
   notes << reporting["note"] if reporting["note"]
 
   {
     benchmark: entry.fetch("name"),
-    scenario: reporting["headline_label"] || headline_scenario.split.map(&:capitalize).join(" "),
+    scenario: lane_entry["headline_label"] || reporting["headline_label"] || BenchmarkReporting.headline_label(lane: lane, scenario: lane_entry["headline_scenario"]),
     actions: lane_entry["before"],
     boringcache: lane_entry["after"],
     result: reporting.fetch("comparative", true) ? timing_result_text(lane_entry["before_seconds"], lane_entry["after_seconds"]) : reporting["result_text"],
     storage: storage_summary_text(comparison),
     notes: notes.empty? ? "—" : notes.join("; ")
   }
+end
+
+def note_metric_label(lane, scenario)
+  return "commit build" if lane.to_s == "rolling" && scenario.to_s == "cold"
+  return "workflow total" if scenario.to_s == "run_total"
+
+  scenario.to_s.tr("_", " ")
 end
 
 def coverage_cell(entry, lane)
@@ -1103,17 +1112,17 @@ def build_report(entries, generated_at:)
     "",
     markdown_table(["Benchmark", "Fresh", "Rolling"], coverage_rows),
     "",
-    "### Fresh Isolated",
+    "### Fresh",
     "",
-    markdown_table(["Benchmark", "Headline", "actions/cache", "BoringCache", "Result", "Storage Saved", "Notes"], fresh_rows),
+    markdown_table(["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "Storage Delta", "Notes"], fresh_rows),
     "",
-    "### Rolling Historical",
+    "### Rolling",
     "",
-    markdown_table(["Benchmark", "Headline", "actions/cache", "BoringCache", "Result", "Storage Saved", "Notes"], rolling_rows),
+    markdown_table(["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "Storage Delta", "Notes"], rolling_rows),
     "",
     "Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.",
     "",
-    "Rows use the latest #{PAIR_COUNT} same-commit AC/BC pairs when enough samples are available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling Docker reseeds or cache-import misses render as investigation-only.",
+    "Rows use the latest #{PAIR_COUNT} same-commit AC/BC pairs when enough samples are available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling Docker cache-import misses render as cache-bootstrap samples excluded from parity claims.",
     ""
   ].join("\n")
 end
