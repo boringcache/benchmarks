@@ -27,6 +27,14 @@ BENCHMARKS = [
     "step" => "Docker build (Go)"
   },
   {
+    "benchmark" => "hugo-go",
+    "name" => "Hugo Go",
+    "repo" => "gohugoio/hugo",
+    "source_repo" => "boringcache/benchmark-hugo-go",
+    "category" => "go",
+    "step" => "Go build (native build cache)"
+  },
+  {
     "benchmark" => "immich",
     "name" => "Immich",
     "repo" => "immich-app/immich",
@@ -50,6 +58,14 @@ BENCHMARKS = [
     "source_repo" => "boringcache/benchmark-posthog",
     "category" => "docker",
     "step" => "Docker build (full stack)"
+  },
+  {
+    "benchmark" => "storybook",
+    "name" => "Storybook",
+    "repo" => "storybookjs/storybook",
+    "source_repo" => "boringcache/benchmark-storybook",
+    "category" => "nodejs",
+    "step" => "Nx build (Yarn monorepo)"
   },
   {
     "benchmark" => "otel-gradle",
@@ -320,9 +336,15 @@ def fetch_run(repo:, run_id:)
 end
 
 def lane_artifact_names(benchmark_id:, strategy:, lane:)
-  names = ["benchmark-#{benchmark_id}-#{strategy}-#{lane}"]
-  names << "benchmark-#{benchmark_id}-#{strategy}" if lane == "fresh"
-  names
+  Array(benchmark_id).flat_map do |id|
+    names = ["benchmark-#{id}-#{strategy}-#{lane}"]
+    names << "benchmark-#{id}-#{strategy}" if lane == "fresh"
+    names
+  end
+end
+
+def benchmark_artifact_ids(benchmark)
+  [benchmark.fetch("benchmark"), *Array(benchmark["aliases"])].uniq
 end
 
 def artifact_name_for_run(repo:, run_id:, benchmark_id:, strategy:, lane:)
@@ -366,7 +388,7 @@ def download_strategy_data(benchmark:, lane:, strategy:, run_id:, cache_dir:)
   artifact_name = artifact_name_for_run(
     repo: repo,
     run_id: run_id,
-    benchmark_id: benchmark.fetch("benchmark"),
+    benchmark_id: benchmark_artifact_ids(benchmark),
     strategy: strategy,
     lane: lane
   )

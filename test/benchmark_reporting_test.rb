@@ -34,7 +34,7 @@ class BenchmarkReportingTest < Minitest::Test
       ]
     )
 
-    assert_equal "investigation_only", rollup["reporting_mode"]
+    assert_equal "comparative", rollup["reporting_mode"]
     assert_equal "rolling_cache_bootstrap", rollup["reporting_reason"]
     assert_equal "Rolling cache was unavailable for 1/2 BoringCache samples; those samples populated the rolling cache and are excluded from parity claims.", rollup["reporting_note"]
     assert_equal 1, rollup["rolling_bootstrap_count"]

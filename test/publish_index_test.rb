@@ -117,6 +117,21 @@ class PublishIndexTest < Minitest::Test
     refute_includes report, "Storage Saved"
   end
 
+  def test_strategy_metrics_infer_nx_mode_for_legacy_storybook_artifacts
+    metrics = extract_strategy_metrics(
+      "benchmark" => "storybook",
+      "strategy" => "boringcache",
+      "mode" => "boringcache",
+      "runs" => {},
+      "speed" => {},
+      "cache" => { "storage_bytes" => 0 },
+      "classification" => {}
+    )
+
+    assert_equal "nx", metrics[:mode]
+    assert_equal "nx", metrics[:adapter]
+  end
+
   private
 
   def lane_entry(lane:, scenario:, label:, reporting: { "comparative" => true }, sample_count: 1, classification: {})
