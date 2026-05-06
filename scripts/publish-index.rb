@@ -17,6 +17,7 @@ MAX_CMD_RETRIES = ENV.fetch("BENCHMARKS_GH_RETRIES", "3").to_i
 RUN_HISTORY_LIMIT = ENV.fetch("BENCHMARKS_GH_RUN_LIMIT", "100").to_i
 PAIR_COUNT = ENV.fetch("BENCHMARKS_PAIR_COUNT", "3").to_i
 CMD_TIMEOUT_SECONDS = ENV.fetch("BENCHMARKS_CMD_TIMEOUT", "120").to_i
+PRESERVE_STALE_ENTRIES = ENV.fetch("BENCHMARKS_PRESERVE_STALE", "false") == "true"
 LANE_IDS = %w[fresh rolling].freeze
 README_REPORT_START = "<!-- benchmark-report:start -->"
 README_REPORT_END = "<!-- benchmark-report:end -->"
@@ -36,6 +37,18 @@ BENCHMARKS = [
     "boringcache_workflow" => "Hugo - BoringCache"
   },
   {
+    "benchmark" => "hugo-go",
+    "name" => "Hugo Go",
+    "logo" => "hugo",
+    "repo" => "gohugoio/hugo",
+    "source_repo" => "boringcache/benchmark-hugo-go",
+    "public" => true,
+    "category" => "go",
+    "step" => "Go build (native build cache)",
+    "actions_workflow" => "Hugo Go - Actions Cache",
+    "boringcache_workflow" => "Hugo Go - BoringCache"
+  },
+  {
     "benchmark" => "immich",
     "name" => "Immich",
     "logo" => "immich",
@@ -49,6 +62,7 @@ BENCHMARKS = [
   },
   {
     "benchmark" => "mastodon-docker",
+    "aliases" => ["mastodon"],
     "name" => "Mastodon",
     "logo" => "mastodon",
     "repo" => "mastodon/mastodon",
@@ -70,6 +84,18 @@ BENCHMARKS = [
     "step" => "Docker build (full stack)",
     "actions_workflow" => "PostHog - Actions Cache",
     "boringcache_workflow" => "PostHog - BoringCache"
+  },
+  {
+    "benchmark" => "storybook",
+    "name" => "Storybook",
+    "logo" => "storybook",
+    "repo" => "storybookjs/storybook",
+    "source_repo" => "boringcache/benchmark-storybook",
+    "public" => true,
+    "category" => "nodejs",
+    "step" => "Nx build (Yarn monorepo)",
+    "actions_workflow" => "Storybook - Actions Cache",
+    "boringcache_workflow" => "Storybook - BoringCache"
   },
   {
     "benchmark" => "otel-gradle",
@@ -149,6 +175,12 @@ def run_cmd(*args)
     end
     raise e
   end
+end
+
+def require_gh!
+  return if system("gh", "--version", out: File::NULL, err: File::NULL)
+
+  raise "GitHub CLI `gh` is required on PATH to publish fresh benchmark data; refusing to reuse stale aggregate entries"
 end
 
 def capture_cmd(*args)
@@ -351,19 +383,26 @@ end
 def benchmark_artifact_name(repo:, run_id:, benchmark_id:, strategy:)
   output = run_cmd("gh", "api", "repos/#{repo}/actions/runs/#{run_id}/artifacts")
   artifacts = JSON.parse(output).fetch("artifacts", [])
+  benchmark_ids = Array(benchmark_id)
 
   artifact = artifacts.find do |item|
     name = item["name"].to_s
-    !item["expired"] && name.start_with?("benchmark-#{benchmark_id}-#{strategy}")
+    !item["expired"] && benchmark_ids.any? { |id| name.start_with?("benchmark-#{id}-#{strategy}") }
   end
 
   artifact && artifact["name"]
 end
 
 def lane_artifact_names(benchmark_id:, strategy:, lane:)
-  names = ["benchmark-#{benchmark_id}-#{strategy}-#{lane}"]
-  names << "benchmark-#{benchmark_id}-#{strategy}" if lane == "fresh"
-  names
+  Array(benchmark_id).flat_map do |id|
+    names = ["benchmark-#{id}-#{strategy}-#{lane}"]
+    names << "benchmark-#{id}-#{strategy}" if lane == "fresh"
+    names
+  end
+end
+
+def benchmark_artifact_ids(benchmark)
+  [benchmark.fetch("benchmark"), *Array(benchmark["aliases"])].uniq
 end
 
 def benchmark_artifact_name_for_lane(repo:, run_id:, benchmark_id:, strategy:, lane:)
@@ -495,6 +534,10 @@ def extract_strategy_metrics(payload)
     parse_number(cache["storage_bytes"]),
     cache["storage_source"]
   )
+  raw_mode = payload["mode"] || cache["mode"]
+  mode = raw_mode.nil? || raw_mode == payload["strategy"] ? inferred_mode(payload) : raw_mode
+  raw_adapter = payload["adapter"] || payload["tool"]
+  adapter = raw_adapter.nil? || raw_adapter == payload["strategy"] ? inferred_adapter(payload.merge("mode" => mode)) : raw_adapter
 
   {
     cold_seconds: parse_number(runs["cold_seconds"]),
@@ -519,8 +562,8 @@ def extract_strategy_metrics(payload)
     workspace: payload["workspace"] || cache["workspace"],
     cache_tag: payload["cache_tag"] || cache["tag"],
     run_uid: payload["run_uid"] || payload["run_id"] || payload.dig("run", "uid"),
-    mode: payload["mode"] || cache["mode"] || payload["strategy"],
-    adapter: payload["adapter"] || payload["tool"] || payload["category"],
+    mode: mode,
+    adapter: adapter,
     docker_cache_from_refs: payload["docker_cache_from_refs"] || docker_cache["from_refs"],
     docker_cache_import_ready: payload["docker_cache_import_ready"] || docker_cache["import_ready"],
     http_transport: payload["http_transport"] || proxy["http_transport"] || summary_proxy["http_transport"],
@@ -533,6 +576,46 @@ def extract_strategy_metrics(payload)
     summary_schema: payload["summary_schema"] || payload["summary_schema_label"],
     reporting_url: payload["reporting_url"] || payload.dig("diagnostics", "reporting_url")
   }
+end
+
+def inferred_mode(payload)
+  return payload["strategy"] unless payload["strategy"] == "boringcache"
+
+  benchmark = payload["benchmark"].to_s
+  case benchmark
+  when /hugo|immich|mastodon|posthog/
+    "docker"
+  when /grpc|bazel/
+    "bazel"
+  when /zed|sccache/
+    "sccache"
+  when /gradle|otel/
+    "gradle"
+  when /maven|spring/
+    "maven"
+  when /storybook|nx/
+    "nx"
+  when /n8n|turbo/
+    "turbo"
+  when /go/
+    "go"
+  else
+    payload["category"] || payload["strategy"]
+  end
+end
+
+def inferred_adapter(payload)
+  mode = payload["mode"] || inferred_mode(payload)
+  case mode
+  when "docker"
+    "oci"
+  when "go"
+    "gocache"
+  when "turbo"
+    "turborepo"
+  else
+    mode
+  end
 end
 
 def payload_lane(payload)
@@ -589,7 +672,7 @@ def load_strategy_data(temp_root:, repo:, run:, benchmark_id:, strategy:, lane:,
     return cache[cache_key]
   end
 
-  run_tmp = File.join(temp_root, "#{benchmark_id}-#{strategy}-#{run_id}")
+  run_tmp = File.join(temp_root, "#{Array(benchmark_id).first}-#{strategy}-#{run_id}")
   FileUtils.mkdir_p(run_tmp)
   payload = download_artifact_json(repo: repo, run_id: run_id, artifact_name: artifact_name, temp_dir: run_tmp)
 
@@ -890,23 +973,43 @@ end
 def average_lane_entries(entries, benchmark:, lane:)
   return nil if entries.empty?
 
-  actions_snapshot = average_snapshot(entries.map { |entry| entry.dig("comparison", "actions_cache") })
-  boringcache_snapshot = average_snapshot(entries.map { |entry| entry.dig("comparison", "boringcache") })
   classifications = entries.map { |entry| entry.dig("comparison", "boringcache", "classification") || {} }
-  rolled_up_classification = BenchmarkReporting.rollup_classification(
+  all_classification = BenchmarkReporting.rollup_classification(
     lane: lane,
     category: benchmark["category"],
     classifications: classifications
   )
-  boringcache_snapshot["classification"] = rolled_up_classification if rolled_up_classification
+
+  measured_entries = comparative_entries(entries, lane: lane, category: benchmark["category"])
+  measured_entries = entries if measured_entries.empty?
+  measured_classifications = measured_entries.map { |entry| entry.dig("comparison", "boringcache", "classification") || {} }
+  measured_classification = BenchmarkReporting.rollup_classification(
+    lane: lane,
+    category: benchmark["category"],
+    classifications: measured_classifications
+  )
+
+  if measured_entries.length < entries.length && measured_classification && all_classification
+    excluded_count = entries.length - measured_entries.length
+    measured_classification["source_sample_count"] = entries.length
+    measured_classification["excluded_sample_count"] = excluded_count
+    measured_classification["excluded_investigation_only_count"] = excluded_count
+    measured_classification["rolling_bootstrap_count"] = all_classification["rolling_bootstrap_count"]
+    measured_classification["rolling_reseed_count"] = all_classification["rolling_reseed_count"]
+    measured_classification["reporting_note"] = "#{excluded_count}/#{entries.length} cache-bootstrap samples were excluded from this comparative row."
+  end
+
+  actions_snapshot = average_snapshot(measured_entries.map { |entry| entry.dig("comparison", "actions_cache") })
+  boringcache_snapshot = average_snapshot(measured_entries.map { |entry| entry.dig("comparison", "boringcache") })
+  boringcache_snapshot["classification"] = measured_classification if measured_classification
   actions_metrics = metrics_from_snapshot(actions_snapshot)
   boringcache_metrics = metrics_from_snapshot(boringcache_snapshot)
-  head_shas = entries.flat_map { |entry| Array(entry.dig("comparison", "pairing_head_shas") || entry.dig("comparison", "pairing_head_sha")) }.compact.uniq
+  head_shas = measured_entries.flat_map { |entry| Array(entry.dig("comparison", "pairing_head_shas") || entry.dig("comparison", "pairing_head_sha")) }.compact.uniq
   reporting = reporting_summary(
     lane: lane,
     benchmark: benchmark,
     classification: boringcache_snapshot["classification"] || {},
-    sample_count: entries.length
+    sample_count: measured_entries.length
   )
   headline = headline_for_scenario(
     scenario: reporting["headline_scenario"],
@@ -932,7 +1035,7 @@ def average_lane_entries(entries, benchmark:, lane:)
     "lane" => lane,
     "lane_label" => lane_label(lane),
     "first_build_label" => first_build_label(lane),
-    "sample_count" => entries.length,
+    "sample_count" => measured_entries.length,
     "benchmark" => benchmark["benchmark"],
     "name" => benchmark["name"],
     "logo" => benchmark["logo"],
@@ -952,7 +1055,7 @@ def average_lane_entries(entries, benchmark:, lane:)
       "paired_on_head_sha" => true,
       "pairing_head_sha" => head_shas.one? ? head_shas.first : nil,
       "pairing_head_shas" => head_shas,
-      "sample_count" => entries.length,
+      "sample_count" => measured_entries.length,
       "actions_cache" => actions_snapshot,
       "boringcache" => boringcache_snapshot,
       "reporting" => reporting,
@@ -973,6 +1076,13 @@ def average_lane_entries(entries, benchmark:, lane:)
       end
     }
   }
+end
+
+def comparative_entries(entries, lane:, category:)
+  entries.select do |entry|
+    classification = entry.dig("comparison", "boringcache", "classification") || {}
+    BenchmarkReporting.reporting_mode(lane: lane, category: category, classification: classification) == "comparative"
+  end
 end
 
 def merge_lane_entries(entries_by_lane)
@@ -1039,12 +1149,20 @@ def lane_report_row(entry, lane)
   notes << "tiny run; setup dominates" if tiny_run
   notes << "storage unavailable" if comparison["storage_saved_bytes"].nil?
   notes << "BC used more storage" if comparison["storage_saved_bytes"].to_f < 0
-  notes << "#{sample_count} paired samples" if sample_count > 1
   invalid_count = bc_classification["invalid_count"].to_i
   bootstrap_count = (bc_classification["rolling_bootstrap_count"] || bc_classification["rolling_reseed_count"]).to_i
+  source_sample_count = bc_classification["source_sample_count"].to_i
+  excluded_sample_count = bc_classification["excluded_sample_count"].to_i
   cache_import_status = bc_classification["cache_import_status"].to_s
+
+  if source_sample_count.positive? && excluded_sample_count.positive?
+    notes << "#{sample_count} steady samples; #{excluded_sample_count}/#{source_sample_count} bootstrap samples excluded"
+  else
+    notes << "#{sample_count} paired samples" if sample_count > 1
+    notes << "BC cache bootstrap #{bootstrap_count}/#{sample_count}" if sample_count > 1 && bootstrap_count.positive?
+  end
+
   notes << "BC invalid #{invalid_count}/#{sample_count}" if sample_count > 1 && invalid_count.positive?
-  notes << "BC cache bootstrap #{bootstrap_count}/#{sample_count}" if sample_count > 1 && bootstrap_count.positive?
   notes << "BC cache import #{cache_import_status}" if !cache_import_status.empty? && cache_import_status != "ok"
   notes << reporting["note"] if reporting["note"]
 
@@ -1128,7 +1246,7 @@ def build_report(entries, generated_at:)
     "",
     "Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.",
     "",
-    "Rows use the latest #{PAIR_COUNT} same-commit AC/BC pairs when enough samples are available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling Docker cache-import misses render as cache-bootstrap samples excluded from parity claims.",
+    "Rows use the latest #{PAIR_COUNT} same-commit AC/BC pairs when enough samples are available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling Docker cache-bootstrap samples are excluded from comparative rows when steady samples exist.",
     ""
   ].join("\n")
 end
@@ -1196,12 +1314,13 @@ def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_ru
     ].max
   end.reverse
   entries = []
+  artifact_ids = benchmark_artifact_ids(benchmark)
 
   paired.each do |head|
     next unless head_complete_for_all_lanes?(
       head: head,
       repo: benchmark.fetch("source_repo"),
-      benchmark_id: benchmark.fetch("benchmark"),
+      benchmark_id: artifact_ids,
       ac_runs_by_head: ac_runs_by_head,
       bc_runs_by_head: bc_runs_by_head,
       artifacts_cache: artifacts_cache
@@ -1210,7 +1329,7 @@ def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_ru
     ac_run = latest_run_with_artifact(
       runs_for_head: ac_runs_by_head[head],
       repo: benchmark.fetch("source_repo"),
-      benchmark_id: benchmark.fetch("benchmark"),
+      benchmark_id: artifact_ids,
       strategy: "actions-cache",
       lane: lane,
       artifacts_cache: artifacts_cache
@@ -1218,7 +1337,7 @@ def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_ru
     bc_run = latest_run_with_artifact(
       runs_for_head: bc_runs_by_head[head],
       repo: benchmark.fetch("source_repo"),
-      benchmark_id: benchmark.fetch("benchmark"),
+      benchmark_id: artifact_ids,
       strategy: "boringcache",
       lane: lane,
       artifacts_cache: artifacts_cache
@@ -1228,7 +1347,7 @@ def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_ru
       temp_root: temp_root,
       repo: benchmark.fetch("source_repo"),
       run: bc_run,
-      benchmark_id: benchmark.fetch("benchmark"),
+      benchmark_id: artifact_ids,
       strategy: "boringcache",
       lane: lane,
       cache: cache
@@ -1239,7 +1358,7 @@ def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_ru
       temp_root: temp_root,
       repo: benchmark.fetch("source_repo"),
       run: ac_run,
-      benchmark_id: benchmark.fetch("benchmark"),
+      benchmark_id: artifact_ids,
       strategy: "actions-cache",
       lane: lane,
       cache: cache
@@ -1327,6 +1446,8 @@ def normalize_entry_reporting(entry)
 end
 
 def main
+  require_gh!
+
   existing_entries = load_existing_entries
   entries = []
   strategy_data_cache = {}
@@ -1358,7 +1479,7 @@ def main
 
         entry = merge_lane_entries(lane_entries)
         if entry.nil?
-          if preserved_entry
+          if PRESERVE_STALE_ENTRIES && preserved_entry
             warn "Preserving #{benchmark['name']} from existing index: no successful run pair found"
             entries << preserved_entry
           else
@@ -1369,11 +1490,11 @@ def main
 
         entries << entry
       rescue StandardError => e
-        if preserved_entry
+        if PRESERVE_STALE_ENTRIES && preserved_entry
           warn "Preserving #{benchmark['name']} from existing index: #{e.message}"
           entries << preserved_entry
         else
-          warn "Skipping #{benchmark['name']}: #{e.message}"
+          raise "Failed to refresh #{benchmark['name']}: #{e.message}"
         end
       end
     end

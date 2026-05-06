@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T14:52:47Z",
+  "generated_at": "2026-05-06T15:45:04Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -73,7 +73,8 @@
         "product_refs_consistent": false,
         "workspace": "boringcache/benchmarks",
         "run_uid": "gh-25427564191-1",
-        "mode": "actions-cache"
+        "mode": "actions-cache",
+        "adapter": "actions-cache"
       },
       "boringcache": {
         "run_id": 25427564208,
@@ -230,7 +231,8 @@
             "product_refs_consistent": false,
             "workspace": "boringcache/benchmarks",
             "run_uid": "gh-25427564191-1",
-            "mode": "actions-cache"
+            "mode": "actions-cache",
+            "adapter": "actions-cache"
           },
           "boringcache": {
             "run_id": 25427564208,
@@ -382,7 +384,8 @@
             "product_refs_consistent": false,
             "workspace": "boringcache/benchmarks",
             "run_uid": "gh-25427602195-1",
-            "mode": "actions-cache"
+            "mode": "actions-cache",
+            "adapter": "actions-cache"
           },
           "boringcache": {
             "run_id": 25427602200,

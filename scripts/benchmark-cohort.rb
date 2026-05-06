@@ -25,6 +25,14 @@ BENCHMARKS = [
     "boringcache_workflow" => "Hugo - BoringCache"
   },
   {
+    "benchmark" => "hugo-go",
+    "name" => "Hugo Go",
+    "repo" => "boringcache/benchmark-hugo-go",
+    "category" => "go",
+    "actions_workflow" => "Hugo Go - Actions Cache",
+    "boringcache_workflow" => "Hugo Go - BoringCache"
+  },
+  {
     "benchmark" => "immich",
     "name" => "Immich",
     "repo" => "boringcache/benchmark-immich",
@@ -48,6 +56,14 @@ BENCHMARKS = [
     "category" => "docker",
     "actions_workflow" => "PostHog - Actions Cache",
     "boringcache_workflow" => "PostHog - BoringCache"
+  },
+  {
+    "benchmark" => "storybook",
+    "name" => "Storybook",
+    "repo" => "boringcache/benchmark-storybook",
+    "category" => "nodejs",
+    "actions_workflow" => "Storybook - Actions Cache",
+    "boringcache_workflow" => "Storybook - BoringCache"
   },
   {
     "benchmark" => "otel-gradle",

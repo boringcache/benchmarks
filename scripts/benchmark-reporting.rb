@@ -182,6 +182,8 @@ module BenchmarkReporting
       "comparative_count" => comparative_count,
       "reporting_mode" => if invalid_count.positive?
         "invalid"
+      elsif comparative_count.positive?
+        "comparative"
       elsif investigation_only_count.positive?
         "investigation_only"
       else
