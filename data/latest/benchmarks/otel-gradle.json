@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-05-06T14:44:36Z",
+  "generated_at": "2026-05-06T14:52:47Z",
   "entry": {
     "lane": "fresh",
-    "lane_label": "Fresh isolated",
+    "lane_label": "Fresh",
     "first_build_label": "Cold build",
     "sample_count": 3,
     "benchmark": "otel-gradle",
@@ -14,6 +14,7 @@
     "category": "gradle",
     "step": "Gradle build (native HTTP cache)",
     "headline_scenario": "warm",
+    "headline_label": "Warm Build",
     "before": "3m 28s",
     "after": "0m 56s",
     "before_seconds": 208.33,
@@ -134,6 +135,7 @@
           "reporting_note": null,
           "validity_reason": null,
           "cache_import_status": null,
+          "rolling_bootstrap_count": 0,
           "rolling_reseed_count": 0,
           "steady_state_candidate_count": 0
         }
@@ -157,7 +159,7 @@
     "lanes": {
       "fresh": {
         "lane": "fresh",
-        "lane_label": "Fresh isolated",
+        "lane_label": "Fresh",
         "first_build_label": "Cold build",
         "sample_count": 3,
         "benchmark": "otel-gradle",
@@ -169,6 +171,7 @@
         "category": "gradle",
         "step": "Gradle build (native HTTP cache)",
         "headline_scenario": "warm",
+        "headline_label": "Warm Build",
         "before": "3m 28s",
         "after": "0m 56s",
         "before_seconds": 208.33,
@@ -289,6 +292,7 @@
               "reporting_note": null,
               "validity_reason": null,
               "cache_import_status": null,
+              "rolling_bootstrap_count": 0,
               "rolling_reseed_count": 0,
               "steady_state_candidate_count": 0
             }
@@ -303,13 +307,12 @@
           "run_total_improvement_pct": -1.45,
           "storage_improvement_pct": 2.52,
           "storage_saved_bytes": 21405989
-        },
-        "headline_label": "Warm Build"
+        }
       },
       "rolling": {
         "lane": "rolling",
-        "lane_label": "Rolling historical",
-        "first_build_label": "First build after upstream sync",
+        "lane_label": "Rolling",
+        "first_build_label": "Commit build",
         "sample_count": 3,
         "benchmark": "otel-gradle",
         "name": "OpenTelemetry Java",
@@ -320,6 +323,7 @@
         "category": "gradle",
         "step": "Gradle build (native HTTP cache)",
         "headline_scenario": "cold",
+        "headline_label": "Commit Build",
         "before": "0m 56s",
         "after": "1m 25s",
         "before_seconds": 55.67,
@@ -440,6 +444,7 @@
               "reporting_note": null,
               "validity_reason": null,
               "cache_import_status": null,
+              "rolling_bootstrap_count": 0,
               "rolling_reseed_count": 0,
               "steady_state_candidate_count": 0
             }
@@ -454,10 +459,8 @@
           "run_total_improvement_pct": -32.79,
           "storage_improvement_pct": 72.92,
           "storage_saved_bytes": 2107013414
-        },
-        "headline_label": "Commit Build"
+        }
       }
-    },
-    "headline_label": "Warm Build"
+    }
   }
 }

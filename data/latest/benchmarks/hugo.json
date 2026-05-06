@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-05-06T14:44:36Z",
+  "generated_at": "2026-05-06T14:52:47Z",
   "entry": {
     "lane": "fresh",
-    "lane_label": "Fresh isolated",
+    "lane_label": "Fresh",
     "first_build_label": "Cold build",
     "sample_count": 3,
     "benchmark": "hugo",
@@ -14,6 +14,7 @@
     "category": "docker",
     "step": "Docker build (Go)",
     "headline_scenario": "cold",
+    "headline_label": "Cold Build",
     "before": "3m 29s",
     "after": "3m 30s",
     "before_seconds": 208.67,
@@ -147,6 +148,7 @@
           "reporting_note": null,
           "validity_reason": null,
           "cache_import_status": "ok",
+          "rolling_bootstrap_count": 0,
           "rolling_reseed_count": 0,
           "steady_state_candidate_count": 0
         }
@@ -170,7 +172,7 @@
     "lanes": {
       "fresh": {
         "lane": "fresh",
-        "lane_label": "Fresh isolated",
+        "lane_label": "Fresh",
         "first_build_label": "Cold build",
         "sample_count": 3,
         "benchmark": "hugo",
@@ -182,6 +184,7 @@
         "category": "docker",
         "step": "Docker build (Go)",
         "headline_scenario": "cold",
+        "headline_label": "Cold Build",
         "before": "3m 29s",
         "after": "3m 30s",
         "before_seconds": 208.67,
@@ -315,6 +318,7 @@
               "reporting_note": null,
               "validity_reason": null,
               "cache_import_status": "ok",
+              "rolling_bootstrap_count": 0,
               "rolling_reseed_count": 0,
               "steady_state_candidate_count": 0
             }
@@ -329,13 +333,12 @@
           "run_total_improvement_pct": -3.05,
           "storage_improvement_pct": 94.73,
           "storage_saved_bytes": 6405799595
-        },
-        "headline_label": "Cold Build"
+        }
       },
       "rolling": {
         "lane": "rolling",
-        "lane_label": "Rolling historical",
-        "first_build_label": "First build after upstream sync",
+        "lane_label": "Rolling",
+        "first_build_label": "Commit build",
         "sample_count": 3,
         "benchmark": "hugo",
         "name": "Hugo",
@@ -346,6 +349,7 @@
         "category": "docker",
         "step": "Docker build (Go)",
         "headline_scenario": "first_build",
+        "headline_label": "Commit Build",
         "before": "1m 10s",
         "after": "1m 27s",
         "before_seconds": 70.0,
@@ -480,10 +484,11 @@
               "investigation_only_count": 1,
               "comparative_count": 2,
               "reporting_mode": "investigation_only",
-              "reporting_reason": "rolling_reseed",
-              "reporting_note": "Rolling Docker reseeds are first-build investigation samples, not steady-state parity.",
+              "reporting_reason": "rolling_cache_bootstrap",
+              "reporting_note": "Rolling cache was unavailable for 1/3 BoringCache samples; those samples populated the rolling cache and are excluded from parity claims.",
               "validity_reason": null,
               "cache_import_status": "ok",
+              "rolling_bootstrap_count": 1,
               "rolling_reseed_count": 1,
               "steady_state_candidate_count": 2
             }
@@ -504,10 +509,8 @@
           "run_total_improvement_pct": -23.17,
           "storage_improvement_pct": 94.73,
           "storage_saved_bytes": 6405800436
-        },
-        "headline_label": "Commit Build"
+        }
       }
-    },
-    "headline_label": "Cold Build"
+    }
   }
 }
