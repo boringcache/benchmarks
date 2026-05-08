@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T13:02:36Z",
+  "generated_at": "2026-05-08T16:58:46Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -15,115 +15,115 @@
     "step": "Docker build (Ruby+Node)",
     "headline_scenario": "cold",
     "headline_label": "Cold Build",
-    "before": "10m 9s",
+    "before": "10m 46s",
     "after": "9m 23s",
-    "before_seconds": 609.0,
+    "before_seconds": 646.0,
     "after_seconds": 563.0,
-    "faster": "8",
+    "faster": "13",
     "comparison": {
       "paired_on_head_sha": true,
       "pairing_head_sha": null,
       "pairing_head_shas": [
-        "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3",
-        "0e472d86c12af495ab2dc399b8c15e05982d91b2",
-        "8b939d3af47f7a8ba271f91b8bdf8dd7ab772b65"
+        "590d10931cd6970f8da49825012fa7710110bedb",
+        "70c7b225f940721d15156a8ded0f3673ae5b6fca",
+        "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3"
       ],
       "sample_count": 3,
       "actions_cache": {
-        "run_id": 25550776081,
-        "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550776081",
-        "head_sha": "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3",
-        "created_at": "2026-05-08T10:32:09Z",
+        "run_id": 25564366631,
+        "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/25564366631",
+        "head_sha": "590d10931cd6970f8da49825012fa7710110bedb",
+        "created_at": "2026-05-08T15:33:28Z",
         "sample_count": 3,
         "sample_run_ids": [
-          25550776081,
-          25548284162,
-          25543248821
+          25564366631,
+          25561578012,
+          25550776081
         ],
         "sample_run_urls": [
-          "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550776081",
-          "https://github.com/boringcache/benchmark-mastodon/actions/runs/25548284162",
-          "https://github.com/boringcache/benchmark-mastodon/actions/runs/25543248821"
+          "https://github.com/boringcache/benchmark-mastodon/actions/runs/25564366631",
+          "https://github.com/boringcache/benchmark-mastodon/actions/runs/25561578012",
+          "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550776081"
         ],
         "head_shas": [
-          "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3",
-          "0e472d86c12af495ab2dc399b8c15e05982d91b2",
-          "8b939d3af47f7a8ba271f91b8bdf8dd7ab772b65"
+          "590d10931cd6970f8da49825012fa7710110bedb",
+          "70c7b225f940721d15156a8ded0f3673ae5b6fca",
+          "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3"
         ],
-        "cold_seconds": 609.0,
-        "cold_build_seconds": 603.3333333333334,
-        "cold_restore_or_setup_seconds": 5.666666666666667,
-        "warm1_seconds": 9.666666666666666,
-        "warm1_build_seconds": 4.333333333333333,
-        "warm1_restore_or_setup_seconds": 5.333333333333333,
+        "cold_seconds": 646.0,
+        "cold_build_seconds": 640.0,
+        "cold_restore_or_setup_seconds": 6.0,
+        "warm1_seconds": 9.333333333333334,
+        "warm1_build_seconds": 3.6666666666666665,
+        "warm1_restore_or_setup_seconds": 5.666666666666667,
         "warm2_seconds": null,
-        "warm_average_seconds": 9.666666666666666,
-        "warm_steady_seconds": 9.666666666666666,
+        "warm_average_seconds": 9.333333333333334,
+        "warm_steady_seconds": 9.333333333333334,
         "rolling_first_build_seconds": null,
         "rolling_warm_seconds": null,
-        "run_total_seconds": 626.0,
-        "storage_bytes": 11309950750,
-        "docker_cache_import_seconds": 0.26666666666666666,
-        "docker_cache_export_seconds": 137.70000000000002,
+        "run_total_seconds": 665.0,
+        "storage_bytes": 11213419480,
+        "docker_cache_import_seconds": 0.19999999999999998,
+        "docker_cache_export_seconds": 170.46666666666667,
         "storage_source": "github-actions-cache-api",
         "product_refs": {
           "api_url": "https://api.boringcache.com",
           "web_revision": "759a40e2"
         },
-        "product_refs_consistent": true,
+        "product_refs_consistent": false,
         "workspace": "boringcache/benchmarks",
-        "run_uid": "gh-25550776081-1",
+        "run_uid": "gh-25564366631-1",
         "mode": "docker",
         "adapter": "oci"
       },
       "boringcache": {
-        "run_id": 25550776028,
-        "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550776028",
-        "head_sha": "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3",
-        "created_at": "2026-05-08T10:32:09Z",
+        "run_id": 25564366585,
+        "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/25564366585",
+        "head_sha": "590d10931cd6970f8da49825012fa7710110bedb",
+        "created_at": "2026-05-08T15:33:28Z",
         "sample_count": 3,
         "sample_run_ids": [
-          25550776028,
-          25548284175,
-          25543248824
+          25564366585,
+          25561578021,
+          25550776028
         ],
         "sample_run_urls": [
-          "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550776028",
-          "https://github.com/boringcache/benchmark-mastodon/actions/runs/25548284175",
-          "https://github.com/boringcache/benchmark-mastodon/actions/runs/25543248824"
+          "https://github.com/boringcache/benchmark-mastodon/actions/runs/25564366585",
+          "https://github.com/boringcache/benchmark-mastodon/actions/runs/25561578021",
+          "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550776028"
         ],
         "head_shas": [
-          "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3",
-          "0e472d86c12af495ab2dc399b8c15e05982d91b2",
-          "8b939d3af47f7a8ba271f91b8bdf8dd7ab772b65"
+          "590d10931cd6970f8da49825012fa7710110bedb",
+          "70c7b225f940721d15156a8ded0f3673ae5b6fca",
+          "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3"
         ],
         "cold_seconds": 563.0,
-        "cold_build_seconds": 542.0,
-        "cold_restore_or_setup_seconds": 21.0,
-        "warm1_seconds": 10.333333333333334,
-        "warm1_build_seconds": 4.333333333333333,
-        "warm1_restore_or_setup_seconds": 6.0,
+        "cold_build_seconds": 542.3333333333334,
+        "cold_restore_or_setup_seconds": 20.666666666666668,
+        "warm1_seconds": 13.0,
+        "warm1_build_seconds": 5.0,
+        "warm1_restore_or_setup_seconds": 8.0,
         "warm2_seconds": null,
-        "warm_average_seconds": 10.333333333333334,
-        "warm_steady_seconds": 10.333333333333334,
+        "warm_average_seconds": 13.0,
+        "warm_steady_seconds": 13.0,
         "rolling_first_build_seconds": null,
         "rolling_warm_seconds": null,
-        "run_total_seconds": 582.3333333333334,
-        "storage_bytes": 1096862461,
-        "docker_cache_import_seconds": 0.10000000000000002,
-        "docker_cache_export_seconds": 67.8,
+        "run_total_seconds": 583.0,
+        "storage_bytes": 1096839418,
+        "docker_cache_import_seconds": 0.13333333333333333,
+        "docker_cache_export_seconds": 65.76666666666667,
         "oci": {
           "body_local_hits": 0.0,
           "body_remote_fetches": 1.0,
           "body_local_bytes": 0.0,
-          "body_remote_bytes": 18136.666666666668,
+          "body_remote_bytes": 18139.0,
           "body_local_duration_ms": 0.0,
-          "body_remote_duration_ms": 85.66666666666667,
-          "new_blob_count": 32.0,
-          "new_blob_bytes": 968207622.3333334,
+          "body_remote_duration_ms": 146.0,
+          "new_blob_count": 34.333333333333336,
+          "new_blob_bytes": 1011069514.6666666,
           "upload_requested_blobs": 40.0,
-          "upload_already_present": 8.0,
-          "upload_batch_seconds": 2.247666666666667
+          "upload_already_present": 5.666666666666667,
+          "upload_batch_seconds": 2.824666666666667
         },
         "storage_source": "boringcache-check",
         "product_refs": {
@@ -133,9 +133,9 @@
           "cli_version": "v1.12.72",
           "web_revision": "759a40e2"
         },
-        "product_refs_consistent": true,
+        "product_refs_consistent": false,
         "workspace": "boringcache/benchmarks",
-        "run_uid": "gh-25550776028-1",
+        "run_uid": "gh-25564366585-1",
         "mode": "docker",
         "adapter": "oci",
         "classification": {
@@ -157,13 +157,13 @@
       "reporting": {
         "comparative": true
       },
-      "warm_improvement_pct": -6.9,
-      "warm_build_improvement_pct": 0.0,
-      "cold_improvement_pct": 7.55,
-      "cold_build_improvement_pct": 10.17,
-      "run_total_improvement_pct": 6.98,
-      "storage_improvement_pct": 90.3,
-      "storage_saved_bytes": 10213088289
+      "warm_improvement_pct": -39.29,
+      "warm_build_improvement_pct": -36.36,
+      "cold_improvement_pct": 12.85,
+      "cold_build_improvement_pct": 15.26,
+      "run_total_improvement_pct": 12.33,
+      "storage_improvement_pct": 90.22,
+      "storage_saved_bytes": 10116580062
     },
     "default_lane": "fresh",
     "available_lanes": [
@@ -186,115 +186,115 @@
         "step": "Docker build (Ruby+Node)",
         "headline_scenario": "cold",
         "headline_label": "Cold Build",
-        "before": "10m 9s",
+        "before": "10m 46s",
         "after": "9m 23s",
-        "before_seconds": 609.0,
+        "before_seconds": 646.0,
         "after_seconds": 563.0,
-        "faster": "8",
+        "faster": "13",
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": null,
           "pairing_head_shas": [
-            "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3",
-            "0e472d86c12af495ab2dc399b8c15e05982d91b2",
-            "8b939d3af47f7a8ba271f91b8bdf8dd7ab772b65"
+            "590d10931cd6970f8da49825012fa7710110bedb",
+            "70c7b225f940721d15156a8ded0f3673ae5b6fca",
+            "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3"
           ],
           "sample_count": 3,
           "actions_cache": {
-            "run_id": 25550776081,
-            "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550776081",
-            "head_sha": "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3",
-            "created_at": "2026-05-08T10:32:09Z",
+            "run_id": 25564366631,
+            "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/25564366631",
+            "head_sha": "590d10931cd6970f8da49825012fa7710110bedb",
+            "created_at": "2026-05-08T15:33:28Z",
             "sample_count": 3,
             "sample_run_ids": [
-              25550776081,
-              25548284162,
-              25543248821
+              25564366631,
+              25561578012,
+              25550776081
             ],
             "sample_run_urls": [
-              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550776081",
-              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25548284162",
-              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25543248821"
+              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25564366631",
+              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25561578012",
+              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550776081"
             ],
             "head_shas": [
-              "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3",
-              "0e472d86c12af495ab2dc399b8c15e05982d91b2",
-              "8b939d3af47f7a8ba271f91b8bdf8dd7ab772b65"
+              "590d10931cd6970f8da49825012fa7710110bedb",
+              "70c7b225f940721d15156a8ded0f3673ae5b6fca",
+              "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3"
             ],
-            "cold_seconds": 609.0,
-            "cold_build_seconds": 603.3333333333334,
-            "cold_restore_or_setup_seconds": 5.666666666666667,
-            "warm1_seconds": 9.666666666666666,
-            "warm1_build_seconds": 4.333333333333333,
-            "warm1_restore_or_setup_seconds": 5.333333333333333,
+            "cold_seconds": 646.0,
+            "cold_build_seconds": 640.0,
+            "cold_restore_or_setup_seconds": 6.0,
+            "warm1_seconds": 9.333333333333334,
+            "warm1_build_seconds": 3.6666666666666665,
+            "warm1_restore_or_setup_seconds": 5.666666666666667,
             "warm2_seconds": null,
-            "warm_average_seconds": 9.666666666666666,
-            "warm_steady_seconds": 9.666666666666666,
+            "warm_average_seconds": 9.333333333333334,
+            "warm_steady_seconds": 9.333333333333334,
             "rolling_first_build_seconds": null,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 626.0,
-            "storage_bytes": 11309950750,
-            "docker_cache_import_seconds": 0.26666666666666666,
-            "docker_cache_export_seconds": 137.70000000000002,
+            "run_total_seconds": 665.0,
+            "storage_bytes": 11213419480,
+            "docker_cache_import_seconds": 0.19999999999999998,
+            "docker_cache_export_seconds": 170.46666666666667,
             "storage_source": "github-actions-cache-api",
             "product_refs": {
               "api_url": "https://api.boringcache.com",
               "web_revision": "759a40e2"
             },
-            "product_refs_consistent": true,
+            "product_refs_consistent": false,
             "workspace": "boringcache/benchmarks",
-            "run_uid": "gh-25550776081-1",
+            "run_uid": "gh-25564366631-1",
             "mode": "docker",
             "adapter": "oci"
           },
           "boringcache": {
-            "run_id": 25550776028,
-            "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550776028",
-            "head_sha": "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3",
-            "created_at": "2026-05-08T10:32:09Z",
+            "run_id": 25564366585,
+            "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/25564366585",
+            "head_sha": "590d10931cd6970f8da49825012fa7710110bedb",
+            "created_at": "2026-05-08T15:33:28Z",
             "sample_count": 3,
             "sample_run_ids": [
-              25550776028,
-              25548284175,
-              25543248824
+              25564366585,
+              25561578021,
+              25550776028
             ],
             "sample_run_urls": [
-              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550776028",
-              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25548284175",
-              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25543248824"
+              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25564366585",
+              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25561578021",
+              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550776028"
             ],
             "head_shas": [
-              "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3",
-              "0e472d86c12af495ab2dc399b8c15e05982d91b2",
-              "8b939d3af47f7a8ba271f91b8bdf8dd7ab772b65"
+              "590d10931cd6970f8da49825012fa7710110bedb",
+              "70c7b225f940721d15156a8ded0f3673ae5b6fca",
+              "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3"
             ],
             "cold_seconds": 563.0,
-            "cold_build_seconds": 542.0,
-            "cold_restore_or_setup_seconds": 21.0,
-            "warm1_seconds": 10.333333333333334,
-            "warm1_build_seconds": 4.333333333333333,
-            "warm1_restore_or_setup_seconds": 6.0,
+            "cold_build_seconds": 542.3333333333334,
+            "cold_restore_or_setup_seconds": 20.666666666666668,
+            "warm1_seconds": 13.0,
+            "warm1_build_seconds": 5.0,
+            "warm1_restore_or_setup_seconds": 8.0,
             "warm2_seconds": null,
-            "warm_average_seconds": 10.333333333333334,
-            "warm_steady_seconds": 10.333333333333334,
+            "warm_average_seconds": 13.0,
+            "warm_steady_seconds": 13.0,
             "rolling_first_build_seconds": null,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 582.3333333333334,
-            "storage_bytes": 1096862461,
-            "docker_cache_import_seconds": 0.10000000000000002,
-            "docker_cache_export_seconds": 67.8,
+            "run_total_seconds": 583.0,
+            "storage_bytes": 1096839418,
+            "docker_cache_import_seconds": 0.13333333333333333,
+            "docker_cache_export_seconds": 65.76666666666667,
             "oci": {
               "body_local_hits": 0.0,
               "body_remote_fetches": 1.0,
               "body_local_bytes": 0.0,
-              "body_remote_bytes": 18136.666666666668,
+              "body_remote_bytes": 18139.0,
               "body_local_duration_ms": 0.0,
-              "body_remote_duration_ms": 85.66666666666667,
-              "new_blob_count": 32.0,
-              "new_blob_bytes": 968207622.3333334,
+              "body_remote_duration_ms": 146.0,
+              "new_blob_count": 34.333333333333336,
+              "new_blob_bytes": 1011069514.6666666,
               "upload_requested_blobs": 40.0,
-              "upload_already_present": 8.0,
-              "upload_batch_seconds": 2.247666666666667
+              "upload_already_present": 5.666666666666667,
+              "upload_batch_seconds": 2.824666666666667
             },
             "storage_source": "boringcache-check",
             "product_refs": {
@@ -304,9 +304,9 @@
               "cli_version": "v1.12.72",
               "web_revision": "759a40e2"
             },
-            "product_refs_consistent": true,
+            "product_refs_consistent": false,
             "workspace": "boringcache/benchmarks",
-            "run_uid": "gh-25550776028-1",
+            "run_uid": "gh-25564366585-1",
             "mode": "docker",
             "adapter": "oci",
             "classification": {
@@ -328,13 +328,13 @@
           "reporting": {
             "comparative": true
           },
-          "warm_improvement_pct": -6.9,
-          "warm_build_improvement_pct": 0.0,
-          "cold_improvement_pct": 7.55,
-          "cold_build_improvement_pct": 10.17,
-          "run_total_improvement_pct": 6.98,
-          "storage_improvement_pct": 90.3,
-          "storage_saved_bytes": 10213088289
+          "warm_improvement_pct": -39.29,
+          "warm_build_improvement_pct": -36.36,
+          "cold_improvement_pct": 12.85,
+          "cold_build_improvement_pct": 15.26,
+          "run_total_improvement_pct": 12.33,
+          "storage_improvement_pct": 90.22,
+          "storage_saved_bytes": 10116580062
         }
       },
       "rolling": {
@@ -352,39 +352,83 @@
         "step": "Docker build (Ruby+Node)",
         "headline_scenario": "cold",
         "headline_label": "Commit Build",
-        "before": "2m 12s",
-        "after": "1m 58s",
-        "before_seconds": 132.0,
-        "after_seconds": 117.5,
-        "faster": "11",
+        "before": "2m 18s",
+        "after": "2m 5s",
+        "before_seconds": 137.5,
+        "after_seconds": 125.0,
+        "faster": "9",
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": null,
           "pairing_head_shas": [
-            "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3",
-            "0e472d86c12af495ab2dc399b8c15e05982d91b2"
+            "590d10931cd6970f8da49825012fa7710110bedb",
+            "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3"
           ],
           "sample_count": 2,
           "actions_cache": {
-            "run_id": 25550782947,
-            "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550782947",
-            "head_sha": "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3",
-            "created_at": "2026-05-08T10:32:20Z",
+            "run_id": 25564375382,
+            "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/25564375382",
+            "head_sha": "590d10931cd6970f8da49825012fa7710110bedb",
+            "created_at": "2026-05-08T15:33:39Z",
             "sample_count": 2,
             "sample_run_ids": [
-              25550782947,
-              25548288322
+              25564375382,
+              25550782947
             ],
             "sample_run_urls": [
-              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550782947",
-              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25548288322"
+              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25564375382",
+              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550782947"
             ],
             "head_shas": [
-              "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3",
-              "0e472d86c12af495ab2dc399b8c15e05982d91b2"
+              "590d10931cd6970f8da49825012fa7710110bedb",
+              "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3"
             ],
-            "cold_seconds": 132.0,
-            "cold_build_seconds": 126.5,
+            "cold_seconds": 137.5,
+            "cold_build_seconds": 130.5,
+            "cold_restore_or_setup_seconds": 7.0,
+            "warm1_seconds": null,
+            "warm1_build_seconds": null,
+            "warm1_restore_or_setup_seconds": null,
+            "warm2_seconds": null,
+            "warm_average_seconds": null,
+            "warm_steady_seconds": null,
+            "rolling_first_build_seconds": 137.5,
+            "rolling_warm_seconds": null,
+            "run_total_seconds": 152.0,
+            "storage_bytes": 11198237207,
+            "docker_cache_import_seconds": 0.15000000000000002,
+            "docker_cache_export_seconds": 53.4,
+            "storage_source": "github-actions-cache-api",
+            "product_refs": {
+              "api_url": "https://api.boringcache.com",
+              "web_revision": "87dfef55"
+            },
+            "product_refs_consistent": false,
+            "workspace": "boringcache/benchmarks",
+            "run_uid": "gh-25564375382-1",
+            "mode": "docker",
+            "adapter": "oci"
+          },
+          "boringcache": {
+            "run_id": 25564376732,
+            "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/25564376732",
+            "head_sha": "590d10931cd6970f8da49825012fa7710110bedb",
+            "created_at": "2026-05-08T15:33:41Z",
+            "sample_count": 2,
+            "sample_run_ids": [
+              25564376732,
+              25550783716
+            ],
+            "sample_run_urls": [
+              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25564376732",
+              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550783716"
+            ],
+            "head_shas": [
+              "590d10931cd6970f8da49825012fa7710110bedb",
+              "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3"
+            ],
+            "cold_seconds": 125.0,
+            "cold_build_seconds": 119.5,
             "cold_restore_or_setup_seconds": 5.5,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
@@ -392,72 +436,28 @@
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 132.0,
+            "rolling_first_build_seconds": 125.0,
             "rolling_warm_seconds": null,
             "run_total_seconds": 146.5,
-            "storage_bytes": 10687700722,
+            "storage_bytes": 1096850598,
             "docker_cache_import_seconds": 0.1,
-            "docker_cache_export_seconds": 49.8,
-            "storage_source": "github-actions-cache-api",
-            "product_refs": {
-              "api_url": "https://api.boringcache.com",
-              "web_revision": "759a40e2"
-            },
-            "product_refs_consistent": true,
-            "workspace": "boringcache/benchmarks",
-            "run_uid": "gh-25550782947-1",
-            "mode": "docker",
-            "adapter": "oci"
-          },
-          "boringcache": {
-            "run_id": 25550783716,
-            "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550783716",
-            "head_sha": "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3",
-            "created_at": "2026-05-08T10:32:21Z",
-            "sample_count": 2,
-            "sample_run_ids": [
-              25550783716,
-              25548289492
-            ],
-            "sample_run_urls": [
-              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25550783716",
-              "https://github.com/boringcache/benchmark-mastodon/actions/runs/25548289492"
-            ],
-            "head_shas": [
-              "f8e259fc02492c1df637fbf1b5a816d3b7e3e4a3",
-              "0e472d86c12af495ab2dc399b8c15e05982d91b2"
-            ],
-            "cold_seconds": 117.5,
-            "cold_build_seconds": 112.5,
-            "cold_restore_or_setup_seconds": 5.0,
-            "warm1_seconds": null,
-            "warm1_build_seconds": null,
-            "warm1_restore_or_setup_seconds": null,
-            "warm2_seconds": null,
-            "warm_average_seconds": null,
-            "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 117.5,
-            "rolling_warm_seconds": null,
-            "run_total_seconds": 135.0,
-            "storage_bytes": 1096863462,
-            "docker_cache_import_seconds": 0.05,
-            "docker_cache_export_seconds": 34.7,
+            "docker_cache_export_seconds": 36.45,
             "oci": {
               "body_local_hits": 0.0,
               "body_remote_fetches": 24.0,
               "body_local_bytes": 0.0,
-              "body_remote_bytes": 604967855.0,
+              "body_remote_bytes": 604970483.5,
               "body_local_duration_ms": 0.0,
-              "body_remote_duration_ms": 7830.0,
+              "body_remote_duration_ms": 9128.5,
               "startup_body_inserted": 0.0,
               "startup_body_failures": 0.0,
               "startup_body_cold_blobs": 40.0,
               "startup_body_duration_ms": 0.0,
               "new_blob_count": 10.0,
-              "new_blob_bytes": 355219093.5,
+              "new_blob_bytes": 355203746.5,
               "upload_requested_blobs": 40.0,
               "upload_already_present": 30.0,
-              "upload_batch_seconds": 1.916,
+              "upload_batch_seconds": 1.658,
               "hydration_policy": "metadata-only"
             },
             "storage_source": "boringcache-check",
@@ -466,11 +466,11 @@
               "action_sha": "f32f40a7692bbdb51a94bb35500d4c45487023f9",
               "api_url": "https://api.boringcache.com",
               "cli_version": "v1.12.72",
-              "web_revision": "759a40e2"
+              "web_revision": "87dfef55"
             },
-            "product_refs_consistent": true,
+            "product_refs_consistent": false,
             "workspace": "boringcache/benchmarks",
-            "run_uid": "gh-25550783716-1",
+            "run_uid": "gh-25564376732-1",
             "mode": "docker",
             "adapter": "oci",
             "classification": {
@@ -497,11 +497,11 @@
           },
           "warm_improvement_pct": null,
           "warm_build_improvement_pct": null,
-          "cold_improvement_pct": 10.98,
-          "cold_build_improvement_pct": 11.07,
-          "run_total_improvement_pct": 7.85,
-          "storage_improvement_pct": 89.74,
-          "storage_saved_bytes": 9590837260
+          "cold_improvement_pct": 9.09,
+          "cold_build_improvement_pct": 8.43,
+          "run_total_improvement_pct": 3.62,
+          "storage_improvement_pct": 90.21,
+          "storage_saved_bytes": 10101386609
         }
       }
     }
