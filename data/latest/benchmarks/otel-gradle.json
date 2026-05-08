@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T13:02:36Z",
+  "generated_at": "2026-05-08T16:58:46Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -15,114 +15,114 @@
     "step": "Gradle build (native HTTP cache)",
     "headline_scenario": "cold",
     "headline_label": "Cold Build",
-    "before": "10m 47s",
-    "after": "11m 24s",
-    "before_seconds": 647.0,
-    "after_seconds": 683.67,
+    "before": "11m 4s",
+    "after": "11m 13s",
+    "before_seconds": 664.0,
+    "after_seconds": 673.0,
     "faster": "0",
     "comparison": {
       "paired_on_head_sha": true,
       "pairing_head_sha": null,
       "pairing_head_shas": [
-        "fc02f62751ec712e47fe12dffa092a22fc53d352",
-        "0027282d7c2500186a454daeb4a84d1af0f0c436",
-        "9c7457fb72d0360a2d5abdb85db13c2bd94e3d3f"
+        "66f08d05c060c0cbf7cd5a4ac9056536d3a5774e",
+        "d44567333c95475fe8866b01f8e0d41c0cb56c22",
+        "fc02f62751ec712e47fe12dffa092a22fc53d352"
       ],
       "sample_count": 3,
       "actions_cache": {
-        "run_id": 25539924037,
-        "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25539924037",
-        "head_sha": "fc02f62751ec712e47fe12dffa092a22fc53d352",
-        "created_at": "2026-05-08T06:06:16Z",
+        "run_id": 25567372666,
+        "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25567372666",
+        "head_sha": "66f08d05c060c0cbf7cd5a4ac9056536d3a5774e",
+        "created_at": "2026-05-08T16:37:04Z",
         "sample_count": 3,
         "sample_run_ids": [
-          25539924037,
-          25513392480,
-          25471164191
+          25567372666,
+          25564596119,
+          25539924037
         ],
         "sample_run_urls": [
-          "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25539924037",
-          "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25513392480",
-          "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25471164191"
+          "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25567372666",
+          "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25564596119",
+          "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25539924037"
         ],
         "head_shas": [
-          "fc02f62751ec712e47fe12dffa092a22fc53d352",
-          "0027282d7c2500186a454daeb4a84d1af0f0c436",
-          "9c7457fb72d0360a2d5abdb85db13c2bd94e3d3f"
+          "66f08d05c060c0cbf7cd5a4ac9056536d3a5774e",
+          "d44567333c95475fe8866b01f8e0d41c0cb56c22",
+          "fc02f62751ec712e47fe12dffa092a22fc53d352"
         ],
-        "cold_seconds": 647.0,
-        "cold_build_seconds": 645.3333333333334,
-        "cold_restore_or_setup_seconds": 1.6666666666666667,
-        "warm1_seconds": 51.666666666666664,
-        "warm1_build_seconds": 42.333333333333336,
-        "warm1_restore_or_setup_seconds": 9.333333333333334,
+        "cold_seconds": 664.0,
+        "cold_build_seconds": 663.0,
+        "cold_restore_or_setup_seconds": 1.0,
+        "warm1_seconds": 55.333333333333336,
+        "warm1_build_seconds": 47.333333333333336,
+        "warm1_restore_or_setup_seconds": 8.0,
         "warm2_seconds": null,
-        "warm_average_seconds": 51.666666666666664,
-        "warm_steady_seconds": 51.666666666666664,
+        "warm_average_seconds": 55.333333333333336,
+        "warm_steady_seconds": 55.333333333333336,
         "rolling_first_build_seconds": null,
         "rolling_warm_seconds": null,
-        "run_total_seconds": 665.0,
-        "storage_bytes": 872255332,
+        "run_total_seconds": 679.0,
+        "storage_bytes": 883737725,
         "docker_cache_import_seconds": null,
         "docker_cache_export_seconds": null,
         "storage_source": "github-actions-cache-api",
         "product_refs": {
           "api_url": "https://api.boringcache.com",
-          "web_revision": "78d79fa0"
+          "web_revision": "030b4ff8"
         },
         "product_refs_consistent": false,
         "workspace": "boringcache/benchmarks",
-        "run_uid": "gh-25539924037-1",
+        "run_uid": "gh-25567372666-1",
         "mode": "gradle",
         "adapter": "gradle"
       },
       "boringcache": {
-        "run_id": 25539922727,
-        "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25539922727",
-        "head_sha": "fc02f62751ec712e47fe12dffa092a22fc53d352",
-        "created_at": "2026-05-08T06:06:15Z",
+        "run_id": 25567372637,
+        "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25567372637",
+        "head_sha": "66f08d05c060c0cbf7cd5a4ac9056536d3a5774e",
+        "created_at": "2026-05-08T16:37:04Z",
         "sample_count": 3,
         "sample_run_ids": [
-          25539922727,
-          25513392461,
-          25471164164
+          25567372637,
+          25564596167,
+          25539922727
         ],
         "sample_run_urls": [
-          "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25539922727",
-          "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25513392461",
-          "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25471164164"
+          "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25567372637",
+          "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25564596167",
+          "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25539922727"
         ],
         "head_shas": [
-          "fc02f62751ec712e47fe12dffa092a22fc53d352",
-          "0027282d7c2500186a454daeb4a84d1af0f0c436",
-          "9c7457fb72d0360a2d5abdb85db13c2bd94e3d3f"
+          "66f08d05c060c0cbf7cd5a4ac9056536d3a5774e",
+          "d44567333c95475fe8866b01f8e0d41c0cb56c22",
+          "fc02f62751ec712e47fe12dffa092a22fc53d352"
         ],
-        "cold_seconds": 683.6666666666666,
-        "cold_build_seconds": 680.3333333333334,
-        "cold_restore_or_setup_seconds": 3.3333333333333335,
-        "warm1_seconds": 58.666666666666664,
-        "warm1_build_seconds": 43.333333333333336,
-        "warm1_restore_or_setup_seconds": 15.333333333333334,
+        "cold_seconds": 673.0,
+        "cold_build_seconds": 670.3333333333334,
+        "cold_restore_or_setup_seconds": 2.6666666666666665,
+        "warm1_seconds": 65.0,
+        "warm1_build_seconds": 49.333333333333336,
+        "warm1_restore_or_setup_seconds": 15.666666666666666,
         "warm2_seconds": null,
-        "warm_average_seconds": 58.666666666666664,
-        "warm_steady_seconds": 58.666666666666664,
+        "warm_average_seconds": 65.0,
+        "warm_steady_seconds": 65.0,
         "rolling_first_build_seconds": null,
         "rolling_warm_seconds": null,
-        "run_total_seconds": 713.6666666666666,
-        "storage_bytes": 819211657,
+        "run_total_seconds": 712.6666666666666,
+        "storage_bytes": 830712316,
         "docker_cache_import_seconds": null,
         "docker_cache_export_seconds": null,
         "storage_source": "boringcache-check",
         "product_refs": {
           "action_ref": "boringcache/one@v1",
-          "action_sha": "f32f40a7692bbdb51a94bb35500d4c45487023f9",
+          "action_sha": "0169b89420554d5bd7c68aef98cc5f1c9e1d494c",
           "api_url": "https://api.boringcache.com",
-          "cli_version": "v1.12.72",
-          "web_revision": "759a40e2"
+          "cli_version": "v1.12.73",
+          "web_revision": "030b4ff8"
         },
         "product_refs_consistent": false,
         "workspace": "boringcache/benchmarks",
-        "run_uid": "gh-25539922727-1",
+        "run_uid": "gh-25567372637-1",
         "mode": "gradle",
         "adapter": "gradle",
         "classification": {
@@ -144,13 +144,13 @@
       "reporting": {
         "comparative": true
       },
-      "warm_improvement_pct": -13.55,
-      "warm_build_improvement_pct": -2.36,
-      "cold_improvement_pct": -5.67,
-      "cold_build_improvement_pct": -5.42,
-      "run_total_improvement_pct": -7.32,
-      "storage_improvement_pct": 6.08,
-      "storage_saved_bytes": 53043675
+      "warm_improvement_pct": -17.47,
+      "warm_build_improvement_pct": -4.23,
+      "cold_improvement_pct": -1.36,
+      "cold_build_improvement_pct": -1.11,
+      "run_total_improvement_pct": -4.96,
+      "storage_improvement_pct": 6.0,
+      "storage_saved_bytes": 53025409
     },
     "default_lane": "fresh",
     "available_lanes": [
@@ -173,114 +173,114 @@
         "step": "Gradle build (native HTTP cache)",
         "headline_scenario": "cold",
         "headline_label": "Cold Build",
-        "before": "10m 47s",
-        "after": "11m 24s",
-        "before_seconds": 647.0,
-        "after_seconds": 683.67,
+        "before": "11m 4s",
+        "after": "11m 13s",
+        "before_seconds": 664.0,
+        "after_seconds": 673.0,
         "faster": "0",
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": null,
           "pairing_head_shas": [
-            "fc02f62751ec712e47fe12dffa092a22fc53d352",
-            "0027282d7c2500186a454daeb4a84d1af0f0c436",
-            "9c7457fb72d0360a2d5abdb85db13c2bd94e3d3f"
+            "66f08d05c060c0cbf7cd5a4ac9056536d3a5774e",
+            "d44567333c95475fe8866b01f8e0d41c0cb56c22",
+            "fc02f62751ec712e47fe12dffa092a22fc53d352"
           ],
           "sample_count": 3,
           "actions_cache": {
-            "run_id": 25539924037,
-            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25539924037",
-            "head_sha": "fc02f62751ec712e47fe12dffa092a22fc53d352",
-            "created_at": "2026-05-08T06:06:16Z",
+            "run_id": 25567372666,
+            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25567372666",
+            "head_sha": "66f08d05c060c0cbf7cd5a4ac9056536d3a5774e",
+            "created_at": "2026-05-08T16:37:04Z",
             "sample_count": 3,
             "sample_run_ids": [
-              25539924037,
-              25513392480,
-              25471164191
+              25567372666,
+              25564596119,
+              25539924037
             ],
             "sample_run_urls": [
-              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25539924037",
-              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25513392480",
-              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25471164191"
+              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25567372666",
+              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25564596119",
+              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25539924037"
             ],
             "head_shas": [
-              "fc02f62751ec712e47fe12dffa092a22fc53d352",
-              "0027282d7c2500186a454daeb4a84d1af0f0c436",
-              "9c7457fb72d0360a2d5abdb85db13c2bd94e3d3f"
+              "66f08d05c060c0cbf7cd5a4ac9056536d3a5774e",
+              "d44567333c95475fe8866b01f8e0d41c0cb56c22",
+              "fc02f62751ec712e47fe12dffa092a22fc53d352"
             ],
-            "cold_seconds": 647.0,
-            "cold_build_seconds": 645.3333333333334,
-            "cold_restore_or_setup_seconds": 1.6666666666666667,
-            "warm1_seconds": 51.666666666666664,
-            "warm1_build_seconds": 42.333333333333336,
-            "warm1_restore_or_setup_seconds": 9.333333333333334,
+            "cold_seconds": 664.0,
+            "cold_build_seconds": 663.0,
+            "cold_restore_or_setup_seconds": 1.0,
+            "warm1_seconds": 55.333333333333336,
+            "warm1_build_seconds": 47.333333333333336,
+            "warm1_restore_or_setup_seconds": 8.0,
             "warm2_seconds": null,
-            "warm_average_seconds": 51.666666666666664,
-            "warm_steady_seconds": 51.666666666666664,
+            "warm_average_seconds": 55.333333333333336,
+            "warm_steady_seconds": 55.333333333333336,
             "rolling_first_build_seconds": null,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 665.0,
-            "storage_bytes": 872255332,
+            "run_total_seconds": 679.0,
+            "storage_bytes": 883737725,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
             "storage_source": "github-actions-cache-api",
             "product_refs": {
               "api_url": "https://api.boringcache.com",
-              "web_revision": "78d79fa0"
+              "web_revision": "030b4ff8"
             },
             "product_refs_consistent": false,
             "workspace": "boringcache/benchmarks",
-            "run_uid": "gh-25539924037-1",
+            "run_uid": "gh-25567372666-1",
             "mode": "gradle",
             "adapter": "gradle"
           },
           "boringcache": {
-            "run_id": 25539922727,
-            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25539922727",
-            "head_sha": "fc02f62751ec712e47fe12dffa092a22fc53d352",
-            "created_at": "2026-05-08T06:06:15Z",
+            "run_id": 25567372637,
+            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25567372637",
+            "head_sha": "66f08d05c060c0cbf7cd5a4ac9056536d3a5774e",
+            "created_at": "2026-05-08T16:37:04Z",
             "sample_count": 3,
             "sample_run_ids": [
-              25539922727,
-              25513392461,
-              25471164164
+              25567372637,
+              25564596167,
+              25539922727
             ],
             "sample_run_urls": [
-              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25539922727",
-              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25513392461",
-              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25471164164"
+              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25567372637",
+              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25564596167",
+              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25539922727"
             ],
             "head_shas": [
-              "fc02f62751ec712e47fe12dffa092a22fc53d352",
-              "0027282d7c2500186a454daeb4a84d1af0f0c436",
-              "9c7457fb72d0360a2d5abdb85db13c2bd94e3d3f"
+              "66f08d05c060c0cbf7cd5a4ac9056536d3a5774e",
+              "d44567333c95475fe8866b01f8e0d41c0cb56c22",
+              "fc02f62751ec712e47fe12dffa092a22fc53d352"
             ],
-            "cold_seconds": 683.6666666666666,
-            "cold_build_seconds": 680.3333333333334,
-            "cold_restore_or_setup_seconds": 3.3333333333333335,
-            "warm1_seconds": 58.666666666666664,
-            "warm1_build_seconds": 43.333333333333336,
-            "warm1_restore_or_setup_seconds": 15.333333333333334,
+            "cold_seconds": 673.0,
+            "cold_build_seconds": 670.3333333333334,
+            "cold_restore_or_setup_seconds": 2.6666666666666665,
+            "warm1_seconds": 65.0,
+            "warm1_build_seconds": 49.333333333333336,
+            "warm1_restore_or_setup_seconds": 15.666666666666666,
             "warm2_seconds": null,
-            "warm_average_seconds": 58.666666666666664,
-            "warm_steady_seconds": 58.666666666666664,
+            "warm_average_seconds": 65.0,
+            "warm_steady_seconds": 65.0,
             "rolling_first_build_seconds": null,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 713.6666666666666,
-            "storage_bytes": 819211657,
+            "run_total_seconds": 712.6666666666666,
+            "storage_bytes": 830712316,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
             "storage_source": "boringcache-check",
             "product_refs": {
               "action_ref": "boringcache/one@v1",
-              "action_sha": "f32f40a7692bbdb51a94bb35500d4c45487023f9",
+              "action_sha": "0169b89420554d5bd7c68aef98cc5f1c9e1d494c",
               "api_url": "https://api.boringcache.com",
-              "cli_version": "v1.12.72",
-              "web_revision": "759a40e2"
+              "cli_version": "v1.12.73",
+              "web_revision": "030b4ff8"
             },
             "product_refs_consistent": false,
             "workspace": "boringcache/benchmarks",
-            "run_uid": "gh-25539922727-1",
+            "run_uid": "gh-25567372637-1",
             "mode": "gradle",
             "adapter": "gradle",
             "classification": {
@@ -302,13 +302,13 @@
           "reporting": {
             "comparative": true
           },
-          "warm_improvement_pct": -13.55,
-          "warm_build_improvement_pct": -2.36,
-          "cold_improvement_pct": -5.67,
-          "cold_build_improvement_pct": -5.42,
-          "run_total_improvement_pct": -7.32,
-          "storage_improvement_pct": 6.08,
-          "storage_saved_bytes": 53043675
+          "warm_improvement_pct": -17.47,
+          "warm_build_improvement_pct": -4.23,
+          "cold_improvement_pct": -1.36,
+          "cold_build_improvement_pct": -1.11,
+          "run_total_improvement_pct": -4.96,
+          "storage_improvement_pct": 6.0,
+          "storage_saved_bytes": 53025409
         }
       },
       "rolling": {
@@ -326,114 +326,114 @@
         "step": "Gradle build (native HTTP cache)",
         "headline_scenario": "cold",
         "headline_label": "Commit Build",
-        "before": "2m 6s",
-        "after": "7m 44s",
-        "before_seconds": 125.67,
-        "after_seconds": 463.67,
+        "before": "6m 18s",
+        "after": "7m 31s",
+        "before_seconds": 378.33,
+        "after_seconds": 451.33,
         "faster": "0",
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": null,
           "pairing_head_shas": [
-            "fc02f62751ec712e47fe12dffa092a22fc53d352",
-            "0027282d7c2500186a454daeb4a84d1af0f0c436",
-            "9c7457fb72d0360a2d5abdb85db13c2bd94e3d3f"
+            "66f08d05c060c0cbf7cd5a4ac9056536d3a5774e",
+            "d44567333c95475fe8866b01f8e0d41c0cb56c22",
+            "fc02f62751ec712e47fe12dffa092a22fc53d352"
           ],
           "sample_count": 3,
           "actions_cache": {
-            "run_id": 25539925927,
-            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25539925927",
-            "head_sha": "fc02f62751ec712e47fe12dffa092a22fc53d352",
-            "created_at": "2026-05-08T06:06:20Z",
+            "run_id": 25567376411,
+            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25567376411",
+            "head_sha": "66f08d05c060c0cbf7cd5a4ac9056536d3a5774e",
+            "created_at": "2026-05-08T16:37:09Z",
             "sample_count": 3,
             "sample_run_ids": [
-              25539925927,
-              25513396666,
-              25471166643
+              25567376411,
+              25564605171,
+              25539925927
             ],
             "sample_run_urls": [
-              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25539925927",
-              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25513396666",
-              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25471166643"
+              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25567376411",
+              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25564605171",
+              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25539925927"
             ],
             "head_shas": [
-              "fc02f62751ec712e47fe12dffa092a22fc53d352",
-              "0027282d7c2500186a454daeb4a84d1af0f0c436",
-              "9c7457fb72d0360a2d5abdb85db13c2bd94e3d3f"
+              "66f08d05c060c0cbf7cd5a4ac9056536d3a5774e",
+              "d44567333c95475fe8866b01f8e0d41c0cb56c22",
+              "fc02f62751ec712e47fe12dffa092a22fc53d352"
             ],
-            "cold_seconds": 125.66666666666667,
-            "cold_build_seconds": 101.33333333333333,
-            "cold_restore_or_setup_seconds": 24.333333333333332,
+            "cold_seconds": 378.3333333333333,
+            "cold_build_seconds": 359.6666666666667,
+            "cold_restore_or_setup_seconds": 18.666666666666668,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 125.66666666666667,
+            "rolling_first_build_seconds": 378.3333333333333,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 146.0,
-            "storage_bytes": 2823057310,
+            "run_total_seconds": 399.6666666666667,
+            "storage_bytes": 2968946043,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
             "storage_source": "github-actions-cache-api",
             "product_refs": {
               "api_url": "https://api.boringcache.com",
-              "web_revision": "78d79fa0"
+              "web_revision": "030b4ff8"
             },
             "product_refs_consistent": false,
             "workspace": "boringcache/benchmarks",
-            "run_uid": "gh-25539925927-1",
+            "run_uid": "gh-25567376411-1",
             "mode": "gradle",
             "adapter": "gradle"
           },
           "boringcache": {
-            "run_id": 25541204673,
-            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25541204673",
-            "head_sha": "fc02f62751ec712e47fe12dffa092a22fc53d352",
-            "created_at": "2026-05-08T06:41:09Z",
+            "run_id": 25567377736,
+            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25567377736",
+            "head_sha": "66f08d05c060c0cbf7cd5a4ac9056536d3a5774e",
+            "created_at": "2026-05-08T16:37:11Z",
             "sample_count": 3,
             "sample_run_ids": [
-              25541204673,
-              25513398060,
-              25471167280
+              25567377736,
+              25564606299,
+              25541204673
             ],
             "sample_run_urls": [
-              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25541204673",
-              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25513398060",
-              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25471167280"
+              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25567377736",
+              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25564606299",
+              "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/25541204673"
             ],
             "head_shas": [
-              "fc02f62751ec712e47fe12dffa092a22fc53d352",
-              "0027282d7c2500186a454daeb4a84d1af0f0c436",
-              "9c7457fb72d0360a2d5abdb85db13c2bd94e3d3f"
+              "66f08d05c060c0cbf7cd5a4ac9056536d3a5774e",
+              "d44567333c95475fe8866b01f8e0d41c0cb56c22",
+              "fc02f62751ec712e47fe12dffa092a22fc53d352"
             ],
-            "cold_seconds": 463.6666666666667,
-            "cold_build_seconds": 456.6666666666667,
-            "cold_restore_or_setup_seconds": 7.0,
+            "cold_seconds": 451.3333333333333,
+            "cold_build_seconds": 439.3333333333333,
+            "cold_restore_or_setup_seconds": 12.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 463.6666666666667,
+            "rolling_first_build_seconds": 451.3333333333333,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 490.3333333333333,
-            "storage_bytes": 819292179,
+            "run_total_seconds": 479.3333333333333,
+            "storage_bytes": 830629246,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
             "storage_source": "boringcache-check",
             "product_refs": {
               "action_ref": "boringcache/one@v1",
-              "action_sha": "f32f40a7692bbdb51a94bb35500d4c45487023f9",
+              "action_sha": "0169b89420554d5bd7c68aef98cc5f1c9e1d494c",
               "api_url": "https://api.boringcache.com",
-              "cli_version": "v1.12.72",
-              "web_revision": "759a40e2"
+              "cli_version": "v1.12.73",
+              "web_revision": "030b4ff8"
             },
             "product_refs_consistent": false,
             "workspace": "boringcache/benchmarks",
-            "run_uid": "gh-25541204673-1",
+            "run_uid": "gh-25567377736-1",
             "mode": "gradle",
             "adapter": "gradle",
             "classification": {
@@ -457,11 +457,11 @@
           },
           "warm_improvement_pct": null,
           "warm_build_improvement_pct": null,
-          "cold_improvement_pct": -268.97,
-          "cold_build_improvement_pct": -350.66,
-          "run_total_improvement_pct": -235.84,
-          "storage_improvement_pct": 70.98,
-          "storage_saved_bytes": 2003765131
+          "cold_improvement_pct": -19.3,
+          "cold_build_improvement_pct": -22.15,
+          "run_total_improvement_pct": -19.93,
+          "storage_improvement_pct": 72.02,
+          "storage_saved_bytes": 2138316797
         }
       }
     }
