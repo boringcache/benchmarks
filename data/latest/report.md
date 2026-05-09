@@ -1,6 +1,6 @@
 ## Latest Benchmark Report
 
-Generated: 2026-05-09 01:16 UTC
+Generated: 2026-05-09 05:35 UTC
 
 ### Lane Coverage
 
@@ -24,9 +24,9 @@ Generated: 2026-05-09 01:16 UTC
 | --- | --- | --- | --- | --- | --- | --- |
 | Hugo | Warm Build | 0m 9s | 0m 7s | near tie | 3.72 GB (91.8%) | cold, workflow total faster; 3 paired samples |
 | Hugo Go | Cold Build | 1m 21s | 1m 20s | near tie | 452.52 MB more (-153.98%) | warm, workflow total slower; BC used more storage; 3 paired samples |
-| Immich | Cold Build | 5m 58s | 4m 40s | 22% faster | 8.29 GB (79.04%) | mixed: warm slower; workflow total faster; 3 paired samples |
+| Immich | Cold Build | 5m 19s | 4m 41s | 12% faster | 8.50 GB (79.46%) | mixed: warm slower; workflow total faster; 3 paired samples |
 | Mastodon | Cold Build | 10m 11s | 9m 20s | 8% faster | 9.22 GB (90.03%) | workflow total faster; 3 paired samples |
-| PostHog | Cold Build | 27m 3s | 15m 38s | 42% faster | 4.82 GB (43.15%) | workflow total faster; 3 paired samples |
+| PostHog | Cold Build | 28m 14s | 15m 43s | 44% faster | 4.17 GB (39.63%) | workflow total faster; 3 paired samples |
 | Storybook | Warm Build | 0m 51s | 0m 46s | 10% faster | 43.81 MB more (-5.99%) | cold, workflow total faster; BC used more storage; 3 paired samples |
 | OpenTelemetry Java | Cold Build | 10m 21s | 11m 31s | 11% slower | 50.64 MB (6.01%) | warm, workflow total slower; 3 paired samples |
 | Spring AI | Warm Build | 0m 30s | 0m 28s | near tie | 1.38 MB (0.15%) | workflow total slower; 3 paired samples |
@@ -40,9 +40,9 @@ Generated: 2026-05-09 01:16 UTC
 | --- | --- | --- | --- | --- | --- | --- |
 | Hugo | Commit Build | 0m 9s | 0m 11s | near tie | 4.61 GB (93.29%) | workflow total slower; tiny run; setup dominates; 1 steady samples; 2/3 bootstrap samples excluded |
 | Hugo Go | Commit Build | 0m 21s | 1m 4s | 206% slower | 169.64 MB (18.52%) | workflow total slower; 3 paired samples |
-| Immich | Commit Build | 3m 0s | 2m 31s | 16% faster | 7.92 GB (78.27%) | workflow total faster; 3 paired samples |
+| Immich | Commit Build | 0m 13s | 0m 10s | near tie | 7.68 GB (77.74%) | tiny run; setup dominates; 3 paired samples |
 | Mastodon | Commit Build | 1m 14s | 1m 7s | 9% faster | 8.94 GB (89.75%) | 2 steady samples; 1/3 bootstrap samples excluded |
-| PostHog | Commit Build | 17m 38s | 7m 38s | 57% faster | 4.92 GB (44.77%) | workflow total faster; 3 paired samples |
+| PostHog | Commit Build | 14m 8s | 4m 16s | 70% faster | 3.80 GB (38.5%) | workflow total faster; 3 paired samples |
 | Storybook | Commit Build | 1m 42s | 2m 44s | 61% slower | 893.13 MB (53.55%) | workflow total slower; 3 paired samples |
 | OpenTelemetry Java | Commit Build | 1m 19s | 4m 32s | 243% slower | 2.09 GB (73.01%) | workflow total slower; 3 paired samples |
 | Spring AI | Commit Build | 0m 51s | 3m 12s | 276% slower | 2.39 GB (72.14%) | workflow total slower; 3 paired samples |
