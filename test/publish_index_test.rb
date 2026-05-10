@@ -157,7 +157,101 @@ class PublishIndexTest < Minitest::Test
     assert_equal [steady], measured
   end
 
+  def test_lane_average_uses_latest_product_cohort_before_bootstrap_filtering
+    old_steady = lane_pair(
+      run_id: "old-steady",
+      created_at: "2026-05-01T10:00:00Z",
+      cli_version: "v1.12.85",
+      bc_classification: { "reporting_mode" => "comparative" },
+      actions_seconds: 10,
+      boringcache_seconds: 8
+    )
+    current_bootstrap = lane_pair(
+      run_id: "current-bootstrap",
+      created_at: "2026-05-02T10:00:00Z",
+      cli_version: "v1.12.86",
+      bc_classification: {
+        "reporting_mode" => "investigation_only",
+        "reporting_reason" => "rolling_reseed",
+        "rolling_reseed_count" => 1,
+        "rolling_bootstrap_count" => 1,
+        "cache_import_status" => "proxy_unreadable"
+      },
+      actions_seconds: 10,
+      boringcache_seconds: 30
+    )
+
+    averaged = average_lane_entries(
+      [current_bootstrap, old_steady],
+      benchmark: benchmark_config(category: "docker"),
+      lane: "rolling"
+    )
+
+    assert_equal ["current-bootstrap-bc"], averaged.dig("comparison", "boringcache", "sample_run_ids")
+    assert_equal "v1.12.86", averaged.dig("comparison", "boringcache", "product_refs", "cli_version")
+    assert_equal false, averaged.dig("comparison", "reporting", "comparative")
+    assert_equal "cache bootstrap", averaged["comparison"].dig("reporting", "result_text")
+    assert_equal "latest_boringcache_product_refs", averaged.dig("comparison", "product_cohort", "basis")
+    assert_equal 1, averaged.dig("comparison", "product_cohort", "excluded_sample_count")
+  end
+
   private
+
+  def benchmark_config(category:)
+    {
+      "benchmark" => "hugo",
+      "name" => "Hugo",
+      "logo" => "hugo",
+      "repo" => "gohugoio/hugo",
+      "source_repo" => "boringcache/benchmark-hugo",
+      "public" => true,
+      "category" => category,
+      "step" => "Docker build"
+    }
+  end
+
+  def lane_pair(run_id:, created_at:, cli_version:, bc_classification:, actions_seconds:, boringcache_seconds:)
+    {
+      "comparison" => {
+        "pairing_head_sha" => "feedface",
+        "pairing_head_shas" => ["feedface"],
+        "actions_cache" => pair_snapshot(
+          run_id: "#{run_id}-ac",
+          created_at: created_at,
+          seconds: actions_seconds,
+          product_refs: {},
+          classification: { "reporting_mode" => "comparative" }
+        ),
+        "boringcache" => pair_snapshot(
+          run_id: "#{run_id}-bc",
+          created_at: created_at,
+          seconds: boringcache_seconds,
+          product_refs: PRODUCT_REFS.merge("cli_version" => cli_version),
+          classification: bc_classification
+        )
+      }
+    }
+  end
+
+  def pair_snapshot(run_id:, created_at:, seconds:, product_refs:, classification:)
+    {
+      "run_id" => run_id,
+      "run_url" => "https://github.com/boringcache/benchmark-hugo/actions/runs/#{run_id}",
+      "head_sha" => "feedface",
+      "created_at" => created_at,
+      "cold_seconds" => seconds,
+      "warm1_seconds" => seconds,
+      "warm_average_seconds" => seconds,
+      "run_total_seconds" => seconds,
+      "storage_bytes" => 1_000,
+      "storage_source" => "test",
+      "classification" => classification,
+      "product_refs" => product_refs,
+      "workspace" => "boringcache/benchmarks",
+      "mode" => "docker",
+      "adapter" => "oci"
+    }
+  end
 
   def paired_entry(ac_classification:, bc_classification:)
     {
