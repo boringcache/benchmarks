@@ -38,7 +38,7 @@ This repo:
 
 ## Latest Benchmark Report
 
-Generated: 2026-05-10 09:09 UTC
+Generated: 2026-05-10 12:52 UTC
 
 ### Lane Coverage
 
@@ -63,7 +63,7 @@ Generated: 2026-05-10 09:09 UTC
 | Hugo | Cold Build | 3m 36s | 3m 21s | 7% faster | 3.41 GB (91.12%) | workflow total faster; 3 paired samples |
 | Hugo Go | Cold Build | 1m 21s | 1m 20s | near tie | 452.52 MB more (-153.98%) | warm, workflow total slower; BC used more storage; 3 paired samples |
 | Immich | Cold Build | 5m 8s | 4m 42s | 9% faster | 7.88 GB (78.19%) | workflow total faster; 3 paired samples |
-| Mastodon | Cold Build | 10m 11s | 9m 20s | 8% faster | 9.22 GB (90.03%) | workflow total faster; 3 paired samples |
+| Mastodon | Cold Build | 10m 14s | 9m 13s | 10% faster | 9.53 GB (90.32%) | workflow total faster; 3 paired samples |
 | PostHog | Warm Build | 3m 17s | 0m 11s | 94% faster | 7.01 GB (52.46%) | cold, workflow total faster; 3 paired samples |
 | Storybook | Warm Build | 0m 51s | 0m 46s | 10% faster | 43.81 MB more (-5.99%) | cold, workflow total faster; BC used more storage; 3 paired samples |
 | OpenTelemetry Java | Cold Build | 10m 21s | 11m 31s | 11% slower | 50.64 MB (6.01%) | warm, workflow total slower; 3 paired samples |
@@ -79,7 +79,7 @@ Generated: 2026-05-10 09:09 UTC
 | Hugo | Commit Build | 2m 13s | 3m 26s | cache import unavailable | 3.41 GB (91.12%) | 3 paired samples; BC cache import proxy_unreadable; Rolling cache import was unavailable, so this sample populated the rolling cache and is excluded from parity claims. |
 | Hugo Go | Commit Build | 0m 21s | 1m 4s | 206% slower | 169.64 MB (18.52%) | workflow total slower; 3 paired samples |
 | Immich | Commit Build | 0m 9s | 0m 10s | near tie | 7.37 GB (77.03%) | workflow total slower; tiny run; setup dominates; 3 paired samples |
-| Mastodon | Commit Build | 1m 14s | 1m 7s | 9% faster | 8.94 GB (89.75%) | 2 steady samples; 1/3 bootstrap samples excluded |
+| Mastodon | Commit Build | 0m 15s | 0m 17s | near tie | 8.94 GB (89.74%) | workflow total slower; tiny run; setup dominates; 1 steady samples; 2/3 bootstrap samples excluded |
 | PostHog | Commit Build | 21m 31s | 8m 9s | 62% faster | 6.46 GB (51.56%) | workflow total faster; 3 paired samples |
 | Storybook | Commit Build | 1m 42s | 2m 44s | 61% slower | 893.13 MB (53.55%) | workflow total slower; 3 paired samples |
 | OpenTelemetry Java | Commit Build | 1m 19s | 4m 32s | 243% slower | 2.09 GB (73.01%) | workflow total slower; 3 paired samples |
