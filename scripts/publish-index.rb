@@ -467,18 +467,6 @@ def latest_run_with_artifact(runs_for_head:, repo:, benchmark_id:, strategy:, la
   end
 end
 
-def head_complete_for_all_lanes?(head:, repo:, benchmark_id:, ac_runs_by_head:, bc_runs_by_head:, artifacts_cache:)
-  LANE_IDS.all? do |lane|
-    !latest_run_with_artifact(
-      runs_for_head: ac_runs_by_head[head], repo: repo, benchmark_id: benchmark_id,
-      strategy: "actions-cache", lane: lane, artifacts_cache: artifacts_cache
-    ).nil? && !latest_run_with_artifact(
-      runs_for_head: bc_runs_by_head[head], repo: repo, benchmark_id: benchmark_id,
-      strategy: "boringcache", lane: lane, artifacts_cache: artifacts_cache
-    ).nil?
-  end
-end
-
 def fetch_run_jobs(repo:, run_id:)
   output = run_cmd(
     "gh", "api",
@@ -929,6 +917,45 @@ def stable_hash_signature(hash)
   JSON.generate(hash.sort.to_h)
 end
 
+def product_ref_signature(snapshot)
+  stable_hash_signature(snapshot && snapshot["product_refs"])
+end
+
+def latest_product_ref_signature(snapshots)
+  snapshots
+    .compact
+    .sort_by { |snapshot| parse_timestamp(snapshot["created_at"]) || Time.at(0) }
+    .reverse_each do |snapshot|
+      signature = product_ref_signature(snapshot)
+      return signature if signature
+    end
+
+  nil
+end
+
+def latest_boringcache_product_cohort(entries)
+  snapshots = entries.map { |entry| entry.dig("comparison", "boringcache") }.compact
+  signature = latest_product_ref_signature(snapshots)
+  return [entries, nil] if signature.nil?
+
+  filtered = entries.select do |entry|
+    product_ref_signature(entry.dig("comparison", "boringcache")) == signature
+  end
+  return [entries, nil] if filtered.empty?
+
+  metadata = nil
+  if filtered.length < entries.length
+    metadata = {
+      "basis" => "latest_boringcache_product_refs",
+      "source_sample_count" => entries.length,
+      "excluded_sample_count" => entries.length - filtered.length,
+      "product_refs" => JSON.parse(signature)
+    }
+  end
+
+  [filtered, metadata]
+end
+
 def most_common_hash(values)
   signatures = values.map { |value| stable_hash_signature(value) }.compact
   return nil if signatures.empty?
@@ -1016,15 +1043,17 @@ end
 def average_lane_entries(entries, benchmark:, lane:)
   return nil if entries.empty?
 
-  classifications = entries.map { |entry| pair_classification(entry, lane: lane, category: benchmark["category"]) }
+  cohort_entries, product_cohort = latest_boringcache_product_cohort(entries)
+  classifications = cohort_entries.map { |entry| pair_classification(entry, lane: lane, category: benchmark["category"]) }
   all_classification = BenchmarkReporting.rollup_classification(
     lane: lane,
     category: benchmark["category"],
     classifications: classifications
   )
 
-  measured_entries = comparative_entries(entries, lane: lane, category: benchmark["category"])
-  measured_entries = entries if measured_entries.empty?
+  steady_entries = comparative_entries(cohort_entries, lane: lane, category: benchmark["category"])
+  measured_entries = steady_entries.empty? ? cohort_entries : steady_entries
+  investigation_excluded_count = steady_entries.empty? ? 0 : cohort_entries.length - steady_entries.length
   measured_classifications = measured_entries.map { |entry| pair_classification(entry, lane: lane, category: benchmark["category"]) }
   measured_classification = BenchmarkReporting.rollup_classification(
     lane: lane,
@@ -1032,14 +1061,17 @@ def average_lane_entries(entries, benchmark:, lane:)
     classifications: measured_classifications
   )
 
-  if measured_entries.length < entries.length && measured_classification && all_classification
-    excluded_count = entries.length - measured_entries.length
-    measured_classification["source_sample_count"] = entries.length
-    measured_classification["excluded_sample_count"] = excluded_count
-    measured_classification["excluded_investigation_only_count"] = excluded_count
+  if investigation_excluded_count.positive? && measured_classification && all_classification
+    measured_classification["source_sample_count"] = cohort_entries.length
+    measured_classification["excluded_sample_count"] = investigation_excluded_count
+    measured_classification["excluded_investigation_only_count"] = investigation_excluded_count
     measured_classification["rolling_bootstrap_count"] = all_classification["rolling_bootstrap_count"]
     measured_classification["rolling_reseed_count"] = all_classification["rolling_reseed_count"]
-    measured_classification["reporting_note"] = "#{excluded_count}/#{entries.length} cache-bootstrap samples were excluded from this comparative row."
+    measured_classification["reporting_note"] = "#{investigation_excluded_count}/#{cohort_entries.length} cache-bootstrap samples were excluded from this comparative row."
+  end
+
+  if product_cohort && measured_classification
+    measured_classification["product_cohort"] = product_cohort
   end
 
   actions_snapshot = average_snapshot(measured_entries.map { |entry| entry.dig("comparison", "actions_cache") })
@@ -1074,7 +1106,7 @@ def average_lane_entries(entries, benchmark:, lane:)
   return nil if faster_pct.nil?
   faster_pct = [faster_pct, 0].max
 
-  {
+  lane_entry = {
     "lane" => lane,
     "lane_label" => lane_label(lane),
     "first_build_label" => first_build_label(lane),
@@ -1119,6 +1151,8 @@ def average_lane_entries(entries, benchmark:, lane:)
       end
     }
   }
+  lane_entry["comparison"]["product_cohort"] = product_cohort if product_cohort
+  lane_entry
 end
 
 def comparative_entries(entries, lane:, category:)
@@ -1303,7 +1337,7 @@ def build_report(entries, generated_at:)
     "",
     "Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.",
     "",
-    "Rows use the latest #{PAIR_COUNT} same-commit AC/BC pairs when enough samples are available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling cache-bootstrap samples are excluded from comparative rows when steady samples exist.",
+    "Rows prefer the latest BoringCache product cohort for same-commit AC/BC pairs, then use up to #{PAIR_COUNT} steady samples when available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling cache-bootstrap samples are excluded from comparative rows when steady samples exist.",
     ""
   ].join("\n")
 end
@@ -1374,15 +1408,6 @@ def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_ru
   artifact_ids = benchmark_artifact_ids(benchmark)
 
   paired.each do |head|
-    next unless head_complete_for_all_lanes?(
-      head: head,
-      repo: benchmark.fetch("source_repo"),
-      benchmark_id: artifact_ids,
-      ac_runs_by_head: ac_runs_by_head,
-      bc_runs_by_head: bc_runs_by_head,
-      artifacts_cache: artifacts_cache
-    )
-
     ac_run = latest_run_with_artifact(
       runs_for_head: ac_runs_by_head[head],
       repo: benchmark.fetch("source_repo"),
@@ -1399,6 +1424,7 @@ def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_ru
       lane: lane,
       artifacts_cache: artifacts_cache
     )
+    next if ac_run.nil? || bc_run.nil?
 
     boringcache_data = load_strategy_data(
       temp_root: temp_root,
