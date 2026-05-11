@@ -38,7 +38,7 @@ This repo:
 
 ## Latest Benchmark Report
 
-Generated: 2026-05-11 09:48 UTC
+Generated: 2026-05-11 13:33 UTC
 
 ### Lane Coverage
 
@@ -60,33 +60,33 @@ Generated: 2026-05-11 09:48 UTC
 
 | Benchmark | Metric | actions/cache | BoringCache | Result | Storage Delta | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | Cold Build | 3m 23s | 3m 26s | near tie | 3.62 GB (91.6%) | workflow total slower; 3 paired samples |
-| Hugo Go | Cold Build | 1m 21s | 1m 20s | near tie | 452.52 MB more (-153.98%) | warm, workflow total slower; BC used more storage; 3 paired samples |
-| Immich | Cold Build | 5m 8s | 4m 42s | 9% faster | 7.88 GB (78.19%) | workflow total faster; 3 paired samples |
-| Mastodon | Cold Build | 10m 4s | 9m 20s | 7% faster | 9.67 GB (90.45%) | workflow total faster; 3 paired samples |
-| PostHog | Warm Build | 2m 47s | 0m 13s | 92% faster | 3.98 GB (38.51%) | cold, workflow total faster; 3 paired samples |
-| Storybook | Cold Build | 3m 25s | 3m 33s | 4% slower | 43.39 MB more (-5.94%) | workflow total slower; BC used more storage; 3 paired samples |
-| OpenTelemetry Java | Cold Build | 10m 21s | 11m 31s | 11% slower | 50.64 MB (6.01%) | warm, workflow total slower; 3 paired samples |
-| Spring AI | Warm Build | 0m 30s | 0m 28s | near tie | 1.38 MB (0.15%) | workflow total slower; 3 paired samples |
-| gRPC | Cold Build | 35m 37s | 38m 24s | 8% slower | 647.78 MB more (-611.24%) | warm, workflow total slower; BC used more storage; 3 paired samples |
-| Zed | Cold Build | 50m 0s | 50m 8s | near tie | 2.04 GB (73.48%) | 3 paired samples |
-| n8n | Cold Build | 5m 36s | 5m 38s | near tie | 15.53 MB more (-2.07%) | warm slower; BC used more storage; 3 paired samples |
+| Hugo | Cold Build | 3m 24s | 3m 26s | near tie | 3.76 GB (91.88%) | workflow total slower; 3 paired samples |
+| Hugo Go | Cold Build | 1m 19s | 1m 20s | near tie | 537.23 MB more (-182.86%) | warm, workflow total slower; BC used more storage; 3 paired samples |
+| Immich | Cold Build | 5m 9s | 4m 42s | 9% faster | 8.12 GB (78.7%) | workflow total faster; 3 paired samples |
+| Mastodon | Warm Build | 0m 16s | 0m 12s | near tie | 9.96 GB (90.7%) | cold, workflow total faster; 3 paired samples |
+| PostHog | Cold Build | 21m 46s | 19m 37s | 10% faster | 6.69 GB (51.65%) | mixed: warm slower; workflow total faster; 3 paired samples |
+| Storybook | Cold Build | 3m 33s | 3m 39s | near tie | 42.59 MB more (-5.83%) | warm, workflow total slower; BC used more storage; 3 paired samples |
+| OpenTelemetry Java | Warm Build | 1m 6s | 1m 2s | 5% faster | 50.73 MB (6.02%) | cold, workflow total slower; 3 paired samples |
+| Spring AI | Cold Build | 3m 59s | 4m 6s | near tie | 1.38 MB (0.15%) | workflow total slower; 3 paired samples |
+| gRPC | Cold Build | 35m 25s | 34m 10s | 4% faster | 647.71 MB more (-611.02%) | mixed: warm slower; workflow total faster; BC used more storage; 3 paired samples |
+| Zed | Cold Build | 49m 59s | 44m 35s | 11% faster | 6.14 MB (0.22%) | workflow total faster; 3 paired samples |
+| n8n | Cold Build | 5m 23s | 5m 19s | near tie | 40.42 MB more (-5.4%) | warm, workflow total slower; BC used more storage; 3 paired samples |
 
 ### Rolling
 
 | Benchmark | Metric | actions/cache | BoringCache | Result | Storage Delta | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | Commit Build | 2m 49s | 2m 50s | near tie | 3.59 GB (91.53%) | 2 steady samples; 1/3 bootstrap samples excluded |
-| Hugo Go | Commit Build | 0m 21s | 1m 4s | 206% slower | 169.64 MB (18.52%) | workflow total slower; 3 paired samples |
-| Immich | Commit Build | 0m 9s | 0m 10s | near tie | 7.37 GB (77.03%) | workflow total slower; tiny run; setup dominates; 3 paired samples |
-| Mastodon | Commit Build | 1m 32s | 1m 9s | 25% faster | 8.95 GB (89.76%) | workflow total faster; 3 paired samples |
-| PostHog | Commit Build | 18m 59s | 12m 10s | 36% faster | 4.86 GB (44.09%) | workflow total faster; 3 paired samples |
-| Storybook | Commit Build | 2m 36s | 2m 40s | near tie | 910.90 MB (54.06%) | workflow total slower; 3 paired samples |
-| OpenTelemetry Java | Commit Build | 1m 19s | 4m 32s | 243% slower | 2.09 GB (73.01%) | workflow total slower; 3 paired samples |
-| Spring AI | Commit Build | 0m 51s | 3m 12s | 276% slower | 2.39 GB (72.14%) | workflow total slower; 3 paired samples |
-| gRPC | Commit Build | 7m 14s | 7m 27s | near tie | 407.65 MB more (-103.25%) | BC used more storage; 3 paired samples |
-| Zed | Commit Build | 21m 15s | 27m 36s | 30% slower | 10.72 GB (93.58%) | workflow total slower; 3 paired samples |
-| n8n | Commit Build | 2m 36s | 2m 30s | 4% faster | 1.10 GB (59.54%) | workflow total slower; 3 paired samples |
+| Hugo | Commit Build | 2m 53s | 2m 47s | 3% faster | 3.76 GB (91.88%) | 3 paired samples |
+| Hugo Go | Commit Build | 0m 21s | 1m 3s | 194% slower | 116.84 MB more (-11.91%) | workflow total slower; BC used more storage; 3 paired samples |
+| Immich | Commit Build | 3m 10s | 1m 19s | 59% faster | 7.83 GB (78.09%) | workflow total faster; 3 paired samples |
+| Mastodon | Commit Build | 2m 18s | 1m 45s | 24% faster | 8.96 GB (89.77%) | workflow total faster; 3 paired samples |
+| PostHog | Commit Build | 22m 19s | 12m 40s | 43% faster | 6.13 GB (49.5%) | workflow total faster; 3 paired samples |
+| Storybook | Workflow Total | 2m 1s | 1m 59s | near tie | 985.76 MB (56.04%) | commit build slower; 3 paired samples |
+| OpenTelemetry Java | Commit Build | 1m 19s | 4m 37s | 249% slower | 2.10 GB (73.1%) | workflow total slower; 3 paired samples |
+| Spring AI | Workflow Total | 1m 16s | 0m 52s | 32% faster | 2.39 GB (72.14%) | commit build faster; 3 paired samples |
+| gRPC | Commit Build | 9m 7s | 8m 55s | near tie | 504.01 MB more (-112.08%) | BC used more storage; 3 paired samples |
+| Zed | Workflow Total | 20m 59s | 20m 48s | near tie | 3.07 GB more (-26.85%) | commit build slower; BC used more storage; 3 paired samples |
+| n8n | Commit Build | 4m 8s | 4m 25s | 7% slower | 1.11 GB (57.56%) | workflow total slower; 3 paired samples |
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
 
