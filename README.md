@@ -19,10 +19,10 @@ Each benchmark repo:
 
 - pins upstream source under `upstream/`
 - owns its own upstream sync + AC/BC workflows
-- uses real upstream sync commits to drive fresh (`cold` + `warm1`) and rolling (first-build) comparisons
+- uses real upstream sync commits to drive fresh (`cold` + `warm1`) and rolling commit-build comparisons
 - publishes JSON benchmark artifacts
 
-Docker benchmark rows measure BuildKit's outer registry cache path. They build the upstream Dockerfile unchanged and do not call `boringcache restore`, `boringcache save`, or `boringcache run` inside Dockerfile `RUN` steps. Public reporting is grounded on fresh isolated lanes and rolling continuous-commit first builds, with total workflow time included beside cold and warm timings. Rolling Docker import failures are investigation-only samples, not parity claims. The aggregate feed also suppresses incomplete storage probes instead of turning them into false savings rows.
+Docker benchmark rows measure BuildKit's outer registry cache path. They build the upstream Dockerfile unchanged and do not call `boringcache restore`, `boringcache save`, or `boringcache run` inside Dockerfile `RUN` steps. Public reporting is grounded on fresh cold-build plus warm-rerun lanes and rolling continuous-commit builds, with total workflow time included beside cold and warm timings. Rolling Docker import failures are investigation-only samples, not parity claims. The aggregate feed also suppresses incomplete storage probes instead of turning them into false savings rows.
 
 This repo:
 
@@ -99,7 +99,7 @@ Rows prefer the latest BoringCache product cohort for same-commit AC/BC pairs, t
 When benchmark data is used in public-facing copy:
 
 - use the aggregate feed as the source of truth
-- keep the claim anchored to the current fresh cold/warm comparison or rolling first-build result
+- keep the claim anchored to the current fresh cold-build/warm-rerun comparison or rolling commit-build result
 - keep mixed or negative results explicit
 - do not promote incomplete benchmark entries in hero copy until the source workflow is fixed
 - do not present rolling Docker import failures as parity wins
@@ -234,7 +234,7 @@ fields required by its matrix row:
 
 The launch matrix distinguishes cold fresh runs, same-runner reruns,
 fresh-runner reruns, repeat fresh-after-purge runs, Docker continuous rolling
-first-builds, Docker same-alias two-writer proof, cleanup interruption recovery,
+commit builds, Docker same-alias two-writer proof, cleanup interruption recovery,
 quota enforcement, save hot-path pressure, PR/fork trust cases, auth/billing
 controls, and customer-safe diagnostics. That prevents a single warm sample or
 local test from standing in for released-path evidence.

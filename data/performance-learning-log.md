@@ -5,7 +5,7 @@ stability learnings. Keep entries factual and tied to concrete runs/commits.
 
 Current reporting standard:
 
-- public benchmark reports use fresh isolated (`cold` + one `warm1` rerun), rolling historical (first build after upstream sync), total workflow time, and storage footprint
+- public benchmark reports use fresh (`cold` from no prior cache + one `warm1` rerun), rolling commit builds (the current upstream commit as-is against the prior rolling cache), total workflow time, and storage footprint
 - older entries below may quote retired intermediate-phase names from archived investigations; treat those as historical notes, not current feed fields
 
 ## 2026-04-08: gRPC and Zed launch-blocking regression
@@ -202,10 +202,10 @@ Fresh, same-ref or latest paired numbers:
   - BC `cold=792s, warm=234s, archived_extra_docker_phase=185s`
   - AC `cold=1404s, warm=7s, archived_extra_docker_phase=349s`
 - Warm-step log showed the BC scenario build used different Docker build args
-  than the seed build. The seed passed `BORINGCACHE_ALLOW_EXTERNAL_SYMLINKS=1`;
+  than the cold build. The cold build passed `BORINGCACHE_ALLOW_EXTERNAL_SYMLINKS=1`;
   the scenario build omitted it.
 - Consequences observed in the warm log:
-  - BuildKit layer keys diverged from the seed for PostHog stages that declare
+  - BuildKit layer keys diverged from the cold build for PostHog stages that declare
     that ARG.
   - `posthog-pnpm-plugin` restore emitted `Symlink target escapes restore root`,
     so pnpm work re-ran instead of using the seeded internal cache.
@@ -213,8 +213,8 @@ Fresh, same-ref or latest paired numbers:
 	    transpiler, frontend build, staticfiles, and final image copy/layer replay.
 - Latest completed PostHog rolling pair checked on 2026-04-16:
   - Ref `b450a351b95844b65cc63b93cfd7c06de0a77f2d`
-  - BC `24532463576`: first build `1140s`, storage `15714.93 MiB`
-  - AC `24532462652`: first build `525s`, storage `30515.64 MiB`
+  - BC `24532463576`: commit build `1140s`, storage `15714.93 MiB`
+  - AC `24532462652`: commit build `525s`, storage `30515.64 MiB`
   - New fresh and rolling runs on ref `e3870d9f53d33b0a296b5b28c7d46ce61fadfaa3`
     were still in progress when checked at 2026-04-16 21:00 UTC.
 

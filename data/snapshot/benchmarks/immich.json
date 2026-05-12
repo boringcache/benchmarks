@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-04-23T13:51:35Z",
+  "generated_at": "2026-05-12T09:26:35Z",
   "entry": {
     "lane": "fresh",
-    "lane_label": "Fresh isolated",
+    "lane_label": "Fresh",
     "first_build_label": "Cold build",
-    "sample_count": 2,
+    "sample_count": 3,
     "benchmark": "immich",
     "name": "Immich",
     "logo": "immich",
@@ -14,96 +14,142 @@
     "category": "docker",
     "step": "Docker build (server)",
     "headline_scenario": "cold",
-    "before": "11m 10s",
-    "after": "10m 17s",
-    "before_seconds": 669.5,
-    "after_seconds": 617.0,
-    "faster": "8",
+    "headline_label": "Cold Build",
+    "before": "6m 28s",
+    "after": "4m 41s",
+    "before_seconds": 388.0,
+    "after_seconds": 281.0,
+    "faster": "28",
     "comparison": {
       "paired_on_head_sha": true,
       "pairing_head_sha": null,
       "pairing_head_shas": [
-        "98c823abe98566f1a8aa5f5886c19f756b9a47bc",
-        "2dff45c33b352579fdb4ac57efbfb381768b9874"
+        "7e27855e766be4cb5b6b8f7a9b0fbae81e8b8e7a",
+        "64edbf3ac9d476611ea8114cbf60ed29dc9df1d7",
+        "ad39b95c916791a06387a53f3155daaf3d77afd8"
       ],
-      "sample_count": 2,
+      "sample_count": 3,
       "actions_cache": {
-        "run_id": 24816272664,
-        "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/24816272664",
-        "head_sha": "98c823abe98566f1a8aa5f5886c19f756b9a47bc",
-        "created_at": "2026-04-23T04:11:30Z",
-        "sample_count": 2,
+        "run_id": 25714825524,
+        "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/25714825524",
+        "head_sha": "7e27855e766be4cb5b6b8f7a9b0fbae81e8b8e7a",
+        "created_at": "2026-05-12T05:12:42Z",
+        "sample_count": 3,
         "sample_run_ids": [
-          24816272664,
-          24586956491
+          25714825524,
+          25712024779,
+          25699648653
         ],
         "sample_run_urls": [
-          "https://github.com/boringcache/benchmark-immich/actions/runs/24816272664",
-          "https://github.com/boringcache/benchmark-immich/actions/runs/24586956491"
+          "https://github.com/boringcache/benchmark-immich/actions/runs/25714825524",
+          "https://github.com/boringcache/benchmark-immich/actions/runs/25712024779",
+          "https://github.com/boringcache/benchmark-immich/actions/runs/25699648653"
         ],
         "head_shas": [
-          "98c823abe98566f1a8aa5f5886c19f756b9a47bc",
-          "2dff45c33b352579fdb4ac57efbfb381768b9874"
+          "7e27855e766be4cb5b6b8f7a9b0fbae81e8b8e7a",
+          "64edbf3ac9d476611ea8114cbf60ed29dc9df1d7",
+          "ad39b95c916791a06387a53f3155daaf3d77afd8"
         ],
-        "cold_seconds": 669.5,
+        "cold_seconds": 388.0,
+        "cold_build_seconds": 382.0,
+        "cold_restore_or_setup_seconds": 6.0,
         "warm1_seconds": 7.0,
+        "warm1_build_seconds": 1.6666666666666667,
+        "warm1_restore_or_setup_seconds": 5.333333333333333,
         "warm2_seconds": null,
         "warm_average_seconds": 7.0,
         "warm_steady_seconds": 7.0,
-        "run_total_seconds": 688.0,
-        "storage_bytes": 21444410595,
-        "docker_cache_import_seconds": 0.4,
-        "docker_cache_export_seconds": 241.60000000000002,
+        "rolling_first_build_seconds": null,
+        "rolling_warm_seconds": null,
+        "run_total_seconds": 408.0,
+        "storage_bytes": 11032879186,
+        "docker_cache_import_seconds": 0.3,
+        "docker_cache_export_seconds": 262.6666666666667,
         "storage_source": "github-actions-cache-api",
-        "classification": {
-          "sample_count": 2,
-          "rolling_reseed_count": 0,
-          "steady_state_candidate_count": 0
-        }
+        "product_refs": {
+          "api_url": "https://api.boringcache.com",
+          "web_revision": "10c92e603536a3e91705cf999fc49f8c50d9bafe"
+        },
+        "product_refs_consistent": true,
+        "workspace": "boringcache/benchmark-immich",
+        "run_uid": "gh-25714825524-1",
+        "mode": "docker",
+        "adapter": "oci"
       },
       "boringcache": {
-        "run_id": 24816271948,
-        "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/24816271948",
-        "head_sha": "98c823abe98566f1a8aa5f5886c19f756b9a47bc",
-        "created_at": "2026-04-23T04:11:29Z",
-        "sample_count": 2,
+        "run_id": 25714825506,
+        "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/25714825506",
+        "head_sha": "7e27855e766be4cb5b6b8f7a9b0fbae81e8b8e7a",
+        "created_at": "2026-05-12T05:12:42Z",
+        "sample_count": 3,
         "sample_run_ids": [
-          24816271948,
-          24586956503
+          25714825506,
+          25712024757,
+          25699648639
         ],
         "sample_run_urls": [
-          "https://github.com/boringcache/benchmark-immich/actions/runs/24816271948",
-          "https://github.com/boringcache/benchmark-immich/actions/runs/24586956503"
+          "https://github.com/boringcache/benchmark-immich/actions/runs/25714825506",
+          "https://github.com/boringcache/benchmark-immich/actions/runs/25712024757",
+          "https://github.com/boringcache/benchmark-immich/actions/runs/25699648639"
         ],
         "head_shas": [
-          "98c823abe98566f1a8aa5f5886c19f756b9a47bc",
-          "2dff45c33b352579fdb4ac57efbfb381768b9874"
+          "7e27855e766be4cb5b6b8f7a9b0fbae81e8b8e7a",
+          "64edbf3ac9d476611ea8114cbf60ed29dc9df1d7",
+          "ad39b95c916791a06387a53f3155daaf3d77afd8"
         ],
-        "cold_seconds": 617.0,
-        "warm1_seconds": 9.5,
+        "cold_seconds": 281.0,
+        "cold_build_seconds": 260.3333333333333,
+        "cold_restore_or_setup_seconds": 20.666666666666668,
+        "warm1_seconds": 23.333333333333332,
+        "warm1_build_seconds": 10.333333333333334,
+        "warm1_restore_or_setup_seconds": 13.0,
         "warm2_seconds": null,
-        "warm_average_seconds": 9.5,
-        "warm_steady_seconds": 9.5,
-        "run_total_seconds": 636.5,
-        "storage_bytes": 4639104713,
-        "docker_cache_import_seconds": 0.85,
-        "docker_cache_export_seconds": 159.35000000000002,
+        "warm_average_seconds": 23.333333333333332,
+        "warm_steady_seconds": 23.333333333333332,
+        "rolling_first_build_seconds": null,
+        "rolling_warm_seconds": null,
+        "run_total_seconds": 303.0,
+        "storage_bytes": 2362768980,
+        "docker_cache_import_seconds": 0.23333333333333336,
+        "docker_cache_export_seconds": 144.56666666666666,
         "oci": {
           "body_local_hits": 0.0,
           "body_remote_fetches": 1.0,
           "body_local_bytes": 0.0,
-          "body_remote_bytes": 13694.0,
+          "body_remote_bytes": 13318.333333333334,
           "body_local_duration_ms": 0.0,
-          "body_remote_duration_ms": 111.0,
-          "new_blob_count": 55.0,
-          "new_blob_bytes": 2436257556.0,
-          "upload_requested_blobs": 56.0,
-          "upload_already_present": 1.0,
-          "upload_batch_seconds": 6.712
+          "body_remote_duration_ms": 220.66666666666666,
+          "new_blob_count": 23.0,
+          "new_blob_bytes": 1271779905.6666667,
+          "upload_requested_blobs": 55.0,
+          "upload_already_present": 32.0,
+          "upload_batch_seconds": 8.285666666666666
         },
         "storage_source": "boringcache-check",
+        "product_refs": {
+          "action_ref": "boringcache/one@v1",
+          "action_sha": "8fa1cf16156b69ae622c5b6f293a8173743ca1e9",
+          "api_url": "https://api.boringcache.com",
+          "cli_version": "v1.12.75",
+          "web_revision": "10c92e603536a3e91705cf999fc49f8c50d9bafe"
+        },
+        "product_refs_consistent": true,
+        "workspace": "boringcache/benchmark-immich",
+        "run_uid": "gh-25714825506-1",
+        "mode": "docker",
+        "adapter": "oci",
         "classification": {
-          "sample_count": 2,
+          "sample_count": 3,
+          "sample_valid_count": 3,
+          "invalid_count": 0,
+          "investigation_only_count": 0,
+          "comparative_count": 3,
+          "reporting_mode": "comparative",
+          "reporting_reason": null,
+          "reporting_note": null,
+          "validity_reason": null,
+          "cache_import_status": "ok",
+          "rolling_bootstrap_count": 0,
           "rolling_reseed_count": 0,
           "steady_state_candidate_count": 0
         }
@@ -111,11 +157,13 @@
       "reporting": {
         "comparative": true
       },
-      "warm_improvement_pct": -35.71,
-      "cold_improvement_pct": 7.84,
-      "run_total_improvement_pct": 7.49,
-      "storage_improvement_pct": 78.37,
-      "storage_saved_bytes": 16805305882
+      "warm_improvement_pct": -233.33,
+      "warm_build_improvement_pct": -520.0,
+      "cold_improvement_pct": 27.58,
+      "cold_build_improvement_pct": 31.85,
+      "run_total_improvement_pct": 25.74,
+      "storage_improvement_pct": 78.58,
+      "storage_saved_bytes": 8670110206
     },
     "default_lane": "fresh",
     "available_lanes": [
@@ -125,126 +173,8 @@
     "lanes": {
       "fresh": {
         "lane": "fresh",
-        "lane_label": "Fresh isolated",
+        "lane_label": "Fresh",
         "first_build_label": "Cold build",
-        "sample_count": 2,
-        "benchmark": "immich",
-        "name": "Immich",
-        "logo": "immich",
-        "repo": "immich-app/immich",
-        "source_repo": "boringcache/benchmark-immich",
-        "public": true,
-        "category": "docker",
-        "step": "Docker build (server)",
-        "headline_scenario": "cold",
-        "before": "11m 10s",
-        "after": "10m 17s",
-        "before_seconds": 669.5,
-        "after_seconds": 617.0,
-        "faster": "8",
-        "comparison": {
-          "paired_on_head_sha": true,
-          "pairing_head_sha": null,
-          "pairing_head_shas": [
-            "98c823abe98566f1a8aa5f5886c19f756b9a47bc",
-            "2dff45c33b352579fdb4ac57efbfb381768b9874"
-          ],
-          "sample_count": 2,
-          "actions_cache": {
-            "run_id": 24816272664,
-            "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/24816272664",
-            "head_sha": "98c823abe98566f1a8aa5f5886c19f756b9a47bc",
-            "created_at": "2026-04-23T04:11:30Z",
-            "sample_count": 2,
-            "sample_run_ids": [
-              24816272664,
-              24586956491
-            ],
-            "sample_run_urls": [
-              "https://github.com/boringcache/benchmark-immich/actions/runs/24816272664",
-              "https://github.com/boringcache/benchmark-immich/actions/runs/24586956491"
-            ],
-            "head_shas": [
-              "98c823abe98566f1a8aa5f5886c19f756b9a47bc",
-              "2dff45c33b352579fdb4ac57efbfb381768b9874"
-            ],
-            "cold_seconds": 669.5,
-            "warm1_seconds": 7.0,
-            "warm2_seconds": null,
-            "warm_average_seconds": 7.0,
-            "warm_steady_seconds": 7.0,
-            "run_total_seconds": 688.0,
-            "storage_bytes": 21444410595,
-            "docker_cache_import_seconds": 0.4,
-            "docker_cache_export_seconds": 241.60000000000002,
-            "storage_source": "github-actions-cache-api",
-            "classification": {
-              "sample_count": 2,
-              "rolling_reseed_count": 0,
-              "steady_state_candidate_count": 0
-            }
-          },
-          "boringcache": {
-            "run_id": 24816271948,
-            "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/24816271948",
-            "head_sha": "98c823abe98566f1a8aa5f5886c19f756b9a47bc",
-            "created_at": "2026-04-23T04:11:29Z",
-            "sample_count": 2,
-            "sample_run_ids": [
-              24816271948,
-              24586956503
-            ],
-            "sample_run_urls": [
-              "https://github.com/boringcache/benchmark-immich/actions/runs/24816271948",
-              "https://github.com/boringcache/benchmark-immich/actions/runs/24586956503"
-            ],
-            "head_shas": [
-              "98c823abe98566f1a8aa5f5886c19f756b9a47bc",
-              "2dff45c33b352579fdb4ac57efbfb381768b9874"
-            ],
-            "cold_seconds": 617.0,
-            "warm1_seconds": 9.5,
-            "warm2_seconds": null,
-            "warm_average_seconds": 9.5,
-            "warm_steady_seconds": 9.5,
-            "run_total_seconds": 636.5,
-            "storage_bytes": 4639104713,
-            "docker_cache_import_seconds": 0.85,
-            "docker_cache_export_seconds": 159.35000000000002,
-            "oci": {
-              "body_local_hits": 0.0,
-              "body_remote_fetches": 1.0,
-              "body_local_bytes": 0.0,
-              "body_remote_bytes": 13694.0,
-              "body_local_duration_ms": 0.0,
-              "body_remote_duration_ms": 111.0,
-              "new_blob_count": 55.0,
-              "new_blob_bytes": 2436257556.0,
-              "upload_requested_blobs": 56.0,
-              "upload_already_present": 1.0,
-              "upload_batch_seconds": 6.712
-            },
-            "storage_source": "boringcache-check",
-            "classification": {
-              "sample_count": 2,
-              "rolling_reseed_count": 0,
-              "steady_state_candidate_count": 0
-            }
-          },
-          "reporting": {
-            "comparative": true
-          },
-          "warm_improvement_pct": -35.71,
-          "cold_improvement_pct": 7.84,
-          "run_total_improvement_pct": 7.49,
-          "storage_improvement_pct": 78.37,
-          "storage_saved_bytes": 16805305882
-        }
-      },
-      "rolling": {
-        "lane": "rolling",
-        "lane_label": "Rolling historical",
-        "first_build_label": "First build after upstream sync",
         "sample_count": 3,
         "benchmark": "immich",
         "name": "Immich",
@@ -254,127 +184,328 @@
         "public": true,
         "category": "docker",
         "step": "Docker build (server)",
-        "headline_scenario": "first_build",
-        "before": "3m 11s",
-        "after": "3m 9s",
-        "before_seconds": 191.0,
-        "after_seconds": 189.0,
-        "faster": null,
+        "headline_scenario": "cold",
+        "headline_label": "Cold Build",
+        "before": "6m 28s",
+        "after": "4m 41s",
+        "before_seconds": 388.0,
+        "after_seconds": 281.0,
+        "faster": "28",
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": null,
           "pairing_head_shas": [
-            "63f15697b6ae6480e8a1045b1d8e4003fa4f40b8",
-            "06e79e4ac213e1cd08b0b52ff8188e465b3ae9a8",
-            "8e4f095948d29692b31cc1bee490db1c6b749ae2"
+            "7e27855e766be4cb5b6b8f7a9b0fbae81e8b8e7a",
+            "64edbf3ac9d476611ea8114cbf60ed29dc9df1d7",
+            "ad39b95c916791a06387a53f3155daaf3d77afd8"
           ],
           "sample_count": 3,
           "actions_cache": {
-            "run_id": 24828967303,
-            "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/24828967303",
-            "head_sha": "63f15697b6ae6480e8a1045b1d8e4003fa4f40b8",
-            "created_at": "2026-04-23T09:58:12Z",
+            "run_id": 25714825524,
+            "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/25714825524",
+            "head_sha": "7e27855e766be4cb5b6b8f7a9b0fbae81e8b8e7a",
+            "created_at": "2026-05-12T05:12:42Z",
             "sample_count": 3,
             "sample_run_ids": [
-              24828967303,
-              24796581281,
-              24791467320
+              25714825524,
+              25712024779,
+              25699648653
             ],
             "sample_run_urls": [
-              "https://github.com/boringcache/benchmark-immich/actions/runs/24828967303",
-              "https://github.com/boringcache/benchmark-immich/actions/runs/24796581281",
-              "https://github.com/boringcache/benchmark-immich/actions/runs/24791467320"
+              "https://github.com/boringcache/benchmark-immich/actions/runs/25714825524",
+              "https://github.com/boringcache/benchmark-immich/actions/runs/25712024779",
+              "https://github.com/boringcache/benchmark-immich/actions/runs/25699648653"
             ],
             "head_shas": [
-              "63f15697b6ae6480e8a1045b1d8e4003fa4f40b8",
-              "06e79e4ac213e1cd08b0b52ff8188e465b3ae9a8",
-              "8e4f095948d29692b31cc1bee490db1c6b749ae2"
+              "7e27855e766be4cb5b6b8f7a9b0fbae81e8b8e7a",
+              "64edbf3ac9d476611ea8114cbf60ed29dc9df1d7",
+              "ad39b95c916791a06387a53f3155daaf3d77afd8"
             ],
-            "cold_seconds": 191.0,
-            "warm1_seconds": null,
+            "cold_seconds": 388.0,
+            "cold_build_seconds": 382.0,
+            "cold_restore_or_setup_seconds": 6.0,
+            "warm1_seconds": 7.0,
+            "warm1_build_seconds": 1.6666666666666667,
+            "warm1_restore_or_setup_seconds": 5.333333333333333,
             "warm2_seconds": null,
-            "warm_average_seconds": null,
-            "warm_steady_seconds": null,
-            "run_total_seconds": 206.0,
-            "storage_bytes": 10641322423,
-            "docker_cache_import_seconds": null,
-            "docker_cache_export_seconds": 133.26666666666665,
+            "warm_average_seconds": 7.0,
+            "warm_steady_seconds": 7.0,
+            "rolling_first_build_seconds": null,
+            "rolling_warm_seconds": null,
+            "run_total_seconds": 408.0,
+            "storage_bytes": 11032879186,
+            "docker_cache_import_seconds": 0.3,
+            "docker_cache_export_seconds": 262.6666666666667,
             "storage_source": "github-actions-cache-api",
-            "classification": {
-              "sample_count": 3,
-              "rolling_reseed_count": 0,
-              "steady_state_candidate_count": 0
-            }
+            "product_refs": {
+              "api_url": "https://api.boringcache.com",
+              "web_revision": "10c92e603536a3e91705cf999fc49f8c50d9bafe"
+            },
+            "product_refs_consistent": true,
+            "workspace": "boringcache/benchmark-immich",
+            "run_uid": "gh-25714825524-1",
+            "mode": "docker",
+            "adapter": "oci"
           },
           "boringcache": {
-            "run_id": 24828968158,
-            "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/24828968158",
-            "head_sha": "63f15697b6ae6480e8a1045b1d8e4003fa4f40b8",
-            "created_at": "2026-04-23T09:58:13Z",
+            "run_id": 25714825506,
+            "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/25714825506",
+            "head_sha": "7e27855e766be4cb5b6b8f7a9b0fbae81e8b8e7a",
+            "created_at": "2026-05-12T05:12:42Z",
             "sample_count": 3,
             "sample_run_ids": [
-              24828968158,
-              24797097761,
-              24791468273
+              25714825506,
+              25712024757,
+              25699648639
             ],
             "sample_run_urls": [
-              "https://github.com/boringcache/benchmark-immich/actions/runs/24828968158",
-              "https://github.com/boringcache/benchmark-immich/actions/runs/24797097761",
-              "https://github.com/boringcache/benchmark-immich/actions/runs/24791468273"
+              "https://github.com/boringcache/benchmark-immich/actions/runs/25714825506",
+              "https://github.com/boringcache/benchmark-immich/actions/runs/25712024757",
+              "https://github.com/boringcache/benchmark-immich/actions/runs/25699648639"
             ],
             "head_shas": [
-              "63f15697b6ae6480e8a1045b1d8e4003fa4f40b8",
-              "06e79e4ac213e1cd08b0b52ff8188e465b3ae9a8",
-              "8e4f095948d29692b31cc1bee490db1c6b749ae2"
+              "7e27855e766be4cb5b6b8f7a9b0fbae81e8b8e7a",
+              "64edbf3ac9d476611ea8114cbf60ed29dc9df1d7",
+              "ad39b95c916791a06387a53f3155daaf3d77afd8"
             ],
-            "cold_seconds": 189.0,
-            "warm1_seconds": null,
+            "cold_seconds": 281.0,
+            "cold_build_seconds": 260.3333333333333,
+            "cold_restore_or_setup_seconds": 20.666666666666668,
+            "warm1_seconds": 23.333333333333332,
+            "warm1_build_seconds": 10.333333333333334,
+            "warm1_restore_or_setup_seconds": 13.0,
             "warm2_seconds": null,
-            "warm_average_seconds": null,
-            "warm_steady_seconds": null,
-            "run_total_seconds": 205.33333333333334,
-            "storage_bytes": 4872491354,
-            "docker_cache_import_seconds": null,
-            "docker_cache_export_seconds": 99.0,
+            "warm_average_seconds": 23.333333333333332,
+            "warm_steady_seconds": 23.333333333333332,
+            "rolling_first_build_seconds": null,
+            "rolling_warm_seconds": null,
+            "run_total_seconds": 303.0,
+            "storage_bytes": 2362768980,
+            "docker_cache_import_seconds": 0.23333333333333336,
+            "docker_cache_export_seconds": 144.56666666666666,
             "oci": {
               "body_local_hits": 0.0,
               "body_remote_fetches": 1.0,
               "body_local_bytes": 0.0,
-              "body_remote_bytes": 13693.0,
+              "body_remote_bytes": 13318.333333333334,
               "body_local_duration_ms": 0.0,
-              "body_remote_duration_ms": 29.0,
-              "startup_body_inserted": 0.0,
-              "startup_body_failures": 0.0,
-              "startup_body_cold_blobs": 93.33333333333333,
-              "startup_body_duration_ms": 0.0,
-              "new_blob_count": 26.0,
-              "new_blob_bytes": 1260497920.3333333,
-              "upload_requested_blobs": 55.666666666666664,
-              "upload_already_present": 29.666666666666668,
-              "upload_batch_seconds": 4.274666666666667,
-              "hydration_policy": "metadata-only"
+              "body_remote_duration_ms": 220.66666666666666,
+              "new_blob_count": 23.0,
+              "new_blob_bytes": 1271779905.6666667,
+              "upload_requested_blobs": 55.0,
+              "upload_already_present": 32.0,
+              "upload_batch_seconds": 8.285666666666666
             },
             "storage_source": "boringcache-check",
+            "product_refs": {
+              "action_ref": "boringcache/one@v1",
+              "action_sha": "8fa1cf16156b69ae622c5b6f293a8173743ca1e9",
+              "api_url": "https://api.boringcache.com",
+              "cli_version": "v1.12.75",
+              "web_revision": "10c92e603536a3e91705cf999fc49f8c50d9bafe"
+            },
+            "product_refs_consistent": true,
+            "workspace": "boringcache/benchmark-immich",
+            "run_uid": "gh-25714825506-1",
+            "mode": "docker",
+            "adapter": "oci",
             "classification": {
               "sample_count": 3,
-              "rolling_reseed_count": 2,
-              "steady_state_candidate_count": 1
+              "sample_valid_count": 3,
+              "invalid_count": 0,
+              "investigation_only_count": 0,
+              "comparative_count": 3,
+              "reporting_mode": "comparative",
+              "reporting_reason": null,
+              "reporting_note": null,
+              "validity_reason": null,
+              "cache_import_status": "ok",
+              "rolling_bootstrap_count": 0,
+              "rolling_reseed_count": 0,
+              "steady_state_candidate_count": 0
             }
           },
           "reporting": {
-            "comparative": false,
-            "status": "investigation_only",
-            "reason": "rolling_reseed",
-            "headline_scenario": "first_build",
-            "headline_label": "First Build",
-            "result_text": "reseeded 2/3",
-            "note": "Rolling Docker reseeds are first-build investigation samples, not steady-state parity."
+            "comparative": true
+          },
+          "warm_improvement_pct": -233.33,
+          "warm_build_improvement_pct": -520.0,
+          "cold_improvement_pct": 27.58,
+          "cold_build_improvement_pct": 31.85,
+          "run_total_improvement_pct": 25.74,
+          "storage_improvement_pct": 78.58,
+          "storage_saved_bytes": 8670110206
+        }
+      },
+      "rolling": {
+        "lane": "rolling",
+        "lane_label": "Rolling",
+        "first_build_label": "Commit build",
+        "sample_count": 3,
+        "benchmark": "immich",
+        "name": "Immich",
+        "logo": "immich",
+        "repo": "immich-app/immich",
+        "source_repo": "boringcache/benchmark-immich",
+        "public": true,
+        "category": "docker",
+        "step": "Docker build (server)",
+        "headline_scenario": "cold",
+        "headline_label": "Commit Build",
+        "before": "8m 3s",
+        "after": "2m 28s",
+        "before_seconds": 482.67,
+        "after_seconds": 148.0,
+        "faster": "69",
+        "comparison": {
+          "paired_on_head_sha": true,
+          "pairing_head_sha": null,
+          "pairing_head_shas": [
+            "7e27855e766be4cb5b6b8f7a9b0fbae81e8b8e7a",
+            "64edbf3ac9d476611ea8114cbf60ed29dc9df1d7",
+            "ad39b95c916791a06387a53f3155daaf3d77afd8"
+          ],
+          "sample_count": 3,
+          "actions_cache": {
+            "run_id": 25714832052,
+            "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/25714832052",
+            "head_sha": "7e27855e766be4cb5b6b8f7a9b0fbae81e8b8e7a",
+            "created_at": "2026-05-12T05:12:54Z",
+            "sample_count": 3,
+            "sample_run_ids": [
+              25714832052,
+              25712027163,
+              25699651950
+            ],
+            "sample_run_urls": [
+              "https://github.com/boringcache/benchmark-immich/actions/runs/25714832052",
+              "https://github.com/boringcache/benchmark-immich/actions/runs/25712027163",
+              "https://github.com/boringcache/benchmark-immich/actions/runs/25699651950"
+            ],
+            "head_shas": [
+              "7e27855e766be4cb5b6b8f7a9b0fbae81e8b8e7a",
+              "64edbf3ac9d476611ea8114cbf60ed29dc9df1d7",
+              "ad39b95c916791a06387a53f3155daaf3d77afd8"
+            ],
+            "cold_seconds": 482.6666666666667,
+            "cold_build_seconds": 475.0,
+            "cold_restore_or_setup_seconds": 7.666666666666667,
+            "warm1_seconds": null,
+            "warm1_build_seconds": null,
+            "warm1_restore_or_setup_seconds": null,
+            "warm2_seconds": null,
+            "warm_average_seconds": null,
+            "warm_steady_seconds": null,
+            "rolling_first_build_seconds": 482.6666666666667,
+            "rolling_warm_seconds": null,
+            "run_total_seconds": 511.6666666666667,
+            "storage_bytes": 11272969434,
+            "docker_cache_import_seconds": 0.26666666666666666,
+            "docker_cache_export_seconds": 302.7333333333333,
+            "storage_source": "github-actions-cache-api",
+            "product_refs": {
+              "api_url": "https://api.boringcache.com",
+              "web_revision": "10c92e603536a3e91705cf999fc49f8c50d9bafe"
+            },
+            "product_refs_consistent": true,
+            "workspace": "boringcache/benchmark-immich",
+            "run_uid": "gh-25714832052-1",
+            "mode": "docker",
+            "adapter": "oci"
+          },
+          "boringcache": {
+            "run_id": 25714832850,
+            "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/25714832850",
+            "head_sha": "7e27855e766be4cb5b6b8f7a9b0fbae81e8b8e7a",
+            "created_at": "2026-05-12T05:12:56Z",
+            "sample_count": 3,
+            "sample_run_ids": [
+              25714832850,
+              25712027844,
+              25699652897
+            ],
+            "sample_run_urls": [
+              "https://github.com/boringcache/benchmark-immich/actions/runs/25714832850",
+              "https://github.com/boringcache/benchmark-immich/actions/runs/25712027844",
+              "https://github.com/boringcache/benchmark-immich/actions/runs/25699652897"
+            ],
+            "head_shas": [
+              "7e27855e766be4cb5b6b8f7a9b0fbae81e8b8e7a",
+              "64edbf3ac9d476611ea8114cbf60ed29dc9df1d7",
+              "ad39b95c916791a06387a53f3155daaf3d77afd8"
+            ],
+            "cold_seconds": 148.0,
+            "cold_build_seconds": 141.66666666666666,
+            "cold_restore_or_setup_seconds": 6.333333333333333,
+            "warm1_seconds": null,
+            "warm1_build_seconds": null,
+            "warm1_restore_or_setup_seconds": null,
+            "warm2_seconds": null,
+            "warm_average_seconds": null,
+            "warm_steady_seconds": null,
+            "rolling_first_build_seconds": 148.0,
+            "rolling_warm_seconds": null,
+            "run_total_seconds": 165.0,
+            "storage_bytes": 2362758868,
+            "docker_cache_import_seconds": 0.13333333333333333,
+            "docker_cache_export_seconds": 71.36666666666666,
+            "oci": {
+              "body_local_hits": 0.0,
+              "body_remote_fetches": 27.333333333333332,
+              "body_local_bytes": 0.0,
+              "body_remote_bytes": 824617599.6666666,
+              "body_local_duration_ms": 0.0,
+              "body_remote_duration_ms": 12217.333333333334,
+              "startup_body_inserted": 0.0,
+              "startup_body_failures": 0.0,
+              "startup_body_cold_blobs": 55.0,
+              "startup_body_duration_ms": 0.0,
+              "new_blob_count": 9.666666666666666,
+              "new_blob_bytes": 676453032.3333334,
+              "upload_requested_blobs": 55.0,
+              "upload_already_present": 45.333333333333336,
+              "upload_batch_seconds": 4.943333333333333,
+              "hydration_policy": "metadata-only"
+            },
+            "storage_source": "boringcache-check",
+            "product_refs": {
+              "action_ref": "boringcache/one@v1",
+              "action_sha": "8fa1cf16156b69ae622c5b6f293a8173743ca1e9",
+              "api_url": "https://api.boringcache.com",
+              "cli_version": "v1.12.75",
+              "web_revision": "10c92e603536a3e91705cf999fc49f8c50d9bafe"
+            },
+            "product_refs_consistent": true,
+            "workspace": "boringcache/benchmark-immich",
+            "run_uid": "gh-25714832850-1",
+            "mode": "docker",
+            "adapter": "oci",
+            "classification": {
+              "sample_count": 3,
+              "sample_valid_count": 3,
+              "invalid_count": 0,
+              "investigation_only_count": 0,
+              "comparative_count": 3,
+              "reporting_mode": "comparative",
+              "reporting_reason": null,
+              "reporting_note": null,
+              "validity_reason": null,
+              "cache_import_status": "ok",
+              "rolling_bootstrap_count": 0,
+              "rolling_reseed_count": 0,
+              "steady_state_candidate_count": 3
+            }
+          },
+          "reporting": {
+            "comparative": true
           },
           "warm_improvement_pct": null,
-          "cold_improvement_pct": 1.05,
-          "run_total_improvement_pct": 0.32,
-          "storage_improvement_pct": 54.21,
-          "storage_saved_bytes": 5768831069
+          "warm_build_improvement_pct": null,
+          "cold_improvement_pct": 69.34,
+          "cold_build_improvement_pct": 70.18,
+          "run_total_improvement_pct": 67.75,
+          "storage_improvement_pct": 79.04,
+          "storage_saved_bytes": 8910210566
         }
       }
     }
