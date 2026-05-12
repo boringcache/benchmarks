@@ -1,49 +1,55 @@
 ## Latest Benchmark Report
 
-Generated: 2026-04-23 13:51 UTC
+Generated: 2026-05-12 09:26 UTC
 
 ### Lane Coverage
 
 | Benchmark | Fresh | Rolling |
 | --- | --- | --- |
 | Hugo | yes | yes |
+| Hugo Go | yes | yes |
 | Immich | yes | yes |
 | Mastodon | yes | yes |
 | PostHog | yes | yes |
+| Storybook | yes | yes |
 | OpenTelemetry Java | yes | yes |
 | Spring AI | yes | yes |
 | gRPC | yes | yes |
 | Zed | yes | yes |
 | n8n | yes | yes |
 
-### Fresh Isolated
+### Fresh
 
-| Benchmark | Headline | actions/cache | BoringCache | Result | Storage Saved | Notes |
+| Benchmark | Metric | actions/cache | BoringCache | Result | Storage Delta | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | Cold | 3m 34s | 4m 46s | 33% slower | 9.22 GB (93.29%) | warm, run total slower; 3 paired samples |
-| Immich | Cold | 11m 10s | 10m 17s | 8% faster | 15.65 GB (78.37%) | run total faster; 2 paired samples |
-| Mastodon | Cold | 10m 1s | 10m 43s | 7% slower | 15.18 GB (88.38%) | warm, run total slower; 3 paired samples |
-| PostHog | Cold | 22m 45s | 17m 38s | 23% faster | 1.34 GB more (-12.86%) | mixed: warm slower; run total faster; BC used more storage; 3 paired samples |
-| OpenTelemetry Java | Cold | 9m 21s | 10m 49s | 16% slower | 49.36 MB (6.05%) | warm, run total slower; 3 paired samples |
-| Spring AI | Cold | 4m 31s | 4m 20s | 4% faster | 3.52 MB (0.36%) | mixed: warm slower; run total faster; 3 paired samples |
-| gRPC | Warm | 36m 27s | 1m 31s | 96% faster | 743.91 MB more (-457.84%) | cold slower; BC used more storage; 2 paired samples |
-| Zed | Cold | 48m 39s | 49m 19s | near tie | 2.09 GB (75.18%) | run total slower; 3 paired samples |
-| n8n | Cold | 5m 20s | 6m 23s | 20% slower | 16.72 MB more (-2.54%) | warm, run total slower; BC used more storage; 2 paired samples |
+| Hugo | Cold Build | 3m 29s | 3m 24s | near tie | 4.10 GB (92.51%) | 3 paired samples |
+| Hugo Go | Cold Build | 1m 19s | 1m 22s | 3% slower | 621.95 MB more (-211.74%) | warm, workflow total slower; BC used more storage; 3 paired samples |
+| Immich | Cold Build | 6m 28s | 4m 41s | 28% faster | 8.07 GB (78.58%) | mixed: warm slower; workflow total faster; 3 paired samples |
+| Mastodon | Cold Build | 10m 13s | 9m 30s | 7% faster | 9.79 GB (90.56%) | workflow total faster; 3 paired samples |
+| PostHog | Warm Build | 3m 29s | 0m 18s | 91% faster | 4.74 GB (42.74%) | cold, workflow total faster; 3 paired samples |
+| Storybook | Cold Build | 4m 54s | 3m 35s | 27% faster | 42.61 MB more (-5.83%) | workflow total faster; BC used more storage; 3 paired samples |
+| OpenTelemetry Java | Cold Build | 11m 15s | 11m 15s | near tie | 50.83 MB (6.03%) | warm slower; 3 paired samples |
+| Spring AI | Warm Build | 0m 32s | 0m 30s | near tie | 1.38 MB (0.15%) | workflow total slower; 3 paired samples |
+| gRPC | Cold Build | 35m 21s | 35m 33s | near tie | 648.17 MB more (-611.42%) | warm slower; BC used more storage; 3 paired samples |
+| Zed | Cold Build | 46m 50s | 50m 35s | 8% slower | 6.05 MB (0.21%) | workflow total slower; 3 paired samples |
+| n8n | Cold Build | 5m 27s | 5m 33s | near tie | 52.93 MB more (-7.07%) | warm slower; BC used more storage; 3 paired samples |
 
-### Rolling Historical
+### Rolling
 
-| Benchmark | Headline | actions/cache | BoringCache | Result | Storage Saved | Notes |
+| Benchmark | Metric | actions/cache | BoringCache | Result | Storage Delta | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | First Build | 2m 2s | 2m 13s | reseeded 2/3 | 9.15 GB (93.24%) | 3 paired samples; BC reseeded 2/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| Immich | First Build | 3m 11s | 3m 9s | reseeded 2/3 | 5.37 GB (54.21%) | 3 paired samples; BC reseeded 2/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| Mastodon | First Build | 1m 45s | 4m 6s | reseeded 2/3 | 8.41 GB (83.26%) | 3 paired samples; BC reseeded 2/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| PostHog | First Build | 14m 26s | 11m 45s | reseeded 3/3 | 777.61 MB more (-7.1%) | BC used more storage; 3 paired samples; BC reseeded 3/3; Rolling Docker reseeds are first-build investigation samples, not steady-state parity. |
-| OpenTelemetry Java | Cold | 1m 7s | 11m 6s | 890% slower | 1.03 GB (57.9%) | run total slower; 3 paired samples |
-| Spring AI | Cold | 1m 23s | 2m 48s | 102% slower | 2.00 GB (67.96%) | run total slower; 3 paired samples |
-| gRPC | Cold | 34m 50s | 10m 16s | 71% faster | 581.88 MB more (-178.99%) | run total faster; BC used more storage; 3 paired samples |
-| Zed | Run Total | 39m 9s | 38m 47s | near tie | 10.74 GB (93.99%) | 3 paired samples |
-| n8n | Cold | 3m 7s | 4m 19s | 39% slower | 3.33 GB (83.44%) | run total slower; 3 paired samples |
+| Hugo | Commit Build | 2m 53s | 2m 43s | 6% faster | 3.93 GB (92.2%) | workflow total faster; 2 steady samples; 1/3 bootstrap samples excluded |
+| Hugo Go | Commit Build | 0m 21s | 1m 2s | 200% slower | 72.42 MB more (-6.53%) | workflow total slower; BC used more storage; 3 paired samples |
+| Immich | Commit Build | 8m 3s | 2m 28s | 69% faster | 8.30 GB (79.04%) | workflow total faster; 3 paired samples |
+| Mastodon | Commit Build | 2m 59s | 2m 3s | 31% faster | 8.91 GB (89.71%) | workflow total faster; 2 steady samples; 1/3 bootstrap samples excluded |
+| PostHog | Commit Build | 19m 27s | 11m 57s | 39% faster | 6.26 GB (49.99%) | workflow total faster; 3 paired samples |
+| Storybook | Commit Build | 2m 37s | 2m 45s | 5% slower | 1.00 GB (56.97%) | 3 paired samples |
+| OpenTelemetry Java | Commit Build | 1m 47s | 4m 43s | 164% slower | 2.10 GB (73.11%) | workflow total slower; 3 paired samples |
+| Spring AI | Commit Build | 0m 39s | 1m 43s | 163% slower | 2.39 GB (72.14%) | workflow total slower; 3 paired samples |
+| gRPC | Commit Build | 5m 49s | 5m 17s | 9% faster | 712.56 MB more (-105.48%) | workflow total slower; BC used more storage; 3 paired samples |
+| Zed | Workflow Total | 30m 19s | 29m 19s | 3% faster | 5.78 GB (50.44%) | 3 paired samples |
+| n8n | Commit Build | 3m 52s | 3m 46s | near tie | 1.48 GB (61.17%) | 3 paired samples |
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
 
-Rows use the latest 3 same-commit AC/BC pairs when enough samples are available. Rolling Docker rows marked reseeded are first-build investigation samples, not steady-state parity claims.
+Rows use the latest 3 same-commit AC/BC pairs when enough samples are available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling Docker cache-bootstrap samples are excluded from comparative rows when steady samples exist.
