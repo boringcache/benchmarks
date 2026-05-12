@@ -1,6 +1,6 @@
 ## Latest Benchmark Report
 
-Generated: 2026-05-12 13:17 UTC
+Generated: 2026-05-12 17:18 UTC
 
 ### Lane Coverage
 
@@ -24,15 +24,15 @@ Generated: 2026-05-12 13:17 UTC
 | --- | --- | --- | --- | --- | --- | --- |
 | Hugo | Warm Build | 0m 16s | 0m 6s | 63% faster | 4.72 GB (93.42%) | cold, workflow total slower |
 | Hugo Go | Workflow Total | 3m 0s | 1m 31s | 49% faster | 706.43 MB more (-240.49%) | cold slower; BC used more storage |
-| Immich | Cold Build | 5m 53s | 5m 43s | near tie | 7.40 GB (77.08%) | — |
-| Mastodon | Workflow Total | 12m 24s | 9m 28s | 24% faster | 9.00 GB (89.81%) | cold faster |
-| PostHog | Cold Build | 26m 54s | 15m 35s | 42% faster | 5.77 GB (47.59%) | workflow total faster; 3 paired samples |
-| Storybook | Cold Build | 3m 41s | 5m 36s | 52% slower | 42.50 MB more (-5.81%) | workflow total slower; BC used more storage |
-| OpenTelemetry Java | Cold Build | 11m 28s | 10m 54s | 5% faster | 50.31 MB (5.97%) | mixed: warm slower; workflow total faster |
-| Spring AI | Warm Build | 0m 32s | 0m 23s | 28% faster | 1.39 MB (0.15%) | mixed: cold slower; workflow total faster |
+| Immich | Warm Build | 0m 31s | 0m 14s | 56% faster | 8.67 GB (79.76%) | cold, workflow total faster; 2 paired samples |
+| Mastodon | Cold Build | 11m 8s | 9m 48s | 12% faster | 9.58 GB (90.37%) | workflow total faster; 2 paired samples |
+| PostHog | Cold Build | 21m 56s | 15m 50s | 28% faster | 5.87 GB (47.95%) | workflow total faster; 3 paired samples |
+| Storybook | Workflow Total | 4m 55s | 4m 45s | 3% faster | 43.10 MB more (-5.9%) | cold, warm slower; BC used more storage |
+| OpenTelemetry Java | Cold Build | 12m 33s | 11m 10s | 11% faster | 50.40 MB (5.98%) | mixed: warm slower; workflow total faster; 2 paired samples |
+| Spring AI | Warm Build | 0m 32s | 0m 25s | 22% faster | 1.39 MB (0.15%) | workflow total slower |
 | gRPC | Workflow Total | 37m 58s | 33m 8s | 13% faster | 648.38 MB more (-611.62%) | mixed: warm slower; cold faster; BC used more storage |
-| Zed | Warm Build | 20m 55s | 17m 51s | 15% faster | 6.56 MB (0.23%) | workflow total faster |
-| n8n | Cold Build | 5m 28s | 5m 24s | near tie | 52.87 MB more (-7.06%) | warm slower; BC used more storage; 3 paired samples |
+| Zed | Cold Build | 49m 43s | 50m 8s | near tie | 5.97 MB (0.21%) | warm, workflow total slower; 2 paired samples |
+| n8n | Cold Build | 5m 20s | 6m 14s | 17% slower | 52.83 MB more (-7.06%) | warm, workflow total slower; BC used more storage; 3 paired samples |
 
 ### Rolling
 
@@ -40,15 +40,15 @@ Generated: 2026-05-12 13:17 UTC
 | --- | --- | --- | --- | --- | --- | --- |
 | Hugo | Commit Build | 0m 8s | 0m 9s | near tie | 4.72 GB (93.42%) | tiny run; setup dominates |
 | Hugo Go | Commit Build | 0m 25s | 0m 22s | near tie | 293.29 MB (22.66%) | tiny run; setup dominates |
-| Immich | Commit Build | 0m 16s | 0m 45s | 181% slower | 7.38 GB (77.04%) | workflow total slower |
-| Mastodon | Commit Build | 0m 16s | 0m 16s | near tie | 8.97 GB (89.77%) | tiny run; setup dominates |
-| PostHog | Commit Build | 16m 0s | 8m 58s | 44% faster | 4.72 GB (43.74%) | workflow total faster; 3 paired samples |
-| Storybook | Commit Build | 0m 43s | 1m 5s | 51% slower | 1.04 GB (57.89%) | workflow total slower |
-| OpenTelemetry Java | Workflow Total | 1m 44s | 1m 27s | 16% faster | 2.16 GB (73.66%) | — |
-| Spring AI | Workflow Total | 1m 0s | 0m 42s | 30% faster | 2.22 GB (67.01%) | commit build faster; tiny run; setup dominates |
+| Immich | Commit Build | 0m 12s | 0m 20s | 67% slower | 7.79 GB (77.97%) | workflow total slower; 1 steady samples; 1/2 bootstrap samples excluded |
+| Mastodon | Commit Build | 2m 39s | 2m 9s | 19% faster | 8.84 GB (89.64%) | workflow total faster; 1 steady samples; 1/2 bootstrap samples excluded |
+| PostHog | Commit Build | 23m 29s | 11m 10s | 52% faster | 6.60 GB (51.98%) | workflow total faster; 2 steady samples; 1/3 bootstrap samples excluded |
+| Storybook | Commit Build | 3m 52s | 8m 3s | 108% slower | 1.06 GB (58.46%) | workflow total slower |
+| OpenTelemetry Java | Commit Build | 1m 32s | 6m 6s | 297% slower | 2.16 GB (73.64%) | workflow total slower; 2 paired samples |
+| Spring AI | Commit Build | 1m 23s | 4m 14s | 206% slower | 2.39 GB (72.14%) | workflow total slower |
 | gRPC | Commit Build | 0m 44s | 0m 59s | 34% slower | 799.08 MB more (-110.57%) | workflow total slower; BC used more storage |
-| Zed | Commit Build | 17m 49s | 18m 19s | near tie | 4.72 GB (41.2%) | — |
-| n8n | Commit Build | 3m 25s | 3m 27s | near tie | 1.65 GB (60.81%) | workflow total slower; 3 paired samples |
+| Zed | Commit Build | 37m 59s | 41m 10s | 8% slower | 8.40 GB (73.32%) | workflow total slower; 3 paired samples |
+| n8n | Commit Build | 4m 11s | 4m 41s | 12% slower | 2.01 GB (71.3%) | workflow total slower; 3 paired samples |
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
 
