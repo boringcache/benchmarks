@@ -1,6 +1,6 @@
 ## Latest Benchmark Report
 
-Generated: 2026-05-12 09:26 UTC
+Generated: 2026-05-12 11:16 UTC
 
 ### Lane Coverage
 
@@ -22,34 +22,34 @@ Generated: 2026-05-12 09:26 UTC
 
 | Benchmark | Metric | actions/cache | BoringCache | Result | Storage Delta | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | Cold Build | 3m 29s | 3m 24s | near tie | 4.10 GB (92.51%) | 3 paired samples |
-| Hugo Go | Cold Build | 1m 19s | 1m 22s | 3% slower | 621.95 MB more (-211.74%) | warm, workflow total slower; BC used more storage; 3 paired samples |
-| Immich | Cold Build | 6m 28s | 4m 41s | 28% faster | 8.07 GB (78.58%) | mixed: warm slower; workflow total faster; 3 paired samples |
-| Mastodon | Cold Build | 10m 13s | 9m 30s | 7% faster | 9.79 GB (90.56%) | workflow total faster; 3 paired samples |
-| PostHog | Warm Build | 3m 29s | 0m 18s | 91% faster | 4.74 GB (42.74%) | cold, workflow total faster; 3 paired samples |
-| Storybook | Cold Build | 4m 54s | 3m 35s | 27% faster | 42.61 MB more (-5.83%) | workflow total faster; BC used more storage; 3 paired samples |
-| OpenTelemetry Java | Cold Build | 11m 15s | 11m 15s | near tie | 50.83 MB (6.03%) | warm slower; 3 paired samples |
-| Spring AI | Warm Build | 0m 32s | 0m 30s | near tie | 1.38 MB (0.15%) | workflow total slower; 3 paired samples |
-| gRPC | Cold Build | 35m 21s | 35m 33s | near tie | 648.17 MB more (-611.42%) | warm slower; BC used more storage; 3 paired samples |
-| Zed | Cold Build | 46m 50s | 50m 35s | 8% slower | 6.05 MB (0.21%) | workflow total slower; 3 paired samples |
-| n8n | Cold Build | 5m 27s | 5m 33s | near tie | 52.93 MB more (-7.07%) | warm slower; BC used more storage; 3 paired samples |
+| Hugo | Warm Build | 0m 16s | 0m 6s | 63% faster | 4.72 GB (93.42%) | cold, workflow total slower |
+| Hugo Go | Workflow Total | 3m 0s | 1m 31s | 49% faster | 706.43 MB more (-240.49%) | cold slower; BC used more storage |
+| Immich | Cold Build | 5m 53s | 5m 43s | near tie | 7.40 GB (77.08%) | — |
+| Mastodon | Warm Build | 0m 12s | 0m 9s | near tie | 9.39 GB (90.19%) | cold, workflow total faster |
+| PostHog | Workflow Total | 22m 16s | 18m 10s | 18% faster | 7.30 GB (53.47%) | mixed: warm slower; cold faster |
+| Storybook | Cold Build | 3m 41s | 5m 36s | 52% slower | 42.50 MB more (-5.81%) | workflow total slower; BC used more storage |
+| OpenTelemetry Java | Cold Build | 12m 10s | 10m 50s | 11% faster | 50.59 MB (6.0%) | mixed: warm slower; workflow total faster |
+| Spring AI | Warm Build | 0m 32s | 0m 23s | 28% faster | 1.39 MB (0.15%) | mixed: cold slower; workflow total faster |
+| gRPC | Cold Build | 37m 30s | 36m 33s | near tie | 648.38 MB more (-611.63%) | warm slower; BC used more storage |
+| Zed | Warm Build | 17m 38s | 17m 37s | near tie | 6.52 MB (0.23%) | — |
+| n8n | Cold Build | 5m 32s | 5m 17s | 5% faster | 52.92 MB more (-7.07%) | mixed: warm slower; workflow total faster; BC used more storage |
 
 ### Rolling
 
 | Benchmark | Metric | actions/cache | BoringCache | Result | Storage Delta | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | Commit Build | 2m 53s | 2m 43s | 6% faster | 3.93 GB (92.2%) | workflow total faster; 2 steady samples; 1/3 bootstrap samples excluded |
-| Hugo Go | Commit Build | 0m 21s | 1m 2s | 200% slower | 72.42 MB more (-6.53%) | workflow total slower; BC used more storage; 3 paired samples |
-| Immich | Commit Build | 8m 3s | 2m 28s | 69% faster | 8.30 GB (79.04%) | workflow total faster; 3 paired samples |
-| Mastodon | Commit Build | 2m 59s | 2m 3s | 31% faster | 8.91 GB (89.71%) | workflow total faster; 2 steady samples; 1/3 bootstrap samples excluded |
-| PostHog | Commit Build | 19m 27s | 11m 57s | 39% faster | 6.26 GB (49.99%) | workflow total faster; 3 paired samples |
-| Storybook | Commit Build | 2m 37s | 2m 45s | 5% slower | 1.00 GB (56.97%) | 3 paired samples |
-| OpenTelemetry Java | Commit Build | 1m 47s | 4m 43s | 164% slower | 2.10 GB (73.11%) | workflow total slower; 3 paired samples |
-| Spring AI | Commit Build | 0m 39s | 1m 43s | 163% slower | 2.39 GB (72.14%) | workflow total slower; 3 paired samples |
-| gRPC | Commit Build | 5m 49s | 5m 17s | 9% faster | 712.56 MB more (-105.48%) | workflow total slower; BC used more storage; 3 paired samples |
-| Zed | Workflow Total | 30m 19s | 29m 19s | 3% faster | 5.78 GB (50.44%) | 3 paired samples |
-| n8n | Commit Build | 3m 52s | 3m 46s | near tie | 1.48 GB (61.17%) | 3 paired samples |
+| Hugo | Commit Build | 0m 8s | 0m 9s | near tie | 4.72 GB (93.42%) | tiny run; setup dominates |
+| Hugo Go | Commit Build | 0m 25s | 0m 22s | near tie | 293.29 MB (22.66%) | tiny run; setup dominates |
+| Immich | Commit Build | 0m 16s | 0m 45s | 181% slower | 7.38 GB (77.04%) | workflow total slower |
+| Mastodon | Commit Build | 0m 16s | 0m 16s | near tie | 8.97 GB (89.77%) | tiny run; setup dominates |
+| PostHog | Commit Build | 22m 10s | 0m 17s | 99% faster | 8.45 GB (58.18%) | workflow total faster |
+| Storybook | Commit Build | 0m 43s | 1m 5s | 51% slower | 1.04 GB (57.89%) | workflow total slower |
+| OpenTelemetry Java | Workflow Total | 1m 44s | 1m 27s | 16% faster | 2.16 GB (73.66%) | — |
+| Spring AI | Workflow Total | 1m 0s | 0m 42s | 30% faster | 2.22 GB (67.01%) | commit build faster; tiny run; setup dominates |
+| gRPC | Commit Build | 0m 43s | 13m 15s | 1771% slower | 784.38 MB more (-108.54%) | workflow total slower; BC used more storage; 2 paired samples |
+| Zed | Workflow Total | 39m 53s | 38m 4s | 5% faster | 4.72 GB (41.23%) | — |
+| n8n | Workflow Total | 1m 53s | 1m 32s | 19% faster | 1.61 GB (61.06%) | commit build faster |
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
 
-Rows use the latest 3 same-commit AC/BC pairs when enough samples are available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling Docker cache-bootstrap samples are excluded from comparative rows when steady samples exist.
+Rows prefer the latest BoringCache product cohort for same-commit AC/BC pairs, then use up to 3 steady samples when available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling cache-bootstrap samples are excluded from comparative rows when steady samples exist.
