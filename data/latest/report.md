@@ -1,6 +1,6 @@
 ## Latest Benchmark Report
 
-Generated: 2026-05-15 01:22 UTC
+Generated: 2026-05-15 05:52 UTC
 
 ### Lane Coverage
 
@@ -24,7 +24,7 @@ Generated: 2026-05-15 01:22 UTC
 | --- | --- | --- | --- | --- | --- | --- |
 | Hugo | Cold Build | 3m 46s | 3m 28s | 8% faster | 6.65 GB (95.24%) | workflow total faster; 3 paired samples |
 | Hugo Go | Workflow Total | 3m 0s | 1m 31s | 49% faster | 706.43 MB more (-240.49%) | cold slower; BC used more storage |
-| Immich | Cold Build | 5m 27s | 4m 41s | 14% faster | 7.70 GB (77.78%) | workflow total faster; 2 paired samples |
+| Immich | Cold Build | 6m 11s | 4m 38s | 25% faster | 8.23 GB (78.92%) | workflow total faster; 3 paired samples |
 | Mastodon | Cold Build | 10m 44s | 9m 5s | 15% faster | 9.34 GB (90.14%) | workflow total faster; 3 paired samples |
 | PostHog | Warm Build | 1m 53s | 0m 15s | 86% faster | 6.05 GB (48.55%) | cold, workflow total faster; 3 paired samples |
 | Storybook | Cold Build | 4m 51s | 6m 0s | 24% slower | 43.51 MB more (-5.96%) | workflow total slower; BC used more storage; 3 paired samples |
@@ -40,7 +40,7 @@ Generated: 2026-05-15 01:22 UTC
 | --- | --- | --- | --- | --- | --- | --- |
 | Hugo | Commit Build | 0m 25s | 3m 18s | cache import unavailable | 7.33 GB (95.66%) | cache import proxy_unreadable; Rolling cache import was unavailable, so this sample populated the rolling cache and is excluded from parity claims. |
 | Hugo Go | Commit Build | 0m 38s | 1m 30s | 137% slower | 1.25 GB (56.07%) | workflow total slower |
-| Immich | Commit Build | 0m 10s | 0m 11s | near tie | 7.62 GB (77.6%) | tiny run; setup dominates; 2 paired samples |
+| Immich | Commit Build | 2m 28s | 1m 55s | 22% faster | 7.66 GB (77.69%) | workflow total faster; 3 paired samples |
 | Mastodon | Commit Build | 0m 17s | 9m 18s | cache import unavailable | 8.95 GB (89.75%) | cache import proxy_unreadable; Rolling cache import was unavailable, so this sample populated the rolling cache and is excluded from parity claims. |
 | PostHog | Commit Build | 26m 4s | 12m 5s | 54% faster | 6.54 GB (51.61%) | workflow total faster; 2 steady samples; 1/3 bootstrap samples excluded |
 | Storybook | Commit Build | 3m 30s | 3m 48s | 9% slower | 1.18 GB (60.97%) | workflow total slower |
