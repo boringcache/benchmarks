@@ -38,7 +38,7 @@ This repo:
 
 ## Latest Benchmark Report
 
-Generated: 2026-05-15 13:10 UTC
+Generated: 2026-05-15 13:56 UTC
 
 ### Lane Coverage
 
@@ -70,7 +70,7 @@ Generated: 2026-05-15 13:10 UTC
 | Spring AI | Warm Build | 0m 31s | 0m 26s | near tie | 1.99 MB (0.21%) | cold, workflow total slower |
 | gRPC | Cold Build | 33m 0s | 30m 35s | 7% faster | 648.22 MB more (-611.6%) | mixed: warm slower; workflow total faster; BC used more storage; 2 paired samples |
 | Zed | Cold Build | 50m 19s | 43m 24s | 14% faster | 6.64 MB (0.23%) | workflow total faster |
-| n8n | Warm Build | 1m 9s | 1m 8s | near tie | 53.42 MB more (-7.14%) | cold, workflow total slower; BC used more storage |
+| n8n | Cold Build | 5m 22s | 5m 50s | 9% slower | 53.17 MB more (-7.1%) | workflow total slower; BC used more storage; 2 paired samples |
 
 ### Rolling
 
@@ -85,8 +85,8 @@ Generated: 2026-05-15 13:10 UTC
 | OpenTelemetry Java | Commit Build | 1m 10s | 7m 17s | 524% slower | 3.14 GB (80.21%) | workflow total slower |
 | Spring AI | Workflow Total | 1m 37s | 1m 28s | 9% faster | 2.39 GB (72.06%) | commit build faster |
 | gRPC | Commit Build | 38m 27s | 29m 3s | 24% faster | 1.02 MB (0.13%) | workflow total faster |
-| Zed | Workflow Total | 36m 59s | 36m 11s | near tie | 7.21 GB (63.06%) | 2 paired samples |
-| n8n | Workflow Total | 4m 56s | 4m 45s | 4% faster | 2.92 GB (78.0%) | — |
+| Zed | Commit Build | 24m 27s | 24m 3s | near tie | 6.87 GB (60.14%) | workflow total slower |
+| n8n | Workflow Total | 4m 56s | 4m 36s | 7% faster | 2.94 GB (77.81%) | 2 paired samples |
 
 Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.
 
