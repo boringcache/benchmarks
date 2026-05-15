@@ -53,6 +53,8 @@ class PublishIndexTest < Minitest::Test
     assert_equal "complete", snapshot["publish_status"]
     assert_equal "cache_session_summary.v2", snapshot.dig("session_summary", "schema")
     assert_equal "https://app.boringcache.com/workspaces/boringcache/benchmarks/cache/sessions/gh-123-1", snapshot["reporting_url"]
+    assert_equal 256, snapshot.dig("storage_breakdown", "summary", "remote_cas_bytes")
+    assert_equal 12, snapshot.dig("tool_outcomes", "gradle", "warm1", "executed_tasks")
   end
 
   def test_average_snapshot_carries_refs_and_flags_mixed_release_samples
@@ -79,6 +81,9 @@ class PublishIndexTest < Minitest::Test
     assert_equal "h1+h2c-auto", averaged["http_transport"]
     assert_equal true, averaged["http2_enabled"]
     assert_equal 33_554_432, averaged["oci_stream_through_min_bytes"]
+    assert_equal 256, averaged.dig("storage_breakdown", "summary", "remote_cas_bytes")
+    assert_equal 512, averaged.dig("storage_breakdown", "summary", "dependency_archive_bytes")
+    assert_equal 12, averaged.dig("tool_outcomes", "gradle", "warm1", "executed_tasks")
   end
 
   def test_build_report_uses_current_lane_language
@@ -116,7 +121,8 @@ class PublishIndexTest < Minitest::Test
     assert_includes report, "### Fresh"
     assert_includes report, "### Rolling"
     assert_includes report, "| Benchmark | Metric | actions/cache | BoringCache | Result | Storage Delta | Notes |"
-    assert_includes report, "| Hugo | Commit Build | 0m 10s | 0m 8s | cache bootstrap 1/3 | 200.00 B (20.0%) | tiny run; setup dominates; 3 paired samples; cache bootstrap 1/3; Rolling cache was unavailable"
+    assert_includes report, "| Hugo | Commit Build | 0m 10s | 0m 8s | cache bootstrap 1/3 | 200.00 B (20.0%) | tiny run; setup dominates; BC storage: remote CAS 256.00 B, deps archive 512.00 B, runtime archive 256.00 B; 3 paired samples; cache bootstrap 1/3; Rolling cache was unavailable"
+    assert_includes report, "BC storage: remote CAS 256.00 B, deps archive 512.00 B, runtime archive 256.00 B"
     refute_includes report, "Fresh Isolated"
     refute_includes report, "Rolling Historical"
     refute_includes report, "First Build"
@@ -286,6 +292,7 @@ class PublishIndexTest < Minitest::Test
           "cold_seconds" => 8,
           "warm1_seconds" => 8,
           "run_total_seconds" => 8,
+          "storage_breakdown" => storage_breakdown_sample,
           "classification" => classification
         }
       }
@@ -311,6 +318,7 @@ class PublishIndexTest < Minitest::Test
       "cache" => {
         "storage_bytes" => 1024,
         "storage_source" => "boringcache-check",
+        "storage_breakdown" => storage_breakdown_sample,
         "workspace" => "boringcache/benchmarks",
         "tag" => "hugo-docker-main",
         "mode" => "docker"
@@ -339,6 +347,7 @@ class PublishIndexTest < Minitest::Test
       "adapter" => "oci",
       "restore_result" => "hit",
       "save_result" => "published",
+      "tool_outcomes" => tool_outcomes_sample,
       "cache_session_summary" => {
         "schema" => "cache_session_summary.v2",
         "startup_prefetch" => {
@@ -384,11 +393,63 @@ class PublishIndexTest < Minitest::Test
         "hydration_policy" => "metadata-only",
         "new_blob_count" => 0
       },
+      "storage_breakdown" => storage_breakdown_sample,
+      "tool_outcomes" => tool_outcomes_sample,
       "startup_prefetch" => {
         "duration_ms" => 152_000,
         "concurrency" => 100,
         "concurrency_reason" => "many_small_blobs_rtt_bound"
       }
+    }
+  end
+
+  def storage_breakdown_sample
+    {
+      "total_bytes" => 1024,
+      "summary" => {
+        "remote_cas_bytes" => 256,
+        "dependency_archive_bytes" => 512,
+        "tool_runtime_archive_bytes" => 256,
+        "unknown_bytes" => 0
+      },
+      "components" => [
+        {
+          "tag" => "hugo-docker-main-remote",
+          "storage_mode" => "cas",
+          "component_type" => "remote_cas",
+          "component_label" => "remote CAS",
+          "bytes" => 256
+        },
+        {
+          "tag" => "hugo-docker-main-deps",
+          "storage_mode" => "archive",
+          "component_type" => "dependency_archive",
+          "component_label" => "dependency archive",
+          "bytes" => 512
+        },
+        {
+          "tag" => "hugo-docker-main-mise-node",
+          "storage_mode" => "archive",
+          "component_type" => "tool_runtime_archive",
+          "component_label" => "tool runtime archive",
+          "bytes" => 256
+        }
+      ]
+    }
+  end
+
+  def tool_outcomes_sample
+    {
+      "gradle" => {
+        "local_build_cache_policy" => "default",
+        "warm1" => {
+          "actionable_tasks" => 51,
+          "executed_tasks" => 12,
+          "from_cache_tasks" => 34,
+          "up_to_date_tasks" => 5
+        }
+      },
+      "warnings" => ["warm1_executed_tasks_high"]
     }
   end
 end

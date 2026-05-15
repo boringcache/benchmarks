@@ -3,7 +3,7 @@
 # sync-helpers.sh
 #
 # Copies canonical helper scripts from benchmarks/scripts/canonical/
-# into every benchmark-*/scripts/ directory under benchmark-repos/.
+# into every benchmark-*/scripts/ directory under benchmarks-repos/.
 #
 # Usage:
 #   ./sync-helpers.sh                # dry-run; shows planned copies
@@ -43,7 +43,7 @@ done
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 canonical_dir="$script_dir/canonical"
-repos_dir="$(cd "$script_dir/../../benchmark-repos" && pwd)"
+repos_dir="$(cd "$script_dir/../../benchmarks-repos" && pwd)"
 
 if [[ ! -d "$canonical_dir" ]]; then
   echo "Canonical directory missing: $canonical_dir" >&2
