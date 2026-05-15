@@ -22,6 +22,10 @@ LANE_IDS = %w[fresh rolling].freeze
 README_REPORT_START = "<!-- benchmark-report:start -->"
 README_REPORT_END = "<!-- benchmark-report:end -->"
 PRODUCT_REF_KEYS = %w[cli_version action_ref action_sha web_revision api_url].freeze
+SLOW_REASON_NUMERIC_KEYS = %w[
+  build_seconds setup_seconds post_cleanup_seconds cache_restore_seconds cache_save_export_seconds
+  hit_count miss_count hit_rate new_blob_bytes
+].freeze
 
 BENCHMARKS = [
   {
@@ -357,6 +361,11 @@ def tool_outcomes_from(payload)
   outcomes.is_a?(Hash) ? outcomes : nil
 end
 
+def slow_reason_from(payload)
+  slow_reason = payload["slow_reason"]
+  slow_reason.is_a?(Hash) ? slow_reason : nil
+end
+
 def launch_proof_paths_from(payload)
   paths = []
   paths.concat(Array(payload["proof_paths"]))
@@ -613,7 +622,8 @@ def extract_strategy_metrics(payload)
     session_summary: session_summary,
     summary_schema: payload["summary_schema"] || payload["summary_schema_label"],
     reporting_url: payload["reporting_url"] || payload.dig("diagnostics", "reporting_url"),
-    tool_outcomes: tool_outcomes_from(payload)
+    tool_outcomes: tool_outcomes_from(payload),
+    slow_reason: slow_reason_from(payload)
   }
 end
 
@@ -727,9 +737,13 @@ def load_strategy_data(temp_root:, repo:, run:, benchmark_id:, strategy:, lane:,
   }
 end
 
-def strategy_snapshot(data)
+def strategy_snapshot(data, paired_run_id = nil)
   metrics = data.fetch(:metrics)
   run = data.fetch(:run)
+  slow_reason = if metrics[:slow_reason].is_a?(Hash)
+    JSON.parse(JSON.generate(metrics[:slow_reason]))
+  end
+  slow_reason["paired_run_id"] = paired_run_id if slow_reason && paired_run_id
 
   {
     "run_id" => run["databaseId"],
@@ -775,7 +789,8 @@ def strategy_snapshot(data)
     "session_summary" => metrics[:session_summary],
     "summary_schema" => metrics[:summary_schema],
     "reporting_url" => metrics[:reporting_url],
-    "tool_outcomes" => metrics[:tool_outcomes]
+    "tool_outcomes" => metrics[:tool_outcomes],
+    "slow_reason" => slow_reason
   }
 end
 
@@ -882,8 +897,8 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:, lane:)
     "comparison" => {
       "paired_on_head_sha" => pair[:paired_on_head_sha],
       "pairing_head_sha" => pair[:pairing_head_sha],
-      "actions_cache" => strategy_snapshot(actions_data),
-      "boringcache" => strategy_snapshot(boringcache_data),
+      "actions_cache" => strategy_snapshot(actions_data, boringcache_data.fetch(:run)["databaseId"]),
+      "boringcache" => strategy_snapshot(boringcache_data, actions_data.fetch(:run)["databaseId"]),
       "reporting" => reporting,
       "warm_improvement_pct" => percent_delta(
         warm_steady_seconds(actions_metrics),
@@ -1040,6 +1055,32 @@ def most_common_hash(values)
   JSON.parse(most_common(signatures))
 end
 
+def average_slow_reason_payload(snapshots)
+  rows = snapshots.map { |snapshot| snapshot["slow_reason"] }.select { |row| row.is_a?(Hash) }
+  return nil if rows.empty?
+
+  latest_snapshot = snapshots
+    .select { |snapshot| snapshot["slow_reason"].is_a?(Hash) }
+    .max_by { |snapshot| parse_timestamp(snapshot["created_at"]) || Time.at(0) }
+  averaged = JSON.parse(JSON.generate(latest_snapshot["slow_reason"]))
+
+  SLOW_REASON_NUMERIC_KEYS.each do |key|
+    value = average(rows.map { |row| parse_number(row[key]) })
+    next if value.nil?
+
+    value = value.round if key.end_with?("_bytes") || key.end_with?("_count")
+    averaged[key] = value
+  end
+
+  averaged["sample_count"] = rows.length
+  averaged["sample_run_ids"] = snapshots.map { |snapshot| snapshot["run_id"] if snapshot["slow_reason"].is_a?(Hash) }.compact
+  averaged["hypothesis_ids"] = rows.flat_map do |row|
+    Array(row["hypotheses"]).map { |hypothesis| hypothesis["id"] if hypothesis.is_a?(Hash) }.compact
+  end.uniq
+  averaged["samples"] = rows if rows.length > 1
+  averaged
+end
+
 def product_refs_consistent?(snapshots)
   signatures = snapshots.map { |snapshot| stable_hash_signature(snapshot["product_refs"]) }.compact.uniq
   signatures.length <= 1
@@ -1074,6 +1115,9 @@ def average_snapshot(snapshots)
     value = value.round if value && (key == "storage_bytes" || key.end_with?("_bytes"))
     averaged[key] = value
   end
+
+  slow_reason = average_slow_reason_payload(snapshots)
+  averaged["slow_reason"] = slow_reason if slow_reason
 
   oci_payload = average_oci_payload(snapshots)
   hydration_policy = most_common(snapshots.map { |snapshot| snapshot.dig("oci", "hydration_policy") })

@@ -14,7 +14,7 @@ class PublishIndexTest < Minitest::Test
 
   def test_strategy_snapshot_preserves_release_and_launch_proof_fields
     metrics = extract_strategy_metrics(raw_boringcache_artifact)
-    snapshot = strategy_snapshot(
+    snapshot = strategy_snapshot({
       run: {
         "databaseId" => 123,
         "url" => "https://github.com/boringcache/benchmark-hugo/actions/runs/123",
@@ -23,7 +23,7 @@ class PublishIndexTest < Minitest::Test
       },
       run_total_seconds: 42.0,
       metrics: metrics
-    )
+    }, 456)
 
     assert_equal PRODUCT_REFS, snapshot["product_refs"]
     assert_equal true, snapshot["product_refs_consistent"]
@@ -55,6 +55,9 @@ class PublishIndexTest < Minitest::Test
     assert_equal "https://app.boringcache.com/workspaces/boringcache/benchmarks/cache/sessions/gh-123-1", snapshot["reporting_url"]
     assert_equal 256, snapshot.dig("storage_breakdown", "summary", "remote_cas_bytes")
     assert_equal 12, snapshot.dig("tool_outcomes", "gradle", "warm1", "executed_tasks")
+    assert_equal 25, snapshot.dig("slow_reason", "build_seconds")
+    assert_equal 456, snapshot.dig("slow_reason", "paired_run_id")
+    assert_equal ["cache_save_export_overhead"], snapshot.dig("slow_reason", "hypothesis_ids")
   end
 
   def test_average_snapshot_carries_refs_and_flags_mixed_release_samples
@@ -84,6 +87,10 @@ class PublishIndexTest < Minitest::Test
     assert_equal 256, averaged.dig("storage_breakdown", "summary", "remote_cas_bytes")
     assert_equal 512, averaged.dig("storage_breakdown", "summary", "dependency_archive_bytes")
     assert_equal 12, averaged.dig("tool_outcomes", "gradle", "warm1", "executed_tasks")
+    assert_equal 25, averaged.dig("slow_reason", "build_seconds")
+    assert_equal 3, averaged.dig("slow_reason", "sample_count")
+    assert_equal ["cache_save_export_overhead"], averaged.dig("slow_reason", "hypothesis_ids")
+    assert_equal 3, averaged.dig("slow_reason", "samples").length
   end
 
   def test_build_report_uses_current_lane_language
@@ -348,6 +355,7 @@ class PublishIndexTest < Minitest::Test
       "restore_result" => "hit",
       "save_result" => "published",
       "tool_outcomes" => tool_outcomes_sample,
+      "slow_reason" => slow_reason_sample,
       "cache_session_summary" => {
         "schema" => "cache_session_summary.v2",
         "startup_prefetch" => {
@@ -399,7 +407,8 @@ class PublishIndexTest < Minitest::Test
         "duration_ms" => 152_000,
         "concurrency" => 100,
         "concurrency_reason" => "many_small_blobs_rtt_bound"
-      }
+      },
+      "slow_reason" => slow_reason_sample
     }
   end
 
@@ -450,6 +459,36 @@ class PublishIndexTest < Minitest::Test
         }
       },
       "warnings" => ["warm1_executed_tasks_high"]
+    }
+  end
+
+  def slow_reason_sample
+    {
+      "schema_version" => "benchmark_slow_reason.v1",
+      "benchmark" => "hugo",
+      "strategy" => "boringcache",
+      "lane" => "rolling",
+      "run_uid" => "gh-123-1",
+      "paired_run_id" => nil,
+      "build_seconds" => 25,
+      "setup_seconds" => 5,
+      "post_cleanup_seconds" => nil,
+      "cache_restore_seconds" => 0.5,
+      "cache_save_export_seconds" => 3.0,
+      "hit_count" => 100,
+      "miss_count" => 39,
+      "hit_rate" => 71.9,
+      "prior_cache_state" => "usable_import",
+      "new_blob_bytes" => 0,
+      "issue_candidates" => [],
+      "hypotheses" => [
+        {
+          "id" => "cache_save_export_overhead",
+          "confidence" => "medium",
+          "summary" => "Cache save/export time is visible in the sample."
+        }
+      ],
+      "hypothesis_ids" => ["cache_save_export_overhead"]
     }
   end
 end

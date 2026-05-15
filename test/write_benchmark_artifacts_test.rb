@@ -26,6 +26,82 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     assert_nil payload.dig("runs", "rolling_warm_seconds")
   end
 
+  def test_slow_reason_row_normalizes_timings_and_hypotheses
+    Dir.mktmpdir("bc-artifact-inputs") do |dir|
+      summary_path = File.join(dir, "summary.json")
+      issue_candidates_path = File.join(dir, "issue-candidates.json")
+      File.write(summary_path, JSON.generate(
+        "tool" => {
+          "cache_read_hit_count" => 100,
+          "cache_read_miss_count" => 39
+        }
+      ))
+      File.write(issue_candidates_path, JSON.generate([
+        {
+          "kind" => "storage_ttfb_regression",
+          "owner" => "boringcache",
+          "severity" => "investigate"
+        }
+      ]))
+
+      payload = write_artifact(
+        "--cache-import-status", "ok",
+        "--docker-cache-import-seconds", "0.1",
+        "--docker-cache-export-seconds", "437.8",
+        "--oci-new-blob-bytes", "5580986362",
+        "--cache-session-summary-json", summary_path,
+        "--issue-candidates-json", issue_candidates_path,
+        "--paired-run-id", "25922740871",
+        "--prior-cache-state", "warm_mixed"
+      )
+
+      slow_reason = payload.fetch("slow_reason")
+      assert_equal "benchmark_slow_reason.v1", slow_reason["schema_version"]
+      assert_equal "25922740871", slow_reason["paired_run_id"]
+      assert_equal 8, slow_reason["build_seconds"]
+      assert_equal 2, slow_reason["setup_seconds"]
+      assert_equal 0.1, slow_reason["cache_restore_seconds"]
+      assert_equal 437.8, slow_reason["cache_save_export_seconds"]
+      assert_equal 100, slow_reason["hit_count"]
+      assert_equal 39, slow_reason["miss_count"]
+      assert_equal 71.9, slow_reason["hit_rate"]
+      assert_equal "warm_mixed", slow_reason["prior_cache_state"]
+      assert_equal 5_580_986_362, slow_reason["new_blob_bytes"]
+      assert_equal "storage_ttfb_regression", slow_reason.dig("issue_candidates", 0, "kind")
+
+      hypothesis_ids = slow_reason.fetch("hypotheses").map { |hypothesis| hypothesis.fetch("id") }
+      assert_includes hypothesis_ids, "cache_save_export_overhead"
+      assert_includes hypothesis_ids, "partial_cache_reuse"
+      assert_includes hypothesis_ids, "large_cache_update"
+      assert_includes hypothesis_ids, "mcp_issue_candidate_present"
+    end
+  end
+
+  def test_slow_reason_uses_action_timing_breakdown_when_docker_timings_are_absent
+    Dir.mktmpdir("bc-artifact-inputs") do |dir|
+      timings_path = File.join(dir, "action-timings.json")
+      File.write(timings_path, JSON.generate(
+        "phases" => {
+          "seed" => {
+            "archive_restore" => {
+              "total_seconds" => 12.5
+            },
+            "archive_save" => {
+              "total_seconds" => 22.25,
+              "post_step_non_save_seconds" => 5.5
+            }
+          }
+        }
+      ))
+
+      payload = write_artifact("--action-timings-json", timings_path)
+
+      assert_equal 12.5, payload.dig("slow_reason", "cache_restore_seconds")
+      assert_equal 22.25, payload.dig("slow_reason", "cache_save_export_seconds")
+      assert_equal 5.5, payload.dig("slow_reason", "post_cleanup_seconds")
+    end
+  end
+
   def test_rolling_import_miss_stays_investigation_only
     payload = write_artifact(
       "--cache-import-status", "proxy_unreadable",
