@@ -169,7 +169,7 @@ def bytes_to_text(value)
 end
 
 def markdown_escape(value)
-  value.to_s.gsub("|", "\\|")
+  value.to_s.gsub(/[|\r\n]/, "|" => "\\|", "\r" => " ", "\n" => "<br>")
 end
 
 def markdown_table(headers, rows)
