@@ -271,6 +271,24 @@ def storage_summary_text(comparison)
   end
 end
 
+def storage_breakdown_note(breakdown)
+  summary = breakdown && breakdown["summary"]
+  return nil unless summary.is_a?(Hash)
+
+  parts = []
+  remote_cas = parse_number(summary["remote_cas_bytes"]).to_i
+  dependency_archive = parse_number(summary["dependency_archive_bytes"]).to_i
+  tool_runtime_archive = parse_number(summary["tool_runtime_archive_bytes"]).to_i
+  unknown = parse_number(summary["unknown_bytes"]).to_i
+
+  parts << "remote CAS #{bytes_to_text(remote_cas)}" if remote_cas.positive?
+  parts << "deps archive #{bytes_to_text(dependency_archive)}" if dependency_archive.positive?
+  parts << "runtime archive #{bytes_to_text(tool_runtime_archive)}" if tool_runtime_archive.positive?
+  parts << "unknown #{bytes_to_text(unknown)}" if unknown.positive?
+
+  parts.empty? ? nil : "BC storage: #{parts.join(', ')}"
+end
+
 def normalize_storage_sample(bytes, source)
   normalized_bytes = bytes&.round&.to_i
   normalized_source = source.to_s.strip
@@ -327,6 +345,16 @@ def startup_prefetch_from(payload, session_summary)
     "retries" => parse_number(raw["retries"] || raw["startup_prefetch_retries"]),
     "failures" => parse_number(raw["failures"] || raw["startup_prefetch_failures"])
   )
+end
+
+def storage_breakdown_from(payload)
+  breakdown = payload.dig("cache", "storage_breakdown") || payload["storage_breakdown"]
+  breakdown.is_a?(Hash) ? breakdown : nil
+end
+
+def tool_outcomes_from(payload)
+  outcomes = payload["tool_outcomes"]
+  outcomes.is_a?(Hash) ? outcomes : nil
 end
 
 def launch_proof_paths_from(payload)
@@ -560,6 +588,7 @@ def extract_strategy_metrics(payload)
     rolling_warm_seconds: parse_number(runs["rolling_warm_seconds"]),
     storage_bytes: storage_bytes,
     storage_source: storage_source,
+    storage_breakdown: storage_breakdown_from(payload),
     docker_cache_import_seconds: parse_number(docker_cache["import_seconds"]),
     docker_cache_export_seconds: parse_number(docker_cache["export_seconds"]),
     startup_prefetch: startup_prefetch,
@@ -583,7 +612,8 @@ def extract_strategy_metrics(payload)
     publish_status: payload["publish_status"] || classification["publish_status"],
     session_summary: session_summary,
     summary_schema: payload["summary_schema"] || payload["summary_schema_label"],
-    reporting_url: payload["reporting_url"] || payload.dig("diagnostics", "reporting_url")
+    reporting_url: payload["reporting_url"] || payload.dig("diagnostics", "reporting_url"),
+    tool_outcomes: tool_outcomes_from(payload)
   }
 end
 
@@ -720,6 +750,7 @@ def strategy_snapshot(data)
     "run_total_seconds" => data[:run_total_seconds],
     "storage_bytes" => metrics[:storage_bytes],
     "storage_source" => metrics[:storage_source],
+    "storage_breakdown" => metrics[:storage_breakdown],
     "docker_cache_import_seconds" => metrics[:docker_cache_import_seconds],
     "docker_cache_export_seconds" => metrics[:docker_cache_export_seconds],
     "startup_prefetch" => metrics[:startup_prefetch],
@@ -743,7 +774,8 @@ def strategy_snapshot(data)
     "publish_status" => metrics[:publish_status],
     "session_summary" => metrics[:session_summary],
     "summary_schema" => metrics[:summary_schema],
-    "reporting_url" => metrics[:reporting_url]
+    "reporting_url" => metrics[:reporting_url],
+    "tool_outcomes" => metrics[:tool_outcomes]
   }
 end
 
@@ -904,6 +936,51 @@ def average_startup_prefetch_payload(snapshots)
   end
 end
 
+def average_storage_breakdown_payload(snapshots)
+  payloads = snapshots.map { |snapshot| snapshot["storage_breakdown"] }.select { |payload| payload.is_a?(Hash) }
+  return nil if payloads.empty?
+
+  summary_keys = payloads.flat_map { |payload| (payload["summary"] || {}).keys }.uniq
+  summary = summary_keys.each_with_object({}) do |key, acc|
+    values = payloads.map { |payload| parse_number(payload.dig("summary", key)) }.compact
+    next if values.empty?
+
+    acc[key] = average(values).round
+  end
+
+  component_groups = Hash.new { |hash, key| hash[key] = [] }
+  payloads.each do |payload|
+    Array(payload["components"]).each do |component|
+      next unless component.is_a?(Hash)
+
+      key = [
+        component["component_type"].to_s,
+        component["component_label"].to_s,
+        component["storage_mode"].to_s
+      ]
+      component_groups[key] << component
+    end
+  end
+
+  components = component_groups.map do |(component_type, component_label, storage_mode), grouped|
+    {
+      "component_type" => component_type,
+      "component_label" => component_label,
+      "storage_mode" => storage_mode,
+      "bytes" => average(grouped.map { |component| parse_number(component["bytes"]) }).round,
+      "sample_count" => grouped.length,
+      "tags" => grouped.map { |component| component["tag"] }.compact.uniq
+    }.reject { |_, value| value.respond_to?(:empty?) ? value.empty? : value.nil? }
+  end
+
+  total_bytes = average(payloads.map { |payload| parse_number(payload["total_bytes"]) })
+  {
+    "total_bytes" => (total_bytes.round if total_bytes),
+    "summary" => summary,
+    "components" => components
+  }.reject { |_, value| value.respond_to?(:empty?) ? value.empty? : value.nil? }
+end
+
 def most_common(values)
   values = values.compact.reject { |value| value.to_s.empty? }
   return nil if values.empty?
@@ -1004,6 +1081,8 @@ def average_snapshot(snapshots)
   averaged["oci"] = oci_payload if oci_payload.any?
   startup_prefetch_payload = average_startup_prefetch_payload(snapshots)
   averaged["startup_prefetch"] = startup_prefetch_payload if startup_prefetch_payload.any?
+  storage_breakdown_payload = average_storage_breakdown_payload(snapshots)
+  averaged["storage_breakdown"] = storage_breakdown_payload if storage_breakdown_payload
   storage_source = most_common(snapshots.map { |snapshot| snapshot["storage_source"] })
   averaged["storage_source"] = storage_source if storage_source
 
@@ -1017,7 +1096,7 @@ def average_snapshot(snapshots)
   %w[
     workspace cache_tag run_uid mode adapter docker_cache_from_refs docker_cache_import_ready
     http_transport http2_enabled oci_stream_through_min_bytes restore_result save_result
-    publish_status session_summary summary_schema reporting_url
+    publish_status session_summary summary_schema reporting_url tool_outcomes
   ].each do |key|
     value = latest[key] || most_common(snapshots.map { |snapshot| snapshot[key] })
     averaged[key] = value if value
@@ -1240,6 +1319,9 @@ def lane_report_row(entry, lane)
   notes << "tiny run; setup dominates" if tiny_run
   notes << "storage unavailable" if comparison["storage_saved_bytes"].nil?
   notes << "BC used more storage" if comparison["storage_saved_bytes"].to_f < 0
+  if (breakdown_note = storage_breakdown_note(boringcache["storage_breakdown"]))
+    notes << breakdown_note
+  end
   invalid_count = bc_classification["invalid_count"].to_i
   bootstrap_count = (bc_classification["rolling_bootstrap_count"] || bc_classification["rolling_reseed_count"]).to_i
   source_sample_count = bc_classification["source_sample_count"].to_i

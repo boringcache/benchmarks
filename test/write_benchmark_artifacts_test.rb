@@ -76,6 +76,39 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     assert_equal 0, payload.dig("startup_prefetch", "failures")
   end
 
+  def test_storage_breakdown_and_tool_outcomes_are_written
+    Dir.mktmpdir("bc-artifact-inputs") do |dir|
+      storage_path = File.join(dir, "storage.json")
+      tool_outcomes_path = File.join(dir, "tool-outcomes.json")
+      File.write(storage_path, JSON.generate(
+        "summary" => {
+          "remote_cas_bytes" => 256,
+          "dependency_archive_bytes" => 512,
+          "tool_runtime_archive_bytes" => 128
+        },
+        "components" => []
+      ))
+      File.write(tool_outcomes_path, JSON.generate(
+        "gradle" => {
+          "warm1" => {
+            "executed_tasks" => 12,
+            "from_cache_tasks" => 34,
+            "up_to_date_tasks" => 5
+          }
+        },
+        "warnings" => ["warm1_executed_tasks_high"]
+      ))
+
+      payload = write_artifact(
+        "--storage-breakdown-json", storage_path,
+        "--tool-outcomes-json", tool_outcomes_path
+      )
+
+      assert_equal 256, payload.dig("cache", "storage_breakdown", "summary", "remote_cas_bytes")
+      assert_equal 12, payload.dig("tool_outcomes", "gradle", "warm1", "executed_tasks")
+    end
+  end
+
   def test_actions_cache_rolling_miss_is_investigation_only
     payload = write_artifact(
       "--cache-import-status", "actions_cache_miss",

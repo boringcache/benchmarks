@@ -6,7 +6,7 @@
 #
 # Compares the md5 of each canonical helper in benchmarks/scripts/canonical/
 # against the same-named helper in every benchmark-* repo under
-# benchmark-repos/. Exits 0 if all repos match; exits non-zero with a
+# benchmarks-repos/. Exits 0 if all repos match; exits non-zero with a
 # per-repo summary if any drift exists.
 #
 # Designed to be runnable in CI as a periodic guard so the helpers
@@ -16,7 +16,7 @@ set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 canonical_dir="$script_dir/canonical"
-repos_dir="$(cd "$script_dir/../../benchmark-repos" && pwd)"
+repos_dir="$(cd "$script_dir/../../benchmarks-repos" && pwd)"
 
 if [[ ! -d "$canonical_dir" ]]; then
   echo "Canonical directory missing: $canonical_dir" >&2

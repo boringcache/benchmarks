@@ -57,9 +57,11 @@ warm1_build_seconds=""
 cache_storage_bytes="0"
 cache_storage_source=""
 cache_storage_note=""
+cache_storage_breakdown_json=""
 bytes_uploaded=""
 bytes_downloaded=""
 hit_behavior_note=""
+tool_outcomes_json=""
 cli_version="${BENCHMARK_CLI_VERSION:-}"
 action_ref="${BENCHMARK_ACTION_REF:-}"
 action_sha="${BENCHMARK_ACTION_SHA:-}"
@@ -168,6 +170,10 @@ while [[ $# -gt 0 ]]; do
       cache_storage_note="$2"
       shift 2
       ;;
+    --storage-breakdown-json)
+      cache_storage_breakdown_json="$2"
+      shift 2
+      ;;
     --bytes-uploaded)
       bytes_uploaded="$2"
       shift 2
@@ -178,6 +184,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --hit-behavior-note)
       hit_behavior_note="$2"
+      shift 2
+      ;;
+    --tool-outcomes-json)
+      tool_outcomes_json="$2"
       shift 2
       ;;
     --cli-version)
@@ -486,6 +496,22 @@ json_array_from_csv_or_null() {
   fi
 }
 
+json_payload_from_optional_file() {
+  local label="$1"
+  local path="$2"
+  if [[ -z "$path" ]]; then
+    echo "null"
+    return
+  fi
+
+  if [[ ! -f "$path" ]]; then
+    echo "Missing ${label} JSON: $path" >&2
+    exit 1
+  fi
+
+  jq -c '.' "$path"
+}
+
 sanitize_uint() {
   local v="$1"
   if [[ -n "$v" && "$v" =~ ^[0-9]+$ ]]; then
@@ -728,6 +754,8 @@ if [[ -n "$action_timings_json" ]]; then
 fi
 session_summary_payload="$(session_summary_payload_from_inputs)"
 launch_proof_paths_payload="$(launch_proof_paths_payload_from_inputs)"
+storage_breakdown_payload="$(json_payload_from_optional_file "storage breakdown" "$cache_storage_breakdown_json")"
+tool_outcomes_payload="$(json_payload_from_optional_file "tool outcomes" "$tool_outcomes_json")"
 
 warm_count=0
 warm_total=0
@@ -894,7 +922,8 @@ cat > "$json_path" <<JSON
     "storage_bytes": $cache_storage_bytes,
     "storage_mib": $cache_storage_mib,
     "storage_source": "$cache_storage_source",
-    "storage_note": $(json_string_or_null "$cache_storage_note")
+    "storage_note": $(json_string_or_null "$cache_storage_note"),
+    "storage_breakdown": $storage_breakdown_payload
   },
   "docker_cache": {
     "import_seconds": $(json_num_or_null "$docker_cache_import_seconds"),
@@ -954,7 +983,8 @@ cat > "$json_path" <<JSON
   "hit_behavior": {
     "warm_rerun_succeeded": $warm_rerun_succeeded,
     "note": $(json_string_or_null "$hit_behavior_note")
-  }
+  },
+  "tool_outcomes": $tool_outcomes_payload
 }
 JSON
 
@@ -1019,6 +1049,42 @@ JSON
     echo "| Storage source | ${cache_storage_source} |"
     if [[ -n "$cache_storage_note" ]]; then
       echo "| Storage note | ${cache_storage_note} |"
+    fi
+    if [[ "$storage_breakdown_payload" != "null" ]]; then
+      remote_cas_bytes="$(jq -r '.summary.remote_cas_bytes // empty' <<< "$storage_breakdown_payload")"
+      dependency_archive_bytes="$(jq -r '.summary.dependency_archive_bytes // empty' <<< "$storage_breakdown_payload")"
+      tool_runtime_archive_bytes="$(jq -r '.summary.tool_runtime_archive_bytes // empty' <<< "$storage_breakdown_payload")"
+      if [[ -n "$remote_cas_bytes" ]]; then
+        remote_cas_mib="$(awk -v bytes="$remote_cas_bytes" 'BEGIN { printf "%.2f", bytes / 1048576 }')"
+        echo "| Remote CAS storage | ${remote_cas_mib} MiB |"
+      fi
+      if [[ -n "$dependency_archive_bytes" ]]; then
+        dependency_archive_mib="$(awk -v bytes="$dependency_archive_bytes" 'BEGIN { printf "%.2f", bytes / 1048576 }')"
+        echo "| Dependency archive storage | ${dependency_archive_mib} MiB |"
+      fi
+      if [[ -n "$tool_runtime_archive_bytes" ]]; then
+        tool_runtime_archive_mib="$(awk -v bytes="$tool_runtime_archive_bytes" 'BEGIN { printf "%.2f", bytes / 1048576 }')"
+        echo "| Tool runtime archive storage | ${tool_runtime_archive_mib} MiB |"
+      fi
+    fi
+  fi
+
+  if [[ "$tool_outcomes_payload" != "null" ]]; then
+    gradle_warm_executed="$(jq -r '.gradle.warm1.executed_tasks // empty' <<< "$tool_outcomes_payload")"
+    gradle_warm_from_cache="$(jq -r '.gradle.warm1.from_cache_tasks // empty' <<< "$tool_outcomes_payload")"
+    gradle_warm_up_to_date="$(jq -r '.gradle.warm1.up_to_date_tasks // empty' <<< "$tool_outcomes_payload")"
+    gradle_warnings="$(jq -r '(.warnings // []) | join("; ")' <<< "$tool_outcomes_payload")"
+    if [[ -n "$gradle_warm_executed" ]]; then
+      echo "| Gradle warm executed tasks | ${gradle_warm_executed} |"
+    fi
+    if [[ -n "$gradle_warm_from_cache" ]]; then
+      echo "| Gradle warm from-cache tasks | ${gradle_warm_from_cache} |"
+    fi
+    if [[ -n "$gradle_warm_up_to_date" ]]; then
+      echo "| Gradle warm up-to-date tasks | ${gradle_warm_up_to_date} |"
+    fi
+    if [[ -n "$gradle_warnings" ]]; then
+      echo "| Tool outcome warnings | ${gradle_warnings} |"
     fi
   fi
 
