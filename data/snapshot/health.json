@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T21:55:24Z",
+  "generated_at": "2026-05-17T22:28:29Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -168,10 +168,10 @@
           "paired_head_count": 46,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "fbe72ebe64bd1a2e3581a3b8ebd67ad54348d1b0",
-          "latest_created_at": "2026-05-17T20:21:48Z",
-          "latest_actions_run_id": 26001694542,
-          "latest_boringcache_run_id": 26001694510,
+          "latest_head_sha": "801f5a337716b30aa96133b2df382f096da82ea2",
+          "latest_created_at": "2026-05-17T21:48:20Z",
+          "latest_actions_run_id": 26003663489,
+          "latest_boringcache_run_id": 26003663469,
           "latest_reporting_mode": "comparative",
           "latest_cache_import_status": "ok",
           "latest_sample_valid": true
@@ -184,10 +184,10 @@
           "paired_head_count": 46,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "fbe72ebe64bd1a2e3581a3b8ebd67ad54348d1b0",
-          "latest_created_at": "2026-05-17T20:21:53Z",
-          "latest_actions_run_id": 26001695836,
-          "latest_boringcache_run_id": 26001696244,
+          "latest_head_sha": "801f5a337716b30aa96133b2df382f096da82ea2",
+          "latest_created_at": "2026-05-17T21:48:26Z",
+          "latest_actions_run_id": 26003665039,
+          "latest_boringcache_run_id": 26003665522,
           "latest_reporting_mode": "comparative",
           "latest_cache_import_status": "ok",
           "latest_sample_valid": true
@@ -370,10 +370,10 @@
           "paired_head_count": 44,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "6bc4a33df11551cc9fa74bcbb2e6bc2d74c62019",
-          "latest_created_at": "2026-05-17T20:49:34Z",
-          "latest_actions_run_id": 26002335565,
-          "latest_boringcache_run_id": 26002336095,
+          "latest_head_sha": "5177ea9249c49c0af052ff8d7a7ad459341a813e",
+          "latest_created_at": "2026-05-17T21:23:51Z",
+          "latest_actions_run_id": 26003111501,
+          "latest_boringcache_run_id": 26003111866,
           "latest_reporting_mode": "comparative",
           "latest_sample_valid": true
         }
