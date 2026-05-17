@@ -1325,48 +1325,34 @@ def lane_report_row(entry, lane)
     sample_count: sample_count
   )
 
-  notes = []
-  notes << "storage unavailable" if comparison["storage_saved_bytes"].nil?
-  notes << "uses more storage" if comparison["storage_saved_bytes"].to_f < 0
-  invalid_count = bc_classification["invalid_count"].to_i
-  bootstrap_count = (bc_classification["rolling_bootstrap_count"] || bc_classification["rolling_reseed_count"]).to_i
-  source_sample_count = bc_classification["source_sample_count"].to_i
-  excluded_sample_count = bc_classification["excluded_sample_count"].to_i
-  cache_import_status = bc_classification["cache_import_status"].to_s
-
-  if source_sample_count.positive? && excluded_sample_count.positive?
-    notes << "#{excluded_sample_count}/#{source_sample_count} bootstrap samples excluded"
-  elsif sample_count > 1 && bootstrap_count.positive?
-    notes << "#{bootstrap_count}/#{sample_count} cache bootstrap"
-  end
-
-  notes << "invalid #{invalid_count}/#{sample_count}" if sample_count > 1 && invalid_count.positive?
-  notes << "cache import #{cache_import_status}" if !cache_import_status.empty? && cache_import_status != "ok"
-  if !reporting.fetch("comparative", true)
-    notes << case reporting["reason"].to_s
-    when "rolling_cache_bootstrap", "rolling_cache_import_not_ok"
-      "not a parity claim"
-    else
-      reporting["status"].to_s.empty? ? "diagnostic only" : reporting["status"].tr("_", " ")
-    end
-  end
-
   {
     benchmark: entry.fetch("name"),
     scenario: lane_entry["headline_label"] || reporting["headline_label"] || BenchmarkReporting.headline_label(lane: lane, scenario: lane_entry["headline_scenario"]),
     actions: lane_entry["before"],
     boringcache: lane_entry["after"],
     result: reporting.fetch("comparative", true) ? timing_result_text(lane_entry["before_seconds"], lane_entry["after_seconds"]) : reporting["result_text"],
-    storage: storage_summary_text(comparison),
-    notes: notes.empty? ? "—" : notes.join("; ")
+    storage: storage_summary_text(comparison)
   }
 end
 
-def coverage_cell(entry, lane)
-  return "yes" if entry.dig("lanes", lane)
-  return "yes" if entry["lane"] == lane
+def lane_available?(entry, lane)
+  entry.dig("lanes", lane) || entry["lane"] == lane
+end
 
-  "—"
+def coverage_summary(entries)
+  total = entries.length
+  fresh = entries.count { |entry| lane_available?(entry, "fresh") }
+  rolling = entries.count { |entry| lane_available?(entry, "rolling") }
+
+  if fresh == total && rolling == total
+    "Coverage: #{total} benchmarks, with fresh and rolling lanes available for all."
+  else
+    "Coverage: #{total} benchmarks; fresh #{fresh}/#{total}, rolling #{rolling}/#{total}."
+  end
+end
+
+def report_note
+  "Rows are the latest complete same-commit AC/BC pairs. Storage is BoringCache compared with actions/cache. Rolling windows, pair evidence, and health live in `data/latest/windows.json`, `data/latest/pairs.json`, and `data/latest/health.json`."
 end
 
 def markdown_table(headers, rows)
@@ -1381,27 +1367,19 @@ end
 
 def build_report(entries, generated_at:)
   generated_label = Time.parse(generated_at).utc.strftime("%Y-%m-%d %H:%M UTC")
-  coverage_rows = entries.map do |entry|
-    [
-      entry.fetch("name"),
-      coverage_cell(entry, "fresh"),
-      coverage_cell(entry, "rolling")
-    ]
-  end
-
   fresh_rows = entries.each_with_object([]) do |entry, rows|
     row = lane_report_row(entry, "fresh")
     next unless row
 
-    rows << [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage], row[:notes]]
+    rows << [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage]]
   end
 
   rolling_rows = entries.map do |entry|
     row = lane_report_row(entry, "rolling")
     if row
-      [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage], row[:notes]]
+      [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage]]
     else
-      [entry.fetch("name"), "—", "—", "—", "—", "—", "not published yet"]
+      [entry.fetch("name"), "—", "—", "—", "—", "—"]
     end
   end
 
@@ -1410,21 +1388,17 @@ def build_report(entries, generated_at:)
     "",
     "Generated: #{generated_label}",
     "",
-    "### Lane Coverage",
-    "",
-    markdown_table(["Benchmark", "Fresh", "Rolling"], coverage_rows),
+    coverage_summary(entries),
     "",
     "### Fresh",
     "",
-    markdown_table(["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "BC Storage Delta", "Caveat"], fresh_rows),
+    markdown_table(["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "Storage"], fresh_rows),
     "",
     "### Rolling",
     "",
-    markdown_table(["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "BC Storage Delta", "Caveat"], rolling_rows),
+    markdown_table(["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "Storage"], rolling_rows),
     "",
-    "Timing results use the selected headline metric for each lane and treat near ties as ties.",
-    "",
-    "Rows use the latest complete same-commit AC/BC pair for each benchmark lane. The #{PAIR_COUNT}-pair rolling window lives separately in `data/latest/windows.json`, and commit-level pair evidence lives in `data/latest/pairs.json`. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling cache-bootstrap samples are marked investigation-only.",
+    report_note,
     ""
   ].join("\n")
 end
