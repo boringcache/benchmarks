@@ -127,9 +127,10 @@ class PublishIndexTest < Minitest::Test
 
     assert_includes report, "### Fresh"
     assert_includes report, "### Rolling"
-    assert_includes report, "| Benchmark | Metric | actions/cache | BoringCache | Result | Storage Delta | Notes |"
-    assert_includes report, "| Hugo | Commit Build | 0m 10s | 0m 8s | cache bootstrap 1/3 | 200.00 B (20.0%) | tiny run; setup dominates; BC storage: remote CAS 256.00 B, deps archive 512.00 B, runtime archive 256.00 B; 3 paired samples; cache bootstrap 1/3; Rolling cache was unavailable"
-    assert_includes report, "BC storage: remote CAS 256.00 B, deps archive 512.00 B, runtime archive 256.00 B"
+    assert_includes report, "| Benchmark | Metric | actions/cache | BoringCache | Result | BC Storage Delta | Caveat |"
+    assert_includes report, "| Hugo | Commit Build | 0m 10s | 0m 8s | cache bootstrap 1/3 | 200.00 B less (20.0%) | 1/3 cache bootstrap; not a parity claim |"
+    refute_includes report, "BC storage:"
+    refute_includes report, "setup dominates"
     refute_includes report, "Fresh Isolated"
     refute_includes report, "Rolling Historical"
     refute_includes report, "First Build"

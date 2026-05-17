@@ -272,28 +272,10 @@ def storage_summary_text(comparison)
   return "—" if saved_bytes.nil?
 
   if saved_bytes.to_f >= 0
-    "#{bytes_to_text(saved_bytes)} (#{improvement_pct}%)"
+    "#{bytes_to_text(saved_bytes)} less (#{improvement_pct.to_f.abs}%)"
   else
-    "#{bytes_to_text(saved_bytes)} more (#{improvement_pct}%)"
+    "#{bytes_to_text(saved_bytes.to_f.abs)} more (#{improvement_pct.to_f.abs}%)"
   end
-end
-
-def storage_breakdown_note(breakdown)
-  summary = breakdown && breakdown["summary"]
-  return nil unless summary.is_a?(Hash)
-
-  parts = []
-  remote_cas = parse_number(summary["remote_cas_bytes"]).to_i
-  dependency_archive = parse_number(summary["dependency_archive_bytes"]).to_i
-  tool_runtime_archive = parse_number(summary["tool_runtime_archive_bytes"]).to_i
-  unknown = parse_number(summary["unknown_bytes"]).to_i
-
-  parts << "remote CAS #{bytes_to_text(remote_cas)}" if remote_cas.positive?
-  parts << "deps archive #{bytes_to_text(dependency_archive)}" if dependency_archive.positive?
-  parts << "runtime archive #{bytes_to_text(tool_runtime_archive)}" if tool_runtime_archive.positive?
-  parts << "unknown #{bytes_to_text(unknown)}" if unknown.positive?
-
-  parts.empty? ? nil : "BC storage: #{parts.join(', ')}"
 end
 
 def normalize_storage_sample(bytes, source)
@@ -1332,7 +1314,6 @@ def lane_report_row(entry, lane)
   return nil if lane_entry.nil?
 
   comparison = lane_entry.fetch("comparison", {})
-  actions = comparison.fetch("actions_cache", {})
   boringcache = comparison.fetch("boringcache", {})
   bc_classification = boringcache["classification"] || {}
   sample_count = comparison["sample_count"].to_i
@@ -1343,44 +1324,10 @@ def lane_report_row(entry, lane)
     classification: bc_classification,
     sample_count: sample_count
   )
-  scenarios = [
-    ["cold", note_metric_label(lane, "cold"), actions["cold_seconds"], boringcache["cold_seconds"]],
-    ["warm", note_metric_label(lane, "warm"), actions["warm1_seconds"], boringcache["warm1_seconds"]],
-    ["run_total", note_metric_label(lane, "run_total"), actions["run_total_seconds"], boringcache["run_total_seconds"]]
-  ]
-  headline_scenario = lane_entry["headline_scenario"].to_s
-  tiny_run = scenarios.all? { |_scenario, _label, before_value, after_value| before_value.nil? || after_value.nil? || [before_value, after_value].max <= 60 }
-  faster_notes = []
-  slower_notes = []
-
-  if reporting.fetch("comparative", true)
-    scenarios.each do |scenario, label, before_value, after_value|
-      next if before_value.nil? || after_value.nil?
-      next if scenario == headline_scenario
-
-      case timing_result_bucket(before_value, after_value)
-      when :faster
-        faster_notes << label
-      when :slower
-        slower_notes << label
-      end
-    end
-  end
 
   notes = []
-  if faster_notes.any? && slower_notes.any?
-    notes << "mixed: #{slower_notes.join(', ')} slower; #{faster_notes.join(', ')} faster"
-  elsif slower_notes.any?
-    notes << "#{slower_notes.join(', ')} slower"
-  elsif faster_notes.any?
-    notes << "#{faster_notes.join(', ')} faster"
-  end
-  notes << "tiny run; setup dominates" if tiny_run
   notes << "storage unavailable" if comparison["storage_saved_bytes"].nil?
-  notes << "BC used more storage" if comparison["storage_saved_bytes"].to_f < 0
-  if (breakdown_note = storage_breakdown_note(boringcache["storage_breakdown"]))
-    notes << breakdown_note
-  end
+  notes << "uses more storage" if comparison["storage_saved_bytes"].to_f < 0
   invalid_count = bc_classification["invalid_count"].to_i
   bootstrap_count = (bc_classification["rolling_bootstrap_count"] || bc_classification["rolling_reseed_count"]).to_i
   source_sample_count = bc_classification["source_sample_count"].to_i
@@ -1388,15 +1335,21 @@ def lane_report_row(entry, lane)
   cache_import_status = bc_classification["cache_import_status"].to_s
 
   if source_sample_count.positive? && excluded_sample_count.positive?
-    notes << "#{sample_count} steady samples; #{excluded_sample_count}/#{source_sample_count} bootstrap samples excluded"
-  else
-    notes << "#{sample_count} paired samples" if sample_count > 1
-    notes << "cache bootstrap #{bootstrap_count}/#{sample_count}" if sample_count > 1 && bootstrap_count.positive?
+    notes << "#{excluded_sample_count}/#{source_sample_count} bootstrap samples excluded"
+  elsif sample_count > 1 && bootstrap_count.positive?
+    notes << "#{bootstrap_count}/#{sample_count} cache bootstrap"
   end
 
   notes << "invalid #{invalid_count}/#{sample_count}" if sample_count > 1 && invalid_count.positive?
   notes << "cache import #{cache_import_status}" if !cache_import_status.empty? && cache_import_status != "ok"
-  notes << reporting["note"] if reporting["note"]
+  if !reporting.fetch("comparative", true)
+    notes << case reporting["reason"].to_s
+    when "rolling_cache_bootstrap", "rolling_cache_import_not_ok"
+      "not a parity claim"
+    else
+      reporting["status"].to_s.empty? ? "diagnostic only" : reporting["status"].tr("_", " ")
+    end
+  end
 
   {
     benchmark: entry.fetch("name"),
@@ -1407,13 +1360,6 @@ def lane_report_row(entry, lane)
     storage: storage_summary_text(comparison),
     notes: notes.empty? ? "—" : notes.join("; ")
   }
-end
-
-def note_metric_label(lane, scenario)
-  return "commit build" if lane.to_s == "rolling" && scenario.to_s == "cold"
-  return "workflow total" if scenario.to_s == "run_total"
-
-  scenario.to_s.tr("_", " ")
 end
 
 def coverage_cell(entry, lane)
@@ -1470,13 +1416,13 @@ def build_report(entries, generated_at:)
     "",
     "### Fresh",
     "",
-    markdown_table(["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "Storage Delta", "Notes"], fresh_rows),
+    markdown_table(["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "BC Storage Delta", "Caveat"], fresh_rows),
     "",
     "### Rolling",
     "",
-    markdown_table(["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "Storage Delta", "Notes"], rolling_rows),
+    markdown_table(["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "BC Storage Delta", "Caveat"], rolling_rows),
     "",
-    "Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.",
+    "Timing results use the selected headline metric for each lane and treat near ties as ties.",
     "",
     "Rows use the latest complete same-commit AC/BC pair for each benchmark lane. The #{PAIR_COUNT}-pair rolling window lives separately in `data/latest/windows.json`, and commit-level pair evidence lives in `data/latest/pairs.json`. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling cache-bootstrap samples are marked investigation-only.",
     ""

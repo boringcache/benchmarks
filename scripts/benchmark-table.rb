@@ -220,9 +220,9 @@ def storage_summary_text(comparison)
   return "—" if saved_bytes.nil?
 
   if saved_bytes.to_f >= 0
-    "#{bytes_to_text(saved_bytes)} (#{improvement_pct}%)"
+    "#{bytes_to_text(saved_bytes)} less (#{improvement_pct.to_f.abs}%)"
   else
-    "#{bytes_to_text(saved_bytes)} more (#{improvement_pct}%)"
+    "#{bytes_to_text(saved_bytes.to_f.abs)} more (#{improvement_pct.to_f.abs}%)"
   end
 end
 
@@ -688,7 +688,6 @@ def lane_report_row(entry, lane)
   return nil unless current
 
   comparison = current.fetch("comparison", {})
-  actions = comparison.fetch("actions_cache", {})
   boringcache = comparison.fetch("boringcache", {})
   bc_classification = boringcache["classification"] || {}
   sample_count = comparison["sample_count"].to_i
@@ -699,52 +698,14 @@ def lane_report_row(entry, lane)
     classification: bc_classification,
     sample_count: sample_count
   )
-  scenarios = [
-    ["cold", note_metric_label(lane, "cold"), actions["cold_seconds"], boringcache["cold_seconds"]],
-    ["warm", note_metric_label(lane, "warm"), actions["warm1_seconds"], boringcache["warm1_seconds"]],
-    ["run_total", note_metric_label(lane, "run_total"), actions["run_total_seconds"], boringcache["run_total_seconds"]]
-  ]
-  headline_scenario = current["headline_scenario"].to_s
-  tiny_run = scenarios.all? { |_scenario, _label, before_value, after_value| before_value.nil? || after_value.nil? || [before_value, after_value].compact.max.to_f <= 60 }
-  faster_notes = []
-  slower_notes = []
-
-  if reporting.fetch("comparative", true)
-    scenarios.each do |scenario, label, before_value, after_value|
-      next if before_value.nil? || after_value.nil?
-      next if scenario == headline_scenario
-
-      case timing_result_bucket(before_value, after_value)
-      when :faster
-        faster_notes << label
-      when :slower
-        slower_notes << label
-      end
-    end
-  end
-
   notes = []
-  if faster_notes.any? && slower_notes.any?
-    notes << "mixed: #{slower_notes.join(', ')} slower; #{faster_notes.join(', ')} faster"
-  elsif slower_notes.any?
-    notes << "#{slower_notes.join(', ')} slower"
-  elsif faster_notes.any?
-    notes << "#{faster_notes.join(', ')} faster"
-  end
-  notes << "tiny run; setup dominates" if tiny_run
   notes << "storage unavailable" if comparison["storage_saved_bytes"].nil?
-  notes << "BC used more storage" if comparison["storage_saved_bytes"].to_f.negative?
+  notes << "uses more storage" if comparison["storage_saved_bytes"].to_f.negative?
   cache_import_status = bc_classification["cache_import_status"].to_s
-  bc_oci = boringcache["oci"] || {}
   if bc_classification["rolling_reseed"] == true
-    new_blob_count = bc_oci["new_blob_count"] || "unknown"
-    new_blob_bytes = bc_oci["new_blob_bytes"]
-    suffix = new_blob_bytes.nil? ? "" : " / #{bytes_to_text(new_blob_bytes)}"
-    notes << "BC cache bootstrap: #{new_blob_count} new OCI blobs#{suffix}"
-  elsif bc_classification["steady_state_candidate"] == true
-    notes << "BC rolling cache import ok"
+    notes << "cache bootstrap"
   end
-  notes << "BC cache import #{cache_import_status}" if !cache_import_status.empty? && cache_import_status != "ok"
+  notes << "cache import #{cache_import_status}" if !cache_import_status.empty? && cache_import_status != "ok"
 
   %w[actions_cache boringcache].each do |strategy|
     snapshot = comparison.fetch(strategy, {})
@@ -754,7 +715,14 @@ def lane_report_row(entry, lane)
     label = strategy == "actions_cache" ? "AC" : "BC"
     notes << "#{label} run #{snapshot['run_id']} #{conclusion}"
   end
-  notes << reporting["note"] if reporting["note"]
+  if !reporting.fetch("comparative", true)
+    notes << case reporting["reason"].to_s
+    when "rolling_cache_bootstrap", "rolling_cache_import_not_ok"
+      "not a parity claim"
+    else
+      reporting["status"].to_s.empty? ? "diagnostic only" : reporting["status"].tr("_", " ")
+    end
+  end
 
   {
     benchmark: entry.fetch("name"),
@@ -765,13 +733,6 @@ def lane_report_row(entry, lane)
     storage: storage_summary_text(comparison),
     notes: notes.empty? ? "—" : notes.join("; ")
   }
-end
-
-def note_metric_label(lane, scenario)
-  return "commit build" if lane.to_s == "rolling" && scenario.to_s == "cold"
-  return "workflow total" if scenario.to_s == "run_total"
-
-  scenario.to_s.tr("_", " ")
 end
 
 def raw_row(entry, lane)
@@ -847,7 +808,7 @@ def build_markdown(entries, generated_at:, format:)
         "### #{lane_label(lane).split.map(&:capitalize).join(' ')}",
         "",
         markdown_table(
-          ["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "Storage Delta", "Notes"],
+          ["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "BC Storage Delta", "Caveat"],
           rows.map { |row| [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage], row[:notes]] }
         ),
         ""
