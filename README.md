@@ -38,7 +38,7 @@ This repo:
 
 ## Latest Benchmark Report
 
-Generated: 2026-05-17 09:14 UTC
+Generated: 2026-05-17 12:52 UTC
 
 ### Lane Coverage
 
@@ -60,11 +60,11 @@ Generated: 2026-05-17 09:14 UTC
 
 | Benchmark | Metric | actions/cache | BoringCache | Result | Storage Delta | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | Cold Build | 3m 26s | 3m 21s | near tie | 7.75 GB (95.89%) | BC storage: remote CAS 340.26 MB; 2 paired samples |
+| Hugo | Cold Build | 3m 30s | 3m 18s | 6% faster | 7.59 GB (95.81%) | workflow total faster; BC storage: remote CAS 340.26 MB; 3 paired samples |
 | Hugo Go | Cold Build | 1m 20s | 1m 6s | 18% faster | 706.12 MB more (-240.01%) | BC used more storage; BC storage: remote CAS 746.62 MB, deps archive 253.70 MB |
 | Immich | Cold Build | 5m 24s | 4m 28s | 17% faster | 8.22 GB (78.9%) | workflow total faster; BC storage: remote CAS 2.20 GB; 3 paired samples |
 | Mastodon | Cold Build | 10m 8s | 9m 10s | 10% faster | 8.94 GB (89.75%) | workflow total faster; BC storage: remote CAS 1.02 GB |
-| PostHog | Warm Build | 3m 20s | 0m 13s | 93% faster | 4.10 GB (38.94%) | cold, workflow total faster; BC storage: remote CAS 6.43 GB; 3 paired samples |
+| PostHog | Warm Build | 0m 43s | 0m 12s | 71% faster | 10.44 GB (61.88%) | cold, workflow total faster; BC storage: remote CAS 6.43 GB; 3 paired samples |
 | Storybook | Cold Build | 3m 26s | 3m 35s | 4% slower | 44.66 MB more (-6.12%) | warm, workflow total slower; BC used more storage; BC storage: deps archive 734.85 MB, runtime archive 39.79 MB |
 | OpenTelemetry Java | Cold Build | 11m 21s | 11m 19s | near tie | 51.58 MB (6.11%) | warm slower; BC storage: deps archive 792.60 MB |
 | Spring AI | Warm Build | 0m 44s | 0m 29s | 34% faster | 2.00 MB (0.21%) | cold, workflow total slower; BC storage: remote CAS 175.18 MB, deps archive 770.98 MB |
@@ -76,11 +76,11 @@ Generated: 2026-05-17 09:14 UTC
 
 | Benchmark | Metric | actions/cache | BoringCache | Result | Storage Delta | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| Hugo | Commit Build | 1m 27s | 1m 31s | 5% slower | 7.75 GB (95.89%) | workflow total slower; BC storage: remote CAS 340.26 MB; 2 paired samples |
-| Hugo Go | Workflow Total | 1m 16s | 0m 50s | 34% faster | 861.66 MB (35.14%) | commit build faster; BC storage: remote CAS 1.30 GB, deps archive 262.95 MB; 2 paired samples |
+| Hugo | Commit Build | 1m 58s | 1m 53s | 4% faster | 7.59 GB (95.81%) | BC storage: remote CAS 340.26 MB; 3 paired samples |
+| Hugo Go | Workflow Total | 1m 10s | 0m 44s | 38% faster | 778.18 MB (31.84%) | commit build faster; BC storage: remote CAS 1.37 GB, deps archive 262.95 MB; 3 paired samples |
 | Immich | Commit Build | 1m 19s | 1m 11s | 10% faster | 7.42 GB (77.15%) | workflow total faster; BC storage: remote CAS 2.20 GB; 3 paired samples |
 | Mastodon | Commit Build | 0m 13s | 0m 16s | near tie | 8.94 GB (89.75%) | workflow total slower; tiny run; setup dominates; BC storage: remote CAS 1.02 GB |
-| PostHog | Commit Build | 18m 14s | 12m 0s | 34% faster | 5.49 GB (46.42%) | workflow total faster; BC storage: remote CAS 6.33 GB; 3 paired samples |
+| PostHog | Commit Build | 21m 48s | 12m 50s | 41% faster | 4.65 GB (42.68%) | workflow total faster; BC storage: remote CAS 6.24 GB; 3 paired samples |
 | Storybook | Workflow Total | 1m 8s | 0m 54s | 21% faster | 1.11 GB (59.43%) | BC storage: deps archive 734.80 MB, runtime archive 39.79 MB |
 | OpenTelemetry Java | Workflow Total | 2m 13s | 1m 35s | 29% faster | 3.02 GB (79.59%) | commit build faster; BC storage: deps archive 792.41 MB |
 | Spring AI | Workflow Total | 1m 7s | 0m 45s | 33% faster | 2.39 GB (72.0%) | commit build faster; BC storage: remote CAS 180.74 MB, deps archive 770.98 MB |
