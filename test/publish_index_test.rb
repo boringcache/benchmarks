@@ -208,6 +208,53 @@ class PublishIndexTest < Minitest::Test
     assert_equal 1, averaged.dig("comparison", "product_cohort", "excluded_sample_count")
   end
 
+  def test_latest_pair_feed_stays_exact_while_window_averages
+    current_pair = lane_pair(
+      run_id: "current",
+      created_at: "2026-05-03T10:00:00Z",
+      cli_version: "v1.12.86",
+      bc_classification: { "reporting_mode" => "comparative" },
+      actions_seconds: 30,
+      boringcache_seconds: 24
+    )
+    older_pair = lane_pair(
+      run_id: "older",
+      created_at: "2026-05-02T10:00:00Z",
+      cli_version: "v1.12.86",
+      bc_classification: { "reporting_mode" => "comparative" },
+      actions_seconds: 10,
+      boringcache_seconds: 8
+    )
+
+    latest = latest_lane_entry([current_pair, older_pair])
+    window = average_lane_entries(
+      [current_pair, older_pair],
+      benchmark: benchmark_config(category: "docker"),
+      lane: "fresh"
+    )
+    pair_point = pair_point_from_entry(current_pair)
+    health = lane_health(
+      benchmark: benchmark_config(category: "docker"),
+      lane: "fresh",
+      actions_runs: [{ "databaseId" => 1 }],
+      boringcache_runs: [{ "databaseId" => 2 }],
+      paired_head_count: 2,
+      entries: [current_pair, older_pair]
+    )
+
+    assert_equal "current-ac", latest.dig("comparison", "actions_cache", "run_id")
+    assert_equal 30, latest.dig("comparison", "actions_cache", "cold_seconds")
+    assert_equal 20, window["before_seconds"]
+    assert_equal 16, window["after_seconds"]
+    assert_equal "benchmark_commit_pair", pair_point["point_type"]
+    assert_equal "feedface", pair_point["head_sha"]
+    assert_equal "current-ac", pair_point["actions_run_id"]
+    assert_equal "current-bc", pair_point["boringcache_run_id"]
+    assert_equal "healthy", health["state"]
+    assert_equal 2, health["selected_pair_count"]
+    assert_equal "feedface", health["latest_head_sha"]
+  end
+
   private
 
   def benchmark_config(category:)

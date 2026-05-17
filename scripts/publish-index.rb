@@ -10,6 +10,9 @@ require_relative "benchmark-reporting"
 
 OUTPUT_DIR = File.join("data", "latest")
 OUTPUT_PATH = File.join(OUTPUT_DIR, "index.json")
+PAIR_POINTS_PATH = File.join(OUTPUT_DIR, "pairs.json")
+WINDOWS_PATH = File.join(OUTPUT_DIR, "windows.json")
+HEALTH_PATH = File.join(OUTPUT_DIR, "health.json")
 DETAIL_OUTPUT_DIR = File.join(OUTPUT_DIR, "benchmarks")
 REPORT_PATH = File.join(OUTPUT_DIR, "report.md")
 README_PATH = "README.md"
@@ -310,6 +313,10 @@ def compact_hash(hash)
 
     acc[key] = value
   end
+end
+
+def deep_copy(value)
+  JSON.parse(JSON.generate(value))
 end
 
 def normalized_product_refs(payload)
@@ -879,6 +886,7 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:, lane:)
     "lane" => lane,
     "lane_label" => lane_label(lane),
     "first_build_label" => first_build_label(lane),
+    "sample_count" => 1,
     "benchmark" => benchmark["benchmark"],
     "name" => benchmark["name"],
     "logo" => benchmark["logo"],
@@ -897,6 +905,7 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:, lane:)
     "comparison" => {
       "paired_on_head_sha" => pair[:paired_on_head_sha],
       "pairing_head_sha" => pair[:pairing_head_sha],
+      "sample_count" => 1,
       "actions_cache" => strategy_snapshot(actions_data, boringcache_data.fetch(:run)["databaseId"]),
       "boringcache" => strategy_snapshot(boringcache_data, actions_data.fetch(:run)["databaseId"]),
       "reporting" => reporting,
@@ -1278,6 +1287,12 @@ def average_lane_entries(entries, benchmark:, lane:)
   lane_entry
 end
 
+def latest_lane_entry(entries)
+  return nil if entries.empty?
+
+  deep_copy(entries.first)
+end
+
 def comparative_entries(entries, lane:, category:)
   entries.select do |entry|
     BenchmarkReporting.reporting_mode(
@@ -1303,11 +1318,11 @@ def merge_lane_entries(entries_by_lane)
   return nil if entries_by_lane.empty?
 
   default_lane = entries_by_lane.key?("fresh") ? "fresh" : entries_by_lane.keys.first
-  default_entry = JSON.parse(JSON.generate(entries_by_lane.fetch(default_lane)))
+  default_entry = deep_copy(entries_by_lane.fetch(default_lane))
   default_entry["default_lane"] = default_lane
   default_entry["available_lanes"] = entries_by_lane.keys
   default_entry["lanes"] = entries_by_lane.transform_values do |entry|
-    JSON.parse(JSON.generate(entry))
+    deep_copy(entry)
   end
   default_entry
 end
@@ -1463,7 +1478,7 @@ def build_report(entries, generated_at:)
     "",
     "Result is signed and near-tie aware, so tiny no-op runs do not get flattened into misleading 0% rows.",
     "",
-    "Rows prefer the latest BoringCache product cohort for same-commit AC/BC pairs, then use up to #{PAIR_COUNT} steady samples when available. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling cache-bootstrap samples are excluded from comparative rows when steady samples exist.",
+    "Rows use the latest complete same-commit AC/BC pair for each benchmark lane. The #{PAIR_COUNT}-pair rolling window lives separately in `data/latest/windows.json`, and commit-level pair evidence lives in `data/latest/pairs.json`. Artifact classification is the source of truth: invalid fresh warm imports are withheld from parity claims, and rolling cache-bootstrap samples are marked investigation-only.",
     ""
   ].join("\n")
 end
@@ -1519,9 +1534,66 @@ def paired_heads(actions_by_head, boringcache_by_head)
   end.reverse
 end
 
-def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_runs:, cache:, artifacts_cache:)
-  return nil if actions_runs.empty? || boringcache_runs.empty?
+def pair_point_from_entry(entry)
+  point = deep_copy(entry)
+  comparison = point.fetch("comparison", {})
+  actions_cache = comparison.fetch("actions_cache", {})
+  boringcache = comparison.fetch("boringcache", {})
+  created_times = [
+    parse_timestamp(actions_cache["created_at"]),
+    parse_timestamp(boringcache["created_at"])
+  ].compact
 
+  point["point_type"] = "benchmark_commit_pair"
+  point["head_sha"] = comparison["pairing_head_sha"] || Array(comparison["pairing_head_shas"]).first
+  point["actions_run_id"] = actions_cache["run_id"]
+  point["boringcache_run_id"] = boringcache["run_id"]
+  point["created_at"] = created_times.max&.utc&.iso8601
+  point
+end
+
+def lane_health(benchmark:, lane:, actions_runs:, boringcache_runs:, paired_head_count:, entries:)
+  latest = entries.first
+  classification = latest ? pair_classification(latest, lane: lane, category: benchmark["category"]) : {}
+  reporting_mode = latest ? BenchmarkReporting.reporting_mode(lane: lane, category: benchmark["category"], classification: classification) : nil
+  latest_comparison = latest&.fetch("comparison", {}) || {}
+  latest_actions = latest_comparison.fetch("actions_cache", {})
+  latest_boringcache = latest_comparison.fetch("boringcache", {})
+  latest_created_at = [
+    parse_timestamp(latest_actions["created_at"]),
+    parse_timestamp(latest_boringcache["created_at"])
+  ].compact.max
+
+  state = if latest.nil?
+    "missing_pair"
+  elsif reporting_mode == "invalid"
+    "invalid"
+  elsif reporting_mode == "investigation_only"
+    "investigation"
+  else
+    "healthy"
+  end
+
+  {
+    "lane" => lane,
+    "state" => state,
+    "actions_successful_run_count" => actions_runs.length,
+    "boringcache_successful_run_count" => boringcache_runs.length,
+    "paired_head_count" => paired_head_count,
+    "selected_pair_count" => entries.length,
+    "window_pair_target" => PAIR_COUNT,
+    "latest_head_sha" => latest_comparison["pairing_head_sha"] || Array(latest_comparison["pairing_head_shas"]).first,
+    "latest_created_at" => latest_created_at&.utc&.iso8601,
+    "latest_actions_run_id" => latest_actions["run_id"],
+    "latest_boringcache_run_id" => latest_boringcache["run_id"],
+    "latest_reporting_mode" => reporting_mode,
+    "latest_reporting_reason" => classification["reporting_reason"] || classification["validity_reason"],
+    "latest_cache_import_status" => classification["cache_import_status"],
+    "latest_sample_valid" => classification.key?("sample_valid") ? classification["sample_valid"] : nil
+  }.reject { |_, value| value.nil? }
+end
+
+def load_lane_data(temp_root:, benchmark:, lane:, actions_runs:, boringcache_runs:, cache:, artifacts_cache:)
   ac_runs_by_head = runs_by_head_grouped(actions_runs)
   bc_runs_by_head = runs_by_head_grouped(boringcache_runs)
   paired = (ac_runs_by_head.keys & bc_runs_by_head.keys).sort_by do |head|
@@ -1592,7 +1664,31 @@ def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_ru
     break if entries.length >= PAIR_COUNT
   end
 
-  average_lane_entries(entries, benchmark: benchmark, lane: lane)
+  {
+    latest: latest_lane_entry(entries),
+    window: average_lane_entries(entries, benchmark: benchmark, lane: lane),
+    pairs: entries.map { |entry| pair_point_from_entry(entry) },
+    health: lane_health(
+      benchmark: benchmark,
+      lane: lane,
+      actions_runs: actions_runs,
+      boringcache_runs: boringcache_runs,
+      paired_head_count: paired.length,
+      entries: entries
+    )
+  }
+end
+
+def load_lane_entry(temp_root:, benchmark:, lane:, actions_runs:, boringcache_runs:, cache:, artifacts_cache:)
+  load_lane_data(
+    temp_root: temp_root,
+    benchmark: benchmark,
+    lane: lane,
+    actions_runs: actions_runs,
+    boringcache_runs: boringcache_runs,
+    cache: cache,
+    artifacts_cache: artifacts_cache
+  )[:window]
 end
 
 def write_index(entries, generated_at:)
@@ -1603,6 +1699,38 @@ def write_index(entries, generated_at:)
   }
   File.write(OUTPUT_PATH, JSON.pretty_generate(payload) + "\n")
   puts "Wrote #{OUTPUT_PATH} with #{entries.length} entries"
+end
+
+def write_pair_points(pair_points, generated_at:)
+  FileUtils.mkdir_p(File.dirname(PAIR_POINTS_PATH))
+  payload = {
+    "generated_at" => generated_at,
+    "pair_count" => pair_points.length,
+    "pairs" => pair_points
+  }
+  File.write(PAIR_POINTS_PATH, JSON.pretty_generate(payload) + "\n")
+  puts "Wrote #{PAIR_POINTS_PATH} with #{pair_points.length} pairs"
+end
+
+def write_windows(entries, generated_at:)
+  FileUtils.mkdir_p(File.dirname(WINDOWS_PATH))
+  payload = {
+    "generated_at" => generated_at,
+    "window_pair_target" => PAIR_COUNT,
+    "entries" => entries
+  }
+  File.write(WINDOWS_PATH, JSON.pretty_generate(payload) + "\n")
+  puts "Wrote #{WINDOWS_PATH} with #{entries.length} entries"
+end
+
+def write_health(health_entries, generated_at:)
+  FileUtils.mkdir_p(File.dirname(HEALTH_PATH))
+  payload = {
+    "generated_at" => generated_at,
+    "entries" => health_entries
+  }
+  File.write(HEALTH_PATH, JSON.pretty_generate(payload) + "\n")
+  puts "Wrote #{HEALTH_PATH} with #{health_entries.length} entries"
 end
 
 def write_detail_files(entries, generated_at:)
@@ -1659,6 +1787,9 @@ def main
 
   existing_entries = load_existing_entries
   entries = []
+  window_entries = []
+  pair_points = []
+  health_entries = []
   strategy_data_cache = {}
   raise "BENCHMARKS_PAIR_COUNT must be >= 1" if PAIR_COUNT < 1
 
@@ -1673,8 +1804,12 @@ def main
         actions_runs = latest_successful_runs(repo: repo, workflow_name: benchmark.fetch("actions_workflow"))
         boringcache_runs = latest_successful_runs(repo: repo, workflow_name: benchmark.fetch("boringcache_workflow"))
         artifacts_cache = {}
-        lane_entries = LANE_IDS.each_with_object({}) do |lane, acc|
-          lane_entry = load_lane_entry(
+        latest_lane_entries = {}
+        window_lane_entries = {}
+        lane_health = {}
+
+        LANE_IDS.each do |lane|
+          lane_data = load_lane_data(
             temp_root: tmp,
             benchmark: benchmark,
             lane: lane,
@@ -1683,10 +1818,22 @@ def main
             cache: strategy_data_cache,
             artifacts_cache: artifacts_cache
           )
-          acc[lane] = lane_entry if lane_entry
+
+          latest_lane_entries[lane] = lane_data[:latest] if lane_data[:latest]
+          window_lane_entries[lane] = lane_data[:window] if lane_data[:window]
+          pair_points.concat(lane_data[:pairs])
+          lane_health[lane] = lane_data[:health]
         end
 
-        entry = merge_lane_entries(lane_entries)
+        entry = merge_lane_entries(latest_lane_entries)
+        window_entry = merge_lane_entries(window_lane_entries)
+        health_entries << {
+          "benchmark" => benchmark_id,
+          "name" => benchmark["name"],
+          "source_repo" => benchmark["source_repo"],
+          "lanes" => lane_health
+        }
+
         if entry.nil?
           if PRESERVE_STALE_ENTRIES && preserved_entry
             warn "Preserving #{benchmark['name']} from existing index: no successful run pair found"
@@ -1698,6 +1845,7 @@ def main
         end
 
         entries << entry
+        window_entries << window_entry if window_entry
       rescue StandardError => e
         if PRESERVE_STALE_ENTRIES && preserved_entry
           warn "Preserving #{benchmark['name']} from existing index: #{e.message}"
@@ -1711,7 +1859,12 @@ def main
 
   generated_at = Time.now.utc.iso8601
   entries = entries.map { |entry| normalize_entry_reporting(entry) }
+  window_entries = window_entries.map { |entry| normalize_entry_reporting(entry) }
+  pair_points = pair_points.map { |entry| normalize_entry_reporting(entry) }
   write_index(entries, generated_at: generated_at)
+  write_pair_points(pair_points, generated_at: generated_at)
+  write_windows(window_entries, generated_at: generated_at)
+  write_health(health_entries, generated_at: generated_at)
   write_detail_files(entries, generated_at: generated_at)
   report = write_report(entries, generated_at: generated_at)
   update_readme(report)
