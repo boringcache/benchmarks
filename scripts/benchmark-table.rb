@@ -679,10 +679,6 @@ def lane_entry(entry, lane)
   entry.dig("lanes", lane) || (entry["lane"] == lane ? entry : nil)
 end
 
-def coverage_cell(entry, lane)
-  lane_entry(entry, lane) ? "yes" : "—"
-end
-
 def lane_report_row(entry, lane)
   current = lane_entry(entry, lane)
   return nil unless current
@@ -698,31 +694,6 @@ def lane_report_row(entry, lane)
     classification: bc_classification,
     sample_count: sample_count
   )
-  notes = []
-  notes << "storage unavailable" if comparison["storage_saved_bytes"].nil?
-  notes << "uses more storage" if comparison["storage_saved_bytes"].to_f.negative?
-  cache_import_status = bc_classification["cache_import_status"].to_s
-  if bc_classification["rolling_reseed"] == true
-    notes << "cache bootstrap"
-  end
-  notes << "cache import #{cache_import_status}" if !cache_import_status.empty? && cache_import_status != "ok"
-
-  %w[actions_cache boringcache].each do |strategy|
-    snapshot = comparison.fetch(strategy, {})
-    conclusion = snapshot["conclusion"].to_s
-    next if conclusion.empty? || conclusion == "success"
-
-    label = strategy == "actions_cache" ? "AC" : "BC"
-    notes << "#{label} run #{snapshot['run_id']} #{conclusion}"
-  end
-  if !reporting.fetch("comparative", true)
-    notes << case reporting["reason"].to_s
-    when "rolling_cache_bootstrap", "rolling_cache_import_not_ok"
-      "not a parity claim"
-    else
-      reporting["status"].to_s.empty? ? "diagnostic only" : reporting["status"].tr("_", " ")
-    end
-  end
 
   {
     benchmark: entry.fetch("name"),
@@ -730,9 +701,20 @@ def lane_report_row(entry, lane)
     actions: current["before"],
     boringcache: current["after"],
     result: reporting.fetch("comparative", true) ? timing_result_text(current["before_seconds"], current["after_seconds"]) : reporting["result_text"],
-    storage: storage_summary_text(comparison),
-    notes: notes.empty? ? "—" : notes.join("; ")
+    storage: storage_summary_text(comparison)
   }
+end
+
+def coverage_summary(entries)
+  total = entries.length
+  fresh = entries.count { |entry| lane_entry(entry, "fresh") }
+  rolling = entries.count { |entry| lane_entry(entry, "rolling") }
+
+  if fresh == total && rolling == total
+    "Coverage: #{total} benchmarks, with fresh and rolling lanes available for all."
+  else
+    "Coverage: #{total} benchmarks; fresh #{fresh}/#{total}, rolling #{rolling}/#{total}."
+  end
 end
 
 def raw_row(entry, lane)
@@ -792,13 +774,7 @@ def build_markdown(entries, generated_at:, format:)
   ]
 
   if %w[summary both].include?(format)
-    coverage_rows = entries.map { |entry| [entry.fetch("name"), coverage_cell(entry, "fresh"), coverage_cell(entry, "rolling")] }
-    sections += [
-      "### Lane Coverage",
-      "",
-      markdown_table(["Benchmark", "Fresh", "Rolling"], coverage_rows),
-      ""
-    ]
+    sections += [coverage_summary(entries), ""]
 
     LANES.each do |lane|
       rows = entries.map { |entry| lane_report_row(entry, lane) }.compact
@@ -808,8 +784,8 @@ def build_markdown(entries, generated_at:, format:)
         "### #{lane_label(lane).split.map(&:capitalize).join(' ')}",
         "",
         markdown_table(
-          ["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "BC Storage Delta", "Caveat"],
-          rows.map { |row| [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage], row[:notes]] }
+          ["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "Storage"],
+          rows.map { |row| [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage]] }
         ),
         ""
       ]
