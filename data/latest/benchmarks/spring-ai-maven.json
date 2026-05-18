@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T13:51:56Z",
+  "generated_at": "2026-05-18T17:26:58Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -502,24 +502,24 @@
         "public": false,
         "category": "maven",
         "step": "Maven build (build-cache extension)",
-        "headline_scenario": "run_total",
-        "headline_label": "Workflow Total",
-        "before": "1m 53s",
-        "after": "1m 31s",
-        "before_seconds": 113.0,
-        "after_seconds": 91.0,
-        "faster": "19",
+        "headline_scenario": "cold",
+        "headline_label": "Commit Build",
+        "before": "0m 49s",
+        "after": "0m 51s",
+        "before_seconds": 49.0,
+        "after_seconds": 51.0,
+        "faster": "0",
         "comparison": {
           "paired_on_head_sha": true,
-          "pairing_head_sha": "1699adca84d40ec27ac084fd2c4f5ce6581f4f02",
+          "pairing_head_sha": "68e214f1863aea2135eac66a62ddc5a10e349e59",
           "sample_count": 1,
           "actions_cache": {
-            "run_id": 26032798014,
-            "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/26032798014",
-            "head_sha": "1699adca84d40ec27ac084fd2c4f5ce6581f4f02",
-            "created_at": "2026-05-18T12:14:16Z",
-            "cold_seconds": 82.0,
-            "cold_build_seconds": 71.0,
+            "run_id": 26042457936,
+            "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/26042457936",
+            "head_sha": "68e214f1863aea2135eac66a62ddc5a10e349e59",
+            "created_at": "2026-05-18T15:14:49Z",
+            "cold_seconds": 49.0,
+            "cold_build_seconds": 38.0,
             "cold_restore_or_setup_seconds": 11.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
@@ -527,10 +527,10 @@
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 82.0,
+            "rolling_first_build_seconds": 49.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 113.0,
-            "storage_bytes": 3564156254,
+            "run_total_seconds": 72.0,
+            "storage_bytes": 3564205156,
             "storage_source": "github-actions-cache-api",
             "storage_breakdown": null,
             "docker_cache_import_seconds": null,
@@ -578,7 +578,7 @@
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-spring-ai",
             "cache_tag": null,
-            "run_uid": "gh-26032798014-1",
+            "run_uid": "gh-26042457936-1",
             "mode": "maven",
             "adapter": "maven",
             "docker_cache_from_refs": null,
@@ -598,9 +598,9 @@
               "benchmark": "spring-ai-maven",
               "strategy": "actions-cache",
               "lane": "rolling",
-              "run_uid": "gh-26032798014-1",
-              "paired_run_id": 26032799415,
-              "build_seconds": 71,
+              "run_uid": "gh-26042457936-1",
+              "paired_run_id": 26042459754,
+              "build_seconds": 38,
               "setup_seconds": 11,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": null,
@@ -611,27 +611,37 @@
               "prior_cache_state": "usable_import",
               "new_blob_bytes": null,
               "issue_candidates": [],
-              "hypotheses": []
+              "hypotheses": [
+                {
+                  "id": "setup_overhead",
+                  "confidence": "medium",
+                  "summary": "Setup or restore overhead is large relative to build time.",
+                  "evidence": {
+                    "setup_seconds": 11,
+                    "build_seconds": 38
+                  }
+                }
+              ]
             }
           },
           "boringcache": {
-            "run_id": 26032799415,
-            "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/26032799415",
-            "head_sha": "1699adca84d40ec27ac084fd2c4f5ce6581f4f02",
-            "created_at": "2026-05-18T12:14:18Z",
-            "cold_seconds": 73.0,
-            "cold_build_seconds": 63.0,
-            "cold_restore_or_setup_seconds": 10.0,
+            "run_id": 26042459754,
+            "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/26042459754",
+            "head_sha": "68e214f1863aea2135eac66a62ddc5a10e349e59",
+            "created_at": "2026-05-18T15:14:50Z",
+            "cold_seconds": 51.0,
+            "cold_build_seconds": 34.0,
+            "cold_restore_or_setup_seconds": 17.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 73.0,
+            "rolling_first_build_seconds": 51.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 91.0,
-            "storage_bytes": 1000791134,
+            "run_total_seconds": 74.0,
+            "storage_bytes": 1002122332,
             "storage_source": "boringcache-check",
             "storage_breakdown": {
               "workspace": "boringcache/benchmark-spring-ai",
@@ -639,9 +649,9 @@
                 "spring-ai-maven-rolling-main-maven-remote-maven-deps-ubuntu-24-x86_64",
                 "spring-ai-maven-rolling-main-maven-remote-ubuntu-24-x86_64"
               ],
-              "total_bytes": 1000791134,
+              "total_bytes": 1002122332,
               "summary": {
-                "remote_cas_bytes": 192363953,
+                "remote_cas_bytes": 193695151,
                 "dependency_archive_bytes": 808427181,
                 "tool_runtime_archive_bytes": 0,
                 "unknown_bytes": 0
@@ -662,14 +672,14 @@
                 {
                   "tag": "spring-ai-maven-rolling-main-maven-remote-ubuntu-24-x86_64",
                   "requested_tag": "spring-ai-maven-rolling-main-maven-remote-ubuntu-24-x86_64",
-                  "cache_entry_id": "23ee6416-5629-4fcd-b321-61dbb10e7753",
+                  "cache_entry_id": "097ba9b7-8dfc-41eb-b2b5-f98c0246a291",
                   "primary_tag": "spring-ai-maven-rolling-main-maven-remote-ubuntu-24-x86_64",
                   "storage_mode": "cas",
                   "component_type": "remote_cas",
                   "component_label": "remote CAS",
-                  "bytes": 192363953,
-                  "archive_size_bytes": 192363953,
-                  "blob_total_size_bytes": 192363953
+                  "bytes": 193695151,
+                  "archive_size_bytes": 193695151,
+                  "blob_total_size_bytes": 193695151
                 }
               ]
             },
@@ -711,9 +721,9 @@
               "reseed_reason": null
             },
             "product_refs": {
-              "cli_version": "v1.13.2",
+              "cli_version": "v1.13.3",
               "action_ref": "boringcache/one@v1",
-              "action_sha": "8b86ca5c78122b6e8674104879a9c617ea727520",
+              "action_sha": "e6a5446449f39d83e03fba4ee744994188bdba55",
               "web_revision": "e144d0ba",
               "api_url": "https://api.boringcache.com"
             },
@@ -721,7 +731,7 @@
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-spring-ai",
             "cache_tag": null,
-            "run_uid": "gh-26032799415-1",
+            "run_uid": "gh-26042459754-1",
             "mode": "maven",
             "adapter": "maven",
             "docker_cache_from_refs": null,
@@ -741,10 +751,10 @@
               "benchmark": "spring-ai-maven",
               "strategy": "boringcache",
               "lane": "rolling",
-              "run_uid": "gh-26032799415-1",
-              "paired_run_id": 26032798014,
-              "build_seconds": 63,
-              "setup_seconds": 10,
+              "run_uid": "gh-26042459754-1",
+              "paired_run_id": 26042457936,
+              "build_seconds": 34,
+              "setup_seconds": 17,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": null,
               "cache_save_export_seconds": null,
@@ -754,7 +764,17 @@
               "prior_cache_state": "unknown",
               "new_blob_bytes": null,
               "issue_candidates": [],
-              "hypotheses": []
+              "hypotheses": [
+                {
+                  "id": "setup_overhead",
+                  "confidence": "medium",
+                  "summary": "Setup or restore overhead is large relative to build time.",
+                  "evidence": {
+                    "setup_seconds": 17,
+                    "build_seconds": 34
+                  }
+                }
+              ]
             }
           },
           "reporting": {
@@ -762,11 +782,11 @@
           },
           "warm_improvement_pct": null,
           "warm_build_improvement_pct": null,
-          "cold_improvement_pct": 10.98,
-          "cold_build_improvement_pct": 11.27,
-          "run_total_improvement_pct": 19.47,
-          "storage_improvement_pct": 71.92,
-          "storage_saved_bytes": 2563365120
+          "cold_improvement_pct": -4.08,
+          "cold_build_improvement_pct": 10.53,
+          "run_total_improvement_pct": -2.78,
+          "storage_improvement_pct": 71.88,
+          "storage_saved_bytes": 2562082824
         }
       }
     }
