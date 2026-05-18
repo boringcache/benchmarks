@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T09:56:45Z",
+  "generated_at": "2026-05-18T10:09:54Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -125,14 +125,14 @@
           "lane": "fresh",
           "state": "healthy",
           "actions_successful_run_count": 98,
-          "boringcache_successful_run_count": 86,
-          "paired_head_count": 35,
+          "boringcache_successful_run_count": 88,
+          "paired_head_count": 36,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "41c332a09dc6e48633f2c20cd6d68d9da54f9814",
-          "latest_created_at": "2026-05-18T08:26:15Z",
-          "latest_actions_run_id": 26022143087,
-          "latest_boringcache_run_id": 26022143014,
+          "latest_head_sha": "cf2bf5e9a3314c59fa93a06d4139d4e20b6a2197",
+          "latest_created_at": "2026-05-18T09:51:13Z",
+          "latest_actions_run_id": 26026189892,
+          "latest_boringcache_run_id": 26026189842,
           "latest_reporting_mode": "comparative",
           "latest_cache_import_status": "ok",
           "latest_sample_valid": true
@@ -141,17 +141,42 @@
           "lane": "rolling",
           "state": "healthy",
           "actions_successful_run_count": 98,
-          "boringcache_successful_run_count": 86,
-          "paired_head_count": 35,
+          "boringcache_successful_run_count": 88,
+          "paired_head_count": 36,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "41c332a09dc6e48633f2c20cd6d68d9da54f9814",
-          "latest_created_at": "2026-05-18T08:26:22Z",
-          "latest_actions_run_id": 26022147422,
-          "latest_boringcache_run_id": 26022148755,
+          "latest_head_sha": "cf2bf5e9a3314c59fa93a06d4139d4e20b6a2197",
+          "latest_created_at": "2026-05-18T09:51:21Z",
+          "latest_actions_run_id": 26026195230,
+          "latest_boringcache_run_id": 26026196390,
           "latest_reporting_mode": "comparative",
           "latest_cache_import_status": "ok",
           "latest_sample_valid": true
+        }
+      }
+    },
+    {
+      "benchmark": "discourse-docker",
+      "name": "Discourse",
+      "source_repo": "boringcache/benchmark-discourse",
+      "lanes": {
+        "fresh": {
+          "lane": "fresh",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
+        },
+        "rolling": {
+          "lane": "rolling",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
         }
       }
     },
