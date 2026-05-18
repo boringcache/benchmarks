@@ -78,6 +78,19 @@ BENCHMARKS = [
     "boringcache_workflow" => "Mastodon Docker - BoringCache"
   },
   {
+    "benchmark" => "discourse-docker",
+    "aliases" => ["discourse"],
+    "name" => "Discourse",
+    "logo" => "docker",
+    "repo" => "discourse/discourse",
+    "source_repo" => "boringcache/benchmark-discourse",
+    "public" => true,
+    "category" => "docker",
+    "step" => "Docker build (Ruby+Node dev image)",
+    "actions_workflow" => "Discourse Docker - Actions Cache",
+    "boringcache_workflow" => "Discourse Docker - BoringCache"
+  },
+  {
     "benchmark" => "posthog",
     "name" => "PostHog",
     "logo" => "posthog",
@@ -618,7 +631,7 @@ def inferred_mode(payload)
 
   benchmark = payload["benchmark"].to_s
   case benchmark
-  when /hugo|immich|mastodon|posthog/
+  when /hugo|immich|discourse|mastodon|posthog/
     "docker"
   when /grpc|bazel/
     "bazel"
