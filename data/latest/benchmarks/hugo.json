@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T06:00:11Z",
+  "generated_at": "2026-05-18T09:56:45Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -46,8 +46,7 @@
         "storage_breakdown": null,
         "docker_cache_import_seconds": 0.3,
         "docker_cache_export_seconds": 36.7,
-        "startup_prefetch": {
-        },
+        "startup_prefetch": {},
         "oci": {
           "hydration_policy": null,
           "body_local_hits": null,
@@ -87,9 +86,7 @@
           "api_url": "https://api.boringcache.com"
         },
         "product_refs_consistent": true,
-        "launch_proof_paths": [
-
-        ],
+        "launch_proof_paths": [],
         "workspace": "boringcache/benchmark-hugo",
         "cache_tag": null,
         "run_uid": "gh-25998887490-1",
@@ -157,8 +154,7 @@
         },
         "docker_cache_import_seconds": 0.2,
         "docker_cache_export_seconds": 24.8,
-        "startup_prefetch": {
-        },
+        "startup_prefetch": {},
         "oci": {
           "hydration_policy": null,
           "body_local_hits": 0,
@@ -201,9 +197,7 @@
           "api_url": "https://api.boringcache.com"
         },
         "product_refs_consistent": true,
-        "launch_proof_paths": [
-
-        ],
+        "launch_proof_paths": [],
         "workspace": "boringcache/benchmark-hugo",
         "cache_tag": null,
         "run_uid": "gh-25998887474-1",
@@ -286,8 +280,7 @@
             "storage_breakdown": null,
             "docker_cache_import_seconds": 0.3,
             "docker_cache_export_seconds": 36.7,
-            "startup_prefetch": {
-            },
+            "startup_prefetch": {},
             "oci": {
               "hydration_policy": null,
               "body_local_hits": null,
@@ -327,9 +320,7 @@
               "api_url": "https://api.boringcache.com"
             },
             "product_refs_consistent": true,
-            "launch_proof_paths": [
-
-            ],
+            "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-hugo",
             "cache_tag": null,
             "run_uid": "gh-25998887490-1",
@@ -397,8 +388,7 @@
             },
             "docker_cache_import_seconds": 0.2,
             "docker_cache_export_seconds": 24.8,
-            "startup_prefetch": {
-            },
+            "startup_prefetch": {},
             "oci": {
               "hydration_policy": null,
               "body_local_hits": 0,
@@ -441,9 +431,7 @@
               "api_url": "https://api.boringcache.com"
             },
             "product_refs_consistent": true,
-            "launch_proof_paths": [
-
-            ],
+            "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-hugo",
             "cache_tag": null,
             "run_uid": "gh-25998887474-1",
@@ -521,8 +509,7 @@
             "storage_breakdown": null,
             "docker_cache_import_seconds": 0.4,
             "docker_cache_export_seconds": 17.9,
-            "startup_prefetch": {
-            },
+            "startup_prefetch": {},
             "oci": {
               "hydration_policy": null,
               "body_local_hits": null,
@@ -562,9 +549,7 @@
               "api_url": "https://api.boringcache.com"
             },
             "product_refs_consistent": true,
-            "launch_proof_paths": [
-
-            ],
+            "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-hugo",
             "cache_tag": null,
             "run_uid": "gh-25998888936-1",
@@ -632,8 +617,7 @@
             },
             "docker_cache_import_seconds": 0.1,
             "docker_cache_export_seconds": 6.8,
-            "startup_prefetch": {
-            },
+            "startup_prefetch": {},
             "oci": {
               "hydration_policy": "metadata-only",
               "body_local_hits": 0,
@@ -676,9 +660,7 @@
               "api_url": "https://api.boringcache.com"
             },
             "product_refs_consistent": true,
-            "launch_proof_paths": [
-
-            ],
+            "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-hugo",
             "cache_tag": null,
             "run_uid": "gh-25998889350-1",
