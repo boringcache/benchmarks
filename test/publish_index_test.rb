@@ -125,9 +125,10 @@ class PublishIndexTest < Minitest::Test
 
     report = build_report(entries, generated_at: "2026-05-06T10:00:00Z")
 
-    assert_includes report, "### Fresh"
-    assert_includes report, "### Rolling"
-    assert_includes report, "Coverage: 1 benchmarks, with fresh and rolling lanes available for all."
+    assert_includes report, "## Fresh"
+    assert_includes report, "## Rolling"
+    assert_includes report, "Coverage: 1 benchmarks; fresh 1/1, rolling 1/1."
+    assert_includes report, "Rows are latest complete same-commit pairs."
     assert_includes report, "| Benchmark | Metric | actions/cache | BoringCache | Result | Storage |"
     assert_includes report, "| Hugo | Commit Build | 0m 10s | 0m 8s | cache bootstrap 1/3 | 200.00 B less (20.0%) |"
     refute_includes report, "BC storage:"

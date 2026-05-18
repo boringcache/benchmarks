@@ -15,15 +15,12 @@ WINDOWS_PATH = File.join(OUTPUT_DIR, "windows.json")
 HEALTH_PATH = File.join(OUTPUT_DIR, "health.json")
 DETAIL_OUTPUT_DIR = File.join(OUTPUT_DIR, "benchmarks")
 REPORT_PATH = File.join(OUTPUT_DIR, "report.md")
-README_PATH = "README.md"
 MAX_CMD_RETRIES = ENV.fetch("BENCHMARKS_GH_RETRIES", "3").to_i
 RUN_HISTORY_LIMIT = ENV.fetch("BENCHMARKS_GH_RUN_LIMIT", "100").to_i
 PAIR_COUNT = ENV.fetch("BENCHMARKS_PAIR_COUNT", "3").to_i
 CMD_TIMEOUT_SECONDS = ENV.fetch("BENCHMARKS_CMD_TIMEOUT", "120").to_i
 PRESERVE_STALE_ENTRIES = ENV.fetch("BENCHMARKS_PRESERVE_STALE", "false") == "true"
 LANE_IDS = %w[fresh rolling].freeze
-README_REPORT_START = "<!-- benchmark-report:start -->"
-README_REPORT_END = "<!-- benchmark-report:end -->"
 PRODUCT_REF_KEYS = %w[cli_version action_ref action_sha web_revision api_url].freeze
 SLOW_REASON_NUMERIC_KEYS = %w[
   build_seconds setup_seconds post_cleanup_seconds cache_restore_seconds cache_save_export_seconds
@@ -252,7 +249,7 @@ def markdown_escape(value)
 end
 
 def bytes_to_text(value)
-  return "—" if value.nil?
+  return "n/a" if value.nil?
 
   units = ["B", "KB", "MB", "GB", "TB"].freeze
   size = value.to_f.abs
@@ -269,7 +266,7 @@ end
 def storage_summary_text(comparison)
   saved_bytes = comparison["storage_saved_bytes"]
   improvement_pct = comparison["storage_improvement_pct"]
-  return "—" if saved_bytes.nil?
+  return "n/a" if saved_bytes.nil?
 
   if saved_bytes.to_f >= 0
     "#{bytes_to_text(saved_bytes)} less (#{improvement_pct.to_f.abs}%)"
@@ -397,7 +394,7 @@ end
 
 def timing_result_text(before_value, after_value)
   delta_pct = percent_delta(before_value, after_value)
-  return "—" if delta_pct.nil?
+  return "n/a" if delta_pct.nil?
 
   case timing_result_bucket(before_value, after_value)
   when :faster
@@ -1316,23 +1313,22 @@ def lane_report_row(entry, lane)
   comparison = lane_entry.fetch("comparison", {})
   boringcache = comparison.fetch("boringcache", {})
   bc_classification = boringcache["classification"] || {}
-  sample_count = comparison["sample_count"].to_i
   reporting = BenchmarkReporting.normalize_summary(
     lane: lane,
     category: entry["category"],
     reporting: comparison.fetch("reporting", {}),
     classification: bc_classification,
-    sample_count: sample_count
+    sample_count: comparison["sample_count"].to_i
   )
 
-  {
-    benchmark: entry.fetch("name"),
-    scenario: lane_entry["headline_label"] || reporting["headline_label"] || BenchmarkReporting.headline_label(lane: lane, scenario: lane_entry["headline_scenario"]),
-    actions: lane_entry["before"],
-    boringcache: lane_entry["after"],
-    result: reporting.fetch("comparative", true) ? timing_result_text(lane_entry["before_seconds"], lane_entry["after_seconds"]) : reporting["result_text"],
-    storage: storage_summary_text(comparison)
-  }
+  [
+    entry.fetch("name"),
+    lane_entry["headline_label"] || reporting["headline_label"] || BenchmarkReporting.headline_label(lane: lane, scenario: lane_entry["headline_scenario"]),
+    lane_entry["before"],
+    lane_entry["after"],
+    reporting.fetch("comparative", true) ? timing_result_text(lane_entry["before_seconds"], lane_entry["after_seconds"]) : reporting["result_text"],
+    storage_summary_text(comparison)
+  ]
 end
 
 def lane_available?(entry, lane)
@@ -1343,16 +1339,7 @@ def coverage_summary(entries)
   total = entries.length
   fresh = entries.count { |entry| lane_available?(entry, "fresh") }
   rolling = entries.count { |entry| lane_available?(entry, "rolling") }
-
-  if fresh == total && rolling == total
-    "Coverage: #{total} benchmarks, with fresh and rolling lanes available for all."
-  else
-    "Coverage: #{total} benchmarks; fresh #{fresh}/#{total}, rolling #{rolling}/#{total}."
-  end
-end
-
-def report_note
-  "Rows are the latest complete same-commit AC/BC pairs. Storage is BoringCache compared with actions/cache. Rolling windows, pair evidence, and health live in `data/latest/windows.json`, `data/latest/pairs.json`, and `data/latest/health.json`."
+  "Coverage: #{total} benchmarks; fresh #{fresh}/#{total}, rolling #{rolling}/#{total}."
 end
 
 def markdown_table(headers, rows)
@@ -1367,38 +1354,26 @@ end
 
 def build_report(entries, generated_at:)
   generated_label = Time.parse(generated_at).utc.strftime("%Y-%m-%d %H:%M UTC")
-  fresh_rows = entries.each_with_object([]) do |entry, rows|
-    row = lane_report_row(entry, "fresh")
-    next unless row
-
-    rows << [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage]]
-  end
-
-  rolling_rows = entries.map do |entry|
-    row = lane_report_row(entry, "rolling")
-    if row
-      [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage]]
-    else
-      [entry.fetch("name"), "—", "—", "—", "—", "—"]
-    end
-  end
+  headers = ["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "Storage"]
+  fresh_rows = entries.filter_map { |entry| lane_report_row(entry, "fresh") }
+  rolling_rows = entries.filter_map { |entry| lane_report_row(entry, "rolling") }
 
   [
-    "## Latest Benchmark Report",
+    "# Latest Benchmark Report",
     "",
     "Generated: #{generated_label}",
     "",
     coverage_summary(entries),
     "",
-    "### Fresh",
+    "Rows are latest complete same-commit pairs.",
     "",
-    markdown_table(["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "Storage"], fresh_rows),
+    "## Fresh",
     "",
-    "### Rolling",
+    markdown_table(headers, fresh_rows),
     "",
-    markdown_table(["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "Storage"], rolling_rows),
+    "## Rolling",
     "",
-    report_note,
+    markdown_table(headers, rolling_rows),
     ""
   ].join("\n")
 end
@@ -1407,32 +1382,6 @@ def write_report(entries, generated_at:)
   report = build_report(entries, generated_at: generated_at)
   File.write(REPORT_PATH, report)
   puts "Wrote #{REPORT_PATH}"
-  report
-end
-
-def update_readme(report)
-  readme = File.read(README_PATH)
-  replacement = [
-    README_REPORT_START,
-    "",
-    report.rstrip,
-    "",
-    README_REPORT_END
-  ].join("\n")
-
-  updated = if readme.include?(README_REPORT_START) && readme.include?(README_REPORT_END)
-    readme.sub(/#{Regexp.escape(README_REPORT_START)}.*?#{Regexp.escape(README_REPORT_END)}/m, replacement)
-  else
-    [
-      readme.rstrip,
-      "",
-      replacement,
-      ""
-    ].join("\n")
-  end
-
-  File.write(README_PATH, updated)
-  puts "Updated #{README_PATH}"
 end
 
 def latest_run_by_head(runs)
@@ -1786,8 +1735,7 @@ def main
   write_windows(window_entries, generated_at: generated_at)
   write_health(health_entries, generated_at: generated_at)
   write_detail_files(entries, generated_at: generated_at)
-  report = write_report(entries, generated_at: generated_at)
-  update_readme(report)
+  write_report(entries, generated_at: generated_at)
 end
 
 main if __FILE__ == $PROGRAM_NAME
