@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T06:00:11Z",
+  "generated_at": "2026-05-18T09:56:45Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -46,8 +46,7 @@
         "storage_breakdown": null,
         "docker_cache_import_seconds": null,
         "docker_cache_export_seconds": null,
-        "startup_prefetch": {
-        },
+        "startup_prefetch": {},
         "oci": {
           "hydration_policy": null,
           "body_local_hits": null,
@@ -87,9 +86,7 @@
           "api_url": "https://api.boringcache.com"
         },
         "product_refs_consistent": true,
-        "launch_proof_paths": [
-
-        ],
+        "launch_proof_paths": [],
         "workspace": "boringcache/benchmark-hugo-go",
         "cache_tag": null,
         "run_uid": "gh-25930151803-1",
@@ -170,8 +167,7 @@
         },
         "docker_cache_import_seconds": null,
         "docker_cache_export_seconds": null,
-        "startup_prefetch": {
-        },
+        "startup_prefetch": {},
         "oci": {
           "hydration_policy": null,
           "body_local_hits": null,
@@ -214,9 +210,7 @@
           "api_url": "https://api.boringcache.com"
         },
         "product_refs_consistent": true,
-        "launch_proof_paths": [
-
-        ],
+        "launch_proof_paths": [],
         "workspace": "boringcache/benchmark-hugo-go",
         "cache_tag": null,
         "run_uid": "gh-25930150604-1",
@@ -299,8 +293,7 @@
             "storage_breakdown": null,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
-            "startup_prefetch": {
-            },
+            "startup_prefetch": {},
             "oci": {
               "hydration_policy": null,
               "body_local_hits": null,
@@ -340,9 +333,7 @@
               "api_url": "https://api.boringcache.com"
             },
             "product_refs_consistent": true,
-            "launch_proof_paths": [
-
-            ],
+            "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-hugo-go",
             "cache_tag": null,
             "run_uid": "gh-25930151803-1",
@@ -423,8 +414,7 @@
             },
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
-            "startup_prefetch": {
-            },
+            "startup_prefetch": {},
             "oci": {
               "hydration_policy": null,
               "body_local_hits": null,
@@ -467,9 +457,7 @@
               "api_url": "https://api.boringcache.com"
             },
             "product_refs_consistent": true,
-            "launch_proof_paths": [
-
-            ],
+            "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-hugo-go",
             "cache_tag": null,
             "run_uid": "gh-25930150604-1",
@@ -547,8 +535,7 @@
             "storage_breakdown": null,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
-            "startup_prefetch": {
-            },
+            "startup_prefetch": {},
             "oci": {
               "hydration_policy": null,
               "body_local_hits": null,
@@ -588,9 +575,7 @@
               "api_url": "https://api.boringcache.com"
             },
             "product_refs_consistent": true,
-            "launch_proof_paths": [
-
-            ],
+            "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-hugo-go",
             "cache_tag": null,
             "run_uid": "gh-25998930257-1",
@@ -671,8 +656,7 @@
             },
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
-            "startup_prefetch": {
-            },
+            "startup_prefetch": {},
             "oci": {
               "hydration_policy": null,
               "body_local_hits": null,
@@ -715,9 +699,7 @@
               "api_url": "https://api.boringcache.com"
             },
             "product_refs_consistent": true,
-            "launch_proof_paths": [
-
-            ],
+            "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-hugo-go",
             "cache_tag": null,
             "run_uid": "gh-25998930866-1",
