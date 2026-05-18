@@ -1,10 +1,12 @@
-## Latest Benchmark Report
+# Latest Benchmark Report
 
 Generated: 2026-05-18 06:00 UTC
 
-Coverage: 11 benchmarks, with fresh and rolling lanes available for all.
+Coverage: 11 benchmarks; fresh 11/11, rolling 11/11.
 
-### Fresh
+Rows are latest complete same-commit pairs.
+
+## Fresh
 
 | Benchmark | Metric | actions/cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
@@ -20,7 +22,7 @@ Coverage: 11 benchmarks, with fresh and rolling lanes available for all.
 | Zed | Cold Build | 49m 52s | 40m 18s | 19% faster | 6.92 MB less (0.24%) |
 | n8n | Workflow Total | 6m 4s | 5m 59s | near tie | 53.36 MB more (7.12%) |
 
-### Rolling
+## Rolling
 
 | Benchmark | Metric | actions/cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
@@ -35,5 +37,3 @@ Coverage: 11 benchmarks, with fresh and rolling lanes available for all.
 | gRPC | Commit Build | 0m 51s | 0m 55s | near tie | 10.68 MB more (1.36%) |
 | Zed | Workflow Total | 38m 39s | 38m 1s | near tie | 1.09 GB less (9.51%) |
 | n8n | Workflow Total | 2m 48s | 2m 31s | 10% faster | 3.08 GB less (76.58%) |
-
-Rows are the latest complete same-commit AC/BC pairs. Storage is BoringCache compared with actions/cache. Rolling windows, pair evidence, and health live in `data/latest/windows.json`, `data/latest/pairs.json`, and `data/latest/health.json`.
