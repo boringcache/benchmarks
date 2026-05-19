@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T17:33:38Z",
+  "generated_at": "2026-05-19T20:54:50Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -552,35 +552,35 @@
         "public": false,
         "category": "bazel",
         "step": "Bazel build (remote cache)",
-        "headline_scenario": "cold",
-        "headline_label": "Commit Build",
-        "before": "1m 3s",
-        "after": "23m 42s",
-        "before_seconds": 63.0,
-        "after_seconds": 1422.0,
-        "faster": "0",
+        "headline_scenario": "run_total",
+        "headline_label": "Workflow Total",
+        "before": "1m 13s",
+        "after": "1m 12s",
+        "before_seconds": 73.0,
+        "after_seconds": 72.0,
+        "faster": "1",
         "comparison": {
           "paired_on_head_sha": true,
-          "pairing_head_sha": "cd29f5b81c6ce640e8c03c4604046e1d7e61a2dc",
+          "pairing_head_sha": "04cb7d0c59f0a67a76e9f1d97cde42585c12628a",
           "sample_count": 1,
           "actions_cache": {
-            "run_id": 26111180207,
-            "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/26111180207",
-            "head_sha": "cd29f5b81c6ce640e8c03c4604046e1d7e61a2dc",
-            "created_at": "2026-05-19T16:37:10Z",
-            "cold_seconds": 63.0,
-            "cold_build_seconds": 47.0,
-            "cold_restore_or_setup_seconds": 16.0,
+            "run_id": 26123903394,
+            "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/26123903394",
+            "head_sha": "04cb7d0c59f0a67a76e9f1d97cde42585c12628a",
+            "created_at": "2026-05-19T20:39:12Z",
+            "cold_seconds": 50.0,
+            "cold_build_seconds": 36.0,
+            "cold_restore_or_setup_seconds": 14.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 63.0,
+            "rolling_first_build_seconds": 50.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 109.0,
-            "storage_bytes": 1231010470,
+            "run_total_seconds": 73.0,
+            "storage_bytes": 1310184182,
             "storage_source": "github-actions-cache-api",
             "storage_breakdown": null,
             "docker_cache_import_seconds": null,
@@ -621,14 +621,14 @@
               "reseed_reason": null
             },
             "product_refs": {
-              "web_revision": "b66a8804",
+              "web_revision": "4bff783c",
               "api_url": "https://api.boringcache.com"
             },
             "product_refs_consistent": true,
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-grpc",
             "cache_tag": null,
-            "run_uid": "gh-26111180207-1",
+            "run_uid": "gh-26123903394-1",
             "mode": "bazel",
             "adapter": "bazel",
             "docker_cache_from_refs": null,
@@ -648,10 +648,10 @@
               "benchmark": "grpc-bazel",
               "strategy": "actions-cache",
               "lane": "rolling",
-              "run_uid": "gh-26111180207-1",
-              "paired_run_id": 26111184998,
-              "build_seconds": 47,
-              "setup_seconds": 16,
+              "run_uid": "gh-26123903394-1",
+              "paired_run_id": 26123907471,
+              "build_seconds": 36,
+              "setup_seconds": 14,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": null,
               "cache_save_export_seconds": null,
@@ -667,58 +667,45 @@
                   "confidence": "medium",
                   "summary": "Setup or restore overhead is large relative to build time.",
                   "evidence": {
-                    "setup_seconds": 16,
-                    "build_seconds": 47
+                    "setup_seconds": 14,
+                    "build_seconds": 36
                   }
                 }
               ]
             }
           },
           "boringcache": {
-            "run_id": 26111184998,
-            "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/26111184998",
-            "head_sha": "cd29f5b81c6ce640e8c03c4604046e1d7e61a2dc",
-            "created_at": "2026-05-19T16:37:16Z",
-            "cold_seconds": 1422.0,
-            "cold_build_seconds": 1395.0,
-            "cold_restore_or_setup_seconds": 27.0,
+            "run_id": 26123907471,
+            "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/26123907471",
+            "head_sha": "04cb7d0c59f0a67a76e9f1d97cde42585c12628a",
+            "created_at": "2026-05-19T20:39:16Z",
+            "cold_seconds": 54.0,
+            "cold_build_seconds": 33.0,
+            "cold_restore_or_setup_seconds": 21.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 1422.0,
+            "rolling_first_build_seconds": 54.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 1544.0,
-            "storage_bytes": 2206736270,
-            "storage_source": "boringcache-check",
+            "run_total_seconds": 72.0,
+            "storage_bytes": null,
+            "storage_source": null,
             "storage_breakdown": {
               "workspace": "boringcache/benchmark-grpc",
               "tags": [
                 "grpc-bazel-remote-cache-rolling-main"
               ],
-              "total_bytes": 2206736270,
+              "total_bytes": 0,
               "summary": {
-                "remote_cas_bytes": 2206736270,
+                "remote_cas_bytes": 0,
                 "dependency_archive_bytes": 0,
                 "tool_runtime_archive_bytes": 0,
                 "unknown_bytes": 0
               },
-              "components": [
-                {
-                  "tag": "grpc-bazel-remote-cache-rolling-main",
-                  "requested_tag": "grpc-bazel-remote-cache-rolling-main",
-                  "cache_entry_id": "dff32dc2-3031-41fd-b757-95eb2e9ddbe4",
-                  "primary_tag": "grpc-bazel-remote-cache-rolling-main",
-                  "storage_mode": "cas",
-                  "component_type": "remote_cas",
-                  "component_label": "remote CAS",
-                  "bytes": 2206736270,
-                  "archive_size_bytes": 2206736270,
-                  "blob_total_size_bytes": 2206736270
-                }
-              ]
+              "components": []
             },
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
@@ -758,17 +745,17 @@
               "reseed_reason": null
             },
             "product_refs": {
-              "cli_version": "v1.13.8",
+              "cli_version": "v1.13.10",
               "action_ref": "boringcache/one@v1",
-              "action_sha": "b0d13b56afea694e9b1accf5a63c64307fa182af",
-              "web_revision": "ec313dae",
+              "action_sha": "8e98e3ed6205b8bd8ff59863badc6a21d83ed8a9",
+              "web_revision": "4bff783c",
               "api_url": "https://api.boringcache.com"
             },
             "product_refs_consistent": true,
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-grpc",
             "cache_tag": null,
-            "run_uid": "gh-26111184998-1",
+            "run_uid": "gh-26123907471-1",
             "mode": "bazel",
             "adapter": "bazel",
             "docker_cache_from_refs": null,
@@ -788,11 +775,11 @@
               "benchmark": "grpc-bazel",
               "strategy": "boringcache",
               "lane": "rolling",
-              "run_uid": "gh-26111184998-1",
-              "paired_run_id": 26111180207,
-              "build_seconds": 1395,
-              "setup_seconds": 27,
-              "post_cleanup_seconds": 112.0,
+              "run_uid": "gh-26123907471-1",
+              "paired_run_id": 26123903394,
+              "build_seconds": 33,
+              "setup_seconds": 21,
+              "post_cleanup_seconds": 5.0,
               "cache_restore_seconds": 0,
               "cache_save_export_seconds": 0,
               "hit_count": null,
@@ -803,12 +790,12 @@
               "issue_candidates": [],
               "hypotheses": [
                 {
-                  "id": "post_cleanup_overhead",
+                  "id": "setup_overhead",
                   "confidence": "medium",
-                  "summary": "Post-step cleanup outside cache save is a likely slow-build contributor.",
+                  "summary": "Setup or restore overhead is large relative to build time.",
                   "evidence": {
-                    "post_cleanup_seconds": 112.0,
-                    "build_seconds": 1395
+                    "setup_seconds": 21,
+                    "build_seconds": 33
                   }
                 }
               ]
@@ -819,11 +806,11 @@
           },
           "warm_improvement_pct": null,
           "warm_build_improvement_pct": null,
-          "cold_improvement_pct": -2157.14,
-          "cold_build_improvement_pct": -2868.09,
-          "run_total_improvement_pct": -1316.51,
-          "storage_improvement_pct": -79.26,
-          "storage_saved_bytes": -975725800
+          "cold_improvement_pct": -8.0,
+          "cold_build_improvement_pct": 8.33,
+          "run_total_improvement_pct": 1.37,
+          "storage_improvement_pct": null,
+          "storage_saved_bytes": null
         }
       }
     }
