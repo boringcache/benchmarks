@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-05-19 20:54 UTC
+Generated: 2026-05-19 21:07 UTC
 
 Coverage: 12 benchmarks; fresh 12/12, rolling 12/12.
 
@@ -10,11 +10,11 @@ Rows are latest complete same-commit pairs.
 
 | Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
-| Hugo | Cold Build | 3m 13s | 3m 31s | 9% slower | 7.22 GB less (95.6%) |
-| Hugo Go | Cold Build | 1m 20s | 1m 6s | 18% faster | 706.12 MB more (240.01%) |
+| Hugo | Cold Build | 3m 44s | 3m 31s | 6% faster | 6.78 GB less (95.33%) |
+| Hugo Go | Cold Build | 1m 24s | 1m 22s | near tie | 40.45 MB less (13.75%) |
 | Immich | Warm Build | 0m 14s | 0m 9s | near tie | 8.13 GB less (78.6%) |
 | Mastodon | Cold Build | 10m 51s | 9m 17s | 14% faster | 9.55 GB less (90.21%) |
-| Discourse | Cold Build | 5m 49s | 5m 3s | 13% faster | 1.03 GB more (19028.12%) |
+| Discourse | Workflow Total | 6m 37s | 5m 38s | 15% faster | 8.99 GB less (89.64%) |
 | PostHog | Warm Build | 2m 44s | 0m 18s | 89% faster | 3.47 GB less (35.02%) |
 | Storybook | Cold Build | 3m 17s | 3m 32s | 8% slower | 44.76 MB more (6.13%) |
 | OpenTelemetry Java | Cold Build | 11m 21s | 11m 19s | near tie | 51.58 MB less (6.11%) |
@@ -27,8 +27,8 @@ Rows are latest complete same-commit pairs.
 
 | Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
-| Hugo | Commit Build | 3m 19s | 2m 57s | 11% faster | 6.70 GB less (95.27%) |
-| Hugo Go | Workflow Total | 0m 56s | 0m 41s | 27% faster | 692.70 MB more (41.31%) |
+| Hugo | Commit Build | 0m 10s | 0m 8s | near tie | 6.78 GB less (95.33%) |
+| Hugo Go | Commit Build | 1m 15s | 1m 23s | 11% slower | 40.48 MB less (13.76%) |
 | Immich | Commit Build | 0m 13s | 0m 8s | near tie | 7.34 GB less (76.85%) |
 | Mastodon | Commit Build | 2m 18s | 1m 56s | 16% faster | 9.04 GB less (89.73%) |
 | Discourse | Commit Build | 0m 14s | 0m 16s | near tie | 8.61 GB less (89.22%) |
