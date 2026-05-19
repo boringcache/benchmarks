@@ -784,7 +784,7 @@ def build_markdown(entries, generated_at:, format:)
         "### #{lane_label(lane).split.map(&:capitalize).join(' ')}",
         "",
         markdown_table(
-          ["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "Storage"],
+          ["Benchmark", "Metric", "GitHub Actions Cache", "BoringCache", "Result", "Storage"],
           rows.map { |row| [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage]] }
         ),
         ""
@@ -801,7 +801,7 @@ def build_markdown(entries, generated_at:, format:)
         "### #{lane_label(lane).split.map(&:capitalize).join(' ')} Raw",
         "",
         markdown_table(
-          ["Benchmark", "AC Cold", "BC Cold", "AC Warm", "BC Warm", "AC Total", "BC Total", "AC Storage", "BC Storage", "AC Run", "BC Run"],
+          ["Benchmark", "GitHub Actions Cache Cold", "BoringCache Cold", "GitHub Actions Cache Warm", "BoringCache Warm", "GitHub Actions Cache Total", "BoringCache Total", "GitHub Actions Cache Storage", "BoringCache Storage", "GitHub Actions Cache Run", "BoringCache Run"],
           rows
         ),
         ""
@@ -813,7 +813,7 @@ def build_markdown(entries, generated_at:, format:)
       sections += [
         "### Docker Cache Detail",
         "",
-        markdown_table(["Benchmark", "Lane", "AC Import", "BC Import", "AC Export", "BC Export", "BC OCI Hydration", "BC HTTP", "BC Stream Min Bytes", "BC New Blobs", "BC New Blob Bytes", "BC Remote Body Bytes"], docker_rows),
+        markdown_table(["Benchmark", "Lane", "GitHub Actions Cache Import", "BoringCache Import", "GitHub Actions Cache Export", "BoringCache Export", "BoringCache OCI Hydration", "BoringCache HTTP", "BoringCache Stream Min Bytes", "BoringCache New Blobs", "BoringCache New Blob Bytes", "BoringCache Remote Body Bytes"], docker_rows),
         ""
       ]
     end

@@ -21,24 +21,24 @@ BENCHMARKS = [
     "name" => "Hugo",
     "repo" => "boringcache/benchmark-hugo",
     "category" => "docker",
-    "actions_workflow" => "Hugo - Actions Cache",
-    "boringcache_workflow" => "Hugo - BoringCache"
+    "actions_workflow" => "hugo-actions-cache.yml",
+    "boringcache_workflow" => "hugo-boringcache.yml"
   },
   {
     "benchmark" => "hugo-go",
     "name" => "Hugo Go",
     "repo" => "boringcache/benchmark-hugo-go",
     "category" => "go",
-    "actions_workflow" => "Hugo Go - Actions Cache",
-    "boringcache_workflow" => "Hugo Go - BoringCache"
+    "actions_workflow" => "hugo-go-actions-cache.yml",
+    "boringcache_workflow" => "hugo-go-boringcache.yml"
   },
   {
     "benchmark" => "immich",
     "name" => "Immich",
     "repo" => "boringcache/benchmark-immich",
     "category" => "docker",
-    "actions_workflow" => "Immich - Actions Cache",
-    "boringcache_workflow" => "Immich - BoringCache"
+    "actions_workflow" => "immich-actions-cache.yml",
+    "boringcache_workflow" => "immich-boringcache.yml"
   },
   {
     "benchmark" => "mastodon-docker",
@@ -46,24 +46,24 @@ BENCHMARKS = [
     "name" => "Mastodon",
     "repo" => "boringcache/benchmark-mastodon",
     "category" => "docker",
-    "actions_workflow" => "Mastodon Docker - Actions Cache",
-    "boringcache_workflow" => "Mastodon Docker - BoringCache"
+    "actions_workflow" => "mastodon-docker-actions-cache.yml",
+    "boringcache_workflow" => "mastodon-docker-boringcache.yml"
   },
   {
     "benchmark" => "posthog",
     "name" => "PostHog",
     "repo" => "boringcache/benchmark-posthog",
     "category" => "docker",
-    "actions_workflow" => "PostHog - Actions Cache",
-    "boringcache_workflow" => "PostHog - BoringCache"
+    "actions_workflow" => "posthog-actions-cache.yml",
+    "boringcache_workflow" => "posthog-boringcache.yml"
   },
   {
     "benchmark" => "storybook",
     "name" => "Storybook",
     "repo" => "boringcache/benchmark-storybook",
     "category" => "nodejs",
-    "actions_workflow" => "Storybook - Actions Cache",
-    "boringcache_workflow" => "Storybook - BoringCache"
+    "actions_workflow" => "storybook-actions-cache.yml",
+    "boringcache_workflow" => "storybook-boringcache.yml"
   },
   {
     "benchmark" => "otel-gradle",
@@ -71,8 +71,8 @@ BENCHMARKS = [
     "name" => "OpenTelemetry Java",
     "repo" => "boringcache/benchmark-opentelemetry-java",
     "category" => "gradle",
-    "actions_workflow" => "OpenTelemetry Java Gradle - Actions Cache",
-    "boringcache_workflow" => "OpenTelemetry Java Gradle - BoringCache"
+    "actions_workflow" => "opentelemetry-java-gradle-actions-cache.yml",
+    "boringcache_workflow" => "opentelemetry-java-gradle-boringcache.yml"
   },
   {
     "benchmark" => "spring-ai-maven",
@@ -80,8 +80,8 @@ BENCHMARKS = [
     "name" => "Spring AI",
     "repo" => "boringcache/benchmark-spring-ai",
     "category" => "maven",
-    "actions_workflow" => "Spring AI Maven - Actions Cache",
-    "boringcache_workflow" => "Spring AI Maven - BoringCache"
+    "actions_workflow" => "spring-ai-maven-actions-cache.yml",
+    "boringcache_workflow" => "spring-ai-maven-boringcache.yml"
   },
   {
     "benchmark" => "grpc-bazel",
@@ -89,8 +89,8 @@ BENCHMARKS = [
     "name" => "gRPC",
     "repo" => "boringcache/benchmark-grpc",
     "category" => "bazel",
-    "actions_workflow" => "gRPC Bazel - Actions Cache",
-    "boringcache_workflow" => "gRPC Bazel - BoringCache"
+    "actions_workflow" => "grpc-bazel-actions-cache.yml",
+    "boringcache_workflow" => "grpc-bazel-boringcache.yml"
   },
   {
     "benchmark" => "zed-sccache",
@@ -98,16 +98,16 @@ BENCHMARKS = [
     "name" => "Zed",
     "repo" => "boringcache/benchmark-zed",
     "category" => "rust",
-    "actions_workflow" => "Zed sccache - Actions Cache",
-    "boringcache_workflow" => "Zed sccache - BoringCache"
+    "actions_workflow" => "zed-sccache-actions-cache.yml",
+    "boringcache_workflow" => "zed-sccache-boringcache.yml"
   },
   {
     "benchmark" => "n8n",
     "name" => "n8n",
     "repo" => "boringcache/benchmark-n8n",
     "category" => "nodejs",
-    "actions_workflow" => "n8n - Actions Cache",
-    "boringcache_workflow" => "n8n - BoringCache"
+    "actions_workflow" => "n8n-actions-cache.yml",
+    "boringcache_workflow" => "n8n-boringcache.yml"
   }
 ].freeze
 
@@ -469,7 +469,7 @@ def build_report(aggregates, cohort)
     sections << "## #{lane == 'fresh' ? 'Fresh' : 'Rolling'}"
     sections << ""
     sections << markdown_table(
-      ["Benchmark", "Category", "Pairs", "AC Cold", "BC Cold", "Cold Result", "AC Warm", "BC Warm", "AC Total", "BC Total", "Avg Storage Delta", "BC Cache Bootstraps"],
+      ["Benchmark", "Category", "Pairs", "GitHub Actions Cache Cold", "BoringCache Cold", "Cold Result", "GitHub Actions Cache Warm", "BoringCache Warm", "GitHub Actions Cache Total", "BoringCache Total", "Avg Storage Delta", "BoringCache Bootstraps"],
       rows
     )
     sections << ""
@@ -499,7 +499,7 @@ def build_report(aggregates, cohort)
     sections << "## Docker Export Detail"
     sections << ""
     sections << markdown_table(
-      ["Benchmark", "Lane", "Pairs", "AC Export", "BC Export", "Export Result", "Avg BC New Blobs", "BC Cache Bootstraps"],
+      ["Benchmark", "Lane", "Pairs", "GitHub Actions Cache Export", "BoringCache Export", "Export Result", "Avg BoringCache New Blobs", "BoringCache Bootstraps"],
       docker_rows
     )
     sections << ""
@@ -584,7 +584,7 @@ end
 
 pairs = cohort.fetch("pairs")
 normalized_pairs = pairs.each_with_index.map do |pair, index|
-  warn "Normalizing #{index + 1}/#{pairs.length}: #{pair.fetch('benchmark')} #{pair.fetch('lane')} AC=#{pair.fetch('actions_cache')} BC=#{pair.fetch('boringcache')}"
+  warn "Normalizing #{index + 1}/#{pairs.length}: #{pair.fetch('benchmark')} #{pair.fetch('lane')} GitHub Actions Cache=#{pair.fetch('actions_cache')} BoringCache=#{pair.fetch('boringcache')}"
   normalize_pair(pair, options[:cache_dir])
 end
 aggregates = aggregate_pairs(normalized_pairs)

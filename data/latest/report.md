@@ -8,7 +8,7 @@ Rows are latest complete same-commit pairs.
 
 ## Fresh
 
-| Benchmark | Metric | actions/cache | BoringCache | Result | Storage |
+| Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
 | Hugo | Cold Build | 3m 13s | 3m 31s | 9% slower | 7.22 GB less (95.6%) |
 | Hugo Go | Cold Build | 1m 20s | 1m 6s | 18% faster | 706.12 MB more (240.01%) |
@@ -25,7 +25,7 @@ Rows are latest complete same-commit pairs.
 
 ## Rolling
 
-| Benchmark | Metric | actions/cache | BoringCache | Result | Storage |
+| Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
 | Hugo | Commit Build | 3m 19s | 2m 57s | 11% faster | 6.70 GB less (95.27%) |
 | Hugo Go | Workflow Total | 0m 56s | 0m 41s | 27% faster | 692.70 MB more (41.31%) |

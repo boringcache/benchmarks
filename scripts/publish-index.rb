@@ -37,8 +37,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "docker",
     "step" => "Docker build (Go)",
-    "actions_workflow" => "Hugo - Actions Cache",
-    "boringcache_workflow" => "Hugo - BoringCache"
+    "actions_workflow" => "hugo-actions-cache.yml",
+    "boringcache_workflow" => "hugo-boringcache.yml"
   },
   {
     "benchmark" => "hugo-go",
@@ -49,8 +49,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "go",
     "step" => "Go build (native build cache)",
-    "actions_workflow" => "Hugo Go - Actions Cache",
-    "boringcache_workflow" => "Hugo Go - BoringCache"
+    "actions_workflow" => "hugo-go-actions-cache.yml",
+    "boringcache_workflow" => "hugo-go-boringcache.yml"
   },
   {
     "benchmark" => "immich",
@@ -61,8 +61,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "docker",
     "step" => "Docker build (server)",
-    "actions_workflow" => "Immich - Actions Cache",
-    "boringcache_workflow" => "Immich - BoringCache"
+    "actions_workflow" => "immich-actions-cache.yml",
+    "boringcache_workflow" => "immich-boringcache.yml"
   },
   {
     "benchmark" => "mastodon-docker",
@@ -74,8 +74,9 @@ BENCHMARKS = [
     "public" => true,
     "category" => "docker",
     "step" => "Docker build (Ruby+Node)",
-    "actions_workflow" => "Mastodon Docker - Actions Cache",
-    "boringcache_workflow" => "Mastodon Docker - BoringCache"
+    "actions_workflow" => "mastodon-docker-actions-cache.yml",
+    "boringcache_workflow" => "mastodon-docker-boringcache.yml",
+    "workflow_benchmark_ids" => ["mastodon-deps"]
   },
   {
     "benchmark" => "discourse-docker",
@@ -87,8 +88,9 @@ BENCHMARKS = [
     "public" => true,
     "category" => "docker",
     "step" => "Docker build (Ruby+Node dev image)",
-    "actions_workflow" => "Discourse Docker - Actions Cache",
-    "boringcache_workflow" => "Discourse Docker - BoringCache"
+    "actions_workflow" => "discourse-docker-actions-cache.yml",
+    "boringcache_workflow" => "discourse-docker-boringcache.yml",
+    "workflow_benchmark_ids" => ["discourse-deps"]
   },
   {
     "benchmark" => "posthog",
@@ -99,8 +101,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "docker",
     "step" => "Docker build (full stack)",
-    "actions_workflow" => "PostHog - Actions Cache",
-    "boringcache_workflow" => "PostHog - BoringCache"
+    "actions_workflow" => "posthog-actions-cache.yml",
+    "boringcache_workflow" => "posthog-boringcache.yml"
   },
   {
     "benchmark" => "storybook",
@@ -111,8 +113,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "nodejs",
     "step" => "Nx build (Yarn monorepo)",
-    "actions_workflow" => "Storybook - Actions Cache",
-    "boringcache_workflow" => "Storybook - BoringCache"
+    "actions_workflow" => "storybook-actions-cache.yml",
+    "boringcache_workflow" => "storybook-boringcache.yml"
   },
   {
     "benchmark" => "otel-gradle",
@@ -123,8 +125,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "gradle",
     "step" => "Gradle build (native HTTP cache)",
-    "actions_workflow" => "OpenTelemetry Java Gradle - Actions Cache",
-    "boringcache_workflow" => "OpenTelemetry Java Gradle - BoringCache"
+    "actions_workflow" => "opentelemetry-java-gradle-actions-cache.yml",
+    "boringcache_workflow" => "opentelemetry-java-gradle-boringcache.yml"
   },
   {
     "benchmark" => "spring-ai-maven",
@@ -135,8 +137,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "maven",
     "step" => "Maven build (build-cache extension)",
-    "actions_workflow" => "Spring AI Maven - Actions Cache",
-    "boringcache_workflow" => "Spring AI Maven - BoringCache"
+    "actions_workflow" => "spring-ai-maven-actions-cache.yml",
+    "boringcache_workflow" => "spring-ai-maven-boringcache.yml"
   },
   {
     "benchmark" => "grpc-bazel",
@@ -147,8 +149,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "bazel",
     "step" => "Bazel build (remote cache)",
-    "actions_workflow" => "gRPC Bazel - Actions Cache",
-    "boringcache_workflow" => "gRPC Bazel - BoringCache"
+    "actions_workflow" => "grpc-bazel-actions-cache.yml",
+    "boringcache_workflow" => "grpc-bazel-boringcache.yml"
   },
   {
     "benchmark" => "zed-sccache",
@@ -159,8 +161,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "rust",
     "step" => "Rust build (sccache)",
-    "actions_workflow" => "Zed sccache - Actions Cache",
-    "boringcache_workflow" => "Zed sccache - BoringCache"
+    "actions_workflow" => "zed-sccache-actions-cache.yml",
+    "boringcache_workflow" => "zed-sccache-boringcache.yml"
   },
   {
     "benchmark" => "n8n",
@@ -171,8 +173,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "nodejs",
     "step" => "Turbo build (pnpm monorepo)",
-    "actions_workflow" => "n8n - Actions Cache",
-    "boringcache_workflow" => "n8n - BoringCache"
+    "actions_workflow" => "n8n-actions-cache.yml",
+    "boringcache_workflow" => "n8n-boringcache.yml"
   }
 ].freeze
 
@@ -1367,7 +1369,7 @@ end
 
 def build_report(entries, generated_at:)
   generated_label = Time.parse(generated_at).utc.strftime("%Y-%m-%d %H:%M UTC")
-  headers = ["Benchmark", "Metric", "actions/cache", "BoringCache", "Result", "Storage"]
+  headers = ["Benchmark", "Metric", "GitHub Actions Cache", "BoringCache", "Result", "Storage"]
   fresh_rows = entries.filter_map { |entry| lane_report_row(entry, "fresh") }
   rolling_rows = entries.filter_map { |entry| lane_report_row(entry, "rolling") }
 
