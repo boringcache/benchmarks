@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-05-19 09:49 UTC
+Generated: 2026-05-19 13:42 UTC
 
 Coverage: 12 benchmarks; fresh 12/12, rolling 12/12.
 
@@ -27,15 +27,15 @@ Rows are latest complete same-commit pairs.
 
 | Benchmark | Metric | actions/cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
-| Hugo | Commit Build | 0m 10s | 0m 8s | near tie | 6.62 GB less (95.22%) |
-| Hugo Go | Commit Build | 0m 36s | 0m 25s | 31% faster | 39.60 MB less (2.06%) |
-| Immich | Commit Build | 2m 59s | 2m 34s | 14% faster | 7.05 GB less (76.11%) |
-| Mastodon | Commit Build | 3m 53s | 3m 26s | 12% faster | 9.24 GB less (89.92%) |
-| Discourse | Commit Build | 0m 13s | 0m 17s | near tie | 2.17 GB less (67.61%) |
-| PostHog | Commit Build | 15m 22s | 12m 7s | 21% faster | 3.62 GB less (37.03%) |
-| Storybook | Workflow Total | 1m 7s | 1m 1s | 9% faster | 1.13 GB less (59.9%) |
+| Hugo | Commit Build | 2m 56s | 3m 2s | 3% slower | 6.62 GB less (95.22%) |
+| Hugo Go | Workflow Total | 1m 10s | 1m 9s | near tie | 689.65 MB more (43.22%) |
+| Immich | Commit Build | 0m 27s | 0m 13s | 52% faster | 7.34 GB less (76.83%) |
+| Mastodon | Commit Build | 2m 45s | 1m 56s | 30% faster | 8.96 GB less (89.65%) |
+| Discourse | Commit Build | 3m 15s | 2m 58s | 9% faster | 3.06 GB less (74.66%) |
+| PostHog | Commit Build | 22m 26s | 11m 43s | 48% faster | 4.23 GB less (40.68%) |
+| Storybook | Commit Build | 3m 20s | 3m 22s | near tie | 1.18 GB less (60.9%) |
 | OpenTelemetry Java | Workflow Total | 7m 0s | 6m 2s | 14% faster | 2.98 GB less (79.4%) |
-| Spring AI | Commit Build | 0m 49s | 0m 51s | near tie | 2.39 GB less (71.88%) |
-| gRPC | Commit Build | 0m 44s | 1m 4s | 45% slower | 148.00 MB more (16.74%) |
-| Zed | Workflow Total | 19m 46s | 19m 34s | near tie | 5.36 GB less (46.75%) |
-| n8n | Workflow Total | 5m 3s | 4m 54s | near tie | 3.52 GB less (72.39%) |
+| Spring AI | Commit Build | 0m 55s | 0m 31s | 44% faster | 2.21 GB less (66.73%) |
+| gRPC | Commit Build | 0m 42s | 0m 56s | 33% slower | 829.13 MB more (73.58%) |
+| Zed | Workflow Total | 44m 35s | 41m 31s | 7% faster | 4.52 GB less (39.42%) |
+| n8n | Workflow Total | 5m 12s | 5m 6s | near tie | 3.60 GB less (71.84%) |
