@@ -3,7 +3,15 @@
 
 require_relative "publish-index"
 
-repos_dir = ARGV[0] || ENV.fetch("BENCHMARK_REPOS_DIR", File.expand_path("../../benchmark-repos", __dir__))
+def default_repos_dir
+  candidates = [
+    File.expand_path("../../benchmarks-repos", __dir__),
+    File.expand_path("../../benchmark-repos", __dir__)
+  ]
+  candidates.find { |path| Dir.exist?(path) } || candidates.first
+end
+
+repos_dir = ARGV[0] || ENV.fetch("BENCHMARK_REPOS_DIR", default_repos_dir)
 abort "benchmark repos directory not found: #{repos_dir}" unless Dir.exist?(repos_dir)
 
 registry_by_repo = BENCHMARKS.each_with_object({}) do |benchmark, index|
@@ -31,7 +39,11 @@ registry_by_repo.each do |repo_name, benchmark|
     end.compact
   end.uniq.sort
 
-  allowed_ids = [benchmark.fetch("benchmark"), *Array(benchmark["aliases"])].uniq.sort
+  allowed_ids = [
+    benchmark.fetch("benchmark"),
+    *Array(benchmark["aliases"]),
+    *Array(benchmark["workflow_benchmark_ids"])
+  ].uniq.sort
   unknown_ids = workflow_ids - allowed_ids
   missing_id = (workflow_ids & allowed_ids).empty?
 
