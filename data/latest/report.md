@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-05-19 13:42 UTC
+Generated: 2026-05-19 17:33 UTC
 
 Coverage: 12 benchmarks; fresh 12/12, rolling 12/12.
 
@@ -27,15 +27,15 @@ Rows are latest complete same-commit pairs.
 
 | Benchmark | Metric | actions/cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
-| Hugo | Commit Build | 2m 56s | 3m 2s | 3% slower | 6.62 GB less (95.22%) |
-| Hugo Go | Workflow Total | 1m 10s | 1m 9s | near tie | 689.65 MB more (43.22%) |
+| Hugo | Commit Build | 3m 19s | 2m 57s | 11% faster | 6.70 GB less (95.27%) |
+| Hugo Go | Workflow Total | 0m 56s | 0m 41s | 27% faster | 692.70 MB more (41.31%) |
 | Immich | Commit Build | 0m 27s | 0m 13s | 52% faster | 7.34 GB less (76.83%) |
-| Mastodon | Commit Build | 2m 45s | 1m 56s | 30% faster | 8.96 GB less (89.65%) |
-| Discourse | Commit Build | 3m 15s | 2m 58s | 9% faster | 3.06 GB less (74.66%) |
-| PostHog | Commit Build | 22m 26s | 11m 43s | 48% faster | 4.23 GB less (40.68%) |
-| Storybook | Commit Build | 3m 20s | 3m 22s | near tie | 1.18 GB less (60.9%) |
+| Mastodon | Commit Build | 2m 18s | 1m 56s | 16% faster | 9.04 GB less (89.73%) |
+| Discourse | Commit Build | 3m 47s | 3m 1s | 20% faster | 5.88 GB less (84.98%) |
+| PostHog | Commit Build | 15m 15s | 11m 49s | 23% faster | 3.28 GB less (34.69%) |
+| Storybook | Workflow Total | 1m 41s | 1m 31s | 10% faster | 1.24 GB less (61.99%) |
 | OpenTelemetry Java | Workflow Total | 7m 0s | 6m 2s | 14% faster | 2.98 GB less (79.4%) |
-| Spring AI | Commit Build | 0m 55s | 0m 31s | 44% faster | 2.21 GB less (66.73%) |
-| gRPC | Commit Build | 0m 42s | 0m 56s | 33% slower | 829.13 MB more (73.58%) |
-| Zed | Workflow Total | 44m 35s | 41m 31s | 7% faster | 4.52 GB less (39.42%) |
-| n8n | Workflow Total | 5m 12s | 5m 6s | near tie | 3.60 GB less (71.84%) |
+| Spring AI | Workflow Total | 1m 27s | 0m 48s | 45% faster | 2.21 GB less (66.73%) |
+| gRPC | Commit Build | 1m 3s | 23m 42s | 2157% slower | 930.52 MB more (79.26%) |
+| Zed | Workflow Total | 45m 27s | 41m 6s | 10% faster | 2.71 GB less (23.63%) |
+| n8n | Commit Build | 4m 29s | 4m 27s | near tie | 3.72 GB less (71.2%) |
