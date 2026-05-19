@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-05-19 22:55 UTC
+Generated: 2026-05-19 23:09 UTC
 
 Coverage: 12 benchmarks; fresh 12/12, rolling 12/12.
 
@@ -37,5 +37,5 @@ Rows are latest complete same-commit pairs.
 | OpenTelemetry Java | Workflow Total | 4m 42s | 4m 26s | 6% faster | 2.89 GB less (78.85%) |
 | Spring AI | Commit Build | 0m 46s | 3m 20s | 335% slower | 2.57 GB less (77.32%) |
 | gRPC | Commit Build | 32m 19s | 0m 51s | 97% faster | n/a |
-| Zed | Workflow Total | 32m 52s | 30m 59s | 6% faster | 4.94 GB less (86.82%) |
+| Zed | Workflow Total | 22m 14s | 19m 20s | 13% faster | 4.95 GB less (86.85%) |
 | n8n | Commit Build | 3m 37s | 1m 3s | 71% faster | 4.54 GB less (85.7%) |
