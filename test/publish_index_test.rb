@@ -156,6 +156,164 @@ class PublishIndexTest < Minitest::Test
     assert_equal "nx", metrics[:adapter]
   end
 
+  def test_known_provider_run_exclusions_are_applied
+    runs = [
+      { "databaseId" => 26_157_635_153, "conclusion" => "success", "createdAt" => "2026-05-20T10:47:44Z" },
+      { "databaseId" => 26_161_049_549, "conclusion" => "success", "createdAt" => "2026-05-20T11:58:55Z" }
+    ]
+
+    filtered = filter_excluded_provider_runs(repo: "boringcache/benchmark-posthog", runs: runs)
+
+    assert_equal [26_161_049_549], filtered.map { |run| run["databaseId"] }
+    assert_equal runs, filter_excluded_provider_runs(repo: "boringcache/benchmark-hugo", runs: runs)
+  end
+
+  def test_provider_workflows_include_standard_and_optional_providers
+    benchmark = benchmark_config(category: "go").merge(
+      "actions_workflow" => "hugo-go-actions-cache.yml",
+      "boringcache_workflow" => "hugo-go-boringcache.yml",
+      "provider_workflows" => {
+        "depot-cache" => "hugo-go-depot-cache.yml"
+      }
+    )
+
+    assert_equal(
+      {
+        "actions-cache" => "hugo-go-actions-cache.yml",
+        "boringcache" => "hugo-go-boringcache.yml",
+        "depot-cache" => "hugo-go-depot-cache.yml"
+      },
+      provider_workflows_for(benchmark)
+    )
+    assert_equal "Depot Cache", provider_label("depot-cache")
+    assert_equal "custom-cache", provider_label("custom-cache")
+  end
+
+  def test_provider_lane_payload_summarizes_samples
+    snapshots = [
+      pair_snapshot(
+        run_id: "older-provider",
+        created_at: "2026-05-20T10:00:00Z",
+        seconds: 10,
+        product_refs: PRODUCT_REFS,
+        classification: { "reporting_mode" => "comparative" }
+      ),
+      pair_snapshot(
+        run_id: "newer-provider",
+        created_at: "2026-05-20T11:00:00Z",
+        seconds: 20,
+        product_refs: PRODUCT_REFS,
+        classification: { "reporting_mode" => "comparative" }
+      )
+    ]
+
+    payload = provider_lane_payload(
+      lane: "rolling",
+      runs: [{ "databaseId" => 1 }, { "databaseId" => 2 }, { "databaseId" => 3 }],
+      unique_head_count: 3,
+      snapshots: snapshots,
+      storage_available: true
+    )
+
+    assert_equal "healthy", payload["state"]
+    assert_equal 3, payload["successful_run_count"]
+    assert_equal 2, payload["selected_sample_count"]
+    assert_equal "newer-provider", payload["latest_run_id"]
+    assert_equal 15, payload.dig("headline", "seconds")
+    assert_equal 15, payload.dig("summary", "cold_seconds")
+    assert_equal ["older-provider", "newer-provider"], payload["sample_run_ids"]
+    assert_equal 2, payload["samples"].length
+
+    missing_build_time = provider_lane_payload(
+      lane: "fresh",
+      runs: [{ "databaseId" => 1 }],
+      unique_head_count: 1,
+      snapshots: [
+        pair_snapshot(
+          run_id: "no-build-timing",
+          created_at: "2026-05-20T12:00:00Z",
+          seconds: 30,
+          product_refs: PRODUCT_REFS,
+          classification: { "reporting_mode" => "comparative" }
+        ).merge(
+          "cold_seconds" => nil,
+          "warm_steady_seconds" => nil,
+          "cold_build_seconds" => nil,
+          "warm1_build_seconds" => nil,
+          "run_total_seconds" => 10
+        )
+      ],
+      storage_available: true
+    )
+
+    assert_equal "missing_build_time", missing_build_time["state"]
+    refute missing_build_time.key?("headline")
+
+    missing = provider_lane_payload(lane: "fresh", runs: [], unique_head_count: 0, snapshots: [], storage_available: false)
+
+    assert_equal "missing_sample", missing["state"]
+    assert_equal 0, missing["selected_sample_count"]
+    assert_equal false, missing["storage_available"]
+    refute missing.key?("summary")
+  end
+
+  def test_provider_snapshot_uses_build_time_and_strips_third_party_storage
+    data = {
+      run: {
+        "databaseId" => 123,
+        "url" => "https://github.com/boringcache/benchmark-zed/actions/runs/123",
+        "headSha" => "feedface",
+        "createdAt" => "2026-05-20T10:00:00Z"
+      },
+      run_total_seconds: 600,
+      metrics: {
+        cold_seconds: 420,
+        cold_build_seconds: 360,
+        cold_restore_or_setup_seconds: 60,
+        warm1_seconds: nil,
+        warm1_build_seconds: nil,
+        warm1_restore_or_setup_seconds: nil,
+        warm2_seconds: nil,
+        warm_average_seconds: nil,
+        rolling_first_build_seconds: 420,
+        rolling_warm_seconds: nil,
+        storage_bytes: 1_000,
+        storage_source: "github-actions-cache-api-partial",
+        storage_breakdown: { "total_bytes" => 1_000 },
+        docker_cache_import_seconds: nil,
+        docker_cache_export_seconds: nil,
+        startup_prefetch: {},
+        oci: {},
+        classification: {},
+        product_refs: {},
+        product_refs_consistent: nil
+      }
+    }
+
+    snapshot = provider_snapshot(data, strategy: "depot-cache")
+
+    assert_equal 420, snapshot["build_seconds"]
+    assert_equal "cold_seconds", snapshot["build_metric_source"]
+    assert_equal 600, snapshot["run_total_seconds"]
+    assert_equal false, snapshot["storage_available"]
+    assert_equal "Depot Cache storage is not available from benchmark artifacts.", snapshot["storage_note"]
+    refute snapshot.key?("storage_bytes")
+    refute snapshot.key?("storage_source")
+    refute snapshot.key?("storage_breakdown")
+
+    data[:metrics][:cold_seconds] = nil
+    data[:metrics][:cold_build_seconds] = nil
+    data[:metrics][:warm1_seconds] = nil
+    data[:metrics][:warm1_build_seconds] = nil
+    data[:metrics][:warm2_seconds] = nil
+    data[:metrics][:warm_average_seconds] = nil
+    no_build_snapshot = provider_snapshot(data, strategy: "buildbuddy-cache")
+
+    refute no_build_snapshot.key?("build_seconds")
+    refute no_build_snapshot.key?("build_metric_source")
+    assert_equal 600, no_build_snapshot["run_total_seconds"]
+  end
+
   def test_comparative_entries_exclude_actions_cache_bootstrap
     steady = paired_entry(
       ac_classification: { "reporting_mode" => "comparative" },
@@ -260,6 +418,47 @@ class PublishIndexTest < Minitest::Test
     assert_equal "feedface", health["latest_head_sha"]
   end
 
+  def test_lane_average_never_uses_workflow_wall_time_as_headline
+    entry = {
+      "comparison" => {
+        "pairing_head_sha" => "feedface",
+        "pairing_head_shas" => ["feedface"],
+        "actions_cache" => pair_snapshot(
+          run_id: "actions",
+          created_at: "2026-05-20T10:00:00Z",
+          seconds: 80,
+          product_refs: {},
+          classification: { "reporting_mode" => "comparative" }
+        ).merge(
+          "cold_build_seconds" => 10,
+          "warm1_build_seconds" => nil,
+          "run_total_seconds" => 100
+        ),
+        "boringcache" => pair_snapshot(
+          run_id: "boringcache",
+          created_at: "2026-05-20T10:00:00Z",
+          seconds: 90,
+          product_refs: PRODUCT_REFS,
+          classification: { "reporting_mode" => "comparative" }
+        ).merge(
+          "cold_build_seconds" => 20,
+          "warm1_build_seconds" => nil,
+          "run_total_seconds" => 50
+        )
+      }
+    }
+
+    averaged = average_lane_entries([entry], benchmark: benchmark_config(category: "docker"), lane: "fresh")
+
+    assert_equal "Cold Build", averaged["headline_label"]
+    assert_equal 80, averaged["before_seconds"]
+    assert_equal 90, averaged["after_seconds"]
+    assert_equal "0", averaged["faster"]
+    assert_equal(-12.5, averaged.dig("comparison", "cold_improvement_pct"))
+    assert_equal(-100.0, averaged.dig("comparison", "cold_build_improvement_pct"))
+    refute averaged.fetch("comparison").key?("run_total_improvement_pct")
+  end
+
   private
 
   def benchmark_config(category:)
@@ -305,7 +504,9 @@ class PublishIndexTest < Minitest::Test
       "head_sha" => "feedface",
       "created_at" => created_at,
       "cold_seconds" => seconds,
+      "cold_build_seconds" => seconds,
       "warm1_seconds" => seconds,
+      "warm1_build_seconds" => seconds,
       "warm_average_seconds" => seconds,
       "run_total_seconds" => seconds,
       "storage_bytes" => 1_000,

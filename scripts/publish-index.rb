@@ -13,6 +13,7 @@ OUTPUT_PATH = File.join(OUTPUT_DIR, "index.json")
 PAIR_POINTS_PATH = File.join(OUTPUT_DIR, "pairs.json")
 WINDOWS_PATH = File.join(OUTPUT_DIR, "windows.json")
 HEALTH_PATH = File.join(OUTPUT_DIR, "health.json")
+PROVIDERS_PATH = File.join(OUTPUT_DIR, "providers.json")
 DETAIL_OUTPUT_DIR = File.join(OUTPUT_DIR, "benchmarks")
 REPORT_PATH = File.join(OUTPUT_DIR, "report.md")
 MAX_CMD_RETRIES = ENV.fetch("BENCHMARKS_GH_RETRIES", "3").to_i
@@ -22,6 +23,13 @@ CMD_TIMEOUT_SECONDS = ENV.fetch("BENCHMARKS_CMD_TIMEOUT", "120").to_i
 PRESERVE_STALE_ENTRIES = ENV.fetch("BENCHMARKS_PRESERVE_STALE", "false") == "true"
 LANE_IDS = %w[fresh rolling].freeze
 PRODUCT_REF_KEYS = %w[cli_version action_ref action_sha web_revision api_url].freeze
+PROVIDER_LABELS = {
+  "actions-cache" => "GitHub Actions Cache",
+  "boringcache" => "BoringCache",
+  "depot-cache" => "Depot Cache",
+  "buildbuddy-cache" => "BuildBuddy Cache"
+}.freeze
+PROVIDER_STORAGE_STRATEGIES = %w[actions-cache boringcache].freeze
 SLOW_REASON_NUMERIC_KEYS = %w[
   build_seconds setup_seconds post_cleanup_seconds cache_restore_seconds cache_save_export_seconds
   hit_count miss_count hit_rate new_blob_bytes
@@ -50,7 +58,10 @@ BENCHMARKS = [
     "category" => "go",
     "step" => "Go build (native build cache)",
     "actions_workflow" => "hugo-go-actions-cache.yml",
-    "boringcache_workflow" => "hugo-go-boringcache.yml"
+    "boringcache_workflow" => "hugo-go-boringcache.yml",
+    "provider_workflows" => {
+      "depot-cache" => "hugo-go-depot-cache.yml"
+    }
   },
   {
     "benchmark" => "immich",
@@ -150,7 +161,11 @@ BENCHMARKS = [
     "category" => "bazel",
     "step" => "Bazel build (remote cache)",
     "actions_workflow" => "grpc-bazel-actions-cache.yml",
-    "boringcache_workflow" => "grpc-bazel-boringcache.yml"
+    "boringcache_workflow" => "grpc-bazel-boringcache.yml",
+    "provider_workflows" => {
+      "depot-cache" => "grpc-bazel-depot-cache.yml",
+      "buildbuddy-cache" => "grpc-bazel-buildbuddy-cache.yml"
+    }
   },
   {
     "benchmark" => "zed-sccache",
@@ -162,7 +177,10 @@ BENCHMARKS = [
     "category" => "rust",
     "step" => "Rust build (sccache)",
     "actions_workflow" => "zed-sccache-actions-cache.yml",
-    "boringcache_workflow" => "zed-sccache-boringcache.yml"
+    "boringcache_workflow" => "zed-sccache-boringcache.yml",
+    "provider_workflows" => {
+      "depot-cache" => "zed-sccache-depot-cache.yml"
+    }
   },
   {
     "benchmark" => "n8n",
@@ -177,6 +195,12 @@ BENCHMARKS = [
     "boringcache_workflow" => "n8n-boringcache.yml"
   }
 ].freeze
+
+EXCLUDED_PROVIDER_RUNS = {
+  "boringcache/benchmark-posthog" => {
+    26_157_635_153 => "PostHog rolling cache tag was manually evicted during storage-pressure cleanup; sample repopulated the rolling cache."
+  }
+}.freeze
 
 def run_cmd(*args)
   attempts = 0
@@ -421,6 +445,29 @@ def timing_result_text(before_value, after_value)
   end
 end
 
+def provider_label(strategy)
+  PROVIDER_LABELS.fetch(strategy, strategy)
+end
+
+def provider_workflows_for(benchmark)
+  {
+    "actions-cache" => benchmark.fetch("actions_workflow"),
+    "boringcache" => benchmark.fetch("boringcache_workflow")
+  }.merge(benchmark.fetch("provider_workflows", {}))
+end
+
+def provider_storage_available?(strategy)
+  PROVIDER_STORAGE_STRATEGIES.include?(strategy)
+end
+
+def excluded_provider_run?(repo:, run_id:)
+  EXCLUDED_PROVIDER_RUNS.fetch(repo, {}).key?(run_id.to_i)
+end
+
+def filter_excluded_provider_runs(repo:, runs:)
+  runs.reject { |run| excluded_provider_run?(repo: repo, run_id: run["databaseId"]) }
+end
+
 def latest_successful_runs(repo:, workflow_name:, limit: RUN_HISTORY_LIMIT)
   output = run_cmd(
     "gh", "run", "list",
@@ -431,8 +478,10 @@ def latest_successful_runs(repo:, workflow_name:, limit: RUN_HISTORY_LIMIT)
     "--json", "databaseId,conclusion,createdAt,url,headSha"
   )
 
-  JSON.parse(output)
+  runs = JSON.parse(output)
     .select { |item| item["conclusion"] == "success" }
+
+  filter_excluded_provider_runs(repo: repo, runs: runs)
     .sort_by { |item| parse_timestamp(item["createdAt"]) || Time.at(0) }
     .reverse
 end
@@ -695,11 +744,18 @@ def warm_steady_seconds(metrics)
   metrics[:warm2_seconds] || metrics[:warm_average_seconds] || metrics[:warm1_seconds]
 end
 
-def headline_candidates(actions_metrics:, boringcache_metrics:, actions_run_total:, boringcache_run_total:)
+def warm_build_steady_seconds(metrics)
+  warm_steady_seconds(metrics)
+end
+
+def first_build_seconds(metrics)
+  metrics[:cold_seconds]
+end
+
+def headline_candidates(actions_metrics:, boringcache_metrics:)
   [
-    ["warm", warm_steady_seconds(actions_metrics), warm_steady_seconds(boringcache_metrics)],
-    ["cold", actions_metrics[:cold_seconds], boringcache_metrics[:cold_seconds]],
-    ["run_total", actions_run_total, boringcache_run_total]
+    ["warm", warm_build_steady_seconds(actions_metrics), warm_build_steady_seconds(boringcache_metrics)],
+    ["cold", first_build_seconds(actions_metrics), first_build_seconds(boringcache_metrics)]
   ].select { |_, before_value, after_value| before_value && after_value }
 end
 
@@ -795,12 +851,10 @@ def strategy_snapshot(data, paired_run_id = nil)
   }
 end
 
-def headline_metric_for(actions_metrics:, boringcache_metrics:, actions_run_total:, boringcache_run_total:)
+def headline_metric_for(actions_metrics:, boringcache_metrics:)
   candidates = headline_candidates(
     actions_metrics: actions_metrics,
-    boringcache_metrics: boringcache_metrics,
-    actions_run_total: actions_run_total,
-    boringcache_run_total: boringcache_run_total
+    boringcache_metrics: boringcache_metrics
   )
   return nil if candidates.empty?
 
@@ -822,15 +876,13 @@ def headline_metric_for(actions_metrics:, boringcache_metrics:, actions_run_tota
   candidates.first
 end
 
-def headline_for_scenario(scenario:, actions_metrics:, boringcache_metrics:, actions_run_total:, boringcache_run_total:)
+def headline_for_scenario(scenario:, actions_metrics:, boringcache_metrics:)
   before_value, after_value = BenchmarkReporting.scenario_pair(
     scenario: scenario,
-    actions_cold: actions_metrics[:cold_seconds],
-    boringcache_cold: boringcache_metrics[:cold_seconds],
-    actions_warm: warm_steady_seconds(actions_metrics),
-    boringcache_warm: warm_steady_seconds(boringcache_metrics),
-    actions_run_total: actions_run_total,
-    boringcache_run_total: boringcache_run_total
+    actions_cold: first_build_seconds(actions_metrics),
+    boringcache_cold: first_build_seconds(boringcache_metrics),
+    actions_warm: warm_build_steady_seconds(actions_metrics),
+    boringcache_warm: warm_build_steady_seconds(boringcache_metrics)
   )
   return nil unless before_value && after_value
 
@@ -859,15 +911,11 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:, lane:)
   headline = headline_for_scenario(
     scenario: reporting["headline_scenario"],
     actions_metrics: actions_metrics,
-    boringcache_metrics: boringcache_metrics,
-    actions_run_total: actions_data[:run_total_seconds],
-    boringcache_run_total: boringcache_data[:run_total_seconds]
+    boringcache_metrics: boringcache_metrics
   )
   headline ||= headline_metric_for(
     actions_metrics: actions_metrics,
-    boringcache_metrics: boringcache_metrics,
-    actions_run_total: actions_data[:run_total_seconds],
-    boringcache_run_total: boringcache_data[:run_total_seconds]
+    boringcache_metrics: boringcache_metrics
   )
   return nil if headline.nil?
 
@@ -913,7 +961,6 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:, lane:)
       )&.round(2),
       "cold_improvement_pct" => percent_delta(actions_metrics[:cold_seconds], boringcache_metrics[:cold_seconds])&.round(2),
       "cold_build_improvement_pct" => percent_delta(actions_metrics[:cold_build_seconds], boringcache_metrics[:cold_build_seconds])&.round(2),
-      "run_total_improvement_pct" => percent_delta(actions_data[:run_total_seconds], boringcache_data[:run_total_seconds])&.round(2),
       "storage_improvement_pct" => percent_delta(actions_metrics[:storage_bytes], boringcache_metrics[:storage_bytes])&.round(2),
       "storage_saved_bytes" => if actions_metrics[:storage_bytes] && boringcache_metrics[:storage_bytes]
         actions_metrics[:storage_bytes] - boringcache_metrics[:storage_bytes]
@@ -1215,15 +1262,11 @@ def average_lane_entries(entries, benchmark:, lane:)
   headline = headline_for_scenario(
     scenario: reporting["headline_scenario"],
     actions_metrics: actions_metrics,
-    boringcache_metrics: boringcache_metrics,
-    actions_run_total: actions_snapshot["run_total_seconds"],
-    boringcache_run_total: boringcache_snapshot["run_total_seconds"]
+    boringcache_metrics: boringcache_metrics
   )
   headline ||= headline_metric_for(
     actions_metrics: actions_metrics,
-    boringcache_metrics: boringcache_metrics,
-    actions_run_total: actions_snapshot["run_total_seconds"],
-    boringcache_run_total: boringcache_snapshot["run_total_seconds"]
+    boringcache_metrics: boringcache_metrics
   )
   return nil unless headline
 
@@ -1270,7 +1313,6 @@ def average_lane_entries(entries, benchmark:, lane:)
       )&.round(2),
       "cold_improvement_pct" => percent_delta(actions_metrics[:cold_seconds], boringcache_metrics[:cold_seconds])&.round(2),
       "cold_build_improvement_pct" => percent_delta(actions_metrics[:cold_build_seconds], boringcache_metrics[:cold_build_seconds])&.round(2),
-      "run_total_improvement_pct" => percent_delta(actions_snapshot["run_total_seconds"], boringcache_snapshot["run_total_seconds"])&.round(2),
       "storage_improvement_pct" => percent_delta(actions_metrics[:storage_bytes], boringcache_metrics[:storage_bytes])&.round(2),
       "storage_saved_bytes" => if actions_metrics[:storage_bytes] && boringcache_metrics[:storage_bytes]
         actions_metrics[:storage_bytes] - boringcache_metrics[:storage_bytes]
@@ -1477,6 +1519,159 @@ def lane_health(benchmark:, lane:, actions_runs:, boringcache_runs:, paired_head
   }.reject { |_, value| value.nil? }
 end
 
+def provider_build_seconds(snapshot)
+  snapshot["cold_seconds"] || snapshot["warm_steady_seconds"]
+end
+
+def provider_build_metric_source(snapshot)
+  return "cold_seconds" if snapshot["cold_seconds"]
+  return "warm_steady_seconds" if snapshot["warm_steady_seconds"]
+
+  nil
+end
+
+def provider_snapshot(data, strategy:)
+  snapshot = strategy_snapshot(data)
+  build_seconds = provider_build_seconds(snapshot)
+  snapshot["build_seconds"] = build_seconds if build_seconds
+  build_metric_source = provider_build_metric_source(snapshot)
+  snapshot["build_metric_source"] = build_metric_source if build_metric_source
+
+  return snapshot if provider_storage_available?(strategy)
+
+  snapshot.except(
+    "storage_bytes",
+    "storage_source",
+    "storage_breakdown"
+  ).merge(
+    "storage_available" => false,
+    "storage_note" => "#{provider_label(strategy)} storage is not available from benchmark artifacts."
+  )
+end
+
+def provider_lane_payload(lane:, runs:, unique_head_count:, snapshots:, storage_available:)
+  summary = average_snapshot(snapshots)
+  build_seconds = average(snapshots.map { |snapshot| provider_build_seconds(snapshot) })
+  state = if snapshots.empty?
+    "missing_sample"
+  elsif build_seconds
+    "healthy"
+  else
+    "missing_build_time"
+  end
+
+  payload = {
+    "lane" => lane,
+    "state" => state,
+    "successful_run_count" => runs.length,
+    "unique_head_count" => unique_head_count,
+    "selected_sample_count" => snapshots.length,
+    "window_sample_target" => PAIR_COUNT,
+    "storage_available" => storage_available
+  }
+
+  if snapshots.any?
+    summary["build_seconds"] = build_seconds if build_seconds
+    payload.merge!(
+      "latest_run_id" => summary["run_id"],
+      "latest_run_url" => summary["run_url"],
+      "latest_head_sha" => summary["head_sha"],
+      "latest_created_at" => summary["created_at"],
+      "sample_run_ids" => summary["sample_run_ids"],
+      "sample_run_urls" => summary["sample_run_urls"],
+      "sample_head_shas" => summary["head_shas"],
+      "summary" => summary,
+      "samples" => snapshots
+    )
+    if build_seconds
+      payload["headline"] = {
+        "metric" => "build_seconds",
+        "label" => "Build Time",
+        "seconds" => build_seconds,
+        "sample_count" => snapshots.length
+      }
+    end
+  end
+
+  payload
+end
+
+def load_provider_lane_data(temp_root:, benchmark:, lane:, strategy:, runs:, cache:, artifacts_cache:)
+  runs_by_head = runs_by_head_grouped(runs)
+  heads = runs_by_head.keys.sort_by do |head|
+    runs_by_head[head].map { |run| parse_timestamp(run["createdAt"]) || Time.at(0) }.max
+  end.reverse
+  snapshots = []
+  artifact_ids = benchmark_artifact_ids(benchmark)
+
+  heads.each do |head|
+    run = latest_run_with_artifact(
+      runs_for_head: runs_by_head[head],
+      repo: benchmark.fetch("source_repo"),
+      benchmark_id: artifact_ids,
+      strategy: strategy,
+      lane: lane,
+      artifacts_cache: artifacts_cache
+    )
+    next if run.nil?
+
+    data = load_strategy_data(
+      temp_root: temp_root,
+      repo: benchmark.fetch("source_repo"),
+      run: run,
+      benchmark_id: artifact_ids,
+      strategy: strategy,
+      lane: lane,
+      cache: cache
+    )
+    next if data[:metrics].nil?
+
+    snapshots << provider_snapshot(data, strategy: strategy)
+    break if snapshots.length >= PAIR_COUNT
+  end
+
+  provider_lane_payload(
+    lane: lane,
+    runs: runs,
+    unique_head_count: runs_by_head.keys.length,
+    snapshots: snapshots,
+    storage_available: provider_storage_available?(strategy)
+  )
+end
+
+def load_provider_entry(temp_root:, benchmark:, provider_workflows:, provider_runs:, cache:, artifacts_cache:)
+  providers = provider_workflows.each_with_object({}) do |(strategy, workflow_name), acc|
+    runs = provider_runs.fetch(strategy, [])
+    lanes = LANE_IDS.each_with_object({}) do |lane, lane_acc|
+      lane_acc[lane] = load_provider_lane_data(
+        temp_root: temp_root,
+        benchmark: benchmark,
+        lane: lane,
+        strategy: strategy,
+        runs: runs,
+        cache: cache,
+        artifacts_cache: artifacts_cache
+      )
+    end
+
+    acc[strategy] = {
+      "strategy" => strategy,
+      "label" => provider_label(strategy),
+      "workflow" => workflow_name,
+      "lanes" => lanes
+    }
+  end
+
+  {
+    "benchmark" => benchmark.fetch("benchmark"),
+    "name" => benchmark.fetch("name"),
+    "source_repo" => benchmark.fetch("source_repo"),
+    "category" => benchmark.fetch("category"),
+    "step" => benchmark.fetch("step"),
+    "providers" => providers
+  }
+end
+
 def load_lane_data(temp_root:, benchmark:, lane:, actions_runs:, boringcache_runs:, cache:, artifacts_cache:)
   ac_runs_by_head = runs_by_head_grouped(actions_runs)
   bc_runs_by_head = runs_by_head_grouped(boringcache_runs)
@@ -1617,6 +1812,18 @@ def write_health(health_entries, generated_at:)
   puts "Wrote #{HEALTH_PATH} with #{health_entries.length} entries"
 end
 
+def write_provider_matrix(provider_entries, generated_at:)
+  FileUtils.mkdir_p(File.dirname(PROVIDERS_PATH))
+  payload = {
+    "generated_at" => generated_at,
+    "window_sample_target" => PAIR_COUNT,
+    "providers" => PROVIDER_LABELS,
+    "entries" => provider_entries
+  }
+  File.write(PROVIDERS_PATH, JSON.pretty_generate(payload) + "\n")
+  puts "Wrote #{PROVIDERS_PATH} with #{provider_entries.length} entries"
+end
+
 def write_detail_files(entries, generated_at:)
   FileUtils.mkdir_p(DETAIL_OUTPUT_DIR)
   Dir.glob(File.join(DETAIL_OUTPUT_DIR, "*.json")).each do |path|
@@ -1674,6 +1881,7 @@ def main
   window_entries = []
   pair_points = []
   health_entries = []
+  provider_entries = []
   strategy_data_cache = {}
   raise "BENCHMARKS_PAIR_COUNT must be >= 1" if PAIR_COUNT < 1
 
@@ -1685,8 +1893,12 @@ def main
 
       begin
         repo = benchmark.fetch("source_repo")
-        actions_runs = latest_successful_runs(repo: repo, workflow_name: benchmark.fetch("actions_workflow"))
-        boringcache_runs = latest_successful_runs(repo: repo, workflow_name: benchmark.fetch("boringcache_workflow"))
+        provider_workflows = provider_workflows_for(benchmark)
+        provider_runs = provider_workflows.transform_values do |workflow_name|
+          latest_successful_runs(repo: repo, workflow_name: workflow_name)
+        end
+        actions_runs = provider_runs.fetch("actions-cache")
+        boringcache_runs = provider_runs.fetch("boringcache")
         artifacts_cache = {}
         latest_lane_entries = {}
         window_lane_entries = {}
@@ -1708,6 +1920,15 @@ def main
           pair_points.concat(lane_data[:pairs])
           lane_health[lane] = lane_data[:health]
         end
+
+        provider_entries << load_provider_entry(
+          temp_root: tmp,
+          benchmark: benchmark,
+          provider_workflows: provider_workflows,
+          provider_runs: provider_runs,
+          cache: strategy_data_cache,
+          artifacts_cache: artifacts_cache
+        )
 
         entry = merge_lane_entries(latest_lane_entries)
         window_entry = merge_lane_entries(window_lane_entries)
@@ -1749,6 +1970,7 @@ def main
   write_pair_points(pair_points, generated_at: generated_at)
   write_windows(window_entries, generated_at: generated_at)
   write_health(health_entries, generated_at: generated_at)
+  write_provider_matrix(provider_entries, generated_at: generated_at)
   write_detail_files(entries, generated_at: generated_at)
   write_report(entries, generated_at: generated_at)
 end

@@ -104,14 +104,12 @@ module BenchmarkReporting
     end
   end
 
-  def scenario_pair(scenario:, actions_cold:, boringcache_cold:, actions_warm:, boringcache_warm:, actions_run_total:, boringcache_run_total:)
+  def scenario_pair(scenario:, actions_cold:, boringcache_cold:, actions_warm:, boringcache_warm:)
     case scenario.to_s
     when "warm"
       [actions_warm, boringcache_warm]
     when "cold", "first_build"
       [actions_cold, boringcache_cold]
-    when "run_total"
-      [actions_run_total, boringcache_run_total]
     else
       [nil, nil]
     end
@@ -120,8 +118,6 @@ module BenchmarkReporting
   def headline_label(lane:, scenario:)
     if lane.to_s == "rolling"
       case scenario.to_s
-      when "run_total"
-        return "Workflow Total"
       when "warm"
         return "Warm Build"
       else
@@ -132,8 +128,6 @@ module BenchmarkReporting
     case scenario.to_s
     when "warm"
       "Warm Build"
-    when "run_total"
-      "Workflow Total"
     else
       "Cold Build"
     end

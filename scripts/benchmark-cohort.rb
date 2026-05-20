@@ -365,8 +365,6 @@ def aggregate_pairs(pairs)
     bc_cold = average(boringcache.map { |snapshot| metric(snapshot, "cold_seconds") })
     ac_warm = average(actions.map { |snapshot| metric(snapshot, "warm_steady_seconds") })
     bc_warm = average(boringcache.map { |snapshot| metric(snapshot, "warm_steady_seconds") })
-    ac_total = average(actions.map { |snapshot| metric(snapshot, "run_total_seconds") })
-    bc_total = average(boringcache.map { |snapshot| metric(snapshot, "run_total_seconds") })
     ac_storage = average(actions.map { |snapshot| metric(snapshot, "storage_bytes") })
     bc_storage = average(boringcache.map { |snapshot| metric(snapshot, "storage_bytes") })
     ac_export = average(actions.map { |snapshot| metric(snapshot, "docker_cache_export_seconds") })
@@ -394,14 +392,12 @@ def aggregate_pairs(pairs)
       "actions_cache" => {
         "avg_cold_seconds" => ac_cold,
         "avg_warm_seconds" => ac_warm,
-        "avg_run_total_seconds" => ac_total,
         "avg_storage_bytes" => ac_storage,
         "avg_docker_export_seconds" => ac_export
       },
       "boringcache" => {
         "avg_cold_seconds" => bc_cold,
         "avg_warm_seconds" => bc_warm,
-        "avg_run_total_seconds" => bc_total,
         "avg_storage_bytes" => bc_storage,
         "avg_docker_export_seconds" => bc_export,
         "avg_oci_new_blob_count" => bc_new_blobs,
@@ -417,7 +413,6 @@ def aggregate_pairs(pairs)
       "improvement" => {
         "cold_pct" => percent_delta(ac_cold, bc_cold),
         "warm_pct" => percent_delta(ac_warm, bc_warm),
-        "run_total_pct" => percent_delta(ac_total, bc_total),
         "storage_pct" => percent_delta(ac_storage, bc_storage),
         "docker_export_pct" => percent_delta(ac_export, bc_export)
       }
@@ -454,8 +449,6 @@ def build_report(aggregates, cohort)
         cold_result,
         seconds_text(row.dig("actions_cache", "avg_warm_seconds")),
         seconds_text(row.dig("boringcache", "avg_warm_seconds")),
-        seconds_text(row.dig("actions_cache", "avg_run_total_seconds")),
-        seconds_text(row.dig("boringcache", "avg_run_total_seconds")),
         bytes_text(
           if row.dig("actions_cache", "avg_storage_bytes") && row.dig("boringcache", "avg_storage_bytes")
             row.dig("actions_cache", "avg_storage_bytes") - row.dig("boringcache", "avg_storage_bytes")
@@ -469,7 +462,7 @@ def build_report(aggregates, cohort)
     sections << "## #{lane == 'fresh' ? 'Fresh' : 'Rolling'}"
     sections << ""
     sections << markdown_table(
-      ["Benchmark", "Category", "Pairs", "GitHub Actions Cache Cold", "BoringCache Cold", "Cold Result", "GitHub Actions Cache Warm", "BoringCache Warm", "GitHub Actions Cache Total", "BoringCache Total", "Avg Storage Delta", "BoringCache Bootstraps"],
+      ["Benchmark", "Category", "Pairs", "GitHub Actions Cache Cold/Commit Build", "BoringCache Cold/Commit Build", "Build Result", "GitHub Actions Cache Warm Build", "BoringCache Warm Build", "Avg Storage Delta", "BoringCache Bootstraps"],
       rows
     )
     sections << ""

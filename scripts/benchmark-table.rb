@@ -248,6 +248,14 @@ def warm_steady_seconds(metrics)
   metrics[:warm2_seconds] || metrics[:warm_average_seconds] || metrics[:warm1_seconds]
 end
 
+def warm_build_steady_seconds(metrics)
+  warm_steady_seconds(metrics)
+end
+
+def first_build_seconds(metrics)
+  metrics[:cold_seconds]
+end
+
 def run_cmd(*args)
   attempts = 0
 
@@ -532,20 +540,17 @@ def strategy_snapshot(data)
   }
 end
 
-def headline_candidates(actions_metrics:, boringcache_metrics:, actions_run_total:, boringcache_run_total:)
+def headline_candidates(actions_metrics:, boringcache_metrics:)
   [
-    ["warm", warm_steady_seconds(actions_metrics), warm_steady_seconds(boringcache_metrics)],
-    ["cold", actions_metrics[:cold_seconds], boringcache_metrics[:cold_seconds]],
-    ["run_total", actions_run_total, boringcache_run_total]
+    ["warm", warm_build_steady_seconds(actions_metrics), warm_build_steady_seconds(boringcache_metrics)],
+    ["cold", first_build_seconds(actions_metrics), first_build_seconds(boringcache_metrics)]
   ].select { |_, before_value, after_value| before_value && after_value }
 end
 
-def headline_metric_for(actions_metrics:, boringcache_metrics:, actions_run_total:, boringcache_run_total:)
+def headline_metric_for(actions_metrics:, boringcache_metrics:)
   candidates = headline_candidates(
     actions_metrics: actions_metrics,
-    boringcache_metrics: boringcache_metrics,
-    actions_run_total: actions_run_total,
-    boringcache_run_total: boringcache_run_total
+    boringcache_metrics: boringcache_metrics
   )
   return nil if candidates.empty?
 
@@ -564,15 +569,13 @@ def headline_metric_for(actions_metrics:, boringcache_metrics:, actions_run_tota
   candidates.find { |scenario, _, _| scenario == "cold" } || candidates.first
 end
 
-def headline_for_scenario(scenario:, actions_metrics:, boringcache_metrics:, actions_run_total:, boringcache_run_total:)
+def headline_for_scenario(scenario:, actions_metrics:, boringcache_metrics:)
   before_value, after_value = BenchmarkReporting.scenario_pair(
     scenario: scenario,
-    actions_cold: actions_metrics[:cold_seconds],
-    boringcache_cold: boringcache_metrics[:cold_seconds],
-    actions_warm: warm_steady_seconds(actions_metrics),
-    boringcache_warm: warm_steady_seconds(boringcache_metrics),
-    actions_run_total: actions_run_total,
-    boringcache_run_total: boringcache_run_total
+    actions_cold: first_build_seconds(actions_metrics),
+    boringcache_cold: first_build_seconds(boringcache_metrics),
+    actions_warm: warm_build_steady_seconds(actions_metrics),
+    boringcache_warm: warm_build_steady_seconds(boringcache_metrics)
   )
   return nil unless before_value && after_value
 
@@ -603,15 +606,11 @@ def build_entry(benchmark:, lane:, actions_data:, boringcache_data:)
   headline = headline_for_scenario(
     scenario: reporting["headline_scenario"],
     actions_metrics: actions_metrics,
-    boringcache_metrics: boringcache_metrics,
-    actions_run_total: actions_data[:run_total_seconds],
-    boringcache_run_total: boringcache_data[:run_total_seconds]
+    boringcache_metrics: boringcache_metrics
   )
   headline ||= headline_metric_for(
     actions_metrics: actions_metrics,
-    boringcache_metrics: boringcache_metrics,
-    actions_run_total: actions_data[:run_total_seconds],
-    boringcache_run_total: boringcache_data[:run_total_seconds]
+    boringcache_metrics: boringcache_metrics
   )
   return nil unless headline
 
@@ -651,7 +650,6 @@ def build_entry(benchmark:, lane:, actions_data:, boringcache_data:)
       )&.round(2),
       "cold_improvement_pct" => percent_delta(actions_metrics[:cold_seconds], boringcache_metrics[:cold_seconds])&.round(2),
       "cold_build_improvement_pct" => percent_delta(actions_metrics[:cold_build_seconds], boringcache_metrics[:cold_build_seconds])&.round(2),
-      "run_total_improvement_pct" => percent_delta(actions_data[:run_total_seconds], boringcache_data[:run_total_seconds])&.round(2),
       "storage_improvement_pct" => percent_delta(actions_metrics[:storage_bytes], boringcache_metrics[:storage_bytes])&.round(2),
       "storage_saved_bytes" => if actions_metrics[:storage_bytes] && boringcache_metrics[:storage_bytes]
         actions_metrics[:storage_bytes] - boringcache_metrics[:storage_bytes]
@@ -730,8 +728,6 @@ def raw_row(entry, lane)
     seconds_to_text(boringcache["cold_seconds"]),
     seconds_to_text(actions["warm_steady_seconds"]),
     seconds_to_text(boringcache["warm_steady_seconds"]),
-    seconds_to_text(actions["run_total_seconds"]),
-    seconds_to_text(boringcache["run_total_seconds"]),
     bytes_to_text(actions["storage_bytes"]),
     bytes_to_text(boringcache["storage_bytes"]),
     actions["run_id"] || "—",
@@ -801,7 +797,7 @@ def build_markdown(entries, generated_at:, format:)
         "### #{lane_label(lane).split.map(&:capitalize).join(' ')} Raw",
         "",
         markdown_table(
-          ["Benchmark", "GitHub Actions Cache Cold", "BoringCache Cold", "GitHub Actions Cache Warm", "BoringCache Warm", "GitHub Actions Cache Total", "BoringCache Total", "GitHub Actions Cache Storage", "BoringCache Storage", "GitHub Actions Cache Run", "BoringCache Run"],
+          ["Benchmark", "GitHub Actions Cache Cold/Commit Build", "BoringCache Cold/Commit Build", "GitHub Actions Cache Warm Build", "BoringCache Warm Build", "GitHub Actions Cache Storage", "BoringCache Storage", "GitHub Actions Cache Run", "BoringCache Run"],
           rows
         ),
         ""
