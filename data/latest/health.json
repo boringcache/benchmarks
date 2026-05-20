@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T14:06:06Z",
+  "generated_at": "2026-05-20T14:19:12Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -389,9 +389,9 @@
         "fresh": {
           "lane": "fresh",
           "state": "healthy",
-          "actions_successful_run_count": 90,
+          "actions_successful_run_count": 91,
           "boringcache_successful_run_count": 87,
-          "paired_head_count": 57,
+          "paired_head_count": 58,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "47d9e7b07e3d78e5a506ef88876fe1057f5cbabb",
@@ -404,15 +404,15 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 90,
+          "actions_successful_run_count": 91,
           "boringcache_successful_run_count": 87,
-          "paired_head_count": 57,
+          "paired_head_count": 58,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "281d585f1c7fc3217852282874474ba01129eb4a",
-          "latest_created_at": "2026-05-20T11:08:47Z",
-          "latest_actions_run_id": 26158635521,
-          "latest_boringcache_run_id": 26158637657,
+          "latest_head_sha": "8d5371f695c481470e6c21634063e32b619863b6",
+          "latest_created_at": "2026-05-20T13:26:49Z",
+          "latest_actions_run_id": 26165590107,
+          "latest_boringcache_run_id": 26165594214,
           "latest_reporting_mode": "comparative",
           "latest_sample_valid": true
         }
