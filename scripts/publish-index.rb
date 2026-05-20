@@ -1539,11 +1539,7 @@ def provider_snapshot(data, strategy:)
 
   return snapshot if provider_storage_available?(strategy)
 
-  snapshot.except(
-    "storage_bytes",
-    "storage_source",
-    "storage_breakdown"
-  ).merge(
+  snapshot.reject { |key, _| %w[storage_bytes storage_source storage_breakdown].include?(key) }.merge(
     "storage_available" => false,
     "storage_note" => "#{provider_label(strategy)} storage is not available from benchmark artifacts."
   )
