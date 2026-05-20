@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-05-20 14:19 UTC
+Generated: 2026-05-20 17:43 UTC
 
 Coverage: 12 benchmarks; fresh 12/12, rolling 12/12.
 
@@ -29,13 +29,13 @@ Rows are latest complete same-commit pairs.
 | --- | --- | --- | --- | --- | --- |
 | Hugo | Commit Build | 0m 9s | 0m 7s | near tie | 6.78 GB less (95.33%) |
 | Hugo Go | Commit Build | 0m 21s | 0m 20s | near tie | 1.07 GB less (80.6%) |
-| Immich | Commit Build | 6m 38s | 4m 26s | 33% faster | 7.65 GB less (77.56%) |
-| Mastodon | Commit Build | 2m 43s | 1m 52s | 31% faster | 8.84 GB less (89.66%) |
-| Discourse | Commit Build | 0m 14s | 0m 14s | near tie | 8.93 GB less (89.58%) |
-| PostHog | Commit Build | 21m 39s | 14m 29s | 33% faster | 3.54 GB less (35.41%) |
+| Immich | Commit Build | 5m 31s | 4m 46s | 14% faster | 7.87 GB less (79.15%) |
+| Mastodon | Commit Build | 2m 56s | 1m 58s | 33% faster | 8.87 GB less (89.7%) |
+| Discourse | Commit Build | 3m 22s | 2m 55s | 13% faster | 9.16 GB less (89.81%) |
+| PostHog | Commit Build | 23m 4s | 12m 58s | 44% faster | 5.25 GB less (44.86%) |
 | Storybook | Commit Build | 4m 16s | 3m 31s | 18% faster | 1.29 GB less (63.06%) |
-| OpenTelemetry Java | Commit Build | 1m 14s | 1m 6s | 11% faster | 2.90 GB less (78.86%) |
-| Spring AI | Commit Build | 1m 27s | 1m 25s | near tie | 2.57 GB less (77.32%) |
+| OpenTelemetry Java | Commit Build | 5m 7s | 5m 4s | near tie | 2.93 GB less (79.03%) |
+| Spring AI | Commit Build | 3m 16s | 3m 9s | 4% faster | 2.57 GB less (77.32%) |
 | gRPC | Commit Build | 7m 50s | 6m 27s | 18% faster | n/a |
-| Zed | Commit Build | 35m 10s | 39m 20s | 12% slower | 10.73 GB less (93.58%) |
-| n8n | Commit Build | 4m 27s | 4m 19s | near tie | 4.72 GB less (86.18%) |
+| Zed | Commit Build | 18m 14s | 18m 8s | near tie | 10.62 GB less (93.52%) |
+| n8n | Commit Build | 4m 44s | 5m 36s | 18% slower | 4.91 GB less (86.65%) |
