@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-05-19 23:09 UTC
+Generated: 2026-05-20 01:27 UTC
 
 Coverage: 12 benchmarks; fresh 12/12, rolling 12/12.
 
@@ -32,7 +32,7 @@ Rows are latest complete same-commit pairs.
 | Immich | Commit Build | 0m 9s | 0m 8s | near tie | 7.39 GB less (76.96%) |
 | Mastodon | Commit Build | 0m 22s | 0m 14s | 36% faster | 9.37 GB less (90.06%) |
 | Discourse | Commit Build | 3m 14s | 3m 2s | 6% faster | 8.69 GB less (89.32%) |
-| PostHog | Commit Build | 14m 11s | 11m 57s | 16% faster | 3.62 GB less (36.97%) |
+| PostHog | Workflow Total | 19m 13s | 13m 35s | 29% faster | 5.35 GB less (46.47%) |
 | Storybook | Workflow Total | 3m 52s | 3m 20s | 14% faster | 1.24 GB less (62.15%) |
 | OpenTelemetry Java | Workflow Total | 4m 42s | 4m 26s | 6% faster | 2.89 GB less (78.85%) |
 | Spring AI | Commit Build | 0m 46s | 3m 20s | 335% slower | 2.57 GB less (77.32%) |
