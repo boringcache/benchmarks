@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-05-20 05:57 UTC
+Generated: 2026-05-20 09:52 UTC
 
 Coverage: 12 benchmarks; fresh 12/12, rolling 12/12.
 
@@ -28,14 +28,14 @@ Rows are latest complete same-commit pairs.
 | Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
 | Hugo | Commit Build | 0m 10s | 0m 8s | near tie | 6.78 GB less (95.33%) |
-| Hugo Go | Commit Build | 0m 31s | 1m 14s | 139% slower | 1.39 GB less (84.38%) |
+| Hugo Go | Workflow Total | 0m 41s | 0m 39s | near tie | 1.23 GB less (82.7%) |
 | Immich | Commit Build | 0m 9s | 0m 8s | near tie | 7.39 GB less (76.96%) |
-| Mastodon | Commit Build | 0m 22s | 0m 14s | 36% faster | 9.37 GB less (90.06%) |
-| Discourse | Commit Build | 3m 33s | 2m 58s | 16% faster | 8.59 GB less (89.21%) |
-| PostHog | Commit Build | 24m 53s | 15m 19s | cache import unavailable | 5.11 GB less (44.19%) |
+| Mastodon | Commit Build | 10m 50s | 8m 59s | 17% faster | 9.41 GB less (90.23%) |
+| Discourse | Commit Build | 3m 45s | 3m 3s | 19% faster | 8.93 GB less (89.58%) |
+| PostHog | Commit Build | 30m 1s | 13m 17s | 56% faster | 3.98 GB less (38.17%) |
 | Storybook | Workflow Total | 3m 52s | 3m 20s | 14% faster | 1.24 GB less (62.15%) |
 | OpenTelemetry Java | Workflow Total | 4m 42s | 4m 26s | 6% faster | 2.89 GB less (78.85%) |
-| Spring AI | Commit Build | 0m 46s | 3m 20s | 335% slower | 2.57 GB less (77.32%) |
+| Spring AI | Workflow Total | 3m 48s | 3m 35s | 6% faster | 2.57 GB less (77.32%) |
 | gRPC | Workflow Total | 1m 16s | 1m 5s | 14% faster | n/a |
-| Zed | Workflow Total | 41m 37s | 38m 54s | 7% faster | 10.72 GB less (93.47%) |
-| n8n | Commit Build | 3m 37s | 1m 3s | 71% faster | 4.54 GB less (85.7%) |
+| Zed | Workflow Total | 38m 44s | 38m 29s | near tie | 10.68 GB less (93.45%) |
+| n8n | Workflow Total | 7m 10s | 2m 54s | 60% faster | 4.54 GB less (85.72%) |

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T05:57:52Z",
+  "generated_at": "2026-05-20T09:52:27Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -594,37 +594,37 @@
         "step": "Docker build (Ruby+Node)",
         "headline_scenario": "cold",
         "headline_label": "Commit Build",
-        "before": "0m 22s",
-        "after": "0m 14s",
-        "before_seconds": 22.0,
-        "after_seconds": 14.0,
-        "faster": "36",
+        "before": "10m 50s",
+        "after": "8m 59s",
+        "before_seconds": 650.0,
+        "after_seconds": 539.0,
+        "faster": "17",
         "comparison": {
           "paired_on_head_sha": true,
-          "pairing_head_sha": "dcba1d39a3aef563b49ab7658f3855a67bd08ec8",
+          "pairing_head_sha": "1791f68a15efd1709e0ac1892d4af392a5828533",
           "sample_count": 1,
           "actions_cache": {
-            "run_id": 26125756784,
-            "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/26125756784",
-            "head_sha": "dcba1d39a3aef563b49ab7658f3855a67bd08ec8",
-            "created_at": "2026-05-19T21:14:45Z",
-            "cold_seconds": 22.0,
-            "cold_build_seconds": 12.0,
-            "cold_restore_or_setup_seconds": 10.0,
+            "run_id": 26150137068,
+            "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/26150137068",
+            "head_sha": "1791f68a15efd1709e0ac1892d4af392a5828533",
+            "created_at": "2026-05-20T08:13:27Z",
+            "cold_seconds": 650.0,
+            "cold_build_seconds": 641.0,
+            "cold_restore_or_setup_seconds": 9.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 22.0,
+            "rolling_first_build_seconds": 650.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 36.0,
-            "storage_bytes": 11174325617,
+            "run_total_seconds": 667.0,
+            "storage_bytes": 11198649784,
             "storage_source": "github-actions-cache-api",
             "storage_breakdown": null,
-            "docker_cache_import_seconds": 0.5,
-            "docker_cache_export_seconds": 5.2,
+            "docker_cache_import_seconds": 0.3,
+            "docker_cache_export_seconds": 164.8,
             "startup_prefetch": {},
             "oci": {
               "hydration_policy": null,
@@ -668,7 +668,7 @@
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-mastodon",
             "cache_tag": null,
-            "run_uid": "gh-26125756784-1",
+            "run_uid": "gh-26150137068-1",
             "mode": "docker",
             "adapter": "oci",
             "docker_cache_from_refs": null,
@@ -688,13 +688,13 @@
               "benchmark": "mastodon",
               "strategy": "actions-cache",
               "lane": "rolling",
-              "run_uid": "gh-26125756784-1",
-              "paired_run_id": 26125759841,
-              "build_seconds": 12,
-              "setup_seconds": 10,
+              "run_uid": "gh-26150137068-1",
+              "paired_run_id": 26150138425,
+              "build_seconds": 641,
+              "setup_seconds": 9,
               "post_cleanup_seconds": null,
-              "cache_restore_seconds": 0.5,
-              "cache_save_export_seconds": 5.2,
+              "cache_restore_seconds": 0.3,
+              "cache_save_export_seconds": 164.8,
               "hit_count": null,
               "miss_count": null,
               "hit_rate": null,
@@ -703,53 +703,44 @@
               "issue_candidates": [],
               "hypotheses": [
                 {
-                  "id": "setup_overhead",
-                  "confidence": "medium",
-                  "summary": "Setup or restore overhead is large relative to build time.",
-                  "evidence": {
-                    "setup_seconds": 10,
-                    "build_seconds": 12
-                  }
-                },
-                {
                   "id": "cache_save_export_overhead",
                   "confidence": "high",
                   "summary": "Cache save/export time is a likely slow-build contributor.",
                   "evidence": {
-                    "cache_save_export_seconds": 5.2,
-                    "build_seconds": 12
+                    "cache_save_export_seconds": 164.8,
+                    "build_seconds": 641
                   }
                 }
               ]
             }
           },
           "boringcache": {
-            "run_id": 26125759841,
-            "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/26125759841",
-            "head_sha": "dcba1d39a3aef563b49ab7658f3855a67bd08ec8",
-            "created_at": "2026-05-19T21:14:49Z",
-            "cold_seconds": 14.0,
-            "cold_build_seconds": 7.0,
-            "cold_restore_or_setup_seconds": 7.0,
+            "run_id": 26150138425,
+            "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/26150138425",
+            "head_sha": "1791f68a15efd1709e0ac1892d4af392a5828533",
+            "created_at": "2026-05-20T08:13:29Z",
+            "cold_seconds": 539.0,
+            "cold_build_seconds": 533.0,
+            "cold_restore_or_setup_seconds": 6.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 14.0,
+            "rolling_first_build_seconds": 539.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 26.0,
-            "storage_bytes": 1111131934,
+            "run_total_seconds": 561.0,
+            "storage_bytes": 1094252031,
             "storage_source": "boringcache-check",
             "storage_breakdown": {
               "workspace": "boringcache/benchmark-mastodon",
               "tags": [
                 "mastodon-run-rolling-main"
               ],
-              "total_bytes": 1111131934,
+              "total_bytes": 1094252031,
               "summary": {
-                "remote_cas_bytes": 1111131934,
+                "remote_cas_bytes": 1094252031,
                 "dependency_archive_bytes": 0,
                 "tool_runtime_archive_bytes": 0,
                 "unknown_bytes": 0
@@ -758,19 +749,19 @@
                 {
                   "tag": "mastodon-run-rolling-main-ubuntu-24-x86_64",
                   "requested_tag": "mastodon-run-rolling-main",
-                  "cache_entry_id": "631280cd-9d9d-4b3b-b5aa-a0c33afbc19b",
+                  "cache_entry_id": "6d71dac8-e16d-4519-bd89-68e480d0ff38",
                   "primary_tag": "mastodon-run-rolling-main-ubuntu-24-x86_64",
                   "storage_mode": "cas",
                   "component_type": "remote_cas",
                   "component_label": "remote CAS",
-                  "bytes": 1111131934,
-                  "archive_size_bytes": 1111131934,
-                  "blob_total_size_bytes": 1111131934
+                  "bytes": 1094252031,
+                  "archive_size_bytes": 1094252031,
+                  "blob_total_size_bytes": 1094252031
                 }
               ]
             },
-            "docker_cache_import_seconds": 0.2,
-            "docker_cache_export_seconds": 2.6,
+            "docker_cache_import_seconds": 0.1,
+            "docker_cache_export_seconds": 71.9,
             "startup_prefetch": {},
             "oci": {
               "hydration_policy": "metadata-only",
@@ -779,16 +770,16 @@
               "body_local_bytes": 0,
               "body_remote_bytes": 18139,
               "body_local_duration_ms": 0,
-              "body_remote_duration_ms": 220,
+              "body_remote_duration_ms": 123,
               "startup_body_inserted": 0,
               "startup_body_failures": 0,
               "startup_body_cold_blobs": 40,
               "startup_body_duration_ms": 0,
-              "new_blob_count": 1,
-              "new_blob_bytes": 18139,
+              "new_blob_count": 39,
+              "new_blob_bytes": 1094251999,
               "upload_requested_blobs": 40,
-              "upload_already_present": 39,
-              "upload_batch_seconds": 0.289
+              "upload_already_present": 1,
+              "upload_batch_seconds": 3.879
             },
             "classification": {
               "sample_valid": true,
@@ -804,7 +795,7 @@
               "tiny_metadata_churn_max_blobs": 1,
               "tiny_metadata_churn_max_bytes": 65536,
               "reseed_new_blob_threshold": 0,
-              "reseed_reason": "rolling imported prior cache; 1 new OCI blobs recorded as continuous-commit cache updates (18139 bytes)"
+              "reseed_reason": "rolling imported prior cache; 39 new OCI blobs recorded as continuous-commit cache updates (1094251999 bytes)"
             },
             "product_refs": {
               "cli_version": "v1.13.10",
@@ -817,7 +808,7 @@
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-mastodon",
             "cache_tag": null,
-            "run_uid": "gh-26125759841-1",
+            "run_uid": "gh-26150138425-1",
             "mode": "docker",
             "adapter": "oci",
             "docker_cache_from_refs": null,
@@ -837,36 +828,35 @@
               "benchmark": "mastodon",
               "strategy": "boringcache",
               "lane": "rolling",
-              "run_uid": "gh-26125759841-1",
-              "paired_run_id": 26125756784,
-              "build_seconds": 7,
-              "setup_seconds": 7,
+              "run_uid": "gh-26150138425-1",
+              "paired_run_id": 26150137068,
+              "build_seconds": 533,
+              "setup_seconds": 6,
               "post_cleanup_seconds": null,
-              "cache_restore_seconds": 0.2,
-              "cache_save_export_seconds": 2.6,
+              "cache_restore_seconds": 0.1,
+              "cache_save_export_seconds": 71.9,
               "hit_count": null,
               "miss_count": null,
               "hit_rate": null,
               "prior_cache_state": "usable_import",
-              "new_blob_bytes": 18139,
+              "new_blob_bytes": 1094251999,
               "issue_candidates": [],
               "hypotheses": [
-                {
-                  "id": "setup_overhead",
-                  "confidence": "medium",
-                  "summary": "Setup or restore overhead is large relative to build time.",
-                  "evidence": {
-                    "setup_seconds": 7,
-                    "build_seconds": 7
-                  }
-                },
                 {
                   "id": "cache_save_export_overhead",
                   "confidence": "high",
                   "summary": "Cache save/export time is a likely slow-build contributor.",
                   "evidence": {
-                    "cache_save_export_seconds": 2.6,
-                    "build_seconds": 7
+                    "cache_save_export_seconds": 71.9,
+                    "build_seconds": 533
+                  }
+                },
+                {
+                  "id": "large_cache_update",
+                  "confidence": "medium",
+                  "summary": "The run exported more than 1 GiB of new cache blobs.",
+                  "evidence": {
+                    "new_blob_bytes": 1094251999
                   }
                 }
               ]
@@ -877,11 +867,11 @@
           },
           "warm_improvement_pct": null,
           "warm_build_improvement_pct": null,
-          "cold_improvement_pct": 36.36,
-          "cold_build_improvement_pct": 41.67,
-          "run_total_improvement_pct": 27.78,
-          "storage_improvement_pct": 90.06,
-          "storage_saved_bytes": 10063193683
+          "cold_improvement_pct": 17.08,
+          "cold_build_improvement_pct": 16.85,
+          "run_total_improvement_pct": 15.89,
+          "storage_improvement_pct": 90.23,
+          "storage_saved_bytes": 10104397753
         }
       }
     }
