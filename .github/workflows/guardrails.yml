@@ -1,0 +1,59 @@
+name: "Benchmark Guardrails"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/guardrails.yml"
+      - "README.md"
+      - "scripts/**"
+      - "test/**"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/guardrails.yml"
+      - "README.md"
+      - "scripts/**"
+      - "test/**"
+
+permissions:
+  contents: read
+
+jobs:
+  guardrails:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout benchmark aggregate repo
+        uses: actions/checkout@v6
+        with:
+          path: benchmarks
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4.4"
+
+      - name: Checkout standalone benchmark repos
+        working-directory: benchmarks
+        env:
+          GH_TOKEN: ${{ secrets.BENCHMARKS_READ_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p ../benchmarks-repos
+          ruby -e 'require_relative "scripts/publish-index"; puts BENCHMARKS.map { |benchmark| benchmark.fetch("source_repo") }.uniq.sort' | while IFS= read -r repo; do
+            target="../benchmarks-repos/${repo##*/}"
+            echo "Checking out ${repo} -> ${target}"
+            gh repo clone "${repo}" "${target}" -- --depth 1
+          done
+
+      - name: Run benchmark tests
+        working-directory: benchmarks
+        run: |
+          set -euo pipefail
+          ruby test/publish_index_test.rb
+          ruby test/benchmark_reporting_test.rb
+          ruby test/benchmark_registry_alignment_test.rb
+          ruby test/benchmark_workflow_guardrails_test.rb
+          ruby test/write_benchmark_artifacts_test.rb
+

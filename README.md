@@ -42,5 +42,15 @@ The scheduled workflow runs every four hours and commits `data/latest/`.
 mise exec -- ruby test/publish_index_test.rb
 mise exec -- ruby test/benchmark_reporting_test.rb
 mise exec -- ruby test/benchmark_registry_alignment_test.rb
+mise exec -- ruby test/benchmark_workflow_guardrails_test.rb
 mise exec -- ruby test/write_benchmark_artifacts_test.rb
 ```
+
+## Guardrails
+
+`.github/workflows/guardrails.yml` checks out the standalone benchmark repos
+listed in `scripts/publish-index.rb` and runs the registry alignment plus
+workflow guardrail tests. The workflow lint fails if Docker benchmark workflows
+reintroduce Dockerfile-internal BoringCache helper wiring, local proxy probes, a
+second `docker-layers` registry tag, or stop consuming the `boringcache/one`
+Docker import-readiness outputs.
