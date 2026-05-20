@@ -219,12 +219,16 @@ class PublishIndexTest < Minitest::Test
     assert_equal 3, payload["successful_run_count"]
     assert_equal 2, payload["selected_sample_count"]
     assert_equal "newer-provider", payload["latest_run_id"]
+    assert_equal "tool_elapsed_seconds", payload.dig("headline", "metric")
+    assert_equal "Tool Elapsed", payload.dig("headline", "label")
     assert_equal 15, payload.dig("headline", "seconds")
     assert_equal 15, payload.dig("summary", "cold_seconds")
+    assert_equal 15, payload.dig("summary", "scenario_seconds")
+    assert_equal 15, payload.dig("summary", "tool_elapsed_seconds")
     assert_equal ["older-provider", "newer-provider"], payload["sample_run_ids"]
     assert_equal 2, payload["samples"].length
 
-    missing_build_time = provider_lane_payload(
+    missing_tool_elapsed = provider_lane_payload(
       lane: "fresh",
       runs: [{ "databaseId" => 1 }],
       unique_head_count: 1,
@@ -246,8 +250,8 @@ class PublishIndexTest < Minitest::Test
       storage_available: true
     )
 
-    assert_equal "missing_build_time", missing_build_time["state"]
-    refute missing_build_time.key?("headline")
+    assert_equal "missing_tool_elapsed", missing_tool_elapsed["state"]
+    refute missing_tool_elapsed.key?("headline")
 
     missing = provider_lane_payload(lane: "fresh", runs: [], unique_head_count: 0, snapshots: [], storage_available: false)
 
@@ -286,14 +290,27 @@ class PublishIndexTest < Minitest::Test
         oci: {},
         classification: {},
         product_refs: {},
-        product_refs_consistent: nil
+        product_refs_consistent: nil,
+        slow_reason: {
+          "cache_save_export_seconds" => 8,
+          "post_cleanup_seconds" => 4
+        }
       }
     }
 
     snapshot = provider_snapshot(data, strategy: "depot-cache")
 
-    assert_equal 420, snapshot["build_seconds"]
-    assert_equal "cold_seconds", snapshot["build_metric_source"]
+    assert_equal 420, snapshot["scenario_seconds"]
+    assert_equal "cold_seconds", snapshot["scenario_metric_source"]
+    assert_equal 432, snapshot["tool_elapsed_seconds"]
+    assert_equal(
+      {
+        "scenario_seconds" => 420,
+        "cache_save_export_seconds" => 8,
+        "post_cleanup_seconds" => 4
+      },
+      snapshot["tool_elapsed_components"]
+    )
     assert_equal 600, snapshot["run_total_seconds"]
     assert_equal false, snapshot["storage_available"]
     assert_equal "Depot Cache storage is not available from benchmark artifacts.", snapshot["storage_note"]
@@ -309,8 +326,10 @@ class PublishIndexTest < Minitest::Test
     data[:metrics][:warm_average_seconds] = nil
     no_build_snapshot = provider_snapshot(data, strategy: "buildbuddy-cache")
 
-    refute no_build_snapshot.key?("build_seconds")
-    refute no_build_snapshot.key?("build_metric_source")
+    refute no_build_snapshot.key?("scenario_seconds")
+    refute no_build_snapshot.key?("scenario_metric_source")
+    refute no_build_snapshot.key?("tool_elapsed_seconds")
+    refute no_build_snapshot.key?("tool_elapsed_components")
     assert_equal 600, no_build_snapshot["run_total_seconds"]
   end
 

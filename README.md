@@ -27,11 +27,13 @@ This repo gathers JSON results from the standalone BoringCache benchmark repos.
 - `health.json`: per-lane flow health
 - `providers.json`: per-provider lane samples for GitHub Actions Cache, BoringCache,
   Depot Cache, and BuildBuddy Cache where those workflows exist. Provider
-  headlines use the benchmark artifact build row (`cold_seconds` for cold or
-  commit builds, warm scenario seconds for warm reruns), never workflow wall
-  time. Narrow build-only splits and raw workflow totals may remain in samples
-  as diagnostic context only. Storage is reported only for providers with
-  benchmark-artifact storage evidence.
+  headlines use tool elapsed time: the benchmark artifact scenario row
+  (`cold_seconds` for cold or commit builds, warm scenario seconds for warm
+  reruns) plus any known cache save/export or post-cleanup timing captured by
+  the artifact. Provider headlines never use workflow wall time. Narrow
+  build-only splits and raw workflow totals may remain in samples as diagnostic
+  context only. Storage is reported only for providers with benchmark-artifact
+  storage evidence.
 - `benchmarks/*.json`: per-benchmark detail payloads
 - `report.md`: small generated table for quick human review
 
