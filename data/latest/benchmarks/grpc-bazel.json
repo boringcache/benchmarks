@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T13:29:24Z",
+  "generated_at": "2026-05-20T13:48:53Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -249,7 +249,6 @@
       "warm_build_improvement_pct": 14.29,
       "cold_improvement_pct": 12.54,
       "cold_build_improvement_pct": 12.63,
-      "run_total_improvement_pct": 12.19,
       "storage_improvement_pct": null,
       "storage_saved_bytes": null
     },
@@ -508,7 +507,6 @@
           "warm_build_improvement_pct": 14.29,
           "cold_improvement_pct": 12.54,
           "cold_build_improvement_pct": 12.63,
-          "run_total_improvement_pct": 12.19,
           "storage_improvement_pct": null,
           "storage_saved_bytes": null
         }
@@ -762,7 +760,6 @@
           "warm_build_improvement_pct": null,
           "cold_improvement_pct": 17.66,
           "cold_build_improvement_pct": 19.26,
-          "run_total_improvement_pct": 16.16,
           "storage_improvement_pct": null,
           "storage_saved_bytes": null
         }

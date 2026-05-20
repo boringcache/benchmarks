@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T13:29:24Z",
+  "generated_at": "2026-05-20T13:48:53Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -263,7 +263,6 @@
       "warm_build_improvement_pct": 33.33,
       "cold_improvement_pct": -26.34,
       "cold_build_improvement_pct": -25.62,
-      "run_total_improvement_pct": -28.52,
       "storage_improvement_pct": 18.7,
       "storage_saved_bytes": 185912887
     },
@@ -536,7 +535,6 @@
           "warm_build_improvement_pct": 33.33,
           "cold_improvement_pct": -26.34,
           "cold_build_improvement_pct": -25.62,
-          "run_total_improvement_pct": -28.52,
           "storage_improvement_pct": 18.7,
           "storage_saved_bytes": 185912887
         }
@@ -554,13 +552,13 @@
         "public": false,
         "category": "maven",
         "step": "Maven build (build-cache extension)",
-        "headline_scenario": "run_total",
-        "headline_label": "Workflow Total",
-        "before": "1m 52s",
-        "after": "1m 39s",
-        "before_seconds": 112.0,
-        "after_seconds": 99.0,
-        "faster": "12",
+        "headline_scenario": "cold",
+        "headline_label": "Commit Build",
+        "before": "1m 27s",
+        "after": "1m 25s",
+        "before_seconds": 87.0,
+        "after_seconds": 85.0,
+        "faster": "2",
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": "aed3f8edc983e32833d558656969d2b2dcd1dc1b",
@@ -804,7 +802,6 @@
           "warm_build_improvement_pct": null,
           "cold_improvement_pct": 2.3,
           "cold_build_improvement_pct": 0.0,
-          "run_total_improvement_pct": 11.61,
           "storage_improvement_pct": 77.32,
           "storage_saved_bytes": 2755399583
         }
