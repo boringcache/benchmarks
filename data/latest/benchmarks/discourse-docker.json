@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T13:29:24Z",
+  "generated_at": "2026-05-20T13:48:53Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -272,7 +272,6 @@
       "warm_build_improvement_pct": -16.67,
       "cold_improvement_pct": 5.25,
       "cold_build_improvement_pct": 9.81,
-      "run_total_improvement_pct": 3.79,
       "storage_improvement_pct": 90.5,
       "storage_saved_bytes": 10630427677
     },
@@ -554,7 +553,6 @@
           "warm_build_improvement_pct": -16.67,
           "cold_improvement_pct": 5.25,
           "cold_build_improvement_pct": 9.81,
-          "run_total_improvement_pct": 3.79,
           "storage_improvement_pct": 90.5,
           "storage_saved_bytes": 10630427677
         }
@@ -850,7 +848,6 @@
           "warm_build_improvement_pct": null,
           "cold_improvement_pct": 0.0,
           "cold_build_improvement_pct": -12.5,
-          "run_total_improvement_pct": -17.86,
           "storage_improvement_pct": 89.58,
           "storage_saved_bytes": 9593060643
         }
