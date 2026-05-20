@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-05-20 01:27 UTC
+Generated: 2026-05-20 05:57 UTC
 
 Coverage: 12 benchmarks; fresh 12/12, rolling 12/12.
 
@@ -15,7 +15,7 @@ Rows are latest complete same-commit pairs.
 | Immich | Cold Build | 6m 34s | 4m 28s | 32% faster | 7.60 GB less (77.44%) |
 | Mastodon | Cold Build | 9m 24s | 9m 5s | 3% faster | 9.75 GB less (90.4%) |
 | Discourse | Workflow Total | 6m 37s | 5m 38s | 15% faster | 8.99 GB less (89.64%) |
-| PostHog | Cold Build | 19m 41s | 16m 0s | 19% faster | 8.80 GB less (57.71%) |
+| PostHog | Cold Build | 23m 0s | 15m 31s | 33% faster | 2.94 GB less (31.35%) |
 | Storybook | Warm Build | 3m 28s | 0m 46s | 78% faster | 44.30 MB more (6.06%) |
 | OpenTelemetry Java | Cold Build | 9m 12s | 10m 45s | 17% slower | 50.53 MB less (6.0%) |
 | Spring AI | Warm Build | 0m 38s | 0m 29s | 24% faster | 177.27 MB less (18.7%) |
@@ -31,11 +31,11 @@ Rows are latest complete same-commit pairs.
 | Hugo Go | Commit Build | 0m 31s | 1m 14s | 139% slower | 1.39 GB less (84.38%) |
 | Immich | Commit Build | 0m 9s | 0m 8s | near tie | 7.39 GB less (76.96%) |
 | Mastodon | Commit Build | 0m 22s | 0m 14s | 36% faster | 9.37 GB less (90.06%) |
-| Discourse | Commit Build | 3m 14s | 3m 2s | 6% faster | 8.69 GB less (89.32%) |
-| PostHog | Workflow Total | 19m 13s | 13m 35s | 29% faster | 5.35 GB less (46.47%) |
+| Discourse | Commit Build | 3m 33s | 2m 58s | 16% faster | 8.59 GB less (89.21%) |
+| PostHog | Commit Build | 24m 53s | 15m 19s | cache import unavailable | 5.11 GB less (44.19%) |
 | Storybook | Workflow Total | 3m 52s | 3m 20s | 14% faster | 1.24 GB less (62.15%) |
 | OpenTelemetry Java | Workflow Total | 4m 42s | 4m 26s | 6% faster | 2.89 GB less (78.85%) |
 | Spring AI | Commit Build | 0m 46s | 3m 20s | 335% slower | 2.57 GB less (77.32%) |
-| gRPC | Commit Build | 32m 19s | 0m 51s | 97% faster | n/a |
-| Zed | Workflow Total | 22m 14s | 19m 20s | 13% faster | 4.95 GB less (86.85%) |
+| gRPC | Workflow Total | 1m 16s | 1m 5s | 14% faster | n/a |
+| Zed | Workflow Total | 41m 37s | 38m 54s | 7% faster | 10.72 GB less (93.47%) |
 | n8n | Commit Build | 3m 37s | 1m 3s | 71% faster | 4.54 GB less (85.7%) |
