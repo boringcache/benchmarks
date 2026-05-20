@@ -1519,23 +1519,58 @@ def lane_health(benchmark:, lane:, actions_runs:, boringcache_runs:, paired_head
   }.reject { |_, value| value.nil? }
 end
 
-def provider_build_seconds(snapshot)
+def provider_scenario_seconds(snapshot)
   snapshot["cold_seconds"] || snapshot["warm_steady_seconds"]
 end
 
-def provider_build_metric_source(snapshot)
+def provider_scenario_metric_source(snapshot)
   return "cold_seconds" if snapshot["cold_seconds"]
   return "warm_steady_seconds" if snapshot["warm_steady_seconds"]
 
   nil
 end
 
+def provider_post_build_tool_seconds(snapshot)
+  slow_reason = snapshot["slow_reason"].is_a?(Hash) ? snapshot["slow_reason"] : {}
+  cache_save_export_seconds = slow_reason["cache_save_export_seconds"] || snapshot["docker_cache_export_seconds"]
+  [
+    cache_save_export_seconds,
+    slow_reason["post_cleanup_seconds"]
+  ].map { |value| parse_number(value) }.compact.sum
+end
+
+def provider_tool_elapsed_seconds(snapshot)
+  scenario_seconds = provider_scenario_seconds(snapshot)
+  return nil unless scenario_seconds
+
+  scenario_seconds + provider_post_build_tool_seconds(snapshot)
+end
+
+def provider_tool_elapsed_components(snapshot)
+  scenario_seconds = provider_scenario_seconds(snapshot)
+  return nil unless scenario_seconds
+
+  slow_reason = snapshot["slow_reason"].is_a?(Hash) ? snapshot["slow_reason"] : {}
+  cache_save_export_seconds = parse_number(slow_reason["cache_save_export_seconds"] || snapshot["docker_cache_export_seconds"])
+  post_cleanup_seconds = parse_number(slow_reason["post_cleanup_seconds"])
+  {
+    "scenario_seconds" => scenario_seconds,
+    "cache_save_export_seconds" => cache_save_export_seconds,
+    "post_cleanup_seconds" => post_cleanup_seconds
+  }.reject { |_, value| value.nil? }
+end
+
 def provider_snapshot(data, strategy:)
   snapshot = strategy_snapshot(data)
-  build_seconds = provider_build_seconds(snapshot)
-  snapshot["build_seconds"] = build_seconds if build_seconds
-  build_metric_source = provider_build_metric_source(snapshot)
-  snapshot["build_metric_source"] = build_metric_source if build_metric_source
+  scenario_seconds = provider_scenario_seconds(snapshot)
+  snapshot["scenario_seconds"] = scenario_seconds if scenario_seconds
+  scenario_metric_source = provider_scenario_metric_source(snapshot)
+  snapshot["scenario_metric_source"] = scenario_metric_source if scenario_metric_source
+
+  tool_elapsed_seconds = provider_tool_elapsed_seconds(snapshot)
+  snapshot["tool_elapsed_seconds"] = tool_elapsed_seconds if tool_elapsed_seconds
+  tool_elapsed_components = provider_tool_elapsed_components(snapshot)
+  snapshot["tool_elapsed_components"] = tool_elapsed_components if tool_elapsed_components
 
   return snapshot if provider_storage_available?(strategy)
 
@@ -1547,13 +1582,14 @@ end
 
 def provider_lane_payload(lane:, runs:, unique_head_count:, snapshots:, storage_available:)
   summary = average_snapshot(snapshots)
-  build_seconds = average(snapshots.map { |snapshot| provider_build_seconds(snapshot) })
+  scenario_seconds = average(snapshots.map { |snapshot| provider_scenario_seconds(snapshot) })
+  tool_elapsed_seconds = average(snapshots.map { |snapshot| provider_tool_elapsed_seconds(snapshot) })
   state = if snapshots.empty?
     "missing_sample"
-  elsif build_seconds
+  elsif tool_elapsed_seconds
     "healthy"
   else
-    "missing_build_time"
+    "missing_tool_elapsed"
   end
 
   payload = {
@@ -1567,7 +1603,8 @@ def provider_lane_payload(lane:, runs:, unique_head_count:, snapshots:, storage_
   }
 
   if snapshots.any?
-    summary["build_seconds"] = build_seconds if build_seconds
+    summary["scenario_seconds"] = scenario_seconds if scenario_seconds
+    summary["tool_elapsed_seconds"] = tool_elapsed_seconds if tool_elapsed_seconds
     payload.merge!(
       "latest_run_id" => summary["run_id"],
       "latest_run_url" => summary["run_url"],
@@ -1579,11 +1616,11 @@ def provider_lane_payload(lane:, runs:, unique_head_count:, snapshots:, storage_
       "summary" => summary,
       "samples" => snapshots
     )
-    if build_seconds
+    if tool_elapsed_seconds
       payload["headline"] = {
-        "metric" => "build_seconds",
-        "label" => "Build Time",
-        "seconds" => build_seconds,
+        "metric" => "tool_elapsed_seconds",
+        "label" => "Tool Elapsed",
+        "seconds" => tool_elapsed_seconds,
         "sample_count" => snapshots.length
       }
     end
