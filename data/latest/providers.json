@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T13:48:53Z",
+  "generated_at": "2026-05-20T14:06:06Z",
   "window_sample_target": 3,
   "providers": {
     "actions-cache": "GitHub Actions Cache",
@@ -173,7 +173,8 @@
                 "run_uid": "gh-26156246334-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 210.66666666666666
+                "scenario_seconds": 210.66666666666666,
+                "tool_elapsed_seconds": 258.43333333333334
               },
               "samples": [
                 {
@@ -276,8 +277,13 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 215.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 215.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 260.9,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 215.0,
+                    "cache_save_export_seconds": 45.9
+                  }
                 },
                 {
                   "run_id": 26124388668,
@@ -389,8 +395,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 224.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 224.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 284.7,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 224.0,
+                    "cache_save_export_seconds": 60.7
+                  }
                 },
                 {
                   "run_id": 25998887490,
@@ -473,14 +484,19 @@
                   "reporting_url": null,
                   "tool_outcomes": null,
                   "slow_reason": null,
-                  "build_seconds": 193.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 193.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 229.7,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 193.0,
+                    "cache_save_export_seconds": 36.7
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 210.66666666666666,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 258.43333333333334,
                 "sample_count": 3
               }
             },
@@ -706,7 +722,8 @@
                 "run_uid": "gh-26156306901-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 72.66666666666667
+                "scenario_seconds": 72.66666666666667,
+                "tool_elapsed_seconds": 81.06666666666668
               },
               "samples": [
                 {
@@ -828,8 +845,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 9.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 9.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 9.9,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 9.0,
+                    "cache_save_export_seconds": 0.9
+                  }
                 },
                 {
                   "run_id": 26124650519,
@@ -950,8 +972,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 10.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 10.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 10.9,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 10.0,
+                    "cache_save_export_seconds": 0.9
+                  }
                 },
                 {
                   "run_id": 26105780514,
@@ -1053,14 +1080,19 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 199.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 199.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 222.4,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 199.0,
+                    "cache_save_export_seconds": 23.4
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 72.66666666666667,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 81.06666666666668,
                 "sample_count": 3
               }
             }
@@ -1251,7 +1283,8 @@
                 "run_uid": "gh-26156248528-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 208.33333333333334
+                "scenario_seconds": 208.33333333333334,
+                "tool_elapsed_seconds": 234.29999999999998
               },
               "samples": [
                 {
@@ -1383,8 +1416,13 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 203.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 203.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 230.5,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 203.0,
+                    "cache_save_export_seconds": 27.5
+                  }
                 },
                 {
                   "run_id": 26124652378,
@@ -1515,8 +1553,13 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 211.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 211.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 236.6,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 211.0,
+                    "cache_save_export_seconds": 25.6
+                  }
                 },
                 {
                   "run_id": 25998887474,
@@ -1628,14 +1671,19 @@
                   "reporting_url": null,
                   "tool_outcomes": null,
                   "slow_reason": null,
-                  "build_seconds": 211.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 211.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 235.8,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 211.0,
+                    "cache_save_export_seconds": 24.8
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 208.33333333333334,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 234.29999999999998,
                 "sample_count": 3
               }
             },
@@ -1885,7 +1933,8 @@
                 "run_uid": "gh-26156308148-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 64.0
+                "scenario_seconds": 64.0,
+                "tool_elapsed_seconds": 66.93333333333334
               },
               "samples": [
                 {
@@ -2027,8 +2076,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 7.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 7.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 7.1,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 7.0,
+                    "cache_save_export_seconds": 0.1
+                  }
                 },
                 {
                   "run_id": 26124653773,
@@ -2178,8 +2232,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 8.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 8.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 8.7,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 8.0,
+                    "cache_save_export_seconds": 0.7
+                  }
                 },
                 {
                   "run_id": 26105783584,
@@ -2310,14 +2369,19 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 177.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 177.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 185.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 177.0,
+                    "cache_save_export_seconds": 8.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 64.0,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 66.93333333333334,
                 "sample_count": 3
               }
             }
@@ -2499,7 +2563,8 @@
                 "run_uid": "gh-26156238993-1",
                 "mode": "go",
                 "adapter": "gocache",
-                "build_seconds": 79.66666666666667
+                "scenario_seconds": 79.66666666666667,
+                "tool_elapsed_seconds": 79.66666666666667
               },
               "samples": [
                 {
@@ -2602,8 +2667,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 79.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 79.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 79.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 79.0
+                  }
                 },
                 {
                   "run_id": 26125732546,
@@ -2705,8 +2774,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 76.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 76.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 76.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 76.0
+                  }
                 },
                 {
                   "run_id": 26124655549,
@@ -2808,13 +2881,17 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 84.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 84.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 84.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 84.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 79.66666666666667,
                 "sample_count": 3
               }
@@ -3024,7 +3101,8 @@
                 "run_uid": "gh-26156306189-1",
                 "mode": "go",
                 "adapter": "gocache",
-                "build_seconds": 42.333333333333336
+                "scenario_seconds": 42.333333333333336,
+                "tool_elapsed_seconds": 42.333333333333336
               },
               "samples": [
                 {
@@ -3137,8 +3215,12 @@
                       }
                     ]
                   },
-                  "build_seconds": 21.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 21.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 21.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 21.0
+                  }
                 },
                 {
                   "run_id": 26125734004,
@@ -3250,8 +3332,12 @@
                       }
                     ]
                   },
-                  "build_seconds": 31.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 31.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 31.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 31.0
+                  }
                 },
                 {
                   "run_id": 26124657848,
@@ -3363,13 +3449,17 @@
                       }
                     ]
                   },
-                  "build_seconds": 75.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 75.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 75.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 75.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 42.333333333333336,
                 "sample_count": 3
               }
@@ -3569,7 +3659,8 @@
                 "run_uid": "gh-26156241659-1",
                 "mode": "go",
                 "adapter": "gocache",
-                "build_seconds": 84.0
+                "scenario_seconds": 84.0,
+                "tool_elapsed_seconds": 84.0
               },
               "samples": [
                 {
@@ -3702,8 +3793,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 83.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 83.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 83.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 83.0
+                  }
                 },
                 {
                   "run_id": 26125736031,
@@ -3835,8 +3930,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 87.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 87.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 87.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 87.0
+                  }
                 },
                 {
                   "run_id": 26124659343,
@@ -3968,13 +4067,17 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 82.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 82.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 82.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 82.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 84.0,
                 "sample_count": 3
               }
@@ -4188,7 +4291,8 @@
                 "run_uid": "gh-26156309206-1",
                 "mode": "go",
                 "adapter": "gocache",
-                "build_seconds": 59.0
+                "scenario_seconds": 59.0,
+                "tool_elapsed_seconds": 59.0
               },
               "samples": [
                 {
@@ -4331,8 +4435,12 @@
                       }
                     ]
                   },
-                  "build_seconds": 20.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 20.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 20.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 20.0
+                  }
                 },
                 {
                   "run_id": 26125737336,
@@ -4464,8 +4572,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 74.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 74.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 74.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 74.0
+                  }
                 },
                 {
                   "run_id": 26124660951,
@@ -4597,13 +4709,17 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 83.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 83.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 83.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 83.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 59.0,
                 "sample_count": 3
               }
@@ -4750,7 +4866,8 @@
                 "run_uid": "gh-26156243971-1",
                 "mode": "go",
                 "adapter": "gocache",
-                "build_seconds": 85.0
+                "scenario_seconds": 85.0,
+                "tool_elapsed_seconds": 85.0
               },
               "samples": [
                 {
@@ -4851,8 +4968,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 64.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 64.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 64.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 64.0
+                  },
                   "storage_available": false,
                   "storage_note": "Depot Cache storage is not available from benchmark artifacts."
                 },
@@ -4954,15 +5075,19 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 106.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 106.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 106.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 106.0
+                  },
                   "storage_available": false,
                   "storage_note": "Depot Cache storage is not available from benchmark artifacts."
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 85.0,
                 "sample_count": 2
               }
@@ -5102,7 +5227,8 @@
                 "run_uid": "gh-26156307581-1",
                 "mode": "go",
                 "adapter": "gocache",
-                "build_seconds": 107.0
+                "scenario_seconds": 107.0,
+                "tool_elapsed_seconds": 107.0
               },
               "samples": [
                 {
@@ -5203,8 +5329,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 100.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 100.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 100.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 100.0
+                  },
                   "storage_available": false,
                   "storage_note": "Depot Cache storage is not available from benchmark artifacts."
                 },
@@ -5306,15 +5436,19 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 114.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 114.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 114.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 114.0
+                  },
                   "storage_available": false,
                   "storage_note": "Depot Cache storage is not available from benchmark artifacts."
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 107.0,
                 "sample_count": 2
               }
@@ -5539,7 +5673,8 @@
                 "run_uid": "gh-26156251334-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 350.3333333333333
+                "scenario_seconds": 350.3333333333333,
+                "tool_elapsed_seconds": 572.2666666666668
               },
               "samples": [
                 {
@@ -5652,8 +5787,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 331.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 331.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 534.9,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 331.0,
+                    "cache_save_export_seconds": 203.9
+                  }
                 },
                 {
                   "run_id": 26125741552,
@@ -5765,8 +5905,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 394.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 394.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 658.2,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 394.0,
+                    "cache_save_export_seconds": 264.2
+                  }
                 },
                 {
                   "run_id": 26076060710,
@@ -5878,14 +6023,19 @@
                       }
                     ]
                   },
-                  "build_seconds": 326.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 326.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 523.7,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 326.0,
+                    "cache_save_export_seconds": 197.7
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 350.3333333333333,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 572.2666666666668,
                 "sample_count": 3
               }
             },
@@ -6112,7 +6262,8 @@
                 "run_uid": "gh-26160977300-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 143.33333333333334
+                "scenario_seconds": 143.33333333333334,
+                "tool_elapsed_seconds": 228.26666666666665
               },
               "samples": [
                 {
@@ -6225,8 +6376,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 398.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 398.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 642.3,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 398.0,
+                    "cache_save_export_seconds": 244.3
+                  }
                 },
                 {
                   "run_id": 26156310471,
@@ -6347,8 +6503,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 14.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 14.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 19.2,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 14.0,
+                    "cache_save_export_seconds": 5.2
+                  }
                 },
                 {
                   "run_id": 26125743038,
@@ -6469,14 +6630,19 @@
                       }
                     ]
                   },
-                  "build_seconds": 18.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 18.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 23.3,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 18.0,
+                    "cache_save_export_seconds": 5.3
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 143.33333333333334,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 228.26666666666665,
                 "sample_count": 3
               }
             }
@@ -6763,7 +6929,8 @@
                 "run_uid": "gh-26156253590-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 278.6666666666667
+                "scenario_seconds": 278.6666666666667,
+                "tool_elapsed_seconds": 418.6333333333334
               },
               "samples": [
                 {
@@ -6913,8 +7080,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 279.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 279.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 417.6,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 279.0,
+                    "cache_save_export_seconds": 138.6
+                  }
                 },
                 {
                   "run_id": 26125744282,
@@ -7063,8 +7235,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 268.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 268.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 399.8,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 268.0,
+                    "cache_save_export_seconds": 131.8
+                  }
                 },
                 {
                   "run_id": 26076300951,
@@ -7213,14 +7390,19 @@
                       }
                     ]
                   },
-                  "build_seconds": 289.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 289.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 438.5,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 289.0,
+                    "cache_save_export_seconds": 149.5
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 278.6666666666667,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 418.6333333333334,
                 "sample_count": 3
               }
             },
@@ -7497,7 +7679,8 @@
                 "run_uid": "gh-26160978545-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 94.33333333333333
+                "scenario_seconds": 94.33333333333333,
+                "tool_elapsed_seconds": 140.86666666666665
               },
               "samples": [
                 {
@@ -7647,8 +7830,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 266.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 266.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 404.4,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 266.0,
+                    "cache_save_export_seconds": 138.4
+                  }
                 },
                 {
                   "run_id": 26156311895,
@@ -7798,8 +7986,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 8.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 8.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 8.6,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 8.0,
+                    "cache_save_export_seconds": 0.6
+                  }
                 },
                 {
                   "run_id": 26125745885,
@@ -7940,14 +8133,19 @@
                       }
                     ]
                   },
-                  "build_seconds": 9.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 9.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 9.6,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 9.0,
+                    "cache_save_export_seconds": 0.6
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 94.33333333333333,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 140.86666666666665,
                 "sample_count": 3
               }
             }
@@ -8171,7 +8369,8 @@
                 "run_uid": "gh-26156260326-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 604.0
+                "scenario_seconds": 604.0,
+                "tool_elapsed_seconds": 735.1333333333333
               },
               "samples": [
                 {
@@ -8284,8 +8483,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 597.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 597.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 711.6,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 597.0,
+                    "cache_save_export_seconds": 114.6
+                  }
                 },
                 {
                   "run_id": 26125755156,
@@ -8397,8 +8601,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 564.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 564.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 678.7,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 564.0,
+                    "cache_save_export_seconds": 114.7
+                  }
                 },
                 {
                   "run_id": 26077903773,
@@ -8510,14 +8719,19 @@
                       }
                     ]
                   },
-                  "build_seconds": 651.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 651.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 815.1,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 651.0,
+                    "cache_save_export_seconds": 164.1
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 604.0,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 735.1333333333333,
                 "sample_count": 3
               }
             },
@@ -8726,7 +8940,8 @@
                 "run_uid": "gh-26165522750-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 103.33333333333333
+                "scenario_seconds": 103.33333333333333,
+                "tool_elapsed_seconds": 147.86666666666667
               },
               "samples": [
                 {
@@ -8839,8 +9054,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 163.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 163.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 239.9,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 163.0,
+                    "cache_save_export_seconds": 76.9
+                  }
                 },
                 {
                   "run_id": 26162072762,
@@ -8952,8 +9172,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 131.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 131.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 185.5,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 131.0,
+                    "cache_save_export_seconds": 54.5
+                  }
                 },
                 {
                   "run_id": 26156310630,
@@ -9065,14 +9290,19 @@
                       }
                     ]
                   },
-                  "build_seconds": 16.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 16.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 18.2,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 16.0,
+                    "cache_save_export_seconds": 2.2
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 103.33333333333333,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 147.86666666666667,
                 "sample_count": 3
               }
             }
@@ -9326,7 +9556,8 @@
                 "run_uid": "gh-26156262568-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 550.3333333333334
+                "scenario_seconds": 550.3333333333334,
+                "tool_elapsed_seconds": 618.3666666666667
               },
               "samples": [
                 {
@@ -9468,8 +9699,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 549.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 549.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 617.1,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 549.0,
+                    "cache_save_export_seconds": 68.1
+                  }
                 },
                 {
                   "run_id": 26125758316,
@@ -9610,8 +9846,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 545.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 545.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 615.1,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 545.0,
+                    "cache_save_export_seconds": 70.1
+                  }
                 },
                 {
                   "run_id": 26077764674,
@@ -9752,14 +9993,19 @@
                       }
                     ]
                   },
-                  "build_seconds": 557.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 557.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 622.9,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 557.0,
+                    "cache_save_export_seconds": 65.9
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 550.3333333333334,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 618.3666666666667,
                 "sample_count": 3
               }
             },
@@ -10010,7 +10256,8 @@
                 "run_uid": "gh-26165524517-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 81.0
+                "scenario_seconds": 81.0,
+                "tool_elapsed_seconds": 104.46666666666668
               },
               "samples": [
                 {
@@ -10152,8 +10399,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 112.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 112.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 145.8,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 112.0,
+                    "cache_save_export_seconds": 33.8
+                  }
                 },
                 {
                   "run_id": 26162074249,
@@ -10294,8 +10546,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 116.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 116.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 151.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 116.0,
+                    "cache_save_export_seconds": 35.0
+                  }
                 },
                 {
                   "run_id": 26156311763,
@@ -10436,14 +10693,19 @@
                       }
                     ]
                   },
-                  "build_seconds": 15.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 15.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 16.6,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 15.0,
+                    "cache_save_export_seconds": 1.6
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 81.0,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 104.46666666666668,
                 "sample_count": 3
               }
             }
@@ -10667,7 +10929,8 @@
                 "run_uid": "gh-26156224663-1",
                 "mode": "actions-cache",
                 "adapter": "actions-cache",
-                "build_seconds": 348.0
+                "scenario_seconds": 348.0,
+                "tool_elapsed_seconds": 443.93333333333334
               },
               "samples": [
                 {
@@ -10780,8 +11043,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 324.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 324.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 400.8,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 324.0,
+                    "cache_save_export_seconds": 76.8
+                  }
                 },
                 {
                   "run_id": 26124370094,
@@ -10893,8 +11161,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 371.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 371.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 490.9,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 371.0,
+                    "cache_save_export_seconds": 119.9
+                  }
                 },
                 {
                   "run_id": 26027188816,
@@ -11006,14 +11279,19 @@
                       }
                     ]
                   },
-                  "build_seconds": 349.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 349.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 440.1,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 349.0,
+                    "cache_save_export_seconds": 91.1
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 348.0,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 443.93333333333334,
                 "sample_count": 3
               }
             },
@@ -11240,7 +11518,8 @@
                 "run_uid": "gh-26156300584-1",
                 "mode": "actions-cache",
                 "adapter": "actions-cache",
-                "build_seconds": 155.33333333333334
+                "scenario_seconds": 155.33333333333334,
+                "tool_elapsed_seconds": 206.76666666666665
               },
               "samples": [
                 {
@@ -11362,8 +11641,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 14.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 14.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 16.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 14.0,
+                    "cache_save_export_seconds": 2.0
+                  }
                 },
                 {
                   "run_id": 26149935045,
@@ -11475,8 +11759,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 225.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 225.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 299.7,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 225.0,
+                    "cache_save_export_seconds": 74.7
+                  }
                 },
                 {
                   "run_id": 26146218457,
@@ -11588,14 +11877,19 @@
                       }
                     ]
                   },
-                  "build_seconds": 227.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 227.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 304.6,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 227.0,
+                    "cache_save_export_seconds": 77.6
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 155.33333333333334,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 206.76666666666665,
                 "sample_count": 3
               }
             }
@@ -11818,7 +12112,8 @@
                 "run_uid": "gh-26156227017-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 309.3333333333333
+                "scenario_seconds": 309.3333333333333,
+                "tool_elapsed_seconds": 353.3666666666666
               },
               "samples": [
                 {
@@ -11950,8 +12245,13 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 307.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 307.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 352.5,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 307.0,
+                    "cache_save_export_seconds": 45.5
+                  }
                 },
                 {
                   "run_id": 26124373143,
@@ -12082,8 +12382,13 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 318.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 318.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 359.8,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 318.0,
+                    "cache_save_export_seconds": 41.8
+                  }
                 },
                 {
                   "run_id": 26027188835,
@@ -12223,14 +12528,19 @@
                       }
                     ]
                   },
-                  "build_seconds": 303.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 303.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 347.8,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 303.0,
+                    "cache_save_export_seconds": 44.8
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 309.3333333333333,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 353.3666666666666,
                 "sample_count": 3
               }
             },
@@ -12460,7 +12770,8 @@
                 "run_uid": "gh-26156301636-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 125.33333333333333
+                "scenario_seconds": 125.33333333333333,
+                "tool_elapsed_seconds": 151.86666666666667
               },
               "samples": [
                 {
@@ -12602,8 +12913,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 14.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 14.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 15.8,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 14.0,
+                    "cache_save_export_seconds": 1.8
+                  }
                 },
                 {
                   "run_id": 26149936444,
@@ -12734,8 +13050,13 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 183.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 183.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 222.4,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 183.0,
+                    "cache_save_export_seconds": 39.4
+                  }
                 },
                 {
                   "run_id": 26146219502,
@@ -12866,14 +13187,19 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 179.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 179.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 217.4,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 179.0,
+                    "cache_save_export_seconds": 38.4
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 125.33333333333333,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 151.86666666666667,
                 "sample_count": 3
               }
             }
@@ -13097,7 +13423,8 @@
                 "run_uid": "gh-26156274530-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 1350.6666666666667
+                "scenario_seconds": 1350.6666666666667,
+                "tool_elapsed_seconds": 2264.566666666667
               },
               "samples": [
                 {
@@ -13210,8 +13537,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 1491.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 1491.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2554.3,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1491.0,
+                    "cache_save_export_seconds": 1063.3
+                  }
                 },
                 {
                   "run_id": 26141305633,
@@ -13323,8 +13655,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 1380.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 1380.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2313.3,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1380.0,
+                    "cache_save_export_seconds": 933.3
+                  }
                 },
                 {
                   "run_id": 26125773146,
@@ -13436,14 +13773,19 @@
                       }
                     ]
                   },
-                  "build_seconds": 1181.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 1181.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1926.1,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1181.0,
+                    "cache_save_export_seconds": 745.1
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 1350.6666666666667,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 2264.566666666667,
                 "sample_count": 3
               }
             },
@@ -13651,7 +13993,8 @@
                 "run_uid": "gh-26164821248-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 1133.0
+                "scenario_seconds": 1133.0,
+                "tool_elapsed_seconds": 1865.9333333333334
               },
               "samples": [
                 {
@@ -13764,8 +14107,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 1299.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 1299.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2154.9,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1299.0,
+                    "cache_save_export_seconds": 855.9
+                  }
                 },
                 {
                   "run_id": 26161048257,
@@ -13877,8 +14225,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 1197.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 1197.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1960.2,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1197.0,
+                    "cache_save_export_seconds": 763.2
+                  }
                 },
                 {
                   "run_id": 26156948209,
@@ -13990,14 +14343,19 @@
                       }
                     ]
                   },
-                  "build_seconds": 903.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 903.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1482.7,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 903.0,
+                    "cache_save_export_seconds": 579.7
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 1133.0,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 1865.9333333333334,
                 "sample_count": 3
               }
             }
@@ -14284,7 +14642,8 @@
                 "run_uid": "gh-26156276801-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 1056.3333333333333
+                "scenario_seconds": 1056.3333333333333,
+                "tool_elapsed_seconds": 1618.2333333333333
               },
               "samples": [
                 {
@@ -14434,8 +14793,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 1278.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 1278.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1970.4,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1278.0,
+                    "cache_save_export_seconds": 692.4
+                  }
                 },
                 {
                   "run_id": 26141203437,
@@ -14584,8 +14948,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 931.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 931.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1423.2,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 931.0,
+                    "cache_save_export_seconds": 492.2
+                  }
                 },
                 {
                   "run_id": 26125776429,
@@ -14734,14 +15103,19 @@
                       }
                     ]
                   },
-                  "build_seconds": 960.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 960.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1461.1,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 960.0,
+                    "cache_save_export_seconds": 501.1
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 1056.3333333333333,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 1618.2333333333333,
                 "sample_count": 3
               }
             },
@@ -15026,7 +15400,8 @@
                 "run_uid": "gh-26164823180-1",
                 "mode": "docker",
                 "adapter": "oci",
-                "build_seconds": 578.3333333333334
+                "scenario_seconds": 578.3333333333334,
+                "tool_elapsed_seconds": 867.7333333333332
               },
               "samples": [
                 {
@@ -15176,8 +15551,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 869.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 869.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1312.6,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 869.0,
+                    "cache_save_export_seconds": 443.6
+                  }
                 },
                 {
                   "run_id": 26161049549,
@@ -15326,8 +15706,13 @@
                       }
                     ]
                   },
-                  "build_seconds": 851.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 851.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1273.2,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 851.0,
+                    "cache_save_export_seconds": 422.2
+                  }
                 },
                 {
                   "run_id": 26156319195,
@@ -15477,14 +15862,19 @@
                       }
                     ]
                   },
-                  "build_seconds": 15.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 15.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 17.4,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 15.0,
+                    "cache_save_export_seconds": 2.4
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 578.3333333333334,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 867.7333333333332,
                 "sample_count": 3
               }
             }
@@ -15602,7 +15992,8 @@
                 "run_uid": "gh-26125785692-1",
                 "mode": "nx",
                 "adapter": "nx",
-                "build_seconds": 203.33333333333334
+                "scenario_seconds": 203.33333333333334,
+                "tool_elapsed_seconds": 203.33333333333334
               },
               "samples": [
                 {
@@ -15705,8 +16096,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 207.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 207.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 207.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 207.0
+                  }
                 },
                 {
                   "run_id": 26021918539,
@@ -15789,8 +16184,12 @@
                   "reporting_url": null,
                   "tool_outcomes": null,
                   "slow_reason": null,
-                  "build_seconds": 197.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 197.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 197.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 197.0
+                  }
                 },
                 {
                   "run_id": 25930163089,
@@ -15873,13 +16272,17 @@
                   "reporting_url": null,
                   "tool_outcomes": null,
                   "slow_reason": null,
-                  "build_seconds": 206.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 206.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 206.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 206.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 203.33333333333334,
                 "sample_count": 3
               }
@@ -16058,7 +16461,8 @@
                 "run_uid": "gh-26165478967-1",
                 "mode": "nx",
                 "adapter": "nx",
-                "build_seconds": 168.0
+                "scenario_seconds": 168.0,
+                "tool_elapsed_seconds": 168.0
               },
               "samples": [
                 {
@@ -16161,8 +16565,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 256.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 256.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 256.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 256.0
+                  }
                 },
                 {
                   "run_id": 26161256980,
@@ -16264,8 +16672,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 196.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 196.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 196.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 196.0
+                  }
                 },
                 {
                   "run_id": 26156325306,
@@ -16377,13 +16789,17 @@
                       }
                     ]
                   },
-                  "build_seconds": 52.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 52.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 52.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 52.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 168.0,
                 "sample_count": 3
               }
@@ -16531,7 +16947,8 @@
                 "run_uid": "gh-26125788157-1",
                 "mode": "nx",
                 "adapter": "nx",
-                "build_seconds": 220.33333333333334
+                "scenario_seconds": 220.33333333333334,
+                "tool_elapsed_seconds": 220.33333333333334
               },
               "samples": [
                 {
@@ -16677,8 +17094,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 234.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 234.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 234.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 234.0
+                  }
                 },
                 {
                   "run_id": 26021918500,
@@ -16804,8 +17225,12 @@
                   "reporting_url": null,
                   "tool_outcomes": null,
                   "slow_reason": null,
-                  "build_seconds": 212.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 212.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 212.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 212.0
+                  }
                 },
                 {
                   "run_id": 25930161958,
@@ -16931,13 +17356,17 @@
                   "reporting_url": null,
                   "tool_outcomes": null,
                   "slow_reason": null,
-                  "build_seconds": 215.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 215.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 215.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 215.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 220.33333333333334,
                 "sample_count": 3
               }
@@ -17150,7 +17579,8 @@
                 "run_uid": "gh-26165481011-1",
                 "mode": "nx",
                 "adapter": "nx",
-                "build_seconds": 155.33333333333334
+                "scenario_seconds": 155.33333333333334,
+                "tool_elapsed_seconds": 155.33333333333334
               },
               "samples": [
                 {
@@ -17296,8 +17726,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 211.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 211.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 211.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 211.0
+                  }
                 },
                 {
                   "run_id": 26161258744,
@@ -17442,8 +17876,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 211.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 211.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 211.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 211.0
+                  }
                 },
                 {
                   "run_id": 26156326365,
@@ -17598,13 +18036,17 @@
                       }
                     ]
                   },
-                  "build_seconds": 44.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 44.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 44.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 44.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 155.33333333333334,
                 "sample_count": 3
               }
@@ -17788,7 +18230,8 @@
                     "warm1_executed_tasks_high"
                   ]
                 },
-                "build_seconds": 633.6666666666666
+                "scenario_seconds": 633.6666666666666,
+                "tool_elapsed_seconds": 633.6666666666666
               },
               "samples": [
                 {
@@ -17912,8 +18355,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 668.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 668.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 668.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 668.0
+                  }
                 },
                 {
                   "run_id": 26125767088,
@@ -18036,8 +18483,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 552.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 552.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 552.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 552.0
+                  }
                 },
                 {
                   "run_id": 25930149239,
@@ -18141,13 +18592,17 @@
                     ]
                   },
                   "slow_reason": null,
-                  "build_seconds": 681.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 681.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 681.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 681.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 633.6666666666666,
                 "sample_count": 3
               }
@@ -18366,7 +18821,8 @@
                   },
                   "warnings": []
                 },
-                "build_seconds": 86.33333333333333
+                "scenario_seconds": 86.33333333333333,
+                "tool_elapsed_seconds": 86.33333333333333
               },
               "samples": [
                 {
@@ -18498,8 +18954,12 @@
                       }
                     ]
                   },
-                  "build_seconds": 74.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 74.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 74.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 74.0
+                  }
                 },
                 {
                   "run_id": 26125768515,
@@ -18630,8 +19090,12 @@
                       }
                     ]
                   },
-                  "build_seconds": 70.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 70.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 70.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 70.0
+                  }
                 },
                 {
                   "run_id": 26123566161,
@@ -18752,13 +19216,17 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 115.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 115.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 115.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 115.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 86.33333333333333,
                 "sample_count": 3
               }
@@ -18959,7 +19427,8 @@
                     "warm1_executed_tasks_high"
                   ]
                 },
-                "build_seconds": 663.6666666666666
+                "scenario_seconds": 663.6666666666666,
+                "tool_elapsed_seconds": 663.6666666666666
               },
               "samples": [
                 {
@@ -19113,8 +19582,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 667.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 667.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 667.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 667.0
+                  }
                 },
                 {
                   "run_id": 26125769901,
@@ -19267,8 +19740,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 645.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 645.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 645.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 645.0
+                  }
                 },
                 {
                   "run_id": 25930147943,
@@ -19402,13 +19879,17 @@
                     ]
                   },
                   "slow_reason": null,
-                  "build_seconds": 679.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 679.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 679.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 679.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 663.6666666666666,
                 "sample_count": 3
               }
@@ -19631,7 +20112,8 @@
                   },
                   "warnings": []
                 },
-                "build_seconds": 92.0
+                "scenario_seconds": 92.0,
+                "tool_elapsed_seconds": 92.0
               },
               "samples": [
                 {
@@ -19783,8 +20265,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 66.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 66.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 66.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 66.0
+                  }
                 },
                 {
                   "run_id": 26125771369,
@@ -19945,8 +20431,12 @@
                       }
                     ]
                   },
-                  "build_seconds": 111.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 111.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 111.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 111.0
+                  }
                 },
                 {
                   "run_id": 26123567436,
@@ -20097,13 +20587,17 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 99.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 99.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 99.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 99.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 92.0,
                 "sample_count": 3
               }
@@ -20265,7 +20759,8 @@
                 "run_uid": "gh-26156279139-1",
                 "mode": "maven",
                 "adapter": "maven",
-                "build_seconds": 246.33333333333334
+                "scenario_seconds": 246.33333333333334,
+                "tool_elapsed_seconds": 246.33333333333334
               },
               "samples": [
                 {
@@ -20368,8 +20863,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 243.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 243.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 243.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 243.0
+                  }
                 },
                 {
                   "run_id": 26125779759,
@@ -20471,8 +20970,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 237.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 237.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 237.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 237.0
+                  }
                 },
                 {
                   "run_id": 25930143899,
@@ -20555,13 +21058,17 @@
                   "reporting_url": null,
                   "tool_outcomes": null,
                   "slow_reason": null,
-                  "build_seconds": 259.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 259.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 259.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 259.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 246.33333333333334,
                 "sample_count": 3
               }
@@ -20740,7 +21247,8 @@
                 "run_uid": "gh-26164676800-1",
                 "mode": "maven",
                 "adapter": "maven",
-                "build_seconds": 95.66666666666667
+                "scenario_seconds": 95.66666666666667,
+                "tool_elapsed_seconds": 95.66666666666667
               },
               "samples": [
                 {
@@ -20843,8 +21351,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 87.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 87.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 87.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 87.0
+                  }
                 },
                 {
                   "run_id": 26159735991,
@@ -20946,8 +21458,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 158.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 158.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 158.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 158.0
+                  }
                 },
                 {
                   "run_id": 26156319609,
@@ -21059,13 +21575,17 @@
                       }
                     ]
                   },
-                  "build_seconds": 42.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 42.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 42.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 42.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 95.66666666666667,
                 "sample_count": 3
               }
@@ -21254,7 +21774,8 @@
                 "run_uid": "gh-26156281342-1",
                 "mode": "maven",
                 "adapter": "maven",
-                "build_seconds": 271.0
+                "scenario_seconds": 271.0,
+                "tool_elapsed_seconds": 271.0
               },
               "samples": [
                 {
@@ -21387,8 +21908,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 307.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 307.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 307.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 307.0
+                  }
                 },
                 {
                   "run_id": 26125782958,
@@ -21520,8 +22045,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 239.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 239.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 239.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 239.0
+                  }
                 },
                 {
                   "run_id": 25930142717,
@@ -21646,13 +22175,17 @@
                   "reporting_url": null,
                   "tool_outcomes": null,
                   "slow_reason": null,
-                  "build_seconds": 267.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 267.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 267.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 267.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 271.0,
                 "sample_count": 3
               }
@@ -21855,7 +22388,8 @@
                 "run_uid": "gh-26164678352-1",
                 "mode": "maven",
                 "adapter": "maven",
-                "build_seconds": 90.33333333333333
+                "scenario_seconds": 90.33333333333333,
+                "tool_elapsed_seconds": 90.33333333333333
               },
               "samples": [
                 {
@@ -21988,8 +22522,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 85.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 85.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 85.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 85.0
+                  }
                 },
                 {
                   "run_id": 26159736961,
@@ -22121,8 +22659,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 158.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 158.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 158.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 158.0
+                  }
                 },
                 {
                   "run_id": 26156320989,
@@ -22264,13 +22806,17 @@
                       }
                     ]
                   },
-                  "build_seconds": 28.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 28.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 28.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 28.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 90.33333333333333,
                 "sample_count": 3
               }
@@ -22453,7 +22999,8 @@
                 "run_uid": "gh-26156229360-1",
                 "mode": "bazel",
                 "adapter": "bazel",
-                "build_seconds": 1957.0
+                "scenario_seconds": 1957.0,
+                "tool_elapsed_seconds": 1957.0
               },
               "samples": [
                 {
@@ -22556,8 +23103,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 1690.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 1690.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1690.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1690.0
+                  }
                 },
                 {
                   "run_id": 26124376108,
@@ -22659,8 +23210,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 2273.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 2273.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2273.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 2273.0
+                  }
                 },
                 {
                   "run_id": 26116476212,
@@ -22762,13 +23317,17 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 1908.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 1908.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1908.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1908.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 1957.0,
                 "sample_count": 3
               }
@@ -22947,7 +23506,8 @@
                 "run_uid": "gh-26156995432-1",
                 "mode": "bazel",
                 "adapter": "bazel",
-                "build_seconds": 821.0
+                "scenario_seconds": 821.0,
+                "tool_elapsed_seconds": 821.0
               },
               "samples": [
                 {
@@ -23050,8 +23610,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 470.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 470.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 470.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 470.0
+                  }
                 },
                 {
                   "run_id": 26156302049,
@@ -23163,8 +23727,12 @@
                       }
                     ]
                   },
-                  "build_seconds": 54.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 54.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 54.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 54.0
+                  }
                 },
                 {
                   "run_id": 26124377562,
@@ -23266,13 +23834,17 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 1939.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 1939.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1939.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1939.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 821.0,
                 "sample_count": 3
               }
@@ -23457,7 +24029,8 @@
                 "run_uid": "gh-26156231501-1",
                 "mode": "bazel",
                 "adapter": "bazel",
-                "build_seconds": 1440.0
+                "scenario_seconds": 1440.0,
+                "tool_elapsed_seconds": 1446.0
               },
               "samples": [
                 {
@@ -23576,8 +24149,14 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 1478.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 1478.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1484.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1478.0,
+                    "cache_save_export_seconds": 0.0,
+                    "post_cleanup_seconds": 6.0
+                  }
                 },
                 {
                   "run_id": 26124378987,
@@ -23695,8 +24274,14 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 1400.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 1400.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1406.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1400.0,
+                    "cache_save_export_seconds": 0.0,
+                    "post_cleanup_seconds": 6.0
+                  }
                 },
                 {
                   "run_id": 26120105669,
@@ -23814,14 +24399,20 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 1442.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 1442.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1448.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1442.0,
+                    "cache_save_export_seconds": 0.0,
+                    "post_cleanup_seconds": 6.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 1440.0,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 1446.0,
                 "sample_count": 3
               }
             },
@@ -24020,7 +24611,8 @@
                 "run_uid": "gh-26156999386-1",
                 "mode": "bazel",
                 "adapter": "bazel",
-                "build_seconds": 164.66666666666666
+                "scenario_seconds": 164.66666666666666,
+                "tool_elapsed_seconds": 170.0
               },
               "samples": [
                 {
@@ -24139,8 +24731,14 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 387.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 387.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 393.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 387.0,
+                    "cache_save_export_seconds": 0.0,
+                    "post_cleanup_seconds": 6.0
+                  }
                 },
                 {
                   "run_id": 26156305179,
@@ -24268,8 +24866,14 @@
                       }
                     ]
                   },
-                  "build_seconds": 56.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 56.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 61.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 56.0,
+                    "cache_save_export_seconds": 0.0,
+                    "post_cleanup_seconds": 5.0
+                  }
                 },
                 {
                   "run_id": 26124380629,
@@ -24397,14 +25001,20 @@
                       }
                     ]
                   },
-                  "build_seconds": 51.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 51.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 56.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 51.0,
+                    "cache_save_export_seconds": 0.0,
+                    "post_cleanup_seconds": 5.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 164.66666666666666,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 170.0,
                 "sample_count": 3
               }
             }
@@ -24575,7 +25185,8 @@
                 "run_uid": "gh-26156236265-1",
                 "mode": "bazel",
                 "adapter": "bazel",
-                "build_seconds": 1520.6666666666667
+                "scenario_seconds": 1520.6666666666667,
+                "tool_elapsed_seconds": 1520.6666666666667
               },
               "samples": [
                 {
@@ -24674,8 +25285,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 1529.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 1529.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1529.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1529.0
+                  },
                   "storage_available": false,
                   "storage_note": "Depot Cache storage is not available from benchmark artifacts."
                 },
@@ -24775,8 +25390,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 1537.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 1537.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1537.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1537.0
+                  },
                   "storage_available": false,
                   "storage_note": "Depot Cache storage is not available from benchmark artifacts."
                 },
@@ -24876,15 +25495,19 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 1496.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 1496.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1496.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1496.0
+                  },
                   "storage_available": false,
                   "storage_note": "Depot Cache storage is not available from benchmark artifacts."
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 1520.6666666666667,
                 "sample_count": 3
               }
@@ -25049,7 +25672,8 @@
                 "run_uid": "gh-26156998287-1",
                 "mode": "bazel",
                 "adapter": "bazel",
-                "build_seconds": 881.6666666666666
+                "scenario_seconds": 881.6666666666666,
+                "tool_elapsed_seconds": 881.6666666666666
               },
               "samples": [
                 {
@@ -25148,8 +25772,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 543.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 543.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 543.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 543.0
+                  },
                   "storage_available": false,
                   "storage_note": "Depot Cache storage is not available from benchmark artifacts."
                 },
@@ -25249,8 +25877,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 186.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 186.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 186.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 186.0
+                  },
                   "storage_available": false,
                   "storage_note": "Depot Cache storage is not available from benchmark artifacts."
                 },
@@ -25350,15 +25982,19 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 1916.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 1916.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1916.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1916.0
+                  },
                   "storage_available": false,
                   "storage_note": "Depot Cache storage is not available from benchmark artifacts."
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 881.6666666666666,
                 "sample_count": 3
               }
@@ -25503,7 +26139,8 @@
                 "run_uid": "gh-26156233573-1",
                 "mode": "bazel",
                 "adapter": "bazel",
-                "build_seconds": 2295.0
+                "scenario_seconds": 2295.0,
+                "tool_elapsed_seconds": 2295.0
               },
               "samples": [
                 {
@@ -25602,8 +26239,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 2291.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 2291.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2291.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 2291.0
+                  },
                   "storage_available": false,
                   "storage_note": "BuildBuddy Cache storage is not available from benchmark artifacts."
                 },
@@ -25703,15 +26344,19 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 2299.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 2299.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2299.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 2299.0
+                  },
                   "storage_available": false,
                   "storage_note": "BuildBuddy Cache storage is not available from benchmark artifacts."
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 2295.0,
                 "sample_count": 2
               }
@@ -25876,7 +26521,8 @@
                 "run_uid": "gh-26156996854-1",
                 "mode": "bazel",
                 "adapter": "bazel",
-                "build_seconds": 268.6666666666667
+                "scenario_seconds": 268.6666666666667,
+                "tool_elapsed_seconds": 268.6666666666667
               },
               "samples": [
                 {
@@ -25975,8 +26621,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 575.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 575.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 575.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 575.0
+                  },
                   "storage_available": false,
                   "storage_note": "BuildBuddy Cache storage is not available from benchmark artifacts."
                 },
@@ -26076,8 +26726,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 99.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 99.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 99.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 99.0
+                  },
                   "storage_available": false,
                   "storage_note": "BuildBuddy Cache storage is not available from benchmark artifacts."
                 },
@@ -26177,15 +26831,19 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 132.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 132.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 132.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 132.0
+                  },
                   "storage_available": false,
                   "storage_note": "BuildBuddy Cache storage is not available from benchmark artifacts."
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 268.6666666666667,
                 "sample_count": 3
               }
@@ -26347,7 +27005,8 @@
                 "run_uid": "gh-26156288216-1",
                 "mode": "sccache",
                 "adapter": "sccache",
-                "build_seconds": 3036.6666666666665
+                "scenario_seconds": 3036.6666666666665,
+                "tool_elapsed_seconds": 3036.6666666666665
               },
               "samples": [
                 {
@@ -26450,8 +27109,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 2981.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 2981.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2981.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 2981.0
+                  }
                 },
                 {
                   "run_id": 26125790400,
@@ -26553,8 +27216,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 3054.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 3054.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 3054.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 3054.0
+                  }
                 },
                 {
                   "run_id": 26024772446,
@@ -26637,13 +27304,17 @@
                   "reporting_url": null,
                   "tool_outcomes": null,
                   "slow_reason": null,
-                  "build_seconds": 3075.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 3075.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 3075.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 3075.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 3036.6666666666665,
                 "sample_count": 3
               }
@@ -26832,7 +27503,8 @@
                 "run_uid": "gh-26158635521-1",
                 "mode": "sccache",
                 "adapter": "sccache",
-                "build_seconds": 1932.0
+                "scenario_seconds": 1932.0,
+                "tool_elapsed_seconds": 1932.0
               },
               "samples": [
                 {
@@ -26945,8 +27617,12 @@
                       }
                     ]
                   },
-                  "build_seconds": 2586.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 2586.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2586.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 2586.0
+                  }
                 },
                 {
                   "run_id": 26156330380,
@@ -27048,8 +27724,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 1069.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 1069.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1069.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1069.0
+                  }
                 },
                 {
                   "run_id": 26150218865,
@@ -27151,13 +27831,17 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 2141.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 2141.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2141.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 2141.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 1932.0,
                 "sample_count": 3
               }
@@ -27368,7 +28052,8 @@
                 "run_uid": "gh-26156290330-1",
                 "mode": "sccache",
                 "adapter": "sccache",
-                "build_seconds": 2845.3333333333335
+                "scenario_seconds": 2845.3333333333335,
+                "tool_elapsed_seconds": 2871.3333333333335
               },
               "samples": [
                 {
@@ -27489,8 +28174,14 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 2570.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 2570.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2611.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 2570.0,
+                    "cache_save_export_seconds": 0.0,
+                    "post_cleanup_seconds": 41.0
+                  }
                 },
                 {
                   "run_id": 26125792987,
@@ -27635,8 +28326,14 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 2965.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 2965.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2980.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 2965.0,
+                    "cache_save_export_seconds": 0.0,
+                    "post_cleanup_seconds": 15.0
+                  }
                 },
                 {
                   "run_id": 26038377409,
@@ -27793,14 +28490,20 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 3001.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 3001.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 3023.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 3001.0,
+                    "cache_save_export_seconds": 0.0,
+                    "post_cleanup_seconds": 22.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 2845.3333333333335,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 2871.3333333333335,
                 "sample_count": 3
               }
             },
@@ -28003,7 +28706,8 @@
                 "run_uid": "gh-26158637657-1",
                 "mode": "sccache",
                 "adapter": "sccache",
-                "build_seconds": 2226.3333333333335
+                "scenario_seconds": 2226.3333333333335,
+                "tool_elapsed_seconds": 2254.3333333333335
               },
               "samples": [
                 {
@@ -28149,8 +28853,14 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 2317.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 2317.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2332.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 2317.0,
+                    "cache_save_export_seconds": 0.0,
+                    "post_cleanup_seconds": 15.0
+                  }
                 },
                 {
                   "run_id": 26156333024,
@@ -28305,8 +29015,14 @@
                       }
                     ]
                   },
-                  "build_seconds": 2171.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 2171.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2234.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 2171.0,
+                    "cache_save_export_seconds": 0.0,
+                    "post_cleanup_seconds": 63.0
+                  }
                 },
                 {
                   "run_id": 26150221927,
@@ -28451,14 +29167,20 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 2191.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 2191.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2197.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 2191.0,
+                    "cache_save_export_seconds": 0.0,
+                    "post_cleanup_seconds": 6.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
-                "seconds": 2226.3333333333335,
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
+                "seconds": 2254.3333333333335,
                 "sample_count": 3
               }
             }
@@ -28602,7 +29324,8 @@
                 "run_uid": "gh-26156292465-1",
                 "mode": "sccache",
                 "adapter": "sccache",
-                "build_seconds": 1929.0
+                "scenario_seconds": 1929.0,
+                "tool_elapsed_seconds": 1929.0
               },
               "samples": [
                 {
@@ -28701,8 +29424,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 1320.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 1320.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1320.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1320.0
+                  },
                   "storage_available": false,
                   "storage_note": "Depot Cache storage is not available from benchmark artifacts."
                 },
@@ -28802,15 +29529,19 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 2538.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 2538.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2538.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 2538.0
+                  },
                   "storage_available": false,
                   "storage_note": "Depot Cache storage is not available from benchmark artifacts."
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 1929.0,
                 "sample_count": 2
               }
@@ -28975,7 +29706,8 @@
                 "run_uid": "gh-26158636430-1",
                 "mode": "sccache",
                 "adapter": "sccache",
-                "build_seconds": 1931.3333333333333
+                "scenario_seconds": 1931.3333333333333,
+                "tool_elapsed_seconds": 1931.3333333333333
               },
               "samples": [
                 {
@@ -29074,8 +29806,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 2379.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 2379.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2379.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 2379.0
+                  },
                   "storage_available": false,
                   "storage_note": "Depot Cache storage is not available from benchmark artifacts."
                 },
@@ -29175,8 +29911,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 1193.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 1193.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 1193.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 1193.0
+                  },
                   "storage_available": false,
                   "storage_note": "Depot Cache storage is not available from benchmark artifacts."
                 },
@@ -29276,15 +30016,19 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 2222.0,
-                  "build_metric_source": "cold_seconds",
+                  "scenario_seconds": 2222.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 2222.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 2222.0
+                  },
                   "storage_available": false,
                   "storage_note": "Depot Cache storage is not available from benchmark artifacts."
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 1931.3333333333333,
                 "sample_count": 3
               }
@@ -29446,7 +30190,8 @@
                 "run_uid": "gh-26156265283-1",
                 "mode": "turbo",
                 "adapter": "turborepo",
-                "build_seconds": 307.0
+                "scenario_seconds": 307.0,
+                "tool_elapsed_seconds": 307.0
               },
               "samples": [
                 {
@@ -29549,8 +30294,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 307.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 307.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 307.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 307.0
+                  }
                 },
                 {
                   "run_id": 26125761533,
@@ -29652,8 +30401,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 304.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 304.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 304.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 304.0
+                  }
                 },
                 {
                   "run_id": 26024418552,
@@ -29736,13 +30489,17 @@
                   "reporting_url": null,
                   "tool_outcomes": null,
                   "slow_reason": null,
-                  "build_seconds": 310.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 310.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 310.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 310.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 307.0,
                 "sample_count": 3
               }
@@ -29921,7 +30678,8 @@
                 "run_uid": "gh-26164833940-1",
                 "mode": "turbo",
                 "adapter": "turborepo",
-                "build_seconds": 278.6666666666667
+                "scenario_seconds": 278.6666666666667,
+                "tool_elapsed_seconds": 278.6666666666667
               },
               "samples": [
                 {
@@ -30024,8 +30782,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 267.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 267.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 267.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 267.0
+                  }
                 },
                 {
                   "run_id": 26161059405,
@@ -30127,8 +30889,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 261.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 261.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 261.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 261.0
+                  }
                 },
                 {
                   "run_id": 26156959776,
@@ -30240,13 +31006,17 @@
                       }
                     ]
                   },
-                  "build_seconds": 308.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 308.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 308.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 308.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 278.6666666666667,
                 "sample_count": 3
               }
@@ -30447,7 +31217,8 @@
                 "run_uid": "gh-26156267394-1",
                 "mode": "turbo",
                 "adapter": "turborepo",
-                "build_seconds": 304.0
+                "scenario_seconds": 304.0,
+                "tool_elapsed_seconds": 304.0
               },
               "samples": [
                 {
@@ -30593,8 +31364,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 295.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 295.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 295.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 295.0
+                  }
                 },
                 {
                   "run_id": 26125764382,
@@ -30739,8 +31514,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 309.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 309.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 309.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 309.0
+                  }
                 },
                 {
                   "run_id": 26024418487,
@@ -30878,13 +31657,17 @@
                   "reporting_url": null,
                   "tool_outcomes": null,
                   "slow_reason": null,
-                  "build_seconds": 308.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 308.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 308.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 308.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 304.0,
                 "sample_count": 3
               }
@@ -31085,7 +31868,8 @@
                 "run_uid": "gh-26164836079-1",
                 "mode": "turbo",
                 "adapter": "turborepo",
-                "build_seconds": 263.6666666666667
+                "scenario_seconds": 263.6666666666667,
+                "tool_elapsed_seconds": 263.6666666666667
               },
               "samples": [
                 {
@@ -31231,8 +32015,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 259.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 259.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 259.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 259.0
+                  }
                 },
                 {
                   "run_id": 26161060553,
@@ -31377,8 +32165,12 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 259.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 259.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 259.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 259.0
+                  }
                 },
                 {
                   "run_id": 26156961122,
@@ -31523,13 +32315,17 @@
                     "issue_candidates": [],
                     "hypotheses": []
                   },
-                  "build_seconds": 273.0,
-                  "build_metric_source": "cold_seconds"
+                  "scenario_seconds": 273.0,
+                  "scenario_metric_source": "cold_seconds",
+                  "tool_elapsed_seconds": 273.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 273.0
+                  }
                 }
               ],
               "headline": {
-                "metric": "build_seconds",
-                "label": "Build Time",
+                "metric": "tool_elapsed_seconds",
+                "label": "Tool Elapsed",
                 "seconds": 263.6666666666667,
                 "sample_count": 3
               }
