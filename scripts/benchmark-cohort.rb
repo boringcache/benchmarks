@@ -50,6 +50,15 @@ BENCHMARKS = [
     "boringcache_workflow" => "mastodon-docker-boringcache.yml"
   },
   {
+    "benchmark" => "discourse-docker",
+    "aliases" => ["discourse"],
+    "name" => "Discourse",
+    "repo" => "boringcache/benchmark-discourse",
+    "category" => "docker",
+    "actions_workflow" => "discourse-docker-actions-cache.yml",
+    "boringcache_workflow" => "discourse-docker-boringcache.yml"
+  },
+  {
     "benchmark" => "posthog",
     "name" => "PostHog",
     "repo" => "boringcache/benchmark-posthog",
