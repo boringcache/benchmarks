@@ -8,6 +8,7 @@ This repo gathers JSON results from the standalone BoringCache benchmark repos.
 - `boringcache/benchmark-hugo-go`
 - `boringcache/benchmark-immich`
 - `boringcache/benchmark-mastodon`
+- `boringcache/benchmark-discourse`
 - `boringcache/benchmark-posthog`
 - `boringcache/benchmark-storybook`
 - `boringcache/benchmark-opentelemetry-java`

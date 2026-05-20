@@ -52,6 +52,15 @@ BENCHMARKS = [
     "step" => "Docker build (Ruby+Node)"
   },
   {
+    "benchmark" => "discourse-docker",
+    "aliases" => ["discourse"],
+    "name" => "Discourse",
+    "repo" => "discourse/discourse",
+    "source_repo" => "boringcache/benchmark-discourse",
+    "category" => "docker",
+    "step" => "Docker build (Ruby+Node dev image)"
+  },
+  {
     "benchmark" => "posthog",
     "name" => "PostHog",
     "repo" => "PostHog/posthog",
