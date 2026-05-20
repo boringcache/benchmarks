@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T17:43:26Z",
+  "generated_at": "2026-05-20T21:16:23Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -555,10 +555,10 @@
         "headline_scenario": "cold",
         "headline_label": "Commit Build",
         "before": "0m 21s",
-        "after": "0m 20s",
+        "after": "0m 18s",
         "before_seconds": 21.0,
-        "after_seconds": 20.0,
-        "faster": "5",
+        "after_seconds": 18.0,
+        "faster": "14",
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": "1b0daccc9442c81468808f53b028d0154c3c7d17",
@@ -649,7 +649,7 @@
               "strategy": "actions-cache",
               "lane": "rolling",
               "run_uid": "gh-26156306189-1",
-              "paired_run_id": 26156309206,
+              "paired_run_id": 26189136995,
               "build_seconds": 2,
               "setup_seconds": 19,
               "post_cleanup_seconds": null,
@@ -675,22 +675,22 @@
             }
           },
           "boringcache": {
-            "run_id": 26156309206,
-            "run_url": "https://github.com/boringcache/benchmark-hugo-go/actions/runs/26156309206",
+            "run_id": 26189136995,
+            "run_url": "https://github.com/boringcache/benchmark-hugo-go/actions/runs/26189136995",
             "head_sha": "1b0daccc9442c81468808f53b028d0154c3c7d17",
-            "created_at": "2026-05-20T10:19:35Z",
-            "cold_seconds": 20.0,
+            "created_at": "2026-05-20T20:49:28Z",
+            "cold_seconds": 18.0,
             "cold_build_seconds": 4.0,
-            "cold_restore_or_setup_seconds": 16.0,
+            "cold_restore_or_setup_seconds": 14.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 20.0,
+            "rolling_first_build_seconds": 18.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 33.0,
+            "run_total_seconds": 27.0,
             "storage_bytes": 276893099,
             "storage_source": "boringcache-check",
             "storage_breakdown": {
@@ -759,17 +759,17 @@
               "reseed_reason": null
             },
             "product_refs": {
-              "cli_version": "v1.13.11",
+              "cli_version": "v1.13.13",
               "action_ref": "boringcache/one@v1",
-              "action_sha": "4230b53b86aaed9a74e7994131347a2cfb082e6d",
-              "web_revision": "fd3fa612",
+              "action_sha": "c5c6f8439a19eccc1d6dc421cfb20899d7cbb614",
+              "web_revision": "bb4230e0",
               "api_url": "https://api.boringcache.com"
             },
             "product_refs_consistent": true,
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-hugo-go",
             "cache_tag": null,
-            "run_uid": "gh-26156309206-1",
+            "run_uid": "gh-26189136995-1",
             "mode": "go",
             "adapter": "gocache",
             "docker_cache_from_refs": null,
@@ -789,10 +789,10 @@
               "benchmark": "hugo-go",
               "strategy": "boringcache",
               "lane": "rolling",
-              "run_uid": "gh-26156309206-1",
+              "run_uid": "gh-26189136995-1",
               "paired_run_id": 26156306189,
               "build_seconds": 4,
-              "setup_seconds": 16,
+              "setup_seconds": 14,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": null,
               "cache_save_export_seconds": null,
@@ -808,7 +808,7 @@
                   "confidence": "medium",
                   "summary": "Setup or restore overhead is large relative to build time.",
                   "evidence": {
-                    "setup_seconds": 16,
+                    "setup_seconds": 14,
                     "build_seconds": 4
                   }
                 }
@@ -820,7 +820,7 @@
           },
           "warm_improvement_pct": null,
           "warm_build_improvement_pct": null,
-          "cold_improvement_pct": 4.76,
+          "cold_improvement_pct": 14.29,
           "cold_build_improvement_pct": -100.0,
           "storage_improvement_pct": 80.6,
           "storage_saved_bytes": 1150624203
