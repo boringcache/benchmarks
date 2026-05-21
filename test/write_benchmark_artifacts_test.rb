@@ -318,6 +318,69 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     assert_equal "nx", payload["adapter"]
   end
 
+  def test_sccache_stats_are_normalized_as_native_tool_evidence
+    Dir.mktmpdir("bc-artifact-inputs") do |dir|
+      stats_path = File.join(dir, "sccache-stats.txt")
+      File.write(stats_path, <<~STATS)
+        Compile requests                  2613
+        Compile requests executed         2305
+        Cache hits                         2173
+        Cache hits (C/C++)                  666
+        Cache hits (Rust)                  1366
+        Cache misses                        124
+        Cache misses (Rust)                 124
+        Cache timeouts                        0
+        Cache read errors                     0
+        Cache write errors                    0
+        Cache errors                          0
+        Non-cacheable calls                 299
+        Non-cacheable reasons:
+        crate-type                          252
+        -o                                   30
+
+        Average cache read hit            0.004 s
+        Average cache write               0.011 s
+        Average compiler                 29.316 s
+      STATS
+
+      payload = write_artifact(
+        "--sccache-stats-file", stats_path,
+        benchmark: "zed-sccache",
+        strategy: "depot-cache"
+      )
+
+      native_tool = payload.fetch("native_tool")
+      assert_equal "native_tool_evidence.v1", native_tool["schema_version"]
+      assert_equal "sccache", native_tool["tool"]
+      assert_equal 2613, native_tool["compile_requests"]
+      assert_equal 2305, native_tool["compile_requests_executed"]
+      assert_equal 2173, native_tool["cache_hits"]
+      assert_equal 124, native_tool["cache_misses"]
+      assert_equal 94.6, native_tool["hit_rate"]
+      assert_equal 1366, native_tool.dig("hit_counts", "rust")
+      assert_equal 124, native_tool.dig("miss_counts", "rust")
+      assert_equal 299, native_tool["non_cacheable_calls"]
+      assert_equal 252, native_tool.dig("non_cacheable_reasons", "crate-type")
+      assert_equal 0.004, native_tool["average_cache_read_hit_seconds"]
+      assert_equal 0.011, native_tool["average_cache_write_seconds"]
+      assert_equal 29.316, native_tool["average_compiler_seconds"]
+
+      review = payload.fetch("cache_review")
+      assert_equal "sccache", review["tool"]
+      assert_equal "cache_miss_quality", review["primary_bottleneck"]
+      assert_includes review["reason_codes"], "cache_miss_quality"
+      assert_includes review["reason_codes"], "native_tool_work"
+      assert_equal 2173, review["hit_count"]
+      assert_equal 124, review["miss_count"]
+      assert_equal 94.6, review["hit_rate"]
+
+      assert_equal 2173, payload.dig("slow_reason", "hit_count")
+      assert_equal 124, payload.dig("slow_reason", "miss_count")
+      assert_equal "cache_miss_quality", payload.dig("slow_reason", "hypotheses").find { |row| row["id"] == "cache_miss_quality" }.fetch("id")
+      assert_equal "native_tool_work", payload.dig("slow_reason", "hypotheses").find { |row| row["id"] == "native_tool_work" }.fetch("id")
+    end
+  end
+
   def test_startup_prefetch_fields_are_written
     payload = write_artifact(
       "--startup-prefetch-duration-ms", "152000",

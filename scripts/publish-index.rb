@@ -391,6 +391,11 @@ def tool_outcomes_from(payload)
   outcomes.is_a?(Hash) ? outcomes : nil
 end
 
+def native_tool_from(payload)
+  native_tool = payload["native_tool"] || payload.dig("diagnostics", "native_tool")
+  native_tool.is_a?(Hash) ? native_tool : nil
+end
+
 def slow_reason_from(payload)
   slow_reason = payload["slow_reason"]
   slow_reason.is_a?(Hash) ? slow_reason : nil
@@ -679,6 +684,7 @@ def extract_strategy_metrics(payload)
     summary_schema: payload["summary_schema"] || payload["summary_schema_label"],
     reporting_url: payload["reporting_url"] || payload.dig("diagnostics", "reporting_url"),
     tool_outcomes: tool_outcomes_from(payload),
+    native_tool: native_tool_from(payload),
     slow_reason: slow_reason_from(payload)
   }
 end
@@ -854,6 +860,7 @@ def strategy_snapshot(data, paired_run_id = nil)
     "summary_schema" => metrics[:summary_schema],
     "reporting_url" => metrics[:reporting_url],
     "tool_outcomes" => metrics[:tool_outcomes],
+    "native_tool" => metrics[:native_tool],
     "slow_reason" => slow_reason
   }
 end
@@ -1197,7 +1204,7 @@ def average_snapshot(snapshots)
   %w[
     workspace cache_tag run_uid mode adapter docker_cache_from_refs docker_cache_import_ready
     http_transport http2_enabled oci_stream_through_min_bytes restore_result save_result
-    publish_status session_summary cache_review summary_schema reporting_url tool_outcomes
+    publish_status session_summary cache_review summary_schema reporting_url tool_outcomes native_tool
   ].each do |key|
     value = latest[key] || most_common(snapshots.map { |snapshot| snapshot[key] })
     averaged[key] = value if value
