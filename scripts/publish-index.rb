@@ -1426,8 +1426,8 @@ end
 def build_report(entries, generated_at:)
   generated_label = Time.parse(generated_at).utc.strftime("%Y-%m-%d %H:%M UTC")
   headers = ["Benchmark", "Metric", "GitHub Actions Cache", "BoringCache", "Result", "Storage"]
-  fresh_rows = entries.filter_map { |entry| lane_report_row(entry, "fresh") }
-  rolling_rows = entries.filter_map { |entry| lane_report_row(entry, "rolling") }
+  fresh_rows = entries.map { |entry| lane_report_row(entry, "fresh") }.compact
+  rolling_rows = entries.map { |entry| lane_report_row(entry, "rolling") }.compact
 
   [
     "# Latest Benchmark Report",
