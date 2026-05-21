@@ -36,14 +36,14 @@ DOCKER_REQUIRED_STRINGS = {
   "registry_proxy_tags=\"${cache_scope}\"" => "single registry proxy tag assignment"
 }.freeze
 
-registry_by_repo = BENCHMARKS.each_with_object({}) do |benchmark, index|
+registry_by_repo = BENCHMARKS.each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |benchmark, index|
   repo_name = benchmark.fetch("source_repo").split("/").last
-  index[repo_name] = benchmark
+  index[repo_name] << benchmark
 end
 
 errors = []
 
-registry_by_repo.each do |repo_name, benchmark|
+registry_by_repo.each do |repo_name, benchmarks|
   repo_path = File.join(repos_dir, repo_name)
   next unless Dir.exist?(repo_path)
 
@@ -60,7 +60,7 @@ registry_by_repo.each do |repo_name, benchmark|
     end
   end
 
-  next unless benchmark.fetch("category") == "docker"
+  next unless benchmarks.any? { |benchmark| benchmark.fetch("category") == "docker" }
 
   docker_reusable_path = File.join(repo_path, ".github", "workflows", "reusable-docker-buildkit-benchmark.yml")
   unless File.exist?(docker_reusable_path)
@@ -82,4 +82,3 @@ if errors.any?
 end
 
 puts "benchmark workflow guardrails passed: #{registry_by_repo.length} repos"
-

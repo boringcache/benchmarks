@@ -52,6 +52,14 @@ BENCHMARKS = [
     "step" => "Docker build (Ruby+Node)"
   },
   {
+    "benchmark" => "mastodon-streaming",
+    "name" => "Mastodon Streaming",
+    "repo" => "mastodon/mastodon",
+    "source_repo" => "boringcache/benchmark-mastodon",
+    "category" => "docker",
+    "step" => "Docker build (streaming service)"
+  },
+  {
     "benchmark" => "discourse-docker",
     "aliases" => ["discourse"],
     "name" => "Discourse",
@@ -59,6 +67,38 @@ BENCHMARKS = [
     "source_repo" => "boringcache/benchmark-discourse",
     "category" => "docker",
     "step" => "Docker build (Ruby+Node dev image)"
+  },
+  {
+    "benchmark" => "discourse-base-deps",
+    "name" => "Discourse Base Deps",
+    "repo" => "discourse/discourse_docker",
+    "source_repo" => "boringcache/benchmark-discourse",
+    "category" => "docker",
+    "step" => "Docker build (base dependencies image)"
+  },
+  {
+    "benchmark" => "discourse-base-web-only",
+    "name" => "Discourse Web-Only Image",
+    "repo" => "discourse/discourse_docker",
+    "source_repo" => "boringcache/benchmark-discourse",
+    "category" => "docker",
+    "step" => "Docker build (web-only base image)"
+  },
+  {
+    "benchmark" => "discourse-base-release",
+    "name" => "Discourse Release Image",
+    "repo" => "discourse/discourse_docker",
+    "source_repo" => "boringcache/benchmark-discourse",
+    "category" => "docker",
+    "step" => "Docker build (release base image)"
+  },
+  {
+    "benchmark" => "discourse-test-release",
+    "name" => "Discourse Test Image",
+    "repo" => "discourse/discourse_docker",
+    "source_repo" => "boringcache/benchmark-discourse",
+    "category" => "docker",
+    "step" => "Docker build (discourse_test release image)"
   },
   {
     "benchmark" => "posthog",
@@ -119,6 +159,30 @@ BENCHMARKS = [
     "source_repo" => "boringcache/benchmark-n8n",
     "category" => "nodejs",
     "step" => "Turbo build (pnpm monorepo)"
+  },
+  {
+    "benchmark" => "n8n-docker",
+    "name" => "n8n Docker",
+    "repo" => "n8n-io/n8n",
+    "source_repo" => "boringcache/benchmark-n8n",
+    "category" => "docker",
+    "step" => "Docker build (n8n image)"
+  },
+  {
+    "benchmark" => "n8n-runners",
+    "name" => "n8n Runners",
+    "repo" => "n8n-io/n8n",
+    "source_repo" => "boringcache/benchmark-n8n",
+    "category" => "docker",
+    "step" => "Docker build (task runners)"
+  },
+  {
+    "benchmark" => "n8n-runners-distroless",
+    "name" => "n8n Runners Distroless",
+    "repo" => "n8n-io/n8n",
+    "source_repo" => "boringcache/benchmark-n8n",
+    "category" => "docker",
+    "step" => "Docker build (distroless task runners)"
   }
 ].freeze
 

@@ -90,6 +90,18 @@ BENCHMARKS = [
     "workflow_benchmark_ids" => ["mastodon-deps"]
   },
   {
+    "benchmark" => "mastodon-streaming",
+    "name" => "Mastodon Streaming",
+    "logo" => "mastodon",
+    "repo" => "mastodon/mastodon",
+    "source_repo" => "boringcache/benchmark-mastodon",
+    "public" => false,
+    "category" => "docker",
+    "step" => "Docker build (streaming service)",
+    "actions_workflow" => "mastodon-streaming-docker-actions-cache.yml",
+    "boringcache_workflow" => "mastodon-streaming-docker-boringcache.yml"
+  },
+  {
     "benchmark" => "discourse-docker",
     "aliases" => ["discourse"],
     "name" => "Discourse",
@@ -102,6 +114,54 @@ BENCHMARKS = [
     "actions_workflow" => "discourse-docker-actions-cache.yml",
     "boringcache_workflow" => "discourse-docker-boringcache.yml",
     "workflow_benchmark_ids" => ["discourse-deps"]
+  },
+  {
+    "benchmark" => "discourse-base-deps",
+    "name" => "Discourse Base Deps",
+    "logo" => "docker",
+    "repo" => "discourse/discourse_docker",
+    "source_repo" => "boringcache/benchmark-discourse",
+    "public" => false,
+    "category" => "docker",
+    "step" => "Docker build (base dependencies image)",
+    "actions_workflow" => "discourse-image-factory-actions-cache.yml",
+    "boringcache_workflow" => "discourse-image-factory-boringcache.yml"
+  },
+  {
+    "benchmark" => "discourse-base-web-only",
+    "name" => "Discourse Web-Only Image",
+    "logo" => "docker",
+    "repo" => "discourse/discourse_docker",
+    "source_repo" => "boringcache/benchmark-discourse",
+    "public" => false,
+    "category" => "docker",
+    "step" => "Docker build (web-only base image)",
+    "actions_workflow" => "discourse-image-factory-actions-cache.yml",
+    "boringcache_workflow" => "discourse-image-factory-boringcache.yml"
+  },
+  {
+    "benchmark" => "discourse-base-release",
+    "name" => "Discourse Release Image",
+    "logo" => "docker",
+    "repo" => "discourse/discourse_docker",
+    "source_repo" => "boringcache/benchmark-discourse",
+    "public" => false,
+    "category" => "docker",
+    "step" => "Docker build (release base image)",
+    "actions_workflow" => "discourse-image-factory-actions-cache.yml",
+    "boringcache_workflow" => "discourse-image-factory-boringcache.yml"
+  },
+  {
+    "benchmark" => "discourse-test-release",
+    "name" => "Discourse Test Image",
+    "logo" => "docker",
+    "repo" => "discourse/discourse_docker",
+    "source_repo" => "boringcache/benchmark-discourse",
+    "public" => false,
+    "category" => "docker",
+    "step" => "Docker build (discourse_test release image)",
+    "actions_workflow" => "discourse-image-factory-actions-cache.yml",
+    "boringcache_workflow" => "discourse-image-factory-boringcache.yml"
   },
   {
     "benchmark" => "posthog",
@@ -193,6 +253,42 @@ BENCHMARKS = [
     "step" => "Turbo build (pnpm monorepo)",
     "actions_workflow" => "n8n-actions-cache.yml",
     "boringcache_workflow" => "n8n-boringcache.yml"
+  },
+  {
+    "benchmark" => "n8n-docker",
+    "name" => "n8n Docker",
+    "logo" => "n8n",
+    "repo" => "n8n-io/n8n",
+    "source_repo" => "boringcache/benchmark-n8n",
+    "public" => false,
+    "category" => "docker",
+    "step" => "Docker build (n8n image)",
+    "actions_workflow" => "n8n-docker-actions-cache.yml",
+    "boringcache_workflow" => "n8n-docker-boringcache.yml"
+  },
+  {
+    "benchmark" => "n8n-runners",
+    "name" => "n8n Runners",
+    "logo" => "n8n",
+    "repo" => "n8n-io/n8n",
+    "source_repo" => "boringcache/benchmark-n8n",
+    "public" => false,
+    "category" => "docker",
+    "step" => "Docker build (task runners)",
+    "actions_workflow" => "n8n-docker-actions-cache.yml",
+    "boringcache_workflow" => "n8n-docker-boringcache.yml"
+  },
+  {
+    "benchmark" => "n8n-runners-distroless",
+    "name" => "n8n Runners Distroless",
+    "logo" => "n8n",
+    "repo" => "n8n-io/n8n",
+    "source_repo" => "boringcache/benchmark-n8n",
+    "public" => false,
+    "category" => "docker",
+    "step" => "Docker build (distroless task runners)",
+    "actions_workflow" => "n8n-docker-actions-cache.yml",
+    "boringcache_workflow" => "n8n-docker-boringcache.yml"
   }
 ].freeze
 
