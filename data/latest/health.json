@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T13:45:53Z",
+  "generated_at": "2026-05-21T15:03:48Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -11,7 +11,7 @@
           "state": "healthy",
           "actions_successful_run_count": 98,
           "boringcache_successful_run_count": 82,
-          "paired_head_count": 34,
+          "paired_head_count": 35,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "0081d6200e601c5838c8edf09057657094d71806",
@@ -27,13 +27,13 @@
           "state": "healthy",
           "actions_successful_run_count": 98,
           "boringcache_successful_run_count": 82,
-          "paired_head_count": 34,
+          "paired_head_count": 35,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "f0f7517feac432ff8a11a55954a17c577e1062e1",
-          "latest_created_at": "2026-05-21T12:30:51Z",
-          "latest_actions_run_id": 26226035639,
-          "latest_boringcache_run_id": 26226037222,
+          "latest_head_sha": "54b47c933041612ed7b232d1ec8d376e105404b1",
+          "latest_created_at": "2026-05-21T14:04:34Z",
+          "latest_actions_run_id": 26231002642,
+          "latest_boringcache_run_id": 26231005211,
           "latest_reporting_mode": "comparative",
           "latest_cache_import_status": "ok",
           "latest_sample_valid": true
@@ -48,9 +48,9 @@
         "fresh": {
           "lane": "fresh",
           "state": "healthy",
-          "actions_successful_run_count": 94,
+          "actions_successful_run_count": 95,
           "boringcache_successful_run_count": 90,
-          "paired_head_count": 43,
+          "paired_head_count": 44,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "1b0daccc9442c81468808f53b028d0154c3c7d17",
@@ -63,15 +63,15 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 94,
+          "actions_successful_run_count": 95,
           "boringcache_successful_run_count": 90,
-          "paired_head_count": 43,
+          "paired_head_count": 44,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "c1a795719a03c21a6df0705d8c99ebcc1a0a2741",
-          "latest_created_at": "2026-05-21T10:44:31Z",
-          "latest_actions_run_id": 26221163549,
-          "latest_boringcache_run_id": 26221164926,
+          "latest_head_sha": "91354341d062ac7c4a3f88700484140e6173a1b1",
+          "latest_created_at": "2026-05-21T13:38:55Z",
+          "latest_actions_run_id": 26229571485,
+          "latest_boringcache_run_id": 26229573432,
           "latest_reporting_mode": "comparative",
           "latest_sample_valid": true
         }
@@ -145,12 +145,52 @@
           "paired_head_count": 50,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "1e80ce46806667a6a0caaf11c1b614ac2404333e",
-          "latest_created_at": "2026-05-21T12:06:48Z",
-          "latest_actions_run_id": 26224896530,
-          "latest_boringcache_run_id": 26224897968,
+          "latest_head_sha": "97db355e1326280dbdf092170b6c5ae790909b6f",
+          "latest_created_at": "2026-05-21T13:37:41Z",
+          "latest_actions_run_id": 26229506138,
+          "latest_boringcache_run_id": 26229507811,
           "latest_reporting_mode": "comparative",
           "latest_cache_import_status": "ok",
+          "latest_sample_valid": true
+        }
+      }
+    },
+    {
+      "benchmark": "mastodon-streaming",
+      "name": "Mastodon Streaming",
+      "source_repo": "boringcache/benchmark-mastodon",
+      "lanes": {
+        "fresh": {
+          "lane": "fresh",
+          "state": "healthy",
+          "actions_successful_run_count": 2,
+          "boringcache_successful_run_count": 2,
+          "paired_head_count": 1,
+          "selected_pair_count": 1,
+          "window_pair_target": 3,
+          "latest_head_sha": "2a73d7d24e7e9906d0f8b1d83bebcea8daf07edc",
+          "latest_created_at": "2026-05-21T14:51:15Z",
+          "latest_actions_run_id": 26233654626,
+          "latest_boringcache_run_id": 26233654486,
+          "latest_reporting_mode": "comparative",
+          "latest_cache_import_status": "ok",
+          "latest_sample_valid": true
+        },
+        "rolling": {
+          "lane": "rolling",
+          "state": "investigation",
+          "actions_successful_run_count": 2,
+          "boringcache_successful_run_count": 2,
+          "paired_head_count": 1,
+          "selected_pair_count": 1,
+          "window_pair_target": 3,
+          "latest_head_sha": "2a73d7d24e7e9906d0f8b1d83bebcea8daf07edc",
+          "latest_created_at": "2026-05-21T14:52:09Z",
+          "latest_actions_run_id": 26233705422,
+          "latest_boringcache_run_id": 26233705628,
+          "latest_reporting_mode": "investigation_only",
+          "latest_reporting_reason": "rolling_cache_import_not_ok",
+          "latest_cache_import_status": "proxy_unreadable",
           "latest_sample_valid": true
         }
       }
@@ -195,6 +235,106 @@
       }
     },
     {
+      "benchmark": "discourse-base-deps",
+      "name": "Discourse Base Deps",
+      "source_repo": "boringcache/benchmark-discourse",
+      "lanes": {
+        "fresh": {
+          "lane": "fresh",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
+        },
+        "rolling": {
+          "lane": "rolling",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
+        }
+      }
+    },
+    {
+      "benchmark": "discourse-base-web-only",
+      "name": "Discourse Web-Only Image",
+      "source_repo": "boringcache/benchmark-discourse",
+      "lanes": {
+        "fresh": {
+          "lane": "fresh",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
+        },
+        "rolling": {
+          "lane": "rolling",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
+        }
+      }
+    },
+    {
+      "benchmark": "discourse-base-release",
+      "name": "Discourse Release Image",
+      "source_repo": "boringcache/benchmark-discourse",
+      "lanes": {
+        "fresh": {
+          "lane": "fresh",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
+        },
+        "rolling": {
+          "lane": "rolling",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
+        }
+      }
+    },
+    {
+      "benchmark": "discourse-test-release",
+      "name": "Discourse Test Image",
+      "source_repo": "boringcache/benchmark-discourse",
+      "lanes": {
+        "fresh": {
+          "lane": "fresh",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
+        },
+        "rolling": {
+          "lane": "rolling",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
+        }
+      }
+    },
+    {
       "benchmark": "posthog",
       "name": "PostHog",
       "source_repo": "boringcache/benchmark-posthog",
@@ -204,7 +344,7 @@
           "state": "healthy",
           "actions_successful_run_count": 99,
           "boringcache_successful_run_count": 98,
-          "paired_head_count": 75,
+          "paired_head_count": 76,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "929ec417f688cee5bf41f356f4b3d632a522fbbe",
@@ -220,13 +360,13 @@
           "state": "healthy",
           "actions_successful_run_count": 99,
           "boringcache_successful_run_count": 98,
-          "paired_head_count": 75,
+          "paired_head_count": 76,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "ec0d5ba3421c857c61e8aee5b344d694e4cebab1",
-          "latest_created_at": "2026-05-21T12:05:28Z",
-          "latest_actions_run_id": 26224833137,
-          "latest_boringcache_run_id": 26224834702,
+          "latest_head_sha": "274413882f772b5ef6ee6aea4dd57501222e4114",
+          "latest_created_at": "2026-05-21T13:36:39Z",
+          "latest_actions_run_id": 26229450413,
+          "latest_boringcache_run_id": 26229452108,
           "latest_reporting_mode": "comparative",
           "latest_cache_import_status": "ok",
           "latest_sample_valid": true
@@ -390,8 +530,8 @@
           "lane": "fresh",
           "state": "healthy",
           "actions_successful_run_count": 92,
-          "boringcache_successful_run_count": 89,
-          "paired_head_count": 64,
+          "boringcache_successful_run_count": 90,
+          "paired_head_count": 65,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "47d9e7b07e3d78e5a506ef88876fe1057f5cbabb",
@@ -405,14 +545,14 @@
           "lane": "rolling",
           "state": "healthy",
           "actions_successful_run_count": 92,
-          "boringcache_successful_run_count": 89,
-          "paired_head_count": 64,
+          "boringcache_successful_run_count": 90,
+          "paired_head_count": 65,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "14ebf72d67e640416771aa8d987bedd2599216d7",
-          "latest_created_at": "2026-05-21T11:40:02Z",
-          "latest_actions_run_id": 26223656627,
-          "latest_boringcache_run_id": 26223659866,
+          "latest_head_sha": "ac694d1d758c74b91ca608eaf8171934cd6ea1b1",
+          "latest_created_at": "2026-05-21T13:35:31Z",
+          "latest_actions_run_id": 26228491612,
+          "latest_boringcache_run_id": 26229390592,
           "latest_reporting_mode": "comparative",
           "latest_sample_valid": true
         }
@@ -452,6 +592,81 @@
           "latest_boringcache_run_id": 26229465424,
           "latest_reporting_mode": "comparative",
           "latest_sample_valid": true
+        }
+      }
+    },
+    {
+      "benchmark": "n8n-docker",
+      "name": "n8n Docker",
+      "source_repo": "boringcache/benchmark-n8n",
+      "lanes": {
+        "fresh": {
+          "lane": "fresh",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
+        },
+        "rolling": {
+          "lane": "rolling",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
+        }
+      }
+    },
+    {
+      "benchmark": "n8n-runners",
+      "name": "n8n Runners",
+      "source_repo": "boringcache/benchmark-n8n",
+      "lanes": {
+        "fresh": {
+          "lane": "fresh",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
+        },
+        "rolling": {
+          "lane": "rolling",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
+        }
+      }
+    },
+    {
+      "benchmark": "n8n-runners-distroless",
+      "name": "n8n Runners Distroless",
+      "source_repo": "boringcache/benchmark-n8n",
+      "lanes": {
+        "fresh": {
+          "lane": "fresh",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
+        },
+        "rolling": {
+          "lane": "rolling",
+          "state": "missing_pair",
+          "actions_successful_run_count": 0,
+          "boringcache_successful_run_count": 0,
+          "paired_head_count": 0,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
         }
       }
     }
