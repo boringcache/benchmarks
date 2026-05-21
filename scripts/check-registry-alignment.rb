@@ -14,9 +14,9 @@ end
 repos_dir = ARGV[0] || ENV.fetch("BENCHMARK_REPOS_DIR", default_repos_dir)
 abort "benchmark repos directory not found: #{repos_dir}" unless Dir.exist?(repos_dir)
 
-registry_by_repo = BENCHMARKS.each_with_object({}) do |benchmark, index|
+registry_by_repo = BENCHMARKS.each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |benchmark, index|
   repo_name = benchmark.fetch("source_repo").split("/").last
-  index[repo_name] = benchmark
+  index[repo_name] << benchmark
 end
 
 repo_names = Dir[File.join(repos_dir, "benchmark-*")].select { |path| File.directory?(path) }.map { |path| File.basename(path) }.sort
@@ -28,7 +28,7 @@ errors = []
 errors << "benchmark repos missing from aggregate registry: #{missing_from_registry.join(", ")}" if missing_from_registry.any?
 errors << "aggregate registry points at missing repos: #{extra_in_registry.join(", ")}" if extra_in_registry.any?
 
-registry_by_repo.each do |repo_name, benchmark|
+registry_by_repo.each do |repo_name, benchmarks|
   repo_path = File.join(repos_dir, repo_name)
   next unless Dir.exist?(repo_path)
 
@@ -39,11 +39,13 @@ registry_by_repo.each do |repo_name, benchmark|
     end.compact
   end.uniq.sort
 
-  allowed_ids = [
-    benchmark.fetch("benchmark"),
-    *Array(benchmark["aliases"]),
-    *Array(benchmark["workflow_benchmark_ids"])
-  ].uniq.sort
+  allowed_ids = benchmarks.flat_map do |benchmark|
+    [
+      benchmark.fetch("benchmark"),
+      *Array(benchmark["aliases"]),
+      *Array(benchmark["workflow_benchmark_ids"])
+    ]
+  end.uniq.sort
   unknown_ids = workflow_ids - allowed_ids
   missing_id = (workflow_ids & allowed_ids).empty?
 

@@ -50,6 +50,14 @@ BENCHMARKS = [
     "boringcache_workflow" => "mastodon-docker-boringcache.yml"
   },
   {
+    "benchmark" => "mastodon-streaming",
+    "name" => "Mastodon Streaming",
+    "repo" => "boringcache/benchmark-mastodon",
+    "category" => "docker",
+    "actions_workflow" => "mastodon-streaming-docker-actions-cache.yml",
+    "boringcache_workflow" => "mastodon-streaming-docker-boringcache.yml"
+  },
+  {
     "benchmark" => "discourse-docker",
     "aliases" => ["discourse"],
     "name" => "Discourse",
@@ -57,6 +65,38 @@ BENCHMARKS = [
     "category" => "docker",
     "actions_workflow" => "discourse-docker-actions-cache.yml",
     "boringcache_workflow" => "discourse-docker-boringcache.yml"
+  },
+  {
+    "benchmark" => "discourse-base-deps",
+    "name" => "Discourse Base Deps",
+    "repo" => "boringcache/benchmark-discourse",
+    "category" => "docker",
+    "actions_workflow" => "discourse-image-factory-actions-cache.yml",
+    "boringcache_workflow" => "discourse-image-factory-boringcache.yml"
+  },
+  {
+    "benchmark" => "discourse-base-web-only",
+    "name" => "Discourse Web-Only Image",
+    "repo" => "boringcache/benchmark-discourse",
+    "category" => "docker",
+    "actions_workflow" => "discourse-image-factory-actions-cache.yml",
+    "boringcache_workflow" => "discourse-image-factory-boringcache.yml"
+  },
+  {
+    "benchmark" => "discourse-base-release",
+    "name" => "Discourse Release Image",
+    "repo" => "boringcache/benchmark-discourse",
+    "category" => "docker",
+    "actions_workflow" => "discourse-image-factory-actions-cache.yml",
+    "boringcache_workflow" => "discourse-image-factory-boringcache.yml"
+  },
+  {
+    "benchmark" => "discourse-test-release",
+    "name" => "Discourse Test Image",
+    "repo" => "boringcache/benchmark-discourse",
+    "category" => "docker",
+    "actions_workflow" => "discourse-image-factory-actions-cache.yml",
+    "boringcache_workflow" => "discourse-image-factory-boringcache.yml"
   },
   {
     "benchmark" => "posthog",
@@ -117,6 +157,30 @@ BENCHMARKS = [
     "category" => "nodejs",
     "actions_workflow" => "n8n-actions-cache.yml",
     "boringcache_workflow" => "n8n-boringcache.yml"
+  },
+  {
+    "benchmark" => "n8n-docker",
+    "name" => "n8n Docker",
+    "repo" => "boringcache/benchmark-n8n",
+    "category" => "docker",
+    "actions_workflow" => "n8n-docker-actions-cache.yml",
+    "boringcache_workflow" => "n8n-docker-boringcache.yml"
+  },
+  {
+    "benchmark" => "n8n-runners",
+    "name" => "n8n Runners",
+    "repo" => "boringcache/benchmark-n8n",
+    "category" => "docker",
+    "actions_workflow" => "n8n-docker-actions-cache.yml",
+    "boringcache_workflow" => "n8n-docker-boringcache.yml"
+  },
+  {
+    "benchmark" => "n8n-runners-distroless",
+    "name" => "n8n Runners Distroless",
+    "repo" => "boringcache/benchmark-n8n",
+    "category" => "docker",
+    "actions_workflow" => "n8n-docker-actions-cache.yml",
+    "boringcache_workflow" => "n8n-docker-boringcache.yml"
   }
 ].freeze
 
