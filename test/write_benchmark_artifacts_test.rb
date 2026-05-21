@@ -238,6 +238,37 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     end
   end
 
+  def test_cache_review_fetches_session_payload_from_api_by_provider_run_id
+    Dir.mktmpdir("bc-artifact-inputs") do |dir|
+      curl_path = File.join(dir, "curl")
+      File.write(curl_path, <<~BASH)
+        #!/usr/bin/env bash
+        printf '%s\n' '{"sessions":[{"session_id":"api-session-123","run_uid":"12345","summary_schema":"cache_session_summary.v2","tool":"gocache","hit_count":7,"miss_count":1,"hit_rate":87.5,"error_count":0,"bytes_read":2048,"bytes_written":512,"duration_seconds":4.2,"review":{"primary_bottleneck":"cache_miss_quality","summary":"One miss remains after restore.","issue_candidates":[{"kind":"cache_miss_quality","owner":"adapter","surface":"go","severity":"investigate"}]}}]}'
+      BASH
+      File.chmod(0o755, curl_path)
+
+      payload = write_artifact(
+        "--workspace", "boringcache/benchmark-hugo",
+        "--run-uid", "gh-12345-1",
+        env: {
+          "PATH" => "#{dir}:#{ENV.fetch("PATH")}",
+          "BORINGCACHE_RESTORE_TOKEN" => "test-token",
+          "GITHUB_RUN_ID" => "12345"
+        }
+      )
+
+      review = payload.fetch("cache_review")
+      assert_equal "api-session-123", review["summary_session_id"]
+      assert_equal "gocache", review["tool"]
+      assert_equal "cache_miss_quality", review["primary_bottleneck"]
+      assert_equal ["cache_miss_quality"], review["reason_codes"]
+      assert_equal 7, review["hit_count"]
+      assert_equal 1, review["miss_count"]
+      assert_equal 87.5, review["hit_rate"]
+      assert_equal "cache_miss_quality", review.dig("issue_candidates", 0, "kind")
+    end
+  end
+
   def test_slow_reason_uses_action_timing_breakdown_when_docker_timings_are_absent
     Dir.mktmpdir("bc-artifact-inputs") do |dir|
       timings_path = File.join(dir, "action-timings.json")
@@ -370,7 +401,7 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
 
   private
 
-  def write_artifact(*extra_args, benchmark: "hugo", strategy: "boringcache", lane: "rolling")
+  def write_artifact(*extra_args, benchmark: "hugo", strategy: "boringcache", lane: "rolling", env: {})
     Dir.mktmpdir("bc-artifacts") do |dir|
       command = [
         SCRIPT,
@@ -386,7 +417,7 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
         *extra_args
       ]
 
-      stdout, stderr, status = Open3.capture3(*command)
+      stdout, stderr, status = Open3.capture3(env, *command)
       assert status.success?, "artifact writer failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
       JSON.parse(File.read(File.join(dir, "#{benchmark}-#{strategy}-#{lane}.json")))
     end
