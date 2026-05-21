@@ -172,6 +172,72 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     end
   end
 
+  def test_cache_review_projects_cache_session_v2_shape
+    Dir.mktmpdir("bc-artifact-inputs") do |dir|
+      summary_path = File.join(dir, "summary.json")
+      File.write(summary_path, JSON.generate(
+        "schema" => "cache-session-v2",
+        "session_id" => "proxy-summary-123",
+        "adapter" => "oci",
+        "workspace" => "boringcache/benchmark-hugo",
+        "tag" => "hugo-rolling-main",
+        "mode" => "docker-registry",
+        "duration_ms" => 2731,
+        "storage" => {
+          "bytes" => 6601,
+          "oci_engine_storage_get_bytes" => 6601
+        },
+        "oci" => {
+          "oci_engine_borrowed_upload_session_bytes" => 6601,
+          "oci_engine_publish_total_duration_ms" => 561
+        },
+        "startup_prefetch" => {
+          "startup_prefetch_oci_duration_ms" => 593
+        },
+        "classification" => {
+          "bottleneck" => {
+            "state" => "cache_side_clear",
+            "evidence" => {
+              "hits" => 25,
+              "misses" => 0,
+              "hit_rate" => 100.0,
+              "errors" => 0
+            }
+          },
+          "cache_temperature" => {
+            "state" => "hot",
+            "hits" => 25,
+            "misses" => 0,
+            "hit_rate" => 100.0,
+            "errors" => 0
+          }
+        }
+      ))
+
+      payload = write_artifact("--cache-session-summary-json", summary_path)
+
+      review = payload.fetch("cache_review")
+      assert_equal "cache-session-v2", review["summary_schema"]
+      assert_equal "proxy-summary-123", review["summary_session_id"]
+      assert_equal "oci", review["tool"]
+      assert_equal "boringcache/benchmark-hugo", review.dig("cache_target", "workspace")
+      assert_equal "cache_side_clear", review["primary_bottleneck"]
+      assert_equal "cache_side_clear", review["diagnostic_classification"]
+      assert_equal ["native_tool_work"], review["reason_codes"]
+      assert_equal 25, review["hit_count"]
+      assert_equal 0, review["miss_count"]
+      assert_equal 100.0, review["hit_rate"]
+      assert_equal 0, review["error_count"]
+      assert_equal 6601, review["bytes_read"]
+      assert_equal 6601, review["bytes_written"]
+      assert_in_delta 2.731, review["duration_seconds"], 0.001
+
+      assert_equal 25, payload.dig("slow_reason", "hit_count")
+      assert_equal 0, payload.dig("slow_reason", "miss_count")
+      assert_equal 100.0, payload.dig("slow_reason", "hit_rate")
+    end
+  end
+
   def test_slow_reason_uses_action_timing_breakdown_when_docker_timings_are_absent
     Dir.mktmpdir("bc-artifact-inputs") do |dir|
       timings_path = File.join(dir, "action-timings.json")
