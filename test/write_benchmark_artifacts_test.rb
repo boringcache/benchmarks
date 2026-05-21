@@ -243,7 +243,7 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
       curl_path = File.join(dir, "curl")
       File.write(curl_path, <<~BASH)
         #!/usr/bin/env bash
-        printf '%s\n' '{"sessions":[{"session_id":"api-session-123","run_uid":"12345","summary_schema":"cache_session_summary.v2","tool":"gocache","hit_count":7,"miss_count":1,"hit_rate":87.5,"error_count":0,"bytes_read":2048,"bytes_written":512,"duration_seconds":4.2,"review":{"primary_bottleneck":"cache_miss_quality","summary":"One miss remains after restore.","issue_candidates":[{"kind":"cache_miss_quality","owner":"adapter","surface":"go","severity":"investigate"}]}}]}'
+        printf '%s\n' '{"sessions":[{"session_id":"api-session-123","run_uid":"github-actions:boringcache/benchmark-hugo:12345","summary_schema":"cache_session_summary.v2","tool":"gocache","hit_count":7,"miss_count":1,"hit_rate":87.5,"error_count":0,"bytes_read":2048,"bytes_written":512,"duration_seconds":4.2,"review":{"primary_bottleneck":"cache_miss_quality","summary":"One miss remains after restore.","issue_candidates":[{"kind":"cache_miss_quality","owner":"adapter","surface":"go","severity":"investigate"}]}}]}'
       BASH
       File.chmod(0o755, curl_path)
 
