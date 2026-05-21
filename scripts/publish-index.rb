@@ -357,6 +357,11 @@ def session_summary_from(payload)
     payload.dig("diagnostics", "summary_json")
 end
 
+def cache_review_from(payload)
+  review = payload["cache_review"] || payload.dig("diagnostics", "cache_review")
+  review.is_a?(Hash) ? review : nil
+end
+
 def startup_prefetch_from(payload, session_summary)
   summary = session_summary.is_a?(Hash) && session_summary["startup_prefetch"].is_a?(Hash) ? session_summary["startup_prefetch"] : {}
   direct = payload["startup_prefetch"].is_a?(Hash) ? payload["startup_prefetch"] : {}
@@ -670,6 +675,7 @@ def extract_strategy_metrics(payload)
     save_result: payload["save_result"],
     publish_status: payload["publish_status"] || classification["publish_status"],
     session_summary: session_summary,
+    cache_review: cache_review_from(payload),
     summary_schema: payload["summary_schema"] || payload["summary_schema_label"],
     reporting_url: payload["reporting_url"] || payload.dig("diagnostics", "reporting_url"),
     tool_outcomes: tool_outcomes_from(payload),
@@ -844,6 +850,7 @@ def strategy_snapshot(data, paired_run_id = nil)
     "save_result" => metrics[:save_result],
     "publish_status" => metrics[:publish_status],
     "session_summary" => metrics[:session_summary],
+    "cache_review" => metrics[:cache_review],
     "summary_schema" => metrics[:summary_schema],
     "reporting_url" => metrics[:reporting_url],
     "tool_outcomes" => metrics[:tool_outcomes],
@@ -1190,7 +1197,7 @@ def average_snapshot(snapshots)
   %w[
     workspace cache_tag run_uid mode adapter docker_cache_from_refs docker_cache_import_ready
     http_transport http2_enabled oci_stream_through_min_bytes restore_result save_result
-    publish_status session_summary summary_schema reporting_url tool_outcomes
+    publish_status session_summary cache_review summary_schema reporting_url tool_outcomes
   ].each do |key|
     value = latest[key] || most_common(snapshots.map { |snapshot| snapshot[key] })
     averaged[key] = value if value
