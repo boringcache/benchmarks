@@ -57,6 +57,8 @@ class PublishIndexTest < Minitest::Test
     assert_equal "https://app.boringcache.com/workspaces/boringcache/benchmarks/cache/sessions/gh-123-1", snapshot["reporting_url"]
     assert_equal 256, snapshot.dig("storage_breakdown", "summary", "remote_cas_bytes")
     assert_equal 12, snapshot.dig("tool_outcomes", "gradle", "warm1", "executed_tasks")
+    assert_equal "sccache", snapshot.dig("native_tool", "tool")
+    assert_equal 94.6, snapshot.dig("native_tool", "hit_rate")
     assert_equal 25, snapshot.dig("slow_reason", "build_seconds")
     assert_equal 456, snapshot.dig("slow_reason", "paired_run_id")
     assert_equal ["cache_save_export_overhead"], snapshot.dig("slow_reason", "hypothesis_ids")
@@ -90,6 +92,8 @@ class PublishIndexTest < Minitest::Test
     assert_equal 256, averaged.dig("storage_breakdown", "summary", "remote_cas_bytes")
     assert_equal 512, averaged.dig("storage_breakdown", "summary", "dependency_archive_bytes")
     assert_equal 12, averaged.dig("tool_outcomes", "gradle", "warm1", "executed_tasks")
+    assert_equal "sccache", averaged.dig("native_tool", "tool")
+    assert_equal 94.6, averaged.dig("native_tool", "hit_rate")
     assert_equal 25, averaged.dig("slow_reason", "build_seconds")
     assert_equal 3, averaged.dig("slow_reason", "sample_count")
     assert_equal ["cache_save_export_overhead"], averaged.dig("slow_reason", "hypothesis_ids")
@@ -630,6 +634,7 @@ class PublishIndexTest < Minitest::Test
       "restore_result" => "hit",
       "save_result" => "published",
       "tool_outcomes" => tool_outcomes_sample,
+      "native_tool" => native_tool_sample,
       "slow_reason" => slow_reason_sample,
       "cache_review" => cache_review_sample,
       "cache_session_summary" => {
@@ -679,6 +684,7 @@ class PublishIndexTest < Minitest::Test
       },
       "storage_breakdown" => storage_breakdown_sample,
       "tool_outcomes" => tool_outcomes_sample,
+      "native_tool" => native_tool_sample,
       "startup_prefetch" => {
         "duration_ms" => 152_000,
         "concurrency" => 100,
@@ -736,6 +742,16 @@ class PublishIndexTest < Minitest::Test
         }
       },
       "warnings" => ["warm1_executed_tasks_high"]
+    }
+  end
+
+  def native_tool_sample
+    {
+      "schema_version" => "native_tool_evidence.v1",
+      "tool" => "sccache",
+      "cache_hits" => 2173,
+      "cache_misses" => 124,
+      "hit_rate" => 94.6
     }
   end
 
