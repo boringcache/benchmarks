@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T13:45:53Z",
+  "generated_at": "2026-05-21T15:03:48Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -126,6 +126,7 @@
             "warm1_executed_tasks_high"
           ]
         },
+        "native_tool": null,
         "slow_reason": {
           "schema_version": "benchmark_slow_reason.v1",
           "benchmark": "otel-gradle",
@@ -279,6 +280,7 @@
             "warm1_executed_tasks_high"
           ]
         },
+        "native_tool": null,
         "slow_reason": {
           "schema_version": "benchmark_slow_reason.v1",
           "benchmark": "otel-gradle",
@@ -442,6 +444,7 @@
                 "warm1_executed_tasks_high"
               ]
             },
+            "native_tool": null,
             "slow_reason": {
               "schema_version": "benchmark_slow_reason.v1",
               "benchmark": "otel-gradle",
@@ -595,6 +598,7 @@
                 "warm1_executed_tasks_high"
               ]
             },
+            "native_tool": null,
             "slow_reason": {
               "schema_version": "benchmark_slow_reason.v1",
               "benchmark": "otel-gradle",
@@ -751,6 +755,7 @@
               },
               "warnings": []
             },
+            "native_tool": null,
             "slow_reason": {
               "schema_version": "benchmark_slow_reason.v1",
               "benchmark": "otel-gradle",
@@ -902,6 +907,7 @@
               },
               "warnings": []
             },
+            "native_tool": null,
             "slow_reason": {
               "schema_version": "benchmark_slow_reason.v1",
               "benchmark": "otel-gradle",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T13:45:53Z",
+  "generated_at": "2026-05-21T15:03:48Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -105,6 +105,7 @@
         "summary_schema": null,
         "reporting_url": null,
         "tool_outcomes": null,
+        "native_tool": null,
         "slow_reason": {
           "schema_version": "benchmark_slow_reason.v1",
           "benchmark": "discourse-docker",
@@ -246,6 +247,7 @@
         "summary_schema": null,
         "reporting_url": null,
         "tool_outcomes": null,
+        "native_tool": null,
         "slow_reason": {
           "schema_version": "benchmark_slow_reason.v1",
           "benchmark": "discourse-docker",
@@ -388,6 +390,7 @@
             "summary_schema": null,
             "reporting_url": null,
             "tool_outcomes": null,
+            "native_tool": null,
             "slow_reason": {
               "schema_version": "benchmark_slow_reason.v1",
               "benchmark": "discourse-docker",
@@ -529,6 +532,7 @@
             "summary_schema": null,
             "reporting_url": null,
             "tool_outcomes": null,
+            "native_tool": null,
             "slow_reason": {
               "schema_version": "benchmark_slow_reason.v1",
               "benchmark": "discourse-docker",
@@ -666,6 +670,7 @@
             "summary_schema": null,
             "reporting_url": null,
             "tool_outcomes": null,
+            "native_tool": null,
             "slow_reason": {
               "schema_version": "benchmark_slow_reason.v1",
               "benchmark": "discourse-docker",
@@ -1207,6 +1212,7 @@
             "summary_schema": null,
             "reporting_url": null,
             "tool_outcomes": null,
+            "native_tool": null,
             "slow_reason": {
               "schema_version": "benchmark_slow_reason.v1",
               "benchmark": "discourse-docker",
