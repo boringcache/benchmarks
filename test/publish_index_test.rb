@@ -52,6 +52,8 @@ class PublishIndexTest < Minitest::Test
     assert_equal "published", snapshot["save_result"]
     assert_equal "complete", snapshot["publish_status"]
     assert_equal "cache_session_summary.v2", snapshot.dig("session_summary", "schema")
+    assert_equal "benchmark_cache_review.v1", snapshot.dig("cache_review", "schema_version")
+    assert_equal "cache_miss_quality", snapshot.dig("cache_review", "primary_bottleneck")
     assert_equal "https://app.boringcache.com/workspaces/boringcache/benchmarks/cache/sessions/gh-123-1", snapshot["reporting_url"]
     assert_equal 256, snapshot.dig("storage_breakdown", "summary", "remote_cas_bytes")
     assert_equal 12, snapshot.dig("tool_outcomes", "gradle", "warm1", "executed_tasks")
@@ -84,6 +86,7 @@ class PublishIndexTest < Minitest::Test
     assert_equal "h1+h2c-auto", averaged["http_transport"]
     assert_equal true, averaged["http2_enabled"]
     assert_equal 33_554_432, averaged["oci_stream_through_min_bytes"]
+    assert_equal "cache_miss_quality", averaged.dig("cache_review", "primary_bottleneck")
     assert_equal 256, averaged.dig("storage_breakdown", "summary", "remote_cas_bytes")
     assert_equal 512, averaged.dig("storage_breakdown", "summary", "dependency_archive_bytes")
     assert_equal 12, averaged.dig("tool_outcomes", "gradle", "warm1", "executed_tasks")
@@ -628,6 +631,7 @@ class PublishIndexTest < Minitest::Test
       "save_result" => "published",
       "tool_outcomes" => tool_outcomes_sample,
       "slow_reason" => slow_reason_sample,
+      "cache_review" => cache_review_sample,
       "cache_session_summary" => {
         "schema" => "cache_session_summary.v2",
         "startup_prefetch" => {
@@ -680,6 +684,7 @@ class PublishIndexTest < Minitest::Test
         "concurrency" => 100,
         "concurrency_reason" => "many_small_blobs_rtt_bound"
       },
+      "cache_review" => cache_review_sample,
       "slow_reason" => slow_reason_sample
     }
   end
@@ -761,6 +766,14 @@ class PublishIndexTest < Minitest::Test
         }
       ],
       "hypothesis_ids" => ["cache_save_export_overhead"]
+    }
+  end
+
+  def cache_review_sample
+    {
+      "schema_version" => "benchmark_cache_review.v1",
+      "primary_bottleneck" => "cache_miss_quality",
+      "customer_summary" => "Remote cache missed enough work to matter."
     }
   end
 end

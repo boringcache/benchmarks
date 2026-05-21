@@ -78,6 +78,100 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     end
   end
 
+  def test_cache_review_projects_session_summary_for_rails
+    Dir.mktmpdir("bc-artifact-inputs") do |dir|
+      summary_path = File.join(dir, "summary.json")
+      File.write(summary_path, JSON.generate(
+        "summary_schema" => "cache_session_summary.v2",
+        "summary_session_id" => "session-123",
+        "tool" => "bazel",
+        "cache_target" => "grpc-bazel",
+        "project_hints" => ["grpc"],
+        "phase_hints" => ["rolling"],
+        "metrics" => {
+          "total_hits" => 12,
+          "total_misses" => 3,
+          "total_errors" => 1,
+          "total_bytes_read" => 2048,
+          "total_bytes_written" => 4096,
+          "duration_seconds" => 9.5
+        },
+        "review" => {
+          "primary_bottleneck" => "native_tool_work",
+          "diagnostic" => {
+            "classification" => "cache_miss_quality",
+            "label" => "Partial remote reuse"
+          },
+          "customer_state" => "fast_but_not_skipping",
+          "customer_summary" => "Bazel used the remote cache, but still executed local analysis work.",
+          "service_side_issue" => false,
+          "operator_issue" => true,
+          "value_outcome" => "needs_native_diagnostics",
+          "value_owner" => "adapter",
+          "value_headline" => "Remote hits are present; native work remains.",
+          "value_detail" => "Profile flags can explain the remaining time.",
+          "value_next_action" => "Enable diagnose mode for one run.",
+          "value_evidence" => ["12 cache hits", "3 misses"],
+          "issue_candidates" => [
+            {
+              "kind" => "cache_miss_quality",
+              "owner" => "adapter",
+              "surface" => "bazel",
+              "severity" => "investigate",
+              "confidence" => 0.75,
+              "summary" => "Misses remain after a warm import.",
+              "suggested_action" => "Inspect the profile.",
+              "evidence_refs" => ["raw-only"]
+            }
+          ]
+        }
+      ))
+
+      payload = write_artifact("--cache-session-summary-json", summary_path)
+
+      review = payload.fetch("cache_review")
+      assert_equal "benchmark_cache_review.v1", review["schema_version"]
+      assert_equal "cache_session_summary.v2", review["summary_schema"]
+      assert_equal "session-123", review["summary_session_id"]
+      assert_equal "bazel", review["tool"]
+      assert_equal "grpc-bazel", review["cache_target"]
+      assert_equal ["grpc"], review["project_hints"]
+      assert_equal ["rolling"], review["phase_hints"]
+      assert_equal "native_tool_work", review["primary_bottleneck"]
+      assert_equal "cache_miss_quality", review["diagnostic_classification"]
+      assert_equal "Partial remote reuse", review["diagnostic_label"]
+      assert_equal "fast_but_not_skipping", review["customer_state"]
+      assert_equal "Bazel used the remote cache, but still executed local analysis work.", review["customer_summary"]
+      assert_equal false, review["service_side_issue"]
+      assert_equal true, review["operator_issue"]
+      assert_equal "needs_native_diagnostics", review["value_outcome"]
+      assert_equal "adapter", review["value_owner"]
+      assert_equal "Remote hits are present; native work remains.", review["value_headline"]
+      assert_equal "Profile flags can explain the remaining time.", review["value_detail"]
+      assert_equal "Enable diagnose mode for one run.", review["value_next_action"]
+      assert_equal ["12 cache hits", "3 misses"], review["value_evidence"]
+      assert_equal 12, review["hit_count"]
+      assert_equal 3, review["miss_count"]
+      assert_equal 80.0, review["hit_rate"]
+      assert_equal 1, review["error_count"]
+      assert_equal 2048, review["bytes_read"]
+      assert_equal 4096, review["bytes_written"]
+      assert_equal 9.5, review["duration_seconds"]
+
+      candidate = review.fetch("issue_candidates").fetch(0)
+      assert_equal "cache_miss_quality", candidate["kind"]
+      assert_equal "adapter", candidate["owner"]
+      assert_equal "bazel", candidate["surface"]
+      assert_equal "investigate", candidate["severity"]
+      assert_equal 0.75, candidate["confidence"]
+      refute_includes candidate.keys, "evidence_refs"
+
+      assert_equal 12, payload.dig("slow_reason", "hit_count")
+      assert_equal 3, payload.dig("slow_reason", "miss_count")
+      assert_equal 80.0, payload.dig("slow_reason", "hit_rate")
+    end
+  end
+
   def test_slow_reason_uses_action_timing_breakdown_when_docker_timings_are_absent
     Dir.mktmpdir("bc-artifact-inputs") do |dir|
       timings_path = File.join(dir, "action-timings.json")
