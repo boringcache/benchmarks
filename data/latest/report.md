@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-05-24 20:54 UTC
+Generated: 2026-05-25 01:35 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 20/20.
 
@@ -37,14 +37,14 @@ Rows are latest complete same-commit pairs.
 | --- | --- | --- | --- | --- | --- |
 | Hugo | Commit Build | 2m 46s | 2m 51s | 3% slower | 2.92 GB less (89.78%) |
 | Hugo Go | Commit Build | 0m 56s | 0m 50s | 11% faster | 1.26 GB less (82.37%) |
-| Immich | Commit Build | 3m 17s | 3m 5s | 6% faster | 7.23 GB less (77.7%) |
+| Immich | Commit Build | 2m 59s | 2m 51s | 4% faster | 7.55 GB less (78.46%) |
 | Mastodon | Commit Build | 2m 8s | 2m 30s | 17% slower | 8.98 GB less (89.8%) |
 | Mastodon Streaming | Commit Build | 0m 13s | 0m 8s | near tie | 9.89 GB less (98.99%) |
-| Discourse | Commit Build | 3m 3s | 2m 59s | near tie | n/a |
-| Discourse Base Deps | Commit Build | 0m 14s | 0m 11s | near tie | 9.05 GB less (93.17%) |
-| Discourse Web-Only Image | Commit Build | 0m 8s | 0m 11s | near tie | n/a |
-| Discourse Release Image | Commit Build | 0m 10s | 0m 11s | near tie | 8.37 GB less (86.1%) |
-| Discourse Test Image | Commit Build | 0m 17s | 0m 9s | 47% faster | 7.79 GB less (80.17%) |
+| Discourse | Commit Build | 3m 33s | 3m 0s | 15% faster | 8.90 GB less (89.67%) |
+| Discourse Base Deps | Commit Build | 5m 3s | 4m 24s | 13% faster | 9.26 GB less (93.32%) |
+| Discourse Web-Only Image | Commit Build | 8m 1s | 6m 21s | 21% faster | 9.39 GB less (88.12%) |
+| Discourse Release Image | Commit Build | 8m 57s | 8m 1s | 10% faster | 9.31 GB less (87.33%) |
+| Discourse Test Image | Commit Build | 0m 9s | 0m 8s | near tie | 8.00 GB less (80.58%) |
 | PostHog | Commit Build | 17m 39s | 11m 56s | 32% faster | 5.65 GB less (46.92%) |
 | Storybook | Commit Build | 3m 27s | 3m 32s | near tie | 1.69 GB less (68.51%) |
 | OpenTelemetry Java | Commit Build | 5m 21s | 4m 44s | 12% faster | 3.12 GB less (77.86%) |
