@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-05-25 01:35 UTC
+Generated: 2026-05-25 06:14 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 20/20.
 
@@ -10,8 +10,8 @@ Rows are latest complete same-commit pairs.
 
 | Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
-| Hugo | Cold Build | 3m 35s | 3m 23s | 6% faster | 6.78 GB less (95.33%) |
-| Hugo Go | Cold Build | 1m 19s | 1m 23s | 5% slower | 40.34 MB less (13.72%) |
+| Hugo | Cold Build | 3m 22s | 3m 30s | 4% slower | 2.04 GB less (86.0%) |
+| Hugo Go | Cold Build | 1m 20s | 1m 23s | 4% slower | 42.35 MB less (14.3%) |
 | Immich | Cold Build | 5m 31s | 4m 39s | 16% faster | 7.77 GB less (77.84%) |
 | Mastodon | Cold Build | 9m 57s | 9m 9s | 8% faster | 9.78 GB less (90.56%) |
 | Mastodon Streaming | Cold Build | 0m 25s | 0m 37s | 48% slower | 10.29 GB less (99.03%) |
@@ -40,12 +40,12 @@ Rows are latest complete same-commit pairs.
 | Immich | Commit Build | 2m 59s | 2m 51s | 4% faster | 7.55 GB less (78.46%) |
 | Mastodon | Commit Build | 2m 8s | 2m 30s | 17% slower | 8.98 GB less (89.8%) |
 | Mastodon Streaming | Commit Build | 0m 13s | 0m 8s | near tie | 9.89 GB less (98.99%) |
-| Discourse | Commit Build | 3m 33s | 3m 0s | 15% faster | 8.90 GB less (89.67%) |
-| Discourse Base Deps | Commit Build | 5m 3s | 4m 24s | 13% faster | 9.26 GB less (93.32%) |
-| Discourse Web-Only Image | Commit Build | 8m 1s | 6m 21s | 21% faster | 9.39 GB less (88.12%) |
-| Discourse Release Image | Commit Build | 8m 57s | 8m 1s | 10% faster | 9.31 GB less (87.33%) |
-| Discourse Test Image | Commit Build | 0m 9s | 0m 8s | near tie | 8.00 GB less (80.58%) |
-| PostHog | Commit Build | 17m 39s | 11m 56s | 32% faster | 5.65 GB less (46.92%) |
+| Discourse | Commit Build | 5m 28s | 4m 34s | 16% faster | 8.95 GB less (89.73%) |
+| Discourse Base Deps | Commit Build | 0m 13s | 0m 8s | near tie | 14.02 GB less (95.48%) |
+| Discourse Web-Only Image | Commit Build | 0m 12s | 0m 10s | near tie | 13.41 GB less (91.37%) |
+| Discourse Release Image | Commit Build | 0m 10s | 0m 8s | near tie | 13.33 GB less (90.8%) |
+| Discourse Test Image | Commit Build | 9m 20s | 7m 47s | 17% faster | 8.05 GB less (80.68%) |
+| PostHog | Commit Build | 12m 39s | 11m 47s | 7% faster | 3.22 GB less (33.48%) |
 | Storybook | Commit Build | 3m 27s | 3m 32s | near tie | 1.69 GB less (68.51%) |
 | OpenTelemetry Java | Commit Build | 5m 21s | 4m 44s | 12% faster | 3.12 GB less (77.86%) |
 | Spring AI | Commit Build | 1m 52s | 1m 50s | near tie | 2.70 GB less (75.52%) |
