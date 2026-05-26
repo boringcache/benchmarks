@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-05-26 21:06 UTC
+Generated: 2026-05-26 21:28 UTC
 
 Coverage: 20 benchmarks; fresh 19/20, rolling 20/20.
 
@@ -36,7 +36,7 @@ Rows are latest complete same-commit pairs.
 | --- | --- | --- | --- | --- | --- |
 | Hugo | Commit Build | 3m 24s | 3m 1s | 11% faster | 1.97 GB less (85.45%) |
 | Hugo Go | Commit Build | 0m 33s | 0m 27s | 18% faster | 1.52 GB less (84.54%) |
-| Immich | Commit Build | 4m 38s | 2m 45s | 41% faster | 7.53 GB less (78.39%) |
+| Immich | Commit Build | 5m 3s | 4m 29s | 11% faster | 7.78 GB less (78.93%) |
 | Mastodon | Commit Build | 2m 9s | 1m 58s | 9% faster | 8.95 GB less (89.77%) |
 | Mastodon Streaming | Commit Build | 0m 10s | 0m 7s | near tie | 9.87 GB less (98.99%) |
 | Discourse | Commit Build | 3m 22s | 3m 21s | near tie | 8.86 GB less (89.62%) |
@@ -50,7 +50,7 @@ Rows are latest complete same-commit pairs.
 | Spring AI | Commit Build | 3m 11s | 3m 10s | near tie | 2.70 GB less (75.53%) |
 | gRPC | Commit Build | 0m 54s | 0m 45s | 17% faster | n/a |
 | Zed | Commit Build | 36m 37s | 37m 29s | near tie | 10.70 GB less (93.52%) |
-| n8n | Commit Build | 4m 20s | 4m 16s | near tie | 7.08 GB less (90.26%) |
-| n8n Docker | Commit Build | 3m 45s | 3m 25s | 9% faster | n/a |
-| n8n Runners | Commit Build | 1m 19s | 0m 49s | 38% faster | n/a |
-| n8n Runners Distroless | Commit Build | 1m 57s | 1m 23s | 29% faster | n/a |
+| n8n | Commit Build | 3m 55s | 3m 46s | 4% faster | 7.15 GB less (90.33%) |
+| n8n Docker | Commit Build | 4m 25s | 3m 27s | 22% faster | n/a |
+| n8n Runners | Commit Build | 0m 52s | 0m 49s | near tie | n/a |
+| n8n Runners Distroless | Commit Build | 1m 33s | 1m 25s | 9% faster | n/a |
