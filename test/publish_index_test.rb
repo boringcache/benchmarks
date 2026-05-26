@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "minitest/autorun"
+require "rbconfig"
 require_relative "../scripts/publish-index"
 
 class PublishIndexTest < Minitest::Test
@@ -173,6 +174,28 @@ class PublishIndexTest < Minitest::Test
 
     assert_equal [26_161_049_549], filtered.map { |run| run["databaseId"] }
     assert_equal runs, filter_excluded_provider_runs(repo: "boringcache/benchmark-hugo", runs: runs)
+  end
+
+  def test_capture_cmd_fails_when_descendant_keeps_output_pipe_open
+    skip "fork is required to simulate an inherited output pipe" unless Process.respond_to?(:fork)
+
+    with_constant(:CMD_OUTPUT_DRAIN_TIMEOUT_SECONDS, 0.1) do
+      error = assert_raises(RuntimeError) do
+        capture_cmd(RbConfig.ruby, "-e", "fork { sleep 30 }; exit!")
+      end
+
+      assert_includes error.message, "Command output pipes did not close"
+    end
+  end
+
+  def test_benchmark_refresh_timeout_bounds_ruby_side_hangs
+    with_constant(:BENCHMARK_REFRESH_TIMEOUT_SECONDS, 0.1) do
+      error = assert_raises(RuntimeError) do
+        with_benchmark_timeout({ "benchmark" => "immich" }) { sleep 5 }
+      end
+
+      assert_includes error.message, "Timed out refreshing immich"
+    end
   end
 
   def test_provider_workflows_include_standard_and_optional_providers
@@ -791,5 +814,15 @@ class PublishIndexTest < Minitest::Test
       "primary_bottleneck" => "cache_miss_quality",
       "customer_summary" => "Remote cache missed enough work to matter."
     }
+  end
+
+  def with_constant(name, value)
+    original = Object.const_get(name)
+    Object.send(:remove_const, name)
+    Object.const_set(name, value)
+    yield
+  ensure
+    Object.send(:remove_const, name) if Object.const_defined?(name, false)
+    Object.const_set(name, original)
   end
 end
