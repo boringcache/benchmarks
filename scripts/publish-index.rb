@@ -5,6 +5,7 @@ require "fileutils"
 require "json"
 require "open3"
 require "time"
+require "timeout"
 require "tmpdir"
 require_relative "benchmark-reporting"
 
@@ -20,6 +21,8 @@ MAX_CMD_RETRIES = ENV.fetch("BENCHMARKS_GH_RETRIES", "3").to_i
 RUN_HISTORY_LIMIT = ENV.fetch("BENCHMARKS_GH_RUN_LIMIT", "100").to_i
 PAIR_COUNT = ENV.fetch("BENCHMARKS_PAIR_COUNT", "3").to_i
 CMD_TIMEOUT_SECONDS = ENV.fetch("BENCHMARKS_CMD_TIMEOUT", "120").to_i
+CMD_OUTPUT_DRAIN_TIMEOUT_SECONDS = ENV.fetch("BENCHMARKS_OUTPUT_DRAIN_TIMEOUT", "5").to_f
+BENCHMARK_REFRESH_TIMEOUT_SECONDS = ENV.fetch("BENCHMARKS_BENCHMARK_TIMEOUT", "600").to_f
 PRESERVE_STALE_ENTRIES = ENV.fetch("BENCHMARKS_PRESERVE_STALE", "false") == "true"
 LANE_IDS = %w[fresh rolling].freeze
 PRODUCT_REF_KEYS = %w[cli_version action_ref action_sha web_revision api_url].freeze
@@ -323,22 +326,72 @@ def require_gh!
 end
 
 def capture_cmd(*args)
-  Open3.popen3(*args) do |stdin, stdout, stderr, wait_thread|
+  Open3.popen3(*args, pgroup: true) do |stdin, stdout, stderr, wait_thread|
     stdin.close
     stdout_reader = Thread.new { stdout.read rescue "" }
     stderr_reader = Thread.new { stderr.read rescue "" }
     unless wait_thread.join(CMD_TIMEOUT_SECONDS)
-      begin
-        Process.kill("TERM", wait_thread.pid)
-        sleep(1)
-        Process.kill("KILL", wait_thread.pid) if wait_thread.alive?
-      rescue Errno::ESRCH
-      end
+      terminate_command_group(wait_thread.pid)
+      close_command_streams(stdout, stderr)
+      wait_thread.join(1)
       raise "Command timed out after #{CMD_TIMEOUT_SECONDS}s: #{args.join(' ')}"
+    end
+
+    unless drain_command_output(stdout_reader, stderr_reader)
+      terminate_command_group(wait_thread.pid)
+      close_command_streams(stdout, stderr)
+      raise "Command output pipes did not close after #{CMD_OUTPUT_DRAIN_TIMEOUT_SECONDS}s: #{args.join(' ')}"
     end
 
     [stdout_reader.value, stderr_reader.value, wait_thread.value]
   end
+end
+
+def terminate_command_group(pid)
+  kill_command_group(pid, "TERM")
+  sleep(1)
+  kill_command_group(pid, "KILL") if command_group_alive?(pid)
+end
+
+def kill_command_group(pid, signal)
+  Process.kill(signal, -pid)
+rescue Errno::ESRCH
+  begin
+    Process.kill(signal, pid)
+  rescue Errno::ESRCH
+  end
+end
+
+def command_group_alive?(pid)
+  Process.kill(0, -pid)
+  true
+rescue Errno::ESRCH
+  false
+end
+
+def close_command_streams(*streams)
+  streams.each do |stream|
+    stream.close unless stream.closed?
+  rescue IOError
+  end
+end
+
+def drain_command_output(*readers)
+  deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + CMD_OUTPUT_DRAIN_TIMEOUT_SECONDS
+  readers.all? do |reader|
+    remaining = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    reader.join([remaining, 0].max)
+  end
+end
+
+def log_progress(message)
+  warn "[publish-index] #{message}"
+end
+
+def with_benchmark_timeout(benchmark)
+  Timeout.timeout(BENCHMARK_REFRESH_TIMEOUT_SECONDS) { yield }
+rescue Timeout::Error
+  raise "Timed out refreshing #{benchmark.fetch('benchmark')} after #{BENCHMARK_REFRESH_TIMEOUT_SECONDS}s"
 end
 
 def parse_timestamp(value)
@@ -2035,65 +2088,72 @@ def main
       preserved_entry = preserved_entry.merge("public" => benchmark.fetch("public")) if preserved_entry
 
       begin
-        repo = benchmark.fetch("source_repo")
-        provider_workflows = provider_workflows_for(benchmark)
-        provider_runs = provider_workflows.transform_values do |workflow_name|
-          latest_successful_runs(repo: repo, workflow_name: workflow_name)
-        end
-        actions_runs = provider_runs.fetch("actions-cache")
-        boringcache_runs = provider_runs.fetch("boringcache")
-        artifacts_cache = {}
-        latest_lane_entries = {}
-        window_lane_entries = {}
-        lane_health = {}
+        with_benchmark_timeout(benchmark) do
+          repo = benchmark.fetch("source_repo")
+          log_progress("refreshing #{benchmark_id} from #{repo}")
+          provider_workflows = provider_workflows_for(benchmark)
+          log_progress("loading #{benchmark_id} workflow runs")
+          provider_runs = provider_workflows.transform_values do |workflow_name|
+            latest_successful_runs(repo: repo, workflow_name: workflow_name)
+          end
+          actions_runs = provider_runs.fetch("actions-cache")
+          boringcache_runs = provider_runs.fetch("boringcache")
+          artifacts_cache = {}
+          latest_lane_entries = {}
+          window_lane_entries = {}
+          lane_health = {}
 
-        LANE_IDS.each do |lane|
-          lane_data = load_lane_data(
+          LANE_IDS.each do |lane|
+            log_progress("loading #{benchmark_id} #{lane} lane")
+            lane_data = load_lane_data(
+              temp_root: tmp,
+              benchmark: benchmark,
+              lane: lane,
+              actions_runs: actions_runs,
+              boringcache_runs: boringcache_runs,
+              cache: strategy_data_cache,
+              artifacts_cache: artifacts_cache
+            )
+
+            latest_lane_entries[lane] = lane_data[:latest] if lane_data[:latest]
+            window_lane_entries[lane] = lane_data[:window] if lane_data[:window]
+            pair_points.concat(lane_data[:pairs])
+            lane_health[lane] = lane_data[:health]
+          end
+
+          log_progress("loading #{benchmark_id} provider matrix")
+          provider_entries << load_provider_entry(
             temp_root: tmp,
             benchmark: benchmark,
-            lane: lane,
-            actions_runs: actions_runs,
-            boringcache_runs: boringcache_runs,
+            provider_workflows: provider_workflows,
+            provider_runs: provider_runs,
             cache: strategy_data_cache,
             artifacts_cache: artifacts_cache
           )
 
-          latest_lane_entries[lane] = lane_data[:latest] if lane_data[:latest]
-          window_lane_entries[lane] = lane_data[:window] if lane_data[:window]
-          pair_points.concat(lane_data[:pairs])
-          lane_health[lane] = lane_data[:health]
-        end
+          entry = merge_lane_entries(latest_lane_entries)
+          window_entry = merge_lane_entries(window_lane_entries)
+          health_entries << {
+            "benchmark" => benchmark_id,
+            "name" => benchmark["name"],
+            "source_repo" => benchmark["source_repo"],
+            "lanes" => lane_health
+          }
 
-        provider_entries << load_provider_entry(
-          temp_root: tmp,
-          benchmark: benchmark,
-          provider_workflows: provider_workflows,
-          provider_runs: provider_runs,
-          cache: strategy_data_cache,
-          artifacts_cache: artifacts_cache
-        )
-
-        entry = merge_lane_entries(latest_lane_entries)
-        window_entry = merge_lane_entries(window_lane_entries)
-        health_entries << {
-          "benchmark" => benchmark_id,
-          "name" => benchmark["name"],
-          "source_repo" => benchmark["source_repo"],
-          "lanes" => lane_health
-        }
-
-        if entry.nil?
-          if PRESERVE_STALE_ENTRIES && preserved_entry
-            warn "Preserving #{benchmark['name']} from existing index: no successful run pair found"
-            entries << preserved_entry
+          if entry.nil?
+            if PRESERVE_STALE_ENTRIES && preserved_entry
+              warn "Preserving #{benchmark['name']} from existing index: no successful run pair found"
+              entries << preserved_entry
+            else
+              warn "Skipping #{benchmark['name']}: no successful run pair found"
+            end
           else
-            warn "Skipping #{benchmark['name']}: no successful run pair found"
+            entries << entry
+            window_entries << window_entry if window_entry
           end
-          next
-        end
 
-        entries << entry
-        window_entries << window_entry if window_entry
+          log_progress("finished #{benchmark_id}")
+        end
       rescue StandardError => e
         if PRESERVE_STALE_ENTRIES && preserved_entry
           warn "Preserving #{benchmark['name']} from existing index: #{e.message}"
