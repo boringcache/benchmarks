@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-05-27 13:13 UTC
+Generated: 2026-05-27 14:03 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 20/20.
 
@@ -48,7 +48,7 @@ Rows are latest complete same-commit pairs.
 | PostHog | Commit Build | 16m 30s | 12m 20s | 25% faster | 3.75 GB less (37.88%) |
 | Storybook | Commit Build | 0m 51s | 0m 51s | near tie | 1.77 GB less (69.28%) |
 | OpenTelemetry Java | Commit Build | 5m 21s | 4m 44s | 12% faster | 3.12 GB less (77.86%) |
-| Spring AI | Commit Build | 1m 34s | 1m 18s | 17% faster | 2.70 GB less (75.53%) |
+| Spring AI | Commit Build | 0m 56s | 0m 42s | 25% faster | 2.70 GB less (75.53%) |
 | gRPC | Commit Build | 1m 0s | 0m 51s | 15% faster | n/a |
 | Zed | Commit Build | 18m 25s | 18m 15s | near tie | 10.73 GB less (93.53%) |
 | n8n | Commit Build | 4m 19s | 5m 37s | 30% slower | 7.46 GB less (90.68%) |
