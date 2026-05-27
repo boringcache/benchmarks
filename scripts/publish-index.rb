@@ -301,6 +301,14 @@ EXCLUDED_PROVIDER_RUNS = {
   }
 }.freeze
 
+PROVIDER_LANE_OUTLIERS = {
+  "zed-sccache" => {
+    "depot-cache" => {
+      "fresh" => "Depot Cache's sccache store cannot be reset for this benchmark, so fresh samples retain remote compiler-cache hits and are not cold-provider evidence."
+    }
+  }
+}.freeze
+
 def run_cmd(*args)
   attempts = 0
 
@@ -625,6 +633,10 @@ end
 
 def filter_excluded_provider_runs(repo:, runs:)
   runs.reject { |run| excluded_provider_run?(repo: repo, run_id: run["databaseId"]) }
+end
+
+def provider_lane_outlier_reason(benchmark:, strategy:, lane:)
+  PROVIDER_LANE_OUTLIERS.dig(benchmark.fetch("benchmark"), strategy, lane)
 end
 
 def latest_successful_runs(repo:, workflow_name:, limit: RUN_HISTORY_LIMIT)
@@ -1792,8 +1804,32 @@ def provider_lane_payload(lane:, runs:, unique_head_count:, snapshots:, storage_
   payload
 end
 
+def provider_lane_outlier_payload(lane:, runs:, unique_head_count:, storage_available:, reason:)
+  {
+    "lane" => lane,
+    "state" => "outlier",
+    "successful_run_count" => runs.length,
+    "unique_head_count" => unique_head_count,
+    "selected_sample_count" => 0,
+    "window_sample_target" => PAIR_COUNT,
+    "storage_available" => storage_available,
+    "outlier_reason" => reason
+  }
+end
+
 def load_provider_lane_data(temp_root:, benchmark:, lane:, strategy:, runs:, cache:, artifacts_cache:)
   runs_by_head = runs_by_head_grouped(runs)
+  outlier_reason = provider_lane_outlier_reason(benchmark: benchmark, strategy: strategy, lane: lane)
+  if outlier_reason
+    return provider_lane_outlier_payload(
+      lane: lane,
+      runs: runs,
+      unique_head_count: runs_by_head.keys.length,
+      storage_available: provider_storage_available?(strategy),
+      reason: outlier_reason
+    )
+  end
+
   heads = runs_by_head.keys.sort_by do |head|
     runs_by_head[head].map { |run| parse_timestamp(run["createdAt"]) || Time.at(0) }.max
   end.reverse
