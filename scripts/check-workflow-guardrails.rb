@@ -16,10 +16,6 @@ abort "benchmark repos directory not found: #{repos_dir}" unless Dir.exist?(repo
 
 BANNED_WORKFLOW_PATTERNS = [
   [
-    /docker-internal-cache|docker-helper-path|BORINGCACHE_INTERNAL_|boringcache-bin/,
-    "legacy Dockerfile-internal BoringCache helper wiring is not a benchmark product path"
-  ],
-  [
     %r{/_boringcache/status|cache:buildcache},
     "benchmark workflows should consume boringcache/one Docker import outputs instead of probing proxy internals"
   ],

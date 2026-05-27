@@ -61,6 +61,5 @@ mise exec -- ruby test/write_benchmark_artifacts_test.rb
 `.github/workflows/guardrails.yml` checks out the standalone benchmark repos
 listed in `scripts/publish-index.rb` and runs the registry alignment plus
 workflow guardrail tests. The workflow lint fails if Docker benchmark workflows
-reintroduce Dockerfile-internal BoringCache helper wiring, local proxy probes, a
-second `docker-layers` registry tag, or stop consuming the `boringcache/one`
-Docker import-readiness outputs.
+add local proxy probes, add a second `docker-layers` registry tag, or stop
+consuming the `boringcache/one` Docker import-readiness outputs.
