@@ -176,6 +176,15 @@ class PublishIndexTest < Minitest::Test
     assert_equal runs, filter_excluded_provider_runs(repo: "boringcache/benchmark-hugo", runs: runs)
   end
 
+  def test_known_provider_lane_outliers_are_marked
+    benchmark = benchmark_config(category: "rust").merge("benchmark" => "zed-sccache")
+
+    reason = provider_lane_outlier_reason(benchmark: benchmark, strategy: "depot-cache", lane: "fresh")
+
+    assert_includes reason, "cannot be reset"
+    assert_nil provider_lane_outlier_reason(benchmark: benchmark, strategy: "depot-cache", lane: "rolling")
+  end
+
   def test_capture_cmd_fails_when_descendant_keeps_output_pipe_open
     skip "fork is required to simulate an inherited output pipe" unless Process.respond_to?(:fork)
 
@@ -289,6 +298,24 @@ class PublishIndexTest < Minitest::Test
     assert_equal 0, missing["selected_sample_count"]
     assert_equal false, missing["storage_available"]
     refute missing.key?("summary")
+  end
+
+  def test_provider_lane_outlier_payload_excludes_headline_samples
+    payload = provider_lane_outlier_payload(
+      lane: "fresh",
+      runs: [{ "databaseId" => 1 }, { "databaseId" => 2 }],
+      unique_head_count: 2,
+      storage_available: false,
+      reason: "provider cache cannot be reset"
+    )
+
+    assert_equal "outlier", payload["state"]
+    assert_equal "provider cache cannot be reset", payload["outlier_reason"]
+    assert_equal 2, payload["successful_run_count"]
+    assert_equal 0, payload["selected_sample_count"]
+    assert_equal false, payload["storage_available"]
+    refute payload.key?("headline")
+    refute payload.key?("samples")
   end
 
   def test_provider_snapshot_uses_build_time_and_strips_third_party_storage
