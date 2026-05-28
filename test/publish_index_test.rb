@@ -318,6 +318,115 @@ class PublishIndexTest < Minitest::Test
     refute payload.key?("samples")
   end
 
+  def test_runner_variance_filter_excludes_only_matching_native_tool_outlier
+    providers = provider_matrix(
+      "actions-cache" => [
+        provider_native_snapshot(run_id: "actions", compiler_seconds: 37.475, hits: 2290, misses: 84, seconds: 2_131)
+      ],
+      "boringcache" => [
+        provider_native_snapshot(run_id: "boringcache", compiler_seconds: 37.329, hits: 2290, misses: 84, seconds: 2_128)
+      ],
+      "depot-cache" => [
+        provider_native_snapshot(run_id: "depot", compiler_seconds: 29.292, hits: 2289, misses: 85, timeouts: 1, seconds: 1_821)
+      ]
+    )
+
+    filtered = apply_runner_variance_outlier_filter(providers)
+    depot_lane = filtered.dig("depot-cache", "lanes", "rolling")
+
+    assert_equal "missing_sample", depot_lane["state"]
+    assert_equal 1, depot_lane["source_sample_count"]
+    assert_equal 1, depot_lane["excluded_runner_variance_outlier_count"]
+    assert_equal ["depot"], depot_lane["runner_variance_outliers"].map { |row| row["run_id"] }
+    assert_equal "faster", depot_lane.dig("runner_variance_outliers", 0, "outlier_direction")
+    assert_equal ["actions", "boringcache"], depot_lane.dig("runner_variance_outliers", 0, "peer_run_ids")
+    assert_equal 1, filtered.dig("actions-cache", "lanes", "rolling", "selected_sample_count")
+    assert_equal 1, filtered.dig("boringcache", "lanes", "rolling", "selected_sample_count")
+    refute filtered.dig("actions-cache", "lanes", "rolling").key?("runner_variance_outliers")
+    refute filtered.dig("boringcache", "lanes", "rolling").key?("runner_variance_outliers")
+  end
+
+  def test_runner_variance_filter_keeps_sample_when_cache_work_differs
+    providers = provider_matrix(
+      "actions-cache" => [
+        provider_native_snapshot(run_id: "actions", compiler_seconds: 37.475, hits: 2290, misses: 84, seconds: 2_131)
+      ],
+      "boringcache" => [
+        provider_native_snapshot(run_id: "boringcache", compiler_seconds: 37.329, hits: 2290, misses: 84, seconds: 2_128)
+      ],
+      "depot-cache" => [
+        provider_native_snapshot(run_id: "depot", compiler_seconds: 29.292, hits: 2254, misses: 120, seconds: 1_821)
+      ]
+    )
+
+    filtered = apply_runner_variance_outlier_filter(providers)
+    depot_lane = filtered.dig("depot-cache", "lanes", "rolling")
+
+    assert_equal "healthy", depot_lane["state"]
+    assert_equal 1, depot_lane["selected_sample_count"]
+    refute depot_lane.key?("runner_variance_outliers")
+  end
+
+  def test_runner_variance_filter_keeps_sample_when_headline_timing_is_not_distorted
+    providers = provider_matrix(
+      "actions-cache" => [
+        provider_native_snapshot(run_id: "actions", compiler_seconds: 63.691, hits: 2296, misses: 3, seconds: 1_287)
+      ],
+      "boringcache" => [
+        provider_native_snapshot(run_id: "boringcache", compiler_seconds: 68.374, hits: 2296, misses: 3, seconds: 1_293)
+      ],
+      "depot-cache" => [
+        provider_native_snapshot(run_id: "depot", compiler_seconds: 47.146, hits: 2295, misses: 4, seconds: 1_353)
+      ]
+    )
+
+    filtered = apply_runner_variance_outlier_filter(providers)
+    depot_lane = filtered.dig("depot-cache", "lanes", "rolling")
+
+    assert_equal "healthy", depot_lane["state"]
+    assert_equal 1, depot_lane["selected_sample_count"]
+    refute depot_lane.key?("runner_variance_outliers")
+  end
+
+  def test_runner_variance_filter_needs_two_comparable_peers
+    providers = provider_matrix(
+      "actions-cache" => [
+        provider_native_snapshot(run_id: "actions", compiler_seconds: 37.475, seconds: 2_131)
+      ],
+      "depot-cache" => [
+        provider_native_snapshot(run_id: "depot", compiler_seconds: 29.292, seconds: 1_821)
+      ]
+    )
+
+    filtered = apply_runner_variance_outlier_filter(providers)
+
+    assert_equal 1, filtered.dig("depot-cache", "lanes", "rolling", "selected_sample_count")
+    refute filtered.dig("depot-cache", "lanes", "rolling").key?("runner_variance_outliers")
+  end
+
+  def test_runner_variance_filter_keeps_samples_when_peers_disagree
+    providers = provider_matrix(
+      "actions-cache" => [
+        provider_native_snapshot(run_id: "actions", compiler_seconds: 32.0, seconds: 2_131)
+      ],
+      "boringcache" => [
+        provider_native_snapshot(run_id: "boringcache", compiler_seconds: 44.0, seconds: 2_128)
+      ],
+      "depot-cache" => [
+        provider_native_snapshot(run_id: "depot", compiler_seconds: 25.0, seconds: 1_821)
+      ]
+    )
+
+    filtered = apply_runner_variance_outlier_filter(providers)
+
+    filtered.each_value do |provider|
+      lane = provider.dig("lanes", "rolling")
+      assert_equal "healthy", lane["state"]
+      assert_equal 1, lane["selected_sample_count"]
+      refute lane.key?("runner_variance_outliers")
+    end
+  end
+
   def test_provider_snapshot_uses_build_time_and_strips_third_party_storage
     data = {
       run: {
@@ -592,6 +701,79 @@ class PublishIndexTest < Minitest::Test
       "workspace" => "boringcache/benchmarks",
       "mode" => "docker",
       "adapter" => "oci"
+    }
+  end
+
+  def provider_matrix(samples_by_strategy, lane: "rolling")
+    samples_by_strategy.each_with_object({}) do |(strategy, snapshots), acc|
+      acc[strategy] = {
+        "strategy" => strategy,
+        "label" => provider_label(strategy),
+        "workflow" => "#{strategy}.yml",
+        "lanes" => {
+          lane => provider_lane_payload(
+            lane: lane,
+            runs: Array.new(snapshots.length),
+            unique_head_count: snapshots.map { |snapshot| snapshot["head_sha"] }.uniq.length,
+            snapshots: snapshots,
+            storage_available: provider_storage_available?(strategy)
+          )
+        }
+      }
+    end
+  end
+
+  def provider_native_snapshot(
+    run_id:,
+    compiler_seconds:,
+    head_sha: "native-head",
+    hits: 2290,
+    misses: 84,
+    requests: 2701,
+    executed: 2382,
+    non_cacheable: 310,
+    hit_rate: 96.46,
+    timeouts: 0,
+    seconds: 2_100
+  )
+    {
+      "run_id" => run_id,
+      "run_url" => "https://github.com/boringcache/benchmark-zed/actions/runs/#{run_id}",
+      "head_sha" => head_sha,
+      "created_at" => "2026-05-28T05:58:00Z",
+      "cold_seconds" => seconds,
+      "cold_build_seconds" => seconds,
+      "run_total_seconds" => seconds,
+      "native_tool" => {
+        "schema_version" => "native_tool_evidence.v1",
+        "tool" => "sccache",
+        "compile_requests" => requests,
+        "compile_requests_executed" => executed,
+        "cache_hits" => hits,
+        "cache_misses" => misses,
+        "hit_rate" => hit_rate,
+        "hit_counts" => {
+          "rust" => 1483,
+          "c_cpp" => 666,
+          "c" => hits - 1483 - 666
+        },
+        "miss_counts" => {
+          "rust" => misses
+        },
+        "non_cacheable_calls" => non_cacheable,
+        "non_cacheable_reasons" => {
+          "crate-type" => 263,
+          "-o" => 30,
+          "-" => 10,
+          "missing input" => 6,
+          "missing emit" => 1
+        },
+        "average_compiler_seconds" => compiler_seconds,
+        "cache_errors" => 0,
+        "cache_read_errors" => 0,
+        "cache_write_errors" => 0,
+        "cache_timeouts" => timeouts
+      }
     }
   end
 
