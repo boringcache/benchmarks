@@ -29,6 +29,7 @@ PRODUCT_REF_KEYS = %w[cli_version action_ref action_sha web_revision api_url].fr
 PROVIDER_LABELS = {
   "actions-cache" => "GitHub Actions Cache",
   "boringcache" => "BoringCache",
+  "boringcache-native" => "BoringCache Native BuildKit",
   "depot-cache" => "Depot Cache",
   "buildbuddy-cache" => "BuildBuddy Cache"
 }.freeze
@@ -638,10 +639,14 @@ def provider_label(strategy)
 end
 
 def provider_workflows_for(benchmark)
-  {
+  workflows = {
     "actions-cache" => benchmark.fetch("actions_workflow"),
     "boringcache" => benchmark.fetch("boringcache_workflow")
-  }.merge(benchmark.fetch("provider_workflows", {}))
+  }
+  if benchmark["category"] == "docker"
+    workflows["boringcache-native"] = benchmark.fetch("boringcache_workflow")
+  end
+  workflows.merge(benchmark.fetch("provider_workflows", {}))
 end
 
 def provider_storage_available?(strategy)
@@ -685,7 +690,13 @@ def benchmark_artifact_name(repo:, run_id:, benchmark_id:, strategy:)
 
   artifact = artifacts.find do |item|
     name = item["name"].to_s
-    !item["expired"] && benchmark_ids.any? { |id| name.start_with?("benchmark-#{id}-#{strategy}") }
+    !item["expired"] && benchmark_ids.any? do |id|
+      if strategy == "boringcache-native"
+        name.start_with?("benchmark-#{id}-native-boringcache")
+      else
+        name.start_with?("benchmark-#{id}-#{strategy}")
+      end
+    end
   end
 
   artifact && artifact["name"]
@@ -693,8 +704,9 @@ end
 
 def lane_artifact_names(benchmark_id:, strategy:, lane:)
   Array(benchmark_id).flat_map do |id|
-    names = ["benchmark-#{id}-#{strategy}-#{lane}"]
-    names << "benchmark-#{id}-#{strategy}" if lane == "fresh"
+    artifact_strategy = strategy == "boringcache-native" ? "native-boringcache" : strategy
+    names = ["benchmark-#{id}-#{artifact_strategy}-#{lane}"]
+    names << "benchmark-#{id}-#{artifact_strategy}" if lane == "fresh"
     names
   end
 end
@@ -899,6 +911,9 @@ end
 
 def inferred_adapter(payload)
   mode = payload["mode"] || inferred_mode(payload)
+  benchmark = payload["benchmark"].to_s
+  return "buildkit-native" if mode == "docker" && benchmark.end_with?("-native")
+
   case mode
   when "docker"
     "oci"
@@ -981,10 +996,13 @@ def load_strategy_data(temp_root:, repo:, run:, benchmark_id:, strategy:, lane:,
     return cache[cache_key]
   end
 
+  metrics = extract_strategy_metrics(payload)
+  metrics[:adapter] = "buildkit-native" if strategy == "boringcache-native"
+
   cache[cache_key] = {
     run: run,
     run_total_seconds: run_total,
-    metrics: extract_strategy_metrics(payload)
+    metrics: metrics
   }
 end
 

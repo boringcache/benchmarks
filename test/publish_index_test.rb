@@ -65,6 +65,18 @@ class PublishIndexTest < Minitest::Test
     assert_equal ["cache_save_export_overhead"], snapshot.dig("slow_reason", "hypothesis_ids")
   end
 
+  def test_native_docker_artifact_infers_native_buildkit_adapter
+    artifact = raw_boringcache_artifact.merge(
+      "benchmark" => "posthog-native"
+    )
+    artifact.delete("adapter")
+
+    metrics = extract_strategy_metrics(artifact)
+
+    assert_equal "docker", metrics[:mode]
+    assert_equal "buildkit-native", metrics[:adapter]
+  end
+
   def test_average_snapshot_carries_refs_and_flags_mixed_release_samples
     snapshots = [
       raw_snapshot("v1.12.86"),
@@ -226,6 +238,23 @@ class PublishIndexTest < Minitest::Test
     )
     assert_equal "Depot Cache", provider_label("depot-cache")
     assert_equal "custom-cache", provider_label("custom-cache")
+
+    docker_benchmark = benchmark_config(category: "docker").merge(
+      "actions_workflow" => "posthog-actions-cache.yml",
+      "boringcache_workflow" => "posthog-boringcache.yml"
+    )
+    assert_equal(
+      {
+        "actions-cache" => "posthog-actions-cache.yml",
+        "boringcache" => "posthog-boringcache.yml",
+        "boringcache-native" => "posthog-boringcache.yml"
+      },
+      provider_workflows_for(docker_benchmark)
+    )
+    assert_equal "BoringCache Native BuildKit", provider_label("boringcache-native")
+    assert_equal false, provider_storage_available?("boringcache-native")
+    assert_includes lane_artifact_names(benchmark_id: "posthog", strategy: "boringcache-native", lane: "rolling"),
+      "benchmark-posthog-native-boringcache-rolling"
   end
 
   def test_provider_lane_payload_summarizes_samples
