@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T21:22:11Z",
+  "generated_at": "2026-05-28T01:36:22Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -592,33 +592,33 @@
         "step": "Turbo build (pnpm monorepo)",
         "headline_scenario": "cold",
         "headline_label": "Commit Build",
-        "before": "1m 36s",
-        "after": "1m 3s",
-        "before_seconds": 96.0,
-        "after_seconds": 63.0,
-        "faster": "34",
+        "before": "1m 29s",
+        "after": "1m 10s",
+        "before_seconds": 89.0,
+        "after_seconds": 70.0,
+        "faster": "21",
         "comparison": {
           "paired_on_head_sha": true,
-          "pairing_head_sha": "445151e9b8bd9eff1f56029a270bf03944a9dd9b",
+          "pairing_head_sha": "426917dfc94475a942a3d2a3a18b4075bb906546",
           "sample_count": 1,
           "actions_cache": {
-            "run_id": 26539028911,
-            "run_url": "https://github.com/boringcache/benchmark-n8n/actions/runs/26539028911",
-            "head_sha": "445151e9b8bd9eff1f56029a270bf03944a9dd9b",
-            "created_at": "2026-05-27T21:11:54Z",
-            "cold_seconds": 96.0,
-            "cold_build_seconds": 43.0,
-            "cold_restore_or_setup_seconds": 53.0,
+            "run_id": 26543790220,
+            "run_url": "https://github.com/boringcache/benchmark-n8n/actions/runs/26543790220",
+            "head_sha": "426917dfc94475a942a3d2a3a18b4075bb906546",
+            "created_at": "2026-05-27T23:00:46Z",
+            "cold_seconds": 89.0,
+            "cold_build_seconds": 45.0,
+            "cold_restore_or_setup_seconds": 44.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 96.0,
+            "rolling_first_build_seconds": 89.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 149.0,
-            "storage_bytes": 9163853913,
+            "run_total_seconds": 169.0,
+            "storage_bytes": 9168958750,
             "storage_source": "github-actions-cache-api",
             "storage_breakdown": null,
             "docker_cache_import_seconds": null,
@@ -666,7 +666,7 @@
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-n8n",
             "cache_tag": null,
-            "run_uid": "gh-26539028911-1",
+            "run_uid": "gh-26543790220-1",
             "mode": "turbo",
             "adapter": "turborepo",
             "docker_cache_from_refs": null,
@@ -688,10 +688,10 @@
               "benchmark": "n8n",
               "strategy": "actions-cache",
               "lane": "rolling",
-              "run_uid": "gh-26539028911-1",
-              "paired_run_id": 26539030436,
-              "build_seconds": 43,
-              "setup_seconds": 53,
+              "run_uid": "gh-26543790220-1",
+              "paired_run_id": 26543791187,
+              "build_seconds": 45,
+              "setup_seconds": 44,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": null,
               "cache_save_export_seconds": null,
@@ -708,31 +708,31 @@
                   "confidence": "medium",
                   "summary": "Setup or restore overhead is large relative to build time.",
                   "evidence": {
-                    "setup_seconds": 53,
-                    "build_seconds": 43
+                    "setup_seconds": 44,
+                    "build_seconds": 45
                   }
                 }
               ]
             }
           },
           "boringcache": {
-            "run_id": 26539030436,
-            "run_url": "https://github.com/boringcache/benchmark-n8n/actions/runs/26539030436",
-            "head_sha": "445151e9b8bd9eff1f56029a270bf03944a9dd9b",
-            "created_at": "2026-05-27T21:11:55Z",
-            "cold_seconds": 63.0,
-            "cold_build_seconds": 42.0,
-            "cold_restore_or_setup_seconds": 21.0,
+            "run_id": 26543791187,
+            "run_url": "https://github.com/boringcache/benchmark-n8n/actions/runs/26543791187",
+            "head_sha": "426917dfc94475a942a3d2a3a18b4075bb906546",
+            "created_at": "2026-05-27T23:00:48Z",
+            "cold_seconds": 70.0,
+            "cold_build_seconds": 43.0,
+            "cold_restore_or_setup_seconds": 27.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 63.0,
+            "rolling_first_build_seconds": 70.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 89.0,
-            "storage_bytes": 824357277,
+            "run_total_seconds": 95.0,
+            "storage_bytes": 824357888,
             "storage_source": "boringcache-check",
             "storage_breakdown": {
               "workspace": "boringcache/benchmark-n8n",
@@ -741,10 +741,10 @@
                 "n8n-rolling-main-turbo-pnpm-store-node-24.13.1-pnpm-10.32.1-ubuntu-24-x86_64",
                 "n8n-rolling-main-turbo-ubuntu-24-x86_64"
               ],
-              "total_bytes": 824357277,
+              "total_bytes": 824357888,
               "summary": {
                 "remote_cas_bytes": 0,
-                "dependency_archive_bytes": 757290776,
+                "dependency_archive_bytes": 757291387,
                 "tool_runtime_archive_bytes": 67066501,
                 "unknown_bytes": 0
               },
@@ -764,13 +764,13 @@
                 {
                   "tag": "n8n-rolling-main-turbo-pnpm-store-node-24.13.1-pnpm-10.32.1-ubuntu-24-x86_64",
                   "requested_tag": "n8n-rolling-main-turbo-pnpm-store-node-24.13.1-pnpm-10.32.1-ubuntu-24-x86_64",
-                  "cache_entry_id": "d94097ea-9561-4a9c-839e-a7243ed4ad30",
+                  "cache_entry_id": "24a1d251-2781-4e45-87ae-f311bcafa3e8",
                   "primary_tag": "n8n-rolling-main-turbo-pnpm-store-node-24.13.1-pnpm-10.32.1-ubuntu-24-x86_64",
                   "storage_mode": "archive",
                   "component_type": "dependency_archive",
                   "component_label": "dependency archive",
-                  "bytes": 757290776,
-                  "archive_size_bytes": 757290776,
+                  "bytes": 757291387,
+                  "archive_size_bytes": 757291387,
                   "blob_total_size_bytes": 0
                 }
               ]
@@ -823,7 +823,7 @@
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-n8n",
             "cache_tag": null,
-            "run_uid": "gh-26539030436-1",
+            "run_uid": "gh-26543791187-1",
             "mode": "turbo",
             "adapter": "turborepo",
             "docker_cache_from_refs": null,
@@ -845,10 +845,10 @@
               "benchmark": "n8n",
               "strategy": "boringcache",
               "lane": "rolling",
-              "run_uid": "gh-26539030436-1",
-              "paired_run_id": 26539028911,
-              "build_seconds": 42,
-              "setup_seconds": 21,
+              "run_uid": "gh-26543791187-1",
+              "paired_run_id": 26543790220,
+              "build_seconds": 43,
+              "setup_seconds": 27,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": null,
               "cache_save_export_seconds": null,
@@ -865,8 +865,8 @@
                   "confidence": "medium",
                   "summary": "Setup or restore overhead is large relative to build time.",
                   "evidence": {
-                    "setup_seconds": 21,
-                    "build_seconds": 42
+                    "setup_seconds": 27,
+                    "build_seconds": 43
                   }
                 }
               ]
@@ -877,10 +877,10 @@
           },
           "warm_improvement_pct": null,
           "warm_build_improvement_pct": null,
-          "cold_improvement_pct": 34.38,
-          "cold_build_improvement_pct": 2.33,
-          "storage_improvement_pct": 91.0,
-          "storage_saved_bytes": 8339496636
+          "cold_improvement_pct": 21.35,
+          "cold_build_improvement_pct": 4.44,
+          "storage_improvement_pct": 91.01,
+          "storage_saved_bytes": 8344600862
         }
       }
     }
