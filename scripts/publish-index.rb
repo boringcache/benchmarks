@@ -2390,6 +2390,8 @@ def main
   health_entries = []
   provider_entries = []
   strategy_data_cache = {}
+  workflow_runs_cache = {}
+  artifacts_cache = {}
   raise "BENCHMARKS_PAIR_COUNT must be >= 1" if PAIR_COUNT < 1
 
   Dir.mktmpdir("benchmark-index-") do |tmp|
@@ -2405,11 +2407,10 @@ def main
           provider_workflows = provider_workflows_for(benchmark)
           log_progress("loading #{benchmark_id} workflow runs")
           provider_runs = provider_workflows.transform_values do |workflow_name|
-            latest_successful_runs(repo: repo, workflow_name: workflow_name)
+            workflow_runs_cache[[repo, workflow_name]] ||= latest_successful_runs(repo: repo, workflow_name: workflow_name)
           end
           actions_runs = provider_runs.fetch("actions-cache")
           boringcache_runs = provider_runs.fetch("boringcache")
-          artifacts_cache = {}
           latest_lane_entries = {}
           window_lane_entries = {}
           lane_health = {}
