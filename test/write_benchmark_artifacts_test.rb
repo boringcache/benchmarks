@@ -307,6 +307,27 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     assert_equal "rolling_bootstrap_or_cache_evicted", payload.dig("classification", "rolling_reseed_kind")
   end
 
+  def test_rolling_docker_import_with_zero_cached_steps_is_investigation_only
+    payload = write_artifact(
+      "--cache-import-status", "ok",
+      "--buildkit-cached-steps", "0",
+      "--oci-new-blob-count", "89",
+      "--oci-new-blob-bytes", "9418062725",
+      benchmark: "posthog-native"
+    )
+
+    assert_equal true, payload.dig("classification", "sample_valid")
+    assert_equal "investigation_only", payload.dig("classification", "reporting_mode")
+    assert_equal "rolling_cache_import_no_reuse", payload.dig("classification", "reporting_reason")
+    assert_equal "rolling_import_no_reuse", payload.dig("classification", "rolling_reseed_kind")
+    assert_equal false, payload.dig("classification", "steady_state_candidate")
+    assert_equal 0, payload.dig("docker_cache", "cached_steps")
+    assert_equal 0, payload.dig("slow_reason", "buildkit_cached_steps")
+
+    hypothesis_ids = payload.dig("slow_reason", "hypotheses").map { |row| row.fetch("id") }
+    assert_includes hypothesis_ids, "docker_import_without_reuse"
+  end
+
   def test_native_tool_labels_are_inferred_for_actions_cache_artifacts
     payload = write_artifact(
       benchmark: "storybook",
