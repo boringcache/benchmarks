@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-06-02 18:10 UTC
+Generated: 2026-06-02 20:21 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 20/20.
 
@@ -41,17 +41,17 @@ Rows are latest complete same-commit pairs.
 | Mastodon | Commit Build | 3m 54s | 0m 18s | 92% faster | 8.97 GB less (89.79%) |
 | Mastodon Streaming | Commit Build | 0m 11s | 0m 9s | near tie | 10.40 GB less (99.04%) |
 | Discourse | Commit Build | 3m 37s | 3m 5s | 15% faster | 9.62 GB less (90.42%) |
-| Discourse Base Deps | Commit Build | 0m 13s | 0m 9s | near tie | 9.99 GB less (93.94%) |
-| Discourse Web-Only Image | Commit Build | 0m 15s | 0m 10s | near tie | 9.40 GB less (88.38%) |
-| Discourse Release Image | Commit Build | 0m 20s | 0m 14s | 30% faster | 9.30 GB less (87.45%) |
-| Discourse Test Image | Commit Build | 0m 15s | 0m 10s | near tie | 8.72 GB less (81.99%) |
+| Discourse Base Deps | Commit Build | 0m 8s | 0m 9s | near tie | 9.99 GB less (93.94%) |
+| Discourse Web-Only Image | Commit Build | 0m 10s | 0m 9s | near tie | 9.40 GB less (88.38%) |
+| Discourse Release Image | Commit Build | 0m 11s | 0m 14s | near tie | 9.30 GB less (87.45%) |
+| Discourse Test Image | Commit Build | 0m 8s | 0m 13s | near tie | 8.72 GB less (81.99%) |
 | PostHog | Commit Build | 13m 27s | 11m 55s | 11% faster | 3.47 GB less (36.67%) |
 | Storybook | Commit Build | 3m 20s | 3m 20s | near tie | 2.17 GB less (72.96%) |
 | OpenTelemetry Java | Commit Build | 5m 21s | 4m 44s | 12% faster | 3.12 GB less (77.86%) |
-| Spring AI | Commit Build | 3m 21s | 3m 6s | 7% faster | 2.70 GB less (75.42%) |
-| gRPC | Commit Build | 1m 11s | 0m 42s | 41% faster | n/a |
-| Zed | Commit Build | 46m 5s | 42m 54s | 7% faster | 10.83 GB less (93.01%) |
-| n8n | Commit Build | 5m 44s | 4m 28s | 22% faster | 10.45 GB less (93.05%) |
+| Spring AI | Commit Build | 0m 54s | 0m 56s | near tie | 2.70 GB less (75.42%) |
+| gRPC | Commit Build | 5m 22s | 4m 46s | 11% faster | n/a |
+| Zed | Commit Build | 41m 20s | 41m 50s | near tie | 10.83 GB less (93.01%) |
+| n8n | Commit Build | 4m 54s | 4m 20s | 12% faster | 10.52 GB less (93.09%) |
 | n8n Docker | Commit Build | 3m 48s | 3m 31s | investigation only | n/a |
 | n8n Runners | Commit Build | 1m 27s | 0m 51s | 41% faster | n/a |
 | n8n Runners Distroless | Commit Build | 2m 6s | 1m 22s | 35% faster | n/a |
