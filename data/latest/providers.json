@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T21:43:45Z",
+  "generated_at": "2026-06-03T01:50:13Z",
   "window_sample_target": 3,
   "providers": {
     "actions-cache": "GitHub Actions Cache",
@@ -1209,8 +1209,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "healthy",
-              "successful_run_count": 96,
-              "unique_head_count": 56,
+              "successful_run_count": 95,
+              "unique_head_count": 55,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -3503,8 +3503,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 96,
-              "unique_head_count": 56,
+              "successful_run_count": 95,
+              "unique_head_count": 55,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -5908,8 +5908,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "healthy",
-              "successful_run_count": 96,
-              "unique_head_count": 56,
+              "successful_run_count": 95,
+              "unique_head_count": 55,
               "selected_sample_count": 1,
               "window_sample_target": 3,
               "storage_available": false,
@@ -7626,8 +7626,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 96,
-              "unique_head_count": 56,
+              "successful_run_count": 95,
+              "unique_head_count": 55,
               "selected_sample_count": 1,
               "window_sample_target": 3,
               "storage_available": false,
