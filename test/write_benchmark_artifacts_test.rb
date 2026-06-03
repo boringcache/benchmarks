@@ -22,7 +22,7 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     assert_equal "none", payload.dig("classification", "rolling_reseed_kind")
     assert_equal "Rolling", payload["lane_label"]
     assert_equal "Commit build", payload["first_build_label"]
-    assert_equal "BoringCache", payload["strategy_label"]
+    assert_equal "BC", payload["strategy_label"]
     assert_equal 10, payload.dig("runs", "rolling_first_build_seconds")
     assert_nil payload.dig("runs", "rolling_warm_seconds")
   end
@@ -472,15 +472,15 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     assert_equal "investigation_only", payload.dig("classification", "reporting_mode")
     assert_equal "rolling_cache_import_not_ok", payload.dig("classification", "reporting_reason")
     assert_equal "actions_cache_miss", payload.dig("classification", "cache_import_status")
-    assert_equal "GitHub Actions Cache", payload["strategy_label"]
+    assert_equal "GHA", payload["strategy_label"]
   end
 
   def test_third_party_strategy_labels_are_written
     depot = write_artifact(benchmark: "hugo-go", strategy: "depot-cache", lane: "fresh")
     buildbuddy = write_artifact(benchmark: "grpc-bazel", strategy: "buildbuddy-cache", lane: "fresh")
 
-    assert_equal "Depot Cache", depot["strategy_label"]
-    assert_equal "BuildBuddy Cache", buildbuddy["strategy_label"]
+    assert_equal "Depot", depot["strategy_label"]
+    assert_equal "BuildBuddy", buildbuddy["strategy_label"]
   end
 
   private
