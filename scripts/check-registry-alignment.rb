@@ -40,11 +40,9 @@ registry_by_repo.each do |repo_name, benchmarks|
   end.uniq.sort
 
   allowed_ids = benchmarks.flat_map do |benchmark|
-    [
-      benchmark.fetch("benchmark"),
-      *Array(benchmark["aliases"]),
-      *Array(benchmark["workflow_benchmark_ids"])
-    ]
+    ids = [benchmark.fetch("benchmark"), *Array(benchmark["aliases"])]
+    ids.concat(ids.map { |id| "#{id}-auto" }) if benchmark["category"] == "docker"
+    ids
   end.uniq.sort
   unknown_ids = workflow_ids - allowed_ids
   missing_id = (workflow_ids & allowed_ids).empty?
