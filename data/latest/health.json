@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-04T06:28:55Z",
+  "generated_at": "2026-06-04T10:00:04Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -399,7 +399,7 @@
           "state": "healthy",
           "actions_successful_run_count": 99,
           "boringcache_successful_run_count": 97,
-          "paired_head_count": 85,
+          "paired_head_count": 84,
           "selected_pair_count": 2,
           "window_pair_target": 3,
           "latest_head_sha": "81a622e3f31241c2ad13e92436d1189ba2665ea6",
@@ -415,7 +415,7 @@
           "state": "healthy",
           "actions_successful_run_count": 99,
           "boringcache_successful_run_count": 97,
-          "paired_head_count": 85,
+          "paired_head_count": 84,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "371689d4f54f64c942a06e54bc8d2465cdf96466",
