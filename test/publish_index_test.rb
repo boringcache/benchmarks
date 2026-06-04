@@ -221,18 +221,15 @@ class PublishIndexTest < Minitest::Test
 
   def test_provider_workflows_include_standard_and_optional_providers
     benchmark = benchmark_config(category: "go").merge(
-      "actions_workflow" => "hugo-go-actions-cache.yml",
-      "boringcache_workflow" => "hugo-go-boringcache.yml",
-      "provider_workflows" => {
-        "depot-cache" => "hugo-go-depot-cache.yml"
-      }
+      "workflow" => "zed-sccache-benchmark.yml",
+      "extra_providers" => ["depot-cache"]
     )
 
     assert_equal(
       {
-        "actions-cache" => "hugo-go-actions-cache.yml",
-        "boringcache" => "hugo-go-boringcache.yml",
-        "depot-cache" => "hugo-go-depot-cache.yml"
+        "actions-cache" => "zed-sccache-benchmark.yml",
+        "boringcache" => "zed-sccache-benchmark.yml",
+        "depot-cache" => "zed-sccache-benchmark.yml"
       },
       provider_workflows_for(benchmark)
     )
@@ -240,14 +237,13 @@ class PublishIndexTest < Minitest::Test
     assert_equal "custom-cache", provider_label("custom-cache")
 
     docker_benchmark = benchmark_config(category: "docker").merge(
-      "actions_workflow" => "posthog-actions-cache.yml",
-      "boringcache_workflow" => "posthog-boringcache.yml"
+      "workflow" => "posthog-benchmark.yml"
     )
     assert_equal(
       {
-        "actions-cache" => "posthog-actions-cache.yml",
-        "boringcache" => "posthog-boringcache.yml",
-        "boringcache-auto" => "posthog-boringcache.yml"
+        "actions-cache" => "posthog-benchmark.yml",
+        "boringcache" => "posthog-benchmark.yml",
+        "boringcache-auto" => "posthog-benchmark.yml"
       },
       provider_workflows_for(docker_benchmark)
     )

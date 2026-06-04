@@ -21,24 +21,21 @@ BENCHMARKS = [
     "name" => "Hugo",
     "repo" => "boringcache/benchmark-hugo",
     "category" => "docker",
-    "actions_workflow" => "hugo-actions-cache.yml",
-    "boringcache_workflow" => "hugo-boringcache.yml"
+    "workflow" => "hugo-benchmark.yml"
   },
   {
     "benchmark" => "hugo-go",
     "name" => "Hugo Go",
     "repo" => "boringcache/benchmark-hugo-go",
     "category" => "go",
-    "actions_workflow" => "hugo-go-actions-cache.yml",
-    "boringcache_workflow" => "hugo-go-boringcache.yml"
+    "workflow" => "hugo-go-benchmark.yml"
   },
   {
     "benchmark" => "immich",
     "name" => "Immich",
     "repo" => "boringcache/benchmark-immich",
     "category" => "docker",
-    "actions_workflow" => "immich-actions-cache.yml",
-    "boringcache_workflow" => "immich-boringcache.yml"
+    "workflow" => "immich-benchmark.yml"
   },
   {
     "benchmark" => "mastodon-docker",
@@ -46,16 +43,14 @@ BENCHMARKS = [
     "name" => "Mastodon",
     "repo" => "boringcache/benchmark-mastodon",
     "category" => "docker",
-    "actions_workflow" => "mastodon-docker-actions-cache.yml",
-    "boringcache_workflow" => "mastodon-docker-boringcache.yml"
+    "workflow" => "mastodon-docker-benchmark.yml"
   },
   {
     "benchmark" => "mastodon-streaming",
     "name" => "Mastodon Streaming",
     "repo" => "boringcache/benchmark-mastodon",
     "category" => "docker",
-    "actions_workflow" => "mastodon-streaming-docker-actions-cache.yml",
-    "boringcache_workflow" => "mastodon-streaming-docker-boringcache.yml"
+    "workflow" => "mastodon-streaming-docker-benchmark.yml"
   },
   {
     "benchmark" => "discourse-docker",
@@ -63,56 +58,49 @@ BENCHMARKS = [
     "name" => "Discourse",
     "repo" => "boringcache/benchmark-discourse",
     "category" => "docker",
-    "actions_workflow" => "discourse-docker-actions-cache.yml",
-    "boringcache_workflow" => "discourse-docker-boringcache.yml"
+    "workflow" => "discourse-docker-benchmark.yml"
   },
   {
     "benchmark" => "discourse-base-deps",
     "name" => "Discourse Base Deps",
     "repo" => "boringcache/benchmark-discourse",
     "category" => "docker",
-    "actions_workflow" => "discourse-image-factory-actions-cache.yml",
-    "boringcache_workflow" => "discourse-image-factory-boringcache.yml"
+    "workflow" => "discourse-image-factory-benchmark.yml"
   },
   {
     "benchmark" => "discourse-base-web-only",
     "name" => "Discourse Web-Only Image",
     "repo" => "boringcache/benchmark-discourse",
     "category" => "docker",
-    "actions_workflow" => "discourse-image-factory-actions-cache.yml",
-    "boringcache_workflow" => "discourse-image-factory-boringcache.yml"
+    "workflow" => "discourse-image-factory-benchmark.yml"
   },
   {
     "benchmark" => "discourse-base-release",
     "name" => "Discourse Release Image",
     "repo" => "boringcache/benchmark-discourse",
     "category" => "docker",
-    "actions_workflow" => "discourse-image-factory-actions-cache.yml",
-    "boringcache_workflow" => "discourse-image-factory-boringcache.yml"
+    "workflow" => "discourse-image-factory-benchmark.yml"
   },
   {
     "benchmark" => "discourse-test-release",
     "name" => "Discourse Test Image",
     "repo" => "boringcache/benchmark-discourse",
     "category" => "docker",
-    "actions_workflow" => "discourse-image-factory-actions-cache.yml",
-    "boringcache_workflow" => "discourse-image-factory-boringcache.yml"
+    "workflow" => "discourse-image-factory-benchmark.yml"
   },
   {
     "benchmark" => "posthog",
     "name" => "PostHog",
     "repo" => "boringcache/benchmark-posthog",
     "category" => "docker",
-    "actions_workflow" => "posthog-actions-cache.yml",
-    "boringcache_workflow" => "posthog-boringcache.yml"
+    "workflow" => "posthog-benchmark.yml"
   },
   {
     "benchmark" => "storybook",
     "name" => "Storybook",
     "repo" => "boringcache/benchmark-storybook",
     "category" => "nodejs",
-    "actions_workflow" => "storybook-actions-cache.yml",
-    "boringcache_workflow" => "storybook-boringcache.yml"
+    "workflow" => "storybook-benchmark.yml"
   },
   {
     "benchmark" => "otel-gradle",
@@ -120,8 +108,7 @@ BENCHMARKS = [
     "name" => "OpenTelemetry Java",
     "repo" => "boringcache/benchmark-opentelemetry-java",
     "category" => "gradle",
-    "actions_workflow" => "opentelemetry-java-gradle-actions-cache.yml",
-    "boringcache_workflow" => "opentelemetry-java-gradle-boringcache.yml"
+    "workflow" => "opentelemetry-java-gradle-benchmark.yml"
   },
   {
     "benchmark" => "spring-ai-maven",
@@ -129,8 +116,7 @@ BENCHMARKS = [
     "name" => "Spring AI",
     "repo" => "boringcache/benchmark-spring-ai",
     "category" => "maven",
-    "actions_workflow" => "spring-ai-maven-actions-cache.yml",
-    "boringcache_workflow" => "spring-ai-maven-boringcache.yml"
+    "workflow" => "spring-ai-maven-benchmark.yml"
   },
   {
     "benchmark" => "grpc-bazel",
@@ -138,8 +124,7 @@ BENCHMARKS = [
     "name" => "gRPC",
     "repo" => "boringcache/benchmark-grpc",
     "category" => "bazel",
-    "actions_workflow" => "grpc-bazel-actions-cache.yml",
-    "boringcache_workflow" => "grpc-bazel-boringcache.yml"
+    "workflow" => "grpc-bazel-benchmark.yml"
   },
   {
     "benchmark" => "zed-sccache",
@@ -147,40 +132,35 @@ BENCHMARKS = [
     "name" => "Zed",
     "repo" => "boringcache/benchmark-zed",
     "category" => "rust",
-    "actions_workflow" => "zed-sccache-actions-cache.yml",
-    "boringcache_workflow" => "zed-sccache-boringcache.yml"
+    "workflow" => "zed-sccache-benchmark.yml"
   },
   {
     "benchmark" => "n8n",
     "name" => "n8n",
     "repo" => "boringcache/benchmark-n8n",
     "category" => "nodejs",
-    "actions_workflow" => "n8n-actions-cache.yml",
-    "boringcache_workflow" => "n8n-boringcache.yml"
+    "workflow" => "n8n-benchmark.yml"
   },
   {
     "benchmark" => "n8n-docker",
     "name" => "n8n Docker",
     "repo" => "boringcache/benchmark-n8n",
     "category" => "docker",
-    "actions_workflow" => "n8n-docker-actions-cache.yml",
-    "boringcache_workflow" => "n8n-docker-boringcache.yml"
+    "workflow" => "n8n-docker-benchmark.yml"
   },
   {
     "benchmark" => "n8n-runners",
     "name" => "n8n Runners",
     "repo" => "boringcache/benchmark-n8n",
     "category" => "docker",
-    "actions_workflow" => "n8n-docker-actions-cache.yml",
-    "boringcache_workflow" => "n8n-docker-boringcache.yml"
+    "workflow" => "n8n-docker-benchmark.yml"
   },
   {
     "benchmark" => "n8n-runners-distroless",
     "name" => "n8n Runners Distroless",
     "repo" => "boringcache/benchmark-n8n",
     "category" => "docker",
-    "actions_workflow" => "n8n-docker-actions-cache.yml",
-    "boringcache_workflow" => "n8n-docker-boringcache.yml"
+    "workflow" => "n8n-docker-benchmark.yml"
   }
 ].freeze
 
@@ -264,14 +244,15 @@ def build_cohort(benchmarks:, lanes:, pairs_per_lane:, run_limit:)
   summary = []
 
   benchmarks.each do |benchmark|
+    workflow = benchmark.fetch("workflow")
     actions_runs = latest_successful_runs(
       repo: benchmark.fetch("repo"),
-      workflow: benchmark.fetch("actions_workflow"),
+      workflow: workflow,
       limit: run_limit
     )
     boringcache_runs = latest_successful_runs(
       repo: benchmark.fetch("repo"),
-      workflow: benchmark.fetch("boringcache_workflow"),
+      workflow: workflow,
       limit: run_limit
     )
 
