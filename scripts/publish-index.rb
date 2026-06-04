@@ -30,10 +30,11 @@ PROVIDER_LABELS = {
   "actions-cache" => "GitHub Actions Cache",
   "boringcache" => "BoringCache",
   "boringcache-auto" => "BoringCache Auto",
+  "boringcache-toolcache" => "BoringCache Toolcache",
   "depot-cache" => "Depot Cache",
   "buildbuddy-cache" => "BuildBuddy Cache"
 }.freeze
-PROVIDER_STORAGE_STRATEGIES = %w[actions-cache boringcache].freeze
+PROVIDER_STORAGE_STRATEGIES = %w[actions-cache boringcache boringcache-toolcache].freeze
 SLOW_REASON_NUMERIC_KEYS = %w[
   build_seconds setup_seconds post_cleanup_seconds cache_restore_seconds cache_save_export_seconds
   hit_count miss_count hit_rate new_blob_bytes
@@ -172,7 +173,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "docker",
     "step" => "Docker build (full stack)",
-    "workflow" => "posthog-benchmark.yml"
+    "workflow" => "posthog-benchmark.yml",
+    "extra_providers" => ["boringcache-toolcache"]
   },
   {
     "benchmark" => "storybook",
@@ -674,12 +676,10 @@ end
 
 def artifact_benchmark_ids(benchmark_id:, strategy:)
   ids = Array(benchmark_id)
-  return ids unless strategy == "boringcache-auto"
+  return ids.map { |id| id.to_s.end_with?("-auto") ? id : "#{id}-auto" } if strategy == "boringcache-auto"
+  return ids.map { |id| id.to_s.end_with?("-toolcache") ? id : "#{id}-toolcache" } if strategy == "boringcache-toolcache"
 
-  ids.map do |id|
-    id = id.to_s
-    id.end_with?("-auto") ? id : "#{id}-auto"
-  end
+  ids
 end
 
 def artifact_strategy_for(strategy)

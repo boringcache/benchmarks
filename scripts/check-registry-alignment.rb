@@ -42,6 +42,7 @@ registry_by_repo.each do |repo_name, benchmarks|
   allowed_ids = benchmarks.flat_map do |benchmark|
     ids = [benchmark.fetch("benchmark"), *Array(benchmark["aliases"])]
     ids.concat(ids.map { |id| "#{id}-auto" }) if benchmark["category"] == "docker"
+    ids.concat(ids.map { |id| "#{id}-toolcache" }) if Array(benchmark["extra_providers"]).include?("boringcache-toolcache")
     ids
   end.uniq.sort
   unknown_ids = workflow_ids - allowed_ids
