@@ -106,7 +106,8 @@ BENCHMARKS = [
     "repo" => "PostHog/posthog",
     "source_repo" => "boringcache/benchmark-posthog",
     "category" => "docker",
-    "step" => "Docker build (full stack)"
+    "step" => "Docker build (full stack)",
+    "extra_providers" => ["boringcache-toolcache"]
   },
   {
     "benchmark" => "storybook",

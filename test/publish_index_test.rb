@@ -237,20 +237,26 @@ class PublishIndexTest < Minitest::Test
     assert_equal "custom-cache", provider_label("custom-cache")
 
     docker_benchmark = benchmark_config(category: "docker").merge(
-      "workflow" => "posthog-benchmark.yml"
+      "workflow" => "posthog-benchmark.yml",
+      "extra_providers" => ["boringcache-toolcache"]
     )
     assert_equal(
       {
         "actions-cache" => "posthog-benchmark.yml",
         "boringcache" => "posthog-benchmark.yml",
-        "boringcache-auto" => "posthog-benchmark.yml"
+        "boringcache-auto" => "posthog-benchmark.yml",
+        "boringcache-toolcache" => "posthog-benchmark.yml"
       },
       provider_workflows_for(docker_benchmark)
     )
     assert_equal "BoringCache Auto", provider_label("boringcache-auto")
+    assert_equal "BoringCache Toolcache", provider_label("boringcache-toolcache")
     assert_equal false, provider_storage_available?("boringcache-auto")
+    assert_equal true, provider_storage_available?("boringcache-toolcache")
     assert_includes lane_artifact_names(benchmark_id: "posthog", strategy: "boringcache-auto", lane: "rolling"),
       "benchmark-posthog-auto-boringcache-rolling"
+    assert_includes lane_artifact_names(benchmark_id: "posthog", strategy: "boringcache-toolcache", lane: "rolling"),
+      "benchmark-posthog-toolcache-boringcache-toolcache-rolling"
   end
 
   def test_provider_lane_payload_summarizes_samples
