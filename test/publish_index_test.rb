@@ -344,7 +344,7 @@ class PublishIndexTest < Minitest::Test
   end
 
   def test_runner_variance_filter_excludes_only_matching_native_tool_outlier
-    providers = provider_matrix(
+    providers = provider_matrix({
       "actions-cache" => [
         provider_native_snapshot(run_id: "actions", compiler_seconds: 37.475, hits: 2290, misses: 84, seconds: 2_131)
       ],
@@ -354,7 +354,7 @@ class PublishIndexTest < Minitest::Test
       "depot-cache" => [
         provider_native_snapshot(run_id: "depot", compiler_seconds: 29.292, hits: 2289, misses: 85, timeouts: 1, seconds: 1_821)
       ]
-    )
+    })
 
     filtered = apply_runner_variance_outlier_filter(providers)
     depot_lane = filtered.dig("depot-cache", "lanes", "rolling")
@@ -372,7 +372,7 @@ class PublishIndexTest < Minitest::Test
   end
 
   def test_runner_variance_filter_keeps_sample_when_cache_work_differs
-    providers = provider_matrix(
+    providers = provider_matrix({
       "actions-cache" => [
         provider_native_snapshot(run_id: "actions", compiler_seconds: 37.475, hits: 2290, misses: 84, seconds: 2_131)
       ],
@@ -382,7 +382,7 @@ class PublishIndexTest < Minitest::Test
       "depot-cache" => [
         provider_native_snapshot(run_id: "depot", compiler_seconds: 29.292, hits: 2254, misses: 120, seconds: 1_821)
       ]
-    )
+    })
 
     filtered = apply_runner_variance_outlier_filter(providers)
     depot_lane = filtered.dig("depot-cache", "lanes", "rolling")
@@ -393,7 +393,7 @@ class PublishIndexTest < Minitest::Test
   end
 
   def test_runner_variance_filter_keeps_sample_when_headline_timing_is_not_distorted
-    providers = provider_matrix(
+    providers = provider_matrix({
       "actions-cache" => [
         provider_native_snapshot(run_id: "actions", compiler_seconds: 63.691, hits: 2296, misses: 3, seconds: 1_287)
       ],
@@ -403,7 +403,7 @@ class PublishIndexTest < Minitest::Test
       "depot-cache" => [
         provider_native_snapshot(run_id: "depot", compiler_seconds: 47.146, hits: 2295, misses: 4, seconds: 1_353)
       ]
-    )
+    })
 
     filtered = apply_runner_variance_outlier_filter(providers)
     depot_lane = filtered.dig("depot-cache", "lanes", "rolling")
@@ -414,14 +414,14 @@ class PublishIndexTest < Minitest::Test
   end
 
   def test_runner_variance_filter_needs_two_comparable_peers
-    providers = provider_matrix(
+    providers = provider_matrix({
       "actions-cache" => [
         provider_native_snapshot(run_id: "actions", compiler_seconds: 37.475, seconds: 2_131)
       ],
       "depot-cache" => [
         provider_native_snapshot(run_id: "depot", compiler_seconds: 29.292, seconds: 1_821)
       ]
-    )
+    })
 
     filtered = apply_runner_variance_outlier_filter(providers)
 
@@ -430,7 +430,7 @@ class PublishIndexTest < Minitest::Test
   end
 
   def test_runner_variance_filter_keeps_samples_when_peers_disagree
-    providers = provider_matrix(
+    providers = provider_matrix({
       "actions-cache" => [
         provider_native_snapshot(run_id: "actions", compiler_seconds: 32.0, seconds: 2_131)
       ],
@@ -440,7 +440,7 @@ class PublishIndexTest < Minitest::Test
       "depot-cache" => [
         provider_native_snapshot(run_id: "depot", compiler_seconds: 25.0, seconds: 1_821)
       ]
-    )
+    })
 
     filtered = apply_runner_variance_outlier_filter(providers)
 
