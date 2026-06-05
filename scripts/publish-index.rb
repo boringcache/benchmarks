@@ -29,7 +29,7 @@ PRODUCT_REF_KEYS = %w[cli_version action_ref action_sha web_revision api_url].fr
 PROVIDER_LABELS = {
   "actions-cache" => "GitHub Actions Cache",
   "boringcache" => "BoringCache",
-  "boringcache-auto" => "BoringCache Auto",
+  "boringcache-native" => "BoringCache Native",
   "boringcache-toolcache" => "BoringCache Toolcache",
   "depot-cache" => "Depot Cache",
   "buildbuddy-cache" => "BuildBuddy Cache"
@@ -618,7 +618,7 @@ def provider_workflows_for(benchmark)
   }
 
   if benchmark["category"] == "docker"
-    workflows["boringcache-auto"] = workflow_name
+    workflows["boringcache-native"] = workflow_name
   end
   Array(benchmark["extra_providers"]).each { |strategy| workflows[strategy] = workflow_name }
   workflows
@@ -676,14 +676,14 @@ end
 
 def artifact_benchmark_ids(benchmark_id:, strategy:)
   ids = Array(benchmark_id)
-  return ids.map { |id| id.to_s.end_with?("-auto") ? id : "#{id}-auto" } if strategy == "boringcache-auto"
+  return ids.map { |id| id.to_s.end_with?("-native") ? id : "#{id}-native" } if strategy == "boringcache-native"
   return ids.map { |id| id.to_s.end_with?("-toolcache") ? id : "#{id}-toolcache" } if strategy == "boringcache-toolcache"
 
   ids
 end
 
 def artifact_strategy_for(strategy)
-  strategy == "boringcache-auto" ? "boringcache" : strategy
+  strategy == "boringcache-native" ? "boringcache" : strategy
 end
 
 def lane_artifact_names(benchmark_id:, strategy:, lane:)

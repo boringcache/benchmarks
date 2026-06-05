@@ -65,9 +65,9 @@ class PublishIndexTest < Minitest::Test
     assert_equal ["cache_save_export_overhead"], snapshot.dig("slow_reason", "hypothesis_ids")
   end
 
-  def test_auto_docker_artifact_keeps_docker_oci_adapter
+  def test_native_docker_artifact_keeps_docker_oci_adapter
     artifact = raw_boringcache_artifact.merge(
-      "benchmark" => "posthog-auto"
+      "benchmark" => "posthog-native"
     )
     artifact.delete("adapter")
 
@@ -244,17 +244,17 @@ class PublishIndexTest < Minitest::Test
       {
         "actions-cache" => "posthog-benchmark.yml",
         "boringcache" => "posthog-benchmark.yml",
-        "boringcache-auto" => "posthog-benchmark.yml",
+        "boringcache-native" => "posthog-benchmark.yml",
         "boringcache-toolcache" => "posthog-benchmark.yml"
       },
       provider_workflows_for(docker_benchmark)
     )
-    assert_equal "BoringCache Auto", provider_label("boringcache-auto")
+    assert_equal "BoringCache Native", provider_label("boringcache-native")
     assert_equal "BoringCache Toolcache", provider_label("boringcache-toolcache")
-    assert_equal false, provider_storage_available?("boringcache-auto")
+    assert_equal false, provider_storage_available?("boringcache-native")
     assert_equal true, provider_storage_available?("boringcache-toolcache")
-    assert_includes lane_artifact_names(benchmark_id: "posthog", strategy: "boringcache-auto", lane: "rolling"),
-      "benchmark-posthog-auto-boringcache-rolling"
+    assert_includes lane_artifact_names(benchmark_id: "posthog", strategy: "boringcache-native", lane: "rolling"),
+      "benchmark-posthog-native-boringcache-rolling"
     assert_includes lane_artifact_names(benchmark_id: "posthog", strategy: "boringcache-toolcache", lane: "rolling"),
       "benchmark-posthog-toolcache-boringcache-toolcache-rolling"
   end

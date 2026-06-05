@@ -313,7 +313,7 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
       "--buildkit-cached-steps", "0",
       "--oci-new-blob-count", "89",
       "--oci-new-blob-bytes", "9418062725",
-      benchmark: "posthog-auto"
+      benchmark: "posthog-native"
     )
 
     assert_equal true, payload.dig("classification", "sample_valid")
