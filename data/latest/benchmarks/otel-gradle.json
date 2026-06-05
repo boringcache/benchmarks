@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05T13:35:40Z",
+  "generated_at": "2026-06-05T17:23:21Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -650,33 +650,33 @@
         "step": "Gradle build (native HTTP cache)",
         "headline_scenario": "cold",
         "headline_label": "Commit Build",
-        "before": "7m 5s",
-        "after": "7m 18s",
-        "before_seconds": 425.0,
-        "after_seconds": 438.0,
-        "faster": "0",
+        "before": "1m 14s",
+        "after": "1m 8s",
+        "before_seconds": 74.0,
+        "after_seconds": 68.0,
+        "faster": "8",
         "comparison": {
           "paired_on_head_sha": true,
-          "pairing_head_sha": "c81b1eb02803affccd44ed3d3b04b596deb1bbcb",
+          "pairing_head_sha": "55427efbe5128d4ca3aea3aa69c3b2ed89415a1b",
           "sample_count": 1,
           "actions_cache": {
-            "run_id": 26966869813,
-            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/26966869813",
-            "head_sha": "c81b1eb02803affccd44ed3d3b04b596deb1bbcb",
-            "created_at": "2026-06-04T17:01:25Z",
-            "cold_seconds": 425.0,
-            "cold_build_seconds": 400.0,
-            "cold_restore_or_setup_seconds": 25.0,
+            "run_id": 27026562404,
+            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/27026562404",
+            "head_sha": "55427efbe5128d4ca3aea3aa69c3b2ed89415a1b",
+            "created_at": "2026-06-05T16:20:01Z",
+            "cold_seconds": 74.0,
+            "cold_build_seconds": 50.0,
+            "cold_restore_or_setup_seconds": 24.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 425.0,
+            "rolling_first_build_seconds": 74.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 467.0,
-            "storage_bytes": 3488821538,
+            "run_total_seconds": 123.0,
+            "storage_bytes": 3548974230,
             "storage_source": "github-actions-cache-api",
             "storage_breakdown": null,
             "docker_cache_import_seconds": null,
@@ -724,7 +724,7 @@
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-opentelemetry-java",
             "cache_tag": null,
-            "run_uid": "gh-26966869813-1",
+            "run_uid": "gh-27026562404-1",
             "mode": "gradle",
             "adapter": "gradle",
             "docker_cache_from_refs": null,
@@ -743,11 +743,11 @@
               "gradle": {
                 "local_build_cache_policy": "default",
                 "commit": {
-                  "summary": "919 actionable tasks: 488 executed, 286 from cache, 145 up-to-date",
+                  "summary": "919 actionable tasks: 240 executed, 532 from cache, 147 up-to-date",
                   "actionable_tasks": 919,
-                  "executed_tasks": 488,
-                  "from_cache_tasks": 286,
-                  "up_to_date_tasks": 145
+                  "executed_tasks": 240,
+                  "from_cache_tasks": 532,
+                  "up_to_date_tasks": 147
                 },
                 "warm1": {
                   "summary": null,
@@ -765,10 +765,10 @@
               "benchmark": "otel-gradle",
               "strategy": "actions-cache",
               "lane": "rolling",
-              "run_uid": "gh-26966869813-1",
-              "paired_run_id": 26966869813,
-              "build_seconds": 400,
-              "setup_seconds": 25,
+              "run_uid": "gh-27026562404-1",
+              "paired_run_id": 27026562404,
+              "build_seconds": 50,
+              "setup_seconds": 24,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": null,
               "cache_save_export_seconds": null,
@@ -779,27 +779,37 @@
               "new_blob_bytes": null,
               "native_tool": null,
               "issue_candidates": [],
-              "hypotheses": []
+              "hypotheses": [
+                {
+                  "id": "setup_overhead",
+                  "confidence": "medium",
+                  "summary": "Setup or restore overhead is large relative to build time.",
+                  "evidence": {
+                    "setup_seconds": 24,
+                    "build_seconds": 50
+                  }
+                }
+              ]
             }
           },
           "boringcache": {
-            "run_id": 26966869813,
-            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/26966869813",
-            "head_sha": "c81b1eb02803affccd44ed3d3b04b596deb1bbcb",
-            "created_at": "2026-06-04T17:01:25Z",
-            "cold_seconds": 438.0,
-            "cold_build_seconds": 422.0,
-            "cold_restore_or_setup_seconds": 16.0,
+            "run_id": 27026562404,
+            "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/27026562404",
+            "head_sha": "55427efbe5128d4ca3aea3aa69c3b2ed89415a1b",
+            "created_at": "2026-06-05T16:20:01Z",
+            "cold_seconds": 68.0,
+            "cold_build_seconds": 51.0,
+            "cold_restore_or_setup_seconds": 17.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 438.0,
+            "rolling_first_build_seconds": 68.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 467.0,
-            "storage_bytes": 952197288,
+            "run_total_seconds": 123.0,
+            "storage_bytes": 951000773,
             "storage_source": "boringcache-check",
             "storage_breakdown": {
               "workspace": "boringcache/benchmark-opentelemetry-java",
@@ -807,10 +817,10 @@
                 "otel-gradle-rolling-main-gradle-remote-gradle-deps-home-v2-ubuntu-24-x86_64",
                 "otel-gradle-rolling-main-gradle-remote"
               ],
-              "total_bytes": 952197288,
+              "total_bytes": 951000773,
               "summary": {
                 "remote_cas_bytes": 0,
-                "dependency_archive_bytes": 952197288,
+                "dependency_archive_bytes": 951000773,
                 "tool_runtime_archive_bytes": 0,
                 "unknown_bytes": 0
               },
@@ -818,13 +828,13 @@
                 {
                   "tag": "otel-gradle-rolling-main-gradle-remote-gradle-deps-home-v2-ubuntu-24-x86_64",
                   "requested_tag": "otel-gradle-rolling-main-gradle-remote-gradle-deps-home-v2-ubuntu-24-x86_64",
-                  "cache_entry_id": "7e4996a4-b782-4af0-aba7-94e1cc5a01d2",
+                  "cache_entry_id": "af327954-ce4b-4904-8cd4-d0990236195e",
                   "primary_tag": "otel-gradle-rolling-main-gradle-remote-gradle-deps-home-v2-ubuntu-24-x86_64",
                   "storage_mode": "archive",
                   "component_type": "dependency_archive",
                   "component_label": "dependency archive",
-                  "bytes": 952197288,
-                  "archive_size_bytes": 952197288,
+                  "bytes": 951000773,
+                  "archive_size_bytes": 951000773,
                   "blob_total_size_bytes": 0
                 }
               ]
@@ -867,9 +877,9 @@
               "reseed_reason": null
             },
             "product_refs": {
-              "cli_version": "v1.13.36",
+              "cli_version": "v1.13.40",
               "action_ref": "boringcache/one@v1",
-              "action_sha": "2870e3a90f3a75b665032b36b95ab1bcda76bd81",
+              "action_sha": "4ba2a2c1afa5aa9a45b407674bf21456cfa884c6",
               "web_revision": "ca52d921",
               "api_url": "https://api.boringcache.com"
             },
@@ -877,7 +887,7 @@
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-opentelemetry-java",
             "cache_tag": null,
-            "run_uid": "gh-26966869813-1",
+            "run_uid": "gh-27026562404-1",
             "mode": "gradle",
             "adapter": "gradle",
             "docker_cache_from_refs": null,
@@ -896,11 +906,11 @@
               "gradle": {
                 "local_build_cache_policy": "default",
                 "commit": {
-                  "summary": "919 actionable tasks: 488 executed, 286 from cache, 145 up-to-date",
+                  "summary": "919 actionable tasks: 240 executed, 532 from cache, 147 up-to-date",
                   "actionable_tasks": 919,
-                  "executed_tasks": 488,
-                  "from_cache_tasks": 286,
-                  "up_to_date_tasks": 145
+                  "executed_tasks": 240,
+                  "from_cache_tasks": 532,
+                  "up_to_date_tasks": 147
                 },
                 "warm1": {
                   "summary": null,
@@ -918,10 +928,10 @@
               "benchmark": "otel-gradle",
               "strategy": "boringcache",
               "lane": "rolling",
-              "run_uid": "gh-26966869813-1",
-              "paired_run_id": 26966869813,
-              "build_seconds": 422,
-              "setup_seconds": 16,
+              "run_uid": "gh-27026562404-1",
+              "paired_run_id": 27026562404,
+              "build_seconds": 51,
+              "setup_seconds": 17,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": null,
               "cache_save_export_seconds": null,
@@ -932,7 +942,17 @@
               "new_blob_bytes": null,
               "native_tool": null,
               "issue_candidates": [],
-              "hypotheses": []
+              "hypotheses": [
+                {
+                  "id": "setup_overhead",
+                  "confidence": "medium",
+                  "summary": "Setup or restore overhead is large relative to build time.",
+                  "evidence": {
+                    "setup_seconds": 17,
+                    "build_seconds": 51
+                  }
+                }
+              ]
             }
           },
           "reporting": {
@@ -940,10 +960,10 @@
           },
           "warm_improvement_pct": null,
           "warm_build_improvement_pct": null,
-          "cold_improvement_pct": -3.06,
-          "cold_build_improvement_pct": -5.5,
-          "storage_improvement_pct": 72.71,
-          "storage_saved_bytes": 2536624250
+          "cold_improvement_pct": 8.11,
+          "cold_build_improvement_pct": -2.0,
+          "storage_improvement_pct": 73.2,
+          "storage_saved_bytes": 2597973457
         }
       }
     }
