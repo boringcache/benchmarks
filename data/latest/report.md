@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-06-07 20:56 UTC
+Generated: 2026-06-08 01:35 UTC
 
 Coverage: 20 benchmarks; fresh 6/20, rolling 20/20.
 
@@ -23,15 +23,15 @@ Rows are latest complete same-commit pairs.
 | --- | --- | --- | --- | --- | --- |
 | Hugo | Commit Build | 2m 57s | 3m 0s | near tie | 2.64 GB less (88.71%) |
 | Hugo Go | Commit Build | 0m 51s | 0m 49s | near tie | 1.21 GB less (81.28%) |
-| Immich | Commit Build | 2m 57s | 2m 48s | 5% faster | 7.50 GB less (78.19%) |
+| Immich | Commit Build | 2m 50s | 3m 8s | 11% slower | 7.87 GB less (78.98%) |
 | Mastodon | Commit Build | 2m 4s | 1m 51s | 10% faster | 8.98 GB less (89.95%) |
 | Mastodon Streaming | Commit Build | 0m 10s | 0m 10s | near tie | 10.17 GB less (99.02%) |
-| Discourse | Commit Build | 3m 50s | 3m 16s | 15% faster | 8.97 GB less (89.79%) |
-| Discourse Base Deps | Commit Build | 0m 11s | 0m 7s | near tie | 9.69 GB less (93.76%) |
-| Discourse Web-Only Image | Commit Build | 0m 12s | 0m 7s | near tie | 9.10 GB less (88.03%) |
-| Discourse Release Image | Commit Build | 0m 9s | 0m 8s | near tie | 9.00 GB less (87.07%) |
-| Discourse Test Image | Commit Build | 0m 10s | 0m 7s | near tie | 8.42 GB less (81.48%) |
-| PostHog | Commit Build | 17m 42s | 11m 33s | 35% faster | 6.16 GB less (50.51%) |
+| Discourse | Commit Build | 3m 29s | 3m 13s | 8% faster | 8.98 GB less (89.79%) |
+| Discourse Base Deps | Commit Build | 0m 16s | 0m 7s | 56% faster | 9.35 GB less (93.55%) |
+| Discourse Web-Only Image | Commit Build | 0m 10s | 0m 8s | near tie | 8.76 GB less (87.62%) |
+| Discourse Release Image | Commit Build | 0m 11s | 0m 7s | near tie | 8.66 GB less (86.63%) |
+| Discourse Test Image | Commit Build | 0m 12s | 0m 9s | near tie | 8.08 GB less (80.84%) |
+| PostHog | Commit Build | 6m 16s | 5m 30s | 12% faster | 3.62 GB less (36.45%) |
 | Storybook | Commit Build | 3m 46s | 3m 22s | 11% faster | 2.43 GB less (74.99%) |
 | OpenTelemetry Java | Commit Build | 1m 14s | 1m 8s | 8% faster | 2.42 GB less (73.2%) |
 | Spring AI | Commit Build | 0m 42s | 0m 32s | 24% faster | 2.77 GB less (74.66%) |
