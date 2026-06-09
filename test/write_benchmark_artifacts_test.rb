@@ -78,6 +78,31 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     end
   end
 
+  def test_network_upload_bytes_use_oci_evidence_not_storage_size
+    payload = write_artifact(
+      "--cache-storage-bytes", "100",
+      "--bytes-uploaded", "100",
+      "--oci-new-blob-bytes", "3456"
+    )
+
+    assert_equal 100, payload.dig("cache", "storage_bytes")
+    assert_equal 3456, payload.dig("oci", "new_blob_bytes")
+    assert_equal 3456, payload.dig("transfer", "network_bytes_uploaded")
+    assert_equal 3456, payload.dig("transfer", "bytes_uploaded")
+    assert_equal "oci_new_blob_bytes", payload.dig("transfer", "network_bytes_uploaded_source")
+  end
+
+  def test_network_upload_bytes_can_be_passed_explicitly
+    payload = write_artifact(
+      "--cache-storage-bytes", "100",
+      "--network-bytes-uploaded", "4567"
+    )
+
+    assert_equal 4567, payload.dig("transfer", "network_bytes_uploaded")
+    assert_equal 4567, payload.dig("transfer", "bytes_uploaded")
+    assert_equal "network_bytes_uploaded_input", payload.dig("transfer", "network_bytes_uploaded_source")
+  end
+
   def test_cache_review_projects_session_summary_for_rails
     Dir.mktmpdir("bc-artifact-inputs") do |dir|
       summary_path = File.join(dir, "summary.json")

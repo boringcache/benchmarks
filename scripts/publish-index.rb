@@ -798,6 +798,7 @@ def extract_strategy_metrics(payload)
   cache = payload.fetch("cache", {})
   docker_cache = payload.fetch("docker_cache", {})
   oci = payload.fetch("oci", {})
+  transfer = payload["transfer"].is_a?(Hash) ? payload["transfer"] : {}
   classification = payload.fetch("classification", {})
   product_refs = normalized_product_refs(payload)
   session_summary = session_summary_from(payload)
@@ -836,6 +837,8 @@ def extract_strategy_metrics(payload)
     storage_bytes: storage_bytes,
     storage_source: storage_source,
     storage_breakdown: storage_breakdown_from(payload),
+    network_bytes_uploaded: parse_number(transfer["network_bytes_uploaded"]),
+    network_bytes_uploaded_source: transfer["network_bytes_uploaded_source"],
     docker_cache_import_seconds: parse_number(docker_cache["import_seconds"]),
     docker_cache_export_seconds: parse_number(docker_cache["export_seconds"]),
     startup_prefetch: startup_prefetch,
@@ -1015,6 +1018,8 @@ def strategy_snapshot(data, paired_run_id = nil)
     "storage_bytes" => metrics[:storage_bytes],
     "storage_source" => metrics[:storage_source],
     "storage_breakdown" => metrics[:storage_breakdown],
+    "network_bytes_uploaded" => metrics[:network_bytes_uploaded],
+    "network_bytes_uploaded_source" => metrics[:network_bytes_uploaded_source],
     "docker_cache_import_seconds" => metrics[:docker_cache_import_seconds],
     "docker_cache_export_seconds" => metrics[:docker_cache_export_seconds],
     "startup_prefetch" => metrics[:startup_prefetch],
@@ -1352,7 +1357,7 @@ def average_snapshot(snapshots)
     warm1_seconds warm1_build_seconds warm1_restore_or_setup_seconds
     warm2_seconds warm_average_seconds warm_steady_seconds
     rolling_first_build_seconds rolling_warm_seconds
-    run_total_seconds storage_bytes docker_cache_import_seconds docker_cache_export_seconds
+    run_total_seconds storage_bytes network_bytes_uploaded docker_cache_import_seconds docker_cache_export_seconds
   ]
 
   numeric_keys.each do |key|
@@ -1374,6 +1379,8 @@ def average_snapshot(snapshots)
   averaged["storage_breakdown"] = storage_breakdown_payload if storage_breakdown_payload
   storage_source = most_common(snapshots.map { |snapshot| snapshot["storage_source"] })
   averaged["storage_source"] = storage_source if storage_source
+  network_bytes_uploaded_source = most_common(snapshots.map { |snapshot| snapshot["network_bytes_uploaded_source"] })
+  averaged["network_bytes_uploaded_source"] = network_bytes_uploaded_source if network_bytes_uploaded_source
 
   product_refs = most_common_hash(snapshots.map { |snapshot| snapshot["product_refs"] })
   averaged["product_refs"] = product_refs if product_refs
@@ -1404,7 +1411,8 @@ def metrics_from_snapshot(snapshot)
     warm1_restore_or_setup_seconds: snapshot["warm1_restore_or_setup_seconds"],
     warm2_seconds: snapshot["warm2_seconds"],
     warm_average_seconds: snapshot["warm_average_seconds"],
-    storage_bytes: snapshot["storage_bytes"]
+    storage_bytes: snapshot["storage_bytes"],
+    network_bytes_uploaded: snapshot["network_bytes_uploaded"]
   }
 end
 

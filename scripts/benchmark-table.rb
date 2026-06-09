@@ -486,6 +486,7 @@ def extract_strategy_metrics(payload)
   cache = payload.fetch("cache", {})
   docker_cache = payload.fetch("docker_cache", {})
   oci = payload.fetch("oci", {})
+  transfer = payload["transfer"].is_a?(Hash) ? payload["transfer"] : {}
   classification = payload.fetch("classification", {})
 
   warm1 = parse_number(runs["warm1_seconds"])
@@ -514,6 +515,8 @@ def extract_strategy_metrics(payload)
     rolling_warm_seconds: parse_number(runs["rolling_warm_seconds"]),
     storage_bytes: storage_bytes,
     storage_source: storage_source,
+    network_bytes_uploaded: parse_number(transfer["network_bytes_uploaded"]),
+    network_bytes_uploaded_source: transfer["network_bytes_uploaded_source"],
     docker_cache_import_seconds: parse_number(docker_cache["import_seconds"]),
     docker_cache_export_seconds: parse_number(docker_cache["export_seconds"]),
     oci: oci,
@@ -607,6 +610,8 @@ def strategy_snapshot(data)
     "run_total_seconds" => data[:run_total_seconds],
     "storage_bytes" => metrics[:storage_bytes],
     "storage_source" => metrics[:storage_source],
+    "network_bytes_uploaded" => metrics[:network_bytes_uploaded],
+    "network_bytes_uploaded_source" => metrics[:network_bytes_uploaded_source],
     "docker_cache_import_seconds" => metrics[:docker_cache_import_seconds],
     "docker_cache_export_seconds" => metrics[:docker_cache_export_seconds],
     "oci" => metrics[:oci],

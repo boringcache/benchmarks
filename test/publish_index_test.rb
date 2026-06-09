@@ -57,6 +57,8 @@ class PublishIndexTest < Minitest::Test
     assert_equal "cache_miss_quality", snapshot.dig("cache_review", "primary_bottleneck")
     assert_equal "https://app.boringcache.com/workspaces/boringcache/benchmarks/cache/sessions/gh-123-1", snapshot["reporting_url"]
     assert_equal 256, snapshot.dig("storage_breakdown", "summary", "remote_cas_bytes")
+    assert_equal 3456, snapshot["network_bytes_uploaded"]
+    assert_equal "oci_new_blob_bytes", snapshot["network_bytes_uploaded_source"]
     assert_equal 12, snapshot.dig("tool_outcomes", "gradle", "warm1", "executed_tasks")
     assert_equal "sccache", snapshot.dig("native_tool", "tool")
     assert_equal 94.6, snapshot.dig("native_tool", "hit_rate")
@@ -884,6 +886,10 @@ class PublishIndexTest < Minitest::Test
       "oci" => {
         "hydration_policy" => "metadata-only",
         "new_blob_count" => 0
+      },
+      "transfer" => {
+        "network_bytes_uploaded" => 3456,
+        "network_bytes_uploaded_source" => "oci_new_blob_bytes"
       },
       "classification" => {
         "sample_valid" => true,
