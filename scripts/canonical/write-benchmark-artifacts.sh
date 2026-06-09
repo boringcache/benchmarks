@@ -59,6 +59,7 @@ cache_storage_source=""
 cache_storage_note=""
 cache_storage_breakdown_json=""
 bytes_uploaded=""
+network_bytes_uploaded=""
 bytes_downloaded=""
 hit_behavior_note=""
 tool_outcomes_json=""
@@ -185,6 +186,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --bytes-uploaded)
       bytes_uploaded="$2"
+      shift 2
+      ;;
+    --network-bytes-uploaded)
+      network_bytes_uploaded="$2"
       shift 2
       ;;
     --bytes-downloaded)
@@ -1206,6 +1211,9 @@ launch_proof_paths_payload_from_inputs() {
 if [[ -n "$bytes_uploaded" ]] && ! [[ "$bytes_uploaded" =~ ^[0-9]+$ ]]; then
   bytes_uploaded=""
 fi
+if [[ -n "$network_bytes_uploaded" ]] && ! [[ "$network_bytes_uploaded" =~ ^[0-9]+$ ]]; then
+  network_bytes_uploaded=""
+fi
 if [[ -n "$bytes_downloaded" ]] && ! [[ "$bytes_downloaded" =~ ^[0-9]+$ ]]; then
   bytes_downloaded=""
 fi
@@ -1252,6 +1260,13 @@ oci_new_blob_bytes="$(sanitize_uint "$oci_new_blob_bytes")"
 oci_upload_requested_blobs="$(sanitize_uint "$oci_upload_requested_blobs")"
 oci_upload_already_present="$(sanitize_uint "$oci_upload_already_present")"
 oci_upload_batch_seconds="$(sanitize_number "$oci_upload_batch_seconds")"
+network_bytes_uploaded_source=""
+if [[ -n "$network_bytes_uploaded" ]]; then
+  network_bytes_uploaded_source="network_bytes_uploaded_input"
+elif [[ -n "$oci_new_blob_bytes" ]]; then
+  network_bytes_uploaded="$oci_new_blob_bytes"
+  network_bytes_uploaded_source="oci_new_blob_bytes"
+fi
 reseed_new_blob_threshold="$(sanitize_uint "$reseed_new_blob_threshold")"
 reseed_new_blob_threshold="${reseed_new_blob_threshold:-0}"
 tiny_metadata_churn_max_blobs="$(sanitize_uint "$tiny_metadata_churn_max_blobs")"
@@ -1877,7 +1892,9 @@ cat > "$json_path" <<JSON
   "classification": $classification_payload,
   "action_timings": $action_timings_payload,
   "transfer": {
-    "bytes_uploaded": $(json_num_or_null "$bytes_uploaded"),
+    "bytes_uploaded": $(json_num_or_null "$network_bytes_uploaded"),
+    "network_bytes_uploaded": $(json_num_or_null "$network_bytes_uploaded"),
+    "network_bytes_uploaded_source": $(json_string_or_null "$network_bytes_uploaded_source"),
     "bytes_downloaded": $(json_num_or_null "$bytes_downloaded")
   },
   "hit_behavior": $hit_behavior_payload,
@@ -2099,8 +2116,8 @@ JSON
     echo "| Reporting note | ${reporting_note} |"
   fi
 
-  if [[ -n "$bytes_uploaded" ]]; then
-    echo "| Bytes uploaded | ${bytes_uploaded} |"
+  if [[ -n "$network_bytes_uploaded" ]]; then
+    echo "| Network bytes uploaded | ${network_bytes_uploaded} |"
   fi
   if [[ -n "$bytes_downloaded" ]]; then
     echo "| Bytes downloaded | ${bytes_downloaded} |"
