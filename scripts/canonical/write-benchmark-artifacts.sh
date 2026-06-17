@@ -42,6 +42,9 @@
 #     are emitted here. New fields are nullable and never required
 #     by the aggregator. Build-only/setup splits and Docker rolling
 #     commit-build fields are emitted with nullable warm fields.
+#   - GitHub run context is emitted uniformly for every lane so native,
+#     OCI, ECR, and Actions Cache artifacts can be compared by run id,
+#     run number, and attempt without guessing from artifact names.
 #
 set -euo pipefail
 
@@ -73,6 +76,16 @@ action_sha="${BENCHMARK_ACTION_SHA:-}"
 web_revision="${BENCHMARK_WEB_REVISION:-}"
 api_url="${BENCHMARK_API_URL:-${BORINGCACHE_API_URL:-https://api.boringcache.com}}"
 action_timings_json=""
+github_repository="${BENCHMARK_GITHUB_REPOSITORY:-${GITHUB_REPOSITORY:-}}"
+github_workflow="${BENCHMARK_GITHUB_WORKFLOW:-${GITHUB_WORKFLOW:-}}"
+github_job="${BENCHMARK_GITHUB_JOB:-${GITHUB_JOB:-}}"
+github_run_id="${BENCHMARK_GITHUB_RUN_ID:-${GITHUB_RUN_ID:-}}"
+github_run_number="${BENCHMARK_GITHUB_RUN_NUMBER:-${GITHUB_RUN_NUMBER:-}}"
+github_run_attempt="${BENCHMARK_GITHUB_RUN_ATTEMPT:-${GITHUB_RUN_ATTEMPT:-}}"
+github_ref="${BENCHMARK_GITHUB_REF:-${GITHUB_REF:-}}"
+github_ref_name="${BENCHMARK_GITHUB_REF_NAME:-${GITHUB_REF_NAME:-}}"
+github_sha="${BENCHMARK_GITHUB_SHA:-${GITHUB_SHA:-}}"
+github_server_url="${BENCHMARK_GITHUB_SERVER_URL:-${GITHUB_SERVER_URL:-https://github.com}}"
 workspace="${BENCHMARK_WORKSPACE:-${BORINGCACHE_WORKSPACE:-}}"
 cache_tag="${BENCHMARK_CACHE_TAG:-${CACHE_SCOPE:-}}"
 run_uid="${BENCHMARK_RUN_UID:-}"
@@ -1806,6 +1819,11 @@ else
     }')"
 fi
 
+github_run_url=""
+if [[ -n "$github_server_url" && -n "$github_repository" && -n "$github_run_id" ]]; then
+  github_run_url="${github_server_url%/}/${github_repository}/actions/runs/${github_run_id}"
+fi
+
 cat > "$json_path" <<JSON
 {
   "benchmark": "$benchmark",
@@ -1824,6 +1842,18 @@ cat > "$json_path" <<JSON
     "action_sha": $(json_string_or_null "$action_sha"),
     "web_revision": $(json_string_or_null "$web_revision"),
     "api_url": $(json_string_or_null "$api_url")
+  },
+  "run_context": {
+    "github_repository": $(json_string_or_null "$github_repository"),
+    "github_workflow": $(json_string_or_null "$github_workflow"),
+    "github_job": $(json_string_or_null "$github_job"),
+    "github_run_id": $(json_num_or_null "$github_run_id"),
+    "github_run_number": $(json_num_or_null "$github_run_number"),
+    "github_run_attempt": $(json_num_or_null "$github_run_attempt"),
+    "github_run_url": $(json_string_or_null "$github_run_url"),
+    "github_ref": $(json_string_or_null "$github_ref"),
+    "github_ref_name": $(json_string_or_null "$github_ref_name"),
+    "github_sha": $(json_string_or_null "$github_sha")
   },
   "workspace": $(json_string_or_null "$workspace"),
   "cache_tag": $(json_string_or_null "$cache_tag"),
@@ -1919,6 +1949,22 @@ JSON
   echo "| Lane | ${lane_label_value} |"
   echo "| Project | \`${project_repo}\` |"
   echo "| Commit | \`${project_ref}\` |"
+  if [[ -n "$github_run_id" ]]; then
+    if [[ -n "$github_run_url" ]]; then
+      echo "| GitHub run | [${github_run_id}](${github_run_url}) |"
+    else
+      echo "| GitHub run | ${github_run_id} |"
+    fi
+  fi
+  if [[ -n "$github_run_number" ]]; then
+    echo "| GitHub run number | ${github_run_number} |"
+  fi
+  if [[ -n "$github_run_attempt" ]]; then
+    echo "| GitHub run attempt | ${github_run_attempt} |"
+  fi
+  if [[ -n "$github_job" ]]; then
+    echo "| GitHub job | \`${github_job}\` |"
+  fi
   if [[ -n "$cli_version" ]]; then
     echo "| CLI version | \`${cli_version}\` |"
   fi
