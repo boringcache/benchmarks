@@ -16,7 +16,11 @@ set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 canonical_dir="$script_dir/canonical"
-repos_dir="$(cd "$script_dir/../../benchmarks-repos" && pwd)"
+repos_dir_candidate="$script_dir/../../benchmark-repos"
+if [[ ! -d "$repos_dir_candidate" ]]; then
+  repos_dir_candidate="$script_dir/../../benchmarks-repos"
+fi
+repos_dir="$(cd "$repos_dir_candidate" && pwd)"
 
 if [[ ! -d "$canonical_dir" ]]; then
   echo "Canonical directory missing: $canonical_dir" >&2
