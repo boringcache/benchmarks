@@ -335,6 +335,8 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
   def test_rolling_docker_import_with_zero_cached_steps_is_investigation_only
     payload = write_artifact(
       "--cache-import-status", "ok",
+      "--mode", "docker",
+      "--adapter", "oci",
       "--buildkit-cached-steps", "0",
       "--oci-new-blob-count", "89",
       "--oci-new-blob-bytes", "9418062725",
@@ -346,8 +348,12 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     assert_equal "rolling_cache_import_no_reuse", payload.dig("classification", "reporting_reason")
     assert_equal "rolling_import_no_reuse", payload.dig("classification", "rolling_reseed_kind")
     assert_equal false, payload.dig("classification", "steady_state_candidate")
+    assert_equal "no_reuse", payload.dig("classification", "cache_import_status")
+    assert_equal "ok", payload.dig("classification", "raw_cache_import_status")
+    assert_equal "no_reuse", payload.dig("classification", "cache_reuse_status")
     assert_equal 0, payload.dig("docker_cache", "cached_steps")
     assert_equal 0, payload.dig("slow_reason", "buildkit_cached_steps")
+    assert_equal "metadata_import_no_reuse", payload.dig("slow_reason", "prior_cache_state")
 
     hypothesis_ids = payload.dig("slow_reason", "hypotheses").map { |row| row.fetch("id") }
     assert_includes hypothesis_ids, "docker_import_without_reuse"
