@@ -350,6 +350,7 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     assert_equal false, payload.dig("classification", "steady_state_candidate")
     assert_equal "no_reuse", payload.dig("classification", "cache_import_status")
     assert_equal "ok", payload.dig("classification", "raw_cache_import_status")
+    assert_equal "metadata_import_no_reuse", payload.dig("classification", "prior_cache_state")
     assert_equal "no_reuse", payload.dig("classification", "cache_reuse_status")
     assert_equal 0, payload.dig("docker_cache", "cached_steps")
     assert_equal 0, payload.dig("slow_reason", "buildkit_cached_steps")
@@ -357,6 +358,26 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
 
     hypothesis_ids = payload.dig("slow_reason", "hypotheses").map { |row| row.fetch("id") }
     assert_includes hypothesis_ids, "docker_import_without_reuse"
+  end
+
+  def test_rolling_docker_import_reports_primary_miss_fallback_reuse
+    payload = write_artifact(
+      "--cache-import-status", "ok",
+      "--prior-cache-state", "primary_miss_fallback_reuse",
+      "--mode", "docker",
+      "--adapter", "oci",
+      "--buildkit-cached-steps", "32",
+      "--oci-new-blob-count", "9",
+      "--oci-new-blob-bytes", "123456",
+      benchmark: "posthog-native-gzip"
+    )
+
+    assert_equal true, payload.dig("classification", "sample_valid")
+    assert_equal "comparative", payload.dig("classification", "reporting_mode")
+    assert_equal "ok", payload.dig("classification", "cache_import_status")
+    assert_equal "primary_miss_fallback_reuse", payload.dig("classification", "prior_cache_state")
+    assert_equal "reused", payload.dig("classification", "cache_reuse_status")
+    assert_equal "primary_miss_fallback_reuse", payload.dig("slow_reason", "prior_cache_state")
   end
 
   def test_native_tool_labels_are_inferred_for_actions_cache_artifacts
