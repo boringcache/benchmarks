@@ -22,6 +22,22 @@ BANNED_WORKFLOW_PATTERNS = [
   [
     /docker-layers/,
     "Docker benchmarks should use one measured registry tag instead of a second docker-layers tag"
+  ],
+  [
+    /buildkit_backend:\s*native\b/,
+    "Docker benchmark workflows should use the registry wrapper backend with buildkit_cache_backend=boringcache; the Rust-native Docker backend is retired"
+  ],
+  [
+    /\bBC Native\b/,
+    "Docker benchmark workflows should not publish active BC Native lanes; keep old native numbers only in historical docs"
+  ],
+  [
+    /run-boringcache-native-buildkit-benchmark/,
+    "Docker benchmark workflows should not call the retired Rust-native BuildKit benchmark runner"
+  ],
+  [
+    /native_publish_intensity|BORINGCACHE_BUILDKIT_PUBLISH_INTENSITY|Upload native BuildKit evidence/,
+    "Docker benchmark workflows should not configure retired native publisher controls"
   ]
 ].freeze
 
@@ -43,7 +59,10 @@ registry_by_repo.each do |repo_name, benchmarks|
   repo_path = File.join(repos_dir, repo_name)
   next unless Dir.exist?(repo_path)
 
-  workflows = Dir[File.join(repo_path, ".github", "workflows", "*.yml")].sort
+  workflows = [
+    *Dir[File.join(repo_path, ".github", "workflows", "*.{yml,yaml}")],
+    *Dir[File.join(repo_path, ".github", "actions", "**", "*.{yml,yaml}")]
+  ].sort
   workflow_text_by_path = workflows.to_h { |path| [path, File.read(path)] }
 
   workflow_text_by_path.each do |path, text|
