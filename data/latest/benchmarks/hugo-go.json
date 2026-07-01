@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-09T01:30:15Z",
+  "generated_at": "2026-07-01T01:36:55Z",
   "entry": {
     "lane": "rolling",
     "lane_label": "Rolling",
@@ -44,6 +44,8 @@
         "storage_bytes": 1598718801,
         "storage_source": "github-actions-cache-api",
         "storage_breakdown": null,
+        "network_bytes_uploaded": null,
+        "network_bytes_uploaded_source": null,
         "docker_cache_import_seconds": null,
         "docker_cache_export_seconds": null,
         "startup_prefetch": {},
@@ -185,6 +187,8 @@
             }
           ]
         },
+        "network_bytes_uploaded": null,
+        "network_bytes_uploaded_source": null,
         "docker_cache_import_seconds": null,
         "docker_cache_export_seconds": null,
         "startup_prefetch": {},
@@ -341,6 +345,8 @@
             "storage_bytes": 1598718801,
             "storage_source": "github-actions-cache-api",
             "storage_breakdown": null,
+            "network_bytes_uploaded": null,
+            "network_bytes_uploaded_source": null,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
             "startup_prefetch": {},
@@ -482,6 +488,8 @@
                 }
               ]
             },
+            "network_bytes_uploaded": null,
+            "network_bytes_uploaded_source": null,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
             "startup_prefetch": {},
