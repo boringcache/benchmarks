@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-07-02 01:34 UTC
+Generated: 2026-07-02 05:58 UTC
 
 Coverage: 20 benchmarks; fresh 6/20, rolling 20/20.
 
@@ -11,8 +11,8 @@ Rows are latest complete same-commit pairs.
 | Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
 | Storybook | Cold Build | 3m 31s | 3m 36s | near tie | 48.52 MB more (6.19%) |
-| OpenTelemetry Java | Warm Build | 1m 12s | 0m 58s | 19% faster | 49.62 MB less (6.08%) |
-| Spring AI | Warm Build | 0m 31s | 0m 27s | near tie | 178.93 MB less (17.92%) |
+| OpenTelemetry Java | Warm Build | 1m 1s | 0m 59s | 3% faster | 49.63 MB less (6.08%) |
+| Spring AI | Warm Build | 0m 32s | 0m 23s | 28% faster | 177.03 MB less (17.99%) |
 | gRPC | Cold Build | 32m 51s | 22m 36s | 31% faster | n/a |
 | Zed | Cold Build | 54m 28s | 52m 9s | 4% faster | 2.11 GB less (75.65%) |
 | n8n | Cold Build | 5m 18s | 5m 34s | 5% slower | 10.17 MB more (1.4%) |
@@ -31,11 +31,11 @@ Rows are latest complete same-commit pairs.
 | Discourse Web-Only Image | Commit Build | 0m 10s | 0m 11s | near tie | 8.67 GB less (86.83%) |
 | Discourse Release Image | Commit Build | 0m 13s | 0m 13s | near tie | 8.57 GB less (85.84%) |
 | Discourse Test Image | Commit Build | 0m 10s | 0m 12s | near tie | 8.04 GB less (80.53%) |
-| PostHog | Commit Build | 16m 26s | 10m 30s | 36% faster | 3.58 GB less (34.94%) |
+| PostHog | Commit Build | 14m 5s | 11m 50s | 16% faster | 3.07 GB less (31.58%) |
 | Storybook | Commit Build | 3m 40s | 3m 36s | near tie | 4.13 GB less (80.43%) |
 | OpenTelemetry Java | Commit Build | 1m 24s | 1m 45s | 25% slower | 2.32 GB less (58.21%) |
 | Spring AI | Commit Build | 1m 16s | 0m 57s | 25% faster | 3.19 GB less (70.59%) |
-| gRPC | Commit Build | 21m 57s | 13m 1s | 41% faster | n/a |
+| gRPC | Commit Build | 19m 44s | 11m 32s | 42% faster | n/a |
 | Zed | Commit Build | 35m 27s | 41m 31s | 17% slower | 10.55 GB less (92.52%) |
 | n8n | Commit Build | 3m 45s | 2m 14s | 40% faster | 8.08 GB less (91.67%) |
 | n8n Docker | Commit Build | 5m 7s | 3m 59s | investigation only | n/a |
