@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-04T05:51:24Z",
+  "generated_at": "2026-07-04T09:22:47Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -331,7 +331,7 @@
           "state": "missing_pair",
           "actions_successful_run_count": 77,
           "boringcache_successful_run_count": 77,
-          "paired_head_count": 72,
+          "paired_head_count": 71,
           "selected_pair_count": 0,
           "window_pair_target": 3
         },
@@ -340,13 +340,13 @@
           "state": "healthy",
           "actions_successful_run_count": 77,
           "boringcache_successful_run_count": 77,
-          "paired_head_count": 72,
+          "paired_head_count": 71,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "b3fcc7c36b954838d32c1593b263d9e99f812434",
-          "latest_created_at": "2026-07-04T00:38:03Z",
-          "latest_actions_run_id": 28689519984,
-          "latest_boringcache_run_id": 28689519984,
+          "latest_head_sha": "fa0a166bb31aa8756d7d51fafbb5aa499a354d2e",
+          "latest_created_at": "2026-07-04T08:07:18Z",
+          "latest_actions_run_id": 28700036222,
+          "latest_boringcache_run_id": 28700036222,
           "latest_reporting_mode": "comparative",
           "latest_cache_import_status": "ok",
           "latest_sample_valid": true
