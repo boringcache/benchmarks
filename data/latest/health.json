@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-04T01:10:15Z",
+  "generated_at": "2026-07-04T05:51:24Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -548,13 +548,13 @@
           "state": "healthy",
           "actions_successful_run_count": 98,
           "boringcache_successful_run_count": 98,
-          "paired_head_count": 96,
-          "selected_pair_count": 1,
+          "paired_head_count": 95,
+          "selected_pair_count": 2,
           "window_pair_target": 3,
-          "latest_head_sha": "19f4db1906e6cf916c892dfa4af5676de8d307fe",
-          "latest_created_at": "2026-06-27T04:19:26Z",
-          "latest_actions_run_id": 28278388263,
-          "latest_boringcache_run_id": 28278388263,
+          "latest_head_sha": "ffa6110639693cc26c8bdafc77669d1fc063cfce",
+          "latest_created_at": "2026-07-04T04:13:04Z",
+          "latest_actions_run_id": 28694556549,
+          "latest_boringcache_run_id": 28694556549,
           "latest_reporting_mode": "comparative",
           "latest_sample_valid": true
         },
@@ -563,7 +563,7 @@
           "state": "healthy",
           "actions_successful_run_count": 98,
           "boringcache_successful_run_count": 98,
-          "paired_head_count": 96,
+          "paired_head_count": 95,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "ffa6110639693cc26c8bdafc77669d1fc063cfce",
