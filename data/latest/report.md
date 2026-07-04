@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-07-04 01:10 UTC
+Generated: 2026-07-04 05:51 UTC
 
 Coverage: 20 benchmarks; fresh 6/20, rolling 20/20.
 
@@ -15,7 +15,7 @@ Rows are latest complete same-commit pairs.
 | Spring AI | Warm Build | 0m 32s | 0m 23s | 28% faster | 177.03 MB less (17.99%) |
 | gRPC | Cold Build | 32m 56s | 23m 35s | 28% faster | n/a |
 | Zed | Cold Build | 54m 28s | 52m 9s | 4% faster | 2.11 GB less (75.65%) |
-| n8n | Cold Build | 5m 18s | 5m 34s | 5% slower | 10.17 MB more (1.4%) |
+| n8n | Cold Build | 5m 41s | 5m 47s | near tie | 9.61 MB more (1.32%) |
 
 ## Rolling
 
