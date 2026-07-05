@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-07-05 16:59 UTC
+Generated: 2026-07-05 20:57 UTC
 
 Coverage: 20 benchmarks; fresh 6/20, rolling 20/20.
 
@@ -31,7 +31,7 @@ Rows are latest complete same-commit pairs.
 | Discourse Web-Only Image | Commit Build | 0m 15s | 0m 14s | near tie | 8.53 GB less (86.65%) |
 | Discourse Release Image | Commit Build | 0m 17s | 0m 10s | 41% faster | 8.43 GB less (85.65%) |
 | Discourse Test Image | Commit Build | 0m 12s | 0m 12s | near tie | 7.91 GB less (80.28%) |
-| PostHog | Commit Build | 17m 46s | 12m 2s | 32% faster | 3.37 GB less (32.82%) |
+| PostHog | Commit Build | 14m 3s | 13m 16s | 6% faster | 3.03 GB less (30.53%) |
 | Storybook | Commit Build | 3m 46s | 3m 19s | 12% faster | 4.31 GB less (80.93%) |
 | OpenTelemetry Java | Commit Build | 9m 6s | 7m 23s | 19% faster | 2.31 GB less (58.09%) |
 | Spring AI | Commit Build | 2m 3s | 2m 12s | 7% slower | 3.19 GB less (70.56%) |
