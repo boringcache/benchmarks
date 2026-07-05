@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-05T05:58:38Z",
+  "generated_at": "2026-07-05T09:39:40Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -343,10 +343,10 @@
           "paired_head_count": 80,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "811c1a9dea688cb8d37a01e26400f0f20bd84b4e",
-          "latest_created_at": "2026-07-04T22:48:17Z",
-          "latest_actions_run_id": 28722145165,
-          "latest_boringcache_run_id": 28722145165,
+          "latest_head_sha": "375c6a2866eb8a1b708b907cda9ec78115c9f543",
+          "latest_created_at": "2026-07-05T07:38:30Z",
+          "latest_actions_run_id": 28733594530,
+          "latest_boringcache_run_id": 28733594530,
           "latest_reporting_mode": "comparative",
           "latest_cache_import_status": "ok",
           "latest_sample_valid": true
