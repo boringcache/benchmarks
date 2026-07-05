@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-05T01:16:00Z",
+  "generated_at": "2026-07-05T05:58:38Z",
   "window_sample_target": 3,
   "providers": {
     "actions-cache": "GitHub Actions Cache",
@@ -49130,8 +49130,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 61,
-              "unique_head_count": 58,
+              "successful_run_count": 60,
+              "unique_head_count": 57,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -49139,8 +49139,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 61,
-              "unique_head_count": 58,
+              "successful_run_count": 60,
+              "unique_head_count": 57,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -49742,8 +49742,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 61,
-              "unique_head_count": 58,
+              "successful_run_count": 60,
+              "unique_head_count": 57,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -49751,8 +49751,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 61,
-              "unique_head_count": 58,
+              "successful_run_count": 60,
+              "unique_head_count": 57,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -50406,8 +50406,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 61,
-              "unique_head_count": 58,
+              "successful_run_count": 60,
+              "unique_head_count": 57,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -50415,8 +50415,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 61,
-              "unique_head_count": 58,
+              "successful_run_count": 60,
+              "unique_head_count": 57,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": false,
@@ -126123,8 +126123,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "healthy",
-              "successful_run_count": 57,
-              "unique_head_count": 56,
+              "successful_run_count": 56,
+              "unique_head_count": 55,
               "selected_sample_count": 1,
               "window_sample_target": 3,
               "storage_available": true,
@@ -126595,8 +126595,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 57,
-              "unique_head_count": 56,
+              "successful_run_count": 56,
+              "unique_head_count": 55,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -127908,8 +127908,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "healthy",
-              "successful_run_count": 57,
-              "unique_head_count": 56,
+              "successful_run_count": 56,
+              "unique_head_count": 55,
               "selected_sample_count": 1,
               "window_sample_target": 3,
               "storage_available": true,
@@ -128886,8 +128886,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 57,
-              "unique_head_count": 56,
+              "successful_run_count": 56,
+              "unique_head_count": 55,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -131322,8 +131322,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "outlier",
-              "successful_run_count": 57,
-              "unique_head_count": 56,
+              "successful_run_count": 56,
+              "unique_head_count": 55,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false,
@@ -131332,8 +131332,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 57,
-              "unique_head_count": 56,
+              "successful_run_count": 56,
+              "unique_head_count": 55,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": false,
