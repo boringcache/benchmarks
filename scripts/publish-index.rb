@@ -219,7 +219,7 @@ BENCHMARKS = [
     "category" => "bazel",
     "step" => "Bazel build (remote cache)",
     "workflow" => "grpc-bazel-benchmark.yml",
-    "extra_providers" => ["depot-cache", "buildbuddy-cache"]
+    "extra_providers" => ["buildbuddy-cache"]
   },
   {
     "benchmark" => "zed-sccache",
@@ -230,8 +230,7 @@ BENCHMARKS = [
     "public" => false,
     "category" => "rust",
     "step" => "Rust build (sccache)",
-    "workflow" => "zed-sccache-benchmark.yml",
-    "extra_providers" => ["depot-cache"]
+    "workflow" => "zed-sccache-benchmark.yml"
   },
   {
     "benchmark" => "n8n",
@@ -285,13 +284,7 @@ EXCLUDED_PROVIDER_RUNS = {
   }
 }.freeze
 
-PROVIDER_LANE_OUTLIERS = {
-  "zed-sccache" => {
-    "depot-cache" => {
-      "fresh" => "Depot Cache's sccache store cannot be reset for this benchmark, so fresh samples retain remote compiler-cache hits and are not cold-provider evidence."
-    }
-  }
-}.freeze
+PROVIDER_LANE_OUTLIERS = {}.freeze
 
 def run_cmd(*args)
   attempts = 0

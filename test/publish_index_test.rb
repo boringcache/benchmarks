@@ -195,7 +195,7 @@ class PublishIndexTest < Minitest::Test
 
     reason = provider_lane_outlier_reason(benchmark: benchmark, strategy: "depot-cache", lane: "fresh")
 
-    assert_includes reason, "cannot be reset"
+    assert_nil reason
     assert_nil provider_lane_outlier_reason(benchmark: benchmark, strategy: "depot-cache", lane: "rolling")
   end
 
