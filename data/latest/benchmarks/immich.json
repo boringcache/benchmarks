@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-08T09:28:22Z",
+  "generated_at": "2026-07-08T13:11:59Z",
   "entry": {
     "lane": "rolling",
     "lane_label": "Rolling",
@@ -15,22 +15,22 @@
     "step": "Docker build (server)",
     "headline_scenario": "cold",
     "headline_label": "Commit Build",
-    "before": "0m 11s",
-    "after": "0m 13s",
-    "before_seconds": 11.0,
-    "after_seconds": 13.0,
-    "faster": "0",
+    "before": "5m 47s",
+    "after": "3m 57s",
+    "before_seconds": 347.0,
+    "after_seconds": 237.0,
+    "faster": "32",
     "comparison": {
       "paired_on_head_sha": true,
-      "pairing_head_sha": "9e6866202f05ee229498beefafaac1c0b4563885",
+      "pairing_head_sha": "d1a2d6c4a9b21162f6480810fe13145ac6b1c297",
       "sample_count": 1,
       "actions_cache": {
-        "run_id": 28915724538,
-        "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/28915724538",
-        "head_sha": "9e6866202f05ee229498beefafaac1c0b4563885",
-        "created_at": "2026-07-08T03:39:58Z",
-        "cold_seconds": 11.0,
-        "cold_build_seconds": 4.0,
+        "run_id": 28935061679,
+        "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/28935061679",
+        "head_sha": "d1a2d6c4a9b21162f6480810fe13145ac6b1c297",
+        "created_at": "2026-07-08T10:15:34Z",
+        "cold_seconds": 347.0,
+        "cold_build_seconds": 340.0,
         "cold_restore_or_setup_seconds": 7.0,
         "warm1_seconds": null,
         "warm1_build_seconds": null,
@@ -38,16 +38,16 @@
         "warm2_seconds": null,
         "warm_average_seconds": null,
         "warm_steady_seconds": null,
-        "rolling_first_build_seconds": 11.0,
+        "rolling_first_build_seconds": 347.0,
         "rolling_warm_seconds": null,
-        "run_total_seconds": 46.0,
-        "storage_bytes": 10334583480,
+        "run_total_seconds": 370.0,
+        "storage_bytes": 10481700994,
         "storage_source": "github-actions-cache-api",
         "storage_breakdown": null,
         "network_bytes_uploaded": null,
         "network_bytes_uploaded_source": null,
-        "docker_cache_import_seconds": 0.1,
-        "docker_cache_export_seconds": 2.7,
+        "docker_cache_import_seconds": 0.6,
+        "docker_cache_export_seconds": 192.8,
         "startup_prefetch": {},
         "oci": {
           "hydration_policy": null,
@@ -94,7 +94,7 @@
         "launch_proof_paths": [],
         "workspace": null,
         "cache_tag": null,
-        "run_uid": "gh-28915724538-1",
+        "run_uid": "gh-28935061679-1",
         "mode": "docker",
         "adapter": "oci",
         "docker_cache_from_refs": null,
@@ -116,14 +116,14 @@
           "benchmark": "immich",
           "strategy": "actions-cache",
           "lane": "rolling",
-          "run_uid": "gh-28915724538-1",
-          "paired_run_id": 28915724538,
-          "build_seconds": 4,
+          "run_uid": "gh-28935061679-1",
+          "paired_run_id": 28935061679,
+          "build_seconds": 340,
           "setup_seconds": 7,
           "post_cleanup_seconds": null,
-          "cache_restore_seconds": 0.1,
-          "cache_save_export_seconds": 2.7,
-          "buildkit_cached_steps": 30,
+          "cache_restore_seconds": 0.6,
+          "cache_save_export_seconds": 192.8,
+          "buildkit_cached_steps": 16,
           "hit_count": null,
           "miss_count": null,
           "hit_rate": null,
@@ -133,33 +133,24 @@
           "issue_candidates": [],
           "hypotheses": [
             {
-              "id": "setup_overhead",
-              "confidence": "medium",
-              "summary": "Setup or restore overhead is large relative to build time.",
-              "evidence": {
-                "setup_seconds": 7,
-                "build_seconds": 4
-              }
-            },
-            {
               "id": "cache_save_export_overhead",
               "confidence": "high",
               "summary": "Cache save/export time is a likely slow-build contributor.",
               "evidence": {
-                "cache_save_export_seconds": 2.7,
-                "build_seconds": 4
+                "cache_save_export_seconds": 192.8,
+                "build_seconds": 340
               }
             }
           ]
         }
       },
       "boringcache": {
-        "run_id": 28915724538,
-        "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/28915724538",
-        "head_sha": "9e6866202f05ee229498beefafaac1c0b4563885",
-        "created_at": "2026-07-08T03:39:58Z",
-        "cold_seconds": 13.0,
-        "cold_build_seconds": 3.0,
+        "run_id": 28935061679,
+        "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/28935061679",
+        "head_sha": "d1a2d6c4a9b21162f6480810fe13145ac6b1c297",
+        "created_at": "2026-07-08T10:15:34Z",
+        "cold_seconds": 237.0,
+        "cold_build_seconds": 227.0,
         "cold_restore_or_setup_seconds": 10.0,
         "warm1_seconds": null,
         "warm1_build_seconds": null,
@@ -167,19 +158,19 @@
         "warm2_seconds": null,
         "warm_average_seconds": null,
         "warm_steady_seconds": null,
-        "rolling_first_build_seconds": 13.0,
+        "rolling_first_build_seconds": 237.0,
         "rolling_warm_seconds": null,
-        "run_total_seconds": 46.0,
-        "storage_bytes": 2836094035,
+        "run_total_seconds": 370.0,
+        "storage_bytes": 2839224521,
         "storage_source": "boringcache-check",
         "storage_breakdown": {
           "workspace": "boringcache/benchmark-immich",
           "tags": [
             "immich-run-rolling-main"
           ],
-          "total_bytes": 2836094035,
+          "total_bytes": 2839224521,
           "summary": {
-            "remote_cas_bytes": 2836094035,
+            "remote_cas_bytes": 2839224521,
             "dependency_archive_bytes": 0,
             "tool_runtime_archive_bytes": 0,
             "unknown_bytes": 0
@@ -188,30 +179,30 @@
             {
               "tag": "immich-run-rolling-main-ubuntu-24-x86_64",
               "requested_tag": "immich-run-rolling-main",
-              "cache_entry_id": "c5d35215-45fe-4da6-b4f4-2a5bdd55bdbd",
+              "cache_entry_id": "0d4bff52-4f8a-4fa0-b7de-137aa7e95f74",
               "primary_tag": "immich-run-rolling-main-ubuntu-24-x86_64",
               "storage_mode": "cas",
               "component_type": "remote_cas",
               "component_label": "remote CAS",
-              "bytes": 2836094035,
-              "archive_size_bytes": 2836094035,
-              "blob_total_size_bytes": 2836094035
+              "bytes": 2839224521,
+              "archive_size_bytes": 2839224521,
+              "blob_total_size_bytes": 2839224521
             }
           ]
         },
         "network_bytes_uploaded": null,
         "network_bytes_uploaded_source": null,
-        "docker_cache_import_seconds": 0.1,
-        "docker_cache_export_seconds": 0.9,
+        "docker_cache_import_seconds": 0.4,
+        "docker_cache_export_seconds": 92.7,
         "startup_prefetch": {},
         "oci": {
           "hydration_policy": "metadata-only",
-          "body_local_hits": 0,
-          "body_remote_fetches": 1,
-          "body_local_bytes": 0,
-          "body_remote_bytes": 15016,
-          "body_local_duration_ms": 0,
-          "body_remote_duration_ms": 68,
+          "body_local_hits": 25,
+          "body_remote_fetches": 20,
+          "body_local_bytes": 782659869,
+          "body_remote_bytes": 508391737,
+          "body_local_duration_ms": 6,
+          "body_remote_duration_ms": 16246,
           "startup_body_inserted": 0,
           "startup_body_failures": 0,
           "startup_body_cold_blobs": 61,
@@ -252,7 +243,7 @@
         "launch_proof_paths": [],
         "workspace": null,
         "cache_tag": null,
-        "run_uid": "gh-28915724538-1",
+        "run_uid": "gh-28935061679-1",
         "mode": "docker",
         "adapter": "oci",
         "docker_cache_from_refs": null,
@@ -274,14 +265,14 @@
           "benchmark": "immich",
           "strategy": "boringcache",
           "lane": "rolling",
-          "run_uid": "gh-28915724538-1",
-          "paired_run_id": 28915724538,
-          "build_seconds": 3,
+          "run_uid": "gh-28935061679-1",
+          "paired_run_id": 28935061679,
+          "build_seconds": 227,
           "setup_seconds": 10,
           "post_cleanup_seconds": null,
-          "cache_restore_seconds": 0.1,
-          "cache_save_export_seconds": 0.9,
-          "buildkit_cached_steps": 30,
+          "cache_restore_seconds": 0.4,
+          "cache_save_export_seconds": 92.7,
+          "buildkit_cached_steps": 14,
           "hit_count": null,
           "miss_count": null,
           "hit_rate": null,
@@ -291,21 +282,12 @@
           "issue_candidates": [],
           "hypotheses": [
             {
-              "id": "setup_overhead",
-              "confidence": "medium",
-              "summary": "Setup or restore overhead is large relative to build time.",
-              "evidence": {
-                "setup_seconds": 10,
-                "build_seconds": 3
-              }
-            },
-            {
               "id": "cache_save_export_overhead",
               "confidence": "high",
               "summary": "Cache save/export time is a likely slow-build contributor.",
               "evidence": {
-                "cache_save_export_seconds": 0.9,
-                "build_seconds": 3
+                "cache_save_export_seconds": 92.7,
+                "build_seconds": 227
               }
             }
           ]
@@ -316,10 +298,10 @@
       },
       "warm_improvement_pct": null,
       "warm_build_improvement_pct": null,
-      "cold_improvement_pct": -18.18,
-      "cold_build_improvement_pct": 25.0,
-      "storage_improvement_pct": 72.56,
-      "storage_saved_bytes": 7498489445
+      "cold_improvement_pct": 31.7,
+      "cold_build_improvement_pct": 33.24,
+      "storage_improvement_pct": 72.91,
+      "storage_saved_bytes": 7642476473
     },
     "default_lane": "rolling",
     "available_lanes": [
@@ -341,22 +323,22 @@
         "step": "Docker build (server)",
         "headline_scenario": "cold",
         "headline_label": "Commit Build",
-        "before": "0m 11s",
-        "after": "0m 13s",
-        "before_seconds": 11.0,
-        "after_seconds": 13.0,
-        "faster": "0",
+        "before": "5m 47s",
+        "after": "3m 57s",
+        "before_seconds": 347.0,
+        "after_seconds": 237.0,
+        "faster": "32",
         "comparison": {
           "paired_on_head_sha": true,
-          "pairing_head_sha": "9e6866202f05ee229498beefafaac1c0b4563885",
+          "pairing_head_sha": "d1a2d6c4a9b21162f6480810fe13145ac6b1c297",
           "sample_count": 1,
           "actions_cache": {
-            "run_id": 28915724538,
-            "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/28915724538",
-            "head_sha": "9e6866202f05ee229498beefafaac1c0b4563885",
-            "created_at": "2026-07-08T03:39:58Z",
-            "cold_seconds": 11.0,
-            "cold_build_seconds": 4.0,
+            "run_id": 28935061679,
+            "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/28935061679",
+            "head_sha": "d1a2d6c4a9b21162f6480810fe13145ac6b1c297",
+            "created_at": "2026-07-08T10:15:34Z",
+            "cold_seconds": 347.0,
+            "cold_build_seconds": 340.0,
             "cold_restore_or_setup_seconds": 7.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
@@ -364,16 +346,16 @@
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 11.0,
+            "rolling_first_build_seconds": 347.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 46.0,
-            "storage_bytes": 10334583480,
+            "run_total_seconds": 370.0,
+            "storage_bytes": 10481700994,
             "storage_source": "github-actions-cache-api",
             "storage_breakdown": null,
             "network_bytes_uploaded": null,
             "network_bytes_uploaded_source": null,
-            "docker_cache_import_seconds": 0.1,
-            "docker_cache_export_seconds": 2.7,
+            "docker_cache_import_seconds": 0.6,
+            "docker_cache_export_seconds": 192.8,
             "startup_prefetch": {},
             "oci": {
               "hydration_policy": null,
@@ -420,7 +402,7 @@
             "launch_proof_paths": [],
             "workspace": null,
             "cache_tag": null,
-            "run_uid": "gh-28915724538-1",
+            "run_uid": "gh-28935061679-1",
             "mode": "docker",
             "adapter": "oci",
             "docker_cache_from_refs": null,
@@ -442,14 +424,14 @@
               "benchmark": "immich",
               "strategy": "actions-cache",
               "lane": "rolling",
-              "run_uid": "gh-28915724538-1",
-              "paired_run_id": 28915724538,
-              "build_seconds": 4,
+              "run_uid": "gh-28935061679-1",
+              "paired_run_id": 28935061679,
+              "build_seconds": 340,
               "setup_seconds": 7,
               "post_cleanup_seconds": null,
-              "cache_restore_seconds": 0.1,
-              "cache_save_export_seconds": 2.7,
-              "buildkit_cached_steps": 30,
+              "cache_restore_seconds": 0.6,
+              "cache_save_export_seconds": 192.8,
+              "buildkit_cached_steps": 16,
               "hit_count": null,
               "miss_count": null,
               "hit_rate": null,
@@ -459,33 +441,24 @@
               "issue_candidates": [],
               "hypotheses": [
                 {
-                  "id": "setup_overhead",
-                  "confidence": "medium",
-                  "summary": "Setup or restore overhead is large relative to build time.",
-                  "evidence": {
-                    "setup_seconds": 7,
-                    "build_seconds": 4
-                  }
-                },
-                {
                   "id": "cache_save_export_overhead",
                   "confidence": "high",
                   "summary": "Cache save/export time is a likely slow-build contributor.",
                   "evidence": {
-                    "cache_save_export_seconds": 2.7,
-                    "build_seconds": 4
+                    "cache_save_export_seconds": 192.8,
+                    "build_seconds": 340
                   }
                 }
               ]
             }
           },
           "boringcache": {
-            "run_id": 28915724538,
-            "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/28915724538",
-            "head_sha": "9e6866202f05ee229498beefafaac1c0b4563885",
-            "created_at": "2026-07-08T03:39:58Z",
-            "cold_seconds": 13.0,
-            "cold_build_seconds": 3.0,
+            "run_id": 28935061679,
+            "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/28935061679",
+            "head_sha": "d1a2d6c4a9b21162f6480810fe13145ac6b1c297",
+            "created_at": "2026-07-08T10:15:34Z",
+            "cold_seconds": 237.0,
+            "cold_build_seconds": 227.0,
             "cold_restore_or_setup_seconds": 10.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
@@ -493,19 +466,19 @@
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 13.0,
+            "rolling_first_build_seconds": 237.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 46.0,
-            "storage_bytes": 2836094035,
+            "run_total_seconds": 370.0,
+            "storage_bytes": 2839224521,
             "storage_source": "boringcache-check",
             "storage_breakdown": {
               "workspace": "boringcache/benchmark-immich",
               "tags": [
                 "immich-run-rolling-main"
               ],
-              "total_bytes": 2836094035,
+              "total_bytes": 2839224521,
               "summary": {
-                "remote_cas_bytes": 2836094035,
+                "remote_cas_bytes": 2839224521,
                 "dependency_archive_bytes": 0,
                 "tool_runtime_archive_bytes": 0,
                 "unknown_bytes": 0
@@ -514,30 +487,30 @@
                 {
                   "tag": "immich-run-rolling-main-ubuntu-24-x86_64",
                   "requested_tag": "immich-run-rolling-main",
-                  "cache_entry_id": "c5d35215-45fe-4da6-b4f4-2a5bdd55bdbd",
+                  "cache_entry_id": "0d4bff52-4f8a-4fa0-b7de-137aa7e95f74",
                   "primary_tag": "immich-run-rolling-main-ubuntu-24-x86_64",
                   "storage_mode": "cas",
                   "component_type": "remote_cas",
                   "component_label": "remote CAS",
-                  "bytes": 2836094035,
-                  "archive_size_bytes": 2836094035,
-                  "blob_total_size_bytes": 2836094035
+                  "bytes": 2839224521,
+                  "archive_size_bytes": 2839224521,
+                  "blob_total_size_bytes": 2839224521
                 }
               ]
             },
             "network_bytes_uploaded": null,
             "network_bytes_uploaded_source": null,
-            "docker_cache_import_seconds": 0.1,
-            "docker_cache_export_seconds": 0.9,
+            "docker_cache_import_seconds": 0.4,
+            "docker_cache_export_seconds": 92.7,
             "startup_prefetch": {},
             "oci": {
               "hydration_policy": "metadata-only",
-              "body_local_hits": 0,
-              "body_remote_fetches": 1,
-              "body_local_bytes": 0,
-              "body_remote_bytes": 15016,
-              "body_local_duration_ms": 0,
-              "body_remote_duration_ms": 68,
+              "body_local_hits": 25,
+              "body_remote_fetches": 20,
+              "body_local_bytes": 782659869,
+              "body_remote_bytes": 508391737,
+              "body_local_duration_ms": 6,
+              "body_remote_duration_ms": 16246,
               "startup_body_inserted": 0,
               "startup_body_failures": 0,
               "startup_body_cold_blobs": 61,
@@ -578,7 +551,7 @@
             "launch_proof_paths": [],
             "workspace": null,
             "cache_tag": null,
-            "run_uid": "gh-28915724538-1",
+            "run_uid": "gh-28935061679-1",
             "mode": "docker",
             "adapter": "oci",
             "docker_cache_from_refs": null,
@@ -600,14 +573,14 @@
               "benchmark": "immich",
               "strategy": "boringcache",
               "lane": "rolling",
-              "run_uid": "gh-28915724538-1",
-              "paired_run_id": 28915724538,
-              "build_seconds": 3,
+              "run_uid": "gh-28935061679-1",
+              "paired_run_id": 28935061679,
+              "build_seconds": 227,
               "setup_seconds": 10,
               "post_cleanup_seconds": null,
-              "cache_restore_seconds": 0.1,
-              "cache_save_export_seconds": 0.9,
-              "buildkit_cached_steps": 30,
+              "cache_restore_seconds": 0.4,
+              "cache_save_export_seconds": 92.7,
+              "buildkit_cached_steps": 14,
               "hit_count": null,
               "miss_count": null,
               "hit_rate": null,
@@ -617,21 +590,12 @@
               "issue_candidates": [],
               "hypotheses": [
                 {
-                  "id": "setup_overhead",
-                  "confidence": "medium",
-                  "summary": "Setup or restore overhead is large relative to build time.",
-                  "evidence": {
-                    "setup_seconds": 10,
-                    "build_seconds": 3
-                  }
-                },
-                {
                   "id": "cache_save_export_overhead",
                   "confidence": "high",
                   "summary": "Cache save/export time is a likely slow-build contributor.",
                   "evidence": {
-                    "cache_save_export_seconds": 0.9,
-                    "build_seconds": 3
+                    "cache_save_export_seconds": 92.7,
+                    "build_seconds": 227
                   }
                 }
               ]
@@ -642,10 +606,10 @@
           },
           "warm_improvement_pct": null,
           "warm_build_improvement_pct": null,
-          "cold_improvement_pct": -18.18,
-          "cold_build_improvement_pct": 25.0,
-          "storage_improvement_pct": 72.56,
-          "storage_saved_bytes": 7498489445
+          "cold_improvement_pct": 31.7,
+          "cold_build_improvement_pct": 33.24,
+          "storage_improvement_pct": 72.91,
+          "storage_saved_bytes": 7642476473
         }
       }
     }
