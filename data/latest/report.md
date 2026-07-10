@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-07-09 21:07 UTC
+Generated: 2026-07-10 01:12 UTC
 
 Coverage: 20 benchmarks; fresh 7/20, rolling 20/20.
 
@@ -32,12 +32,12 @@ Rows are latest complete same-commit pairs.
 | Discourse Web-Only Image | Commit Build | 0m 26s | 0m 12s | 54% faster | 8.68 GB less (86.84%) |
 | Discourse Release Image | Commit Build | 0m 15s | 0m 11s | near tie | 8.58 GB less (85.85%) |
 | Discourse Test Image | Commit Build | 0m 13s | 0m 12s | near tie | 8.06 GB less (80.57%) |
-| PostHog | Commit Build | 14m 48s | 13m 0s | 12% faster | 3.03 GB less (30.99%) |
-| Storybook | Commit Build | 4m 2s | 3m 6s | 23% faster | 4.97 GB less (85.7%) |
+| PostHog | Commit Build | 16m 41s | 11m 32s | 31% faster | 3.62 GB less (34.89%) |
+| Storybook | Commit Build | 3m 5s | 2m 53s | 6% faster | 5.07 GB less (85.9%) |
 | OpenTelemetry Java | Commit Build | 1m 29s | 1m 25s | 4% faster | 3.09 GB less (80.3%) |
-| Spring AI | Commit Build | 0m 52s | 0m 50s | near tie | 3.20 GB less (70.43%) |
-| gRPC | Commit Build | 6m 30s | 4m 6s | 37% faster | n/a |
-| Zed | Commit Build | 42m 30s | 40m 14s | 5% faster | 10.55 GB less (92.29%) |
+| Spring AI | Commit Build | 0m 52s | 0m 28s | 46% faster | 3.22 GB less (70.34%) |
+| gRPC | Commit Build | 22m 25s | 10m 19s | 54% faster | n/a |
+| Zed | Commit Build | 18m 17s | 23m 24s | 28% slower | 10.58 GB less (92.31%) |
 | n8n | Commit Build | 3m 3s | 2m 21s | 23% faster | 11.19 GB less (93.8%) |
 | n8n Docker | Commit Build | 6m 2s | 4m 49s | investigation only | n/a |
 | n8n Runners | Commit Build | 1m 5s | 0m 55s | 15% faster | n/a |
