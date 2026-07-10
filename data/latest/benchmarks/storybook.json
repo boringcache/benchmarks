@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-10T05:56:20Z",
+  "generated_at": "2026-07-10T09:50:22Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -612,33 +612,33 @@
         "step": "Nx build (Yarn monorepo)",
         "headline_scenario": "cold",
         "headline_label": "Commit Build",
-        "before": "3m 5s",
-        "after": "2m 53s",
-        "before_seconds": 185.0,
-        "after_seconds": 173.0,
-        "faster": "6",
+        "before": "1m 33s",
+        "after": "0m 52s",
+        "before_seconds": 93.0,
+        "after_seconds": 52.0,
+        "faster": "44",
         "comparison": {
           "paired_on_head_sha": true,
-          "pairing_head_sha": "c990f2a39c130465ff0303ffa06325dcfae468dd",
+          "pairing_head_sha": "5f439789e206d722c739f9221eaef95871965190",
           "sample_count": 1,
           "actions_cache": {
-            "run_id": 29055864023,
-            "run_url": "https://github.com/boringcache/benchmark-storybook/actions/runs/29055864023",
-            "head_sha": "c990f2a39c130465ff0303ffa06325dcfae468dd",
-            "created_at": "2026-07-09T22:54:13Z",
-            "cold_seconds": 185.0,
-            "cold_build_seconds": 147.0,
-            "cold_restore_or_setup_seconds": 38.0,
+            "run_id": 29078772504,
+            "run_url": "https://github.com/boringcache/benchmark-storybook/actions/runs/29078772504",
+            "head_sha": "5f439789e206d722c739f9221eaef95871965190",
+            "created_at": "2026-07-10T08:07:25Z",
+            "cold_seconds": 93.0,
+            "cold_build_seconds": 36.0,
+            "cold_restore_or_setup_seconds": 57.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 185.0,
+            "rolling_first_build_seconds": 93.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 237.0,
-            "storage_bytes": 6333457197,
+            "run_total_seconds": 141.0,
+            "storage_bytes": 6346437310,
             "storage_source": "github-actions-cache-api",
             "storage_breakdown": null,
             "network_bytes_uploaded": null,
@@ -690,7 +690,7 @@
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-storybook",
             "cache_tag": null,
-            "run_uid": "gh-29055864023-1",
+            "run_uid": "gh-29078772504-1",
             "mode": "nx",
             "adapter": "nx",
             "docker_cache_from_refs": null,
@@ -712,10 +712,10 @@
               "benchmark": "storybook",
               "strategy": "actions-cache",
               "lane": "rolling",
-              "run_uid": "gh-29055864023-1",
-              "paired_run_id": 29055864023,
-              "build_seconds": 147,
-              "setup_seconds": 38,
+              "run_uid": "gh-29078772504-1",
+              "paired_run_id": 29078772504,
+              "build_seconds": 36,
+              "setup_seconds": 57,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": null,
               "cache_save_export_seconds": null,
@@ -733,30 +733,30 @@
                   "confidence": "medium",
                   "summary": "Setup or restore overhead is large relative to build time.",
                   "evidence": {
-                    "setup_seconds": 38,
-                    "build_seconds": 147
+                    "setup_seconds": 57,
+                    "build_seconds": 36
                   }
                 }
               ]
             }
           },
           "boringcache": {
-            "run_id": 29055864023,
-            "run_url": "https://github.com/boringcache/benchmark-storybook/actions/runs/29055864023",
-            "head_sha": "c990f2a39c130465ff0303ffa06325dcfae468dd",
-            "created_at": "2026-07-09T22:54:13Z",
-            "cold_seconds": 173.0,
-            "cold_build_seconds": 156.0,
-            "cold_restore_or_setup_seconds": 17.0,
+            "run_id": 29078772504,
+            "run_url": "https://github.com/boringcache/benchmark-storybook/actions/runs/29078772504",
+            "head_sha": "5f439789e206d722c739f9221eaef95871965190",
+            "created_at": "2026-07-10T08:07:25Z",
+            "cold_seconds": 52.0,
+            "cold_build_seconds": 30.0,
+            "cold_restore_or_setup_seconds": 22.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 173.0,
+            "rolling_first_build_seconds": 52.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 237.0,
+            "run_total_seconds": 141.0,
             "storage_bytes": 892979562,
             "storage_source": "boringcache-check",
             "storage_breakdown": {
@@ -852,7 +852,7 @@
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-storybook",
             "cache_tag": null,
-            "run_uid": "gh-29055864023-1",
+            "run_uid": "gh-29078772504-1",
             "mode": "nx",
             "adapter": "nx",
             "docker_cache_from_refs": null,
@@ -874,10 +874,10 @@
               "benchmark": "storybook",
               "strategy": "boringcache",
               "lane": "rolling",
-              "run_uid": "gh-29055864023-1",
-              "paired_run_id": 29055864023,
-              "build_seconds": 156,
-              "setup_seconds": 17,
+              "run_uid": "gh-29078772504-1",
+              "paired_run_id": 29078772504,
+              "build_seconds": 30,
+              "setup_seconds": 22,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": null,
               "cache_save_export_seconds": null,
@@ -889,7 +889,17 @@
               "new_blob_bytes": null,
               "native_tool": null,
               "issue_candidates": [],
-              "hypotheses": []
+              "hypotheses": [
+                {
+                  "id": "setup_overhead",
+                  "confidence": "medium",
+                  "summary": "Setup or restore overhead is large relative to build time.",
+                  "evidence": {
+                    "setup_seconds": 22,
+                    "build_seconds": 30
+                  }
+                }
+              ]
             }
           },
           "reporting": {
@@ -897,10 +907,10 @@
           },
           "warm_improvement_pct": null,
           "warm_build_improvement_pct": null,
-          "cold_improvement_pct": 6.49,
-          "cold_build_improvement_pct": -6.12,
-          "storage_improvement_pct": 85.9,
-          "storage_saved_bytes": 5440477635
+          "cold_improvement_pct": 44.09,
+          "cold_build_improvement_pct": 16.67,
+          "storage_improvement_pct": 85.93,
+          "storage_saved_bytes": 5453457748
         }
       }
     }
