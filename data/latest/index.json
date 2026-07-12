@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-12T09:20:27Z",
+  "generated_at": "2026-07-12T12:52:21Z",
   "entries": [
     {
       "lane": "rolling",
@@ -6498,22 +6498,22 @@
       "step": "Docker build (full stack)",
       "headline_scenario": "cold",
       "headline_label": "Commit Build",
-      "before": "16m 16s",
-      "after": "11m 57s",
-      "before_seconds": 976.0,
-      "after_seconds": 717.0,
-      "faster": "27",
+      "before": "0m 20s",
+      "after": "0m 15s",
+      "before_seconds": 20.0,
+      "after_seconds": 15.0,
+      "faster": "25",
       "comparison": {
         "paired_on_head_sha": true,
-        "pairing_head_sha": "d89e08164d25291c25e892f00551e066d4b89e62",
+        "pairing_head_sha": "f98758dc986de052b3ed93e32fb5a970528f929c",
         "sample_count": 1,
         "actions_cache": {
-          "run_id": 29173945845,
-          "run_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/29173945845",
-          "head_sha": "d89e08164d25291c25e892f00551e066d4b89e62",
-          "created_at": "2026-07-12T00:35:16Z",
-          "cold_seconds": 976.0,
-          "cold_build_seconds": 968.0,
+          "run_id": 29192437253,
+          "run_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/29192437253",
+          "head_sha": "f98758dc986de052b3ed93e32fb5a970528f929c",
+          "created_at": "2026-07-12T12:20:13Z",
+          "cold_seconds": 20.0,
+          "cold_build_seconds": 12.0,
           "cold_restore_or_setup_seconds": 8.0,
           "warm1_seconds": null,
           "warm1_build_seconds": null,
@@ -6521,16 +6521,16 @@
           "warm2_seconds": null,
           "warm_average_seconds": null,
           "warm_steady_seconds": null,
-          "rolling_first_build_seconds": 976.0,
+          "rolling_first_build_seconds": 20.0,
           "rolling_warm_seconds": null,
-          "run_total_seconds": 1037.0,
-          "storage_bytes": 12794978657,
+          "run_total_seconds": 131.0,
+          "storage_bytes": 10646003777,
           "storage_source": "github-actions-cache-api",
           "storage_breakdown": null,
           "network_bytes_uploaded": null,
           "network_bytes_uploaded_source": null,
-          "docker_cache_import_seconds": 0.6,
-          "docker_cache_export_seconds": 696.5,
+          "docker_cache_import_seconds": 0.2,
+          "docker_cache_export_seconds": 4.6,
           "startup_prefetch": {},
           "oci": {
             "hydration_policy": null,
@@ -6577,7 +6577,7 @@
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
-          "run_uid": "gh-29173945845-1",
+          "run_uid": "gh-29192437253-1",
           "mode": "docker",
           "adapter": "oci",
           "docker_cache_from_refs": null,
@@ -6599,14 +6599,14 @@
             "benchmark": "posthog",
             "strategy": "actions-cache",
             "lane": "rolling",
-            "run_uid": "gh-29173945845-1",
-            "paired_run_id": 29173945845,
-            "build_seconds": 968,
+            "run_uid": "gh-29192437253-1",
+            "paired_run_id": 29192437253,
+            "build_seconds": 12,
             "setup_seconds": 8,
             "post_cleanup_seconds": null,
-            "cache_restore_seconds": 0.6,
-            "cache_save_export_seconds": 696.5,
-            "buildkit_cached_steps": 34,
+            "cache_restore_seconds": 0.2,
+            "cache_save_export_seconds": 4.6,
+            "buildkit_cached_steps": 68,
             "hit_count": null,
             "miss_count": null,
             "hit_rate": null,
@@ -6625,24 +6625,33 @@
             "issue_candidates": [],
             "hypotheses": [
               {
+                "id": "setup_overhead",
+                "confidence": "medium",
+                "summary": "Setup or restore overhead is large relative to build time.",
+                "evidence": {
+                  "setup_seconds": 8,
+                  "build_seconds": 12
+                }
+              },
+              {
                 "id": "cache_save_export_overhead",
                 "confidence": "high",
                 "summary": "Cache save/export time is a likely slow-build contributor.",
                 "evidence": {
-                  "cache_save_export_seconds": 696.5,
-                  "build_seconds": 968
+                  "cache_save_export_seconds": 4.6,
+                  "build_seconds": 12
                 }
               }
             ]
           }
         },
         "boringcache": {
-          "run_id": 29173945845,
-          "run_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/29173945845",
-          "head_sha": "d89e08164d25291c25e892f00551e066d4b89e62",
-          "created_at": "2026-07-12T00:35:16Z",
-          "cold_seconds": 717.0,
-          "cold_build_seconds": 711.0,
+          "run_id": 29192437253,
+          "run_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/29192437253",
+          "head_sha": "f98758dc986de052b3ed93e32fb5a970528f929c",
+          "created_at": "2026-07-12T12:20:13Z",
+          "cold_seconds": 15.0,
+          "cold_build_seconds": 9.0,
           "cold_restore_or_setup_seconds": 6.0,
           "warm1_seconds": null,
           "warm1_build_seconds": null,
@@ -6650,19 +6659,19 @@
           "warm2_seconds": null,
           "warm_average_seconds": null,
           "warm_steady_seconds": null,
-          "rolling_first_build_seconds": 717.0,
+          "rolling_first_build_seconds": 15.0,
           "rolling_warm_seconds": null,
-          "run_total_seconds": 1037.0,
-          "storage_bytes": 6931351642,
+          "run_total_seconds": 131.0,
+          "storage_bytes": 6930690793,
           "storage_source": "boringcache-check",
           "storage_breakdown": {
             "workspace": "boringcache/benchmark-posthog",
             "tags": [
               "posthog-run-rolling-main"
             ],
-            "total_bytes": 6931351642,
+            "total_bytes": 6930690793,
             "summary": {
-              "remote_cas_bytes": 6931351642,
+              "remote_cas_bytes": 6930690793,
               "dependency_archive_bytes": 0,
               "tool_runtime_archive_bytes": 0,
               "unknown_bytes": 0
@@ -6671,30 +6680,30 @@
               {
                 "tag": "posthog-run-rolling-main",
                 "requested_tag": "posthog-run-rolling-main",
-                "cache_entry_id": "38ef6eb9-7678-43d5-aba2-e1c6887e7501",
+                "cache_entry_id": "8cf935ab-d195-47cb-8c10-3925b07f7742",
                 "primary_tag": "posthog-run-rolling-main",
                 "storage_mode": "cas",
                 "component_type": "remote_cas",
                 "component_label": "remote CAS",
-                "bytes": 6931351642,
-                "archive_size_bytes": 6931351642,
-                "blob_total_size_bytes": 6931351642
+                "bytes": 6930690793,
+                "archive_size_bytes": 6930690793,
+                "blob_total_size_bytes": 6930690793
               }
             ]
           },
           "network_bytes_uploaded": null,
           "network_bytes_uploaded_source": null,
-          "docker_cache_import_seconds": 0.0,
-          "docker_cache_export_seconds": 395.9,
+          "docker_cache_import_seconds": 0.1,
+          "docker_cache_export_seconds": 1.3,
           "startup_prefetch": {},
           "oci": {
             "hydration_policy": "metadata-only",
-            "body_local_hits": 31,
-            "body_remote_fetches": 22,
-            "body_local_bytes": 714952815,
-            "body_remote_bytes": 1648840855,
-            "body_local_duration_ms": 20,
-            "body_remote_duration_ms": 23925,
+            "body_local_hits": 0,
+            "body_remote_fetches": 1,
+            "body_local_bytes": 0,
+            "body_remote_bytes": 27885,
+            "body_local_duration_ms": 0,
+            "body_remote_duration_ms": 122,
             "startup_body_inserted": 0,
             "startup_body_failures": 0,
             "startup_body_cold_blobs": 85,
@@ -6735,7 +6744,7 @@
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
-          "run_uid": "gh-29173945845-1",
+          "run_uid": "gh-29192437253-1",
           "mode": "docker",
           "adapter": "oci",
           "docker_cache_from_refs": null,
@@ -6757,14 +6766,14 @@
             "benchmark": "posthog",
             "strategy": "boringcache",
             "lane": "rolling",
-            "run_uid": "gh-29173945845-1",
-            "paired_run_id": 29173945845,
-            "build_seconds": 711,
+            "run_uid": "gh-29192437253-1",
+            "paired_run_id": 29192437253,
+            "build_seconds": 9,
             "setup_seconds": 6,
             "post_cleanup_seconds": null,
-            "cache_restore_seconds": 0.0,
-            "cache_save_export_seconds": 395.9,
-            "buildkit_cached_steps": 31,
+            "cache_restore_seconds": 0.1,
+            "cache_save_export_seconds": 1.3,
+            "buildkit_cached_steps": 68,
             "hit_count": null,
             "miss_count": null,
             "hit_rate": null,
@@ -6783,12 +6792,12 @@
             "issue_candidates": [],
             "hypotheses": [
               {
-                "id": "cache_save_export_overhead",
-                "confidence": "high",
-                "summary": "Cache save/export time is a likely slow-build contributor.",
+                "id": "setup_overhead",
+                "confidence": "medium",
+                "summary": "Setup or restore overhead is large relative to build time.",
                 "evidence": {
-                  "cache_save_export_seconds": 395.9,
-                  "build_seconds": 711
+                  "setup_seconds": 6,
+                  "build_seconds": 9
                 }
               }
             ]
@@ -6799,10 +6808,10 @@
         },
         "warm_improvement_pct": null,
         "warm_build_improvement_pct": null,
-        "cold_improvement_pct": 26.54,
-        "cold_build_improvement_pct": 26.55,
-        "storage_improvement_pct": 45.83,
-        "storage_saved_bytes": 5863627015
+        "cold_improvement_pct": 25.0,
+        "cold_build_improvement_pct": 25.0,
+        "storage_improvement_pct": 34.9,
+        "storage_saved_bytes": 3715312984
       },
       "default_lane": "rolling",
       "available_lanes": [
@@ -6824,22 +6833,22 @@
           "step": "Docker build (full stack)",
           "headline_scenario": "cold",
           "headline_label": "Commit Build",
-          "before": "16m 16s",
-          "after": "11m 57s",
-          "before_seconds": 976.0,
-          "after_seconds": 717.0,
-          "faster": "27",
+          "before": "0m 20s",
+          "after": "0m 15s",
+          "before_seconds": 20.0,
+          "after_seconds": 15.0,
+          "faster": "25",
           "comparison": {
             "paired_on_head_sha": true,
-            "pairing_head_sha": "d89e08164d25291c25e892f00551e066d4b89e62",
+            "pairing_head_sha": "f98758dc986de052b3ed93e32fb5a970528f929c",
             "sample_count": 1,
             "actions_cache": {
-              "run_id": 29173945845,
-              "run_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/29173945845",
-              "head_sha": "d89e08164d25291c25e892f00551e066d4b89e62",
-              "created_at": "2026-07-12T00:35:16Z",
-              "cold_seconds": 976.0,
-              "cold_build_seconds": 968.0,
+              "run_id": 29192437253,
+              "run_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/29192437253",
+              "head_sha": "f98758dc986de052b3ed93e32fb5a970528f929c",
+              "created_at": "2026-07-12T12:20:13Z",
+              "cold_seconds": 20.0,
+              "cold_build_seconds": 12.0,
               "cold_restore_or_setup_seconds": 8.0,
               "warm1_seconds": null,
               "warm1_build_seconds": null,
@@ -6847,16 +6856,16 @@
               "warm2_seconds": null,
               "warm_average_seconds": null,
               "warm_steady_seconds": null,
-              "rolling_first_build_seconds": 976.0,
+              "rolling_first_build_seconds": 20.0,
               "rolling_warm_seconds": null,
-              "run_total_seconds": 1037.0,
-              "storage_bytes": 12794978657,
+              "run_total_seconds": 131.0,
+              "storage_bytes": 10646003777,
               "storage_source": "github-actions-cache-api",
               "storage_breakdown": null,
               "network_bytes_uploaded": null,
               "network_bytes_uploaded_source": null,
-              "docker_cache_import_seconds": 0.6,
-              "docker_cache_export_seconds": 696.5,
+              "docker_cache_import_seconds": 0.2,
+              "docker_cache_export_seconds": 4.6,
               "startup_prefetch": {},
               "oci": {
                 "hydration_policy": null,
@@ -6903,7 +6912,7 @@
               "launch_proof_paths": [],
               "workspace": null,
               "cache_tag": null,
-              "run_uid": "gh-29173945845-1",
+              "run_uid": "gh-29192437253-1",
               "mode": "docker",
               "adapter": "oci",
               "docker_cache_from_refs": null,
@@ -6925,14 +6934,14 @@
                 "benchmark": "posthog",
                 "strategy": "actions-cache",
                 "lane": "rolling",
-                "run_uid": "gh-29173945845-1",
-                "paired_run_id": 29173945845,
-                "build_seconds": 968,
+                "run_uid": "gh-29192437253-1",
+                "paired_run_id": 29192437253,
+                "build_seconds": 12,
                 "setup_seconds": 8,
                 "post_cleanup_seconds": null,
-                "cache_restore_seconds": 0.6,
-                "cache_save_export_seconds": 696.5,
-                "buildkit_cached_steps": 34,
+                "cache_restore_seconds": 0.2,
+                "cache_save_export_seconds": 4.6,
+                "buildkit_cached_steps": 68,
                 "hit_count": null,
                 "miss_count": null,
                 "hit_rate": null,
@@ -6951,24 +6960,33 @@
                 "issue_candidates": [],
                 "hypotheses": [
                   {
+                    "id": "setup_overhead",
+                    "confidence": "medium",
+                    "summary": "Setup or restore overhead is large relative to build time.",
+                    "evidence": {
+                      "setup_seconds": 8,
+                      "build_seconds": 12
+                    }
+                  },
+                  {
                     "id": "cache_save_export_overhead",
                     "confidence": "high",
                     "summary": "Cache save/export time is a likely slow-build contributor.",
                     "evidence": {
-                      "cache_save_export_seconds": 696.5,
-                      "build_seconds": 968
+                      "cache_save_export_seconds": 4.6,
+                      "build_seconds": 12
                     }
                   }
                 ]
               }
             },
             "boringcache": {
-              "run_id": 29173945845,
-              "run_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/29173945845",
-              "head_sha": "d89e08164d25291c25e892f00551e066d4b89e62",
-              "created_at": "2026-07-12T00:35:16Z",
-              "cold_seconds": 717.0,
-              "cold_build_seconds": 711.0,
+              "run_id": 29192437253,
+              "run_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/29192437253",
+              "head_sha": "f98758dc986de052b3ed93e32fb5a970528f929c",
+              "created_at": "2026-07-12T12:20:13Z",
+              "cold_seconds": 15.0,
+              "cold_build_seconds": 9.0,
               "cold_restore_or_setup_seconds": 6.0,
               "warm1_seconds": null,
               "warm1_build_seconds": null,
@@ -6976,19 +6994,19 @@
               "warm2_seconds": null,
               "warm_average_seconds": null,
               "warm_steady_seconds": null,
-              "rolling_first_build_seconds": 717.0,
+              "rolling_first_build_seconds": 15.0,
               "rolling_warm_seconds": null,
-              "run_total_seconds": 1037.0,
-              "storage_bytes": 6931351642,
+              "run_total_seconds": 131.0,
+              "storage_bytes": 6930690793,
               "storage_source": "boringcache-check",
               "storage_breakdown": {
                 "workspace": "boringcache/benchmark-posthog",
                 "tags": [
                   "posthog-run-rolling-main"
                 ],
-                "total_bytes": 6931351642,
+                "total_bytes": 6930690793,
                 "summary": {
-                  "remote_cas_bytes": 6931351642,
+                  "remote_cas_bytes": 6930690793,
                   "dependency_archive_bytes": 0,
                   "tool_runtime_archive_bytes": 0,
                   "unknown_bytes": 0
@@ -6997,30 +7015,30 @@
                   {
                     "tag": "posthog-run-rolling-main",
                     "requested_tag": "posthog-run-rolling-main",
-                    "cache_entry_id": "38ef6eb9-7678-43d5-aba2-e1c6887e7501",
+                    "cache_entry_id": "8cf935ab-d195-47cb-8c10-3925b07f7742",
                     "primary_tag": "posthog-run-rolling-main",
                     "storage_mode": "cas",
                     "component_type": "remote_cas",
                     "component_label": "remote CAS",
-                    "bytes": 6931351642,
-                    "archive_size_bytes": 6931351642,
-                    "blob_total_size_bytes": 6931351642
+                    "bytes": 6930690793,
+                    "archive_size_bytes": 6930690793,
+                    "blob_total_size_bytes": 6930690793
                   }
                 ]
               },
               "network_bytes_uploaded": null,
               "network_bytes_uploaded_source": null,
-              "docker_cache_import_seconds": 0.0,
-              "docker_cache_export_seconds": 395.9,
+              "docker_cache_import_seconds": 0.1,
+              "docker_cache_export_seconds": 1.3,
               "startup_prefetch": {},
               "oci": {
                 "hydration_policy": "metadata-only",
-                "body_local_hits": 31,
-                "body_remote_fetches": 22,
-                "body_local_bytes": 714952815,
-                "body_remote_bytes": 1648840855,
-                "body_local_duration_ms": 20,
-                "body_remote_duration_ms": 23925,
+                "body_local_hits": 0,
+                "body_remote_fetches": 1,
+                "body_local_bytes": 0,
+                "body_remote_bytes": 27885,
+                "body_local_duration_ms": 0,
+                "body_remote_duration_ms": 122,
                 "startup_body_inserted": 0,
                 "startup_body_failures": 0,
                 "startup_body_cold_blobs": 85,
@@ -7061,7 +7079,7 @@
               "launch_proof_paths": [],
               "workspace": null,
               "cache_tag": null,
-              "run_uid": "gh-29173945845-1",
+              "run_uid": "gh-29192437253-1",
               "mode": "docker",
               "adapter": "oci",
               "docker_cache_from_refs": null,
@@ -7083,14 +7101,14 @@
                 "benchmark": "posthog",
                 "strategy": "boringcache",
                 "lane": "rolling",
-                "run_uid": "gh-29173945845-1",
-                "paired_run_id": 29173945845,
-                "build_seconds": 711,
+                "run_uid": "gh-29192437253-1",
+                "paired_run_id": 29192437253,
+                "build_seconds": 9,
                 "setup_seconds": 6,
                 "post_cleanup_seconds": null,
-                "cache_restore_seconds": 0.0,
-                "cache_save_export_seconds": 395.9,
-                "buildkit_cached_steps": 31,
+                "cache_restore_seconds": 0.1,
+                "cache_save_export_seconds": 1.3,
+                "buildkit_cached_steps": 68,
                 "hit_count": null,
                 "miss_count": null,
                 "hit_rate": null,
@@ -7109,12 +7127,12 @@
                 "issue_candidates": [],
                 "hypotheses": [
                   {
-                    "id": "cache_save_export_overhead",
-                    "confidence": "high",
-                    "summary": "Cache save/export time is a likely slow-build contributor.",
+                    "id": "setup_overhead",
+                    "confidence": "medium",
+                    "summary": "Setup or restore overhead is large relative to build time.",
                     "evidence": {
-                      "cache_save_export_seconds": 395.9,
-                      "build_seconds": 711
+                      "setup_seconds": 6,
+                      "build_seconds": 9
                     }
                   }
                 ]
@@ -7125,10 +7143,10 @@
             },
             "warm_improvement_pct": null,
             "warm_build_improvement_pct": null,
-            "cold_improvement_pct": 26.54,
-            "cold_build_improvement_pct": 26.55,
-            "storage_improvement_pct": 45.83,
-            "storage_saved_bytes": 5863627015
+            "cold_improvement_pct": 25.0,
+            "cold_build_improvement_pct": 25.0,
+            "storage_improvement_pct": 34.9,
+            "storage_saved_bytes": 3715312984
           }
         }
       }
