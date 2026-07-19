@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-19T01:09:49Z",
+  "generated_at": "2026-07-19T05:41:05Z",
   "entry": {
     "lane": "rolling",
     "lane_label": "Rolling",
@@ -13,41 +13,41 @@
     "public": false,
     "category": "docker",
     "step": "Docker build (discourse_test release image)",
-    "headline_scenario": "cold",
+    "headline_scenario": "first_build",
     "headline_label": "Commit Build",
-    "before": "0m 10s",
-    "after": "0m 11s",
-    "before_seconds": 10.0,
-    "after_seconds": 11.0,
-    "faster": "0",
+    "before": "8m 16s",
+    "after": "6m 59s",
+    "before_seconds": 496.0,
+    "after_seconds": 419.0,
+    "faster": null,
     "comparison": {
       "paired_on_head_sha": true,
       "pairing_head_sha": "777ad29c6ff97d0fa8fab64ca2f2b299fc43491e",
       "sample_count": 1,
       "actions_cache": {
-        "run_id": 29614077311,
-        "run_url": "https://github.com/boringcache/benchmark-discourse/actions/runs/29614077311",
+        "run_id": 29673751844,
+        "run_url": "https://github.com/boringcache/benchmark-discourse/actions/runs/29673751844",
         "head_sha": "777ad29c6ff97d0fa8fab64ca2f2b299fc43491e",
-        "created_at": "2026-07-17T21:15:11Z",
-        "cold_seconds": 10.0,
-        "cold_build_seconds": 3.0,
-        "cold_restore_or_setup_seconds": 7.0,
+        "created_at": "2026-07-19T04:43:28Z",
+        "cold_seconds": 496.0,
+        "cold_build_seconds": 486.0,
+        "cold_restore_or_setup_seconds": 10.0,
         "warm1_seconds": null,
         "warm1_build_seconds": null,
         "warm1_restore_or_setup_seconds": null,
         "warm2_seconds": null,
         "warm_average_seconds": null,
         "warm_steady_seconds": null,
-        "rolling_first_build_seconds": 10.0,
+        "rolling_first_build_seconds": 496.0,
         "rolling_warm_seconds": null,
-        "run_total_seconds": 40.0,
-        "storage_bytes": 10507975682,
+        "run_total_seconds": 527.0,
+        "storage_bytes": 10716576004,
         "storage_source": "github-actions-cache-api",
         "storage_breakdown": null,
         "network_bytes_uploaded": null,
         "network_bytes_uploaded_source": null,
         "docker_cache_import_seconds": 0.1,
-        "docker_cache_export_seconds": 2.1,
+        "docker_cache_export_seconds": 117.5,
         "startup_prefetch": {},
         "oci": {
           "hydration_policy": null,
@@ -91,7 +91,7 @@
         "launch_proof_paths": [],
         "workspace": null,
         "cache_tag": null,
-        "run_uid": "gh-29614077311-1",
+        "run_uid": "gh-29673751844-1",
         "mode": "docker",
         "adapter": "oci",
         "docker_cache_from_refs": null,
@@ -113,14 +113,14 @@
           "benchmark": "discourse-test-release",
           "strategy": "actions-cache",
           "lane": "rolling",
-          "run_uid": "gh-29614077311-1",
-          "paired_run_id": 29614077311,
-          "build_seconds": 3,
-          "setup_seconds": 7,
+          "run_uid": "gh-29673751844-1",
+          "paired_run_id": 29673751844,
+          "build_seconds": 486,
+          "setup_seconds": 10,
           "post_cleanup_seconds": null,
           "cache_restore_seconds": 0.1,
-          "cache_save_export_seconds": 2.1,
-          "buildkit_cached_steps": 14,
+          "cache_save_export_seconds": 117.5,
+          "buildkit_cached_steps": 0,
           "hit_count": null,
           "miss_count": null,
           "hit_rate": null,
@@ -130,53 +130,44 @@
           "issue_candidates": [],
           "hypotheses": [
             {
-              "id": "setup_overhead",
-              "confidence": "medium",
-              "summary": "Setup or restore overhead is large relative to build time.",
-              "evidence": {
-                "setup_seconds": 7,
-                "build_seconds": 3
-              }
-            },
-            {
               "id": "cache_save_export_overhead",
               "confidence": "high",
               "summary": "Cache save/export time is a likely slow-build contributor.",
               "evidence": {
-                "cache_save_export_seconds": 2.1,
-                "build_seconds": 3
+                "cache_save_export_seconds": 117.5,
+                "build_seconds": 486
               }
             }
           ]
         }
       },
       "boringcache": {
-        "run_id": 29614077311,
-        "run_url": "https://github.com/boringcache/benchmark-discourse/actions/runs/29614077311",
+        "run_id": 29673751844,
+        "run_url": "https://github.com/boringcache/benchmark-discourse/actions/runs/29673751844",
         "head_sha": "777ad29c6ff97d0fa8fab64ca2f2b299fc43491e",
-        "created_at": "2026-07-17T21:15:11Z",
-        "cold_seconds": 11.0,
-        "cold_build_seconds": 3.0,
-        "cold_restore_or_setup_seconds": 8.0,
+        "created_at": "2026-07-19T04:43:28Z",
+        "cold_seconds": 419.0,
+        "cold_build_seconds": 409.0,
+        "cold_restore_or_setup_seconds": 10.0,
         "warm1_seconds": null,
         "warm1_build_seconds": null,
         "warm1_restore_or_setup_seconds": null,
         "warm2_seconds": null,
         "warm_average_seconds": null,
         "warm_steady_seconds": null,
-        "rolling_first_build_seconds": 11.0,
+        "rolling_first_build_seconds": 419.0,
         "rolling_warm_seconds": null,
-        "run_total_seconds": 40.0,
-        "storage_bytes": 2181289291,
+        "run_total_seconds": 527.0,
+        "storage_bytes": 2093533969,
         "storage_source": "boringcache-check",
         "storage_breakdown": {
           "workspace": "boringcache/benchmark-discourse",
           "tags": [
             "discourse-test-release-run-rolling-main"
           ],
-          "total_bytes": 2181289291,
+          "total_bytes": 2093533969,
           "summary": {
-            "remote_cas_bytes": 2181289291,
+            "remote_cas_bytes": 2093533969,
             "dependency_archive_bytes": 0,
             "tool_runtime_archive_bytes": 0,
             "unknown_bytes": 0
@@ -185,21 +176,21 @@
             {
               "tag": "discourse-test-release-run-rolling-main-ubuntu-24-x86_64",
               "requested_tag": "discourse-test-release-run-rolling-main",
-              "cache_entry_id": "b64c7aa1-14c5-452f-8a75-1aaee57583f2",
+              "cache_entry_id": "64f0733a-a474-460a-a9d9-0e05e7602183",
               "primary_tag": "discourse-test-release-run-rolling-main-ubuntu-24-x86_64",
               "storage_mode": "cas",
               "component_type": "remote_cas",
               "component_label": "remote CAS",
-              "bytes": 2181289291,
-              "archive_size_bytes": 2181289291,
-              "blob_total_size_bytes": 2181289291
+              "bytes": 2093533969,
+              "archive_size_bytes": 2093533969,
+              "blob_total_size_bytes": 2093533969
             }
           ]
         },
         "network_bytes_uploaded": null,
         "network_bytes_uploaded_source": null,
-        "docker_cache_import_seconds": 0.6,
-        "docker_cache_export_seconds": 0.7,
+        "docker_cache_import_seconds": 0.2,
+        "docker_cache_export_seconds": 62.9,
         "startup_prefetch": {},
         "oci": {
           "hydration_policy": "metadata-only",
@@ -208,7 +199,7 @@
           "body_local_bytes": 0,
           "body_remote_bytes": 8305,
           "body_local_duration_ms": 0,
-          "body_remote_duration_ms": 550,
+          "body_remote_duration_ms": 175,
           "startup_body_inserted": 0,
           "startup_body_failures": 0,
           "startup_body_cold_blobs": 47,
@@ -221,24 +212,24 @@
         },
         "classification": {
           "sample_valid": true,
-          "reporting_mode": "comparative",
-          "reporting_reason": null,
-          "reporting_note": null,
+          "reporting_mode": "investigation_only",
+          "reporting_reason": "rolling_cache_import_no_reuse",
+          "reporting_note": "Rolling cache import completed, but BuildKit reported zero cached steps; this sample behaved like a cold build and is excluded from parity claims.",
           "validity_reason": null,
           "cache_import_status": "ok",
-          "rolling_reseed": false,
-          "steady_state_candidate": true,
-          "rolling_reseed_kind": "none",
+          "rolling_reseed": null,
+          "steady_state_candidate": false,
+          "rolling_reseed_kind": "rolling_import_no_reuse",
           "tiny_metadata_churn": false,
           "tiny_metadata_churn_max_blobs": 1,
           "tiny_metadata_churn_max_bytes": 65536,
           "reseed_new_blob_threshold": 0,
-          "reseed_reason": "rolling imported prior cache; OCI upload diagnostics unavailable"
+          "reseed_reason": "rolling imported prior cache metadata, but BuildKit reported zero cached steps"
         },
         "product_refs": {
-          "cli_version": "v1.13.92",
+          "cli_version": "v1.13.93",
           "action_ref": "boringcache/one@v1",
-          "action_sha": "d39427a8c278c17670e2fbb1b2ba9a699b61075f",
+          "action_sha": "c4ebb4f3b4b586f2364e990e27ccc70a3cf3edd7",
           "web_revision": "52f409ae8",
           "api_url": "https://api.boringcache.com"
         },
@@ -246,7 +237,7 @@
         "launch_proof_paths": [],
         "workspace": null,
         "cache_tag": null,
-        "run_uid": "gh-29614077311-1",
+        "run_uid": "gh-29673751844-1",
         "mode": "docker",
         "adapter": "oci",
         "docker_cache_from_refs": null,
@@ -268,14 +259,14 @@
           "benchmark": "discourse-test-release",
           "strategy": "boringcache",
           "lane": "rolling",
-          "run_uid": "gh-29614077311-1",
-          "paired_run_id": 29614077311,
-          "build_seconds": 3,
-          "setup_seconds": 8,
+          "run_uid": "gh-29673751844-1",
+          "paired_run_id": 29673751844,
+          "build_seconds": 409,
+          "setup_seconds": 10,
           "post_cleanup_seconds": null,
-          "cache_restore_seconds": 0.6,
-          "cache_save_export_seconds": 0.7,
-          "buildkit_cached_steps": 14,
+          "cache_restore_seconds": 0.2,
+          "cache_save_export_seconds": 62.9,
+          "buildkit_cached_steps": 0,
           "hit_count": null,
           "miss_count": null,
           "hit_rate": null,
@@ -285,26 +276,41 @@
           "issue_candidates": [],
           "hypotheses": [
             {
-              "id": "setup_overhead",
-              "confidence": "medium",
-              "summary": "Setup or restore overhead is large relative to build time.",
+              "id": "docker_import_without_reuse",
+              "confidence": "high",
+              "summary": "BuildKit imported cache metadata but reported zero cached steps.",
               "evidence": {
-                "setup_seconds": 8,
-                "build_seconds": 3
+                "cache_import_status": "ok",
+                "buildkit_cached_steps": 0
+              }
+            },
+            {
+              "id": "cache_save_export_overhead",
+              "confidence": "high",
+              "summary": "Cache save/export time is a likely slow-build contributor.",
+              "evidence": {
+                "cache_save_export_seconds": 62.9,
+                "build_seconds": 409
               }
             }
           ]
         }
       },
       "reporting": {
-        "comparative": true
+        "comparative": false,
+        "status": "investigation_only",
+        "reason": "rolling_cache_import_no_reuse",
+        "headline_scenario": "first_build",
+        "headline_label": "Commit Build",
+        "result_text": "investigation only",
+        "note": "This rolling sample is investigation-only."
       },
       "warm_improvement_pct": null,
       "warm_build_improvement_pct": null,
-      "cold_improvement_pct": -10.0,
-      "cold_build_improvement_pct": 0.0,
-      "storage_improvement_pct": 79.24,
-      "storage_saved_bytes": 8326686391
+      "cold_improvement_pct": 15.52,
+      "cold_build_improvement_pct": 15.84,
+      "storage_improvement_pct": 80.46,
+      "storage_saved_bytes": 8623042035
     },
     "default_lane": "rolling",
     "available_lanes": [
@@ -324,41 +330,41 @@
         "public": false,
         "category": "docker",
         "step": "Docker build (discourse_test release image)",
-        "headline_scenario": "cold",
+        "headline_scenario": "first_build",
         "headline_label": "Commit Build",
-        "before": "0m 10s",
-        "after": "0m 11s",
-        "before_seconds": 10.0,
-        "after_seconds": 11.0,
-        "faster": "0",
+        "before": "8m 16s",
+        "after": "6m 59s",
+        "before_seconds": 496.0,
+        "after_seconds": 419.0,
+        "faster": null,
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": "777ad29c6ff97d0fa8fab64ca2f2b299fc43491e",
           "sample_count": 1,
           "actions_cache": {
-            "run_id": 29614077311,
-            "run_url": "https://github.com/boringcache/benchmark-discourse/actions/runs/29614077311",
+            "run_id": 29673751844,
+            "run_url": "https://github.com/boringcache/benchmark-discourse/actions/runs/29673751844",
             "head_sha": "777ad29c6ff97d0fa8fab64ca2f2b299fc43491e",
-            "created_at": "2026-07-17T21:15:11Z",
-            "cold_seconds": 10.0,
-            "cold_build_seconds": 3.0,
-            "cold_restore_or_setup_seconds": 7.0,
+            "created_at": "2026-07-19T04:43:28Z",
+            "cold_seconds": 496.0,
+            "cold_build_seconds": 486.0,
+            "cold_restore_or_setup_seconds": 10.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 10.0,
+            "rolling_first_build_seconds": 496.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 40.0,
-            "storage_bytes": 10507975682,
+            "run_total_seconds": 527.0,
+            "storage_bytes": 10716576004,
             "storage_source": "github-actions-cache-api",
             "storage_breakdown": null,
             "network_bytes_uploaded": null,
             "network_bytes_uploaded_source": null,
             "docker_cache_import_seconds": 0.1,
-            "docker_cache_export_seconds": 2.1,
+            "docker_cache_export_seconds": 117.5,
             "startup_prefetch": {},
             "oci": {
               "hydration_policy": null,
@@ -402,7 +408,7 @@
             "launch_proof_paths": [],
             "workspace": null,
             "cache_tag": null,
-            "run_uid": "gh-29614077311-1",
+            "run_uid": "gh-29673751844-1",
             "mode": "docker",
             "adapter": "oci",
             "docker_cache_from_refs": null,
@@ -424,14 +430,14 @@
               "benchmark": "discourse-test-release",
               "strategy": "actions-cache",
               "lane": "rolling",
-              "run_uid": "gh-29614077311-1",
-              "paired_run_id": 29614077311,
-              "build_seconds": 3,
-              "setup_seconds": 7,
+              "run_uid": "gh-29673751844-1",
+              "paired_run_id": 29673751844,
+              "build_seconds": 486,
+              "setup_seconds": 10,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": 0.1,
-              "cache_save_export_seconds": 2.1,
-              "buildkit_cached_steps": 14,
+              "cache_save_export_seconds": 117.5,
+              "buildkit_cached_steps": 0,
               "hit_count": null,
               "miss_count": null,
               "hit_rate": null,
@@ -441,53 +447,44 @@
               "issue_candidates": [],
               "hypotheses": [
                 {
-                  "id": "setup_overhead",
-                  "confidence": "medium",
-                  "summary": "Setup or restore overhead is large relative to build time.",
-                  "evidence": {
-                    "setup_seconds": 7,
-                    "build_seconds": 3
-                  }
-                },
-                {
                   "id": "cache_save_export_overhead",
                   "confidence": "high",
                   "summary": "Cache save/export time is a likely slow-build contributor.",
                   "evidence": {
-                    "cache_save_export_seconds": 2.1,
-                    "build_seconds": 3
+                    "cache_save_export_seconds": 117.5,
+                    "build_seconds": 486
                   }
                 }
               ]
             }
           },
           "boringcache": {
-            "run_id": 29614077311,
-            "run_url": "https://github.com/boringcache/benchmark-discourse/actions/runs/29614077311",
+            "run_id": 29673751844,
+            "run_url": "https://github.com/boringcache/benchmark-discourse/actions/runs/29673751844",
             "head_sha": "777ad29c6ff97d0fa8fab64ca2f2b299fc43491e",
-            "created_at": "2026-07-17T21:15:11Z",
-            "cold_seconds": 11.0,
-            "cold_build_seconds": 3.0,
-            "cold_restore_or_setup_seconds": 8.0,
+            "created_at": "2026-07-19T04:43:28Z",
+            "cold_seconds": 419.0,
+            "cold_build_seconds": 409.0,
+            "cold_restore_or_setup_seconds": 10.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 11.0,
+            "rolling_first_build_seconds": 419.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 40.0,
-            "storage_bytes": 2181289291,
+            "run_total_seconds": 527.0,
+            "storage_bytes": 2093533969,
             "storage_source": "boringcache-check",
             "storage_breakdown": {
               "workspace": "boringcache/benchmark-discourse",
               "tags": [
                 "discourse-test-release-run-rolling-main"
               ],
-              "total_bytes": 2181289291,
+              "total_bytes": 2093533969,
               "summary": {
-                "remote_cas_bytes": 2181289291,
+                "remote_cas_bytes": 2093533969,
                 "dependency_archive_bytes": 0,
                 "tool_runtime_archive_bytes": 0,
                 "unknown_bytes": 0
@@ -496,21 +493,21 @@
                 {
                   "tag": "discourse-test-release-run-rolling-main-ubuntu-24-x86_64",
                   "requested_tag": "discourse-test-release-run-rolling-main",
-                  "cache_entry_id": "b64c7aa1-14c5-452f-8a75-1aaee57583f2",
+                  "cache_entry_id": "64f0733a-a474-460a-a9d9-0e05e7602183",
                   "primary_tag": "discourse-test-release-run-rolling-main-ubuntu-24-x86_64",
                   "storage_mode": "cas",
                   "component_type": "remote_cas",
                   "component_label": "remote CAS",
-                  "bytes": 2181289291,
-                  "archive_size_bytes": 2181289291,
-                  "blob_total_size_bytes": 2181289291
+                  "bytes": 2093533969,
+                  "archive_size_bytes": 2093533969,
+                  "blob_total_size_bytes": 2093533969
                 }
               ]
             },
             "network_bytes_uploaded": null,
             "network_bytes_uploaded_source": null,
-            "docker_cache_import_seconds": 0.6,
-            "docker_cache_export_seconds": 0.7,
+            "docker_cache_import_seconds": 0.2,
+            "docker_cache_export_seconds": 62.9,
             "startup_prefetch": {},
             "oci": {
               "hydration_policy": "metadata-only",
@@ -519,7 +516,7 @@
               "body_local_bytes": 0,
               "body_remote_bytes": 8305,
               "body_local_duration_ms": 0,
-              "body_remote_duration_ms": 550,
+              "body_remote_duration_ms": 175,
               "startup_body_inserted": 0,
               "startup_body_failures": 0,
               "startup_body_cold_blobs": 47,
@@ -532,24 +529,24 @@
             },
             "classification": {
               "sample_valid": true,
-              "reporting_mode": "comparative",
-              "reporting_reason": null,
-              "reporting_note": null,
+              "reporting_mode": "investigation_only",
+              "reporting_reason": "rolling_cache_import_no_reuse",
+              "reporting_note": "Rolling cache import completed, but BuildKit reported zero cached steps; this sample behaved like a cold build and is excluded from parity claims.",
               "validity_reason": null,
               "cache_import_status": "ok",
-              "rolling_reseed": false,
-              "steady_state_candidate": true,
-              "rolling_reseed_kind": "none",
+              "rolling_reseed": null,
+              "steady_state_candidate": false,
+              "rolling_reseed_kind": "rolling_import_no_reuse",
               "tiny_metadata_churn": false,
               "tiny_metadata_churn_max_blobs": 1,
               "tiny_metadata_churn_max_bytes": 65536,
               "reseed_new_blob_threshold": 0,
-              "reseed_reason": "rolling imported prior cache; OCI upload diagnostics unavailable"
+              "reseed_reason": "rolling imported prior cache metadata, but BuildKit reported zero cached steps"
             },
             "product_refs": {
-              "cli_version": "v1.13.92",
+              "cli_version": "v1.13.93",
               "action_ref": "boringcache/one@v1",
-              "action_sha": "d39427a8c278c17670e2fbb1b2ba9a699b61075f",
+              "action_sha": "c4ebb4f3b4b586f2364e990e27ccc70a3cf3edd7",
               "web_revision": "52f409ae8",
               "api_url": "https://api.boringcache.com"
             },
@@ -557,7 +554,7 @@
             "launch_proof_paths": [],
             "workspace": null,
             "cache_tag": null,
-            "run_uid": "gh-29614077311-1",
+            "run_uid": "gh-29673751844-1",
             "mode": "docker",
             "adapter": "oci",
             "docker_cache_from_refs": null,
@@ -579,14 +576,14 @@
               "benchmark": "discourse-test-release",
               "strategy": "boringcache",
               "lane": "rolling",
-              "run_uid": "gh-29614077311-1",
-              "paired_run_id": 29614077311,
-              "build_seconds": 3,
-              "setup_seconds": 8,
+              "run_uid": "gh-29673751844-1",
+              "paired_run_id": 29673751844,
+              "build_seconds": 409,
+              "setup_seconds": 10,
               "post_cleanup_seconds": null,
-              "cache_restore_seconds": 0.6,
-              "cache_save_export_seconds": 0.7,
-              "buildkit_cached_steps": 14,
+              "cache_restore_seconds": 0.2,
+              "cache_save_export_seconds": 62.9,
+              "buildkit_cached_steps": 0,
               "hit_count": null,
               "miss_count": null,
               "hit_rate": null,
@@ -596,26 +593,41 @@
               "issue_candidates": [],
               "hypotheses": [
                 {
-                  "id": "setup_overhead",
-                  "confidence": "medium",
-                  "summary": "Setup or restore overhead is large relative to build time.",
+                  "id": "docker_import_without_reuse",
+                  "confidence": "high",
+                  "summary": "BuildKit imported cache metadata but reported zero cached steps.",
                   "evidence": {
-                    "setup_seconds": 8,
-                    "build_seconds": 3
+                    "cache_import_status": "ok",
+                    "buildkit_cached_steps": 0
+                  }
+                },
+                {
+                  "id": "cache_save_export_overhead",
+                  "confidence": "high",
+                  "summary": "Cache save/export time is a likely slow-build contributor.",
+                  "evidence": {
+                    "cache_save_export_seconds": 62.9,
+                    "build_seconds": 409
                   }
                 }
               ]
             }
           },
           "reporting": {
-            "comparative": true
+            "comparative": false,
+            "status": "investigation_only",
+            "reason": "rolling_cache_import_no_reuse",
+            "headline_scenario": "first_build",
+            "headline_label": "Commit Build",
+            "result_text": "investigation only",
+            "note": "This rolling sample is investigation-only."
           },
           "warm_improvement_pct": null,
           "warm_build_improvement_pct": null,
-          "cold_improvement_pct": -10.0,
-          "cold_build_improvement_pct": 0.0,
-          "storage_improvement_pct": 79.24,
-          "storage_saved_bytes": 8326686391
+          "cold_improvement_pct": 15.52,
+          "cold_build_improvement_pct": 15.84,
+          "storage_improvement_pct": 80.46,
+          "storage_saved_bytes": 8623042035
         }
       }
     }
