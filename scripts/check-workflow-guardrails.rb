@@ -72,6 +72,23 @@ def workflow_step_blocks(text)
   blocks
 end
 
+ECR_RUNTIME_PATTERN = /(?:\becr-cache\b|\becr_(?:region|role_arn|registry|repository|allowed_account_ids)\b|(?:DOCKER_BENCHMARK|BENCHMARK)_ECR_|aws-actions\/(?:configure-aws-credentials|amazon-ecr-login)|\baws\s+ecr\b)/i
+
+def check_ecr_retired(repo_name:, repo_path:)
+  paths = [
+    *Dir[File.join(repo_path, ".github", "workflows", "*.{yml,yaml}")],
+    *Dir[File.join(repo_path, ".github", "actions", "**", "action.{yml,yaml}")]
+  ].sort
+
+  paths.filter_map do |path|
+    line_number = File.foreach(path).with_index(1).find { |line, _number| line.match?(ECR_RUNTIME_PATTERN) }&.last
+    next unless line_number
+
+    relative_path = path.delete_prefix("#{repo_path}/")
+    "#{repo_name}/#{relative_path}:#{line_number}: ECR runtime support is retired; preserve historical artifacts outside active workflow/action YAML"
+  end
+end
+
 registry_by_repo = BENCHMARKS.each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |benchmark, index|
   repo_name = benchmark.fetch("source_repo").split("/").last
   index[repo_name] << benchmark
@@ -142,6 +159,14 @@ registry_by_repo.each do |repo_name, benchmarks|
   elsif !File.read(benchmark_script_path).include?(DOCKER_PRODUCT_ASSERTION)
     errors << "#{repo_name}/scripts/run-boringcache-buildkit-benchmark.sh: does not enforce the managed Docker runtime contract"
   end
+end
+
+ecr_guardrail_repos = [*registry_by_repo.keys, "docker-cache-proofs"].uniq
+ecr_guardrail_repos.each do |repo_name|
+  repo_path = File.join(repos_dir, repo_name)
+  next unless Dir.exist?(repo_path)
+
+  errors.concat(check_ecr_retired(repo_name: repo_name, repo_path: repo_path))
 end
 
 if errors.any?

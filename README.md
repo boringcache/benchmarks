@@ -27,14 +27,15 @@ This repo gathers JSON results from the standalone BoringCache benchmark repos.
 - `windows.json`: rolling summaries over the selected pair window
 - `health.json`: per-lane flow health
 - `providers.json`: per-provider lane samples for GitHub Actions Cache, BoringCache,
-  and optional comparison providers such as BuildBuddy Cache where those workflows exist. Provider
-  headlines use tool elapsed time: the benchmark artifact scenario row
-  (`cold_seconds` for cold or commit builds, warm scenario seconds for warm
-  reruns) plus any known cache save/export or post-cleanup timing captured by
-  the artifact. Provider headlines never use workflow wall time. Narrow
-  build-only splits and raw workflow totals may remain in samples as diagnostic
-  context only. Storage is reported only for providers with benchmark-artifact
-  storage evidence.
+  the retired ECR control, and optional comparison providers such as BuildBuddy
+  Cache where those workflows exist. ECR remains in this historical feed after
+  leaving every active workflow/action path. Provider headlines use tool
+  elapsed time: the benchmark artifact scenario row (`cold_seconds` for cold or
+  commit builds, warm scenario seconds for warm reruns) plus any known cache
+  save/export or post-cleanup timing captured by the artifact. Provider headlines
+  never use workflow wall time. Narrow build-only splits and raw workflow totals
+  may remain in samples as diagnostic context only. Storage is reported only for
+  providers with benchmark-artifact storage evidence.
 - `benchmarks/*.json`: per-benchmark detail payloads
 - `report.md`: small generated table for quick human review
 
@@ -57,6 +58,9 @@ mise exec -- ruby test/boringcache_docker_product_run_test.rb
 mise exec -- ruby test/write_benchmark_artifacts_test.rb
 ```
 
+The final recurring ECR control measurements and retirement boundary are in
+[ECR Benchmark Control Retirement](docs/ecr-retirement-2026-07-21.md).
+
 ## Guardrails
 
 `.github/workflows/guardrails.yml` checks out the standalone benchmark repos
@@ -67,3 +71,8 @@ consuming the `boringcache/one` Docker import-readiness outputs. Managed Docker
 lanes must run through `boringcache docker --backend boringcache`; a shared
 runtime assertion requires CLI-harvested BuildKit vertex spans so setup-only
 plus raw Buildx cannot masquerade as the product path.
+
+ECR is a retired BuildKit registry-cache control. Owned benchmark workflows and
+composite actions contain no ECR runtime path, AWS OIDC setup, or ECR inputs.
+`data/latest/providers.json` still recognizes historical `ecr-cache` artifacts,
+so removing the live implementation does not erase the performance evidence.
