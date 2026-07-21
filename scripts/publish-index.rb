@@ -31,10 +31,11 @@ PROVIDER_LABELS = {
   "boringcache" => "BoringCache",
   "boringcache-native" => "BoringCache Native",
   "boringcache-toolcache" => "BoringCache Toolcache",
+  "ecr-cache" => "ECR (retired control)",
   "depot-cache" => "Depot Cache",
   "buildbuddy-cache" => "BuildBuddy Cache"
 }.freeze
-PROVIDER_STORAGE_STRATEGIES = %w[actions-cache boringcache boringcache-toolcache].freeze
+PROVIDER_STORAGE_STRATEGIES = %w[actions-cache boringcache boringcache-toolcache ecr-cache].freeze
 SLOW_REASON_NUMERIC_KEYS = %w[
   build_seconds setup_seconds post_cleanup_seconds cache_restore_seconds cache_save_export_seconds
   hit_count miss_count hit_rate new_blob_bytes
@@ -612,6 +613,7 @@ def provider_workflows_for(benchmark)
 
   if benchmark["category"] == "docker"
     workflows["boringcache-native"] = workflow_name
+    workflows["ecr-cache"] = workflow_name
   end
   Array(benchmark["extra_providers"]).each { |strategy| workflows[strategy] = workflow_name }
   workflows
