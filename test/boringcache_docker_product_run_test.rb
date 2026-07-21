@@ -78,7 +78,10 @@ class BoringcacheDockerProductRunTest < Minitest::Test
     )
 
     refute status.success?
-    assert_includes output, "Rails accepts at most 65536 bytes"
+    assert_includes output, "the BoringCache ingestion limit is 65536 bytes"
+    assert_includes output, "Use a current BoringCache CLI"
+    refute_includes output, "Rails"
+    refute_includes output, "setup-only plus raw Docker"
   end
 
   private
