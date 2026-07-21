@@ -101,3 +101,32 @@ account `416997488804` / `us-east-1`. Do not delete GitHub workflow runs,
 artifacts, provider-index compatibility, or this evidence snapshot. Remove
 GitHub variables and IAM/OIDC access only when live reference checks prove they
 are exclusive to these retired lanes.
+
+### Teardown completion
+
+The retirement completed at `2026-07-21T20:40:29Z`, after all owning `main`
+branches, the aggregate cross-repository guardrail, the historical index
+refresh, and CodeQL checks passed. The final pre-delete recount found one
+additional PostHog cache record written before its runtime path was removed.
+The exact deleted total was therefore **161 records / 422,344,791,718 bytes
+(393.34 GiB)** across the same eight repositories, rather than the earlier
+160-record live-baseline snapshot above.
+
+Cleanup removed:
+
+- the four ECR-only repository variables from each of the six scheduled
+  benchmark repositories;
+- the four ECR-only organization variables selected only for
+  `docker-cache-proofs`;
+- seven repository-specific GitHub OIDC roles and their ECR-only inline
+  policies; and
+- all objects plus the eight exact ECR repositories in AWS account
+  `416997488804` / `us-east-1`.
+
+Post-delete verification returned no matching benchmark/proof repositories and
+no remaining ECR repositories in the account. The shared GitHub OIDC provider,
+unrelated GitHub variables, GitHub workflow runs and artifacts, raw run links,
+historical `ecr-cache` provider parsing, generated historical provider rows,
+and this retirement evidence were deliberately retained. Cost Explorer can
+show a normal billing-reporting tail; new storage cost should converge to zero
+after AWS finishes accounting for the deletion.
