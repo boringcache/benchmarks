@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-21T17:04:01Z",
+  "generated_at": "2026-07-21T17:34:28Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -334,18 +334,18 @@
         "fresh": {
           "lane": "fresh",
           "state": "missing_pair",
-          "actions_successful_run_count": 96,
-          "boringcache_successful_run_count": 96,
-          "paired_head_count": 63,
+          "actions_successful_run_count": 95,
+          "boringcache_successful_run_count": 95,
+          "paired_head_count": 62,
           "selected_pair_count": 0,
           "window_pair_target": 3
         },
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 96,
-          "boringcache_successful_run_count": 96,
-          "paired_head_count": 63,
+          "actions_successful_run_count": 95,
+          "boringcache_successful_run_count": 95,
+          "paired_head_count": 62,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "a9250510a7b2e67942b7071b2f0ae7f75d82b4ca",
@@ -477,9 +477,9 @@
         "fresh": {
           "lane": "fresh",
           "state": "healthy",
-          "actions_successful_run_count": 84,
-          "boringcache_successful_run_count": 84,
-          "paired_head_count": 78,
+          "actions_successful_run_count": 83,
+          "boringcache_successful_run_count": 83,
+          "paired_head_count": 77,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "cc3b5380f767c57fbd0ad7f642425bfa4c65e165",
@@ -492,9 +492,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 84,
-          "boringcache_successful_run_count": 84,
-          "paired_head_count": 78,
+          "actions_successful_run_count": 83,
+          "boringcache_successful_run_count": 83,
+          "paired_head_count": 77,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "ea2bd48a7f5e84c4b15c4e501526a20fd977177c",
