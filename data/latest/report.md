@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-07-21 15:32 UTC
+Generated: 2026-07-21 15:51 UTC
 
 Coverage: 20 benchmarks; fresh 7/20, rolling 20/20.
 
@@ -24,9 +24,9 @@ Rows are latest complete same-commit pairs.
 | --- | --- | --- | --- | --- | --- |
 | Hugo | Commit Build | 0m 11s | 0m 8s | near tie | 119.70 MB less (25.62%) |
 | Hugo Go | Commit Build | 1m 39s | 0m 50s | 49% faster | 1.01 GB less (79.5%) |
-| Immich | Commit Build | 4m 45s | 3m 28s | 27% faster | 7.05 GB less (71.0%) |
-| Mastodon | Commit Build | 2m 36s | 2m 3s | 21% faster | 7.82 GB less (88.34%) |
-| Mastodon Streaming | Commit Build | 0m 9s | 0m 10s | near tie | 8.76 GB less (98.86%) |
+| Immich | Commit Build | 0m 9s | 0m 12s | near tie | 7.05 GB less (70.98%) |
+| Mastodon | Commit Build | 2m 9s | 2m 47s | 29% slower | 7.85 GB less (88.37%) |
+| Mastodon Streaming | Commit Build | 0m 9s | 0m 9s | near tie | 8.78 GB less (98.86%) |
 | Discourse | Commit Build | 3m 25s | 3m 5s | 10% faster | 8.80 GB less (89.5%) |
 | Discourse Base Deps | Commit Build | 0m 12s | 0m 12s | near tie | 9.39 GB less (93.04%) |
 | Discourse Web-Only Image | Commit Build | 0m 11s | 0m 8s | near tie | 8.69 GB less (86.1%) |
@@ -38,7 +38,7 @@ Rows are latest complete same-commit pairs.
 | Spring AI | Commit Build | 2m 51s | 3m 51s | 35% slower | 3.26 GB less (70.17%) |
 | gRPC | Commit Build | 2m 44s | 0m 39s | 76% faster | n/a |
 | Zed | Commit Build | 33m 45s | 39m 50s | 18% slower | 10.58 GB less (92.16%) |
-| n8n | Commit Build | 2m 39s | 2m 47s | 5% slower | 2.26 GB less (74.15%) |
-| n8n Docker | Commit Build | 5m 2s | 4m 32s | investigation only | n/a |
-| n8n Runners | Commit Build | 1m 3s | 0m 51s | 19% faster | n/a |
-| n8n Runners Distroless | Commit Build | 2m 22s | 1m 37s | 32% faster | n/a |
+| n8n | Commit Build | 1m 38s | 1m 22s | 16% faster | 2.31 GB less (74.53%) |
+| n8n Docker | Commit Build | 5m 14s | 4m 41s | investigation only | n/a |
+| n8n Runners | Commit Build | 0m 55s | 0m 55s | near tie | n/a |
+| n8n Runners Distroless | Commit Build | 2m 20s | 2m 31s | 8% slower | n/a |
