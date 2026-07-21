@@ -46,6 +46,7 @@ jobs:
             echo "Checking out ${repo} -> ${target}"
             gh repo clone "${repo}" "${target}" -- --depth 1
           done
+          gh repo clone boringcache/docker-cache-proofs ../benchmarks-repos/docker-cache-proofs -- --depth 1
 
       - name: Run benchmark tests
         working-directory: benchmarks
