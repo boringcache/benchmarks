@@ -35,13 +35,19 @@ registry_by_repo.each do |repo_name, benchmarks|
   workflow_ids = Dir[File.join(repo_path, ".github", "workflows", "*.yml")].flat_map do |path|
     File.readlines(path).map do |line|
       line[/^\s*benchmark_id:\s*([A-Za-z0-9._-]+)\s*$/, 1] ||
-        line[/^\s*BENCHMARK_ID:\s*([A-Za-z0-9._-]+)\s*$/, 1]
+        line[/^\s*BENCHMARK_ID:\s*([A-Za-z0-9._-]+)\s*$/, 1] ||
+        line[/^\s*benchmark_id:\s*([A-Za-z0-9._-]+)\$\{\{\s*inputs\.benchmark_id_suffix\s*\}\}\s*$/, 1] ||
+        line[/^\s*benchmark_id:\s*\$\{\{\s*format\('([A-Za-z0-9._-]+)\{0\}',\s*inputs\.benchmark_id_suffix\)\s*\}\}\s*$/, 1]
     end.compact
   end.uniq.sort
 
   allowed_ids = benchmarks.flat_map do |benchmark|
     ids = [benchmark.fetch("benchmark"), *Array(benchmark["aliases"])]
-    ids.concat(ids.map { |id| "#{id}-auto" }) if benchmark["category"] == "docker"
+    if benchmark["category"] == "docker"
+      ids.concat(ids.flat_map do |id|
+        [ "#{id}-bc-buildkit", "#{id}-bc-buildkit-sccache", "#{id}-bc-buildkit-mountcache", "#{id}-oci-sccache" ]
+      end)
+    end
     ids.concat(ids.map { |id| "#{id}-toolcache" }) if Array(benchmark["extra_providers"]).include?("boringcache-toolcache")
     ids
   end.uniq.sort
