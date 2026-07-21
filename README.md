@@ -53,6 +53,7 @@ mise exec -- ruby test/publish_index_test.rb
 mise exec -- ruby test/benchmark_reporting_test.rb
 mise exec -- ruby test/benchmark_registry_alignment_test.rb
 mise exec -- ruby test/benchmark_workflow_guardrails_test.rb
+mise exec -- ruby test/boringcache_docker_product_run_test.rb
 mise exec -- ruby test/write_benchmark_artifacts_test.rb
 ```
 
@@ -62,4 +63,7 @@ mise exec -- ruby test/write_benchmark_artifacts_test.rb
 listed in `scripts/publish-index.rb` and runs the registry alignment plus
 workflow guardrail tests. The workflow lint fails if Docker benchmark workflows
 add local proxy probes, add a second `docker-layers` registry tag, or stop
-consuming the `boringcache/one` Docker import-readiness outputs.
+consuming the `boringcache/one` Docker import-readiness outputs. Managed Docker
+lanes must run through `boringcache docker --backend boringcache`; a shared
+runtime assertion requires CLI-harvested BuildKit vertex spans so setup-only
+plus raw Buildx cannot masquerade as the product path.

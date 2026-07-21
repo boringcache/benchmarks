@@ -55,5 +55,6 @@ jobs:
           ruby test/benchmark_reporting_test.rb
           ruby test/benchmark_registry_alignment_test.rb
           ruby test/benchmark_workflow_guardrails_test.rb
+          ruby test/boringcache_docker_product_run_test.rb
           ruby test/public_benchmark_proof_test.rb
           ruby test/write_benchmark_artifacts_test.rb
