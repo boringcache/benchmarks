@@ -1,0 +1,2 @@
+# helper	repositories (comma-separated); helpers without an entry apply to every benchmark repo
+assert-boringcache-docker-product-run.sh	benchmark-discourse,benchmark-hugo,benchmark-immich,benchmark-mastodon,benchmark-n8n,benchmark-posthog

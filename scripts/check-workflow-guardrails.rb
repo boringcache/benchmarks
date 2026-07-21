@@ -48,6 +48,30 @@ DOCKER_REQUIRED_STRINGS = {
   "registry_proxy_tags=\"${cache_scope}\"" => "single registry proxy tag assignment"
 }.freeze
 
+DOCKER_PRODUCT_ASSERTION = "assert-boringcache-docker-product-run.sh"
+CANONICAL_DOCKER_PRODUCT_ASSERTION = File.expand_path(
+  "canonical/#{DOCKER_PRODUCT_ASSERTION}",
+  __dir__
+)
+
+def workflow_step_blocks(text)
+  lines = text.lines
+  blocks = []
+
+  lines.each_with_index do |line, index|
+    match = line.match(/\A(\s*)- name:/)
+    next unless match
+
+    indent = match[1]
+    finish = ((index + 1)...lines.length).find do |candidate|
+      lines[candidate].match?(/\A#{Regexp.escape(indent)}- name:/)
+    end || lines.length
+    blocks << lines[index...finish].join
+  end
+
+  blocks
+end
+
 registry_by_repo = BENCHMARKS.each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |benchmark, index|
   repo_name = benchmark.fetch("source_repo").split("/").last
   index[repo_name] << benchmark
@@ -88,6 +112,35 @@ registry_by_repo.each do |repo_name, benchmarks|
     next if docker_text.include?(needle)
 
     errors << "#{repo_name}/.github/workflows/reusable-docker-buildkit-benchmark.yml: missing #{description}"
+  end
+
+  workflow_text_by_path.each do |path, text|
+    relative_path = path.delete_prefix("#{repo_path}/")
+    workflow_step_blocks(text).each do |block|
+      next unless block.include?("uses: boringcache/one@")
+      next unless block.include?("docker-command: setup")
+      next unless block.include?("buildkit_cache_backend")
+      unless block.include?("buildkit_cache_backend != 'boringcache'")
+        errors << "#{repo_name}/#{relative_path}: managed Docker must bypass boringcache/one setup-only and run through the CLI-owned build"
+      end
+      unless block.match?(/^\s*cache-backend:\s*registry\s*$/)
+        errors << "#{repo_name}/#{relative_path}: setup-only Docker must declare cache-backend=registry explicitly"
+      end
+    end
+  end
+
+  assertion_path = File.join(repo_path, "scripts", DOCKER_PRODUCT_ASSERTION)
+  if !File.exist?(assertion_path)
+    errors << "#{repo_name}/scripts/#{DOCKER_PRODUCT_ASSERTION}: missing managed Docker runtime contract"
+  elsif File.binread(assertion_path) != File.binread(CANONICAL_DOCKER_PRODUCT_ASSERTION)
+    errors << "#{repo_name}/scripts/#{DOCKER_PRODUCT_ASSERTION}: differs from the canonical managed Docker runtime contract"
+  end
+
+  benchmark_script_path = File.join(repo_path, "scripts", "run-boringcache-buildkit-benchmark.sh")
+  if !File.exist?(benchmark_script_path)
+    errors << "#{repo_name}/scripts/run-boringcache-buildkit-benchmark.sh: missing managed Docker benchmark entrypoint"
+  elsif !File.read(benchmark_script_path).include?(DOCKER_PRODUCT_ASSERTION)
+    errors << "#{repo_name}/scripts/run-boringcache-buildkit-benchmark.sh: does not enforce the managed Docker runtime contract"
   end
 end
 
