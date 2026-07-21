@@ -25,6 +25,7 @@ class BoringcacheDockerProductRunTest < Minitest::Test
     assert status.success?, output
     assert_includes output, "Managed Docker product path verified"
     assert_includes output, "total=5"
+    assert_includes output, "summary_bytes="
   end
 
   def test_rejects_setup_only_or_raw_docker_evidence
@@ -59,6 +60,25 @@ class BoringcacheDockerProductRunTest < Minitest::Test
 
     assert status.success?, output
     assert_includes output, "total=1"
+  end
+
+  def test_rejects_a_summary_larger_than_the_ingestion_contract
+    status, output = run_contract(
+      "operation" => "cache_session_summary",
+      "buildkit" => {
+        "vertex_spans" => {
+          "schema_version" => "buildkit_vertex_spans.v1",
+          "total_spans" => 1,
+          "executed_count" => 1,
+          "cached_count" => 0,
+          "error_count" => 0
+        }
+      },
+      "unbounded" => "x" * 70_000
+    )
+
+    refute status.success?
+    assert_includes output, "Rails accepts at most 65536 bytes"
   end
 
   private
