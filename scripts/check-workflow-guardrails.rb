@@ -16,36 +16,34 @@ abort "benchmark repos directory not found: #{repos_dir}" unless Dir.exist?(repo
 
 BANNED_WORKFLOW_PATTERNS = [
   [
-    %r{/_boringcache/status|cache:buildcache},
-    "benchmark workflows should consume boringcache/one Docker import outputs instead of probing proxy internals"
+    /type=registry/,
+    "Docker benchmark workflows must not publish a registry-cache product lane"
   ],
   [
-    /docker-layers/,
-    "Docker benchmarks should use one measured registry tag instead of a second docker-layers tag"
+    /\becr-cache\b/,
+    "Docker benchmark workflows must not publish an ECR cache lane"
   ],
   [
-    /buildkit_backend:\s*native\b/,
-    "Docker benchmark workflows should use the registry wrapper backend with buildkit_cache_backend=boringcache; the Rust-native Docker backend is retired"
+    /^\s*(?:buildkit_backend|buildkit_cache_backend|cache_export_type|oci_hydration):|BORINGCACHE_(?:BUILDKIT_CACHE_BACKEND|CACHE_EXPORT_TYPE|OCI_HYDRATION)/,
+    "Docker benchmark workflows have one managed BoringCache backend and must not expose backend selectors"
   ],
   [
-    /\bBC Native\b/,
-    "Docker benchmark workflows should not publish active BC Native lanes; keep old native numbers only in historical docs"
+    /^\s*(?:cache-backend|registry-tag|registry-ref-tag|buildkit-backend|buildkit-cache-backend|cache-export-type|oci-hydration):/,
+    "Docker benchmark workflows should use the managed backend defaults instead of legacy Action inputs"
   ],
   [
-    /run-boringcache-native-buildkit-benchmark/,
-    "Docker benchmark workflows should not call the retired Rust-native BuildKit benchmark runner"
+    /docker-command:\s*setup/,
+    "Docker benchmarks must use the CLI-owned managed build instead of setup-only cache wiring"
   ],
   [
-    /native_publish_intensity|BORINGCACHE_BUILDKIT_PUBLISH_INTENSITY|Upload native BuildKit evidence/,
-    "Docker benchmark workflows should not configure retired native publisher controls"
+    /\bBC OCI\b|BoringCache OCI/,
+    "Docker benchmark workflows must present one BoringCache product lane"
   ]
 ].freeze
 
-DOCKER_REQUIRED_STRINGS = {
-  "docker-cache-import-ready" => "Docker import readiness output",
-  "docker-cache-requested-from-refs" => "requested import refs output",
-  "docker-cache-from-refs" => "used import refs output",
-  "registry_proxy_tags=\"${cache_scope}\"" => "single registry proxy tag assignment"
+DOCKER_REQUIRED_PATTERNS = {
+  /BORINGCACHE_MANAGED_BUILDKIT_IMAGE/ => "managed BuildKit image wiring",
+  /run-boringcache-(?:buildkit-benchmark|docker-lane)/ => "managed BoringCache benchmark runner"
 }.freeze
 
 DOCKER_PRODUCT_ASSERTION = "assert-boringcache-docker-product-run.sh"
@@ -53,24 +51,6 @@ CANONICAL_DOCKER_PRODUCT_ASSERTION = File.expand_path(
   "canonical/#{DOCKER_PRODUCT_ASSERTION}",
   __dir__
 )
-
-def workflow_step_blocks(text)
-  lines = text.lines
-  blocks = []
-
-  lines.each_with_index do |line, index|
-    match = line.match(/\A(\s*)- name:/)
-    next unless match
-
-    indent = match[1]
-    finish = ((index + 1)...lines.length).find do |candidate|
-      lines[candidate].match?(/\A#{Regexp.escape(indent)}- name:/)
-    end || lines.length
-    blocks << lines[index...finish].join
-  end
-
-  blocks
-end
 
 ECR_RUNTIME_PATTERN = /(?:\becr-cache\b|\becr_(?:region|role_arn|registry|repository|allowed_account_ids)\b|(?:DOCKER_BENCHMARK|BENCHMARK)_ECR_|aws-actions\/(?:configure-aws-credentials|amazon-ecr-login)|\baws\s+ecr\b)/i
 
@@ -118,32 +98,11 @@ registry_by_repo.each do |repo_name, benchmarks|
 
   next unless benchmarks.any? { |benchmark| benchmark.fetch("category") == "docker" }
 
-  docker_reusable_path = File.join(repo_path, ".github", "workflows", "reusable-docker-buildkit-benchmark.yml")
-  unless File.exist?(docker_reusable_path)
-    errors << "#{repo_name}: missing reusable-docker-buildkit-benchmark.yml for Docker benchmark"
-    next
-  end
+  docker_text = workflow_text_by_path.values.join("\n")
+  DOCKER_REQUIRED_PATTERNS.each do |pattern, description|
+    next if docker_text.match?(pattern)
 
-  docker_text = File.read(docker_reusable_path)
-  DOCKER_REQUIRED_STRINGS.each do |needle, description|
-    next if docker_text.include?(needle)
-
-    errors << "#{repo_name}/.github/workflows/reusable-docker-buildkit-benchmark.yml: missing #{description}"
-  end
-
-  workflow_text_by_path.each do |path, text|
-    relative_path = path.delete_prefix("#{repo_path}/")
-    workflow_step_blocks(text).each do |block|
-      next unless block.include?("uses: boringcache/one@")
-      next unless block.include?("docker-command: setup")
-      next unless block.include?("buildkit_cache_backend")
-      unless block.include?("buildkit_cache_backend != 'boringcache'")
-        errors << "#{repo_name}/#{relative_path}: managed Docker must bypass boringcache/one setup-only and run through the CLI-owned build"
-      end
-      unless block.match?(/^\s*cache-backend:\s*registry\s*$/)
-        errors << "#{repo_name}/#{relative_path}: setup-only Docker must declare cache-backend=registry explicitly"
-      end
-    end
+    errors << "#{repo_name}: Docker workflows are missing #{description}"
   end
 
   assertion_path = File.join(repo_path, "scripts", DOCKER_PRODUCT_ASSERTION)
