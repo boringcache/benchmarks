@@ -888,7 +888,7 @@ def build_markdown(entries, generated_at:, format:)
       sections += [
         "### Docker Cache Detail",
         "",
-        markdown_table(["Benchmark", "Lane", "GitHub Actions Cache Import", "BoringCache Import", "GitHub Actions Cache Export", "BoringCache Export", "BoringCache OCI Hydration", "BoringCache HTTP", "BoringCache Stream Min Bytes", "BoringCache New Blobs", "BoringCache New Blob Bytes", "BoringCache Remote Body Bytes"], docker_rows),
+        markdown_table(["Benchmark", "Lane", "GitHub Actions Cache Import", "BoringCache Import", "GitHub Actions Cache Export", "BoringCache Export", "BoringCache Hydration", "BoringCache HTTP", "BoringCache Stream Min Bytes", "BoringCache New Blobs", "BoringCache New Blob Bytes", "BoringCache Remote Body Bytes"], docker_rows),
         ""
       ]
     end

@@ -38,15 +38,33 @@ jobs:
         working-directory: benchmarks
         env:
           GH_TOKEN: ${{ secrets.BENCHMARKS_READ_TOKEN || github.token }}
+          STANDALONE_REF: ${{ github.event_name == 'pull_request' && github.head_ref || '' }}
         run: |
           set -euo pipefail
           mkdir -p ../benchmarks-repos
+
+          checkout_repo() {
+            local repo="$1"
+            local target="$2"
+
+            if [[ -n "$STANDALONE_REF" ]]; then
+              echo "Trying coordinated branch ${STANDALONE_REF} in ${repo}"
+              if gh repo clone "$repo" "$target" -- --branch "$STANDALONE_REF" --single-branch --depth 1; then
+                return 0
+              fi
+              rm -rf -- "$target"
+              echo "Falling back to the default branch in ${repo}"
+            fi
+
+            gh repo clone "$repo" "$target" -- --depth 1
+          }
+
           ruby -e 'require_relative "scripts/publish-index"; puts BENCHMARKS.map { |benchmark| benchmark.fetch("source_repo") }.uniq.sort' | while IFS= read -r repo; do
             target="../benchmarks-repos/${repo##*/}"
             echo "Checking out ${repo} -> ${target}"
-            gh repo clone "${repo}" "${target}" -- --depth 1
+            checkout_repo "$repo" "$target"
           done
-          gh repo clone boringcache/docker-cache-proofs ../benchmarks-repos/docker-cache-proofs -- --depth 1
+          checkout_repo boringcache/docker-cache-proofs ../benchmarks-repos/docker-cache-proofs
 
       - name: Run benchmark tests
         working-directory: benchmarks
