@@ -380,6 +380,17 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     assert_equal "primary_miss_fallback_reuse", payload.dig("slow_reason", "prior_cache_state")
   end
 
+  def test_buildkit_image_is_recorded
+    image = "ghcr.io/boringcache/buildkit@sha256:abc123"
+    payload = write_artifact(
+      "--mode", "docker",
+      "--adapter", "oci",
+      "--buildkit-image", image
+    )
+
+    assert_equal image, payload.dig("docker_cache", "buildkit_image")
+  end
+
   def test_native_tool_labels_are_inferred_for_actions_cache_artifacts
     payload = write_artifact(
       benchmark: "storybook",
