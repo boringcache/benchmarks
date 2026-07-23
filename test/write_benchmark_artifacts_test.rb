@@ -391,6 +391,75 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     assert_equal image, payload.dig("docker_cache", "buildkit_image")
   end
 
+  def test_buildkit_prewarm_telemetry_is_recorded
+    payload = write_artifact(
+      "--cli-image", "ghcr.io/boringcache/cli:v1",
+      "--buildkit-cache-prewarm-seconds", "12.5",
+      "--buildkit-cache-prepare-seconds", "3.5",
+      "--buildkit-cache-send-seconds", "2.5",
+      "--buildkit-cache-prewarm-queued", "1",
+      "--buildkit-cache-prewarm-dropped", "2",
+      "--buildkit-cache-prewarm-canceled", "3",
+      "--buildkit-cache-prewarm-retried", "4",
+      "--buildkit-cache-prewarm-deferred", "5",
+      "--buildkit-cache-prewarm-prepared", "6",
+      "--buildkit-cache-prewarm-body-prepared", "7",
+      "--buildkit-cache-prewarm-committed-bodies", "8",
+      "--buildkit-cache-prewarm-delegated-bodies", "9",
+      "--buildkit-cache-prewarm-owned-bodies", "10",
+      "--buildkit-cache-prewarm-owned-body-bytes", "11",
+      "--buildkit-cache-prewarm-owned-body-max", "12",
+      "--buildkit-cache-prewarm-resolved", "13",
+      "--buildkit-cache-prewarm-reused", "14",
+      "--buildkit-cache-prewarm-uploaded", "15",
+      "--buildkit-cache-prewarm-failed", "16",
+      "--buildkit-cache-prewarm-recursive", "17",
+      "--buildkit-cache-prewarm-direct", "18",
+      "--buildkit-cache-prewarm-missed", "19",
+      "--buildkit-cache-prewarm-body-time-seconds", "20.5",
+      "--buildkit-cache-prewarm-body-max-seconds", "21.5",
+      "--buildkit-cache-prewarm-resolve-time-seconds", "22.5",
+      "--buildkit-cache-prewarm-resolve-max-seconds", "23.5",
+      "--buildkit-cache-prewarm-upload-time-seconds", "24.5",
+      "--buildkit-cache-prewarm-upload-max-seconds", "25.5",
+      "--buildkit-cache-prewarm-queue-depth", "26",
+      "--buildkit-cache-prewarm-max-queue-depth", "27",
+      "--buildkit-cache-prewarm-body-slot-limit", "28",
+      "--buildkit-cache-prewarm-body-slot-max", "29",
+      "--buildkit-cache-prewarm-body-active", "30",
+      "--buildkit-cache-prewarm-body-active-max", "31",
+      "--buildkit-cache-prewarm-body-scaleups", "32",
+      "--buildkit-cache-prewarm-body-downshifts", "33",
+      "--buildkit-cache-prewarm-body-backlog-reliefs", "34",
+      "--buildkit-cache-prewarm-cpu-pressure-seconds", "61",
+      "--buildkit-cache-prewarm-io-pressure-seconds", "62",
+      "--buildkit-cache-prewarm-body-phase", "cache-only",
+      "--buildkit-cache-prewarm-image-output-overlap-seconds", "35.5",
+      "--buildkit-cache-prewarm-cache-only-transitions", "36",
+      "--buildkit-cache-prewarm-slot-limit-min", "37",
+      "--buildkit-cache-prewarm-slot-limit-max", "38",
+      "--buildkit-cache-prewarm-body-wait-seconds", "63",
+      "--buildkit-cache-prewarm-body-wait-max-seconds", "40.5",
+      "--buildkit-cache-prewarm-workers-current", "41",
+      "--buildkit-cache-prewarm-workers-max", "42"
+    )
+
+    assert_equal "ghcr.io/boringcache/cli:v1", payload.dig("docker_cache", "cli_image")
+    assert_equal 12.5, payload.dig("docker_cache", "prewarm_seconds")
+    assert_equal 3.5, payload.dig("docker_cache", "prepare_seconds")
+    assert_equal 2.5, payload.dig("docker_cache", "send_seconds")
+    assert_equal 7, payload.dig("docker_cache", "prewarm", "body_prepared")
+    assert_equal 11, payload.dig("docker_cache", "prewarm", "owned_body_bytes")
+    assert_equal "cache-only", payload.dig("docker_cache", "prewarm", "body_phase")
+    assert_equal 42, payload.dig("docker_cache", "prewarm", "workers_max")
+    assert_equal 63, payload.dig("slow_reason", "buildkit_prewarm", "body_wait_seconds")
+
+    hypothesis_ids = payload.dig("slow_reason", "hypotheses").map { |row| row.fetch("id") }
+    assert_includes hypothesis_ids, "buildkit_body_backlog_wait"
+    assert_includes hypothesis_ids, "buildkit_cpu_pressure_observed"
+    assert_includes hypothesis_ids, "buildkit_io_pressure_observed"
+  end
+
   def test_native_tool_labels_are_inferred_for_actions_cache_artifacts
     payload = write_artifact(
       benchmark: "storybook",
