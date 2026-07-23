@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-23T09:23:27Z",
+  "generated_at": "2026-07-23T13:08:39Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -1420,33 +1420,33 @@
         "step": "Rust build (sccache)",
         "headline_scenario": "cold",
         "headline_label": "Commit Build",
-        "before": "46m 50s",
-        "after": "44m 17s",
-        "before_seconds": 2810.0,
-        "after_seconds": 2657.0,
-        "faster": "5",
+        "before": "41m 23s",
+        "after": "40m 29s",
+        "before_seconds": 2483.0,
+        "after_seconds": 2429.0,
+        "faster": "2",
         "comparison": {
           "paired_on_head_sha": true,
-          "pairing_head_sha": "daf67b0228cfdcff7e55170f2e66d5a6082bb5b3",
+          "pairing_head_sha": "aae94c69ee3d6f663757da3930abc84d71c7bb27",
           "sample_count": 1,
           "actions_cache": {
-            "run_id": 29988173087,
-            "run_url": "https://github.com/boringcache/benchmark-zed/actions/runs/29988173087",
-            "head_sha": "daf67b0228cfdcff7e55170f2e66d5a6082bb5b3",
-            "created_at": "2026-07-23T07:25:09Z",
-            "cold_seconds": 2810.0,
-            "cold_build_seconds": 2766.0,
-            "cold_restore_or_setup_seconds": 44.0,
+            "run_id": 30005733636,
+            "run_url": "https://github.com/boringcache/benchmark-zed/actions/runs/30005733636",
+            "head_sha": "aae94c69ee3d6f663757da3930abc84d71c7bb27",
+            "created_at": "2026-07-23T12:07:22Z",
+            "cold_seconds": 2483.0,
+            "cold_build_seconds": 2444.0,
+            "cold_restore_or_setup_seconds": 39.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 2810.0,
+            "rolling_first_build_seconds": 2483.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 2918.0,
-            "storage_bytes": 12355729614,
+            "run_total_seconds": 2578.0,
+            "storage_bytes": 12277215106,
             "storage_source": "github-actions-cache-api",
             "storage_breakdown": null,
             "network_bytes_uploaded": null,
@@ -1491,14 +1491,14 @@
               "reseed_reason": null
             },
             "product_refs": {
-              "web_revision": "e59784cd5",
+              "web_revision": "b9dba21d5",
               "api_url": "https://api.boringcache.com"
             },
             "product_refs_consistent": true,
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-zed",
             "cache_tag": null,
-            "run_uid": "gh-29988173087-1",
+            "run_uid": "gh-30005733636-1",
             "mode": "sccache",
             "adapter": "sccache",
             "docker_cache_from_refs": null,
@@ -1530,15 +1530,15 @@
                 "stats_source": "sccache --show-stats",
                 "compile_requests": 2418,
                 "compile_requests_executed": 2118,
-                "cache_hits": 1957,
-                "cache_misses": 153,
-                "hit_rate": 92.7,
+                "cache_hits": 2008,
+                "cache_misses": 102,
+                "hit_rate": 95.2,
                 "hit_counts": {
                   "c_cpp": 467,
-                  "rust": 1340
+                  "rust": 1391
                 },
                 "miss_counts": {
-                  "rust": 153
+                  "rust": 102
                 },
                 "non_cacheable_calls": 292,
                 "non_cacheable_reasons": {
@@ -1549,8 +1549,8 @@
                   "missing emit": 1
                 },
                 "average_cache_read_hit_seconds": 0.0,
-                "average_cache_write_seconds": 0.002,
-                "average_compiler_seconds": 29.036,
+                "average_cache_write_seconds": 0.003,
+                "average_compiler_seconds": 37.036,
                 "cache_errors": 0,
                 "cache_read_errors": 0,
                 "cache_write_errors": 0,
@@ -1567,9 +1567,9 @@
               "value_detail": null,
               "value_next_action": null,
               "value_evidence": [],
-              "hit_count": 1957,
-              "miss_count": 153,
-              "hit_rate": 92.7,
+              "hit_count": 2008,
+              "miss_count": 102,
+              "hit_rate": 95.2,
               "error_count": null,
               "bytes_read": null,
               "bytes_written": null,
@@ -1585,15 +1585,15 @@
               "stats_source": "sccache --show-stats",
               "compile_requests": 2418,
               "compile_requests_executed": 2118,
-              "cache_hits": 1957,
-              "cache_misses": 153,
-              "hit_rate": 92.7,
+              "cache_hits": 2008,
+              "cache_misses": 102,
+              "hit_rate": 95.2,
               "hit_counts": {
                 "c_cpp": 467,
-                "rust": 1340
+                "rust": 1391
               },
               "miss_counts": {
-                "rust": 153
+                "rust": 102
               },
               "non_cacheable_calls": 292,
               "non_cacheable_reasons": {
@@ -1604,8 +1604,8 @@
                 "missing emit": 1
               },
               "average_cache_read_hit_seconds": 0.0,
-              "average_cache_write_seconds": 0.002,
-              "average_compiler_seconds": 29.036,
+              "average_cache_write_seconds": 0.003,
+              "average_compiler_seconds": 37.036,
               "cache_errors": 0,
               "cache_read_errors": 0,
               "cache_write_errors": 0,
@@ -1616,17 +1616,17 @@
               "benchmark": "zed-sccache",
               "strategy": "actions-cache",
               "lane": "rolling",
-              "run_uid": "gh-29988173087-1",
-              "paired_run_id": 29988173087,
-              "build_seconds": 2766,
-              "setup_seconds": 44,
+              "run_uid": "gh-30005733636-1",
+              "paired_run_id": 30005733636,
+              "build_seconds": 2444,
+              "setup_seconds": 39,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": null,
               "cache_save_export_seconds": null,
               "buildkit_cached_steps": null,
-              "hit_count": 1957,
-              "miss_count": 153,
-              "hit_rate": 92.7,
+              "hit_count": 2008,
+              "miss_count": 102,
+              "hit_rate": 95.2,
               "prior_cache_state": "usable_import",
               "new_blob_bytes": null,
               "native_tool": {
@@ -1635,15 +1635,15 @@
                 "stats_source": "sccache --show-stats",
                 "compile_requests": 2418,
                 "compile_requests_executed": 2118,
-                "cache_hits": 1957,
-                "cache_misses": 153,
-                "hit_rate": 92.7,
+                "cache_hits": 2008,
+                "cache_misses": 102,
+                "hit_rate": 95.2,
                 "hit_counts": {
                   "c_cpp": 467,
-                  "rust": 1340
+                  "rust": 1391
                 },
                 "miss_counts": {
-                  "rust": 153
+                  "rust": 102
                 },
                 "non_cacheable_calls": 292,
                 "non_cacheable_reasons": {
@@ -1654,8 +1654,8 @@
                   "missing emit": 1
                 },
                 "average_cache_read_hit_seconds": 0.0,
-                "average_cache_write_seconds": 0.002,
-                "average_compiler_seconds": 29.036,
+                "average_cache_write_seconds": 0.003,
+                "average_compiler_seconds": 37.036,
                 "cache_errors": 0,
                 "cache_read_errors": 0,
                 "cache_write_errors": 0,
@@ -1668,8 +1668,8 @@
                   "confidence": "low",
                   "summary": "The native tool still missed cache entries during the measured build.",
                   "evidence": {
-                    "miss_count": 153,
-                    "hit_rate": 92.7
+                    "miss_count": 102,
+                    "hit_rate": 95.2
                   }
                 },
                 {
@@ -1684,24 +1684,24 @@
             }
           },
           "boringcache": {
-            "run_id": 29988173087,
-            "run_url": "https://github.com/boringcache/benchmark-zed/actions/runs/29988173087",
-            "head_sha": "daf67b0228cfdcff7e55170f2e66d5a6082bb5b3",
-            "created_at": "2026-07-23T07:25:09Z",
-            "cold_seconds": 2657.0,
-            "cold_build_seconds": 2628.0,
-            "cold_restore_or_setup_seconds": 29.0,
+            "run_id": 30005733636,
+            "run_url": "https://github.com/boringcache/benchmark-zed/actions/runs/30005733636",
+            "head_sha": "aae94c69ee3d6f663757da3930abc84d71c7bb27",
+            "created_at": "2026-07-23T12:07:22Z",
+            "cold_seconds": 2429.0,
+            "cold_build_seconds": 2399.0,
+            "cold_restore_or_setup_seconds": 30.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 2657.0,
+            "rolling_first_build_seconds": 2429.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 2918.0,
-            "storage_bytes": null,
-            "storage_source": null,
+            "run_total_seconds": 2578.0,
+            "storage_bytes": 2969092345,
+            "storage_source": "boringcache-check",
             "storage_breakdown": {
               "workspace": "boringcache/benchmark-zed",
               "tags": [
@@ -1709,9 +1709,9 @@
                 "zed-sccache-rolling-main-cargo-git-rust1.95",
                 "zed-sccache-rolling-main-sccache-rust1.95"
               ],
-              "total_bytes": 967350822,
+              "total_bytes": 3936443167,
               "summary": {
-                "remote_cas_bytes": 0,
+                "remote_cas_bytes": 2969092345,
                 "dependency_archive_bytes": 967350822,
                 "tool_runtime_archive_bytes": 0,
                 "unknown_bytes": 0
@@ -1740,6 +1740,19 @@
                   "bytes": 701878836,
                   "archive_size_bytes": 701878836,
                   "blob_total_size_bytes": 0
+                },
+                {
+                  "tag": "zed-sccache-rolling-main-sccache-rust1.95",
+                  "requested_tag": "zed-sccache-rolling-main-sccache-rust1.95",
+                  "cache_entry_id": null,
+                  "primary_tag": null,
+                  "storage_mode": "kv",
+                  "component_type": "remote_cas",
+                  "component_label": "remote tool cache",
+                  "entry_count": 2209,
+                  "bytes": 2969092345,
+                  "archive_size_bytes": 0,
+                  "blob_total_size_bytes": 2969092345
                 }
               ]
             },
@@ -1748,12 +1761,12 @@
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
             "startup_prefetch": {
-              "duration_ms": 5995.0,
+              "duration_ms": 7305.0,
               "target_blobs": 2107.0,
-              "target_bytes": 2273538995.0,
+              "target_bytes": 2274404587.0,
               "concurrency": 96.0,
               "initial_concurrency": 96.0,
-              "final_concurrency": 96.0,
+              "final_concurrency": 81.0,
               "max_observed_concurrency": 96.0,
               "concurrency_reason": "many_medium_blobs_io_bound",
               "retries": 0.0,
@@ -1796,17 +1809,17 @@
               "reseed_reason": null
             },
             "product_refs": {
-              "cli_version": "v1.13.99",
+              "cli_version": "v1.13.100",
               "action_ref": "boringcache/one@v1",
-              "action_sha": "b55458ec8a4165e3fd70b1a1645f518a2095ed02",
-              "web_revision": "e59784cd5",
+              "action_sha": "2213745ea5356f67a615d8a00ebbb26d6f16a419",
+              "web_revision": "b9dba21d5",
               "api_url": "https://api.boringcache.com"
             },
             "product_refs_consistent": true,
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-zed",
             "cache_tag": null,
-            "run_uid": "gh-29988173087-1",
+            "run_uid": "gh-30005733636-1",
             "mode": "sccache",
             "adapter": "sccache",
             "docker_cache_from_refs": null,
@@ -1823,25 +1836,25 @@
               "mode": "cache-registry",
               "adapter": "sccache",
               "workspace": "boringcache/benchmark-zed",
-              "duration_ms": 2628889,
+              "duration_ms": 2400592,
               "identity": {
                 "attempt": "1",
-                "commit_sha": "daf67b0228cfdcff7e55170f2e66d5a6082bb5b3",
+                "commit_sha": "aae94c69ee3d6f663757da3930abc84d71c7bb27",
                 "kind": "ci",
                 "provider": "github-actions",
-                "provider_run_uid": "29988173087",
+                "provider_run_uid": "30005733636",
                 "repository": "boringcache/benchmark-zed",
                 "source_ref_name": "main",
                 "source_ref_type": "branch",
-                "summary_session_id": "proxy-summary-dbea9977-767e-41e9-a07d-70dd744abb73",
-                "uid": "github-actions:boringcache/benchmark-zed:29988173087"
+                "summary_session_id": "proxy-summary-188376a6-1ada-41ba-9009-b917ac623726",
+                "uid": "github-actions:boringcache/benchmark-zed:30005733636"
               },
               "proxy": {
                 "adapter": "sccache",
                 "blob_download_max_concurrency": 10,
                 "blob_prefetch_concurrency_source": "auto",
                 "blob_prefetch_max_concurrency": 2000,
-                "duration_ms": 2628889,
+                "duration_ms": 2400592,
                 "fail_on_cache_error": false,
                 "h2_initial_connection_window_bytes": 33554432,
                 "h2_initial_stream_window_bytes": 2097152,
@@ -1865,25 +1878,25 @@
                   "cache_rollups_ingest": 0
                 },
                 "p50_ms_by_operation": {
-                  "cache_blobs_commit": 24,
-                  "cache_blobs_upload_urls": 29,
-                  "cache_kv_entries_download_urls": 108,
-                  "cache_kv_entries_upsert": 51,
-                  "cache_rollups_ingest": 97
+                  "cache_blobs_commit": 39,
+                  "cache_blobs_upload_urls": 45,
+                  "cache_kv_entries_download_urls": 84,
+                  "cache_kv_entries_upsert": 85,
+                  "cache_rollups_ingest": 104
                 },
                 "p95_ms_by_operation": {
-                  "cache_blobs_commit": 29,
-                  "cache_blobs_upload_urls": 35,
-                  "cache_kv_entries_download_urls": 433,
-                  "cache_kv_entries_upsert": 84,
-                  "cache_rollups_ingest": 170
+                  "cache_blobs_commit": 44,
+                  "cache_blobs_upload_urls": 52,
+                  "cache_kv_entries_download_urls": 638,
+                  "cache_kv_entries_upsert": 166,
+                  "cache_rollups_ingest": 283
                 },
                 "request_count_by_operation": {
-                  "cache_blobs_commit": 151,
-                  "cache_blobs_upload_urls": 244,
+                  "cache_blobs_commit": 101,
+                  "cache_blobs_upload_urls": 179,
                   "cache_kv_entries_download_urls": 2,
-                  "cache_kv_entries_upsert": 92,
-                  "cache_rollups_ingest": 45
+                  "cache_kv_entries_upsert": 78,
+                  "cache_rollups_ingest": 38
                 },
                 "retry_count_by_operation": {
                   "cache_blobs_commit": 0,
@@ -1893,7 +1906,7 @@
                   "cache_rollups_ingest": 0
                 },
                 "total_error_count": 0,
-                "total_request_count": 534,
+                "total_request_count": 398,
                 "total_retry_count": 0
               },
               "rails": {
@@ -1905,25 +1918,25 @@
                   "cache_rollups_ingest": 0
                 },
                 "p50_ms_by_operation": {
-                  "cache_blobs_commit": 24,
-                  "cache_blobs_upload_urls": 29,
-                  "cache_kv_entries_download_urls": 108,
-                  "cache_kv_entries_upsert": 51,
-                  "cache_rollups_ingest": 97
+                  "cache_blobs_commit": 39,
+                  "cache_blobs_upload_urls": 45,
+                  "cache_kv_entries_download_urls": 84,
+                  "cache_kv_entries_upsert": 85,
+                  "cache_rollups_ingest": 104
                 },
                 "p95_ms_by_operation": {
-                  "cache_blobs_commit": 29,
-                  "cache_blobs_upload_urls": 35,
-                  "cache_kv_entries_download_urls": 433,
-                  "cache_kv_entries_upsert": 84,
-                  "cache_rollups_ingest": 170
+                  "cache_blobs_commit": 44,
+                  "cache_blobs_upload_urls": 52,
+                  "cache_kv_entries_download_urls": 638,
+                  "cache_kv_entries_upsert": 166,
+                  "cache_rollups_ingest": 283
                 },
                 "request_count_by_operation": {
-                  "cache_blobs_commit": 151,
-                  "cache_blobs_upload_urls": 244,
+                  "cache_blobs_commit": 101,
+                  "cache_blobs_upload_urls": 179,
                   "cache_kv_entries_download_urls": 2,
-                  "cache_kv_entries_upsert": 92,
-                  "cache_rollups_ingest": 45
+                  "cache_kv_entries_upsert": 78,
+                  "cache_rollups_ingest": 38
                 },
                 "retry_count_by_operation": {
                   "cache_blobs_commit": 0,
@@ -1933,7 +1946,7 @@
                   "cache_rollups_ingest": 0
                 },
                 "total_error_count": 0,
-                "total_request_count": 534,
+                "total_request_count": 398,
                 "total_retry_count": 0
               },
               "storage": {},
@@ -1945,17 +1958,18 @@
               },
               "startup_prefetch": {
                 "startup_prefetch_already_local": 0,
-                "startup_prefetch_average_blob_bytes": 1079040,
-                "startup_prefetch_blobs_per_sec": 351,
-                "startup_prefetch_bytes_per_sec": 379239198,
+                "startup_prefetch_average_blob_bytes": 1079451,
+                "startup_prefetch_blobs_per_sec": 288,
+                "startup_prefetch_bytes_per_sec": 311349019,
                 "startup_prefetch_cold_blobs": 0,
                 "startup_prefetch_concurrency": 96,
-                "startup_prefetch_concurrency_adjustment_count": 0,
+                "startup_prefetch_concurrency_adjustment_count": 1,
+                "startup_prefetch_concurrency_adjustments": "DropSlow:96->81",
                 "startup_prefetch_concurrency_reason": "many_medium_blobs_io_bound",
                 "startup_prefetch_concurrency_source": "auto",
-                "startup_prefetch_duration_ms": 5995,
+                "startup_prefetch_duration_ms": 7305,
                 "startup_prefetch_failures": 0,
-                "startup_prefetch_final_concurrency": 96,
+                "startup_prefetch_final_concurrency": 81,
                 "startup_prefetch_initial_concurrency": 96,
                 "startup_prefetch_inserted": 2107,
                 "startup_prefetch_max_concurrency": 2000,
@@ -1963,19 +1977,19 @@
                 "startup_prefetch_mode": "current_version",
                 "startup_prefetch_retries": 0,
                 "startup_prefetch_target_blobs": 2107,
-                "startup_prefetch_target_bytes": 2273538995,
-                "startup_prefetch_total_unique_blobs": 2107,
+                "startup_prefetch_target_bytes": 2274404587,
+                "startup_prefetch_total_unique_blobs": 2537,
                 "startup_prefetch_url_missing": 0,
                 "startup_prefetch_url_resolved": 2107
               },
               "kv_upload": {
                 "kv_upload_allowed_concurrency_max": 1,
-                "kv_upload_already_present_blobs": 152,
-                "kv_upload_batches": 92,
+                "kv_upload_already_present_blobs": 101,
+                "kv_upload_batches": 78,
                 "kv_upload_blobs_per_sec": 0,
                 "kv_upload_concurrency_reason": "adaptive_ramp",
                 "kv_upload_concurrency_source": "auto",
-                "kv_upload_duration_ms": 2486,
+                "kv_upload_duration_ms": 3524,
                 "kv_upload_failed_blobs": 0,
                 "kv_upload_final_concurrency_max": 1,
                 "kv_upload_initial_concurrency_max": 1,
@@ -1985,24 +1999,24 @@
               },
               "singleflight": {
                 "singleflight_kv_download_leaders": 2107,
-                "singleflight_kv_lookup_leaders": 163
+                "singleflight_kv_lookup_leaders": 111
               },
               "kv_lookup": {
-                "kv_lookup_sccache_after_refresh_miss": 161,
-                "kv_lookup_sccache_published_fast_hit": 1957,
-                "kv_lookup_sccache_published_fast_miss": 161
+                "kv_lookup_sccache_after_refresh_miss": 110,
+                "kv_lookup_sccache_published_fast_hit": 2008,
+                "kv_lookup_sccache_published_fast_miss": 110
               },
               "local_cache": {
                 "blob_read": {
                   "blob_read_local_avg_ms": 0,
-                  "blob_read_local_bytes": 1421751098,
-                  "blob_read_local_count": 1957,
-                  "blob_read_local_hit_rate_pct": 48,
-                  "blob_read_remote_avg_ms": 252,
-                  "blob_read_remote_bytes": 2273538995,
+                  "blob_read_local_bytes": 1579629013,
+                  "blob_read_local_count": 2008,
+                  "blob_read_local_hit_rate_pct": 49,
+                  "blob_read_remote_avg_ms": 222,
+                  "blob_read_remote_bytes": 2274404587,
                   "blob_read_remote_count": 2107
                 },
-                "blob_read_cache_bytes": 3125333747,
+                "blob_read_cache_bytes": 2969092345,
                 "blob_read_cache_max_bytes": 68719476736,
                 "blob_read_memory_cache_bytes": 0,
                 "blob_read_memory_cache_max_bytes": 0,
@@ -2018,24 +2032,24 @@
                     {
                       "confidence": "low",
                       "evidence": {
-                        "bytes_read": 1421751098,
-                        "hit_rate": 92.4,
-                        "hits": 1957,
-                        "misses": 161
+                        "bytes_read": 1579629013,
+                        "hit_rate": 94.8,
+                        "hits": 2008,
+                        "misses": 110
                       },
                       "kind": "cache_miss_quality",
                       "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
                     }
                   ],
                   "evidence": {
-                    "duration_ms": 2628889,
+                    "duration_ms": 2400592,
                     "errors": 0,
-                    "hit_rate": 92.4,
-                    "hits": 1957,
-                    "misses": 161,
+                    "hit_rate": 94.8,
+                    "hits": 2008,
+                    "misses": 110,
                     "write_degraded": 0,
                     "write_errors": 0,
-                    "writes": 153
+                    "writes": 102
                   },
                   "primary_bottleneck": "cache_miss_quality",
                   "state": "bottleneck_detected"
@@ -2045,12 +2059,12 @@
                 },
                 "cache_temperature": {
                   "errors": 0,
-                  "hit_rate": 92.4,
-                  "hits": 1957,
+                  "hit_rate": 94.8,
+                  "hits": 2008,
                   "likely_reason": "partial_key_churn_or_new_work",
-                  "misses": 161,
+                  "misses": 110,
                   "state": "mostly_hot_with_misses",
-                  "writes": 153
+                  "writes": 102
                 },
                 "issue_candidates": [],
                 "primary_bottleneck": "cache_miss_quality"
@@ -2059,7 +2073,7 @@
             "cache_review": {
               "schema_version": "benchmark_cache_review.v1",
               "summary_schema": "cache-session-v2",
-              "summary_session_id": "proxy-summary-dbea9977-767e-41e9-a07d-70dd744abb73",
+              "summary_session_id": "proxy-summary-188376a6-1ada-41ba-9009-b917ac623726",
               "tool": "sccache",
               "cache_target": {
                 "workspace": "boringcache/benchmark-zed",
@@ -2080,15 +2094,15 @@
                 "stats_source": "sccache --show-stats",
                 "compile_requests": 2418,
                 "compile_requests_executed": 2118,
-                "cache_hits": 1957,
-                "cache_misses": 153,
-                "hit_rate": 92.7,
+                "cache_hits": 2008,
+                "cache_misses": 102,
+                "hit_rate": 95.2,
                 "hit_counts": {
                   "c_cpp": 467,
-                  "rust": 1340
+                  "rust": 1391
                 },
                 "miss_counts": {
-                  "rust": 153
+                  "rust": 102
                 },
                 "non_cacheable_calls": 292,
                 "non_cacheable_reasons": {
@@ -2099,8 +2113,8 @@
                   "missing emit": 1
                 },
                 "average_cache_read_hit_seconds": 0.002,
-                "average_cache_write_seconds": 0.01,
-                "average_compiler_seconds": 27.433,
+                "average_cache_write_seconds": 0.012,
+                "average_compiler_seconds": 35.761,
                 "cache_errors": 0,
                 "cache_read_errors": 0,
                 "cache_write_errors": 0,
@@ -2117,13 +2131,13 @@
               "value_detail": null,
               "value_next_action": null,
               "value_evidence": [],
-              "hit_count": 1957,
-              "miss_count": 161,
-              "hit_rate": 92.4,
+              "hit_count": 2008,
+              "miss_count": 110,
+              "hit_rate": 94.8,
               "error_count": 0,
               "bytes_read": null,
               "bytes_written": null,
-              "duration_seconds": 2628.889,
+              "duration_seconds": 2400.592,
               "issue_candidates": []
             },
             "summary_schema": null,
@@ -2135,15 +2149,15 @@
               "stats_source": "sccache --show-stats",
               "compile_requests": 2418,
               "compile_requests_executed": 2118,
-              "cache_hits": 1957,
-              "cache_misses": 153,
-              "hit_rate": 92.7,
+              "cache_hits": 2008,
+              "cache_misses": 102,
+              "hit_rate": 95.2,
               "hit_counts": {
                 "c_cpp": 467,
-                "rust": 1340
+                "rust": 1391
               },
               "miss_counts": {
-                "rust": 153
+                "rust": 102
               },
               "non_cacheable_calls": 292,
               "non_cacheable_reasons": {
@@ -2154,8 +2168,8 @@
                 "missing emit": 1
               },
               "average_cache_read_hit_seconds": 0.002,
-              "average_cache_write_seconds": 0.01,
-              "average_compiler_seconds": 27.433,
+              "average_cache_write_seconds": 0.012,
+              "average_compiler_seconds": 35.761,
               "cache_errors": 0,
               "cache_read_errors": 0,
               "cache_write_errors": 0,
@@ -2166,17 +2180,17 @@
               "benchmark": "zed-sccache",
               "strategy": "boringcache",
               "lane": "rolling",
-              "run_uid": "gh-29988173087-1",
-              "paired_run_id": 29988173087,
-              "build_seconds": 2628,
-              "setup_seconds": 29,
+              "run_uid": "gh-30005733636-1",
+              "paired_run_id": 30005733636,
+              "build_seconds": 2399,
+              "setup_seconds": 30,
               "post_cleanup_seconds": 18.0,
               "cache_restore_seconds": 0,
               "cache_save_export_seconds": 0,
               "buildkit_cached_steps": null,
-              "hit_count": 1957,
-              "miss_count": 161,
-              "hit_rate": 92.4,
+              "hit_count": 2008,
+              "miss_count": 110,
+              "hit_rate": 94.8,
               "prior_cache_state": "unknown",
               "new_blob_bytes": null,
               "native_tool": {
@@ -2185,15 +2199,15 @@
                 "stats_source": "sccache --show-stats",
                 "compile_requests": 2418,
                 "compile_requests_executed": 2118,
-                "cache_hits": 1957,
-                "cache_misses": 153,
-                "hit_rate": 92.7,
+                "cache_hits": 2008,
+                "cache_misses": 102,
+                "hit_rate": 95.2,
                 "hit_counts": {
                   "c_cpp": 467,
-                  "rust": 1340
+                  "rust": 1391
                 },
                 "miss_counts": {
-                  "rust": 153
+                  "rust": 102
                 },
                 "non_cacheable_calls": 292,
                 "non_cacheable_reasons": {
@@ -2204,8 +2218,8 @@
                   "missing emit": 1
                 },
                 "average_cache_read_hit_seconds": 0.002,
-                "average_cache_write_seconds": 0.01,
-                "average_compiler_seconds": 27.433,
+                "average_cache_write_seconds": 0.012,
+                "average_compiler_seconds": 35.761,
                 "cache_errors": 0,
                 "cache_read_errors": 0,
                 "cache_write_errors": 0,
@@ -2218,8 +2232,8 @@
                   "confidence": "low",
                   "summary": "The native tool still missed cache entries during the measured build.",
                   "evidence": {
-                    "miss_count": 161,
-                    "hit_rate": 92.4
+                    "miss_count": 110,
+                    "hit_rate": 94.8
                   }
                 },
                 {
@@ -2238,10 +2252,10 @@
           },
           "warm_improvement_pct": null,
           "warm_build_improvement_pct": null,
-          "cold_improvement_pct": 5.44,
-          "cold_build_improvement_pct": 4.99,
-          "storage_improvement_pct": null,
-          "storage_saved_bytes": null
+          "cold_improvement_pct": 2.17,
+          "cold_build_improvement_pct": 1.84,
+          "storage_improvement_pct": 75.82,
+          "storage_saved_bytes": 9308122761
         }
       }
     }
