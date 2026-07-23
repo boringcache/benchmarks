@@ -70,6 +70,7 @@ jobs:
         working-directory: benchmarks
         run: |
           set -euo pipefail
+          ./scripts/check-helpers-aligned.sh
           ruby test/publish_index_test.rb
           ruby test/benchmark_reporting_test.rb
           ruby test/benchmark_registry_alignment_test.rb
