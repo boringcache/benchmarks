@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-24T13:10:38Z",
+  "generated_at": "2026-07-24T17:08:04Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -1166,33 +1166,33 @@
         "step": "Bazel build (remote cache)",
         "headline_scenario": "cold",
         "headline_label": "Commit Build",
-        "before": "23m 4s",
-        "after": "13m 45s",
-        "before_seconds": 1384.0,
-        "after_seconds": 825.0,
-        "faster": "40",
+        "before": "2m 21s",
+        "after": "0m 40s",
+        "before_seconds": 141.0,
+        "after_seconds": 40.0,
+        "faster": "72",
         "comparison": {
           "paired_on_head_sha": true,
-          "pairing_head_sha": "490e59a4f1bf4855e9893f3ffaf0193c04379642",
+          "pairing_head_sha": "0946c640f8c7686d9ddcc85d7f4b017e46e011b6",
           "sample_count": 1,
           "actions_cache": {
-            "run_id": 30052973245,
-            "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/30052973245",
-            "head_sha": "490e59a4f1bf4855e9893f3ffaf0193c04379642",
-            "created_at": "2026-07-23T23:22:04Z",
-            "cold_seconds": 1384.0,
-            "cold_build_seconds": 1302.0,
-            "cold_restore_or_setup_seconds": 82.0,
+            "run_id": 30109978088,
+            "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/30109978088",
+            "head_sha": "0946c640f8c7686d9ddcc85d7f4b017e46e011b6",
+            "created_at": "2026-07-24T16:40:11Z",
+            "cold_seconds": 141.0,
+            "cold_build_seconds": 41.0,
+            "cold_restore_or_setup_seconds": 100.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 1384.0,
+            "rolling_first_build_seconds": 141.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 1490.0,
-            "storage_bytes": 6803668955,
+            "run_total_seconds": 252.0,
+            "storage_bytes": 6820811645,
             "storage_source": "github-actions-cache-api",
             "storage_breakdown": null,
             "network_bytes_uploaded": null,
@@ -1238,14 +1238,14 @@
               "reseed_reason": null
             },
             "product_refs": {
-              "web_revision": "b9dba21d5",
+              "web_revision": "904344f57",
               "api_url": "https://api.boringcache.com"
             },
             "product_refs_consistent": true,
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-grpc",
             "cache_tag": null,
-            "run_uid": "gh-30052973245-1",
+            "run_uid": "gh-30109978088-1",
             "mode": "bazel",
             "adapter": "bazel",
             "docker_cache_from_refs": null,
@@ -1267,10 +1267,10 @@
               "benchmark": "grpc-bazel",
               "strategy": "actions-cache",
               "lane": "rolling",
-              "run_uid": "gh-30052973245-1",
-              "paired_run_id": 30052973245,
-              "build_seconds": 1302,
-              "setup_seconds": 82,
+              "run_uid": "gh-30109978088-1",
+              "paired_run_id": 30109978088,
+              "build_seconds": 41,
+              "setup_seconds": 100,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": null,
               "cache_save_export_seconds": null,
@@ -1301,30 +1301,30 @@
                   "confidence": "medium",
                   "summary": "Setup or restore overhead is large relative to build time.",
                   "evidence": {
-                    "setup_seconds": 82,
-                    "build_seconds": 1302
+                    "setup_seconds": 100,
+                    "build_seconds": 41
                   }
                 }
               ]
             }
           },
           "boringcache": {
-            "run_id": 30052973245,
-            "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/30052973245",
-            "head_sha": "490e59a4f1bf4855e9893f3ffaf0193c04379642",
-            "created_at": "2026-07-23T23:22:04Z",
-            "cold_seconds": 825.0,
-            "cold_build_seconds": 823.0,
-            "cold_restore_or_setup_seconds": 2.0,
+            "run_id": 30109978088,
+            "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/30109978088",
+            "head_sha": "0946c640f8c7686d9ddcc85d7f4b017e46e011b6",
+            "created_at": "2026-07-24T16:40:11Z",
+            "cold_seconds": 40.0,
+            "cold_build_seconds": 37.0,
+            "cold_restore_or_setup_seconds": 3.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 825.0,
+            "rolling_first_build_seconds": 40.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 1490.0,
+            "run_total_seconds": 252.0,
             "storage_bytes": null,
             "storage_source": null,
             "storage_breakdown": {
@@ -1347,9 +1347,9 @@
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
             "startup_prefetch": {
-              "duration_ms": 11307.0,
-              "target_blobs": 10442.0,
-              "target_bytes": 957396147.0,
+              "duration_ms": 14887.0,
+              "target_blobs": 11466.0,
+              "target_bytes": 959293421.0,
               "concurrency": 256.0,
               "initial_concurrency": 20.0,
               "final_concurrency": 256.0,
@@ -1399,14 +1399,14 @@
               "cli_version": "v1.13.102",
               "action_ref": "boringcache/one@v1",
               "action_sha": "58df2c0d6884ecd5e430feeeaf7e477656864771",
-              "web_revision": "b9dba21d5",
+              "web_revision": "904344f57",
               "api_url": "https://api.boringcache.com"
             },
             "product_refs_consistent": true,
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-grpc",
             "cache_tag": null,
-            "run_uid": "gh-30052973245-1",
+            "run_uid": "gh-30109978088-1",
             "mode": "bazel",
             "adapter": "bazel",
             "docker_cache_from_refs": null,
@@ -1423,25 +1423,25 @@
               "mode": "cache-registry",
               "adapter": "bazel",
               "workspace": "boringcache/benchmark-grpc",
-              "duration_ms": 825087,
+              "duration_ms": 38943,
               "identity": {
                 "attempt": "1",
-                "commit_sha": "490e59a4f1bf4855e9893f3ffaf0193c04379642",
+                "commit_sha": "0946c640f8c7686d9ddcc85d7f4b017e46e011b6",
                 "kind": "ci",
                 "provider": "github-actions",
-                "provider_run_uid": "30052973245",
+                "provider_run_uid": "30109978088",
                 "repository": "boringcache/benchmark-grpc",
                 "source_ref_name": "main",
                 "source_ref_type": "branch",
-                "summary_session_id": "proxy-summary-272785b7-6b54-48e1-8cc9-aa3a3e011475",
-                "uid": "github-actions:boringcache/benchmark-grpc:30052973245"
+                "summary_session_id": "proxy-summary-58eb523a-325f-45a6-8fed-26a23598ba79",
+                "uid": "github-actions:boringcache/benchmark-grpc:30109978088"
               },
               "proxy": {
                 "adapter": "bazel",
                 "blob_download_max_concurrency": 10,
                 "blob_prefetch_concurrency_source": "auto",
                 "blob_prefetch_max_concurrency": 2000,
-                "duration_ms": 825087,
+                "duration_ms": 38943,
                 "fail_on_cache_error": false,
                 "h2_initial_connection_window_bytes": 33554432,
                 "h2_initial_stream_window_bytes": 2097152,
@@ -1458,90 +1458,56 @@
               },
               "backend_api": {
                 "error_count_by_operation": {
-                  "cache_blobs_commit": 0,
-                  "cache_blobs_upload_urls": 0,
                   "cache_kv_entries_download_urls": 0,
-                  "cache_kv_entries_upsert": 0,
                   "cache_rollups_ingest": 0
                 },
                 "p50_ms_by_operation": {
-                  "cache_blobs_commit": 48,
-                  "cache_blobs_upload_urls": 61,
-                  "cache_kv_entries_download_urls": 1221,
-                  "cache_kv_entries_upsert": 94,
-                  "cache_rollups_ingest": 140
+                  "cache_kv_entries_download_urls": 2533,
+                  "cache_rollups_ingest": 160
                 },
                 "p95_ms_by_operation": {
-                  "cache_blobs_commit": 55,
-                  "cache_blobs_upload_urls": 70,
-                  "cache_kv_entries_download_urls": 2090,
-                  "cache_kv_entries_upsert": 1179,
-                  "cache_rollups_ingest": 161
+                  "cache_kv_entries_download_urls": 3213,
+                  "cache_rollups_ingest": 160
                 },
                 "request_count_by_operation": {
-                  "cache_blobs_commit": 674,
-                  "cache_blobs_upload_urls": 696,
                   "cache_kv_entries_download_urls": 6,
-                  "cache_kv_entries_upsert": 17,
-                  "cache_rollups_ingest": 27
+                  "cache_rollups_ingest": 1
                 },
                 "retry_count_by_operation": {
-                  "cache_blobs_commit": 0,
-                  "cache_blobs_upload_urls": 0,
                   "cache_kv_entries_download_urls": 0,
-                  "cache_kv_entries_upsert": 0,
                   "cache_rollups_ingest": 0
                 },
                 "total_error_count": 0,
-                "total_request_count": 1420,
+                "total_request_count": 7,
                 "total_retry_count": 0
               },
               "rails": {
                 "error_count_by_operation": {
-                  "cache_blobs_commit": 0,
-                  "cache_blobs_upload_urls": 0,
                   "cache_kv_entries_download_urls": 0,
-                  "cache_kv_entries_upsert": 0,
                   "cache_rollups_ingest": 0
                 },
                 "p50_ms_by_operation": {
-                  "cache_blobs_commit": 48,
-                  "cache_blobs_upload_urls": 61,
-                  "cache_kv_entries_download_urls": 1221,
-                  "cache_kv_entries_upsert": 94,
-                  "cache_rollups_ingest": 140
+                  "cache_kv_entries_download_urls": 2533,
+                  "cache_rollups_ingest": 160
                 },
                 "p95_ms_by_operation": {
-                  "cache_blobs_commit": 55,
-                  "cache_blobs_upload_urls": 70,
-                  "cache_kv_entries_download_urls": 2090,
-                  "cache_kv_entries_upsert": 1179,
-                  "cache_rollups_ingest": 161
+                  "cache_kv_entries_download_urls": 3213,
+                  "cache_rollups_ingest": 160
                 },
                 "request_count_by_operation": {
-                  "cache_blobs_commit": 674,
-                  "cache_blobs_upload_urls": 696,
                   "cache_kv_entries_download_urls": 6,
-                  "cache_kv_entries_upsert": 17,
-                  "cache_rollups_ingest": 27
+                  "cache_rollups_ingest": 1
                 },
                 "retry_count_by_operation": {
-                  "cache_blobs_commit": 0,
-                  "cache_blobs_upload_urls": 0,
                   "cache_kv_entries_download_urls": 0,
-                  "cache_kv_entries_upsert": 0,
                   "cache_rollups_ingest": 0
                 },
                 "total_error_count": 0,
-                "total_request_count": 1420,
+                "total_request_count": 7,
                 "total_retry_count": 0
               },
               "storage": {},
-              "lifecycle": {
-                "miss_reason_counts": {
-                  "action_cache_key_absent_from_warmed_cache": 663
-                }
-              },
+              "lifecycle": {},
               "oci": {
                 "buildkit_enrichment": "not_applicable",
                 "oci_engine_hydration_policy": "metadata-only",
@@ -1549,66 +1515,49 @@
               },
               "startup_prefetch": {
                 "startup_prefetch_already_local": 0,
-                "startup_prefetch_average_blob_bytes": 91687,
-                "startup_prefetch_blobs_per_sec": 923,
-                "startup_prefetch_bytes_per_sec": 84672870,
+                "startup_prefetch_average_blob_bytes": 83664,
+                "startup_prefetch_blobs_per_sec": 770,
+                "startup_prefetch_bytes_per_sec": 64438330,
                 "startup_prefetch_cold_blobs": 0,
                 "startup_prefetch_concurrency": 256,
                 "startup_prefetch_concurrency_adjustment_count": 8,
                 "startup_prefetch_concurrency_adjustments": "Increase:20->25,Increase:25->30,Increase:30->35,Increase:35->53,Increase:53->80,Increase:80->120,Increase:120->180,Increase:180->256",
                 "startup_prefetch_concurrency_reason": "many_small_blobs_io_bound",
                 "startup_prefetch_concurrency_source": "auto",
-                "startup_prefetch_duration_ms": 11307,
+                "startup_prefetch_duration_ms": 14887,
                 "startup_prefetch_failures": 0,
                 "startup_prefetch_final_concurrency": 256,
                 "startup_prefetch_initial_concurrency": 20,
-                "startup_prefetch_inserted": 10442,
+                "startup_prefetch_inserted": 11466,
                 "startup_prefetch_max_concurrency": 2000,
                 "startup_prefetch_max_observed_concurrency": 256,
                 "startup_prefetch_mode": "current_version",
                 "startup_prefetch_retries": 0,
-                "startup_prefetch_target_blobs": 10442,
-                "startup_prefetch_target_bytes": 957396147,
-                "startup_prefetch_total_unique_blobs": 18367,
+                "startup_prefetch_target_blobs": 11466,
+                "startup_prefetch_target_bytes": 959293421,
+                "startup_prefetch_total_unique_blobs": 19705,
                 "startup_prefetch_url_missing": 0,
-                "startup_prefetch_url_resolved": 10442
+                "startup_prefetch_url_resolved": 11466
               },
-              "kv_upload": {
-                "kv_upload_allowed_concurrency_max": 1,
-                "kv_upload_already_present_blobs": 3367,
-                "kv_upload_batches": 17,
-                "kv_upload_blobs_per_sec": 1,
-                "kv_upload_concurrency_reason": "large_blobs",
-                "kv_upload_concurrency_source": "auto",
-                "kv_upload_duration_ms": 1658,
-                "kv_upload_failed_blobs": 0,
-                "kv_upload_final_concurrency_max": 1,
-                "kv_upload_initial_concurrency_max": 1,
-                "kv_upload_missing_local_blobs": 0,
-                "kv_upload_requested_blobs": 3,
-                "kv_upload_uploaded_blobs": 3
-              },
+              "kv_upload": {},
               "singleflight": {
-                "singleflight_kv_download_leaders": 10442,
-                "singleflight_kv_lookup_leaders": 663
+                "singleflight_kv_download_leaders": 11466
               },
               "kv_lookup": {
-                "kv_lookup_bazel_ac_after_refresh_miss": 663,
-                "kv_lookup_bazel_ac_published_fast_hit": 2552,
-                "kv_lookup_bazel_ac_published_fast_miss": 663,
-                "kv_lookup_bazel_cas_published_fast_hit": 4792
+                "kv_lookup_bazel_ac_published_fast_hit": 3215,
+                "kv_lookup_bazel_cas_published_fast_hit": 3023
               },
               "local_cache": {
                 "blob_read": {
                   "blob_read_local_avg_ms": 0,
-                  "blob_read_local_bytes": 243303373,
-                  "blob_read_local_count": 7344,
-                  "blob_read_local_hit_rate_pct": 41,
-                  "blob_read_remote_avg_ms": 120,
-                  "blob_read_remote_bytes": 957396147,
-                  "blob_read_remote_count": 10442
+                  "blob_read_local_bytes": 49829538,
+                  "blob_read_local_count": 6238,
+                  "blob_read_local_hit_rate_pct": 35,
+                  "blob_read_remote_avg_ms": 185,
+                  "blob_read_remote_bytes": 959293421,
+                  "blob_read_remote_count": 11466
                 },
-                "blob_read_cache_bytes": 964765914,
+                "blob_read_cache_bytes": 959293421,
                 "blob_read_cache_max_bytes": 68719476736,
                 "blob_read_memory_cache_bytes": 0,
                 "blob_read_memory_cache_max_bytes": 0,
@@ -1620,31 +1569,19 @@
               "classification": {
                 "bottleneck": {
                   "adapter": "bazel",
-                  "candidates": [
-                    {
-                      "confidence": "low",
-                      "evidence": {
-                        "bytes_read": 243303373,
-                        "hit_rate": 91.7,
-                        "hits": 7344,
-                        "misses": 663
-                      },
-                      "kind": "cache_miss_quality",
-                      "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
-                    }
-                  ],
+                  "candidates": [],
                   "evidence": {
-                    "duration_ms": 825087,
+                    "duration_ms": 38943,
                     "errors": 0,
-                    "hit_rate": 91.7,
-                    "hits": 7344,
-                    "misses": 663,
+                    "hit_rate": 100.0,
+                    "hits": 6238,
+                    "misses": 0,
                     "write_degraded": 0,
                     "write_errors": 0,
-                    "writes": 3371
+                    "writes": 0
                   },
-                  "primary_bottleneck": "cache_miss_quality",
-                  "state": "bottleneck_detected"
+                  "primary_bottleneck": null,
+                  "state": "cache_side_clear"
                 },
                 "cache_key_lookup": {
                   "cas": {
@@ -1652,68 +1589,68 @@
                     "errors": 0,
                     "evidence": {
                       "absent_from_warmed_cache": 0,
-                      "action_cache_hits": 2552,
+                      "action_cache_hits": 3215,
                       "integrity_misses": 0,
                       "recent_negative_cache_misses": 0,
                       "shared_lookup_wait_misses": 0,
-                      "warmed_cache_hits": 4792,
+                      "warmed_cache_hits": 3023,
                       "warmed_cache_misses_before_refresh": 0,
                       "warmed_cache_refresh_hits": 0,
                       "warmed_cache_refresh_misses": 0
                     },
-                    "hits": 4792,
+                    "hits": 3023,
                     "misses": 0,
                     "owner": "none",
-                    "requests": 4792,
+                    "requests": 3023,
                     "scope": "cas",
                     "state": "cas_hot"
                   },
                   "confidence": "high",
                   "customer_action_required": false,
-                  "diagnosis": "Bazel asked for action-cache keys that were absent from the published cache tag, then wrote matching action-cache entries in the same run.",
+                  "diagnosis": "Bazel action-cache lookups hit the published cache tag.",
                   "errors": 0,
                   "evidence": {
-                    "absent_from_published_tag": 663,
-                    "absent_from_warmed_cache": 663,
+                    "absent_from_published_tag": 0,
+                    "absent_from_warmed_cache": 0,
                     "integrity_misses": 0,
-                    "published_tag_hits": 2552,
-                    "published_tag_misses_before_refresh": 663,
+                    "published_tag_hits": 3215,
+                    "published_tag_misses_before_refresh": 0,
                     "published_tag_refresh_hits": 0,
-                    "published_tag_refresh_misses": 663,
+                    "published_tag_refresh_misses": 0,
                     "recent_negative_cache_misses": 0,
-                    "same_run_action_cache_writes": 663,
+                    "same_run_action_cache_writes": 0,
                     "shared_lookup_wait_misses": 0,
-                    "warmed_cache_hits": 2552,
-                    "warmed_cache_misses_before_refresh": 663,
+                    "warmed_cache_hits": 3215,
+                    "warmed_cache_misses_before_refresh": 0,
                     "warmed_cache_refresh_hits": 0,
-                    "warmed_cache_refresh_misses": 663
+                    "warmed_cache_refresh_misses": 0
                   },
-                  "hits": 2552,
-                  "misses": 663,
-                  "next_step": "No service action needed. Treat this as a rolling cache population run; compare benchmark history and tag retention if it repeats unexpectedly.",
+                  "hits": 3215,
+                  "misses": 0,
+                  "next_step": "No action needed.",
                   "owner": "none",
                   "requests": 3215,
                   "scope": "action_cache",
-                  "state": "action_cache_repopulated_this_run",
+                  "state": "action_cache_hot",
                   "tool": "bazel"
                 },
                 "cache_temperature": {
                   "errors": 0,
-                  "hit_rate": 91.7,
-                  "hits": 7344,
-                  "likely_reason": "partial_key_churn_or_new_work",
-                  "misses": 663,
-                  "state": "mostly_hot_with_misses",
-                  "writes": 3371
+                  "hit_rate": 100.0,
+                  "hits": 6238,
+                  "likely_reason": "all_reads_hit",
+                  "misses": 0,
+                  "state": "hot",
+                  "writes": 0
                 },
                 "issue_candidates": [],
-                "primary_bottleneck": "cache_miss_quality"
+                "primary_bottleneck": null
               }
             },
             "cache_review": {
               "schema_version": "benchmark_cache_review.v1",
               "summary_schema": "cache-session-v2",
-              "summary_session_id": "proxy-summary-272785b7-6b54-48e1-8cc9-aa3a3e011475",
+              "summary_session_id": "proxy-summary-58eb523a-325f-45a6-8fed-26a23598ba79",
               "tool": "bazel",
               "cache_target": {
                 "workspace": "boringcache/benchmark-grpc",
@@ -1722,10 +1659,10 @@
               },
               "project_hints": [],
               "phase_hints": [],
-              "primary_bottleneck": "cache_miss_quality",
-              "diagnostic_classification": "bottleneck_detected",
+              "primary_bottleneck": "cache_side_clear",
+              "diagnostic_classification": "cache_side_clear",
               "reason_codes": [
-                "cache_miss_quality"
+                "native_tool_work"
               ],
               "native_tool": null,
               "diagnostic_label": null,
@@ -1739,13 +1676,13 @@
               "value_detail": null,
               "value_next_action": null,
               "value_evidence": [],
-              "hit_count": 7344,
-              "miss_count": 663,
-              "hit_rate": 91.7,
+              "hit_count": 6238,
+              "miss_count": 0,
+              "hit_rate": 100,
               "error_count": 0,
               "bytes_read": null,
               "bytes_written": null,
-              "duration_seconds": 825.087,
+              "duration_seconds": 38.943,
               "issue_candidates": []
             },
             "summary_schema": null,
@@ -1757,17 +1694,17 @@
               "benchmark": "grpc-bazel",
               "strategy": "boringcache",
               "lane": "rolling",
-              "run_uid": "gh-30052973245-1",
-              "paired_run_id": 30052973245,
-              "build_seconds": 823,
-              "setup_seconds": 2,
+              "run_uid": "gh-30109978088-1",
+              "paired_run_id": 30109978088,
+              "build_seconds": 37,
+              "setup_seconds": 3,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": 0,
               "cache_save_export_seconds": 0,
               "buildkit_cached_steps": null,
-              "hit_count": 7344,
-              "miss_count": 663,
-              "hit_rate": 91.7,
+              "hit_count": 6238,
+              "miss_count": 0,
+              "hit_rate": 100,
               "prior_cache_state": "unknown",
               "new_blob_bytes": null,
               "buildkit_prewarm": {
@@ -1785,17 +1722,7 @@
               },
               "native_tool": null,
               "issue_candidates": [],
-              "hypotheses": [
-                {
-                  "id": "cache_miss_quality",
-                  "confidence": "low",
-                  "summary": "The native tool still missed cache entries during the measured build.",
-                  "evidence": {
-                    "miss_count": 663,
-                    "hit_rate": 91.7
-                  }
-                }
-              ]
+              "hypotheses": []
             }
           },
           "reporting": {
@@ -1803,8 +1730,8 @@
           },
           "warm_improvement_pct": null,
           "warm_build_improvement_pct": null,
-          "cold_improvement_pct": 40.39,
-          "cold_build_improvement_pct": 36.79,
+          "cold_improvement_pct": 71.63,
+          "cold_build_improvement_pct": 9.76,
           "storage_improvement_pct": null,
           "storage_saved_bytes": null
         }
