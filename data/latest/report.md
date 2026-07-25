@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-07-24 20:56 UTC
+Generated: 2026-07-25 01:12 UTC
 
 Coverage: 20 benchmarks; fresh 7/20, rolling 20/20.
 
@@ -27,17 +27,17 @@ Rows are latest complete same-commit pairs.
 | Immich | Commit Build | 8m 28s | 3m 18s | 61% faster | 6.92 GB less (70.62%) |
 | Mastodon | Commit Build | 3m 1s | 1m 35s | 48% faster | n/a |
 | Mastodon Streaming | Commit Build | 0m 6s | 0m 16s | 167% slower | n/a |
-| Discourse | Commit Build | 4m 0s | 2m 58s | 26% faster | 8.90 GB less (89.6%) |
-| Discourse Base Deps | Commit Build | 0m 10s | 0m 8s | near tie | 9.23 GB less (92.93%) |
-| Discourse Web-Only Image | Commit Build | 0m 7s | 0m 6s | near tie | 8.61 GB less (86.7%) |
-| Discourse Release Image | Commit Build | 0m 17s | 0m 6s | 65% faster | 8.51 GB less (85.7%) |
-| Discourse Test Image | Commit Build | 0m 14s | 0m 6s | 57% faster | 7.98 GB less (80.35%) |
-| PostHog | Commit Build | 26m 24s | 13m 52s | 47% faster | n/a |
+| Discourse | Commit Build | 4m 4s | 2m 42s | 34% faster | 8.78 GB less (89.47%) |
+| Discourse Base Deps | Commit Build | 0m 8s | 0m 7s | near tie | 9.11 GB less (92.84%) |
+| Discourse Web-Only Image | Commit Build | 0m 21s | 0m 10s | 52% faster | 8.49 GB less (86.54%) |
+| Discourse Release Image | Commit Build | 0m 8s | 0m 16s | 100% slower | 8.39 GB less (85.52%) |
+| Discourse Test Image | Commit Build | 0m 12s | 0m 24s | 100% slower | 7.86 GB less (80.12%) |
+| PostHog | Commit Build | 24m 10s | 13m 38s | 44% faster | n/a |
 | Storybook | Commit Build | 2m 48s | 3m 27s | 23% slower | 1.04 GB less (53.56%) |
 | OpenTelemetry Java | Commit Build | 1m 12s | 2m 6s | 75% slower | 2.47 GB less (79.16%) |
 | Spring AI | Commit Build | 0m 39s | 0m 41s | near tie | 886.49 MB less (40.07%) |
 | gRPC | Commit Build | 1m 15s | 0m 57s | 24% faster | n/a |
-| Zed | Commit Build | 27m 46s | 27m 14s | near tie | 28.67 MB less (0.25%) |
+| Zed | Commit Build | 33m 5s | 34m 17s | 4% slower | 1.46 GB more (13.03%) |
 | n8n | Commit Build | 3m 30s | 3m 28s | near tie | 369.03 MB less (10.9%) |
 | n8n Docker | Commit Build | 4m 46s | 2m 59s | 37% faster | n/a |
 | n8n Runners | Commit Build | 0m 54s | 0m 42s | 22% faster | n/a |
