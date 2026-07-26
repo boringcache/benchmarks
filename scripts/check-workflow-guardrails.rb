@@ -53,6 +53,9 @@ CANONICAL_DOCKER_PRODUCT_ASSERTION = File.expand_path(
 )
 
 ECR_RUNTIME_PATTERN = /(?:\becr-cache\b|\becr_(?:region|role_arn|registry|repository|allowed_account_ids)\b|(?:DOCKER_BENCHMARK|BENCHMARK)_ECR_|aws-actions\/(?:configure-aws-credentials|amazon-ecr-login)|\baws\s+ecr\b)/i
+REQUIRED_SEED_CONSUMER_PATTERN = /(?:^|\n)\s*needs:\s*(?:\[[^\]]*\bseed-cache\b[^\]]*\]|seed-cache\b)/
+BORINGCACHE_ACTION_PATTERN = /^\s*(?:-\s*)?uses:\s*boringcache\/one@/m
+STRICT_FRESH_SEED_PATTERN = /^\s*fail-on-cache-error:\s*(?:['"]?true['"]?|\$\{\{\s*inputs\.cache_lane\s*==\s*['"]fresh['"]\s*\}\})\s*$/m
 
 def check_ecr_retired(repo_name:, repo_path:)
   paths = [
@@ -93,6 +96,12 @@ registry_by_repo.each do |repo_name, benchmarks|
       next unless text.match?(pattern)
 
       errors << "#{repo_name}/#{relative_path}: #{message}"
+    end
+
+    if text.match?(REQUIRED_SEED_CONSUMER_PATTERN) &&
+       text.match?(BORINGCACHE_ACTION_PATTERN) &&
+       !text.match?(STRICT_FRESH_SEED_PATTERN)
+      errors << "#{repo_name}/#{relative_path}: a fresh BoringCache seed consumed by a warm job must set fail-on-cache-error for the fresh lane"
     end
   end
 

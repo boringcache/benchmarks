@@ -534,6 +534,99 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     end
   end
 
+  def test_matching_native_evidence_owns_cache_effectiveness
+    Dir.mktmpdir("bc-artifact-inputs") do |dir|
+      summary_path = File.join(dir, "summary.json")
+      stats_path = File.join(dir, "sccache-stats.txt")
+      File.write(summary_path, JSON.generate(
+        "schema" => "cache-session-v2",
+        "adapter" => "sccache",
+        "classification" => {
+          "primary_bottleneck" => "cache_miss_quality",
+          "bottleneck" => {
+            "state" => "bottleneck_detected",
+            "evidence" => { "hits" => 3, "misses" => 2117, "hit_rate" => 0.1 }
+          },
+          "cache_temperature" => { "hits" => 3, "misses" => 2117, "hit_rate" => 0.1 }
+        }
+      ))
+      File.write(stats_path, <<~STATS)
+        Compile requests                  2420
+        Compile requests executed         2120
+        Cache hits                         2112
+        Cache misses                          0
+        Cache errors                          0
+        Non-cacheable calls                 292
+        Non-cacheable reasons:
+        crate-type                          245
+      STATS
+
+      payload = write_artifact(
+        "--cache-session-summary-json", summary_path,
+        "--sccache-stats-file", stats_path,
+        benchmark: "zed-sccache"
+      )
+
+      review = payload.fetch("cache_review")
+      assert_equal "sccache --show-stats", review["cache_effectiveness_source"]
+      assert_equal 2112, review["hit_count"]
+      assert_equal 0, review["miss_count"]
+      assert_equal 100.0, review["hit_rate"]
+      assert_equal 0, review["error_count"]
+      assert_equal "native_tool_work", review["primary_bottleneck"]
+      assert_equal "native_tool_work", review["diagnostic_classification"]
+      assert_includes review["reason_codes"], "native_tool_work"
+      refute_includes review["reason_codes"], "cache_miss_quality"
+
+      slow_reason = payload.fetch("slow_reason")
+      assert_equal "sccache --show-stats", slow_reason["cache_effectiveness_source"]
+      assert_equal 2112, slow_reason["hit_count"]
+      assert_equal 0, slow_reason["miss_count"]
+      assert_equal 100.0, slow_reason["hit_rate"]
+      hypothesis_ids = slow_reason.fetch("hypotheses").map { |row| row.fetch("id") }
+      assert_includes hypothesis_ids, "native_tool_work"
+      refute_includes hypothesis_ids, "cache_miss_quality"
+      refute_includes hypothesis_ids, "partial_cache_reuse"
+    end
+  end
+
+  def test_native_evidence_does_not_replace_another_adapters_cache_metrics
+    Dir.mktmpdir("bc-artifact-inputs") do |dir|
+      summary_path = File.join(dir, "summary.json")
+      stats_path = File.join(dir, "sccache-stats.txt")
+      File.write(summary_path, JSON.generate(
+        "schema" => "cache-session-v2",
+        "adapter" => "oci",
+        "metrics" => { "total_hits" => 4, "total_misses" => 6 },
+        "classification" => { "primary_bottleneck" => "cache_miss_quality" }
+      ))
+      File.write(stats_path, <<~STATS)
+        Compile requests                    10
+        Compile requests executed           10
+        Cache hits                           10
+        Cache misses                          0
+        Cache errors                          0
+        Non-cacheable calls                   0
+      STATS
+
+      payload = write_artifact(
+        "--cache-session-summary-json", summary_path,
+        "--sccache-stats-file", stats_path,
+        benchmark: "docker-sccache"
+      )
+
+      review = payload.fetch("cache_review")
+      assert_equal "cache_session_summary", review["cache_effectiveness_source"]
+      assert_equal "oci", review["tool"]
+      assert_equal 4, review["hit_count"]
+      assert_equal 6, review["miss_count"]
+      assert_equal 40.0, review["hit_rate"]
+      assert_equal "cache_miss_quality", review["primary_bottleneck"]
+      assert_equal 4, payload.dig("slow_reason", "hit_count")
+      assert_equal 6, payload.dig("slow_reason", "miss_count")
+    end
+  end
+
   def test_startup_prefetch_fields_are_written
     payload = write_artifact(
       "--startup-prefetch-duration-ms", "152000",
