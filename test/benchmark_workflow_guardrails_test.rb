@@ -99,4 +99,62 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
       assert_includes stderr, "composite run steps must declare shell"
     end
   end
+
+  def test_required_boringcache_seed_must_fail_at_the_save_boundary
+    Dir.mktmpdir("benchmark-workflow-guardrails-") do |repos_dir|
+      repo_dir = File.join(repos_dir, "benchmark-storybook")
+      workflows_dir = File.join(repo_dir, ".github", "workflows")
+      FileUtils.mkdir_p(workflows_dir)
+      File.write(
+        File.join(repo_dir, ".boringcache.toml"),
+        "workspace = \"boringcache/benchmark-storybook\"\n\n[adapters.nx]\ntag = \"storybook-nx\"\n"
+      )
+      workflow_path = File.join(workflows_dir, "storybook-benchmark.yml")
+      File.write(workflow_path, <<~YAML)
+        on:
+          workflow_dispatch:
+        jobs:
+          seed-cache:
+            steps:
+              - uses: boringcache/one@9721d419d2c78c0780963d297eb3f81f24641a27
+                with:
+                  setup: none
+                  mode: nx
+                  trust-policy: publish
+          warm:
+            needs: seed-cache
+            steps:
+              - run: yarn build
+      YAML
+
+      _stdout, stderr, status = Open3.capture3(SCRIPT, repos_dir)
+
+      refute status.success?
+      assert_includes stderr, "benchmark-storybook/.github/workflows/storybook-benchmark.yml"
+      assert_includes stderr, "must set fail-on-cache-error for the fresh lane"
+
+      File.write(workflow_path, <<~YAML)
+        on:
+          workflow_dispatch:
+        jobs:
+          seed-cache:
+            steps:
+              - uses: boringcache/one@9721d419d2c78c0780963d297eb3f81f24641a27
+                with:
+                  setup: none
+                  mode: nx
+                  trust-policy: publish
+                  fail-on-cache-error: ${{ inputs.cache_lane == 'fresh' }}
+          warm:
+            needs: seed-cache
+            steps:
+              - run: yarn build
+      YAML
+
+      stdout, stderr, status = Open3.capture3(SCRIPT, repos_dir)
+
+      assert status.success?, "workflow guardrails failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
+      assert_includes stdout, "benchmark workflow guardrails passed"
+    end
+  end
 end
