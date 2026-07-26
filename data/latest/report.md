@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-07-26 12:58 UTC
+Generated: 2026-07-26 16:52 UTC
 
 Coverage: 20 benchmarks; fresh 7/20, rolling 20/20.
 
@@ -22,7 +22,7 @@ Rows are latest complete same-commit pairs.
 
 | Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
-| Hugo | Commit Build | 3m 14s | 2m 29s | 23% faster | 4.81 GB less (93.41%) |
+| Hugo | Commit Build | 2m 55s | 2m 39s | 9% faster | 4.89 GB less (93.51%) |
 | Hugo Go | Commit Build | 0m 15s | 0m 19s | near tie | 339.68 MB less (55.99%) |
 | Immich | Commit Build | 8m 28s | 3m 18s | 61% faster | 6.92 GB less (70.62%) |
 | Mastodon | Commit Build | 3m 1s | 1m 35s | 48% faster | n/a |
@@ -32,12 +32,12 @@ Rows are latest complete same-commit pairs.
 | Discourse Web-Only Image | Commit Build | 9m 58s | 5m 29s | 45% faster | 8.68 GB less (86.79%) |
 | Discourse Release Image | Commit Build | 11m 27s | 7m 54s | 31% faster | 12.60 GB less (89.87%) |
 | Discourse Test Image | Commit Build | 10m 4s | 6m 36s | investigation only | 8.05 GB less (80.49%) |
-| PostHog | Commit Build | 20m 43s | 14m 0s | 32% faster | n/a |
+| PostHog | Commit Build | 0m 24s | 0m 26s | near tie | n/a |
 | Storybook | Commit Build | 2m 48s | 3m 27s | 23% slower | 1.04 GB less (53.56%) |
 | OpenTelemetry Java | Commit Build | 1m 12s | 2m 6s | 75% slower | 2.47 GB less (79.16%) |
 | Spring AI | Commit Build | 0m 39s | 0m 41s | near tie | 886.49 MB less (40.07%) |
 | gRPC | Commit Build | 1m 15s | 0m 57s | 24% faster | n/a |
-| Zed | Commit Build | 20m 29s | 20m 34s | near tie | 5.43 GB more (48.58%) |
+| Zed | Commit Build | 21m 1s | 20m 50s | near tie | 5.44 GB more (48.71%) |
 | n8n | Commit Build | 3m 34s | 3m 35s | near tie | 568.62 MB less (15.84%) |
 | n8n Docker | Commit Build | 5m 8s | 3m 4s | 40% faster | n/a |
 | n8n Runners | Commit Build | 1m 14s | 0m 43s | 42% faster | n/a |
