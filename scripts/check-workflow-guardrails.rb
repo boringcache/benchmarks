@@ -57,6 +57,25 @@ REQUIRED_SEED_CONSUMER_PATTERN = /(?:^|\n)\s*needs:\s*(?:\[[^\]]*\bseed-cache\b[
 BORINGCACHE_ACTION_PATTERN = /^\s*(?:-\s*)?uses:\s*boringcache\/one@/m
 STRICT_FRESH_SEED_PATTERN = /^\s*fail-on-cache-error:\s*(?:['"]?true['"]?|\$\{\{\s*inputs\.cache_lane\s*==\s*['"]fresh['"]\s*\}\})\s*$/m
 PUBLISH_FRESH_PR_SEED_PATTERN = /^\s*save-on-pull-request:\s*(?:['"]?true['"]?|\$\{\{\s*inputs\.cache_lane\s*==\s*['"]fresh['"]\s*\}\})\s*$/m
+CACHE_TAG_PATTERN = /^\s*cache-tag:/m
+READ_ONLY_CACHE_PATTERN = /^\s*read-only:\s*['"]?true['"]?\s*$/m
+
+def boringcache_action_blocks(text)
+  lines = text.lines
+
+  lines.each_index.filter_map do |index|
+    line = lines[index]
+    next unless line.match?(BORINGCACHE_ACTION_PATTERN)
+
+    indentation = line[/^\s*/].length
+    step_indentation = line.match?(/^\s*-\s*uses:/) ? indentation : [indentation - 2, 0].max
+    next_step = ((index + 1)...lines.length).find do |candidate|
+      lines[candidate].match?(/^ {#{step_indentation}}-\s/)
+    end
+
+    lines[index...(next_step || lines.length)].join
+  end
+end
 
 def check_ecr_retired(repo_name:, repo_path:)
   paths = [
@@ -100,11 +119,18 @@ registry_by_repo.each do |repo_name, benchmarks|
     end
 
     if text.match?(REQUIRED_SEED_CONSUMER_PATTERN) && text.match?(BORINGCACHE_ACTION_PATTERN)
-      unless text.match?(PUBLISH_FRESH_PR_SEED_PATTERN)
+      cache_action_blocks = boringcache_action_blocks(text).select { |block| block.match?(CACHE_TAG_PATTERN) }
+      seed_action_blocks = cache_action_blocks.reject { |block| block.match?(READ_ONLY_CACHE_PATTERN) }
+      restore_action_blocks = cache_action_blocks.select { |block| block.match?(READ_ONLY_CACHE_PATTERN) }
+
+      unless seed_action_blocks.any? && seed_action_blocks.all? { |block| block.match?(PUBLISH_FRESH_PR_SEED_PATTERN) }
         errors << "#{repo_name}/#{relative_path}: a fresh BoringCache seed consumed by a warm job must enable save-on-pull-request for the fresh lane"
       end
-      unless text.match?(STRICT_FRESH_SEED_PATTERN)
+      unless seed_action_blocks.any? && seed_action_blocks.all? { |block| block.match?(STRICT_FRESH_SEED_PATTERN) }
         errors << "#{repo_name}/#{relative_path}: a fresh BoringCache seed consumed by a warm job must set fail-on-cache-error for the fresh lane"
+      end
+      unless restore_action_blocks.any? && restore_action_blocks.all? { |block| block.match?(PUBLISH_FRESH_PR_SEED_PATTERN) }
+        errors << "#{repo_name}/#{relative_path}: a warm BoringCache restore must enable save-on-pull-request for the fresh lane to resolve its PR-scoped seed"
       end
     end
   end

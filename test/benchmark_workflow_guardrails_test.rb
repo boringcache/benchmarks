@@ -52,7 +52,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
     end
   end
 
-  def test_required_boringcache_seed_must_fail_at_the_save_boundary
+  def test_required_boringcache_seed_and_warm_restore_share_pr_scope
     Dir.mktmpdir("benchmark-workflow-guardrails-") do |repos_dir|
       workflows_dir = File.join(repos_dir, "benchmark-storybook", ".github", "workflows")
       FileUtils.mkdir_p(workflows_dir)
@@ -66,10 +66,15 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
               - uses: boringcache/one@v1
                 with:
                   mode: nx
+                  cache-tag: storybook-run
           warm:
             needs: seed-cache
             steps:
-              - run: yarn build
+              - uses: boringcache/one@v1
+                with:
+                  mode: nx
+                  cache-tag: storybook-run
+                  read-only: true
       YAML
 
       _stdout, stderr, status = Open3.capture3(SCRIPT, repos_dir)
@@ -78,6 +83,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
       assert_includes stderr, "benchmark-storybook/.github/workflows/storybook-benchmark.yml"
       assert_includes stderr, "must enable save-on-pull-request for the fresh lane"
       assert_includes stderr, "must set fail-on-cache-error for the fresh lane"
+      assert_includes stderr, "must enable save-on-pull-request for the fresh lane to resolve its PR-scoped seed"
 
       File.write(workflow_path, <<~YAML)
         on:
@@ -88,12 +94,18 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
               - uses: boringcache/one@v1
                 with:
                   mode: nx
+                  cache-tag: storybook-run
                   save-on-pull-request: ${{ inputs.cache_lane == 'fresh' }}
                   fail-on-cache-error: ${{ inputs.cache_lane == 'fresh' }}
           warm:
             needs: seed-cache
             steps:
-              - run: yarn build
+              - uses: boringcache/one@v1
+                with:
+                  mode: nx
+                  cache-tag: storybook-run
+                  read-only: true
+                  save-on-pull-request: ${{ inputs.cache_lane == 'fresh' }}
       YAML
 
       stdout, stderr, status = Open3.capture3(SCRIPT, repos_dir)
