@@ -3,7 +3,8 @@
 # sync-helpers.sh
 #
 # Copies canonical helper scripts from benchmarks/scripts/canonical/
-# into every benchmark-*/scripts/ directory under benchmarks-repos/.
+# into every active benchmark repo and docker-cache-proofs checkout under the
+# configured repository directory.
 #
 # Usage:
 #   ./sync-helpers.sh                # dry-run; shows planned copies
@@ -149,7 +150,7 @@ missing_target_dir=0
 
 for helper in "${helpers[@]}"; do
   canonical_path="$canonical_dir/$helper"
-  for repo in "$repos_dir"/benchmark-*; do
+  for repo in "$repos_dir"/benchmark-* "$repos_dir"/docker-cache-proofs "$repos_dir"/../docker-cache-proofs; do
     [[ -d "$repo" ]] || continue
     repo_name="$(basename "$repo")"
 

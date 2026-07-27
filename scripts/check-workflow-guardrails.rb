@@ -72,6 +72,7 @@ PUBLIC_CONTENT_MARKERS = [
   "source monorepo", "synced from the monorepo",
   "generated from the monorepo", "internal source", "/Users/", ".planning/"
 ].freeze
+HIDDEN_CACHE_SURFACE = ["cache-registry", "go-cacheprog", "run --proxy"].freeze
 
 def workflow_steps(document)
   steps = []
@@ -83,6 +84,30 @@ def workflow_steps(document)
   runs = document.is_a?(Hash) ? document["runs"] : nil
   steps.concat(runs["steps"]) if runs.is_a?(Hash) && runs["steps"].is_a?(Array)
   steps.select { |step| step.is_a?(Hash) }
+end
+
+def duplicate_yaml_keys(source)
+  duplicates = []
+  tree = Psych.parse_stream(source)
+  visit = lambda do |node|
+    if node.is_a?(Psych::Nodes::Mapping)
+      seen = {}
+      node.children.each_slice(2) do |key, value|
+        if key.is_a?(Psych::Nodes::Scalar)
+          normalized_key = key.value.downcase
+          duplicates << [key.value, key.start_line + 1] if seen.key?(normalized_key)
+          seen[normalized_key] = true
+        end
+        visit.call(value)
+      end
+    else
+      Array(node.children).each { |child| visit.call(child) }
+    end
+  end
+  visit.call(tree)
+  duplicates
+rescue Psych::SyntaxError
+  []
 end
 
 def adapter_has_tag?(repo_plan, mode)
@@ -141,10 +166,17 @@ registry_by_repo.each do |repo_name, benchmarks|
     PUBLIC_CONTENT_MARKERS.each do |marker|
       errors << "#{repo_name}/#{relative_path}: private publishing detail #{marker.inspect}" if text.downcase.include?(marker.downcase)
     end
+    HIDDEN_CACHE_SURFACE.each do |marker|
+      errors << "#{repo_name}/#{relative_path}: exposes hidden cache interface #{marker.inspect}" if text.downcase.include?(marker.downcase)
+    end
   end
 
   workflow_text_by_path.each do |path, text|
     relative_path = path.delete_prefix("#{repo_path}/")
+
+    duplicate_yaml_keys(text).each do |key, line|
+      errors << "#{repo_name}/#{relative_path}:#{line}: duplicate YAML key #{key.inspect}"
+    end
 
     BANNED_WORKFLOW_PATTERNS.each do |pattern, message|
       next unless text.match?(pattern)
@@ -153,6 +185,16 @@ registry_by_repo.each do |repo_name, benchmarks|
     end
 
     document = YAML.safe_load(text, aliases: true)
+    runs = document.is_a?(Hash) ? document["runs"] : nil
+    if runs.is_a?(Hash) && runs["using"] == "composite"
+      Array(runs["steps"]).each do |step|
+        next unless step.is_a?(Hash) && step.key?("run") && step["shell"].to_s.empty?
+
+        step_name = step.fetch("name", "unnamed step")
+        errors << "#{repo_name}/#{relative_path} (#{step_name}): composite run steps must declare shell"
+      end
+    end
+
     workflow_steps(document).each do |step|
       uses = step["uses"].to_s
       next unless uses.start_with?("boringcache/one@")
