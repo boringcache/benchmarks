@@ -120,7 +120,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
                 with:
                   setup: none
                   mode: nx
-                  trust-policy: publish
+                  trust-policy: restore
           warm:
             needs: seed-cache
             steps:
@@ -131,6 +131,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
 
       refute status.success?
       assert_includes stderr, "benchmark-storybook/.github/workflows/storybook-benchmark.yml"
+      assert_includes stderr, "must use trust-policy: publish"
       assert_includes stderr, "must set fail-on-cache-error for the fresh lane"
 
       File.write(workflow_path, <<~YAML)
