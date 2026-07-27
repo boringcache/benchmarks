@@ -57,8 +57,6 @@ ECR_RUNTIME_PATTERN = /(?:\becr-cache\b|\becr_(?:region|role_arn|registry|reposi
 REQUIRED_SEED_CONSUMER_PATTERN = /(?:^|\n)\s*needs:\s*(?:\[[^\]]*\bseed-cache\b[^\]]*\]|seed-cache\b)/
 BORINGCACHE_ACTION_PATTERN = /^\s*(?:-\s*)?uses:\s*boringcache\/one@/m
 STRICT_FRESH_SEED_PATTERN = /^\s*fail-on-cache-error:\s*(?:['"]?true['"]?|\$\{\{\s*inputs\.cache_lane\s*==\s*['"]fresh['"]\s*\}\})\s*$/m
-PUBLISH_FRESH_SEED_PATTERN = /^\s*trust-policy:\s*['"]?publish['"]?\s*$/m
-
 REVIEWED_ONE_ACTION_SHA = "9721d419d2c78c0780963d297eb3f81f24641a27"
 PUBLIC_CACHE_MODES = %w[archive docker buildkit bazel go gradle maven nx sccache turbo].freeze
 RETIRED_CACHE_TOKENS = %w[BORINGCACHE_API_TOKEN BORINGCACHE_TOKEN].freeze
@@ -119,6 +117,26 @@ end
 def adapter_has_tag?(repo_plan, mode)
   section = repo_plan[/^\[adapters\.#{Regexp.escape(mode)}\]\s*$\n(?<body>.*?)(?=^\[|\z)/m, :body]
   section&.match?(/^tag\s*=\s*"[^"]+"\s*$/)
+end
+
+def boringcache_action_steps(steps)
+  Array(steps).select do |step|
+    step.is_a?(Hash) && step["uses"].to_s.start_with?("boringcache/one@")
+  end
+end
+
+def job_needs?(job, dependency)
+  needs = job.is_a?(Hash) ? job["needs"] : nil
+  needs == dependency || (needs.is_a?(Array) && needs.include?(dependency))
+end
+
+def action_inputs(step)
+  step["with"].is_a?(Hash) ? step["with"].transform_keys(&:to_s) : {}
+end
+
+def strict_fresh_seed?(value)
+  value == true || value.to_s.strip == "true" ||
+    value.to_s.match?(/\A\$\{\{\s*inputs\.cache_lane\s*==\s*['"]fresh['"]\s*\}\}\z/)
 end
 
 def check_ecr_retired(repo_name:, repo_path:)
@@ -190,16 +208,25 @@ registry_by_repo.each do |repo_name, benchmarks|
       errors << "#{repo_name}/#{relative_path}: #{message}"
     end
 
-    if text.match?(REQUIRED_SEED_CONSUMER_PATTERN) && text.match?(BORINGCACHE_ACTION_PATTERN)
-      unless text.match?(PUBLISH_FRESH_SEED_PATTERN)
+    document = YAML.safe_load(text, aliases: true)
+    jobs = document.is_a?(Hash) && document["jobs"].is_a?(Hash) ? document["jobs"] : {}
+    seed_job = jobs["seed-cache"]
+    consumer_jobs = jobs.each_value.select { |job| job_needs?(job, "seed-cache") }
+    if seed_job.is_a?(Hash) && consumer_jobs.any?
+      seed_actions = boringcache_action_steps(seed_job["steps"])
+      restore_actions = consumer_jobs.flat_map { |job| boringcache_action_steps(job["steps"]) }
+
+      unless seed_actions.any? && seed_actions.all? { |step| action_inputs(step)["trust-policy"] == "publish" }
         errors << "#{repo_name}/#{relative_path}: a fresh BoringCache seed consumed by a warm job must use trust-policy: publish"
       end
-      unless text.match?(STRICT_FRESH_SEED_PATTERN)
+      unless seed_actions.any? && seed_actions.all? { |step| strict_fresh_seed?(action_inputs(step)["fail-on-cache-error"]) }
         errors << "#{repo_name}/#{relative_path}: a fresh BoringCache seed consumed by a warm job must set fail-on-cache-error for the fresh lane"
+      end
+      unless restore_actions.any? && restore_actions.all? { |step| action_inputs(step)["trust-policy"] == "restore" }
+        errors << "#{repo_name}/#{relative_path}: a warm BoringCache consumer must use trust-policy: restore"
       end
     end
 
-    document = YAML.safe_load(text, aliases: true)
     runs = document.is_a?(Hash) ? document["runs"] : nil
     if runs.is_a?(Hash) && runs["using"] == "composite"
       Array(runs["steps"]).each do |step|
@@ -217,7 +244,7 @@ registry_by_repo.each do |repo_name, benchmarks|
       step_name = step.fetch("name", "unnamed step")
       location = "#{repo_name}/#{relative_path} (#{step_name})"
       action_ref = uses.delete_prefix("boringcache/one@")
-      inputs = step["with"].is_a?(Hash) ? step["with"].transform_keys(&:to_s) : {}
+      inputs = action_inputs(step)
       mode = inputs["mode"].to_s
       trust_policy = inputs["trust-policy"].to_s
 

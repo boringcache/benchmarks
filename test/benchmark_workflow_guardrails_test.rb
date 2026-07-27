@@ -100,7 +100,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
     end
   end
 
-  def test_required_boringcache_seed_must_fail_at_the_save_boundary
+  def test_required_boringcache_seed_and_warm_restore_use_explicit_lifecycle
     Dir.mktmpdir("benchmark-workflow-guardrails-") do |repos_dir|
       repo_dir = File.join(repos_dir, "benchmark-storybook")
       workflows_dir = File.join(repo_dir, ".github", "workflows")
@@ -124,7 +124,11 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
           warm:
             needs: seed-cache
             steps:
-              - run: yarn build
+              - uses: boringcache/one@9721d419d2c78c0780963d297eb3f81f24641a27
+                with:
+                  setup: none
+                  mode: nx
+                  trust-policy: publish
       YAML
 
       _stdout, stderr, status = Open3.capture3(SCRIPT, repos_dir)
@@ -133,6 +137,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
       assert_includes stderr, "benchmark-storybook/.github/workflows/storybook-benchmark.yml"
       assert_includes stderr, "must use trust-policy: publish"
       assert_includes stderr, "must set fail-on-cache-error for the fresh lane"
+      assert_includes stderr, "warm BoringCache consumer must use trust-policy: restore"
 
       File.write(workflow_path, <<~YAML)
         on:
@@ -149,7 +154,11 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
           warm:
             needs: seed-cache
             steps:
-              - run: yarn build
+              - uses: boringcache/one@9721d419d2c78c0780963d297eb3f81f24641a27
+                with:
+                  setup: none
+                  mode: nx
+                  trust-policy: restore
       YAML
 
       stdout, stderr, status = Open3.capture3(SCRIPT, repos_dir)
