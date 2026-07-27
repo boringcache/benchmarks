@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require_relative "publish-index"
+require "yaml"
 
 def default_repos_dir
   candidates = [
@@ -54,6 +55,66 @@ CANONICAL_DOCKER_PRODUCT_ASSERTION = File.expand_path(
 
 ECR_RUNTIME_PATTERN = /(?:\becr-cache\b|\becr_(?:region|role_arn|registry|repository|allowed_account_ids)\b|(?:DOCKER_BENCHMARK|BENCHMARK)_ECR_|aws-actions\/(?:configure-aws-credentials|amazon-ecr-login)|\baws\s+ecr\b)/i
 
+REVIEWED_ONE_ACTION_SHA = "9721d419d2c78c0780963d297eb3f81f24641a27"
+PUBLIC_CACHE_MODES = %w[archive docker buildkit bazel go gradle maven nx sccache turbo].freeze
+RETIRED_CACHE_TOKENS = %w[BORINGCACHE_API_TOKEN BORINGCACHE_TOKEN].freeze
+RETIRED_ACTION_INPUTS = %w[
+  workspace cache-tag entries path key restore-keys enableCrossOsArchive
+  no-platform exclude-patterns allow-external-symlinks preset
+  runtime-cache-tag tool-version-scope require-oci-import-ready exclude
+  cache-runtime uv-version composer-version proxy-no-git proxy-no-platform
+  cache-mode turbo-api-url turbo-token turbo-team turbo-port nx-access-token
+  nx-port sccache sccache-mode rust-version toolchain targets components
+  profile cache-cargo cache-cargo-bin cache-target
+].freeze
+PUBLIC_CONTENT_MARKERS = [
+  "boringcache/monorepo", "private monorepo", "monorepo source",
+  "source monorepo", "synced from the monorepo",
+  "generated from the monorepo", "internal source", "/Users/", ".planning/"
+].freeze
+HIDDEN_CACHE_SURFACE = ["cache-registry", "go-cacheprog", "run --proxy"].freeze
+
+def workflow_steps(document)
+  steps = []
+  jobs = document.is_a?(Hash) ? document["jobs"] : nil
+  jobs&.each_value do |job|
+    steps.concat(job["steps"]) if job.is_a?(Hash) && job["steps"].is_a?(Array)
+  end
+
+  runs = document.is_a?(Hash) ? document["runs"] : nil
+  steps.concat(runs["steps"]) if runs.is_a?(Hash) && runs["steps"].is_a?(Array)
+  steps.select { |step| step.is_a?(Hash) }
+end
+
+def duplicate_yaml_keys(source)
+  duplicates = []
+  tree = Psych.parse_stream(source)
+  visit = lambda do |node|
+    if node.is_a?(Psych::Nodes::Mapping)
+      seen = {}
+      node.children.each_slice(2) do |key, value|
+        if key.is_a?(Psych::Nodes::Scalar)
+          normalized_key = key.value.downcase
+          duplicates << [key.value, key.start_line + 1] if seen.key?(normalized_key)
+          seen[normalized_key] = true
+        end
+        visit.call(value)
+      end
+    else
+      Array(node.children).each { |child| visit.call(child) }
+    end
+  end
+  visit.call(tree)
+  duplicates
+rescue Psych::SyntaxError
+  []
+end
+
+def adapter_has_tag?(repo_plan, mode)
+  section = repo_plan[/^\[adapters\.#{Regexp.escape(mode)}\]\s*$\n(?<body>.*?)(?=^\[|\z)/m, :body]
+  section&.match?(/^tag\s*=\s*"[^"]+"\s*$/)
+end
+
 def check_ecr_retired(repo_name:, repo_path:)
   paths = [
     *Dir[File.join(repo_path, ".github", "workflows", "*.{yml,yaml}")],
@@ -85,14 +146,79 @@ registry_by_repo.each do |repo_name, benchmarks|
     *Dir[File.join(repo_path, ".github", "actions", "**", "*.{yml,yaml}")]
   ].sort
   workflow_text_by_path = workflows.to_h { |path| [path, File.read(path)] }
+  plan_path = File.join(repo_path, ".boringcache.toml")
+  repo_plan = File.exist?(plan_path) ? File.read(plan_path) : ""
+  errors << "#{repo_name}/.boringcache.toml: missing CLI-owned repo plan" unless File.exist?(plan_path)
+  errors << "#{repo_name}/.boringcache.toml: missing workspace identity" unless repo_plan.match?(/^workspace\s*=\s*"[^"]+"\s*$/)
+
+  maintained_paths = [
+    File.join(repo_path, "README.md"),
+    plan_path,
+    *workflows,
+    *Dir[File.join(repo_path, "scripts", "**", "*")].select { |path| File.file?(path) }
+  ].select { |path| File.file?(path) }.uniq
+  maintained_paths.each do |path|
+    relative_path = path.delete_prefix("#{repo_path}/")
+    text = File.read(path)
+    RETIRED_CACHE_TOKENS.each do |token|
+      errors << "#{repo_name}/#{relative_path}: retired token #{token}" if text.match?(/\b#{token}\b/)
+    end
+    PUBLIC_CONTENT_MARKERS.each do |marker|
+      errors << "#{repo_name}/#{relative_path}: private publishing detail #{marker.inspect}" if text.downcase.include?(marker.downcase)
+    end
+    HIDDEN_CACHE_SURFACE.each do |marker|
+      errors << "#{repo_name}/#{relative_path}: exposes hidden cache interface #{marker.inspect}" if text.downcase.include?(marker.downcase)
+    end
+  end
 
   workflow_text_by_path.each do |path, text|
     relative_path = path.delete_prefix("#{repo_path}/")
+
+    duplicate_yaml_keys(text).each do |key, line|
+      errors << "#{repo_name}/#{relative_path}:#{line}: duplicate YAML key #{key.inspect}"
+    end
 
     BANNED_WORKFLOW_PATTERNS.each do |pattern, message|
       next unless text.match?(pattern)
 
       errors << "#{repo_name}/#{relative_path}: #{message}"
+    end
+
+    document = YAML.safe_load(text, aliases: true)
+    runs = document.is_a?(Hash) ? document["runs"] : nil
+    if runs.is_a?(Hash) && runs["using"] == "composite"
+      Array(runs["steps"]).each do |step|
+        next unless step.is_a?(Hash) && step.key?("run") && step["shell"].to_s.empty?
+
+        step_name = step.fetch("name", "unnamed step")
+        errors << "#{repo_name}/#{relative_path} (#{step_name}): composite run steps must declare shell"
+      end
+    end
+
+    workflow_steps(document).each do |step|
+      uses = step["uses"].to_s
+      next unless uses.start_with?("boringcache/one@")
+
+      step_name = step.fetch("name", "unnamed step")
+      location = "#{repo_name}/#{relative_path} (#{step_name})"
+      action_ref = uses.delete_prefix("boringcache/one@")
+      inputs = step["with"].is_a?(Hash) ? step["with"].transform_keys(&:to_s) : {}
+      mode = inputs["mode"].to_s
+
+      errors << "#{location}: use reviewed Action SHA #{REVIEWED_ONE_ACTION_SHA}" unless action_ref == REVIEWED_ONE_ACTION_SHA
+      errors << "#{location}: setup must be none" unless inputs["setup"] == "none"
+      errors << "#{location}: mode #{mode.inspect} is not canonical" unless PUBLIC_CACHE_MODES.include?(mode)
+
+      forbidden = inputs.keys & RETIRED_ACTION_INPUTS
+      errors << "#{location}: retired Action inputs #{forbidden.sort.join(', ')}" unless forbidden.empty?
+
+      if mode == "archive"
+        errors << "#{location}: archive mode must select cache-profiles" unless inputs.key?("cache-profiles")
+      elsif PUBLIC_CACHE_MODES.include?(mode) && !adapter_has_tag?(repo_plan, mode)
+        errors << "#{location}: .boringcache.toml must own [adapters.#{mode}].tag"
+      end
+    rescue Psych::Exception => error
+      errors << "#{repo_name}/#{relative_path}: invalid YAML (#{error.message.lines.first.strip})"
     end
   end
 

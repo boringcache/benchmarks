@@ -142,7 +142,7 @@ for helper in "${helpers[@]}"; do
   canonical_path="$canonical_dir/$helper"
   canonical_md5="$(md5_of "$canonical_path")"
 
-  for repo in "$repos_dir"/benchmark-*; do
+  for repo in "$repos_dir"/benchmark-* "$repos_dir"/docker-cache-proofs "$repos_dir"/../docker-cache-proofs; do
     [[ -d "$repo" ]] || continue
     repo_name="$(basename "$repo")"
     selected_repo "$repo_name" || continue
