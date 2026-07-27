@@ -76,6 +76,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
 
       refute status.success?
       assert_includes stderr, "benchmark-storybook/.github/workflows/storybook-benchmark.yml"
+      assert_includes stderr, "must enable save-on-pull-request for the fresh lane"
       assert_includes stderr, "must set fail-on-cache-error for the fresh lane"
 
       File.write(workflow_path, <<~YAML)
@@ -87,6 +88,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
               - uses: boringcache/one@v1
                 with:
                   mode: nx
+                  save-on-pull-request: ${{ inputs.cache_lane == 'fresh' }}
                   fail-on-cache-error: ${{ inputs.cache_lane == 'fresh' }}
           warm:
             needs: seed-cache

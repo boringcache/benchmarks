@@ -56,6 +56,7 @@ ECR_RUNTIME_PATTERN = /(?:\becr-cache\b|\becr_(?:region|role_arn|registry|reposi
 REQUIRED_SEED_CONSUMER_PATTERN = /(?:^|\n)\s*needs:\s*(?:\[[^\]]*\bseed-cache\b[^\]]*\]|seed-cache\b)/
 BORINGCACHE_ACTION_PATTERN = /^\s*(?:-\s*)?uses:\s*boringcache\/one@/m
 STRICT_FRESH_SEED_PATTERN = /^\s*fail-on-cache-error:\s*(?:['"]?true['"]?|\$\{\{\s*inputs\.cache_lane\s*==\s*['"]fresh['"]\s*\}\})\s*$/m
+PUBLISH_FRESH_PR_SEED_PATTERN = /^\s*save-on-pull-request:\s*(?:['"]?true['"]?|\$\{\{\s*inputs\.cache_lane\s*==\s*['"]fresh['"]\s*\}\})\s*$/m
 
 def check_ecr_retired(repo_name:, repo_path:)
   paths = [
@@ -98,10 +99,13 @@ registry_by_repo.each do |repo_name, benchmarks|
       errors << "#{repo_name}/#{relative_path}: #{message}"
     end
 
-    if text.match?(REQUIRED_SEED_CONSUMER_PATTERN) &&
-       text.match?(BORINGCACHE_ACTION_PATTERN) &&
-       !text.match?(STRICT_FRESH_SEED_PATTERN)
-      errors << "#{repo_name}/#{relative_path}: a fresh BoringCache seed consumed by a warm job must set fail-on-cache-error for the fresh lane"
+    if text.match?(REQUIRED_SEED_CONSUMER_PATTERN) && text.match?(BORINGCACHE_ACTION_PATTERN)
+      unless text.match?(PUBLISH_FRESH_PR_SEED_PATTERN)
+        errors << "#{repo_name}/#{relative_path}: a fresh BoringCache seed consumed by a warm job must enable save-on-pull-request for the fresh lane"
+      end
+      unless text.match?(STRICT_FRESH_SEED_PATTERN)
+        errors << "#{repo_name}/#{relative_path}: a fresh BoringCache seed consumed by a warm job must set fail-on-cache-error for the fresh lane"
+      end
     end
   end
 
