@@ -51,4 +51,36 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
       refute_includes stderr, "docs/ecr-history.md"
     end
   end
+
+  def test_cache_interface_and_public_boundary_are_locked
+    Dir.mktmpdir("benchmark-cache-interface-") do |repos_dir|
+      repo_dir = File.join(repos_dir, "benchmark-hugo")
+      workflows_dir = File.join(repo_dir, ".github", "workflows")
+      FileUtils.mkdir_p(workflows_dir)
+      File.write(File.join(repo_dir, ".boringcache.toml"), "workspace = \"boringcache/benchmark-hugo\"\n")
+      File.write(File.join(repo_dir, "README.md"), "Synced from the monorepo with BORINGCACHE_API_TOKEN.\n")
+      File.write(File.join(workflows_dir, "hugo-benchmark.yml"), <<~YAML)
+        on:
+          workflow_dispatch:
+        jobs:
+          benchmark:
+            steps:
+              - uses: boringcache/one@v1
+                with:
+                  setup: mise
+                  mode: nx-proxy
+                  workspace: boringcache/benchmark-hugo
+      YAML
+
+      _stdout, stderr, status = Open3.capture3(SCRIPT, repos_dir)
+
+      refute status.success?
+      assert_includes stderr, "retired token BORINGCACHE_API_TOKEN"
+      assert_includes stderr, "private publishing detail \"synced from the monorepo\""
+      assert_includes stderr, "use reviewed Action SHA"
+      assert_includes stderr, "setup must be none"
+      assert_includes stderr, "mode \"nx-proxy\" is not canonical"
+      assert_includes stderr, "retired Action inputs workspace"
+    end
+  end
 end
