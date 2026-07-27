@@ -216,14 +216,16 @@ registry_by_repo.each do |repo_name, benchmarks|
       seed_actions = boringcache_action_steps(seed_job["steps"])
       restore_actions = consumer_jobs.flat_map { |job| boringcache_action_steps(job["steps"]) }
 
-      unless seed_actions.any? && seed_actions.all? { |step| action_inputs(step)["trust-policy"] == "publish" }
-        errors << "#{repo_name}/#{relative_path}: a fresh BoringCache seed consumed by a warm job must use trust-policy: publish"
-      end
-      unless seed_actions.any? && seed_actions.all? { |step| strict_fresh_seed?(action_inputs(step)["fail-on-cache-error"]) }
-        errors << "#{repo_name}/#{relative_path}: a fresh BoringCache seed consumed by a warm job must set fail-on-cache-error for the fresh lane"
-      end
-      unless restore_actions.any? && restore_actions.all? { |step| action_inputs(step)["trust-policy"] == "restore" }
-        errors << "#{repo_name}/#{relative_path}: a warm BoringCache consumer must use trust-policy: restore"
+      unless seed_actions.empty? && restore_actions.empty?
+        unless seed_actions.any? && seed_actions.all? { |step| action_inputs(step)["trust-policy"] == "publish" }
+          errors << "#{repo_name}/#{relative_path}: a fresh BoringCache seed consumed by a warm job must use trust-policy: publish"
+        end
+        unless seed_actions.any? && seed_actions.all? { |step| strict_fresh_seed?(action_inputs(step)["fail-on-cache-error"]) }
+          errors << "#{repo_name}/#{relative_path}: a fresh BoringCache seed consumed by a warm job must set fail-on-cache-error for the fresh lane"
+        end
+        unless restore_actions.any? && restore_actions.all? { |step| action_inputs(step)["trust-policy"] == "restore" }
+          errors << "#{repo_name}/#{relative_path}: a warm BoringCache consumer must use trust-policy: restore"
+        end
       end
     end
 
