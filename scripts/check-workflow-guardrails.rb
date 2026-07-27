@@ -66,7 +66,9 @@ RETIRED_ACTION_INPUTS = %w[
   cache-mode turbo-api-url turbo-token turbo-team turbo-port nx-access-token
   nx-port sccache sccache-mode rust-version toolchain targets components
   profile cache-cargo cache-cargo-bin cache-target
+  read-only save-policy save-on-pull-request
 ].freeze
+TRUST_POLICIES = %w[auto restore stage publish].freeze
 PUBLIC_CONTENT_MARKERS = [
   "boringcache/monorepo", "private monorepo", "monorepo source",
   "source monorepo", "synced from the monorepo",
@@ -204,10 +206,12 @@ registry_by_repo.each do |repo_name, benchmarks|
       action_ref = uses.delete_prefix("boringcache/one@")
       inputs = step["with"].is_a?(Hash) ? step["with"].transform_keys(&:to_s) : {}
       mode = inputs["mode"].to_s
+      trust_policy = inputs["trust-policy"].to_s
 
       errors << "#{location}: use reviewed Action SHA #{REVIEWED_ONE_ACTION_SHA}" unless action_ref == REVIEWED_ONE_ACTION_SHA
       errors << "#{location}: setup must be none" unless inputs["setup"] == "none"
       errors << "#{location}: mode #{mode.inspect} is not canonical" unless PUBLIC_CACHE_MODES.include?(mode)
+      errors << "#{location}: trust-policy #{trust_policy.inspect} is not canonical" unless TRUST_POLICIES.include?(trust_policy)
 
       forbidden = inputs.keys & RETIRED_ACTION_INPUTS
       errors << "#{location}: retired Action inputs #{forbidden.sort.join(', ')}" unless forbidden.empty?

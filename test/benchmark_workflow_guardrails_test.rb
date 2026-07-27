@@ -75,6 +75,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
                   setup: mise
                   mode: nx-proxy
                   workspace: boringcache/benchmark-hugo
+                  save-policy: "off"
       YAML
       File.write(File.join(actions_dir, "action.yml"), <<~YAML)
         runs:
@@ -92,7 +93,8 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
       assert_includes stderr, "use reviewed Action SHA"
       assert_includes stderr, "setup must be none"
       assert_includes stderr, "mode \"nx-proxy\" is not canonical"
-      assert_includes stderr, "retired Action inputs workspace"
+      assert_includes stderr, "trust-policy \"\" is not canonical"
+      assert_includes stderr, "retired Action inputs save-policy, workspace"
       assert_includes stderr, "duplicate YAML key \"BORINGCACHE_RESTORE_TOKEN\""
       assert_includes stderr, "composite run steps must declare shell"
     end
