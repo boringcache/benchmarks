@@ -56,6 +56,7 @@ CANONICAL_DOCKER_PRODUCT_ASSERTION = File.expand_path(
 ECR_RUNTIME_PATTERN = /(?:\becr-cache\b|\becr_(?:region|role_arn|registry|repository|allowed_account_ids)\b|(?:DOCKER_BENCHMARK|BENCHMARK)_ECR_|aws-actions\/(?:configure-aws-credentials|amazon-ecr-login)|\baws\s+ecr\b)/i
 
 REVIEWED_ONE_ACTION_SHA = "6b7033721b37075b2138fd0c769bf088e0836ce6"
+DEFAULT_PROXY_PORT = "22243"
 PUBLIC_CACHE_MODES = %w[archive docker buildkit bazel go gradle maven nx sccache turbo].freeze
 RETIRED_CACHE_TOKENS = %w[BORINGCACHE_API_TOKEN BORINGCACHE_TOKEN].freeze
 RETIRED_ACTION_INPUTS = %w[
@@ -160,6 +161,16 @@ registry_by_repo.each do |repo_name, benchmarks|
   maintained_paths.each do |path|
     relative_path = path.delete_prefix("#{repo_path}/")
     text = File.read(path)
+    text.scan(/\$\{BORINGCACHE_PROXY_PORT:-([0-9]+)\}/).flatten.each do |port|
+      next if port == DEFAULT_PROXY_PORT
+
+      errors << "#{repo_name}/#{relative_path}: defaults BORINGCACHE_PROXY_PORT to #{port}; use #{DEFAULT_PROXY_PORT}"
+    end
+    text.scan(/^\s*(?:BORINGCACHE_)?PROXY_PORT:\s*["']?([0-9]+)["']?\s*$/i).flatten.each do |port|
+      next if port == DEFAULT_PROXY_PORT
+
+      errors << "#{repo_name}/#{relative_path}: defaults PROXY_PORT to #{port}; use #{DEFAULT_PROXY_PORT}"
+    end
     RETIRED_CACHE_TOKENS.each do |token|
       errors << "#{repo_name}/#{relative_path}: retired token #{token}" if text.match?(/\b#{token}\b/)
     end

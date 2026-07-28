@@ -6,7 +6,7 @@ require "json"
 index_path = ARGV[0] || File.expand_path("../data/latest/index.json", __dir__)
 payload = JSON.parse(File.read(index_path))
 
-required_product_refs = %w[cli_version action_ref action_sha web_revision].freeze
+required_product_refs = %w[cli_version web_revision].freeze
 errors = []
 
 payload.fetch("entries").each do |entry|
@@ -26,6 +26,13 @@ payload.fetch("entries").each do |entry|
       next unless refs[key].to_s.empty?
 
       errors << "#{label}: missing product_refs.#{key} for public valid BoringCache proof"
+    end
+
+    action_ref_present = !refs["action_ref"].to_s.empty?
+    action_sha_present = !refs["action_sha"].to_s.empty?
+    if action_ref_present != action_sha_present
+      missing_key = action_ref_present ? "action_sha" : "action_ref"
+      errors << "#{label}: missing product_refs.#{missing_key} for Action-backed public proof"
     end
 
     if boringcache["product_refs_consistent"] != true

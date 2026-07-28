@@ -23,13 +23,32 @@ class PublicBenchmarkProofTest < Minitest::Test
     assert_includes stdout, "public benchmark proof guardrails passed"
   end
 
-  def test_public_valid_boringcache_proof_requires_product_refs
+  def test_public_valid_action_backed_proof_requires_action_sha
     payload = index_payload(product_refs: PRODUCT_REFS.reject { |key, _| key == "action_sha" })
 
     stdout, stderr, status = run_script_with_payload(payload)
 
     refute status.success?, "guardrail unexpectedly passed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
-    assert_includes stderr, "hugo/fresh: missing product_refs.action_sha"
+    assert_includes stderr, "hugo/fresh: missing product_refs.action_sha for Action-backed public proof"
+  end
+
+  def test_public_valid_action_backed_proof_requires_action_ref
+    payload = index_payload(product_refs: PRODUCT_REFS.reject { |key, _| key == "action_ref" })
+
+    stdout, stderr, status = run_script_with_payload(payload)
+
+    refute status.success?, "guardrail unexpectedly passed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
+    assert_includes stderr, "hugo/fresh: missing product_refs.action_ref for Action-backed public proof"
+  end
+
+  def test_public_valid_cli_only_proof_does_not_invent_action_participation
+    product_refs = PRODUCT_REFS.reject { |key, _| %w[action_ref action_sha].include?(key) }
+    payload = index_payload(product_refs: product_refs)
+
+    stdout, stderr, status = run_script_with_payload(payload)
+
+    assert status.success?, "CLI-only guardrail failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
+    assert_includes stdout, "public benchmark proof guardrails passed"
   end
 
   def test_import_failure_cannot_be_comparative_public_proof

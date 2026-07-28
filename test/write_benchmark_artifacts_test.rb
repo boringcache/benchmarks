@@ -615,6 +615,17 @@ class WriteBenchmarkArtifactsTest < Minitest::Test
     assert_equal "BuildBuddy", buildbuddy["strategy_label"]
   end
 
+  def test_cli_only_boringcache_run_does_not_invent_action_refs
+    payload = write_artifact(
+      "--cli-version", "v1.14.1",
+      "--web-revision", "web-revision"
+    )
+
+    assert_equal "v1.14.1", payload.dig("product_refs", "cli_version")
+    assert_nil payload.dig("product_refs", "action_ref")
+    assert_nil payload.dig("product_refs", "action_sha")
+  end
+
   private
 
   def write_artifact(*extra_args, benchmark: "hugo", strategy: "boringcache", lane: "rolling", env: {})
