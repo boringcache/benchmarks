@@ -57,10 +57,16 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
       repo_dir = File.join(repos_dir, "benchmark-hugo")
       workflows_dir = File.join(repo_dir, ".github", "workflows")
       actions_dir = File.join(repo_dir, ".github", "actions", "docker-benchmark")
+      scripts_dir = File.join(repo_dir, "scripts")
       FileUtils.mkdir_p(workflows_dir)
       FileUtils.mkdir_p(actions_dir)
+      FileUtils.mkdir_p(scripts_dir)
       File.write(File.join(repo_dir, ".boringcache.toml"), "workspace = \"boringcache/benchmark-hugo\"\n")
       File.write(File.join(repo_dir, "README.md"), "Synced from the monorepo with BORINGCACHE_API_TOKEN.\n")
+      File.write(
+        File.join(scripts_dir, "run-boringcache-buildkit-benchmark.sh"),
+        'proxy_port="${BORINGCACHE_PROXY_PORT:-5000}"' + "\n"
+      )
       File.write(File.join(workflows_dir, "hugo-benchmark.yml"), <<~YAML)
         on:
           workflow_dispatch:
@@ -95,6 +101,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
       assert_includes stderr, "retired Action inputs workspace"
       assert_includes stderr, "duplicate YAML key \"BORINGCACHE_RESTORE_TOKEN\""
       assert_includes stderr, "composite run steps must declare shell"
+      assert_includes stderr, "defaults BORINGCACHE_PROXY_PORT to 5000; use 22243"
     end
   end
 end
