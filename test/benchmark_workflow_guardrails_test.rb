@@ -65,7 +65,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
       File.write(File.join(repo_dir, "README.md"), "Synced from the monorepo with BORINGCACHE_API_TOKEN.\n")
       File.write(
         File.join(scripts_dir, "run-boringcache-buildkit-benchmark.sh"),
-        'proxy_port="${BORINGCACHE_PROXY_PORT:-5000}"' + "\n"
+        'proxy_port="${BORINGCACHE_PROXY_PORT:-22243}"' + "\n"
       )
       File.write(File.join(workflows_dir, "hugo-benchmark.yml"), <<~YAML)
         on:
@@ -73,6 +73,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
         jobs:
           benchmark:
             env:
+              PROXY_PORT: "5000"
               BORINGCACHE_RESTORE_TOKEN: first
               BORINGCACHE_RESTORE_TOKEN: second
             steps:
@@ -101,7 +102,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
       assert_includes stderr, "retired Action inputs workspace"
       assert_includes stderr, "duplicate YAML key \"BORINGCACHE_RESTORE_TOKEN\""
       assert_includes stderr, "composite run steps must declare shell"
-      assert_includes stderr, "defaults BORINGCACHE_PROXY_PORT to 5000; use 22243"
+      assert_includes stderr, "defaults PROXY_PORT to 5000; use 22243"
     end
   end
 end

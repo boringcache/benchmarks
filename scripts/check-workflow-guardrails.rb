@@ -166,6 +166,11 @@ registry_by_repo.each do |repo_name, benchmarks|
 
       errors << "#{repo_name}/#{relative_path}: defaults BORINGCACHE_PROXY_PORT to #{port}; use #{DEFAULT_PROXY_PORT}"
     end
+    text.scan(/^\s*(?:BORINGCACHE_)?PROXY_PORT:\s*["']?([0-9]+)["']?\s*$/i).flatten.each do |port|
+      next if port == DEFAULT_PROXY_PORT
+
+      errors << "#{repo_name}/#{relative_path}: defaults PROXY_PORT to #{port}; use #{DEFAULT_PROXY_PORT}"
+    end
     RETIRED_CACHE_TOKENS.each do |token|
       errors << "#{repo_name}/#{relative_path}: retired token #{token}" if text.match?(/\b#{token}\b/)
     end
