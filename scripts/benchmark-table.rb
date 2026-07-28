@@ -154,6 +154,39 @@ BENCHMARKS = [
     "step" => "Rust build (sccache)"
   },
   {
+    "benchmark" => "duckgres",
+    "name" => "Duckgres",
+    "repo" => "PostHog/duckgres",
+    "source_repo" => "boringcache/benchmark-duckgres",
+    "category" => "docker",
+    "step" => "Docker build (Postgres extension image)"
+  },
+  {
+    "benchmark" => "chroma",
+    "name" => "Chroma",
+    "repo" => "chroma-core/chroma",
+    "source_repo" => "boringcache/benchmark-chroma",
+    "category" => "docker",
+    "step" => "Docker build (Rust CLI image)"
+  },
+  {
+    "benchmark" => "linkerd2-v2",
+    "aliases" => ["linkerd", "linkerd2"],
+    "name" => "Linkerd2 Web",
+    "repo" => "linkerd/linkerd2",
+    "source_repo" => "boringcache/benchmark-linkerd2",
+    "category" => "docker",
+    "step" => "Docker build (web image)"
+  },
+  {
+    "benchmark" => "qdrant",
+    "name" => "Qdrant",
+    "repo" => "qdrant/qdrant",
+    "source_repo" => "boringcache/benchmark-qdrant",
+    "category" => "docker",
+    "step" => "Docker build (Rust vector database)"
+  },
+  {
     "benchmark" => "n8n",
     "name" => "n8n",
     "repo" => "n8n-io/n8n",

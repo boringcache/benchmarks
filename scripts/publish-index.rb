@@ -235,6 +235,51 @@ BENCHMARKS = [
     "workflow" => "zed-sccache-benchmark.yml"
   },
   {
+    "benchmark" => "duckgres",
+    "name" => "Duckgres",
+    "logo" => "docker",
+    "repo" => "PostHog/duckgres",
+    "source_repo" => "boringcache/benchmark-duckgres",
+    "public" => true,
+    "category" => "docker",
+    "step" => "Docker build (Postgres extension image)",
+    "workflow" => "duckgres-benchmark.yml"
+  },
+  {
+    "benchmark" => "chroma",
+    "workflow_benchmark_ids" => ["chroma-sccache-control", "chroma-sccache-tool", "chroma-full-bake-control", "chroma-full-bake-tool-v2"],
+    "name" => "Chroma",
+    "logo" => "docker",
+    "repo" => "chroma-core/chroma",
+    "source_repo" => "boringcache/benchmark-chroma",
+    "public" => true,
+    "category" => "docker",
+    "step" => "Docker build (Rust CLI image)",
+    "workflow" => "chroma-benchmark.yml"
+  },
+  {
+    "benchmark" => "linkerd2-v2",
+    "name" => "Linkerd2 Web",
+    "logo" => "docker",
+    "repo" => "linkerd/linkerd2",
+    "source_repo" => "boringcache/benchmark-linkerd2",
+    "public" => true,
+    "category" => "docker",
+    "step" => "Docker build (web image)",
+    "workflow" => "linkerd2-benchmark.yml"
+  },
+  {
+    "benchmark" => "qdrant",
+    "name" => "Qdrant",
+    "logo" => "docker",
+    "repo" => "qdrant/qdrant",
+    "source_repo" => "boringcache/benchmark-qdrant",
+    "public" => true,
+    "category" => "docker",
+    "step" => "Docker build (Rust vector database)",
+    "workflow" => "qdrant-benchmark.yml"
+  },
+  {
     "benchmark" => "n8n",
     "name" => "n8n",
     "logo" => "n8n",

@@ -16,6 +16,10 @@ This repo gathers JSON results from the standalone BoringCache benchmark repos.
 - `boringcache/benchmark-grpc`
 - `boringcache/benchmark-zed`
 - `boringcache/benchmark-n8n`
+- `boringcache/benchmark-chroma`
+- `boringcache/benchmark-duckgres`
+- `boringcache/benchmark-linkerd2`
+- `boringcache/benchmark-qdrant`
 
 ## Data Feed
 
