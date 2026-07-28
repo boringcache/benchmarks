@@ -135,6 +135,35 @@ BENCHMARKS = [
     "workflow" => "zed-sccache-benchmark.yml"
   },
   {
+    "benchmark" => "duckgres",
+    "name" => "Duckgres",
+    "repo" => "boringcache/benchmark-duckgres",
+    "category" => "docker",
+    "workflow" => "duckgres-benchmark.yml"
+  },
+  {
+    "benchmark" => "chroma",
+    "name" => "Chroma",
+    "repo" => "boringcache/benchmark-chroma",
+    "category" => "docker",
+    "workflow" => "chroma-benchmark.yml"
+  },
+  {
+    "benchmark" => "linkerd2-v2",
+    "aliases" => ["linkerd", "linkerd2"],
+    "name" => "Linkerd2 Web",
+    "repo" => "boringcache/benchmark-linkerd2",
+    "category" => "docker",
+    "workflow" => "linkerd2-benchmark.yml"
+  },
+  {
+    "benchmark" => "qdrant",
+    "name" => "Qdrant",
+    "repo" => "boringcache/benchmark-qdrant",
+    "category" => "docker",
+    "workflow" => "qdrant-benchmark.yml"
+  },
+  {
     "benchmark" => "n8n",
     "name" => "n8n",
     "repo" => "boringcache/benchmark-n8n",
