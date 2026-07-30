@@ -10,6 +10,7 @@ class PublicBenchmarkProofTest < Minitest::Test
   SCRIPT = File.expand_path("../scripts/check-public-benchmark-proof.rb", __dir__)
 
   PRODUCT_REFS = {
+    "schema_version" => 1,
     "cli_version" => "v1.13.13",
     "action_ref" => "boringcache/one@v1",
     "action_sha" => "c5c6f8439a19eccc1d6dc421cfb20899d7cbb614",
@@ -30,6 +31,15 @@ class PublicBenchmarkProofTest < Minitest::Test
 
     refute status.success?, "guardrail unexpectedly passed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
     assert_includes stderr, "hugo/fresh: missing product_refs.action_sha"
+  end
+
+  def test_legacy_public_proof_keeps_its_original_release_contract
+    legacy_refs = PRODUCT_REFS.reject { |key, _| %w[schema_version action_ref action_sha].include?(key) }
+    payload = index_payload(product_refs: legacy_refs)
+
+    stdout, stderr, status = run_script_with_payload(payload)
+
+    assert status.success?, "legacy guardrail failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
   end
 
   def test_import_failure_cannot_be_comparative_public_proof

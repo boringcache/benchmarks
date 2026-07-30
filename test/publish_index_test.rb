@@ -6,6 +6,7 @@ require_relative "../scripts/publish-index"
 
 class PublishIndexTest < Minitest::Test
   PRODUCT_REFS = {
+    "schema_version" => 1,
     "action_ref" => "boringcache/one@v1",
     "action_sha" => "0123456789abcdef0123456789abcdef01234567",
     "cli_version" => "v1.12.86",

@@ -25,7 +25,7 @@ CMD_OUTPUT_DRAIN_TIMEOUT_SECONDS = ENV.fetch("BENCHMARKS_OUTPUT_DRAIN_TIMEOUT", 
 BENCHMARK_REFRESH_TIMEOUT_SECONDS = ENV.fetch("BENCHMARKS_BENCHMARK_TIMEOUT", "600").to_f
 PRESERVE_STALE_ENTRIES = ENV.fetch("BENCHMARKS_PRESERVE_STALE", "false") == "true"
 LANE_IDS = %w[fresh rolling].freeze
-PRODUCT_REF_KEYS = %w[cli_version action_ref action_sha web_revision api_url].freeze
+PRODUCT_REF_KEYS = %w[schema_version cli_version action_ref action_sha web_revision api_url].freeze
 PROVIDER_LABELS = {
   "actions-cache" => "GitHub Actions Cache",
   "boringcache" => "BoringCache",
