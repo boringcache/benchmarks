@@ -6,7 +6,8 @@ require "json"
 index_path = ARGV[0] || File.expand_path("../data/latest/index.json", __dir__)
 payload = JSON.parse(File.read(index_path))
 
-required_product_refs = %w[cli_version action_ref action_sha web_revision].freeze
+legacy_required_product_refs = %w[cli_version web_revision].freeze
+current_required_product_refs = %w[cli_version action_ref action_sha web_revision].freeze
 errors = []
 
 payload.fetch("entries").each do |entry|
@@ -22,6 +23,13 @@ payload.fetch("entries").each do |entry|
     next unless classification["sample_valid"] == true
 
     refs = boringcache["product_refs"].is_a?(Hash) ? boringcache["product_refs"] : {}
+    # Keep published legacy evidence immutable while enforcing complete provenance
+    # for every artifact emitted by the versioned product-ref contract.
+    required_product_refs = if refs["schema_version"].to_i >= 1
+      current_required_product_refs
+    else
+      legacy_required_product_refs
+    end
     required_product_refs.each do |key|
       next unless refs[key].to_s.empty?
 
