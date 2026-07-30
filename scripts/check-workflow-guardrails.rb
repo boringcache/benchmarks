@@ -55,7 +55,7 @@ CANONICAL_DOCKER_PRODUCT_ASSERTION = File.expand_path(
 
 ECR_RUNTIME_PATTERN = /(?:\becr-cache\b|\becr_(?:region|role_arn|registry|repository|allowed_account_ids)\b|(?:DOCKER_BENCHMARK|BENCHMARK)_ECR_|aws-actions\/(?:configure-aws-credentials|amazon-ecr-login)|\baws\s+ecr\b)/i
 
-REVIEWED_ONE_ACTION_SHA = "6b7033721b37075b2138fd0c769bf088e0836ce6"
+REVIEWED_ONE_ACTION_SHA = "8294be671cd5a2b73638df1b8e1e240df888297e"
 PUBLIC_CACHE_MODES = %w[archive docker buildkit bazel go gradle maven nx sccache turbo].freeze
 RETIRED_CACHE_TOKENS = %w[BORINGCACHE_API_TOKEN BORINGCACHE_TOKEN].freeze
 RETIRED_ACTION_INPUTS = %w[
