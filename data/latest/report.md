@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-07-31 20:54 UTC
+Generated: 2026-08-01 01:14 UTC
 
 Coverage: 24 benchmarks; fresh 11/24, rolling 24/24.
 
@@ -31,19 +31,19 @@ Rows are latest complete same-commit pairs.
 | Immich | Commit Build | 0m 19s | 0m 7s | 63% faster | 7.11 GB less (71.18%) |
 | Mastodon | Commit Build | 2m 47s | 1m 35s | 43% faster | n/a |
 | Mastodon Streaming | Commit Build | 0m 11s | 0m 13s | near tie | n/a |
-| Discourse | Commit Build | 3m 17s | 2m 38s | 20% faster | 9.31 GB less (90.01%) |
-| Discourse Base Deps | Commit Build | 0m 15s | 0m 10s | near tie | 9.64 GB less (93.21%) |
-| Discourse Web-Only Image | Commit Build | 0m 16s | 0m 9s | 44% faster | 9.02 GB less (87.23%) |
-| Discourse Release Image | Commit Build | 0m 14s | 0m 24s | 71% slower | 8.92 GB less (86.27%) |
-| Discourse Test Image | Commit Build | 0m 41s | 0m 10s | 76% faster | 8.39 GB less (81.14%) |
-| PostHog | Commit Build | 21m 28s | 14m 7s | 34% faster | n/a |
-| Storybook | Commit Build | 3m 29s | 3m 16s | 6% faster | 1.55 GB less (54.14%) |
+| Discourse | Commit Build | 3m 13s | 2m 31s | 22% faster | 8.87 GB less (89.58%) |
+| Discourse Base Deps | Commit Build | 0m 17s | 0m 10s | 41% faster | 9.20 GB less (92.91%) |
+| Discourse Web-Only Image | Commit Build | 0m 17s | 0m 10s | 41% faster | 8.59 GB less (86.66%) |
+| Discourse Release Image | Commit Build | 0m 14s | 0m 10s | near tie | 8.49 GB less (85.66%) |
+| Discourse Test Image | Commit Build | 0m 14s | 0m 7s | 50% faster | 7.96 GB less (80.31%) |
+| PostHog | Commit Build | 20m 58s | 16m 32s | 21% faster | n/a |
+| Storybook | Commit Build | 2m 10s | 2m 11s | near tie | 1.61 GB less (55.1%) |
 | OpenTelemetry Java | Commit Build | 1m 17s | 1m 16s | near tie | 852.61 MB less (42.99%) |
 | Spring AI | Commit Build | 4m 23s | 2m 33s | 42% faster | 192.29 MB more (20.39%) |
-| gRPC | Commit Build | 18m 33s | 14m 21s | 23% faster | 1.65 GB more (389.6%) |
-| Zed | Commit Build | 23m 24s | 26m 43s | 14% slower | 2.34 GB less (41.87%) |
-| Duckgres | Commit Build | 4m 59s | 3m 55s | 21% faster | n/a |
-| Chroma | Commit Build | 19m 12s | 11m 13s | 42% faster | n/a |
+| gRPC | Commit Build | 0m 44s | 1m 46s | 141% slower | 1.71 GB more (363.56%) |
+| Zed | Commit Build | 46m 45s | 45m 12s | 3% faster | 7.17 GB less (64.15%) |
+| Duckgres | Commit Build | 4m 15s | 3m 21s | 21% faster | n/a |
+| Chroma | Commit Build | 17m 14s | 10m 51s | 37% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 25s | 0m 10s | 60% faster | n/a |
 | Qdrant | Commit Build | 4m 46s | 3m 43s | 22% faster | n/a |
 | n8n | Commit Build | 2m 29s | 2m 25s | near tie | 1.62 GB less (36.24%) |
