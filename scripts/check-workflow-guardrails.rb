@@ -48,6 +48,7 @@ DOCKER_REQUIRED_PATTERNS = {
 }.freeze
 
 DOCKER_PRODUCT_ASSERTION = "assert-boringcache-docker-product-run.sh"
+MANAGED_BUILDKIT_IMAGE_PATTERN = %r{ghcr\.io/boringcache/buildkit(?:@sha256:|:v)}
 CANONICAL_DOCKER_PRODUCT_ASSERTION = File.expand_path(
   "canonical/#{DOCKER_PRODUCT_ASSERTION}",
   __dir__
@@ -55,7 +56,7 @@ CANONICAL_DOCKER_PRODUCT_ASSERTION = File.expand_path(
 
 ECR_RUNTIME_PATTERN = /(?:\becr-cache\b|\becr_(?:region|role_arn|registry|repository|allowed_account_ids)\b|(?:DOCKER_BENCHMARK|BENCHMARK)_ECR_|aws-actions\/(?:configure-aws-credentials|amazon-ecr-login)|\baws\s+ecr\b)/i
 
-REVIEWED_ONE_ACTION_SHA = "8294be671cd5a2b73638df1b8e1e240df888297e"
+REVIEWED_ONE_ACTION_SHA = "b1d1e466317cde2d78a86f8cb94347deebb501e9"
 DEFAULT_PROXY_PORT = "22243"
 PUBLIC_CACHE_MODES = %w[archive docker buildkit bazel go gradle maven nx sccache turbo].freeze
 RETIRED_CACHE_TOKENS = %w[BORINGCACHE_API_TOKEN BORINGCACHE_TOKEN].freeze
@@ -141,6 +142,7 @@ errors = []
 registry_by_repo.each do |repo_name, benchmarks|
   repo_path = File.join(repos_dir, repo_name)
   next unless Dir.exist?(repo_path)
+  docker_benchmark = benchmarks.any? { |benchmark| benchmark.fetch("category") == "docker" }
 
   workflows = [
     *Dir[File.join(repo_path, ".github", "workflows", "*.{yml,yaml}")],
@@ -184,6 +186,10 @@ registry_by_repo.each do |repo_name, benchmarks|
 
   workflow_text_by_path.each do |path, text|
     relative_path = path.delete_prefix("#{repo_path}/")
+
+    if docker_benchmark && !relative_path.downcase.include?("canary") && text.match?(MANAGED_BUILDKIT_IMAGE_PATTERN)
+      errors << "#{repo_name}/#{relative_path}: normal Docker workflows must let the released CLI select managed BuildKit; reserve explicit worker refs for canary workflows"
+    end
 
     duplicate_yaml_keys(text).each do |key, line|
       errors << "#{repo_name}/#{relative_path}:#{line}: duplicate YAML key #{key.inspect}"
@@ -233,7 +239,7 @@ registry_by_repo.each do |repo_name, benchmarks|
     end
   end
 
-  next unless benchmarks.any? { |benchmark| benchmark.fetch("category") == "docker" }
+  next unless docker_benchmark
 
   docker_text = workflow_text_by_path.values.join("\n")
   DOCKER_REQUIRED_PATTERNS.each do |pattern, description|
@@ -263,6 +269,21 @@ ecr_guardrail_repos.each do |repo_name|
   next unless Dir.exist?(repo_path)
 
   errors.concat(check_ecr_retired(repo_name: repo_name, repo_path: repo_path))
+end
+
+docker_proofs_path = File.join(repos_dir, "docker-cache-proofs")
+if Dir.exist?(docker_proofs_path)
+  docker_proof_workflows = [
+    *Dir[File.join(docker_proofs_path, ".github", "workflows", "*.{yml,yaml}")],
+    *Dir[File.join(docker_proofs_path, ".github", "actions", "**", "*.{yml,yaml}")]
+  ]
+  docker_proof_workflows.each do |path|
+    relative_path = path.delete_prefix("#{docker_proofs_path}/")
+    next if relative_path.downcase.include?("canary")
+    next unless File.read(path).match?(MANAGED_BUILDKIT_IMAGE_PATTERN)
+
+    errors << "docker-cache-proofs/#{relative_path}: normal Docker workflows must let the released CLI select managed BuildKit; reserve explicit worker refs for canary workflows"
+  end
 end
 
 if errors.any?
