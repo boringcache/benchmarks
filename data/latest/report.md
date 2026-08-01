@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-08-01 16:55 UTC
+Generated: 2026-08-01 20:51 UTC
 
 Coverage: 24 benchmarks; fresh 11/24, rolling 24/24.
 
@@ -15,7 +15,7 @@ Rows are latest complete same-commit pairs.
 | OpenTelemetry Java | Cold Build | 11m 59s | 11m 28s | 4% faster | 3.35 MB less (0.42%) |
 | Spring AI | Cold Build | 4m 21s | 4m 16s | near tie | 5.16 MB more (0.55%) |
 | gRPC | Cold Build | 39m 2s | 24m 13s | 38% faster | 818.96 MB more (802.71%) |
-| Zed | Cold Build | 54m 3s | 52m 42s | near tie | 6.90 MB less (0.25%) |
+| Zed | Warm Build | 20m 28s | 20m 6s | near tie | 6.99 MB less (0.25%) |
 | Duckgres | Warm Build | 0m 3s | 0m 2s | near tie | n/a |
 | Chroma | Cold Build | 35m 33s | 16m 23s | 54% faster | n/a |
 | Linkerd2 Web | Cold Build | 5m 18s | 3m 8s | 41% faster | n/a |
@@ -36,7 +36,7 @@ Rows are latest complete same-commit pairs.
 | Discourse Web-Only Image | Commit Build | 0m 17s | 0m 10s | 41% faster | 8.59 GB less (86.66%) |
 | Discourse Release Image | Commit Build | 0m 14s | 0m 10s | near tie | 8.49 GB less (85.66%) |
 | Discourse Test Image | Commit Build | 0m 14s | 0m 7s | 50% faster | 7.96 GB less (80.31%) |
-| PostHog | Commit Build | 24m 23s | 14m 7s | 42% faster | n/a |
+| PostHog | Commit Build | 25m 1s | 14m 23s | 43% faster | n/a |
 | Storybook | Commit Build | 2m 10s | 2m 11s | near tie | 1.61 GB less (55.1%) |
 | OpenTelemetry Java | Commit Build | 1m 17s | 1m 16s | near tie | 852.61 MB less (42.99%) |
 | Spring AI | Commit Build | 4m 23s | 2m 33s | 42% faster | 192.29 MB more (20.39%) |
