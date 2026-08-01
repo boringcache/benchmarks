@@ -46,11 +46,15 @@ done
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 canonical_dir="$script_dir/canonical"
 helper_scopes_path="$canonical_dir/helper-scopes.tsv"
-repos_dir_candidate="$script_dir/../../benchmark-repos"
-if [[ ! -d "$repos_dir_candidate" ]]; then
+repos_dir_candidate="${BENCHMARK_REPOS_DIR:-$script_dir/../../benchmark-repos}"
+if [[ -z "${BENCHMARK_REPOS_DIR:-}" && ! -d "$repos_dir_candidate" ]]; then
   repos_dir_candidate="$script_dir/../../benchmarks-repos"
 fi
 repos_dir="$(cd "$repos_dir_candidate" && pwd)"
+repo_candidates=("$repos_dir"/benchmark-* "$repos_dir"/docker-cache-proofs)
+if [[ -z "${BENCHMARK_REPOS_DIR:-}" ]]; then
+  repo_candidates+=("$repos_dir"/../docker-cache-proofs)
+fi
 
 if [[ ! -d "$canonical_dir" ]]; then
   echo "Canonical directory missing: $canonical_dir" >&2
@@ -142,7 +146,7 @@ for helper in "${helpers[@]}"; do
   canonical_path="$canonical_dir/$helper"
   canonical_md5="$(md5_of "$canonical_path")"
 
-  for repo in "$repos_dir"/benchmark-* "$repos_dir"/docker-cache-proofs "$repos_dir"/../docker-cache-proofs; do
+  for repo in "${repo_candidates[@]}"; do
     [[ -d "$repo" ]] || continue
     repo_name="$(basename "$repo")"
     selected_repo "$repo_name" || continue
