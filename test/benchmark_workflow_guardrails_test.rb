@@ -74,6 +74,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
           benchmark:
             env:
               PROXY_PORT: "5000"
+              BUILDKIT_IMAGE: ghcr.io/boringcache/buildkit:v0.30.0-bc.14
               BORINGCACHE_RESTORE_TOKEN: first
               BORINGCACHE_RESTORE_TOKEN: second
             steps:
@@ -103,6 +104,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
       assert_includes stderr, "duplicate YAML key \"BORINGCACHE_RESTORE_TOKEN\""
       assert_includes stderr, "composite run steps must declare shell"
       assert_includes stderr, "defaults PROXY_PORT to 5000; use 22243"
+      assert_includes stderr, "normal Docker workflows must let the released CLI select managed BuildKit"
     end
   end
 end

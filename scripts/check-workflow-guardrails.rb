@@ -48,6 +48,7 @@ DOCKER_REQUIRED_PATTERNS = {
 }.freeze
 
 DOCKER_PRODUCT_ASSERTION = "assert-boringcache-docker-product-run.sh"
+MANAGED_BUILDKIT_IMAGE_PATTERN = %r{ghcr\.io/boringcache/buildkit(?:@sha256:|:v)}
 CANONICAL_DOCKER_PRODUCT_ASSERTION = File.expand_path(
   "canonical/#{DOCKER_PRODUCT_ASSERTION}",
   __dir__
@@ -141,6 +142,7 @@ errors = []
 registry_by_repo.each do |repo_name, benchmarks|
   repo_path = File.join(repos_dir, repo_name)
   next unless Dir.exist?(repo_path)
+  docker_benchmark = benchmarks.any? { |benchmark| benchmark.fetch("category") == "docker" }
 
   workflows = [
     *Dir[File.join(repo_path, ".github", "workflows", "*.{yml,yaml}")],
@@ -184,6 +186,10 @@ registry_by_repo.each do |repo_name, benchmarks|
 
   workflow_text_by_path.each do |path, text|
     relative_path = path.delete_prefix("#{repo_path}/")
+
+    if docker_benchmark && !relative_path.downcase.include?("canary") && text.match?(MANAGED_BUILDKIT_IMAGE_PATTERN)
+      errors << "#{repo_name}/#{relative_path}: normal Docker workflows must let the released CLI select managed BuildKit; reserve explicit worker refs for canary workflows"
+    end
 
     duplicate_yaml_keys(text).each do |key, line|
       errors << "#{repo_name}/#{relative_path}:#{line}: duplicate YAML key #{key.inspect}"
@@ -233,7 +239,7 @@ registry_by_repo.each do |repo_name, benchmarks|
     end
   end
 
-  next unless benchmarks.any? { |benchmark| benchmark.fetch("category") == "docker" }
+  next unless docker_benchmark
 
   docker_text = workflow_text_by_path.values.join("\n")
   DOCKER_REQUIRED_PATTERNS.each do |pattern, description|
