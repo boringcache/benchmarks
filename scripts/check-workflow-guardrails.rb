@@ -271,6 +271,21 @@ ecr_guardrail_repos.each do |repo_name|
   errors.concat(check_ecr_retired(repo_name: repo_name, repo_path: repo_path))
 end
 
+docker_proofs_path = File.join(repos_dir, "docker-cache-proofs")
+if Dir.exist?(docker_proofs_path)
+  docker_proof_workflows = [
+    *Dir[File.join(docker_proofs_path, ".github", "workflows", "*.{yml,yaml}")],
+    *Dir[File.join(docker_proofs_path, ".github", "actions", "**", "*.{yml,yaml}")]
+  ]
+  docker_proof_workflows.each do |path|
+    relative_path = path.delete_prefix("#{docker_proofs_path}/")
+    next if relative_path.downcase.include?("canary")
+    next unless File.read(path).match?(MANAGED_BUILDKIT_IMAGE_PATTERN)
+
+    errors << "docker-cache-proofs/#{relative_path}: normal Docker workflows must let the released CLI select managed BuildKit; reserve explicit worker refs for canary workflows"
+  end
+end
+
 if errors.any?
   warn errors.join("\n")
   exit 1
