@@ -241,7 +241,7 @@ class PublishIndexTest < Minitest::Test
 
     docker_benchmark = benchmark_config(category: "docker").merge(
       "workflow" => "posthog-benchmark.yml",
-      "extra_providers" => ["boringcache-toolcache"]
+      "extra_providers" => ["boringcache-toolcache", "boringcache-mountcache"]
     )
     assert_equal(
       {
@@ -249,20 +249,25 @@ class PublishIndexTest < Minitest::Test
         "boringcache" => "posthog-benchmark.yml",
         "boringcache-native" => "posthog-benchmark.yml",
         "ecr-cache" => "posthog-benchmark.yml",
-        "boringcache-toolcache" => "posthog-benchmark.yml"
+        "boringcache-toolcache" => "posthog-benchmark.yml",
+        "boringcache-mountcache" => "posthog-benchmark.yml"
       },
       provider_workflows_for(docker_benchmark)
     )
     assert_equal "BoringCache Native", provider_label("boringcache-native")
     assert_equal "BoringCache Toolcache", provider_label("boringcache-toolcache")
+    assert_equal "BoringCache Mount Cache", provider_label("boringcache-mountcache")
     assert_equal "ECR (retired control)", provider_label("ecr-cache")
     assert_equal false, provider_storage_available?("boringcache-native")
     assert_equal true, provider_storage_available?("boringcache-toolcache")
+    assert_equal true, provider_storage_available?("boringcache-mountcache")
     assert_equal true, provider_storage_available?("ecr-cache")
     assert_includes lane_artifact_names(benchmark_id: "posthog", strategy: "boringcache-native", lane: "rolling"),
       "benchmark-posthog-native-boringcache-rolling"
     assert_includes lane_artifact_names(benchmark_id: "posthog", strategy: "boringcache-toolcache", lane: "rolling"),
       "benchmark-posthog-toolcache-boringcache-toolcache-rolling"
+    assert_includes lane_artifact_names(benchmark_id: "posthog", strategy: "boringcache-mountcache", lane: "rolling"),
+      "benchmark-posthog-mountcache-boringcache-rolling"
     assert_includes lane_artifact_names(benchmark_id: "posthog", strategy: "ecr-cache", lane: "rolling"),
       "benchmark-posthog-ecr-cache-rolling"
   end
