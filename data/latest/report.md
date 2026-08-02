@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-08-02 16:57 UTC
+Generated: 2026-08-02 20:55 UTC
 
 Coverage: 24 benchmarks; fresh 11/24, rolling 24/24.
 
@@ -10,17 +10,17 @@ Rows are latest complete same-commit pairs.
 
 | Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
-| Hugo Go | Cold Build | 1m 27s | 1m 32s | 6% slower | 158.94 MB less (52.38%) |
-| Storybook | Cold Build | 3m 39s | 3m 32s | 3% faster | 1.44 MB less (0.16%) |
-| OpenTelemetry Java | Cold Build | 11m 59s | 11m 28s | 4% faster | 3.35 MB less (0.42%) |
-| Spring AI | Cold Build | 4m 21s | 4m 16s | near tie | 5.16 MB more (0.55%) |
-| gRPC | Cold Build | 39m 2s | 24m 13s | 38% faster | 818.96 MB more (802.71%) |
-| Zed | Warm Build | 20m 15s | 19m 50s | near tie | 352.34 MB more (12.56%) |
+| Hugo Go | Cold Build | 1m 26s | 1m 13s | 15% faster | 159.20 MB less (52.43%) |
+| Storybook | Cold Build | 5m 50s | 4m 29s | 23% faster | 15.57 MB less (1.16%) |
+| OpenTelemetry Java | Warm Build | 0m 58s | 0m 50s | 14% faster | 3.04 MB less (0.36%) |
+| Spring AI | Cold Build | 4m 45s | 4m 52s | near tie | 4.91 MB more (0.52%) |
+| gRPC | Cold Build | 25m 18s | 16m 50s | 33% faster | 829.88 MB more (805.66%) |
+| Zed | Cold Build | 55m 47s | 44m 2s | 21% faster | 353.05 MB more (12.59%) |
 | Duckgres | Warm Build | 0m 3s | 0m 2s | near tie | n/a |
 | Chroma | Cold Build | 35m 33s | 16m 23s | 54% faster | n/a |
 | Linkerd2 Web | Cold Build | 5m 18s | 3m 8s | 41% faster | n/a |
 | Qdrant | Cold Build | 13m 5s | 10m 12s | 22% faster | n/a |
-| n8n | Cold Build | 3m 48s | 3m 58s | 4% slower | 9.29 MB less (1.2%) |
+| n8n | Warm Build | 1m 35s | 1m 14s | 22% faster | 11.03 MB less (1.42%) |
 
 ## Rolling
 
@@ -32,16 +32,16 @@ Rows are latest complete same-commit pairs.
 | Mastodon | Commit Build | 2m 47s | 1m 35s | 43% faster | n/a |
 | Mastodon Streaming | Commit Build | 0m 11s | 0m 13s | near tie | n/a |
 | Discourse | Commit Build | 5m 47s | 4m 38s | investigation only | 8.88 GB less (89.58%) |
-| Discourse Base Deps | Commit Build | 0m 14s | 0m 7s | 50% faster | 9.21 GB less (92.91%) |
-| Discourse Web-Only Image | Commit Build | 0m 20s | 0m 8s | 60% faster | 8.59 GB less (86.67%) |
-| Discourse Release Image | Commit Build | 0m 12s | 0m 6s | 50% faster | 8.49 GB less (85.67%) |
-| Discourse Test Image | Commit Build | 10m 4s | 6m 52s | investigation only | 7.96 GB less (80.33%) |
-| PostHog | Commit Build | 36m 16s | 14m 11s | 61% faster | n/a |
+| Discourse Base Deps | Commit Build | 8m 4s | 5m 5s | investigation only | n/a |
+| Discourse Web-Only Image | Commit Build | 12m 22s | 7m 58s | investigation only | n/a |
+| Discourse Release Image | Commit Build | 11m 16s | 9m 40s | investigation only | n/a |
+| Discourse Test Image | Commit Build | 7m 56s | 6m 18s | investigation only | n/a |
+| PostHog | Commit Build | 36m 54s | 16m 20s | investigation only | n/a |
 | Storybook | Commit Build | 2m 10s | 2m 11s | near tie | 1.61 GB less (55.1%) |
 | OpenTelemetry Java | Commit Build | 1m 17s | 1m 16s | near tie | 852.61 MB less (42.99%) |
 | Spring AI | Commit Build | 4m 23s | 2m 33s | 42% faster | 192.29 MB more (20.39%) |
 | gRPC | Commit Build | 0m 44s | 1m 46s | 141% slower | 1.71 GB more (363.56%) |
-| Zed | Commit Build | 23m 5s | 23m 16s | near tie | 3.34 GB less (44.97%) |
+| Zed | Commit Build | 20m 1s | 19m 10s | 4% faster | 354.92 MB more (9.28%) |
 | Duckgres | Commit Build | 4m 15s | 3m 21s | 21% faster | n/a |
 | Chroma | Commit Build | 17m 14s | 10m 51s | 37% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 25s | 0m 10s | 60% faster | n/a |
