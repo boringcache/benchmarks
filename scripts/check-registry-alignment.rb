@@ -44,6 +44,7 @@ registry_by_repo.each do |repo_name, benchmarks|
   allowed_ids = benchmarks.flat_map do |benchmark|
     ids = [benchmark.fetch("benchmark"), *Array(benchmark["aliases"])]
     ids.concat(ids.map { |id| "#{id}-toolcache" }) if Array(benchmark["extra_providers"]).include?("boringcache-toolcache")
+    ids.concat(ids.map { |id| "#{id}-mountcache" }) if Array(benchmark["extra_providers"]).include?("boringcache-mountcache")
     ids.concat(Array(benchmark["workflow_benchmark_ids"]))
     ids
   end.uniq.sort
