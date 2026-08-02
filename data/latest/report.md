@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-08-01 20:51 UTC
+Generated: 2026-08-02 07:18 UTC
 
 Coverage: 24 benchmarks; fresh 11/24, rolling 24/24.
 
@@ -36,12 +36,12 @@ Rows are latest complete same-commit pairs.
 | Discourse Web-Only Image | Commit Build | 0m 17s | 0m 10s | 41% faster | 8.59 GB less (86.66%) |
 | Discourse Release Image | Commit Build | 0m 14s | 0m 10s | near tie | 8.49 GB less (85.66%) |
 | Discourse Test Image | Commit Build | 0m 14s | 0m 7s | 50% faster | 7.96 GB less (80.31%) |
-| PostHog | Commit Build | 25m 1s | 14m 23s | 43% faster | n/a |
+| PostHog | Commit Build | 0m 23s | 0m 23s | near tie | n/a |
 | Storybook | Commit Build | 2m 10s | 2m 11s | near tie | 1.61 GB less (55.1%) |
 | OpenTelemetry Java | Commit Build | 1m 17s | 1m 16s | near tie | 852.61 MB less (42.99%) |
 | Spring AI | Commit Build | 4m 23s | 2m 33s | 42% faster | 192.29 MB more (20.39%) |
 | gRPC | Commit Build | 0m 44s | 1m 46s | 141% slower | 1.71 GB more (363.56%) |
-| Zed | Commit Build | 46m 45s | 45m 12s | 3% faster | 7.17 GB less (64.15%) |
+| Zed | Commit Build | 54m 51s | 60m 42s | 11% slower | 6.63 MB less (0.24%) |
 | Duckgres | Commit Build | 4m 15s | 3m 21s | 21% faster | n/a |
 | Chroma | Commit Build | 17m 14s | 10m 51s | 37% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 25s | 0m 10s | 60% faster | n/a |
