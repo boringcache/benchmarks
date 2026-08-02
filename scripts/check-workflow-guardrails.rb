@@ -56,7 +56,7 @@ CANONICAL_DOCKER_PRODUCT_ASSERTION = File.expand_path(
 
 ECR_RUNTIME_PATTERN = /(?:\becr-cache\b|\becr_(?:region|role_arn|registry|repository|allowed_account_ids)\b|(?:DOCKER_BENCHMARK|BENCHMARK)_ECR_|aws-actions\/(?:configure-aws-credentials|amazon-ecr-login)|\baws\s+ecr\b)/i
 
-REVIEWED_ONE_ACTION_SHA = "b1d1e466317cde2d78a86f8cb94347deebb501e9"
+REVIEWED_ONE_ACTION_SHA = "bf810e34331db84f9f11930e83b8813b5ad31ba1"
 DEFAULT_PROXY_PORT = "22243"
 PUBLIC_CACHE_MODES = %w[archive docker buildkit bazel go gradle maven nx sccache turbo].freeze
 RETIRED_CACHE_TOKENS = %w[BORINGCACHE_API_TOKEN BORINGCACHE_TOKEN].freeze

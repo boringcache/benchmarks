@@ -31,11 +31,12 @@ PROVIDER_LABELS = {
   "boringcache" => "BoringCache",
   "boringcache-native" => "BoringCache Native",
   "boringcache-toolcache" => "BoringCache Toolcache",
+  "boringcache-mountcache" => "BoringCache Mount Cache",
   "ecr-cache" => "ECR (retired control)",
   "depot-cache" => "Depot Cache",
   "buildbuddy-cache" => "BuildBuddy Cache"
 }.freeze
-PROVIDER_STORAGE_STRATEGIES = %w[actions-cache boringcache boringcache-toolcache ecr-cache].freeze
+PROVIDER_STORAGE_STRATEGIES = %w[actions-cache boringcache boringcache-toolcache boringcache-mountcache ecr-cache].freeze
 SLOW_REASON_NUMERIC_KEYS = %w[
   build_seconds setup_seconds post_cleanup_seconds cache_restore_seconds cache_save_export_seconds
   hit_count miss_count hit_rate new_blob_bytes
@@ -176,7 +177,7 @@ BENCHMARKS = [
     "category" => "docker",
     "step" => "Docker build (full stack)",
     "workflow" => "posthog-benchmark.yml",
-    "extra_providers" => ["boringcache-toolcache"]
+    "extra_providers" => ["boringcache-toolcache", "boringcache-mountcache"]
   },
   {
     "benchmark" => "storybook",
@@ -732,12 +733,13 @@ def artifact_benchmark_ids(benchmark_id:, strategy:)
   ids = Array(benchmark_id)
   return ids.map { |id| id.to_s.end_with?("-native") ? id : "#{id}-native" } if strategy == "boringcache-native"
   return ids.map { |id| id.to_s.end_with?("-toolcache") ? id : "#{id}-toolcache" } if strategy == "boringcache-toolcache"
+  return ids.map { |id| id.to_s.end_with?("-mountcache") ? id : "#{id}-mountcache" } if strategy == "boringcache-mountcache"
 
   ids
 end
 
 def artifact_strategy_for(strategy)
-  strategy == "boringcache-native" ? "boringcache" : strategy
+  %w[boringcache-native boringcache-mountcache].include?(strategy) ? "boringcache" : strategy
 end
 
 def lane_artifact_names(benchmark_id:, strategy:, lane:)
