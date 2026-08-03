@@ -20,6 +20,7 @@ registry_by_repo = BENCHMARKS.each_with_object(Hash.new { |hash, key| hash[key] 
 end
 
 registry_exempt_repos = ["benchmark-docker", "benchmark-obs-studio"]
+sync_exempt_repos = ["benchmark-docker"]
 owned_repo_names = Dir[File.join(repos_dir, "benchmark-*")].select { |path| File.directory?(path) }.map { |path| File.basename(path) }.sort
 repo_names = owned_repo_names - registry_exempt_repos
 
@@ -45,8 +46,28 @@ owned_repo_names.each do |repo_name|
   ]
 
   errors << "#{repo_name}: README does not match the owned benchmark template" unless !subject.empty? && lines == expected_readme
-  errors << "#{repo_name}: .github/workflows is missing" unless Dir.exist?(File.join(repo_path, ".github", "workflows"))
+  workflows_path = File.join(repo_path, ".github", "workflows")
+  errors << "#{repo_name}: .github/workflows is missing" unless Dir.exist?(workflows_path)
   errors << "#{repo_name}: .boringcache.toml is missing" unless File.file?(File.join(repo_path, ".boringcache.toml"))
+
+  next if sync_exempt_repos.include?(repo_name)
+
+  sync_path = File.join(workflows_path, "sync.yml")
+  unless File.file?(sync_path)
+    errors << "#{repo_name}: sync.yml is missing for a single-upstream benchmark"
+    next
+  end
+
+  sync_text = File.read(sync_path)
+  errors << "#{repo_name}: sync.yml must run every 30 minutes" unless sync_text.include?('cron: "*/30 * * * *"')
+  errors << "#{repo_name}: sync.yml must push with BOT_PUBLIC_GITHUB_TOKEN" unless sync_text.include?("secrets.BOT_PUBLIC_GITHUB_TOKEN")
+
+  source_pin = File.file?(File.join(repo_path, "benchmark-source.env")) ? "benchmark-source.env" : "upstream"
+  benchmark_workflows = Dir[File.join(workflows_path, "*.yml")].reject { |path| path == sync_path }.map { |path| File.read(path) }
+  source_push_trigger = benchmark_workflows.any? do |workflow|
+    workflow.match?(/^\s{2}push:\s*$/) && workflow.include?(source_pin)
+  end
+  errors << "#{repo_name}: source updates must trigger a benchmark from #{source_pin}" unless source_push_trigger
 end
 
 registry_by_repo.each do |repo_name, benchmarks|
