@@ -41,6 +41,14 @@ registry_by_repo.each do |repo_name, benchmarks|
     end.compact
   end.uniq.sort
 
+  config_path = File.join(repo_path, ".boringcache.toml")
+  config_ids = if File.file?(config_path)
+    File.read(config_path).scan(/\bbenchmark=([A-Za-z0-9._-]+)/).flatten
+  else
+    []
+  end
+  declared_ids = (workflow_ids + config_ids).uniq.sort
+
   allowed_ids = benchmarks.flat_map do |benchmark|
     ids = [benchmark.fetch("benchmark"), *Array(benchmark["aliases"])]
     ids.concat(ids.map { |id| "#{id}-toolcache" }) if Array(benchmark["extra_providers"]).include?("boringcache-toolcache")
@@ -48,12 +56,12 @@ registry_by_repo.each do |repo_name, benchmarks|
     ids.concat(Array(benchmark["workflow_benchmark_ids"]))
     ids
   end.uniq.sort
-  unknown_ids = workflow_ids - allowed_ids
-  missing_id = (workflow_ids & allowed_ids).empty?
+  unknown_ids = declared_ids - allowed_ids
+  missing_id = (declared_ids & allowed_ids).empty?
 
-  errors << "#{repo_name}: no concrete benchmark_id found in workflows" if workflow_ids.empty?
-  errors << "#{repo_name}: workflow benchmark ids #{workflow_ids.join(", ")} do not match registry ids #{allowed_ids.join(", ")}" if missing_id
-  errors << "#{repo_name}: unknown workflow benchmark ids #{unknown_ids.join(", ")}; registry ids are #{allowed_ids.join(", ")}" if unknown_ids.any?
+  errors << "#{repo_name}: no concrete benchmark id found in workflows or .boringcache.toml" if declared_ids.empty?
+  errors << "#{repo_name}: declared benchmark ids #{declared_ids.join(", ")} do not match registry ids #{allowed_ids.join(", ")}" if missing_id
+  errors << "#{repo_name}: unknown declared benchmark ids #{unknown_ids.join(", ")}; registry ids are #{allowed_ids.join(", ")}" if unknown_ids.any?
 end
 
 if errors.any?
