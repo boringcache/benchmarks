@@ -145,13 +145,22 @@ BENCHMARKS = [
     "step" => "Bazel build (remote cache)"
   },
   {
-    "benchmark" => "zed-sccache",
-    "aliases" => ["zed"],
+    "benchmark" => "zed-cargo",
+    "aliases" => ["zed", "zed-sccache"],
     "name" => "Zed",
     "repo" => "zed-industries/zed",
     "source_repo" => "boringcache/benchmark-zed",
     "category" => "rust",
-    "step" => "Rust build (sccache)"
+    "step" => "Cargo build (target + sccache)"
+  },
+  {
+    "benchmark" => "deno-cargo",
+    "aliases" => ["deno"],
+    "name" => "Deno",
+    "repo" => "denoland/deno",
+    "source_repo" => "boringcache/benchmark-deno",
+    "category" => "rust",
+    "step" => "Cargo build (target + sccache)"
   },
   {
     "benchmark" => "duckgres",

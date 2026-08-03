@@ -15,6 +15,7 @@ This repo gathers JSON results from the standalone BoringCache benchmark repos.
 - `boringcache/benchmark-spring-ai`
 - `boringcache/benchmark-grpc`
 - `boringcache/benchmark-zed`
+- `boringcache/benchmark-deno`
 - `boringcache/benchmark-n8n`
 - `boringcache/benchmark-chroma`
 - `boringcache/benchmark-duckgres`

@@ -127,12 +127,20 @@ BENCHMARKS = [
     "workflow" => "grpc-bazel-benchmark.yml"
   },
   {
-    "benchmark" => "zed-sccache",
-    "aliases" => ["zed"],
+    "benchmark" => "zed-cargo",
+    "aliases" => ["zed", "zed-sccache"],
     "name" => "Zed",
     "repo" => "boringcache/benchmark-zed",
     "category" => "rust",
-    "workflow" => "zed-sccache-benchmark.yml"
+    "workflow" => "zed-cargo-product.yml"
+  },
+  {
+    "benchmark" => "deno-cargo",
+    "aliases" => ["deno"],
+    "name" => "Deno",
+    "repo" => "boringcache/benchmark-deno",
+    "category" => "rust",
+    "workflow" => "deno-cargo-product.yml"
   },
   {
     "benchmark" => "duckgres",
