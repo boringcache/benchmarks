@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-03T09:50:57Z",
+  "generated_at": "2026-08-03T13:38:53Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -860,33 +860,33 @@
         "step": "Nx build (Yarn monorepo)",
         "headline_scenario": "cold",
         "headline_label": "Commit Build",
-        "before": "4m 15s",
-        "after": "3m 48s",
-        "before_seconds": 255.0,
-        "after_seconds": 228.0,
-        "faster": "11",
+        "before": "4m 20s",
+        "after": "3m 59s",
+        "before_seconds": 260.0,
+        "after_seconds": 239.0,
+        "faster": "8",
         "comparison": {
           "paired_on_head_sha": true,
-          "pairing_head_sha": "b8a731a0685a435872237c29c589a9526bb4a010",
+          "pairing_head_sha": "2f3a207c35cdc74fd6c0fc2d2949870f77d73cce",
           "sample_count": 1,
           "actions_cache": {
-            "run_id": 30796173708,
-            "run_url": "https://github.com/boringcache/benchmark-storybook/actions/runs/30796173708",
-            "head_sha": "b8a731a0685a435872237c29c589a9526bb4a010",
-            "created_at": "2026-08-03T08:07:40Z",
-            "cold_seconds": 255.0,
-            "cold_build_seconds": 227.0,
-            "cold_restore_or_setup_seconds": 28.0,
+            "run_id": 30802744410,
+            "run_url": "https://github.com/boringcache/benchmark-storybook/actions/runs/30802744410",
+            "head_sha": "2f3a207c35cdc74fd6c0fc2d2949870f77d73cce",
+            "created_at": "2026-08-03T09:45:09Z",
+            "cold_seconds": 260.0,
+            "cold_build_seconds": 178.0,
+            "cold_restore_or_setup_seconds": 82.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 255.0,
+            "rolling_first_build_seconds": 260.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 309.0,
-            "storage_bytes": 3171260117,
+            "run_total_seconds": 299.0,
+            "storage_bytes": 3207354928,
             "storage_source": "github-actions-cache-api",
             "storage_breakdown": null,
             "network_bytes_uploaded": null,
@@ -940,7 +940,7 @@
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-storybook",
             "cache_tag": null,
-            "run_uid": "gh-30796173708-1",
+            "run_uid": "gh-30802744410-1",
             "mode": "nx",
             "adapter": "nx",
             "docker_cache_from_refs": null,
@@ -962,10 +962,10 @@
               "benchmark": "storybook",
               "strategy": "actions-cache",
               "lane": "rolling",
-              "run_uid": "gh-30796173708-1",
-              "paired_run_id": 30796173708,
-              "build_seconds": 227,
-              "setup_seconds": 28,
+              "run_uid": "gh-30802744410-1",
+              "paired_run_id": 30802744410,
+              "build_seconds": 178,
+              "setup_seconds": 82,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": null,
               "cache_save_export_seconds": null,
@@ -990,26 +990,36 @@
               },
               "native_tool": null,
               "issue_candidates": [],
-              "hypotheses": []
+              "hypotheses": [
+                {
+                  "id": "setup_overhead",
+                  "confidence": "medium",
+                  "summary": "Setup or restore overhead is large relative to build time.",
+                  "evidence": {
+                    "setup_seconds": 82,
+                    "build_seconds": 178
+                  }
+                }
+              ]
             }
           },
           "boringcache": {
-            "run_id": 30796173708,
-            "run_url": "https://github.com/boringcache/benchmark-storybook/actions/runs/30796173708",
-            "head_sha": "b8a731a0685a435872237c29c589a9526bb4a010",
-            "created_at": "2026-08-03T08:07:40Z",
-            "cold_seconds": 228.0,
-            "cold_build_seconds": 197.0,
-            "cold_restore_or_setup_seconds": 31.0,
+            "run_id": 30802744410,
+            "run_url": "https://github.com/boringcache/benchmark-storybook/actions/runs/30802744410",
+            "head_sha": "2f3a207c35cdc74fd6c0fc2d2949870f77d73cce",
+            "created_at": "2026-08-03T09:45:09Z",
+            "cold_seconds": 239.0,
+            "cold_build_seconds": 198.0,
+            "cold_restore_or_setup_seconds": 41.0,
             "warm1_seconds": null,
             "warm1_build_seconds": null,
             "warm1_restore_or_setup_seconds": null,
             "warm2_seconds": null,
             "warm_average_seconds": null,
             "warm_steady_seconds": null,
-            "rolling_first_build_seconds": 228.0,
+            "rolling_first_build_seconds": 239.0,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 309.0,
+            "run_total_seconds": 299.0,
             "storage_bytes": 1411001969,
             "storage_source": "boringcache-check",
             "storage_breakdown": {
@@ -1095,7 +1105,7 @@
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-storybook",
             "cache_tag": null,
-            "run_uid": "gh-30796173708-1",
+            "run_uid": "gh-30802744410-1",
             "mode": "nx",
             "adapter": "nx",
             "docker_cache_from_refs": null,
@@ -1107,27 +1117,25 @@
             "save_result": null,
             "publish_status": null,
             "session_summary": {
-              "session_id": "cli-archive-save-6a628c52-2000-4af3-8488-5baa0617713a",
-              "tool": "archive",
-              "project_hint": null,
+              "session_id": "nx-1785750555-3",
+              "tool": "nx",
+              "project_hint": "benchmark-storybook",
               "phase_hint": null,
-              "run_uid": "github-actions:boringcache/benchmark-storybook:30796173708",
-              "run_label": "github-actions/30796173708#1",
+              "run_uid": "github-actions:boringcache/benchmark-storybook:30802744410",
+              "run_label": "github-actions/30802744410#1",
               "run_identity": {
-                "uid": "github-actions:boringcache/benchmark-storybook:30796173708",
-                "kind": "ci",
-                "attempt": "1",
+                "uid": "github-actions:boringcache/benchmark-storybook:30802744410",
                 "provider": "github-actions",
-                "commit_sha": "b8a731a0685a435872237c29c589a9526bb4a010",
+                "provider_run_uid": "30802744410",
+                "attempt": "1",
                 "repository": "boringcache/benchmark-storybook",
-                "source_ref_name": "main",
                 "source_ref_type": "branch",
-                "provider_run_uid": "30796173708",
-                "summary_session_id": "cli-archive-save-6a628c52-2000-4af3-8488-5baa0617713a"
+                "source_ref_name": "main",
+                "commit_sha": "2f3a207c35cdc74fd6c0fc2d2949870f77d73cce"
               },
-              "summary_schema": "cache_session_summary.v2",
+              "summary_schema": null,
               "review": {
-                "primary_bottleneck": "local_disk_bound",
+                "primary_bottleneck": null,
                 "state": "clear",
                 "summary": "No issue found",
                 "detail": null,
@@ -1136,46 +1144,64 @@
                 "value_outcome": "populated_cache",
                 "value_owner": "none",
                 "value_headline": "BoringCache populated the cache for future runs.",
-                "value_detail": "No reads were restored; 1.31 GB was written for later runs.",
+                "value_detail": "Cache served 0 of 1 reads. 5.06 MB was written for later runs.",
                 "value_next_action": "Nothing to do.",
                 "value_evidence": [
-                  "1.31 GB written",
-                  "tag storybook-rolling-nx2-main-yarn-cache-ubuntu-24-x86_64",
-                  "18.6s"
+                  "1 miss",
+                  "5.06 MB written",
+                  "tag storybook-rolling-nx2-main-nx",
+                  "9.0s"
                 ]
               },
               "tool_stats": [],
-              "tool_insights": [],
+              "tool_insights": [
+                {
+                  "tool": "nx",
+                  "headline": "Nx remote cache missed",
+                  "detail": "Nx missed 1 task output and did not save reusable outputs for later runs.",
+                  "tone": "warning"
+                }
+              ],
               "metadata_hints": {
-                "tool": "archive",
-                "source": "cli",
-                "adapter": "archive",
-                "cache_tag": "storybook-rolling-nx2-main-yarn-cache-ubuntu-24-x86_64",
-                "operation": "save",
-                "manifest_root_digest": "sha256:7af5bbfec77743fcc56c77e5f53f955022d05ce38f32c0f6648e5fbd7ffd531b"
+                "tool": "nx",
+                "project": "benchmark-storybook",
+                "cache_tag": "storybook-rolling-nx2-main-nx",
+                "blob_read_local_bytes": "0",
+                "blob_read_local_count": "0",
+                "blob_read_local_avg_ms": "0",
+                "blob_read_remote_avg_ms": "276",
+                "blob_read_local_hit_rate_pct": "0"
               },
               "hit_rate": 0.0,
               "hit_count": 0,
-              "miss_count": 0,
+              "miss_count": 1,
               "error_count": 0,
               "error_details": [],
-              "duration_seconds": 18.6,
+              "duration_seconds": 9.0,
               "bytes_read": 0,
-              "bytes_written": 1411001969,
-              "created_at": "2026-08-03T08:11:58Z",
-              "missed_keys": []
+              "bytes_written": 5301726,
+              "created_at": "2026-08-03T09:49:24Z",
+              "missed_keys": [
+                {
+                  "key_hash": "79cf9ceaf125cf83d8f9af0dca6393a1c8353270cdbb65da0166b8324360ad72",
+                  "miss_count": 1,
+                  "sampled_key_prefix": "11469684107931535555"
+                }
+              ]
             },
             "cache_review": {
               "schema_version": "benchmark_cache_review.v1",
               "summary_schema": "cache_session_summary.v2",
-              "summary_session_id": "cli-archive-save-6a628c52-2000-4af3-8488-5baa0617713a",
-              "tool": "archive",
+              "summary_session_id": "nx-1785750555-3",
+              "tool": "nx",
               "cache_target": null,
               "project_hints": [],
               "phase_hints": [],
-              "primary_bottleneck": "local_disk_bound",
+              "primary_bottleneck": "cache_miss_quality",
               "diagnostic_classification": null,
-              "reason_codes": [],
+              "reason_codes": [
+                "cache_miss_quality"
+              ],
               "native_tool": null,
               "diagnostic_label": null,
               "customer_state": "clear",
@@ -1185,20 +1211,21 @@
               "value_outcome": "populated_cache",
               "value_owner": "none",
               "value_headline": "BoringCache populated the cache for future runs.",
-              "value_detail": "No reads were restored; 1.31 GB was written for later runs.",
+              "value_detail": "Cache served 0 of 1 reads. 5.06 MB was written for later runs.",
               "value_next_action": "Nothing to do.",
               "value_evidence": [
-                "1.31 GB written",
-                "tag storybook-rolling-nx2-main-yarn-cache-ubuntu-24-x86_64",
-                "18.6s"
+                "1 miss",
+                "5.06 MB written",
+                "tag storybook-rolling-nx2-main-nx",
+                "9.0s"
               ],
               "hit_count": 0,
-              "miss_count": 0,
-              "hit_rate": 0.0,
+              "miss_count": 1,
+              "hit_rate": 0,
               "error_count": 0,
               "bytes_read": 0,
-              "bytes_written": 1411001969,
-              "duration_seconds": 18.6,
+              "bytes_written": 5301726,
+              "duration_seconds": 9.0,
               "issue_candidates": []
             },
             "summary_schema": null,
@@ -1210,17 +1237,17 @@
               "benchmark": "storybook",
               "strategy": "boringcache",
               "lane": "rolling",
-              "run_uid": "gh-30796173708-1",
-              "paired_run_id": 30796173708,
-              "build_seconds": 197,
-              "setup_seconds": 31,
+              "run_uid": "gh-30802744410-1",
+              "paired_run_id": 30802744410,
+              "build_seconds": 198,
+              "setup_seconds": 41,
               "post_cleanup_seconds": null,
               "cache_restore_seconds": null,
               "cache_save_export_seconds": null,
               "buildkit_cached_steps": null,
               "hit_count": 0,
-              "miss_count": 0,
-              "hit_rate": null,
+              "miss_count": 1,
+              "hit_rate": 0,
               "prior_cache_state": "unknown",
               "new_blob_bytes": null,
               "buildkit_prewarm": {
@@ -1238,7 +1265,25 @@
               },
               "native_tool": null,
               "issue_candidates": [],
-              "hypotheses": []
+              "hypotheses": [
+                {
+                  "id": "partial_cache_reuse",
+                  "confidence": "medium",
+                  "summary": "Hit rate is below the benchmark reuse floor.",
+                  "evidence": {
+                    "hit_rate": 0
+                  }
+                },
+                {
+                  "id": "cache_miss_quality",
+                  "confidence": "medium",
+                  "summary": "The native tool still missed cache entries during the measured build.",
+                  "evidence": {
+                    "miss_count": 1,
+                    "hit_rate": 0
+                  }
+                }
+              ]
             }
           },
           "reporting": {
@@ -1246,10 +1291,10 @@
           },
           "warm_improvement_pct": null,
           "warm_build_improvement_pct": null,
-          "cold_improvement_pct": 10.59,
-          "cold_build_improvement_pct": 13.22,
-          "storage_improvement_pct": 55.51,
-          "storage_saved_bytes": 1760258148
+          "cold_improvement_pct": 8.08,
+          "cold_build_improvement_pct": -11.24,
+          "storage_improvement_pct": 56.01,
+          "storage_saved_bytes": 1796352959
         }
       }
     }
