@@ -39,6 +39,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.BENCHMARKS_READ_TOKEN || github.token }}
           STANDALONE_REF: ${{ github.event_name == 'pull_request' && github.head_ref || '' }}
+          BENCHMARK_OWNER: ${{ github.repository_owner }}
         run: |
           set -euo pipefail
           mkdir -p ../benchmarks-repos
@@ -59,12 +60,13 @@ jobs:
             gh repo clone "$repo" "$target" -- --depth 1
           }
 
-          ruby -e 'require_relative "scripts/publish-index"; puts BENCHMARKS.map { |benchmark| benchmark.fetch("source_repo") }.uniq.sort' | while IFS= read -r repo; do
+          gh repo list "$BENCHMARK_OWNER" --limit 300 --json name,nameWithOwner,isArchived,isFork \
+            --jq '.[] | select((.name | startswith("benchmark-")) and (.isArchived | not) and (.isFork | not)) | .nameWithOwner' \
+            | sort | while IFS= read -r repo; do
             target="../benchmarks-repos/${repo##*/}"
             echo "Checking out ${repo} -> ${target}"
             checkout_repo "$repo" "$target"
           done
-          checkout_repo boringcache/benchmark-docker ../benchmarks-repos/benchmark-docker
 
       - name: Run benchmark tests
         working-directory: benchmarks
