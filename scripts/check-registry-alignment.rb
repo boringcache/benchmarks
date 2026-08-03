@@ -72,6 +72,14 @@ owned_repo_names.each do |repo_name|
     workflow.match?(/^\s{2}push:\s*$/) && workflow.include?(source_pin)
   end
   errors << "#{repo_name}: source updates must trigger a benchmark from #{source_pin}" unless source_push_trigger
+
+  cargo_rolling_chain = Dir[File.join(workflows_path, "*cargo-rolling-chain.yml")].any?
+  if cargo_rolling_chain
+    rolling_source_push = benchmark_workflows.any? do |workflow|
+      workflow.match?(/^\s{2}push:\s*$/) && workflow.include?(source_pin) && workflow.include?("cargo-rolling-chain")
+    end
+    errors << "#{repo_name}: Cargo source updates must trigger the persistent rolling chain" unless rolling_source_push
+  end
 end
 
 registry_by_repo.each do |repo_name, benchmarks|
