@@ -224,15 +224,28 @@ BENCHMARKS = [
     "extra_providers" => ["buildbuddy-cache"]
   },
   {
-    "benchmark" => "zed-sccache",
+    "benchmark" => "zed-cargo",
+    "aliases" => ["zed", "zed-sccache"],
     "name" => "Zed",
     "logo" => "zed",
     "repo" => "zed-industries/zed",
     "source_repo" => "boringcache/benchmark-zed",
     "public" => false,
     "category" => "rust",
-    "step" => "Rust build (sccache)",
-    "workflow" => "zed-sccache-benchmark.yml"
+    "step" => "Cargo build (target + sccache)",
+    "workflow" => "zed-cargo-product.yml"
+  },
+  {
+    "benchmark" => "deno-cargo",
+    "aliases" => ["deno"],
+    "name" => "Deno",
+    "logo" => "deno",
+    "repo" => "denoland/deno",
+    "source_repo" => "boringcache/benchmark-deno",
+    "public" => false,
+    "category" => "rust",
+    "step" => "Cargo build (target + sccache)",
+    "workflow" => "deno-cargo-product.yml"
   },
   {
     "benchmark" => "duckgres",

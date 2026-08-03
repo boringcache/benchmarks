@@ -115,4 +115,39 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
       assert_includes stderr, "normal Docker workflows must let the released CLI select managed BuildKit"
     end
   end
+
+  def test_native_rust_benchmarks_reject_the_old_sccache_runner
+    Dir.mktmpdir("benchmark-rust-workflow-guardrails-") do |repos_dir|
+      repo_dir = File.join(repos_dir, "benchmark-zed")
+      workflows_dir = File.join(repo_dir, ".github", "workflows")
+      FileUtils.mkdir_p(workflows_dir)
+      File.write(File.join(repo_dir, ".boringcache.toml"), <<~TOML)
+        workspace = "boringcache/benchmark-zed"
+
+        [adapters.sccache]
+        tag = "zed-sccache"
+      TOML
+      File.write(File.join(workflows_dir, "zed-cargo-product.yml"), <<~YAML)
+        on:
+          workflow_dispatch:
+        jobs:
+          benchmark:
+            steps:
+              - uses: boringcache/one@b1d1e466317cde2d78a86f8cb94347deebb501e9
+                with:
+                  setup: none
+                  mode: sccache
+                  trust-policy: publish
+              - run: cargo build --release
+      YAML
+
+      _stdout, stderr, status = Open3.capture3(SCRIPT, repos_dir)
+
+      refute status.success?
+      assert_includes stderr, "native Rust benchmarks must use [adapters.cargo].tag"
+      assert_includes stderr, "[adapters.sccache] is a retired native Rust benchmark lifecycle"
+      assert_includes stderr, "native Rust benchmarks must run through the boringcache cargo product entrypoint"
+      assert_includes stderr, "mode=sccache plus raw Cargo is retired"
+    end
+  end
 end
