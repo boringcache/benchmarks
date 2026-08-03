@@ -64,7 +64,7 @@ jobs:
             echo "Checking out ${repo} -> ${target}"
             checkout_repo "$repo" "$target"
           done
-          checkout_repo boringcache/docker-cache-proofs ../benchmarks-repos/docker-cache-proofs
+          checkout_repo boringcache/benchmark-docker ../benchmarks-repos/benchmark-docker
 
       - name: Run benchmark tests
         working-directory: benchmarks

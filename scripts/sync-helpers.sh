@@ -3,7 +3,7 @@
 # sync-helpers.sh
 #
 # Copies canonical helper scripts from benchmarks/scripts/canonical/
-# into every active benchmark repo and docker-cache-proofs checkout under the
+# into every active benchmark checkout under the
 # configured repository directory.
 #
 # Usage:
@@ -57,10 +57,7 @@ if [[ -z "${BENCHMARK_REPOS_DIR:-}" && ! -d "$repos_dir_candidate" ]]; then
   repos_dir_candidate="$script_dir/../../benchmarks-repos"
 fi
 repos_dir="$(cd "$repos_dir_candidate" && pwd)"
-repo_candidates=("$repos_dir"/benchmark-* "$repos_dir"/docker-cache-proofs)
-if [[ -z "${BENCHMARK_REPOS_DIR:-}" ]]; then
-  repo_candidates+=("$repos_dir"/../docker-cache-proofs)
-fi
+repo_candidates=("$repos_dir"/benchmark-*)
 
 if [[ ! -d "$canonical_dir" ]]; then
   echo "Canonical directory missing: $canonical_dir" >&2

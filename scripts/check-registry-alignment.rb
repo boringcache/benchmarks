@@ -19,7 +19,8 @@ registry_by_repo = BENCHMARKS.each_with_object(Hash.new { |hash, key| hash[key] 
   index[repo_name] << benchmark
 end
 
-repo_names = Dir[File.join(repos_dir, "benchmark-*")].select { |path| File.directory?(path) }.map { |path| File.basename(path) }.sort
+suite_repos = ["benchmark-docker"]
+repo_names = Dir[File.join(repos_dir, "benchmark-*")].select { |path| File.directory?(path) }.map { |path| File.basename(path) }.sort - suite_repos
 
 missing_from_registry = repo_names - registry_by_repo.keys
 extra_in_registry = registry_by_repo.keys - repo_names

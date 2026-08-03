@@ -279,7 +279,7 @@ registry_by_repo.each do |repo_name, benchmarks|
   end
 end
 
-ecr_guardrail_repos = [*registry_by_repo.keys, "docker-cache-proofs"].uniq
+ecr_guardrail_repos = [*registry_by_repo.keys, "benchmark-docker"].uniq
 ecr_guardrail_repos.each do |repo_name|
   repo_path = File.join(repos_dir, repo_name)
   next unless Dir.exist?(repo_path)
@@ -287,7 +287,7 @@ ecr_guardrail_repos.each do |repo_name|
   errors.concat(check_ecr_retired(repo_name: repo_name, repo_path: repo_path))
 end
 
-docker_proofs_path = File.join(repos_dir, "docker-cache-proofs")
+docker_proofs_path = File.join(repos_dir, "benchmark-docker")
 if Dir.exist?(docker_proofs_path)
   docker_proof_workflows = [
     *Dir[File.join(docker_proofs_path, ".github", "workflows", "*.{yml,yaml}")],
@@ -298,7 +298,7 @@ if Dir.exist?(docker_proofs_path)
     next if relative_path.downcase.include?("canary")
     next unless File.read(path).match?(MANAGED_BUILDKIT_IMAGE_PATTERN)
 
-    errors << "docker-cache-proofs/#{relative_path}: normal Docker workflows must let the released CLI select managed BuildKit; reserve explicit worker refs for canary workflows"
+    errors << "benchmark-docker/#{relative_path}: normal Docker workflows must let the released CLI select managed BuildKit; reserve explicit worker refs for canary workflows"
   end
 end
 
