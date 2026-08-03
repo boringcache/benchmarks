@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-02T20:55:02Z",
+  "generated_at": "2026-08-03T01:13:30Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -339,27 +339,26 @@
         "fresh": {
           "lane": "fresh",
           "state": "missing_pair",
-          "actions_successful_run_count": 87,
-          "boringcache_successful_run_count": 87,
-          "paired_head_count": 65,
+          "actions_successful_run_count": 86,
+          "boringcache_successful_run_count": 86,
+          "paired_head_count": 64,
           "selected_pair_count": 0,
           "window_pair_target": 3
         },
         "rolling": {
           "lane": "rolling",
-          "state": "investigation",
-          "actions_successful_run_count": 87,
-          "boringcache_successful_run_count": 87,
-          "paired_head_count": 65,
+          "state": "healthy",
+          "actions_successful_run_count": 86,
+          "boringcache_successful_run_count": 86,
+          "paired_head_count": 64,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "49b9a4af80e22d4894abc513d487a74705fc1568",
-          "latest_created_at": "2026-08-02T18:05:09Z",
-          "latest_actions_run_id": 30760317157,
-          "latest_boringcache_run_id": 30760317157,
-          "latest_reporting_mode": "investigation_only",
-          "latest_reporting_reason": "rolling_cache_import_no_reuse",
-          "latest_cache_import_status": "no_reuse",
+          "latest_head_sha": "f09a758c703b262427b7e289be3aa1524745984a",
+          "latest_created_at": "2026-08-02T20:22:20Z",
+          "latest_actions_run_id": 30765463665,
+          "latest_boringcache_run_id": 30765463665,
+          "latest_reporting_mode": "comparative",
+          "latest_cache_import_status": "ok",
           "latest_sample_valid": true
         }
       }
@@ -542,10 +541,10 @@
           "paired_head_count": 76,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "c083671341bf794fe831ad7c6a864286de4f5ff2",
-          "latest_created_at": "2026-08-02T18:50:53Z",
-          "latest_actions_run_id": 30762044785,
-          "latest_boringcache_run_id": 30762044785,
+          "latest_head_sha": "4efe31b9d9c009f0d2108f27104bef207b0eaefb",
+          "latest_created_at": "2026-08-02T22:49:47Z",
+          "latest_actions_run_id": 30770955616,
+          "latest_boringcache_run_id": 30770955616,
           "latest_reporting_mode": "comparative",
           "latest_sample_valid": true
         }
@@ -676,9 +675,9 @@
         "fresh": {
           "lane": "fresh",
           "state": "healthy",
-          "actions_successful_run_count": 40,
-          "boringcache_successful_run_count": 40,
-          "paired_head_count": 37,
+          "actions_successful_run_count": 41,
+          "boringcache_successful_run_count": 41,
+          "paired_head_count": 38,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "e0640297dc37b250c5246b0d32d44c04fbb4e936",
@@ -692,15 +691,15 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 40,
-          "boringcache_successful_run_count": 40,
-          "paired_head_count": 37,
+          "actions_successful_run_count": 41,
+          "boringcache_successful_run_count": 41,
+          "paired_head_count": 38,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "681275ef9b32f625ad0fde94143ca4b376ed3c9a",
-          "latest_created_at": "2026-08-02T12:48:04Z",
-          "latest_actions_run_id": 30748583127,
-          "latest_boringcache_run_id": 30748583127,
+          "latest_head_sha": "ae2e1d40a18271576016690b6e131d900b5660d4",
+          "latest_created_at": "2026-08-02T22:47:05Z",
+          "latest_actions_run_id": 30770861165,
+          "latest_boringcache_run_id": 30770861165,
           "latest_reporting_mode": "comparative",
           "latest_cache_import_status": "ok",
           "latest_sample_valid": true
