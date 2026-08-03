@@ -192,7 +192,7 @@ class PublishIndexTest < Minitest::Test
   end
 
   def test_known_provider_lane_outliers_are_marked
-    benchmark = benchmark_config(category: "rust").merge("benchmark" => "zed-sccache")
+    benchmark = benchmark_config(category: "rust").merge("benchmark" => "zed-cargo")
 
     reason = provider_lane_outlier_reason(benchmark: benchmark, strategy: "depot-cache", lane: "fresh")
 

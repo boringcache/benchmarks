@@ -143,6 +143,7 @@ registry_by_repo.each do |repo_name, benchmarks|
   repo_path = File.join(repos_dir, repo_name)
   next unless Dir.exist?(repo_path)
   docker_benchmark = benchmarks.any? { |benchmark| benchmark.fetch("category") == "docker" }
+  cargo_benchmark = benchmarks.any? { |benchmark| benchmark.fetch("category") == "rust" }
 
   workflows = [
     *Dir[File.join(repo_path, ".github", "workflows", "*.{yml,yaml}")],
@@ -236,6 +237,21 @@ registry_by_repo.each do |repo_name, benchmarks|
       end
     rescue Psych::Exception => error
       errors << "#{repo_name}/#{relative_path}: invalid YAML (#{error.message.lines.first.strip})"
+    end
+  end
+
+  if cargo_benchmark
+    errors << "#{repo_name}/.boringcache.toml: native Rust benchmarks must use [adapters.cargo].tag" unless adapter_has_tag?(repo_plan, "cargo")
+    errors << "#{repo_name}/.boringcache.toml: [adapters.sccache] is a retired native Rust benchmark lifecycle; use [adapters.cargo]" if adapter_has_tag?(repo_plan, "sccache")
+
+    cargo_entrypoint = workflow_text_by_path.values.any? { |text| text.match?(/\bboringcache\s+cargo\b/) }
+    errors << "#{repo_name}: native Rust benchmarks must run through the boringcache cargo product entrypoint" unless cargo_entrypoint
+
+    workflow_text_by_path.each do |path, text|
+      relative_path = path.delete_prefix("#{repo_path}/")
+      if text.match?(/^\s*mode:\s*sccache\s*$/)
+        errors << "#{repo_name}/#{relative_path}: mode=sccache plus raw Cargo is retired; use boringcache cargo"
+      end
     end
   end
 
