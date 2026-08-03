@@ -24,7 +24,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
     Dir.mktmpdir("benchmark-workflow-guardrails-") do |repos_dir|
       workflows_dir = File.join(repos_dir, "benchmark-hugo", ".github", "workflows")
       actions_dir = File.join(repos_dir, "benchmark-hugo", ".github", "actions", "docker-benchmark")
-      docker_proofs_dir = File.join(repos_dir, "docker-cache-proofs", ".github", "workflows")
+      docker_proofs_dir = File.join(repos_dir, "benchmark-docker", ".github", "workflows")
       docs_dir = File.join(repos_dir, "benchmark-hugo", "docs")
       FileUtils.mkdir_p(workflows_dir)
       FileUtils.mkdir_p(actions_dir)
@@ -54,7 +54,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
       assert_includes stderr, "benchmark-hugo/.github/workflows/hugo-benchmark.yml"
       assert_includes stderr, "benchmark-hugo/.github/actions/docker-benchmark/action.yml"
       assert_includes stderr, "ECR runtime support is retired"
-      assert_includes stderr, "docker-cache-proofs/.github/workflows/proof.yml"
+      assert_includes stderr, "benchmark-docker/.github/workflows/proof.yml"
       assert_includes stderr, "normal Docker workflows must let the released CLI select managed BuildKit"
       refute_includes stderr, "docs/ecr-history.md"
     end
