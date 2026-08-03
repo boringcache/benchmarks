@@ -6,6 +6,7 @@ require_relative "../scripts/publish-index"
 
 class BenchmarkRegistryAlignmentTest < Minitest::Test
   SCRIPT = File.expand_path("../scripts/check-registry-alignment.rb", __dir__)
+  README = File.expand_path("../README.md", __dir__)
   TABLE_SCRIPT = File.expand_path("../scripts/benchmark-table.rb", __dir__)
   COHORT_SCRIPT = File.expand_path("../scripts/benchmark-cohort.rb", __dir__)
   REPOS_DIR = ENV["BENCHMARK_REPOS_DIR"] || [
@@ -24,6 +25,10 @@ class BenchmarkRegistryAlignmentTest < Minitest::Test
   def test_helper_registries_list_all_published_benchmark_repos
     assert_equal published_repos, ruby_hash_values(File.read(TABLE_SCRIPT), "source_repo")
     assert_equal published_repos, ruby_hash_values(File.read(COHORT_SCRIPT), "repo")
+  end
+
+  def test_aggregate_readme_stays_minimal
+    assert_equal "# BoringCache benchmarks\n\nThis repository contains the BoringCache benchmark index and shared benchmark checks.\n", File.read(README)
   end
 
   private

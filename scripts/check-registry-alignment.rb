@@ -19,8 +19,9 @@ registry_by_repo = BENCHMARKS.each_with_object(Hash.new { |hash, key| hash[key] 
   index[repo_name] << benchmark
 end
 
-suite_repos = ["benchmark-docker"]
-repo_names = Dir[File.join(repos_dir, "benchmark-*")].select { |path| File.directory?(path) }.map { |path| File.basename(path) }.sort - suite_repos
+registry_exempt_repos = ["benchmark-docker", "benchmark-obs-studio"]
+owned_repo_names = Dir[File.join(repos_dir, "benchmark-*")].select { |path| File.directory?(path) }.map { |path| File.basename(path) }.sort
+repo_names = owned_repo_names - registry_exempt_repos
 
 missing_from_registry = repo_names - registry_by_repo.keys
 extra_in_registry = registry_by_repo.keys - repo_names
@@ -28,6 +29,25 @@ errors = []
 
 errors << "benchmark repos missing from aggregate registry: #{missing_from_registry.join(", ")}" if missing_from_registry.any?
 errors << "aggregate registry points at missing repos: #{extra_in_registry.join(", ")}" if extra_in_registry.any?
+
+owned_repo_names.each do |repo_name|
+  repo_path = File.join(repos_dir, repo_name)
+  readme_path = File.join(repo_path, "README.md")
+  lines = File.file?(readme_path) ? File.readlines(readme_path, chomp: true) : []
+  title = lines.first.to_s
+  subject = title.delete_prefix("# BoringCache ").delete_suffix(" benchmark")
+  expected_readme = [
+    "# BoringCache #{subject} benchmark",
+    "",
+    "This repository contains the BoringCache benchmark for #{subject}.",
+    "",
+    "Benchmark workflows are in [`.github/workflows/`](.github/workflows/), with configuration in [`.boringcache.toml`](.boringcache.toml)."
+  ]
+
+  errors << "#{repo_name}: README does not match the owned benchmark template" unless !subject.empty? && lines == expected_readme
+  errors << "#{repo_name}: .github/workflows is missing" unless Dir.exist?(File.join(repo_path, ".github", "workflows"))
+  errors << "#{repo_name}: .boringcache.toml is missing" unless File.file?(File.join(repo_path, ".boringcache.toml"))
+end
 
 registry_by_repo.each do |repo_name, benchmarks|
   repo_path = File.join(repos_dir, repo_name)
