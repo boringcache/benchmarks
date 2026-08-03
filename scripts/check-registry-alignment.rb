@@ -63,6 +63,10 @@ owned_repo_names.each do |repo_name|
   errors << "#{repo_name}: sync.yml must push with BOT_PUBLIC_GITHUB_TOKEN" unless sync_text.include?("secrets.BOT_PUBLIC_GITHUB_TOKEN")
 
   source_pin = File.file?(File.join(repo_path, "benchmark-source.env")) ? "benchmark-source.env" : "upstream"
+  if source_pin == "benchmark-source.env"
+    pair_is_gated = sync_text.include?("gh run list") && sync_text.include?("steps.previous.outputs.ready == 'true'")
+    errors << "#{repo_name}: adjacent source pairs must wait for the previous rolling benchmark" unless pair_is_gated
+  end
   benchmark_workflows = Dir[File.join(workflows_path, "*.yml")].reject { |path| path == sync_path }.map { |path| File.read(path) }
   source_push_trigger = benchmark_workflows.any? do |workflow|
     workflow.match?(/^\s{2}push:\s*$/) && workflow.include?(source_pin)
