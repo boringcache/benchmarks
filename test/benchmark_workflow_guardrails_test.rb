@@ -144,6 +144,31 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
     end
   end
 
+  def test_inline_canary_inputs_are_allowed
+    with_repo do |repo_dir|
+      write_workflow(repo_dir, <<~YAML)
+        on:
+          workflow_dispatch:
+            inputs:
+              cli_version: {required: false, type: string, default: ""}
+              buildkit_image: {required: false, type: string, default: ""}
+        jobs:
+          benchmark:
+            runs-on: ubuntu-latest
+            steps:
+              - uses: boringcache/one@0123456789012345678901234567890123456789
+                with:
+                  cli-version: ${{ inputs.cli_version }}
+                  managed-buildkit-image: ${{ inputs.buildkit_image }}
+                  mode: docker
+      YAML
+
+      stdout, stderr, status = run_guard(repo_dir)
+
+      assert status.success?, "inline canary inputs failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
+    end
+  end
+
   def test_cli_release_must_not_be_hardcoded
     with_repo do |repo_dir|
       write_workflow(repo_dir, <<~YAML)
@@ -247,6 +272,160 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
     end
   end
 
+  def test_benchmark_jobs_must_be_flat_top_level_jobs
+    with_repo do |repo_dir|
+      write_workflow(repo_dir, <<~YAML)
+        on:
+          workflow_dispatch:
+            inputs:
+              cli_version:
+                required: false
+                type: string
+              buildkit_image:
+                required: false
+                type: string
+        jobs:
+          nested:
+            name: BC / amd64
+            uses: ./.github/workflows/reusable-benchmark.yml
+          dynamic:
+            name: ${{ matrix.label }}
+            strategy:
+              matrix:
+                include:
+                  - label: GHA / arm64
+            runs-on: ubuntu-latest
+            steps:
+              - uses: boringcache/one@0123456789012345678901234567890123456789
+                with:
+                  cli-version: ${{ inputs.cli_version }}
+                  managed-buildkit-image: ${{ inputs.buildkit_image }}
+                  mode: docker
+      YAML
+
+      _stdout, stderr, status = run_guard(repo_dir)
+
+      refute status.success?
+      assert_includes stderr, "benchmark metrics must be direct top-level jobs"
+      assert_includes stderr, "benchmark job names must be flat"
+      assert_includes stderr, "benchmark matrix job names must be flat"
+    end
+  end
+
+  def test_step_level_actions_keep_benchmark_jobs_flat
+    with_repo do |repo_dir|
+      write_workflow(repo_dir, <<~YAML)
+        on:
+          workflow_dispatch:
+            inputs:
+              cli_version:
+                required: false
+                type: string
+              buildkit_image:
+                required: false
+                type: string
+        jobs:
+          benchmark:
+            name: BoringCache amd64 commit
+            runs-on: ubuntu-latest
+            steps:
+              - uses: ./.github/actions/prepare-workload
+              - uses: boringcache/one@0123456789012345678901234567890123456789
+                with:
+                  cli-version: ${{ inputs.cli_version }}
+                  managed-buildkit-image: ${{ inputs.buildkit_image }}
+                  mode: docker
+      YAML
+
+      stdout, stderr, status = run_guard(repo_dir)
+
+      assert status.success?, "flat benchmark job failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
+    end
+  end
+
+  def test_large_runner_overrides_are_manual_and_main_only
+    with_repo do |repo_dir|
+      write_workflow(repo_dir, <<~YAML)
+        on:
+          workflow_dispatch:
+            inputs:
+              cli_version:
+                required: false
+                type: string
+              buildkit_image:
+                required: false
+                type: string
+              runner_label:
+                required: false
+                type: string
+        jobs:
+          hardcoded:
+            runs-on: ubuntu-latest-8-cores
+            steps:
+              - uses: boringcache/one@0123456789012345678901234567890123456789
+                with:
+                  cli-version: ${{ inputs.cli_version }}
+                  managed-buildkit-image: ${{ inputs.buildkit_image }}
+                  mode: docker
+          unsafe-override:
+            runs-on: ${{ inputs.runner_label || 'ubuntu-latest' }}
+            steps:
+              - run: docker version
+      YAML
+
+      _stdout, stderr, status = run_guard(repo_dir)
+
+      refute status.success?
+      assert_includes stderr, "large runners must be an empty runtime override"
+      assert_includes stderr, "runner_label overrides must be restricted to manual main-branch dispatches"
+    end
+  end
+
+  def test_fresh_and_rolling_entry_points_have_explicit_phases
+    with_repo do |repo_dir|
+      write_workflow(repo_dir, <<~YAML, "hugo-fresh-benchmark.yml")
+        on:
+          workflow_dispatch:
+            inputs:
+              cli_version: {required: false, type: string}
+              buildkit_image: {required: false, type: string}
+        jobs:
+          cold:
+            name: BoringCache Hugo cold
+            runs-on: ubuntu-latest
+            steps:
+              - uses: boringcache/one@0123456789012345678901234567890123456789
+                with:
+                  cli-version: ${{ inputs.cli_version }}
+                  managed-buildkit-image: ${{ inputs.buildkit_image }}
+                  mode: docker
+      YAML
+      write_workflow(repo_dir, <<~YAML, "hugo-benchmark.yml")
+        on:
+          push:
+            branches: [main]
+        jobs:
+          cold:
+            name: BoringCache Hugo cold
+            runs-on: ubuntu-latest
+            steps:
+              - run: docker version
+          warm:
+            name: BoringCache Hugo warm
+            runs-on: ubuntu-latest
+            steps:
+              - run: docker version
+      YAML
+
+      _stdout, stderr, status = run_guard(repo_dir)
+
+      refute status.success?
+      assert_includes stderr, "fresh benchmarks must run on pull requests"
+      assert_includes stderr, "fresh benchmarks must expose direct warm jobs"
+      assert_includes stderr, "source-push rolling benchmarks must contain commit jobs only"
+    end
+  end
+
   private
 
   def with_repo(repo_name = "benchmark-hugo")
@@ -261,10 +440,10 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
     end
   end
 
-  def write_workflow(repo_dir, contents)
+  def write_workflow(repo_dir, contents, filename = "benchmark.yml")
     workflows_dir = File.join(repo_dir, ".github", "workflows")
     FileUtils.mkdir_p(workflows_dir)
-    File.write(File.join(workflows_dir, "benchmark.yml"), contents)
+    File.write(File.join(workflows_dir, filename), contents)
   end
 
   def run_guard(repo_dir)
