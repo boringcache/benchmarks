@@ -9,84 +9,70 @@ def default_repos_dir
     File.expand_path("../../benchmarks-repos", __dir__),
     File.expand_path("../../benchmark-repos", __dir__)
   ]
-  candidates.find { |path| Dir.exist?(path) } || candidates.first
+  candidates.find { |candidate| Dir.exist?(candidate) } || candidates.first
 end
 
 repos_dir = ARGV[0] || ENV.fetch("BENCHMARK_REPOS_DIR", default_repos_dir)
 abort "benchmark repos directory not found: #{repos_dir}" unless Dir.exist?(repos_dir)
 
-BANNED_WORKFLOW_PATTERNS = [
-  [
-    /type=registry/,
-    "Docker benchmark workflows must not publish a registry-cache product lane"
-  ],
-  [
-    /\becr-cache\b/,
-    "Docker benchmark workflows must not publish an ECR cache lane"
-  ],
-  [
-    /^\s*(?:buildkit_backend|buildkit_cache_backend|cache_export_type|oci_hydration):|BORINGCACHE_(?:BUILDKIT_CACHE_BACKEND|CACHE_EXPORT_TYPE|OCI_HYDRATION)/,
-    "Docker benchmark workflows have one managed BoringCache backend and must not expose backend selectors"
-  ],
-  [
-    /^\s*(?:cache-backend|registry-tag|registry-ref-tag|buildkit-backend|buildkit-cache-backend|cache-export-type|oci-hydration):/,
-    "Docker benchmark workflows should use the managed backend defaults instead of legacy Action inputs"
-  ],
-  [
-    /docker-command:\s*setup/,
-    "Docker benchmarks must use the CLI-owned managed build instead of setup-only cache wiring"
-  ],
-  [
-    /\bBC OCI\b|BoringCache OCI/,
-    "Docker benchmark workflows must present one BoringCache product lane"
-  ]
-].freeze
+repo_names = BENCHMARKS
+  .map { |benchmark| benchmark.fetch("source_repo").split("/").last }
+  .concat(%w[benchmark-docker benchmark-obs-studio])
+  .uniq
+  .sort
 
-DOCKER_REQUIRED_PATTERNS = {
-  /BORINGCACHE_MANAGED_BUILDKIT_IMAGE/ => "managed BuildKit image wiring",
-  /run-boringcache-(?:buildkit-benchmark|docker-lane)/ => "managed BoringCache benchmark runner"
+docker_repo_names = BENCHMARKS
+  .select { |benchmark| benchmark.fetch("category") == "docker" }
+  .map { |benchmark| benchmark.fetch("source_repo").split("/").last }
+  .concat(%w[benchmark-docker])
+  .uniq
+  .sort
+
+FORBIDDEN_HELPERS = {
+  /\Ainstall-(?:boringcache|benchmark)-cli\.sh\z/ => "copied CLI installer",
+  /\Aassert-boringcache-/ => "BoringCache internal assertion helper",
+  /\Asum-boringcache-check-sizes\.sh\z/ => "cache-storage calculator",
+  /\Awrite-benchmark-artifacts\.sh\z/ => "BoringCache artifact normalizer",
+  /\Awrite-boringcache-docker-lane-artifacts\.sh\z/ => "BoringCache artifact normalizer",
+  /\Acollect-boringcache-diagnostics\.sh\z/ => "BoringCache diagnostic collector",
+  /\Arun-boringcache-(?:buildkit-benchmark|docker-lane)\.sh\z/ => "BoringCache lifecycle wrapper"
 }.freeze
 
-DOCKER_PRODUCT_ASSERTION = "assert-boringcache-docker-product-run.sh"
-MANAGED_BUILDKIT_IMAGE_PATTERN = %r{ghcr\.io/boringcache/buildkit(?:@sha256:|:v)}
-CANONICAL_DOCKER_PRODUCT_ASSERTION = File.expand_path(
-  "canonical/#{DOCKER_PRODUCT_ASSERTION}",
-  __dir__
-)
+FORBIDDEN_INTERNAL_PATTERNS = {
+  /cache_session_summary/ => "must retain product evidence without parsing cache-session internals",
+  /\.buildkit\.(?:vertex_spans|mountcache|tool_caches)/ => "must not assert BuildKit receipt internals",
+  /\bcache_errors\b/ => "must not duplicate product cache-error assertions",
+  /\bboringcache\s+(?:check|inspect|cache-registry)\b/ => "must use one benchmark product lifecycle instead of secondary cache inspection",
+  %r{/_boringcache/(?:status|metrics|shutdown)} => "must not manage the product proxy lifecycle",
+  /BORINGCACHE_(?:PROXY_(?:LOG|PID|READY)|READY_FILE)/ => "must not manage the product proxy lifecycle",
+  /publish_transferred_bytes|decoded_reuse|encoded_reuse/ => "must not calculate archive receipt or CDC reuse fields",
+  /boringcache-proxy-[0-9]+\.log/ => "must not scrape product proxy logs"
+}.freeze
 
-ECR_RUNTIME_PATTERN = /(?:\becr-cache\b|\becr_(?:region|role_arn|registry|repository|allowed_account_ids)\b|(?:DOCKER_BENCHMARK|BENCHMARK)_ECR_|aws-actions\/(?:configure-aws-credentials|amazon-ecr-login)|\baws\s+ecr\b)/i
+FORBIDDEN_CLI_VERSION_PINS = {
+  /(?:cli-version|cli_version|BORINGCACHE_CLI_VERSION)[^\n]{0,120}(?:v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)/i =>
+    "must leave the CLI version to the Action default or a runtime cli_version input",
+  /cli_version:\s*\n(?:[^\n]*\n){0,5}?\s*default:\s*["']?v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?/i =>
+    "must not give cli_version a pinned release default",
+  /--cli-version(?:=|\s+)["']?v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?/i =>
+    "must not pass a hardcoded CLI release"
+}.freeze
 
-REVIEWED_ONE_ACTION_SHA = "bf810e34331db84f9f11930e83b8813b5ad31ba1"
-DEFAULT_PROXY_PORT = "22243"
-PUBLIC_CACHE_MODES = %w[archive docker buildkit bazel go gradle maven nx sccache turbo].freeze
-RETIRED_CACHE_TOKENS = %w[BORINGCACHE_API_TOKEN BORINGCACHE_TOKEN].freeze
-RETIRED_ACTION_INPUTS = %w[
-  workspace cache-tag entries path key restore-keys enableCrossOsArchive
-  no-platform exclude-patterns allow-external-symlinks preset
-  runtime-cache-tag tool-version-scope require-oci-import-ready exclude
-  cache-runtime uv-version composer-version proxy-no-git proxy-no-platform
-  cache-mode turbo-api-url turbo-token turbo-team turbo-port nx-access-token
-  nx-port sccache sccache-mode rust-version toolchain targets components
-  profile cache-cargo cache-cargo-bin cache-target
+PUBLIC_BOUNDARY_MARKERS = [
+  "boringcache/monorepo",
+  "private monorepo",
+  "synced from the monorepo",
+  "generated from the monorepo",
+  "internal source",
+  "/Users/",
+  ".planning/"
 ].freeze
-PUBLIC_CONTENT_MARKERS = [
-  "boringcache/monorepo", "private monorepo", "monorepo source",
-  "source monorepo", "synced from the monorepo",
-  "generated from the monorepo", "internal source", "/Users/", ".planning/"
-].freeze
-HIDDEN_CACHE_SURFACE = ["cache-registry", "go-cacheprog", "run --proxy"].freeze
 
-def workflow_steps(document)
-  steps = []
-  jobs = document.is_a?(Hash) ? document["jobs"] : nil
-  jobs&.each_value do |job|
-    steps.concat(job["steps"]) if job.is_a?(Hash) && job["steps"].is_a?(Array)
-  end
-
-  runs = document.is_a?(Hash) ? document["runs"] : nil
-  steps.concat(runs["steps"]) if runs.is_a?(Hash) && runs["steps"].is_a?(Array)
-  steps.select { |step| step.is_a?(Hash) }
-end
+PRODUCT_INVOCATION = /(?:\bboringcache\s+(?:bazel|cargo|ccache|docker|go|gradle|maven|nx|sccache|turbo|xcode)\b|boringcache\/one@)/
+CLI_CANARY_INPUT = /^\s+cli_version:\s*$/
+CLI_CANARY_FORWARD = /(?:cli-version|cli_version):\s*\$\{\{\s*inputs\.cli_version\b/
+BUILDKIT_CANARY_INPUT = /^\s+buildkit_image:\s*$/
+BUILDKIT_CANARY_FORWARD = /(?:managed-buildkit-image|buildkit_image):\s*\$\{\{[^\n]*inputs\.buildkit_image\b/
 
 def duplicate_yaml_keys(source)
   duplicates = []
@@ -96,9 +82,9 @@ def duplicate_yaml_keys(source)
       seen = {}
       node.children.each_slice(2) do |key, value|
         if key.is_a?(Psych::Nodes::Scalar)
-          normalized_key = key.value.downcase
-          duplicates << [key.value, key.start_line + 1] if seen.key?(normalized_key)
-          seen[normalized_key] = true
+          normalized = key.value.downcase
+          duplicates << [key.value, key.start_line + 1] if seen.key?(normalized)
+          seen[normalized] = true
         end
         visit.call(value)
       end
@@ -112,194 +98,111 @@ rescue Psych::SyntaxError
   []
 end
 
-def adapter_has_tag?(repo_plan, mode)
-  section = repo_plan[/^\[adapters\.#{Regexp.escape(mode)}\]\s*$\n(?<body>.*?)(?=^\[|\z)/m, :body]
-  section&.match?(/^tag\s*=\s*"[^"]+"\s*$/)
-end
-
-def check_ecr_retired(repo_name:, repo_path:)
-  paths = [
-    *Dir[File.join(repo_path, ".github", "workflows", "*.{yml,yaml}")],
-    *Dir[File.join(repo_path, ".github", "actions", "**", "action.{yml,yaml}")]
-  ].sort
-
-  paths.filter_map do |path|
-    line_number = File.foreach(path).with_index(1).find { |line, _number| line.match?(ECR_RUNTIME_PATTERN) }&.last
-    next unless line_number
-
-    relative_path = path.delete_prefix("#{repo_path}/")
-    "#{repo_name}/#{relative_path}:#{line_number}: ECR runtime support is retired; preserve historical artifacts outside active workflow/action YAML"
+def workflow_steps(document)
+  steps = []
+  jobs = document.is_a?(Hash) ? document["jobs"] : nil
+  jobs&.each_value do |job|
+    steps.concat(job["steps"]) if job.is_a?(Hash) && job["steps"].is_a?(Array)
   end
-end
 
-registry_by_repo = BENCHMARKS.each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |benchmark, index|
-  repo_name = benchmark.fetch("source_repo").split("/").last
-  index[repo_name] << benchmark
+  runs = document.is_a?(Hash) ? document["runs"] : nil
+  steps.concat(runs["steps"]) if runs.is_a?(Hash) && runs["steps"].is_a?(Array)
+  steps.select { |step| step.is_a?(Hash) }
 end
 
 errors = []
+checked = 0
 
-registry_by_repo.each do |repo_name, benchmarks|
-  repo_path = File.join(repos_dir, repo_name)
-  next unless Dir.exist?(repo_path)
-  docker_benchmark = benchmarks.any? { |benchmark| benchmark.fetch("category") == "docker" }
-  cargo_benchmark = benchmarks.any? { |benchmark| benchmark.fetch("category") == "rust" }
+repo_names.each do |repo_name|
+  repo_dir = File.join(repos_dir, repo_name)
+  next unless Dir.exist?(repo_dir)
 
-  workflows = [
-    *Dir[File.join(repo_path, ".github", "workflows", "*.{yml,yaml}")],
-    *Dir[File.join(repo_path, ".github", "actions", "**", "*.{yml,yaml}")]
+  checked += 1
+  plan_path = File.join(repo_dir, ".boringcache.toml")
+  plan = File.file?(plan_path) ? File.read(plan_path) : ""
+  errors << "#{repo_name}/.boringcache.toml: missing CLI-owned repository plan" unless File.file?(plan_path)
+  errors << "#{repo_name}/.boringcache.toml: missing workspace identity" unless plan.match?(/^workspace\s*=\s*"[^"]+"\s*$/)
+
+  integration_files = [
+    *Dir[File.join(repo_dir, ".github", "workflows", "*.{yml,yaml}")],
+    *Dir[File.join(repo_dir, ".github", "actions", "**", "*.{yml,yaml}")],
+    *Dir[File.join(repo_dir, "scripts", "**", "*")].select { |candidate| File.file?(candidate) },
+    *Dir[File.join(repo_dir, "cases", "*.json")]
   ].sort
-  workflow_text_by_path = workflows.to_h { |path| [path, File.read(path)] }
-  plan_path = File.join(repo_path, ".boringcache.toml")
-  repo_plan = File.exist?(plan_path) ? File.read(plan_path) : ""
-  errors << "#{repo_name}/.boringcache.toml: missing CLI-owned repo plan" unless File.exist?(plan_path)
-  errors << "#{repo_name}/.boringcache.toml: missing workspace identity" unless repo_plan.match?(/^workspace\s*=\s*"[^"]+"\s*$/)
 
-  maintained_paths = [
-    File.join(repo_path, "README.md"),
-    plan_path,
-    *workflows,
-    *Dir[File.join(repo_path, "scripts", "**", "*")].select { |path| File.file?(path) }
-  ].select { |path| File.file?(path) }.uniq
-  maintained_paths.each do |path|
-    relative_path = path.delete_prefix("#{repo_path}/")
-    text = File.read(path)
-    text.scan(/\$\{BORINGCACHE_PROXY_PORT:-([0-9]+)\}/).flatten.each do |port|
-      next if port == DEFAULT_PROXY_PORT
+  integration_files.each do |file_path|
+    relative = file_path.delete_prefix("#{repo_dir}/")
+    basename = File.basename(file_path)
+    text = File.read(file_path)
 
-      errors << "#{repo_name}/#{relative_path}: defaults BORINGCACHE_PROXY_PORT to #{port}; use #{DEFAULT_PROXY_PORT}"
+    FORBIDDEN_HELPERS.each do |pattern, description|
+      errors << "#{repo_name}/#{relative}: remove #{description}; this contract belongs to product E2E" if basename.match?(pattern)
     end
-    text.scan(/^\s*(?:BORINGCACHE_)?PROXY_PORT:\s*["']?([0-9]+)["']?\s*$/i).flatten.each do |port|
-      next if port == DEFAULT_PROXY_PORT
-
-      errors << "#{repo_name}/#{relative_path}: defaults PROXY_PORT to #{port}; use #{DEFAULT_PROXY_PORT}"
-    end
-    RETIRED_CACHE_TOKENS.each do |token|
-      errors << "#{repo_name}/#{relative_path}: retired token #{token}" if text.match?(/\b#{token}\b/)
-    end
-    PUBLIC_CONTENT_MARKERS.each do |marker|
-      errors << "#{repo_name}/#{relative_path}: private publishing detail #{marker.inspect}" if text.downcase.include?(marker.downcase)
-    end
-    HIDDEN_CACHE_SURFACE.each do |marker|
-      errors << "#{repo_name}/#{relative_path}: exposes hidden cache interface #{marker.inspect}" if text.downcase.include?(marker.downcase)
-    end
-  end
-
-  workflow_text_by_path.each do |path, text|
-    relative_path = path.delete_prefix("#{repo_path}/")
-
-    if docker_benchmark && !relative_path.downcase.include?("canary") && text.match?(MANAGED_BUILDKIT_IMAGE_PATTERN)
-      errors << "#{repo_name}/#{relative_path}: normal Docker workflows must let the released CLI select managed BuildKit; reserve explicit worker refs for canary workflows"
-    end
-
-    duplicate_yaml_keys(text).each do |key, line|
-      errors << "#{repo_name}/#{relative_path}:#{line}: duplicate YAML key #{key.inspect}"
-    end
-
-    BANNED_WORKFLOW_PATTERNS.each do |pattern, message|
+    FORBIDDEN_INTERNAL_PATTERNS.each do |pattern, description|
       next unless text.match?(pattern)
 
-      errors << "#{repo_name}/#{relative_path}: #{message}"
+      errors << "#{repo_name}/#{relative}: #{description}"
+    end
+    FORBIDDEN_CLI_VERSION_PINS.each do |pattern, description|
+      next unless text.match?(pattern)
+
+      errors << "#{repo_name}/#{relative}: #{description}"
+    end
+    PUBLIC_BOUNDARY_MARKERS.each do |marker|
+      next unless text.downcase.include?(marker.downcase)
+
+      errors << "#{repo_name}/#{relative}: private publishing detail #{marker.inspect}"
     end
 
-    document = YAML.safe_load(text, aliases: true)
-    runs = document.is_a?(Hash) ? document["runs"] : nil
-    if runs.is_a?(Hash) && runs["using"] == "composite"
-      Array(runs["steps"]).each do |step|
-        next unless step.is_a?(Hash) && step.key?("run") && step["shell"].to_s.empty?
+    next unless file_path.match?(%r{/\.github/(?:workflows|actions)/})
 
-        step_name = step.fetch("name", "unnamed step")
-        errors << "#{repo_name}/#{relative_path} (#{step_name}): composite run steps must declare shell"
-      end
+    duplicate_yaml_keys(text).each do |key, line|
+      errors << "#{repo_name}/#{relative}:#{line}: duplicate YAML key #{key.inspect}"
     end
 
-    workflow_steps(document).each do |step|
-      uses = step["uses"].to_s
-      next unless uses.start_with?("boringcache/one@")
+    begin
+      document = YAML.safe_load(text, aliases: true)
+      runs = document.is_a?(Hash) ? document["runs"] : nil
+      if runs.is_a?(Hash) && runs["using"] == "composite"
+        workflow_steps(document).each do |step|
+          next unless step.key?("run") && step["shell"].to_s.empty?
 
-      step_name = step.fetch("name", "unnamed step")
-      location = "#{repo_name}/#{relative_path} (#{step_name})"
-      action_ref = uses.delete_prefix("boringcache/one@")
-      inputs = step["with"].is_a?(Hash) ? step["with"].transform_keys(&:to_s) : {}
-      mode = inputs["mode"].to_s
-
-      errors << "#{location}: use reviewed Action SHA #{REVIEWED_ONE_ACTION_SHA}" unless action_ref == REVIEWED_ONE_ACTION_SHA
-      errors << "#{location}: setup must be none" unless inputs["setup"] == "none"
-      errors << "#{location}: mode #{mode.inspect} is not canonical" unless PUBLIC_CACHE_MODES.include?(mode)
-
-      forbidden = inputs.keys & RETIRED_ACTION_INPUTS
-      errors << "#{location}: retired Action inputs #{forbidden.sort.join(', ')}" unless forbidden.empty?
-
-      if mode == "archive"
-        errors << "#{location}: archive mode must select cache-profiles" unless inputs.key?("cache-profiles")
-      elsif PUBLIC_CACHE_MODES.include?(mode) && !adapter_has_tag?(repo_plan, mode)
-        errors << "#{location}: .boringcache.toml must own [adapters.#{mode}].tag"
+          errors << "#{repo_name}/#{relative} (#{step.fetch("name", "unnamed step")}): composite run steps must declare shell"
+        end
       end
     rescue Psych::Exception => error
-      errors << "#{repo_name}/#{relative_path}: invalid YAML (#{error.message.lines.first.strip})"
+      errors << "#{repo_name}/#{relative}: invalid YAML (#{error.message.lines.first.strip})"
     end
   end
 
-  if cargo_benchmark
-    errors << "#{repo_name}/.boringcache.toml: native Rust benchmarks must use [adapters.cargo].tag" unless adapter_has_tag?(repo_plan, "cargo")
-    errors << "#{repo_name}/.boringcache.toml: [adapters.sccache] is a retired native Rust benchmark lifecycle; use [adapters.cargo]" if adapter_has_tag?(repo_plan, "sccache")
+  workflow_text = integration_files
+    .select { |file_path| file_path.match?(%r{/\.github/(?:workflows|actions)/}) }
+    .map { |file_path| File.read(file_path) }
+    .join("\n")
+  unless workflow_text.match?(PRODUCT_INVOCATION)
+    errors << "#{repo_name}: benchmark workflows must invoke one public BoringCache product lifecycle directly"
+  end
 
-    cargo_entrypoint = workflow_text_by_path.values.any? { |text| text.match?(/\bboringcache\s+cargo\b/) }
-    errors << "#{repo_name}: native Rust benchmarks must run through the boringcache cargo product entrypoint" unless cargo_entrypoint
+  unless workflow_text.include?("workflow_dispatch:") && workflow_text.match?(CLI_CANARY_INPUT)
+    errors << "#{repo_name}: a dispatchable benchmark workflow must expose the standard cli_version canary input"
+  end
+  unless workflow_text.match?(CLI_CANARY_FORWARD)
+    errors << "#{repo_name}: benchmark workflows must forward inputs.cli_version to the BoringCache product lifecycle"
+  end
 
-    workflow_text_by_path.each do |path, text|
-      relative_path = path.delete_prefix("#{repo_path}/")
-      if text.match?(/^\s*mode:\s*sccache\s*$/)
-        errors << "#{repo_name}/#{relative_path}: mode=sccache plus raw Cargo is retired; use boringcache cargo"
-      end
+  if docker_repo_names.include?(repo_name)
+    unless workflow_text.match?(BUILDKIT_CANARY_INPUT)
+      errors << "#{repo_name}: Docker benchmarks must expose the standard buildkit_image canary input"
+    end
+    unless workflow_text.match?(BUILDKIT_CANARY_FORWARD)
+      errors << "#{repo_name}: Docker benchmarks must forward inputs.buildkit_image to managed-buildkit-image"
     end
   end
 
-  next unless docker_benchmark
+  next unless workflow_text.include?("BORINGCACHE_OBSERVABILITY_JSONL_PATH")
+  next if workflow_text.include?("actions/upload-artifact@")
 
-  docker_text = workflow_text_by_path.values.join("\n")
-  DOCKER_REQUIRED_PATTERNS.each do |pattern, description|
-    next if docker_text.match?(pattern)
-
-    errors << "#{repo_name}: Docker workflows are missing #{description}"
-  end
-
-  assertion_path = File.join(repo_path, "scripts", DOCKER_PRODUCT_ASSERTION)
-  if !File.exist?(assertion_path)
-    errors << "#{repo_name}/scripts/#{DOCKER_PRODUCT_ASSERTION}: missing managed Docker runtime contract"
-  elsif File.binread(assertion_path) != File.binread(CANONICAL_DOCKER_PRODUCT_ASSERTION)
-    errors << "#{repo_name}/scripts/#{DOCKER_PRODUCT_ASSERTION}: differs from the canonical managed Docker runtime contract"
-  end
-
-  benchmark_script_path = File.join(repo_path, "scripts", "run-boringcache-buildkit-benchmark.sh")
-  if !File.exist?(benchmark_script_path)
-    errors << "#{repo_name}/scripts/run-boringcache-buildkit-benchmark.sh: missing managed Docker benchmark entrypoint"
-  elsif !File.read(benchmark_script_path).include?(DOCKER_PRODUCT_ASSERTION)
-    errors << "#{repo_name}/scripts/run-boringcache-buildkit-benchmark.sh: does not enforce the managed Docker runtime contract"
-  end
-end
-
-ecr_guardrail_repos = [*registry_by_repo.keys, "benchmark-docker"].uniq
-ecr_guardrail_repos.each do |repo_name|
-  repo_path = File.join(repos_dir, repo_name)
-  next unless Dir.exist?(repo_path)
-
-  errors.concat(check_ecr_retired(repo_name: repo_name, repo_path: repo_path))
-end
-
-docker_proofs_path = File.join(repos_dir, "benchmark-docker")
-if Dir.exist?(docker_proofs_path)
-  docker_proof_workflows = [
-    *Dir[File.join(docker_proofs_path, ".github", "workflows", "*.{yml,yaml}")],
-    *Dir[File.join(docker_proofs_path, ".github", "actions", "**", "*.{yml,yaml}")]
-  ]
-  docker_proof_workflows.each do |path|
-    relative_path = path.delete_prefix("#{docker_proofs_path}/")
-    next if relative_path.downcase.include?("canary")
-    next unless File.read(path).match?(MANAGED_BUILDKIT_IMAGE_PATTERN)
-
-    errors << "benchmark-docker/#{relative_path}: normal Docker workflows must let the released CLI select managed BuildKit; reserve explicit worker refs for canary workflows"
-  end
+  errors << "#{repo_name}: product-emitted observability must be retained as an unmodified artifact"
 end
 
 if errors.any?
@@ -307,4 +210,4 @@ if errors.any?
   exit 1
 end
 
-puts "benchmark workflow guardrails passed: #{registry_by_repo.length} repos"
+puts "benchmark leaf boundary passed: #{checked} repositories"
