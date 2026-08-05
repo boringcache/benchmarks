@@ -69,9 +69,9 @@ PUBLIC_BOUNDARY_MARKERS = [
 ].freeze
 
 PRODUCT_INVOCATION = /(?:\bboringcache\s+(?:bazel|cargo|ccache|docker|go|gradle|maven|nx|sccache|turbo|xcode)\b|boringcache\/one@)/
-CLI_CANARY_INPUT = /^\s+cli_version:\s*$/
+CLI_CANARY_INPUT = /^\s+cli_version:\s*(?:$|\{)/
 CLI_CANARY_FORWARD = /(?:cli-version|cli_version):\s*\$\{\{\s*inputs\.cli_version\b/
-BUILDKIT_CANARY_INPUT = /^\s+buildkit_image:\s*$/
+BUILDKIT_CANARY_INPUT = /^\s+buildkit_image:\s*(?:$|\{)/
 BUILDKIT_CANARY_FORWARD = /(?:managed-buildkit-image|buildkit_image):\s*\$\{\{[^\n]*inputs\.buildkit_image\b/
 
 DEPENDENCY_CACHE_PATHS = {
@@ -162,6 +162,16 @@ repo_names.each do |repo_name|
       errors << "#{repo_name}/#{relative}: private publishing detail #{marker.inspect}"
     end
 
+    if text.match?(/ubuntu-[^\s"']*(?:8|16)-cores/i)
+      errors << "#{repo_name}/#{relative}: large runners must be an empty runtime override, not a benchmark default"
+    end
+
+    text.lines.grep(/runs-on:.*inputs\.runner_label/).each do |line|
+      next if line.include?("github.event_name == 'workflow_dispatch'") && line.include?("github.ref_name == 'main'")
+
+      errors << "#{repo_name}/#{relative}: runner_label overrides must be restricted to manual main-branch dispatches"
+    end
+
     next unless file_path.match?(%r{/\.github/(?:workflows|actions)/})
 
     duplicate_yaml_keys(text).each do |key, line|
@@ -180,8 +190,57 @@ repo_names.each do |repo_name|
       end
 
       jobs = document.is_a?(Hash) && document["jobs"].is_a?(Hash) ? document["jobs"] : {}
+      if relative.start_with?(".github/workflows/") && basename.include?("fresh")
+        display_names = jobs.values.map { |job| job.is_a?(Hash) ? job["name"].to_s.downcase : nil }.compact
+        errors << "#{repo_name}/#{relative}: fresh benchmarks must run on pull requests" unless text.include?("pull_request:")
+        errors << "#{repo_name}/#{relative}: fresh benchmarks must expose direct cold jobs" unless display_names.any? { |name| name.include?("cold") }
+        errors << "#{repo_name}/#{relative}: fresh benchmarks must expose direct warm jobs" unless display_names.any? { |name| name.include?("warm") }
+        jobs.each do |job_name, job|
+          next unless job.is_a?(Hash) && job["name"].to_s.downcase.include?("warm")
+          next if job.key?("needs")
+
+          errors << "#{repo_name}/#{relative} (#{job_name}): fresh warm jobs must depend on the cold publish"
+        end
+      end
+
+      if relative.start_with?(".github/workflows/") && basename.end_with?("-benchmark.yml") && !basename.include?("fresh") && text.include?("push:")
+        display_names = jobs.values.map { |job| job.is_a?(Hash) ? job["name"].to_s.downcase : nil }.compact
+        unless display_names.any? { |name| name.include?("commit") } && display_names.none? { |name| name.include?("cold") || name.include?("warm") }
+          errors << "#{repo_name}/#{relative}: source-push rolling benchmarks must contain commit jobs only"
+        end
+      end
+
       jobs.each do |job_name, job|
-        next unless job.is_a?(Hash) && job["steps"].is_a?(Array)
+        next unless job.is_a?(Hash)
+
+        local_workflow = job["uses"].to_s
+        if local_workflow.start_with?("./.github/workflows/")
+          errors << "#{repo_name}/#{relative} (#{job_name}): benchmark metrics must be direct top-level jobs; move shared work into a step-level action"
+        end
+
+        display_name = job["name"].to_s
+        if display_name.include?("/")
+          errors << "#{repo_name}/#{relative} (#{job_name}): benchmark job names must be flat; use spaces instead of slash hierarchy"
+        end
+
+        matrix = job.dig("strategy", "matrix")
+        display_name.scan(/matrix\.([A-Za-z0-9_.-]+)/).flatten.each do |reference|
+          path = reference.split(".")
+          values = []
+          if matrix.is_a?(Hash)
+            axis = matrix[path.first]
+            values.concat(axis.is_a?(Array) ? axis : [axis].compact)
+            values.concat(matrix["include"]) if matrix["include"].is_a?(Array)
+          end
+          nested_values = values.map do |value|
+            path.reduce(value) { |current, key| current.is_a?(Hash) ? current[key] : nil }
+          end.compact
+          if nested_values.any? { |value| value.to_s.include?("/") }
+            errors << "#{repo_name}/#{relative} (#{job_name}): benchmark matrix job names must be flat; use spaces instead of slash hierarchy"
+          end
+        end
+
+        next unless job["steps"].is_a?(Array)
 
         steps = job["steps"].select { |step| step.is_a?(Hash) }
         product_steps = steps.select { |step| step["uses"].to_s.start_with?("boringcache/one@") }
