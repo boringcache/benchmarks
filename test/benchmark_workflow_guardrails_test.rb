@@ -2,6 +2,7 @@
 
 require "minitest/autorun"
 require "open3"
+require "rbconfig"
 require "fileutils"
 require "tmpdir"
 
@@ -10,144 +11,192 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
   REPOS_DIR = ENV["BENCHMARK_REPOS_DIR"] || [
     File.expand_path("../../benchmarks-repos", __dir__),
     File.expand_path("../../benchmark-repos", __dir__)
-  ].find { |path| Dir.exist?(path) }
+  ].find { |candidate| Dir.exist?(candidate) }
 
-  def test_benchmark_workflows_keep_product_guardrails
-    skip "benchmark repos checkout not available" unless REPOS_DIR
+  def test_current_benchmarks_keep_the_leaf_boundary
+    skip "benchmark repositories checkout not available" unless REPOS_DIR
 
-    stdout, stderr, status = Open3.capture3(SCRIPT, REPOS_DIR)
-    assert status.success?, "workflow guardrails failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
-    assert_includes stdout, "benchmark workflow guardrails passed"
+    stdout, stderr, status = Open3.capture3(RbConfig.ruby, SCRIPT, REPOS_DIR)
+
+    assert status.success?, "leaf boundary failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
+    assert_includes stdout, "benchmark leaf boundary passed"
   end
 
-  def test_ecr_runtime_support_is_rejected_but_historical_docs_are_ignored
-    Dir.mktmpdir("benchmark-workflow-guardrails-") do |repos_dir|
-      workflows_dir = File.join(repos_dir, "benchmark-hugo", ".github", "workflows")
-      actions_dir = File.join(repos_dir, "benchmark-hugo", ".github", "actions", "docker-benchmark")
-      docker_proofs_dir = File.join(repos_dir, "benchmark-docker", ".github", "workflows")
-      docs_dir = File.join(repos_dir, "benchmark-hugo", "docs")
-      FileUtils.mkdir_p(workflows_dir)
-      FileUtils.mkdir_p(actions_dir)
-      FileUtils.mkdir_p(docker_proofs_dir)
-      FileUtils.mkdir_p(docs_dir)
-      File.write(File.join(workflows_dir, "hugo-benchmark.yml"), <<~YAML)
+  def test_minimal_product_run_and_raw_evidence_are_allowed
+    with_repo do |repo_dir|
+      write_workflow(repo_dir, <<~YAML)
         on:
           workflow_dispatch:
+            inputs:
+              cli_version:
+                required: false
+                type: string
+              buildkit_image:
+                required: false
+                type: string
         jobs:
-          ecr-cache:
-            name: ECR
+          benchmark:
+            runs-on: ubuntu-latest
             steps:
-              - name: ECR
+              - uses: actions/checkout@v6
+              - name: Run released product
+                env:
+                  BORINGCACHE_OBSERVABILITY_JSONL_PATH: ${{ runner.temp }}/boringcache.jsonl
+                uses: boringcache/one@0123456789012345678901234567890123456789
                 with:
-                  strategy: ecr-cache
+                  cli-version: ${{ inputs.cli_version }}
+                  managed-buildkit-image: ${{ inputs.buildkit_image }}
+                  mode: docker
+              - name: Retain product evidence
+                uses: actions/upload-artifact@v6
+                with:
+                  path: ${{ runner.temp }}/boringcache.jsonl
       YAML
-      File.write(File.join(actions_dir, "action.yml"), "runs:\n  using: composite\n  steps:\n    - uses: aws-actions/amazon-ecr-login@v2\n")
-      File.write(
-        File.join(docker_proofs_dir, "proof.yml"),
-        "env:\n  BUILDKIT_IMAGE: ghcr.io/boringcache/buildkit:v0.30.0-bc.14\n"
-      )
-      File.write(File.join(docs_dir, "ecr-history.md"), "Historical ECR benchmark evidence.\n")
 
-      _stdout, stderr, status = Open3.capture3(SCRIPT, repos_dir)
+      stdout, stderr, status = run_guard(repo_dir)
 
-      refute status.success?
-      assert_includes stderr, "benchmark-hugo/.github/workflows/hugo-benchmark.yml"
-      assert_includes stderr, "benchmark-hugo/.github/actions/docker-benchmark/action.yml"
-      assert_includes stderr, "ECR runtime support is retired"
-      assert_includes stderr, "benchmark-docker/.github/workflows/proof.yml"
-      assert_includes stderr, "normal Docker workflows must let the released CLI select managed BuildKit"
-      refute_includes stderr, "docs/ecr-history.md"
+      assert status.success?, "minimal product run failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
+      assert_includes stdout, "benchmark leaf boundary passed: 1 repositories"
     end
   end
 
-  def test_cache_interface_and_public_boundary_are_locked
-    Dir.mktmpdir("benchmark-cache-interface-") do |repos_dir|
-      repo_dir = File.join(repos_dir, "benchmark-hugo")
-      workflows_dir = File.join(repo_dir, ".github", "workflows")
-      actions_dir = File.join(repo_dir, ".github", "actions", "docker-benchmark")
+  def test_product_assertions_installers_and_lifecycle_wrappers_are_rejected
+    with_repo do |repo_dir|
       scripts_dir = File.join(repo_dir, "scripts")
-      FileUtils.mkdir_p(workflows_dir)
-      FileUtils.mkdir_p(actions_dir)
       FileUtils.mkdir_p(scripts_dir)
-      File.write(File.join(repo_dir, ".boringcache.toml"), "workspace = \"boringcache/benchmark-hugo\"\n")
-      File.write(File.join(repo_dir, "README.md"), "Synced from the monorepo with BORINGCACHE_API_TOKEN.\n")
-      File.write(
-        File.join(scripts_dir, "run-boringcache-buildkit-benchmark.sh"),
-        'proxy_port="${BORINGCACHE_PROXY_PORT:-22243}"' + "\n"
-      )
-      File.write(File.join(workflows_dir, "hugo-benchmark.yml"), <<~YAML)
+      File.write(File.join(scripts_dir, "install-boringcache-cli.sh"), "#!/usr/bin/env bash\n")
+      File.write(File.join(scripts_dir, "assert-boringcache-docker-product-run.sh"), <<~SH)
+        #!/usr/bin/env bash
+        jq -e '.buildkit.vertex_spans and .cache_errors == 0' cache_session_summary.json
+      SH
+      File.write(File.join(scripts_dir, "run-boringcache-docker-lane.sh"), <<~SH)
+        #!/usr/bin/env bash
+        curl http://127.0.0.1:22243/_boringcache/status
+      SH
+      write_workflow(repo_dir, <<~YAML)
         on:
           workflow_dispatch:
         jobs:
           benchmark:
-            env:
-              PROXY_PORT: "5000"
-              BUILDKIT_IMAGE: ghcr.io/boringcache/buildkit:v0.30.0-bc.14
-              BORINGCACHE_RESTORE_TOKEN: first
-              BORINGCACHE_RESTORE_TOKEN: second
+            runs-on: ubuntu-latest
             steps:
-              - uses: boringcache/one@v1
-                with:
-                  setup: mise
-                  mode: nx-proxy
-                  workspace: boringcache/benchmark-hugo
-      YAML
-      File.write(File.join(actions_dir, "action.yml"), <<~YAML)
-        runs:
-          using: composite
-          steps:
-            - name: Missing shell
-              run: echo invalid
+              - run: boringcache docker --tag hugo -- docker buildx build .
+              - run: boringcache inspect boringcache/benchmark-hugo hugo --json
       YAML
 
-      _stdout, stderr, status = Open3.capture3(SCRIPT, repos_dir)
+      _stdout, stderr, status = run_guard(repo_dir)
 
       refute status.success?
-      assert_includes stderr, "retired token BORINGCACHE_API_TOKEN"
-      assert_includes stderr, "private publishing detail \"synced from the monorepo\""
-      assert_includes stderr, "use reviewed Action SHA"
-      assert_includes stderr, "setup must be none"
-      assert_includes stderr, "mode \"nx-proxy\" is not canonical"
-      assert_includes stderr, "retired Action inputs workspace"
-      assert_includes stderr, "duplicate YAML key \"BORINGCACHE_RESTORE_TOKEN\""
-      assert_includes stderr, "composite run steps must declare shell"
-      assert_includes stderr, "defaults PROXY_PORT to 5000; use 22243"
-      assert_includes stderr, "normal Docker workflows must let the released CLI select managed BuildKit"
+      assert_includes stderr, "remove copied CLI installer"
+      assert_includes stderr, "remove BoringCache internal assertion helper"
+      assert_includes stderr, "remove BoringCache lifecycle wrapper"
+      assert_includes stderr, "must retain product evidence without parsing cache-session internals"
+      assert_includes stderr, "must not assert BuildKit receipt internals"
+      assert_includes stderr, "must not duplicate product cache-error assertions"
+      assert_includes stderr, "must use one benchmark product lifecycle instead of secondary cache inspection"
+      assert_includes stderr, "must not manage the product proxy lifecycle"
     end
   end
 
-  def test_native_rust_benchmarks_reject_the_old_sccache_runner
-    Dir.mktmpdir("benchmark-rust-workflow-guardrails-") do |repos_dir|
-      repo_dir = File.join(repos_dir, "benchmark-zed")
-      workflows_dir = File.join(repo_dir, ".github", "workflows")
-      FileUtils.mkdir_p(workflows_dir)
-      File.write(File.join(repo_dir, ".boringcache.toml"), <<~TOML)
-        workspace = "boringcache/benchmark-zed"
-
-        [adapters.sccache]
-        tag = "zed-sccache"
-      TOML
-      File.write(File.join(workflows_dir, "zed-cargo-product.yml"), <<~YAML)
+  def test_product_observability_must_be_uploaded_without_a_repo_local_normalizer
+    with_repo do |repo_dir|
+      write_workflow(repo_dir, <<~YAML)
         on:
           workflow_dispatch:
         jobs:
           benchmark:
+            runs-on: ubuntu-latest
             steps:
-              - uses: boringcache/one@b1d1e466317cde2d78a86f8cb94347deebb501e9
-                with:
-                  setup: none
-                  mode: sccache
-                  trust-policy: publish
-              - run: cargo build --release
+              - name: Run released product
+                env:
+                  BORINGCACHE_OBSERVABILITY_JSONL_PATH: ${{ runner.temp }}/boringcache.jsonl
+                run: boringcache cargo -- cargo build --release
       YAML
 
-      _stdout, stderr, status = Open3.capture3(SCRIPT, repos_dir)
+      _stdout, stderr, status = run_guard(repo_dir)
 
       refute status.success?
-      assert_includes stderr, "native Rust benchmarks must use [adapters.cargo].tag"
-      assert_includes stderr, "[adapters.sccache] is a retired native Rust benchmark lifecycle"
-      assert_includes stderr, "native Rust benchmarks must run through the boringcache cargo product entrypoint"
-      assert_includes stderr, "mode=sccache plus raw Cargo is retired"
+      assert_includes stderr, "product-emitted observability must be retained as an unmodified artifact"
     end
+  end
+
+  def test_first_class_canary_inputs_are_required_and_must_reach_the_product
+    with_repo do |repo_dir|
+      write_workflow(repo_dir, <<~YAML)
+        on:
+          workflow_dispatch:
+        jobs:
+          benchmark:
+            runs-on: ubuntu-latest
+            steps:
+              - uses: boringcache/one@0123456789012345678901234567890123456789
+                with:
+                  mode: docker
+      YAML
+
+      _stdout, stderr, status = run_guard(repo_dir)
+
+      refute status.success?
+      assert_includes stderr, "must expose the standard cli_version canary input"
+      assert_includes stderr, "must forward inputs.cli_version"
+      assert_includes stderr, "must expose the standard buildkit_image canary input"
+      assert_includes stderr, "must forward inputs.buildkit_image"
+    end
+  end
+
+  def test_cli_release_must_not_be_hardcoded
+    with_repo do |repo_dir|
+      write_workflow(repo_dir, <<~YAML)
+        on:
+          workflow_dispatch:
+            inputs:
+              cli_version:
+                required: false
+                type: string
+                default: v1.16.8
+              buildkit_image:
+                required: false
+                type: string
+        jobs:
+          benchmark:
+            runs-on: ubuntu-latest
+            steps:
+              - uses: boringcache/one@0123456789012345678901234567890123456789
+                with:
+                  cli-version: ${{ inputs.cli_version || 'v1.16.8' }}
+                  managed-buildkit-image: ${{ inputs.buildkit_image }}
+                  mode: docker
+      YAML
+
+      _stdout, stderr, status = run_guard(repo_dir)
+
+      refute status.success?
+      assert_includes stderr, "must not give cli_version a pinned release default"
+      assert_includes stderr, "must leave the CLI version to the Action default"
+    end
+  end
+
+  private
+
+  def with_repo
+    Dir.mktmpdir("benchmark-leaf-boundary-") do |repos_dir|
+      repo_dir = File.join(repos_dir, "benchmark-hugo")
+      FileUtils.mkdir_p(repo_dir)
+      File.write(
+        File.join(repo_dir, ".boringcache.toml"),
+        "workspace = \"boringcache/benchmark-hugo\"\n\n[adapters.docker]\ntag = \"hugo\"\n"
+      )
+      yield repo_dir
+    end
+  end
+
+  def write_workflow(repo_dir, contents)
+    workflows_dir = File.join(repo_dir, ".github", "workflows")
+    FileUtils.mkdir_p(workflows_dir)
+    File.write(File.join(workflows_dir, "benchmark.yml"), contents)
+  end
+
+  def run_guard(repo_dir)
+    Open3.capture3(RbConfig.ruby, SCRIPT, File.dirname(repo_dir))
   end
 end
