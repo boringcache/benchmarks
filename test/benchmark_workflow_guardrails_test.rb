@@ -176,15 +176,86 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
     end
   end
 
+  def test_adapter_benchmarks_reject_hidden_cache_composition
+    with_repo("benchmark-storybook") do |repo_dir|
+      write_workflow(repo_dir, <<~YAML)
+        on:
+          workflow_dispatch:
+            inputs:
+              cli_version:
+                required: false
+                type: string
+        jobs:
+          benchmark:
+            runs-on: ubuntu-latest
+            steps:
+              - uses: actions/setup-node@v6
+                with:
+                  cache: pnpm
+              - uses: actions/cache@v5
+                with:
+                  path: |
+                    .pnpm-store
+                    ${{ env.GRADLE_USER_HOME }}
+              - uses: boringcache/one@0123456789012345678901234567890123456789
+                with:
+                  cli-version: ${{ inputs.cli_version }}
+                  mode: turbo
+                  cache-profiles: benchmark
+              - uses: boringcache/one@0123456789012345678901234567890123456789
+                with:
+                  cli-version: ${{ inputs.cli_version }}
+                  mode: docker
+      YAML
+
+      _stdout, stderr, status = run_guard(repo_dir)
+
+      refute status.success?
+      assert_includes stderr, "one benchmark lane must use one BoringCache mode"
+      assert_includes stderr, "adapter mode turbo must not hide an archive profile"
+      assert_includes stderr, "pnpm store must not be hidden inside an adapter comparison"
+      assert_includes stderr, "cache only Gradle build-cache directories"
+      assert_includes stderr, "runtime setup must not add a hidden dependency cache"
+    end
+  end
+
+  def test_one_adapter_and_its_matching_build_cache_are_allowed
+    with_repo("benchmark-storybook") do |repo_dir|
+      write_workflow(repo_dir, <<~YAML)
+        on:
+          workflow_dispatch:
+            inputs:
+              cli_version:
+                required: false
+                type: string
+        jobs:
+          benchmark:
+            runs-on: ubuntu-latest
+            steps:
+              - uses: actions/cache@v5
+                with:
+                  path: upstream/.turbo
+              - uses: boringcache/one@0123456789012345678901234567890123456789
+                with:
+                  cli-version: ${{ inputs.cli_version }}
+                  mode: turbo
+      YAML
+
+      stdout, stderr, status = run_guard(repo_dir)
+
+      assert status.success?, "pure adapter benchmark failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
+    end
+  end
+
   private
 
-  def with_repo
+  def with_repo(repo_name = "benchmark-hugo")
     Dir.mktmpdir("benchmark-leaf-boundary-") do |repos_dir|
-      repo_dir = File.join(repos_dir, "benchmark-hugo")
+      repo_dir = File.join(repos_dir, repo_name)
       FileUtils.mkdir_p(repo_dir)
       File.write(
         File.join(repo_dir, ".boringcache.toml"),
-        "workspace = \"boringcache/benchmark-hugo\"\n\n[adapters.docker]\ntag = \"hugo\"\n"
+        "workspace = \"boringcache/#{repo_name}\"\n\n[adapters.docker]\ntag = \"benchmark\"\n"
       )
       yield repo_dir
     end
