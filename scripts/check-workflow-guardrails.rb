@@ -74,6 +74,14 @@ CLI_CANARY_FORWARD = /(?:cli-version|cli_version):\s*\$\{\{\s*inputs\.cli_versio
 BUILDKIT_CANARY_INPUT = /^\s+buildkit_image:\s*$/
 BUILDKIT_CANARY_FORWARD = /(?:managed-buildkit-image|buildkit_image):\s*\$\{\{[^\n]*inputs\.buildkit_image\b/
 
+DEPENDENCY_CACHE_PATHS = {
+  /(?:^|\/)node_modules(?:\/|$)/i => "node_modules",
+  /pnpm[-_]?store/i => "pnpm store",
+  /YARN_CACHE|\.yarn(?:-cache|\/berry\/cache)/i => "Yarn package cache",
+  /GO_MODULE_CACHE|GOMODCACHE|\/pkg\/mod(?:\/|$)/i => "Go module cache",
+  /MAVEN_LOCAL_REPO|\.m2\/repository(?:\/|$)/i => "Maven dependency repository"
+}.freeze
+
 def duplicate_yaml_keys(source)
   duplicates = []
   tree = Psych.parse_stream(source)
@@ -168,6 +176,57 @@ repo_names.each do |repo_name|
           next unless step.key?("run") && step["shell"].to_s.empty?
 
           errors << "#{repo_name}/#{relative} (#{step.fetch("name", "unnamed step")}): composite run steps must declare shell"
+        end
+      end
+
+      jobs = document.is_a?(Hash) && document["jobs"].is_a?(Hash) ? document["jobs"] : {}
+      jobs.each do |job_name, job|
+        next unless job.is_a?(Hash) && job["steps"].is_a?(Array)
+
+        steps = job["steps"].select { |step| step.is_a?(Hash) }
+        product_steps = steps.select { |step| step["uses"].to_s.start_with?("boringcache/one@") }
+        product_modes = product_steps.each_with_object([]) do |step, modes|
+          inputs = step["with"].is_a?(Hash) ? step["with"] : {}
+          mode = inputs["mode"].to_s.strip
+          modes << mode unless mode.empty?
+        end.uniq
+
+        if product_modes.length > 1
+          errors << "#{repo_name}/#{relative} (#{job_name}): one benchmark lane must use one BoringCache mode, found #{product_modes.join(", ")}"
+        end
+
+        product_steps.each do |step|
+          inputs = step["with"].is_a?(Hash) ? step["with"] : {}
+          mode = inputs["mode"].to_s.strip
+          profiles = inputs["cache-profiles"].to_s.strip
+          next if profiles.empty? || mode == "archive"
+
+          errors << "#{repo_name}/#{relative} (#{step.fetch("name", "unnamed step")}): adapter mode #{mode} must not hide an archive profile; use a separately named benchmark case"
+        end
+
+        next if product_modes.empty? || product_modes.include?("archive")
+
+        steps.each do |step|
+          uses = step["uses"].to_s
+          inputs = step["with"].is_a?(Hash) ? step["with"] : {}
+          if uses.match?(%r{\Aactions/cache(?:/(?:restore|save))?@})
+            cache_paths = inputs["path"].to_s
+            DEPENDENCY_CACHE_PATHS.each do |pattern, description|
+              next unless cache_paths.match?(pattern)
+
+              errors << "#{repo_name}/#{relative} (#{step.fetch("name", "unnamed step")}): #{description} must not be hidden inside an adapter comparison"
+            end
+            if cache_paths.lines.any? { |line| line.strip.match?(/\A(?:\$\{\{\s*env\.GRADLE_USER_HOME\s*\}\}|[^\s]*\.gradle-user-home)\z/) }
+              errors << "#{repo_name}/#{relative} (#{step.fetch("name", "unnamed step")}): cache only Gradle build-cache directories, not the dependency-bearing Gradle user home"
+            end
+          end
+
+          next unless uses.match?(%r{\A(?:actions/setup-(?:go|java|node|python)|ruby/setup-ruby)@})
+
+          setup_cache = inputs["cache"] || inputs["package-manager-cache"] || inputs["bundler-cache"]
+          next if setup_cache.nil? || setup_cache == false || setup_cache.to_s.strip.match?(/\A(?:|false)\z/i)
+
+          errors << "#{repo_name}/#{relative} (#{step.fetch("name", "unnamed step")}): runtime setup must not add a hidden dependency cache to an adapter benchmark"
         end
       end
     rescue Psych::Exception => error
