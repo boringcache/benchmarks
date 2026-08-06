@@ -12,7 +12,17 @@ SCHEMA_VERSION = 1
 PROVIDER_LABELS = {
     "actions-cache": "GitHub Actions",
     "boringcache": "BoringCache",
+    "boringcache-mountcache": "BoringCache mountcache",
+    "boringcache-native": "BoringCache native",
+    "boringcache-toolcache": "BoringCache toolcache",
+    "boringcache-turbo": "BoringCache Turbo",
+    "buildbuddy": "BuildBuddy",
+    "buildbuddy-cache": "BuildBuddy",
+    "ecr-cache": "Amazon ECR",
 }
+
+BASELINE_STRATEGY = "actions-cache"
+CANDIDATE_STRATEGY = "boringcache"
 
 PHASE_LABELS = {
     "cold": "Cold build",
@@ -38,7 +48,7 @@ def parse_args() -> argparse.Namespace:
 
     phase = subparsers.add_parser("phase")
     phase.add_argument("--benchmark", required=True)
-    phase.add_argument("--strategy", required=True, choices=sorted(PROVIDER_LABELS))
+    phase.add_argument("--strategy", required=True)
     phase.add_argument("--lane", required=True, choices=sorted(LANE_PHASES))
     phase.add_argument("--phase", required=True, choices=sorted(PHASE_LABELS))
     phase.add_argument("--mode", required=True)
@@ -330,11 +340,16 @@ def render_markdown(title: str, lanes: dict[tuple[str, str], dict[str, Any]], ph
     lane_names = sorted({lane for _, lane in lanes})
 
     for lane in lane_names:
-        baseline = lanes.get(("actions-cache", lane))
-        candidate = lanes.get(("boringcache", lane))
+        baseline = lanes.get((BASELINE_STRATEGY, lane))
+        candidate = lanes.get((CANDIDATE_STRATEGY, lane))
         reference = candidate or baseline
         if reference is None:
             continue
+
+        lane_strategies = sorted(
+            {strategy for strategy, item in lanes if item == lane},
+            key=lambda strategy: (strategy != CANDIDATE_STRATEGY, strategy != BASELINE_STRATEGY, strategy),
+        )
 
         lines.append(f"### {lane.capitalize()} lane")
         lines.append("")
@@ -342,7 +357,7 @@ def render_markdown(title: str, lanes: dict[tuple[str, str], dict[str, Any]], ph
         lines.append("| --- | --- | ---: | ---: | ---: | --- |")
 
         for phase_name in LANE_PHASES[lane]:
-            for strategy in ("boringcache", "actions-cache"):
+            for strategy in lane_strategies:
                 payload = next(
                     (
                         item
@@ -355,7 +370,7 @@ def render_markdown(title: str, lanes: dict[tuple[str, str], dict[str, Any]], ph
                     continue
                 timing = payload["timing"]
                 lines.append(
-                    f"| {PROVIDER_LABELS[strategy]} | {PHASE_LABELS[phase_name]} "
+                    f"| {PROVIDER_LABELS.get(strategy, strategy)} | {PHASE_LABELS[phase_name]} "
                     f"| {format_seconds(timing['restore_or_setup_seconds'])} "
                     f"| {format_seconds(timing['build_seconds'])} "
                     f"| {format_seconds(timing['total_seconds'])} "
@@ -378,8 +393,8 @@ def render_markdown(title: str, lanes: dict[tuple[str, str], dict[str, Any]], ph
                 if before is None or after is None:
                     continue
                 lines.append(
-                    f"- {PHASE_LABELS[phase_name]}: BoringCache {format_seconds(after)} "
-                    f"vs GitHub Actions {format_seconds(before)} — **{format_delta(before, after)}**"
+                    f"- {PHASE_LABELS[phase_name]}: {PROVIDER_LABELS[CANDIDATE_STRATEGY]} {format_seconds(after)} "
+                    f"vs {PROVIDER_LABELS[BASELINE_STRATEGY]} {format_seconds(before)} — **{format_delta(before, after)}**"
                 )
             lines.append("")
 
