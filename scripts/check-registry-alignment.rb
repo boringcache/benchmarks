@@ -11,6 +11,20 @@ def default_repos_dir
   candidates.find { |path| Dir.exist?(path) } || candidates.first
 end
 
+BENCHMARK_ID_ASSIGNMENT = /\b(?:benchmark_id|BENCHMARK_ID):[ \t]*(?:"([^"]*)"|'([^']*)'|((?:\$\{\{.*?\}\}|[^,}\s])+))/
+BENCHMARK_ID_VALUES = [
+  /\A([A-Za-z0-9._-]+)\z/,
+  /\A([A-Za-z0-9._-]+)\$\{\{\s*inputs\.benchmark_id_suffix\s*\}\}\z/,
+  /\A\$\{\{\s*format\('([A-Za-z0-9._-]+)\{0\}',\s*inputs\.benchmark_id_suffix\)\s*\}\}\z/
+].freeze
+
+def benchmark_ids_in(line)
+  line.scan(BENCHMARK_ID_ASSIGNMENT).filter_map do |captures|
+    value = captures.compact.first.to_s.strip
+    BENCHMARK_ID_VALUES.filter_map { |pattern| value[pattern, 1] }.first
+  end
+end
+
 repos_dir = ARGV[0] || ENV.fetch("BENCHMARK_REPOS_DIR", default_repos_dir)
 abort "benchmark repos directory not found: #{repos_dir}" unless Dir.exist?(repos_dir)
 
@@ -86,12 +100,7 @@ registry_by_repo.each do |repo_name, benchmarks|
   next unless Dir.exist?(repo_path)
 
   workflow_ids = Dir[File.join(repo_path, ".github", "workflows", "*.yml")].flat_map do |path|
-    File.readlines(path).map do |line|
-      line[/^\s*benchmark_id:\s*([A-Za-z0-9._-]+)\s*$/, 1] ||
-        line[/^\s*BENCHMARK_ID:\s*([A-Za-z0-9._-]+)\s*$/, 1] ||
-        line[/^\s*benchmark_id:\s*([A-Za-z0-9._-]+)\$\{\{\s*inputs\.benchmark_id_suffix\s*\}\}\s*$/, 1] ||
-        line[/^\s*benchmark_id:\s*\$\{\{\s*format\('([A-Za-z0-9._-]+)\{0\}',\s*inputs\.benchmark_id_suffix\)\s*\}\}\s*$/, 1]
-    end.compact
+    File.readlines(path).flat_map { |line| benchmark_ids_in(line) }
   end.uniq.sort
 
   config_path = File.join(repo_path, ".boringcache.toml")

@@ -136,12 +136,12 @@ repo_names.each do |repo_name|
     *Dir[File.join(repo_dir, ".github", "actions", "**", "*.{yml,yaml}")],
     *Dir[File.join(repo_dir, "scripts", "**", "*")].select { |candidate| File.file?(candidate) },
     *Dir[File.join(repo_dir, "cases", "*.json")]
-  ].sort
+  ].reject { |candidate| candidate.include?("/__pycache__/") }.sort
 
   integration_files.each do |file_path|
     relative = file_path.delete_prefix("#{repo_dir}/")
     basename = File.basename(file_path)
-    text = File.read(file_path)
+    text = File.read(file_path).scrub("")
 
     FORBIDDEN_HELPERS.each do |pattern, description|
       errors << "#{repo_name}/#{relative}: remove #{description}; this contract belongs to product E2E" if basename.match?(pattern)
