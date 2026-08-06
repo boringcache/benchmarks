@@ -4,18 +4,37 @@
 module BenchmarkReporting
   module_function
 
-  def classify_observations(lane:, phases:)
+  IMPORT_MODES = %w[docker buildkit].freeze
+
+  def classify_observations(lane:, phases:, mode: nil)
     return {} if phases.nil? || phases.empty?
 
     lane = lane.to_s
     warm = phases["warm"]
     commit = phases["commit"]
 
-    return warm_classification(warm) if lane == "fresh" && warm
-    return rolling_classification(commit) if lane == "rolling" && commit
+    return warm_classification(warm, mode) if lane == "fresh" && warm
+    return rolling_classification(commit, mode) if lane == "rolling" && commit
     return cold_classification if lane == "fresh" && phases["cold"]
 
     {}
+  end
+
+  def restored?(observation, mode)
+    return false if observation["cache_import_ready"] == false
+    if IMPORT_MODES.include?(mode.to_s)
+      return true if observation["cache_import_ready"].nil?
+
+      return observation["cache_import_refs"].to_i.positive?
+    end
+
+    observation["cache_hit"] == true
+  end
+
+  def restore_observable?(observation, mode)
+    return !observation["cache_import_ready"].nil? if IMPORT_MODES.include?(mode.to_s)
+
+    !observation["cache_hit"].nil?
   end
 
   def cold_classification
@@ -27,16 +46,17 @@ module BenchmarkReporting
     }
   end
 
-  def warm_classification(observation)
-    case observation["cache_hit"]
-    when nil
+  def warm_classification(observation, mode = nil)
+    unless restore_observable?(observation, mode)
       {
         "sample_valid" => true,
         "reporting_mode" => "comparative",
         "validity_reason" => "provider does not expose warm restore evidence",
         "cache_import_status" => "unknown"
       }
-    when true
+    end
+
+    if restored?(observation, mode)
       {
         "sample_valid" => true,
         "reporting_mode" => "comparative",
@@ -54,7 +74,7 @@ module BenchmarkReporting
     end
   end
 
-  def rolling_classification(observation)
+  def rolling_classification(observation, mode = nil)
     if observation["cache_import_ready"] == false
       return {
         "sample_valid" => true,
@@ -66,15 +86,16 @@ module BenchmarkReporting
       }
     end
 
-    case observation["cache_hit"]
-    when nil
-      {
+    unless restore_observable?(observation, mode)
+      return {
         "sample_valid" => true,
         "reporting_mode" => "comparative",
         "validity_reason" => "provider does not expose cache import evidence",
         "cache_import_status" => "unknown"
       }
-    when true
+    end
+
+    if restored?(observation, mode)
       {
         "sample_valid" => true,
         "reporting_mode" => "comparative",
