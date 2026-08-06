@@ -249,7 +249,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "rust",
     "step" => "Cargo build (target + sccache)",
-    "workflow" => "zed-cargo-product.yml"
+    "workflow" => "zed-cargo-rolling-chain.yml",
+    "fresh_workflow" => "zed-cargo-product.yml"
   },
   {
     "benchmark" => "deno-cargo",
@@ -261,7 +262,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "rust",
     "step" => "Cargo build (target + sccache)",
-    "workflow" => "deno-cargo-product.yml"
+    "workflow" => "deno-cargo-rolling-chain.yml",
+    "fresh_workflow" => "deno-cargo-product.yml"
   },
   {
     "benchmark" => "duckgres",
