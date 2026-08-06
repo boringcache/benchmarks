@@ -41,6 +41,7 @@ repo_names = owned_repo_names - registry_exempt_repos
 missing_from_registry = repo_names - registry_by_repo.keys
 extra_in_registry = registry_by_repo.keys - repo_names
 errors = []
+sync_offsets = Hash.new { |offsets, minute| offsets[minute] = [] }
 
 errors << "benchmark repos missing from aggregate registry: #{missing_from_registry.join(", ")}" if missing_from_registry.any?
 errors << "aggregate registry points at missing repos: #{extra_in_registry.join(", ")}" if extra_in_registry.any?
@@ -73,7 +74,11 @@ owned_repo_names.each do |repo_name|
   end
 
   sync_text = File.read(sync_path)
-  errors << "#{repo_name}: sync.yml must run every 30 minutes" unless sync_text.include?('cron: "*/30 * * * *"')
+  sync_minutes = sync_text[/^\s*- cron: "(\d+),(\d+) \* \* \* \*"$/m] ? [Regexp.last_match(1).to_i, Regexp.last_match(2).to_i] : nil
+  unless sync_minutes && sync_minutes[1] - sync_minutes[0] == 30 && sync_minutes[0].between?(1, 29)
+    errors << "#{repo_name}: sync.yml must run twice an hour on a repo-specific offset, as \"<m>,<m+30> * * * *\" with m between 1 and 29"
+  end
+  sync_offsets[sync_minutes[0]] << repo_name if sync_minutes
   errors << "#{repo_name}: sync.yml must push with BOT_PUBLIC_GITHUB_TOKEN" unless sync_text.include?("secrets.BOT_PUBLIC_GITHUB_TOKEN")
 
   source_pin = File.file?(File.join(repo_path, "benchmark-source.env")) ? "benchmark-source.env" : "upstream"
@@ -93,6 +98,10 @@ owned_repo_names.each do |repo_name|
     end
     errors << "#{repo_name}: Cargo source updates must trigger the persistent rolling chain" unless rolling_source_push
   end
+end
+
+sync_offsets.select { |_, repos| repos.length > 1 }.each do |minute, repos|
+  errors << "sync offset #{minute} is shared by #{repos.sort.join(", ")}; give each benchmark its own minute"
 end
 
 registry_by_repo.each do |repo_name, benchmarks|
