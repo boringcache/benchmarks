@@ -101,7 +101,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "docker",
     "step" => "Docker build (Ruby+Node)",
-    "workflow" => "mastodon-docker-benchmark.yml"
+    "workflow" => "mastodon-docker-benchmark.yml",
+    "fresh_workflow" => "mastodon-fresh-benchmark.yml"
   },
   {
     "benchmark" => "mastodon-streaming",
@@ -112,7 +113,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "docker",
     "step" => "Docker build (streaming service)",
-    "workflow" => "mastodon-streaming-docker-benchmark.yml"
+    "workflow" => "mastodon-docker-benchmark.yml",
+    "fresh_workflow" => "mastodon-fresh-benchmark.yml"
   },
   {
     "benchmark" => "discourse-docker",
@@ -124,7 +126,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "docker",
     "step" => "Docker build (Ruby+Node dev image)",
-    "workflow" => "discourse-docker-benchmark.yml"
+    "workflow" => "discourse-docker-benchmark.yml",
+    "fresh_workflow" => "discourse-fresh-benchmark.yml"
   },
   {
     "benchmark" => "discourse-base-deps",
@@ -135,7 +138,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "docker",
     "step" => "Docker build (base dependencies image)",
-    "workflow" => "discourse-image-factory-benchmark.yml"
+    "workflow" => "discourse-image-factory-benchmark.yml",
+    "fresh_workflow" => "discourse-image-factory-fresh-benchmark.yml"
   },
   {
     "benchmark" => "discourse-base-web-only",
@@ -146,7 +150,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "docker",
     "step" => "Docker build (web-only base image)",
-    "workflow" => "discourse-image-factory-benchmark.yml"
+    "workflow" => "discourse-image-factory-benchmark.yml",
+    "fresh_workflow" => "discourse-image-factory-fresh-benchmark.yml"
   },
   {
     "benchmark" => "discourse-base-release",
@@ -157,7 +162,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "docker",
     "step" => "Docker build (release base image)",
-    "workflow" => "discourse-image-factory-benchmark.yml"
+    "workflow" => "discourse-image-factory-benchmark.yml",
+    "fresh_workflow" => "discourse-image-factory-fresh-benchmark.yml"
   },
   {
     "benchmark" => "discourse-test-release",
@@ -168,7 +174,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "docker",
     "step" => "Docker build (discourse_test release image)",
-    "workflow" => "discourse-image-factory-benchmark.yml"
+    "workflow" => "discourse-image-factory-benchmark.yml",
+    "fresh_workflow" => "discourse-image-factory-fresh-benchmark.yml"
   },
   {
     "benchmark" => "posthog",
@@ -180,6 +187,7 @@ BENCHMARKS = [
     "category" => "docker",
     "step" => "Docker build (full stack)",
     "workflow" => "posthog-benchmark.yml",
+    "fresh_workflow" => "posthog-fresh-benchmark.yml",
     "extra_providers" => ["boringcache-toolcache", "boringcache-mountcache"]
   },
   {
@@ -313,7 +321,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "nodejs",
     "step" => "Turbo build (pnpm monorepo)",
-    "workflow" => "n8n-benchmark.yml"
+    "workflow" => "n8n-benchmark.yml",
+    "fresh_workflow" => "n8n-fresh-benchmark.yml"
   },
   {
     "benchmark" => "n8n-docker",
@@ -324,7 +333,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "docker",
     "step" => "Docker build (n8n image)",
-    "workflow" => "n8n-docker-benchmark.yml"
+    "workflow" => "n8n-docker-benchmark.yml",
+    "fresh_workflow" => "n8n-docker-fresh-benchmark.yml"
   },
   {
     "benchmark" => "n8n-runners",
@@ -335,7 +345,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "docker",
     "step" => "Docker build (task runners)",
-    "workflow" => "n8n-docker-benchmark.yml"
+    "workflow" => "n8n-docker-benchmark.yml",
+    "fresh_workflow" => "n8n-docker-fresh-benchmark.yml"
   },
   {
     "benchmark" => "n8n-runners-distroless",
@@ -346,7 +357,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "docker",
     "step" => "Docker build (distroless task runners)",
-    "workflow" => "n8n-docker-benchmark.yml"
+    "workflow" => "n8n-docker-benchmark.yml",
+    "fresh_workflow" => "n8n-docker-fresh-benchmark.yml"
   }
 ].freeze
 
