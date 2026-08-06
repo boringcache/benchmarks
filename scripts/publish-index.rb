@@ -873,6 +873,12 @@ def extract_strategy_metrics(payload)
   oci = payload.fetch("oci", {})
   transfer = payload["transfer"].is_a?(Hash) ? payload["transfer"] : {}
   classification = payload.fetch("classification", {})
+  if classification.empty?
+    classification = BenchmarkReporting.classify_observations(
+      lane: payload["lane"],
+      phases: payload["phase_observations"]
+    )
+  end
   product_refs = normalized_product_refs(payload)
   session_summary = session_summary_from(payload)
   startup_prefetch = startup_prefetch_from(payload, session_summary)
