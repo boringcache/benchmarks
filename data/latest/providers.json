@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-06T03:59:55Z",
+  "generated_at": "2026-08-06T07:18:01Z",
   "window_sample_target": 3,
   "providers": {
     "actions-cache": "GitHub Actions Cache",
@@ -85560,7 +85560,7 @@
               "lane": "fresh",
               "state": "missing_sample",
               "successful_run_count": 85,
-              "unique_head_count": 66,
+              "unique_head_count": 67,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -85569,7 +85569,7 @@
               "lane": "rolling",
               "state": "healthy",
               "successful_run_count": 85,
-              "unique_head_count": 66,
+              "unique_head_count": 67,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -86276,7 +86276,7 @@
               "lane": "fresh",
               "state": "missing_sample",
               "successful_run_count": 85,
-              "unique_head_count": 66,
+              "unique_head_count": 67,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -86285,7 +86285,7 @@
               "lane": "rolling",
               "state": "healthy",
               "successful_run_count": 85,
-              "unique_head_count": 66,
+              "unique_head_count": 67,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -94529,7 +94529,7 @@
               "lane": "fresh",
               "state": "missing_sample",
               "successful_run_count": 85,
-              "unique_head_count": 66,
+              "unique_head_count": 67,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -94538,7 +94538,7 @@
               "lane": "rolling",
               "state": "missing_sample",
               "successful_run_count": 85,
-              "unique_head_count": 66,
+              "unique_head_count": 67,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -94554,7 +94554,7 @@
               "lane": "fresh",
               "state": "missing_sample",
               "successful_run_count": 85,
-              "unique_head_count": 66,
+              "unique_head_count": 67,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -94563,7 +94563,7 @@
               "lane": "rolling",
               "state": "missing_sample",
               "successful_run_count": 85,
-              "unique_head_count": 66,
+              "unique_head_count": 67,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -94579,7 +94579,7 @@
               "lane": "fresh",
               "state": "missing_sample",
               "successful_run_count": 85,
-              "unique_head_count": 66,
+              "unique_head_count": 67,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -94588,7 +94588,7 @@
               "lane": "rolling",
               "state": "missing_sample",
               "successful_run_count": 85,
-              "unique_head_count": 66,
+              "unique_head_count": 67,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -94604,7 +94604,7 @@
               "lane": "fresh",
               "state": "missing_sample",
               "successful_run_count": 85,
-              "unique_head_count": 66,
+              "unique_head_count": 67,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -94613,7 +94613,7 @@
               "lane": "rolling",
               "state": "healthy",
               "successful_run_count": 85,
-              "unique_head_count": 66,
+              "unique_head_count": 67,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -180544,8 +180544,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -180553,8 +180553,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -181259,8 +181259,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -181268,8 +181268,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -187140,8 +187140,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -187149,8 +187149,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -187165,8 +187165,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -187174,8 +187174,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -187199,8 +187199,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -187208,8 +187208,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -187914,8 +187914,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -187923,8 +187923,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -195004,8 +195004,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -195013,8 +195013,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -195029,8 +195029,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -195038,8 +195038,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -195063,8 +195063,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -195072,8 +195072,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -195778,8 +195778,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -195787,8 +195787,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -203109,8 +203109,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -203118,8 +203118,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -203134,8 +203134,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -203143,8 +203143,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 92,
-              "unique_head_count": 92,
+              "successful_run_count": 91,
+              "unique_head_count": 91,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
