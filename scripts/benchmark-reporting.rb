@@ -4,6 +4,97 @@
 module BenchmarkReporting
   module_function
 
+  def classify_observations(lane:, phases:)
+    return {} if phases.nil? || phases.empty?
+
+    lane = lane.to_s
+    warm = phases["warm"]
+    commit = phases["commit"]
+
+    return warm_classification(warm) if lane == "fresh" && warm
+    return rolling_classification(commit) if lane == "rolling" && commit
+    return cold_classification if lane == "fresh" && phases["cold"]
+
+    {}
+  end
+
+  def cold_classification
+    {
+      "sample_valid" => true,
+      "reporting_mode" => "comparative",
+      "validity_reason" => "cold build against an empty cache cohort",
+      "cache_import_status" => "cold"
+    }
+  end
+
+  def warm_classification(observation)
+    case observation["cache_hit"]
+    when nil
+      {
+        "sample_valid" => true,
+        "reporting_mode" => "comparative",
+        "validity_reason" => "provider does not expose warm restore evidence",
+        "cache_import_status" => "unknown"
+      }
+    when true
+      {
+        "sample_valid" => true,
+        "reporting_mode" => "comparative",
+        "validity_reason" => "warm build restored the cold cache on a fresh runner",
+        "cache_import_status" => "hit"
+      }
+    else
+      {
+        "sample_valid" => false,
+        "reporting_mode" => "invalid",
+        "reporting_reason" => "fresh_warm_cache_import_not_ok",
+        "validity_reason" => "fresh_warm_cache_import_not_ok",
+        "cache_import_status" => "miss"
+      }
+    end
+  end
+
+  def rolling_classification(observation)
+    if observation["cache_import_ready"] == false
+      return {
+        "sample_valid" => true,
+        "reporting_mode" => "investigation_only",
+        "reporting_reason" => "rolling_cache_import_not_ok",
+        "cache_import_status" => "import_not_ready",
+        "rolling_reseed" => true,
+        "steady_state_candidate" => false
+      }
+    end
+
+    case observation["cache_hit"]
+    when nil
+      {
+        "sample_valid" => true,
+        "reporting_mode" => "comparative",
+        "validity_reason" => "provider does not expose cache import evidence",
+        "cache_import_status" => "unknown"
+      }
+    when true
+      {
+        "sample_valid" => true,
+        "reporting_mode" => "comparative",
+        "validity_reason" => "commit build imported the prior rolling cache",
+        "cache_import_status" => "hit",
+        "rolling_reseed" => false,
+        "steady_state_candidate" => true
+      }
+    else
+      {
+        "sample_valid" => true,
+        "reporting_mode" => "investigation_only",
+        "reporting_reason" => "rolling_cache_bootstrap",
+        "cache_import_status" => "miss",
+        "rolling_reseed" => true,
+        "steady_state_candidate" => false
+      }
+    end
+  end
+
   def most_common(values)
     values = values.compact.reject { |value| value.to_s.empty? }
     return nil if values.empty?
