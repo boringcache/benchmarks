@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-05T21:49:39Z",
+  "generated_at": "2026-08-06T03:59:55Z",
   "window_sample_target": 3,
   "providers": {
     "actions-cache": "GitHub Actions Cache",
@@ -47158,8 +47158,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 87,
-              "unique_head_count": 87,
+              "successful_run_count": 85,
+              "unique_head_count": 85,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -47167,8 +47167,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 87,
-              "unique_head_count": 87,
+              "successful_run_count": 85,
+              "unique_head_count": 85,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -47874,8 +47874,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 87,
-              "unique_head_count": 87,
+              "successful_run_count": 85,
+              "unique_head_count": 85,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -47883,8 +47883,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 87,
-              "unique_head_count": 87,
+              "successful_run_count": 85,
+              "unique_head_count": 85,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -54573,8 +54573,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 87,
-              "unique_head_count": 87,
+              "successful_run_count": 85,
+              "unique_head_count": 85,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -54582,8 +54582,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 87,
-              "unique_head_count": 87,
+              "successful_run_count": 85,
+              "unique_head_count": 85,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -54598,8 +54598,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 87,
-              "unique_head_count": 87,
+              "successful_run_count": 85,
+              "unique_head_count": 85,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -54607,8 +54607,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 87,
-              "unique_head_count": 87,
+              "successful_run_count": 85,
+              "unique_head_count": 85,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -121306,8 +121306,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "healthy",
-              "successful_run_count": 37,
-              "unique_head_count": 35,
+              "successful_run_count": 40,
+              "unique_head_count": 38,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -121953,8 +121953,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 37,
-              "unique_head_count": 35,
+              "successful_run_count": 40,
+              "unique_head_count": 38,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -122661,8 +122661,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "healthy",
-              "successful_run_count": 37,
-              "unique_head_count": 35,
+              "successful_run_count": 40,
+              "unique_head_count": 38,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -128192,8 +128192,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 37,
-              "unique_head_count": 35,
+              "successful_run_count": 40,
+              "unique_head_count": 38,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -134913,8 +134913,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 37,
-              "unique_head_count": 35,
+              "successful_run_count": 40,
+              "unique_head_count": 38,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -134922,8 +134922,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 37,
-              "unique_head_count": 35,
+              "successful_run_count": 40,
+              "unique_head_count": 38,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -134938,8 +134938,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 37,
-              "unique_head_count": 35,
+              "successful_run_count": 40,
+              "unique_head_count": 38,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -134947,8 +134947,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 37,
-              "unique_head_count": 35,
+              "successful_run_count": 40,
+              "unique_head_count": 38,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -163499,8 +163499,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "healthy",
-              "successful_run_count": 53,
-              "unique_head_count": 49,
+              "successful_run_count": 54,
+              "unique_head_count": 50,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -164146,8 +164146,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 53,
-              "unique_head_count": 49,
+              "successful_run_count": 54,
+              "unique_head_count": 50,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -164833,8 +164833,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "healthy",
-              "successful_run_count": 53,
-              "unique_head_count": 49,
+              "successful_run_count": 54,
+              "unique_head_count": 50,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -170742,8 +170742,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 53,
-              "unique_head_count": 49,
+              "successful_run_count": 54,
+              "unique_head_count": 50,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -177868,8 +177868,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 53,
-              "unique_head_count": 49,
+              "successful_run_count": 54,
+              "unique_head_count": 50,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -177877,8 +177877,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 53,
-              "unique_head_count": 49,
+              "successful_run_count": 54,
+              "unique_head_count": 50,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -177893,8 +177893,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 53,
-              "unique_head_count": 49,
+              "successful_run_count": 54,
+              "unique_head_count": 50,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -177902,8 +177902,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 53,
-              "unique_head_count": 49,
+              "successful_run_count": 54,
+              "unique_head_count": 50,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
