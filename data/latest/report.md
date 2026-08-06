@@ -1,8 +1,8 @@
 # Latest Benchmark Report
 
-Generated: 2026-08-06 11:10 UTC
+Generated: 2026-08-06 14:08 UTC
 
-Coverage: 23 benchmarks; fresh 10/23, rolling 23/23.
+Coverage: 22 benchmarks; fresh 14/22, rolling 22/22.
 
 Rows are latest complete same-commit pairs.
 
@@ -10,16 +10,20 @@ Rows are latest complete same-commit pairs.
 
 | Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
-| Hugo Go | Cold Build | 1m 26s | 1m 13s | 15% faster | 159.20 MB less (52.43%) |
-| Storybook | Cold Build | 5m 50s | 4m 29s | 23% faster | 15.57 MB less (1.16%) |
-| OpenTelemetry Java | Warm Build | 0m 58s | 0m 50s | 14% faster | 3.04 MB less (0.36%) |
-| Spring AI | Cold Build | 4m 45s | 4m 52s | near tie | 4.91 MB more (0.52%) |
-| gRPC | Cold Build | 25m 18s | 16m 50s | 33% faster | 829.88 MB more (805.66%) |
-| Duckgres | Cold Build | 5m 20s | 3m 28s | 35% faster | n/a |
-| Chroma | Cold Build | 31m 14s | 16m 7s | 48% faster | n/a |
-| Linkerd2 Web | Warm Build | 0m 4s | 0m 3s | near tie | n/a |
-| Qdrant | Cold Build | 12m 58s | 9m 29s | 27% faster | n/a |
-| n8n | Warm Build | 1m 35s | 1m 14s | 22% faster | 11.03 MB less (1.42%) |
+| Hugo | Cold Build | 3m 26s | 2m 44s | 20% faster | n/a |
+| Hugo Go | Cold Build | 1m 27s | 1m 35s | 9% slower | 159.21 MB less (52.43%) |
+| Immich | Cold Build | 7m 14s | 6m 2s | 17% faster | n/a |
+| Mastodon | Cold Build | 11m 25s | 8m 42s | 24% faster | n/a |
+| Discourse | Cold Build | 6m 14s | 4m 38s | 26% faster | n/a |
+| PostHog | Cold Build | 30m 31s | 15m 44s | 48% faster | 4.70 GB less (41.4%) |
+| Storybook | Cold Build | 4m 43s | 4m 6s | 13% faster | 19.21 MB less (1.43%) |
+| OpenTelemetry Java | Cold Build | 11m 42s | 11m 29s | near tie | 2.71 MB less (0.32%) |
+| Spring AI | Cold Build | 5m 14s | 4m 25s | 16% faster | 5.16 MB more (0.55%) |
+| gRPC | Cold Build | 39m 56s | 24m 58s | 37% faster | 829.86 MB more (805.64%) |
+| n8n | Cold Build | 3m 32s | 3m 41s | 4% slower | 9.29 MB less (1.2%) |
+| n8n Docker | Cold Build | 4m 28s | 3m 4s | 31% faster | n/a |
+| n8n Runners | Cold Build | 1m 34s | 0m 41s | 56% faster | n/a |
+| n8n Runners Distroless | Cold Build | 2m 43s | 1m 35s | 42% faster | n/a |
 
 ## Rolling
 
@@ -29,7 +33,6 @@ Rows are latest complete same-commit pairs.
 | Hugo Go | Commit Build | 0m 23s | 0m 30s | 30% slower | 471.28 MB less (76.54%) |
 | Immich | Commit Build | 0m 24s | 0m 11s | 54% faster | 6.90 GB less (70.56%) |
 | Mastodon | Commit Build | 12m 48s | 8m 15s | investigation only | n/a |
-| Mastodon Streaming | Commit Build | 0m 30s | 0m 21s | investigation only | n/a |
 | Discourse | Commit Build | 4m 9s | 3m 19s | 20% faster | 8.87 GB less (89.57%) |
 | Discourse Base Deps | Commit Build | 0m 9s | 0m 9s | near tie | 9.20 GB less (92.91%) |
 | Discourse Web-Only Image | Commit Build | 0m 10s | 0m 8s | near tie | 8.58 GB less (86.66%) |
