@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-06T07:18:01Z",
+  "generated_at": "2026-08-06T11:10:17Z",
   "window_sample_target": 3,
   "providers": {
     "actions-cache": "GitHub Actions Cache",
@@ -85559,8 +85559,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 85,
-              "unique_head_count": 67,
+              "successful_run_count": 87,
+              "unique_head_count": 69,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -85568,8 +85568,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 85,
-              "unique_head_count": 67,
+              "successful_run_count": 87,
+              "unique_head_count": 69,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -86275,8 +86275,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 85,
-              "unique_head_count": 67,
+              "successful_run_count": 87,
+              "unique_head_count": 69,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -86284,8 +86284,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 85,
-              "unique_head_count": 67,
+              "successful_run_count": 87,
+              "unique_head_count": 69,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -94528,8 +94528,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 85,
-              "unique_head_count": 67,
+              "successful_run_count": 87,
+              "unique_head_count": 69,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -94537,8 +94537,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 85,
-              "unique_head_count": 67,
+              "successful_run_count": 87,
+              "unique_head_count": 69,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -94553,8 +94553,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 85,
-              "unique_head_count": 67,
+              "successful_run_count": 87,
+              "unique_head_count": 69,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -94562,8 +94562,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 85,
-              "unique_head_count": 67,
+              "successful_run_count": 87,
+              "unique_head_count": 69,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -94578,8 +94578,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 85,
-              "unique_head_count": 67,
+              "successful_run_count": 87,
+              "unique_head_count": 69,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -94587,8 +94587,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 85,
-              "unique_head_count": 67,
+              "successful_run_count": 87,
+              "unique_head_count": 69,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -94603,8 +94603,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 85,
-              "unique_head_count": 67,
+              "successful_run_count": 87,
+              "unique_head_count": 69,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -94612,8 +94612,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 85,
-              "unique_head_count": 67,
+              "successful_run_count": 87,
+              "unique_head_count": 69,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -163499,8 +163499,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "healthy",
-              "successful_run_count": 54,
-              "unique_head_count": 50,
+              "successful_run_count": 55,
+              "unique_head_count": 51,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -164146,8 +164146,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 54,
-              "unique_head_count": 50,
+              "successful_run_count": 55,
+              "unique_head_count": 51,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -164833,8 +164833,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "healthy",
-              "successful_run_count": 54,
-              "unique_head_count": 50,
+              "successful_run_count": 55,
+              "unique_head_count": 51,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -170742,8 +170742,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 54,
-              "unique_head_count": 50,
+              "successful_run_count": 55,
+              "unique_head_count": 51,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -177868,8 +177868,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 54,
-              "unique_head_count": 50,
+              "successful_run_count": 55,
+              "unique_head_count": 51,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -177877,8 +177877,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 54,
-              "unique_head_count": 50,
+              "successful_run_count": 55,
+              "unique_head_count": 51,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -177893,8 +177893,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 54,
-              "unique_head_count": 50,
+              "successful_run_count": 55,
+              "unique_head_count": 51,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -177902,8 +177902,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 54,
-              "unique_head_count": 50,
+              "successful_run_count": 55,
+              "unique_head_count": 51,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -180544,8 +180544,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -180553,8 +180553,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -181259,8 +181259,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -181268,8 +181268,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -187140,8 +187140,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -187149,8 +187149,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -187165,8 +187165,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -187174,8 +187174,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -187199,8 +187199,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -187208,8 +187208,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -187914,8 +187914,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -187923,8 +187923,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -195004,8 +195004,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -195013,8 +195013,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -195029,8 +195029,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -195038,8 +195038,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -195063,8 +195063,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -195072,8 +195072,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -195778,8 +195778,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -195787,8 +195787,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -203109,8 +203109,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -203118,8 +203118,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -203134,8 +203134,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -203143,8 +203143,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 91,
-              "unique_head_count": 91,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
