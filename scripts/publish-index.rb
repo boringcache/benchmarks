@@ -890,7 +890,8 @@ def extract_strategy_metrics(payload)
   if classification.empty?
     classification = BenchmarkReporting.classify_observations(
       lane: payload["lane"],
-      phases: payload["phase_observations"]
+      phases: payload["phase_observations"],
+      mode: payload["mode"]
     )
   end
   product_refs = normalized_product_refs(payload)
