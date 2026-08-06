@@ -291,7 +291,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "docker",
     "step" => "Docker build (Rust vector database)",
-    "workflow" => "qdrant-benchmark.yml"
+    "workflow" => "qdrant-benchmark.yml",
+    "fresh_workflow" => "qdrant-fresh-benchmark.yml"
   },
   {
     "benchmark" => "n8n",
@@ -664,8 +665,14 @@ def provider_label(strategy)
   PROVIDER_LABELS.fetch(strategy, strategy)
 end
 
-def provider_workflows_for(benchmark)
-  workflow_name = benchmark.fetch("workflow")
+def lane_workflow_name(benchmark, lane)
+  return benchmark["fresh_workflow"] || benchmark.fetch("workflow") if lane.to_s == "fresh"
+
+  benchmark.fetch("workflow")
+end
+
+def provider_workflows_for(benchmark, lane: nil)
+  workflow_name = lane ? lane_workflow_name(benchmark, lane) : benchmark.fetch("workflow")
   workflows = {
     "actions-cache" => workflow_name,
     "boringcache" => workflow_name
@@ -2454,20 +2461,21 @@ def main
           provider_runs = provider_workflows.transform_values do |workflow_name|
             workflow_runs_cache[[repo, workflow_name]] ||= latest_successful_runs(repo: repo, workflow_name: workflow_name)
           end
-          actions_runs = provider_runs.fetch("actions-cache")
-          boringcache_runs = provider_runs.fetch("boringcache")
           latest_lane_entries = {}
           window_lane_entries = {}
           lane_health = {}
 
           LANE_IDS.each do |lane|
             log_progress("loading #{benchmark_id} #{lane} lane")
+            lane_runs = provider_workflows_for(benchmark, lane: lane).transform_values do |workflow_name|
+              workflow_runs_cache[[repo, workflow_name]] ||= latest_successful_runs(repo: repo, workflow_name: workflow_name)
+            end
             lane_data = load_lane_data(
               temp_root: tmp,
               benchmark: benchmark,
               lane: lane,
-              actions_runs: actions_runs,
-              boringcache_runs: boringcache_runs,
+              actions_runs: lane_runs.fetch("actions-cache"),
+              boringcache_runs: lane_runs.fetch("boringcache"),
               cache: strategy_data_cache,
               artifacts_cache: artifacts_cache
             )
