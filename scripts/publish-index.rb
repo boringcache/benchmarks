@@ -63,7 +63,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "docker",
     "step" => "Docker build (Go)",
-    "workflow" => "hugo-benchmark.yml"
+    "workflow" => "hugo-benchmark.yml",
+    "fresh_workflow" => "hugo-fresh-benchmark.yml"
   },
   {
     "benchmark" => "hugo-go",
@@ -74,7 +75,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "go",
     "step" => "Go build (native build cache)",
-    "workflow" => "hugo-go-benchmark.yml"
+    "workflow" => "hugo-go-benchmark.yml",
+    "fresh_workflow" => "hugo-go-fresh-benchmark.yml"
   },
   {
     "benchmark" => "immich",
@@ -85,7 +87,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "docker",
     "step" => "Docker build (server)",
-    "workflow" => "immich-benchmark.yml"
+    "workflow" => "immich-benchmark.yml",
+    "fresh_workflow" => "immich-fresh-benchmark.yml"
   },
   {
     "benchmark" => "mastodon-docker",
@@ -188,7 +191,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "nodejs",
     "step" => "Nx build (Yarn monorepo)",
-    "workflow" => "storybook-benchmark.yml"
+    "workflow" => "storybook-benchmark.yml",
+    "fresh_workflow" => "storybook-fresh-benchmark.yml"
   },
   {
     "benchmark" => "otel-gradle",
@@ -199,7 +203,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "gradle",
     "step" => "Gradle build (native HTTP cache)",
-    "workflow" => "opentelemetry-java-gradle-benchmark.yml"
+    "workflow" => "opentelemetry-java-gradle-benchmark.yml",
+    "fresh_workflow" => "opentelemetry-java-gradle-fresh-benchmark.yml"
   },
   {
     "benchmark" => "spring-ai-maven",
@@ -210,7 +215,8 @@ BENCHMARKS = [
     "public" => false,
     "category" => "maven",
     "step" => "Maven build (build-cache extension)",
-    "workflow" => "spring-ai-maven-benchmark.yml"
+    "workflow" => "spring-ai-maven-benchmark.yml",
+    "fresh_workflow" => "spring-ai-maven-fresh-benchmark.yml"
   },
   {
     "benchmark" => "grpc-bazel",
@@ -222,6 +228,7 @@ BENCHMARKS = [
     "category" => "bazel",
     "step" => "Bazel build (remote cache)",
     "workflow" => "grpc-bazel-benchmark.yml",
+    "fresh_workflow" => "grpc-bazel-fresh-benchmark.yml",
     "extra_providers" => ["buildbuddy-cache"]
   },
   {
@@ -257,7 +264,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "docker",
     "step" => "Docker build (Postgres extension image)",
-    "workflow" => "duckgres-benchmark.yml"
+    "workflow" => "duckgres-benchmark.yml",
+    "fresh_workflow" => "duckgres-fresh-benchmark.yml"
   },
   {
     "benchmark" => "chroma",
@@ -269,7 +277,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "docker",
     "step" => "Docker build (Rust CLI image)",
-    "workflow" => "chroma-benchmark.yml"
+    "workflow" => "chroma-benchmark.yml",
+    "fresh_workflow" => "chroma-fresh-benchmark.yml"
   },
   {
     "benchmark" => "linkerd2-v2",
@@ -280,7 +289,8 @@ BENCHMARKS = [
     "public" => true,
     "category" => "docker",
     "step" => "Docker build (web image)",
-    "workflow" => "linkerd2-benchmark.yml"
+    "workflow" => "linkerd2-benchmark.yml",
+    "fresh_workflow" => "linkerd2-fresh-benchmark.yml"
   },
   {
     "benchmark" => "qdrant",
