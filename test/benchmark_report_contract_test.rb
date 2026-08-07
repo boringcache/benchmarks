@@ -49,6 +49,13 @@ class BenchmarkReportContractTest < Minitest::Test
     assert_includes stderr, "a benchmark_id_suffix dispatch produces acme-docker-canary-boringcache-rolling.json"
   end
 
+  def test_a_summarize_call_that_passes_an_unread_flag_fails
+    _, stderr, status = run_against(summarize_flags: "--benchmark acme-docker ")
+
+    refute status.success?
+    assert_includes stderr, "summarize reads every benchmark in its input directory; drop --benchmark"
+  end
+
   def test_a_reporter_that_drifts_from_canonical_fails
     _, stderr, status = run_against(reporter: "print('drifted')\n")
 
@@ -58,7 +65,7 @@ class BenchmarkReportContractTest < Minitest::Test
 
   private
 
-  def run_against(uploaded: :default, artifact_name: nil, suffixed: true, reporter: nil)
+  def run_against(uploaded: :default, artifact_name: nil, suffixed: true, reporter: nil, summarize_flags: "")
     Dir.mktmpdir do |root|
       repo = File.join(root, "benchmark-acme")
       FileUtils.mkdir_p(File.join(repo, ".github", "workflows"))
@@ -68,7 +75,8 @@ class BenchmarkReportContractTest < Minitest::Test
       File.write(File.join(repo, ".github", "actions", "acme-docker-benchmark", "action.yml"), action_yaml)
       File.write(File.join(repo, ".github", "workflows", "acme-benchmark.yml"), workflow_yaml(
         uploaded: uploaded == :default ? "acme-docker#{suffixed ? SUFFIX : ""}-boringcache-rolling.json" : uploaded,
-        artifact_name: artifact_name
+        artifact_name: artifact_name,
+        summarize_flags: summarize_flags
       ))
       Open3.capture3(SCRIPT, root)
     end
@@ -92,7 +100,7 @@ class BenchmarkReportContractTest < Minitest::Test
     YAML
   end
 
-  def workflow_yaml(uploaded:, artifact_name:)
+  def workflow_yaml(uploaded:, artifact_name:, summarize_flags: "")
     retain = uploaded.nil? ? [] : [
       "      - uses: actions/upload-artifact@v6",
       "        with:",
@@ -126,7 +134,7 @@ class BenchmarkReportContractTest < Minitest::Test
                 with:
                   pattern: phase-*
                   path: phase-evidence
-              - run: python3 ./scripts/benchmark-report.py summarize --title Acme --input-dir phase-evidence --output-dir benchmark-results
+              - run: python3 ./scripts/benchmark-report.py summarize #{summarize_flags}--title Acme --input-dir phase-evidence --output-dir benchmark-results
       YAML
       *retain
     ].join("\n") + "\n"

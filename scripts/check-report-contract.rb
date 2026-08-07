@@ -246,6 +246,16 @@ def summarizing?(job)
   Array(job["steps"]).any? { |step| step.is_a?(Hash) && step["run"].to_s.include?("benchmark-report.py summarize") }
 end
 
+SUMMARIZE_FLAGS = %w[title input-dir output-dir].freeze
+
+def summarize_flags(job)
+  Array(job["steps"]).flat_map do |step|
+    next [] unless step.is_a?(Hash)
+
+    step["run"].to_s[/benchmark-report\.py\s+summarize\b.*/m].to_s.scan(/--([a-z-]+)/).flatten
+  end.uniq
+end
+
 CANARY_SUFFIX = "-canary"
 
 repos_dir = ARGV[0] || ENV.fetch("BENCHMARK_REPOS_DIR", default_repos_dir)
@@ -277,6 +287,13 @@ Dir[File.join(repos_dir, "benchmark-*")].select { |path| File.directory?(path) }
     next if report_jobs.empty?
 
     checked += 1
+    report_jobs.each do |job_id, job|
+      unexpected = summarize_flags(job) - SUMMARIZE_FLAGS
+      next if unexpected.empty?
+
+      errors << "#{relative} (#{job_id}): summarize reads every benchmark in its input directory; drop --#{unexpected.join(", --")}"
+    end
+
     producers = workflow.jobs.flat_map do |job_id, job|
       job.is_a?(Hash) ? producers_for(workflow: workflow, repo_dir: repo_dir, job_id: job_id, job: job) : []
     end
