@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-08-07 01:09 UTC
+Generated: 2026-08-07 06:09 UTC
 
 Coverage: 22 benchmarks; fresh 14/22, rolling 22/22.
 
@@ -19,7 +19,7 @@ Rows are latest complete same-commit pairs.
 | Storybook | Cold Build | 4m 43s | 4m 6s | 13% faster | 19.21 MB less (1.43%) |
 | OpenTelemetry Java | Cold Build | 11m 42s | 11m 29s | near tie | 2.71 MB less (0.32%) |
 | Spring AI | Cold Build | 5m 14s | 4m 25s | 16% faster | 5.16 MB more (0.55%) |
-| gRPC | Cold Build | 39m 56s | 24m 58s | 37% faster | 829.86 MB more (805.64%) |
+| gRPC | Warm Build | 0m 33s | 1m 2s | invalid sample | n/a |
 | n8n | Cold Build | 3m 32s | 3m 41s | 4% slower | 9.29 MB less (1.2%) |
 | n8n Docker | Cold Build | 4m 28s | 3m 4s | 31% faster | n/a |
 | n8n Runners | Cold Build | 1m 34s | 0m 41s | 56% faster | n/a |
