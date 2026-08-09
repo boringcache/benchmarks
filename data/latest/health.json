@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-09T02:50:10Z",
+  "generated_at": "2026-08-09T05:50:27Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -189,17 +189,18 @@
         "fresh": {
           "lane": "fresh",
           "state": "healthy",
-          "actions_successful_run_count": 10,
-          "boringcache_successful_run_count": 10,
-          "paired_head_count": 10,
+          "actions_successful_run_count": 11,
+          "boringcache_successful_run_count": 11,
+          "paired_head_count": 11,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "2f4877e85ab7c10f885312dde7e38c3c09d94ca1",
-          "latest_created_at": "2026-07-27T21:56:58Z",
-          "latest_actions_run_id": 30308894225,
-          "latest_boringcache_run_id": 30308894225,
+          "latest_head_sha": "89cb5dd98025129086572fc0fe0ba55ef3ac93c0",
+          "latest_created_at": "2026-08-09T04:35:49Z",
+          "latest_actions_run_id": 31294901731,
+          "latest_boringcache_run_id": 31294901731,
           "latest_reporting_mode": "comparative",
-          "latest_cache_import_status": "ok",
+          "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
+          "latest_cache_import_status": "hit",
           "latest_sample_valid": true
         },
         "rolling": {
