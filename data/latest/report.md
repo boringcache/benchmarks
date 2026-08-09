@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-08-09 02:50 UTC
+Generated: 2026-08-09 05:50 UTC
 
 Coverage: 22 benchmarks; fresh 14/22, rolling 22/22.
 
@@ -14,7 +14,7 @@ Rows are latest complete same-commit pairs.
 | Hugo Go | Cold Build | 1m 27s | 1m 35s | 9% slower | 159.21 MB less (52.43%) |
 | Immich | Cold Build | 7m 14s | 6m 2s | 17% faster | n/a |
 | Mastodon | Cold Build | 11m 25s | 8m 42s | 24% faster | n/a |
-| Discourse | Cold Build | 6m 14s | 4m 38s | 26% faster | n/a |
+| Discourse | Cold Build | 7m 0s | 4m 44s | 32% faster | n/a |
 | PostHog | Cold Build | 30m 31s | 15m 44s | 48% faster | 4.70 GB less (41.4%) |
 | Storybook | Cold Build | 4m 43s | 4m 6s | 13% faster | 19.21 MB less (1.43%) |
 | OpenTelemetry Java | Cold Build | 11m 42s | 11m 29s | near tie | 2.71 MB less (0.32%) |
