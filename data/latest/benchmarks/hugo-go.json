@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-10T02:52:27Z",
+  "generated_at": "2026-08-10T06:16:31Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -13,91 +13,60 @@
     "public": true,
     "category": "go",
     "step": "Go build (native build cache)",
-    "headline_scenario": "cold",
-    "headline_label": "Cold Build",
-    "before": "1m 27s",
-    "after": "1m 35s",
-    "before_seconds": 87.0,
-    "after_seconds": 95.0,
-    "faster": "0",
+    "headline_scenario": "warm",
+    "headline_label": "Warm Build",
+    "before": "0m 10s",
+    "after": "0m 19s",
+    "before_seconds": 10.0,
+    "after_seconds": 19.0,
+    "faster": null,
     "comparison": {
       "paired_on_head_sha": true,
-      "pairing_head_sha": "e76300433f9eb961af355f5193fa24268e47bff3",
+      "pairing_head_sha": "a763a3b945ada03bf4a58646d37704de902ca3a2",
       "sample_count": 1,
       "actions_cache": {
-        "run_id": 30786434849,
-        "run_url": "https://github.com/boringcache/benchmark-hugo-go/actions/runs/30786434849",
-        "head_sha": "e76300433f9eb961af355f5193fa24268e47bff3",
-        "created_at": "2026-08-03T05:11:16Z",
-        "cold_seconds": 87.0,
-        "cold_build_seconds": 73.0,
-        "cold_restore_or_setup_seconds": 14.0,
-        "warm1_seconds": 15.0,
-        "warm1_build_seconds": 3.0,
-        "warm1_restore_or_setup_seconds": 12.0,
+        "run_id": 31355725483,
+        "run_url": "https://github.com/boringcache/benchmark-hugo-go/actions/runs/31355725483",
+        "head_sha": "a763a3b945ada03bf4a58646d37704de902ca3a2",
+        "created_at": "2026-08-10T04:30:57Z",
+        "cold_seconds": 73.0,
+        "cold_build_seconds": 72.0,
+        "cold_restore_or_setup_seconds": 1.0,
+        "warm1_seconds": 10.0,
+        "warm1_build_seconds": 6.0,
+        "warm1_restore_or_setup_seconds": 4.0,
         "warm2_seconds": null,
-        "warm_average_seconds": 15.0,
-        "warm_steady_seconds": 15.0,
+        "warm_average_seconds": 10.0,
+        "warm_steady_seconds": 10.0,
         "rolling_first_build_seconds": null,
         "rolling_warm_seconds": null,
-        "run_total_seconds": 122.0,
-        "storage_bytes": 318417435,
-        "storage_source": "github-actions-cache-api",
+        "run_total_seconds": 107.0,
+        "storage_bytes": null,
+        "storage_source": null,
         "storage_breakdown": null,
         "network_bytes_uploaded": null,
         "network_bytes_uploaded_source": null,
         "docker_cache_import_seconds": null,
         "docker_cache_export_seconds": null,
         "startup_prefetch": {},
-        "oci": {
-          "hydration_policy": null,
-          "body_local_hits": null,
-          "body_remote_fetches": null,
-          "body_local_bytes": null,
-          "body_remote_bytes": null,
-          "body_local_duration_ms": null,
-          "body_remote_duration_ms": null,
-          "startup_body_inserted": null,
-          "startup_body_failures": null,
-          "startup_body_cold_blobs": null,
-          "startup_body_duration_ms": null,
-          "new_blob_count": null,
-          "new_blob_bytes": null,
-          "upload_requested_blobs": null,
-          "upload_already_present": null,
-          "upload_batch_seconds": null
-        },
+        "oci": {},
         "classification": {
-          "sample_valid": true,
-          "reporting_mode": "comparative",
-          "reporting_reason": null,
-          "reporting_note": null,
-          "validity_reason": null,
-          "cache_import_status": null,
-          "raw_cache_import_status": null,
-          "prior_cache_state": "not_expected",
-          "cache_reuse_status": null,
-          "rolling_reseed": null,
-          "steady_state_candidate": null,
-          "rolling_reseed_kind": null,
-          "tiny_metadata_churn": false,
-          "tiny_metadata_churn_max_blobs": 1,
-          "tiny_metadata_churn_max_bytes": 65536,
-          "reseed_new_blob_threshold": 0,
-          "reseed_reason": null
+          "sample_valid": false,
+          "reporting_mode": "invalid",
+          "reporting_reason": "fresh_warm_cache_import_not_ok",
+          "validity_reason": "fresh_warm_cache_import_not_ok",
+          "cache_import_status": "miss"
         },
         "product_refs": {
-          "schema_version": 1,
-          "action_ref": "actions/cache@v5",
-          "action_sha": "caa296126883cff596d87d8935842f9db880ef25"
+          "schema_version": 1
         },
         "product_refs_consistent": true,
         "launch_proof_paths": [],
-        "workspace": "boringcache/benchmark-hugo-go",
+        "workspace": null,
         "cache_tag": null,
-        "run_uid": "gh-30786434849-1",
+        "run_uid": "gh-31355725483-1",
         "mode": "go",
-        "adapter": "gocache",
+        "adapter": "go",
         "docker_cache_from_refs": null,
         "docker_cache_import_ready": null,
         "http_transport": null,
@@ -112,444 +81,82 @@
         "reporting_url": null,
         "tool_outcomes": null,
         "native_tool": null,
-        "slow_reason": {
-          "schema_version": "benchmark_slow_reason.v1",
-          "benchmark": "hugo-go",
-          "strategy": "actions-cache",
-          "lane": "fresh",
-          "run_uid": "gh-30786434849-1",
-          "paired_run_id": 30786434849,
-          "build_seconds": 73,
-          "setup_seconds": 14,
-          "post_cleanup_seconds": null,
-          "cache_restore_seconds": null,
-          "cache_save_export_seconds": null,
-          "buildkit_cached_steps": null,
-          "hit_count": null,
-          "miss_count": null,
-          "hit_rate": null,
-          "prior_cache_state": "not_expected",
-          "new_blob_bytes": null,
-          "buildkit_prewarm": {
-            "body_time_seconds": null,
-            "upload_time_seconds": null,
-            "body_wait_seconds": null,
-            "cpu_pressure_seconds": null,
-            "io_pressure_seconds": null,
-            "body_phase": null,
-            "image_output_overlap_seconds": null,
-            "cache_only_transitions": null,
-            "body_downshifts": null,
-            "slot_limit_min": null,
-            "slot_limit_max": null
-          },
-          "native_tool": null,
-          "issue_candidates": [],
-          "hypotheses": []
-        }
+        "slow_reason": null
       },
       "boringcache": {
-        "run_id": 30786434849,
-        "run_url": "https://github.com/boringcache/benchmark-hugo-go/actions/runs/30786434849",
-        "head_sha": "e76300433f9eb961af355f5193fa24268e47bff3",
-        "created_at": "2026-08-03T05:11:16Z",
-        "cold_seconds": 95.0,
-        "cold_build_seconds": 82.0,
-        "cold_restore_or_setup_seconds": 13.0,
-        "warm1_seconds": 37.0,
-        "warm1_build_seconds": 6.0,
-        "warm1_restore_or_setup_seconds": 31.0,
+        "run_id": 31355725483,
+        "run_url": "https://github.com/boringcache/benchmark-hugo-go/actions/runs/31355725483",
+        "head_sha": "a763a3b945ada03bf4a58646d37704de902ca3a2",
+        "created_at": "2026-08-10T04:30:57Z",
+        "cold_seconds": 83.0,
+        "cold_build_seconds": 80.0,
+        "cold_restore_or_setup_seconds": 3.0,
+        "warm1_seconds": 19.0,
+        "warm1_build_seconds": 10.0,
+        "warm1_restore_or_setup_seconds": 9.0,
         "warm2_seconds": null,
-        "warm_average_seconds": 37.0,
-        "warm_steady_seconds": 37.0,
+        "warm_average_seconds": 19.0,
+        "warm_steady_seconds": 19.0,
         "rolling_first_build_seconds": null,
         "rolling_warm_seconds": null,
-        "run_total_seconds": 122.0,
-        "storage_bytes": 151471241,
-        "storage_source": "boringcache-check",
-        "storage_breakdown": {
-          "workspace": "boringcache/benchmark-hugo-go",
-          "tags": [
-            "hugo-go-run-r30786434849-a1-go-mod-cache-ubuntu-24-x86_64"
-          ],
-          "total_bytes": 151471241,
-          "summary": {
-            "remote_kv_bytes": 0,
-            "remote_cas_bytes": 0,
-            "dependency_archive_bytes": 151471241,
-            "tool_runtime_archive_bytes": 0,
-            "unknown_bytes": 0
-          },
-          "components": [
-            {
-              "tag": "hugo-go-run-r30786434849-a1-go-mod-cache-ubuntu-24-x86_64",
-              "requested_tag": "hugo-go-run-r30786434849-a1-go-mod-cache-ubuntu-24-x86_64",
-              "cache_entry_id": "b64b061b-3441-4ea9-acbd-7b980f0815a6",
-              "primary_tag": "hugo-go-run-r30786434849-a1-go-mod-cache-ubuntu-24-x86_64",
-              "storage_mode": "archive",
-              "component_type": "dependency_archive",
-              "component_label": "dependency archive",
-              "bytes": 151471241,
-              "archive_size_bytes": 151471241,
-              "blob_total_size_bytes": 0
-            }
-          ]
-        },
+        "run_total_seconds": 107.0,
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": null,
         "network_bytes_uploaded": null,
         "network_bytes_uploaded_source": null,
         "docker_cache_import_seconds": null,
         "docker_cache_export_seconds": null,
         "startup_prefetch": {},
-        "oci": {
-          "hydration_policy": null,
-          "body_local_hits": null,
-          "body_remote_fetches": null,
-          "body_local_bytes": null,
-          "body_remote_bytes": null,
-          "body_local_duration_ms": null,
-          "body_remote_duration_ms": null,
-          "startup_body_inserted": null,
-          "startup_body_failures": null,
-          "startup_body_cold_blobs": null,
-          "startup_body_duration_ms": null,
-          "new_blob_count": null,
-          "new_blob_bytes": null,
-          "upload_requested_blobs": null,
-          "upload_already_present": null,
-          "upload_batch_seconds": null
-        },
+        "oci": {},
         "classification": {
-          "sample_valid": true,
-          "reporting_mode": "comparative",
-          "reporting_reason": null,
-          "reporting_note": null,
-          "validity_reason": null,
-          "cache_import_status": null,
-          "raw_cache_import_status": null,
-          "prior_cache_state": "not_expected",
-          "cache_reuse_status": null,
-          "rolling_reseed": null,
-          "steady_state_candidate": null,
-          "rolling_reseed_kind": null,
-          "tiny_metadata_churn": false,
-          "tiny_metadata_churn_max_blobs": 1,
-          "tiny_metadata_churn_max_bytes": 65536,
-          "reseed_new_blob_threshold": 0,
-          "reseed_reason": null
+          "sample_valid": false,
+          "reporting_mode": "invalid",
+          "reporting_reason": "fresh_warm_cache_import_not_ok",
+          "validity_reason": "fresh_warm_cache_import_not_ok",
+          "cache_import_status": "miss"
         },
         "product_refs": {
-          "schema_version": 1,
-          "cli_version": "v1.16.4",
-          "action_ref": "boringcache/one@bf810e34331db84f9f11930e83b8813b5ad31ba1",
-          "action_sha": "bf810e34331db84f9f11930e83b8813b5ad31ba1",
-          "web_revision": "2d9739b6f",
-          "api_url": "https://api.boringcache.com"
+          "schema_version": 1
         },
         "product_refs_consistent": true,
         "launch_proof_paths": [],
         "workspace": "boringcache/benchmark-hugo-go",
-        "cache_tag": null,
-        "run_uid": "gh-30786434849-1",
+        "cache_tag": "hugo-go-run-r31355725483-a1",
+        "run_uid": "gh-31355725483-1",
         "mode": "go",
-        "adapter": "gocache",
+        "adapter": "go",
         "docker_cache_from_refs": null,
         "docker_cache_import_ready": null,
-        "http_transport": "h1+h2c-auto",
-        "http2_enabled": true,
-        "oci_stream_through_min_bytes": 1,
+        "http_transport": null,
+        "http2_enabled": null,
+        "oci_stream_through_min_bytes": null,
         "restore_result": null,
         "save_result": null,
         "publish_status": null,
-        "session_summary": {
-          "schema": "cache-session-v2",
-          "cli_version": "1.16.4",
-          "mode": "cache-registry",
-          "adapter": "gocache",
-          "workspace": "boringcache/benchmark-hugo-go",
-          "duration_ms": 93776,
-          "identity": {
-            "attempt": "1",
-            "commit_sha": "e76300433f9eb961af355f5193fa24268e47bff3",
-            "kind": "ci",
-            "provider": "github-actions",
-            "provider_run_uid": "30786434849",
-            "repository": "boringcache/benchmark-hugo-go",
-            "source_ref_name": "main",
-            "source_ref_type": "branch",
-            "summary_session_id": "proxy-summary-dea2eb2b-94eb-4036-8958-8b9fd3d4bdca",
-            "uid": "github-actions:boringcache/benchmark-hugo-go:30786434849"
-          },
-          "proxy": {
-            "adapter": "gocache",
-            "blob_download_max_concurrency": 10,
-            "blob_prefetch_concurrency_source": "auto",
-            "blob_prefetch_max_concurrency": 2000,
-            "duration_ms": 93776,
-            "fail_on_cache_error": false,
-            "h2_initial_connection_window_bytes": 33554432,
-            "h2_initial_stream_window_bytes": 2097152,
-            "h2_max_concurrent_streams": 1024,
-            "http2_enabled": true,
-            "http_transport": "h1+h2c-auto",
-            "hydration_policy": "metadata-only",
-            "mode": "cache-registry",
-            "oci_alias_promotion_refs": [],
-            "oci_stream_through_enabled": true,
-            "oci_stream_through_min_bytes": 1,
-            "oci_stream_through_mode": "full_body_always",
-            "read_only": false
-          },
-          "backend_api": {
-            "error_count_by_operation": {
-              "cache_blobs_upload_urls": 0,
-              "cache_kv_entries_upsert": 0,
-              "cache_rollups_ingest": 0
-            },
-            "p50_ms_by_operation": {
-              "cache_blobs_upload_urls": 86,
-              "cache_kv_entries_upsert": 119,
-              "cache_rollups_ingest": 199
-            },
-            "p95_ms_by_operation": {
-              "cache_blobs_upload_urls": 94,
-              "cache_kv_entries_upsert": 376,
-              "cache_rollups_ingest": 280
-            },
-            "request_count_by_operation": {
-              "cache_blobs_upload_urls": 638,
-              "cache_kv_entries_upsert": 23,
-              "cache_rollups_ingest": 4
-            },
-            "retry_count_by_operation": {
-              "cache_blobs_upload_urls": 0,
-              "cache_kv_entries_upsert": 0,
-              "cache_rollups_ingest": 0
-            },
-            "total_error_count": 0,
-            "total_request_count": 665,
-            "total_retry_count": 0
-          },
-          "rails": {
-            "error_count_by_operation": {
-              "cache_blobs_upload_urls": 0,
-              "cache_kv_entries_upsert": 0,
-              "cache_rollups_ingest": 0
-            },
-            "p50_ms_by_operation": {
-              "cache_blobs_upload_urls": 86,
-              "cache_kv_entries_upsert": 119,
-              "cache_rollups_ingest": 199
-            },
-            "p95_ms_by_operation": {
-              "cache_blobs_upload_urls": 94,
-              "cache_kv_entries_upsert": 376,
-              "cache_rollups_ingest": 280
-            },
-            "request_count_by_operation": {
-              "cache_blobs_upload_urls": 638,
-              "cache_kv_entries_upsert": 23,
-              "cache_rollups_ingest": 4
-            },
-            "retry_count_by_operation": {
-              "cache_blobs_upload_urls": 0,
-              "cache_kv_entries_upsert": 0,
-              "cache_rollups_ingest": 0
-            },
-            "total_error_count": 0,
-            "total_request_count": 665,
-            "total_retry_count": 0
-          },
-          "storage": {},
-          "lifecycle": {},
-          "oci": {
-            "buildkit_enrichment": "not_applicable",
-            "oci_engine_hydration_policy": "metadata-only",
-            "oci_negative_generation": 0
-          },
-          "startup_prefetch": {},
-          "kv_upload": {
-            "kv_upload_allowed_concurrency_max": 1,
-            "kv_upload_already_present_blobs": 2036,
-            "kv_upload_batches": 23,
-            "kv_upload_blobs_per_sec": 0,
-            "kv_upload_concurrency_reason": "adaptive_ramp",
-            "kv_upload_concurrency_source": "auto",
-            "kv_upload_duration_ms": 2316,
-            "kv_upload_failed_blobs": 0,
-            "kv_upload_final_concurrency_max": 1,
-            "kv_upload_initial_concurrency_max": 1,
-            "kv_upload_missing_local_blobs": 0,
-            "kv_upload_requested_blobs": 0,
-            "kv_upload_uploaded_blobs": 0
-          },
-          "singleflight": {
-            "singleflight_kv_lookup_leaders": 1301
-          },
-          "kv_lookup": {
-            "kv_lookup_go_cache_after_refresh_miss": 1300,
-            "kv_lookup_go_cache_published_fast_miss": 1300
-          },
-          "local_cache": {
-            "blob_read": {},
-            "blob_read_cache_bytes": 853885406,
-            "blob_read_cache_max_bytes": 68719476736,
-            "blob_read_memory_cache_bytes": 0,
-            "blob_read_memory_cache_max_bytes": 0,
-            "oci_body": {}
-          },
-          "buildkit": {
-            "run_classification": "not_applicable"
-          },
-          "classification": {
-            "bottleneck": {
-              "adapter": "gocache",
-              "candidates": [
-                {
-                  "confidence": "high",
-                  "evidence": {
-                    "bytes_read": 0,
-                    "hit_rate": 0.0,
-                    "hits": 0,
-                    "misses": 1300
-                  },
-                  "kind": "cache_miss_quality",
-                  "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
-                }
-              ],
-              "evidence": {
-                "duration_ms": 93776,
-                "errors": 0,
-                "hit_rate": 0.0,
-                "hits": 0,
-                "misses": 1300,
-                "write_degraded": 0,
-                "write_errors": 0,
-                "writes": 2816
-              },
-              "primary_bottleneck": "cache_miss_quality",
-              "state": "bottleneck_detected"
-            },
-            "cache_key_lookup": {
-              "state": "not_applicable"
-            },
-            "cache_temperature": {
-              "errors": 0,
-              "hit_rate": 0.0,
-              "hits": 0,
-              "likely_reason": "no_hits_for_requested_keys",
-              "misses": 1300,
-              "state": "cold",
-              "writes": 2816
-            },
-            "issue_candidates": [],
-            "primary_bottleneck": "cache_miss_quality"
-          }
-        },
-        "cache_review": {
-          "schema_version": "benchmark_cache_review.v1",
-          "summary_schema": "cache-session-v2",
-          "summary_session_id": "proxy-summary-dea2eb2b-94eb-4036-8958-8b9fd3d4bdca",
-          "tool": "gocache",
-          "cache_target": {
-            "workspace": "boringcache/benchmark-hugo-go",
-            "tag": null,
-            "mode": "cache-registry"
-          },
-          "project_hints": [],
-          "phase_hints": [],
-          "primary_bottleneck": "cache_miss_quality",
-          "diagnostic_classification": "bottleneck_detected",
-          "reason_codes": [
-            "cache_miss_quality"
-          ],
-          "native_tool": null,
-          "diagnostic_label": null,
-          "customer_state": null,
-          "customer_summary": null,
-          "service_side_issue": false,
-          "operator_issue": false,
-          "value_outcome": null,
-          "value_owner": null,
-          "value_headline": null,
-          "value_detail": null,
-          "value_next_action": null,
-          "value_evidence": [],
-          "hit_count": 0,
-          "miss_count": 1300,
-          "hit_rate": 0,
-          "error_count": 0,
-          "bytes_read": null,
-          "bytes_written": null,
-          "duration_seconds": 93.776,
-          "issue_candidates": []
-        },
+        "session_summary": null,
+        "cache_review": null,
         "summary_schema": null,
         "reporting_url": null,
         "tool_outcomes": null,
         "native_tool": null,
-        "slow_reason": {
-          "schema_version": "benchmark_slow_reason.v1",
-          "benchmark": "hugo-go",
-          "strategy": "boringcache",
-          "lane": "fresh",
-          "run_uid": "gh-30786434849-1",
-          "paired_run_id": 30786434849,
-          "build_seconds": 82,
-          "setup_seconds": 13,
-          "post_cleanup_seconds": null,
-          "cache_restore_seconds": null,
-          "cache_save_export_seconds": null,
-          "buildkit_cached_steps": null,
-          "hit_count": 0,
-          "miss_count": 1300,
-          "hit_rate": 0,
-          "prior_cache_state": "not_expected",
-          "new_blob_bytes": null,
-          "buildkit_prewarm": {
-            "body_time_seconds": null,
-            "upload_time_seconds": null,
-            "body_wait_seconds": null,
-            "cpu_pressure_seconds": null,
-            "io_pressure_seconds": null,
-            "body_phase": null,
-            "image_output_overlap_seconds": null,
-            "cache_only_transitions": null,
-            "body_downshifts": null,
-            "slot_limit_min": null,
-            "slot_limit_max": null
-          },
-          "native_tool": null,
-          "issue_candidates": [],
-          "hypotheses": [
-            {
-              "id": "partial_cache_reuse",
-              "confidence": "medium",
-              "summary": "Hit rate is below the benchmark reuse floor.",
-              "evidence": {
-                "hit_rate": 0
-              }
-            },
-            {
-              "id": "cache_miss_quality",
-              "confidence": "medium",
-              "summary": "The native tool still missed cache entries during the measured build.",
-              "evidence": {
-                "miss_count": 1300,
-                "hit_rate": 0
-              }
-            }
-          ]
-        }
+        "slow_reason": null
       },
       "reporting": {
-        "comparative": true
+        "comparative": false,
+        "status": "invalid",
+        "reason": "fresh_warm_cache_import_not_ok",
+        "headline_scenario": "warm",
+        "headline_label": "Warm Build",
+        "result_text": "invalid sample",
+        "note": "Fresh BoringCache warm reruns require a usable cache import; this sample is diagnostic only."
       },
-      "warm_improvement_pct": -146.67,
-      "warm_build_improvement_pct": -100.0,
-      "cold_improvement_pct": -9.2,
-      "cold_build_improvement_pct": -12.33,
-      "storage_improvement_pct": 52.43,
-      "storage_saved_bytes": 166946194
+      "warm_improvement_pct": -90.0,
+      "warm_build_improvement_pct": -66.67,
+      "cold_improvement_pct": -13.7,
+      "cold_build_improvement_pct": -11.11,
+      "storage_improvement_pct": null,
+      "storage_saved_bytes": null
     },
     "default_lane": "fresh",
     "available_lanes": [
@@ -570,91 +177,60 @@
         "public": true,
         "category": "go",
         "step": "Go build (native build cache)",
-        "headline_scenario": "cold",
-        "headline_label": "Cold Build",
-        "before": "1m 27s",
-        "after": "1m 35s",
-        "before_seconds": 87.0,
-        "after_seconds": 95.0,
-        "faster": "0",
+        "headline_scenario": "warm",
+        "headline_label": "Warm Build",
+        "before": "0m 10s",
+        "after": "0m 19s",
+        "before_seconds": 10.0,
+        "after_seconds": 19.0,
+        "faster": null,
         "comparison": {
           "paired_on_head_sha": true,
-          "pairing_head_sha": "e76300433f9eb961af355f5193fa24268e47bff3",
+          "pairing_head_sha": "a763a3b945ada03bf4a58646d37704de902ca3a2",
           "sample_count": 1,
           "actions_cache": {
-            "run_id": 30786434849,
-            "run_url": "https://github.com/boringcache/benchmark-hugo-go/actions/runs/30786434849",
-            "head_sha": "e76300433f9eb961af355f5193fa24268e47bff3",
-            "created_at": "2026-08-03T05:11:16Z",
-            "cold_seconds": 87.0,
-            "cold_build_seconds": 73.0,
-            "cold_restore_or_setup_seconds": 14.0,
-            "warm1_seconds": 15.0,
-            "warm1_build_seconds": 3.0,
-            "warm1_restore_or_setup_seconds": 12.0,
+            "run_id": 31355725483,
+            "run_url": "https://github.com/boringcache/benchmark-hugo-go/actions/runs/31355725483",
+            "head_sha": "a763a3b945ada03bf4a58646d37704de902ca3a2",
+            "created_at": "2026-08-10T04:30:57Z",
+            "cold_seconds": 73.0,
+            "cold_build_seconds": 72.0,
+            "cold_restore_or_setup_seconds": 1.0,
+            "warm1_seconds": 10.0,
+            "warm1_build_seconds": 6.0,
+            "warm1_restore_or_setup_seconds": 4.0,
             "warm2_seconds": null,
-            "warm_average_seconds": 15.0,
-            "warm_steady_seconds": 15.0,
+            "warm_average_seconds": 10.0,
+            "warm_steady_seconds": 10.0,
             "rolling_first_build_seconds": null,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 122.0,
-            "storage_bytes": 318417435,
-            "storage_source": "github-actions-cache-api",
+            "run_total_seconds": 107.0,
+            "storage_bytes": null,
+            "storage_source": null,
             "storage_breakdown": null,
             "network_bytes_uploaded": null,
             "network_bytes_uploaded_source": null,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
             "startup_prefetch": {},
-            "oci": {
-              "hydration_policy": null,
-              "body_local_hits": null,
-              "body_remote_fetches": null,
-              "body_local_bytes": null,
-              "body_remote_bytes": null,
-              "body_local_duration_ms": null,
-              "body_remote_duration_ms": null,
-              "startup_body_inserted": null,
-              "startup_body_failures": null,
-              "startup_body_cold_blobs": null,
-              "startup_body_duration_ms": null,
-              "new_blob_count": null,
-              "new_blob_bytes": null,
-              "upload_requested_blobs": null,
-              "upload_already_present": null,
-              "upload_batch_seconds": null
-            },
+            "oci": {},
             "classification": {
-              "sample_valid": true,
-              "reporting_mode": "comparative",
-              "reporting_reason": null,
-              "reporting_note": null,
-              "validity_reason": null,
-              "cache_import_status": null,
-              "raw_cache_import_status": null,
-              "prior_cache_state": "not_expected",
-              "cache_reuse_status": null,
-              "rolling_reseed": null,
-              "steady_state_candidate": null,
-              "rolling_reseed_kind": null,
-              "tiny_metadata_churn": false,
-              "tiny_metadata_churn_max_blobs": 1,
-              "tiny_metadata_churn_max_bytes": 65536,
-              "reseed_new_blob_threshold": 0,
-              "reseed_reason": null
+              "sample_valid": false,
+              "reporting_mode": "invalid",
+              "reporting_reason": "fresh_warm_cache_import_not_ok",
+              "validity_reason": "fresh_warm_cache_import_not_ok",
+              "cache_import_status": "miss"
             },
             "product_refs": {
-              "schema_version": 1,
-              "action_ref": "actions/cache@v5",
-              "action_sha": "caa296126883cff596d87d8935842f9db880ef25"
+              "schema_version": 1
             },
             "product_refs_consistent": true,
             "launch_proof_paths": [],
-            "workspace": "boringcache/benchmark-hugo-go",
+            "workspace": null,
             "cache_tag": null,
-            "run_uid": "gh-30786434849-1",
+            "run_uid": "gh-31355725483-1",
             "mode": "go",
-            "adapter": "gocache",
+            "adapter": "go",
             "docker_cache_from_refs": null,
             "docker_cache_import_ready": null,
             "http_transport": null,
@@ -669,444 +245,82 @@
             "reporting_url": null,
             "tool_outcomes": null,
             "native_tool": null,
-            "slow_reason": {
-              "schema_version": "benchmark_slow_reason.v1",
-              "benchmark": "hugo-go",
-              "strategy": "actions-cache",
-              "lane": "fresh",
-              "run_uid": "gh-30786434849-1",
-              "paired_run_id": 30786434849,
-              "build_seconds": 73,
-              "setup_seconds": 14,
-              "post_cleanup_seconds": null,
-              "cache_restore_seconds": null,
-              "cache_save_export_seconds": null,
-              "buildkit_cached_steps": null,
-              "hit_count": null,
-              "miss_count": null,
-              "hit_rate": null,
-              "prior_cache_state": "not_expected",
-              "new_blob_bytes": null,
-              "buildkit_prewarm": {
-                "body_time_seconds": null,
-                "upload_time_seconds": null,
-                "body_wait_seconds": null,
-                "cpu_pressure_seconds": null,
-                "io_pressure_seconds": null,
-                "body_phase": null,
-                "image_output_overlap_seconds": null,
-                "cache_only_transitions": null,
-                "body_downshifts": null,
-                "slot_limit_min": null,
-                "slot_limit_max": null
-              },
-              "native_tool": null,
-              "issue_candidates": [],
-              "hypotheses": []
-            }
+            "slow_reason": null
           },
           "boringcache": {
-            "run_id": 30786434849,
-            "run_url": "https://github.com/boringcache/benchmark-hugo-go/actions/runs/30786434849",
-            "head_sha": "e76300433f9eb961af355f5193fa24268e47bff3",
-            "created_at": "2026-08-03T05:11:16Z",
-            "cold_seconds": 95.0,
-            "cold_build_seconds": 82.0,
-            "cold_restore_or_setup_seconds": 13.0,
-            "warm1_seconds": 37.0,
-            "warm1_build_seconds": 6.0,
-            "warm1_restore_or_setup_seconds": 31.0,
+            "run_id": 31355725483,
+            "run_url": "https://github.com/boringcache/benchmark-hugo-go/actions/runs/31355725483",
+            "head_sha": "a763a3b945ada03bf4a58646d37704de902ca3a2",
+            "created_at": "2026-08-10T04:30:57Z",
+            "cold_seconds": 83.0,
+            "cold_build_seconds": 80.0,
+            "cold_restore_or_setup_seconds": 3.0,
+            "warm1_seconds": 19.0,
+            "warm1_build_seconds": 10.0,
+            "warm1_restore_or_setup_seconds": 9.0,
             "warm2_seconds": null,
-            "warm_average_seconds": 37.0,
-            "warm_steady_seconds": 37.0,
+            "warm_average_seconds": 19.0,
+            "warm_steady_seconds": 19.0,
             "rolling_first_build_seconds": null,
             "rolling_warm_seconds": null,
-            "run_total_seconds": 122.0,
-            "storage_bytes": 151471241,
-            "storage_source": "boringcache-check",
-            "storage_breakdown": {
-              "workspace": "boringcache/benchmark-hugo-go",
-              "tags": [
-                "hugo-go-run-r30786434849-a1-go-mod-cache-ubuntu-24-x86_64"
-              ],
-              "total_bytes": 151471241,
-              "summary": {
-                "remote_kv_bytes": 0,
-                "remote_cas_bytes": 0,
-                "dependency_archive_bytes": 151471241,
-                "tool_runtime_archive_bytes": 0,
-                "unknown_bytes": 0
-              },
-              "components": [
-                {
-                  "tag": "hugo-go-run-r30786434849-a1-go-mod-cache-ubuntu-24-x86_64",
-                  "requested_tag": "hugo-go-run-r30786434849-a1-go-mod-cache-ubuntu-24-x86_64",
-                  "cache_entry_id": "b64b061b-3441-4ea9-acbd-7b980f0815a6",
-                  "primary_tag": "hugo-go-run-r30786434849-a1-go-mod-cache-ubuntu-24-x86_64",
-                  "storage_mode": "archive",
-                  "component_type": "dependency_archive",
-                  "component_label": "dependency archive",
-                  "bytes": 151471241,
-                  "archive_size_bytes": 151471241,
-                  "blob_total_size_bytes": 0
-                }
-              ]
-            },
+            "run_total_seconds": 107.0,
+            "storage_bytes": null,
+            "storage_source": null,
+            "storage_breakdown": null,
             "network_bytes_uploaded": null,
             "network_bytes_uploaded_source": null,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
             "startup_prefetch": {},
-            "oci": {
-              "hydration_policy": null,
-              "body_local_hits": null,
-              "body_remote_fetches": null,
-              "body_local_bytes": null,
-              "body_remote_bytes": null,
-              "body_local_duration_ms": null,
-              "body_remote_duration_ms": null,
-              "startup_body_inserted": null,
-              "startup_body_failures": null,
-              "startup_body_cold_blobs": null,
-              "startup_body_duration_ms": null,
-              "new_blob_count": null,
-              "new_blob_bytes": null,
-              "upload_requested_blobs": null,
-              "upload_already_present": null,
-              "upload_batch_seconds": null
-            },
+            "oci": {},
             "classification": {
-              "sample_valid": true,
-              "reporting_mode": "comparative",
-              "reporting_reason": null,
-              "reporting_note": null,
-              "validity_reason": null,
-              "cache_import_status": null,
-              "raw_cache_import_status": null,
-              "prior_cache_state": "not_expected",
-              "cache_reuse_status": null,
-              "rolling_reseed": null,
-              "steady_state_candidate": null,
-              "rolling_reseed_kind": null,
-              "tiny_metadata_churn": false,
-              "tiny_metadata_churn_max_blobs": 1,
-              "tiny_metadata_churn_max_bytes": 65536,
-              "reseed_new_blob_threshold": 0,
-              "reseed_reason": null
+              "sample_valid": false,
+              "reporting_mode": "invalid",
+              "reporting_reason": "fresh_warm_cache_import_not_ok",
+              "validity_reason": "fresh_warm_cache_import_not_ok",
+              "cache_import_status": "miss"
             },
             "product_refs": {
-              "schema_version": 1,
-              "cli_version": "v1.16.4",
-              "action_ref": "boringcache/one@bf810e34331db84f9f11930e83b8813b5ad31ba1",
-              "action_sha": "bf810e34331db84f9f11930e83b8813b5ad31ba1",
-              "web_revision": "2d9739b6f",
-              "api_url": "https://api.boringcache.com"
+              "schema_version": 1
             },
             "product_refs_consistent": true,
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-hugo-go",
-            "cache_tag": null,
-            "run_uid": "gh-30786434849-1",
+            "cache_tag": "hugo-go-run-r31355725483-a1",
+            "run_uid": "gh-31355725483-1",
             "mode": "go",
-            "adapter": "gocache",
+            "adapter": "go",
             "docker_cache_from_refs": null,
             "docker_cache_import_ready": null,
-            "http_transport": "h1+h2c-auto",
-            "http2_enabled": true,
-            "oci_stream_through_min_bytes": 1,
+            "http_transport": null,
+            "http2_enabled": null,
+            "oci_stream_through_min_bytes": null,
             "restore_result": null,
             "save_result": null,
             "publish_status": null,
-            "session_summary": {
-              "schema": "cache-session-v2",
-              "cli_version": "1.16.4",
-              "mode": "cache-registry",
-              "adapter": "gocache",
-              "workspace": "boringcache/benchmark-hugo-go",
-              "duration_ms": 93776,
-              "identity": {
-                "attempt": "1",
-                "commit_sha": "e76300433f9eb961af355f5193fa24268e47bff3",
-                "kind": "ci",
-                "provider": "github-actions",
-                "provider_run_uid": "30786434849",
-                "repository": "boringcache/benchmark-hugo-go",
-                "source_ref_name": "main",
-                "source_ref_type": "branch",
-                "summary_session_id": "proxy-summary-dea2eb2b-94eb-4036-8958-8b9fd3d4bdca",
-                "uid": "github-actions:boringcache/benchmark-hugo-go:30786434849"
-              },
-              "proxy": {
-                "adapter": "gocache",
-                "blob_download_max_concurrency": 10,
-                "blob_prefetch_concurrency_source": "auto",
-                "blob_prefetch_max_concurrency": 2000,
-                "duration_ms": 93776,
-                "fail_on_cache_error": false,
-                "h2_initial_connection_window_bytes": 33554432,
-                "h2_initial_stream_window_bytes": 2097152,
-                "h2_max_concurrent_streams": 1024,
-                "http2_enabled": true,
-                "http_transport": "h1+h2c-auto",
-                "hydration_policy": "metadata-only",
-                "mode": "cache-registry",
-                "oci_alias_promotion_refs": [],
-                "oci_stream_through_enabled": true,
-                "oci_stream_through_min_bytes": 1,
-                "oci_stream_through_mode": "full_body_always",
-                "read_only": false
-              },
-              "backend_api": {
-                "error_count_by_operation": {
-                  "cache_blobs_upload_urls": 0,
-                  "cache_kv_entries_upsert": 0,
-                  "cache_rollups_ingest": 0
-                },
-                "p50_ms_by_operation": {
-                  "cache_blobs_upload_urls": 86,
-                  "cache_kv_entries_upsert": 119,
-                  "cache_rollups_ingest": 199
-                },
-                "p95_ms_by_operation": {
-                  "cache_blobs_upload_urls": 94,
-                  "cache_kv_entries_upsert": 376,
-                  "cache_rollups_ingest": 280
-                },
-                "request_count_by_operation": {
-                  "cache_blobs_upload_urls": 638,
-                  "cache_kv_entries_upsert": 23,
-                  "cache_rollups_ingest": 4
-                },
-                "retry_count_by_operation": {
-                  "cache_blobs_upload_urls": 0,
-                  "cache_kv_entries_upsert": 0,
-                  "cache_rollups_ingest": 0
-                },
-                "total_error_count": 0,
-                "total_request_count": 665,
-                "total_retry_count": 0
-              },
-              "rails": {
-                "error_count_by_operation": {
-                  "cache_blobs_upload_urls": 0,
-                  "cache_kv_entries_upsert": 0,
-                  "cache_rollups_ingest": 0
-                },
-                "p50_ms_by_operation": {
-                  "cache_blobs_upload_urls": 86,
-                  "cache_kv_entries_upsert": 119,
-                  "cache_rollups_ingest": 199
-                },
-                "p95_ms_by_operation": {
-                  "cache_blobs_upload_urls": 94,
-                  "cache_kv_entries_upsert": 376,
-                  "cache_rollups_ingest": 280
-                },
-                "request_count_by_operation": {
-                  "cache_blobs_upload_urls": 638,
-                  "cache_kv_entries_upsert": 23,
-                  "cache_rollups_ingest": 4
-                },
-                "retry_count_by_operation": {
-                  "cache_blobs_upload_urls": 0,
-                  "cache_kv_entries_upsert": 0,
-                  "cache_rollups_ingest": 0
-                },
-                "total_error_count": 0,
-                "total_request_count": 665,
-                "total_retry_count": 0
-              },
-              "storage": {},
-              "lifecycle": {},
-              "oci": {
-                "buildkit_enrichment": "not_applicable",
-                "oci_engine_hydration_policy": "metadata-only",
-                "oci_negative_generation": 0
-              },
-              "startup_prefetch": {},
-              "kv_upload": {
-                "kv_upload_allowed_concurrency_max": 1,
-                "kv_upload_already_present_blobs": 2036,
-                "kv_upload_batches": 23,
-                "kv_upload_blobs_per_sec": 0,
-                "kv_upload_concurrency_reason": "adaptive_ramp",
-                "kv_upload_concurrency_source": "auto",
-                "kv_upload_duration_ms": 2316,
-                "kv_upload_failed_blobs": 0,
-                "kv_upload_final_concurrency_max": 1,
-                "kv_upload_initial_concurrency_max": 1,
-                "kv_upload_missing_local_blobs": 0,
-                "kv_upload_requested_blobs": 0,
-                "kv_upload_uploaded_blobs": 0
-              },
-              "singleflight": {
-                "singleflight_kv_lookup_leaders": 1301
-              },
-              "kv_lookup": {
-                "kv_lookup_go_cache_after_refresh_miss": 1300,
-                "kv_lookup_go_cache_published_fast_miss": 1300
-              },
-              "local_cache": {
-                "blob_read": {},
-                "blob_read_cache_bytes": 853885406,
-                "blob_read_cache_max_bytes": 68719476736,
-                "blob_read_memory_cache_bytes": 0,
-                "blob_read_memory_cache_max_bytes": 0,
-                "oci_body": {}
-              },
-              "buildkit": {
-                "run_classification": "not_applicable"
-              },
-              "classification": {
-                "bottleneck": {
-                  "adapter": "gocache",
-                  "candidates": [
-                    {
-                      "confidence": "high",
-                      "evidence": {
-                        "bytes_read": 0,
-                        "hit_rate": 0.0,
-                        "hits": 0,
-                        "misses": 1300
-                      },
-                      "kind": "cache_miss_quality",
-                      "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
-                    }
-                  ],
-                  "evidence": {
-                    "duration_ms": 93776,
-                    "errors": 0,
-                    "hit_rate": 0.0,
-                    "hits": 0,
-                    "misses": 1300,
-                    "write_degraded": 0,
-                    "write_errors": 0,
-                    "writes": 2816
-                  },
-                  "primary_bottleneck": "cache_miss_quality",
-                  "state": "bottleneck_detected"
-                },
-                "cache_key_lookup": {
-                  "state": "not_applicable"
-                },
-                "cache_temperature": {
-                  "errors": 0,
-                  "hit_rate": 0.0,
-                  "hits": 0,
-                  "likely_reason": "no_hits_for_requested_keys",
-                  "misses": 1300,
-                  "state": "cold",
-                  "writes": 2816
-                },
-                "issue_candidates": [],
-                "primary_bottleneck": "cache_miss_quality"
-              }
-            },
-            "cache_review": {
-              "schema_version": "benchmark_cache_review.v1",
-              "summary_schema": "cache-session-v2",
-              "summary_session_id": "proxy-summary-dea2eb2b-94eb-4036-8958-8b9fd3d4bdca",
-              "tool": "gocache",
-              "cache_target": {
-                "workspace": "boringcache/benchmark-hugo-go",
-                "tag": null,
-                "mode": "cache-registry"
-              },
-              "project_hints": [],
-              "phase_hints": [],
-              "primary_bottleneck": "cache_miss_quality",
-              "diagnostic_classification": "bottleneck_detected",
-              "reason_codes": [
-                "cache_miss_quality"
-              ],
-              "native_tool": null,
-              "diagnostic_label": null,
-              "customer_state": null,
-              "customer_summary": null,
-              "service_side_issue": false,
-              "operator_issue": false,
-              "value_outcome": null,
-              "value_owner": null,
-              "value_headline": null,
-              "value_detail": null,
-              "value_next_action": null,
-              "value_evidence": [],
-              "hit_count": 0,
-              "miss_count": 1300,
-              "hit_rate": 0,
-              "error_count": 0,
-              "bytes_read": null,
-              "bytes_written": null,
-              "duration_seconds": 93.776,
-              "issue_candidates": []
-            },
+            "session_summary": null,
+            "cache_review": null,
             "summary_schema": null,
             "reporting_url": null,
             "tool_outcomes": null,
             "native_tool": null,
-            "slow_reason": {
-              "schema_version": "benchmark_slow_reason.v1",
-              "benchmark": "hugo-go",
-              "strategy": "boringcache",
-              "lane": "fresh",
-              "run_uid": "gh-30786434849-1",
-              "paired_run_id": 30786434849,
-              "build_seconds": 82,
-              "setup_seconds": 13,
-              "post_cleanup_seconds": null,
-              "cache_restore_seconds": null,
-              "cache_save_export_seconds": null,
-              "buildkit_cached_steps": null,
-              "hit_count": 0,
-              "miss_count": 1300,
-              "hit_rate": 0,
-              "prior_cache_state": "not_expected",
-              "new_blob_bytes": null,
-              "buildkit_prewarm": {
-                "body_time_seconds": null,
-                "upload_time_seconds": null,
-                "body_wait_seconds": null,
-                "cpu_pressure_seconds": null,
-                "io_pressure_seconds": null,
-                "body_phase": null,
-                "image_output_overlap_seconds": null,
-                "cache_only_transitions": null,
-                "body_downshifts": null,
-                "slot_limit_min": null,
-                "slot_limit_max": null
-              },
-              "native_tool": null,
-              "issue_candidates": [],
-              "hypotheses": [
-                {
-                  "id": "partial_cache_reuse",
-                  "confidence": "medium",
-                  "summary": "Hit rate is below the benchmark reuse floor.",
-                  "evidence": {
-                    "hit_rate": 0
-                  }
-                },
-                {
-                  "id": "cache_miss_quality",
-                  "confidence": "medium",
-                  "summary": "The native tool still missed cache entries during the measured build.",
-                  "evidence": {
-                    "miss_count": 1300,
-                    "hit_rate": 0
-                  }
-                }
-              ]
-            }
+            "slow_reason": null
           },
           "reporting": {
-            "comparative": true
+            "comparative": false,
+            "status": "invalid",
+            "reason": "fresh_warm_cache_import_not_ok",
+            "headline_scenario": "warm",
+            "headline_label": "Warm Build",
+            "result_text": "invalid sample",
+            "note": "Fresh BoringCache warm reruns require a usable cache import; this sample is diagnostic only."
           },
-          "warm_improvement_pct": -146.67,
-          "warm_build_improvement_pct": -100.0,
-          "cold_improvement_pct": -9.2,
-          "cold_build_improvement_pct": -12.33,
-          "storage_improvement_pct": 52.43,
-          "storage_saved_bytes": 166946194
+          "warm_improvement_pct": -90.0,
+          "warm_build_improvement_pct": -66.67,
+          "cold_improvement_pct": -13.7,
+          "cold_build_improvement_pct": -11.11,
+          "storage_improvement_pct": null,
+          "storage_saved_bytes": null
         }
       },
       "rolling": {
