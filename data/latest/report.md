@@ -1,8 +1,8 @@
 # Latest Benchmark Report
 
-Generated: 2026-08-10 14:20 UTC
+Generated: 2026-08-11 10:25 UTC
 
-Coverage: 22 benchmarks; fresh 18/22, rolling 22/22.
+Coverage: 18 benchmarks; fresh 18/18, rolling 17/18.
 
 Rows are latest complete same-commit pairs.
 
@@ -12,9 +12,9 @@ Rows are latest complete same-commit pairs.
 | --- | --- | --- | --- | --- | --- |
 | Hugo | Warm Build | 0m 13s | 0m 5s | 62% faster | n/a |
 | Hugo Go | Warm Build | 0m 10s | 0m 19s | invalid sample | n/a |
-| Immich | Cold Build | 7m 14s | 6m 2s | 17% faster | n/a |
-| Mastodon | Cold Build | 11m 25s | 8m 42s | 24% faster | n/a |
-| Discourse | Cold Build | 7m 0s | 4m 44s | 32% faster | n/a |
+| Immich | Warm Build | 0m 16s | 0m 7s | 56% faster | n/a |
+| Mastodon | Cold Build | 11m 23s | 8m 34s | 25% faster | n/a |
+| Mastodon Streaming | Cold Build | 0m 23s | 0m 20s | near tie | n/a |
 | PostHog | Cold Build | 30m 31s | 15m 44s | 48% faster | 4.70 GB less (41.4%) |
 | Storybook | Cold Build | 4m 43s | 4m 6s | 13% faster | 19.21 MB less (1.43%) |
 | OpenTelemetry Java | Cold Build | 11m 42s | 11m 29s | near tie | 2.71 MB less (0.32%) |
@@ -37,11 +37,6 @@ Rows are latest complete same-commit pairs.
 | Hugo Go | Commit Build | 0m 23s | 0m 30s | 30% slower | 471.28 MB less (76.54%) |
 | Immich | Commit Build | 0m 24s | 0m 11s | 54% faster | 6.90 GB less (70.56%) |
 | Mastodon | Commit Build | 12m 48s | 8m 15s | investigation only | n/a |
-| Discourse | Commit Build | 4m 9s | 3m 19s | 20% faster | 8.87 GB less (89.57%) |
-| Discourse Base Deps | Commit Build | 0m 9s | 0m 9s | near tie | 9.20 GB less (92.91%) |
-| Discourse Web-Only Image | Commit Build | 0m 10s | 0m 8s | near tie | 8.58 GB less (86.66%) |
-| Discourse Release Image | Commit Build | 0m 18s | 0m 9s | 50% faster | 8.48 GB less (85.65%) |
-| Discourse Test Image | Commit Build | 0m 8s | 0m 9s | near tie | 7.95 GB less (80.29%) |
 | PostHog | Commit Build | 29m 31s | 14m 6s | 52% faster | n/a |
 | Storybook | Commit Build | 3m 16s | 3m 52s | 18% slower | 1.86 GB less (57.94%) |
 | OpenTelemetry Java | Commit Build | 1m 0s | 1m 11s | 18% slower | 957.32 MB less (47.17%) |
