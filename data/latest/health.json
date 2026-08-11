@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-10T14:20:26Z",
+  "generated_at": "2026-08-11T10:25:21Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -26,9 +26,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 74,
-          "boringcache_successful_run_count": 74,
-          "paired_head_count": 69,
+          "actions_successful_run_count": 77,
+          "boringcache_successful_run_count": 77,
+          "paired_head_count": 71,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "058f5b78d61be93dd9ad0fe36d3879200a0de988",
@@ -66,9 +66,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 35,
-          "boringcache_successful_run_count": 35,
-          "paired_head_count": 26,
+          "actions_successful_run_count": 39,
+          "boringcache_successful_run_count": 39,
+          "paired_head_count": 30,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "4e96acd775ea16281886cc1f2e4cb00eacd0833e",
@@ -88,25 +88,26 @@
         "fresh": {
           "lane": "fresh",
           "state": "healthy",
-          "actions_successful_run_count": 12,
-          "boringcache_successful_run_count": 12,
-          "paired_head_count": 11,
+          "actions_successful_run_count": 13,
+          "boringcache_successful_run_count": 13,
+          "paired_head_count": 12,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "058959ccd5c5d57ea97aacb54b1be713f41878ac",
-          "latest_created_at": "2026-08-04T04:02:07Z",
-          "latest_actions_run_id": 30876448644,
-          "latest_boringcache_run_id": 30876448644,
+          "latest_head_sha": "2fd982bce6ac6141e54a9e1df5deb28deaee8853",
+          "latest_created_at": "2026-08-11T03:32:15Z",
+          "latest_actions_run_id": 31455688461,
+          "latest_boringcache_run_id": 31455688461,
           "latest_reporting_mode": "comparative",
-          "latest_cache_import_status": "ok",
+          "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
+          "latest_cache_import_status": "hit",
           "latest_sample_valid": true
         },
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 92,
-          "boringcache_successful_run_count": 92,
-          "paired_head_count": 92,
+          "actions_successful_run_count": 95,
+          "boringcache_successful_run_count": 95,
+          "paired_head_count": 95,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "5f4f47f8c6b3de69c27276120cf475671c1e32c0",
@@ -127,25 +128,26 @@
         "fresh": {
           "lane": "fresh",
           "state": "healthy",
-          "actions_successful_run_count": 11,
-          "boringcache_successful_run_count": 11,
-          "paired_head_count": 11,
+          "actions_successful_run_count": 12,
+          "boringcache_successful_run_count": 12,
+          "paired_head_count": 12,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "45a95daf66f7b5eef5d9d1dc79947ca771ab9a99",
-          "latest_created_at": "2026-08-04T05:08:05Z",
-          "latest_actions_run_id": 30879746009,
-          "latest_boringcache_run_id": 30879746009,
+          "latest_head_sha": "e0053bc1c7bbde9404f97493f02237cae1b17580",
+          "latest_created_at": "2026-08-11T04:33:15Z",
+          "latest_actions_run_id": 31458835262,
+          "latest_boringcache_run_id": 31458835262,
           "latest_reporting_mode": "comparative",
-          "latest_cache_import_status": "ok",
+          "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
+          "latest_cache_import_status": "hit",
           "latest_sample_valid": true
         },
         "rolling": {
           "lane": "rolling",
           "state": "investigation",
-          "actions_successful_run_count": 84,
-          "boringcache_successful_run_count": 84,
-          "paired_head_count": 83,
+          "actions_successful_run_count": 85,
+          "boringcache_successful_run_count": 85,
+          "paired_head_count": 84,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "0e25c3d5229eb3b0a97de2575cd80f7f823d08a7",
@@ -166,41 +168,16 @@
       "lanes": {
         "fresh": {
           "lane": "fresh",
-          "state": "missing_pair",
-          "actions_successful_run_count": 11,
-          "boringcache_successful_run_count": 11,
-          "paired_head_count": 11,
-          "selected_pair_count": 0,
-          "window_pair_target": 3
-        },
-        "rolling": {
-          "lane": "rolling",
-          "state": "missing_pair",
-          "actions_successful_run_count": 84,
-          "boringcache_successful_run_count": 84,
-          "paired_head_count": 83,
-          "selected_pair_count": 0,
-          "window_pair_target": 3
-        }
-      }
-    },
-    {
-      "benchmark": "discourse-docker",
-      "name": "Discourse",
-      "source_repo": "boringcache/benchmark-discourse",
-      "lanes": {
-        "fresh": {
-          "lane": "fresh",
           "state": "healthy",
-          "actions_successful_run_count": 11,
-          "boringcache_successful_run_count": 11,
-          "paired_head_count": 11,
-          "selected_pair_count": 3,
+          "actions_successful_run_count": 12,
+          "boringcache_successful_run_count": 12,
+          "paired_head_count": 12,
+          "selected_pair_count": 1,
           "window_pair_target": 3,
-          "latest_head_sha": "89cb5dd98025129086572fc0fe0ba55ef3ac93c0",
-          "latest_created_at": "2026-08-09T04:35:49Z",
-          "latest_actions_run_id": 31294901731,
-          "latest_boringcache_run_id": 31294901731,
+          "latest_head_sha": "e0053bc1c7bbde9404f97493f02237cae1b17580",
+          "latest_created_at": "2026-08-11T04:33:15Z",
+          "latest_actions_run_id": 31458835262,
+          "latest_boringcache_run_id": 31458835262,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
           "latest_cache_import_status": "hit",
@@ -208,25 +185,18 @@
         },
         "rolling": {
           "lane": "rolling",
-          "state": "healthy",
-          "actions_successful_run_count": 83,
-          "boringcache_successful_run_count": 83,
-          "paired_head_count": 83,
-          "selected_pair_count": 3,
-          "window_pair_target": 3,
-          "latest_head_sha": "6e803c084e4063ab1d93a76728f35b676a027473",
-          "latest_created_at": "2026-08-05T12:21:27Z",
-          "latest_actions_run_id": 31005253413,
-          "latest_boringcache_run_id": 31005253413,
-          "latest_reporting_mode": "comparative",
-          "latest_cache_import_status": "ok",
-          "latest_sample_valid": true
+          "state": "missing_pair",
+          "actions_successful_run_count": 85,
+          "boringcache_successful_run_count": 85,
+          "paired_head_count": 84,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
         }
       }
     },
     {
-      "benchmark": "discourse-base-deps",
-      "name": "Discourse Base Deps",
+      "benchmark": "discourse-image-factory-amd64",
+      "name": "Discourse Image Factory (amd64)",
       "source_repo": "boringcache/benchmark-discourse",
       "lanes": {
         "fresh": {
@@ -240,25 +210,18 @@
         },
         "rolling": {
           "lane": "rolling",
-          "state": "healthy",
-          "actions_successful_run_count": 99,
-          "boringcache_successful_run_count": 99,
-          "paired_head_count": 99,
-          "selected_pair_count": 3,
-          "window_pair_target": 3,
-          "latest_head_sha": "6e803c084e4063ab1d93a76728f35b676a027473",
-          "latest_created_at": "2026-08-05T12:21:27Z",
-          "latest_actions_run_id": 31005253321,
-          "latest_boringcache_run_id": 31005253321,
-          "latest_reporting_mode": "comparative",
-          "latest_cache_import_status": "ok",
-          "latest_sample_valid": true
+          "state": "missing_pair",
+          "actions_successful_run_count": 6,
+          "boringcache_successful_run_count": 6,
+          "paired_head_count": 6,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
         }
       }
     },
     {
-      "benchmark": "discourse-base-web-only",
-      "name": "Discourse Web-Only Image",
+      "benchmark": "discourse-image-factory-arm64",
+      "name": "Discourse Image Factory (arm64)",
       "source_repo": "boringcache/benchmark-discourse",
       "lanes": {
         "fresh": {
@@ -272,83 +235,12 @@
         },
         "rolling": {
           "lane": "rolling",
-          "state": "healthy",
-          "actions_successful_run_count": 99,
-          "boringcache_successful_run_count": 99,
-          "paired_head_count": 99,
-          "selected_pair_count": 3,
-          "window_pair_target": 3,
-          "latest_head_sha": "6e803c084e4063ab1d93a76728f35b676a027473",
-          "latest_created_at": "2026-08-05T12:21:27Z",
-          "latest_actions_run_id": 31005253321,
-          "latest_boringcache_run_id": 31005253321,
-          "latest_reporting_mode": "comparative",
-          "latest_cache_import_status": "ok",
-          "latest_sample_valid": true
-        }
-      }
-    },
-    {
-      "benchmark": "discourse-base-release",
-      "name": "Discourse Release Image",
-      "source_repo": "boringcache/benchmark-discourse",
-      "lanes": {
-        "fresh": {
-          "lane": "fresh",
           "state": "missing_pair",
-          "actions_successful_run_count": 0,
-          "boringcache_successful_run_count": 0,
-          "paired_head_count": 0,
+          "actions_successful_run_count": 6,
+          "boringcache_successful_run_count": 6,
+          "paired_head_count": 6,
           "selected_pair_count": 0,
           "window_pair_target": 3
-        },
-        "rolling": {
-          "lane": "rolling",
-          "state": "healthy",
-          "actions_successful_run_count": 99,
-          "boringcache_successful_run_count": 99,
-          "paired_head_count": 99,
-          "selected_pair_count": 3,
-          "window_pair_target": 3,
-          "latest_head_sha": "6e803c084e4063ab1d93a76728f35b676a027473",
-          "latest_created_at": "2026-08-05T12:21:27Z",
-          "latest_actions_run_id": 31005253321,
-          "latest_boringcache_run_id": 31005253321,
-          "latest_reporting_mode": "comparative",
-          "latest_cache_import_status": "ok",
-          "latest_sample_valid": true
-        }
-      }
-    },
-    {
-      "benchmark": "discourse-test-release",
-      "name": "Discourse Test Image",
-      "source_repo": "boringcache/benchmark-discourse",
-      "lanes": {
-        "fresh": {
-          "lane": "fresh",
-          "state": "missing_pair",
-          "actions_successful_run_count": 0,
-          "boringcache_successful_run_count": 0,
-          "paired_head_count": 0,
-          "selected_pair_count": 0,
-          "window_pair_target": 3
-        },
-        "rolling": {
-          "lane": "rolling",
-          "state": "healthy",
-          "actions_successful_run_count": 99,
-          "boringcache_successful_run_count": 99,
-          "paired_head_count": 99,
-          "selected_pair_count": 3,
-          "window_pair_target": 3,
-          "latest_head_sha": "6e803c084e4063ab1d93a76728f35b676a027473",
-          "latest_created_at": "2026-08-05T12:21:27Z",
-          "latest_actions_run_id": 31005253321,
-          "latest_boringcache_run_id": 31005253321,
-          "latest_reporting_mode": "comparative",
-          "latest_cache_import_status": "ok",
-          "latest_sample_valid": true
         }
       }
     },
@@ -376,9 +268,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 85,
-          "boringcache_successful_run_count": 85,
-          "paired_head_count": 82,
+          "actions_successful_run_count": 82,
+          "boringcache_successful_run_count": 82,
+          "paired_head_count": 81,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "1f687159b76dcfd4ec630cf0ca243b17b00db835",
@@ -414,9 +306,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 66,
-          "boringcache_successful_run_count": 66,
-          "paired_head_count": 61,
+          "actions_successful_run_count": 63,
+          "boringcache_successful_run_count": 63,
+          "paired_head_count": 58,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "fc95ef2177b4445c56def465303e8683448481ca",
@@ -490,7 +382,7 @@
           "state": "healthy",
           "actions_successful_run_count": 95,
           "boringcache_successful_run_count": 95,
-          "paired_head_count": 85,
+          "paired_head_count": 86,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "9914a4bca895d6cc5e538c446ad1ddedad221bd8",
@@ -527,9 +419,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 78,
-          "boringcache_successful_run_count": 78,
-          "paired_head_count": 71,
+          "actions_successful_run_count": 74,
+          "boringcache_successful_run_count": 74,
+          "paired_head_count": 67,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "c8507dedb01532474c6c9ab1255ff11dfa448764",
@@ -549,18 +441,18 @@
         "fresh": {
           "lane": "fresh",
           "state": "missing_pair",
-          "actions_successful_run_count": 8,
-          "boringcache_successful_run_count": 8,
-          "paired_head_count": 8,
+          "actions_successful_run_count": 9,
+          "boringcache_successful_run_count": 9,
+          "paired_head_count": 9,
           "selected_pair_count": 0,
           "window_pair_target": 3
         },
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 48,
-          "boringcache_successful_run_count": 48,
-          "paired_head_count": 47,
+          "actions_successful_run_count": 59,
+          "boringcache_successful_run_count": 59,
+          "paired_head_count": 58,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -574,18 +466,18 @@
         "fresh": {
           "lane": "fresh",
           "state": "missing_pair",
-          "actions_successful_run_count": 2,
-          "boringcache_successful_run_count": 2,
-          "paired_head_count": 2,
+          "actions_successful_run_count": 3,
+          "boringcache_successful_run_count": 3,
+          "paired_head_count": 3,
           "selected_pair_count": 0,
           "window_pair_target": 3
         },
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 23,
-          "boringcache_successful_run_count": 23,
-          "paired_head_count": 22,
+          "actions_successful_run_count": 31,
+          "boringcache_successful_run_count": 31,
+          "paired_head_count": 30,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -616,9 +508,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 46,
-          "boringcache_successful_run_count": 46,
-          "paired_head_count": 44,
+          "actions_successful_run_count": 49,
+          "boringcache_successful_run_count": 49,
+          "paired_head_count": 47,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "767c2faa2aa97b7622887201916ae4edf500e1fe",
@@ -656,9 +548,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 23,
-          "boringcache_successful_run_count": 23,
-          "paired_head_count": 22,
+          "actions_successful_run_count": 24,
+          "boringcache_successful_run_count": 24,
+          "paired_head_count": 23,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "fafe96c77f9959477943b784015cc5fd5bedb268",
@@ -696,9 +588,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 24,
-          "boringcache_successful_run_count": 24,
-          "paired_head_count": 22,
+          "actions_successful_run_count": 26,
+          "boringcache_successful_run_count": 26,
+          "paired_head_count": 24,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "6c6ba80c453ea895d04f4de77b404754153b139c",
@@ -736,9 +628,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 68,
-          "boringcache_successful_run_count": 68,
-          "paired_head_count": 64,
+          "actions_successful_run_count": 73,
+          "boringcache_successful_run_count": 73,
+          "paired_head_count": 69,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "a3abd3ee25276de998bb49da8ea654b12c31f109",
