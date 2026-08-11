@@ -80,6 +80,7 @@ BENCHMARKS = [
   },
   {
     "benchmark" => "immich",
+    "workflow_benchmark_ids" => ["immich-server"],
     "name" => "Immich",
     "logo" => "immich",
     "repo" => "immich-app/immich",
@@ -117,65 +118,36 @@ BENCHMARKS = [
     "fresh_workflow" => "mastodon-fresh-benchmark.yml"
   },
   {
-    "benchmark" => "discourse-docker",
-    "aliases" => ["discourse"],
-    "name" => "Discourse",
+    "benchmark" => "discourse-image-factory-amd64",
+    "aliases" => ["discourse", "discourse-image-factory"],
+    "workflow_benchmark_ids" => ["discourse-image-factory"],
+    "artifact_benchmark" => "discourse-image-factory",
+    "artifact_variants" => {"actions-cache" => ["amd64"], "boringcache" => ["amd64"]},
+    "name" => "Discourse Image Factory (amd64)",
     "logo" => "docker",
-    "repo" => "discourse/discourse",
+    "repo" => "discourse/discourse_docker",
     "source_repo" => "boringcache/benchmark-discourse",
     "public" => true,
     "category" => "docker",
-    "step" => "Docker build (Ruby+Node dev image)",
-    "workflow" => "discourse-docker-benchmark.yml",
-    "fresh_workflow" => "discourse-fresh-benchmark.yml"
+    "step" => "Docker Bake (base and test image graph, amd64)",
+    "workflow" => "discourse-image-factory.yml",
+    "fresh_workflow" => "discourse-image-factory-fresh.yml"
   },
   {
-    "benchmark" => "discourse-base-deps",
-    "name" => "Discourse Base Deps",
+    "benchmark" => "discourse-image-factory-arm64",
+    "aliases" => ["discourse-arm64"],
+    "workflow_benchmark_ids" => ["discourse-image-factory"],
+    "artifact_benchmark" => "discourse-image-factory",
+    "artifact_variants" => {"actions-cache" => ["arm64"], "boringcache" => ["arm64"]},
+    "name" => "Discourse Image Factory (arm64)",
     "logo" => "docker",
     "repo" => "discourse/discourse_docker",
     "source_repo" => "boringcache/benchmark-discourse",
-    "public" => false,
+    "public" => true,
     "category" => "docker",
-    "step" => "Docker build (base dependencies image)",
-    "workflow" => "discourse-image-factory-benchmark.yml",
-    "fresh_workflow" => "discourse-image-factory-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "discourse-base-web-only",
-    "name" => "Discourse Web-Only Image",
-    "logo" => "docker",
-    "repo" => "discourse/discourse_docker",
-    "source_repo" => "boringcache/benchmark-discourse",
-    "public" => false,
-    "category" => "docker",
-    "step" => "Docker build (web-only base image)",
-    "workflow" => "discourse-image-factory-benchmark.yml",
-    "fresh_workflow" => "discourse-image-factory-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "discourse-base-release",
-    "name" => "Discourse Release Image",
-    "logo" => "docker",
-    "repo" => "discourse/discourse_docker",
-    "source_repo" => "boringcache/benchmark-discourse",
-    "public" => false,
-    "category" => "docker",
-    "step" => "Docker build (release base image)",
-    "workflow" => "discourse-image-factory-benchmark.yml",
-    "fresh_workflow" => "discourse-image-factory-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "discourse-test-release",
-    "name" => "Discourse Test Image",
-    "logo" => "docker",
-    "repo" => "discourse/discourse_docker",
-    "source_repo" => "boringcache/benchmark-discourse",
-    "public" => false,
-    "category" => "docker",
-    "step" => "Docker build (discourse_test release image)",
-    "workflow" => "discourse-image-factory-benchmark.yml",
-    "fresh_workflow" => "discourse-image-factory-fresh-benchmark.yml"
+    "step" => "Docker Bake (base and test image graph, arm64)",
+    "workflow" => "discourse-image-factory.yml",
+    "fresh_workflow" => "discourse-image-factory-fresh.yml"
   },
   {
     "benchmark" => "posthog",
@@ -204,6 +176,7 @@ BENCHMARKS = [
   },
   {
     "benchmark" => "otel-gradle",
+    "aliases" => ["otel", "opentelemetry", "opentelemetry-java"],
     "name" => "OpenTelemetry Java",
     "logo" => "docker",
     "repo" => "open-telemetry/opentelemetry-java",
@@ -216,6 +189,7 @@ BENCHMARKS = [
   },
   {
     "benchmark" => "spring-ai-maven",
+    "aliases" => ["spring", "spring-ai"],
     "name" => "Spring AI",
     "logo" => "docker",
     "repo" => "spring-projects/spring-ai",
@@ -228,6 +202,7 @@ BENCHMARKS = [
   },
   {
     "benchmark" => "grpc-bazel",
+    "aliases" => ["grpc", "gRPC"],
     "name" => "gRPC",
     "logo" => "grpc",
     "repo" => "grpc/grpc",
@@ -292,6 +267,7 @@ BENCHMARKS = [
   },
   {
     "benchmark" => "linkerd2-v2",
+    "aliases" => ["linkerd", "linkerd2", "linkerd2-web"],
     "name" => "Linkerd2 Web",
     "logo" => "docker",
     "repo" => "linkerd/linkerd2",
@@ -316,6 +292,7 @@ BENCHMARKS = [
   },
   {
     "benchmark" => "n8n",
+    "workflow_benchmark_ids" => ["n8n-turbo"],
     "name" => "n8n",
     "logo" => "n8n",
     "repo" => "n8n-io/n8n",
@@ -773,28 +750,43 @@ def artifact_strategy_for(strategy)
   %w[boringcache-native boringcache-mountcache].include?(strategy) ? "boringcache" : strategy
 end
 
-def lane_artifact_names(benchmark_id:, strategy:, lane:)
+def lane_artifact_names(benchmark_id:, strategy:, lane:, variants: [])
   artifact_strategy = artifact_strategy_for(strategy)
   artifact_benchmark_ids(benchmark_id: benchmark_id, strategy: strategy).flat_map do |id|
-    names = ["benchmark-#{id}-#{artifact_strategy}-#{lane}"]
+    names = Array(variants).flat_map do |variant|
+      variant_names = ["benchmark-#{id}-#{artifact_strategy}-#{variant}-#{lane}"]
+      variant_names << "benchmark-#{id}-#{artifact_strategy}-#{variant}" if lane == "fresh"
+      variant_names
+    end
+    names << "benchmark-#{id}-#{artifact_strategy}-#{lane}"
     names << "benchmark-#{id}-#{artifact_strategy}" if lane == "fresh"
     names
   end
 end
 
 def benchmark_artifact_ids(benchmark)
+  if benchmark["artifact_benchmark"]
+    return [benchmark.fetch("artifact_benchmark"), *Array(benchmark["artifact_aliases"])].uniq
+  end
+
   [benchmark.fetch("benchmark"), *Array(benchmark["aliases"])].uniq
 end
 
-def benchmark_artifact_name_for_lane(repo:, run_id:, benchmark_id:, strategy:, lane:)
+def benchmark_artifact_variants(benchmark, strategy)
+  variants = benchmark["artifact_variants"]
+  variants.is_a?(Hash) ? Array(variants[strategy]) : Array(variants)
+end
+
+def benchmark_artifact_name_for_lane(repo:, run_id:, benchmark_id:, strategy:, lane:, variants: [])
   output = run_cmd("gh", "api", "repos/#{repo}/actions/runs/#{run_id}/artifacts")
   artifacts = JSON.parse(output).fetch("artifacts", [])
-  candidate_names = lane_artifact_names(benchmark_id: benchmark_id, strategy: strategy, lane: lane)
+  candidate_names = lane_artifact_names(benchmark_id: benchmark_id, strategy: strategy, lane: lane, variants: variants)
 
-  artifact = artifacts.find do |item|
-    name = item["name"].to_s
-    !item["expired"] && candidate_names.include?(name)
-  end
+  artifact = candidate_names.filter_map do |candidate_name|
+    artifacts.find do |item|
+      !item["expired"] && item["name"].to_s == candidate_name
+    end
+  end.first
 
   artifact && artifact["name"]
 end
@@ -818,10 +810,10 @@ def runs_by_head_grouped(runs)
   end
 end
 
-def latest_run_with_artifact(runs_for_head:, repo:, benchmark_id:, strategy:, lane:, artifacts_cache:)
+def latest_run_with_artifact(runs_for_head:, repo:, benchmark_id:, strategy:, lane:, artifacts_cache:, variants: [])
   return nil if runs_for_head.nil? || runs_for_head.empty?
 
-  candidate_names = lane_artifact_names(benchmark_id: benchmark_id, strategy: strategy, lane: lane)
+  candidate_names = lane_artifact_names(benchmark_id: benchmark_id, strategy: strategy, lane: lane, variants: variants)
   sorted = runs_for_head.sort_by { |run| parse_timestamp(run["createdAt"]) || Time.at(0) }.reverse
   sorted.find do |run|
     artifacts = list_run_artifacts(repo: repo, run_id: run["databaseId"], cache: artifacts_cache)
@@ -1047,9 +1039,9 @@ def headline_candidates(actions_metrics:, boringcache_metrics:)
   ].select { |_, before_value, after_value| before_value && after_value }
 end
 
-def load_strategy_data(temp_root:, repo:, run:, benchmark_id:, strategy:, lane:, cache:)
+def load_strategy_data(temp_root:, repo:, run:, benchmark_id:, strategy:, lane:, cache:, variants: [])
   run_id = run.fetch("databaseId")
-  cache_key = [repo, run_id, benchmark_id, strategy, lane]
+  cache_key = [repo, run_id, benchmark_id, strategy, lane, variants]
   return cache[cache_key] if cache.key?(cache_key)
 
   artifact_name = benchmark_artifact_name_for_lane(
@@ -1057,7 +1049,8 @@ def load_strategy_data(temp_root:, repo:, run:, benchmark_id:, strategy:, lane:,
     run_id: run_id,
     benchmark_id: benchmark_id,
     strategy: strategy,
-    lane: lane
+    lane: lane,
+    variants: variants
   )
   run_total = run_total_seconds(repo: repo, run_id: run_id)
 
@@ -2192,6 +2185,7 @@ def load_provider_lane_data(temp_root:, benchmark:, lane:, strategy:, runs:, cac
   end.reverse
   snapshots = []
   artifact_ids = benchmark_artifact_ids(benchmark)
+  artifact_variants = benchmark_artifact_variants(benchmark, strategy)
 
   heads.each do |head|
     run = latest_run_with_artifact(
@@ -2200,7 +2194,8 @@ def load_provider_lane_data(temp_root:, benchmark:, lane:, strategy:, runs:, cac
       benchmark_id: artifact_ids,
       strategy: strategy,
       lane: lane,
-      artifacts_cache: artifacts_cache
+      artifacts_cache: artifacts_cache,
+      variants: artifact_variants
     )
     next if run.nil?
 
@@ -2211,7 +2206,8 @@ def load_provider_lane_data(temp_root:, benchmark:, lane:, strategy:, runs:, cac
       benchmark_id: artifact_ids,
       strategy: strategy,
       lane: lane,
-      cache: cache
+      cache: cache,
+      variants: artifact_variants
     )
     next if data[:metrics].nil?
 
@@ -2273,6 +2269,8 @@ def load_lane_data(temp_root:, benchmark:, lane:, actions_runs:, boringcache_run
   end.reverse
   entries = []
   artifact_ids = benchmark_artifact_ids(benchmark)
+  actions_variants = benchmark_artifact_variants(benchmark, "actions-cache")
+  boringcache_variants = benchmark_artifact_variants(benchmark, "boringcache")
 
   paired.each do |head|
     ac_run = latest_run_with_artifact(
@@ -2281,7 +2279,8 @@ def load_lane_data(temp_root:, benchmark:, lane:, actions_runs:, boringcache_run
       benchmark_id: artifact_ids,
       strategy: "actions-cache",
       lane: lane,
-      artifacts_cache: artifacts_cache
+      artifacts_cache: artifacts_cache,
+      variants: actions_variants
     )
     bc_run = latest_run_with_artifact(
       runs_for_head: bc_runs_by_head[head],
@@ -2289,7 +2288,8 @@ def load_lane_data(temp_root:, benchmark:, lane:, actions_runs:, boringcache_run
       benchmark_id: artifact_ids,
       strategy: "boringcache",
       lane: lane,
-      artifacts_cache: artifacts_cache
+      artifacts_cache: artifacts_cache,
+      variants: boringcache_variants
     )
     next if ac_run.nil? || bc_run.nil?
 
@@ -2300,7 +2300,8 @@ def load_lane_data(temp_root:, benchmark:, lane:, actions_runs:, boringcache_run
       benchmark_id: artifact_ids,
       strategy: "boringcache",
       lane: lane,
-      cache: cache
+      cache: cache,
+      variants: boringcache_variants
     )
     next if boringcache_data[:metrics].nil?
 
@@ -2311,7 +2312,8 @@ def load_lane_data(temp_root:, benchmark:, lane:, actions_runs:, boringcache_run
       benchmark_id: artifact_ids,
       strategy: "actions-cache",
       lane: lane,
-      cache: cache
+      cache: cache,
+      variants: actions_variants
     )
     next if actions_data[:metrics].nil?
 

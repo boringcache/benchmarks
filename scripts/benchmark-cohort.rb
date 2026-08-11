@@ -53,40 +53,20 @@ BENCHMARKS = [
     "workflow" => "mastodon-streaming-docker-benchmark.yml"
   },
   {
-    "benchmark" => "discourse-docker",
-    "aliases" => ["discourse"],
-    "name" => "Discourse",
+    "benchmark" => "discourse-image-factory-amd64",
+    "aliases" => ["discourse", "discourse-image-factory"],
+    "name" => "Discourse Image Factory (amd64)",
     "repo" => "boringcache/benchmark-discourse",
     "category" => "docker",
-    "workflow" => "discourse-docker-benchmark.yml"
+    "workflow" => "discourse-image-factory.yml"
   },
   {
-    "benchmark" => "discourse-base-deps",
-    "name" => "Discourse Base Deps",
+    "benchmark" => "discourse-image-factory-arm64",
+    "aliases" => ["discourse-arm64"],
+    "name" => "Discourse Image Factory (arm64)",
     "repo" => "boringcache/benchmark-discourse",
     "category" => "docker",
-    "workflow" => "discourse-image-factory-benchmark.yml"
-  },
-  {
-    "benchmark" => "discourse-base-web-only",
-    "name" => "Discourse Web-Only Image",
-    "repo" => "boringcache/benchmark-discourse",
-    "category" => "docker",
-    "workflow" => "discourse-image-factory-benchmark.yml"
-  },
-  {
-    "benchmark" => "discourse-base-release",
-    "name" => "Discourse Release Image",
-    "repo" => "boringcache/benchmark-discourse",
-    "category" => "docker",
-    "workflow" => "discourse-image-factory-benchmark.yml"
-  },
-  {
-    "benchmark" => "discourse-test-release",
-    "name" => "Discourse Test Image",
-    "repo" => "boringcache/benchmark-discourse",
-    "category" => "docker",
-    "workflow" => "discourse-image-factory-benchmark.yml"
+    "workflow" => "discourse-image-factory.yml"
   },
   {
     "benchmark" => "posthog",
@@ -158,7 +138,7 @@ BENCHMARKS = [
   },
   {
     "benchmark" => "linkerd2-v2",
-    "aliases" => ["linkerd", "linkerd2"],
+    "aliases" => ["linkerd", "linkerd2", "linkerd2-web"],
     "name" => "Linkerd2 Web",
     "repo" => "boringcache/benchmark-linkerd2",
     "category" => "docker",

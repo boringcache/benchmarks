@@ -120,6 +120,33 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
     end
   end
 
+  def test_benchmark_execution_must_not_race_a_moving_source_branch
+    with_repo do |repo_dir|
+      write_workflow(repo_dir, <<~YAML)
+        on:
+          workflow_dispatch:
+            inputs:
+              cli_version: {required: false, type: string}
+              buildkit_image: {required: false, type: string}
+        jobs:
+          benchmark:
+            runs-on: ubuntu-latest
+            steps:
+              - run: git ls-remote https://github.com/example/upstream.git refs/heads/main
+              - uses: boringcache/one@0123456789012345678901234567890123456789
+                with:
+                  cli-version: ${{ inputs.cli_version }}
+                  managed-buildkit-image: ${{ inputs.buildkit_image }}
+                  mode: docker
+      YAML
+
+      _stdout, stderr, status = run_guard(repo_dir)
+
+      refute status.success?
+      assert_includes stderr, "benchmark execution must use the committed source pin"
+    end
+  end
+
   def test_first_class_canary_inputs_are_required_and_must_reach_the_product
     with_repo do |repo_dir|
       write_workflow(repo_dir, <<~YAML)
