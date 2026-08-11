@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T14:11:14Z",
+  "generated_at": "2026-08-11T15:59:37Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -10,7 +10,7 @@
     "logo": "n8n",
     "repo": "n8n-io/n8n",
     "source_repo": "boringcache/benchmark-n8n",
-    "public": true,
+    "public": false,
     "category": "nodejs",
     "step": "Turbo build (pnpm monorepo)",
     "headline_scenario": "warm",
@@ -174,7 +174,7 @@
         "logo": "n8n",
         "repo": "n8n-io/n8n",
         "source_repo": "boringcache/benchmark-n8n",
-        "public": true,
+        "public": false,
         "category": "nodejs",
         "step": "Turbo build (pnpm monorepo)",
         "headline_scenario": "warm",
@@ -333,7 +333,7 @@
         "logo": "n8n",
         "repo": "n8n-io/n8n",
         "source_repo": "boringcache/benchmark-n8n",
-        "public": true,
+        "public": false,
         "category": "nodejs",
         "step": "Turbo build (pnpm monorepo)",
         "headline_scenario": "cold",
