@@ -162,6 +162,10 @@ repo_names.each do |repo_name|
       errors << "#{repo_name}/#{relative}: private publishing detail #{marker.inspect}"
     end
 
+    if relative.match?(%r{\A\.github/(?:actions/|workflows/(?!sync\.yml\z))}) && text.match?(/\bgit\s+ls-remote\b/)
+      errors << "#{repo_name}/#{relative}: benchmark execution must use the committed source pin; resolve moving branches in sync.yml"
+    end
+
     if text.match?(/ubuntu-[^\s"']*(?:8|16)-cores/i)
       errors << "#{repo_name}/#{relative}: large runners must be an empty runtime override, not a benchmark default"
     end
