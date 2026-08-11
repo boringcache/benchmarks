@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T10:25:21Z",
+  "generated_at": "2026-08-11T14:11:14Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -145,9 +145,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "investigation",
-          "actions_successful_run_count": 85,
-          "boringcache_successful_run_count": 85,
-          "paired_head_count": 84,
+          "actions_successful_run_count": 87,
+          "boringcache_successful_run_count": 87,
+          "paired_head_count": 86,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "0e25c3d5229eb3b0a97de2575cd80f7f823d08a7",
@@ -186,9 +186,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 85,
-          "boringcache_successful_run_count": 85,
-          "paired_head_count": 84,
+          "actions_successful_run_count": 87,
+          "boringcache_successful_run_count": 87,
+          "paired_head_count": 86,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -211,9 +211,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 6,
-          "boringcache_successful_run_count": 6,
-          "paired_head_count": 6,
+          "actions_successful_run_count": 7,
+          "boringcache_successful_run_count": 7,
+          "paired_head_count": 7,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -236,9 +236,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 6,
-          "boringcache_successful_run_count": 6,
-          "paired_head_count": 6,
+          "actions_successful_run_count": 7,
+          "boringcache_successful_run_count": 7,
+          "paired_head_count": 7,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -270,7 +270,7 @@
           "state": "healthy",
           "actions_successful_run_count": 82,
           "boringcache_successful_run_count": 82,
-          "paired_head_count": 81,
+          "paired_head_count": 82,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "1f687159b76dcfd4ec630cf0ca243b17b00db835",
@@ -419,9 +419,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 74,
-          "boringcache_successful_run_count": 74,
-          "paired_head_count": 67,
+          "actions_successful_run_count": 72,
+          "boringcache_successful_run_count": 72,
+          "paired_head_count": 65,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "c8507dedb01532474c6c9ab1255ff11dfa448764",
@@ -450,9 +450,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 59,
-          "boringcache_successful_run_count": 59,
-          "paired_head_count": 58,
+          "actions_successful_run_count": 62,
+          "boringcache_successful_run_count": 62,
+          "paired_head_count": 61,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -508,9 +508,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 49,
-          "boringcache_successful_run_count": 49,
-          "paired_head_count": 47,
+          "actions_successful_run_count": 50,
+          "boringcache_successful_run_count": 50,
+          "paired_head_count": 48,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "767c2faa2aa97b7622887201916ae4edf500e1fe",
@@ -628,9 +628,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 73,
-          "boringcache_successful_run_count": 73,
-          "paired_head_count": 69,
+          "actions_successful_run_count": 74,
+          "boringcache_successful_run_count": 74,
+          "paired_head_count": 70,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "a3abd3ee25276de998bb49da8ea654b12c31f109",
