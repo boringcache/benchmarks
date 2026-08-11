@@ -270,6 +270,20 @@ class PublishIndexTest < Minitest::Test
       "benchmark-posthog-mountcache-boringcache-rolling"
     assert_includes lane_artifact_names(benchmark_id: "posthog", strategy: "ecr-cache", lane: "rolling"),
       "benchmark-posthog-ecr-cache-rolling"
+    assert_includes lane_artifact_names(
+      benchmark_id: "posthog",
+      strategy: "boringcache",
+      lane: "rolling",
+      variants: ["linux-arm64-linux-amd64"]
+    ), "benchmark-posthog-boringcache-linux-arm64-linux-amd64-rolling"
+
+    variant_benchmark = {
+      "benchmark" => "discourse-image-factory-amd64",
+      "artifact_benchmark" => "discourse-image-factory",
+      "artifact_variants" => {"boringcache" => ["amd64"]}
+    }
+    assert_equal ["discourse-image-factory"], benchmark_artifact_ids(variant_benchmark)
+    assert_equal ["amd64"], benchmark_artifact_variants(variant_benchmark, "boringcache")
   end
 
   def test_provider_lane_payload_summarizes_samples

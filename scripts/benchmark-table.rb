@@ -60,45 +60,26 @@ BENCHMARKS = [
     "step" => "Docker build (streaming service)"
   },
   {
-    "benchmark" => "discourse-docker",
-    "aliases" => ["discourse"],
-    "name" => "Discourse",
-    "repo" => "discourse/discourse",
-    "source_repo" => "boringcache/benchmark-discourse",
-    "category" => "docker",
-    "step" => "Docker build (Ruby+Node dev image)"
-  },
-  {
-    "benchmark" => "discourse-base-deps",
-    "name" => "Discourse Base Deps",
+    "benchmark" => "discourse-image-factory-amd64",
+    "aliases" => ["discourse", "discourse-image-factory"],
+    "artifact_benchmark" => "discourse-image-factory",
+    "artifact_variants" => {"actions-cache" => ["amd64"], "boringcache" => ["amd64"]},
+    "name" => "Discourse Image Factory (amd64)",
     "repo" => "discourse/discourse_docker",
     "source_repo" => "boringcache/benchmark-discourse",
     "category" => "docker",
-    "step" => "Docker build (base dependencies image)"
+    "step" => "Docker Bake (base and test image graph, amd64)"
   },
   {
-    "benchmark" => "discourse-base-web-only",
-    "name" => "Discourse Web-Only Image",
+    "benchmark" => "discourse-image-factory-arm64",
+    "aliases" => ["discourse-arm64"],
+    "artifact_benchmark" => "discourse-image-factory",
+    "artifact_variants" => {"actions-cache" => ["arm64"], "boringcache" => ["arm64"]},
+    "name" => "Discourse Image Factory (arm64)",
     "repo" => "discourse/discourse_docker",
     "source_repo" => "boringcache/benchmark-discourse",
     "category" => "docker",
-    "step" => "Docker build (web-only base image)"
-  },
-  {
-    "benchmark" => "discourse-base-release",
-    "name" => "Discourse Release Image",
-    "repo" => "discourse/discourse_docker",
-    "source_repo" => "boringcache/benchmark-discourse",
-    "category" => "docker",
-    "step" => "Docker build (release base image)"
-  },
-  {
-    "benchmark" => "discourse-test-release",
-    "name" => "Discourse Test Image",
-    "repo" => "discourse/discourse_docker",
-    "source_repo" => "boringcache/benchmark-discourse",
-    "category" => "docker",
-    "step" => "Docker build (discourse_test release image)"
+    "step" => "Docker Bake (base and test image graph, arm64)"
   },
   {
     "benchmark" => "posthog",
@@ -180,7 +161,7 @@ BENCHMARKS = [
   },
   {
     "benchmark" => "linkerd2-v2",
-    "aliases" => ["linkerd", "linkerd2"],
+    "aliases" => ["linkerd", "linkerd2", "linkerd2-web"],
     "name" => "Linkerd2 Web",
     "repo" => "linkerd/linkerd2",
     "source_repo" => "boringcache/benchmark-linkerd2",
@@ -459,26 +440,42 @@ def fetch_run(repo:, run_id:)
   }
 end
 
-def lane_artifact_names(benchmark_id:, strategy:, lane:)
+def lane_artifact_names(benchmark_id:, strategy:, lane:, variants: [])
   Array(benchmark_id).flat_map do |id|
-    names = ["benchmark-#{id}-#{strategy}-#{lane}"]
+    names = Array(variants).flat_map do |variant|
+      variant_names = ["benchmark-#{id}-#{strategy}-#{variant}-#{lane}"]
+      variant_names << "benchmark-#{id}-#{strategy}-#{variant}" if lane == "fresh"
+      variant_names
+    end
+    names << "benchmark-#{id}-#{strategy}-#{lane}"
     names << "benchmark-#{id}-#{strategy}" if lane == "fresh"
     names
   end
 end
 
 def benchmark_artifact_ids(benchmark)
+  if benchmark["artifact_benchmark"]
+    return [benchmark.fetch("artifact_benchmark"), *Array(benchmark["artifact_aliases"])].uniq
+  end
+
   [benchmark.fetch("benchmark"), *Array(benchmark["aliases"])].uniq
 end
 
-def artifact_name_for_run(repo:, run_id:, benchmark_id:, strategy:, lane:)
+def benchmark_artifact_variants(benchmark, strategy)
+  variants = benchmark["artifact_variants"]
+  variants.is_a?(Hash) ? Array(variants[strategy]) : Array(variants)
+end
+
+def artifact_name_for_run(repo:, run_id:, benchmark_id:, strategy:, lane:, variants: [])
   output = run_cmd("gh", "api", "repos/#{repo}/actions/runs/#{run_id}/artifacts")
   artifacts = JSON.parse(output).fetch("artifacts", [])
-  candidate_names = lane_artifact_names(benchmark_id: benchmark_id, strategy: strategy, lane: lane)
+  candidate_names = lane_artifact_names(benchmark_id: benchmark_id, strategy: strategy, lane: lane, variants: variants)
 
-  artifact = artifacts.find do |item|
-    !item["expired"] && candidate_names.include?(item["name"].to_s)
-  end
+  artifact = candidate_names.filter_map do |candidate_name|
+    artifacts.find do |item|
+      !item["expired"] && item["name"].to_s == candidate_name
+    end
+  end.first
 
   artifact && artifact["name"]
 end
@@ -514,7 +511,8 @@ def download_strategy_data(benchmark:, lane:, strategy:, run_id:, cache_dir:)
     run_id: run_id,
     benchmark_id: benchmark_artifact_ids(benchmark),
     strategy: strategy,
-    lane: lane
+    lane: lane,
+    variants: benchmark_artifact_variants(benchmark, strategy)
   )
   raise "No #{strategy} #{lane} artifact found for #{repo} run #{run_id}" unless artifact_name
 

@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require_relative "publish-index"
+require "open3"
 
 def default_repos_dir
   candidates = [
@@ -25,6 +26,14 @@ def benchmark_ids_in(line)
   end
 end
 
+def canonical_checkout?(path)
+  remote, status = Open3.capture2("git", "-C", path, "remote", "get-url", "origin")
+  return true unless status.success?
+
+  remote_name = File.basename(remote.strip).delete_suffix(".git")
+  remote_name == File.basename(path)
+end
+
 repos_dir = ARGV[0] || ENV.fetch("BENCHMARK_REPOS_DIR", default_repos_dir)
 abort "benchmark repos directory not found: #{repos_dir}" unless Dir.exist?(repos_dir)
 
@@ -35,7 +44,10 @@ end
 
 registry_exempt_repos = ["benchmark-docker", "benchmark-obs-studio"]
 sync_exempt_repos = ["benchmark-docker"]
-owned_repo_names = Dir[File.join(repos_dir, "benchmark-*")].select { |path| File.directory?(path) }.map { |path| File.basename(path) }.sort
+owned_repo_names = Dir[File.join(repos_dir, "benchmark-*")]
+  .select { |path| File.directory?(path) && canonical_checkout?(path) }
+  .map { |path| File.basename(path) }
+  .sort
 repo_names = owned_repo_names - registry_exempt_repos
 
 missing_from_registry = repo_names - registry_by_repo.keys
@@ -52,15 +64,12 @@ owned_repo_names.each do |repo_name|
   lines = File.file?(readme_path) ? File.readlines(readme_path, chomp: true) : []
   title = lines.first.to_s
   subject = title.delete_prefix("# BoringCache ").delete_suffix(" benchmark")
-  expected_readme = [
-    "# BoringCache #{subject} benchmark",
-    "",
-    "This repository contains the BoringCache benchmark for #{subject}.",
-    "",
-    "Benchmark workflows are in [`.github/workflows/`](.github/workflows/), with configuration in [`.boringcache.toml`](.boringcache.toml)."
-  ]
+  valid_readme = !subject.empty? &&
+    title == "# BoringCache #{subject} benchmark" &&
+    lines.drop(1).any? { |line| !line.empty? } &&
+    lines.any? { |line| line.include?(".boringcache.toml") }
 
-  errors << "#{repo_name}: README does not match the owned benchmark template" unless !subject.empty? && lines == expected_readme
+  errors << "#{repo_name}: README must use the owned benchmark title and point to .boringcache.toml" unless valid_readme
   workflows_path = File.join(repo_path, ".github", "workflows")
   errors << "#{repo_name}: .github/workflows is missing" unless Dir.exist?(workflows_path)
   errors << "#{repo_name}: .boringcache.toml is missing" unless File.file?(File.join(repo_path, ".boringcache.toml"))

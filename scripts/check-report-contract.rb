@@ -165,12 +165,17 @@ def matrix_combinations(matrix)
   combinations
 end
 
-def action_emits_variant?(repo_dir, uses)
+def action_variant_input(repo_dir, uses)
   action_dir = uses.delete_prefix("./")
   path = ["action.yml", "action.yaml"].map { |basename| File.join(repo_dir, action_dir, basename) }.find { |candidate| File.file?(candidate) }
-  return false unless path
+  return nil unless path
 
-  File.read(path).include?("--variant")
+  source = File.read(path)
+  return nil unless source.include?("--variant")
+
+  return "arch" if source.match?(/--variant\s+["']?\$ARCH\b/)
+
+  "platform"
 end
 
 def phase_flags(run)
@@ -186,13 +191,14 @@ def producers_for(workflow:, repo_dir:, job_id:, job:)
       uses = step["uses"].to_s
       if uses.start_with?("./.github/actions/")
         with = step["with"].is_a?(Hash) ? step["with"] : {}
-        platform = workflow.resolve(with["platform"].to_s, matrix).to_s
+        variant_input = action_variant_input(repo_dir, uses)
+        variant = workflow.resolve(with[variant_input].to_s, matrix).to_s if variant_input
         fields = {
           "benchmark" => workflow.resolve(with["benchmark_id"].to_s, matrix),
           "strategy" => workflow.resolve(with["strategy"].to_s, matrix),
           "lane" => workflow.resolve(with["cache_lane"].to_s, matrix),
           "phase" => workflow.resolve(with["phase"].to_s, matrix),
-          "variant" => action_emits_variant?(repo_dir, uses) && platform != DEFAULT_PLATFORM ? platform : ""
+          "variant" => variant_input && variant != DEFAULT_PLATFORM ? variant : ""
         }
       elsif step["run"].to_s.match?(/benchmark-report\.py\s+phase\b/)
         shell_env = workflow.shell_env_for(job, step, matrix)
