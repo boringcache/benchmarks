@@ -26,6 +26,9 @@ BENCHMARK_REFRESH_TIMEOUT_SECONDS = ENV.fetch("BENCHMARKS_BENCHMARK_TIMEOUT", "6
 PRESERVE_STALE_ENTRIES = ENV.fetch("BENCHMARKS_PRESERVE_STALE", "false") == "true"
 LANE_IDS = %w[fresh rolling].freeze
 PRODUCT_REF_KEYS = %w[schema_version cli_version action_ref action_sha web_revision api_url].freeze
+LEGACY_PUBLIC_PRODUCT_REF_KEYS = %w[cli_version web_revision].freeze
+CURRENT_PUBLIC_PRODUCT_REF_KEYS = %w[cli_version action_ref action_sha web_revision].freeze
+PUBLIC_CACHE_IMPORT_STATUSES = %w[ok hit].freeze
 PROVIDER_LABELS = {
   "actions-cache" => "GitHub Actions Cache",
   "boringcache" => "BoringCache",
@@ -546,6 +549,28 @@ def normalized_product_refs(payload)
   end
 end
 
+def public_lane_evidence_ready?(lane_entry, configured_public:)
+  return false unless configured_public
+
+  boringcache = lane_entry.dig("comparison", "boringcache")
+  return false unless boringcache.is_a?(Hash)
+
+  classification = boringcache["classification"].is_a?(Hash) ? boringcache["classification"] : {}
+  return false unless classification["sample_valid"] == true
+  return false unless BenchmarkReporting.reporting_mode(
+    lane: lane_entry["lane"],
+    category: lane_entry["category"],
+    classification: classification
+  ) == "comparative"
+
+  product_refs = boringcache["product_refs"].is_a?(Hash) ? boringcache["product_refs"] : {}
+  required_refs = product_refs["schema_version"].to_i >= 1 ? CURRENT_PUBLIC_PRODUCT_REF_KEYS : LEGACY_PUBLIC_PRODUCT_REF_KEYS
+  return false unless required_refs.all? { |key| !product_refs[key].to_s.empty? }
+  return false unless boringcache["product_refs_consistent"] == true
+
+  PUBLIC_CACHE_IMPORT_STATUSES.include?(classification["cache_import_status"].to_s)
+end
+
 def session_summary_from(payload)
   payload["cache_session_summary"] ||
     payload["session_summary"] ||
@@ -931,7 +956,9 @@ def extract_strategy_metrics(payload)
     oci: oci,
     classification: classification,
     product_refs: product_refs,
-    product_refs_consistent: product_refs.any? ? true : nil,
+    product_refs_consistent: if product_refs.any?
+      payload.key?("product_refs_consistent") ? payload["product_refs_consistent"] == true : true
+    end,
     launch_proof_paths: launch_proof_paths_from(payload),
     workspace: payload["workspace"] || cache["workspace"],
     cache_tag: payload["cache_tag"] || cache["tag"],
@@ -1810,12 +1837,13 @@ def lane_health(benchmark:, lane:, actions_runs:, boringcache_runs:, paired_head
 end
 
 def provider_scenario_seconds(snapshot)
-  snapshot["cold_seconds"] || snapshot["warm_steady_seconds"]
+  snapshot["cold_seconds"] || snapshot["warm_steady_seconds"] || snapshot["rolling_first_build_seconds"]
 end
 
 def provider_scenario_metric_source(snapshot)
   return "cold_seconds" if snapshot["cold_seconds"]
   return "warm_steady_seconds" if snapshot["warm_steady_seconds"]
+  return "rolling_first_build_seconds" if snapshot["rolling_first_build_seconds"]
 
   nil
 end
@@ -2455,12 +2483,19 @@ def normalize_lane_reporting!(lane_entry, category:)
     BenchmarkReporting.headline_label(lane: lane_entry["lane"], scenario: lane_entry["headline_scenario"])
 end
 
-def normalize_entry_reporting(entry)
+def normalize_entry_reporting(entry, configured_public:)
   normalized = JSON.parse(JSON.generate(entry))
   category = normalized["category"]
   normalize_lane_reporting!(normalized, category: category)
-  normalized.fetch("lanes", {}).each_value do |lane_entry|
+  lanes = normalized.fetch("lanes", {})
+  lanes.each_value do |lane_entry|
     normalize_lane_reporting!(lane_entry, category: category)
+    lane_entry["public"] = public_lane_evidence_ready?(lane_entry, configured_public: configured_public)
+  end
+  normalized["public"] = if lanes.empty?
+    public_lane_evidence_ready?(normalized, configured_public: configured_public)
+  else
+    lanes.values.any? { |lane_entry| lane_entry["public"] == true }
   end
   normalized
 end
@@ -2564,9 +2599,10 @@ def main
   end
 
   generated_at = Time.now.utc.iso8601
-  entries = entries.map { |entry| normalize_entry_reporting(entry) }
-  window_entries = window_entries.map { |entry| normalize_entry_reporting(entry) }
-  pair_points = pair_points.map { |entry| normalize_entry_reporting(entry) }
+  public_benchmarks = BENCHMARKS.to_h { |benchmark| [benchmark.fetch("benchmark"), benchmark.fetch("public")] }
+  entries = entries.map { |entry| normalize_entry_reporting(entry, configured_public: public_benchmarks.fetch(entry.fetch("benchmark"), false)) }
+  window_entries = window_entries.map { |entry| normalize_entry_reporting(entry, configured_public: public_benchmarks.fetch(entry.fetch("benchmark"), false)) }
+  pair_points = pair_points.map { |entry| normalize_entry_reporting(entry, configured_public: public_benchmarks.fetch(entry.fetch("benchmark"), false)) }
   write_index(entries, generated_at: generated_at)
   write_pair_points(pair_points, generated_at: generated_at)
   write_windows(window_entries, generated_at: generated_at)

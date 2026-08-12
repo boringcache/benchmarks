@@ -61,7 +61,7 @@ module BenchmarkReporting
         "sample_valid" => true,
         "reporting_mode" => "comparative",
         "validity_reason" => "warm build restored the cold cache on a fresh runner",
-        "cache_import_status" => "hit"
+        "cache_import_status" => "ok"
       }
     else
       {
@@ -100,7 +100,7 @@ module BenchmarkReporting
         "sample_valid" => true,
         "reporting_mode" => "comparative",
         "validity_reason" => "commit build imported the prior rolling cache",
-        "cache_import_status" => "hit",
+        "cache_import_status" => "ok",
         "rolling_reseed" => false,
         "steady_state_candidate" => true
       }

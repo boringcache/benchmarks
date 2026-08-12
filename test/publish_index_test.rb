@@ -80,6 +80,45 @@ class PublishIndexTest < Minitest::Test
     assert_equal "oci", metrics[:adapter]
   end
 
+  def test_strategy_metrics_preserve_reported_product_ref_inconsistency
+    metrics = extract_strategy_metrics(
+      raw_boringcache_artifact.merge("product_refs_consistent" => false)
+    )
+
+    assert_equal PRODUCT_REFS, metrics[:product_refs]
+    assert_equal false, metrics[:product_refs_consistent]
+  end
+
+  def test_public_lane_requires_complete_consistent_product_evidence
+    lane_entry = {
+      "lane" => "fresh",
+      "category" => "docker",
+      "comparison" => {
+        "boringcache" => pair_snapshot(
+          run_id: "public-proof",
+          created_at: "2026-08-11T12:00:00Z",
+          seconds: 30,
+          product_refs: PRODUCT_REFS,
+          classification: {
+            "sample_valid" => true,
+            "reporting_mode" => "comparative",
+            "cache_import_status" => "ok"
+          }
+        ).merge("product_refs_consistent" => true)
+      }
+    }
+
+    assert public_lane_evidence_ready?(lane_entry, configured_public: true)
+    refute public_lane_evidence_ready?(lane_entry, configured_public: false)
+
+    lane_entry["comparison"]["boringcache"]["product_refs"] = PRODUCT_REFS.reject { |key, _| key == "action_sha" }
+    refute public_lane_evidence_ready?(lane_entry, configured_public: true)
+
+    lane_entry["comparison"]["boringcache"]["product_refs"] = PRODUCT_REFS
+    lane_entry["comparison"]["boringcache"]["product_refs_consistent"] = false
+    refute public_lane_evidence_ready?(lane_entry, configured_public: true)
+  end
+
   def test_average_snapshot_carries_refs_and_flags_mixed_release_samples
     snapshots = [
       raw_snapshot("v1.12.86"),
@@ -358,6 +397,36 @@ class PublishIndexTest < Minitest::Test
     refute missing.key?("summary")
   end
 
+  def test_provider_lane_payload_uses_rolling_commit_build_timing
+    snapshot = pair_snapshot(
+      run_id: "rolling-provider",
+      created_at: "2026-08-11T12:00:00Z",
+      seconds: 30,
+      product_refs: PRODUCT_REFS,
+      classification: { "reporting_mode" => "comparative" }
+    ).merge(
+      "cold_seconds" => nil,
+      "warm_steady_seconds" => nil,
+      "rolling_first_build_seconds" => 37
+    )
+
+    assert_equal 37, provider_scenario_seconds(snapshot)
+    assert_equal "rolling_first_build_seconds", provider_scenario_metric_source(snapshot)
+
+    payload = provider_lane_payload(
+      lane: "rolling",
+      runs: [{ "databaseId" => 1 }],
+      unique_head_count: 1,
+      snapshots: [snapshot],
+      storage_available: true
+    )
+
+    assert_equal "healthy", payload["state"]
+    assert_equal 37, payload.dig("headline", "seconds")
+    assert_equal 37, payload.dig("summary", "scenario_seconds")
+    assert_equal 37, payload.dig("summary", "tool_elapsed_seconds")
+  end
+
   def test_provider_lane_outlier_payload_excludes_headline_samples
     payload = provider_lane_outlier_payload(
       lane: "fresh",
@@ -548,6 +617,7 @@ class PublishIndexTest < Minitest::Test
     data[:metrics][:warm1_build_seconds] = nil
     data[:metrics][:warm2_seconds] = nil
     data[:metrics][:warm_average_seconds] = nil
+    data[:metrics][:rolling_first_build_seconds] = nil
     no_build_snapshot = provider_snapshot(data, strategy: "buildbuddy-cache")
 
     refute no_build_snapshot.key?("scenario_seconds")
