@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11T21:46:04Z",
+  "generated_at": "2026-08-12T03:37:09Z",
   "window_pair_target": 3,
   "entries": [
     {
@@ -10445,8 +10445,8 @@
                 "steady_state_candidate_count": 1,
                 "product_cohort": {
                   "basis": "latest_boringcache_product_refs",
-                  "source_sample_count": 3,
-                  "excluded_sample_count": 2,
+                  "source_sample_count": 2,
+                  "excluded_sample_count": 1,
                   "product_refs": {
                     "action_ref": "boringcache/one@bf810e34331db84f9f11930e83b8813b5ad31ba1",
                     "action_sha": "bf810e34331db84f9f11930e83b8813b5ad31ba1",
@@ -10469,8 +10469,8 @@
             "storage_saved_bytes": null,
             "product_cohort": {
               "basis": "latest_boringcache_product_refs",
-              "source_sample_count": 3,
-              "excluded_sample_count": 2,
+              "source_sample_count": 2,
+              "excluded_sample_count": 1,
               "product_refs": {
                 "action_ref": "boringcache/one@bf810e34331db84f9f11930e83b8813b5ad31ba1",
                 "action_sha": "bf810e34331db84f9f11930e83b8813b5ad31ba1",
