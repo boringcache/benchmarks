@@ -97,7 +97,7 @@ BENCHMARKS = [
   {
     "benchmark" => "mastodon-docker",
     "aliases" => ["mastodon"],
-    "workflow_benchmark_ids" => ["mastodon-sccache"],
+    "workflow_benchmark_ids" => ["mastodon-ccache", "mastodon-sccache"],
     "name" => "Mastodon",
     "logo" => "mastodon",
     "repo" => "mastodon/mastodon",
