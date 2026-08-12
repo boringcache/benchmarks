@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T14:35:03Z",
+  "generated_at": "2026-08-12T17:50:35Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -66,9 +66,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 43,
-          "boringcache_successful_run_count": 43,
-          "paired_head_count": 34,
+          "actions_successful_run_count": 44,
+          "boringcache_successful_run_count": 44,
+          "paired_head_count": 35,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "4e96acd775ea16281886cc1f2e4cb00eacd0833e",
@@ -219,9 +219,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 12,
-          "boringcache_successful_run_count": 12,
-          "paired_head_count": 12,
+          "actions_successful_run_count": 16,
+          "boringcache_successful_run_count": 16,
+          "paired_head_count": 15,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -252,9 +252,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 12,
-          "boringcache_successful_run_count": 12,
-          "paired_head_count": 12,
+          "actions_successful_run_count": 16,
+          "boringcache_successful_run_count": 16,
+          "paired_head_count": 15,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -466,9 +466,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 74,
-          "boringcache_successful_run_count": 74,
-          "paired_head_count": 73,
+          "actions_successful_run_count": 75,
+          "boringcache_successful_run_count": 75,
+          "paired_head_count": 74,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -491,9 +491,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 42,
-          "boringcache_successful_run_count": 42,
-          "paired_head_count": 40,
+          "actions_successful_run_count": 45,
+          "boringcache_successful_run_count": 45,
+          "paired_head_count": 43,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -644,9 +644,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 81,
-          "boringcache_successful_run_count": 81,
-          "paired_head_count": 77,
+          "actions_successful_run_count": 82,
+          "boringcache_successful_run_count": 82,
+          "paired_head_count": 78,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "a3abd3ee25276de998bb49da8ea654b12c31f109",
@@ -723,9 +723,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "investigation",
-          "actions_successful_run_count": 87,
-          "boringcache_successful_run_count": 87,
-          "paired_head_count": 87,
+          "actions_successful_run_count": 86,
+          "boringcache_successful_run_count": 86,
+          "paired_head_count": 86,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "e6eba189560518f0be598c275c0d615ccc9fd2d4",
@@ -764,9 +764,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 87,
-          "boringcache_successful_run_count": 87,
-          "paired_head_count": 87,
+          "actions_successful_run_count": 86,
+          "boringcache_successful_run_count": 86,
+          "paired_head_count": 86,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "e6eba189560518f0be598c275c0d615ccc9fd2d4",
@@ -804,9 +804,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 87,
-          "boringcache_successful_run_count": 87,
-          "paired_head_count": 87,
+          "actions_successful_run_count": 86,
+          "boringcache_successful_run_count": 86,
+          "paired_head_count": 86,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "e6eba189560518f0be598c275c0d615ccc9fd2d4",
