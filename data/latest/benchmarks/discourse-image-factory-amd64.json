@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T09:58:50Z",
+  "generated_at": "2026-08-12T10:08:20Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -10,7 +10,7 @@
     "logo": "docker",
     "repo": "discourse/discourse_docker",
     "source_repo": "boringcache/benchmark-discourse",
-    "public": true,
+    "public": false,
     "category": "docker",
     "step": "Docker Bake (base and test image graph, amd64)",
     "headline_scenario": "warm",
@@ -54,12 +54,12 @@
           "sample_valid": true,
           "reporting_mode": "comparative",
           "validity_reason": "warm build restored the cold cache on a fresh runner",
-          "cache_import_status": "hit"
+          "cache_import_status": "ok"
         },
         "product_refs": {
           "schema_version": 1
         },
-        "product_refs_consistent": true,
+        "product_refs_consistent": false,
         "launch_proof_paths": [],
         "workspace": "boringcache/benchmark-discourse",
         "cache_tag": "discourse-image-factory-run-r31574377679-a1-amd64",
@@ -112,12 +112,12 @@
           "sample_valid": true,
           "reporting_mode": "comparative",
           "validity_reason": "warm build restored the cold cache on a fresh runner",
-          "cache_import_status": "hit"
+          "cache_import_status": "ok"
         },
         "product_refs": {
           "schema_version": 1
         },
-        "product_refs_consistent": true,
+        "product_refs_consistent": false,
         "launch_proof_paths": [],
         "workspace": "boringcache/benchmark-discourse",
         "cache_tag": "discourse-image-factory-run-r31574377679-a1-amd64",
@@ -165,7 +165,7 @@
         "logo": "docker",
         "repo": "discourse/discourse_docker",
         "source_repo": "boringcache/benchmark-discourse",
-        "public": true,
+        "public": false,
         "category": "docker",
         "step": "Docker Bake (base and test image graph, amd64)",
         "headline_scenario": "warm",
@@ -209,12 +209,12 @@
               "sample_valid": true,
               "reporting_mode": "comparative",
               "validity_reason": "warm build restored the cold cache on a fresh runner",
-              "cache_import_status": "hit"
+              "cache_import_status": "ok"
             },
             "product_refs": {
               "schema_version": 1
             },
-            "product_refs_consistent": true,
+            "product_refs_consistent": false,
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-discourse",
             "cache_tag": "discourse-image-factory-run-r31574377679-a1-amd64",
@@ -267,12 +267,12 @@
               "sample_valid": true,
               "reporting_mode": "comparative",
               "validity_reason": "warm build restored the cold cache on a fresh runner",
-              "cache_import_status": "hit"
+              "cache_import_status": "ok"
             },
             "product_refs": {
               "schema_version": 1
             },
-            "product_refs_consistent": true,
+            "product_refs_consistent": false,
             "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-discourse",
             "cache_tag": "discourse-image-factory-run-r31574377679-a1-amd64",

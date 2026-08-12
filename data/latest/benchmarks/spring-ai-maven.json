@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T09:58:50Z",
+  "generated_at": "2026-08-12T10:08:20Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -60,7 +60,7 @@
         "product_refs": {
           "schema_version": 1
         },
-        "product_refs_consistent": true,
+        "product_refs_consistent": false,
         "launch_proof_paths": [],
         "workspace": null,
         "cache_tag": null,
@@ -227,7 +227,7 @@
             "product_refs": {
               "schema_version": 1
             },
-            "product_refs_consistent": true,
+            "product_refs_consistent": false,
             "launch_proof_paths": [],
             "workspace": null,
             "cache_tag": null,
