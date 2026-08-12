@@ -4,6 +4,14 @@ require "minitest/autorun"
 require_relative "../scripts/benchmark-reporting"
 
 class BenchmarkReportingTest < Minitest::Test
+  def test_successful_import_uses_the_shared_ok_status
+    warm = BenchmarkReporting.warm_classification({ "cache_hit" => true })
+    rolling = BenchmarkReporting.rolling_classification({ "cache_hit" => true })
+
+    assert_equal "ok", warm["cache_import_status"]
+    assert_equal "ok", rolling["cache_import_status"]
+  end
+
   def test_rolling_bootstrap_uses_current_public_language
     summary = BenchmarkReporting.reporting_summary(
       lane: "rolling",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T09:58:50Z",
+  "generated_at": "2026-08-12T10:08:20Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -20,7 +20,7 @@
           "latest_boringcache_run_id": 31569885431,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
-          "latest_cache_import_status": "hit",
+          "latest_cache_import_status": "ok",
           "latest_sample_valid": true
         },
         "rolling": {
@@ -99,7 +99,7 @@
           "latest_boringcache_run_id": 31569890271,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
-          "latest_cache_import_status": "hit",
+          "latest_cache_import_status": "ok",
           "latest_sample_valid": true
         },
         "rolling": {
@@ -139,7 +139,7 @@
           "latest_boringcache_run_id": 31569894419,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
-          "latest_cache_import_status": "hit",
+          "latest_cache_import_status": "ok",
           "latest_sample_valid": true
         },
         "rolling": {
@@ -180,7 +180,7 @@
           "latest_boringcache_run_id": 31569894419,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
-          "latest_cache_import_status": "hit",
+          "latest_cache_import_status": "ok",
           "latest_sample_valid": true
         },
         "rolling": {
@@ -213,7 +213,7 @@
           "latest_boringcache_run_id": 31574377679,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
-          "latest_cache_import_status": "hit",
+          "latest_cache_import_status": "ok",
           "latest_sample_valid": true
         },
         "rolling": {
@@ -246,7 +246,7 @@
           "latest_boringcache_run_id": 31574377679,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
-          "latest_cache_import_status": "hit",
+          "latest_cache_import_status": "ok",
           "latest_sample_valid": true
         },
         "rolling": {
@@ -279,7 +279,7 @@
           "latest_boringcache_run_id": 31569900357,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
-          "latest_cache_import_status": "hit",
+          "latest_cache_import_status": "ok",
           "latest_sample_valid": true
         },
         "rolling": {
@@ -525,7 +525,7 @@
           "latest_boringcache_run_id": 31356053980,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
-          "latest_cache_import_status": "hit",
+          "latest_cache_import_status": "ok",
           "latest_sample_valid": true
         },
         "rolling": {
@@ -565,7 +565,7 @@
           "latest_boringcache_run_id": 31355272642,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
-          "latest_cache_import_status": "hit",
+          "latest_cache_import_status": "ok",
           "latest_sample_valid": true
         },
         "rolling": {
@@ -605,7 +605,7 @@
           "latest_boringcache_run_id": 31569891810,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
-          "latest_cache_import_status": "hit",
+          "latest_cache_import_status": "ok",
           "latest_sample_valid": true
         },
         "rolling": {
@@ -645,7 +645,7 @@
           "latest_boringcache_run_id": 31569902388,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
-          "latest_cache_import_status": "hit",
+          "latest_cache_import_status": "ok",
           "latest_sample_valid": true
         },
         "rolling": {
@@ -724,7 +724,7 @@
           "latest_boringcache_run_id": 31238270520,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
-          "latest_cache_import_status": "hit",
+          "latest_cache_import_status": "ok",
           "latest_sample_valid": true
         },
         "rolling": {
@@ -765,7 +765,7 @@
           "latest_boringcache_run_id": 31238270520,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
-          "latest_cache_import_status": "hit",
+          "latest_cache_import_status": "ok",
           "latest_sample_valid": true
         },
         "rolling": {
@@ -805,7 +805,7 @@
           "latest_boringcache_run_id": 31238270520,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
-          "latest_cache_import_status": "hit",
+          "latest_cache_import_status": "ok",
           "latest_sample_valid": true
         },
         "rolling": {

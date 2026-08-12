@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T09:58:50Z",
+  "generated_at": "2026-08-12T10:08:20Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -10,7 +10,7 @@
     "logo": "storybook",
     "repo": "storybookjs/storybook",
     "source_repo": "boringcache/benchmark-storybook",
-    "public": true,
+    "public": false,
     "category": "nodejs",
     "step": "Nx build (Yarn monorepo)",
     "headline_scenario": "warm",
@@ -60,7 +60,7 @@
         "product_refs": {
           "schema_version": 1
         },
-        "product_refs_consistent": true,
+        "product_refs_consistent": false,
         "launch_proof_paths": [],
         "workspace": null,
         "cache_tag": null,
@@ -177,7 +177,7 @@
         "logo": "storybook",
         "repo": "storybookjs/storybook",
         "source_repo": "boringcache/benchmark-storybook",
-        "public": true,
+        "public": false,
         "category": "nodejs",
         "step": "Nx build (Yarn monorepo)",
         "headline_scenario": "warm",
@@ -227,7 +227,7 @@
             "product_refs": {
               "schema_version": 1
             },
-            "product_refs_consistent": true,
+            "product_refs_consistent": false,
             "launch_proof_paths": [],
             "workspace": null,
             "cache_tag": null,
@@ -339,7 +339,7 @@
         "logo": "storybook",
         "repo": "storybookjs/storybook",
         "source_repo": "boringcache/benchmark-storybook",
-        "public": true,
+        "public": false,
         "category": "nodejs",
         "step": "Nx build (Yarn monorepo)",
         "headline_scenario": "cold",

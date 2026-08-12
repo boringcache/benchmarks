@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T09:58:50Z",
+  "generated_at": "2026-08-12T10:08:20Z",
   "pair_count": 101,
   "pairs": [
     {
@@ -12,7 +12,7 @@
       "logo": "hugo",
       "repo": "gohugoio/hugo",
       "source_repo": "boringcache/benchmark-hugo",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (Go)",
       "headline_scenario": "cold",
@@ -56,12 +56,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -114,7 +114,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1,
@@ -171,7 +171,7 @@
       "logo": "hugo",
       "repo": "gohugoio/hugo",
       "source_repo": "boringcache/benchmark-hugo",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (Go)",
       "headline_scenario": "cold",
@@ -215,12 +215,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -273,12 +273,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-hugo",
           "cache_tag": "hugo-run-r31510460686-a1-docker",
@@ -327,7 +327,7 @@
       "logo": "hugo",
       "repo": "gohugoio/hugo",
       "source_repo": "boringcache/benchmark-hugo",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (Go)",
       "headline_scenario": "warm",
@@ -371,7 +371,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -429,7 +429,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -5666,7 +5666,7 @@
       "logo": "hugo",
       "repo": "gohugoio/hugo",
       "source_repo": "boringcache/benchmark-hugo-go",
-      "public": true,
+      "public": false,
       "category": "go",
       "step": "Go build (native build cache)",
       "headline_scenario": "warm",
@@ -5716,7 +5716,7 @@
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -5833,7 +5833,7 @@
       "logo": "hugo",
       "repo": "gohugoio/hugo",
       "source_repo": "boringcache/benchmark-hugo-go",
-      "public": true,
+      "public": false,
       "category": "go",
       "step": "Go build (native build cache)",
       "headline_scenario": "warm",
@@ -5883,7 +5883,7 @@
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -5942,7 +5942,7 @@
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-hugo-go",
           "cache_tag": "hugo-go-run-r31510461490-a1",
@@ -5997,7 +5997,7 @@
       "logo": "hugo",
       "repo": "gohugoio/hugo",
       "source_repo": "boringcache/benchmark-hugo-go",
-      "public": true,
+      "public": false,
       "category": "go",
       "step": "Go build (native build cache)",
       "headline_scenario": "warm",
@@ -6161,7 +6161,7 @@
       "logo": "hugo",
       "repo": "gohugoio/hugo",
       "source_repo": "boringcache/benchmark-hugo-go",
-      "public": true,
+      "public": false,
       "category": "go",
       "step": "Go build (native build cache)",
       "headline_scenario": "cold",
@@ -6793,7 +6793,7 @@
       "logo": "hugo",
       "repo": "gohugoio/hugo",
       "source_repo": "boringcache/benchmark-hugo-go",
-      "public": true,
+      "public": false,
       "category": "go",
       "step": "Go build (native build cache)",
       "headline_scenario": "cold",
@@ -7370,7 +7370,7 @@
       "logo": "hugo",
       "repo": "gohugoio/hugo",
       "source_repo": "boringcache/benchmark-hugo-go",
-      "public": true,
+      "public": false,
       "category": "go",
       "step": "Go build (native build cache)",
       "headline_scenario": "cold",
@@ -7678,7 +7678,7 @@
       "logo": "immich",
       "repo": "immich-app/immich",
       "source_repo": "boringcache/benchmark-immich",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (server)",
       "headline_scenario": "cold",
@@ -7722,12 +7722,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -7780,7 +7780,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1,
@@ -7837,7 +7837,7 @@
       "logo": "immich",
       "repo": "immich-app/immich",
       "source_repo": "boringcache/benchmark-immich",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (server)",
       "headline_scenario": "warm",
@@ -7881,12 +7881,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -7939,12 +7939,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-immich",
           "cache_tag": "immich-run-r31510461603-a1-docker",
@@ -7993,7 +7993,7 @@
       "logo": "immich",
       "repo": "immich-app/immich",
       "source_repo": "boringcache/benchmark-immich",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (server)",
       "headline_scenario": "warm",
@@ -8037,7 +8037,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -8095,7 +8095,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -13812,7 +13812,7 @@
       "logo": "mastodon",
       "repo": "mastodon/mastodon",
       "source_repo": "boringcache/benchmark-mastodon",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (Ruby+Node)",
       "headline_scenario": "warm",
@@ -13856,12 +13856,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -13914,7 +13914,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1,
@@ -13971,7 +13971,7 @@
       "logo": "mastodon",
       "repo": "mastodon/mastodon",
       "source_repo": "boringcache/benchmark-mastodon",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (Ruby+Node)",
       "headline_scenario": "warm",
@@ -14015,12 +14015,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -14073,12 +14073,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-mastodon",
           "cache_tag": "mastodon-run-r31510462438-a1-docker",
@@ -14127,7 +14127,7 @@
       "logo": "mastodon",
       "repo": "mastodon/mastodon",
       "source_repo": "boringcache/benchmark-mastodon",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (Ruby+Node)",
       "headline_scenario": "cold",
@@ -14171,7 +14171,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -14229,7 +14229,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -14283,7 +14283,7 @@
       "logo": "mastodon",
       "repo": "mastodon/mastodon",
       "source_repo": "boringcache/benchmark-mastodon",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (Ruby+Node)",
       "headline_scenario": "first_build",
@@ -20559,12 +20559,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -20617,7 +20617,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1,
@@ -20718,12 +20718,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -20776,12 +20776,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-mastodon",
           "cache_tag": "mastodon-streaming-run-r31510462438-a1-docker",
@@ -20874,7 +20874,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -20932,7 +20932,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -20986,7 +20986,7 @@
       "logo": "docker",
       "repo": "discourse/discourse_docker",
       "source_repo": "boringcache/benchmark-discourse",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker Bake (base and test image graph, amd64)",
       "headline_scenario": "warm",
@@ -21030,12 +21030,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-discourse",
           "cache_tag": "discourse-image-factory-run-r31574377679-a1-amd64",
@@ -21088,12 +21088,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-discourse",
           "cache_tag": "discourse-image-factory-run-r31574377679-a1-amd64",
@@ -21142,7 +21142,7 @@
       "logo": "docker",
       "repo": "discourse/discourse_docker",
       "source_repo": "boringcache/benchmark-discourse",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker Bake (base and test image graph, arm64)",
       "headline_scenario": "warm",
@@ -21186,12 +21186,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-discourse",
           "cache_tag": "discourse-image-factory-run-r31574377679-a1-arm64",
@@ -21244,12 +21244,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-discourse",
           "cache_tag": "discourse-image-factory-run-r31574377679-a1-arm64",
@@ -21298,7 +21298,7 @@
       "logo": "posthog",
       "repo": "PostHog/posthog",
       "source_repo": "boringcache/benchmark-posthog",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (full stack)",
       "headline_scenario": "cold",
@@ -21342,12 +21342,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -21400,7 +21400,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1,
@@ -21457,7 +21457,7 @@
       "logo": "posthog",
       "repo": "PostHog/posthog",
       "source_repo": "boringcache/benchmark-posthog",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (full stack)",
       "headline_scenario": "cold",
@@ -21501,7 +21501,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -21559,7 +21559,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -21613,7 +21613,7 @@
       "logo": "posthog",
       "repo": "PostHog/posthog",
       "source_repo": "boringcache/benchmark-posthog",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (full stack)",
       "headline_scenario": "cold",
@@ -21657,12 +21657,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -21715,12 +21715,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-posthog",
           "cache_tag": "posthog-run-r31510461528-a1-docker",
@@ -23933,7 +23933,7 @@
       "logo": "storybook",
       "repo": "storybookjs/storybook",
       "source_repo": "boringcache/benchmark-storybook",
-      "public": true,
+      "public": false,
       "category": "nodejs",
       "step": "Nx build (Yarn monorepo)",
       "headline_scenario": "warm",
@@ -23983,7 +23983,7 @@
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -24100,7 +24100,7 @@
       "logo": "storybook",
       "repo": "storybookjs/storybook",
       "source_repo": "boringcache/benchmark-storybook",
-      "public": true,
+      "public": false,
       "category": "nodejs",
       "step": "Nx build (Yarn monorepo)",
       "headline_scenario": "warm",
@@ -24264,7 +24264,7 @@
       "logo": "storybook",
       "repo": "storybookjs/storybook",
       "source_repo": "boringcache/benchmark-storybook",
-      "public": true,
+      "public": false,
       "category": "nodejs",
       "step": "Nx build (Yarn monorepo)",
       "headline_scenario": "warm",
@@ -24314,7 +24314,7 @@
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -24373,7 +24373,7 @@
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-storybook",
           "cache_tag": "storybook-run-r31510460549-a1-nx",
@@ -24428,7 +24428,7 @@
       "logo": "storybook",
       "repo": "storybookjs/storybook",
       "source_repo": "boringcache/benchmark-storybook",
-      "public": true,
+      "public": false,
       "category": "nodejs",
       "step": "Nx build (Yarn monorepo)",
       "headline_scenario": "cold",
@@ -24850,7 +24850,7 @@
       "logo": "storybook",
       "repo": "storybookjs/storybook",
       "source_repo": "boringcache/benchmark-storybook",
-      "public": true,
+      "public": false,
       "category": "nodejs",
       "step": "Nx build (Yarn monorepo)",
       "headline_scenario": "cold",
@@ -25272,7 +25272,7 @@
       "logo": "storybook",
       "repo": "storybookjs/storybook",
       "source_repo": "boringcache/benchmark-storybook",
-      "public": true,
+      "public": false,
       "category": "nodejs",
       "step": "Nx build (Yarn monorepo)",
       "headline_scenario": "cold",
@@ -25769,7 +25769,7 @@
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -25936,7 +25936,7 @@
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -25995,7 +25995,7 @@
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-opentelemetry-java",
           "cache_tag": "otel-gradle-run-r31510460723-a1-gradle-remote",
@@ -27969,7 +27969,7 @@
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -28136,7 +28136,7 @@
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -28195,7 +28195,7 @@
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-spring-ai",
           "cache_tag": "spring-ai-maven-run-r31510462159-a1-maven-remote",
@@ -33373,7 +33373,7 @@
       "logo": "docker",
       "repo": "PostHog/duckgres",
       "source_repo": "boringcache/benchmark-duckgres",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (Postgres extension image)",
       "headline_scenario": "cold",
@@ -33417,7 +33417,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -33475,7 +33475,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -38956,7 +38956,7 @@
       "logo": "docker",
       "repo": "chroma-core/chroma",
       "source_repo": "boringcache/benchmark-chroma",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (Rust CLI image)",
       "headline_scenario": "warm",
@@ -39000,7 +39000,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -39058,7 +39058,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -44630,7 +44630,7 @@
       "logo": "docker",
       "repo": "linkerd/linkerd2",
       "source_repo": "boringcache/benchmark-linkerd2",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (web image)",
       "headline_scenario": "warm",
@@ -44674,12 +44674,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -44732,7 +44732,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1,
@@ -44789,7 +44789,7 @@
       "logo": "docker",
       "repo": "linkerd/linkerd2",
       "source_repo": "boringcache/benchmark-linkerd2",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (web image)",
       "headline_scenario": "warm",
@@ -44833,12 +44833,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -44891,12 +44891,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-linkerd2-v2",
           "cache_tag": "linkerd2-v2-run-r31510461912-a1-docker",
@@ -44945,7 +44945,7 @@
       "logo": "docker",
       "repo": "linkerd/linkerd2",
       "source_repo": "boringcache/benchmark-linkerd2",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (web image)",
       "headline_scenario": "warm",
@@ -44989,7 +44989,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -45047,7 +45047,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -50746,7 +50746,7 @@
       "logo": "docker",
       "repo": "qdrant/qdrant",
       "source_repo": "boringcache/benchmark-qdrant",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (Rust vector database)",
       "headline_scenario": "cold",
@@ -50790,12 +50790,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -50848,7 +50848,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1,
@@ -50905,7 +50905,7 @@
       "logo": "docker",
       "repo": "qdrant/qdrant",
       "source_repo": "boringcache/benchmark-qdrant",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (Rust vector database)",
       "headline_scenario": "warm",
@@ -50949,12 +50949,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -51007,12 +51007,12 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-qdrant",
           "cache_tag": "qdrant-run-r31510462310-a1-docker",
@@ -51061,7 +51061,7 @@
       "logo": "docker",
       "repo": "qdrant/qdrant",
       "source_repo": "boringcache/benchmark-qdrant",
-      "public": true,
+      "public": false,
       "category": "docker",
       "step": "Docker build (Rust vector database)",
       "headline_scenario": "warm",
@@ -51105,7 +51105,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -51163,7 +51163,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -56933,7 +56933,7 @@
       "logo": "n8n",
       "repo": "n8n-io/n8n",
       "source_repo": "boringcache/benchmark-n8n",
-      "public": true,
+      "public": false,
       "category": "nodejs",
       "step": "Turbo build (pnpm monorepo)",
       "headline_scenario": "warm",
@@ -56983,7 +56983,7 @@
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -57100,7 +57100,7 @@
       "logo": "n8n",
       "repo": "n8n-io/n8n",
       "source_repo": "boringcache/benchmark-n8n",
-      "public": true,
+      "public": false,
       "category": "nodejs",
       "step": "Turbo build (pnpm monorepo)",
       "headline_scenario": "warm",
@@ -57150,7 +57150,7 @@
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": null,
           "cache_tag": null,
@@ -57209,7 +57209,7 @@
           "product_refs": {
             "schema_version": 1
           },
-          "product_refs_consistent": true,
+          "product_refs_consistent": false,
           "launch_proof_paths": [],
           "workspace": "boringcache/benchmark-n8n",
           "cache_tag": "n8n-run-r31510462082-a1-turbo",
@@ -57264,7 +57264,7 @@
       "logo": "n8n",
       "repo": "n8n-io/n8n",
       "source_repo": "boringcache/benchmark-n8n",
-      "public": true,
+      "public": false,
       "category": "nodejs",
       "step": "Turbo build (pnpm monorepo)",
       "headline_scenario": "warm",
@@ -57428,7 +57428,7 @@
       "logo": "n8n",
       "repo": "n8n-io/n8n",
       "source_repo": "boringcache/benchmark-n8n",
-      "public": true,
+      "public": false,
       "category": "nodejs",
       "step": "Turbo build (pnpm monorepo)",
       "headline_scenario": "cold",
@@ -57852,7 +57852,7 @@
       "logo": "n8n",
       "repo": "n8n-io/n8n",
       "source_repo": "boringcache/benchmark-n8n",
-      "public": true,
+      "public": false,
       "category": "nodejs",
       "step": "Turbo build (pnpm monorepo)",
       "headline_scenario": "cold",
@@ -58286,7 +58286,7 @@
       "logo": "n8n",
       "repo": "n8n-io/n8n",
       "source_repo": "boringcache/benchmark-n8n",
-      "public": true,
+      "public": false,
       "category": "nodejs",
       "step": "Turbo build (pnpm monorepo)",
       "headline_scenario": "cold",
@@ -58754,7 +58754,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -58812,7 +58812,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -66380,7 +66380,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -66438,7 +66438,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -75505,7 +75505,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1
@@ -75563,7 +75563,7 @@
             "sample_valid": true,
             "reporting_mode": "comparative",
             "validity_reason": "warm build restored the cold cache on a fresh runner",
-            "cache_import_status": "hit"
+            "cache_import_status": "ok"
           },
           "product_refs": {
             "schema_version": 1

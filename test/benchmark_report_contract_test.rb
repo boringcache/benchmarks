@@ -2,6 +2,7 @@
 
 require "minitest/autorun"
 require "fileutils"
+require "json"
 require "open3"
 require "tmpdir"
 
@@ -61,6 +62,45 @@ class BenchmarkReportContractTest < Minitest::Test
 
     refute status.success?
     assert_includes stderr, "has drifted from scripts/canonical/benchmark-report.py"
+  end
+
+  def test_reporter_carries_action_product_refs_into_the_lane
+    Dir.mktmpdir do |root|
+      evidence_path = File.join(root, "action-evidence.json")
+      phase_dir = File.join(root, "phases")
+      output_dir = File.join(root, "output")
+      refs = {
+        "schema_version" => 1,
+        "cli_version" => "v1.18.1",
+        "action_ref" => "boringcache/one@0123456789abcdef0123456789abcdef01234567",
+        "action_sha" => "0123456789abcdef0123456789abcdef01234567"
+      }
+      File.write(evidence_path, JSON.generate({
+        "schema_version" => "boringcache_one_evidence.v1",
+        "product_refs" => refs,
+        "phases" => { "restore" => { "mode" => "docker" } }
+      }))
+
+      _, stderr, status = Open3.capture3(
+        "python3", CANONICAL, "phase",
+        "--benchmark", "hugo", "--strategy", "boringcache",
+        "--lane", "rolling", "--phase", "commit", "--mode", "docker",
+        "--build-seconds", "37", "--evidence", evidence_path,
+        "--output-dir", phase_dir
+      )
+      assert status.success?, stderr
+
+      _, stderr, status = Open3.capture3(
+        "python3", CANONICAL, "summarize",
+        "--title", "Hugo", "--input-dir", phase_dir, "--output-dir", output_dir
+      )
+      assert status.success?, stderr
+
+      lane = JSON.parse(File.read(File.join(output_dir, "hugo-boringcache-rolling.json")))
+      assert_equal refs, lane["product_refs"]
+      assert_equal true, lane["product_refs_consistent"]
+      assert_equal 37, lane.dig("runs", "rolling_first_build_seconds")
+    end
   end
 
   private

@@ -15,6 +15,8 @@ payload.fetch("entries").each do |entry|
 
   lanes = entry["lanes"].is_a?(Hash) ? entry["lanes"] : { entry["lane"] => entry }
   lanes.each do |lane, lane_entry|
+    next if lane_entry.key?("public") && lane_entry["public"] != true
+
     label = "#{entry.fetch("benchmark")}/#{lane}"
     boringcache = lane_entry.dig("comparison", "boringcache")
     next unless boringcache.is_a?(Hash)
@@ -42,7 +44,7 @@ payload.fetch("entries").each do |entry|
 
     import_status = classification["cache_import_status"].to_s
     reporting_mode = classification["reporting_mode"].to_s
-    if !import_status.empty? && import_status != "ok" && reporting_mode == "comparative"
+    if !import_status.empty? && !%w[ok hit].include?(import_status) && reporting_mode == "comparative"
       errors << "#{label}: cache_import_status=#{import_status} cannot be comparative public proof"
     end
   end

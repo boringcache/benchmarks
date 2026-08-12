@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T09:58:50Z",
+  "generated_at": "2026-08-12T10:08:20Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -54,12 +54,12 @@
           "sample_valid": true,
           "reporting_mode": "comparative",
           "validity_reason": "warm build restored the cold cache on a fresh runner",
-          "cache_import_status": "hit"
+          "cache_import_status": "ok"
         },
         "product_refs": {
           "schema_version": 1
         },
-        "product_refs_consistent": true,
+        "product_refs_consistent": false,
         "launch_proof_paths": [],
         "workspace": null,
         "cache_tag": null,
@@ -112,7 +112,7 @@
           "sample_valid": true,
           "reporting_mode": "comparative",
           "validity_reason": "warm build restored the cold cache on a fresh runner",
-          "cache_import_status": "hit"
+          "cache_import_status": "ok"
         },
         "product_refs": {
           "schema_version": 1,
@@ -169,7 +169,7 @@
         "logo": "hugo",
         "repo": "gohugoio/hugo",
         "source_repo": "boringcache/benchmark-hugo",
-        "public": true,
+        "public": false,
         "category": "docker",
         "step": "Docker build (Go)",
         "headline_scenario": "cold",
@@ -213,12 +213,12 @@
               "sample_valid": true,
               "reporting_mode": "comparative",
               "validity_reason": "warm build restored the cold cache on a fresh runner",
-              "cache_import_status": "hit"
+              "cache_import_status": "ok"
             },
             "product_refs": {
               "schema_version": 1
             },
-            "product_refs_consistent": true,
+            "product_refs_consistent": false,
             "launch_proof_paths": [],
             "workspace": null,
             "cache_tag": null,
@@ -271,7 +271,7 @@
               "sample_valid": true,
               "reporting_mode": "comparative",
               "validity_reason": "warm build restored the cold cache on a fresh runner",
-              "cache_import_status": "hit"
+              "cache_import_status": "ok"
             },
             "product_refs": {
               "schema_version": 1,
