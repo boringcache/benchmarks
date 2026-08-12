@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-08-12 03:37 UTC
+Generated: 2026-08-12 06:26 UTC
 
 Coverage: 18 benchmarks; fresh 18/18, rolling 17/18.
 
@@ -15,8 +15,8 @@ Rows are latest complete same-commit pairs.
 | Immich | Warm Build | 0m 24s | 0m 7s | 71% faster | n/a |
 | Mastodon | Warm Build | 0m 14s | 0m 8s | 43% faster | n/a |
 | Mastodon Streaming | Warm Build | 0m 14s | 0m 11s | near tie | n/a |
-| PostHog | Cold Build | 38m 36s | 16m 39s | 57% faster | n/a |
-| Storybook | Warm Build | 5m 27s | 5m 31s | invalid sample | n/a |
+| PostHog | Cold Build | 47m 35s | 16m 27s | 65% faster | n/a |
+| Storybook | Warm Build | 4m 43s | 5m 15s | invalid sample | n/a |
 | OpenTelemetry Java | Warm Build | 2m 35s | 2m 49s | invalid sample | n/a |
 | Spring AI | Warm Build | 2m 8s | 5m 16s | invalid sample | n/a |
 | gRPC | Warm Build | 0m 33s | 1m 2s | invalid sample | n/a |
