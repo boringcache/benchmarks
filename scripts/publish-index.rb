@@ -154,6 +154,7 @@ BENCHMARKS = [
   },
   {
     "benchmark" => "posthog",
+    "workflow_benchmark_ids" => ["posthog-no-layer-toolcache-mountcache"],
     "name" => "PostHog",
     "logo" => "posthog",
     "repo" => "PostHog/posthog",
