@@ -28,7 +28,14 @@ class BenchmarkRegistryAlignmentTest < Minitest::Test
   end
 
   def test_aggregate_readme_stays_minimal
-    assert_equal "# BoringCache benchmarks\n\nThis repository contains the BoringCache benchmark index and shared benchmark checks.\n", File.read(README)
+    readme = File.read(README)
+
+    assert_operator readme.lines.length, :<=, 40
+    assert_includes readme, "**Real repositories. Exact runs.**"
+    assert_includes readme, "[product benchmark page](https://boringcache.com/benchmarks)"
+    assert_includes readme, "[`data/latest/report.md`](data/latest/report.md)"
+    assert_includes readme, "[`data/latest/index.json`](data/latest/index.json)"
+    assert_includes readme, "[`data/latest/providers.json`](data/latest/providers.json)"
   end
 
   private
