@@ -1,8 +1,8 @@
 # Latest Benchmark Report
 
-Generated: 2026-08-14 17:59 UTC
+Generated: 2026-08-14 21:14 UTC
 
-Coverage: 20 benchmarks; fresh 20/20, rolling 16/20.
+Coverage: 18 benchmarks; fresh 18/18, rolling 16/18.
 
 Rows are latest complete same-commit pairs.
 
@@ -15,8 +15,6 @@ Rows are latest complete same-commit pairs.
 | Immich | Warm Build | 0m 11s | 0m 7s | near tie | n/a |
 | Mastodon | Cold Build | 9m 25s | 9m 52s | 5% slower | n/a |
 | Mastodon Streaming | Cold Build | 0m 39s | 0m 25s | 36% faster | n/a |
-| Discourse Image Factory (amd64) | Cold Build | 43m 9s | 41m 46s | 3% faster | n/a |
-| Discourse Image Factory (arm64) | Cold Build | 38m 58s | 47m 1s | 21% slower | n/a |
 | PostHog | Cold Build | 36m 44s | 14m 31s | 60% faster | n/a |
 | Storybook | Warm Build | 5m 56s | 6m 29s | invalid sample | n/a |
 | OpenTelemetry Java | Cold Build | 14m 20s | 14m 40s | near tie | n/a |
