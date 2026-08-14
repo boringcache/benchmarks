@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-14T14:18:49Z",
+  "generated_at": "2026-08-14T17:59:22Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -145,9 +145,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "investigation",
-          "actions_successful_run_count": 89,
-          "boringcache_successful_run_count": 89,
-          "paired_head_count": 88,
+          "actions_successful_run_count": 88,
+          "boringcache_successful_run_count": 88,
+          "paired_head_count": 87,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "0e25c3d5229eb3b0a97de2575cd80f7f823d08a7",
@@ -186,9 +186,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 89,
-          "boringcache_successful_run_count": 89,
-          "paired_head_count": 88,
+          "actions_successful_run_count": 88,
+          "boringcache_successful_run_count": 88,
+          "paired_head_count": 87,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -466,9 +466,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 95,
-          "boringcache_successful_run_count": 95,
-          "paired_head_count": 95,
+          "actions_successful_run_count": 97,
+          "boringcache_successful_run_count": 97,
+          "paired_head_count": 97,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -524,9 +524,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 60,
-          "boringcache_successful_run_count": 60,
-          "paired_head_count": 58,
+          "actions_successful_run_count": 62,
+          "boringcache_successful_run_count": 62,
+          "paired_head_count": 60,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "767c2faa2aa97b7622887201916ae4edf500e1fe",
