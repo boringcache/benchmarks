@@ -317,11 +317,11 @@ class PublishIndexTest < Minitest::Test
     ), "benchmark-posthog-boringcache-linux-arm64-linux-amd64-rolling"
 
     variant_benchmark = {
-      "benchmark" => "discourse-image-factory-amd64",
-      "artifact_benchmark" => "discourse-image-factory",
+      "benchmark" => "discourse-docker-amd64",
+      "artifact_benchmark" => "discourse-docker",
       "artifact_variants" => {"boringcache" => ["amd64"]}
     }
-    assert_equal ["discourse-image-factory"], benchmark_artifact_ids(variant_benchmark)
+    assert_equal ["discourse-docker"], benchmark_artifact_ids(variant_benchmark)
     assert_equal ["amd64"], benchmark_artifact_variants(variant_benchmark, "boringcache")
   end
 

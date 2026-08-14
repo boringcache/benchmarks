@@ -50,8 +50,9 @@ owned_repo_names = Dir[File.join(repos_dir, "benchmark-*")]
   .sort
 repo_names = owned_repo_names - registry_exempt_repos
 
-missing_from_registry = repo_names - registry_by_repo.keys
-extra_in_registry = registry_by_repo.keys - repo_names
+managed_registry_repos = registry_by_repo.keys.select { |name| name.start_with?("benchmark-") }
+missing_from_registry = repo_names - managed_registry_repos
+extra_in_registry = managed_registry_repos - repo_names
 errors = []
 sync_offsets = Hash.new { |offsets, minute| offsets[minute] = [] }
 

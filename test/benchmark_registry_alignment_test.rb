@@ -45,6 +45,6 @@ class BenchmarkRegistryAlignmentTest < Minitest::Test
   end
 
   def ruby_hash_values(text, key)
-    text.scan(/"#{Regexp.escape(key)}"\s*=>\s*"([^"]+)"/).flatten.grep(%r{\Aboringcache/benchmark-}).uniq.sort
+    text.scan(/"#{Regexp.escape(key)}"\s*=>\s*"([^"]+)"/).flatten.grep(%r{\Aboringcache/}).uniq.sort
   end
 end

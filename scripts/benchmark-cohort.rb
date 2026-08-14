@@ -53,20 +53,20 @@ BENCHMARKS = [
     "workflow" => "mastodon-streaming-docker-benchmark.yml"
   },
   {
-    "benchmark" => "discourse-image-factory-amd64",
-    "aliases" => ["discourse", "discourse-image-factory"],
-    "name" => "Discourse Image Factory (amd64)",
-    "repo" => "boringcache/benchmark-discourse",
+    "benchmark" => "discourse-docker-amd64",
+    "aliases" => ["discourse", "discourse-docker"],
+    "name" => "Discourse Docker (amd64)",
+    "repo" => "boringcache/discourse_docker",
     "category" => "docker",
-    "workflow" => "discourse-image-factory.yml"
+    "workflow" => "build.yml"
   },
   {
-    "benchmark" => "discourse-image-factory-arm64",
+    "benchmark" => "discourse-docker-arm64",
     "aliases" => ["discourse-arm64"],
-    "name" => "Discourse Image Factory (arm64)",
-    "repo" => "boringcache/benchmark-discourse",
+    "name" => "Discourse Docker (arm64)",
+    "repo" => "boringcache/discourse_docker",
     "category" => "docker",
-    "workflow" => "discourse-image-factory.yml"
+    "workflow" => "build.yml"
   },
   {
     "benchmark" => "posthog",

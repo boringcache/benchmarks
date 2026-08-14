@@ -60,26 +60,26 @@ BENCHMARKS = [
     "step" => "Docker build (streaming service)"
   },
   {
-    "benchmark" => "discourse-image-factory-amd64",
-    "aliases" => ["discourse", "discourse-image-factory"],
-    "artifact_benchmark" => "discourse-image-factory",
+    "benchmark" => "discourse-docker-amd64",
+    "aliases" => ["discourse", "discourse-docker"],
+    "artifact_benchmark" => "discourse-docker",
     "artifact_variants" => {"actions-cache" => ["amd64"], "boringcache" => ["amd64"]},
-    "name" => "Discourse Image Factory (amd64)",
+    "name" => "Discourse Docker (amd64)",
     "repo" => "discourse/discourse_docker",
-    "source_repo" => "boringcache/benchmark-discourse",
+    "source_repo" => "boringcache/discourse_docker",
     "category" => "docker",
-    "step" => "Docker Bake (base and test image graph, amd64)"
+    "step" => "Docker Bake (base, application, and test image graph, amd64)"
   },
   {
-    "benchmark" => "discourse-image-factory-arm64",
+    "benchmark" => "discourse-docker-arm64",
     "aliases" => ["discourse-arm64"],
-    "artifact_benchmark" => "discourse-image-factory",
+    "artifact_benchmark" => "discourse-docker",
     "artifact_variants" => {"actions-cache" => ["arm64"], "boringcache" => ["arm64"]},
-    "name" => "Discourse Image Factory (arm64)",
+    "name" => "Discourse Docker (arm64)",
     "repo" => "discourse/discourse_docker",
-    "source_repo" => "boringcache/benchmark-discourse",
+    "source_repo" => "boringcache/discourse_docker",
     "category" => "docker",
-    "step" => "Docker Bake (base and test image graph, arm64)"
+    "step" => "Docker Bake (base, application, and test image graph, arm64)"
   },
   {
     "benchmark" => "posthog",
