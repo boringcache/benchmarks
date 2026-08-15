@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-15T05:17:58Z",
+  "generated_at": "2026-08-15T09:39:23Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -285,9 +285,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 90,
-          "boringcache_successful_run_count": 90,
-          "paired_head_count": 88,
+          "actions_successful_run_count": 91,
+          "boringcache_successful_run_count": 91,
+          "paired_head_count": 89,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -318,15 +318,15 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 66,
-          "boringcache_successful_run_count": 66,
-          "paired_head_count": 59,
+          "actions_successful_run_count": 72,
+          "boringcache_successful_run_count": 72,
+          "paired_head_count": 67,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "765728724d477ce0530708ddcb5d22e4386dc43f",
-          "latest_created_at": "2026-07-28T16:59:49Z",
-          "latest_actions_run_id": 30380849843,
-          "latest_boringcache_run_id": 30380849843,
+          "latest_head_sha": "fc95ef2177b4445c56def465303e8683448481ca",
+          "latest_created_at": "2026-08-05T12:22:07Z",
+          "latest_actions_run_id": 31005300551,
+          "latest_boringcache_run_id": 31005300551,
           "latest_reporting_mode": "comparative",
           "latest_sample_valid": true
         }
@@ -396,15 +396,15 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 98,
-          "boringcache_successful_run_count": 98,
-          "paired_head_count": 92,
+          "actions_successful_run_count": 95,
+          "boringcache_successful_run_count": 95,
+          "paired_head_count": 86,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "768c988f8c00054e6762d7c0d0c4a1933de9b425",
-          "latest_created_at": "2026-07-17T09:40:48Z",
-          "latest_actions_run_id": 29570829534,
-          "latest_boringcache_run_id": 29570829534,
+          "latest_head_sha": "9914a4bca895d6cc5e538c446ad1ddedad221bd8",
+          "latest_created_at": "2026-08-05T09:19:59Z",
+          "latest_actions_run_id": 30992807589,
+          "latest_boringcache_run_id": 30992807589,
           "latest_reporting_mode": "comparative",
           "latest_sample_valid": true
         }
@@ -435,9 +435,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 75,
-          "boringcache_successful_run_count": 75,
-          "paired_head_count": 69,
+          "actions_successful_run_count": 76,
+          "boringcache_successful_run_count": 76,
+          "paired_head_count": 70,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "c8507dedb01532474c6c9ab1255ff11dfa448764",
@@ -684,15 +684,15 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 99,
-          "boringcache_successful_run_count": 99,
-          "paired_head_count": 97,
+          "actions_successful_run_count": 98,
+          "boringcache_successful_run_count": 98,
+          "paired_head_count": 98,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "22b2dd1065a07b51e559c5946bccea5556dd1672",
-          "latest_created_at": "2026-08-03T10:45:52Z",
-          "latest_actions_run_id": 30806847246,
-          "latest_boringcache_run_id": 30806847246,
+          "latest_head_sha": "e6eba189560518f0be598c275c0d615ccc9fd2d4",
+          "latest_created_at": "2026-08-05T12:59:23Z",
+          "latest_actions_run_id": 31008084125,
+          "latest_boringcache_run_id": 31008084125,
           "latest_reporting_mode": "comparative",
           "latest_sample_valid": true
         }
