@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-08-16 21:29 UTC
+Generated: 2026-08-17 02:35 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 13/20.
 
@@ -38,7 +38,7 @@ Rows are latest complete same-commit pairs.
 | Hugo | Commit Build | 3m 0s | 2m 47s | 7% faster | 792.74 MB less (69.52%) |
 | Hugo Go | Commit Build | 0m 23s | 0m 30s | 30% slower | 471.28 MB less (76.54%) |
 | Immich | Commit Build | 0m 24s | 0m 11s | 54% faster | 6.90 GB less (70.56%) |
-| Mastodon | Commit Build | 12m 48s | 8m 15s | investigation only | n/a |
+| Mastodon | Commit Build | 2m 4s | 1m 55s | 7% faster | 8.95 GB less (89.72%) |
 | Storybook | Commit Build | 3m 16s | 3m 52s | 18% slower | 1.86 GB less (57.94%) |
 | OpenTelemetry Java | Commit Build | 1m 0s | 1m 11s | 18% slower | 957.32 MB less (47.17%) |
 | Spring AI | Commit Build | 3m 56s | 3m 57s | near tie | 941.65 MB less (34.39%) |
