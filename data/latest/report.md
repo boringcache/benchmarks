@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-08-17 02:35 UTC
+Generated: 2026-08-17 05:54 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 13/20.
 
@@ -10,8 +10,8 @@ Rows are latest complete same-commit pairs.
 
 | Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
-| Hugo | Cold Build | 4m 17s | 3m 50s | 11% faster | n/a |
-| Hugo Go | Warm Build | 0m 11s | 0m 19s | invalid sample | n/a |
+| Hugo | Warm Build | 0m 28s | 0m 19s | 32% faster | n/a |
+| Hugo Go | Cold Build | 1m 11s | 1m 29s | 25% slower | n/a |
 | Immich | Warm Build | 0m 11s | 0m 7s | near tie | n/a |
 | Mastodon | Cold Build | 9m 25s | 9m 52s | 5% slower | n/a |
 | Mastodon Streaming | Cold Build | 0m 39s | 0m 25s | 36% faster | n/a |
@@ -22,10 +22,10 @@ Rows are latest complete same-commit pairs.
 | OpenTelemetry Java | Cold Build | 14m 20s | 14m 40s | near tie | n/a |
 | Spring AI | Cold Build | 8m 16s | 8m 20s | near tie | n/a |
 | gRPC | Warm Build | 0m 33s | 1m 2s | invalid sample | n/a |
-| Duckgres | Cold Build | 6m 30s | 3m 50s | 41% faster | n/a |
-| Chroma | Warm Build | 0m 11s | 0m 7s | near tie | n/a |
-| Linkerd2 Web | Warm Build | 0m 13s | 0m 8s | near tie | n/a |
-| Qdrant | Cold Build | 14m 47s | 9m 37s | 35% faster | n/a |
+| Duckgres | Warm Build | 0m 17s | 0m 8s | 53% faster | n/a |
+| Chroma | Warm Build | 0m 14s | 0m 9s | near tie | n/a |
+| Linkerd2 Web | Warm Build | 0m 11s | 0m 5s | 55% faster | n/a |
+| Qdrant | Warm Build | 0m 19s | 0m 14s | near tie | n/a |
 | n8n | Cold Build | 4m 5s | 4m 7s | near tie | n/a |
 | n8n Docker | Cold Build | 7m 4s | 4m 13s | 40% faster | n/a |
 | n8n Runners | Cold Build | 1m 31s | 0m 52s | 43% faster | n/a |
@@ -38,7 +38,7 @@ Rows are latest complete same-commit pairs.
 | Hugo | Commit Build | 3m 0s | 2m 47s | 7% faster | 792.74 MB less (69.52%) |
 | Hugo Go | Commit Build | 0m 23s | 0m 30s | 30% slower | 471.28 MB less (76.54%) |
 | Immich | Commit Build | 0m 24s | 0m 11s | 54% faster | 6.90 GB less (70.56%) |
-| Mastodon | Commit Build | 2m 4s | 1m 55s | 7% faster | 8.95 GB less (89.72%) |
+| Mastodon | Commit Build | 12m 48s | 8m 15s | investigation only | n/a |
 | Storybook | Commit Build | 3m 16s | 3m 52s | 18% slower | 1.86 GB less (57.94%) |
 | OpenTelemetry Java | Commit Build | 1m 0s | 1m 11s | 18% slower | 957.32 MB less (47.17%) |
 | Spring AI | Commit Build | 3m 56s | 3m 57s | near tie | 941.65 MB less (34.39%) |
