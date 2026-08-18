@@ -1,8 +1,8 @@
 # Latest Benchmark Report
 
-Generated: 2026-08-18 05:57 UTC
+Generated: 2026-08-18 09:59 UTC
 
-Coverage: 20 benchmarks; fresh 20/20, rolling 13/20.
+Coverage: 20 benchmarks; fresh 20/20, rolling 12/20.
 
 Rows are latest complete same-commit pairs.
 
@@ -47,4 +47,3 @@ Rows are latest complete same-commit pairs.
 | Chroma | Commit Build | 20m 21s | 10m 54s | 46% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 16s | 0m 9s | 44% faster | n/a |
 | Qdrant | Commit Build | 5m 31s | 4m 8s | 25% faster | n/a |
-| n8n | Commit Build | 4m 14s | 3m 55s | 7% faster | 3.69 GB less (56.93%) |
