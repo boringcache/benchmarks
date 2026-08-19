@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-08-18 21:45 UTC
+Generated: 2026-08-19 02:55 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 12/20.
 
