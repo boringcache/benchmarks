@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19T21:52:59Z",
+  "generated_at": "2026-08-20T02:45:40Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -285,9 +285,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 96,
-          "boringcache_successful_run_count": 96,
-          "paired_head_count": 96,
+          "actions_successful_run_count": 95,
+          "boringcache_successful_run_count": 95,
+          "paired_head_count": 95,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -466,9 +466,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 98,
-          "boringcache_successful_run_count": 98,
-          "paired_head_count": 97,
+          "actions_successful_run_count": 91,
+          "boringcache_successful_run_count": 91,
+          "paired_head_count": 90,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -491,9 +491,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 80,
-          "boringcache_successful_run_count": 80,
-          "paired_head_count": 78,
+          "actions_successful_run_count": 81,
+          "boringcache_successful_run_count": 81,
+          "paired_head_count": 79,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -524,9 +524,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 85,
-          "boringcache_successful_run_count": 85,
-          "paired_head_count": 83,
+          "actions_successful_run_count": 87,
+          "boringcache_successful_run_count": 87,
+          "paired_head_count": 85,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "767c2faa2aa97b7622887201916ae4edf500e1fe",
