@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-24T17:57:52Z",
+  "generated_at": "2026-08-24T21:55:12Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -285,9 +285,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 99,
-          "boringcache_successful_run_count": 99,
-          "paired_head_count": 99,
+          "actions_successful_run_count": 98,
+          "boringcache_successful_run_count": 98,
+          "paired_head_count": 98,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -357,9 +357,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 93,
-          "boringcache_successful_run_count": 93,
-          "paired_head_count": 84,
+          "actions_successful_run_count": 91,
+          "boringcache_successful_run_count": 91,
+          "paired_head_count": 82,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "92e61ebe89819cb5d53abfc9846156a84298f145",
@@ -524,9 +524,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 98,
-          "boringcache_successful_run_count": 98,
-          "paired_head_count": 96,
+          "actions_successful_run_count": 99,
+          "boringcache_successful_run_count": 99,
+          "paired_head_count": 97,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "767c2faa2aa97b7622887201916ae4edf500e1fe",
@@ -604,9 +604,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 35,
-          "boringcache_successful_run_count": 35,
-          "paired_head_count": 33,
+          "actions_successful_run_count": 36,
+          "boringcache_successful_run_count": 36,
+          "paired_head_count": 34,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "6c6ba80c453ea895d04f4de77b404754153b139c",
