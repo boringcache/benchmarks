@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-25T17:46:56Z",
+  "generated_at": "2026-08-25T22:02:01Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -104,19 +104,12 @@
         },
         "rolling": {
           "lane": "rolling",
-          "state": "healthy",
+          "state": "missing_pair",
           "actions_successful_run_count": 96,
           "boringcache_successful_run_count": 96,
           "paired_head_count": 95,
-          "selected_pair_count": 2,
-          "window_pair_target": 3,
-          "latest_head_sha": "5f4f47f8c6b3de69c27276120cf475671c1e32c0",
-          "latest_created_at": "2026-08-04T20:48:44Z",
-          "latest_actions_run_id": 30949555874,
-          "latest_boringcache_run_id": 30949555874,
-          "latest_reporting_mode": "comparative",
-          "latest_cache_import_status": "ok",
-          "latest_sample_valid": true
+          "selected_pair_count": 0,
+          "window_pair_target": 3
         }
       }
     },
