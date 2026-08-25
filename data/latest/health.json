@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-24T21:55:12Z",
+  "generated_at": "2026-08-25T01:32:34Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -357,9 +357,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 91,
-          "boringcache_successful_run_count": 91,
-          "paired_head_count": 82,
+          "actions_successful_run_count": 90,
+          "boringcache_successful_run_count": 90,
+          "paired_head_count": 81,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "92e61ebe89819cb5d53abfc9846156a84298f145",
@@ -435,9 +435,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 83,
-          "boringcache_successful_run_count": 83,
-          "paired_head_count": 83,
+          "actions_successful_run_count": 84,
+          "boringcache_successful_run_count": 84,
+          "paired_head_count": 84,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "c8507dedb01532474c6c9ab1255ff11dfa448764",
@@ -466,9 +466,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 89,
-          "boringcache_successful_run_count": 89,
-          "paired_head_count": 89,
+          "actions_successful_run_count": 87,
+          "boringcache_successful_run_count": 87,
+          "paired_head_count": 87,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -491,9 +491,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 86,
-          "boringcache_successful_run_count": 86,
-          "paired_head_count": 85,
+          "actions_successful_run_count": 87,
+          "boringcache_successful_run_count": 87,
+          "paired_head_count": 86,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
