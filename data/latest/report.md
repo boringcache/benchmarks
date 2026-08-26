@@ -1,8 +1,8 @@
 # Latest Benchmark Report
 
-Generated: 2026-08-26 14:00 UTC
+Generated: 2026-08-26 17:45 UTC
 
-Coverage: 20 benchmarks; fresh 20/20, rolling 12/20.
+Coverage: 20 benchmarks; fresh 20/20, rolling 11/20.
 
 Rows are latest complete same-commit pairs.
 
@@ -12,7 +12,7 @@ Rows are latest complete same-commit pairs.
 | --- | --- | --- | --- | --- | --- |
 | Hugo | Warm Build | 0m 30s | 0m 22s | 27% faster | n/a |
 | Hugo Go | Cold Build | 1m 11s | 1m 29s | 25% slower | n/a |
-| Immich | Cold Build | 6m 21s | 2m 39s | 58% faster | n/a |
+| Immich | Cold Build | 6m 0s | 2m 56s | 51% faster | n/a |
 | Mastodon | Cold Build | 11m 43s | 8m 23s | 28% faster | n/a |
 | Mastodon Streaming | Cold Build | 0m 48s | 0m 19s | 60% faster | n/a |
 | Discourse Image Factory (amd64) | Cold Build | 43m 9s | 41m 46s | 3% faster | n/a |
@@ -46,4 +46,3 @@ Rows are latest complete same-commit pairs.
 | Chroma | Commit Build | 20m 21s | 10m 54s | 46% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 16s | 0m 9s | 44% faster | n/a |
 | Qdrant | Commit Build | 5m 31s | 4m 8s | 25% faster | n/a |
-| n8n | Commit Build | 4m 14s | 3m 55s | 7% faster | 3.69 GB less (56.93%) |
