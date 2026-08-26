@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-25T22:02:01Z",
+  "generated_at": "2026-08-26T01:59:05Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -105,9 +105,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 96,
-          "boringcache_successful_run_count": 96,
-          "paired_head_count": 95,
+          "actions_successful_run_count": 97,
+          "boringcache_successful_run_count": 97,
+          "paired_head_count": 96,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -519,7 +519,7 @@
           "state": "healthy",
           "actions_successful_run_count": 100,
           "boringcache_successful_run_count": 100,
-          "paired_head_count": 98,
+          "paired_head_count": 99,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "767c2faa2aa97b7622887201916ae4edf500e1fe",
@@ -710,9 +710,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 94,
-          "boringcache_successful_run_count": 94,
-          "paired_head_count": 94,
+          "actions_successful_run_count": 93,
+          "boringcache_successful_run_count": 93,
+          "paired_head_count": 93,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -743,9 +743,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 94,
-          "boringcache_successful_run_count": 94,
-          "paired_head_count": 94,
+          "actions_successful_run_count": 93,
+          "boringcache_successful_run_count": 93,
+          "paired_head_count": 93,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -776,9 +776,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 94,
-          "boringcache_successful_run_count": 94,
-          "paired_head_count": 94,
+          "actions_successful_run_count": 93,
+          "boringcache_successful_run_count": 93,
+          "paired_head_count": 93,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
