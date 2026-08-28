@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-27T20:46:50Z",
+  "generated_at": "2026-08-28T00:45:58Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -519,7 +519,7 @@
           "state": "healthy",
           "actions_successful_run_count": 100,
           "boringcache_successful_run_count": 100,
-          "paired_head_count": 99,
+          "paired_head_count": 100,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "767c2faa2aa97b7622887201916ae4edf500e1fe",
