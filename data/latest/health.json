@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-30T13:28:23Z",
+  "generated_at": "2026-08-30T17:46:27Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -66,9 +66,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 45,
-          "boringcache_successful_run_count": 45,
-          "paired_head_count": 36,
+          "actions_successful_run_count": 44,
+          "boringcache_successful_run_count": 44,
+          "paired_head_count": 35,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "4e96acd775ea16281886cc1f2e4cb00eacd0833e",
