@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T09:48:31Z",
+  "generated_at": "2026-08-31T13:50:26Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -66,9 +66,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 43,
-          "boringcache_successful_run_count": 43,
-          "paired_head_count": 34,
+          "actions_successful_run_count": 42,
+          "boringcache_successful_run_count": 42,
+          "paired_head_count": 33,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "4e96acd775ea16281886cc1f2e4cb00eacd0833e",
@@ -311,9 +311,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 88,
-          "boringcache_successful_run_count": 88,
-          "paired_head_count": 88,
+          "actions_successful_run_count": 89,
+          "boringcache_successful_run_count": 89,
+          "paired_head_count": 89,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "fc95ef2177b4445c56def465303e8683448481ca",
@@ -677,9 +677,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 97,
-          "boringcache_successful_run_count": 97,
-          "paired_head_count": 97,
+          "actions_successful_run_count": 90,
+          "boringcache_successful_run_count": 90,
+          "paired_head_count": 90,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -710,9 +710,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 93,
-          "boringcache_successful_run_count": 93,
-          "paired_head_count": 93,
+          "actions_successful_run_count": 85,
+          "boringcache_successful_run_count": 85,
+          "paired_head_count": 85,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -743,9 +743,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 93,
-          "boringcache_successful_run_count": 93,
-          "paired_head_count": 93,
+          "actions_successful_run_count": 85,
+          "boringcache_successful_run_count": 85,
+          "paired_head_count": 85,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -776,9 +776,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 93,
-          "boringcache_successful_run_count": 93,
-          "paired_head_count": 93,
+          "actions_successful_run_count": 85,
+          "boringcache_successful_run_count": 85,
+          "paired_head_count": 85,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
