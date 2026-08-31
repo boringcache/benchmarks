@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T13:50:26Z",
+  "generated_at": "2026-08-31T17:26:39Z",
   "window_pair_target": 3,
   "entries": [
     {
@@ -20154,20 +20154,7 @@
                 "cache_import_status": "ok",
                 "rolling_bootstrap_count": 0,
                 "rolling_reseed_count": 0,
-                "steady_state_candidate_count": 1,
-                "product_cohort": {
-                  "basis": "latest_boringcache_product_refs",
-                  "source_sample_count": 3,
-                  "excluded_sample_count": 2,
-                  "product_refs": {
-                    "action_ref": "boringcache/one@bf810e34331db84f9f11930e83b8813b5ad31ba1",
-                    "action_sha": "bf810e34331db84f9f11930e83b8813b5ad31ba1",
-                    "api_url": "https://api.boringcache.com",
-                    "cli_version": "v1.16.4",
-                    "schema_version": 1,
-                    "web_revision": "be65cc209"
-                  }
-                }
+                "steady_state_candidate_count": 1
               }
             },
             "reporting": {
@@ -20178,20 +20165,7 @@
             "cold_improvement_pct": 25.08,
             "cold_build_improvement_pct": 23.46,
             "storage_improvement_pct": null,
-            "storage_saved_bytes": null,
-            "product_cohort": {
-              "basis": "latest_boringcache_product_refs",
-              "source_sample_count": 3,
-              "excluded_sample_count": 2,
-              "product_refs": {
-                "action_ref": "boringcache/one@bf810e34331db84f9f11930e83b8813b5ad31ba1",
-                "action_sha": "bf810e34331db84f9f11930e83b8813b5ad31ba1",
-                "api_url": "https://api.boringcache.com",
-                "cli_version": "v1.16.4",
-                "schema_version": 1,
-                "web_revision": "be65cc209"
-              }
-            }
+            "storage_saved_bytes": null
           }
         }
       }
