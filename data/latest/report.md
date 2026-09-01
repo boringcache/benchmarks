@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-01 02:36 UTC
+Generated: 2026-09-01 05:24 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 10/20.
 
@@ -12,9 +12,9 @@ Rows are latest complete same-commit pairs.
 | --- | --- | --- | --- | --- | --- |
 | Hugo | Warm Build | 0m 28s | 0m 23s | near tie | n/a |
 | Hugo Go | Cold Build | 1m 11s | 1m 29s | 25% slower | n/a |
-| Immich | Cold Build | 6m 0s | 2m 56s | 51% faster | n/a |
-| Mastodon | Cold Build | 11m 43s | 8m 23s | 28% faster | n/a |
-| Mastodon Streaming | Cold Build | 0m 48s | 0m 19s | 60% faster | n/a |
+| Immich | Cold Build | 4m 52s | 2m 52s | 41% faster | n/a |
+| Mastodon | Warm Build | 1m 2s | 0m 14s | 77% faster | n/a |
+| Mastodon Streaming | Cold Build | 0m 30s | 0m 23s | 23% faster | n/a |
 | Discourse Image Factory (amd64) | Cold Build | 43m 9s | 41m 46s | 3% faster | n/a |
 | Discourse Image Factory (arm64) | Cold Build | 38m 58s | 47m 1s | 21% slower | n/a |
 | PostHog | Cold Build | 36m 12s | 16m 19s | 55% faster | n/a |
