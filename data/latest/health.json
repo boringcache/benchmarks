@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01T13:33:21Z",
+  "generated_at": "2026-09-01T17:41:02Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -141,7 +141,7 @@
           "actions_successful_run_count": 94,
           "boringcache_successful_run_count": 94,
           "paired_head_count": 93,
-          "selected_pair_count": 3,
+          "selected_pair_count": 2,
           "window_pair_target": 3,
           "latest_head_sha": "0e25c3d5229eb3b0a97de2575cd80f7f823d08a7",
           "latest_created_at": "2026-08-05T13:11:00Z",
@@ -311,9 +311,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 89,
-          "boringcache_successful_run_count": 89,
-          "paired_head_count": 89,
+          "actions_successful_run_count": 90,
+          "boringcache_successful_run_count": 90,
+          "paired_head_count": 90,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -551,9 +551,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 42,
-          "boringcache_successful_run_count": 42,
-          "paired_head_count": 41,
+          "actions_successful_run_count": 43,
+          "boringcache_successful_run_count": 43,
+          "paired_head_count": 42,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "fafe96c77f9959477943b784015cc5fd5bedb268",
@@ -591,9 +591,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 38,
-          "boringcache_successful_run_count": 38,
-          "paired_head_count": 36,
+          "actions_successful_run_count": 39,
+          "boringcache_successful_run_count": 39,
+          "paired_head_count": 37,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "6c6ba80c453ea895d04f4de77b404754153b139c",
@@ -664,9 +664,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 71,
-          "boringcache_successful_run_count": 71,
-          "paired_head_count": 71,
+          "actions_successful_run_count": 64,
+          "boringcache_successful_run_count": 64,
+          "paired_head_count": 64,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -697,9 +697,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 69,
-          "boringcache_successful_run_count": 69,
-          "paired_head_count": 69,
+          "actions_successful_run_count": 62,
+          "boringcache_successful_run_count": 62,
+          "paired_head_count": 62,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -730,9 +730,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 69,
-          "boringcache_successful_run_count": 69,
-          "paired_head_count": 69,
+          "actions_successful_run_count": 62,
+          "boringcache_successful_run_count": 62,
+          "paired_head_count": 62,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -763,9 +763,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 69,
-          "boringcache_successful_run_count": 69,
-          "paired_head_count": 69,
+          "actions_successful_run_count": 62,
+          "boringcache_successful_run_count": 62,
+          "paired_head_count": 62,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
