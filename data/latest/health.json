@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02T05:52:01Z",
+  "generated_at": "2026-09-02T09:41:44Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -311,9 +311,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 92,
-          "boringcache_successful_run_count": 92,
-          "paired_head_count": 92,
+          "actions_successful_run_count": 93,
+          "boringcache_successful_run_count": 93,
+          "paired_head_count": 93,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -551,9 +551,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 43,
-          "boringcache_successful_run_count": 43,
-          "paired_head_count": 42,
+          "actions_successful_run_count": 44,
+          "boringcache_successful_run_count": 44,
+          "paired_head_count": 43,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "fafe96c77f9959477943b784015cc5fd5bedb268",
@@ -664,9 +664,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 59,
-          "boringcache_successful_run_count": 59,
-          "paired_head_count": 59,
+          "actions_successful_run_count": 54,
+          "boringcache_successful_run_count": 54,
+          "paired_head_count": 54,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -697,9 +697,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 57,
-          "boringcache_successful_run_count": 57,
-          "paired_head_count": 57,
+          "actions_successful_run_count": 51,
+          "boringcache_successful_run_count": 51,
+          "paired_head_count": 51,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -730,9 +730,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 57,
-          "boringcache_successful_run_count": 57,
-          "paired_head_count": 57,
+          "actions_successful_run_count": 51,
+          "boringcache_successful_run_count": 51,
+          "paired_head_count": 51,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -763,9 +763,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 57,
-          "boringcache_successful_run_count": 57,
-          "paired_head_count": 57,
+          "actions_successful_run_count": 51,
+          "boringcache_successful_run_count": 51,
+          "paired_head_count": 51,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
