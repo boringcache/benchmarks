@@ -1,8 +1,8 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-02 17:32 UTC
+Generated: 2026-09-02 21:35 UTC
 
-Coverage: 20 benchmarks; fresh 20/20, rolling 9/20.
+Coverage: 20 benchmarks; fresh 20/20, rolling 8/20.
 
 Rows are latest complete same-commit pairs.
 
@@ -40,7 +40,6 @@ Rows are latest complete same-commit pairs.
 | Mastodon | Commit Build | 12m 48s | 8m 15s | investigation only | n/a |
 | OpenTelemetry Java | Commit Build | 1m 0s | 1m 11s | 18% slower | 957.32 MB less (47.17%) |
 | Spring AI | Commit Build | 3m 56s | 3m 57s | near tie | 941.65 MB less (34.39%) |
-| gRPC | Commit Build | 0m 45s | 1m 0s | 33% slower | 1.74 GB more (301.6%) |
 | Duckgres | Commit Build | 5m 49s | 4m 20s | 26% faster | n/a |
 | Chroma | Commit Build | 20m 21s | 10m 54s | 46% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 16s | 0m 9s | 44% faster | n/a |
