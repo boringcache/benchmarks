@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-03 02:13 UTC
+Generated: 2026-09-03 06:36 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 8/20.
 
@@ -10,26 +10,26 @@ Rows are latest complete same-commit pairs.
 
 | Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
-| Hugo | Warm Build | 0m 28s | 0m 23s | near tie | n/a |
-| Hugo Go | Cold Build | 1m 11s | 1m 29s | 25% slower | n/a |
+| Hugo | Warm Build | 0m 37s | 0m 19s | 49% faster | n/a |
+| Hugo Go | Cold Build | 1m 13s | 1m 21s | 11% slower | n/a |
 | Immich | Cold Build | 4m 52s | 2m 52s | 41% faster | n/a |
 | Mastodon | Warm Build | 1m 2s | 0m 14s | 77% faster | n/a |
 | Mastodon Streaming | Cold Build | 0m 30s | 0m 23s | 23% faster | n/a |
 | Discourse Image Factory (amd64) | Cold Build | 43m 9s | 41m 46s | 3% faster | n/a |
 | Discourse Image Factory (arm64) | Cold Build | 38m 58s | 47m 1s | 21% slower | n/a |
 | PostHog | Cold Build | 38m 29s | 16m 34s | 57% faster | n/a |
-| Storybook | Warm Build | 4m 24s | 9m 2s | invalid sample | n/a |
-| OpenTelemetry Java | Cold Build | 14m 6s | 11m 45s | 17% faster | n/a |
-| Spring AI | Warm Build | 2m 32s | 1m 37s | 36% faster | n/a |
+| Storybook | Warm Build | 5m 30s | 5m 31s | invalid sample | n/a |
+| OpenTelemetry Java | Warm Build | 2m 42s | 16m 11s | invalid sample | n/a |
+| Spring AI | Cold Build | 7m 5s | 7m 58s | 12% slower | n/a |
 | gRPC | Warm Build | 1m 23s | 1m 52s | invalid sample | n/a |
-| Duckgres | Cold Build | 6m 33s | 3m 37s | 45% faster | n/a |
+| Duckgres | Cold Build | 5m 38s | 3m 59s | 29% faster | n/a |
 | Chroma | Cold Build | 76m 49s | 83m 58s | 9% slower | n/a |
-| Linkerd2 Web | Warm Build | 0m 13s | 0m 8s | near tie | n/a |
-| Qdrant | Warm Build | 0m 24s | 0m 16s | 33% faster | n/a |
-| n8n | Cold Build | 4m 5s | 4m 14s | 4% slower | n/a |
-| n8n Docker | Warm Build | 6m 25s | 4m 47s | 25% faster | n/a |
-| n8n Runners | Cold Build | 1m 28s | 1m 2s | 30% faster | n/a |
-| n8n Runners Distroless | Cold Build | 2m 43s | 1m 8s | 58% faster | n/a |
+| Linkerd2 Web | Cold Build | 4m 8s | 3m 19s | 20% faster | n/a |
+| Qdrant | Cold Build | 12m 32s | 9m 19s | 26% faster | n/a |
+| n8n | Cold Build | 3m 45s | 4m 9s | 11% slower | n/a |
+| n8n Docker | Cold Build | 5m 7s | 3m 19s | 35% faster | n/a |
+| n8n Runners | Cold Build | 1m 20s | 0m 44s | 45% faster | n/a |
+| n8n Runners Distroless | Cold Build | 3m 1s | 1m 10s | 61% faster | n/a |
 
 ## Rolling
 
