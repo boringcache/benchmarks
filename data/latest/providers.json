@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-03T06:36:02Z",
+  "generated_at": "2026-09-03T09:51:56Z",
   "window_sample_target": 3,
   "providers": {
     "actions-cache": "GitHub Actions Cache",
@@ -13947,8 +13947,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 98,
-              "unique_head_count": 98,
+              "successful_run_count": 97,
+              "unique_head_count": 97,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -13956,8 +13956,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 98,
-              "unique_head_count": 98,
+              "successful_run_count": 97,
+              "unique_head_count": 97,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -14238,8 +14238,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 98,
-              "unique_head_count": 98,
+              "successful_run_count": 97,
+              "unique_head_count": 97,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -14247,8 +14247,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 98,
-              "unique_head_count": 98,
+              "successful_run_count": 97,
+              "unique_head_count": 97,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -14549,8 +14549,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 98,
-              "unique_head_count": 98,
+              "successful_run_count": 97,
+              "unique_head_count": 97,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -14558,8 +14558,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 98,
-              "unique_head_count": 98,
+              "successful_run_count": 97,
+              "unique_head_count": 97,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -14574,8 +14574,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 98,
-              "unique_head_count": 98,
+              "successful_run_count": 97,
+              "unique_head_count": 97,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -14583,8 +14583,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 98,
-              "unique_head_count": 98,
+              "successful_run_count": 97,
+              "unique_head_count": 97,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -17220,8 +17220,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 94,
-              "unique_head_count": 94,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -17229,8 +17229,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 94,
-              "unique_head_count": 94,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -17511,8 +17511,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 94,
-              "unique_head_count": 94,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -17520,8 +17520,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 94,
-              "unique_head_count": 94,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -17822,8 +17822,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 94,
-              "unique_head_count": 94,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -17831,8 +17831,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 94,
-              "unique_head_count": 94,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -17847,8 +17847,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 94,
-              "unique_head_count": 94,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -17856,8 +17856,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 94,
-              "unique_head_count": 94,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -17872,8 +17872,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 94,
-              "unique_head_count": 94,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -17881,8 +17881,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 94,
-              "unique_head_count": 94,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -17897,8 +17897,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 94,
-              "unique_head_count": 94,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -17906,8 +17906,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 94,
-              "unique_head_count": 94,
+              "successful_run_count": 92,
+              "unique_head_count": 92,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -23572,45 +23572,45 @@
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
-              "latest_run_id": 33720452953,
-              "latest_run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/33720452953",
-              "latest_head_sha": "7e38892fb873c6b23418a6a9c460ada718b18323",
-              "latest_created_at": "2026-09-03T05:48:57Z",
+              "latest_run_id": 33728120012,
+              "latest_run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/33728120012",
+              "latest_head_sha": "f8d772b6a5018e8ccc2a063feb97da49899d9642",
+              "latest_created_at": "2026-09-03T07:26:37Z",
               "sample_run_ids": [
+                33728120012,
                 33720452953,
-                33711129289,
-                33678939229
+                33711129289
               ],
               "sample_run_urls": [
+                "https://github.com/boringcache/benchmark-grpc/actions/runs/33728120012",
                 "https://github.com/boringcache/benchmark-grpc/actions/runs/33720452953",
-                "https://github.com/boringcache/benchmark-grpc/actions/runs/33711129289",
-                "https://github.com/boringcache/benchmark-grpc/actions/runs/33678939229"
+                "https://github.com/boringcache/benchmark-grpc/actions/runs/33711129289"
               ],
               "sample_head_shas": [
+                "f8d772b6a5018e8ccc2a063feb97da49899d9642",
                 "7e38892fb873c6b23418a6a9c460ada718b18323",
-                "2aab27ac248946d1388431c25f04091da2309e2c",
-                "84b0965ae2ecce8479146ab81ce89ca8aa75f3ee"
+                "2aab27ac248946d1388431c25f04091da2309e2c"
               ],
               "summary": {
-                "run_id": 33720452953,
-                "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/33720452953",
-                "head_sha": "7e38892fb873c6b23418a6a9c460ada718b18323",
-                "created_at": "2026-09-03T05:48:57Z",
+                "run_id": 33728120012,
+                "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/33728120012",
+                "head_sha": "f8d772b6a5018e8ccc2a063feb97da49899d9642",
+                "created_at": "2026-09-03T07:26:37Z",
                 "sample_count": 3,
                 "sample_run_ids": [
+                  33728120012,
                   33720452953,
-                  33711129289,
-                  33678939229
+                  33711129289
                 ],
                 "sample_run_urls": [
+                  "https://github.com/boringcache/benchmark-grpc/actions/runs/33728120012",
                   "https://github.com/boringcache/benchmark-grpc/actions/runs/33720452953",
-                  "https://github.com/boringcache/benchmark-grpc/actions/runs/33711129289",
-                  "https://github.com/boringcache/benchmark-grpc/actions/runs/33678939229"
+                  "https://github.com/boringcache/benchmark-grpc/actions/runs/33711129289"
                 ],
                 "head_shas": [
+                  "f8d772b6a5018e8ccc2a063feb97da49899d9642",
                   "7e38892fb873c6b23418a6a9c460ada718b18323",
-                  "2aab27ac248946d1388431c25f04091da2309e2c",
-                  "84b0965ae2ecce8479146ab81ce89ca8aa75f3ee"
+                  "2aab27ac248946d1388431c25f04091da2309e2c"
                 ],
                 "cold_seconds": null,
                 "cold_build_seconds": null,
@@ -23621,9 +23621,9 @@
                 "warm2_seconds": null,
                 "warm_average_seconds": null,
                 "warm_steady_seconds": null,
-                "rolling_first_build_seconds": 348.6666666666667,
+                "rolling_first_build_seconds": 252.33333333333334,
                 "rolling_warm_seconds": null,
-                "run_total_seconds": 375.3333333333333,
+                "run_total_seconds": 290.3333333333333,
                 "storage_bytes": null,
                 "network_bytes_uploaded": null,
                 "docker_cache_import_seconds": null,
@@ -23632,13 +23632,77 @@
                   "schema_version": 1
                 },
                 "product_refs_consistent": true,
-                "run_uid": "gh-33720452953-1",
+                "run_uid": "gh-33728120012-1",
                 "mode": "bazel",
                 "adapter": "bazel",
-                "scenario_seconds": 348.6666666666667,
-                "tool_elapsed_seconds": 348.6666666666667
+                "scenario_seconds": 252.33333333333334,
+                "tool_elapsed_seconds": 252.33333333333334
               },
               "samples": [
+                {
+                  "run_id": 33728120012,
+                  "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/33728120012",
+                  "head_sha": "f8d772b6a5018e8ccc2a063feb97da49899d9642",
+                  "created_at": "2026-09-03T07:26:37Z",
+                  "cold_seconds": null,
+                  "cold_build_seconds": null,
+                  "cold_restore_or_setup_seconds": null,
+                  "warm1_seconds": null,
+                  "warm1_build_seconds": null,
+                  "warm1_restore_or_setup_seconds": null,
+                  "warm2_seconds": null,
+                  "warm_average_seconds": null,
+                  "warm_steady_seconds": null,
+                  "rolling_first_build_seconds": 94.0,
+                  "rolling_warm_seconds": null,
+                  "run_total_seconds": 152.0,
+                  "storage_bytes": null,
+                  "storage_source": null,
+                  "storage_breakdown": null,
+                  "network_bytes_uploaded": null,
+                  "network_bytes_uploaded_source": null,
+                  "docker_cache_import_seconds": null,
+                  "docker_cache_export_seconds": null,
+                  "startup_prefetch": {},
+                  "oci": {},
+                  "classification": {
+                    "sample_valid": true,
+                    "reporting_mode": "comparative",
+                    "validity_reason": "provider does not expose cache import evidence",
+                    "cache_import_status": "unknown"
+                  },
+                  "product_refs": {
+                    "schema_version": 1
+                  },
+                  "product_refs_consistent": false,
+                  "launch_proof_paths": [],
+                  "workspace": null,
+                  "cache_tag": null,
+                  "run_uid": "gh-33728120012-1",
+                  "mode": "bazel",
+                  "adapter": "bazel",
+                  "docker_cache_from_refs": null,
+                  "docker_cache_import_ready": null,
+                  "http_transport": null,
+                  "http2_enabled": null,
+                  "oci_stream_through_min_bytes": null,
+                  "restore_result": null,
+                  "save_result": null,
+                  "publish_status": null,
+                  "session_summary": null,
+                  "cache_review": null,
+                  "summary_schema": null,
+                  "reporting_url": null,
+                  "tool_outcomes": null,
+                  "native_tool": null,
+                  "slow_reason": null,
+                  "scenario_seconds": 94.0,
+                  "scenario_metric_source": "rolling_first_build_seconds",
+                  "tool_elapsed_seconds": 94.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 94.0
+                  }
+                },
                 {
                   "run_id": 33720452953,
                   "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/33720452953",
@@ -23766,76 +23830,12 @@
                   "tool_elapsed_components": {
                     "scenario_seconds": 104.0
                   }
-                },
-                {
-                  "run_id": 33678939229,
-                  "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/33678939229",
-                  "head_sha": "84b0965ae2ecce8479146ab81ce89ca8aa75f3ee",
-                  "created_at": "2026-09-02T20:23:01Z",
-                  "cold_seconds": null,
-                  "cold_build_seconds": null,
-                  "cold_restore_or_setup_seconds": null,
-                  "warm1_seconds": null,
-                  "warm1_build_seconds": null,
-                  "warm1_restore_or_setup_seconds": null,
-                  "warm2_seconds": null,
-                  "warm_average_seconds": null,
-                  "warm_steady_seconds": null,
-                  "rolling_first_build_seconds": 383.0,
-                  "rolling_warm_seconds": null,
-                  "run_total_seconds": 407.0,
-                  "storage_bytes": null,
-                  "storage_source": null,
-                  "storage_breakdown": null,
-                  "network_bytes_uploaded": null,
-                  "network_bytes_uploaded_source": null,
-                  "docker_cache_import_seconds": null,
-                  "docker_cache_export_seconds": null,
-                  "startup_prefetch": {},
-                  "oci": {},
-                  "classification": {
-                    "sample_valid": true,
-                    "reporting_mode": "comparative",
-                    "validity_reason": "provider does not expose cache import evidence",
-                    "cache_import_status": "unknown"
-                  },
-                  "product_refs": {
-                    "schema_version": 1
-                  },
-                  "product_refs_consistent": false,
-                  "launch_proof_paths": [],
-                  "workspace": null,
-                  "cache_tag": null,
-                  "run_uid": "gh-33678939229-1",
-                  "mode": "bazel",
-                  "adapter": "bazel",
-                  "docker_cache_from_refs": null,
-                  "docker_cache_import_ready": null,
-                  "http_transport": null,
-                  "http2_enabled": null,
-                  "oci_stream_through_min_bytes": null,
-                  "restore_result": null,
-                  "save_result": null,
-                  "publish_status": null,
-                  "session_summary": null,
-                  "cache_review": null,
-                  "summary_schema": null,
-                  "reporting_url": null,
-                  "tool_outcomes": null,
-                  "native_tool": null,
-                  "slow_reason": null,
-                  "scenario_seconds": 383.0,
-                  "scenario_metric_source": "rolling_first_build_seconds",
-                  "tool_elapsed_seconds": 383.0,
-                  "tool_elapsed_components": {
-                    "scenario_seconds": 383.0
-                  }
                 }
               ],
               "headline": {
                 "metric": "tool_elapsed_seconds",
                 "label": "Tool Elapsed",
-                "seconds": 348.6666666666667,
+                "seconds": 252.33333333333334,
                 "sample_count": 3
               }
             }
@@ -23863,45 +23863,45 @@
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
-              "latest_run_id": 33720452953,
-              "latest_run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/33720452953",
-              "latest_head_sha": "7e38892fb873c6b23418a6a9c460ada718b18323",
-              "latest_created_at": "2026-09-03T05:48:57Z",
+              "latest_run_id": 33728120012,
+              "latest_run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/33728120012",
+              "latest_head_sha": "f8d772b6a5018e8ccc2a063feb97da49899d9642",
+              "latest_created_at": "2026-09-03T07:26:37Z",
               "sample_run_ids": [
+                33728120012,
                 33720452953,
-                33711129289,
-                33678939229
+                33711129289
               ],
               "sample_run_urls": [
+                "https://github.com/boringcache/benchmark-grpc/actions/runs/33728120012",
                 "https://github.com/boringcache/benchmark-grpc/actions/runs/33720452953",
-                "https://github.com/boringcache/benchmark-grpc/actions/runs/33711129289",
-                "https://github.com/boringcache/benchmark-grpc/actions/runs/33678939229"
+                "https://github.com/boringcache/benchmark-grpc/actions/runs/33711129289"
               ],
               "sample_head_shas": [
+                "f8d772b6a5018e8ccc2a063feb97da49899d9642",
                 "7e38892fb873c6b23418a6a9c460ada718b18323",
-                "2aab27ac248946d1388431c25f04091da2309e2c",
-                "84b0965ae2ecce8479146ab81ce89ca8aa75f3ee"
+                "2aab27ac248946d1388431c25f04091da2309e2c"
               ],
               "summary": {
-                "run_id": 33720452953,
-                "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/33720452953",
-                "head_sha": "7e38892fb873c6b23418a6a9c460ada718b18323",
-                "created_at": "2026-09-03T05:48:57Z",
+                "run_id": 33728120012,
+                "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/33728120012",
+                "head_sha": "f8d772b6a5018e8ccc2a063feb97da49899d9642",
+                "created_at": "2026-09-03T07:26:37Z",
                 "sample_count": 3,
                 "sample_run_ids": [
+                  33728120012,
                   33720452953,
-                  33711129289,
-                  33678939229
+                  33711129289
                 ],
                 "sample_run_urls": [
+                  "https://github.com/boringcache/benchmark-grpc/actions/runs/33728120012",
                   "https://github.com/boringcache/benchmark-grpc/actions/runs/33720452953",
-                  "https://github.com/boringcache/benchmark-grpc/actions/runs/33711129289",
-                  "https://github.com/boringcache/benchmark-grpc/actions/runs/33678939229"
+                  "https://github.com/boringcache/benchmark-grpc/actions/runs/33711129289"
                 ],
                 "head_shas": [
+                  "f8d772b6a5018e8ccc2a063feb97da49899d9642",
                   "7e38892fb873c6b23418a6a9c460ada718b18323",
-                  "2aab27ac248946d1388431c25f04091da2309e2c",
-                  "84b0965ae2ecce8479146ab81ce89ca8aa75f3ee"
+                  "2aab27ac248946d1388431c25f04091da2309e2c"
                 ],
                 "cold_seconds": null,
                 "cold_build_seconds": null,
@@ -23912,9 +23912,9 @@
                 "warm2_seconds": null,
                 "warm_average_seconds": null,
                 "warm_steady_seconds": null,
-                "rolling_first_build_seconds": 286.0,
+                "rolling_first_build_seconds": 194.33333333333334,
                 "rolling_warm_seconds": null,
-                "run_total_seconds": 375.3333333333333,
+                "run_total_seconds": 290.3333333333333,
                 "storage_bytes": null,
                 "network_bytes_uploaded": null,
                 "docker_cache_import_seconds": null,
@@ -23925,16 +23925,81 @@
                   "cli_version": "v1.20.0",
                   "schema_version": 1
                 },
-                "product_refs_consistent": false,
-                "workspace": "boringcache/benchmark-grpc",
-                "cache_tag": "grpc-bazel-rolling-main",
-                "run_uid": "gh-33720452953-1",
+                "product_refs_consistent": true,
+                "run_uid": "gh-33728120012-1",
                 "mode": "bazel",
                 "adapter": "bazel",
-                "scenario_seconds": 286.0,
-                "tool_elapsed_seconds": 286.0
+                "scenario_seconds": 194.33333333333334,
+                "tool_elapsed_seconds": 194.33333333333334
               },
               "samples": [
+                {
+                  "run_id": 33728120012,
+                  "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/33728120012",
+                  "head_sha": "f8d772b6a5018e8ccc2a063feb97da49899d9642",
+                  "created_at": "2026-09-03T07:26:37Z",
+                  "cold_seconds": null,
+                  "cold_build_seconds": null,
+                  "cold_restore_or_setup_seconds": null,
+                  "warm1_seconds": null,
+                  "warm1_build_seconds": null,
+                  "warm1_restore_or_setup_seconds": null,
+                  "warm2_seconds": null,
+                  "warm_average_seconds": null,
+                  "warm_steady_seconds": null,
+                  "rolling_first_build_seconds": 108.0,
+                  "rolling_warm_seconds": null,
+                  "run_total_seconds": 152.0,
+                  "storage_bytes": null,
+                  "storage_source": null,
+                  "storage_breakdown": null,
+                  "network_bytes_uploaded": null,
+                  "network_bytes_uploaded_source": null,
+                  "docker_cache_import_seconds": null,
+                  "docker_cache_export_seconds": null,
+                  "startup_prefetch": {},
+                  "oci": {},
+                  "classification": {
+                    "sample_valid": true,
+                    "reporting_mode": "comparative",
+                    "validity_reason": "provider does not expose cache import evidence",
+                    "cache_import_status": "unknown"
+                  },
+                  "product_refs": {
+                    "schema_version": 1,
+                    "cli_version": "v1.20.0",
+                    "action_ref": "boringcache/one@20202f4c4b789cdee581ae3f117dfafb8293b19c",
+                    "action_sha": "20202f4c4b789cdee581ae3f117dfafb8293b19c"
+                  },
+                  "product_refs_consistent": true,
+                  "launch_proof_paths": [],
+                  "workspace": null,
+                  "cache_tag": null,
+                  "run_uid": "gh-33728120012-1",
+                  "mode": "bazel",
+                  "adapter": "bazel",
+                  "docker_cache_from_refs": null,
+                  "docker_cache_import_ready": null,
+                  "http_transport": null,
+                  "http2_enabled": null,
+                  "oci_stream_through_min_bytes": null,
+                  "restore_result": null,
+                  "save_result": null,
+                  "publish_status": null,
+                  "session_summary": null,
+                  "cache_review": null,
+                  "summary_schema": null,
+                  "reporting_url": null,
+                  "tool_outcomes": null,
+                  "native_tool": null,
+                  "slow_reason": null,
+                  "scenario_seconds": 108.0,
+                  "scenario_metric_source": "rolling_first_build_seconds",
+                  "tool_elapsed_seconds": 108.0,
+                  "tool_elapsed_components": {
+                    "scenario_seconds": 108.0
+                  }
+                },
                 {
                   "run_id": 33720452953,
                   "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/33720452953",
@@ -24068,79 +24133,12 @@
                   "tool_elapsed_components": {
                     "scenario_seconds": 115.0
                   }
-                },
-                {
-                  "run_id": 33678939229,
-                  "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/33678939229",
-                  "head_sha": "84b0965ae2ecce8479146ab81ce89ca8aa75f3ee",
-                  "created_at": "2026-09-02T20:23:01Z",
-                  "cold_seconds": null,
-                  "cold_build_seconds": null,
-                  "cold_restore_or_setup_seconds": null,
-                  "warm1_seconds": null,
-                  "warm1_build_seconds": null,
-                  "warm1_restore_or_setup_seconds": null,
-                  "warm2_seconds": null,
-                  "warm_average_seconds": null,
-                  "warm_steady_seconds": null,
-                  "rolling_first_build_seconds": 383.0,
-                  "rolling_warm_seconds": null,
-                  "run_total_seconds": 407.0,
-                  "storage_bytes": null,
-                  "storage_source": null,
-                  "storage_breakdown": null,
-                  "network_bytes_uploaded": null,
-                  "network_bytes_uploaded_source": null,
-                  "docker_cache_import_seconds": null,
-                  "docker_cache_export_seconds": null,
-                  "startup_prefetch": {},
-                  "oci": {},
-                  "classification": {
-                    "sample_valid": true,
-                    "reporting_mode": "comparative",
-                    "validity_reason": "provider does not expose cache import evidence",
-                    "cache_import_status": "unknown"
-                  },
-                  "product_refs": {
-                    "schema_version": 1,
-                    "cli_version": "v1.19.6",
-                    "action_ref": "boringcache/one@aac19c43035c9d77cfc2573f663d35ea3fce2868",
-                    "action_sha": "aac19c43035c9d77cfc2573f663d35ea3fce2868"
-                  },
-                  "product_refs_consistent": true,
-                  "launch_proof_paths": [],
-                  "workspace": "boringcache/benchmark-grpc",
-                  "cache_tag": "grpc-bazel-rolling-main",
-                  "run_uid": "gh-33678939229-1",
-                  "mode": "bazel",
-                  "adapter": "bazel",
-                  "docker_cache_from_refs": null,
-                  "docker_cache_import_ready": null,
-                  "http_transport": null,
-                  "http2_enabled": null,
-                  "oci_stream_through_min_bytes": null,
-                  "restore_result": null,
-                  "save_result": null,
-                  "publish_status": null,
-                  "session_summary": null,
-                  "cache_review": null,
-                  "summary_schema": null,
-                  "reporting_url": null,
-                  "tool_outcomes": null,
-                  "native_tool": null,
-                  "slow_reason": null,
-                  "scenario_seconds": 383.0,
-                  "scenario_metric_source": "rolling_first_build_seconds",
-                  "tool_elapsed_seconds": 383.0,
-                  "tool_elapsed_components": {
-                    "scenario_seconds": 383.0
-                  }
                 }
               ],
               "headline": {
                 "metric": "tool_elapsed_seconds",
                 "label": "Tool Elapsed",
-                "seconds": 286.0,
+                "seconds": 194.33333333333334,
                 "sample_count": 3
               }
             }
@@ -43558,8 +43556,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 32,
-              "unique_head_count": 32,
+              "successful_run_count": 27,
+              "unique_head_count": 27,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -43567,8 +43565,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 32,
-              "unique_head_count": 32,
+              "successful_run_count": 27,
+              "unique_head_count": 27,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -43849,8 +43847,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 32,
-              "unique_head_count": 32,
+              "successful_run_count": 27,
+              "unique_head_count": 27,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -43858,8 +43856,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 32,
-              "unique_head_count": 32,
+              "successful_run_count": 27,
+              "unique_head_count": 27,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -44169,8 +44167,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -44178,8 +44176,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -44460,8 +44458,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -44469,8 +44467,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -44771,8 +44769,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -44780,8 +44778,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -44796,8 +44794,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -44805,8 +44803,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -44830,8 +44828,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -44839,8 +44837,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -45121,8 +45119,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -45130,8 +45128,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -45432,8 +45430,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -45441,8 +45439,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -45457,8 +45455,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -45466,8 +45464,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -45491,8 +45489,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -45500,8 +45498,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -45782,8 +45780,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -45791,8 +45789,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "healthy",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 3,
               "window_sample_target": 3,
               "storage_available": true,
@@ -46093,8 +46091,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -46102,8 +46100,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": false
@@ -46118,8 +46116,8 @@
             "fresh": {
               "lane": "fresh",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
@@ -46127,8 +46125,8 @@
             "rolling": {
               "lane": "rolling",
               "state": "missing_sample",
-              "successful_run_count": 31,
-              "unique_head_count": 31,
+              "successful_run_count": 26,
+              "unique_head_count": 26,
               "selected_sample_count": 0,
               "window_sample_target": 3,
               "storage_available": true
