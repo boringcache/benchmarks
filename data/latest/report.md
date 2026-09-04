@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-04 02:11 UTC
+Generated: 2026-09-04 05:44 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 7/20.
 
@@ -21,7 +21,7 @@ Rows are latest complete same-commit pairs.
 | Storybook | Warm Build | 5m 30s | 5m 31s | invalid sample | n/a |
 | OpenTelemetry Java | Warm Build | 2m 42s | 16m 11s | invalid sample | n/a |
 | Spring AI | Cold Build | 7m 5s | 7m 58s | 12% slower | n/a |
-| gRPC | Warm Build | 1m 10s | 1m 25s | invalid sample | n/a |
+| gRPC | Warm Build | 1m 22s | 2m 0s | invalid sample | n/a |
 | Duckgres | Cold Build | 5m 38s | 3m 59s | 29% faster | n/a |
 | Chroma | Warm Build | 68m 24s | 68m 20s | near tie | n/a |
 | Linkerd2 Web | Cold Build | 4m 8s | 3m 19s | 20% faster | n/a |
