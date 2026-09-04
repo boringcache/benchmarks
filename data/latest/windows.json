@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-03T21:28:19Z",
+  "generated_at": "2026-09-04T02:11:23Z",
   "window_pair_target": 3,
   "entries": [
     {
@@ -9744,47 +9744,47 @@
       "public": false,
       "category": "docker",
       "step": "Docker build (Rust CLI image)",
-      "headline_scenario": "cold",
-      "headline_label": "Cold Build",
-      "before": "76m 49s",
-      "after": "83m 58s",
-      "before_seconds": 4609.0,
-      "after_seconds": 5038.0,
+      "headline_scenario": "warm",
+      "headline_label": "Warm Build",
+      "before": "68m 24s",
+      "after": "68m 20s",
+      "before_seconds": 4104.0,
+      "after_seconds": 4100.0,
       "faster": "0",
       "comparison": {
         "paired_on_head_sha": true,
-        "pairing_head_sha": "78b6df196a50d0d1299f2b73f98b302a459f235d",
+        "pairing_head_sha": "5b1398c3173fdd947d63e5f51a0105c6dff3faef",
         "pairing_head_shas": [
-          "78b6df196a50d0d1299f2b73f98b302a459f235d"
+          "5b1398c3173fdd947d63e5f51a0105c6dff3faef"
         ],
         "sample_count": 1,
         "actions_cache": {
-          "run_id": 33352691607,
-          "run_url": "https://github.com/boringcache/benchmark-chroma/actions/runs/33352691607",
-          "head_sha": "78b6df196a50d0d1299f2b73f98b302a459f235d",
-          "created_at": "2026-08-31T03:05:23Z",
+          "run_id": 33795557754,
+          "run_url": "https://github.com/boringcache/benchmark-chroma/actions/runs/33795557754",
+          "head_sha": "5b1398c3173fdd947d63e5f51a0105c6dff3faef",
+          "created_at": "2026-09-03T19:17:26Z",
           "sample_count": 1,
           "sample_run_ids": [
-            33352691607
+            33795557754
           ],
           "sample_run_urls": [
-            "https://github.com/boringcache/benchmark-chroma/actions/runs/33352691607"
+            "https://github.com/boringcache/benchmark-chroma/actions/runs/33795557754"
           ],
           "head_shas": [
-            "78b6df196a50d0d1299f2b73f98b302a459f235d"
+            "5b1398c3173fdd947d63e5f51a0105c6dff3faef"
           ],
-          "cold_seconds": 4609.0,
-          "cold_build_seconds": 4596.0,
-          "cold_restore_or_setup_seconds": 13.0,
-          "warm1_seconds": 15.0,
-          "warm1_build_seconds": 7.0,
-          "warm1_restore_or_setup_seconds": 8.0,
+          "cold_seconds": 4373.0,
+          "cold_build_seconds": 4367.0,
+          "cold_restore_or_setup_seconds": 6.0,
+          "warm1_seconds": 4104.0,
+          "warm1_build_seconds": 4097.0,
+          "warm1_restore_or_setup_seconds": 7.0,
           "warm2_seconds": null,
-          "warm_average_seconds": 15.0,
-          "warm_steady_seconds": 15.0,
+          "warm_average_seconds": 4104.0,
+          "warm_steady_seconds": 4104.0,
           "rolling_first_build_seconds": null,
           "rolling_warm_seconds": null,
-          "run_total_seconds": 5048.0,
+          "run_total_seconds": 4426.0,
           "storage_bytes": null,
           "network_bytes_uploaded": null,
           "docker_cache_import_seconds": null,
@@ -9793,51 +9793,51 @@
             "schema_version": 1
           },
           "product_refs_consistent": true,
-          "run_uid": "gh-33352691607-1",
+          "run_uid": "gh-33795557754-1",
           "mode": "docker",
           "adapter": "docker"
         },
         "boringcache": {
-          "run_id": 33352691607,
-          "run_url": "https://github.com/boringcache/benchmark-chroma/actions/runs/33352691607",
-          "head_sha": "78b6df196a50d0d1299f2b73f98b302a459f235d",
-          "created_at": "2026-08-31T03:05:23Z",
+          "run_id": 33795557754,
+          "run_url": "https://github.com/boringcache/benchmark-chroma/actions/runs/33795557754",
+          "head_sha": "5b1398c3173fdd947d63e5f51a0105c6dff3faef",
+          "created_at": "2026-09-03T19:17:26Z",
           "sample_count": 1,
           "sample_run_ids": [
-            33352691607
+            33795557754
           ],
           "sample_run_urls": [
-            "https://github.com/boringcache/benchmark-chroma/actions/runs/33352691607"
+            "https://github.com/boringcache/benchmark-chroma/actions/runs/33795557754"
           ],
           "head_shas": [
-            "78b6df196a50d0d1299f2b73f98b302a459f235d"
+            "5b1398c3173fdd947d63e5f51a0105c6dff3faef"
           ],
-          "cold_seconds": 5038.0,
-          "cold_build_seconds": 5038.0,
+          "cold_seconds": 4408.0,
+          "cold_build_seconds": 4408.0,
           "cold_restore_or_setup_seconds": 0.0,
-          "warm1_seconds": 17.0,
-          "warm1_build_seconds": 17.0,
+          "warm1_seconds": 4100.0,
+          "warm1_build_seconds": 4100.0,
           "warm1_restore_or_setup_seconds": 0.0,
           "warm2_seconds": null,
-          "warm_average_seconds": 17.0,
-          "warm_steady_seconds": 17.0,
+          "warm_average_seconds": 4100.0,
+          "warm_steady_seconds": 4100.0,
           "rolling_first_build_seconds": null,
           "rolling_warm_seconds": null,
-          "run_total_seconds": 5048.0,
+          "run_total_seconds": 4426.0,
           "storage_bytes": null,
           "network_bytes_uploaded": null,
           "docker_cache_import_seconds": null,
           "docker_cache_export_seconds": null,
           "product_refs": {
-            "action_ref": "boringcache/one@aac19c43035c9d77cfc2573f663d35ea3fce2868",
-            "action_sha": "aac19c43035c9d77cfc2573f663d35ea3fce2868",
-            "cli_version": "v1.19.6",
+            "action_ref": "boringcache/one@4d152565a19570e669c54269f537ad2394bf1fe5",
+            "action_sha": "4d152565a19570e669c54269f537ad2394bf1fe5",
+            "cli_version": "v1.20.2",
             "schema_version": 1
           },
           "product_refs_consistent": true,
           "workspace": "boringcache/benchmark-chroma",
-          "cache_tag": "chroma-run-r33352691607-a1-docker",
-          "run_uid": "gh-33352691607-1",
+          "cache_tag": "chroma-run-r33795557754-a1-docker",
+          "run_uid": "gh-33795557754-1",
           "mode": "docker",
           "adapter": "docker",
           "classification": {
@@ -9859,9 +9859,9 @@
               "source_sample_count": 3,
               "excluded_sample_count": 2,
               "product_refs": {
-                "action_ref": "boringcache/one@aac19c43035c9d77cfc2573f663d35ea3fce2868",
-                "action_sha": "aac19c43035c9d77cfc2573f663d35ea3fce2868",
-                "cli_version": "v1.19.6",
+                "action_ref": "boringcache/one@4d152565a19570e669c54269f537ad2394bf1fe5",
+                "action_sha": "4d152565a19570e669c54269f537ad2394bf1fe5",
+                "cli_version": "v1.20.2",
                 "schema_version": 1
               }
             }
@@ -9870,10 +9870,10 @@
         "reporting": {
           "comparative": true
         },
-        "warm_improvement_pct": -13.33,
-        "warm_build_improvement_pct": -142.86,
-        "cold_improvement_pct": -9.31,
-        "cold_build_improvement_pct": -9.62,
+        "warm_improvement_pct": 0.1,
+        "warm_build_improvement_pct": -0.07,
+        "cold_improvement_pct": -0.8,
+        "cold_build_improvement_pct": -0.94,
         "storage_improvement_pct": null,
         "storage_saved_bytes": null,
         "product_cohort": {
@@ -9881,9 +9881,9 @@
           "source_sample_count": 3,
           "excluded_sample_count": 2,
           "product_refs": {
-            "action_ref": "boringcache/one@aac19c43035c9d77cfc2573f663d35ea3fce2868",
-            "action_sha": "aac19c43035c9d77cfc2573f663d35ea3fce2868",
-            "cli_version": "v1.19.6",
+            "action_ref": "boringcache/one@4d152565a19570e669c54269f537ad2394bf1fe5",
+            "action_sha": "4d152565a19570e669c54269f537ad2394bf1fe5",
+            "cli_version": "v1.20.2",
             "schema_version": 1
           }
         }
@@ -9907,47 +9907,47 @@
           "public": false,
           "category": "docker",
           "step": "Docker build (Rust CLI image)",
-          "headline_scenario": "cold",
-          "headline_label": "Cold Build",
-          "before": "76m 49s",
-          "after": "83m 58s",
-          "before_seconds": 4609.0,
-          "after_seconds": 5038.0,
+          "headline_scenario": "warm",
+          "headline_label": "Warm Build",
+          "before": "68m 24s",
+          "after": "68m 20s",
+          "before_seconds": 4104.0,
+          "after_seconds": 4100.0,
           "faster": "0",
           "comparison": {
             "paired_on_head_sha": true,
-            "pairing_head_sha": "78b6df196a50d0d1299f2b73f98b302a459f235d",
+            "pairing_head_sha": "5b1398c3173fdd947d63e5f51a0105c6dff3faef",
             "pairing_head_shas": [
-              "78b6df196a50d0d1299f2b73f98b302a459f235d"
+              "5b1398c3173fdd947d63e5f51a0105c6dff3faef"
             ],
             "sample_count": 1,
             "actions_cache": {
-              "run_id": 33352691607,
-              "run_url": "https://github.com/boringcache/benchmark-chroma/actions/runs/33352691607",
-              "head_sha": "78b6df196a50d0d1299f2b73f98b302a459f235d",
-              "created_at": "2026-08-31T03:05:23Z",
+              "run_id": 33795557754,
+              "run_url": "https://github.com/boringcache/benchmark-chroma/actions/runs/33795557754",
+              "head_sha": "5b1398c3173fdd947d63e5f51a0105c6dff3faef",
+              "created_at": "2026-09-03T19:17:26Z",
               "sample_count": 1,
               "sample_run_ids": [
-                33352691607
+                33795557754
               ],
               "sample_run_urls": [
-                "https://github.com/boringcache/benchmark-chroma/actions/runs/33352691607"
+                "https://github.com/boringcache/benchmark-chroma/actions/runs/33795557754"
               ],
               "head_shas": [
-                "78b6df196a50d0d1299f2b73f98b302a459f235d"
+                "5b1398c3173fdd947d63e5f51a0105c6dff3faef"
               ],
-              "cold_seconds": 4609.0,
-              "cold_build_seconds": 4596.0,
-              "cold_restore_or_setup_seconds": 13.0,
-              "warm1_seconds": 15.0,
-              "warm1_build_seconds": 7.0,
-              "warm1_restore_or_setup_seconds": 8.0,
+              "cold_seconds": 4373.0,
+              "cold_build_seconds": 4367.0,
+              "cold_restore_or_setup_seconds": 6.0,
+              "warm1_seconds": 4104.0,
+              "warm1_build_seconds": 4097.0,
+              "warm1_restore_or_setup_seconds": 7.0,
               "warm2_seconds": null,
-              "warm_average_seconds": 15.0,
-              "warm_steady_seconds": 15.0,
+              "warm_average_seconds": 4104.0,
+              "warm_steady_seconds": 4104.0,
               "rolling_first_build_seconds": null,
               "rolling_warm_seconds": null,
-              "run_total_seconds": 5048.0,
+              "run_total_seconds": 4426.0,
               "storage_bytes": null,
               "network_bytes_uploaded": null,
               "docker_cache_import_seconds": null,
@@ -9956,51 +9956,51 @@
                 "schema_version": 1
               },
               "product_refs_consistent": true,
-              "run_uid": "gh-33352691607-1",
+              "run_uid": "gh-33795557754-1",
               "mode": "docker",
               "adapter": "docker"
             },
             "boringcache": {
-              "run_id": 33352691607,
-              "run_url": "https://github.com/boringcache/benchmark-chroma/actions/runs/33352691607",
-              "head_sha": "78b6df196a50d0d1299f2b73f98b302a459f235d",
-              "created_at": "2026-08-31T03:05:23Z",
+              "run_id": 33795557754,
+              "run_url": "https://github.com/boringcache/benchmark-chroma/actions/runs/33795557754",
+              "head_sha": "5b1398c3173fdd947d63e5f51a0105c6dff3faef",
+              "created_at": "2026-09-03T19:17:26Z",
               "sample_count": 1,
               "sample_run_ids": [
-                33352691607
+                33795557754
               ],
               "sample_run_urls": [
-                "https://github.com/boringcache/benchmark-chroma/actions/runs/33352691607"
+                "https://github.com/boringcache/benchmark-chroma/actions/runs/33795557754"
               ],
               "head_shas": [
-                "78b6df196a50d0d1299f2b73f98b302a459f235d"
+                "5b1398c3173fdd947d63e5f51a0105c6dff3faef"
               ],
-              "cold_seconds": 5038.0,
-              "cold_build_seconds": 5038.0,
+              "cold_seconds": 4408.0,
+              "cold_build_seconds": 4408.0,
               "cold_restore_or_setup_seconds": 0.0,
-              "warm1_seconds": 17.0,
-              "warm1_build_seconds": 17.0,
+              "warm1_seconds": 4100.0,
+              "warm1_build_seconds": 4100.0,
               "warm1_restore_or_setup_seconds": 0.0,
               "warm2_seconds": null,
-              "warm_average_seconds": 17.0,
-              "warm_steady_seconds": 17.0,
+              "warm_average_seconds": 4100.0,
+              "warm_steady_seconds": 4100.0,
               "rolling_first_build_seconds": null,
               "rolling_warm_seconds": null,
-              "run_total_seconds": 5048.0,
+              "run_total_seconds": 4426.0,
               "storage_bytes": null,
               "network_bytes_uploaded": null,
               "docker_cache_import_seconds": null,
               "docker_cache_export_seconds": null,
               "product_refs": {
-                "action_ref": "boringcache/one@aac19c43035c9d77cfc2573f663d35ea3fce2868",
-                "action_sha": "aac19c43035c9d77cfc2573f663d35ea3fce2868",
-                "cli_version": "v1.19.6",
+                "action_ref": "boringcache/one@4d152565a19570e669c54269f537ad2394bf1fe5",
+                "action_sha": "4d152565a19570e669c54269f537ad2394bf1fe5",
+                "cli_version": "v1.20.2",
                 "schema_version": 1
               },
               "product_refs_consistent": true,
               "workspace": "boringcache/benchmark-chroma",
-              "cache_tag": "chroma-run-r33352691607-a1-docker",
-              "run_uid": "gh-33352691607-1",
+              "cache_tag": "chroma-run-r33795557754-a1-docker",
+              "run_uid": "gh-33795557754-1",
               "mode": "docker",
               "adapter": "docker",
               "classification": {
@@ -10022,9 +10022,9 @@
                   "source_sample_count": 3,
                   "excluded_sample_count": 2,
                   "product_refs": {
-                    "action_ref": "boringcache/one@aac19c43035c9d77cfc2573f663d35ea3fce2868",
-                    "action_sha": "aac19c43035c9d77cfc2573f663d35ea3fce2868",
-                    "cli_version": "v1.19.6",
+                    "action_ref": "boringcache/one@4d152565a19570e669c54269f537ad2394bf1fe5",
+                    "action_sha": "4d152565a19570e669c54269f537ad2394bf1fe5",
+                    "cli_version": "v1.20.2",
                     "schema_version": 1
                   }
                 }
@@ -10033,10 +10033,10 @@
             "reporting": {
               "comparative": true
             },
-            "warm_improvement_pct": -13.33,
-            "warm_build_improvement_pct": -142.86,
-            "cold_improvement_pct": -9.31,
-            "cold_build_improvement_pct": -9.62,
+            "warm_improvement_pct": 0.1,
+            "warm_build_improvement_pct": -0.07,
+            "cold_improvement_pct": -0.8,
+            "cold_build_improvement_pct": -0.94,
             "storage_improvement_pct": null,
             "storage_saved_bytes": null,
             "product_cohort": {
@@ -10044,9 +10044,9 @@
               "source_sample_count": 3,
               "excluded_sample_count": 2,
               "product_refs": {
-                "action_ref": "boringcache/one@aac19c43035c9d77cfc2573f663d35ea3fce2868",
-                "action_sha": "aac19c43035c9d77cfc2573f663d35ea3fce2868",
-                "cli_version": "v1.19.6",
+                "action_ref": "boringcache/one@4d152565a19570e669c54269f537ad2394bf1fe5",
+                "action_sha": "4d152565a19570e669c54269f537ad2394bf1fe5",
+                "cli_version": "v1.20.2",
                 "schema_version": 1
               }
             }
