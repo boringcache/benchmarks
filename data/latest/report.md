@@ -1,8 +1,8 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-04 05:44 UTC
+Generated: 2026-09-04 09:44 UTC
 
-Coverage: 20 benchmarks; fresh 20/20, rolling 7/20.
+Coverage: 20 benchmarks; fresh 20/20, rolling 8/20.
 
 Rows are latest complete same-commit pairs.
 
@@ -42,3 +42,4 @@ Rows are latest complete same-commit pairs.
 | Duckgres | Commit Build | 5m 49s | 4m 20s | 26% faster | n/a |
 | Chroma | Commit Build | 20m 21s | 10m 54s | 46% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 16s | 0m 9s | 44% faster | n/a |
+| n8n | Commit Build | 4m 11s | 3m 31s | 16% faster | 1.96 GB less (41.64%) |
