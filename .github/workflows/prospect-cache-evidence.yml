@@ -19,7 +19,11 @@ jobs:
       - uses: ./harness/.github/actions/prospect-cli
       - name: Retain the public workspace cache inventory
         shell: bash
-        run: boringcache ci run --oidc-provider github-actions -- boringcache ls boringcache/benchmarks --limit 100 --json > "$RUNNER_TEMP/prospect-evidence/cache-inventory.json"
+        run: |
+          boringcache ci run --oidc-provider github-actions -- boringcache ls boringcache/benchmarks --limit 100 --json > "$RUNNER_TEMP/prospect-evidence/cache-inventory.json"
+          for project in waterui status-list-server ferrum-edge cadence dotcms loomarr; do
+            boringcache ci run --oidc-provider github-actions -- boringcache tags boringcache/benchmarks --filter "$project" --limit 100 --json > "$RUNNER_TEMP/prospect-evidence/$project-tags.json"
+          done
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
