@@ -1,0 +1,191 @@
+name: Prospect dotcms rolling
+'on':
+  push:
+    branches:
+    - prospect-validation
+    paths:
+    - .github/workflows/prospect-rolling-dotcms.yml
+  workflow_dispatch:
+    inputs:
+      cli_version:
+        description: Optional exact BoringCache CLI release override
+        type: string
+        required: false
+        default: ''
+permissions:
+  contents: read
+concurrency:
+  group: prospect-rolling-dotcms-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  seed:
+    name: BoringCache dotcms rolling seed
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+      NX_DAEMON: 'false'
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/core
+        ref: 5d96ccd842b2945006e3ecba9b8ea0c65238cec1
+        path: source
+        submodules: false
+        persist-credentials: false
+        fetch-depth: 2
+    - uses: ./harness/.github/actions/prospect-dotcms
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py dotcms boringcache seed 0
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: dotcms-boringcache-rolling-seed
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+  commit1:
+    name: BoringCache dotcms rolling commit1
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+      NX_DAEMON: 'false'
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/core
+        ref: 5a9287de90384d604bab9d65fb6b6550bdf0d10f
+        path: source
+        submodules: false
+        persist-credentials: false
+        fetch-depth: 2
+    - uses: ./harness/.github/actions/prospect-dotcms
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py dotcms boringcache commit1 1
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: dotcms-boringcache-rolling-commit1
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: seed
+  commit2:
+    name: BoringCache dotcms rolling commit2
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+      NX_DAEMON: 'false'
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/core
+        ref: 1349c15c88e3c6ba1ed6caf025e6b98314cc42cf
+        path: source
+        submodules: false
+        persist-credentials: false
+        fetch-depth: 2
+    - uses: ./harness/.github/actions/prospect-dotcms
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py dotcms boringcache commit2 2
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: dotcms-boringcache-rolling-commit2
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: commit1
+  commit3:
+    name: BoringCache dotcms rolling commit3
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+      NX_DAEMON: 'false'
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/core
+        ref: dab8b385c412bf40dfa7157b08e99a2666b482b4
+        path: source
+        submodules: false
+        persist-credentials: false
+        fetch-depth: 2
+    - uses: ./harness/.github/actions/prospect-dotcms
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py dotcms boringcache commit3 3
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: dotcms-boringcache-rolling-commit3
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: commit2

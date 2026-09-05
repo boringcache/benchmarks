@@ -11,9 +11,17 @@ import tomllib
 
 
 def main():
-    case, provider, phase = sys.argv[1:]
-    sources = json.loads(Path(__file__).with_name("sources.json").read_text())
-    source = sources[case]
+    case, provider, phase, *rolling_index = sys.argv[1:]
+    rolling = bool(rolling_index)
+    if rolling:
+        if len(rolling_index) != 1 or provider != "boringcache":
+            raise SystemExit("Rolling measurements require one BoringCache source index")
+        sources = json.loads(Path(__file__).with_name("rolling-sources.json").read_text())
+        source = sources[case]["commits"][int(rolling_index[0])]
+    else:
+        sources = json.loads(Path(__file__).with_name("sources.json").read_text())
+        source = sources[case]
+    publish = rolling or phase == "cold"
     checkout = Path(os.environ["GITHUB_WORKSPACE"]) / "source"
     cwd = checkout / source["working_directory"]
     evidence = Path(os.environ["RUNNER_TEMP"]) / "prospect-evidence"
@@ -24,6 +32,12 @@ def main():
     ).strip()
     if sha != source["source_sha"]:
         raise SystemExit("The checkout differs from the pinned prospect source")
+    if rolling and source.get("source_parent"):
+        parent = subprocess.check_output(
+            ["git", "rev-parse", "HEAD^"], cwd=checkout, text=True
+        ).strip()
+        if parent != source["source_parent"]:
+            raise SystemExit("The rolling checkout is not the next pinned commit")
 
     plan = tomllib.loads((cwd / ".boringcache.toml").read_text())
     mode = source["mode"]
@@ -35,7 +49,7 @@ def main():
             "gradle"
             if provider == "github"
             else "boringcache"
-            if phase == "cold"
+            if publish
             else "boringcache-restore"
         )
         if provider == "boringcache":
@@ -58,7 +72,7 @@ def main():
             "--",
             "boringcache",
             mode,
-            "--write" if phase == "cold" else "--read-only",
+            "--write" if publish else "--read-only",
             "--fail-on-cache-error",
         ]
     elif mode == "docker":
@@ -72,6 +86,7 @@ def main():
         "case": case,
         "provider": provider,
         "phase": phase,
+        "lane": "rolling" if rolling else "fresh",
         "command": command,
         "workflow_sha": os.environ["GITHUB_SHA"],
         "run_id": os.environ["GITHUB_RUN_ID"],

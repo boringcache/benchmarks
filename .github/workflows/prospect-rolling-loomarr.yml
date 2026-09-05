@@ -1,0 +1,191 @@
+name: Prospect loomarr rolling
+'on':
+  push:
+    branches:
+    - prospect-validation
+    paths:
+    - .github/workflows/prospect-rolling-loomarr.yml
+  workflow_dispatch:
+    inputs:
+      cli_version:
+        description: Optional exact BoringCache CLI release override
+        type: string
+        required: false
+        default: ''
+permissions:
+  contents: read
+concurrency:
+  group: prospect-rolling-loomarr-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  seed:
+    name: BoringCache loomarr rolling seed
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      GRADLE_USER_HOME: ${{ github.workspace }}/gradle-home
+      ANDROID_CI_OUTPUT_DIR: ${{ github.workspace }}/source/.artifacts/android-ci
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/loomarr
+        ref: 65a80dcde5269012c926dcce54c0120d829792dd
+        path: source
+        submodules: false
+        persist-credentials: false
+        fetch-depth: 2
+    - uses: ./harness/.github/actions/prospect-loomarr
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py loomarr boringcache seed 0
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: loomarr-boringcache-rolling-seed
+        path: '${{ runner.temp }}/prospect-evidence
+
+          source/.artifacts/android-ci/*.json'
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+  commit1:
+    name: BoringCache loomarr rolling commit1
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      GRADLE_USER_HOME: ${{ github.workspace }}/gradle-home
+      ANDROID_CI_OUTPUT_DIR: ${{ github.workspace }}/source/.artifacts/android-ci
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/loomarr
+        ref: c941ded190886f36c1adf3432aa6d043cbcca9c7
+        path: source
+        submodules: false
+        persist-credentials: false
+        fetch-depth: 2
+    - uses: ./harness/.github/actions/prospect-loomarr
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py loomarr boringcache commit1 1
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: loomarr-boringcache-rolling-commit1
+        path: '${{ runner.temp }}/prospect-evidence
+
+          source/.artifacts/android-ci/*.json'
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: seed
+  commit2:
+    name: BoringCache loomarr rolling commit2
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      GRADLE_USER_HOME: ${{ github.workspace }}/gradle-home
+      ANDROID_CI_OUTPUT_DIR: ${{ github.workspace }}/source/.artifacts/android-ci
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/loomarr
+        ref: 3669b54e686e0b491f853701c5cb6eb606fb6d65
+        path: source
+        submodules: false
+        persist-credentials: false
+        fetch-depth: 2
+    - uses: ./harness/.github/actions/prospect-loomarr
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py loomarr boringcache commit2 2
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: loomarr-boringcache-rolling-commit2
+        path: '${{ runner.temp }}/prospect-evidence
+
+          source/.artifacts/android-ci/*.json'
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: commit1
+  commit3:
+    name: BoringCache loomarr rolling commit3
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      GRADLE_USER_HOME: ${{ github.workspace }}/gradle-home
+      ANDROID_CI_OUTPUT_DIR: ${{ github.workspace }}/source/.artifacts/android-ci
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/loomarr
+        ref: 6d06cd8fe37bb3ee2f19554f4d9d9d97746109e7
+        path: source
+        submodules: false
+        persist-credentials: false
+        fetch-depth: 2
+    - uses: ./harness/.github/actions/prospect-loomarr
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py loomarr boringcache commit3 3
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: loomarr-boringcache-rolling-commit3
+        path: '${{ runner.temp }}/prospect-evidence
+
+          source/.artifacts/android-ci/*.json'
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: commit2
