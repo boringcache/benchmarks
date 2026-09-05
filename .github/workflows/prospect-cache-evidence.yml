@@ -1,5 +1,8 @@
 name: Prospect cache inventory
 on:
+  push:
+    branches: [prospect-validation]
+    paths: [.github/workflows/prospect-cache-evidence.yml]
   workflow_dispatch:
 permissions:
   contents: read
