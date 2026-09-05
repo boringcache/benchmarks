@@ -1,21 +1,136 @@
 {
-  "source_run": "https://github.com/boringcache/benchmarks/actions/runs/33986564351",
   "workspace": "boringcache/benchmarks",
-  "scope": "Prospect archive entries from the public CLI ls output. This excludes native compiler/task stores and is not a physical deduplication inventory.",
+  "source_run": "https://github.com/boringcache/benchmarks/actions/runs/33991917691",
+  "mcp_generated_at": "2026-09-05T21:04:10Z",
+  "scope": "Current archive entries for the measured cohorts. Payloads can share blobs; these are not physical stored-byte totals. Native compiler and task stores are additional.",
   "entries": [
     {
-      "id": "35871410-c74c-4c6a-abc7-8106d153fd18",
-      "manifest_root_digest": "sha256:27c446da69981c2a33239e647733d53158e1e17ce635fff4d59a082987d46537",
+      "id": "61876043-acc4-47cf-aa7f-5306fd336e7c",
+      "manifest_root_digest": "sha256:2e34d5e5194968d92e85b5b2fc1ba06104191c94063deb47b28786f8f8879267",
+      "tag": "ferrum-edge-unit-tests-rolling-20260905-target-toolchain-1e2d3026a86fab33-graph-f6f16f5d518e394e-branch-prospect-validation-ubuntu-24-x86_64",
+      "status": "ready",
+      "total_size_bytes": 1316649296,
+      "payload_size_bytes": 1316649296,
+      "uncompressed_size": null,
+      "compressed_size": 1316649296,
+      "file_count": 7927,
+      "compression_algorithm": "zstd",
+      "created_at": "2026-09-05T20:40:55.047Z",
+      "uploaded_at": "2026-09-05T20:40:56.733Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T20:41:26Z"
+    },
+    {
+      "id": "63d1231a-17c9-41ea-896a-d4816597e77e",
+      "manifest_root_digest": "sha256:f4a7d5c96ffd5f90e3800dcafeca90eabb3602360092f1732a824ce7ff07f9d2",
+      "tag": "waterui-linux-tests-rolling-20260905-target-toolchain-1e2d3026a86fab33-graph-6e77d546ddb9b100-branch-prospect-validation-ubuntu-24-x86_64",
+      "status": "ready",
+      "total_size_bytes": 6385141210,
+      "payload_size_bytes": 6385141210,
+      "uncompressed_size": null,
+      "compressed_size": 6385141210,
+      "file_count": 30632,
+      "compression_algorithm": "zstd",
+      "created_at": "2026-09-05T20:19:44.150Z",
+      "uploaded_at": "2026-09-05T20:19:49.170Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T20:20:18Z"
+    },
+    {
+      "id": "d1db579d-bd54-4e5e-a832-b4f9a8b9416a",
+      "manifest_root_digest": "sha256:00a09e27f69015340e51044dae6f1e8bb8604a3bcbfc207691bc512663fec6d0",
+      "tag": "waterui-linux-tests-rolling-20260905-registry-branch-prospect-validation-ubuntu-24-x86_64",
+      "status": "ready",
+      "total_size_bytes": 244794216,
+      "payload_size_bytes": 244794216,
+      "uncompressed_size": null,
+      "compressed_size": 244794216,
+      "file_count": 52046,
+      "compression_algorithm": "zstd",
+      "created_at": "2026-09-05T19:50:34.456Z",
+      "uploaded_at": "2026-09-05T19:50:35.118Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T19:51:04Z"
+    },
+    {
+      "id": "81c50e9b-1735-486e-a5c9-c6b27c4102cb",
+      "manifest_root_digest": "sha256:e7b1b0a8f024fda66f5428f94e5045a8c8a4fc3df9ef2c6c34bd4ec6ab3a0e46",
+      "tag": "ferrum-edge-unit-tests-rolling-20260905-target-toolchain-1e2d3026a86fab33-graph-0d648447bc8121d7-branch-prospect-validation-ubuntu-24-x86_64",
+      "status": "ready",
+      "total_size_bytes": 1326197693,
+      "payload_size_bytes": 1326197693,
+      "uncompressed_size": null,
+      "compressed_size": 1326197693,
+      "file_count": 9357,
+      "compression_algorithm": "zstd",
+      "created_at": "2026-09-05T19:45:58.725Z",
+      "uploaded_at": "2026-09-05T19:46:10.702Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T19:46:40Z"
+    },
+    {
+      "id": "4515ba35-b135-4df3-8401-8a2f6a712906",
+      "manifest_root_digest": "sha256:9f90f2e1d49de6bc3ef2158136f1e1a437ab8e29acfb4db207be4f233753c392",
+      "tag": "waterui-linux-tests-rolling-20260905-target-toolchain-1e2d3026a86fab33-graph-15ff1513918b6752-branch-prospect-validation-ubuntu-24-x86_64",
+      "status": "ready",
+      "total_size_bytes": 6608240986,
+      "payload_size_bytes": 6608240986,
+      "uncompressed_size": null,
+      "compressed_size": 6608240986,
+      "file_count": 30695,
+      "compression_algorithm": "zstd",
+      "created_at": "2026-09-05T19:39:03.551Z",
+      "uploaded_at": "2026-09-05T19:39:37.067Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T19:40:06Z"
+    },
+    {
+      "id": "c59c8078-b97e-4322-8a55-03d7ca709c54",
+      "manifest_root_digest": "sha256:8c6bf8ed1256d1116e50f9b1e60cd9399ff244254187fbd2960e27c8611d8791",
+      "tag": "waterui-linux-tests-rolling-20260905-git-branch-prospect-validation-ubuntu-24-x86_64",
+      "status": "ready",
+      "total_size_bytes": 269346484,
+      "payload_size_bytes": 269346484,
+      "uncompressed_size": null,
+      "compressed_size": 269346484,
+      "file_count": 24772,
+      "compression_algorithm": "zstd",
+      "created_at": "2026-09-05T19:37:24.785Z",
+      "uploaded_at": "2026-09-05T19:37:26.126Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T19:37:55Z"
+    },
+    {
+      "id": "9117ab75-cae5-41d7-85f8-eb86e7b65dd9",
+      "manifest_root_digest": "sha256:a29318c84af092816f6537bef1eb6f3895e1bb3f582bcabc2a2f537f44b06759",
       "tag": "status-list-server-tests-rolling-20260905-target-toolchain-1e2d3026a86fab33-graph-433343dac409703d-branch-prospect-validation-ubuntu-24-x86_64",
       "status": "ready",
-      "total_size_bytes": 1494297600,
-      "payload_size_bytes": 1494297600,
+      "total_size_bytes": 1494249307,
+      "payload_size_bytes": 1494249307,
       "uncompressed_size": null,
-      "compressed_size": 1494297600,
+      "compressed_size": 1494249307,
       "file_count": 5965,
       "compression_algorithm": "zstd",
-      "created_at": "2026-09-05T19:10:27.323Z",
-      "uploaded_at": "2026-09-05T19:10:36.649Z"
+      "created_at": "2026-09-05T19:23:14.473Z",
+      "uploaded_at": "2026-09-05T19:23:15.170Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T19:23:44Z"
+    },
+    {
+      "id": "4de6a6a1-79a9-456f-8401-c5e5405b0d8e",
+      "manifest_root_digest": "sha256:8e82b2be7ca4c0c4e097c873ee85a86e95522264f7dacdeea34342ef47bde26c",
+      "tag": "ferrum-edge-unit-tests-rolling-20260905-registry-branch-prospect-validation-ubuntu-24-x86_64",
+      "status": "ready",
+      "total_size_bytes": 128132900,
+      "payload_size_bytes": 128132900,
+      "uncompressed_size": null,
+      "compressed_size": 128132900,
+      "file_count": 35035,
+      "compression_algorithm": "zstd",
+      "created_at": "2026-09-05T19:18:22.578Z",
+      "uploaded_at": "2026-09-05T19:18:23.481Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T19:18:52Z"
     },
     {
       "id": "e6232985-9cda-4c74-be25-79f1a3aca5ea",
@@ -29,7 +144,9 @@
       "file_count": 34505,
       "compression_algorithm": "zstd",
       "created_at": "2026-09-05T19:10:07.698Z",
-      "uploaded_at": "2026-09-05T19:10:08.615Z"
+      "uploaded_at": "2026-09-05T19:10:08.615Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T19:10:37Z"
     },
     {
       "id": "fbe2d38c-7e2e-435f-b63e-df641850b65b",
@@ -43,7 +160,9 @@
       "file_count": 19,
       "compression_algorithm": "zstd",
       "created_at": "2026-09-05T19:00:36.173Z",
-      "uploaded_at": "2026-09-05T19:00:37.290Z"
+      "uploaded_at": "2026-09-05T19:00:37.290Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T19:01:06Z"
     },
     {
       "id": "3f3d9dc0-f216-4a6d-a244-44f1f50d636a",
@@ -57,7 +176,9 @@
       "file_count": 9357,
       "compression_algorithm": "zstd",
       "created_at": "2026-09-05T18:57:21.486Z",
-      "uploaded_at": "2026-09-05T18:57:31.477Z"
+      "uploaded_at": "2026-09-05T18:57:31.477Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T18:58:00Z"
     },
     {
       "id": "3b4018be-c6a7-4d35-97ed-fdf49815326c",
@@ -71,35 +192,9 @@
       "file_count": 35035,
       "compression_algorithm": "zstd",
       "created_at": "2026-09-05T18:56:41.078Z",
-      "uploaded_at": "2026-09-05T18:56:42.694Z"
-    },
-    {
-      "id": "e64a84ee-1a55-4d09-b830-3a23e244650c",
-      "manifest_root_digest": "sha256:2c64a949e9bd2ccee50a13d5cdc37b0c8fe16f294cf49ecf3231970fa0fa19c4",
-      "tag": "ferrum-edge-unit-tests-20260905-r2-target-toolchain-1e2d3026a86fab33-graph-f6f16f5d518e394e-branch-prospect-validation-ubuntu-24-x86_64",
-      "status": "ready",
-      "total_size_bytes": 1324424341,
-      "payload_size_bytes": 1324424341,
-      "uncompressed_size": null,
-      "compressed_size": 1324424341,
-      "file_count": 9357,
-      "compression_algorithm": "zstd",
-      "created_at": "2026-09-05T18:02:08.913Z",
-      "uploaded_at": "2026-09-05T18:02:38.262Z"
-    },
-    {
-      "id": "cce52462-2df4-4983-8c65-42fa171e7116",
-      "manifest_root_digest": "sha256:cddea297d45748fdb180e64ace983a43080a74de25747af4a13f6ed1ef8d6712",
-      "tag": "ferrum-edge-unit-tests-20260905-r2-registry-branch-prospect-validation-ubuntu-24-x86_64",
-      "status": "ready",
-      "total_size_bytes": 128132292,
-      "payload_size_bytes": 128132292,
-      "uncompressed_size": null,
-      "compressed_size": 128132292,
-      "file_count": 35035,
-      "compression_algorithm": "zstd",
-      "created_at": "2026-09-05T18:02:16.672Z",
-      "uploaded_at": "2026-09-05T18:02:17.928Z"
+      "uploaded_at": "2026-09-05T18:56:42.694Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T18:57:12Z"
     },
     {
       "id": "3174a698-3d6d-4039-9ecd-f79649fc054f",
@@ -113,7 +208,9 @@
       "file_count": 30632,
       "compression_algorithm": "zstd",
       "created_at": "2026-09-05T15:52:59.294Z",
-      "uploaded_at": "2026-09-05T15:57:55.882Z"
+      "uploaded_at": "2026-09-05T15:57:55.882Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T15:58:25Z"
     },
     {
       "id": "b0516a5c-8deb-4088-9854-b72a6a82ed2b",
@@ -127,7 +224,9 @@
       "file_count": 52046,
       "compression_algorithm": "zstd",
       "created_at": "2026-09-05T15:49:51.184Z",
-      "uploaded_at": "2026-09-05T15:49:56.239Z"
+      "uploaded_at": "2026-09-05T15:49:56.239Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T15:50:25Z"
     },
     {
       "id": "fcdc566b-735d-4741-b182-90c7258143b5",
@@ -141,21 +240,9 @@
       "file_count": 24772,
       "compression_algorithm": "zstd",
       "created_at": "2026-09-05T15:49:33.878Z",
-      "uploaded_at": "2026-09-05T15:49:39.010Z"
-    },
-    {
-      "id": "017052cd-27ac-4876-b1b6-7e5540a16ba7",
-      "manifest_root_digest": "sha256:fef6ddaa37219e3952580d1acd6a45bee6a78ec287c26ab8f74aec70d19b81b8",
-      "tag": "ferrum-edge-unit-tests-20260905-registry-branch-prospect-validation-ubuntu-24-x86_64",
-      "status": "ready",
-      "total_size_bytes": 128131878,
-      "payload_size_bytes": 128131878,
-      "uncompressed_size": null,
-      "compressed_size": 128131878,
-      "file_count": 35035,
-      "compression_algorithm": "zstd",
-      "created_at": "2026-09-05T15:42:05.485Z",
-      "uploaded_at": "2026-09-05T15:42:07.797Z"
+      "uploaded_at": "2026-09-05T15:49:39.010Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T15:50:08Z"
     },
     {
       "id": "842becd0-f2ed-4762-93e3-5cde865aec7f",
@@ -169,7 +256,9 @@
       "file_count": 5965,
       "compression_algorithm": "zstd",
       "created_at": "2026-09-05T15:22:50.206Z",
-      "uploaded_at": "2026-09-05T15:23:19.360Z"
+      "uploaded_at": "2026-09-05T15:23:19.360Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T15:23:48Z"
     },
     {
       "id": "6f0020ec-b179-443a-be7e-0da52af9fd70",
@@ -183,7 +272,9 @@
       "file_count": 34505,
       "compression_algorithm": "zstd",
       "created_at": "2026-09-05T15:22:24.460Z",
-      "uploaded_at": "2026-09-05T15:22:27.148Z"
+      "uploaded_at": "2026-09-05T15:22:27.148Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T15:22:56Z"
     },
     {
       "id": "6eff055e-e0a2-422f-a07e-cc152c0469bf",
@@ -197,7 +288,9 @@
       "file_count": 20,
       "compression_algorithm": "zstd",
       "created_at": "2026-09-05T15:12:33.022Z",
-      "uploaded_at": "2026-09-05T15:12:33.465Z"
+      "uploaded_at": "2026-09-05T15:12:33.465Z",
+      "mcp_storage_verified": true,
+      "mcp_storage_verified_at": "2026-09-05T15:13:02Z"
     }
   ]
 }

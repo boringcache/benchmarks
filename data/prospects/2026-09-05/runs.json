@@ -17,24 +17,6 @@
     "resolved": "publish",
     "static_tokens_created": false
   },
-  "inventory_runs": [
-    33974912140,
-    33975155322,
-    33982050792,
-    33983636386,
-    33986564351
-  ],
-  "investigation_runs": {
-    "ferrum-edge": [
-      33973996106,
-      33981755862
-    ]
-  },
-  "setup_failures": {
-    "ferrum-edge": [
-      33983928426
-    ]
-  },
   "rolling": {
     "waterui": 33985627704,
     "status-list-server": 33985627750,
@@ -44,5 +26,6 @@
     "loomarr": 33985627719
   },
   "rolling_harness_sha": "4f1bc59bb26281cabbbfe391149d2cf57ea7bd12",
-  "rolling_method": "BoringCache only; third first-parent ancestor seed followed by three real successor commits on fresh serial runners; restore and publish after every build."
+  "rolling_method": "BoringCache only; third first-parent ancestor seed followed by three real successor commits on fresh serial runners; restore and publish after every build.",
+  "final_inventory_run": 33991917691
 }

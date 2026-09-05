@@ -34,6 +34,7 @@
       "measured_command_seconds": 2769.23,
       "completed_at": 1788623877.4702735,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 2839.0,
       "external_archive_cache_seconds": 0,
       "cache_inclusive_command_seconds": 2769.23,
@@ -55,60 +56,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_cold",
-      "evidence_directory": "waterui/run-33973996116/waterui-boringcache-cold",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 8.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-waterui",
-          "seconds": 50.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 4.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 2769.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_cold"
     },
     {
       "repository": "boringcache/waterui",
@@ -141,6 +89,7 @@
       "measured_command_seconds": 599.865,
       "completed_at": 1788624553.133344,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 679.0,
       "external_archive_cache_seconds": 0,
       "cache_inclusive_command_seconds": 599.865,
@@ -162,60 +111,7 @@
           "read_only": true
         }
       ],
-      "validity": "verified_restore",
-      "evidence_directory": "waterui/run-33973996116/waterui-boringcache-warm",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 8.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-waterui",
-          "seconds": 53.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 4.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 602.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "verified_restore"
     },
     {
       "repository": "boringcache/waterui",
@@ -244,70 +140,13 @@
       "measured_command_seconds": 2187.388,
       "completed_at": 1788623272.6052582,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 2297.0,
       "external_archive_cache_seconds": 67.0,
       "cache_inclusive_command_seconds": 2254.388,
       "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33973996116/job/101327374253",
       "native_cache_summaries": [],
-      "validity": "successful_cold",
-      "evidence_directory": "waterui/run-33973996116/waterui-github-cold",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 5.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-waterui",
-          "seconds": 33.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "GitHub Rust cache",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 2187.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post GitHub Rust cache",
-          "seconds": 65.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_cold"
     },
     {
       "repository": "boringcache/waterui",
@@ -336,75 +175,318 @@
       "measured_command_seconds": 548.218,
       "completed_at": 1788624039.192683,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 666.0,
       "external_archive_cache_seconds": 66.0,
       "cache_inclusive_command_seconds": 614.218,
       "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33973996116/job/101332524108",
       "native_cache_summaries": [],
-      "validity": "verified_restore",
-      "evidence_directory": "waterui/run-33973996116/waterui-github-warm",
-      "steps": [
+      "validity": "verified_restore"
+    },
+    {
+      "repository": "boringcache/waterui",
+      "source_sha": "7642492e7b32390ec8b21747002ccf498125e15a",
+      "upstream_sha": "1f657d3e8b3458a48435eabb7e2c63d635dff9e9",
+      "mode": "cargo",
+      "working_directory": ".",
+      "source_index": 1,
+      "upstream_subject": "Merge pull request #335 from water-rs/agent/chart-registry",
+      "integration_files": [
+        ".boringcache.toml"
+      ],
+      "source_parent": "1edfee825e32a6d71fb8f3bf0a511e554d28a7a7",
+      "upstream_parent": "8d6712266c5af39d4fb94ab1fea5e56d9dc57bb4",
+      "upstream_changed_files": [
+        "Cargo.lock",
+        "Cargo.toml",
+        "backends/dew/Cargo.toml",
+        "components/data/chart/Cargo.toml",
+        "components/data/chart/LICENSE-APACHE",
+        "components/data/chart/LICENSE-MIT",
+        "components/data/chart/src/animation.rs",
+        "components/data/chart/src/axes.rs",
+        "components/data/chart/src/axis.rs",
+        "components/data/chart/src/charts/cartesian/area.rs",
+        "components/data/chart/src/charts/cartesian/bar.rs",
+        "components/data/chart/src/charts/cartesian/bubble.rs",
+        "components/data/chart/src/charts/cartesian/line.rs",
+        "components/data/chart/src/charts/cartesian/mod.rs",
+        "components/data/chart/src/charts/cartesian/scatter.rs",
+        "components/data/chart/src/charts/core/canvas.rs",
+        "components/data/chart/src/charts/core/mod.rs",
+        "components/data/chart/src/charts/density/contour.rs",
+        "components/data/chart/src/charts/density/heatmap.rs",
+        "components/data/chart/src/charts/density/mod.rs",
+        "components/data/chart/src/charts/financial/candlestick.rs",
+        "components/data/chart/src/charts/financial/depth.rs",
+        "components/data/chart/src/charts/financial/mod.rs",
+        "components/data/chart/src/charts/geo/choropleth.rs",
+        "components/data/chart/src/charts/geo/mod.rs",
+        "components/data/chart/src/charts/mod.rs",
+        "components/data/chart/src/charts/polar/mod.rs",
+        "components/data/chart/src/charts/polar/pie.rs",
+        "components/data/chart/src/charts/polar/radar.rs",
+        "components/data/chart/src/charts/specialized/gauge.rs",
+        "components/data/chart/src/charts/specialized/mod.rs",
+        "components/data/chart/src/composition.rs",
+        "components/data/chart/src/data.rs",
+        "components/data/chart/src/interaction.rs",
+        "components/data/chart/src/legend.rs",
+        "components/data/chart/src/lib.rs",
+        "components/data/chart/src/params.rs",
+        "components/data/chart/src/tooltip.rs",
+        "components/data/chart/tests/chart_stack_bounds.rs",
+        "components/data/chart/tests/e2e_accessibility.rs",
+        "components/data/chart/tests/e2e_composition.rs",
+        "components/data/chart/tests/e2e_interaction_smoke.rs",
+        "components/data/chart/tests/e2e_radar_geometry.rs",
+        "components/data/chart/tests/e2e_scroll.rs",
+        "components/data/chart/tests/e2e_x_selection.rs",
+        "components/data/chart/tests/readout_layout.rs",
+        "components/data/chart/tests/support/mod.rs"
+      ],
+      "case": "waterui",
+      "provider": "boringcache",
+      "phase": "commit1",
+      "lane": "rolling",
+      "command": [
+        "boringcache",
+        "ci",
+        "run",
+        "--oidc-provider",
+        "github-actions",
+        "--",
+        "boringcache",
+        "cargo",
+        "--write",
+        "--fail-on-cache-error"
+      ],
+      "workflow_sha": "4f1bc59bb26281cabbbfe391149d2cf57ea7bd12",
+      "run_id": "33985627704",
+      "run_attempt": "1",
+      "job": "commit1",
+      "runner_os": "Linux",
+      "runner_arch": "X64",
+      "started_at": 1788637219.467456,
+      "cached_build_seconds": 718.294,
+      "measured_command_seconds": 718.484,
+      "completed_at": 1788637937.9516785,
+      "exit_code": 0,
+      "whole_job_seconds": 755.0,
+      "external_archive_cache_seconds": 0,
+      "cache_inclusive_command_seconds": 718.484,
+      "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33985627704/job/101364419265",
+      "native_cache_summaries": [
         {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 7.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-waterui",
-          "seconds": 37.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "GitHub Rust cache",
-          "seconds": 66.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Require the GitHub warm cache",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 549.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post GitHub Rust cache",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
+          "schema": "cache-session-v2",
+          "adapter": "sccache",
+          "classification": {
+            "errors": 0,
+            "hit_rate": 96.3,
+            "hits": 2926,
+            "likely_reason": "partial_key_churn_or_new_work",
+            "misses": 112,
+            "state": "mostly_hot_with_misses",
+            "writes": 92
+          },
+          "buildkit_run_classification": "not_applicable",
+          "read_only": false
         }
-      ]
+      ],
+      "validity": "successful_rolling_commit"
+    },
+    {
+      "repository": "boringcache/waterui",
+      "source_sha": "2415a85072e2851cd88a14070e3522ae8a00dc57",
+      "upstream_sha": "ac967c37667cc45efa39548557f923885ca7faa4",
+      "mode": "cargo",
+      "working_directory": ".",
+      "source_index": 2,
+      "upstream_subject": "Merge pull request #350 from water-rs/agent/dist-allow-dirty-ci",
+      "integration_files": [
+        ".boringcache.toml"
+      ],
+      "source_parent": "7642492e7b32390ec8b21747002ccf498125e15a",
+      "upstream_parent": "1f657d3e8b3458a48435eabb7e2c63d635dff9e9",
+      "upstream_changed_files": [
+        "dist-workspace.toml"
+      ],
+      "case": "waterui",
+      "provider": "boringcache",
+      "phase": "commit2",
+      "lane": "rolling",
+      "command": [
+        "boringcache",
+        "ci",
+        "run",
+        "--oidc-provider",
+        "github-actions",
+        "--",
+        "boringcache",
+        "cargo",
+        "--write",
+        "--fail-on-cache-error"
+      ],
+      "workflow_sha": "4f1bc59bb26281cabbbfe391149d2cf57ea7bd12",
+      "run_id": "33985627704",
+      "run_attempt": "1",
+      "job": "commit2",
+      "runner_os": "Linux",
+      "runner_arch": "X64",
+      "started_at": 1788638028.9684587,
+      "cached_build_seconds": 959.389,
+      "measured_command_seconds": 959.818,
+      "completed_at": 1788638988.7867484,
+      "exit_code": 0,
+      "whole_job_seconds": 1054.0,
+      "external_archive_cache_seconds": 0,
+      "cache_inclusive_command_seconds": 959.818,
+      "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33985627704/job/101366110538",
+      "native_cache_summaries": [
+        {
+          "schema": "cache-session-v2",
+          "adapter": "sccache",
+          "classification": {
+            "errors": 0,
+            "hit_rate": 95.8,
+            "hits": 229,
+            "likely_reason": "partial_key_churn_or_new_work",
+            "misses": 10,
+            "state": "mostly_hot_with_misses",
+            "writes": 10
+          },
+          "buildkit_run_classification": "not_applicable",
+          "read_only": false
+        }
+      ],
+      "validity": "successful_rolling_commit"
+    },
+    {
+      "repository": "boringcache/waterui",
+      "source_sha": "53513817e587ce592ce00ae9a56a14498deaac2d",
+      "upstream_sha": "c7e196ae65e78256003e1666018b575ce94ff972",
+      "mode": "cargo",
+      "working_directory": ".",
+      "source_index": 3,
+      "upstream_subject": "Merge pull request #346 from water-rs/agent/failure-report-diagnostics",
+      "integration_files": [
+        ".boringcache.toml"
+      ],
+      "source_parent": "2415a85072e2851cd88a14070e3522ae8a00dc57",
+      "upstream_parent": "ac967c37667cc45efa39548557f923885ca7faa4",
+      "upstream_changed_files": [
+        "cli/src/runtime/utils.rs"
+      ],
+      "case": "waterui",
+      "provider": "boringcache",
+      "phase": "commit3",
+      "lane": "rolling",
+      "command": [
+        "boringcache",
+        "ci",
+        "run",
+        "--oidc-provider",
+        "github-actions",
+        "--",
+        "boringcache",
+        "cargo",
+        "--write",
+        "--fail-on-cache-error"
+      ],
+      "workflow_sha": "4f1bc59bb26281cabbbfe391149d2cf57ea7bd12",
+      "run_id": "33985627704",
+      "run_attempt": "1",
+      "job": "commit3",
+      "runner_os": "Linux",
+      "runner_arch": "X64",
+      "started_at": 1788639051.231499,
+      "cached_build_seconds": 539.147,
+      "measured_command_seconds": 539.272,
+      "completed_at": 1788639590.503901,
+      "exit_code": 0,
+      "whole_job_seconds": 594.0,
+      "external_archive_cache_seconds": 0,
+      "cache_inclusive_command_seconds": 539.272,
+      "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33985627704/job/101368465914",
+      "native_cache_summaries": [
+        {
+          "schema": "cache-session-v2",
+          "adapter": "sccache",
+          "classification": {
+            "errors": 0,
+            "hit_rate": 95.8,
+            "hits": 226,
+            "likely_reason": "partial_key_churn_or_new_work",
+            "misses": 10,
+            "state": "mostly_hot_with_misses",
+            "writes": 10
+          },
+          "buildkit_run_classification": "not_applicable",
+          "read_only": false
+        }
+      ],
+      "validity": "successful_rolling_commit"
+    },
+    {
+      "repository": "boringcache/waterui",
+      "source_sha": "1edfee825e32a6d71fb8f3bf0a511e554d28a7a7",
+      "upstream_sha": "8d6712266c5af39d4fb94ab1fea5e56d9dc57bb4",
+      "mode": "cargo",
+      "working_directory": ".",
+      "source_index": 0,
+      "upstream_subject": "Merge pull request #348 from water-rs/agent/ci-windows-split",
+      "integration_files": [
+        ".boringcache.toml"
+      ],
+      "case": "waterui",
+      "provider": "boringcache",
+      "phase": "seed",
+      "lane": "rolling",
+      "command": [
+        "boringcache",
+        "ci",
+        "run",
+        "--oidc-provider",
+        "github-actions",
+        "--",
+        "boringcache",
+        "cargo",
+        "--write",
+        "--fail-on-cache-error"
+      ],
+      "workflow_sha": "4f1bc59bb26281cabbbfe391149d2cf57ea7bd12",
+      "run_id": "33985627704",
+      "run_attempt": "1",
+      "job": "seed",
+      "runner_os": "Linux",
+      "runner_arch": "X64",
+      "started_at": 1788634690.5401566,
+      "cached_build_seconds": 2488.157,
+      "measured_command_seconds": 2488.336,
+      "completed_at": 1788637178.8757713,
+      "exit_code": 0,
+      "whole_job_seconds": 2543.0,
+      "external_archive_cache_seconds": 0,
+      "cache_inclusive_command_seconds": 2488.336,
+      "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33985627704/job/101358485585",
+      "native_cache_summaries": [
+        {
+          "schema": "cache-session-v2",
+          "adapter": "sccache",
+          "classification": {
+            "errors": 0,
+            "hit_rate": 5.0,
+            "hits": 152,
+            "likely_reason": "mixed_existing_and_new_work",
+            "misses": 2886,
+            "state": "warm_mixed",
+            "writes": 2866
+          },
+          "buildkit_run_classification": "not_applicable",
+          "read_only": false
+        }
+      ],
+      "validity": "successful_rolling_seed"
     },
     {
       "repository": "boringcache/status-list-server",
@@ -437,6 +519,7 @@
       "measured_command_seconds": 721.765,
       "completed_at": 1788621800.4894521,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 761.0,
       "external_archive_cache_seconds": 0,
       "cache_inclusive_command_seconds": 721.765,
@@ -458,60 +541,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_cold",
-      "evidence_directory": "status-list-server/run-33973996178/status-list-server-boringcache-cold",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-status-list-server",
-          "seconds": 29.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 722.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_cold"
     },
     {
       "repository": "boringcache/status-list-server",
@@ -544,6 +574,7 @@
       "measured_command_seconds": 148.734,
       "completed_at": 1788621990.7697027,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 188.0,
       "external_archive_cache_seconds": 0,
       "cache_inclusive_command_seconds": 148.734,
@@ -565,60 +596,7 @@
           "read_only": true
         }
       ],
-      "validity": "verified_restore",
-      "evidence_directory": "status-list-server/run-33973996178/status-list-server-boringcache-warm",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-status-list-server",
-          "seconds": 28.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 149.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "verified_restore"
     },
     {
       "repository": "boringcache/status-list-server",
@@ -647,70 +625,13 @@
       "measured_command_seconds": 736.356,
       "completed_at": 1788621818.9661796,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 803.0,
       "external_archive_cache_seconds": 24.0,
       "cache_inclusive_command_seconds": 760.356,
       "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33973996178/job/101327374566",
       "native_cache_summaries": [],
-      "validity": "successful_cold",
-      "evidence_directory": "status-list-server/run-33973996178/status-list-server-github-cold",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-status-list-server",
-          "seconds": 32.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "GitHub Rust cache",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 736.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post GitHub Rust cache",
-          "seconds": 23.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_cold"
     },
     {
       "repository": "boringcache/status-list-server",
@@ -739,75 +660,13 @@
       "measured_command_seconds": 269.73,
       "completed_at": 1788622159.331044,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 314.0,
       "external_archive_cache_seconds": 12.0,
       "cache_inclusive_command_seconds": 281.73,
       "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33973996178/job/101329197398",
       "native_cache_summaries": [],
-      "validity": "verified_restore",
-      "evidence_directory": "status-list-server/run-33973996178/status-list-server-github-warm",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-status-list-server",
-          "seconds": 25.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "GitHub Rust cache",
-          "seconds": 12.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Require the GitHub warm cache",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 270.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post GitHub Rust cache",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "verified_restore"
     },
     {
       "repository": "boringcache/status-list-server",
@@ -893,60 +752,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_rolling_commit",
-      "evidence_directory": "status-list-server/run-33985627750/status-list-server-boringcache-rolling-commit1",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-status-list-server",
-          "seconds": 26.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 341.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_rolling_commit"
     },
     {
       "repository": "boringcache/status-list-server",
@@ -1012,60 +818,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_rolling_commit",
-      "evidence_directory": "status-list-server/run-33985627750/status-list-server-boringcache-rolling-commit2",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-status-list-server",
-          "seconds": 27.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 154.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_rolling_commit"
     },
     {
       "repository": "boringcache/status-list-server",
@@ -1132,60 +885,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_rolling_commit",
-      "evidence_directory": "status-list-server/run-33985627750/status-list-server-boringcache-rolling-commit3",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-status-list-server",
-          "seconds": 25.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 155.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_rolling_commit"
     },
     {
       "repository": "boringcache/status-list-server",
@@ -1246,359 +946,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_rolling_seed",
-      "evidence_directory": "status-list-server/run-33985627750/status-list-server-boringcache-rolling-seed",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-status-list-server",
-          "seconds": 25.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 768.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
-    },
-    {
-      "repository": "boringcache/ferrum-edge",
-      "source_sha": "cc29f109788a23f9b6c4aeeb64a3a532a075538c",
-      "upstream_sha": "9bd6cd8bff3adcbedb561715464801b63292797f",
-      "mode": "cargo",
-      "working_directory": ".",
-      "case": "ferrum-edge",
-      "provider": "boringcache",
-      "phase": "cold",
-      "command": [
-        "boringcache",
-        "ci",
-        "run",
-        "--oidc-provider",
-        "github-actions",
-        "--",
-        "boringcache",
-        "cargo",
-        "--write",
-        "--fail-on-cache-error"
-      ],
-      "workflow_sha": "04563ea493340b7da0365ec7ada97b658640c315",
-      "run_id": "33973996106",
-      "run_attempt": "1",
-      "job": "boringcache-cold",
-      "runner_os": "Linux",
-      "runner_arch": "X64",
-      "started_at": 1788621082.9941428,
-      "measured_command_seconds": 1845.899,
-      "completed_at": 1788622928.8943882,
-      "exit_code": 0,
-      "whole_job_seconds": 1890.0,
-      "external_archive_cache_seconds": 0,
-      "cache_inclusive_command_seconds": 1845.899,
-      "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33973996106/job/101327374409",
-      "native_cache_summaries": [
-        {
-          "schema": "cache-session-v2",
-          "adapter": "sccache",
-          "classification": {
-            "errors": 0,
-            "hit_rate": 0.3,
-            "hits": 3,
-            "likely_reason": "mixed_existing_and_new_work",
-            "misses": 994,
-            "state": "warm_mixed",
-            "writes": 991
-          },
-          "buildkit_run_classification": "not_applicable",
-          "read_only": false
-        }
-      ],
-      "validity": "investigation_target_not_saved",
-      "evidence_directory": "ferrum-edge/run-33973996106/ferrum-edge-boringcache-cold",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 5.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-ferrum-edge",
-          "seconds": 22.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 1847.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
-    },
-    {
-      "repository": "boringcache/ferrum-edge",
-      "source_sha": "cc29f109788a23f9b6c4aeeb64a3a532a075538c",
-      "upstream_sha": "9bd6cd8bff3adcbedb561715464801b63292797f",
-      "mode": "cargo",
-      "working_directory": ".",
-      "case": "ferrum-edge",
-      "provider": "github",
-      "phase": "cold",
-      "command": [
-        "cargo",
-        "test",
-        "--lib",
-        "--test",
-        "unit_tests"
-      ],
-      "workflow_sha": "04563ea493340b7da0365ec7ada97b658640c315",
-      "run_id": "33973996106",
-      "run_attempt": "1",
-      "job": "github-cold",
-      "runner_os": "Linux",
-      "runner_arch": "X64",
-      "started_at": 1788621073.2907739,
-      "measured_command_seconds": 1709.981,
-      "completed_at": 1788622783.2726483,
-      "exit_code": 0,
-      "whole_job_seconds": 1763.0,
-      "external_archive_cache_seconds": 21.0,
-      "cache_inclusive_command_seconds": 1730.981,
-      "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33973996106/job/101327374346",
-      "native_cache_summaries": [],
-      "validity": "investigation_target_not_saved",
-      "evidence_directory": "ferrum-edge/run-33973996106/ferrum-edge-github-cold",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 6.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-ferrum-edge",
-          "seconds": 21.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "GitHub Rust cache",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 1710.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post GitHub Rust cache",
-          "seconds": 20.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
-    },
-    {
-      "repository": "boringcache/ferrum-edge",
-      "source_sha": "57f9940fbbf088e443d5a8a294636617ce3627fd",
-      "upstream_sha": "9bd6cd8bff3adcbedb561715464801b63292797f",
-      "mode": "cargo",
-      "working_directory": ".",
-      "case": "ferrum-edge",
-      "provider": "github",
-      "phase": "cold",
-      "command": [
-        "cargo",
-        "test",
-        "--lib",
-        "--test",
-        "unit_tests",
-        "--no-run"
-      ],
-      "workflow_sha": "0d3ece5396a8d3589a391ec8e886ace45297083c",
-      "run_id": "33981755862",
-      "run_attempt": "1",
-      "job": "github-cold",
-      "runner_os": "Linux",
-      "runner_arch": "X64",
-      "started_at": 1788630132.366046,
-      "cached_build_seconds": 1217.372,
-      "test_command": [
-        "cargo",
-        "test",
-        "--lib",
-        "--test",
-        "unit_tests"
-      ],
-      "test_execution_seconds": 563.008,
-      "measured_command_seconds": 1780.398,
-      "completed_at": 1788631912.7642417,
-      "exit_code": 0,
-      "whole_job_seconds": 1836.0,
-      "external_archive_cache_seconds": 24.0,
-      "cache_inclusive_command_seconds": 1804.398,
-      "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33981755862/job/101348104058",
-      "native_cache_summaries": [],
-      "validity": "investigation_compiler_environment_changed",
-      "evidence_directory": "ferrum-edge/run-33981755862/ferrum-edge-github-cold",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 5.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-ferrum-edge",
-          "seconds": 21.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "GitHub Rust cache",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 1780.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post GitHub Rust cache",
-          "seconds": 23.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_rolling_seed"
     },
     {
       "repository": "boringcache/ferrum-edge",
@@ -1640,6 +988,7 @@
       "measured_command_seconds": 2300.778,
       "completed_at": 1788635125.5627432,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 2340.0,
       "external_archive_cache_seconds": 0,
       "cache_inclusive_command_seconds": 2300.778,
@@ -1661,60 +1010,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_cold",
-      "evidence_directory": "ferrum-edge/run-33984066894/ferrum-edge-boringcache-cold",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 6.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-ferrum-edge",
-          "seconds": 24.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 2301.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_cold"
     },
     {
       "repository": "boringcache/ferrum-edge",
@@ -1756,6 +1052,7 @@
       "measured_command_seconds": 487.592,
       "completed_at": 1788635658.0319595,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 530.0,
       "external_archive_cache_seconds": 0,
       "cache_inclusive_command_seconds": 487.592,
@@ -1777,60 +1074,7 @@
           "read_only": true
         }
       ],
-      "validity": "verified_restore",
-      "evidence_directory": "ferrum-edge/run-33984066894/ferrum-edge-boringcache-warm",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 5.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-ferrum-edge",
-          "seconds": 26.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 4.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 488.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "verified_restore"
     },
     {
       "repository": "boringcache/ferrum-edge",
@@ -1868,70 +1112,13 @@
       "measured_command_seconds": 1802.526,
       "completed_at": 1788634622.7789164,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 1859.0,
       "external_archive_cache_seconds": 24.0,
       "cache_inclusive_command_seconds": 1826.526,
       "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33984066894/job/101354290598",
       "native_cache_summaries": [],
-      "validity": "successful_cold",
-      "evidence_directory": "ferrum-edge/run-33984066894/ferrum-edge-github-cold",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 5.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-ferrum-edge",
-          "seconds": 21.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "GitHub Rust cache",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 1802.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post GitHub Rust cache",
-          "seconds": 23.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_cold"
     },
     {
       "repository": "boringcache/ferrum-edge",
@@ -1969,75 +1156,332 @@
       "measured_command_seconds": 1515.43,
       "completed_at": 1788636211.7357826,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 1564.0,
       "external_archive_cache_seconds": 16.0,
       "cache_inclusive_command_seconds": 1531.43,
       "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33984066894/job/101358515015",
       "native_cache_summaries": [],
-      "validity": "verified_restore",
-      "evidence_directory": "ferrum-edge/run-33984066894/ferrum-edge-github-warm",
-      "steps": [
+      "validity": "verified_restore"
+    },
+    {
+      "repository": "boringcache/ferrum-edge",
+      "source_sha": "d66121cd51a873dbe2488560989e63cc49a6e93d",
+      "upstream_sha": "748fb16a036b293ee05b30a4bd484e2f699a6204",
+      "mode": "cargo",
+      "working_directory": ".",
+      "source_index": 1,
+      "upstream_subject": "Merge pull request #4632 from ferrum-edge/claude/issue-4627-namespace-scoped-primary-keys",
+      "integration_files": [
+        ".boringcache.toml"
+      ],
+      "source_parent": "082107e37ce796e0ea477fd7f5776cb7704ce692",
+      "upstream_parent": "6936e7bc75c7464a057b254ab57c04d2484e0fe6",
+      "upstream_changed_files": [
+        "docs/admin_api.md",
+        "docs/api_specs.md",
+        "docs/configuration.md",
+        "docs/functional_testing_database.md",
+        "docs/migrations.md",
+        "docs/mongodb.md",
+        "docs/plugins.md",
+        "src/config/db_loader.rs",
+        "src/config/migrations/mysql_collation_probe.rs",
+        "src/config/migrations/sql_dialect.rs",
+        "src/config/mongo_store.rs",
+        "src/config/namespace_registry.rs",
+        "tests/functional/functional_mongodb_test.rs",
+        "tests/integration/admin_api_specs_handler_tests.rs",
+        "tests/integration/admin_cached_config_tests.rs",
+        "tests/integration/admin_cross_namespace_refs_tests.rs",
+        "tests/integration/admin_db_api_specs_tests.rs",
+        "tests/integration/db_mutation_decode_fail_closed_tests.rs",
+        "tests/integration/db_proxy_plugin_association_fail_closed_tests.rs",
+        "tests/unit/config/db_loader_tests.rs",
+        "tests/unit/config/migration_runner_tests.rs",
+        "tests/unit/config/mongo_store_tests.rs",
+        "tests/unit/config/namespace_registry_tests.rs"
+      ],
+      "case": "ferrum-edge",
+      "provider": "boringcache",
+      "phase": "commit1",
+      "lane": "rolling",
+      "command": [
+        "boringcache",
+        "ci",
+        "run",
+        "--oidc-provider",
+        "github-actions",
+        "--",
+        "boringcache",
+        "cargo",
+        "--write",
+        "--fail-on-cache-error"
+      ],
+      "workflow_sha": "4f1bc59bb26281cabbbfe391149d2cf57ea7bd12",
+      "run_id": "33985627694",
+      "run_attempt": "1",
+      "job": "commit1",
+      "runner_os": "Linux",
+      "runner_arch": "X64",
+      "started_at": 1788636516.7983813,
+      "cached_build_seconds": 1054.913,
+      "test_command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--test",
+        "unit_tests"
+      ],
+      "test_execution_seconds": 571.331,
+      "measured_command_seconds": 1626.262,
+      "completed_at": 1788638143.0600777,
+      "exit_code": 0,
+      "whole_job_seconds": 1665.0,
+      "external_archive_cache_seconds": 0,
+      "cache_inclusive_command_seconds": 1626.262,
+      "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33985627694/job/101362840186",
+      "native_cache_summaries": [
         {
-          "name": "Set up job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 6.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-ferrum-edge",
-          "seconds": 20.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "GitHub Rust cache",
-          "seconds": 16.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Require the GitHub warm cache",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 1516.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post GitHub Rust cache",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
+          "schema": "cache-session-v2",
+          "adapter": "sccache",
+          "classification": {
+            "errors": 0,
+            "hit_rate": 0.0,
+            "hits": 0,
+            "likely_reason": "no_hits_for_requested_keys",
+            "misses": 1,
+            "state": "cold",
+            "writes": 1
+          },
+          "buildkit_run_classification": "not_applicable",
+          "read_only": false
         }
-      ]
+      ],
+      "validity": "successful_rolling_commit"
+    },
+    {
+      "repository": "boringcache/ferrum-edge",
+      "source_sha": "35913058d237fc31b2de97f9b11675da25079588",
+      "upstream_sha": "e8848386b9f4d49247e2ab0f6cce19c291d19d1f",
+      "mode": "cargo",
+      "working_directory": ".",
+      "source_index": 2,
+      "upstream_subject": "Merge pull request #4633 from ferrum-edge/claude/release-0.9.2-prep",
+      "integration_files": [
+        ".boringcache.toml"
+      ],
+      "source_parent": "d66121cd51a873dbe2488560989e63cc49a6e93d",
+      "upstream_parent": "748fb16a036b293ee05b30a4bd484e2f699a6204",
+      "upstream_changed_files": [
+        "CHANGELOG.md",
+        "Cargo.lock",
+        "Cargo.toml",
+        "charts/ferrum-gateway/Chart.yaml",
+        "charts/ferrum-mesh/Chart.yaml",
+        "fuzz/Cargo.lock",
+        "tests/performance/mesh/Cargo.lock"
+      ],
+      "case": "ferrum-edge",
+      "provider": "boringcache",
+      "phase": "commit2",
+      "lane": "rolling",
+      "command": [
+        "boringcache",
+        "ci",
+        "run",
+        "--oidc-provider",
+        "github-actions",
+        "--",
+        "boringcache",
+        "cargo",
+        "--write",
+        "--fail-on-cache-error"
+      ],
+      "workflow_sha": "4f1bc59bb26281cabbbfe391149d2cf57ea7bd12",
+      "run_id": "33985627694",
+      "run_attempt": "1",
+      "job": "commit2",
+      "runner_os": "Linux",
+      "runner_arch": "X64",
+      "started_at": 1788638181.0918653,
+      "cached_build_seconds": 1099.429,
+      "test_command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--test",
+        "unit_tests"
+      ],
+      "test_execution_seconds": 563.404,
+      "measured_command_seconds": 1662.849,
+      "completed_at": 1788639843.9409065,
+      "exit_code": 0,
+      "whole_job_seconds": 1696.0,
+      "external_archive_cache_seconds": 0,
+      "cache_inclusive_command_seconds": 1662.849,
+      "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33985627694/job/101366561901",
+      "native_cache_summaries": [
+        {
+          "schema": "cache-session-v2",
+          "adapter": "sccache",
+          "classification": {
+            "errors": 0,
+            "hit_rate": 99.6,
+            "hits": 993,
+            "likely_reason": "partial_key_churn_or_new_work",
+            "misses": 4,
+            "state": "mostly_hot_with_misses",
+            "writes": 1
+          },
+          "buildkit_run_classification": "not_applicable",
+          "read_only": false
+        }
+      ],
+      "validity": "successful_rolling_commit"
+    },
+    {
+      "repository": "boringcache/ferrum-edge",
+      "source_sha": "1890c991148f8141dd31349365aa4a70af288872",
+      "upstream_sha": "9bd6cd8bff3adcbedb561715464801b63292797f",
+      "mode": "cargo",
+      "working_directory": ".",
+      "source_index": 3,
+      "upstream_subject": "Merge pull request #4634 from ferrum-edge/claude/app-probe-budget-body-name",
+      "integration_files": [
+        ".boringcache.toml"
+      ],
+      "source_parent": "35913058d237fc31b2de97f9b11675da25079588",
+      "upstream_parent": "e8848386b9f4d49247e2ab0f6cce19c291d19d1f",
+      "upstream_changed_files": [
+        "src/modes/mesh/app_probe.rs"
+      ],
+      "case": "ferrum-edge",
+      "provider": "boringcache",
+      "phase": "commit3",
+      "lane": "rolling",
+      "command": [
+        "boringcache",
+        "ci",
+        "run",
+        "--oidc-provider",
+        "github-actions",
+        "--",
+        "boringcache",
+        "cargo",
+        "--write",
+        "--fail-on-cache-error"
+      ],
+      "workflow_sha": "4f1bc59bb26281cabbbfe391149d2cf57ea7bd12",
+      "run_id": "33985627694",
+      "run_attempt": "1",
+      "job": "commit3",
+      "runner_os": "Linux",
+      "runner_arch": "X64",
+      "started_at": 1788639881.609137,
+      "cached_build_seconds": 975.958,
+      "test_command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--test",
+        "unit_tests"
+      ],
+      "test_execution_seconds": 581.546,
+      "measured_command_seconds": 1557.519,
+      "completed_at": 1788641439.1285357,
+      "exit_code": 0,
+      "whole_job_seconds": 1592.0,
+      "external_archive_cache_seconds": 0,
+      "cache_inclusive_command_seconds": 1557.519,
+      "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33985627694/job/101370399230",
+      "native_cache_summaries": [
+        {
+          "schema": "cache-session-v2",
+          "adapter": "sccache",
+          "classification": {
+            "errors": 0,
+            "hit_rate": 0.0,
+            "hits": 0,
+            "likely_reason": "no_hits_for_requested_keys",
+            "misses": 1,
+            "state": "cold",
+            "writes": 1
+          },
+          "buildkit_run_classification": "not_applicable",
+          "read_only": false
+        }
+      ],
+      "validity": "successful_rolling_commit"
+    },
+    {
+      "repository": "boringcache/ferrum-edge",
+      "source_sha": "082107e37ce796e0ea477fd7f5776cb7704ce692",
+      "upstream_sha": "6936e7bc75c7464a057b254ab57c04d2484e0fe6",
+      "mode": "cargo",
+      "working_directory": ".",
+      "source_index": 0,
+      "upstream_subject": "Merge pull request #4631 from ferrum-edge/claude/issue-4625-4626-capture-listener-admission",
+      "integration_files": [
+        ".boringcache.toml"
+      ],
+      "case": "ferrum-edge",
+      "provider": "boringcache",
+      "phase": "seed",
+      "lane": "rolling",
+      "command": [
+        "boringcache",
+        "ci",
+        "run",
+        "--oidc-provider",
+        "github-actions",
+        "--",
+        "boringcache",
+        "cargo",
+        "--write",
+        "--fail-on-cache-error"
+      ],
+      "workflow_sha": "4f1bc59bb26281cabbbfe391149d2cf57ea7bd12",
+      "run_id": "33985627694",
+      "run_attempt": "1",
+      "job": "seed",
+      "runner_os": "Linux",
+      "runner_arch": "X64",
+      "started_at": 1788634670.2628536,
+      "cached_build_seconds": 1248.11,
+      "test_command": [
+        "cargo",
+        "test",
+        "--lib",
+        "--test",
+        "unit_tests"
+      ],
+      "test_execution_seconds": 559.104,
+      "measured_command_seconds": 1807.23,
+      "completed_at": 1788636477.492687,
+      "exit_code": 0,
+      "whole_job_seconds": 1841.0,
+      "external_archive_cache_seconds": 0,
+      "cache_inclusive_command_seconds": 1807.23,
+      "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33985627694/job/101358485548",
+      "native_cache_summaries": [
+        {
+          "schema": "cache-session-v2",
+          "adapter": "sccache",
+          "classification": {
+            "errors": 0,
+            "hit_rate": 0.3,
+            "hits": 3,
+            "likely_reason": "mixed_existing_and_new_work",
+            "misses": 994,
+            "state": "warm_mixed",
+            "writes": 991
+          },
+          "buildkit_run_classification": "not_applicable",
+          "read_only": false
+        }
+      ],
+      "validity": "successful_rolling_seed"
     },
     {
       "repository": "boringcache/cadence",
@@ -2070,6 +1514,7 @@
       "measured_command_seconds": 100.785,
       "completed_at": 1788621153.949054,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 113.0,
       "external_archive_cache_seconds": 0,
       "cache_inclusive_command_seconds": 100.785,
@@ -2091,60 +1536,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_cold",
-      "evidence_directory": "cadence/run-33973996120/cadence-boringcache-cold",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cadence",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 100.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_cold"
     },
     {
       "repository": "boringcache/cadence",
@@ -2177,6 +1569,7 @@
       "measured_command_seconds": 58.5,
       "completed_at": 1788621224.8398254,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 69.0,
       "external_archive_cache_seconds": 0,
       "cache_inclusive_command_seconds": 58.5,
@@ -2198,60 +1591,7 @@
           "read_only": true
         }
       ],
-      "validity": "verified_restore",
-      "evidence_directory": "cadence/run-33973996120/cadence-boringcache-warm",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cadence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 58.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "verified_restore"
     },
     {
       "repository": "boringcache/cadence",
@@ -2286,75 +1626,13 @@
       "measured_command_seconds": 169.818,
       "completed_at": 1788621226.149799,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 189.0,
       "external_archive_cache_seconds": 0,
       "cache_inclusive_command_seconds": 169.818,
       "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33973996120/job/101327374496",
       "native_cache_summaries": [],
-      "validity": "successful_cold",
-      "evidence_directory": "cadence/run-33973996120/cadence-github-cold",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cadence",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435",
-          "seconds": 7.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run crazy-max/ghaction-github-runtime@3cb05d89e1f492524af3d41a1c98c83bc3025124",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 170.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435",
-          "seconds": 5.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_cold"
     },
     {
       "repository": "boringcache/cadence",
@@ -2388,75 +1666,13 @@
       "measured_command_seconds": 66.196,
       "completed_at": 1788621320.2123544,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 88.0,
       "external_archive_cache_seconds": 0,
       "cache_inclusive_command_seconds": 66.196,
       "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33973996120/job/101327802055",
       "native_cache_summaries": [],
-      "validity": "verified_restore",
-      "evidence_directory": "cadence/run-33973996120/cadence-github-warm",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cadence",
-          "seconds": 4.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435",
-          "seconds": 8.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run crazy-max/ghaction-github-runtime@3cb05d89e1f492524af3d41a1c98c83bc3025124",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 67.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "verified_restore"
     },
     {
       "repository": "boringcache/cadence",
@@ -2526,60 +1742,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_rolling_commit",
-      "evidence_directory": "cadence/run-33985627716/cadence-boringcache-rolling-commit1",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cadence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 76.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_rolling_commit"
     },
     {
       "repository": "boringcache/cadence",
@@ -2653,60 +1816,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_rolling_commit",
-      "evidence_directory": "cadence/run-33985627716/cadence-boringcache-rolling-commit2",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cadence",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 6.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 93.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_rolling_commit"
     },
     {
       "repository": "boringcache/cadence",
@@ -2776,60 +1886,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_rolling_commit",
-      "evidence_directory": "cadence/run-33985627716/cadence-boringcache-rolling-commit3",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cadence",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 56.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_rolling_commit"
     },
     {
       "repository": "boringcache/cadence",
@@ -2890,60 +1947,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_rolling_seed",
-      "evidence_directory": "cadence/run-33985627716/cadence-boringcache-rolling-seed",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cadence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 101.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_rolling_seed"
     },
     {
       "repository": "boringcache/core",
@@ -2976,6 +1980,7 @@
       "measured_command_seconds": 187.083,
       "completed_at": 1788621281.552822,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 242.0,
       "external_archive_cache_seconds": 0,
       "cache_inclusive_command_seconds": 187.083,
@@ -2997,65 +2002,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_cold",
-      "evidence_directory": "core/run-33973996156/dotcms-boringcache-cold",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 14.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 30.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 4.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 187.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_cold"
     },
     {
       "repository": "boringcache/core",
@@ -3088,6 +2035,7 @@
       "measured_command_seconds": 17.505,
       "completed_at": 1788621354.7551491,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 70.0,
       "external_archive_cache_seconds": 0,
       "cache_inclusive_command_seconds": 17.505,
@@ -3109,65 +2057,7 @@
           "read_only": true
         }
       ],
-      "validity": "verified_restore",
-      "evidence_directory": "core/run-33973996156/dotcms-boringcache-warm",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 14.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 30.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 17.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "verified_restore"
     },
     {
       "repository": "boringcache/core",
@@ -3198,75 +2088,13 @@
       "measured_command_seconds": 186.916,
       "completed_at": 1788621296.2945042,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 260.0,
       "external_archive_cache_seconds": 3.0,
       "cache_inclusive_command_seconds": 189.916,
       "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33973996156/job/101327374644",
       "native_cache_summaries": [],
-      "validity": "successful_cold",
-      "evidence_directory": "core/run-33973996156/dotcms-github-cold",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 28.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 33.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "GitHub Nx task cache",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 187.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Publish GitHub Nx task cache",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_cold"
     },
     {
       "repository": "boringcache/core",
@@ -3297,70 +2125,13 @@
       "measured_command_seconds": 198.253,
       "completed_at": 1788621554.307514,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 250.0,
       "external_archive_cache_seconds": 1.0,
       "cache_inclusive_command_seconds": 199.253,
       "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33973996156/job/101327958368",
       "native_cache_summaries": [],
-      "validity": "invalid_warm_archive",
-      "evidence_directory": "core/run-33973996156/dotcms-github-warm",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 14.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 33.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "GitHub Nx task cache",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 198.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "invalid_warm_archive"
     },
     {
       "repository": "boringcache/core",
@@ -3426,65 +2197,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_rolling_commit",
-      "evidence_directory": "core/run-33985627773/dotcms-boringcache-rolling-commit1",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 15.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 29.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 4.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 17.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_rolling_commit"
     },
     {
       "repository": "boringcache/core",
@@ -3550,65 +2263,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_rolling_commit",
-      "evidence_directory": "core/run-33985627773/dotcms-boringcache-rolling-commit2",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 20.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 33.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 21.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_rolling_commit"
     },
     {
       "repository": "boringcache/core",
@@ -3674,65 +2329,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_rolling_commit",
-      "evidence_directory": "core/run-33985627773/dotcms-boringcache-rolling-commit3",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 13.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 40.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 4.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 16.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_rolling_commit"
     },
     {
       "repository": "boringcache/core",
@@ -3793,65 +2390,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_rolling_seed",
-      "evidence_directory": "core/run-33985627773/dotcms-boringcache-rolling-seed",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 14.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 35.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 198.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run ./harness/.github/actions/prospect-dotcms",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_rolling_seed"
     },
     {
       "repository": "boringcache/loomarr",
@@ -3882,6 +2421,7 @@
       "measured_command_seconds": 1483.552,
       "completed_at": 1788622909.9379318,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 1647.0,
       "external_archive_cache_seconds": 0,
       "cache_inclusive_command_seconds": 1483.552,
@@ -3903,65 +2443,7 @@
           "read_only": false
         }
       ],
-      "validity": "successful_cold",
-      "evidence_directory": "loomarr/run-33974184466/loomarr-boringcache-cold/_temp/prospect-evidence",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-loomarr",
-          "seconds": 153.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 1483.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run ./harness/.github/actions/prospect-loomarr",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_cold"
     },
     {
       "repository": "boringcache/loomarr",
@@ -3992,6 +2474,7 @@
       "measured_command_seconds": 1385.726,
       "completed_at": 1788624474.4512649,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 1564.0,
       "external_archive_cache_seconds": 0,
       "cache_inclusive_command_seconds": 1385.726,
@@ -4013,65 +2496,7 @@
           "read_only": true
         }
       ],
-      "validity": "verified_restore",
-      "evidence_directory": "loomarr/run-33974184466/loomarr-boringcache-warm/_temp/prospect-evidence",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-loomarr",
-          "seconds": 165.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-cli",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 1386.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run ./harness/.github/actions/prospect-loomarr",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "verified_restore"
     },
     {
       "repository": "boringcache/loomarr",
@@ -4096,75 +2521,13 @@
       "measured_command_seconds": 1708.56,
       "completed_at": 1788623168.770181,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 1911.0,
       "external_archive_cache_seconds": 6.0,
       "cache_inclusive_command_seconds": 1714.56,
       "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33974184466/job/101327871135",
       "native_cache_summaries": [],
-      "validity": "successful_cold",
-      "evidence_directory": "loomarr/run-33974184466/loomarr-github-cold/_temp/prospect-evidence",
-      "steps": [
-        {
-          "name": "Set up job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-loomarr",
-          "seconds": 186.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "GitHub Gradle task cache",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 1708.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Publish GitHub Gradle task cache",
-          "seconds": 5.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 2.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run ./harness/.github/actions/prospect-loomarr",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
-        }
-      ]
+      "validity": "successful_cold"
     },
     {
       "repository": "boringcache/loomarr",
@@ -4189,70 +2552,347 @@
       "measured_command_seconds": 1316.386,
       "completed_at": 1788624661.8689914,
       "exit_code": 0,
+      "lane": "fresh",
       "whole_job_seconds": 1484.0,
       "external_archive_cache_seconds": 1.0,
       "cache_inclusive_command_seconds": 1317.386,
       "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33974184466/job/101332167532",
       "native_cache_summaries": [],
-      "validity": "verified_restore",
-      "evidence_directory": "loomarr/run-33974184466/loomarr-github-warm/_temp/prospect-evidence",
-      "steps": [
+      "validity": "verified_restore"
+    },
+    {
+      "repository": "boringcache/loomarr",
+      "source_sha": "c941ded190886f36c1adf3432aa6d043cbcca9c7",
+      "upstream_sha": "a2cc26dadc3e01c718230072c7b5e936ddbbda2e",
+      "mode": "gradle",
+      "working_directory": ".",
+      "source_index": 1,
+      "upstream_subject": "feat(tv): make Android beta release-ready (#1078)",
+      "integration_files": [
+        ".boringcache.toml",
+        "docs/design.md",
+        "scripts/ci-impact.sh",
+        "scripts/testdata/ci-impact.tsv",
+        "web/scripts/build-shield-play.sh"
+      ],
+      "source_parent": "65a80dcde5269012c926dcce54c0120d829792dd",
+      "upstream_parent": "b90210699f06612adafb3f3c264857691e7aa1a4",
+      "upstream_changed_files": [
+        ".github/workflows/android-beta.yml",
+        ".github/workflows/ci-android.yml",
+        "PROGRESS.md",
+        "brand-assets.lock.json",
+        "cmd/loomarr/main.go",
+        "docs/design.md",
+        "docs/dev/android-beta.md",
+        "docs/dev/commands.md",
+        "docs/frontend-design.md",
+        "go.mod",
+        "go.sum",
+        "internal/landiscovery/advertisement.go",
+        "internal/landiscovery/advertisement_test.go",
+        "internal/releaseverify/android_workflow.go",
+        "internal/releaseverify/android_workflow_test.go",
+        "internal/releaseverify/ci_container_workflow_actions.go",
+        "internal/releaseverify/ci_container_workflow_authority.go",
+        "internal/releaseverify/ci_container_workflow_context.go",
+        "internal/releaseverify/ci_container_workflow_topology.go",
+        "mk/agent.mk",
+        "mk/android.mk",
+        "scripts/ci-impact.sh",
+        "scripts/download-android-ci-artifact.sh",
+        "scripts/generate-brand-assets.mjs",
+        "scripts/sign-android-ci-artifact.sh",
+        "scripts/test-android-release-emulator-contract-test.sh",
+        "scripts/test-android-release-emulator.sh",
+        "scripts/test-android-release.sh",
+        "scripts/testdata/ci-impact.tsv",
+        "web/.gitignore",
+        "web/apps/mobile/assets/adaptive-icon.png",
+        "web/apps/mobile/assets/icon.png",
+        "web/apps/mobile/assets/splash-icon.png",
+        "web/apps/tv/android-release.json",
+        "web/apps/tv/assets/adaptive-icon.png",
+        "web/apps/tv/assets/icon.png",
+        "web/apps/tv/package.json",
+        "web/apps/tv/src/app.tsx",
+        "web/apps/tv/tests/config.test.mjs",
+        "web/apps/web/public/icon-192.png",
+        "web/apps/web/public/icon-512.png",
+        "web/packages/core/server-discovery.ts",
+        "web/packages/core/src/index.ts",
+        "web/packages/core/src/pairing/pairing.test.ts",
+        "web/packages/core/src/pairing/pairing.ts",
+        "web/packages/core/src/server-discovery/index.ts",
+        "web/packages/core/src/server-discovery/server-discovery.type.ts",
+        "web/packages/lan-discovery-native/android/build.gradle",
+        "web/packages/lan-discovery-native/android/src/main/AndroidManifest.xml",
+        "web/packages/lan-discovery-native/android/src/main/java/media/loomarr/tv/discovery/LoomarrLanDiscoveryModule.java",
+        "web/packages/lan-discovery-native/android/src/main/java/media/loomarr/tv/discovery/LoomarrLanDiscoveryPackage.java",
+        "web/packages/lan-discovery-native/index.ts",
+        "web/packages/lan-discovery-native/package.json",
+        "web/packages/lan-discovery-native/react-native.config.cjs",
+        "web/packages/lan-discovery-native/src/lan-discovery-native/index.ts",
+        "web/packages/lan-discovery-native/src/lan-discovery-native/lan-discovery-native.ts",
+        "web/packages/lan-discovery-native/tests/lan-discovery-native.test.mjs",
+        "web/packages/lan-discovery-native/tsconfig.json",
+        "web/packages/ui/src/pairing-shell/pairing-shell.tsx",
+        "web/packages/ui/src/pairing-shell/pairing-shell.type.ts",
+        "web/packages/ui/tests/pairing-shell.test.tsx",
+        "web/pnpm-lock.yaml",
+        "web/scripts/tv-emulator-fixture-server.mjs",
+        "web/scripts/verify-shield-aab.sh"
+      ],
+      "case": "loomarr",
+      "provider": "boringcache",
+      "phase": "commit1",
+      "lane": "rolling",
+      "command": [
+        "boringcache",
+        "ci",
+        "run",
+        "--oidc-provider",
+        "github-actions",
+        "--",
+        "make",
+        "android"
+      ],
+      "workflow_sha": "4f1bc59bb26281cabbbfe391149d2cf57ea7bd12",
+      "run_id": "33985627719",
+      "run_attempt": "1",
+      "job": "commit1",
+      "runner_os": "Linux",
+      "runner_arch": "X64",
+      "started_at": 1788636904.107211,
+      "cached_build_seconds": 1596.244,
+      "measured_command_seconds": 1596.293,
+      "completed_at": 1788638500.3998082,
+      "exit_code": 0,
+      "whole_job_seconds": 1795.0,
+      "external_archive_cache_seconds": 0,
+      "cache_inclusive_command_seconds": 1596.293,
+      "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33985627719/job/101363350442",
+      "native_cache_summaries": [
         {
-          "name": "Set up job",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Checkout pinned prospect validation",
-          "seconds": 3.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Run ./harness/.github/actions/prospect-loomarr",
-          "seconds": 159.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "GitHub Gradle task cache",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Measure the real workload",
-          "seconds": 1316.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Retain benchmark evidence",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run ./harness/.github/actions/prospect-loomarr",
-          "seconds": 1.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Checkout pinned prospect validation",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-          "seconds": 0.0,
-          "conclusion": "success"
-        },
-        {
-          "name": "Complete job",
-          "seconds": 0.0,
-          "conclusion": "success"
+          "schema": "cache-session-v2",
+          "adapter": "gradle",
+          "classification": {
+            "errors": 0,
+            "hit_rate": 96.5,
+            "hits": 800,
+            "likely_reason": "partial_key_churn_or_new_work",
+            "misses": 29,
+            "state": "mostly_hot_with_misses",
+            "writes": 29
+          },
+          "buildkit_run_classification": "not_applicable",
+          "read_only": false
         }
-      ]
+      ],
+      "validity": "successful_rolling_commit"
+    },
+    {
+      "repository": "boringcache/loomarr",
+      "source_sha": "3669b54e686e0b491f853701c5cb6eb606fb6d65",
+      "upstream_sha": "bcbfbb0b2a2fb34bc1e1c910e73c3c5c657ab96e",
+      "mode": "gradle",
+      "working_directory": ".",
+      "source_index": 2,
+      "upstream_subject": "fix(suggest): accept provider optional fields (#1021) (#1083)",
+      "integration_files": [
+        ".boringcache.toml",
+        "docs/design.md",
+        "scripts/ci-impact.sh",
+        "scripts/testdata/ci-impact.tsv",
+        "web/scripts/build-shield-play.sh"
+      ],
+      "source_parent": "c941ded190886f36c1adf3432aa6d043cbcca9c7",
+      "upstream_parent": "a2cc26dadc3e01c718230072c7b5e936ddbbda2e",
+      "upstream_changed_files": [
+        "internal/suggest/suggester_test.go",
+        "internal/suggest/tools.go",
+        "internal/suggest/tools_internal_test.go"
+      ],
+      "case": "loomarr",
+      "provider": "boringcache",
+      "phase": "commit2",
+      "lane": "rolling",
+      "command": [
+        "boringcache",
+        "ci",
+        "run",
+        "--oidc-provider",
+        "github-actions",
+        "--",
+        "make",
+        "android"
+      ],
+      "workflow_sha": "4f1bc59bb26281cabbbfe391149d2cf57ea7bd12",
+      "run_id": "33985627719",
+      "run_attempt": "1",
+      "job": "commit2",
+      "runner_os": "Linux",
+      "runner_arch": "X64",
+      "started_at": 1788638697.6505232,
+      "cached_build_seconds": 1581.497,
+      "measured_command_seconds": 1581.542,
+      "completed_at": 1788640279.1925547,
+      "exit_code": 0,
+      "whole_job_seconds": 1776.0,
+      "external_archive_cache_seconds": 0,
+      "cache_inclusive_command_seconds": 1581.542,
+      "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33985627719/job/101367346357",
+      "native_cache_summaries": [
+        {
+          "schema": "cache-session-v2",
+          "adapter": "gradle",
+          "classification": {
+            "errors": 0,
+            "hit_rate": 99.2,
+            "hits": 822,
+            "likely_reason": "partial_key_churn_or_new_work",
+            "misses": 7,
+            "state": "mostly_hot_with_misses",
+            "writes": 7
+          },
+          "buildkit_run_classification": "not_applicable",
+          "read_only": false
+        }
+      ],
+      "validity": "successful_rolling_commit"
+    },
+    {
+      "repository": "boringcache/loomarr",
+      "source_sha": "6d06cd8fe37bb3ee2f19554f4d9d9d97746109e7",
+      "upstream_sha": "d94e1140373b4e6579a4565987298ae96e3ba013",
+      "mode": "gradle",
+      "working_directory": ".",
+      "source_index": 3,
+      "upstream_subject": "fix(android): repair exact-artifact promotion checks (#1084)",
+      "integration_files": [
+        ".boringcache.toml",
+        "docs/design.md",
+        "scripts/ci-impact.sh",
+        "scripts/testdata/ci-impact.tsv",
+        "web/scripts/build-shield-play.sh"
+      ],
+      "source_parent": "3669b54e686e0b491f853701c5cb6eb606fb6d65",
+      "upstream_parent": "bcbfbb0b2a2fb34bc1e1c910e73c3c5c657ab96e",
+      "upstream_changed_files": [
+        "scripts/sign-android-ci-artifact.sh",
+        "scripts/test-android-release-emulator.sh",
+        "scripts/test-android-release.sh"
+      ],
+      "case": "loomarr",
+      "provider": "boringcache",
+      "phase": "commit3",
+      "lane": "rolling",
+      "command": [
+        "boringcache",
+        "ci",
+        "run",
+        "--oidc-provider",
+        "github-actions",
+        "--",
+        "make",
+        "android"
+      ],
+      "workflow_sha": "4f1bc59bb26281cabbbfe391149d2cf57ea7bd12",
+      "run_id": "33985627719",
+      "run_attempt": "1",
+      "job": "commit3",
+      "runner_os": "Linux",
+      "runner_arch": "X64",
+      "started_at": 1788640501.2708313,
+      "cached_build_seconds": 1680.173,
+      "measured_command_seconds": 1680.221,
+      "completed_at": 1788642181.4918213,
+      "exit_code": 0,
+      "whole_job_seconds": 1901.0,
+      "external_archive_cache_seconds": 0,
+      "cache_inclusive_command_seconds": 1680.221,
+      "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33985627719/job/101371376481",
+      "native_cache_summaries": [
+        {
+          "schema": "cache-session-v2",
+          "adapter": "gradle",
+          "classification": {
+            "errors": 0,
+            "hit_rate": 99.3,
+            "hits": 823,
+            "likely_reason": "partial_key_churn_or_new_work",
+            "misses": 6,
+            "state": "mostly_hot_with_misses",
+            "writes": 6
+          },
+          "buildkit_run_classification": "not_applicable",
+          "read_only": false
+        }
+      ],
+      "validity": "successful_rolling_commit"
+    },
+    {
+      "repository": "boringcache/loomarr",
+      "source_sha": "65a80dcde5269012c926dcce54c0120d829792dd",
+      "upstream_sha": "b90210699f06612adafb3f3c264857691e7aa1a4",
+      "mode": "gradle",
+      "working_directory": ".",
+      "source_index": 0,
+      "upstream_subject": "fix(playout): prepare Library originals before tune (#1082)",
+      "integration_files": [
+        ".boringcache.toml",
+        "docs/design.md",
+        "scripts/ci-impact.sh",
+        "scripts/testdata/ci-impact.tsv",
+        "web/scripts/build-shield-play.sh"
+      ],
+      "case": "loomarr",
+      "provider": "boringcache",
+      "phase": "seed",
+      "lane": "rolling",
+      "command": [
+        "boringcache",
+        "ci",
+        "run",
+        "--oidc-provider",
+        "github-actions",
+        "--",
+        "make",
+        "android"
+      ],
+      "workflow_sha": "4f1bc59bb26281cabbbfe391149d2cf57ea7bd12",
+      "run_id": "33985627719",
+      "run_attempt": "1",
+      "job": "seed",
+      "runner_os": "Linux",
+      "runner_arch": "X64",
+      "started_at": 1788634853.876328,
+      "cached_build_seconds": 1849.522,
+      "measured_command_seconds": 1849.57,
+      "completed_at": 1788636703.4468217,
+      "exit_code": 0,
+      "whole_job_seconds": 2068.0,
+      "external_archive_cache_seconds": 0,
+      "cache_inclusive_command_seconds": 1849.57,
+      "job_url": "https://github.com/boringcache/benchmarks/actions/runs/33985627719/job/101358485598",
+      "native_cache_summaries": [
+        {
+          "schema": "cache-session-v2",
+          "adapter": "gradle",
+          "classification": {
+            "errors": 0,
+            "hit_rate": 0.0,
+            "hits": 0,
+            "likely_reason": "no_hits_for_requested_keys",
+            "misses": 818,
+            "state": "cold",
+            "writes": 818
+          },
+          "buildkit_run_classification": "not_applicable",
+          "read_only": false
+        }
+      ],
+      "validity": "successful_rolling_seed"
     }
   ]
 }

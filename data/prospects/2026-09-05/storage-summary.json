@@ -1,0 +1,30 @@
+{
+  "workspace": "boringcache/benchmarks",
+  "source_run": "https://github.com/boringcache/benchmarks/actions/runs/33991917691",
+  "mcp_generated_at": "2026-09-05T21:04:10Z",
+  "catalog": {
+    "current_targets_count": 33,
+    "current_targets_storage_bytes": 42827019062,
+    "dedup_unique_bytes": 26827017197,
+    "dedup_savings_bytes": 16000001865,
+    "dedup_ratio": 37.4,
+    "cache_usage_synced_at": "2026-09-05T21:02:22Z",
+    "workspace_storage_target_bytes": 107374182400
+  },
+  "physical_objects": {
+    "stored_objects_bytes": 20997642102,
+    "stored_objects_synced_at": "2026-09-05T19:23:44Z"
+  },
+  "waterui": {
+    "current_archive_targets": 7,
+    "compressed_payload_bytes": 20406317464,
+    "fresh_compressed_payload_bytes": 6898794568,
+    "all_current_targets_ready_and_verified": true
+  },
+  "session_inventory": {
+    "returned": 230,
+    "pages": 3,
+    "truncated": false
+  },
+  "note": "Workspace catalog deduplication and asynchronously measured physical objects have different accounting boundaries and refresh times. WaterUI snapshot payloads overlap and exclude compiler storage; do not treat their sum as unique physical bytes."
+}
