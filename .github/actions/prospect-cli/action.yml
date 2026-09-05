@@ -1,0 +1,45 @@
+name: Install reviewed BoringCache CLI
+description: Install the released CLI selected by the pinned One Action contract.
+inputs:
+  cli-version:
+    description: Optional exact release override
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+  - name: Resolve the reviewed Action default
+    shell: bash
+    run: 'gh api ''repos/boringcache/one/contents/action.yml?ref=c62af42c5c1e29388ceeea77b6a7f1db51f641e7'' -H ''Accept:
+      application/vnd.github.raw+json'' > "$RUNNER_TEMP/one-action.yml"
+
+      version=$(sed -n ''/^  cli-version:/,/^  cli-platform:/s/^    default: ''\''''\([^''\'''']*\)''\''''/\1/p''
+      "$RUNNER_TEMP/one-action.yml")
+
+      if [ -n "$CLI_OVERRIDE" ]; then version="$CLI_OVERRIDE"; fi
+
+      test -n "$version"
+
+      echo "version=$version" >> "$GITHUB_OUTPUT"'
+    id: cli
+    env:
+      GH_TOKEN: ${{ github.token }}
+      CLI_OVERRIDE: ${{ inputs.cli-version }}
+  - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db
+    with:
+      version: 2026.9.1
+      mise_toml: '[tools]
+
+        "github:boringcache/cli" = { version = "${{ steps.cli.outputs.version }}", asset_pattern = "boringcache-linux-amd64",
+        rename_exe = "boringcache" }
+
+        '
+      cache: false
+      working_directory: ${{ runner.temp }}/prospect-tools
+  - name: Record released product selection
+    shell: bash
+    run: 'mkdir -p "$RUNNER_TEMP/prospect-evidence"
+
+      boringcache --version > "$RUNNER_TEMP/prospect-evidence/cli-version.txt"
+
+      cp "$RUNNER_TEMP/one-action.yml" "$RUNNER_TEMP/prospect-evidence/action.yml"'

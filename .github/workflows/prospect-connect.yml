@@ -1,0 +1,27 @@
+name: Prospect OIDC connection
+'on':
+  push:
+    branches:
+    - prospect-validation
+    paths:
+    - .github/workflows/prospect-connect.yml
+  workflow_dispatch: {}
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  connect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-cli
+    - name: Approve the benchmarks connection
+      shell: bash
+      run: boringcache ci connect --oidc-provider github-actions
+    - name: Verify trusted publication
+      shell: bash
+      run: boringcache ci run --oidc-provider github-actions -- boringcache ci trust --request publish --json
