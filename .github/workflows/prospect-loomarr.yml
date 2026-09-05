@@ -1,0 +1,197 @@
+name: Prospect loomarr
+'on':
+  push:
+    branches:
+    - prospect-validation
+    paths:
+    - .github/workflows/prospect-loomarr.yml
+  workflow_dispatch:
+    inputs:
+      cli_version:
+        description: Optional exact BoringCache CLI release override
+        type: string
+        required: false
+        default: ''
+permissions:
+  contents: read
+concurrency:
+  group: prospect-loomarr-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  github-cold:
+    name: GitHub loomarr cold
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+    env:
+      GRADLE_USER_HOME: ${{ github.workspace }}/gradle-home
+      ANDROID_CI_OUTPUT_DIR: ${{ github.workspace }}/source/.artifacts/android-ci
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/loomarr
+        ref: 8f00bd69dd822a5baddce7cca09e234249a6e4d5
+        path: source
+        submodules: false
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-loomarr
+    - name: GitHub Gradle task cache
+      id: cache
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+      with:
+        path: ${{ github.workspace }}/gradle-home/caches/build-cache-*
+        key: prospect-loomarr-${{ github.run_id }}-${{ github.run_attempt }}
+        fail-on-cache-miss: false
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py loomarr github cold
+    - name: Publish GitHub Gradle task cache
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+      with:
+        path: ${{ github.workspace }}/gradle-home/caches/build-cache-*
+        key: prospect-loomarr-${{ github.run_id }}-${{ github.run_attempt }}
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: loomarr-github-cold
+        path: |-
+          ${{ runner.temp }}/prospect-evidence
+          source/.artifacts/android-ci/*.json
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+  github-warm:
+    name: GitHub loomarr warm
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+    env:
+      GRADLE_USER_HOME: ${{ github.workspace }}/gradle-home
+      ANDROID_CI_OUTPUT_DIR: ${{ github.workspace }}/source/.artifacts/android-ci
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/loomarr
+        ref: 8f00bd69dd822a5baddce7cca09e234249a6e4d5
+        path: source
+        submodules: false
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-loomarr
+    - name: GitHub Gradle task cache
+      id: cache
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+      with:
+        path: ${{ github.workspace }}/gradle-home/caches/build-cache-*
+        key: prospect-loomarr-${{ github.run_id }}-${{ github.run_attempt }}
+        fail-on-cache-miss: true
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py loomarr github warm
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: loomarr-github-warm
+        path: |-
+          ${{ runner.temp }}/prospect-evidence
+          source/.artifacts/android-ci/*.json
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: github-cold
+  boringcache-cold:
+    name: BoringCache loomarr cold
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      GRADLE_USER_HOME: ${{ github.workspace }}/gradle-home
+      ANDROID_CI_OUTPUT_DIR: ${{ github.workspace }}/source/.artifacts/android-ci
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/loomarr
+        ref: 8f00bd69dd822a5baddce7cca09e234249a6e4d5
+        path: source
+        submodules: false
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-loomarr
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py loomarr boringcache cold
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: loomarr-boringcache-cold
+        path: |-
+          ${{ runner.temp }}/prospect-evidence
+          source/.artifacts/android-ci/*.json
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+  boringcache-warm:
+    name: BoringCache loomarr warm
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      GRADLE_USER_HOME: ${{ github.workspace }}/gradle-home
+      ANDROID_CI_OUTPUT_DIR: ${{ github.workspace }}/source/.artifacts/android-ci
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/loomarr
+        ref: 8f00bd69dd822a5baddce7cca09e234249a6e4d5
+        path: source
+        submodules: false
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-loomarr
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py loomarr boringcache warm
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: loomarr-boringcache-warm
+        path: |-
+          ${{ runner.temp }}/prospect-evidence
+          source/.artifacts/android-ci/*.json
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: boringcache-cold

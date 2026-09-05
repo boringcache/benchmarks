@@ -1,0 +1,32 @@
+name: Prepare loomarr
+description: Prepare the upstream four-ABI Android workload without a build cache.
+runs:
+  using: composite
+  steps:
+  - uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c
+    with:
+      distribution: temurin
+      java-version: '21'
+  - uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699
+  - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+    with:
+      node-version: 22.22.3
+  - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
+    with:
+      go-version: 1.27.0
+      cache: false
+  - name: Install the pinned frontend and generate upstream clients
+    shell: bash
+    working-directory: source
+    run: |-
+      corepack enable
+      make fe-install
+      make fe-codegen
+  - name: Verify the affected Android and CI contracts
+    shell: bash
+    working-directory: source
+    run: |-
+      bash scripts/ci-impact-test.sh
+      node --test web/scripts/with-memory-safe-android-build.test.cjs
+      go test -race ./internal/releaseverify
+      make ci-lint

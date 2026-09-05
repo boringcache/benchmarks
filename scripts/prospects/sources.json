@@ -33,5 +33,12 @@
     "upstream_sha": "439be9daafd277c3317edd74619d511d47c9f6f7",
     "mode": "nx",
     "working_directory": "core-web"
+  },
+  "loomarr": {
+    "repository": "boringcache/loomarr",
+    "source_sha": "8f00bd69dd822a5baddce7cca09e234249a6e4d5",
+    "upstream_sha": "d94e1140373b4e6579a4565987298ae96e3ba013",
+    "mode": "gradle",
+    "working_directory": "."
   }
 }

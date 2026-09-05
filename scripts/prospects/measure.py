@@ -27,8 +27,28 @@ def main():
 
     plan = tomllib.loads((cwd / ".boringcache.toml").read_text())
     mode = source["mode"]
-    command = plan["adapters"][mode]["command"]
-    if provider == "boringcache":
+    command = (
+        ["make", "android"] if case == "loomarr" else plan["adapters"][mode]["command"]
+    )
+    if case == "loomarr":
+        os.environ["LOOMARR_ANDROID_GRADLE_CACHE"] = (
+            "gradle"
+            if provider == "github"
+            else "boringcache"
+            if phase == "cold"
+            else "boringcache-restore"
+        )
+        if provider == "boringcache":
+            command = [
+                "boringcache",
+                "ci",
+                "run",
+                "--oidc-provider",
+                "github-actions",
+                "--",
+                *command,
+            ]
+    elif provider == "boringcache":
         command = [
             "boringcache",
             "ci",
