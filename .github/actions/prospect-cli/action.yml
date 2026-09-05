@@ -11,7 +11,6 @@ runs:
   - name: Resolve the reviewed Action default
     shell: bash
     run: |-
-      mkdir -p "$RUNNER_TEMP/prospect-tools"
       gh api 'repos/boringcache/one/contents/action.yml?ref=c62af42c5c1e29388ceeea77b6a7f1db51f641e7' -H 'Accept: application/vnd.github.raw+json' > "$RUNNER_TEMP/one-action.yml"
       version=$(sed -n '/^  cli-version:/,/^  cli-platform:/s/^    default: '\''\([^'\'']*\)'\''/\1/p' "$RUNNER_TEMP/one-action.yml")
       if [ -n "$CLI_OVERRIDE" ]; then version="$CLI_OVERRIDE"; fi
@@ -28,7 +27,6 @@ runs:
         [tools]
         "github:boringcache/cli" = { version = "${{ steps.cli.outputs.version }}", asset_pattern = "boringcache-linux-amd64", rename_exe = "boringcache" }
       cache: false
-      working_directory: ${{ runner.temp }}/prospect-tools
   - name: Record released product selection
     shell: bash
     run: |-
