@@ -1,0 +1,30 @@
+name: Prepare ferrum-edge
+description: Prepare the unchanged upstream workload without a build cache.
+runs:
+  using: composite
+  steps:
+  - uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8
+    with:
+      toolchain: 1.98.1
+  - uses: taiki-e/install-action@c44f6b046f1c29ae5918b1e0bfdbb2f1813836fd
+    with:
+      tool: sccache@0.17.0,nextest@0.9.101
+  - name: Install upstream native dependencies
+    shell: bash
+    run: |-
+      sudo apt-get update
+      sudo apt-get install -y --no-install-recommends protobuf-compiler libcurl4-openssl-dev mold clang
+  - name: Preserve upstream unit-test runner settings
+    shell: bash
+    run: |-
+      sudo fallocate -l 12G /mnt/ferrum-swapfile
+      sudo chmod 600 /mnt/ferrum-swapfile
+      sudo mkswap /mnt/ferrum-swapfile
+      sudo swapon /mnt/ferrum-swapfile
+      python3 - <<'PYTHON'
+      import pathlib,re,os
+      root=pathlib.Path('source/custom_plugins')
+      names=sorted(p.stem for p in list((root/'examples').glob('*.rs'))+list(root.glob('*.rs')) if p.stem!='mod')
+      assert names and all(re.fullmatch('[A-Za-z0-9_]+',n) for n in names)
+      with open(os.environ['GITHUB_ENV'],'a') as f:f.write('FERRUM_CUSTOM_PLUGINS='+','.join(names)+'\n')
+      PYTHON

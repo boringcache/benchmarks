@@ -1,0 +1,37 @@
+{
+  "waterui": {
+    "repository": "boringcache/waterui",
+    "source_sha": "e683e4ac358bce0072311a6fda4b81ed376e4e03",
+    "upstream_sha": "c7e196ae65e78256003e1666018b575ce94ff972",
+    "mode": "cargo",
+    "working_directory": "."
+  },
+  "status-list-server": {
+    "repository": "boringcache/status-list-server",
+    "source_sha": "6fe8efea22efb558fe93a7f636e53d7b3ba8c405",
+    "upstream_sha": "9d46ee448321ad5b89be9bc9d1832692e71cf696",
+    "mode": "cargo",
+    "working_directory": "."
+  },
+  "ferrum-edge": {
+    "repository": "boringcache/ferrum-edge",
+    "source_sha": "cc29f109788a23f9b6c4aeeb64a3a532a075538c",
+    "upstream_sha": "9bd6cd8bff3adcbedb561715464801b63292797f",
+    "mode": "cargo",
+    "working_directory": "."
+  },
+  "cadence": {
+    "repository": "boringcache/cadence",
+    "source_sha": "7f99ff499f305dad960854a231118cbb1401c3b5",
+    "upstream_sha": "44f948b07d39b4895bd173242f79bdb7fb8866c8",
+    "mode": "docker",
+    "working_directory": "."
+  },
+  "dotcms": {
+    "repository": "boringcache/core",
+    "source_sha": "5c824d85cd4be295c8382950c911179a2a8f83fa",
+    "upstream_sha": "439be9daafd277c3317edd74619d511d47c9f6f7",
+    "mode": "nx",
+    "working_directory": "core-web"
+  }
+}

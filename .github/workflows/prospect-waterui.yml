@@ -1,0 +1,201 @@
+name: Prospect waterui
+'on':
+  push:
+    branches:
+    - prospect-validation
+    paths:
+    - .github/workflows/prospect-waterui.yml
+  workflow_dispatch:
+    inputs:
+      cli_version:
+        description: Optional exact BoringCache CLI release override
+        type: string
+        required: false
+        default: ''
+permissions:
+  contents: read
+concurrency:
+  group: prospect-waterui-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  github-cold:
+    name: GitHub waterui cold
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+      WATERUI_TEST_ARTIFACTS_DIR: ${{ github.workspace }}/waterui-test-artifacts
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/waterui
+        ref: e683e4ac358bce0072311a6fda4b81ed376e4e03
+        path: source
+        submodules: recursive
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-waterui
+    - name: GitHub Rust cache
+      id: cache
+      uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6
+      with:
+        workspaces: source -> target
+        prefix-key: prospect-${{ github.run_id }}-${{ github.run_attempt }}
+        shared-key: waterui
+        cache-on-failure: false
+        save-if: 'true'
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py waterui github cold
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: waterui-github-cold
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+  github-warm:
+    name: GitHub waterui warm
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+      WATERUI_TEST_ARTIFACTS_DIR: ${{ github.workspace }}/waterui-test-artifacts
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/waterui
+        ref: e683e4ac358bce0072311a6fda4b81ed376e4e03
+        path: source
+        submodules: recursive
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-waterui
+    - name: GitHub Rust cache
+      id: cache
+      uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6
+      with:
+        workspaces: source -> target
+        prefix-key: prospect-${{ github.run_id }}-${{ github.run_attempt }}
+        shared-key: waterui
+        cache-on-failure: false
+        save-if: 'false'
+    - name: Require the GitHub warm cache
+      shell: bash
+      run: test "$CACHE_HIT" = true
+      env:
+        CACHE_HIT: ${{ steps.cache.outputs.cache-hit }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py waterui github warm
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: waterui-github-warm
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: github-cold
+  boringcache-cold:
+    name: BoringCache waterui cold
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+      WATERUI_TEST_ARTIFACTS_DIR: ${{ github.workspace }}/waterui-test-artifacts
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/waterui
+        ref: e683e4ac358bce0072311a6fda4b81ed376e4e03
+        path: source
+        submodules: recursive
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-waterui
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py waterui boringcache cold
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: waterui-boringcache-cold
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+  boringcache-warm:
+    name: BoringCache waterui warm
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+      WATERUI_TEST_ARTIFACTS_DIR: ${{ github.workspace }}/waterui-test-artifacts
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/waterui
+        ref: e683e4ac358bce0072311a6fda4b81ed376e4e03
+        path: source
+        submodules: recursive
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-waterui
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py waterui boringcache warm
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: waterui-boringcache-warm
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: boringcache-cold

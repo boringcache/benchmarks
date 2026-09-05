@@ -1,0 +1,197 @@
+name: Prospect status-list-server
+'on':
+  push:
+    branches:
+    - prospect-validation
+    paths:
+    - .github/workflows/prospect-status-list-server.yml
+  workflow_dispatch:
+    inputs:
+      cli_version:
+        description: Optional exact BoringCache CLI release override
+        type: string
+        required: false
+        default: ''
+permissions:
+  contents: read
+concurrency:
+  group: prospect-status-list-server-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  github-cold:
+    name: GitHub status-list-server cold
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/status-list-server
+        ref: 6fe8efea22efb558fe93a7f636e53d7b3ba8c405
+        path: source
+        submodules: false
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-status-list-server
+    - name: GitHub Rust cache
+      id: cache
+      uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6
+      with:
+        workspaces: source -> target
+        prefix-key: prospect-${{ github.run_id }}-${{ github.run_attempt }}
+        shared-key: status-list-server
+        cache-on-failure: false
+        save-if: 'true'
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py status-list-server github cold
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: status-list-server-github-cold
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+  github-warm:
+    name: GitHub status-list-server warm
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/status-list-server
+        ref: 6fe8efea22efb558fe93a7f636e53d7b3ba8c405
+        path: source
+        submodules: false
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-status-list-server
+    - name: GitHub Rust cache
+      id: cache
+      uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6
+      with:
+        workspaces: source -> target
+        prefix-key: prospect-${{ github.run_id }}-${{ github.run_attempt }}
+        shared-key: status-list-server
+        cache-on-failure: false
+        save-if: 'false'
+    - name: Require the GitHub warm cache
+      shell: bash
+      run: test "$CACHE_HIT" = true
+      env:
+        CACHE_HIT: ${{ steps.cache.outputs.cache-hit }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py status-list-server github warm
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: status-list-server-github-warm
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: github-cold
+  boringcache-cold:
+    name: BoringCache status-list-server cold
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/status-list-server
+        ref: 6fe8efea22efb558fe93a7f636e53d7b3ba8c405
+        path: source
+        submodules: false
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-status-list-server
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py status-list-server boringcache cold
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: status-list-server-boringcache-cold
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+  boringcache-warm:
+    name: BoringCache status-list-server warm
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/status-list-server
+        ref: 6fe8efea22efb558fe93a7f636e53d7b3ba8c405
+        path: source
+        submodules: false
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-status-list-server
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py status-list-server boringcache warm
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: status-list-server-boringcache-warm
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: boringcache-cold

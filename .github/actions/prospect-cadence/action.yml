@@ -1,0 +1,10 @@
+name: Prepare cadence
+description: Prepare the unchanged upstream workload without a build cache.
+runs:
+  using: composite
+  steps:
+  - name: Inspect Docker
+    shell: bash
+    run: |-
+      docker version
+      docker buildx version

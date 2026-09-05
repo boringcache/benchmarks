@@ -1,0 +1,178 @@
+name: Prospect cadence
+'on':
+  push:
+    branches:
+    - prospect-validation
+    paths:
+    - .github/workflows/prospect-cadence.yml
+  workflow_dispatch:
+    inputs:
+      cli_version:
+        description: Optional exact BoringCache CLI release override
+        type: string
+        required: false
+        default: ''
+permissions:
+  contents: read
+concurrency:
+  group: prospect-cadence-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  github-cold:
+    name: GitHub cadence cold
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/cadence
+        ref: 7f99ff499f305dad960854a231118cbb1401c3b5
+        path: source
+        submodules: false
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-cadence
+    - uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435
+    - uses: crazy-max/ghaction-github-runtime@3cb05d89e1f492524af3d41a1c98c83bc3025124
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py cadence github cold
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: cadence-github-cold
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+  github-warm:
+    name: GitHub cadence warm
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/cadence
+        ref: 7f99ff499f305dad960854a231118cbb1401c3b5
+        path: source
+        submodules: false
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-cadence
+    - uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435
+    - uses: crazy-max/ghaction-github-runtime@3cb05d89e1f492524af3d41a1c98c83bc3025124
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py cadence github warm
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: cadence-github-warm
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: github-cold
+  boringcache-cold:
+    name: BoringCache cadence cold
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/cadence
+        ref: 7f99ff499f305dad960854a231118cbb1401c3b5
+        path: source
+        submodules: false
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-cadence
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py cadence boringcache cold
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: cadence-boringcache-cold
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+  boringcache-warm:
+    name: BoringCache cadence warm
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CARGO_TERM_COLOR: always
+      CARGO_INCREMENTAL: '0'
+      RUSTUP_TOOLCHAIN: 1.98.1
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/cadence
+        ref: 7f99ff499f305dad960854a231118cbb1401c3b5
+        path: source
+        submodules: false
+        persist-credentials: false
+    - uses: ./harness/.github/actions/prospect-cadence
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py cadence boringcache warm
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: cadence-boringcache-warm
+        path: ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: boringcache-cold

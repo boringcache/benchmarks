@@ -1,0 +1,16 @@
+name: Prepare dotcms
+description: Prepare the unchanged upstream workload without a build cache.
+runs:
+  using: composite
+  steps:
+  - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+    with:
+      node-version-file: source/core-web/.nvmrc
+  - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86
+    with:
+      package_json_file: source/core-web/package.json
+      run_install: false
+  - name: Install the pinned frontend dependencies
+    shell: bash
+    run: pnpm install --frozen-lockfile
+    working-directory: source/core-web
