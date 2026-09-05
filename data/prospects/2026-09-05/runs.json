@@ -1,0 +1,48 @@
+{
+  "workspace": "boringcache/benchmarks",
+  "fork_branch": "boringcache-validation",
+  "harness_repository": "boringcache/benchmarks",
+  "harness_branch": "prospect-validation",
+  "comparisons": {
+    "waterui": 33973996116,
+    "status-list-server": 33973996178,
+    "ferrum-edge": 33984066894,
+    "cadence": 33973996120,
+    "dotcms": 33973996156,
+    "loomarr": 33974184466
+  },
+  "oidc_proof": {
+    "fork_run": "https://github.com/boringcache/waterui/actions/runs/33970798955",
+    "harness_run": "https://github.com/boringcache/benchmarks/actions/runs/33973917111",
+    "resolved": "publish",
+    "static_tokens_created": false
+  },
+  "inventory_runs": [
+    33974912140,
+    33975155322,
+    33982050792,
+    33983636386,
+    33986564351
+  ],
+  "investigation_runs": {
+    "ferrum-edge": [
+      33973996106,
+      33981755862
+    ]
+  },
+  "setup_failures": {
+    "ferrum-edge": [
+      33983928426
+    ]
+  },
+  "rolling": {
+    "waterui": 33985627704,
+    "status-list-server": 33985627750,
+    "ferrum-edge": 33985627694,
+    "cadence": 33985627716,
+    "dotcms": 33985627773,
+    "loomarr": 33985627719
+  },
+  "rolling_harness_sha": "4f1bc59bb26281cabbbfe391149d2cf57ea7bd12",
+  "rolling_method": "BoringCache only; third first-parent ancestor seed followed by three real successor commits on fresh serial runners; restore and publish after every build."
+}

@@ -1,0 +1,610 @@
+{
+  "waterui": {
+    "branch": "boringcache-rolling-validation",
+    "cohort": "rolling-20260905",
+    "commits": [
+      {
+        "repository": "boringcache/waterui",
+        "source_sha": "1edfee825e32a6d71fb8f3bf0a511e554d28a7a7",
+        "upstream_sha": "8d6712266c5af39d4fb94ab1fea5e56d9dc57bb4",
+        "mode": "cargo",
+        "working_directory": ".",
+        "source_index": 0,
+        "upstream_subject": "Merge pull request #348 from water-rs/agent/ci-windows-split",
+        "integration_files": [
+          ".boringcache.toml"
+        ]
+      },
+      {
+        "repository": "boringcache/waterui",
+        "source_sha": "7642492e7b32390ec8b21747002ccf498125e15a",
+        "upstream_sha": "1f657d3e8b3458a48435eabb7e2c63d635dff9e9",
+        "mode": "cargo",
+        "working_directory": ".",
+        "source_index": 1,
+        "upstream_subject": "Merge pull request #335 from water-rs/agent/chart-registry",
+        "integration_files": [
+          ".boringcache.toml"
+        ],
+        "source_parent": "1edfee825e32a6d71fb8f3bf0a511e554d28a7a7",
+        "upstream_parent": "8d6712266c5af39d4fb94ab1fea5e56d9dc57bb4",
+        "upstream_changed_files": [
+          "Cargo.lock",
+          "Cargo.toml",
+          "backends/dew/Cargo.toml",
+          "components/data/chart/Cargo.toml",
+          "components/data/chart/LICENSE-APACHE",
+          "components/data/chart/LICENSE-MIT",
+          "components/data/chart/src/animation.rs",
+          "components/data/chart/src/axes.rs",
+          "components/data/chart/src/axis.rs",
+          "components/data/chart/src/charts/cartesian/area.rs",
+          "components/data/chart/src/charts/cartesian/bar.rs",
+          "components/data/chart/src/charts/cartesian/bubble.rs",
+          "components/data/chart/src/charts/cartesian/line.rs",
+          "components/data/chart/src/charts/cartesian/mod.rs",
+          "components/data/chart/src/charts/cartesian/scatter.rs",
+          "components/data/chart/src/charts/core/canvas.rs",
+          "components/data/chart/src/charts/core/mod.rs",
+          "components/data/chart/src/charts/density/contour.rs",
+          "components/data/chart/src/charts/density/heatmap.rs",
+          "components/data/chart/src/charts/density/mod.rs",
+          "components/data/chart/src/charts/financial/candlestick.rs",
+          "components/data/chart/src/charts/financial/depth.rs",
+          "components/data/chart/src/charts/financial/mod.rs",
+          "components/data/chart/src/charts/geo/choropleth.rs",
+          "components/data/chart/src/charts/geo/mod.rs",
+          "components/data/chart/src/charts/mod.rs",
+          "components/data/chart/src/charts/polar/mod.rs",
+          "components/data/chart/src/charts/polar/pie.rs",
+          "components/data/chart/src/charts/polar/radar.rs",
+          "components/data/chart/src/charts/specialized/gauge.rs",
+          "components/data/chart/src/charts/specialized/mod.rs",
+          "components/data/chart/src/composition.rs",
+          "components/data/chart/src/data.rs",
+          "components/data/chart/src/interaction.rs",
+          "components/data/chart/src/legend.rs",
+          "components/data/chart/src/lib.rs",
+          "components/data/chart/src/params.rs",
+          "components/data/chart/src/tooltip.rs",
+          "components/data/chart/tests/chart_stack_bounds.rs",
+          "components/data/chart/tests/e2e_accessibility.rs",
+          "components/data/chart/tests/e2e_composition.rs",
+          "components/data/chart/tests/e2e_interaction_smoke.rs",
+          "components/data/chart/tests/e2e_radar_geometry.rs",
+          "components/data/chart/tests/e2e_scroll.rs",
+          "components/data/chart/tests/e2e_x_selection.rs",
+          "components/data/chart/tests/readout_layout.rs",
+          "components/data/chart/tests/support/mod.rs"
+        ]
+      },
+      {
+        "repository": "boringcache/waterui",
+        "source_sha": "2415a85072e2851cd88a14070e3522ae8a00dc57",
+        "upstream_sha": "ac967c37667cc45efa39548557f923885ca7faa4",
+        "mode": "cargo",
+        "working_directory": ".",
+        "source_index": 2,
+        "upstream_subject": "Merge pull request #350 from water-rs/agent/dist-allow-dirty-ci",
+        "integration_files": [
+          ".boringcache.toml"
+        ],
+        "source_parent": "7642492e7b32390ec8b21747002ccf498125e15a",
+        "upstream_parent": "1f657d3e8b3458a48435eabb7e2c63d635dff9e9",
+        "upstream_changed_files": [
+          "dist-workspace.toml"
+        ]
+      },
+      {
+        "repository": "boringcache/waterui",
+        "source_sha": "53513817e587ce592ce00ae9a56a14498deaac2d",
+        "upstream_sha": "c7e196ae65e78256003e1666018b575ce94ff972",
+        "mode": "cargo",
+        "working_directory": ".",
+        "source_index": 3,
+        "upstream_subject": "Merge pull request #346 from water-rs/agent/failure-report-diagnostics",
+        "integration_files": [
+          ".boringcache.toml"
+        ],
+        "source_parent": "2415a85072e2851cd88a14070e3522ae8a00dc57",
+        "upstream_parent": "ac967c37667cc45efa39548557f923885ca7faa4",
+        "upstream_changed_files": [
+          "cli/src/runtime/utils.rs"
+        ]
+      }
+    ]
+  },
+  "status-list-server": {
+    "branch": "boringcache-rolling-validation",
+    "cohort": "rolling-20260905",
+    "commits": [
+      {
+        "repository": "boringcache/status-list-server",
+        "source_sha": "3a81101bca96340f79b6fbe775ff51b44c258c40",
+        "upstream_sha": "a3d077275e29d10a08384be44409a33910e87708",
+        "mode": "cargo",
+        "working_directory": ".",
+        "source_index": 0,
+        "upstream_subject": "docs: add operator deployment and operations guide (#467)",
+        "integration_files": [
+          ".boringcache.toml"
+        ]
+      },
+      {
+        "repository": "boringcache/status-list-server",
+        "source_sha": "4c2f30d9123cf03eb943469defe4592711899d9f",
+        "upstream_sha": "b1c57686127b70f0509f518e4f9f840914edaf52",
+        "mode": "cargo",
+        "working_directory": ".",
+        "source_index": 1,
+        "upstream_subject": "feat: update Helm chart for provider-neutral deployment and enhance configuration options (#473)",
+        "integration_files": [
+          ".boringcache.toml"
+        ],
+        "source_parent": "3a81101bca96340f79b6fbe775ff51b44c258c40",
+        "upstream_parent": "a3d077275e29d10a08384be44409a33910e87708",
+        "upstream_changed_files": [
+          ".github/workflows/deploy.yml",
+          ".github/workflows/render-helm-templates/action.yml",
+          "docs/LOCAL_DEPLOYMENT.md",
+          "docs/deployment-runbook.md",
+          "docs/troubleshooting.md",
+          "helm/README.md",
+          "helm/chart/Chart.yaml",
+          "helm/chart/templates/deployment.yaml",
+          "helm/chart/templates/ingress.yaml",
+          "helm/chart/templates/secret.yaml",
+          "helm/chart/templates/service.yaml",
+          "helm/chart/values-aws-nlb.yaml",
+          "helm/chart/values-aws.yaml",
+          "helm/chart/values-external-secrets.yaml",
+          "helm/chart/values-local.yaml",
+          "helm/chart/values-production.yaml",
+          "helm/chart/values-rotation-example.yaml",
+          "helm/chart/values.schema.json",
+          "helm/chart/values.yaml",
+          "scripts/verify-image-reference.sh",
+          "src/config.rs"
+        ]
+      },
+      {
+        "repository": "boringcache/status-list-server",
+        "source_sha": "a8ed7ca1ad37c80d1ca5a40ff2e2433ffb113d06",
+        "upstream_sha": "b7cca4b8ba335973b0d1cd7eb72a9dd4496d1c6c",
+        "mode": "cargo",
+        "working_directory": ".",
+        "source_index": 2,
+        "upstream_subject": "fix: unset CARGO_BUILD_TARGET when installing cargo tools in Dockerfile",
+        "integration_files": [
+          ".boringcache.toml"
+        ],
+        "source_parent": "4c2f30d9123cf03eb943469defe4592711899d9f",
+        "upstream_parent": "b1c57686127b70f0509f518e4f9f840914edaf52",
+        "upstream_changed_files": [
+          "Dockerfile"
+        ]
+      },
+      {
+        "repository": "boringcache/status-list-server",
+        "source_sha": "d91c37ae9260627ad148b88aa980af000b63bbaa",
+        "upstream_sha": "9d46ee448321ad5b89be9bc9d1832692e71cf696",
+        "mode": "cargo",
+        "working_directory": ".",
+        "source_index": 3,
+        "upstream_subject": "fix(ci): fetch repo and pass repository flag for digest artifact download",
+        "integration_files": [
+          ".boringcache.toml"
+        ],
+        "source_parent": "a8ed7ca1ad37c80d1ca5a40ff2e2433ffb113d06",
+        "upstream_parent": "b7cca4b8ba335973b0d1cd7eb72a9dd4496d1c6c",
+        "upstream_changed_files": [
+          ".github/workflows/deploy.yml",
+          ".github/workflows/scheduled-image-scan.yml"
+        ]
+      }
+    ]
+  },
+  "ferrum-edge": {
+    "branch": "boringcache-rolling-validation",
+    "cohort": "rolling-20260905",
+    "commits": [
+      {
+        "repository": "boringcache/ferrum-edge",
+        "source_sha": "082107e37ce796e0ea477fd7f5776cb7704ce692",
+        "upstream_sha": "6936e7bc75c7464a057b254ab57c04d2484e0fe6",
+        "mode": "cargo",
+        "working_directory": ".",
+        "source_index": 0,
+        "upstream_subject": "Merge pull request #4631 from ferrum-edge/claude/issue-4625-4626-capture-listener-admission",
+        "integration_files": [
+          ".boringcache.toml"
+        ]
+      },
+      {
+        "repository": "boringcache/ferrum-edge",
+        "source_sha": "d66121cd51a873dbe2488560989e63cc49a6e93d",
+        "upstream_sha": "748fb16a036b293ee05b30a4bd484e2f699a6204",
+        "mode": "cargo",
+        "working_directory": ".",
+        "source_index": 1,
+        "upstream_subject": "Merge pull request #4632 from ferrum-edge/claude/issue-4627-namespace-scoped-primary-keys",
+        "integration_files": [
+          ".boringcache.toml"
+        ],
+        "source_parent": "082107e37ce796e0ea477fd7f5776cb7704ce692",
+        "upstream_parent": "6936e7bc75c7464a057b254ab57c04d2484e0fe6",
+        "upstream_changed_files": [
+          "docs/admin_api.md",
+          "docs/api_specs.md",
+          "docs/configuration.md",
+          "docs/functional_testing_database.md",
+          "docs/migrations.md",
+          "docs/mongodb.md",
+          "docs/plugins.md",
+          "src/config/db_loader.rs",
+          "src/config/migrations/mysql_collation_probe.rs",
+          "src/config/migrations/sql_dialect.rs",
+          "src/config/mongo_store.rs",
+          "src/config/namespace_registry.rs",
+          "tests/functional/functional_mongodb_test.rs",
+          "tests/integration/admin_api_specs_handler_tests.rs",
+          "tests/integration/admin_cached_config_tests.rs",
+          "tests/integration/admin_cross_namespace_refs_tests.rs",
+          "tests/integration/admin_db_api_specs_tests.rs",
+          "tests/integration/db_mutation_decode_fail_closed_tests.rs",
+          "tests/integration/db_proxy_plugin_association_fail_closed_tests.rs",
+          "tests/unit/config/db_loader_tests.rs",
+          "tests/unit/config/migration_runner_tests.rs",
+          "tests/unit/config/mongo_store_tests.rs",
+          "tests/unit/config/namespace_registry_tests.rs"
+        ]
+      },
+      {
+        "repository": "boringcache/ferrum-edge",
+        "source_sha": "35913058d237fc31b2de97f9b11675da25079588",
+        "upstream_sha": "e8848386b9f4d49247e2ab0f6cce19c291d19d1f",
+        "mode": "cargo",
+        "working_directory": ".",
+        "source_index": 2,
+        "upstream_subject": "Merge pull request #4633 from ferrum-edge/claude/release-0.9.2-prep",
+        "integration_files": [
+          ".boringcache.toml"
+        ],
+        "source_parent": "d66121cd51a873dbe2488560989e63cc49a6e93d",
+        "upstream_parent": "748fb16a036b293ee05b30a4bd484e2f699a6204",
+        "upstream_changed_files": [
+          "CHANGELOG.md",
+          "Cargo.lock",
+          "Cargo.toml",
+          "charts/ferrum-gateway/Chart.yaml",
+          "charts/ferrum-mesh/Chart.yaml",
+          "fuzz/Cargo.lock",
+          "tests/performance/mesh/Cargo.lock"
+        ]
+      },
+      {
+        "repository": "boringcache/ferrum-edge",
+        "source_sha": "1890c991148f8141dd31349365aa4a70af288872",
+        "upstream_sha": "9bd6cd8bff3adcbedb561715464801b63292797f",
+        "mode": "cargo",
+        "working_directory": ".",
+        "source_index": 3,
+        "upstream_subject": "Merge pull request #4634 from ferrum-edge/claude/app-probe-budget-body-name",
+        "integration_files": [
+          ".boringcache.toml"
+        ],
+        "source_parent": "35913058d237fc31b2de97f9b11675da25079588",
+        "upstream_parent": "e8848386b9f4d49247e2ab0f6cce19c291d19d1f",
+        "upstream_changed_files": [
+          "src/modes/mesh/app_probe.rs"
+        ]
+      }
+    ]
+  },
+  "cadence": {
+    "branch": "boringcache-rolling-validation",
+    "cohort": "rolling-20260905",
+    "commits": [
+      {
+        "repository": "boringcache/cadence",
+        "source_sha": "b4552b452a5a9af073f3278cc85629b9e9df710a",
+        "upstream_sha": "57e37286ebb1ed89eb39fbd2fa5e3fd302fb5f09",
+        "mode": "docker",
+        "working_directory": ".",
+        "source_index": 0,
+        "upstream_subject": "feat(diagnostics): diagnose large workflow histories (#8490)",
+        "integration_files": [
+          ".boringcache.toml"
+        ]
+      },
+      {
+        "repository": "boringcache/cadence",
+        "source_sha": "feb9e454133085d035c4e32b10df4ff4edfcb346",
+        "upstream_sha": "dc49d8ca2e9f0861458404e05173df03b5ed5533",
+        "mode": "docker",
+        "working_directory": ".",
+        "source_index": 1,
+        "upstream_subject": "test(queuev2): add immediate task cache simulation scenarios (#8514)",
+        "integration_files": [
+          ".boringcache.toml"
+        ],
+        "source_parent": "b4552b452a5a9af073f3278cc85629b9e9df710a",
+        "upstream_parent": "57e37286ebb1ed89eb39fbd2fa5e3fd302fb5f09",
+        "upstream_changed_files": [
+          ".github/workflows/history-simulation.yml",
+          "simulation/history/dynamicconfig/queuev2_immediate_cache_enabled.yaml",
+          "simulation/history/dynamicconfig/queuev2_immediate_cache_shadow.yaml",
+          "simulation/history/testdata/history_simulation_queuev2_immediate_cache_enabled.yaml",
+          "simulation/history/testdata/history_simulation_queuev2_immediate_cache_shadow.yaml"
+        ]
+      },
+      {
+        "repository": "boringcache/cadence",
+        "source_sha": "2f264200d0b59d4d487ebfbe45eb96ff61afa28b",
+        "upstream_sha": "b1f4b5c825fec9a82febb63b3e86528a297ab2ea",
+        "mode": "docker",
+        "working_directory": ".",
+        "source_index": 2,
+        "upstream_subject": "feat(diagnostics): add antipatterns invariant (#8471)",
+        "integration_files": [
+          ".boringcache.toml"
+        ],
+        "source_parent": "feb9e454133085d035c4e32b10df4ff4edfcb346",
+        "upstream_parent": "dc49d8ca2e9f0861458404e05173df03b5ed5533",
+        "upstream_changed_files": [
+          "cmd/server/cadence/server.go",
+          "service/worker/diagnostics/activities.go",
+          "service/worker/diagnostics/activities_test.go",
+          "service/worker/diagnostics/invariant/antipatterns/antipatterns.go",
+          "service/worker/diagnostics/invariant/antipatterns/antipatterns_test.go",
+          "service/worker/diagnostics/invariant/antipatterns/types.go",
+          "service/worker/diagnostics/parent_workflow.go",
+          "service/worker/diagnostics/workflow.go",
+          "service/worker/diagnostics/workflow_test.go"
+        ]
+      },
+      {
+        "repository": "boringcache/cadence",
+        "source_sha": "e36398c15127ea3584f9d24f072741184259ff9c",
+        "upstream_sha": "44f948b07d39b4895bd173242f79bdb7fb8866c8",
+        "mode": "docker",
+        "working_directory": ".",
+        "source_index": 3,
+        "upstream_subject": "fix: shardedNosqlStore GetName returns plugin name instead of wrapper (#8523)",
+        "integration_files": [
+          ".boringcache.toml"
+        ],
+        "source_parent": "2f264200d0b59d4d487ebfbe45eb96ff61afa28b",
+        "upstream_parent": "b1f4b5c825fec9a82febb63b3e86528a297ab2ea",
+        "upstream_changed_files": [
+          "common/persistence/nosql/sharded_nosql_store.go",
+          "common/persistence/nosql/sharded_nosql_store_test.go",
+          "common/persistence/persistence-tests/executionManagerTest.go",
+          "common/persistence/persistence-tests/matchingPersistenceTest.go",
+          "common/persistence/persistence-tests/shardPersistenceTest.go"
+        ]
+      }
+    ]
+  },
+  "dotcms": {
+    "branch": "boringcache-rolling-validation",
+    "cohort": "rolling-20260905",
+    "commits": [
+      {
+        "repository": "boringcache/core",
+        "source_sha": "5d96ccd842b2945006e3ecba9b8ea0c65238cec1",
+        "upstream_sha": "e34836f539c7bd2206663cff832c6f4bdcaea8a6",
+        "mode": "nx",
+        "working_directory": "core-web",
+        "source_index": 0,
+        "upstream_subject": "fix(edit-content): open related content in a side panel from the full-screen editor (#37415)",
+        "integration_files": [
+          "core-web/.boringcache.toml"
+        ]
+      },
+      {
+        "repository": "boringcache/core",
+        "source_sha": "5a9287de90384d604bab9d65fb6b6550bdf0d10f",
+        "upstream_sha": "baebb620cbc831bdae38eebbd22114f6583e5f7d",
+        "mode": "nx",
+        "working_directory": "core-web",
+        "source_index": 1,
+        "upstream_subject": "docs(content-drive): spec for undersized user cache during folder listings (#37186) (#37190)",
+        "integration_files": [
+          "core-web/.boringcache.toml"
+        ],
+        "source_parent": "5d96ccd842b2945006e3ecba9b8ea0c65238cec1",
+        "upstream_parent": "e34836f539c7bd2206663cff832c6f4bdcaea8a6",
+        "upstream_changed_files": [
+          "specs/37186-content-drive-user-cache-sizing/spec.md"
+        ]
+      },
+      {
+        "repository": "boringcache/core",
+        "source_sha": "1349c15c88e3c6ba1ed6caf025e6b98314cc42cf",
+        "upstream_sha": "959f1c6385b267f8b088fa3c8a531faafaf7fadc",
+        "mode": "nx",
+        "working_directory": "core-web",
+        "source_index": 2,
+        "upstream_subject": "docs(content-drive): spec for field-filter chunk multiplier (#37184) (#37188)",
+        "integration_files": [
+          "core-web/.boringcache.toml"
+        ],
+        "source_parent": "5a9287de90384d604bab9d65fb6b6550bdf0d10f",
+        "upstream_parent": "baebb620cbc831bdae38eebbd22114f6583e5f7d",
+        "upstream_changed_files": [
+          "specs/37184-content-drive-field-filter-chunk-multiplier/spec.md"
+        ]
+      },
+      {
+        "repository": "boringcache/core",
+        "source_sha": "dab8b385c412bf40dfa7157b08e99a2666b482b4",
+        "upstream_sha": "439be9daafd277c3317edd74619d511d47c9f6f7",
+        "mode": "nx",
+        "working_directory": "core-web",
+        "source_index": 3,
+        "upstream_subject": "docs(content-drive): spec for listing long-text projection trim (#37185) (#37189)",
+        "integration_files": [
+          "core-web/.boringcache.toml"
+        ],
+        "source_parent": "1349c15c88e3c6ba1ed6caf025e6b98314cc42cf",
+        "upstream_parent": "959f1c6385b267f8b088fa3c8a531faafaf7fadc",
+        "upstream_changed_files": [
+          "specs/37185-content-drive-listing-longtext-projection/spec.md"
+        ]
+      }
+    ]
+  },
+  "loomarr": {
+    "branch": "boringcache-rolling-validation",
+    "cohort": "rolling-20260905",
+    "commits": [
+      {
+        "repository": "boringcache/loomarr",
+        "source_sha": "65a80dcde5269012c926dcce54c0120d829792dd",
+        "upstream_sha": "b90210699f06612adafb3f3c264857691e7aa1a4",
+        "mode": "gradle",
+        "working_directory": ".",
+        "source_index": 0,
+        "upstream_subject": "fix(playout): prepare Library originals before tune (#1082)",
+        "integration_files": [
+          ".boringcache.toml",
+          "docs/design.md",
+          "scripts/ci-impact.sh",
+          "scripts/testdata/ci-impact.tsv",
+          "web/scripts/build-shield-play.sh"
+        ]
+      },
+      {
+        "repository": "boringcache/loomarr",
+        "source_sha": "c941ded190886f36c1adf3432aa6d043cbcca9c7",
+        "upstream_sha": "a2cc26dadc3e01c718230072c7b5e936ddbbda2e",
+        "mode": "gradle",
+        "working_directory": ".",
+        "source_index": 1,
+        "upstream_subject": "feat(tv): make Android beta release-ready (#1078)",
+        "integration_files": [
+          ".boringcache.toml",
+          "docs/design.md",
+          "scripts/ci-impact.sh",
+          "scripts/testdata/ci-impact.tsv",
+          "web/scripts/build-shield-play.sh"
+        ],
+        "source_parent": "65a80dcde5269012c926dcce54c0120d829792dd",
+        "upstream_parent": "b90210699f06612adafb3f3c264857691e7aa1a4",
+        "upstream_changed_files": [
+          ".github/workflows/android-beta.yml",
+          ".github/workflows/ci-android.yml",
+          "PROGRESS.md",
+          "brand-assets.lock.json",
+          "cmd/loomarr/main.go",
+          "docs/design.md",
+          "docs/dev/android-beta.md",
+          "docs/dev/commands.md",
+          "docs/frontend-design.md",
+          "go.mod",
+          "go.sum",
+          "internal/landiscovery/advertisement.go",
+          "internal/landiscovery/advertisement_test.go",
+          "internal/releaseverify/android_workflow.go",
+          "internal/releaseverify/android_workflow_test.go",
+          "internal/releaseverify/ci_container_workflow_actions.go",
+          "internal/releaseverify/ci_container_workflow_authority.go",
+          "internal/releaseverify/ci_container_workflow_context.go",
+          "internal/releaseverify/ci_container_workflow_topology.go",
+          "mk/agent.mk",
+          "mk/android.mk",
+          "scripts/ci-impact.sh",
+          "scripts/download-android-ci-artifact.sh",
+          "scripts/generate-brand-assets.mjs",
+          "scripts/sign-android-ci-artifact.sh",
+          "scripts/test-android-release-emulator-contract-test.sh",
+          "scripts/test-android-release-emulator.sh",
+          "scripts/test-android-release.sh",
+          "scripts/testdata/ci-impact.tsv",
+          "web/.gitignore",
+          "web/apps/mobile/assets/adaptive-icon.png",
+          "web/apps/mobile/assets/icon.png",
+          "web/apps/mobile/assets/splash-icon.png",
+          "web/apps/tv/android-release.json",
+          "web/apps/tv/assets/adaptive-icon.png",
+          "web/apps/tv/assets/icon.png",
+          "web/apps/tv/package.json",
+          "web/apps/tv/src/app.tsx",
+          "web/apps/tv/tests/config.test.mjs",
+          "web/apps/web/public/icon-192.png",
+          "web/apps/web/public/icon-512.png",
+          "web/packages/core/server-discovery.ts",
+          "web/packages/core/src/index.ts",
+          "web/packages/core/src/pairing/pairing.test.ts",
+          "web/packages/core/src/pairing/pairing.ts",
+          "web/packages/core/src/server-discovery/index.ts",
+          "web/packages/core/src/server-discovery/server-discovery.type.ts",
+          "web/packages/lan-discovery-native/android/build.gradle",
+          "web/packages/lan-discovery-native/android/src/main/AndroidManifest.xml",
+          "web/packages/lan-discovery-native/android/src/main/java/media/loomarr/tv/discovery/LoomarrLanDiscoveryModule.java",
+          "web/packages/lan-discovery-native/android/src/main/java/media/loomarr/tv/discovery/LoomarrLanDiscoveryPackage.java",
+          "web/packages/lan-discovery-native/index.ts",
+          "web/packages/lan-discovery-native/package.json",
+          "web/packages/lan-discovery-native/react-native.config.cjs",
+          "web/packages/lan-discovery-native/src/lan-discovery-native/index.ts",
+          "web/packages/lan-discovery-native/src/lan-discovery-native/lan-discovery-native.ts",
+          "web/packages/lan-discovery-native/tests/lan-discovery-native.test.mjs",
+          "web/packages/lan-discovery-native/tsconfig.json",
+          "web/packages/ui/src/pairing-shell/pairing-shell.tsx",
+          "web/packages/ui/src/pairing-shell/pairing-shell.type.ts",
+          "web/packages/ui/tests/pairing-shell.test.tsx",
+          "web/pnpm-lock.yaml",
+          "web/scripts/tv-emulator-fixture-server.mjs",
+          "web/scripts/verify-shield-aab.sh"
+        ]
+      },
+      {
+        "repository": "boringcache/loomarr",
+        "source_sha": "3669b54e686e0b491f853701c5cb6eb606fb6d65",
+        "upstream_sha": "bcbfbb0b2a2fb34bc1e1c910e73c3c5c657ab96e",
+        "mode": "gradle",
+        "working_directory": ".",
+        "source_index": 2,
+        "upstream_subject": "fix(suggest): accept provider optional fields (#1021) (#1083)",
+        "integration_files": [
+          ".boringcache.toml",
+          "docs/design.md",
+          "scripts/ci-impact.sh",
+          "scripts/testdata/ci-impact.tsv",
+          "web/scripts/build-shield-play.sh"
+        ],
+        "source_parent": "c941ded190886f36c1adf3432aa6d043cbcca9c7",
+        "upstream_parent": "a2cc26dadc3e01c718230072c7b5e936ddbbda2e",
+        "upstream_changed_files": [
+          "internal/suggest/suggester_test.go",
+          "internal/suggest/tools.go",
+          "internal/suggest/tools_internal_test.go"
+        ]
+      },
+      {
+        "repository": "boringcache/loomarr",
+        "source_sha": "6d06cd8fe37bb3ee2f19554f4d9d9d97746109e7",
+        "upstream_sha": "d94e1140373b4e6579a4565987298ae96e3ba013",
+        "mode": "gradle",
+        "working_directory": ".",
+        "source_index": 3,
+        "upstream_subject": "fix(android): repair exact-artifact promotion checks (#1084)",
+        "integration_files": [
+          ".boringcache.toml",
+          "docs/design.md",
+          "scripts/ci-impact.sh",
+          "scripts/testdata/ci-impact.tsv",
+          "web/scripts/build-shield-play.sh"
+        ],
+        "source_parent": "3669b54e686e0b491f853701c5cb6eb606fb6d65",
+        "upstream_parent": "bcbfbb0b2a2fb34bc1e1c910e73c3c5c657ab96e",
+        "upstream_changed_files": [
+          "scripts/sign-android-ci-artifact.sh",
+          "scripts/test-android-release-emulator.sh",
+          "scripts/test-android-release.sh"
+        ]
+      }
+    ]
+  }
+}
