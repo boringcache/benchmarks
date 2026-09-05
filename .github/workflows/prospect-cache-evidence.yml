@@ -1,0 +1,26 @@
+name: Prospect cache inventory
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: harness
+          persist-credentials: false
+      - uses: ./harness/.github/actions/prospect-cli
+      - name: Retain the public workspace cache inventory
+        shell: bash
+        run: boringcache ci run --oidc-provider github-actions -- boringcache ls boringcache/benchmarks --limit 100 --json > "$RUNNER_TEMP/prospect-evidence/cache-inventory.json"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: prospect-cache-inventory
+          path: ${{ runner.temp }}/prospect-evidence
+          if-no-files-found: error
+          retention-days: 14
