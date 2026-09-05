@@ -95,6 +95,44 @@ def main():
             print(line, end="", flush=True)
             log.write(line)
         exit_code = process.wait()
+        build_seconds = round(time.monotonic() - started, 3)
+        record["cached_build_seconds"] = build_seconds
+        with (evidence / "checkout-after-build.txt").open("w") as status:
+            subprocess.run(
+                ["git", "status", "--porcelain=v1"],
+                cwd=checkout,
+                stdout=status,
+                check=True,
+            )
+        if case == "ferrum-edge" and exit_code == 0:
+            tests = ["cargo", "test", "--lib", "--test", "unit_tests"]
+            record["test_command"] = tests
+            process = subprocess.Popen(
+                tests,
+                cwd=cwd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1,
+            )
+            for line in process.stdout:
+                print(line, end="", flush=True)
+                log.write(line)
+            exit_code = process.wait()
+            record["test_execution_seconds"] = round(
+                time.monotonic() - started - build_seconds, 3
+            )
+        with (evidence / "checkout-after-workload.txt").open("w") as status:
+            subprocess.run(
+                ["git", "status", "--porcelain=v1"],
+                cwd=checkout,
+                stdout=status,
+                check=True,
+            )
+        with (evidence / "source-changes.diff").open("w") as diff:
+            subprocess.run(
+                ["git", "diff", "--no-ext-diff"], cwd=checkout, stdout=diff, check=True
+            )
     record.update(
         measured_command_seconds=round(time.monotonic() - started, 3),
         completed_at=time.time(),

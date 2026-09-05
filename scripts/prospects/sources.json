@@ -15,7 +15,7 @@
   },
   "ferrum-edge": {
     "repository": "boringcache/ferrum-edge",
-    "source_sha": "cc29f109788a23f9b6c4aeeb64a3a532a075538c",
+    "source_sha": "57f9940fbbf088e443d5a8a294636617ce3627fd",
     "upstream_sha": "9bd6cd8bff3adcbedb561715464801b63292797f",
     "mode": "cargo",
     "working_directory": "."

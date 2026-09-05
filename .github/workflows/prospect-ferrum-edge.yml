@@ -44,7 +44,7 @@ jobs:
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       with:
         repository: boringcache/ferrum-edge
-        ref: cc29f109788a23f9b6c4aeeb64a3a532a075538c
+        ref: 57f9940fbbf088e443d5a8a294636617ce3627fd
         path: source
         submodules: false
         persist-credentials: false
@@ -97,7 +97,7 @@ jobs:
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       with:
         repository: boringcache/ferrum-edge
-        ref: cc29f109788a23f9b6c4aeeb64a3a532a075538c
+        ref: 57f9940fbbf088e443d5a8a294636617ce3627fd
         path: source
         submodules: false
         persist-credentials: false
@@ -157,7 +157,7 @@ jobs:
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       with:
         repository: boringcache/ferrum-edge
-        ref: cc29f109788a23f9b6c4aeeb64a3a532a075538c
+        ref: 57f9940fbbf088e443d5a8a294636617ce3627fd
         path: source
         submodules: false
         persist-credentials: false
@@ -204,7 +204,7 @@ jobs:
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       with:
         repository: boringcache/ferrum-edge
-        ref: cc29f109788a23f9b6c4aeeb64a3a532a075538c
+        ref: 57f9940fbbf088e443d5a8a294636617ce3627fd
         path: source
         submodules: false
         persist-credentials: false
