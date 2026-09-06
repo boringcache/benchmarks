@@ -40,5 +40,18 @@
     "upstream_sha": "d94e1140373b4e6579a4565987298ae96e3ba013",
     "mode": "gradle",
     "working_directory": "."
+  },
+  "loomarr-compiler": {
+    "repository": "boringcache/loomarr",
+    "source_sha": "f8d66aef8d0a698b0aa868acd66b6a8c2f43ea65",
+    "upstream_sha": "d94e1140373b4e6579a4565987298ae96e3ba013",
+    "mode": "ccache",
+    "working_directory": ".",
+    "workload": "loomarr",
+    "native_compiler_cache": true,
+    "cache_surfaces": [
+      "gradle",
+      "ccache"
+    ]
   }
 }

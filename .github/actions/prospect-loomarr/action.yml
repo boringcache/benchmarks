@@ -1,5 +1,9 @@
 name: Prepare loomarr
 description: Prepare the upstream four-ABI Android workload without a build cache.
+inputs:
+  compiler-cache:
+    description: Install the pinned C/C++ compiler cache for the separate combined case
+    default: 'false'
 runs:
   using: composite
   steps:
@@ -15,6 +19,34 @@ runs:
     with:
       go-version: 1.27.0
       cache: false
+  - name: Install ccache 4.14
+    if: inputs.compiler-cache == 'true'
+    shell: bash
+    run: |-
+      archive="$RUNNER_TEMP/ccache-4.14.tar.xz"
+      curl --fail --location --retry 3 https://github.com/ccache/ccache/releases/download/v4.14/ccache-4.14-linux-x86_64-glibc.tar.xz --output "$archive"
+      echo "45a91165db7092e67c6208ada03f54700e684c4cd3735f9031de95669ed9272c  $archive" | sha256sum --check
+      mkdir -p "$RUNNER_TEMP/ccache-bin"
+      tar -xJf "$archive" --strip-components=1 -C "$RUNNER_TEMP/ccache-bin"
+      echo "$RUNNER_TEMP/ccache-bin" >> "$GITHUB_PATH"
+      rm "$archive"
+      archive="$RUNNER_TEMP/ccache-storage-http-0.9.tar.gz"
+      curl --fail --location --retry 3 https://github.com/ccache/ccache-storage-http-go/releases/download/v0.9/ccache-storage-http-go-0.9-linux-amd64.tar.gz --output "$archive"
+      echo "875dbf6d575d06e4c4492f1ba639beb68530bc23382031a6bacc767cded9f463  $archive" | sha256sum --check
+      tar -xzf "$archive" --strip-components=1 -C "$RUNNER_TEMP/ccache-bin"
+      rm "$archive"
+  - name: Record compiler-cache runner resources
+    if: inputs.compiler-cache == 'true'
+    shell: bash
+    run: |-
+      mkdir -p "$RUNNER_TEMP/prospect-evidence"
+      {
+        ccache --version
+        nproc
+        lscpu
+        free -h
+        df -h
+      } > "$RUNNER_TEMP/prospect-evidence/runner-resources.txt"
   - name: Install the pinned frontend and generate upstream clients
     shell: bash
     working-directory: source

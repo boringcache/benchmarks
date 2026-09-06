@@ -22,6 +22,8 @@ def main():
         sources = json.loads(Path(__file__).with_name("sources.json").read_text())
         source = sources[case]
     publish = rolling or phase == "cold"
+    workload = source.get("workload", case)
+    compiler_cache = source.get("native_compiler_cache", False)
     checkout = Path(os.environ["GITHUB_WORKSPACE"]) / "source"
     cwd = checkout / source["working_directory"]
     evidence = Path(os.environ["RUNNER_TEMP"]) / "prospect-evidence"
@@ -42,9 +44,9 @@ def main():
     plan = tomllib.loads((cwd / ".boringcache.toml").read_text())
     mode = source["mode"]
     command = (
-        ["make", "android"] if case == "loomarr" else plan["adapters"][mode]["command"]
+        ["make", "android"] if workload == "loomarr" else plan["adapters"][mode]["command"]
     )
-    if case == "loomarr":
+    if workload == "loomarr":
         os.environ["LOOMARR_ANDROID_GRADLE_CACHE"] = (
             "gradle"
             if provider == "github"
@@ -53,6 +55,12 @@ def main():
             else "boringcache-restore"
         )
         if provider == "boringcache":
+            if compiler_cache:
+                command = [
+                    "boringcache", "ccache",
+                    "--write" if publish else "--read-only",
+                    "--fail-on-cache-error", "--", *command,
+                ]
             command = [
                 "boringcache",
                 "ci",
@@ -80,6 +88,9 @@ def main():
         command += ["--progress=plain", f"--cache-from=type=gha,scope={scope}"]
         if phase == "cold":
             command += [f"--cache-to=type=gha,scope={scope},mode=max"]
+
+    if compiler_cache:
+        subprocess.run(["ccache", "--zero-stats"], check=True)
 
     record = {
         **source,
@@ -153,6 +164,11 @@ def main():
         completed_at=time.time(),
         exit_code=exit_code,
     )
+    if compiler_cache:
+        with (evidence / "ccache-stats.json").open("w") as stats:
+            subprocess.run(
+                ["ccache", "--show-stats", "--format=json"], stdout=stats, check=True
+            )
     (evidence / "benchmark.json").write_text(json.dumps(record, indent=2) + "\n")
     print(json.dumps(record), flush=True)
     raise SystemExit(exit_code)
