@@ -1,0 +1,59 @@
+---
+name: Prospect Loomarr compiler verification
+'on':
+  push:
+    branches:
+    - prospect-validation
+    paths:
+    - ".github/workflows/prospect-loomarr-compiler-verify.yml"
+  workflow_dispatch: 
+permissions:
+  contents: read
+jobs:
+  verify:
+    name: Loomarr compiler cache affected verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+    env:
+      CMAKE_C_COMPILER_LAUNCHER: ccache
+      CMAKE_CXX_COMPILER_LAUNCHER: ccache
+      CCACHE_COMPILERCHECK: content
+      CCACHE_SLOPPINESS: pch_defines,time_macros
+      CCACHE_DIR: "${{ github.workspace }}/ccache-home"
+      CCACHE_MAXSIZE: 5G
+      GRADLE_USER_HOME: "${{ github.workspace }}/gradle-home"
+      ANDROID_CI_OUTPUT_DIR: "${{ github.workspace }}/source/.artifacts/android-ci"
+      LOOMARR_ANDROID_GRADLE_CACHE: gradle
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/loomarr
+        ref: f8d66aef8d0a698b0aa868acd66b6a8c2f43ea65
+        path: source
+        submodules: false
+        persist-credentials: false
+        fetch-depth: 2
+    - uses: "./harness/.github/actions/prospect-loomarr"
+      with:
+        compiler-cache: 'true'
+    - name: Run the required affected verification
+      working-directory: source
+      run: make verify BASE=8f00bd69dd822a5baddce7cca09e234249a6e4d5
+    - name: Retain verification evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: loomarr-compiler-verification
+        path: |-
+          source/.artifacts/android-ci/*.json
+          source/web/apps/tv/android/build/reports/profile/
+          ${{ runner.temp }}/prospect-evidence
+        if-no-files-found: error
+        retention-days: 14
