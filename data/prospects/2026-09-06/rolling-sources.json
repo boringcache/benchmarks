@@ -1,0 +1,186 @@
+{
+  "loomarr-compiler": {
+    "branch": "boringcache-compiler-rolling-validation",
+    "cohort": "compiler-rolling-20260906",
+    "commits": [
+      {
+        "repository": "boringcache/loomarr",
+        "source_sha": "5813d87c428e213dff01c66fb69a8e1e21ee9019",
+        "upstream_sha": "b90210699f06612adafb3f3c264857691e7aa1a4",
+        "mode": "ccache",
+        "working_directory": ".",
+        "source_index": 0,
+        "upstream_subject": "fix(playout): prepare Library originals before tune (#1082)",
+        "integration_files": [
+          ".boringcache.toml",
+          "docs/design.md",
+          "scripts/ci-impact.sh",
+          "scripts/testdata/ci-impact.tsv",
+          "web/scripts/build-shield-play.sh",
+          "web/scripts/with-memory-safe-android-build.cjs",
+          "web/scripts/with-memory-safe-android-build.test.cjs"
+        ],
+        "workload": "loomarr",
+        "native_compiler_cache": true,
+        "cache_surfaces": [
+          "gradle",
+          "ccache"
+        ]
+      },
+      {
+        "repository": "boringcache/loomarr",
+        "source_sha": "77ad19526a0a426be247c91d735936e70c590e96",
+        "upstream_sha": "a2cc26dadc3e01c718230072c7b5e936ddbbda2e",
+        "mode": "ccache",
+        "working_directory": ".",
+        "source_index": 1,
+        "upstream_subject": "feat(tv): make Android beta release-ready (#1078)",
+        "integration_files": [
+          ".boringcache.toml",
+          "docs/design.md",
+          "scripts/ci-impact.sh",
+          "scripts/testdata/ci-impact.tsv",
+          "web/scripts/build-shield-play.sh",
+          "web/scripts/with-memory-safe-android-build.cjs",
+          "web/scripts/with-memory-safe-android-build.test.cjs"
+        ],
+        "source_parent": "5813d87c428e213dff01c66fb69a8e1e21ee9019",
+        "upstream_parent": "b90210699f06612adafb3f3c264857691e7aa1a4",
+        "upstream_changed_files": [
+          ".github/workflows/android-beta.yml",
+          ".github/workflows/ci-android.yml",
+          "PROGRESS.md",
+          "brand-assets.lock.json",
+          "cmd/loomarr/main.go",
+          "docs/design.md",
+          "docs/dev/android-beta.md",
+          "docs/dev/commands.md",
+          "docs/frontend-design.md",
+          "go.mod",
+          "go.sum",
+          "internal/landiscovery/advertisement.go",
+          "internal/landiscovery/advertisement_test.go",
+          "internal/releaseverify/android_workflow.go",
+          "internal/releaseverify/android_workflow_test.go",
+          "internal/releaseverify/ci_container_workflow_actions.go",
+          "internal/releaseverify/ci_container_workflow_authority.go",
+          "internal/releaseverify/ci_container_workflow_context.go",
+          "internal/releaseverify/ci_container_workflow_topology.go",
+          "mk/agent.mk",
+          "mk/android.mk",
+          "scripts/ci-impact.sh",
+          "scripts/download-android-ci-artifact.sh",
+          "scripts/generate-brand-assets.mjs",
+          "scripts/sign-android-ci-artifact.sh",
+          "scripts/test-android-release-emulator-contract-test.sh",
+          "scripts/test-android-release-emulator.sh",
+          "scripts/test-android-release.sh",
+          "scripts/testdata/ci-impact.tsv",
+          "web/.gitignore",
+          "web/apps/mobile/assets/adaptive-icon.png",
+          "web/apps/mobile/assets/icon.png",
+          "web/apps/mobile/assets/splash-icon.png",
+          "web/apps/tv/android-release.json",
+          "web/apps/tv/assets/adaptive-icon.png",
+          "web/apps/tv/assets/icon.png",
+          "web/apps/tv/package.json",
+          "web/apps/tv/src/app.tsx",
+          "web/apps/tv/tests/config.test.mjs",
+          "web/apps/web/public/icon-192.png",
+          "web/apps/web/public/icon-512.png",
+          "web/packages/core/server-discovery.ts",
+          "web/packages/core/src/index.ts",
+          "web/packages/core/src/pairing/pairing.test.ts",
+          "web/packages/core/src/pairing/pairing.ts",
+          "web/packages/core/src/server-discovery/index.ts",
+          "web/packages/core/src/server-discovery/server-discovery.type.ts",
+          "web/packages/lan-discovery-native/android/build.gradle",
+          "web/packages/lan-discovery-native/android/src/main/AndroidManifest.xml",
+          "web/packages/lan-discovery-native/android/src/main/java/media/loomarr/tv/discovery/LoomarrLanDiscoveryModule.java",
+          "web/packages/lan-discovery-native/android/src/main/java/media/loomarr/tv/discovery/LoomarrLanDiscoveryPackage.java",
+          "web/packages/lan-discovery-native/index.ts",
+          "web/packages/lan-discovery-native/package.json",
+          "web/packages/lan-discovery-native/react-native.config.cjs",
+          "web/packages/lan-discovery-native/src/lan-discovery-native/index.ts",
+          "web/packages/lan-discovery-native/src/lan-discovery-native/lan-discovery-native.ts",
+          "web/packages/lan-discovery-native/tests/lan-discovery-native.test.mjs",
+          "web/packages/lan-discovery-native/tsconfig.json",
+          "web/packages/ui/src/pairing-shell/pairing-shell.tsx",
+          "web/packages/ui/src/pairing-shell/pairing-shell.type.ts",
+          "web/packages/ui/tests/pairing-shell.test.tsx",
+          "web/pnpm-lock.yaml",
+          "web/scripts/tv-emulator-fixture-server.mjs",
+          "web/scripts/verify-shield-aab.sh"
+        ],
+        "workload": "loomarr",
+        "native_compiler_cache": true,
+        "cache_surfaces": [
+          "gradle",
+          "ccache"
+        ]
+      },
+      {
+        "repository": "boringcache/loomarr",
+        "source_sha": "9d60373941bf8fff24abfbfbd76ff43f9fab5fd9",
+        "upstream_sha": "bcbfbb0b2a2fb34bc1e1c910e73c3c5c657ab96e",
+        "mode": "ccache",
+        "working_directory": ".",
+        "source_index": 2,
+        "upstream_subject": "fix(suggest): accept provider optional fields (#1021) (#1083)",
+        "integration_files": [
+          ".boringcache.toml",
+          "docs/design.md",
+          "scripts/ci-impact.sh",
+          "scripts/testdata/ci-impact.tsv",
+          "web/scripts/build-shield-play.sh",
+          "web/scripts/with-memory-safe-android-build.cjs",
+          "web/scripts/with-memory-safe-android-build.test.cjs"
+        ],
+        "source_parent": "77ad19526a0a426be247c91d735936e70c590e96",
+        "upstream_parent": "a2cc26dadc3e01c718230072c7b5e936ddbbda2e",
+        "upstream_changed_files": [
+          "internal/suggest/suggester_test.go",
+          "internal/suggest/tools.go",
+          "internal/suggest/tools_internal_test.go"
+        ],
+        "workload": "loomarr",
+        "native_compiler_cache": true,
+        "cache_surfaces": [
+          "gradle",
+          "ccache"
+        ]
+      },
+      {
+        "repository": "boringcache/loomarr",
+        "source_sha": "3e6aea7b50443238acf4711d1af5be90373bda76",
+        "upstream_sha": "d94e1140373b4e6579a4565987298ae96e3ba013",
+        "mode": "ccache",
+        "working_directory": ".",
+        "source_index": 3,
+        "upstream_subject": "fix(android): repair exact-artifact promotion checks (#1084)",
+        "integration_files": [
+          ".boringcache.toml",
+          "docs/design.md",
+          "scripts/ci-impact.sh",
+          "scripts/testdata/ci-impact.tsv",
+          "web/scripts/build-shield-play.sh",
+          "web/scripts/with-memory-safe-android-build.cjs",
+          "web/scripts/with-memory-safe-android-build.test.cjs"
+        ],
+        "source_parent": "9d60373941bf8fff24abfbfbd76ff43f9fab5fd9",
+        "upstream_parent": "bcbfbb0b2a2fb34bc1e1c910e73c3c5c657ab96e",
+        "upstream_changed_files": [
+          "scripts/sign-android-ci-artifact.sh",
+          "scripts/test-android-release-emulator.sh",
+          "scripts/test-android-release.sh"
+        ],
+        "workload": "loomarr",
+        "native_compiler_cache": true,
+        "cache_surfaces": [
+          "gradle",
+          "ccache"
+        ]
+      }
+    ]
+  }
+}

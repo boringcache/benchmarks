@@ -1,0 +1,1210 @@
+[
+  {
+    "case": "loomarr-compiler",
+    "provider": "boringcache",
+    "phase": "cold",
+    "lane": "fresh",
+    "source_sha": "f8d66aef8d0a698b0aa868acd66b6a8c2f43ea65",
+    "upstream_sha": "d94e1140373b4e6579a4565987298ae96e3ba013",
+    "workflow_sha": "8b010a169c165042ff0206e767a9ef658b8adc67",
+    "run_id": "34020980647",
+    "run_attempt": "1",
+    "job": "boringcache-cold",
+    "gradle_summary_seconds": {
+      "Total Build Time": 2156.78,
+      "Startup": 111.44,
+      "Settings and buildSrc": 0.001,
+      "Loading Projects": 0.423,
+      "Configuring Projects": 199.45,
+      "Artifact Transforms": 96.37,
+      "Task Execution": 1980.29
+    },
+    "native_tasks": [
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[arm64-v8a][reanimated]",
+        "seconds": 163.78
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86][reanimated]",
+        "seconds": 160.75
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[armeabi-v7a][reanimated]",
+        "seconds": 158.85
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86_64][reanimated]",
+        "seconds": 158.18
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.639
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.622
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.615
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.61
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 114.85
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 113.45
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 113.34
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 109.9
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 1.046
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.673
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.668
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.642
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 70.31
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 69.72
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 69.47
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 68.77
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.597
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.594
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.58
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.569
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[arm64-v8a][worklets]",
+        "seconds": 44.761
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86][worklets]",
+        "seconds": 44.732
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86_64][worklets]",
+        "seconds": 44.656
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[armeabi-v7a][worklets]",
+        "seconds": 44.551
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 4.162
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.706
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.628
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.616
+      }
+    ]
+  },
+  {
+    "case": "loomarr-compiler",
+    "provider": "boringcache",
+    "phase": "warm",
+    "lane": "fresh",
+    "source_sha": "f8d66aef8d0a698b0aa868acd66b6a8c2f43ea65",
+    "upstream_sha": "d94e1140373b4e6579a4565987298ae96e3ba013",
+    "workflow_sha": "8b010a169c165042ff0206e767a9ef658b8adc67",
+    "run_id": "34020980647",
+    "run_attempt": "1",
+    "job": "boringcache-warm",
+    "gradle_summary_seconds": {
+      "Total Build Time": 297.26,
+      "Startup": 54.174,
+      "Settings and buildSrc": 0.001,
+      "Loading Projects": 0.197,
+      "Configuring Projects": 96.69,
+      "Artifact Transforms": 5.312,
+      "Task Execution": 169.26
+    },
+    "native_tasks": [
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.773
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.759
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.749
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 0.72
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.7
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.66
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.539
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.511
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86][reanimated]",
+        "seconds": 12.062
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[arm64-v8a][reanimated]",
+        "seconds": 12.04
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[armeabi-v7a][reanimated]",
+        "seconds": 12.003
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86_64][reanimated]",
+        "seconds": 11.643
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.512
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.466
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.377
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.358
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 3.782
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 2.419
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[armeabi-v7a][worklets]",
+        "seconds": 2.11
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86][worklets]",
+        "seconds": 1.497
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[arm64-v8a][worklets]",
+        "seconds": 1.455
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86_64][worklets]",
+        "seconds": 1.029
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.83
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.362
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 2.303
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 1.819
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 1.779
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 1.751
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.519
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.475
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.443
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.376
+      }
+    ]
+  },
+  {
+    "case": "loomarr-compiler",
+    "provider": "github",
+    "phase": "cold",
+    "lane": "fresh",
+    "source_sha": "f8d66aef8d0a698b0aa868acd66b6a8c2f43ea65",
+    "upstream_sha": "d94e1140373b4e6579a4565987298ae96e3ba013",
+    "workflow_sha": "8b010a169c165042ff0206e767a9ef658b8adc67",
+    "run_id": "34020980647",
+    "run_attempt": "1",
+    "job": "github-cold",
+    "gradle_summary_seconds": {
+      "Total Build Time": 1683.1,
+      "Startup": 103.22,
+      "Settings and buildSrc": 0.001,
+      "Loading Projects": 0.344,
+      "Configuring Projects": 181.56,
+      "Artifact Transforms": 74.28999999999999,
+      "Task Execution": 1512.39
+    },
+    "native_tasks": [
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[arm64-v8a][reanimated]",
+        "seconds": 122.12
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[armeabi-v7a][reanimated]",
+        "seconds": 118.22999999999999
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86][reanimated]",
+        "seconds": 117.53
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86_64][reanimated]",
+        "seconds": 116.07
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.98
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.844
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.648
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.445
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 84.3
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 81.98
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 81.11
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 79.8
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.908
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.577
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.501
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.473
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 54.035
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 52.746
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 51.966
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 51.836
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.58
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.569
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.513
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.475
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[arm64-v8a][worklets]",
+        "seconds": 34.127
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86_64][worklets]",
+        "seconds": 34.009
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86][worklets]",
+        "seconds": 33.964
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[armeabi-v7a][worklets]",
+        "seconds": 33.954
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 5.76
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.474
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.461
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.449
+      }
+    ]
+  },
+  {
+    "case": "loomarr-compiler",
+    "provider": "github",
+    "phase": "warm",
+    "lane": "fresh",
+    "source_sha": "f8d66aef8d0a698b0aa868acd66b6a8c2f43ea65",
+    "upstream_sha": "d94e1140373b4e6579a4565987298ae96e3ba013",
+    "workflow_sha": "8b010a169c165042ff0206e767a9ef658b8adc67",
+    "run_id": "34020980647",
+    "run_attempt": "1",
+    "job": "github-warm",
+    "gradle_summary_seconds": {
+      "Total Build Time": 358.02,
+      "Startup": 62.28,
+      "Settings and buildSrc": 0.001,
+      "Loading Projects": 0.348,
+      "Configuring Projects": 112.2,
+      "Artifact Transforms": 7.22,
+      "Task Execution": 211.87
+    },
+    "native_tasks": [
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[arm64-v8a][reanimated]",
+        "seconds": 17.09
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86][reanimated]",
+        "seconds": 16.725
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86_64][reanimated]",
+        "seconds": 16.371
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[armeabi-v7a][reanimated]",
+        "seconds": 16.294
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.588
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.576
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.573
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.56
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 1.008
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.965
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.951
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 0.942
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.837
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.593
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.555
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.54
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 3.67
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[arm64-v8a][worklets]",
+        "seconds": 1.674
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86_64][worklets]",
+        "seconds": 1.618
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[armeabi-v7a][worklets]",
+        "seconds": 1.591
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86][worklets]",
+        "seconds": 1.571
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.754
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.573
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.545
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 2.774
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 2.732
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 2.691
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 2.657
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.549
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.549
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.542
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.525
+      }
+    ]
+  },
+  {
+    "case": "loomarr-compiler",
+    "provider": "boringcache",
+    "phase": "commit1",
+    "lane": "rolling",
+    "source_sha": "77ad19526a0a426be247c91d735936e70c590e96",
+    "upstream_sha": "a2cc26dadc3e01c718230072c7b5e936ddbbda2e",
+    "workflow_sha": "6dafebd847bcfde3a96eb6458a40a135eacc6d0f",
+    "run_id": "34021064665",
+    "run_attempt": "1",
+    "job": "commit1",
+    "gradle_summary_seconds": {
+      "Total Build Time": 396.12,
+      "Startup": 73.7,
+      "Settings and buildSrc": 0.001,
+      "Loading Projects": 0.304,
+      "Configuring Projects": 127.14,
+      "Artifact Transforms": 5.948,
+      "Task Execution": 213.64
+    },
+    "native_tasks": [
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 1.533
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.635
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.628
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.596
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 0.589
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.579
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.408
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.387
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[arm64-v8a][reanimated]",
+        "seconds": 12.58
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86][reanimated]",
+        "seconds": 12.48
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[armeabi-v7a][reanimated]",
+        "seconds": 12.318
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86_64][reanimated]",
+        "seconds": 12.244
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.45
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.43
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.388
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.384
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 4.858
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86_64][worklets]",
+        "seconds": 1.244
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[arm64-v8a][worklets]",
+        "seconds": 1.061
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[armeabi-v7a][worklets]",
+        "seconds": 0.955
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86][worklets]",
+        "seconds": 0.928
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.456
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.378
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.374
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 2.364
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 1.813
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 1.805
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 1.732
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.515
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.488
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.486
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.386
+      }
+    ]
+  },
+  {
+    "case": "loomarr-compiler",
+    "provider": "boringcache",
+    "phase": "commit2",
+    "lane": "rolling",
+    "source_sha": "9d60373941bf8fff24abfbfbd76ff43f9fab5fd9",
+    "upstream_sha": "bcbfbb0b2a2fb34bc1e1c910e73c3c5c657ab96e",
+    "workflow_sha": "6dafebd847bcfde3a96eb6458a40a135eacc6d0f",
+    "run_id": "34021064665",
+    "run_attempt": "1",
+    "job": "commit2",
+    "gradle_summary_seconds": {
+      "Total Build Time": 342.92,
+      "Startup": 60.23,
+      "Settings and buildSrc": 0.0,
+      "Loading Projects": 0.361,
+      "Configuring Projects": 101.53,
+      "Artifact Transforms": 7.008,
+      "Task Execution": 208.31
+    },
+    "native_tasks": [
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86][reanimated]",
+        "seconds": 16.557
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[armeabi-v7a][reanimated]",
+        "seconds": 16.449
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[arm64-v8a][reanimated]",
+        "seconds": 16.445
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86_64][reanimated]",
+        "seconds": 16.425
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.661
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.584
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.533
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.531
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 1.021
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.984
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.974
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 0.966
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.929
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.559
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.558
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.552
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 3.642
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[arm64-v8a][worklets]",
+        "seconds": 1.704
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[armeabi-v7a][worklets]",
+        "seconds": 1.636
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86_64][worklets]",
+        "seconds": 1.62
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86][worklets]",
+        "seconds": 1.59
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.558
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.525
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.506
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 2.825
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 2.779
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 2.755
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 2.708
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.537
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.528
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.52
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.516
+      }
+    ]
+  },
+  {
+    "case": "loomarr-compiler",
+    "provider": "boringcache",
+    "phase": "commit3",
+    "lane": "rolling",
+    "source_sha": "3e6aea7b50443238acf4711d1af5be90373bda76",
+    "upstream_sha": "d94e1140373b4e6579a4565987298ae96e3ba013",
+    "workflow_sha": "6dafebd847bcfde3a96eb6458a40a135eacc6d0f",
+    "run_id": "34021064665",
+    "run_attempt": "1",
+    "job": "commit3",
+    "gradle_summary_seconds": {
+      "Total Build Time": 311.09,
+      "Startup": 54.637,
+      "Settings and buildSrc": 0.001,
+      "Loading Projects": 0.364,
+      "Configuring Projects": 94.33,
+      "Artifact Transforms": 5.938,
+      "Task Execution": 185.49
+    },
+    "native_tasks": [
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 1.047
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.871
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.855
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.841
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.751
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.534
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.462
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.46
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86][reanimated]",
+        "seconds": 14.004
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[armeabi-v7a][reanimated]",
+        "seconds": 13.855
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[arm64-v8a][reanimated]",
+        "seconds": 13.788
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86_64][reanimated]",
+        "seconds": 13.483
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.725
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.466
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.462
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.448
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 3.567
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[armeabi-v7a][worklets]",
+        "seconds": 2.023
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[arm64-v8a][worklets]",
+        "seconds": 1.591
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 1.316
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86][worklets]",
+        "seconds": 1.24
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86_64][worklets]",
+        "seconds": 1.203
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.635
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.425
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 2.222
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 2.18
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 2.147
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 2.117
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.433
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.431
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.429
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.429
+      }
+    ]
+  },
+  {
+    "case": "loomarr-compiler",
+    "provider": "boringcache",
+    "phase": "seed",
+    "lane": "rolling",
+    "source_sha": "5813d87c428e213dff01c66fb69a8e1e21ee9019",
+    "upstream_sha": "b90210699f06612adafb3f3c264857691e7aa1a4",
+    "workflow_sha": "6dafebd847bcfde3a96eb6458a40a135eacc6d0f",
+    "run_id": "34021064665",
+    "run_attempt": "1",
+    "job": "seed",
+    "gradle_summary_seconds": {
+      "Total Build Time": 2085.92,
+      "Startup": 105.28999999999999,
+      "Settings and buildSrc": 0.001,
+      "Loading Projects": 0.749,
+      "Configuring Projects": 159.57999999999998,
+      "Artifact Transforms": 96.42,
+      "Task Execution": 1958.64
+    },
+    "native_tasks": [
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[arm64-v8a][reanimated]",
+        "seconds": 162.81
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86_64][reanimated]",
+        "seconds": 160.65
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[x86][reanimated]",
+        "seconds": 159.5
+      },
+      {
+        "task": ":react-native-reanimated:buildCMakeRelWithDebInfo[armeabi-v7a][reanimated]",
+        "seconds": 158.8
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.666
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.608
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.599
+      },
+      {
+        "task": ":react-native-reanimated:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.597
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 116.19
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 113.93
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 113.68
+      },
+      {
+        "task": ":app:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 113.05
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.918
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.641
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.634
+      },
+      {
+        "task": ":app:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.624
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 71.41
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86]",
+        "seconds": 69.82
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[x86_64]",
+        "seconds": 69.58
+      },
+      {
+        "task": ":expo-modules-core:buildCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 69.56
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 0.63
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.581
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.57
+      },
+      {
+        "task": ":expo-modules-core:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.554
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[arm64-v8a][worklets]",
+        "seconds": 45.299
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86][worklets]",
+        "seconds": 45.281
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[x86_64][worklets]",
+        "seconds": 44.993
+      },
+      {
+        "task": ":react-native-worklets:buildCMakeRelWithDebInfo[armeabi-v7a][worklets]",
+        "seconds": 44.991
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[arm64-v8a]",
+        "seconds": 3.28
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86_64]",
+        "seconds": 0.622
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[x86]",
+        "seconds": 0.615
+      },
+      {
+        "task": ":react-native-worklets:configureCMakeRelWithDebInfo[armeabi-v7a]",
+        "seconds": 0.606
+      }
+    ]
+  }
+]

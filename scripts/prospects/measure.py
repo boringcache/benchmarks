@@ -165,9 +165,9 @@ def main():
         exit_code=exit_code,
     )
     if compiler_cache:
-        with (evidence / "ccache-stats.json").open("w") as stats:
+        with (evidence / "ccache-stats.txt").open("w") as stats:
             subprocess.run(
-                ["ccache", "--show-stats", "--format=json"], stdout=stats, check=True
+                ["ccache", "--show-stats"], stdout=stats, check=True
             )
     (evidence / "benchmark.json").write_text(json.dumps(record, indent=2) + "\n")
     print(json.dumps(record), flush=True)
