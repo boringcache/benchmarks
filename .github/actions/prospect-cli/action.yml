@@ -16,6 +16,14 @@ runs:
       if [ -n "$CLI_OVERRIDE" ]; then version="$CLI_OVERRIDE"; fi
       test -n "$version"
       echo "version=$version" >> "$GITHUB_OUTPUT"
+      case "$RUNNER_OS" in
+        Linux) asset=boringcache-linux-amd64; executable=boringcache ;;
+        Windows) asset=boringcache-windows-amd64.exe; executable=boringcache.exe ;;
+        *) echo "Unsupported prospect runner: $RUNNER_OS" >&2; exit 1 ;;
+      esac
+      echo "asset=$asset" >> "$GITHUB_OUTPUT"
+      echo "executable=$executable" >> "$GITHUB_OUTPUT"
+      mkdir -p "$RUNNER_TEMP/prospect-cli"
     id: cli
     env:
       GH_TOKEN: ${{ github.token }}
@@ -23,9 +31,11 @@ runs:
   - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db
     with:
       version: 2026.9.1
+      working_directory: ${{ runner.temp }}/prospect-cli
+      install_args: github:boringcache/cli
       mise_toml: |
         [tools]
-        "github:boringcache/cli" = { version = "${{ steps.cli.outputs.version }}", asset_pattern = "boringcache-linux-amd64", rename_exe = "boringcache" }
+        "github:boringcache/cli" = { version = "${{ steps.cli.outputs.version }}", asset_pattern = "${{ steps.cli.outputs.asset }}", rename_exe = "${{ steps.cli.outputs.executable }}" }
       cache: false
   - name: Record released product selection
     shell: bash
