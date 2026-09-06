@@ -9,6 +9,7 @@ from pathlib import Path
 
 
 def main():
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     label, separator, *command = sys.argv[1:]
     if separator != "--" or not command:
         raise SystemExit("usage: measure-command.py LABEL -- COMMAND [ARG ...]")
