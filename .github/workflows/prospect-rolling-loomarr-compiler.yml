@@ -1,0 +1,239 @@
+name: Prospect loomarr-compiler rolling
+'on':
+  push:
+    branches:
+    - prospect-validation
+    paths:
+    - .github/workflows/prospect-rolling-loomarr-compiler.yml
+  workflow_dispatch:
+    inputs:
+      cli_version:
+        description: Optional exact BoringCache CLI release override
+        type: string
+        required: false
+        default: ''
+permissions:
+  contents: read
+concurrency:
+  group: prospect-rolling-loomarr-compiler-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  seed:
+    name: BoringCache loomarr-compiler rolling seed
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CMAKE_C_COMPILER_LAUNCHER: ccache
+      CMAKE_CXX_COMPILER_LAUNCHER: ccache
+      CCACHE_COMPILERCHECK: content
+      CCACHE_SLOPPINESS: pch_defines,time_macros
+      CCACHE_DIR: ${{ github.workspace }}/ccache-home
+      CCACHE_MAXSIZE: 5G
+      GRADLE_USER_HOME: ${{ github.workspace }}/gradle-home
+      ANDROID_CI_OUTPUT_DIR: ${{ github.workspace }}/source/.artifacts/android-ci
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/loomarr
+        ref: 5813d87c428e213dff01c66fb69a8e1e21ee9019
+        path: source
+        submodules: false
+        persist-credentials: false
+        fetch-depth: 2
+    - uses: ./harness/.github/actions/prospect-loomarr
+      with:
+        compiler-cache: 'true'
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py loomarr-compiler boringcache seed 0
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: loomarr-compiler-boringcache-rolling-seed
+        path: |-
+          ${{ runner.temp }}/prospect-evidence
+          source/.artifacts/android-ci/*.json
+          source/web/apps/tv/android/build/reports/profile/
+          source/web/**/CMakeCache.txt
+          source/web/**/build.ninja
+          source/web/**/.ninja_log
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+  commit1:
+    name: BoringCache loomarr-compiler rolling commit1
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CMAKE_C_COMPILER_LAUNCHER: ccache
+      CMAKE_CXX_COMPILER_LAUNCHER: ccache
+      CCACHE_COMPILERCHECK: content
+      CCACHE_SLOPPINESS: pch_defines,time_macros
+      CCACHE_DIR: ${{ github.workspace }}/ccache-home
+      CCACHE_MAXSIZE: 5G
+      GRADLE_USER_HOME: ${{ github.workspace }}/gradle-home
+      ANDROID_CI_OUTPUT_DIR: ${{ github.workspace }}/source/.artifacts/android-ci
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/loomarr
+        ref: 77ad19526a0a426be247c91d735936e70c590e96
+        path: source
+        submodules: false
+        persist-credentials: false
+        fetch-depth: 2
+    - uses: ./harness/.github/actions/prospect-loomarr
+      with:
+        compiler-cache: 'true'
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py loomarr-compiler boringcache commit1 1
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: loomarr-compiler-boringcache-rolling-commit1
+        path: |-
+          ${{ runner.temp }}/prospect-evidence
+          source/.artifacts/android-ci/*.json
+          source/web/apps/tv/android/build/reports/profile/
+          source/web/**/CMakeCache.txt
+          source/web/**/build.ninja
+          source/web/**/.ninja_log
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: seed
+  commit2:
+    name: BoringCache loomarr-compiler rolling commit2
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CMAKE_C_COMPILER_LAUNCHER: ccache
+      CMAKE_CXX_COMPILER_LAUNCHER: ccache
+      CCACHE_COMPILERCHECK: content
+      CCACHE_SLOPPINESS: pch_defines,time_macros
+      CCACHE_DIR: ${{ github.workspace }}/ccache-home
+      CCACHE_MAXSIZE: 5G
+      GRADLE_USER_HOME: ${{ github.workspace }}/gradle-home
+      ANDROID_CI_OUTPUT_DIR: ${{ github.workspace }}/source/.artifacts/android-ci
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/loomarr
+        ref: 9d60373941bf8fff24abfbfbd76ff43f9fab5fd9
+        path: source
+        submodules: false
+        persist-credentials: false
+        fetch-depth: 2
+    - uses: ./harness/.github/actions/prospect-loomarr
+      with:
+        compiler-cache: 'true'
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py loomarr-compiler boringcache commit2 2
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: loomarr-compiler-boringcache-rolling-commit2
+        path: |-
+          ${{ runner.temp }}/prospect-evidence
+          source/.artifacts/android-ci/*.json
+          source/web/apps/tv/android/build/reports/profile/
+          source/web/**/CMakeCache.txt
+          source/web/**/build.ninja
+          source/web/**/.ninja_log
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: commit1
+  commit3:
+    name: BoringCache loomarr-compiler rolling commit3
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CMAKE_C_COMPILER_LAUNCHER: ccache
+      CMAKE_CXX_COMPILER_LAUNCHER: ccache
+      CCACHE_COMPILERCHECK: content
+      CCACHE_SLOPPINESS: pch_defines,time_macros
+      CCACHE_DIR: ${{ github.workspace }}/ccache-home
+      CCACHE_MAXSIZE: 5G
+      GRADLE_USER_HOME: ${{ github.workspace }}/gradle-home
+      ANDROID_CI_OUTPUT_DIR: ${{ github.workspace }}/source/.artifacts/android-ci
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: harness
+        persist-credentials: false
+    - name: Checkout pinned prospect validation
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        repository: boringcache/loomarr
+        ref: 3e6aea7b50443238acf4711d1af5be90373bda76
+        path: source
+        submodules: false
+        persist-credentials: false
+        fetch-depth: 2
+    - uses: ./harness/.github/actions/prospect-loomarr
+      with:
+        compiler-cache: 'true'
+    - uses: ./harness/.github/actions/prospect-cli
+      with:
+        cli-version: ${{ inputs.cli_version }}
+    - name: Measure the real workload
+      shell: bash
+      run: python3 harness/scripts/prospects/measure.py loomarr-compiler boringcache commit3 3
+    - name: Retain benchmark evidence
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: loomarr-compiler-boringcache-rolling-commit3
+        path: |-
+          ${{ runner.temp }}/prospect-evidence
+          source/.artifacts/android-ci/*.json
+          source/web/apps/tv/android/build/reports/profile/
+          source/web/**/CMakeCache.txt
+          source/web/**/build.ninja
+          source/web/**/.ninja_log
+        if-no-files-found: error
+        retention-days: 14
+        include-hidden-files: true
+    needs: commit2
