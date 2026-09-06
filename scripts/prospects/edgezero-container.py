@@ -57,6 +57,19 @@ def isolation():
             "--tmpfs", f"/tmp:rw,nosuid,nodev,uid={uid},gid={gid}"]
 
 
+def check_sources():
+    for source, expected in ((workspace / "application", os.environ["UPSTREAM_SHA"]),
+                             (state / "source", os.environ["UPSTREAM_SHA"]),
+                             (workspace / "edgezero", os.environ["ACTION_SHA"])):
+        actual = subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD"], text=True).strip()
+        if actual != expected:
+            raise SystemExit(f"Source identity changed at {source}")
+        run("git", "-C", str(source), "diff", "HEAD", "--exit-code")
+        untracked = subprocess.check_output(["git", "-C", str(source), "ls-files", "--others", "--exclude-standard"], text=True)
+        if untracked:
+            raise SystemExit(f"Unexpected source files at {source}: {untracked}")
+
+
 def prepare():
     if state.exists():
         raise SystemExit("Refusing to reuse an existing build state directory")
@@ -65,6 +78,7 @@ def prepare():
     for folder in ("runtime/home", "runtime/cargo", "runtime/rustup", "runtime/tmp/edgezero", "tools", "verify"):
         (state / folder).mkdir(parents=True)
     shutil.copytree(workspace / "application", state / "source", symlinks=True)
+    check_sources()
     shutil.copy2(shutil.which("sccache"), state / "tools/sccache")
     shutil.copy2(workspace / "benchmark-tools/jq", state / "tools/jq")
     compiler = workspace / "compiler-cache"
@@ -96,7 +110,8 @@ git -C /workspace/source diff --exit-code
     metadata = execute(["cargo", "+1.95.0", "metadata", "--manifest-path", "/workspace/source/Cargo.toml",
                         "--locked", "--no-deps", "--format-version", "1"], capture_output=True, text=True)
     package = next(p for p in json.loads(metadata.stdout)["packages"] if p["name"] == "trusted-server-cli")
-    record = {"image": IMAGE, "package": package["name"], "version": package["version"],
+    record = {"image": IMAGE, "action_sha": os.environ["ACTION_SHA"],
+              "package": package["name"], "version": package["version"],
               "application_sha": subprocess.check_output(["git", "-C", str(workspace / "application"), "rev-parse", "HEAD"], text=True).strip()}
     if record["application_sha"] != os.environ["UPSTREAM_SHA"]:
         raise SystemExit("Application checkout differs from the pinned source")
@@ -123,10 +138,11 @@ test -s /state/tmp/check.rlib
         command = ["/opt/edgezero/.github/actions/build-app-cli/scripts/build-app-cli.sh"]
     result = execute(command, cache, check=False)
     with (evidence / "container-sccache.json").open("w") as output:
-        execute(["sccache", "--show-stats", "--stats-format=json"], cache, stdout=output)
+        stats = execute(["sccache", "--show-stats", "--stats-format=json"], cache, check=False, stdout=output)
+    stop_code = 0
     if os.environ["PROVIDER"] == "github":
-        execute(["sccache", "--stop-server"], cache)
-    raise SystemExit(result.returncode)
+        stop_code = execute(["sccache", "--stop-server"], cache, check=False).returncode
+    raise SystemExit(result.returncode or stats.returncode or stop_code)
 
 
 def verify():
@@ -150,8 +166,7 @@ def verify():
     record.update(binary_sha256=hashlib.file_digest(binary.open("rb"), "sha256").hexdigest(),
                   binary_bytes=binary.stat().st_size)
     (evidence / "artifact-validation.json").write_text(json.dumps(record, indent=2) + "\n")
-    for source in (workspace / "application", workspace / "edgezero", state / "source"):
-        run("git", "-C", str(source), "diff", "--exit-code")
+    check_sources()
 
 
 def cleanup():
