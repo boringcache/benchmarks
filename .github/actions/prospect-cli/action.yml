@@ -41,5 +41,7 @@ runs:
     shell: bash
     run: |-
       mkdir -p "$RUNNER_TEMP/prospect-evidence"
-      boringcache --version > "$RUNNER_TEMP/prospect-evidence/cli-version.txt"
+      cli=$(mise which boringcache)
+      dirname "$cli" >> "$GITHUB_PATH"
+      "$cli" --version > "$RUNNER_TEMP/prospect-evidence/cli-version.txt"
       cp "$RUNNER_TEMP/one-action.yml" "$RUNNER_TEMP/prospect-evidence/action.yml"
