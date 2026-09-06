@@ -4,6 +4,11 @@ on:
     branches: [prospect-validation]
     paths: [.github/workflows/prospect-cache-evidence.yml]
   workflow_dispatch:
+    inputs:
+      cache_tags:
+        description: Exact observed cache tags, comma-separated
+        type: string
+        required: false
 permissions:
   contents: read
   id-token: write
@@ -25,6 +30,14 @@ jobs:
           boringcache ci run --oidc-provider github-actions -- boringcache sessions boringcache/benchmarks --period 24h --limit 100 --json > "$RUNNER_TEMP/prospect-evidence/cache-sessions.json"
           boringcache ci run --oidc-provider github-actions -- boringcache sessions boringcache/benchmarks --period 24h --limit 100 --page 2 --json > "$RUNNER_TEMP/prospect-evidence/cache-sessions-page2.json"
           boringcache ci run --oidc-provider github-actions -- boringcache sessions boringcache/benchmarks --period 24h --limit 100 --page 3 --json > "$RUNNER_TEMP/prospect-evidence/cache-sessions-page3.json"
+      - name: Retain selected compiler-cache sizes
+        if: inputs.cache_tags != ''
+        shell: bash
+        env:
+          CACHE_TAGS: ${{ inputs.cache_tags }}
+        run: |
+          date -u +%FT%TZ > "$RUNNER_TEMP/prospect-evidence/cache-check-observed-at.txt"
+          boringcache ci run --oidc-provider github-actions -- boringcache check boringcache/benchmarks "$CACHE_TAGS" --no-git --no-platform --json > "$RUNNER_TEMP/prospect-evidence/cache-check.json"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
