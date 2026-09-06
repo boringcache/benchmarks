@@ -129,10 +129,10 @@ def build(smoke=False):
     if smoke:
         command = ["bash", "-euc", """
 printf 'pub fn answer() -> u32 { 42 }\\n' > /state/tmp/check.rs
-sccache rustc --crate-name cache_check --crate-type rlib /state/tmp/check.rs -o /state/tmp/check.rlib
-rm /state/tmp/check.rlib
-sccache rustc --crate-name cache_check --crate-type rlib /state/tmp/check.rs -o /state/tmp/check.rlib
-test -s /state/tmp/check.rlib
+sccache rustc --crate-name cache_check --crate-type rlib --emit dep-info,link --out-dir /state/tmp /state/tmp/check.rs
+rm /state/tmp/libcache_check.rlib
+sccache rustc --crate-name cache_check --crate-type rlib --emit dep-info,link --out-dir /state/tmp /state/tmp/check.rs
+test -s /state/tmp/libcache_check.rlib
 """]
     else:
         command = ["/opt/edgezero/.github/actions/build-app-cli/scripts/build-app-cli.sh"]
