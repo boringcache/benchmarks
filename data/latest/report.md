@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-07 02:09 UTC
+Generated: 2026-09-07 05:48 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 7/20.
 
@@ -10,8 +10,8 @@ Rows are latest complete same-commit pairs.
 
 | Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
-| Hugo | Warm Build | 0m 37s | 0m 19s | 49% faster | n/a |
-| Hugo Go | Cold Build | 1m 13s | 1m 21s | 11% slower | n/a |
+| Hugo | Cold Build | 3m 53s | 3m 45s | 3% faster | n/a |
+| Hugo Go | Cold Build | 1m 13s | 1m 18s | 7% slower | n/a |
 | Immich | Warm Build | 0m 11s | 0m 6s | near tie | n/a |
 | Mastodon | Cold Build | 10m 39s | 7m 55s | 26% faster | n/a |
 | Mastodon Streaming | Cold Build | 0m 30s | 0m 21s | 30% faster | n/a |
@@ -22,10 +22,10 @@ Rows are latest complete same-commit pairs.
 | OpenTelemetry Java | Warm Build | 2m 42s | 16m 11s | invalid sample | n/a |
 | Spring AI | Cold Build | 7m 5s | 7m 58s | 12% slower | n/a |
 | gRPC | Warm Build | 1m 22s | 2m 0s | invalid sample | n/a |
-| Duckgres | Cold Build | 5m 38s | 3m 59s | 29% faster | n/a |
+| Duckgres | Cold Build | 5m 24s | 3m 46s | 30% faster | n/a |
 | Chroma | Warm Build | 68m 24s | 68m 20s | near tie | n/a |
-| Linkerd2 Web | Cold Build | 4m 8s | 3m 19s | 20% faster | n/a |
-| Qdrant | Cold Build | 12m 32s | 9m 19s | 26% faster | n/a |
+| Linkerd2 Web | Cold Build | 4m 48s | 3m 1s | 37% faster | n/a |
+| Qdrant | Warm Build | 0m 21s | 0m 14s | 33% faster | n/a |
 | n8n | Cold Build | 4m 3s | 4m 22s | 8% slower | n/a |
 | n8n Docker | Warm Build | 2m 33s | 1m 28s | 42% faster | n/a |
 | n8n Runners | Warm Build | 0m 59s | 0m 38s | 36% faster | n/a |
