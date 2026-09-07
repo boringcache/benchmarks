@@ -23,7 +23,6 @@ runs:
       esac
       echo "asset=$asset" >> "$GITHUB_OUTPUT"
       echo "executable=$executable" >> "$GITHUB_OUTPUT"
-      mkdir -p "$RUNNER_TEMP/prospect-cli"
     id: cli
     env:
       GH_TOKEN: ${{ github.token }}
@@ -31,17 +30,19 @@ runs:
   - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db
     with:
       version: 2026.9.1
-      working_directory: ${{ runner.temp }}/prospect-cli
-      install_args: github:boringcache/cli
+      install_args: github:boringcache/cli@${{ steps.cli.outputs.version }}
       mise_toml: |
         [tools]
         "github:boringcache/cli" = { version = "${{ steps.cli.outputs.version }}", asset_pattern = "${{ steps.cli.outputs.asset }}", rename_exe = "${{ steps.cli.outputs.executable }}" }
       cache: false
   - name: Record released product selection
     shell: bash
+    env:
+      CLI_RELEASE: ${{ steps.cli.outputs.version }}
     run: |-
       mkdir -p "$RUNNER_TEMP/prospect-evidence"
       cli=$(mise which boringcache)
       dirname "$cli" >> "$GITHUB_PATH"
+      printf '%s\n' "$CLI_RELEASE" > "$RUNNER_TEMP/prospect-evidence/cli-release.txt"
       "$cli" --version > "$RUNNER_TEMP/prospect-evidence/cli-version.txt"
       cp "$RUNNER_TEMP/one-action.yml" "$RUNNER_TEMP/prospect-evidence/action.yml"
