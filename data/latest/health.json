@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-08T05:38:07Z",
+  "generated_at": "2026-09-08T09:32:29Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -650,9 +650,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 66,
-          "boringcache_successful_run_count": 66,
-          "paired_head_count": 66,
+          "actions_successful_run_count": 70,
+          "boringcache_successful_run_count": 70,
+          "paired_head_count": 70,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -683,9 +683,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 70,
-          "boringcache_successful_run_count": 70,
-          "paired_head_count": 70,
+          "actions_successful_run_count": 74,
+          "boringcache_successful_run_count": 74,
+          "paired_head_count": 74,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -716,9 +716,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 70,
-          "boringcache_successful_run_count": 70,
-          "paired_head_count": 70,
+          "actions_successful_run_count": 74,
+          "boringcache_successful_run_count": 74,
+          "paired_head_count": 74,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -749,9 +749,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 70,
-          "boringcache_successful_run_count": 70,
-          "paired_head_count": 70,
+          "actions_successful_run_count": 74,
+          "boringcache_successful_run_count": 74,
+          "paired_head_count": 74,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
