@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-09 02:16 UTC
+Generated: 2026-09-09 06:06 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 7/20.
 
@@ -17,8 +17,8 @@ Rows are latest complete same-commit pairs.
 | Mastodon Streaming | Cold Build | 0m 33s | 0m 17s | 48% faster | n/a |
 | Discourse Image Factory (amd64) | Cold Build | 43m 9s | 41m 46s | 3% faster | n/a |
 | Discourse Image Factory (arm64) | Cold Build | 38m 58s | 47m 1s | 21% slower | n/a |
-| PostHog | Warm Build | 0m 36s | 0m 18s | 50% faster | n/a |
-| Storybook | Warm Build | 5m 30s | 5m 31s | invalid sample | n/a |
+| PostHog | Cold Build | 39m 15s | 16m 28s | 58% faster | n/a |
+| Storybook | Warm Build | 4m 12s | 4m 38s | invalid sample | n/a |
 | OpenTelemetry Java | Warm Build | 2m 42s | 16m 11s | invalid sample | n/a |
 | Spring AI | Cold Build | 7m 5s | 7m 58s | 12% slower | n/a |
 | gRPC | Warm Build | 1m 22s | 2m 0s | invalid sample | n/a |
