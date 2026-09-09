@@ -66,6 +66,7 @@ jobs:
           key: ${{ env.CACHE_SCOPE }}
           fail-on-cache-miss: ${{ inputs.phase != 'cold' }}
       - name: Measure Android producer
+        id: build
         working-directory: source
         shell: bash
         run: bash ../harness/scripts/prospects/loomarr-current-main.sh
@@ -82,6 +83,7 @@ jobs:
         shell: bash
         run: python3 ../harness/scripts/prospects/loomarr-native-evidence.py
       - name: Retain verified unsigned bundle
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: loomarr-main-${{ inputs.provider }}-${{ inputs.phase }}-n${{ inputs.workers }}-unsigned

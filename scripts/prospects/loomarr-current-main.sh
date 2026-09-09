@@ -14,7 +14,7 @@ git diff "$UPSTREAM_SHA" > "$evidence/fork.diff"
 {
   git rev-parse HEAD
   node --version
-  pnpm --version
+  (cd web && pnpm --version)
   java -version
   uname -a
   lscpu

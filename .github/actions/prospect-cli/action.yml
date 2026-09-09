@@ -39,6 +39,7 @@ runs:
       cache: false
   - name: Record released product selection
     shell: bash
+    working-directory: ${{ runner.temp }}/prospect-cli
     run: |-
       mkdir -p "$RUNNER_TEMP/prospect-evidence"
       cli=$(mise which boringcache)

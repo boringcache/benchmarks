@@ -1,4 +1,5 @@
 name: Loomarr current-main validation
+# Keep the compiler-cache installer resolution inside its configured directory.
 on:
   push:
     branches: [prospect-validation]
