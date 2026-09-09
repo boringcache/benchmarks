@@ -23,7 +23,6 @@ runs:
       esac
       echo "asset=$asset" >> "$GITHUB_OUTPUT"
       echo "executable=$executable" >> "$GITHUB_OUTPUT"
-      mkdir -p "$RUNNER_TEMP/prospect-cli"
     id: cli
     env:
       GH_TOKEN: ${{ github.token }}
@@ -31,18 +30,24 @@ runs:
   - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db
     with:
       version: 2026.9.1
-      working_directory: ${{ runner.temp }}/prospect-cli
-      install_args: github:boringcache/cli
+      install_args: github:boringcache/cli@${{ steps.cli.outputs.version }}
       mise_toml: |
         [tools]
         "github:boringcache/cli" = { version = "${{ steps.cli.outputs.version }}", asset_pattern = "${{ steps.cli.outputs.asset }}", rename_exe = "${{ steps.cli.outputs.executable }}" }
       cache: false
   - name: Record released product selection
     shell: bash
-    working-directory: ${{ runner.temp }}/prospect-cli
+    env:
+      CLI_VERSION: ${{ steps.cli.outputs.version }}
     run: |-
       mkdir -p "$RUNNER_TEMP/prospect-evidence"
-      cli=$(mise which boringcache)
+      cli=$(mise which boringcache --tool "github:boringcache/cli@$CLI_VERSION")
+      actual=$("$cli" --version)
+      expected="boringcache ${CLI_VERSION#v}"
+      if [ "$actual" != "$expected" ]; then
+        printf 'Expected %s, installed %s\n' "$expected" "$actual" >&2
+        exit 1
+      fi
       dirname "$cli" >> "$GITHUB_PATH"
-      "$cli" --version > "$RUNNER_TEMP/prospect-evidence/cli-version.txt"
+      printf '%s\n' "$actual" | tee "$RUNNER_TEMP/prospect-evidence/cli-version.txt"
       cp "$RUNNER_TEMP/one-action.yml" "$RUNNER_TEMP/prospect-evidence/action.yml"

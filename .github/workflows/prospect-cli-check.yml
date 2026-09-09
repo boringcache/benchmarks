@@ -1,0 +1,30 @@
+name: Prospect CLI installation check
+on:
+  push:
+    branches: [prospect-validation]
+    paths:
+      - .github/actions/prospect-cli/action.yml
+      - .github/workflows/prospect-cli-check.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  install:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: harness
+          persist-credentials: false
+      - uses: ./harness/.github/actions/prospect-cli
+        with:
+          cli-version: v1.30.1
+      - name: Verify the selected CLI outside its mise configuration directory
+        working-directory: ${{ runner.temp }}
+        shell: bash
+        run: |
+          actual=$(boringcache --version)
+          test "$actual" = 'boringcache 1.30.1'
+          test "$(cat "$RUNNER_TEMP/prospect-evidence/cli-version.txt")" = "$actual"
+          printf '%s\n' "$actual"

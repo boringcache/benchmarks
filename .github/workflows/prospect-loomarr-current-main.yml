@@ -1,18 +1,17 @@
 name: Loomarr current-main validation
-# Keep the compiler-cache installer resolution inside its configured directory.
 on:
-  push:
-    branches: [prospect-validation]
-    paths: [.github/workflows/prospect-loomarr-current-main.yml]
   workflow_dispatch:
+    inputs:
+      include_baselines:
+        description: Run the one- and two-worker baselines as well as the cache trials
+        type: boolean
+        default: true
 permissions:
   contents: read
   id-token: write
-concurrency:
-  group: loomarr-current-main-${{ github.ref }}
-  cancel-in-progress: false
 jobs:
   baseline:
+    if: inputs.include_baselines
     strategy:
       fail-fast: false
       matrix:
@@ -23,25 +22,37 @@ jobs:
       phase: cold
       workers: ${{ matrix.workers }}
       source: d435fb3f930b457ffa683b9ea5794cdb60bd2e55
-  cold:
-    strategy:
-      fail-fast: false
-      matrix:
-        provider: [github, boringcache]
+  github-cold:
     uses: ./.github/workflows/prospect-loomarr-current-job.yml
     with:
-      provider: ${{ matrix.provider }}
+      provider: github
       phase: cold
       source: d435fb3f930b457ffa683b9ea5794cdb60bd2e55
-  warm:
-    needs: cold
+  github-warm:
+    needs: github-cold
     strategy:
       fail-fast: false
       matrix:
-        provider: [github, boringcache]
         phase: [warm-1, warm-2]
     uses: ./.github/workflows/prospect-loomarr-current-job.yml
     with:
-      provider: ${{ matrix.provider }}
+      provider: github
+      phase: ${{ matrix.phase }}
+      source: d435fb3f930b457ffa683b9ea5794cdb60bd2e55
+  boringcache-cold:
+    uses: ./.github/workflows/prospect-loomarr-current-job.yml
+    with:
+      provider: boringcache
+      phase: cold
+      source: d435fb3f930b457ffa683b9ea5794cdb60bd2e55
+  boringcache-warm:
+    needs: boringcache-cold
+    strategy:
+      fail-fast: false
+      matrix:
+        phase: [warm-1, warm-2]
+    uses: ./.github/workflows/prospect-loomarr-current-job.yml
+    with:
+      provider: boringcache
       phase: ${{ matrix.phase }}
       source: d435fb3f930b457ffa683b9ea5794cdb60bd2e55
