@@ -1,6 +1,9 @@
 name: Prepare loomarr
 description: Prepare the upstream four-ABI Android workload without a build cache.
 inputs:
+  node-version:
+    description: Exact Node version for the pinned producer comparison
+    default: '22.22.3'
   compiler-cache:
     description: Install the pinned C/C++ compiler cache for the separate combined case
     default: 'false'
@@ -14,7 +17,7 @@ runs:
   - uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699
   - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
     with:
-      node-version: 22.22.3
+      node-version: ${{ inputs.node-version }}
   - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
     with:
       go-version: 1.27.0

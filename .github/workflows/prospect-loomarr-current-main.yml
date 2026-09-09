@@ -1,0 +1,46 @@
+name: Loomarr current-main validation
+on:
+  push:
+    branches: [prospect-validation]
+    paths: [.github/workflows/prospect-loomarr-current-main.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: loomarr-current-main-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  baseline:
+    strategy:
+      fail-fast: false
+      matrix:
+        workers: ['1', '2']
+    uses: ./.github/workflows/prospect-loomarr-current-job.yml
+    with:
+      provider: baseline
+      phase: cold
+      workers: ${{ matrix.workers }}
+      source: d435fb3f930b457ffa683b9ea5794cdb60bd2e55
+  cold:
+    strategy:
+      fail-fast: false
+      matrix:
+        provider: [github, boringcache]
+    uses: ./.github/workflows/prospect-loomarr-current-job.yml
+    with:
+      provider: ${{ matrix.provider }}
+      phase: cold
+      source: d435fb3f930b457ffa683b9ea5794cdb60bd2e55
+  warm:
+    needs: cold
+    strategy:
+      fail-fast: false
+      matrix:
+        provider: [github, boringcache]
+        phase: [warm-1, warm-2]
+    uses: ./.github/workflows/prospect-loomarr-current-job.yml
+    with:
+      provider: ${{ matrix.provider }}
+      phase: ${{ matrix.phase }}
+      source: d435fb3f930b457ffa683b9ea5794cdb60bd2e55

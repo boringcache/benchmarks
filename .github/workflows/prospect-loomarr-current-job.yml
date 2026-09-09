@@ -1,0 +1,102 @@
+name: Loomarr current-main producer trial
+on:
+  workflow_call:
+    inputs:
+      provider:
+        type: string
+        required: true
+      phase:
+        type: string
+        required: true
+      workers:
+        type: string
+        default: '1'
+      source:
+        type: string
+        required: true
+permissions:
+  contents: read
+jobs:
+  producer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      SOURCE_SHA: ${{ inputs.source }}
+      UPSTREAM_SHA: e56f2166386a93734b0a4a0cf88639ec7c219e54
+      PROSPECT: loomarr-current-main
+      PROVIDER: ${{ inputs.provider }}
+      PHASE: ${{ inputs.phase }}
+      LOOMARR_ANDROID_NATIVE_JOBS: ${{ inputs.workers }}
+      LOOMARR_ANDROID_GRADLE_HEAP: 1280m
+      GRADLE_USER_HOME: ${{ github.workspace }}/gradle-home
+      CCACHE_DIR: ${{ github.workspace }}/ccache-home
+      CCACHE_MAXSIZE: 5G
+      ANDROID_CI_OUTPUT_DIR: ${{ github.workspace }}/source/.artifacts/android-ci
+      CACHE_SCOPE: loomarr-main-v1-${{ github.run_id }}-${{ github.run_attempt }}-${{ inputs.source }}-n${{ inputs.workers }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: harness
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: boringcache/loomarr
+          ref: ${{ inputs.source }}
+          path: source
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: ./harness/.github/actions/prospect-loomarr
+        with:
+          compiler-cache: ${{ inputs.provider != 'baseline' && 'true' || 'false' }}
+          node-version: '22.23.2'
+      - uses: ./harness/.github/actions/prospect-cli
+        if: inputs.provider == 'boringcache'
+        with:
+          cli-version: v1.30.1
+      - name: Restore GitHub task and compiler caches
+        if: inputs.provider == 'github'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: |
+            ${{ github.workspace }}/gradle-home/caches/build-cache-*
+            ${{ github.workspace }}/ccache-home
+          key: ${{ env.CACHE_SCOPE }}
+          fail-on-cache-miss: ${{ inputs.phase != 'cold' }}
+      - name: Measure Android producer
+        working-directory: source
+        shell: bash
+        run: bash ../harness/scripts/prospects/loomarr-current-main.sh
+      - name: Save GitHub task and compiler caches
+        if: inputs.provider == 'github' && inputs.phase == 'cold'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: |
+            ${{ github.workspace }}/gradle-home/caches/build-cache-*
+            ${{ github.workspace }}/ccache-home
+          key: ${{ env.CACHE_SCOPE }}
+      - name: Inspect every native project and ABI
+        working-directory: source
+        shell: bash
+        run: python3 ../harness/scripts/prospects/loomarr-native-evidence.py
+      - name: Retain verified unsigned bundle
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: loomarr-main-${{ inputs.provider }}-${{ inputs.phase }}-n${{ inputs.workers }}-unsigned
+          path: source/.artifacts/android-ci/*
+          if-no-files-found: error
+          retention-days: 30
+      - name: Retain benchmark evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: loomarr-main-${{ inputs.provider }}-${{ inputs.phase }}-n${{ inputs.workers }}-evidence
+          path: |
+            ${{ runner.temp }}/prospect-evidence
+            source/.artifacts/android-ci/*.json
+            source/web/apps/tv/android/build/reports/profile/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
