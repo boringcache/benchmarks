@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-10 02:02 UTC
+Generated: 2026-09-10 06:06 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 7/20.
 
@@ -19,8 +19,8 @@ Rows are latest complete same-commit pairs.
 | Discourse Image Factory (arm64) | Cold Build | 38m 58s | 47m 1s | 21% slower | n/a |
 | PostHog | Cold Build | 39m 15s | 16m 28s | 58% faster | n/a |
 | Storybook | Warm Build | 4m 12s | 4m 38s | invalid sample | n/a |
-| OpenTelemetry Java | Warm Build | 2m 42s | 16m 11s | invalid sample | n/a |
-| Spring AI | Cold Build | 7m 5s | 7m 58s | 12% slower | n/a |
+| OpenTelemetry Java | Warm Build | 2m 45s | 14m 56s | invalid sample | n/a |
+| Spring AI | Cold Build | 7m 49s | 8m 1s | near tie | n/a |
 | gRPC | Warm Build | 1m 22s | 2m 0s | invalid sample | n/a |
 | Duckgres | Cold Build | 5m 24s | 3m 46s | 30% faster | n/a |
 | Chroma | Warm Build | 75m 25s | 48m 55s | 35% faster | n/a |
