@@ -325,6 +325,19 @@ class PublishIndexTest < Minitest::Test
     assert_equal ["amd64"], benchmark_artifact_variants(variant_benchmark, "boringcache")
   end
 
+  def test_grpc_cachely_provider_uses_the_reported_artifact_names
+    benchmark = BENCHMARKS.find { |item| item.fetch("benchmark") == "grpc-bazel" }
+
+    assert_equal "Cachely", provider_label("cachely")
+    assert_equal false, provider_storage_available?("cachely")
+    %w[fresh rolling].each do |lane|
+      expected_workflow = lane == "fresh" ? "grpc-bazel-fresh-benchmark.yml" : "grpc-bazel-benchmark.yml"
+      assert_equal expected_workflow, provider_workflows_for(benchmark, lane: lane).fetch("cachely")
+      assert_includes lane_artifact_names(benchmark_id: "grpc-bazel", strategy: "cachely", lane: lane),
+        "benchmark-grpc-bazel-cachely-#{lane}"
+    end
+  end
+
   def test_provider_lane_payload_summarizes_samples
     snapshots = [
       pair_snapshot(

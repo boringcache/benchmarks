@@ -37,7 +37,8 @@ PROVIDER_LABELS = {
   "boringcache-mountcache" => "BoringCache Mount Cache",
   "ecr-cache" => "ECR (retired control)",
   "depot-cache" => "Depot Cache",
-  "buildbuddy-cache" => "BuildBuddy Cache"
+  "buildbuddy-cache" => "BuildBuddy Cache",
+  "cachely" => "Cachely"
 }.freeze
 PROVIDER_STORAGE_STRATEGIES = %w[actions-cache boringcache boringcache-toolcache boringcache-mountcache ecr-cache].freeze
 SLOW_REASON_NUMERIC_KEYS = %w[
@@ -216,7 +217,7 @@ BENCHMARKS = [
     "step" => "Bazel build (remote cache)",
     "workflow" => "grpc-bazel-benchmark.yml",
     "fresh_workflow" => "grpc-bazel-fresh-benchmark.yml",
-    "extra_providers" => ["buildbuddy-cache"]
+    "extra_providers" => ["buildbuddy-cache", "cachely"]
   },
   {
     "benchmark" => "zed-cargo",
