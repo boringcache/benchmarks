@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T13:45:06Z",
+  "generated_at": "2026-09-11T18:10:01Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -270,9 +270,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 68,
-          "boringcache_successful_run_count": 68,
-          "paired_head_count": 68,
+          "actions_successful_run_count": 77,
+          "boringcache_successful_run_count": 77,
+          "paired_head_count": 77,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -303,9 +303,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 93,
-          "boringcache_successful_run_count": 93,
-          "paired_head_count": 93,
+          "actions_successful_run_count": 95,
+          "boringcache_successful_run_count": 95,
+          "paired_head_count": 95,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -500,7 +500,7 @@
           "actions_successful_run_count": 99,
           "boringcache_successful_run_count": 99,
           "paired_head_count": 99,
-          "selected_pair_count": 3,
+          "selected_pair_count": 1,
           "window_pair_target": 3,
           "latest_head_sha": "767c2faa2aa97b7622887201916ae4edf500e1fe",
           "latest_created_at": "2026-08-05T02:36:40Z",
@@ -577,9 +577,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 45,
-          "boringcache_successful_run_count": 45,
-          "paired_head_count": 43,
+          "actions_successful_run_count": 46,
+          "boringcache_successful_run_count": 46,
+          "paired_head_count": 44,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "6c6ba80c453ea895d04f4de77b404754153b139c",
@@ -650,9 +650,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 98,
-          "boringcache_successful_run_count": 98,
-          "paired_head_count": 97,
+          "actions_successful_run_count": 99,
+          "boringcache_successful_run_count": 99,
+          "paired_head_count": 98,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
