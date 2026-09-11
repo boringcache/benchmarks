@@ -217,7 +217,8 @@ BENCHMARKS = [
     "step" => "Bazel build (remote cache)",
     "workflow" => "grpc-bazel-benchmark.yml",
     "fresh_workflow" => "grpc-bazel-fresh-benchmark.yml",
-    "extra_providers" => ["buildbuddy-cache", "cachely"]
+    "extra_providers" => ["buildbuddy-cache"],
+    "fresh_only_providers" => ["cachely"]
   },
   {
     "benchmark" => "zed-cargo",
@@ -711,6 +712,12 @@ def provider_workflows_for(benchmark, lane: nil)
     workflows["ecr-cache"] = workflow_name
   end
   Array(benchmark["extra_providers"]).each { |strategy| workflows[strategy] = workflow_name }
+  if lane.nil?
+    fresh_workflow = benchmark["fresh_workflow"] || benchmark.fetch("workflow")
+    Array(benchmark["fresh_only_providers"]).each { |strategy| workflows[strategy] = fresh_workflow }
+  elsif lane.to_s == "fresh"
+    Array(benchmark["fresh_only_providers"]).each { |strategy| workflows[strategy] = workflow_name }
+  end
   workflows
 end
 

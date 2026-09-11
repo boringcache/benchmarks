@@ -330,12 +330,11 @@ class PublishIndexTest < Minitest::Test
 
     assert_equal "Cachely", provider_label("cachely")
     assert_equal false, provider_storage_available?("cachely")
-    %w[fresh rolling].each do |lane|
-      expected_workflow = lane == "fresh" ? "grpc-bazel-fresh-benchmark.yml" : "grpc-bazel-benchmark.yml"
-      assert_equal expected_workflow, provider_workflows_for(benchmark, lane: lane).fetch("cachely")
-      assert_includes lane_artifact_names(benchmark_id: "grpc-bazel", strategy: "cachely", lane: lane),
-        "benchmark-grpc-bazel-cachely-#{lane}"
-    end
+    assert_equal "grpc-bazel-fresh-benchmark.yml", provider_workflows_for(benchmark).fetch("cachely")
+    assert_equal "grpc-bazel-fresh-benchmark.yml", provider_workflows_for(benchmark, lane: "fresh").fetch("cachely")
+    refute provider_workflows_for(benchmark, lane: "rolling").key?("cachely")
+    assert_includes lane_artifact_names(benchmark_id: "grpc-bazel", strategy: "cachely", lane: "fresh"),
+      "benchmark-grpc-bazel-cachely-fresh"
   end
 
   def test_provider_lane_payload_summarizes_samples
