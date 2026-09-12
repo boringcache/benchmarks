@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-12 02:04 UTC
+Generated: 2026-09-12 05:55 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 6/20.
 
@@ -26,10 +26,10 @@ Rows are latest complete same-commit pairs.
 | Chroma | Warm Build | 75m 25s | 48m 55s | 35% faster | n/a |
 | Linkerd2 Web | Cold Build | 4m 48s | 3m 1s | 37% faster | n/a |
 | Qdrant | Warm Build | 0m 21s | 0m 14s | 33% faster | n/a |
-| n8n | Cold Build | 4m 3s | 4m 22s | 8% slower | n/a |
-| n8n Docker | Warm Build | 2m 33s | 1m 28s | 42% faster | n/a |
-| n8n Runners | Warm Build | 0m 59s | 0m 38s | 36% faster | n/a |
-| n8n Runners Distroless | Warm Build | 2m 24s | 1m 6s | 54% faster | n/a |
+| n8n | Cold Build | 2m 34s | 2m 40s | 4% slower | n/a |
+| n8n Docker | Warm Build | 2m 16s | 1m 36s | 29% faster | n/a |
+| n8n Runners | Cold Build | 1m 44s | 0m 46s | 56% faster | n/a |
+| n8n Runners Distroless | Cold Build | 2m 6s | 1m 1s | 52% faster | n/a |
 
 ## Rolling
 
