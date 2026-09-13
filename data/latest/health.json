@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-13T13:57:52Z",
+  "generated_at": "2026-09-13T17:32:46Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -272,7 +272,7 @@
           "state": "missing_pair",
           "actions_successful_run_count": 99,
           "boringcache_successful_run_count": 99,
-          "paired_head_count": 98,
+          "paired_head_count": 97,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -499,7 +499,7 @@
           "state": "missing_pair",
           "actions_successful_run_count": 99,
           "boringcache_successful_run_count": 99,
-          "paired_head_count": 99,
+          "paired_head_count": 98,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
