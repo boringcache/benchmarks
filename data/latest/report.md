@@ -1,8 +1,8 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-14 14:25 UTC
+Generated: 2026-09-14 17:40 UTC
 
-Coverage: 20 benchmarks; fresh 20/20, rolling 9/20.
+Coverage: 20 benchmarks; fresh 20/20, rolling 6/20.
 
 Rows are latest complete same-commit pairs.
 
@@ -41,6 +41,3 @@ Rows are latest complete same-commit pairs.
 | Spring AI | Commit Build | 3m 56s | 3m 57s | near tie | 941.65 MB less (34.39%) |
 | Chroma | Commit Build | 20m 21s | 10m 54s | 46% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 16s | 0m 9s | 44% faster | n/a |
-| n8n Docker | Commit Build | 4m 14s | 3m 2s | investigation only | n/a |
-| n8n Runners | Commit Build | 0m 54s | 0m 40s | 26% faster | n/a |
-| n8n Runners Distroless | Commit Build | 1m 52s | 1m 48s | 4% faster | n/a |
