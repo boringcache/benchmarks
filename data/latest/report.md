@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-14 05:52 UTC
+Generated: 2026-09-14 10:05 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 6/20.
 
@@ -23,7 +23,7 @@ Rows are latest complete same-commit pairs.
 | Spring AI | Cold Build | 7m 49s | 8m 1s | near tie | n/a |
 | gRPC | Warm Build | 1m 38s | 1m 45s | invalid sample | n/a |
 | Duckgres | Warm Build | 0m 14s | 0m 8s | 43% faster | n/a |
-| Chroma | Warm Build | 75m 25s | 48m 55s | 35% faster | n/a |
+| Chroma | Warm Build | 80m 53s | 3m 6s | 96% faster | n/a |
 | Linkerd2 Web | Cold Build | 4m 50s | 2m 54s | 40% faster | n/a |
 | Qdrant | Cold Build | 14m 12s | 9m 32s | 33% faster | n/a |
 | n8n | Cold Build | 2m 34s | 2m 40s | 4% slower | n/a |
