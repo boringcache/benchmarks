@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14T05:52:41Z",
+  "generated_at": "2026-09-14T10:05:40Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -377,7 +377,7 @@
           "state": "healthy",
           "actions_successful_run_count": 94,
           "boringcache_successful_run_count": 94,
-          "paired_head_count": 85,
+          "paired_head_count": 86,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "9914a4bca895d6cc5e538c446ad1ddedad221bd8",
@@ -414,9 +414,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 91,
-          "boringcache_successful_run_count": 91,
-          "paired_head_count": 91,
+          "actions_successful_run_count": 92,
+          "boringcache_successful_run_count": 92,
+          "paired_head_count": 92,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -513,15 +513,15 @@
         "fresh": {
           "lane": "fresh",
           "state": "healthy",
-          "actions_successful_run_count": 7,
-          "boringcache_successful_run_count": 7,
-          "paired_head_count": 7,
+          "actions_successful_run_count": 8,
+          "boringcache_successful_run_count": 8,
+          "paired_head_count": 8,
           "selected_pair_count": 3,
           "window_pair_target": 3,
-          "latest_head_sha": "1260c68c1184ffbd1accb0c36c6e0f51e5165f98",
-          "latest_created_at": "2026-09-07T03:18:53Z",
-          "latest_actions_run_id": 34079228961,
-          "latest_boringcache_run_id": 34079228961,
+          "latest_head_sha": "46dda8ceccf02807e35e1856a22590542f72935f",
+          "latest_created_at": "2026-09-14T03:19:35Z",
+          "latest_actions_run_id": 34802221457,
+          "latest_boringcache_run_id": 34802221457,
           "latest_reporting_mode": "comparative",
           "latest_reporting_reason": "warm build restored the cold cache on a fresh runner",
           "latest_cache_import_status": "ok",
@@ -676,9 +676,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 94,
-          "boringcache_successful_run_count": 94,
-          "paired_head_count": 94,
+          "actions_successful_run_count": 93,
+          "boringcache_successful_run_count": 93,
+          "paired_head_count": 93,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -709,9 +709,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 94,
-          "boringcache_successful_run_count": 94,
-          "paired_head_count": 94,
+          "actions_successful_run_count": 93,
+          "boringcache_successful_run_count": 93,
+          "paired_head_count": 93,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -742,9 +742,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 94,
-          "boringcache_successful_run_count": 94,
-          "paired_head_count": 94,
+          "actions_successful_run_count": 93,
+          "boringcache_successful_run_count": 93,
+          "paired_head_count": 93,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
