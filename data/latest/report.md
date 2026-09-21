@@ -1,8 +1,8 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-21 06:17 UTC
+Generated: 2026-09-21 09:47 UTC
 
-Coverage: 20 benchmarks; fresh 20/20, rolling 6/20.
+Coverage: 20 benchmarks; fresh 20/20, rolling 8/20.
 
 Rows are latest complete same-commit pairs.
 
@@ -23,7 +23,7 @@ Rows are latest complete same-commit pairs.
 | Spring AI | Warm Build | 2m 23s | 1m 43s | 28% faster | n/a |
 | gRPC | Warm Build | 1m 22s | 1m 57s | invalid sample | n/a |
 | Duckgres | Cold Build | 6m 41s | 3m 29s | 48% faster | n/a |
-| Chroma | Warm Build | 80m 53s | 3m 6s | 96% faster | n/a |
+| Chroma | Warm Build | 63m 56s | 5m 24s | 92% faster | n/a |
 | Linkerd2 Web | Cold Build | 4m 36s | 2m 40s | 42% faster | n/a |
 | Qdrant | Warm Build | 0m 29s | 0m 14s | 52% faster | n/a |
 | n8n | Cold Build | 2m 46s | 2m 31s | 9% faster | n/a |
@@ -39,5 +39,7 @@ Rows are latest complete same-commit pairs.
 | Hugo Go | Commit Build | 0m 23s | 0m 30s | 30% slower | 471.28 MB less (76.54%) |
 | OpenTelemetry Java | Commit Build | 1m 0s | 1m 11s | 18% slower | 957.32 MB less (47.17%) |
 | Spring AI | Commit Build | 3m 56s | 3m 57s | near tie | 941.65 MB less (34.39%) |
+| gRPC | Commit Build | 2m 21s | 0m 40s | 72% faster | n/a |
 | Chroma | Commit Build | 20m 21s | 10m 54s | 46% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 16s | 0m 9s | 44% faster | n/a |
+| n8n | Commit Build | 4m 11s | 3m 31s | 16% faster | 1.96 GB less (41.64%) |
