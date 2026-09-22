@@ -152,6 +152,44 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
     end
   end
 
+  def test_composite_actions_must_not_reference_secrets
+    with_repo do |repo_dir|
+      write_workflow(repo_dir, <<~YAML)
+        on:
+          workflow_dispatch:
+            inputs:
+              cli_version: {required: false, type: string}
+              buildkit_image: {required: false, type: string}
+        jobs:
+          benchmark:
+            runs-on: ubuntu-latest
+            steps:
+              - uses: boringcache/one@0123456789012345678901234567890123456789
+                with:
+                  cli-version: ${{ inputs.cli_version }}
+                  managed-buildkit-image: ${{ inputs.buildkit_image }}
+                  mode: docker
+      YAML
+      actions_dir = File.join(repo_dir, ".github", "actions", "invalid")
+      FileUtils.mkdir_p(actions_dir)
+      File.write(File.join(actions_dir, "action.yml"), <<~YAML)
+        name: Invalid action
+        runs:
+          using: composite
+          steps:
+            - shell: bash
+              env:
+                BORINGCACHE_RESTORE_TOKEN: ${{ secrets.BORINGCACHE_RESTORE_TOKEN }}
+              run: true
+      YAML
+
+      _stdout, stderr, status = run_guard(repo_dir)
+
+      refute status.success?
+      assert_includes stderr, "composite actions must receive secrets from their caller"
+    end
+  end
+
   def test_benchmark_execution_must_not_race_a_moving_source_branch
     with_repo do |repo_dir|
       write_workflow(repo_dir, <<~YAML)

@@ -187,6 +187,9 @@ repo_names.each do |repo_name|
       document = YAML.safe_load(text, aliases: true)
       runs = document.is_a?(Hash) ? document["runs"] : nil
       if runs.is_a?(Hash) && runs["using"] == "composite"
+        if text.match?(/\$\{\{\s*secrets\./)
+          errors << "#{repo_name}/#{relative}: composite actions must receive secrets from their caller"
+        end
         workflow_steps(document).each do |step|
           next unless step.key?("run") && step["shell"].to_s.empty?
 
