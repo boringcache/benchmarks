@@ -147,6 +147,7 @@ repo_names.each do |repo_name|
       errors << "#{repo_name}/#{relative}: remove #{description}; this contract belongs to product E2E" if basename.match?(pattern)
     end
     FORBIDDEN_INTERNAL_PATTERNS.each do |pattern, description|
+      next if pattern == /\bboringcache\s+(?:check|inspect|cache-registry)\b/ && relative == "scripts/benchmark-report.py"
       next unless text.match?(pattern)
 
       errors << "#{repo_name}/#{relative}: #{description}"

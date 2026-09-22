@@ -120,6 +120,38 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
     end
   end
 
+  def test_canonical_reporter_can_measure_resolved_boringcache_storage
+    with_repo do |repo_dir|
+      scripts_dir = File.join(repo_dir, "scripts")
+      FileUtils.mkdir_p(scripts_dir)
+      File.write(File.join(scripts_dir, "benchmark-report.py"), <<~PYTHON)
+        import subprocess
+        subprocess.run(["boringcache", "check", "example", "tag", "--exact"])
+      PYTHON
+      write_workflow(repo_dir, <<~YAML)
+        on:
+          workflow_dispatch:
+            inputs:
+              cli_version: {required: false, type: string}
+              buildkit_image: {required: false, type: string}
+        jobs:
+          benchmark:
+            runs-on: ubuntu-latest
+            steps:
+              - uses: boringcache/one@0123456789012345678901234567890123456789
+                with:
+                  cli-version: ${{ inputs.cli_version }}
+                  managed-buildkit-image: ${{ inputs.buildkit_image }}
+                  mode: docker
+      YAML
+
+      stdout, stderr, status = run_guard(repo_dir)
+
+      assert status.success?, "storage reporter failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
+      assert_includes stdout, "benchmark leaf boundary passed"
+    end
+  end
+
   def test_benchmark_execution_must_not_race_a_moving_source_branch
     with_repo do |repo_dir|
       write_workflow(repo_dir, <<~YAML)
