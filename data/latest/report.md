@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-24 05:57 UTC
+Generated: 2026-09-24 10:44 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 6/20.
 
@@ -18,18 +18,18 @@ Rows are latest complete same-commit pairs.
 | Discourse Image Factory (amd64) | Cold Build | 43m 9s | 41m 46s | 3% faster | n/a |
 | Discourse Image Factory (arm64) | Cold Build | 38m 58s | 47m 1s | 21% slower | n/a |
 | PostHog | Cold Build | 27m 48s | 17m 13s | 38% faster | n/a |
-| Storybook | Warm Build | 4m 34s | 4m 39s | invalid sample | n/a |
-| OpenTelemetry Java | Cold Build | 12m 22s | 15m 37s | 26% slower | 539.18 KB more (1.09%) |
-| Spring AI | Cold Build | 6m 13s | 8m 38s | 39% slower | 20.28 MB more (11.22%) |
-| gRPC | Warm Build | 1m 38s | 1m 45s | invalid sample | 548.71 MB more (337.29%) |
-| Duckgres | Cold Build | 5m 31s | 3m 56s | 29% faster | n/a |
+| Storybook | Cold Build | 3m 46s | 6m 11s | 64% slower | n/a |
+| OpenTelemetry Java | Cold Build | 12m 14s | 15m 43s | 28% slower | 582.82 KB more (1.18%) |
+| Spring AI | Cold Build | 5m 47s | 8m 8s | 41% slower | 20.21 MB more (11.18%) |
+| gRPC | Cold Build | 44m 47s | 32m 51s | 27% faster | 548.71 MB more (337.29%) |
+| Duckgres | Cold Build | 6m 2s | 3m 38s | 40% faster | n/a |
 | Chroma | Warm Build | 63m 56s | 5m 24s | 92% faster | n/a |
-| Linkerd2 Web | Warm Build | 0m 22s | 0m 15s | 32% faster | n/a |
-| Qdrant | Cold Build | 15m 15s | 8m 11s | 46% faster | n/a |
-| n8n | Cold Build | 2m 46s | 2m 31s | 9% faster | n/a |
-| n8n Docker | Cold Build | 4m 57s | 3m 53s | 22% faster | n/a |
-| n8n Runners | Cold Build | 1m 23s | 0m 41s | 51% faster | n/a |
-| n8n Runners Distroless | Cold Build | 3m 10s | 1m 13s | 62% faster | n/a |
+| Linkerd2 Web | Warm Build | 0m 19s | 0m 7s | 63% faster | n/a |
+| Qdrant | Cold Build | 12m 11s | 9m 35s | 21% faster | n/a |
+| n8n | Cold Build | 2m 16s | 2m 9s | 5% faster | 965.92 KB less (1.9%) |
+| n8n Docker | Warm Build | 2m 9s | 1m 10s | 46% faster | n/a |
+| n8n Runners | Cold Build | 1m 34s | 0m 39s | 59% faster | n/a |
+| n8n Runners Distroless | Warm Build | 2m 31s | 1m 4s | 58% faster | n/a |
 
 ## Rolling
 

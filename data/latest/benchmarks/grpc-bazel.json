@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T05:57:50Z",
+  "generated_at": "2026-09-24T10:44:30Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -13,13 +13,13 @@
     "public": false,
     "category": "bazel",
     "step": "Bazel build (remote cache)",
-    "headline_scenario": "warm",
-    "headline_label": "Warm Build",
-    "before": "1m 38s",
-    "after": "1m 45s",
-    "before_seconds": 98.0,
-    "after_seconds": 105.0,
-    "faster": null,
+    "headline_scenario": "cold",
+    "headline_label": "Cold Build",
+    "before": "44m 47s",
+    "after": "32m 51s",
+    "before_seconds": 2687.0,
+    "after_seconds": 1971.0,
+    "faster": "27",
     "comparison": {
       "paired_on_head_sha": true,
       "pairing_head_sha": "6fcbfa82479ede2385d82f89079653b0de33536f",
@@ -54,11 +54,10 @@
         "startup_prefetch": {},
         "oci": {},
         "classification": {
-          "sample_valid": false,
-          "reporting_mode": "invalid",
-          "reporting_reason": "fresh_warm_cache_import_not_ok",
-          "validity_reason": "fresh_warm_cache_import_not_ok",
-          "cache_import_status": "miss"
+          "sample_valid": true,
+          "reporting_mode": "comparative",
+          "validity_reason": "provider does not expose warm restore evidence",
+          "cache_import_status": "unknown"
         },
         "product_refs": {
           "schema_version": 1
@@ -119,11 +118,10 @@
         "startup_prefetch": {},
         "oci": {},
         "classification": {
-          "sample_valid": false,
-          "reporting_mode": "invalid",
-          "reporting_reason": "fresh_warm_cache_import_not_ok",
-          "validity_reason": "fresh_warm_cache_import_not_ok",
-          "cache_import_status": "miss"
+          "sample_valid": true,
+          "reporting_mode": "comparative",
+          "validity_reason": "provider does not expose warm restore evidence",
+          "cache_import_status": "unknown"
         },
         "product_refs": {
           "schema_version": 1,
@@ -155,13 +153,7 @@
         "slow_reason": null
       },
       "reporting": {
-        "comparative": false,
-        "status": "invalid",
-        "reason": "fresh_warm_cache_import_not_ok",
-        "headline_scenario": "warm",
-        "headline_label": "Warm Build",
-        "result_text": "invalid sample",
-        "note": "Fresh BoringCache warm reruns require a usable cache import; this sample is diagnostic only."
+        "comparative": true
       },
       "warm_improvement_pct": -7.14,
       "warm_build_improvement_pct": 5.43,
@@ -188,13 +180,13 @@
         "public": false,
         "category": "bazel",
         "step": "Bazel build (remote cache)",
-        "headline_scenario": "warm",
-        "headline_label": "Warm Build",
-        "before": "1m 38s",
-        "after": "1m 45s",
-        "before_seconds": 98.0,
-        "after_seconds": 105.0,
-        "faster": null,
+        "headline_scenario": "cold",
+        "headline_label": "Cold Build",
+        "before": "44m 47s",
+        "after": "32m 51s",
+        "before_seconds": 2687.0,
+        "after_seconds": 1971.0,
+        "faster": "27",
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": "6fcbfa82479ede2385d82f89079653b0de33536f",
@@ -229,11 +221,10 @@
             "startup_prefetch": {},
             "oci": {},
             "classification": {
-              "sample_valid": false,
-              "reporting_mode": "invalid",
-              "reporting_reason": "fresh_warm_cache_import_not_ok",
-              "validity_reason": "fresh_warm_cache_import_not_ok",
-              "cache_import_status": "miss"
+              "sample_valid": true,
+              "reporting_mode": "comparative",
+              "validity_reason": "provider does not expose warm restore evidence",
+              "cache_import_status": "unknown"
             },
             "product_refs": {
               "schema_version": 1
@@ -294,11 +285,10 @@
             "startup_prefetch": {},
             "oci": {},
             "classification": {
-              "sample_valid": false,
-              "reporting_mode": "invalid",
-              "reporting_reason": "fresh_warm_cache_import_not_ok",
-              "validity_reason": "fresh_warm_cache_import_not_ok",
-              "cache_import_status": "miss"
+              "sample_valid": true,
+              "reporting_mode": "comparative",
+              "validity_reason": "provider does not expose warm restore evidence",
+              "cache_import_status": "unknown"
             },
             "product_refs": {
               "schema_version": 1,
@@ -330,13 +320,7 @@
             "slow_reason": null
           },
           "reporting": {
-            "comparative": false,
-            "status": "invalid",
-            "reason": "fresh_warm_cache_import_not_ok",
-            "headline_scenario": "warm",
-            "headline_label": "Warm Build",
-            "result_text": "invalid sample",
-            "note": "Fresh BoringCache warm reruns require a usable cache import; this sample is diagnostic only."
+            "comparative": true
           },
           "warm_improvement_pct": -7.14,
           "warm_build_improvement_pct": 5.43,
