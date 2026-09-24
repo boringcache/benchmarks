@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-24 10:44 UTC
+Generated: 2026-09-24 13:57 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 6/20.
 
@@ -10,20 +10,20 @@ Rows are latest complete same-commit pairs.
 
 | Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
-| Hugo | Cold Build | 4m 14s | 3m 42s | 13% faster | n/a |
-| Hugo Go | Cold Build | 1m 13s | 1m 16s | 4% slower | 619.11 MB more (401.59%) |
-| Immich | Cold Build | 5m 38s | 3m 1s | 46% faster | n/a |
-| Mastodon | Warm Build | 0m 10s | 0m 9s | near tie | n/a |
-| Mastodon Streaming | Cold Build | 0m 23s | 0m 23s | near tie | n/a |
+| Hugo | Cold Build | 4m 9s | 3m 7s | 25% faster | n/a |
+| Hugo Go | Cold Build | 1m 11s | 1m 16s | 7% slower | 619.00 MB more (401.19%) |
+| Immich | Warm Build | 0m 18s | 0m 6s | 67% faster | n/a |
+| Mastodon | Cold Build | 9m 54s | 8m 50s | 11% faster | n/a |
+| Mastodon Streaming | Warm Build | 0m 15s | 0m 10s | near tie | n/a |
 | Discourse Image Factory (amd64) | Cold Build | 43m 9s | 41m 46s | 3% faster | n/a |
 | Discourse Image Factory (arm64) | Cold Build | 38m 58s | 47m 1s | 21% slower | n/a |
-| PostHog | Cold Build | 27m 48s | 17m 13s | 38% faster | n/a |
+| PostHog | Warm Build | 0m 42s | 0m 18s | 57% faster | n/a |
 | Storybook | Cold Build | 3m 46s | 6m 11s | 64% slower | n/a |
 | OpenTelemetry Java | Cold Build | 12m 14s | 15m 43s | 28% slower | 582.82 KB more (1.18%) |
 | Spring AI | Cold Build | 5m 47s | 8m 8s | 41% slower | 20.21 MB more (11.18%) |
-| gRPC | Cold Build | 44m 47s | 32m 51s | 27% faster | 548.71 MB more (337.29%) |
+| gRPC | Cold Build | 52m 26s | 34m 4s | 35% faster | 548.86 MB more (337.55%) |
 | Duckgres | Cold Build | 6m 2s | 3m 38s | 40% faster | n/a |
-| Chroma | Warm Build | 63m 56s | 5m 24s | 92% faster | n/a |
+| Chroma | Warm Build | 76m 54s | 4m 1s | 95% faster | n/a |
 | Linkerd2 Web | Warm Build | 0m 19s | 0m 7s | 63% faster | n/a |
 | Qdrant | Cold Build | 12m 11s | 9m 35s | 21% faster | n/a |
 | n8n | Cold Build | 2m 16s | 2m 9s | 5% faster | 965.92 KB less (1.9%) |
