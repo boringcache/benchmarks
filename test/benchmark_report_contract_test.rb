@@ -86,6 +86,7 @@ class BenchmarkReportContractTest < Minitest::Test
         "--benchmark", "hugo", "--strategy", "boringcache",
         "--lane", "rolling", "--phase", "commit", "--mode", "docker",
         "--build-seconds", "37", "--evidence", evidence_path,
+        "--source-repository", "gohugoio/hugo", "--source-sha", "a" * 40,
         "--output-dir", phase_dir
       )
       assert status.success?, stderr

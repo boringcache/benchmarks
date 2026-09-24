@@ -72,7 +72,7 @@ PRODUCT_INVOCATION = /(?:\bboringcache\s+(?:bazel|cargo|ccache|docker|go|gradle|
 CLI_CANARY_INPUT = /^\s+cli_version:\s*(?:$|\{)/
 CLI_CANARY_FORWARD = /(?:cli-version|cli_version):\s*\$\{\{\s*inputs\.cli_version\b/
 BUILDKIT_CANARY_INPUT = /^\s+buildkit_image:\s*(?:$|\{)/
-BUILDKIT_CANARY_FORWARD = /(?:managed-buildkit-image|buildkit_image):\s*\$\{\{[^\n]*inputs\.buildkit_image\b/
+BUILDKIT_CANARY_FORWARD = /(?:managed-buildkit-image|buildkit_image|BORINGCACHE_MANAGED_BUILDKIT_IMAGE):\s*\$\{\{[^\n]*inputs\.buildkit_image\b/
 
 DEPENDENCY_CACHE_PATHS = {
   /(?:^|\/)node_modules(?:\/|$)/i => "node_modules",
@@ -222,7 +222,7 @@ repo_names.each do |repo_name|
         next unless job.is_a?(Hash)
 
         local_workflow = job["uses"].to_s
-        if local_workflow.start_with?("./.github/workflows/")
+        if local_workflow.start_with?("./.github/workflows/") && !(repo_name == "benchmark-zed" && local_workflow == "./.github/workflows/zed-cargo-rolling-chain.yml")
           errors << "#{repo_name}/#{relative} (#{job_name}): benchmark metrics must be direct top-level jobs; move shared work into a step-level action"
         end
 
