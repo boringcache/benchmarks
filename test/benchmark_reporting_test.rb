@@ -12,6 +12,13 @@ class BenchmarkReportingTest < Minitest::Test
     assert_equal "ok", rolling["cache_import_status"]
   end
 
+  def test_unmeasured_docker_restore_stays_unknown
+    warm = BenchmarkReporting.warm_classification({ "cache_import_ready" => nil }, "docker")
+
+    assert_equal "unknown", warm["cache_import_status"]
+    assert_equal "provider does not expose warm restore evidence", warm["validity_reason"]
+  end
+
   def test_rolling_bootstrap_uses_current_public_language
     summary = BenchmarkReporting.reporting_summary(
       lane: "rolling",

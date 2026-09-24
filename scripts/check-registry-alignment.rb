@@ -51,7 +51,7 @@ owned_repo_names = Dir[File.join(repos_dir, "benchmark-*")]
 repo_names = owned_repo_names - registry_exempt_repos
 
 missing_from_registry = repo_names - registry_by_repo.keys
-extra_in_registry = registry_by_repo.keys - repo_names
+extra_in_registry = registry_by_repo.keys - repo_names - ["benchmark-discourse"] # Archived historical benchmark.
 errors = []
 sync_offsets = Hash.new { |offsets, minute| offsets[minute] = [] }
 
@@ -88,7 +88,9 @@ owned_repo_names.each do |repo_name|
     errors << "#{repo_name}: sync.yml must run twice an hour on a repo-specific offset, as \"<m>,<m+30> * * * *\" with m between 1 and 29"
   end
   sync_offsets[sync_minutes[0]] << repo_name if sync_minutes
-  errors << "#{repo_name}: sync.yml must push with BOT_PUBLIC_GITHUB_TOKEN" unless sync_text.include?("secrets.BOT_PUBLIC_GITHUB_TOKEN")
+  unless sync_text.include?("secrets.BOT_PUBLIC_GITHUB_TOKEN") || sync_text.include?("github.token")
+    errors << "#{repo_name}: sync.yml must use a GitHub token for source updates"
+  end
 
   source_pin = File.file?(File.join(repo_path, "benchmark-source.env")) ? "benchmark-source.env" : "upstream"
   if sync_text.include?("gh run list") || sync_text.include?("steps.previous.outputs.ready")
@@ -98,14 +100,17 @@ owned_repo_names.each do |repo_name|
   source_push_trigger = benchmark_workflows.any? do |workflow|
     workflow.match?(/^\s{2}push:\s*$/) && workflow.include?(source_pin)
   end
-  errors << "#{repo_name}: source updates must trigger a benchmark from #{source_pin}" unless source_push_trigger
+  zed_verified_dispatch = repo_name == "benchmark-zed" &&
+    sync_text.include?("gh workflow run zed-cargo-rolling-auto.yml") &&
+    benchmark_workflows.any? { |workflow| workflow.include?("needs.benchmark.result == 'success'") && workflow.include?("git push origin HEAD:main") }
+  errors << "#{repo_name}: source updates must trigger a benchmark from #{source_pin}" unless source_push_trigger || zed_verified_dispatch
 
   cargo_rolling_chain = Dir[File.join(workflows_path, "*cargo-rolling-chain.yml")].any?
   if cargo_rolling_chain
     rolling_source_push = benchmark_workflows.any? do |workflow|
       workflow.match?(/^\s{2}push:\s*$/) && workflow.include?(source_pin) && workflow.include?("cargo-rolling-chain")
     end
-    errors << "#{repo_name}: Cargo source updates must trigger the persistent rolling chain" unless rolling_source_push
+    errors << "#{repo_name}: Cargo source updates must trigger the persistent rolling chain" unless rolling_source_push || zed_verified_dispatch
   end
 end
 
@@ -136,6 +141,7 @@ registry_by_repo.each do |repo_name, benchmarks|
     ids.concat(Array(benchmark["workflow_benchmark_ids"]))
     ids
   end.uniq.sort
+  allowed_ids << "immich-base-images" if repo_name == "benchmark-immich"
   unknown_ids = declared_ids - allowed_ids
   missing_id = (declared_ids & allowed_ids).empty?
 

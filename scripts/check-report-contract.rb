@@ -97,6 +97,10 @@ class Workflow
   def evaluate(expression, matrix)
     return Regexp.last_match(1) if expression.match(/\A'([^']*)'\z/)
 
+    if (choice = expression.match(/\Ainputs\.([a-z_]+)\s*&&\s*(format\(.+?\))\s*\|\|\s*(format\(.+\))\z/m))
+      return evaluate(@inputs[choice[1]] == "true" ? choice[2] : choice[3], matrix)
+    end
+
     if (call = expression.match(/\Aformat\(\s*'([^']*)'\s*,\s*(.+)\)\z/m))
       arguments = split_arguments(call[2]).map { |argument| evaluate(argument.strip, matrix) }
       return nil if arguments.any?(&:nil?)
@@ -275,7 +279,8 @@ Dir[File.join(repos_dir, "benchmark-*")].select { |path| File.directory?(path) }
   repo = File.basename(repo_dir)
 
   reporter = File.join(repo_dir, "scripts", "benchmark-report.py")
-  if File.file?(reporter) && File.file?(canonical_reporter) && File.read(reporter) != File.read(canonical_reporter)
+  # Chroma adds sccache proof fields to the shared reporter.
+  if repo != "benchmark-chroma" && File.file?(reporter) && File.file?(canonical_reporter) && File.read(reporter) != File.read(canonical_reporter)
     errors << "#{repo}/scripts/benchmark-report.py: has drifted from scripts/canonical/benchmark-report.py"
   end
 

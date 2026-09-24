@@ -48,7 +48,7 @@ module BenchmarkReporting
 
   def warm_classification(observation, mode = nil)
     unless restore_observable?(observation, mode)
-      {
+      return {
         "sample_valid" => true,
         "reporting_mode" => "comparative",
         "validity_reason" => "provider does not expose warm restore evidence",
