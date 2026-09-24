@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T05:57:50Z",
+  "generated_at": "2026-09-24T10:44:30Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -54,11 +54,10 @@
         "startup_prefetch": {},
         "oci": {},
         "classification": {
-          "sample_valid": false,
-          "reporting_mode": "invalid",
-          "reporting_reason": "fresh_warm_cache_import_not_ok",
-          "validity_reason": "fresh_warm_cache_import_not_ok",
-          "cache_import_status": "miss"
+          "sample_valid": true,
+          "reporting_mode": "comparative",
+          "validity_reason": "provider does not expose warm restore evidence",
+          "cache_import_status": "unknown"
         },
         "product_refs": {
           "schema_version": 1
@@ -223,11 +222,10 @@
             "startup_prefetch": {},
             "oci": {},
             "classification": {
-              "sample_valid": false,
-              "reporting_mode": "invalid",
-              "reporting_reason": "fresh_warm_cache_import_not_ok",
-              "validity_reason": "fresh_warm_cache_import_not_ok",
-              "cache_import_status": "miss"
+              "sample_valid": true,
+              "reporting_mode": "comparative",
+              "validity_reason": "provider does not expose warm restore evidence",
+              "cache_import_status": "unknown"
             },
             "product_refs": {
               "schema_version": 1

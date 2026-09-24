@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T05:57:50Z",
+  "generated_at": "2026-09-24T10:44:30Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -53,8 +53,8 @@
         "classification": {
           "sample_valid": true,
           "reporting_mode": "comparative",
-          "validity_reason": "warm build restored the cold cache on a fresh runner",
-          "cache_import_status": "ok"
+          "validity_reason": "provider does not expose warm restore evidence",
+          "cache_import_status": "unknown"
         },
         "product_refs": {
           "schema_version": 1
@@ -111,8 +111,8 @@
         "classification": {
           "sample_valid": true,
           "reporting_mode": "comparative",
-          "validity_reason": "warm build restored the cold cache on a fresh runner",
-          "cache_import_status": "ok"
+          "validity_reason": "provider does not expose warm restore evidence",
+          "cache_import_status": "unknown"
         },
         "product_refs": {
           "schema_version": 1,
@@ -212,8 +212,8 @@
             "classification": {
               "sample_valid": true,
               "reporting_mode": "comparative",
-              "validity_reason": "warm build restored the cold cache on a fresh runner",
-              "cache_import_status": "ok"
+              "validity_reason": "provider does not expose warm restore evidence",
+              "cache_import_status": "unknown"
             },
             "product_refs": {
               "schema_version": 1
@@ -270,8 +270,8 @@
             "classification": {
               "sample_valid": true,
               "reporting_mode": "comparative",
-              "validity_reason": "warm build restored the cold cache on a fresh runner",
-              "cache_import_status": "ok"
+              "validity_reason": "provider does not expose warm restore evidence",
+              "cache_import_status": "unknown"
             },
             "product_refs": {
               "schema_version": 1,
