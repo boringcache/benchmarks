@@ -1,8 +1,8 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-28 14:00 UTC
+Generated: 2026-09-28 17:55 UTC
 
-Coverage: 20 benchmarks; fresh 20/20, rolling 8/20.
+Coverage: 20 benchmarks; fresh 20/20, rolling 6/20.
 
 Rows are latest complete same-commit pairs.
 
@@ -20,7 +20,7 @@ Rows are latest complete same-commit pairs.
 | PostHog | Warm Build | 0m 42s | 0m 18s | 57% faster | n/a |
 | Storybook | Cold Build | 3m 46s | 6m 11s | 64% slower | n/a |
 | OpenTelemetry Java | Cold Build | 12m 14s | 15m 43s | 28% slower | 582.82 KB more (1.18%) |
-| Spring AI | Cold Build | 8m 16s | 8m 20s | near tie | n/a |
+| Spring AI | Cold Build | 5m 47s | 8m 8s | 41% slower | 20.21 MB more (11.18%) |
 | gRPC | Cold Build | 54m 17s | 32m 21s | 40% faster | 550.70 MB more (338.06%) |
 | Duckgres | Cold Build | 7m 28s | 4m 10s | 44% faster | n/a |
 | Chroma | Warm Build | 80m 19s | 2m 26s | 97% faster | n/a |
@@ -35,11 +35,9 @@ Rows are latest complete same-commit pairs.
 
 | Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
-| Hugo | Commit Build | 0m 13s | 0m 13s | near tie | 1.18 GB less (77.73%) |
+| Hugo | Commit Build | 3m 0s | 2m 47s | 7% faster | 792.74 MB less (69.52%) |
 | Hugo Go | Commit Build | 0m 23s | 0m 30s | 30% slower | 471.28 MB less (76.54%) |
-| OpenTelemetry Java | Commit Build | 1m 0s | 1m 11s | 18% slower | 957.32 MB less (47.17%) |
+| OpenTelemetry Java | Commit Build | 9m 8s | 12m 1s | 32% slower | 3.23 GB less (81.17%) |
 | Spring AI | Commit Build | 3m 56s | 3m 57s | near tie | 941.65 MB less (34.39%) |
-| gRPC | Commit Build | 0m 45s | 1m 0s | 33% slower | 1.74 GB more (301.6%) |
 | Chroma | Commit Build | 20m 21s | 10m 54s | 46% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 16s | 0m 9s | 44% faster | n/a |
-| n8n | Commit Build | 4m 11s | 3m 31s | 16% faster | 1.96 GB less (41.64%) |
