@@ -1,8 +1,8 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-29 02:55 UTC
+Generated: 2026-09-29 06:22 UTC
 
-Coverage: 20 benchmarks; fresh 20/20, rolling 6/20.
+Coverage: 20 benchmarks; fresh 20/20, rolling 7/20.
 
 Rows are latest complete same-commit pairs.
 
@@ -12,9 +12,9 @@ Rows are latest complete same-commit pairs.
 | --- | --- | --- | --- | --- | --- |
 | Hugo | Warm Build | 0m 27s | 0m 20s | 26% faster | n/a |
 | Hugo Go | Cold Build | 1m 11s | 0m 57s | 20% faster | 619.48 MB more (401.57%) |
-| Immich | Warm Build | 0m 18s | 0m 6s | 67% faster | n/a |
-| Mastodon | Cold Build | 9m 54s | 8m 50s | 11% faster | n/a |
-| Mastodon Streaming | Warm Build | 0m 15s | 0m 10s | near tie | n/a |
+| Immich | Warm Build | 0m 20s | 0m 10s | 50% faster | n/a |
+| Mastodon | Cold Build | 10m 29s | 6m 45s | 36% faster | n/a |
+| Mastodon Streaming | Warm Build | 0m 16s | 0m 10s | 38% faster | n/a |
 | Discourse Image Factory (amd64) | Cold Build | 43m 9s | 41m 46s | 3% faster | n/a |
 | Discourse Image Factory (arm64) | Cold Build | 38m 58s | 47m 1s | 21% slower | n/a |
 | PostHog | Warm Build | 0m 42s | 0m 18s | 57% faster | n/a |
@@ -41,3 +41,4 @@ Rows are latest complete same-commit pairs.
 | Spring AI | Commit Build | 3m 56s | 3m 57s | near tie | 941.65 MB less (34.39%) |
 | Chroma | Commit Build | 20m 21s | 10m 54s | 46% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 16s | 0m 9s | 44% faster | n/a |
+| n8n | Commit Build | 4m 11s | 3m 31s | 16% faster | 1.96 GB less (41.64%) |
