@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-28T22:06:52Z",
+  "generated_at": "2026-09-29T02:55:20Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -270,9 +270,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 97,
-          "boringcache_successful_run_count": 97,
-          "paired_head_count": 97,
+          "actions_successful_run_count": 58,
+          "boringcache_successful_run_count": 58,
+          "paired_head_count": 58,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -530,9 +530,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "healthy",
-          "actions_successful_run_count": 69,
-          "boringcache_successful_run_count": 69,
-          "paired_head_count": 67,
+          "actions_successful_run_count": 71,
+          "boringcache_successful_run_count": 71,
+          "paired_head_count": 69,
           "selected_pair_count": 3,
           "window_pair_target": 3,
           "latest_head_sha": "fafe96c77f9959477943b784015cc5fd5bedb268",
