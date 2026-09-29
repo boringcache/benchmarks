@@ -1,8 +1,8 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-29 17:59 UTC
+Generated: 2026-09-29 21:47 UTC
 
-Coverage: 20 benchmarks; fresh 20/20, rolling 11/20.
+Coverage: 20 benchmarks; fresh 20/20, rolling 8/20.
 
 Rows are latest complete same-commit pairs.
 
@@ -37,12 +37,9 @@ Rows are latest complete same-commit pairs.
 | --- | --- | --- | --- | --- | --- |
 | Hugo | Commit Build | 3m 0s | 2m 47s | 7% faster | 792.74 MB less (69.52%) |
 | Hugo Go | Commit Build | 0m 23s | 0m 30s | 30% slower | 471.28 MB less (76.54%) |
-| Storybook | Commit Build | 3m 52s | 3m 8s | 19% faster | 5.40 GB less (86.0%) |
 | OpenTelemetry Java | Commit Build | 1m 0s | 1m 11s | 18% slower | 957.32 MB less (47.17%) |
 | Spring AI | Commit Build | 3m 56s | 3m 57s | near tie | 941.65 MB less (34.39%) |
-| gRPC | Commit Build | 0m 45s | 1m 0s | 33% slower | 1.74 GB more (301.6%) |
+| gRPC | Commit Build | 0m 44s | 1m 46s | 141% slower | 1.71 GB more (363.56%) |
 | Chroma | Commit Build | 20m 21s | 10m 54s | 46% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 16s | 0m 9s | 44% faster | n/a |
-| n8n Docker | Commit Build | 5m 41s | 3m 38s | investigation only | n/a |
-| n8n Runners | Commit Build | 1m 13s | 0m 37s | 49% faster | n/a |
-| n8n Runners Distroless | Commit Build | 1m 44s | 1m 16s | 27% faster | n/a |
+| n8n | Commit Build | 4m 11s | 3m 31s | 16% faster | 1.96 GB less (41.64%) |
