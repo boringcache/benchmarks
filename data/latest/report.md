@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-29 06:22 UTC
+Generated: 2026-09-29 09:56 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 7/20.
 
@@ -39,6 +39,6 @@ Rows are latest complete same-commit pairs.
 | Hugo Go | Commit Build | 0m 23s | 0m 30s | 30% slower | 471.28 MB less (76.54%) |
 | OpenTelemetry Java | Commit Build | 1m 0s | 1m 11s | 18% slower | 957.32 MB less (47.17%) |
 | Spring AI | Commit Build | 3m 56s | 3m 57s | near tie | 941.65 MB less (34.39%) |
+| gRPC | Commit Build | 0m 40s | 0m 52s | 30% slower | 1.49 GB more (299.09%) |
 | Chroma | Commit Build | 20m 21s | 10m 54s | 46% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 16s | 0m 9s | 44% faster | n/a |
-| n8n | Commit Build | 4m 11s | 3m 31s | 16% faster | 1.96 GB less (41.64%) |
