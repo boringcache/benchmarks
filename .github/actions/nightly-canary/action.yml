@@ -1,0 +1,26 @@
+name: Dispatch a CLI canary benchmark
+description: Dispatch this repository's registered fresh benchmarks with the latest published CLI canary.
+runs:
+  using: composite
+  steps:
+    - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+      with:
+        ruby-version: "3.4.4"
+    - name: Dispatch this repository's fresh benchmarks
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        CANARY_ACTION_PATH: ${{ github.action_path }}
+      run: |
+        ruby "${CANARY_ACTION_PATH}/../../../scripts/nightly-canaries.rb" \
+          --repository "$GITHUB_REPOSITORY" \
+          --output "$RUNNER_TEMP/nightly-canaries.json" \
+          --summary "$GITHUB_STEP_SUMMARY"
+    - name: Retain dispatch receipt
+      if: always()
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      with:
+        name: nightly-canaries
+        path: ${{ runner.temp }}/nightly-canaries.json
+        if-no-files-found: error
+        retention-days: 30

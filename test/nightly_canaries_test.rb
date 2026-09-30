@@ -8,11 +8,13 @@ class NightlyCanariesTest < Minitest::Test
   BENCHMARK = {"source_repo" => "boringcache/benchmark-example", "fresh_workflow" => "fresh.yml"}
 
   class FakeRunner < NightlyCanaries::Runner
-    attr_reader :requests
-    attr_accessor :releases, :failure, :conclusion
+    attr_reader :requests, :receipt_requests
+    attr_accessor :releases, :failure, :conclusion, :parents, :record, :receipt_error
 
     def initialize
       @requests = []
+      @receipt_requests = []
+      @parents = []
       @releases = [{"tag_name" => VERSION, "prerelease" => true, "draft" => false,
                     "published_at" => "2026-09-30T01:00:00Z",
                     "assets" => %w[SHA256SUMS boringcache-linux-amd64 boringcache-linux-arm64 boringcache-macos-universal boringcache-windows-amd64.exe].map { |name| {"name" => name} }}]
@@ -23,12 +25,19 @@ class NightlyCanariesTest < Minitest::Test
       @requests << {path: path, body: body}
       return @releases if path.include?("releases?")
       return @releases.first if path.include?("releases/tags/")
+      return {"workflow_runs" => @parents} if path.include?("canary.yml/runs?")
       if path.include?("/actions/runs/")
         return {"head_sha" => "a" * 40, "status" => @conclusion ? "completed" : "in_progress", "conclusion" => @conclusion}
       end
       return {"state" => "active"} unless body
       raise NightlyCanaries::Error, "dispatch unavailable" if @failure && path.include?(@failure)
       {"workflow_run_id" => @requests.count { |request| request[:body] }}
+    end
+
+    def receipt(repository, run_id)
+      @receipt_requests << [repository, run_id]
+      raise NightlyCanaries::Error, "Receipt missing" if @receipt_error
+      @record
     end
   end
 
@@ -44,7 +53,7 @@ class NightlyCanariesTest < Minitest::Test
   end
 
   def dispatch(**options)
-    @runner.dispatch(output: @output, summary: @summary, benchmarks: [BENCHMARK, BENCHMARK], **options)
+    @runner.dispatch(repository: BENCHMARK.fetch("source_repo"), output: @output, summary: @summary, benchmarks: [BENCHMARK, BENCHMARK], **options)
   end
 
   def test_dispatches_each_existing_workflow_once_with_the_exact_canary
@@ -79,7 +88,7 @@ class NightlyCanariesTest < Minitest::Test
     @runner.failure = "second.yml"
     second = BENCHMARK.merge("fresh_workflow" => "second.yml")
     assert_raises(NightlyCanaries::Error) do
-      @runner.dispatch(output: @output, summary: @summary, benchmarks: [BENCHMARK, second])
+      @runner.dispatch(repository: BENCHMARK.fetch("source_repo"), output: @output, summary: @summary, benchmarks: [BENCHMARK, second])
     end
     record = JSON.parse(File.read(@output))
     assert_equal "dispatch-failed", record["state"]
@@ -102,5 +111,97 @@ class NightlyCanariesTest < Minitest::Test
     assert @runner.check(record, summary: @summary)
     assert_includes File.read(@summary), "**in_progress**"
     refute_includes File.read(@summary), "**success**"
+  end
+
+  def test_dispatch_is_limited_to_the_selected_repository
+    other = BENCHMARK.merge("source_repo" => "boringcache/benchmark-other")
+    @runner.dispatch(repository: BENCHMARK.fetch("source_repo"), output: @output, summary: @summary,
+      benchmarks: [BENCHMARK, other])
+    refute @runner.requests.any? { |request| request[:path].include?("benchmark-other") }
+  end
+
+  def test_unknown_or_archived_repositories_cannot_dispatch
+    [[], [BENCHMARK.merge("archived" => true)]].each do |benchmarks|
+      assert_raises(NightlyCanaries::Error) do
+        @runner.dispatch(repository: BENCHMARK.fetch("source_repo"), output: @output, summary: @summary,
+          benchmarks: benchmarks)
+      end
+    end
+    assert_empty @runner.requests
+  end
+
+  def prepare_collection
+    @runner.record = dispatch
+    @runner.parents = [
+      {"id" => 21, "display_title" => "CLI canary dispatch", "created_at" => "2026-09-30T02:17:00Z", "status" => "completed", "conclusion" => "success"},
+      {"id" => 20, "display_title" => "CLI canary dispatch", "created_at" => "2026-09-29T02:17:00Z", "status" => "completed", "conclusion" => "success"}
+    ]
+  end
+
+  def collect
+    @runner.collect(summary: @summary, benchmarks: [BENCHMARK], now: Time.utc(2026, 9, 30, 12))
+  end
+
+  def test_collects_exact_child_ids_from_the_latest_dispatch_even_when_the_child_failed
+    prepare_collection
+    @runner.conclusion = "failure"
+    refute collect
+    assert_equal [[BENCHMARK.fetch("source_repo"), 21]], @runner.receipt_requests
+    assert_includes File.read(@summary), "**failure**"
+    assert_includes File.read(@summary), "/actions/runs/1"
+  end
+
+  def test_missing_latest_receipt_does_not_fall_back_to_an_older_success
+    prepare_collection
+    @runner.receipt_error = true
+    refute collect
+    assert_equal [[BENCHMARK.fetch("source_repo"), 21]], @runner.receipt_requests
+    assert_includes File.read(@summary), "Receipt missing"
+  end
+
+  def test_receipt_cannot_report_another_repository
+    prepare_collection
+    @runner.record["runs"].first["repository"] = "boringcache/benchmark-other"
+    refute collect
+    refute @runner.requests.any? { |request| request[:path].include?("benchmark-other") }
+  end
+
+  def test_failed_dispatch_is_not_hidden_by_a_successful_child
+    prepare_collection
+    @runner.parents.first["conclusion"] = "failure"
+    refute collect
+  end
+
+  def test_running_dispatch_does_not_require_a_receipt_yet
+    prepare_collection
+    @runner.parents.first["status"] = "in_progress"
+    assert collect
+    assert_empty @runner.receipt_requests
+    assert_includes File.read(@summary), "in_progress"
+  end
+
+  def test_before_first_dispatch_reports_that_no_run_has_been_observed
+    refute collect
+    assert_includes File.read(@summary), "No canary dispatch has been observed yet"
+    refute_includes File.read(@summary), "**success**"
+  end
+
+  def test_old_success_does_not_hide_a_missed_nightly_dispatch
+    prepare_collection
+    refute @runner.collect(summary: @summary, benchmarks: [BENCHMARK], now: Time.utc(2026, 10, 2))
+    assert_includes File.read(@summary), "more than 36 hours old"
+  end
+
+  def test_receipt_run_ids_must_be_positive_integers
+    prepare_collection
+    @runner.record["runs"].first["id"] = "1/jobs"
+    refute collect
+    assert_includes File.read(@summary), "invalid run ID"
+    refute @runner.requests.any? { |request| request[:path].include?("1/jobs") }
+  end
+
+  def test_collector_skips_archived_benchmarks
+    assert @runner.collect(summary: @summary, benchmarks: [BENCHMARK.merge("archived" => true)])
+    assert_empty @runner.requests
   end
 end

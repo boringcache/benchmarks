@@ -35,17 +35,22 @@ module NightlyCanaries
       release.fetch("tag_name")
     end
 
-    def dispatch(output:, summary:, version: nil, dry_run: false, benchmarks: BENCHMARKS)
+    def targets(benchmarks)
+      benchmarks.reject { |item| item["archived"] }.map { |item| item.values_at("source_repo", "fresh_workflow") }.uniq
+    end
+
+    def dispatch(repository:, output:, summary: nil, version: nil, dry_run: false, benchmarks: BENCHMARKS)
+      selected = targets(benchmarks).select { |repo, _| repo == repository }
+      raise Error, "No active fresh workflows registered for #{repository}" if selected.empty?
       if version.nil? || version.empty?
         version = latest_canary
       else
         raise Error, "Use an exact CLI canary tag" unless version.match?(/\Avcli-canary-[0-9a-f]{9,40}\z/)
         published_canary(api("repos/boringcache/cli/releases/tags/#{version}"))
       end
-      targets = benchmarks.map { |item| item.values_at("source_repo", "fresh_workflow") }.uniq
       record = {"cli_version" => version, "created_at" => Time.now.utc.iso8601,
                 "state" => "dispatching", "runs" => []}
-      targets.each do |repository, workflow|
+      selected.each do |repository, workflow|
         raise Error, "Benchmark lacks a fresh workflow" if repository.nil? || workflow.nil?
         record["runs"] << {"repository" => repository, "workflow" => workflow, "state" => "planned"}
       end
@@ -60,7 +65,7 @@ module NightlyCanaries
         result = api("repos/#{run.fetch('repository')}/actions/workflows/#{run.fetch('workflow')}/dispatches",
           body: {"ref" => "main", "inputs" => {"cli_version" => version}, "return_run_details" => true})
         id = result["workflow_run_id"]
-        raise Error, "Dispatch returned no run ID; inspect the workflow before retrying" unless id.is_a?(Integer)
+        raise Error, "Dispatch returned no run ID; inspect the workflow before retrying" unless id.is_a?(Integer) && id.positive?
         run.merge!("id" => id, "url" => "https://github.com/#{run.fetch('repository')}/actions/runs/#{id}", "state" => "requested")
         write(output, record)
       end
@@ -82,12 +87,70 @@ module NightlyCanaries
       raise Error, "The dispatch receipt has no runs" if record.fetch("runs").empty?
       record.fetch("runs").each do |run|
         next unless run["id"]
+        raise Error, "Dispatch receipt has an invalid run ID" unless run["id"].is_a?(Integer) && run["id"].positive?
         current = api("repos/#{run.fetch('repository')}/actions/runs/#{run.fetch('id')}")
         run["source_sha"] = current.fetch("head_sha")
         run["state"] = current["status"] == "completed" ? current.fetch("conclusion") : current.fetch("status")
       end
       write_summary(summary, record)
       record["state"] == "requested" && record.fetch("runs").all? { |run| %w[requested queued pending waiting in_progress success].include?(run["state"]) }
+    end
+
+    def receipt(repository, run_id)
+      Dir.mktmpdir("canary-receipt-") do |directory|
+        _, error, status = Open3.capture3("gh", "run", "download", run_id.to_s,
+          "--repo", repository, "--name", "nightly-canaries", "--dir", directory)
+        raise Error, "Cannot read dispatch receipt: #{error.strip}" unless status.success?
+        JSON.parse(File.read(File.join(directory, "nightly-canaries.json")))
+      end
+    end
+
+    def collect(summary:, benchmarks: BENCHMARKS, now: Time.now.utc)
+      lines = ["## CLI canary benchmark results", "", "Dispatch and workload states are reported separately.", ""]
+      passed = true
+      targets(benchmarks).group_by(&:first).each do |repository, expected|
+        lines << "### #{repository}"
+        begin
+          parents = api("repos/#{repository}/actions/workflows/canary.yml/runs?branch=main&per_page=100").fetch("workflow_runs")
+          parent = parents.max_by { |run| run.fetch("created_at") }
+          unless parent
+            passed = false
+            lines << "No canary dispatch has been observed yet."
+            next
+          end
+          parent_id = parent.fetch("id")
+          state = parent["status"] == "completed" ? parent.fetch("conclusion") : parent.fetch("status")
+          lines << "Dispatch: [run #{parent_id}](https://github.com/#{repository}/actions/runs/#{parent_id}) — #{state}."
+          if now - Time.iso8601(parent.fetch("created_at")) > 36 * 60 * 60
+            passed = false
+            lines << "The latest dispatch is more than 36 hours old."
+          end
+          next unless parent["status"] == "completed"
+
+          passed = false unless parent["conclusion"] == "success"
+          record = receipt(repository, parent_id)
+          recorded = record.fetch("runs").map { |run| run.values_at("repository", "workflow") }
+          unless recorded.sort == expected.sort && record.fetch("cli_version").match?(/\Avcli-canary-[0-9a-f]{9,40}\z/)
+            raise Error, "Dispatch receipt does not match this repository's registered workflows"
+          end
+          healthy = check(record, summary: nil)
+          passed = false unless healthy
+          lines << "CLI: `#{record.fetch('cli_version')}`. Dispatch: **#{record.fetch('state')}**."
+          record.fetch("runs").each do |run|
+            name = run.fetch("workflow")
+            name = "[#{name}](https://github.com/#{repository}/actions/runs/#{run.fetch('id')})" if run["id"]
+            lines << "- #{name}: **#{run.fetch('state')}**"
+          end
+          lines << record["error"] if record["error"]
+        rescue Error, KeyError, JSON::ParserError, Errno::ENOENT => error
+          passed = false
+          lines << "Unable to report this dispatch: #{error.message}"
+        ensure
+          lines << ""
+        end
+      end
+      File.write(summary, lines.join("\n") + "\n")
+      passed
     end
 
     def write(path, record)
@@ -113,16 +176,24 @@ if __FILE__ == $PROGRAM_NAME
   options = {output: "nightly-canaries.json"}
   OptionParser.new do |parser|
     parser.on("--version TAG") { |value| options[:version] = value }
+    parser.on("--repository REPO") { |value| options[:repository] = value }
     parser.on("--output PATH") { |value| options[:output] = value }
     parser.on("--summary PATH") { |value| options[:summary] = value }
     parser.on("--dry-run") { options[:dry_run] = true }
     parser.on("--check PATH") { |value| options[:check] = value }
+    parser.on("--collect") { options[:collect] = true }
   end.parse!
   begin
     runner = NightlyCanaries::Runner.new
-    if options[:check]
+    if options[:collect]
+      exit(runner.collect(summary: options.fetch(:summary)) ? 0 : 1)
+    elsif options[:check]
       exit(runner.check(JSON.parse(File.read(options[:check])), summary: options[:summary]) ? 0 : 1)
     else
+      raise NightlyCanaries::Error, "Select the benchmark repository with --repository" unless options[:repository]
+      if ENV["GITHUB_ACTIONS"] == "true" && options[:repository] != ENV["GITHUB_REPOSITORY"]
+        raise NightlyCanaries::Error, "A workflow can dispatch canaries only in its own repository"
+      end
       raise NightlyCanaries::Error, "Inspect the retained dispatch receipt before retrying; reruns can start duplicate benchmarks" if ENV.fetch("GITHUB_RUN_ATTEMPT", "1").to_i > 1 && !options[:dry_run]
       runner.dispatch(**options)
     end
