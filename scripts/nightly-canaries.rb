@@ -149,7 +149,9 @@ module NightlyCanaries
           lines << ""
         end
       end
-      File.write(summary, lines.join("\n") + "\n")
+      report = lines.join("\n") + "\n"
+      File.write(summary, report)
+      puts report
       passed
     end
 
