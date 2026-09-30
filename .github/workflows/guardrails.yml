@@ -6,6 +6,7 @@ on:
     paths:
       - ".github/workflows/guardrails.yml"
       - ".github/workflows/nightly-canaries.yml"
+      - ".github/actions/nightly-canary/**"
       - "README.md"
       - "scripts/**"
       - "test/**"
@@ -15,6 +16,7 @@ on:
     paths:
       - ".github/workflows/guardrails.yml"
       - ".github/workflows/nightly-canaries.yml"
+      - ".github/actions/nightly-canary/**"
       - "README.md"
       - "scripts/**"
       - "test/**"
