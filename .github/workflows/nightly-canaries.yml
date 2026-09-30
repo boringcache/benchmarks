@@ -1,33 +1,25 @@
 name: Canary Benchmarks
-run-name: ${{ github.event.schedule == '47 * * * *' && 'Canary benchmark results' || 'Canary benchmark dispatch' }}
+run-name: Canary benchmark results
 
 on:
   schedule:
-    - cron: "17 2 * * *"
     - cron: "47 * * * *"
   workflow_dispatch:
-    inputs:
-      cli_version:
-        description: Exact CLI canary tag; empty selects the latest published canary.
-        required: false
-        type: string
-        default: ""
 
 permissions:
   contents: read
   actions: read
 
 concurrency:
-  group: nightly-canary-benchmarks
+  group: nightly-canary-results
   cancel-in-progress: false
 
 jobs:
-  canaries:
-    if: github.ref == 'refs/heads/main'
+  results:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
-      GH_TOKEN: ${{ secrets.BOT_PUBLIC_GITHUB_TOKEN }}
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -35,31 +27,5 @@ jobs:
       - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
           ruby-version: "3.4.4"
-      - name: Require cross-repository workflow access
-        run: test -n "${GH_TOKEN}"
-      - name: Dispatch the fresh benchmarks
-        if: github.event.schedule != '47 * * * *'
-        env:
-          CLI_VERSION: ${{ inputs.cli_version }}
-        run: ruby scripts/nightly-canaries.rb --version "${CLI_VERSION}" --output nightly-canaries.json --summary "${GITHUB_STEP_SUMMARY}"
-      - name: Check the latest dispatch
-        if: github.event.schedule == '47 * * * *'
-        env:
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          set -euo pipefail
-          run_id="$(gh run list --repo "${REPOSITORY}" --workflow nightly-canaries.yml --branch main --limit 100 --json databaseId,displayTitle --jq '[.[] | select(.displayTitle == "Canary benchmark dispatch")][0].databaseId // empty')"
-          if [[ -z "${run_id}" ]]; then
-            echo "No nightly canary dispatch has run yet." >> "${GITHUB_STEP_SUMMARY}"
-            exit 0
-          fi
-          gh run download "${run_id}" --repo "${REPOSITORY}" --name nightly-canaries --dir prior
-          ruby scripts/nightly-canaries.rb --check prior/nightly-canaries.json --summary "${GITHUB_STEP_SUMMARY}"
-      - name: Retain dispatch receipt
-        if: always() && github.event.schedule != '47 * * * *'
-        uses: actions/upload-artifact@v4
-        with:
-          name: nightly-canaries
-          path: nightly-canaries.json
-          if-no-files-found: error
-          retention-days: 30
+      - name: Check repository canaries
+        run: ruby scripts/nightly-canaries.rb --collect --summary "${GITHUB_STEP_SUMMARY}"

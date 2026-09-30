@@ -1,20 +1,40 @@
 # Nightly CLI canary benchmarks
 
-At 02:17 UTC, `Canary Benchmarks` selects the latest published CLI canary and
-dispatches each distinct fresh workflow in the benchmark registry. It uses the
-existing `cli_version` input and standard runners. It does not rebuild the CLI,
-change benchmark source pins, or change the installed build-tool versions.
+Each active benchmark repository runs `canary.yml` daily, staggered between
+02:02 and 02:29 UTC. It selects the latest published CLI canary with a complete
+set of release assets and dispatches its registered fresh workflows with that
+exact `cli_version`. Archived repositories are excluded.
 
-The dispatch receipt records the exact CLI tag and every requested run. An hourly
-check reports those run IDs, including failures, cancellations, and pending work.
-It never substitutes an older successful run. A successful dispatch means the
-requests were accepted; it does not mean the benchmarks passed. A failed or
-partial dispatch retains its receipt for inspection before another dispatch.
+The dispatcher uses the repository's built-in `GITHUB_TOKEN` with Actions write
+permission. A pinned shared action provides the dispatch code; it can request
+runs only in the calling repository. Upstream synchronization keeps its existing
+schedule. Benchmark workloads, source pins, installed tool versions, and stable
+weekly runs keep their existing settings.
 
-`BOT_PUBLIC_GITHUB_TOKEN` must have Actions write access to the registered
-benchmark repositories and Actions read access to this repository. The workflow
-also supports a manual dispatch with an exact canary tag. Preview without
-starting builds with `ruby scripts/nightly-canaries.rb --dry-run`.
+Each dispatch retains `nightly-canaries.json`, recording the exact CLI tag and
+requested run IDs. The aggregate `Canary Benchmarks` workflow checks these
+receipts hourly with its built-in token and read-only permissions. It reports
+the latest dispatch and its exact workloads, including pending work, failures,
+and cancellations. It fails for missing receipts, failed dispatches or workloads,
+and dispatches more than 36 hours old. It never substitutes an older green run.
+A successful dispatch means the requests were accepted; it does not mean the
+benchmarks passed.
+
+Start a repository's latest-canary run manually with:
+
+```sh
+gh workflow run canary.yml --repo boringcache/benchmark-hugo-go --ref main
+```
+
+For an exact canary tag, dispatch the existing fresh workflow with its
+`cli_version` input. Preview the shared dispatcher without starting builds with:
+
+```sh
+ruby scripts/nightly-canaries.rb --repository boringcache/benchmark-hugo-go --dry-run
+```
+
+Inspect a failed or partial dispatch receipt before starting another run.
+Rerunning a dispatch attempt is rejected to avoid duplicate builds.
 
 Review the completed workload results and retained timing/memory evidence before
 promoting a canary. Compare performance only with a stable run that used the
