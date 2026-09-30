@@ -1,8 +1,8 @@
 # Latest Benchmark Report
 
-Generated: 2026-09-30 02:22 UTC
+Generated: 2026-09-30 06:06 UTC
 
-Coverage: 20 benchmarks; fresh 20/20, rolling 6/20.
+Coverage: 20 benchmarks; fresh 20/20, rolling 7/20.
 
 Rows are latest complete same-commit pairs.
 
@@ -17,8 +17,8 @@ Rows are latest complete same-commit pairs.
 | Mastodon Streaming | Warm Build | 0m 16s | 0m 10s | 38% faster | n/a |
 | Discourse Image Factory (amd64) | Cold Build | 43m 9s | 41m 46s | 3% faster | n/a |
 | Discourse Image Factory (arm64) | Cold Build | 38m 58s | 47m 1s | 21% slower | n/a |
-| PostHog | Warm Build | 0m 42s | 0m 18s | 57% faster | n/a |
-| Storybook | Cold Build | 3m 46s | 6m 11s | 64% slower | n/a |
+| PostHog | Cold Build | 29m 35s | 13m 30s | 54% faster | n/a |
+| Storybook | Cold Build | 4m 52s | 4m 23s | 10% faster | n/a |
 | OpenTelemetry Java | Cold Build | 12m 14s | 15m 43s | 28% slower | 582.82 KB more (1.18%) |
 | Spring AI | Cold Build | 5m 47s | 8m 8s | 41% slower | 20.21 MB more (11.18%) |
 | gRPC | Cold Build | 54m 17s | 32m 21s | 40% faster | 550.70 MB more (338.06%) |
@@ -41,3 +41,4 @@ Rows are latest complete same-commit pairs.
 | Spring AI | Commit Build | 3m 56s | 3m 57s | near tie | 941.65 MB less (34.39%) |
 | Chroma | Commit Build | 20m 21s | 10m 54s | 46% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 16s | 0m 9s | 44% faster | n/a |
+| n8n | Commit Build | 4m 11s | 3m 31s | 16% faster | 1.96 GB less (41.64%) |
