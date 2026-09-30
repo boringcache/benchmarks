@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - ".github/workflows/guardrails.yml"
+      - ".github/workflows/nightly-canaries.yml"
       - "README.md"
       - "scripts/**"
       - "test/**"
@@ -13,6 +14,7 @@ on:
       - main
     paths:
       - ".github/workflows/guardrails.yml"
+      - ".github/workflows/nightly-canaries.yml"
       - "README.md"
       - "scripts/**"
       - "test/**"
@@ -73,6 +75,7 @@ jobs:
         run: |
           set -euo pipefail
           ruby test/publish_index_test.rb
+          ruby test/nightly_canaries_test.rb
           ruby test/benchmark_reporting_test.rb
           ruby test/benchmark_registry_alignment_test.rb
           ruby test/benchmark_workflow_guardrails_test.rb
