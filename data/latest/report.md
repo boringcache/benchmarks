@@ -1,8 +1,8 @@
 # Latest Benchmark Report
 
-Generated: 2026-10-01 14:03 UTC
+Generated: 2026-10-01 18:21 UTC
 
-Coverage: 20 benchmarks; fresh 20/20, rolling 9/20.
+Coverage: 20 benchmarks; fresh 20/20, rolling 7/20.
 
 Rows are latest complete same-commit pairs.
 
@@ -19,7 +19,7 @@ Rows are latest complete same-commit pairs.
 | Discourse Image Factory (arm64) | Cold Build | 38m 58s | 47m 1s | 21% slower | n/a |
 | PostHog | Cold Build | 28m 19s | 13m 42s | 52% faster | n/a |
 | Storybook | Cold Build | 4m 13s | 4m 19s | near tie | n/a |
-| OpenTelemetry Java | Warm Build | 2m 40s | 2m 20s | 13% faster | 639.15 KB more (1.29%) |
+| OpenTelemetry Java | Warm Build | 2m 45s | 14m 56s | invalid sample | n/a |
 | Spring AI | Warm Build | 2m 4s | 1m 40s | 19% faster | 20.39 MB more (11.29%) |
 | gRPC | Cold Build | 53m 16s | 34m 16s | 36% faster | n/a |
 | Duckgres | Cold Build | 5m 31s | 4m 5s | 26% faster | n/a |
@@ -37,10 +37,8 @@ Rows are latest complete same-commit pairs.
 | --- | --- | --- | --- | --- | --- |
 | Hugo | Commit Build | 3m 0s | 2m 47s | 7% faster | 792.74 MB less (69.52%) |
 | Hugo Go | Commit Build | 0m 23s | 0m 30s | 30% slower | 471.28 MB less (76.54%) |
-| Mastodon | Commit Build | 2m 5s | 1m 51s | 11% faster | 8.94 GB less (89.65%) |
-| OpenTelemetry Java | Commit Build | 11m 0s | 5m 37s | 49% faster | 184.17 MB more (23.09%) |
+| OpenTelemetry Java | Commit Build | 1m 0s | 1m 11s | 18% slower | 957.32 MB less (47.17%) |
 | Spring AI | Commit Build | 3m 56s | 3m 57s | near tie | 941.65 MB less (34.39%) |
-| gRPC | Commit Build | 2m 21s | 0m 40s | 72% faster | n/a |
 | Duckgres | Commit Build | 5m 49s | 4m 20s | 26% faster | n/a |
 | Chroma | Commit Build | 20m 21s | 10m 54s | 46% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 16s | 0m 9s | 44% faster | n/a |
