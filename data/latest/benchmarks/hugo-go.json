@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-02T13:58:57Z",
+  "generated_at": "2026-10-02T18:50:13Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -9,7 +9,7 @@
     "name": "Hugo Go",
     "logo": "hugo",
     "repo": "gohugoio/hugo",
-    "source_repo": "boringcache/benchmark-hugo-go",
+    "source_repo": "boringcache/benchmarks",
     "public": false,
     "category": "go",
     "step": "Go build (native build cache)",
@@ -171,7 +171,7 @@
         "name": "Hugo Go",
         "logo": "hugo",
         "repo": "gohugoio/hugo",
-        "source_repo": "boringcache/benchmark-hugo-go",
+        "source_repo": "boringcache/benchmarks",
         "public": false,
         "category": "go",
         "step": "Go build (native build cache)",
@@ -328,7 +328,7 @@
         "name": "Hugo Go",
         "logo": "hugo",
         "repo": "gohugoio/hugo",
-        "source_repo": "boringcache/benchmark-hugo-go",
+        "source_repo": "boringcache/benchmarks",
         "public": false,
         "category": "go",
         "step": "Go build (native build cache)",
