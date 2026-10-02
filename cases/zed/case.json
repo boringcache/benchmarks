@@ -76,7 +76,14 @@
     ],
     "sync": "verified-pair",
     "sync_minute": 28,
-    "source_prefix": "ZED"
+    "source_prefix": "ZED",
+    "cache_tags": {
+      "zed-cargo-rolling-main-cargo": "{scope}-cargo",
+      "zed-sccache-local": "{scope}-sccache",
+      "zed-cargo-registry-local": "{scope}-cargo-registry",
+      "zed-cargo-git-local": "{scope}-cargo-git",
+      "zed-target-local": "{scope}-target"
+    }
   },
   "reporting": {
     "entries": [

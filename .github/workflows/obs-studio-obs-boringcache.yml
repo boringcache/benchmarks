@@ -1,3 +1,4 @@
+---
 name: 'obs-studio: OBS Studio BoringCache benchmark'
 run-name: "${{ github.event_name == 'pull_request' && format('OBS validation | PR
   #{0}', github.event.pull_request.number) || inputs.cli_version != '' && format('OBS
@@ -10,6 +11,7 @@ permissions:
 concurrency:
   group: benchmark-provider-comparisons
   cancel-in-progress: false
+  queue: max
 env:
   BENCHMARK_ID: obs-studio-compiler-cache
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
@@ -35,19 +37,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: obs-studio
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: obs-studio
     - name: Read pinned source
       id: source
       run: sed '/^$/d' benchmark-source.env >> "$GITHUB_OUTPUT"
@@ -76,7 +69,7 @@ jobs:
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
     - name: Configure BoringCache ccache adapter
       id: cache
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         trust-policy: publish
@@ -149,19 +142,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: obs-studio
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: obs-studio
     - name: Read pinned source
       id: source
       run: sed '/^$/d' benchmark-source.env >> "$GITHUB_OUTPUT"
@@ -190,7 +174,7 @@ jobs:
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
     - name: Restore BoringCache ccache adapter
       id: cache
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         trust-policy: restore
@@ -256,19 +240,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: obs-studio
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: obs-studio
     - name: Read pinned source
       id: source
       run: sed '/^$/d' benchmark-source.env >> "$GITHUB_OUTPUT"
@@ -291,7 +266,7 @@ jobs:
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
     - name: Configure BoringCache Xcode adapter
       id: cache
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         trust-policy: publish
@@ -352,19 +327,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: obs-studio
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: obs-studio
     - name: Read pinned source
       id: source
       run: sed '/^$/d' benchmark-source.env >> "$GITHUB_OUTPUT"
@@ -391,7 +357,7 @@ jobs:
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
     - name: Restore BoringCache Xcode adapter
       id: cache
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         trust-policy: restore
@@ -443,14 +409,6 @@ jobs:
     env:
       BENCHMARK_RUNNER_CLASS: macos-26
 'on':
-  push:
-    branches:
-    - main
-    paths:
-    - cases/obs-studio/**
-    - adapters/**
-    - scripts/canonical/**
-    - ".github/workflows/obs-studio-obs-boringcache.yml"
   workflow_dispatch:
     inputs:
       cli_version:
@@ -492,9 +450,3 @@ jobs:
         type: string
         required: false
         default: '1'
-  pull_request:
-    paths:
-    - cases/obs-studio/**
-    - adapters/**
-    - scripts/canonical/**
-    - ".github/workflows/obs-studio-obs-boringcache.yml"

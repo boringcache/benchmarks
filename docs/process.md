@@ -25,10 +25,31 @@ live in `cases/<case-id>/payload/`. Docker workloads use `recipe.json` and `plan
 with the shared Docker adapter. Do not vendor upstream source: `bin/bench prepare`
 obtains the declared revision and applies recorded patches in a disposable checkout.
 
-Add reviewed dispatchable workflows in `.github/workflows/` and register paths and
-inputs in the case. Use shared preparation and the canonical Ruby reporter. Add
+For the standard BoringCache/Actions Cache comparison, use
+`native-fresh-benchmark.yml` and `native-rolling-benchmark.yml`. Declare the local
+composite action, benchmark ID, toolchain inputs, and lane-specific publication
+settings in `execution.native`. Register `case_id` in the workflow inputs. The
+shared executor prepares that reviewed action on the disposable runner; agents
+do not copy workflow setup or reporting into each new case. Declare tag mappings
+in `execution.cache_tags` and use `scope-case-cache.rb`. Use `prepare-source.rb`
+for an unchanged pinned upstream checkout.
+
+Keep different provider sets, architectures, source-change sequences, and output
+behavior explicit in their adapters or case actions. OBS, Cargo product proofs,
+and the Docker corpus retain their distinct execution shapes. Add a workflow
+only when the experiment requires a different shape, and register it in the case.
+Use the canonical Ruby reporter for every execution path. Add
 suite membership for an explicit scheduling purpose. `suites/published.json` is
 the shared registry for published reporting.
+
+`.github/actions/boringcache` is the sole BoringCache One invocation and release
+pin. It forwards the public product inputs and evidence outputs. Tool setup uses
+shared actions such as `prepare-case`, `setup-docker`, and `setup-node`; case
+actions retain their upstream commands, patches, and output verification. Native
+fresh and rolling workflows support both dispatch and `workflow_call`. Use them
+for evaluations and published cases without copying the provider lifecycle.
+Docker tool caches remain product-plan settings rather than a second implementation
+of the product's proxy or cache lifecycle.
 
 ## 3. Validate before execution
 
@@ -37,6 +58,11 @@ bin/bench check <case-id>
 bin/bench plan <case-id> --lane fresh
 bin/bench prepare <case-id> --directory /tmp/<case-id>-workload
 ```
+
+For a standard native comparison, add `--native-lane fresh` to prepare and inspect
+the resolved `.github/actions/benchmark-phase/action.yml`. Its cache publication
+behavior and toolchain come from the case definition. Runtime canary inputs pass
+through the shared workflow; they do not replace the case identity or recipe.
 
 Check prepared source, recipe, commands, and output verification. Recipe digest
 changes require review. Schema and workflow checks do not establish that a build
@@ -67,6 +93,10 @@ Provider-comparison workflows share a concurrency group so separate cases cannot
 write competing GitHub cache seeds simultaneously. Qualification must still check
 cache occupancy, quota, and the actual restored key; serialization does not give
 each case its own quota.
+The group uses `queue: max` so waiting observations are not replaced by newer
+dispatches. [GitHub documents the 100-run queue limit](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency).
+`scripts/lint-workflows.rb` checks that property and runs Actionlint 1.7.12 for
+the remaining workflow syntax; that linter version does not recognize `queue`.
 
 ## 5. Execute and record
 

@@ -1,3 +1,4 @@
+---
 name: 'zed: Zed Cargo rolling run'
 run-name: "${{ format('Zed Cargo rolling {0} to {1}', inputs.base_sha, inputs.head_sha)
   }}"
@@ -24,19 +25,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: zed
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: zed
     - name: Read pinned source
       id: source
       env:
@@ -69,19 +61,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: zed
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: zed
     - name: Checkout the selected Zed source
       run: |
         set -euo pipefail
@@ -114,7 +97,7 @@ jobs:
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
     - name: Run the released Cargo product
       id: cache
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         mode: cargo
@@ -189,43 +172,34 @@ jobs:
 'on':
   workflow_call:
     inputs:
-      cli_version:
+      cli_version: &1
         description: Optional exact immutable BoringCache CLI release tag.
         required: false
         type: string
         default: ''
-      base_sha:
+      base_sha: &2
         description: Source commit currently represented by the published target.
         required: true
         type: string
-      head_sha:
+      head_sha: &3
         description: Dependency-verified descendant to build and publish as the next
           seed.
         required: true
         type: string
-      source_distance:
+      source_distance: &4
         description: Number of first-parent commits from the published seed to the
           selected source; 0 replays it manually.
         required: false
         type: string
         default: '1'
-      runner_label:
+      runner_label: &5
         description: Optional runner label for a manual main-branch experiment.
         required: false
         type: string
         default: ''
-    secrets:
-      BORINGCACHE_RESTORE_TOKEN:
-        required: true
-      BORINGCACHE_SAVE_TOKEN:
-        required: true
   workflow_dispatch:
     inputs:
-      cli_version:
-        description: Optional exact BoringCache CLI release or prerelease tag
-        required: false
-        type: string
-        default: ''
+      cli_version: *1
       series_id:
         description: Predeclared series ID; empty for legacy diagnostics
         type: string
@@ -236,3 +210,7 @@ jobs:
         type: string
         required: false
         default: '1'
+      base_sha: *2
+      head_sha: *3
+      source_distance: *4
+      runner_label: *5

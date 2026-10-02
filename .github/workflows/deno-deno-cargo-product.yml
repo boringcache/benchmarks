@@ -1,3 +1,4 @@
+---
 name: 'deno: Deno Cargo product run'
 run-name: "${{ format('Deno Cargo fresh | {0} | CLI {1}', inputs.cache_profile ||
   'cargo-product', inputs.cli_version || 'Action default') }}"
@@ -32,19 +33,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: deno
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: deno
     - name: Read pinned source
       id: source
       run: sed '/^$/d' benchmark-source.env >> "$GITHUB_OUTPUT"
@@ -111,7 +103,7 @@ jobs:
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
     - name: Build Deno release binaries through boringcache cargo
       id: build_primary
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         trust-policy: publish
@@ -124,7 +116,7 @@ jobs:
       run: "./scripts/select-deno-cargo-phase.rb desktop"
     - name: Build denort_desktop through boringcache cargo
       id: build_desktop
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         trust-policy: publish
@@ -195,19 +187,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: deno
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: deno
     - name: Read pinned source
       id: source
       run: sed '/^$/d' benchmark-source.env >> "$GITHUB_OUTPUT"
@@ -276,7 +259,7 @@ jobs:
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
     - name: Restore and build Deno release binaries through boringcache cargo
       id: build_primary
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         trust-policy: restore
@@ -289,7 +272,7 @@ jobs:
       run: "./scripts/select-deno-cargo-phase.rb desktop"
     - name: Build denort_desktop through boringcache cargo
       id: build_desktop
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         trust-policy: restore
@@ -387,9 +370,3 @@ jobs:
         type: string
         required: false
         default: '1'
-  pull_request:
-    paths:
-    - cases/deno/**
-    - adapters/**
-    - scripts/canonical/**
-    - ".github/workflows/deno-deno-cargo-product.yml"

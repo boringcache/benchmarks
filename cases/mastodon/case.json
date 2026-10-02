@@ -33,7 +33,11 @@
       }
     ],
     "sync": "upstream-head",
-    "sync_minute": 15
+    "sync_minute": 15,
+    "cache_tags": {
+      "mastodon-docker-local": "{scope}-docker",
+      "mastodon-sccache-local": "{scope}-sccache"
+    }
   },
   "reporting": {
     "entries": [

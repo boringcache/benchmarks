@@ -8,10 +8,12 @@
     "public": true,
     "category": "docker",
     "step": "Docker build (Go)",
-    "workflow": "hugo-hugo-benchmark.yml",
-    "fresh_workflow": "hugo-hugo-fresh-benchmark.yml",
+    "workflow": "native-rolling-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-hugo",
-    "case_id": "hugo"
+    "case_id": "hugo",
+    "historical_workflow": "hugo-benchmark.yml",
+    "historical_fresh_workflow": "hugo-fresh-benchmark.yml"
   },
   {
     "benchmark": "hugo-go",
@@ -22,10 +24,12 @@
     "public": true,
     "category": "go",
     "step": "Go build (native build cache)",
-    "workflow": "hugo-go-hugo-go-benchmark.yml",
-    "fresh_workflow": "hugo-go-hugo-go-fresh-benchmark.yml",
+    "workflow": "native-rolling-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-hugo-go",
-    "case_id": "hugo-go"
+    "case_id": "hugo-go",
+    "historical_workflow": "hugo-go-benchmark.yml",
+    "historical_fresh_workflow": "hugo-go-fresh-benchmark.yml"
   },
   {
     "benchmark": "immich",
@@ -165,10 +169,12 @@
     "public": true,
     "category": "nodejs",
     "step": "Nx build (Yarn monorepo)",
-    "workflow": "storybook-storybook-benchmark.yml",
-    "fresh_workflow": "storybook-storybook-fresh-benchmark.yml",
+    "workflow": "native-rolling-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-storybook",
-    "case_id": "storybook"
+    "case_id": "storybook",
+    "historical_workflow": "storybook-benchmark.yml",
+    "historical_fresh_workflow": "storybook-fresh-benchmark.yml"
   },
   {
     "benchmark": "otel-gradle",
@@ -184,10 +190,12 @@
     "public": false,
     "category": "gradle",
     "step": "Gradle build (native HTTP cache)",
-    "workflow": "opentelemetry-java-opentelemetry-java-gradle-benchmark.yml",
-    "fresh_workflow": "opentelemetry-java-opentelemetry-java-gradle-fresh-benchmark.yml",
+    "workflow": "native-rolling-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-opentelemetry-java",
-    "case_id": "opentelemetry-java"
+    "case_id": "opentelemetry-java",
+    "historical_workflow": "opentelemetry-java-gradle-benchmark.yml",
+    "historical_fresh_workflow": "opentelemetry-java-gradle-fresh-benchmark.yml"
   },
   {
     "benchmark": "spring-ai-maven",
@@ -202,10 +210,12 @@
     "public": false,
     "category": "maven",
     "step": "Maven build (build-cache extension)",
-    "workflow": "spring-ai-spring-ai-maven-benchmark.yml",
-    "fresh_workflow": "spring-ai-spring-ai-maven-fresh-benchmark.yml",
+    "workflow": "native-rolling-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-spring-ai",
-    "case_id": "spring-ai"
+    "case_id": "spring-ai",
+    "historical_workflow": "spring-ai-maven-benchmark.yml",
+    "historical_fresh_workflow": "spring-ai-maven-fresh-benchmark.yml"
   },
   {
     "benchmark": "grpc-bazel",
@@ -272,10 +282,12 @@
     "public": true,
     "category": "docker",
     "step": "Docker build (Postgres extension image)",
-    "workflow": "duckgres-duckgres-benchmark.yml",
-    "fresh_workflow": "duckgres-duckgres-fresh-benchmark.yml",
+    "workflow": "native-rolling-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-duckgres",
-    "case_id": "duckgres"
+    "case_id": "duckgres",
+    "historical_workflow": "duckgres-benchmark.yml",
+    "historical_fresh_workflow": "duckgres-fresh-benchmark.yml"
   },
   {
     "benchmark": "chroma",
@@ -292,10 +304,12 @@
     "public": true,
     "category": "docker",
     "step": "Docker build (Rust CLI image)",
-    "workflow": "chroma-chroma-benchmark.yml",
-    "fresh_workflow": "chroma-chroma-fresh-benchmark.yml",
+    "workflow": "native-rolling-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-chroma",
-    "case_id": "chroma"
+    "case_id": "chroma",
+    "historical_workflow": "chroma-benchmark.yml",
+    "historical_fresh_workflow": "chroma-fresh-benchmark.yml"
   },
   {
     "benchmark": "linkerd2-v2",
@@ -311,10 +325,12 @@
     "public": true,
     "category": "docker",
     "step": "Docker build (web image)",
-    "workflow": "linkerd2-linkerd2-benchmark.yml",
-    "fresh_workflow": "linkerd2-linkerd2-fresh-benchmark.yml",
+    "workflow": "native-rolling-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-linkerd2",
-    "case_id": "linkerd2"
+    "case_id": "linkerd2",
+    "historical_workflow": "linkerd2-benchmark.yml",
+    "historical_fresh_workflow": "linkerd2-fresh-benchmark.yml"
   },
   {
     "benchmark": "qdrant",
@@ -325,10 +341,12 @@
     "public": true,
     "category": "docker",
     "step": "Docker build (Rust vector database)",
-    "workflow": "qdrant-qdrant-benchmark.yml",
-    "fresh_workflow": "qdrant-qdrant-fresh-benchmark.yml",
+    "workflow": "native-rolling-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-qdrant",
-    "case_id": "qdrant"
+    "case_id": "qdrant",
+    "historical_workflow": "qdrant-benchmark.yml",
+    "historical_fresh_workflow": "qdrant-fresh-benchmark.yml"
   },
   {
     "benchmark": "n8n",

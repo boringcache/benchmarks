@@ -1,3 +1,4 @@
+---
 name: 'grpc: gRPC Bazel Benchmark'
 run-name: "${{ format('Benchmark {0} | {1}', inputs.cli_version != '' && 'Canary'
   || 'Rolling', github.event_name == 'push' && 'Upstream update' || format('Manual
@@ -8,6 +9,7 @@ permissions:
 concurrency:
   group: benchmark-provider-comparisons
   cancel-in-progress: false
+  queue: max
 env:
   BORINGCACHE_NO_GIT: 'true'
   BUILDBUDDY_API_KEY: "${{ secrets.BUILDBUDDY_API_KEY }}"
@@ -40,19 +42,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: grpc
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: grpc
     - uses: "./.github/actions/grpc-bazel-benchmark"
       with:
         strategy: "${{ matrix.strategy }}"
@@ -78,19 +71,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: grpc
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: grpc
     - name: Download the benchmark phase evidence
       uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
       with:
@@ -150,11 +134,3 @@ jobs:
         type: string
         required: false
         default: '1'
-  push:
-    branches:
-    - main
-    paths:
-    - cases/grpc/**
-    - adapters/**
-    - scripts/canonical/**
-    - ".github/workflows/grpc-grpc-bazel-benchmark.yml"

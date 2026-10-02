@@ -15,10 +15,11 @@ class BenchmarkCaseScriptsTest < Minitest::Test
     Dir.mktmpdir("benchmark-recipe-") do |directory|
       FileUtils.cp_r(Dir[File.join(ROOT, "cases", id, "payload", "{*,.[!.]*}")], directory)
       FileUtils.mkdir_p(File.join(directory, "scripts"))
-      %w[benchmark-plan activate-docker-plan run-benchmark-plan verify-upstream-recipe].each do |name|
+      %w[benchmark-plan activate-docker-plan run-benchmark-plan verify-upstream-recipe scope-case-cache prepare-source].each do |name|
         FileUtils.cp(File.join(ROOT, "scripts", "#{name}.rb"), File.join(directory, "scripts", "#{name}.rb"))
       end
-      File.write(File.join(directory, "benchmark-context.json"), JSON.generate({"case_id" => id}))
+      item = JSON.parse(File.read(File.join(ROOT, "cases", id, "case.json")))
+      File.write(File.join(directory, "benchmark-context.json"), JSON.generate({"case_id" => id, "execution" => item.fetch("execution")}))
       yield directory
     end
   end
@@ -53,7 +54,7 @@ class BenchmarkCaseScriptsTest < Minitest::Test
     with_case("immich") do |directory|
       path = File.join(directory, ".boringcache.toml")
       original = TomlRB.load_file(path)
-      _, error, status = run_script(directory, "scope-boringcache-run", "screening-01")
+      _, error, status = run_script(directory, "scope-case-cache", "screening-01")
       assert status.success?, error
       plan = TomlRB.load_file(path)
       assert_equal "boringcache/benchmarks", plan["workspace"]

@@ -33,7 +33,11 @@
       }
     ],
     "sync": "upstream-head",
-    "sync_minute": 12
+    "sync_minute": 12,
+    "cache_tags": {
+      "immich-docker-local": "{scope}-docker",
+      "immich-ccache-local": "{scope}-ccache"
+    }
   },
   "reporting": {
     "entries": [

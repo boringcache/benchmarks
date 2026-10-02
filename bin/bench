@@ -24,6 +24,8 @@ parser = OptionParser.new do |value|
   end
   value.on("--ref REF") { |input| options[:ref] = input }
   value.on("--directory PATH") { |input| options[:directory] = input }
+  value.on("--native-lane LANE") { |input| options[:native_lane] = input }
+  value.on("--suffix SUFFIX") { |input| options[:suffix] = input }
   value.on("--output PATH") { |input| options[:output] = input }
   value.on("--series ID") { |input| options[:series] = input }
   value.on("--run ID", Integer) { |input| options[:run] = input }
@@ -73,7 +75,7 @@ begin
     puts JSON.pretty_generate(BenchmarkCases.dispatch(item, **options.slice(:lane, :workflow, :inputs, :ref), output: output))
   when "prepare"
     raise BenchmarkCases::Error, "Select a case ID and --directory" unless item && options[:directory]
-    puts BenchmarkCases.prepare(item, directory: options.fetch(:directory))
+    puts BenchmarkCases.prepare(item, **options.slice(:directory, :native_lane, :suffix))
   when "contracts"
     raise BenchmarkCases::Error, "Use --directory for disposable contract views" unless options[:directory]
     BenchmarkCases.validate
@@ -119,6 +121,6 @@ begin
   else
     abort parser.to_s
   end
-rescue BenchmarkCases::Error, BenchmarkSeries::Error, OptionParser::ParseError, JSON::ParserError, KeyError => error
+rescue BenchmarkCases::Error, BenchmarkSeries::Error, NativeCase::Error, OptionParser::ParseError, JSON::ParserError, KeyError => error
   abort error.message
 end

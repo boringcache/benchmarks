@@ -16,12 +16,13 @@ require "rbconfig"
 require "cgi"
 require_relative "docker-case-contract"
 require_relative "benchmark-series"
+require_relative "native-case"
 
 module BenchmarkCases
   ROOT = File.expand_path("..", __dir__)
   WORKSPACE = "boringcache/benchmarks"
   REPOSITORY = "boringcache/benchmarks"
-  HELPERS = %w[benchmark-plan run-benchmark-plan activate-docker-plan summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build].freeze
+  HELPERS = %w[benchmark-plan run-benchmark-plan activate-docker-plan summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache].freeze
   class Error < StandardError; end
 
   def self.command(*args, chdir: nil, stdin: "", env: {})
@@ -43,6 +44,7 @@ module BenchmarkCases
     files += item.dig("execution", "workflows").map { |entry| File.join(root, entry.fetch("path")) }
     files += HELPERS.map { |name| File.join(root, "scripts", "#{name}.rb") }
     files += %w[scripts/canonical/benchmark-report.rb scripts/verify-upstream-recipe.rb scripts/benchmark-cases.rb scripts/benchmark-series.rb bin/bench Gemfile.lock .tool-versions].map { |path| File.join(root, path) }
+    files += Dir.glob(File.join(root, ".github", "actions", "**", "*"), File::FNM_DOTMATCH).select { |path| File.file?(path) }
     files += Dir.glob(File.join(root, "adapters", "docker", "**", "*"), File::FNM_DOTMATCH).select { |path| File.file?(path) } if item["adapter"] == "docker"
     manifest = files.uniq.sort.to_h { |path| [path.delete_prefix(root + "/"), Digest::SHA256.file(path).hexdigest] }
     Digest::SHA256.hexdigest(JSON.generate({"case" => item, "files" => manifest}))
@@ -129,6 +131,11 @@ module BenchmarkCases
         end
       end
       payload = File.join(directory, "payload")
+      begin
+        NativeCase.validate(item, payload: payload)
+      rescue NativeCase::Error => error
+        errors << "#{id}: #{error.message}"
+      end
       helper_names = HELPERS.map { |name| "#{name}.rb" } + %w[benchmark-report.rb verify-upstream-recipe.rb]
       files = item.dig("execution", "workflows").map { |entry| File.join(root, entry.fetch("path")) }
       files += Dir[File.join(payload, ".github", "actions", "**", "*.{yml,yaml}")]
@@ -138,6 +145,7 @@ module BenchmarkCases
           errors << "#{id}: #{path.delete_prefix(root + '/')} calls missing scripts/#{name}" unless helper_names.include?(name) || File.file?(File.join(payload, "scripts", name))
         end
         uses = File.read(path).scan(/^\s*(?:-\s*)?uses:\s*["']?([^\s"']+)/).flatten
+        errors << "#{id}: use the shared BoringCache wrapper rather than copying its release pin" if uses.any? { |ref| ref.start_with?("boringcache/one@") }
         uses.reject { |ref| ref.start_with?("./") }.each do |ref|
           errors << "#{id}: Action reference must use a complete commit SHA: #{ref}" unless ref.match?(/@[0-9a-f]{40}\z/)
         end
@@ -186,6 +194,9 @@ module BenchmarkCases
     entry = workflow ? entries.find { |value| File.basename(value.fetch("path")) == workflow } : entries.find { |value| value.fetch("lane") == lane }
     raise Error, "#{item.fetch('id')} has no #{workflow || lane} workflow" unless entry
     combined = entry.fetch("inputs").merge(inputs)
+    if item.dig("execution", "native") && combined["case_id"] != item.fetch("id")
+      raise Error, "case_id must match the selected case"
+    end
     revisions = item.fetch("source").fetch("pins").map { |pin| pin.fetch("revision") }
     combined.each do |name, value|
       if name.end_with?("_sha") && (!value.match?(/\A[0-9a-f]{40}\z/) || !revisions.include?(value))
@@ -312,7 +323,7 @@ module BenchmarkCases
     receipt
   end
 
-  def self.prepare(item, directory:, root: ROOT)
+  def self.prepare(item, directory:, root: ROOT, native_lane: nil, suffix: "")
     blockers = item.fetch("execution").fetch("blockers", [])
     raise Error, "#{item.fetch('id')}: #{blockers.join('; ')}" unless blockers.empty?
     target = File.expand_path(directory)
@@ -363,6 +374,7 @@ module BenchmarkCases
     helpers.each do |name|
       FileUtils.cp(File.join(root, "scripts", "#{name}.rb"), File.join(target, "scripts", "#{name}.rb"))
     end
+    copy_shared_actions(target, root: root)
     # The workload's submodule commands need an index and a local source tree.
     # This commit stays on the disposable worker and has no publication remote.
     files = Dir.children(target) - %w[.git .harness]
@@ -375,8 +387,11 @@ module BenchmarkCases
     context = {"schema_version" => 1, "case_id" => item.fetch("id"), "workspace" => WORKSPACE,
                "definition_sha256" => definition_sha256(item, root: root),
                "source" => source, "origin" => item.fetch("origin"), "verification" => item.fetch("verification"),
-               "comparison" => item.fetch("comparison")}
+               "comparison" => item.fetch("comparison"), "execution" => item.fetch("execution")}
     write_json(File.join(target, "benchmark-context.json"), context)
+    if native_lane
+      NativeCase.write_action(item, directory: target, lane: native_lane, suffix: suffix)
+    end
     target
   end
 
@@ -385,6 +400,36 @@ module BenchmarkCases
       write_contract_views(directory, root: root)
       yield directory
     end
+  end
+
+  def self.copy_shared_actions(target, root: ROOT)
+    FileUtils.mkdir_p(File.join(target, ".github", "actions"))
+    FileUtils.cp_r(Dir[File.join(root, ".github", "actions", "*")], File.join(target, ".github", "actions"))
+  end
+
+  def self.resolve_provider_steps(document, provider)
+    case document
+    when Hash
+      if document["uses"] == "./.github/actions/boringcache"
+        invocation = provider.fetch("runs").fetch("steps").fetch(0)
+        supplied = document.fetch("with", {})
+        declared = provider.fetch("inputs")
+        unknown = supplied.keys - declared.keys
+        raise Error, "Unsupported BoringCache wrapper inputs: #{unknown.join(', ')}" unless unknown.empty?
+        resolved = invocation.fetch("with").transform_values do |value|
+          match = value.match(/\A\$\{\{ inputs\.([a-z-]+) \}\}\z/)
+          raise Error, "Provider wrapper must forward declared inputs directly" unless match
+          name = match[1]
+          supplied.fetch(name, declared.fetch(name).fetch("default", ""))
+        end
+        document["uses"] = invocation.fetch("uses")
+        document["with"] = resolved
+      end
+      document.each_value { |value| resolve_provider_steps(value, provider) }
+    when Array
+      document.each { |value| resolve_provider_steps(value, provider) }
+    end
+    document
   end
 
   def self.write_contract_views(directory, root: ROOT)
@@ -409,10 +454,31 @@ module BenchmarkCases
           FileUtils.cp(File.join(root, workflow), File.join(target, ".github", "workflows", File.basename(workflow)))
         end
         FileUtils.mkdir_p(File.join(target, "scripts"))
+        write_json(File.join(target, "benchmark-context.json"), {"execution" => item.fetch("execution"), "case_id" => item.fetch("id")})
         FileUtils.cp(File.join(root, "scripts", "canonical", "benchmark-report.rb"), File.join(target, "scripts", "benchmark-report.rb"))
         HELPERS.each do |name|
           FileUtils.cp(File.join(root, "scripts", "#{name}.rb"), File.join(target, "scripts", "#{name}.rb"))
         end
+        copy_shared_actions(target, root: root)
+        NativeCase.write_action(item, directory: target, lane: "fresh") if item.dig("execution", "native")
+        # Legacy product guards consume the resolved public Action invocation.
+        # Expand the shared wrapper in these disposable views, preserving its
+        # defaults and each caller's phase, adapter, and strict failure settings.
+        provider_path = File.join(target, ".github", "actions", "boringcache", "action.yml")
+        provider = YAML.safe_load(File.read(provider_path), aliases: true)
+        raise Error, "The provider wrapper must contain one product call" unless provider.dig("runs", "steps").length == 1
+        Dir[File.join(target, ".github", "**", "*.{yml,yaml}")].each do |path|
+          next if path == provider_path
+          document = YAML.safe_load(File.read(path), aliases: true)
+          if item.dig("execution", "native") && File.basename(path).start_with?("native-")
+            recipe = item.dig("execution", "native")
+            document["env"]["BENCHMARK_ID"] = "${{ format('#{recipe.fetch('benchmark_id')}{0}', inputs.benchmark_id_suffix) }}"
+            (document["on"] || document[true])["workflow_dispatch"]["inputs"]["case_id"]["default"] = item.fetch("id")
+          end
+          resolved = resolve_provider_steps(document, provider)
+          File.write(path, YAML.dump(resolved))
+        end
+        FileUtils.remove_entry(File.dirname(provider_path))
       end
     directory
   end

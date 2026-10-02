@@ -1,26 +1,21 @@
-name: 'hugo: Hugo Docker Benchmark'
-run-name: "${{ format('Benchmark {0} | {1}', inputs.cli_version != '' && 'Canary'
-  || 'Rolling', github.event_name == 'push' && 'Upstream update' || format('Manual
-  dispatch ({0})', github.ref_name)) }}"
-concurrency:
-  group: benchmark-provider-comparisons
-  cancel-in-progress: false
+---
+name: Native comparison rolling
+run-name: "${{ inputs.case_id }} rolling ${{ inputs.series_id }} sample ${{ inputs.sample
+  }}"
 permissions:
   contents: read
   actions: read
-  packages: write
 env:
   BORINGCACHE_NO_GIT: 'true'
-  BENCHMARK_ID: "${{ format('hugo{0}', inputs.benchmark_id_suffix) }}"
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
   BENCHMARK_SAMPLE: "${{ inputs.sample }}"
 jobs:
-  commit:
-    name: "${{ matrix.provider }} Hugo Docker commit"
+  publish:
+    name: "${{ matrix.provider }} ${{ inputs.case_id }} commit"
     if: inputs.runner_label == '' || github.ref_name == 'main'
     runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
       && inputs.runner_label || 'ubuntu-latest' }}"
-    timeout-minutes: 180
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
@@ -35,40 +30,31 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: hugo
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
-    - uses: "./.github/actions/hugo-docker-benchmark"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: "${{ inputs.case_id }}"
+        native-lane: rolling
+        suffix: "${{ inputs.benchmark_id_suffix }}"
+    - uses: "./.github/actions/benchmark-phase"
       with:
         strategy: "${{ matrix.strategy }}"
         cache_lane: rolling
         phase: publish
-        benchmark_id: "${{ format('hugo{0}', inputs.benchmark_id_suffix) }}"
+        benchmark_id: "${{ env.BENCHMARK_ID }}"
         cli_version: "${{ inputs.cli_version }}"
-        cli_platform: "${{ inputs.cli_platform }}"
         buildkit_image: "${{ inputs.buildkit_image }}"
-        push_image: 'true'
+        cli_platform: "${{ inputs.cli_platform }}"
     permissions:
       contents: read
       actions: read
-      packages: write
       id-token: write
     env:
       BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
         == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
   report:
-    name: Hugo Docker rolling report
-    needs: commit
+    name: "${{ inputs.case_id }} rolling report"
+    needs: publish
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -77,28 +63,21 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: hugo
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: "${{ inputs.case_id }}"
+        native-lane: rolling
+        suffix: "${{ inputs.benchmark_id_suffix }}"
     - name: Download the benchmark phase evidence
       uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
       with:
         pattern: phase-${{ env.BENCHMARK_ID }}-*
         path: phase-evidence
-    - name: Publish the Hugo Docker benchmark report
+    - name: Generate the benchmark report
       run: |
         ruby ./scripts/benchmark-report.rb summarize \
-          --title "Hugo Docker rolling benchmark" \
+          --title "${{ inputs.case_id }} rolling benchmark" \
           --input-dir phase-evidence \
           --output-dir benchmark-results
     - name: Retain the BoringCache rolling result
@@ -118,23 +97,8 @@ jobs:
 'on':
   workflow_dispatch:
     inputs:
-      buildkit_image:
-        description: Optional managed BoringCache BuildKit image.
-        required: false
-        type: string
-        default: ''
       cli_version:
         description: Optional exact BoringCache CLI release tag.
-        required: false
-        type: string
-        default: ''
-      cli_platform:
-        description: Optional BoringCache CLI platform.
-        required: false
-        type: string
-        default: linux-musl-amd64
-      benchmark_id_suffix:
-        description: Optional suffix for an isolated comparison run.
         required: false
         type: string
         default: ''
@@ -153,11 +117,59 @@ jobs:
         type: string
         required: false
         default: '1'
-  push:
-    branches:
-    - main
-    paths:
-    - cases/hugo/**
-    - adapters/**
-    - scripts/canonical/**
-    - ".github/workflows/hugo-hugo-benchmark.yml"
+      case_id:
+        description: Reviewed case ID
+        required: true
+        type: string
+      buildkit_image:
+        description: Optional managed BuildKit image
+        required: false
+        type: string
+        default: ''
+      cli_platform:
+        description: Optional CLI package platform
+        required: false
+        type: string
+        default: ''
+      benchmark_id_suffix:
+        description: Optional diagnostic result suffix
+        required: false
+        type: string
+        default: ''
+  workflow_call:
+    inputs:
+      cli_version:
+        required: false
+        type: string
+        default: ''
+      runner_label:
+        required: false
+        type: string
+        default: ''
+      series_id:
+        type: string
+        required: false
+        default: ''
+      sample:
+        type: string
+        required: false
+        default: '1'
+      case_id:
+        required: true
+        type: string
+      buildkit_image:
+        required: false
+        type: string
+        default: ''
+      cli_platform:
+        required: false
+        type: string
+        default: ''
+      benchmark_id_suffix:
+        required: false
+        type: string
+        default: ''
+concurrency:
+  group: benchmark-provider-comparisons
+  cancel-in-progress: false
+  queue: max

@@ -12,12 +12,26 @@ not change the case's identity or copy its executor.
 Follow [`docs/process.md`](docs/process.md) to add or run a case.
 [`AGENTS.md`](AGENTS.md) applies the same requirements to agents and humans.
 
+Standard comparisons use two shared fresh and rolling workflows, which also
+support `workflow_call`. All cases use one [BoringCache wrapper](.github/actions/boringcache/action.yml)
+for the product invocation and release pin. Preparation and common tool setup
+use shared actions; case payloads keep their upstream recipe and output checks.
+
+```mermaid
+flowchart LR
+  Case[Case definition] --> Workflow[Shared experiment workflow]
+  Workflow --> Setup[Shared preparation and tool setup]
+  Setup --> Provider[BoringCache wrapper or declared comparator]
+  Provider --> Recipe[Case build and output checks]
+  Recipe --> Report[Shared records, reports and evidence]
+```
+
 ```sh
 bundle install
 bin/bench list
 bin/bench check
 bin/bench plan hugo-go --lane fresh
-bin/bench prepare hugo-go --directory /tmp/hugo-benchmark
+bin/bench prepare hugo-go --native-lane fresh --directory /tmp/hugo-benchmark
 bin/bench start hugo-go --series screening-01 --lane fresh --samples 2
 ```
 

@@ -45,7 +45,7 @@ runs:
     shell: bash
     env:
       PREPARE_PHASE: "${{ inputs.phase == 'warm' && 'warm1' || 'base' }}"
-    run: ./scripts/prepare-source.sh "$PREPARE_PHASE"
+    run: ruby ./scripts/prepare-source.rb "$PREPARE_PHASE"
   - name: Select the cache cohort
     id: scope
     shell: bash
@@ -72,14 +72,14 @@ runs:
           cache_scope="${BENCHMARK_ID:-benchmark}-series-${BENCHMARK_SERIES_ID}-s${BENCHMARK_SAMPLE}-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
         fi
       fi
-      ./scripts/scope-boringcache-run.sh "$cache_scope"
+      ruby ./scripts/scope-case-cache.rb "$cache_scope"
       source_sha="$(git rev-parse HEAD:upstream)"
       echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
       echo "cache_key=turbo-${cache_scope}-${source_sha}" >> "$GITHUB_OUTPUT"
       echo "source_repository=n8n-io/n8n" >> "$GITHUB_OUTPUT"
       echo "source_sha=${source_sha}" >> "$GITHUB_OUTPUT"
   - name: Set up Node.js
-    uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+    uses: ./.github/actions/setup-node
     with:
       node-version: "${{ inputs.node_version }}"
   - name: Enable the pinned pnpm release
@@ -113,7 +113,7 @@ runs:
   - name: Publish with BoringCache
     id: boringcache-publish
     if: inputs.strategy == 'boringcache' && inputs.phase == 'publish'
-    uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+    uses: ./.github/actions/boringcache
     with:
       cli-version: "${{ inputs.cli_version }}"
       mode: turbo
@@ -123,7 +123,7 @@ runs:
   - name: Restore with BoringCache
     id: boringcache-restore
     if: inputs.strategy == 'boringcache' && inputs.phase == 'warm'
-    uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+    uses: ./.github/actions/boringcache
     with:
       cli-version: "${{ inputs.cli_version }}"
       mode: turbo

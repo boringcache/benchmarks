@@ -6,6 +6,26 @@ require "rbconfig"
 require_relative "../scripts/publish-index"
 
 class PublishIndexTest < Minitest::Test
+  def test_shared_workflow_keeps_cases_separate_and_uses_the_original_historical_workflow
+    benchmark = {"source_repo" => "boringcache/benchmarks", "historical_source_repo" => "boringcache/benchmark-hugo", "case_id" => "hugo",
+      "fresh_workflow" => "native-fresh-benchmark.yml", "historical_fresh_workflow" => "hugo-fresh-benchmark.yml"}
+    calls = []
+    lookup = lambda do |repo:, workflow_name:|
+      calls << [repo, workflow_name]
+      if repo == "boringcache/benchmarks"
+        [{"databaseId" => 1, "createdAt" => "2026-10-02T00:00:00Z", "displayTitle" => "hugo fresh screening sample 1"},
+          {"databaseId" => 2, "createdAt" => "2026-10-02T00:00:00Z", "displayTitle" => "hugo-go fresh screening sample 1"}]
+      else
+        [{"databaseId" => 3, "createdAt" => "2026-10-01T00:00:00Z"}]
+      end
+    end
+    stub(:latest_successful_runs, lookup) do
+      runs = benchmark_workflow_runs(benchmark, "native-fresh-benchmark.yml", {})
+      assert_equal [1, 3], runs.map { |run| run.fetch("databaseId") }
+      assert_equal "boringcache/benchmark-hugo", runs.last.fetch("repository")
+    end
+    assert_equal "hugo-fresh-benchmark.yml", calls.last.last
+  end
   def test_migration_keeps_historical_execution_repository
     benchmark = {"source_repo" => "boringcache/benchmarks", "historical_source_repo" => "boringcache/benchmark-hugo", "case_id" => "hugo"}
     calls = []

@@ -22,18 +22,36 @@
   "execution": {
     "workflows": [
       {
-        "path": ".github/workflows/hugo-hugo-benchmark.yml",
+        "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
-        "inputs": {}
+        "inputs": {
+          "case_id": "hugo"
+        },
+        "historical_workflow": "hugo-benchmark.yml"
       },
       {
-        "path": ".github/workflows/hugo-hugo-fresh-benchmark.yml",
+        "path": ".github/workflows/native-fresh-benchmark.yml",
         "lane": "fresh",
-        "inputs": {}
+        "inputs": {
+          "case_id": "hugo"
+        },
+        "historical_workflow": "hugo-fresh-benchmark.yml"
       }
     ],
     "sync": "upstream-head",
-    "sync_minute": 9
+    "sync_minute": 9,
+    "native": {
+      "action": ".github/actions/hugo-docker-benchmark",
+      "benchmark_id": "hugo",
+      "rolling_inputs": {
+        "push_image": "true"
+      },
+      "environment": {},
+      "fresh_inputs": {}
+    },
+    "cache_tags": {
+      "hugo-docker-local": "{scope}-docker"
+    }
   },
   "reporting": {
     "entries": [

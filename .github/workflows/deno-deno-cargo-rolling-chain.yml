@@ -1,3 +1,4 @@
+---
 name: 'deno: Deno Cargo rolling run'
 run-name: "${{ github.event_name == 'push' && 'Deno Cargo rolling pinned source update'
   || format('Deno Cargo rolling {0} | {1} to {2}', inputs.cache_profile || 'cargo-product',
@@ -8,6 +9,7 @@ permissions:
 concurrency:
   group: benchmark-deno-cargo-rolling-chain
   cancel-in-progress: false
+  queue: max
 env:
   CACHE_PROFILE: "${{ inputs.cache_profile || 'cargo-product' }}"
   CARGO_TERM_COLOR: always
@@ -30,19 +32,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: deno
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: deno
     - name: Read pinned source
       id: source
       run: sed '/^$/d' benchmark-source.env >> "$GITHUB_OUTPUT"
@@ -86,19 +79,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: deno
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: deno
     - name: Read pinned toolchain
       id: source
       run: sed '/^$/d' benchmark-source.env >> "$GITHUB_OUTPUT"
@@ -166,7 +150,7 @@ jobs:
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
     - name: Build Deno release binaries through the Cargo product
       id: build_primary
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         trust-policy: publish
@@ -179,7 +163,7 @@ jobs:
       run: "./scripts/select-deno-cargo-phase.rb desktop"
     - name: Build denort_desktop through the Cargo product
       id: build_desktop
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         trust-policy: publish
@@ -262,14 +246,6 @@ jobs:
       contents: read
       id-token: write
 'on':
-  push:
-    branches:
-    - main
-    paths:
-    - cases/deno/**
-    - adapters/**
-    - scripts/canonical/**
-    - ".github/workflows/deno-deno-cargo-rolling-chain.yml"
   workflow_dispatch:
     inputs:
       cli_version:

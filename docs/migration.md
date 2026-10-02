@@ -24,6 +24,13 @@ Verify these conditions for each repository:
    experiments may require retaining a fork or fixture.
 
 No repository is deletion-ready merely because its definition was imported.
+Imported execution workflows accept explicit dispatch only until their live
+qualification passes. Schedules and source-triggered execution must be enabled
+as part of the reviewed caller cutover. PR validation runs the harness guards.
+GitHub's default CodeQL configuration now scans Ruby and Actions. Python was
+removed from its language list because this branch removes the maintained Python
+reporter; query suite, threat model, weekly schedule, and runner settings were
+preserved.
 Archiving does not preserve expiring Actions evidence. Missing evidence and
 unverified execution remain explicit in the inventory.
 

@@ -22,18 +22,36 @@
   "execution": {
     "workflows": [
       {
-        "path": ".github/workflows/qdrant-qdrant-benchmark.yml",
+        "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
-        "inputs": {}
+        "inputs": {
+          "case_id": "qdrant"
+        },
+        "historical_workflow": "qdrant-benchmark.yml"
       },
       {
-        "path": ".github/workflows/qdrant-qdrant-fresh-benchmark.yml",
+        "path": ".github/workflows/native-fresh-benchmark.yml",
         "lane": "fresh",
-        "inputs": {}
+        "inputs": {
+          "case_id": "qdrant"
+        },
+        "historical_workflow": "qdrant-fresh-benchmark.yml"
       }
     ],
     "sync": "upstream-head",
-    "sync_minute": 23
+    "sync_minute": 23,
+    "native": {
+      "action": ".github/actions/qdrant-docker-benchmark",
+      "benchmark_id": "qdrant",
+      "rolling_inputs": {
+        "push_image": "true"
+      },
+      "environment": {},
+      "fresh_inputs": {}
+    },
+    "cache_tags": {
+      "qdrant-docker-local": "{scope}-docker"
+    }
   },
   "reporting": {
     "entries": [

@@ -43,7 +43,11 @@
       }
     ],
     "sync": "upstream-head",
-    "sync_minute": 17
+    "sync_minute": 17,
+    "cache_tags": {
+      "n8n-docker": "{scope}-docker",
+      "n8n-turbo-local": "{scope}-turbo"
+    }
   },
   "reporting": {
     "entries": [

@@ -22,18 +22,36 @@
   "execution": {
     "workflows": [
       {
-        "path": ".github/workflows/linkerd2-linkerd2-benchmark.yml",
+        "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
-        "inputs": {}
+        "inputs": {
+          "case_id": "linkerd2"
+        },
+        "historical_workflow": "linkerd2-benchmark.yml"
       },
       {
-        "path": ".github/workflows/linkerd2-linkerd2-fresh-benchmark.yml",
+        "path": ".github/workflows/native-fresh-benchmark.yml",
         "lane": "fresh",
-        "inputs": {}
+        "inputs": {
+          "case_id": "linkerd2"
+        },
+        "historical_workflow": "linkerd2-fresh-benchmark.yml"
       }
     ],
     "sync": "upstream-head",
-    "sync_minute": 13
+    "sync_minute": 13,
+    "native": {
+      "action": ".github/actions/linkerd2-docker-benchmark",
+      "benchmark_id": "linkerd2-v2",
+      "rolling_inputs": {
+        "push_image": "true"
+      },
+      "environment": {},
+      "fresh_inputs": {}
+    },
+    "cache_tags": {
+      "linkerd2-docker-local": "{scope}-docker"
+    }
   },
   "reporting": {
     "entries": [

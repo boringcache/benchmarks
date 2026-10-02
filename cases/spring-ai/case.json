@@ -22,18 +22,38 @@
   "execution": {
     "workflows": [
       {
-        "path": ".github/workflows/spring-ai-spring-ai-maven-benchmark.yml",
+        "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
-        "inputs": {}
+        "inputs": {
+          "case_id": "spring-ai"
+        },
+        "historical_workflow": "spring-ai-maven-benchmark.yml"
       },
       {
-        "path": ".github/workflows/spring-ai-spring-ai-maven-fresh-benchmark.yml",
+        "path": ".github/workflows/native-fresh-benchmark.yml",
         "lane": "fresh",
-        "inputs": {}
+        "inputs": {
+          "case_id": "spring-ai"
+        },
+        "historical_workflow": "spring-ai-maven-fresh-benchmark.yml"
       }
     ],
     "sync": "upstream-head",
-    "sync_minute": 25
+    "sync_minute": 25,
+    "native": {
+      "action": ".github/actions/spring-maven-benchmark",
+      "benchmark_id": "spring-ai-maven",
+      "rolling_inputs": {
+        "java_version": "17"
+      },
+      "environment": {},
+      "fresh_inputs": {
+        "java_version": "17"
+      }
+    },
+    "cache_tags": {
+      "spring-ai-maven-local": "{scope}-maven-remote"
+    }
   },
   "reporting": {
     "entries": [

@@ -100,7 +100,7 @@ runs:
     shell: bash
     env:
       PREPARE_PHASE: "${{ inputs.phase == 'warm' && 'warm1' || 'base' }}"
-    run: ./scripts/prepare-source.sh "$PREPARE_PHASE"
+    run: ruby ./scripts/prepare-source.rb "$PREPARE_PHASE"
   - name: Prepare the product Dockerfile
     id: dockerfile
     shell: bash
@@ -150,7 +150,7 @@ runs:
           cache_scope="${BENCHMARK_ID:-benchmark}-series-${BENCHMARK_SERIES_ID}-s${BENCHMARK_SAMPLE}-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
         fi
       fi
-      ./scripts/scope-boringcache-run.sh "$cache_scope"
+      ruby ./scripts/scope-case-cache.rb "$cache_scope"
       echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
       source_url="$(git config -f .gitmodules submodule.upstream.url)"
       echo "source_repository=$(printf '%s' "${source_url#https://github.com/}" | sed 's/\.git$//')" >> "$GITHUB_OUTPUT"
@@ -194,7 +194,7 @@ runs:
     run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
   - name: Set up Buildx for the Actions cache protocol
     if: inputs.strategy == 'actions-cache' || inputs.strategy == 'runs-on-cache'
-    uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069
+    uses: ./.github/actions/setup-docker
   - name: Start the build timer
     id: build_timer
     shell: bash
@@ -228,7 +228,7 @@ runs:
     id: publish
     if: inputs.strategy == 'boringcache' && (inputs.phase == 'publish' || (inputs.phase
       == 'warm' && inputs.publish_on_warm == 'true'))
-    uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+    uses: ./.github/actions/boringcache
     env:
       BORINGCACHE_MANAGED_BUILDKIT_IMAGE: "${{ inputs.buildkit_image }}"
       POSTHOG_SOURCEMAP_API_KEY: "${{ inputs.posthog_sourcemap_api_key }}"
@@ -242,7 +242,7 @@ runs:
     id: restore
     if: inputs.strategy == 'boringcache' && inputs.phase == 'warm' && inputs.publish_on_warm
       != 'true'
-    uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+    uses: ./.github/actions/boringcache
     env:
       BORINGCACHE_MANAGED_BUILDKIT_IMAGE: "${{ inputs.buildkit_image }}"
       POSTHOG_SOURCEMAP_API_KEY: "${{ inputs.posthog_sourcemap_api_key }}"

@@ -10,9 +10,11 @@ if ARGV.empty? && !ENV["BENCHMARK_REPOS_DIR"]
   require "bundler/setup"
   require_relative "benchmark-cases"
   BenchmarkCases.contract_views do |directory|
-    exit(system(RbConfig.ruby, __FILE__, directory) ? 0 : 1)
+    exit(system(RbConfig.ruby, __FILE__, directory, "--central") ? 0 : 1)
   end
 end
+
+central_execution = ARGV.delete("--central")
 
 def default_repos_dir
   candidates = [
@@ -79,7 +81,7 @@ PUBLIC_BOUNDARY_MARKERS = [
   ".planning/"
 ].freeze
 
-PRODUCT_INVOCATION = /(?:\bboringcache\s+(?:bazel|cargo|ccache|docker|go|gradle|maven|nx|sccache|turbo|xcode)\b|boringcache\/one@)/
+PRODUCT_INVOCATION = /(?:\bboringcache\s+(?:bazel|cargo|ccache|docker|go|gradle|maven|nx|sccache|turbo|xcode)\b|boringcache\/one@|\.\/\.github\/actions\/boringcache)/
 CLI_CANARY_INPUT = /^\s+cli_version:\s*(?:$|\{)/
 CLI_CANARY_FORWARD = /(?:cli-version|cli_version):\s*["\x27]?\$\{\{\s*inputs\.cli_version\b/
 BUILDKIT_CANARY_INPUT = /^\s+buildkit_image:\s*(?:$|\{)/
@@ -211,7 +213,12 @@ repo_names.each do |repo_name|
       jobs = document.is_a?(Hash) && document["jobs"].is_a?(Hash) ? document["jobs"] : {}
       if relative.start_with?(".github/workflows/") && basename.include?("fresh")
         display_names = jobs.values.map { |job| job.is_a?(Hash) ? job["name"].to_s.downcase : nil }.compact
-        errors << "#{repo_name}/#{relative}: fresh benchmarks must run on pull requests" unless text.include?("pull_request:")
+        if central_execution
+          errors << "#{repo_name}/#{relative}: central fresh benchmarks must be manually dispatchable" unless text.include?("workflow_dispatch:")
+          errors << "#{repo_name}/#{relative}: central workload activation requires reviewed cutover" if text.match?(/^\s+(?:pull_request|push|schedule):/)
+        else
+          errors << "#{repo_name}/#{relative}: fresh benchmarks must run on pull requests" unless text.include?("pull_request:")
+        end
         errors << "#{repo_name}/#{relative}: fresh benchmarks must expose direct cold jobs" unless display_names.any? { |name| name.include?("cold") }
         errors << "#{repo_name}/#{relative}: fresh benchmarks must expose direct warm jobs" unless display_names.any? { |name| name.include?("warm") }
         jobs.each do |job_name, job|
@@ -262,7 +269,7 @@ repo_names.each do |repo_name|
         next unless job["steps"].is_a?(Array)
 
         steps = job["steps"].select { |step| step.is_a?(Hash) }
-        product_steps = steps.select { |step| step["uses"].to_s.start_with?("boringcache/one@") }
+        product_steps = steps.select { |step| step["uses"].to_s.start_with?("boringcache/one@") || step["uses"] == "./.github/actions/boringcache" }
         product_modes = product_steps.each_with_object([]) do |step, modes|
           inputs = step["with"].is_a?(Hash) ? step["with"] : {}
           mode = inputs["mode"].to_s.strip
