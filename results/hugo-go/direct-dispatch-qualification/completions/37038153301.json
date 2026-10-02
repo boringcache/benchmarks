@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "hugo-go",
+  "series_id": "direct-dispatch-qualification",
+  "sample": 1,
+  "run_id": "37038153301",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37038153301",
+  "source_sha": "aef10ff570e92395652bc8c5d7a4fe7cfd0bd114",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "9fff7441d035ae732e83c862aaa47ac64bbc7b429e840a56a864b21140239510"
+}

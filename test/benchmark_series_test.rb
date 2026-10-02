@@ -93,6 +93,33 @@ class BenchmarkSeriesTest < Minitest::Test
     assert_includes error.message, "different source, case, variant, or runner environments"
   end
 
+  def test_complete_correctness_proof_does_not_qualify_a_provider_comparison
+    @case["comparison"].merge!("providers" => ["boringcache"], "primary_metric" => "correctness")
+    @directory = File.join(@root, "correctness")
+    BenchmarkSeries.create(@case, directory: @directory, series: "screening", lane: "fresh", variant: "release")
+    [1, 2].each do |sample|
+      %w[cold warm].each { |phase| add(record(sample: sample).merge("phase" => phase, "lane" => "fresh", "timing" => {})) }
+      BenchmarkSeries.finish(@directory, evidence_directory: evidence(run_id: sample), sample: sample)
+    end
+    result = BenchmarkSeries.report(@directory)
+    assert result["complete"]
+    assert result["execution_verified"]
+    refute result["valid_for_comparison"]
+    assert result["summaries"].all? { |row| row["measurement"].nil? }
+    refute_includes File.read(File.join(@directory, "report.md")), "Median correctness"
+  end
+
+  def test_storage_comparison_uses_provider_bytes_for_the_primary_measurement
+    @case["comparison"]["primary_metric"] = "storage_bytes"
+    @directory = File.join(@root, "storage")
+    BenchmarkSeries.create(@case, directory: @directory, series: "screening", lane: "rolling", variant: "release")
+    add(record(storage: 100))
+    add(record(sample: 2, storage: 300))
+    result = BenchmarkSeries.report(@directory)
+    assert_equal({"median" => 200.0, "min" => 100, "max" => 300}, result["summaries"].first["measurement"])
+    assert_includes File.read(File.join(@directory, "report.md")), "Median storage_bytes"
+  end
+
   def test_cannot_replace_a_slow_sample
     add(record(seconds: 900))
     assert_raises(BenchmarkSeries::Error) { add(record(seconds: 9)) }
