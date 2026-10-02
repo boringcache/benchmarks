@@ -370,3 +370,30 @@ jobs:
         type: string
         required: false
         default: '1'
+  workflow_call:
+    inputs:
+      cli_version:
+        description: Exact immutable BoringCache CLI release tag.
+        required: false
+        type: string
+        default: ''
+      cache_profile:
+        description: Cargo product caches or native compiler cache only.
+        required: false
+        type: string
+        default: cargo-product
+      runner_label:
+        description: Optional runner label for a manual main-branch experiment.
+        required: false
+        type: string
+        default: ''
+      series_id:
+        description: Predeclared series ID; empty for legacy diagnostics
+        type: string
+        required: false
+        default: ''
+      sample:
+        description: Observation number in the predeclared series
+        type: string
+        required: false
+        default: '1'
