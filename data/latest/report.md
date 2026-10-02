@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-10-02 03:00 UTC
+Generated: 2026-10-02 05:52 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 6/20.
 
@@ -10,26 +10,26 @@ Rows are latest complete same-commit pairs.
 
 | Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
-| Hugo | Warm Build | 0m 30s | 0m 19s | 37% faster | n/a |
-| Hugo Go | Cold Build | 1m 14s | 0m 57s | 23% faster | n/a |
-| Immich | Warm Build | 0m 19s | 0m 8s | 58% faster | n/a |
-| Mastodon | Warm Build | 0m 17s | 0m 9s | 47% faster | n/a |
-| Mastodon Streaming | Cold Build | 0m 23s | 0m 20s | near tie | n/a |
+| Hugo | Cold Build | 4m 4s | 3m 28s | 15% faster | n/a |
+| Hugo Go | Cold Build | 1m 12s | 1m 19s | 10% slower | n/a |
+| Immich | Cold Build | 5m 32s | 2m 31s | 55% faster | n/a |
+| Mastodon | Warm Build | 0m 24s | 0m 15s | 38% faster | n/a |
+| Mastodon Streaming | Warm Build | 0m 11s | 0m 10s | near tie | n/a |
 | Discourse Image Factory (amd64) | Cold Build | 43m 9s | 41m 46s | 3% faster | n/a |
 | Discourse Image Factory (arm64) | Cold Build | 38m 58s | 47m 1s | 21% slower | n/a |
-| PostHog | Cold Build | 28m 19s | 13m 42s | 52% faster | n/a |
-| Storybook | Cold Build | 4m 13s | 4m 19s | near tie | n/a |
-| OpenTelemetry Java | Warm Build | 2m 40s | 2m 20s | 13% faster | 639.15 KB more (1.29%) |
-| Spring AI | Warm Build | 2m 4s | 1m 40s | 19% faster | 20.39 MB more (11.29%) |
-| gRPC | Cold Build | 53m 16s | 34m 16s | 36% faster | n/a |
-| Duckgres | Cold Build | 5m 31s | 4m 5s | 26% faster | n/a |
-| Chroma | Warm Build | 67m 57s | 3m 55s | 94% faster | n/a |
-| Linkerd2 Web | Warm Build | 0m 17s | 0m 5s | 71% faster | n/a |
-| Qdrant | Cold Build | 10m 35s | 9m 59s | 6% faster | n/a |
-| n8n | Cold Build | 2m 18s | 2m 20s | near tie | n/a |
-| n8n Docker | Warm Build | 2m 1s | 1m 22s | 32% faster | n/a |
-| n8n Runners | Cold Build | 1m 55s | 0m 40s | 65% faster | n/a |
-| n8n Runners Distroless | Cold Build | 2m 38s | 1m 9s | 56% faster | n/a |
+| PostHog | Cold Build | 33m 9s | 13m 37s | 59% faster | n/a |
+| Storybook | Cold Build | 5m 20s | 4m 34s | 14% faster | n/a |
+| OpenTelemetry Java | Cold Build | 16m 29s | 15m 11s | 8% faster | n/a |
+| Spring AI | Cold Build | 13m 16s | 8m 28s | 36% faster | n/a |
+| gRPC | Cold Build | 53m 47s | 34m 58s | 35% faster | 528.77 MB more (338.69%) |
+| Duckgres | Cold Build | 6m 30s | 4m 6s | 37% faster | n/a |
+| Chroma | Warm Build | 76m 26s | 2m 27s | 97% faster | n/a |
+| Linkerd2 Web | Cold Build | 4m 36s | 2m 42s | 41% faster | n/a |
+| Qdrant | Cold Build | 14m 17s | 9m 36s | 33% faster | n/a |
+| n8n | Cold Build | 2m 19s | 1m 41s | 27% faster | n/a |
+| n8n Docker | Cold Build | 4m 59s | 3m 3s | 39% faster | n/a |
+| n8n Runners | Warm Build | 1m 34s | 0m 38s | 60% faster | n/a |
+| n8n Runners Distroless | Cold Build | 2m 53s | 1m 6s | 62% faster | n/a |
 
 ## Rolling
 
