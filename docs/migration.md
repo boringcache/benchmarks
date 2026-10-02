@@ -24,6 +24,11 @@ Verify these conditions for each repository:
    experiments may require retaining a fork or fixture.
 
 No repository is deletion-ready merely because its definition was imported.
+The existing `boringcache/benchmarks` workspace is connected through GitHub OIDC.
+The [connection run](https://github.com/boringcache/benchmarks/actions/runs/37016106096)
+verified CLI 1.33.0 through the official signed installer and completed enrollment
+with restore and trusted-job publication access. Individual workload execution
+and reporting qualification remain required.
 Imported execution workflows accept explicit dispatch only until their live
 qualification passes. Schedules and source-triggered execution must be enabled
 as part of the reviewed caller cutover. PR validation runs the harness guards.

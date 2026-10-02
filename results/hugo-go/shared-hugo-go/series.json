@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
   "case_id": "hugo-go",
-  "series_id": "shared-wrapper-hugo-go",
-  "created_at": "2026-10-02T13:50:15Z",
+  "series_id": "shared-hugo-go",
+  "created_at": "2026-10-02T14:04:42Z",
   "lane": "fresh",
   "phases": [
     "cold",
     "warm"
   ],
   "sample_count": 2,
-  "definition_sha256": "84705a9f57f077e0e3c709fe51a47f51cb31a4a65f0b405666d5bc902a593fcd",
+  "definition_sha256": "7b55837951e12fd276a7141fabbed970820b13bc81eefa94ada5520aa38020fc",
   "variant": null,
   "workflow_inputs": {
     "case_id": "hugo-go"
@@ -39,5 +39,5 @@
   "verification": [
     "Pinned upstream recipe and build success"
   ],
-  "plan_sha256": "e4e5c089894237d95efa24688f5b8c5dc6e72faa4d8818e421a787923d77849b"
+  "plan_sha256": "ccd52e95b2380ca3e05635f9e982a9be9df0a51913192469eddf13c9f713f06d"
 }
