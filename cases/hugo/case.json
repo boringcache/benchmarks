@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "id": "hugo",
+  "kind": "benchmark",
+  "adapter": "workflow",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "gohugoio/hugo",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-hugo",
+    "branch": "main",
+    "revision": "ecc41a3b3e250f5268000ddde142d61a15959e95"
+  },
+  "execution": {
+    "workflows": [
+      {
+        "path": ".github/workflows/hugo-hugo-benchmark.yml",
+        "lane": "rolling",
+        "inputs": {}
+      },
+      {
+        "path": ".github/workflows/hugo-hugo-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {}
+      }
+    ],
+    "sync": "upstream-head",
+    "sync_minute": 9
+  },
+  "reporting": {
+    "entries": [
+      "hugo"
+    ],
+    "publication": "reviewed"
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}

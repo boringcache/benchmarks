@@ -1,0 +1,124 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "rbconfig"
+
+require "bundler/setup"
+require "optparse"
+require "tmpdir"
+require_relative "../scripts/benchmark-cases"
+require_relative "../scripts/benchmark-series"
+
+command = ARGV.shift
+id = ARGV.first unless ARGV.first&.start_with?("--")
+ARGV.shift if id
+options = {lane: "fresh", inputs: {}, ref: "main"}
+parser = OptionParser.new do |value|
+  value.banner = "Usage: bin/bench <list|new|check|plan|start|run|record|prepare|sync|update-source|report|preserve|verify-evidence> [case-id] [options]"
+  value.on("--lane LANE") { |input| options[:lane] = input }
+  value.on("--workflow NAME") { |input| options[:workflow] = input }
+  value.on("--input NAME=VALUE") do |input|
+    name, content = input.split("=", 2)
+    raise OptionParser::InvalidArgument, "Use NAME=VALUE" unless content
+    options[:inputs][name] = content
+  end
+  value.on("--ref REF") { |input| options[:ref] = input }
+  value.on("--directory PATH") { |input| options[:directory] = input }
+  value.on("--output PATH") { |input| options[:output] = input }
+  value.on("--series ID") { |input| options[:series] = input }
+  value.on("--run ID", Integer) { |input| options[:run] = input }
+  value.on("--repository NAME") { |input| options[:repository] = input }
+  value.on("--revision SHA") { |input| options[:revision] = input }
+  value.on("--question TEXT") { |input| options[:question] = input }
+  value.on("--samples COUNT", Integer) { |input| options[:samples] = input }
+  value.on("--sample NUMBER", Integer) { |input| options[:sample] = input }
+  value.on("--variant NAME") { |input| options[:variant] = input }
+  value.on("--record PATH") { |input| options[:record] = input }
+end
+
+begin
+  parser.parse!
+  raise BenchmarkCases::Error, "Unexpected arguments: #{ARGV.join(' ')}" unless ARGV.empty?
+  item = BenchmarkCases.load_case(id) if id && command != "new"
+  case command
+  when "list"
+    BenchmarkCases.documents.each { |entry| puts "#{entry.fetch('id')}\t#{entry.fetch('kind')}\t#{entry.fetch('adapter')}" }
+  when "new"
+    raise BenchmarkCases::Error, "Select a case ID, --repository, --revision, and --question" unless id && options.values_at(:repository, :revision, :question).all?
+    BenchmarkCases.create(id, **options.slice(:repository, :revision, :question))
+    puts "Created cases/#{id}/case.json and proposal.md. Execution is blocked until the workload is reviewed and verified."
+  when "check"
+    selected = item ? [item] : BenchmarkCases.documents
+    BenchmarkCases.validate(selected)
+    puts "Validated #{selected.length} benchmark cases"
+  when "plan"
+    raise BenchmarkCases::Error, "Select a case ID" unless item
+    puts JSON.pretty_generate(BenchmarkCases.plan(item, **options.slice(:lane, :workflow, :inputs)))
+  when "run"
+    raise BenchmarkCases::Error, "Select a case ID and --series" unless item && options[:series]&.match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/)
+    BenchmarkCases.validate([item])
+    directory = File.join(BenchmarkCases::ROOT, "results", item.fetch("id"), options.fetch(:series))
+    series = BenchmarkSeries.load(directory)
+    raise BenchmarkCases::Error, "Case changed after series creation; start a new series" unless series.fetch("definition_sha256") == BenchmarkCases.definition_sha256(item)
+    sample = options.fetch(:sample, 1)
+    raise BenchmarkCases::Error, "Sample is outside the declared series" unless (1..series.fetch("sample_count")).cover?(sample)
+    options[:lane] = series.fetch("lane")
+    frozen_inputs = series.fetch("workflow_inputs")
+    raise BenchmarkCases::Error, "Workflow inputs changed after series creation; start a new series" unless options.fetch(:inputs).all? { |name, value| frozen_inputs[name] == value }
+    options[:inputs] = frozen_inputs.merge("series_id" => options.fetch(:series), "sample" => sample.to_s)
+    selected = BenchmarkCases.plan(item, **options.slice(:lane, :workflow, :inputs))
+    raise BenchmarkCases::Error, "Workflow lane differs from the series" unless selected.fetch("lane") == series.fetch("lane")
+    output = options[:output] || File.join(directory, "dispatches", "#{sample}-#{selected.fetch('workflow')}.json")
+    raise BenchmarkCases::Error, "This sample and workflow already have a dispatch receipt; inspect it before retrying" if File.exist?(output)
+    puts JSON.pretty_generate(BenchmarkCases.dispatch(item, **options.slice(:lane, :workflow, :inputs, :ref), output: output))
+  when "prepare"
+    raise BenchmarkCases::Error, "Select a case ID and --directory" unless item && options[:directory]
+    puts BenchmarkCases.prepare(item, directory: options.fetch(:directory))
+  when "contracts"
+    raise BenchmarkCases::Error, "Use --directory for disposable contract views" unless options[:directory]
+    BenchmarkCases.validate
+    puts BenchmarkCases.write_contract_views(options.fetch(:directory))
+  when "sync"
+    raise BenchmarkCases::Error, "Select a case ID" unless item
+    record = BenchmarkCases.sync_source(item)
+    BenchmarkCases.write_json(options[:output], record) if options[:output]
+    puts JSON.pretty_generate(record)
+  when "update-source"
+    raise BenchmarkCases::Error, "Select a case ID and --directory" unless item && options[:directory]
+    BenchmarkCases.update_source(item, options.fetch(:directory))
+    puts "Updated #{item.fetch('id')} source pins"
+  when "report"
+    raise BenchmarkCases::Error, "Select a case ID and --series" unless item && options[:series]
+    directory = options[:directory] || File.join(BenchmarkCases::ROOT, "results", id, options.fetch(:series))
+    raise BenchmarkCases::Error, "Series belongs to another case" unless BenchmarkSeries.load(directory).fetch("case_id") == id
+    puts JSON.pretty_generate(BenchmarkSeries.report(directory))
+  when "start", "record"
+    raise BenchmarkCases::Error, "Select a case ID and --series" unless item && options[:series]
+    directory = options[:directory] || File.join(BenchmarkCases::ROOT, "results", id, options.fetch(:series))
+    if command == "start"
+      BenchmarkCases.validate([item])
+      selected = BenchmarkCases.plan(item, **options.slice(:lane, :workflow, :inputs))
+      if selected["variants"] && !selected["variants"].include?(options[:variant])
+        raise BenchmarkCases::Error, "Select --variant #{selected.fetch('variants').join(' or ')}"
+      end
+      puts JSON.pretty_generate(BenchmarkSeries.create(item, directory: directory, series: options.fetch(:series), lane: selected.fetch("lane"), samples: options[:samples], variant: options[:variant],
+        definition_sha256: BenchmarkCases.definition_sha256(item), workflow_inputs: selected.fetch("inputs"), phases: selected.fetch("phases")))
+    else
+      raise BenchmarkCases::Error, "Use --record with the phase JSON record" unless options[:record]
+      puts BenchmarkSeries.record(directory, options.fetch(:record))
+    end
+  when "preserve", "verify-evidence"
+    require_relative "../scripts/benchmark-evidence"
+    if command == "preserve"
+      raise BenchmarkCases::Error, "Use --repository, --run, and --directory" unless options.values_at(:repository, :run, :directory).all?
+      puts JSON.pretty_generate(BenchmarkEvidence.export(repository: options.fetch(:repository), run_id: options.fetch(:run), directory: options.fetch(:directory)))
+    else
+      raise BenchmarkCases::Error, "Use --directory" unless options[:directory]
+      puts JSON.pretty_generate(BenchmarkEvidence.verify(options.fetch(:directory)))
+    end
+  else
+    abort parser.to_s
+  end
+rescue BenchmarkCases::Error, BenchmarkSeries::Error, OptionParser::ParseError, JSON::ParserError, KeyError => error
+  abort error.message
+end

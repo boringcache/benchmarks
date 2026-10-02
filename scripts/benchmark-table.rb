@@ -17,198 +17,7 @@ MAX_GH_RETRIES = ENV.fetch("BENCHMARK_TABLE_GH_RETRIES", "3").to_i
 LANES = %w[fresh rolling].freeze
 STRATEGIES = %w[actions-cache boringcache].freeze
 
-BENCHMARKS = [
-  {
-    "benchmark" => "hugo",
-    "name" => "Hugo",
-    "repo" => "gohugoio/hugo",
-    "source_repo" => "boringcache/benchmark-hugo",
-    "category" => "docker",
-    "step" => "Docker build (Go)"
-  },
-  {
-    "benchmark" => "hugo-go",
-    "name" => "Hugo Go",
-    "repo" => "gohugoio/hugo",
-    "source_repo" => "boringcache/benchmark-hugo-go",
-    "category" => "go",
-    "step" => "Go build (native build cache)"
-  },
-  {
-    "benchmark" => "immich",
-    "name" => "Immich",
-    "repo" => "immich-app/immich",
-    "source_repo" => "boringcache/benchmark-immich",
-    "category" => "docker",
-    "step" => "Docker build (server)"
-  },
-  {
-    "benchmark" => "mastodon-docker",
-    "aliases" => ["mastodon"],
-    "name" => "Mastodon",
-    "repo" => "mastodon/mastodon",
-    "source_repo" => "boringcache/benchmark-mastodon",
-    "category" => "docker",
-    "step" => "Docker build (Ruby+Node)"
-  },
-  {
-    "benchmark" => "mastodon-streaming",
-    "name" => "Mastodon Streaming",
-    "repo" => "mastodon/mastodon",
-    "source_repo" => "boringcache/benchmark-mastodon",
-    "category" => "docker",
-    "step" => "Docker build (streaming service)"
-  },
-  {
-    "benchmark" => "discourse-image-factory-amd64",
-    "aliases" => ["discourse", "discourse-image-factory"],
-    "artifact_benchmark" => "discourse-image-factory",
-    "artifact_variants" => {"actions-cache" => ["amd64"], "boringcache" => ["amd64"]},
-    "name" => "Discourse Image Factory (amd64)",
-    "repo" => "discourse/discourse_docker",
-    "source_repo" => "boringcache/benchmark-discourse",
-    "category" => "docker",
-    "step" => "Docker Bake (base and test image graph, amd64)"
-  },
-  {
-    "benchmark" => "discourse-image-factory-arm64",
-    "aliases" => ["discourse-arm64"],
-    "artifact_benchmark" => "discourse-image-factory",
-    "artifact_variants" => {"actions-cache" => ["arm64"], "boringcache" => ["arm64"]},
-    "name" => "Discourse Image Factory (arm64)",
-    "repo" => "discourse/discourse_docker",
-    "source_repo" => "boringcache/benchmark-discourse",
-    "category" => "docker",
-    "step" => "Docker Bake (base and test image graph, arm64)"
-  },
-  {
-    "benchmark" => "posthog",
-    "name" => "PostHog",
-    "repo" => "PostHog/posthog",
-    "source_repo" => "boringcache/benchmark-posthog",
-    "category" => "docker",
-    "step" => "Docker build (full stack)",
-    "extra_providers" => ["boringcache-toolcache"]
-  },
-  {
-    "benchmark" => "storybook",
-    "name" => "Storybook",
-    "repo" => "storybookjs/storybook",
-    "source_repo" => "boringcache/benchmark-storybook",
-    "category" => "nodejs",
-    "step" => "Nx build (Yarn monorepo)"
-  },
-  {
-    "benchmark" => "otel-gradle",
-    "aliases" => ["otel", "opentelemetry", "opentelemetry-java"],
-    "name" => "OpenTelemetry Java",
-    "repo" => "open-telemetry/opentelemetry-java",
-    "source_repo" => "boringcache/benchmark-opentelemetry-java",
-    "category" => "gradle",
-    "step" => "Gradle build (native HTTP cache)"
-  },
-  {
-    "benchmark" => "spring-ai-maven",
-    "aliases" => ["spring", "spring-ai"],
-    "name" => "Spring AI",
-    "repo" => "spring-projects/spring-ai",
-    "source_repo" => "boringcache/benchmark-spring-ai",
-    "category" => "maven",
-    "step" => "Maven build (build-cache extension)"
-  },
-  {
-    "benchmark" => "grpc-bazel",
-    "aliases" => ["grpc", "gRPC"],
-    "name" => "gRPC",
-    "repo" => "grpc/grpc",
-    "source_repo" => "boringcache/benchmark-grpc",
-    "category" => "bazel",
-    "step" => "Bazel build (remote cache)"
-  },
-  {
-    "benchmark" => "zed-cargo",
-    "aliases" => ["zed", "zed-sccache"],
-    "name" => "Zed",
-    "repo" => "zed-industries/zed",
-    "source_repo" => "boringcache/benchmark-zed",
-    "category" => "rust",
-    "step" => "Cargo build (target + sccache)"
-  },
-  {
-    "benchmark" => "deno-cargo",
-    "aliases" => ["deno"],
-    "name" => "Deno",
-    "repo" => "denoland/deno",
-    "source_repo" => "boringcache/benchmark-deno",
-    "category" => "rust",
-    "step" => "Cargo build (target + sccache)"
-  },
-  {
-    "benchmark" => "duckgres",
-    "name" => "Duckgres",
-    "repo" => "PostHog/duckgres",
-    "source_repo" => "boringcache/benchmark-duckgres",
-    "category" => "docker",
-    "step" => "Docker build (Postgres extension image)"
-  },
-  {
-    "benchmark" => "chroma",
-    "name" => "Chroma",
-    "repo" => "chroma-core/chroma",
-    "source_repo" => "boringcache/benchmark-chroma",
-    "category" => "docker",
-    "step" => "Docker build (Rust CLI image)"
-  },
-  {
-    "benchmark" => "linkerd2-v2",
-    "aliases" => ["linkerd", "linkerd2", "linkerd2-web"],
-    "name" => "Linkerd2 Web",
-    "repo" => "linkerd/linkerd2",
-    "source_repo" => "boringcache/benchmark-linkerd2",
-    "category" => "docker",
-    "step" => "Docker build (web image)"
-  },
-  {
-    "benchmark" => "qdrant",
-    "name" => "Qdrant",
-    "repo" => "qdrant/qdrant",
-    "source_repo" => "boringcache/benchmark-qdrant",
-    "category" => "docker",
-    "step" => "Docker build (Rust vector database)"
-  },
-  {
-    "benchmark" => "n8n",
-    "name" => "n8n",
-    "repo" => "n8n-io/n8n",
-    "source_repo" => "boringcache/benchmark-n8n",
-    "category" => "nodejs",
-    "step" => "Turbo build (pnpm monorepo)"
-  },
-  {
-    "benchmark" => "n8n-docker",
-    "name" => "n8n Docker",
-    "repo" => "n8n-io/n8n",
-    "source_repo" => "boringcache/benchmark-n8n",
-    "category" => "docker",
-    "step" => "Docker build (n8n image)"
-  },
-  {
-    "benchmark" => "n8n-runners",
-    "name" => "n8n Runners",
-    "repo" => "n8n-io/n8n",
-    "source_repo" => "boringcache/benchmark-n8n",
-    "category" => "docker",
-    "step" => "Docker build (task runners)"
-  },
-  {
-    "benchmark" => "n8n-runners-distroless",
-    "name" => "n8n Runners Distroless",
-    "repo" => "n8n-io/n8n",
-    "source_repo" => "boringcache/benchmark-n8n",
-    "category" => "docker",
-    "step" => "Docker build (distroless task runners)"
-  }
-].freeze
+BENCHMARKS = JSON.parse(File.read(File.expand_path("../suites/published.json", __dir__))).freeze
 
 BENCHMARK_BY_KEY = BENCHMARKS.each_with_object({}) do |benchmark, acc|
   ([benchmark.fetch("benchmark"), benchmark.fetch("name")] + Array(benchmark["aliases"])).each do |key|
@@ -994,6 +803,7 @@ def load_cohort_file(path)
   [pairs, runs]
 end
 
+if $PROGRAM_NAME == __FILE__
 options = {
   source: :latest,
   index_path: DEFAULT_INDEX_PATH,
@@ -1150,4 +960,6 @@ if options[:output_md]
   File.write(options[:output_md], markdown)
 else
   puts markdown
+end
+
 end

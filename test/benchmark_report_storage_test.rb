@@ -1,3 +1,4 @@
+require "rbconfig"
 # frozen_string_literal: true
 
 require "json"
@@ -7,7 +8,7 @@ require "socket"
 require "tmpdir"
 
 class BenchmarkReportStorageTest < Minitest::Test
-  CANONICAL = File.expand_path("../scripts/canonical/benchmark-report.py", __dir__)
+  CANONICAL = File.expand_path("../scripts/canonical/benchmark-report.rb", __dir__)
 
   def test_boringcache_storage_uses_exact_resolved_tags_and_deduplicates_entries
     Dir.mktmpdir do |dir|
@@ -166,8 +167,9 @@ class BenchmarkReportStorageTest < Minitest::Test
     output_dir = File.join(dir, "output")
     stdout, stderr, status = Open3.capture3(
       env,
-      "python3", CANONICAL, "phase",
+      RbConfig.ruby, CANONICAL, "phase",
       "--benchmark", "example", "--strategy", strategy,
+      "--source-repository", "example/upstream", "--source-sha", "a" * 40,
       "--lane", "rolling", "--phase", "commit", "--mode", "gradle",
       "--build-seconds", "20",
       "--output-dir", output_dir,
@@ -183,7 +185,7 @@ class BenchmarkReportStorageTest < Minitest::Test
     phase_dir = File.join(dir, "output")
     output_dir = File.join(dir, "lanes")
     stdout, stderr, status = Open3.capture3(
-      "python3", CANONICAL, "summarize",
+      RbConfig.ruby, CANONICAL, "summarize",
       "--title", "Example", "--input-dir", phase_dir, "--output-dir", output_dir
     )
     assert status.success?, "reporter failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"

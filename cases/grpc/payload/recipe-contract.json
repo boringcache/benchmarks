@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "upstream_files": {
+    "examples/cpp/csm/BUILD": "6643491c186207af9cf4a05d1adc1e89f933e778df9437ae4ddb46350f3bb98f"
+  },
+  "commands": {
+    "bazel": [
+      "./tools/bazel",
+      "build",
+      "--config=opt",
+      "//examples/cpp/csm:csm_greeter_client",
+      "//examples/cpp/csm:csm_greeter_server"
+    ]
+  }
+}
