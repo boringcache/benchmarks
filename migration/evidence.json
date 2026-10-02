@@ -127,6 +127,22 @@
       "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
       "execution_qualification": "passed preserved completion checks; publication remains unreviewed",
       "repository_retirement": "Original repositories remain until all migration gates pass"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37021502943,
+      "verified_files": 9,
+      "gaps": [],
+      "sha256": "0137a5e198228dcd7904956d2e192635aa6e4d76febb78a6b681b768ca90feb1",
+      "bundle_bytes": 727552,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-deno-wrapper-qualification-37021502943",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-deno-wrapper-qualification-37021502943/benchmarks-37021502943.tar",
+      "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory",
+      "verified_on": "2026-10-02",
+      "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+      "execution_qualification": "passed preserved completion checks for the single-provider cold/changed-source Cargo proof; publication remains unreviewed",
+      "repository_retirement": "Original repositories remain until all migration gates pass"
     }
   ],
   "bundles": [
