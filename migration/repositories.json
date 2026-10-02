@@ -471,7 +471,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "First direct ccache pair failed during Ruby setup and was preserved; replacement ccache plan and Xcode execution remain unqualified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -490,6 +490,15 @@
           "complete": 2
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "failed_direct_qualification": {
+        "series_id": "direct-ccache-qualification",
+        "run_ids": [
+          37063464018,
+          37063467317
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-obs-preparation-2026-10-02",
+        "scope": "Both providers failed before build/cache setup because Ruby 3.4.4 lacked an Ubuntu 26.04 binary; no measurements completed"
       }
     },
     {
