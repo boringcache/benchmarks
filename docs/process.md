@@ -138,7 +138,9 @@ When a variant selects a workflow input, declare `variant_input` in the workflow
 entry. The plan fills that input from `--variant` and rejects a conflicting value.
 The Zed layer proof uses the same combined cold seed for its target-only,
 sccache-only, and combined restore probes; it establishes output correctness and
-cache behavior rather than a comparison between providers.
+cache behavior rather than a comparison between providers. The frozen variant
+selects `cache_layer`; one shared restore matrix runs only that selected probe.
+Manual `cache_layer: all` runs the diagnostic matrix against a common cold seed.
 Inspect the planned receipt before retrying an uncertain dispatch. Never
 redispatch blindly after an interrupted request.
 
@@ -208,6 +210,9 @@ original execution URLs as provenance.
 green job with a reported BoringCache post-step failure remains unqualified.
 Reports require a completion check for every run represented by their phase
 records; complete timing records alone cannot qualify a comparison.
+Retain the raw phase and product evidence when a later reporting step fails.
+Summary artifact paths and names must include the reporter's selected variant
+and lane. `scripts/check-report-contract.rb` checks that naming contract.
 
 Review correctness, matched arms, storage semantics, sample completeness,
 environment variance, and claim limits. Parity and no material improvement are

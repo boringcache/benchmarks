@@ -91,6 +91,14 @@
         ],
         "scope": "One correctness sample per cache profile; output, reuse and post-step completion verified; no provider performance claim; rolling publication and full release caller pending",
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-direct-dispatch-2026-10-02"
+      },
+      "failed_rolling_qualification": {
+        "series_id": "rolling-cargo-product-qualification",
+        "run_ids": [
+          37063477982
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-deno-rolling-failure-2026-10-02",
+        "scope": "Cargo operations and output checks passed; summary upload failed because its path omitted the profile; original structured phase and product files were not retained"
       }
     },
     {
