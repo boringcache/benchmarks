@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "repository": "boringcache/benchmarks",
+  "run_id": 37041630583,
+  "attempt": 1,
+  "series_id": "direct-cargo-product-qualification",
+  "harness_ref": "aef10ff570e92395652bc8c5d7a4fe7cfd0bd114",
+  "source_sha": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+  "cache_scope": "r37041630583-a1",
+  "profile": "cargo-product",
+  "qualification": "Successful cold parent publication, preserved output and post-step checks; the following direct changed-source job was restore-only",
+  "scope": "Qualify the rolling workflow's changed-source publication against this parent seed; this does not establish a multi-commit steady-state chain"
+}

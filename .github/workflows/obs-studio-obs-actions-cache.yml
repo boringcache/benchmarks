@@ -18,7 +18,7 @@ env:
 jobs:
   ccache-base:
     name: GitHub Actions OBS ccache cold
-    if: inputs.runner_label == '' || github.ref_name == 'main'
+    if: inputs.cache_tool != 'xcode' && (inputs.runner_label == '' || github.ref_name == 'main')
     runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
       && inputs.runner_label || 'ubuntu-26.04' }}"
     timeout-minutes: 120
@@ -190,6 +190,7 @@ jobs:
         retention-days: 30
   xcode-base:
     name: GitHub Actions OBS Xcode cold
+    if: inputs.cache_tool != 'ccache'
     runs-on: macos-26
     timeout-minutes: 120
     env:
@@ -330,6 +331,15 @@ jobs:
 'on':
   workflow_dispatch:
     inputs:
+      cache_tool:
+        description: Select the tool declared by the evaluation series.
+        required: false
+        type: choice
+        options:
+        - all
+        - ccache
+        - xcode
+        default: all
       runner_label:
         description: Optional Linux runner label for a manual main-branch experiment.
         required: false

@@ -26,6 +26,20 @@ class BenchmarkCasesTest < Minitest::Test
     end
   end
 
+  def test_variant_selects_the_workflow_input_and_rejects_conflicting_inputs
+    deno = BenchmarkCases.load_case("deno")
+    plan = BenchmarkCases.plan(deno, variant: "compiler-only")
+    assert_equal "compiler-only", plan.dig("inputs", "cache_profile")
+    error = assert_raises(BenchmarkCases::Error) do
+      BenchmarkCases.plan(deno, variant: "compiler-only", inputs: {"cache_profile" => "cargo-product"})
+    end
+    assert_includes error.message, "differs from the declared variant"
+    obs = BenchmarkCases.load_case("obs-studio")
+    %w[obs-studio-obs-actions-cache.yml obs-studio-obs-boringcache.yml].each do |workflow|
+      assert_equal "ccache", BenchmarkCases.plan(obs, workflow: workflow, variant: "ccache").dig("inputs", "cache_tool")
+    end
+  end
+
   def test_draft_cannot_remove_its_blocker_without_an_execution_path
     with_root do |root|
       item = BenchmarkCases.create("example", repository: "example/upstream", revision: "a" * 40, question: "Can task outputs be reused?", root: root)

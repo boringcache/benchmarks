@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "source": "BoringCache read-only MCP",
+  "generated_at": "2026-10-02T19:58:05Z",
+  "workspace": "boringcache/benchmarks",
+  "identity": {
+    "run_uid": "github-actions:boringcache/benchmarks:37041656850",
+    "run_label": "github-actions/37041656850#1",
+    "run_kind": "ci",
+    "provider": "github-actions",
+    "provider_run_uid": "37041656850",
+    "attempt": "1",
+    "repository": "boringcache/benchmarks",
+    "ref_type": "tag",
+    "ref_name": "benchmark-consolidation-2026-10-02",
+    "commit_sha": "aef10ff570e92395652bc8c5d7a4fe7cfd0bd114",
+    "summary_session_id": "proxy-summary-c09d13f8-7e80-4a1a-9cef-688456475e3c",
+    "tools": [
+      "sccache"
+    ]
+  },
+  "external_context": {
+    "ci": {
+      "repository": "boringcache/benchmarks",
+      "run_id": "37041656850",
+      "attempt": "1",
+      "ref_name": "benchmark-consolidation-2026-10-02",
+      "ref_type": "tag",
+      "commit_sha": "aef10ff570e92395652bc8c5d7a4fe7cfd0bd114",
+      "provider": "github-actions"
+    },
+    "github_actions": {
+      "repository": "boringcache/benchmarks",
+      "run_id": "37041656850",
+      "attempt": "1",
+      "ref_name": "benchmark-consolidation-2026-10-02",
+      "ref_type": "tag",
+      "commit_sha": "aef10ff570e92395652bc8c5d7a4fe7cfd0bd114"
+    }
+  },
+  "metrics": {
+    "session_count": 26,
+    "total_hits": 3079,
+    "total_misses": 3081,
+    "total_errors": 0,
+    "total_bytes_read": 1917215948,
+    "total_bytes_written": 1998299927,
+    "duration_seconds": 5975.8,
+    "read_label": "Remote read lookups",
+    "hit_label": "Remote hits",
+    "miss_label": "Missed lookups",
+    "hit_count_label": "remote hit",
+    "miss_count_label": "missed lookup"
+  },
+  "cache_inventory": [
+    {
+      "tag": "deno-rust-cache-r37041656850-a1-compiler-only-ubuntu-24-x86_64",
+      "cache_type": "direct_kv",
+      "available_before_run": false,
+      "absence_proven": false,
+      "state": "current_kv_populated_after_run",
+      "direct_kv": {
+        "entry_count": 3010,
+        "size_bytes": 1998299927,
+        "updated_at": "2026-10-02T19:03:41Z"
+      }
+    }
+  ],
+  "limitations": [
+    "Run totals combine the cold seed and changed-source jobs; remote lookup counts are not compiler hit rates.",
+    "The retained inventory does not prove pre-run absence.",
+    "Inventory sizes were observed after completion and are not a replacement for the original phase-time storage probe.",
+    "Transfer bytes and selected-cache sizes are not physical or billable storage."
+  ]
+}
