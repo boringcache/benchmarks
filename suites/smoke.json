@@ -2,6 +2,6 @@
   "schema_version": 1,
   "cases": [
     "hugo-go",
-    "docker-grist-oss"
+    "docker-cloudcost-exporter-amd64"
   ]
 }

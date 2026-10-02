@@ -106,7 +106,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "incomplete; only recent run metadata inventoried",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "cloudcost-exporter AMD64 cold/warm product proof verified; remaining workloads and variants unverified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -114,7 +114,15 @@
         "Run the declared case with OIDC and verify outputs",
         "Export required Actions evidence and verify durable storage",
         "Verify source-sync, schedules, release callers, and website links"
-      ]
+      ],
+      "qualification": {
+        "case_id": "docker-cloudcost-exporter-amd64",
+        "series_id": "wrapper-qualification",
+        "run_ids": [
+          37021507888
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-wrapper-qualification-2026-10-02"
+      }
     },
     {
       "repository": "boringcache/benchmark-duckgres",
@@ -192,7 +200,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "incomplete; only recent run metadata inventoried",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "verified two-sample fresh Go comparison; rolling/source-advance execution remains unverified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -200,7 +208,16 @@
         "Run the declared case with OIDC and verify outputs",
         "Export required Actions evidence and verify durable storage",
         "Verify source-sync, schedules, release callers, and website links"
-      ]
+      ],
+      "qualification": {
+        "case_id": "hugo-go",
+        "series_id": "wrapper-qualification",
+        "run_ids": [
+          37021492460,
+          37021496989
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-wrapper-qualification-2026-10-02"
+      }
     },
     {
       "repository": "boringcache/benchmark-immich",
