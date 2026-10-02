@@ -8,6 +8,7 @@ class BenchmarkRuntimeTest < Minitest::Test
 
   def test_ruby_setup_uses_the_project_runtime_pin
     assert_match(/^ruby \d+\.\d+\.\d+$/, File.read(File.join(ROOT, ".tool-versions")).strip)
+    refute File.exist?(File.join(ROOT, ".ruby-version")), "A .ruby-version would override the shared .tool-versions pin"
     paths = Dir[File.join(ROOT, ".github", "{actions/**/action,workflows/*}.{yml,yaml}")]
     setups = paths.flat_map do |path|
       document = YAML.safe_load(File.read(path), aliases: true)
