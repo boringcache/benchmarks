@@ -25,6 +25,15 @@ live in `cases/<case-id>/payload/`. Docker workloads use `recipe.json` and `plan
 with the shared Docker adapter. Do not vendor upstream source: `bin/bench prepare`
 obtains the declared revision and applies recorded patches in a disposable checkout.
 
+Record reviewed upstream file digests and build commands in `recipe-contract.json`.
+When a case has distinct pinned recipes, use a named contract with the same
+`verify-upstream-recipe.rb <source-directory> <contract-file>` verifier. A contract
+can declare groups of plan paths with a shared adapter and command under `plans`;
+the verifier checks every named plan. A digest mismatch requires reviewing the
+source, command, and environment changes before updating the contract. Zed's
+[recipe review](../cases/zed/recipe-review.md) distinguishes its older Cargo layer
+proof from its newer rolling recipe.
+
 For the standard BoringCache/Actions Cache comparison, use
 `native-fresh-benchmark.yml` and `native-rolling-benchmark.yml`. Declare the local
 composite action, benchmark ID, toolchain inputs, and lane-specific publication
@@ -50,8 +59,15 @@ fresh and rolling workflows support both dispatch and `workflow_call`. Use them
 for evaluations and published cases without copying the provider lifecycle.
 Docker tool caches remain product-plan settings rather than a second implementation
 of the product's proxy or cache lifecycle.
-Cache errors always fail benchmark observations. The wrapper sets that policy
-literally and converts the optional cache-miss input to a boolean expression.
+The harness Ruby version is pinned once in `.tool-versions`. Ruby setup reads
+that file from the harness checkout, including when a shared action is called
+from an older benchmark repository. Guardrails verify preparation on Ubuntu
+26.04 and macOS 26 as well as running the full harness checks on Ubuntu 24.04.
+Runtime support must be verified before selecting a new runner or Ruby version.
+BoringCache Action cache failures fail benchmark jobs. The wrapper sets that
+policy literally and converts the optional cache-miss input to a boolean expression.
+Retain native tool error counters separately. Successful outputs do not establish
+an error-free native cache operation; review those counters before making a claim.
 Nested composite post steps can receive a different input context; forwarding a
 boolean as an unchecked string can become empty during cleanup. Qualification
 must inspect post-job logs and evidence as well as the job conclusion.
@@ -118,6 +134,8 @@ case has more than one execution path. A receipt is retained for each sample and
 workflow; a changed case requires a new series. Use `--variant` at series creation
 when measuring a particular workload variant.
 Workflows that declare `variants` require one of those variants at series creation.
+When a variant selects a workflow input, declare `variant_input` in the workflow
+entry. The plan fills that input from `--variant` and rejects a conflicting value.
 The Zed layer proof uses the same combined cold seed for its target-only,
 sccache-only, and combined restore probes; it establishes output correctness and
 cache behavior rather than a comparison between providers.
@@ -162,6 +180,16 @@ reported KV or archive size; the GitHub probe uses the selected cache key's
 reported archive size. Keep those sources explicit. Do not infer equivalent
 compression, cross-tag deduplication, or physical storage efficiency from these
 counts alone.
+The selected storage total requires byte measurements for every resolved tag.
+A partial probe retains its measured subtotal and unmeasured tags in
+`storage_breakdown`; `storage_bytes` remains unmeasured. A missing tag or byte
+field must not become a zero-byte measurement or a complete selected-cache total.
+The breakdown retains the selected probe rows' status, identity, cache type, and
+byte fields so coverage can be checked later. Archive entries use their archive
+byte fields; an unrelated KV observation must not replace the archive size.
+`action.trust_state` preserves the product's requested and resolved policy,
+write permission, and decision source. Preserve the raw Action evidence as well;
+do not infer publication permission from a successful build or a cache hit.
 
 ## 6. Preserve and review
 

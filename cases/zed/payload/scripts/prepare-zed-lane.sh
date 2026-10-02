@@ -25,7 +25,7 @@ test -z "$(git -C upstream status --porcelain=v1 --untracked-files=all)"
 
 ./scripts/install-zed-toolchain.sh
 
-./scripts/verify-upstream-recipe.rb upstream
+./scripts/verify-upstream-recipe.rb upstream cargo-layer-recipe.json
 
 version="$(cd upstream && script/get-crate-version zed)"
 test -n "${version}"

@@ -55,7 +55,7 @@ begin
     puts "Validated #{selected.length} benchmark cases"
   when "plan"
     raise BenchmarkCases::Error, "Select a case ID" unless item
-    puts JSON.pretty_generate(BenchmarkCases.plan(item, **options.slice(:lane, :workflow, :inputs)))
+    puts JSON.pretty_generate(BenchmarkCases.plan(item, **options.slice(:lane, :workflow, :inputs, :variant)))
   when "run"
     raise BenchmarkCases::Error, "Select a case ID and --series" unless item && options[:series]&.match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/)
     BenchmarkCases.validate([item])
@@ -68,7 +68,8 @@ begin
     frozen_inputs = series.fetch("workflow_inputs")
     raise BenchmarkCases::Error, "Workflow inputs changed after series creation; start a new series" unless options.fetch(:inputs).all? { |name, value| frozen_inputs[name] == value }
     options[:inputs] = frozen_inputs.merge("series_id" => options.fetch(:series), "sample" => sample.to_s)
-    selected = BenchmarkCases.plan(item, **options.slice(:lane, :workflow, :inputs))
+    options[:variant] = series["variant"]
+    selected = BenchmarkCases.plan(item, **options.slice(:lane, :workflow, :inputs, :variant))
     raise BenchmarkCases::Error, "Workflow lane differs from the series" unless selected.fetch("lane") == series.fetch("lane")
     output = options[:output] || File.join(directory, "dispatches", "#{sample}-#{selected.fetch('workflow')}.json")
     raise BenchmarkCases::Error, "This sample and workflow already have a dispatch receipt; inspect it before retrying" if File.exist?(output)
@@ -104,7 +105,7 @@ begin
     directory = options[:directory] || File.join(BenchmarkCases::ROOT, "results", id, options.fetch(:series))
     if command == "start"
       BenchmarkCases.validate([item])
-      selected = BenchmarkCases.plan(item, **options.slice(:lane, :workflow, :inputs))
+      selected = BenchmarkCases.plan(item, **options.slice(:lane, :workflow, :inputs, :variant))
       if selected["variants"] && !selected["variants"].include?(options[:variant])
         raise BenchmarkCases::Error, "Select --variant #{selected.fetch('variants').join(' or ')}"
       end

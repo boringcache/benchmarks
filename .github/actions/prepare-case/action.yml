@@ -16,7 +16,6 @@ runs:
     - name: Set up benchmark Ruby
       uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
       with:
-        ruby-version: 3.4.4
         working-directory: .harness
     - name: Install benchmark dependencies
       shell: bash

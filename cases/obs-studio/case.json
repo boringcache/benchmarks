@@ -28,6 +28,7 @@
     "workflows": [
       {
         "path": ".github/workflows/obs-studio-obs-actions-cache.yml",
+        "variant_input": "cache_tool",
         "lane": "fresh",
         "inputs": {},
         "phases": [
@@ -41,6 +42,7 @@
       },
       {
         "path": ".github/workflows/obs-studio-obs-boringcache.yml",
+        "variant_input": "cache_tool",
         "lane": "fresh",
         "inputs": {},
         "phases": [
