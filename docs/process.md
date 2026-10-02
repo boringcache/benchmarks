@@ -176,6 +176,14 @@ environment variance, and claim limits. Parity and no material improvement are
 valid outcomes. Promotion changes metadata or suite membership. Website claims
 link to specific reports and preserved evidence, not only the homepage.
 
+The legacy `data/latest/` collector remains a historical compatibility feed.
+It reads original execution repositories and does not mix central Actions
+summaries into those windows. Publish a central series through its canonical
+report after evidence and methodology review; update the website's reviewed
+evidence selection to an immutable report link. A green workflow or a case's
+existing publication status does not approve a new series. Replacing the legacy
+feed requires a separately qualified adapter for canonical series reports.
+
 ## 7. Review source updates
 
 Use `bin/bench sync <case-id> --output /tmp/<case-id>-source-proposal.json` in a
