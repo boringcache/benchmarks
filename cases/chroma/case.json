@@ -22,18 +22,37 @@
   "execution": {
     "workflows": [
       {
-        "path": ".github/workflows/chroma-chroma-benchmark.yml",
+        "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
-        "inputs": {}
+        "inputs": {
+          "case_id": "chroma"
+        },
+        "historical_workflow": "chroma-benchmark.yml"
       },
       {
-        "path": ".github/workflows/chroma-chroma-fresh-benchmark.yml",
+        "path": ".github/workflows/native-fresh-benchmark.yml",
         "lane": "fresh",
-        "inputs": {}
+        "inputs": {
+          "case_id": "chroma"
+        },
+        "historical_workflow": "chroma-fresh-benchmark.yml"
       }
     ],
     "sync": "upstream-head",
-    "sync_minute": 1
+    "sync_minute": 1,
+    "native": {
+      "action": ".github/actions/chroma-docker-benchmark",
+      "benchmark_id": "chroma",
+      "rolling_inputs": {
+        "push_image": "true"
+      },
+      "environment": {},
+      "fresh_inputs": {}
+    },
+    "cache_tags": {
+      "chroma-docker-local": "{scope}-docker",
+      "chroma-sccache-local": "{scope}-sccache"
+    }
   },
   "reporting": {
     "entries": [

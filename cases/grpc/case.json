@@ -33,7 +33,10 @@
       }
     ],
     "sync": "upstream-head",
-    "sync_minute": 7
+    "sync_minute": 7,
+    "cache_tags": {
+      "grpc-bazel-local": "{scope}"
+    }
   },
   "reporting": {
     "entries": [

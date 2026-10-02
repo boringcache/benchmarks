@@ -1,3 +1,4 @@
+---
 name: 'zed: Zed Cargo rolling run'
 run-name: "${{ format('Zed Cargo rolling {0} to {1}', inputs.base_sha, inputs.head_sha)
   }}"
@@ -8,6 +9,7 @@ permissions:
 concurrency:
   group: benchmark-zed-cargo-rolling-chain
   cancel-in-progress: false
+  queue: max
 jobs:
   source:
     name: Resolve Zed source
@@ -22,19 +24,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: zed
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: zed
     - name: Read pinned source
       id: source
       env:
@@ -67,19 +60,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: zed
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: zed
     - name: Checkout the selected Zed source
       run: |
         set -euo pipefail
@@ -112,7 +96,7 @@ jobs:
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
     - name: Run the released Cargo product
       id: cache
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         mode: cargo
@@ -202,19 +186,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: zed
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: zed
     - name: Advance the verified source pair
       id: source
       env:

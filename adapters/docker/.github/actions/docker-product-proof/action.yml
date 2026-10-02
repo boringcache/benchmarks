@@ -156,7 +156,7 @@ runs:
   - name: Publish BoringCache on the real Docker workload
     id: publish
     if: inputs.phase == 'publish'
-    uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+    uses: ./.github/actions/boringcache
     env:
       BORINGCACHE_MANAGED_BUILDKIT_IMAGE: "${{ inputs.buildkit_image }}"
     with:
@@ -169,7 +169,7 @@ runs:
   - name: Restore BoringCache on a fresh runner
     id: restore
     if: inputs.phase == 'warm'
-    uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+    uses: ./.github/actions/boringcache
     env:
       BORINGCACHE_MANAGED_BUILDKIT_IMAGE: "${{ inputs.buildkit_image }}"
     with:

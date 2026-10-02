@@ -45,7 +45,7 @@ commercial qualification notes outside this public repository.
 
 Run `bin/bench check`, Ruby tests, `scripts/check-registry-alignment.rb`,
 `scripts/check-workflow-guardrails.rb`, `scripts/check-report-contract.rb`, and
-`actionlint`. Prepare the changed workload in a disposable directory and run
+`scripts/lint-workflows.rb`. Prepare the changed workload in a disposable directory and run
 recipe and output verification. Record live-execution gaps honestly.
 
 Use minimal permissions, immutable action pins, credential-free source checkouts,

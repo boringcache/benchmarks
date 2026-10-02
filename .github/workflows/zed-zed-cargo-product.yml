@@ -1,3 +1,4 @@
+---
 name: 'zed: Zed Cargo layer matrix'
 run-name: "${{ format('Zed Cargo layers | CLI {0}', inputs.cli_version || 'Action
   default') }}"
@@ -7,6 +8,7 @@ permissions:
 concurrency:
   group: benchmark-zed-cargo-layer-matrix
   cancel-in-progress: false
+  queue: max
 env:
   CARGO_INCREMENTAL: '0'
   ZED_BUNDLE: 'true'
@@ -27,19 +29,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: zed
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: zed
     - name: Select the reviewed source pair
       id: source
       env:
@@ -65,19 +58,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: zed
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: zed
     - name: Prepare the seed source and release toolchain
       run: ./scripts/prepare-zed-lane.sh "${{ needs.source.outputs.base_sha }}"
     - name: Install sccache
@@ -93,7 +77,7 @@ jobs:
       run: ruby ./scripts/activate-cargo-plan.rb cold primary
     - name: Build the primary seed through the combined Cargo plan
       id: primary
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         mode: cargo
@@ -107,7 +91,7 @@ jobs:
       run: ruby ./scripts/activate-cargo-plan.rb cold remote-server
     - name: Build the remote server seed through the combined Cargo plan
       id: remote
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         mode: cargo
@@ -182,19 +166,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: zed
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: zed
     - name: Prepare the adjacent source and release toolchain
       run: ./scripts/prepare-zed-lane.sh "${{ needs.source.outputs.head_sha }}" "${{
         needs.source.outputs.base_sha }}"
@@ -207,7 +182,7 @@ jobs:
       run: ruby ./scripts/activate-cargo-plan.rb target-only primary
     - name: Build primary with the target-only Cargo plan
       id: primary
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         mode: cargo
@@ -221,7 +196,7 @@ jobs:
       run: ruby ./scripts/activate-cargo-plan.rb target-only remote-server
     - name: Build remote server with the target-only Cargo plan
       id: remote
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         mode: cargo
@@ -297,19 +272,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: zed
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: zed
     - name: Prepare the adjacent source and release toolchain
       run: ./scripts/prepare-zed-lane.sh "${{ needs.source.outputs.head_sha }}" "${{
         needs.source.outputs.base_sha }}"
@@ -326,7 +292,7 @@ jobs:
       run: ruby ./scripts/activate-cargo-plan.rb sccache-only primary
     - name: Build primary with the sccache-only Cargo plan
       id: primary
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         mode: cargo
@@ -340,7 +306,7 @@ jobs:
       run: ruby ./scripts/activate-cargo-plan.rb sccache-only remote-server
     - name: Build remote server with the sccache-only Cargo plan
       id: remote
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         mode: cargo
@@ -415,19 +381,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: zed
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: zed
     - name: Prepare the adjacent source and release toolchain
       run: ./scripts/prepare-zed-lane.sh "${{ needs.source.outputs.head_sha }}" "${{
         needs.source.outputs.base_sha }}"
@@ -444,7 +401,7 @@ jobs:
       run: ruby ./scripts/activate-cargo-plan.rb combined primary
     - name: Build primary with the combined Cargo plan
       id: primary
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         mode: cargo
@@ -458,7 +415,7 @@ jobs:
       run: ruby ./scripts/activate-cargo-plan.rb combined remote-server
     - name: Build remote server with the combined Cargo plan
       id: remote
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         mode: cargo
@@ -535,19 +492,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: zed
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: zed
     - name: Download every lane's product evidence
       uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
       with:
