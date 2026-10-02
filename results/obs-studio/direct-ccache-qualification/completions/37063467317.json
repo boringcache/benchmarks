@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "case_id": "obs-studio",
+  "series_id": "direct-ccache-qualification",
+  "sample": 1,
+  "run_id": "37063467317",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37063467317",
+  "source_sha": "50f069f123cef134e307db653c853d39eee08404",
+  "github_conclusion": "failure",
+  "status": "failed",
+  "errors": [
+    "Workflow concluded failure",
+    "GitHub Actions OBS ccache cold: failure"
+  ],
+  "evidence_manifest_sha256": "78815b4b0e4a976eff37bf3f035c3952f003971727a4a6adcd072a532f42d064"
+}

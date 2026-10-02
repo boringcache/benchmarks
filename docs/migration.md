@@ -91,8 +91,14 @@ compiler-cache errors remain in the evidence. The Cargo product's original stora
 probe does not establish coverage of every selected tag and cannot support a total
 storage claim. These runs do not qualify provider performance, the rolling
 publication workflows, or the full release caller. OBS ccache/Xcode and Deno
-rolling plans are prepared but have not been dispatched. Original schedules and
-repositories remain active.
+rolling plans were dispatched from signed harness `50f069f`. The first OBS ccache
+pair failed before building because Ruby 3.4.4 has no Ubuntu 26.04 binary. Both
+failed completions and their [verified evidence](../results/obs-studio/direct-ccache-qualification/evidence.md)
+are retained. The harness now reads Ruby 3.4.10 from one project pin and checks
+preparation on the declared Ubuntu 26.04 and macOS 26 runners. A replacement ccache
+series has its own frozen plan. Xcode, rolling Deno, replacement ccache, and hosted
+runtime checks remain unqualified. Original schedules and repositories remain
+active.
 
 The legacy index collector continues to read the original execution repositories.
 It cannot publish raw central Actions summaries or mix them into historical

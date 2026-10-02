@@ -223,6 +223,38 @@
       "scope": "This run's attempts, jobs, logs, artifacts, commit metadata, and workflow; not the original repository history",
       "execution_qualification": "Direct single-provider cold/adjacent-source proof passed output and post-step completion checks; native cache errors retained; rolling execution and website publication remain unqualified",
       "repository_retirement": "Keep originals until all migration gates pass"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37063464018,
+      "verified_files": 7,
+      "gaps": [],
+      "sha256": "5aec5b72aedf003c0f71a98fd85abdec7a463a79b801d14073b5382223ceb82a",
+      "bundle_bytes": 251392,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-obs-preparation-2026-10-02",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-obs-preparation-2026-10-02/benchmarks-37063464018.tar",
+      "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory",
+      "verified_on": "2026-10-02",
+      "scope": "This run's available attempts, jobs, logs, commit metadata, and workflow; no workload artifacts were produced",
+      "execution_qualification": "Failed during Ruby preparation before build, cache setup, or output verification; no timing, correctness, or storage claim is qualified",
+      "repository_retirement": "Keep originals until all migration gates pass"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37063467317,
+      "verified_files": 7,
+      "gaps": [],
+      "sha256": "d4b0215eef1e74e7707f77b7d732de6250c37df2c9c64e6637bffa6f399ffbb0",
+      "bundle_bytes": 247296,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-obs-preparation-2026-10-02",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-obs-preparation-2026-10-02/benchmarks-37063467317.tar",
+      "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory",
+      "verified_on": "2026-10-02",
+      "scope": "This run's available attempts, jobs, logs, commit metadata, and workflow; no workload artifacts were produced",
+      "execution_qualification": "Failed during Ruby preparation before build, cache setup, or output verification; no timing, correctness, or storage claim is qualified",
+      "repository_retirement": "Keep originals until all migration gates pass"
     }
   ],
   "bundles": [

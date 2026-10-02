@@ -59,6 +59,11 @@ fresh and rolling workflows support both dispatch and `workflow_call`. Use them
 for evaluations and published cases without copying the provider lifecycle.
 Docker tool caches remain product-plan settings rather than a second implementation
 of the product's proxy or cache lifecycle.
+The harness Ruby version is pinned once in `.tool-versions`. Ruby setup reads
+that file from the harness checkout, including when a shared action is called
+from an older benchmark repository. Guardrails verify preparation on Ubuntu
+26.04 and macOS 26 as well as running the full harness checks on Ubuntu 24.04.
+Runtime support must be verified before selecting a new runner or Ruby version.
 BoringCache Action cache failures fail benchmark jobs. The wrapper sets that
 policy literally and converts the optional cache-miss input to a boolean expression.
 Retain native tool error counters separately. Successful outputs do not establish
