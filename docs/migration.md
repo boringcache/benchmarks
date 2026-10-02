@@ -81,3 +81,9 @@ The legacy index collector continues to read the original execution repositories
 It cannot publish raw central Actions summaries or mix them into historical
 windows. New central claims use reviewed canonical series reports. Migrating the
 legacy index to those records remains a reporting cutover gate.
+
+The gRPC case declares its BuildBuddy arm alongside BoringCache and Actions Cache,
+so a series cannot omit the third provider's observations. Its credential is
+passed only to BuildBuddy matrix jobs. The existing organization secret is
+restricted to `benchmark-grpc`; central access must be configured before gRPC
+qualification or caller cutover.
