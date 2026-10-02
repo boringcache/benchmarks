@@ -56,7 +56,8 @@
           "target-only",
           "sccache-only",
           "combined"
-        ]
+        ],
+        "variant_input": "cache_layer"
       },
       {
         "path": ".github/workflows/zed-zed-cargo-rolling-auto.yml",

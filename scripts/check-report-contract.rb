@@ -107,6 +107,11 @@ class Workflow
   def evaluate(expression, matrix)
     return Regexp.last_match(1) if expression.match(/\A'([^']*)'\z/)
 
+    if (fallback = expression.match(/\A(inputs\.[a-z_]+)\s*\|\|\s*'([^']*)'\z/))
+      selected = lookup(fallback[1], matrix)
+      return selected.to_s.empty? ? fallback[2] : selected
+    end
+
     if (choice = expression.match(/\Ainputs\.([a-z_]+)\s*&&\s*(format\(.+?\))\s*\|\|\s*(format\(.+\))\z/m))
       return evaluate(@inputs[choice[1]] == "true" ? choice[2] : choice[3], matrix)
     end

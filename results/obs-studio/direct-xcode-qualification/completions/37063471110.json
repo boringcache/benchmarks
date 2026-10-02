@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "obs-studio",
+  "series_id": "direct-xcode-qualification",
+  "sample": 1,
+  "run_id": "37063471110",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37063471110",
+  "source_sha": "50f069f123cef134e307db653c853d39eee08404",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "0796f950e9144c52105fa2b0850aeac7b5b703d8b8adaae2fcab8795af410897"
+}

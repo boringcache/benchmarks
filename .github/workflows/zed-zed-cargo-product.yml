@@ -1,7 +1,6 @@
 ---
 name: 'zed: Zed Cargo layer matrix'
-run-name: "${{ format('Zed Cargo layers | CLI {0}', inputs.cli_version || 'Action
-  default') }}"
+run-name: "${{ format('Zed Cargo layers | CLI {0}', inputs.cli_version || 'Action default') }}"
 permissions:
   actions: read
   contents: read
@@ -23,6 +22,7 @@ jobs:
     outputs:
       base_sha: "${{ steps.source.outputs.base_sha }}"
       head_sha: "${{ steps.source.outputs.head_sha }}"
+      cache_layers: "${{ steps.source.outputs.cache_layers }}"
     steps:
     - name: Checkout benchmark definitions
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -38,19 +38,27 @@ jobs:
       env:
         INPUT_BASE_SHA: "${{ inputs.base_sha }}"
         INPUT_HEAD_SHA: "${{ inputs.head_sha }}"
+        INPUT_CACHE_LAYER: "${{ inputs.cache_layer }}"
       run: |
         set -euo pipefail
         source cargo-layer-source.env
-        echo "base_sha=${INPUT_BASE_SHA:-$ZED_BASE_SHA}" >> "$GITHUB_OUTPUT"
-        echo "head_sha=${INPUT_HEAD_SHA:-$ZED_HEAD_SHA}" >> "$GITHUB_OUTPUT"
+        {
+          echo "base_sha=${INPUT_BASE_SHA:-$ZED_BASE_SHA}"
+          echo "head_sha=${INPUT_HEAD_SHA:-$ZED_HEAD_SHA}"
+          ruby -rjson -e '
+            layers = %w[target-only sccache-only combined]
+            selected = ENV.fetch("INPUT_CACHE_LAYER", "all")
+            abort "Unsupported Zed cache layer" unless selected == "all" || layers.include?(selected)
+            puts "cache_layers=#{JSON.generate(selected == "all" ? layers : [selected])}"
+          '
+        } >> "$GITHUB_OUTPUT"
     env:
       BENCHMARK_RUNNER_CLASS: ubuntu-24.04
   cold:
     name: 'Cold: target + sccache seed'
     needs: source
     if: inputs.runner_label == '' || github.ref_name == 'main'
-    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
-      && inputs.runner_label || 'ubuntu-24.04' }}"
+    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main' && inputs.runner_label || 'ubuntu-24.04' }}"
     timeout-minutes: 240
     steps:
     - name: Checkout benchmark definitions
@@ -98,13 +106,11 @@ jobs:
         working-directory: upstream
         diagnostics: summary
       env:
-        RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib -C
-          target-feature=+crt-static"
+        RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib -C target-feature=+crt-static"
         CC_x86_64_unknown_linux_musl: musl-gcc
     - name: Capture build and reuse timing
       id: proof_timing
-      run: echo "seconds=$(( $(date +%s) - ${{ steps.proof_timer.outputs.started_at
-        }} ))" >> "$GITHUB_OUTPUT"
+      run: echo "seconds=$(( $(date +%s) - ${{ steps.proof_timer.outputs.started_at }} ))" >> "$GITHUB_OUTPUT"
     - name: Verify Zed release outputs
       run: |
         set -euo pipefail
@@ -117,10 +123,12 @@ jobs:
         PROOF_SECONDS: "${{ steps.proof_timing.outputs.seconds }}"
         EVIDENCE_PATH: "${{ steps.primary.outputs.evidence-path }}"
         CACHE_HIT: "${{ steps.primary.outputs.cache-hit }}"
+        CARGO_LAYER_MATRIX: "${{ needs.source.outputs.cache_layers }}"
       run: |
         set -euo pipefail
         source_sha="$(git -C upstream rev-parse HEAD)"
-        for variant in target-only sccache-only combined; do
+        mapfile -t variants < <(ruby -rjson -e 'puts JSON.parse(ENV.fetch("CARGO_LAYER_MATRIX"))')
+        for variant in "${variants[@]}"; do
           ruby ./scripts/benchmark-report.rb phase \
             --benchmark zed-cargo-layers --strategy boringcache --mode cargo \
             --lane fresh --phase cold --variant "$variant" \
@@ -148,15 +156,13 @@ jobs:
       contents: read
       id-token: write
     env:
-      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
-        == 'main' && inputs.runner_label || 'ubuntu-24.04' }}"
-  target-only:
-    name: 'Target only: compiler cache disabled'
+      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main' && inputs.runner_label || 'ubuntu-24.04' }}"
+  reuse:
+    name: "${{ matrix.cache_layer }}: restore the combined cold seed"
     needs:
     - source
     - cold
-    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
-      && inputs.runner_label || 'ubuntu-24.04' }}"
+    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main' && inputs.runner_label || 'ubuntu-24.04' }}"
     timeout-minutes: 240
     steps:
     - name: Checkout benchmark definitions
@@ -169,124 +175,20 @@ jobs:
       with:
         case-id: zed
     - name: Prepare the adjacent source and release toolchain
-      run: ./scripts/prepare-zed-lane.sh "${{ needs.source.outputs.head_sha }}" "${{
-        needs.source.outputs.base_sha }}"
-    - name: Require an empty target
-      run: test ! -e upstream/target
-    - name: Start build and reuse timing
-      id: proof_timer
-      run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
-    - name: Select the target-only primary CLI plan
-      run: ruby ./scripts/activate-cargo-plan.rb target-only primary
-    - name: Build primary with the target-only Cargo plan
-      id: primary
-      uses: "./.github/actions/boringcache"
-      with:
-        cli-version: "${{ inputs.cli_version }}"
-        mode: cargo
-        trust-policy: restore
-        working-directory: upstream
-        diagnostics: summary
-      env:
-        RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib"
-    - name: Select the target-only remote-server CLI plan
-      run: ruby ./scripts/activate-cargo-plan.rb target-only remote-server
-    - name: Build remote server with the target-only Cargo plan
-      id: remote
-      uses: "./.github/actions/boringcache"
-      with:
-        cli-version: "${{ inputs.cli_version }}"
-        mode: cargo
-        trust-policy: restore
-        working-directory: upstream
-        diagnostics: summary
-      env:
-        RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib -C
-          target-feature=+crt-static"
-        CC_x86_64_unknown_linux_musl: musl-gcc
-    - name: Capture build and reuse timing
-      id: proof_timing
-      run: echo "seconds=$(( $(date +%s) - ${{ steps.proof_timer.outputs.started_at
-        }} ))" >> "$GITHUB_OUTPUT"
-    - name: Verify Zed release outputs
-      run: |
-        set -euo pipefail
-        test -x upstream/target/x86_64-unknown-linux-gnu/release/zed
-        test -x upstream/target/x86_64-unknown-linux-gnu/release/cli
-        test -x upstream/target/x86_64-unknown-linux-musl/release/remote_server
-        test -z "$(git -C upstream status --porcelain=v1 --untracked-files=all)"
-    - name: Write verified case records
-      env:
-        PROOF_SECONDS: "${{ steps.proof_timing.outputs.seconds }}"
-        EVIDENCE_PATH: "${{ steps.primary.outputs.evidence-path }}"
-        CACHE_HIT: "${{ steps.primary.outputs.cache-hit }}"
-      run: |
-        set -euo pipefail
-        source_sha="$(git -C upstream rev-parse HEAD)"
-        for variant in target-only; do
-          ruby ./scripts/benchmark-report.rb phase \
-            --benchmark zed-cargo-layers --strategy boringcache --mode cargo \
-            --lane rolling --phase commit --variant "$variant" \
-            --build-seconds "$PROOF_SECONDS" --cache-hit "$CACHE_HIT" --verified-output \
-            --source-repository "$(git -C upstream remote get-url origin | sed -E 's#https://github.com/##; s#\.git$##')" \
-            --source-sha "$source_sha" --evidence "$EVIDENCE_PATH"
-        done
-    - name: Report target-only evidence
-      run: |
-        test "${{ steps.primary.outputs.cache-hit }}" = "true"
-        ./scripts/summarize-cargo-evidence.rb \
-          target-only-primary "${{ steps.primary.outputs.evidence-path }}" \
-          target-only-remote-server "${{ steps.remote.outputs.evidence-path }}"
-    - name: Retain target-only product evidence
-      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
-      with:
-        name: zed-cargo-layers-target-only
-        path: |
-          ${{ steps.primary.outputs.evidence-path }}
-          ${{ steps.remote.outputs.evidence-path }}
-
-          benchmark-results/*.json
-        if-no-files-found: error
-    permissions:
-      actions: read
-      contents: read
-      id-token: write
-    env:
-      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
-        == 'main' && inputs.runner_label || 'ubuntu-24.04' }}"
-  sccache-only:
-    name: 'sccache only: target excluded'
-    needs:
-    - source
-    - cold
-    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
-      && inputs.runner_label || 'ubuntu-24.04' }}"
-    timeout-minutes: 240
-    steps:
-    - name: Checkout benchmark definitions
-      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      with:
-        path: ".harness"
-        persist-credentials: false
-    - name: Prepare declared case
-      uses: "./.harness/.github/actions/prepare-case"
-      with:
-        case-id: zed
-    - name: Prepare the adjacent source and release toolchain
-      run: ./scripts/prepare-zed-lane.sh "${{ needs.source.outputs.head_sha }}" "${{
-        needs.source.outputs.base_sha }}"
+      run: ./scripts/prepare-zed-lane.sh "${{ needs.source.outputs.head_sha }}" "${{ needs.source.outputs.base_sha }}"
     - name: Install sccache
       uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba
       with:
         version: v0.17.0
+      if: "${{ matrix.cache_layer != 'target-only' }}"
     - name: Require an empty target
       run: test ! -e upstream/target
     - name: Start build and reuse timing
       id: proof_timer
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
-    - name: Select the sccache-only primary CLI plan
-      run: ruby ./scripts/activate-cargo-plan.rb sccache-only primary
-    - name: Build primary with the sccache-only Cargo plan
+    - name: Select the primary CLI plan
+      run: ruby ./scripts/activate-cargo-plan.rb "$CARGO_LAYER" primary
+    - name: Build primary with the selected Cargo plan
       id: primary
       uses: "./.github/actions/boringcache"
       with:
@@ -297,9 +199,9 @@ jobs:
         diagnostics: summary
       env:
         RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib"
-    - name: Select the sccache-only remote-server CLI plan
-      run: ruby ./scripts/activate-cargo-plan.rb sccache-only remote-server
-    - name: Build remote server with the sccache-only Cargo plan
+    - name: Select the remote-server CLI plan
+      run: ruby ./scripts/activate-cargo-plan.rb "$CARGO_LAYER" remote-server
+    - name: Build remote server with the selected Cargo plan
       id: remote
       uses: "./.github/actions/boringcache"
       with:
@@ -309,13 +211,11 @@ jobs:
         working-directory: upstream
         diagnostics: summary
       env:
-        RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib -C
-          target-feature=+crt-static"
+        RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib -C target-feature=+crt-static"
         CC_x86_64_unknown_linux_musl: musl-gcc
     - name: Capture build and reuse timing
       id: proof_timing
-      run: echo "seconds=$(( $(date +%s) - ${{ steps.proof_timer.outputs.started_at
-        }} ))" >> "$GITHUB_OUTPUT"
+      run: echo "seconds=$(( $(date +%s) - ${{ steps.proof_timer.outputs.started_at }} ))" >> "$GITHUB_OUTPUT"
     - name: Verify Zed release outputs
       run: |
         set -euo pipefail
@@ -331,131 +231,27 @@ jobs:
       run: |
         set -euo pipefail
         source_sha="$(git -C upstream rev-parse HEAD)"
-        for variant in sccache-only; do
-          ruby ./scripts/benchmark-report.rb phase \
-            --benchmark zed-cargo-layers --strategy boringcache --mode cargo \
-            --lane rolling --phase commit --variant "$variant" \
-            --build-seconds "$PROOF_SECONDS" --cache-hit "$CACHE_HIT" --verified-output \
-            --source-repository "$(git -C upstream remote get-url origin | sed -E 's#https://github.com/##; s#\.git$##')" \
-            --source-sha "$source_sha" --evidence "$EVIDENCE_PATH"
-        done
-    - name: Report sccache-only evidence
-      run: |
-        ./scripts/summarize-cargo-evidence.rb \
-          sccache-only-primary "${{ steps.primary.outputs.evidence-path }}" \
-          sccache-only-remote-server "${{ steps.remote.outputs.evidence-path }}"
-    - name: Retain sccache-only product evidence
-      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
-      with:
-        name: zed-cargo-layers-sccache-only
-        path: |
-          ${{ steps.primary.outputs.evidence-path }}
-          ${{ steps.remote.outputs.evidence-path }}
-
-          benchmark-results/*.json
-        if-no-files-found: error
-    permissions:
-      actions: read
-      contents: read
-      id-token: write
-    env:
-      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
-        == 'main' && inputs.runner_label || 'ubuntu-24.04' }}"
-  combined:
-    name: 'Combined: target + sccache'
-    needs:
-    - source
-    - cold
-    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
-      && inputs.runner_label || 'ubuntu-24.04' }}"
-    timeout-minutes: 240
-    steps:
-    - name: Checkout benchmark definitions
-      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      with:
-        path: ".harness"
-        persist-credentials: false
-    - name: Prepare declared case
-      uses: "./.harness/.github/actions/prepare-case"
-      with:
-        case-id: zed
-    - name: Prepare the adjacent source and release toolchain
-      run: ./scripts/prepare-zed-lane.sh "${{ needs.source.outputs.head_sha }}" "${{
-        needs.source.outputs.base_sha }}"
-    - name: Install sccache
-      uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba
-      with:
-        version: v0.17.0
-    - name: Require an empty target
-      run: test ! -e upstream/target
-    - name: Start build and reuse timing
-      id: proof_timer
-      run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
-    - name: Select the combined primary CLI plan
-      run: ruby ./scripts/activate-cargo-plan.rb combined primary
-    - name: Build primary with the combined Cargo plan
-      id: primary
-      uses: "./.github/actions/boringcache"
-      with:
-        cli-version: "${{ inputs.cli_version }}"
-        mode: cargo
-        trust-policy: restore
-        working-directory: upstream
-        diagnostics: summary
-      env:
-        RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib"
-    - name: Select the combined remote-server CLI plan
-      run: ruby ./scripts/activate-cargo-plan.rb combined remote-server
-    - name: Build remote server with the combined Cargo plan
-      id: remote
-      uses: "./.github/actions/boringcache"
-      with:
-        cli-version: "${{ inputs.cli_version }}"
-        mode: cargo
-        trust-policy: restore
-        working-directory: upstream
-        diagnostics: summary
-      env:
-        RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib -C
-          target-feature=+crt-static"
-        CC_x86_64_unknown_linux_musl: musl-gcc
-    - name: Capture build and reuse timing
-      id: proof_timing
-      run: echo "seconds=$(( $(date +%s) - ${{ steps.proof_timer.outputs.started_at
-        }} ))" >> "$GITHUB_OUTPUT"
-    - name: Verify Zed release outputs
+        ruby ./scripts/benchmark-report.rb phase \
+          --benchmark zed-cargo-layers --strategy boringcache --mode cargo \
+          --lane rolling --phase commit --variant "$CARGO_LAYER" \
+          --build-seconds "$PROOF_SECONDS" --cache-hit "$CACHE_HIT" --verified-output \
+          --source-repository "$(git -C upstream remote get-url origin | sed -E 's#https://github.com/##; s#\.git$##')" \
+          --source-sha "$source_sha" --evidence "$EVIDENCE_PATH"
+    - name: Verify restore and report layer evidence
       run: |
         set -euo pipefail
-        test -x upstream/target/x86_64-unknown-linux-gnu/release/zed
-        test -x upstream/target/x86_64-unknown-linux-gnu/release/cli
-        test -x upstream/target/x86_64-unknown-linux-musl/release/remote_server
-        test -z "$(git -C upstream status --porcelain=v1 --untracked-files=all)"
-    - name: Write verified case records
+        if [[ "$CARGO_LAYER" != sccache-only ]]; then
+          test "$CACHE_HIT" = true
+        fi
+        ./scripts/summarize-cargo-evidence.rb \
+          "$CARGO_LAYER-primary" "${{ steps.primary.outputs.evidence-path }}" \
+          "$CARGO_LAYER-remote-server" "${{ steps.remote.outputs.evidence-path }}"
       env:
-        PROOF_SECONDS: "${{ steps.proof_timing.outputs.seconds }}"
-        EVIDENCE_PATH: "${{ steps.primary.outputs.evidence-path }}"
         CACHE_HIT: "${{ steps.primary.outputs.cache-hit }}"
-      run: |
-        set -euo pipefail
-        source_sha="$(git -C upstream rev-parse HEAD)"
-        for variant in combined; do
-          ruby ./scripts/benchmark-report.rb phase \
-            --benchmark zed-cargo-layers --strategy boringcache --mode cargo \
-            --lane rolling --phase commit --variant "$variant" \
-            --build-seconds "$PROOF_SECONDS" --cache-hit "$CACHE_HIT" --verified-output \
-            --source-repository "$(git -C upstream remote get-url origin | sed -E 's#https://github.com/##; s#\.git$##')" \
-            --source-sha "$source_sha" --evidence "$EVIDENCE_PATH"
-        done
-    - name: Report combined evidence
-      run: |
-        test "${{ steps.primary.outputs.cache-hit }}" = "true"
-        ./scripts/summarize-cargo-evidence.rb \
-          combined-primary "${{ steps.primary.outputs.evidence-path }}" \
-          combined-remote-server "${{ steps.remote.outputs.evidence-path }}"
-    - name: Retain combined product evidence
+    - name: Retain selected product evidence
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: zed-cargo-layers-combined
+        name: zed-cargo-layers-${{ matrix.cache_layer }}
         path: |
           ${{ steps.primary.outputs.evidence-path }}
           ${{ steps.remote.outputs.evidence-path }}
@@ -467,15 +263,17 @@ jobs:
       contents: read
       id-token: write
     env:
-      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
-        == 'main' && inputs.runner_label || 'ubuntu-24.04' }}"
+      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main' && inputs.runner_label || 'ubuntu-24.04' }}"
+      CARGO_LAYER: "${{ matrix.cache_layer }}"
+    strategy:
+      fail-fast: false
+      matrix:
+        cache_layer: "${{ fromJSON(needs.source.outputs.cache_layers) }}"
   report:
     name: Compare Cargo layers
     needs:
     - cold
-    - target-only
-    - sccache-only
-    - combined
+    - reuse
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -546,3 +344,13 @@ jobs:
         type: string
         required: false
         default: '1'
+      cache_layer:
+        description: Restore variant; all runs the diagnostic layer matrix
+        required: false
+        type: choice
+        default: all
+        options:
+        - all
+        - target-only
+        - sccache-only
+        - combined
