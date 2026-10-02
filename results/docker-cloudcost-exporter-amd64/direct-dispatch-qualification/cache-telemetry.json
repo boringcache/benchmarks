@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "source": "Read-only BoringCache MCP, joined by workspace, original repository, provider run ID and attempt",
+  "observed_at": "2026-10-02T17:24:36Z",
+  "workspace": {
+    "namespace_slug": "boringcache",
+    "workspace_slug": "benchmarks",
+    "full_path": "boringcache/benchmarks"
+  },
+  "run": {
+    "run_uid": "github-actions:boringcache/benchmarks:37038162155",
+    "run_label": "github-actions/37038162155#1",
+    "run_kind": "ci",
+    "provider": "github-actions",
+    "provider_run_uid": "37038162155",
+    "attempt": "1",
+    "repository": "boringcache/benchmarks",
+    "ref_type": "tag",
+    "ref_name": "benchmark-consolidation-2026-10-02",
+    "commit_sha": "aef10ff570e92395652bc8c5d7a4fe7cfd0bd114",
+    "summary_session_id": "proxy-summary-cfda9ae7-d103-401b-9bc2-dc51f5c60e46",
+    "tools": [
+      "oci"
+    ]
+  },
+  "metrics": {
+    "session_count": 6,
+    "total_hits": 24,
+    "total_misses": 3,
+    "total_errors": 0,
+    "total_bytes_read": 795048147,
+    "total_bytes_written": 13492,
+    "duration_seconds": 322.9,
+    "read_label": "Docker cache objects",
+    "hit_label": "Object hits",
+    "miss_label": "Missed objects",
+    "hit_count_label": "object hit",
+    "miss_count_label": "missed object"
+  },
+  "jobs": [
+    {
+      "job": "warm",
+      "phases": [
+        "fresh-warm"
+      ],
+      "tools": [
+        "oci"
+      ],
+      "cache_layers": [],
+      "hits": 16,
+      "misses": 0,
+      "errors": 0,
+      "bytes_read": 478958667,
+      "bytes_written": 0,
+      "duration_seconds": 130.2,
+      "state": "warm"
+    },
+    {
+      "job": "publish",
+      "phases": [
+        "fresh-cold"
+      ],
+      "tools": [
+        "oci"
+      ],
+      "cache_layers": [],
+      "hits": 8,
+      "misses": 3,
+      "errors": 0,
+      "bytes_read": 316089480,
+      "bytes_written": 13492,
+      "duration_seconds": 145.3,
+      "state": "seed"
+    }
+  ],
+  "build_performance": {
+    "summary": "37 BuildKit steps across 2 builds: 8 cached, 29 executed. Slowest was [build 6/6] RUN --mount=type=cache,target=\"/go/pkg/mod/\" make build-binary in publish at 2m.",
+    "total_steps": 37,
+    "executed_steps": 29,
+    "cached_steps": 8,
+    "error_steps": 0,
+    "executed_duration_ms": 255046,
+    "cached_duration_ms": 31,
+    "slow_steps": [
+      {
+        "name": "[build 6/6] RUN --mount=type=cache,target=\"/go/pkg/mod/\" make build-binary",
+        "duration_ms": 119552,
+        "state": "executed",
+        "job": "publish",
+        "cache_target": "tag-85166ffb57fc4c8e"
+      },
+      {
+        "name": "[build 6/6] RUN --mount=type=cache,target=\"/go/pkg/mod/\" make build-binary",
+        "duration_ms": 114507,
+        "state": "executed",
+        "job": "warm",
+        "cache_target": "tag-85166ffb57fc4c8e"
+      },
+      {
+        "name": "[build 4/6] RUN go mod download",
+        "duration_ms": 8102,
+        "state": "executed",
+        "job": "publish",
+        "cache_target": "tag-85166ffb57fc4c8e"
+      },
+      {
+        "name": "[build 5/6] COPY . .",
+        "duration_ms": 3125,
+        "state": "executed",
+        "job": "warm",
+        "cache_target": "tag-85166ffb57fc4c8e"
+      },
+      {
+        "name": "[build 5/6] COPY . .",
+        "duration_ms": 2503,
+        "state": "executed",
+        "job": "publish",
+        "cache_target": "tag-85166ffb57fc4c8e"
+      }
+    ],
+    "signals": [
+      {
+        "key": "io",
+        "label": "I/O pressure",
+        "headline": "4s observed",
+        "detail": "BuildKit reported runner I/O pressure while cache body work was active.",
+        "tone": "neutral",
+        "job": "publish",
+        "cache_target": "tag-85166ffb57fc4c8e"
+      },
+      {
+        "key": "network",
+        "label": "Remote cache transfer",
+        "headline": "9.14 KB in 0s read · 9.14 KB in 0s uploaded",
+        "detail": "Remote-body timings are summed work and can overlap with each other and the build.",
+        "tone": "neutral",
+        "job": "publish",
+        "cache_target": "tag-85166ffb57fc4c8e"
+      },
+      {
+        "key": "cache_work",
+        "label": "Cache preparation",
+        "headline": "1.8s queue wait",
+        "detail": "finished in cache-only phase; 1 cache-only transition; slot limit 1-8",
+        "tone": "neutral",
+        "job": "publish",
+        "cache_target": "tag-85166ffb57fc4c8e"
+      },
+      {
+        "key": "network",
+        "label": "Remote cache transfer",
+        "headline": "457 MB in 7.8s read",
+        "detail": "Remote-body timings are summed work and can overlap with each other and the build.",
+        "tone": "neutral",
+        "job": "warm",
+        "cache_target": "tag-85166ffb57fc4c8e"
+      }
+    ],
+    "build_count": 2,
+    "reported_build_count": 2,
+    "vertex_timing_state": "complete",
+    "vertex_timing_reasons": []
+  },
+  "comparison_inventory": {
+    "contract": {
+      "tool": "boringcache_compare_run_cache_state",
+      "schema_version": "boringcache_mcp.v1",
+      "generated_at": "2026-10-02T17:24:36Z",
+      "redaction": "cache inventory excludes storage URLs and raw cache keys"
+    },
+    "temperature": {
+      "state": "warm_mixed",
+      "hit_rate": 88.9,
+      "hits": 24,
+      "misses": 3,
+      "prior_cache_state": "not_observed"
+    },
+    "cache_targets": [
+      {
+        "target": "tag-85166ffb57fc4c8e",
+        "cache_type": "managed_oci",
+        "repository": "cache",
+        "tag": "tag-85166ffb57fc4c8e",
+        "available_before_run": false,
+        "history_observed": false,
+        "absence_proven": false,
+        "state": "manifest_not_observed"
+      }
+    ],
+    "explanation": "No pre-run cache could be proven from the retained managed_oci inventory. This is unknown, not proof that the run was cold."
+  },
+  "limits": "Counts describe Docker cache objects and BuildKit vertices, not compiler cache hits or provider storage bytes. Cache-side durations may overlap. The retained managed OCI inventory does not prove absence before the cold seed."
+}

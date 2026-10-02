@@ -165,6 +165,15 @@
           "complete": 3
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "direct_dispatch_qualification": {
+        "case_id": "docker-cloudcost-exporter-amd64",
+        "run_ids": [
+          37038162155
+        ],
+        "scope": "Direct AMD64 single-provider cold/warm proof; remaining Docker cases, architectures, and callers pending",
+        "series_id": "direct-dispatch-qualification",
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-direct-dispatch-2026-10-02"
       }
     },
     {
@@ -293,6 +302,16 @@
           "partial": 1
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "direct_dispatch_qualification": {
+        "case_id": "hugo-go",
+        "run_ids": [
+          37038153301,
+          37038157657
+        ],
+        "scope": "Direct fresh comparison with two predeclared samples; rolling and remaining caller/schedule gates pending",
+        "series_id": "direct-dispatch-qualification",
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-direct-dispatch-2026-10-02"
       }
     },
     {
