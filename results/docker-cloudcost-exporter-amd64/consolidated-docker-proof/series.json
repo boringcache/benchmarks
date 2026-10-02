@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "case_id": "docker-cloudcost-exporter-amd64",
+  "series_id": "consolidated-docker-proof",
+  "created_at": "2026-10-02T14:14:51Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "3e99745861c9d1a260c56deebc1947e9f9765f692e8a5cc54cb6b6d2fca9f7da",
+  "variant": "linux-amd64",
+  "workflow_inputs": {
+    "case_id": "cloudcost-exporter-amd64",
+    "ref_key": "main",
+    "cache_lane": "fresh"
+  },
+  "comparison": {
+    "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+    "providers": [
+      "boringcache"
+    ],
+    "timed_scope": "Declared Docker build, including dependencies, cache import/export and declared image output",
+    "primary_metric": "correctness",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "grafana/cloudcost-exporter",
+    "pins": [
+      {
+        "path": "recipe.json",
+        "revision": "e2bf02e3b91909f3e7c2e47561f2a3b897bf7ab4",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "9565ae6cbef0759e53e1e54a5efec36219eabeaf",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "b55648776f0d9eb8f245a7fdbd6121a59446e174",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "0304705af4cbc54dc4a6a9cadbca9ab59f8c690b",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "26977e7e0066177ef80cce649b5071745f566a86",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "580113c9610da388dda767eaa0acbf8d0cc2fbeb",
+        "kind": "recipe"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream workflow fidelity",
+    "Declared Docker output"
+  ],
+  "plan_sha256": "2135963e9ffd8069b23d748491c5ba07bdda506ba60e1b71df7182066ead7ab5"
+}

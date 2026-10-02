@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "id": "opentelemetry-java",
+  "kind": "benchmark",
+  "adapter": "workflow",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "open-telemetry/opentelemetry-java",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "a674ff1acea16754a2ed413fb8966084220fbd8b",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-opentelemetry-java",
+    "branch": "main",
+    "revision": "b4694de47a6595986d88a56c45910e832b7053bf"
+  },
+  "execution": {
+    "workflows": [
+      {
+        "path": ".github/workflows/native-rolling-benchmark.yml",
+        "lane": "rolling",
+        "inputs": {
+          "case_id": "opentelemetry-java"
+        },
+        "historical_workflow": "opentelemetry-java-gradle-benchmark.yml"
+      },
+      {
+        "path": ".github/workflows/native-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "opentelemetry-java"
+        },
+        "historical_workflow": "opentelemetry-java-gradle-fresh-benchmark.yml"
+      }
+    ],
+    "sync": "upstream-head",
+    "sync_minute": 20,
+    "native": {
+      "action": ".github/actions/opentelemetry-gradle-benchmark",
+      "benchmark_id": "otel-gradle",
+      "rolling_inputs": {
+        "java_version": "21"
+      },
+      "environment": {
+        "GRADLE_USER_HOME": "${{ github.workspace }}/.gradle-user-home"
+      },
+      "fresh_inputs": {
+        "java_version": "21"
+      }
+    },
+    "cache_tags": {
+      "otel-gradle-local": "{scope}-gradle-remote"
+    }
+  },
+  "reporting": {
+    "entries": [
+      "otel-gradle"
+    ],
+    "publication": "reviewed"
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}

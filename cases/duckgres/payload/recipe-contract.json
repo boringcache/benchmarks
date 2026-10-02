@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "upstream_files": {
+    ".github/workflows/container-image-controlplane-cd.yml": "c7f2bd048bb873aed1e22bbb4900e094af26f34cd85a2fd00f662e92f170e691",
+    "Dockerfile": "d2c9bc0a6c852a26508e25f9d6571aead4513f6da5a13f57d01bd8a1b56acf5e"
+  },
+  "commands": {
+    "docker": [
+      "docker",
+      "buildx",
+      "build",
+      "--file",
+      "upstream/Dockerfile",
+      "--platform",
+      "linux/amd64",
+      "--build-arg",
+      "VERSION=build-__SOURCE_SHA__",
+      "--build-arg",
+      "COMMIT=__SOURCE_SHA__",
+      "--build-arg",
+      "BUILD_TAGS=kubernetes",
+      "--tag",
+      "duckgres-benchmark:local",
+      "upstream"
+    ]
+  }
+}

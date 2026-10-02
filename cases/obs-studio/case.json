@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "id": "obs-studio",
+  "kind": "benchmark",
+  "adapter": "workflow",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "obsproject/obs-studio",
+    "pins": [
+      {
+        "path": "payload/benchmark-source.env",
+        "revision": "e7136951c052db9a74de853f2f0ec5d1bc8f6f4a",
+        "kind": "env"
+      },
+      {
+        "path": "payload/benchmark-source.env",
+        "revision": "ef5814431c6af9061874470201d0b799bc84602b",
+        "kind": "env"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-obs-studio",
+    "branch": "main",
+    "revision": "74322882037cad76d0fda72b5ba6058ded815343"
+  },
+  "execution": {
+    "workflows": [
+      {
+        "path": ".github/workflows/obs-studio-obs-actions-cache.yml",
+        "lane": "fresh",
+        "inputs": {},
+        "phases": [
+          "cold",
+          "commit"
+        ],
+        "variants": [
+          "ccache",
+          "xcode"
+        ]
+      },
+      {
+        "path": ".github/workflows/obs-studio-obs-boringcache.yml",
+        "lane": "fresh",
+        "inputs": {},
+        "phases": [
+          "cold",
+          "commit"
+        ],
+        "variants": [
+          "ccache",
+          "xcode"
+        ]
+      },
+      {
+        "path": ".github/workflows/obs-studio-obs-xcode-continuation.yml",
+        "lane": "diagnostic",
+        "inputs": {}
+      }
+    ],
+    "sync": "adjacent-pair",
+    "sync_minute": 18,
+    "source_prefix": "OBS"
+  },
+  "reporting": {
+    "entries": [],
+    "publication": "reviewed"
+  },
+  "verification": [
+    "Pinned upstream recipe and commands",
+    "Successful upstream build",
+    "Native ccache or Xcode output verification for reuse observations"
+  ],
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Cache restore/setup plus the upstream Building obs-studio log group; dependency installation, CMake configuration, queueing, and post-job cache save are excluded",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}

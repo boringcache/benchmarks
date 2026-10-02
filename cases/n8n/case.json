@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "id": "n8n",
+  "kind": "benchmark",
+  "adapter": "workflow",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "n8n-io/n8n",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-n8n",
+    "branch": "main",
+    "revision": "dd69b0de722c645f9b4719556e390446010f7fcc"
+  },
+  "execution": {
+    "workflows": [
+      {
+        "path": ".github/workflows/n8n-n8n-benchmark.yml",
+        "lane": "rolling",
+        "inputs": {}
+      },
+      {
+        "path": ".github/workflows/n8n-n8n-docker-benchmark.yml",
+        "lane": "rolling",
+        "inputs": {}
+      },
+      {
+        "path": ".github/workflows/n8n-n8n-docker-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {}
+      },
+      {
+        "path": ".github/workflows/n8n-n8n-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {}
+      }
+    ],
+    "sync": "upstream-head",
+    "sync_minute": 17,
+    "cache_tags": {
+      "n8n-docker": "{scope}-docker",
+      "n8n-turbo-local": "{scope}-turbo"
+    }
+  },
+  "reporting": {
+    "entries": [
+      "n8n",
+      "n8n-docker",
+      "n8n-runners",
+      "n8n-runners-distroless"
+    ],
+    "publication": "reviewed"
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}

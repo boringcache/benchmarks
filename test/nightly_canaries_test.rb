@@ -72,6 +72,17 @@ class NightlyCanariesTest < Minitest::Test
     assert_empty @runner.requests.select { |request| request[:body] }
   end
 
+  def test_shared_workflow_dispatches_each_case_once_and_retains_its_selector
+    first = {"source_repo" => "boringcache/benchmarks", "fresh_workflow" => "native-fresh-benchmark.yml", "case_id" => "hugo-go"}
+    second = first.merge("case_id" => "storybook")
+    record = @runner.dispatch(repository: "boringcache/benchmarks", output: @output, benchmarks: [first, first, second])
+    posts = @runner.requests.select { |request| request[:body] }
+    assert_equal 2, posts.length
+    assert_equal %w[hugo-go storybook], posts.map { |request| request[:body].dig("inputs", "case_id") }
+    assert_equal %w[hugo-go storybook], record["runs"].map { |run| run.dig("inputs", "case_id") }
+    assert posts.all? { |request| request[:body].dig("inputs", "cli_version") == VERSION }
+  end
+
   def test_incomplete_latest_canary_does_not_fall_back_to_an_older_one
     @runner.releases << @runner.releases.first.merge("tag_name" => "vcli-canary-abcdef012345", "published_at" => "2026-09-30T02:00:00Z", "assets" => [])
     assert_raises(NightlyCanaries::Error) { dispatch }

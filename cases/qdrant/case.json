@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "id": "qdrant",
+  "kind": "benchmark",
+  "adapter": "workflow",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "qdrant/qdrant",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "9ae05efdc1ef96352889b2a6b6b574c35232b974",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-qdrant",
+    "branch": "main",
+    "revision": "22f17e82abcbe9227a6f60a385fba47eadb9aade"
+  },
+  "execution": {
+    "workflows": [
+      {
+        "path": ".github/workflows/native-rolling-benchmark.yml",
+        "lane": "rolling",
+        "inputs": {
+          "case_id": "qdrant"
+        },
+        "historical_workflow": "qdrant-benchmark.yml"
+      },
+      {
+        "path": ".github/workflows/native-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "qdrant"
+        },
+        "historical_workflow": "qdrant-fresh-benchmark.yml"
+      }
+    ],
+    "sync": "upstream-head",
+    "sync_minute": 23,
+    "native": {
+      "action": ".github/actions/qdrant-docker-benchmark",
+      "benchmark_id": "qdrant",
+      "rolling_inputs": {
+        "push_image": "true"
+      },
+      "environment": {},
+      "fresh_inputs": {}
+    },
+    "cache_tags": {
+      "qdrant-docker-local": "{scope}-docker"
+    }
+  },
+  "reporting": {
+    "entries": [
+      "qdrant"
+    ],
+    "publication": "reviewed"
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}

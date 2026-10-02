@@ -1,0 +1,215 @@
+---
+name: 'zed: Zed Cargo rolling run'
+run-name: "${{ format('Zed Cargo rolling {0} to {1}', inputs.base_sha, inputs.head_sha)
+  }}"
+permissions:
+  actions: read
+  contents: read
+env:
+  ZED_BUNDLE: 'true'
+  CC: clang
+  CXX: clang++
+  BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
+  BENCHMARK_SAMPLE: "${{ inputs.sample }}"
+jobs:
+  source:
+    name: Resolve Zed source
+    runs-on: ubuntu-24.04
+    outputs:
+      base_sha: "${{ steps.source.outputs.ZED_BASE_SHA }}"
+      head_sha: "${{ steps.source.outputs.ZED_HEAD_SHA }}"
+      source_repository: "${{ steps.source.outputs.ZED_SOURCE_REPOSITORY }}"
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Prepare declared case
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: zed
+    - name: Read pinned source
+      id: source
+      env:
+        INPUT_BASE_SHA: "${{ inputs.base_sha }}"
+      run: |
+        set -euo pipefail
+        source benchmark-source.env
+        test "$INPUT_BASE_SHA" = "$ZED_HEAD_SHA"
+        sed '/^$/d' benchmark-source.env >> "$GITHUB_OUTPUT"
+    env:
+      BENCHMARK_RUNNER_CLASS: ubuntu-24.04
+  advance:
+    name: BoringCache Zed Cargo commit
+    needs: source
+    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
+      && inputs.runner_label || 'ubuntu-24.04' }}"
+    timeout-minutes: 240
+    env:
+      RESOLVED_BASE_SHA: "${{ inputs.base_sha }}"
+      RESOLVED_HEAD_SHA: "${{ inputs.head_sha }}"
+      RESOLVED_SOURCE_DISTANCE: "${{ inputs.source_distance }}"
+      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
+        == 'main' && inputs.runner_label || 'ubuntu-24.04' }}"
+    steps:
+    - name: Start the workflow timer
+      id: workflow_timer
+      run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Prepare declared case
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: zed
+    - name: Checkout the selected Zed source
+      run: |
+        set -euo pipefail
+        git submodule sync --recursive
+        git -c protocol.version=2 submodule update --init --depth 2 --recommend-shallow --jobs 4 upstream
+        if [[ ! "$RESOLVED_SOURCE_DISTANCE" =~ ^[0-9]+$ ]]; then
+          echo "Invalid source distance: $RESOLVED_SOURCE_DISTANCE" >&2
+          exit 1
+        fi
+        fetch_depth=$((RESOLVED_SOURCE_DISTANCE + 1))
+        git -C upstream fetch --no-tags --depth "$fetch_depth" origin "$RESOLVED_HEAD_SHA"
+        git -C upstream checkout --detach "$RESOLVED_HEAD_SHA"
+        test "$(git -C upstream rev-parse HEAD)" = "$RESOLVED_HEAD_SHA"
+        git -C upstream merge-base --is-ancestor "$RESOLVED_BASE_SHA" "$RESOLVED_HEAD_SHA"
+        test "$(git -C upstream rev-list --count "${RESOLVED_BASE_SHA}..${RESOLVED_HEAD_SHA}")" = "$RESOLVED_SOURCE_DISTANCE"
+        git -C upstream clean -fdx
+        test -z "$(git -C upstream status --porcelain=v1 --untracked-files=all)"
+    - name: Install Zed's release toolchain
+      run: "./scripts/install-zed-toolchain.sh"
+    - name: Install sccache
+      uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba
+      with:
+        version: v0.17.0
+    - name: Free runner disk space
+      run: "./scripts/free-runner-disk.sh"
+    - name: Require an empty destination
+      run: test ! -e upstream/target
+    - name: Start the build timer
+      id: build_timer
+      run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+    - name: Run the released Cargo product
+      id: cache
+      uses: "./.github/actions/boringcache"
+      with:
+        cli-version: "${{ inputs.cli_version }}"
+        mode: cargo
+        trust-policy: publish
+        working-directory: upstream
+    - name: Capture the build timing
+      id: build_timing
+      env:
+        BUILD_STARTED_AT: "${{ steps.build_timer.outputs.started_at }}"
+      run: echo "build_seconds=$(( $(date +%s) - BUILD_STARTED_AT ))" >> "$GITHUB_OUTPUT"
+    - name: Verify the Zed build
+      run: |
+        set -euo pipefail
+        test -x upstream/target/release/zed
+        test -z "$(git -C upstream status --porcelain=v1 --untracked-files=all)"
+    - name: Write the benchmark phase evidence
+      env:
+        WORKFLOW_STARTED_AT: "${{ steps.workflow_timer.outputs.started_at }}"
+        BUILD_SECONDS: "${{ steps.build_timing.outputs.build_seconds }}"
+        CACHE_HIT: "${{ steps.cache.outputs.cache-hit }}"
+        EVIDENCE_PATH: "${{ steps.cache.outputs.evidence-path }}"
+        GITHUB_TOKEN: "${{ github.token }}"
+        SOURCE_REPOSITORY: "${{ needs.source.outputs.source_repository }}"
+        SOURCE_SHA: "${{ env.RESOLVED_HEAD_SHA }}"
+      run: |
+        set -euo pipefail
+        ruby ./scripts/benchmark-report.rb phase \
+          --benchmark zed-cargo \
+          --strategy boringcache \
+          --lane rolling \
+          --phase commit \
+          --mode cargo \
+          --build-seconds "$BUILD_SECONDS" --verified-output \
+          --workflow-seconds "$(( $(date +%s) - WORKFLOW_STARTED_AT ))" \
+          --cache-hit "$CACHE_HIT" \
+          --source-repository "$SOURCE_REPOSITORY" \
+          --source-sha "$SOURCE_SHA" \
+          --evidence "$EVIDENCE_PATH"
+    - name: Publish the Zed Cargo rolling benchmark report
+      run: |
+        ruby ./scripts/benchmark-report.rb summarize \
+          --title "Zed Cargo rolling benchmark" \
+          --input-dir benchmark-results \
+          --output-dir benchmark-results
+    - name: Retain the Zed Cargo rolling result
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-zed-cargo-boringcache-rolling
+        path: benchmark-results/zed-cargo-boringcache-rolling.json
+        if-no-files-found: error
+    - name: Publish rolling run summary
+      run: |
+        {
+          echo "## Zed Cargo rolling run"
+          echo
+          echo "- CLI: \`${{ inputs.cli_version }}\`"
+          echo "- Source: \`${RESOLVED_BASE_SHA}\` → \`${RESOLVED_HEAD_SHA}\`"
+          echo "- Commit distance: \`${RESOLVED_SOURCE_DISTANCE}\`"
+          echo "- Signed target available before the source build: \`${{ steps.cache.outputs.cache-hit }}\`"
+        } >> "$GITHUB_STEP_SUMMARY"
+    - name: Retain product evidence
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: zed-cargo-rolling-${{ env.RESOLVED_HEAD_SHA }}
+        path: "${{ steps.cache.outputs.evidence-path }}"
+        if-no-files-found: error
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+'on':
+  workflow_call:
+    inputs:
+      cli_version: &1
+        description: Optional exact immutable BoringCache CLI release tag.
+        required: false
+        type: string
+        default: ''
+      base_sha: &2
+        description: Source commit currently represented by the published target.
+        required: true
+        type: string
+      head_sha: &3
+        description: Dependency-verified descendant to build and publish as the next
+          seed.
+        required: true
+        type: string
+      source_distance: &4
+        description: Number of first-parent commits from the published seed to the
+          selected source; 0 replays it manually.
+        required: false
+        type: string
+        default: '1'
+      runner_label: &5
+        description: Optional runner label for a manual main-branch experiment.
+        required: false
+        type: string
+        default: ''
+  workflow_dispatch:
+    inputs:
+      cli_version: *1
+      series_id:
+        description: Predeclared series ID; empty for legacy diagnostics
+        type: string
+        required: false
+        default: ''
+      sample:
+        description: Observation number in the predeclared series
+        type: string
+        required: false
+        default: '1'
+      base_sha: *2
+      head_sha: *3
+      source_distance: *4
+      runner_label: *5

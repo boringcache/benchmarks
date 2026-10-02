@@ -1,0 +1,3355 @@
+{
+  "schema_version": 1,
+  "source_surface": "website",
+  "source_revision": "8b90b40fe0a12e3b3f93d806d100b05483aa0c92",
+  "references": [
+    {
+      "url": "https://github.com/boringcache/Stirling-PDF/actions/runs/32013847013/job/95339632696",
+      "files": [
+        "web/app/views/blog/posts/_docker_layer_miss_inner_cache_hit.html.erb"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "Stirling-PDF/32013847013"
+    },
+    {
+      "url": "https://github.com/boringcache/base-images/actions/runs/31700820652",
+      "files": [
+        "web/app/models/marketing_tool_page.rb",
+        "web/config/adapter-guide-content.json",
+        "web/config/marketing_benchmark_evidence.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "base-images/31700820652"
+    },
+    {
+      "url": "https://github.com/boringcache/base-images/actions/runs/31709427865",
+      "files": [
+        "web/app/views/blog/posts/_docker_layer_miss_inner_cache_hit.html.erb"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "base-images/31709427865"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-chroma/actions/runs/31355272642",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-chroma/31355272642"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-deno/actions/runs/31538912668",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-deno/31538912668"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-deno/actions/runs/31538912668/job/93950046673",
+      "files": [
+        "web/app/views/blog/posts/_rust_build_cache_is_three_caches_not_one.html.erb"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-deno/31538912668"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-deno/actions/runs/32838898789/job/97773868637",
+      "files": [
+        "web/app/views/blog/posts/_reusing_large_rust_builds.html.erb"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-deno/32838898789"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-deno/actions/runs/35673704230",
+      "files": [
+        "web/config/marketing_demo.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-deno/35673704230"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-deno/actions/runs/36121614000",
+      "files": [
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-deno/36121614000"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-discourse/actions/runs/29234025211",
+      "files": [
+        "web/config/marketing_benchmark_snapshot.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-discourse/29234025211"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-discourse/actions/runs/29240137345",
+      "files": [
+        "web/config/marketing_benchmark_snapshot.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-discourse/29240137345"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-docker/actions/runs/30089375174",
+      "files": [
+        "web/app/views/blog/posts/_docker_build_done_still_exporting_cache.html.erb"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-docker/30089375174"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-docker/actions/runs/30090229757",
+      "files": [
+        "web/app/views/blog/posts/_docker_build_done_still_exporting_cache.html.erb"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-docker/30090229757"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-docker/actions/runs/30090831887",
+      "files": [
+        "web/app/views/blog/posts/_docker_build_done_still_exporting_cache.html.erb"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-docker/30090831887"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-grpc-bazel/actions/runs/31382784321",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-unavailable",
+      "archive_directory": null
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-grpc/actions/runs/29232804148",
+      "files": [
+        "web/config/marketing_benchmark_snapshot.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-grpc/29232804148"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-grpc/actions/runs/31382784321",
+      "files": [
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-grpc/31382784321"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-grpc/actions/runs/35822236227",
+      "files": [
+        "web/config/marketing_demo.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-grpc/35822236227"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-hugo-go/actions/runs/27092625118",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json",
+        "web/config/marketing_benchmark_snapshot.json",
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-partial",
+      "archive_directory": "benchmark-hugo-go/27092625118"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-hugo/actions/runs/29223295753",
+      "files": [
+        "web/config/marketing_benchmark_snapshot.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-hugo/29223295753"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-hugo/actions/runs/31569885431",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-hugo/31569885431"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-immich/actions/runs/29121976944",
+      "files": [
+        "web/config/marketing_benchmark_snapshot.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-immich/29121976944"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-immich/actions/runs/31569890271",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-immich/31569890271"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-linkerd2/actions/runs/31569891810",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-linkerd2/31569891810"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/29238089830",
+      "files": [
+        "web/config/marketing_benchmark_snapshot.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-mastodon/29238089830"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/29238090976",
+      "files": [
+        "web/config/marketing_benchmark_snapshot.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-mastodon/29238090976"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/35861702773",
+      "files": [
+        "web/config/marketing_demo.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-mastodon/35861702773"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-n8n/actions/runs/29237867482",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json",
+        "web/config/marketing_benchmark_snapshot.json",
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-n8n/29237867482"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-n8n/actions/runs/29237868570",
+      "files": [
+        "web/config/marketing_benchmark_snapshot.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-n8n/29237868570"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-obs-studio/actions/runs/30664501753",
+      "files": [
+        "web/app/models/marketing_tool_page.rb",
+        "web/config/adapter-guide-content.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-obs-studio/30664501753"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-obs-studio/actions/runs/31538912306",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json",
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-obs-studio/31538912306"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/29118580746",
+      "files": [
+        "web/app/models/marketing_tool_page.rb",
+        "web/config/marketing_benchmark_evidence.json",
+        "web/config/marketing_benchmark_snapshot.json",
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-opentelemetry-java/29118580746"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-posthog/actions/runs/29116728265",
+      "files": [
+        "web/app/views/blog/posts/_buildkit_backend_deleted_after_it_worked.html.erb"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-posthog/29116728265"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-posthog/actions/runs/29237882152",
+      "files": [
+        "web/config/marketing_benchmark_snapshot.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-posthog/29237882152"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-posthog/actions/runs/29772448203",
+      "files": [
+        "web/app/views/blog/posts/_buildkit_backend_deleted_after_it_worked.html.erb"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-posthog/29772448203"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-posthog/actions/runs/31569900357",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-posthog/31569900357"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-posthog/actions/runs/36533112590",
+      "files": [
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-posthog/36533112590"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-posthog/actions/runs/36538060810",
+      "files": [
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-posthog/36538060810"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-posthog/actions/runs/36539746463",
+      "files": [
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-posthog/36539746463"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-posthog/pull/5",
+      "files": [
+        "web/app/views/blog/posts/_buildkit_backend_deleted_after_it_worked.html.erb"
+      ],
+      "kind": "historical_discussion",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "pending"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-qdrant/actions/runs/31569902388",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-qdrant/31569902388"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/29232864168",
+      "files": [
+        "web/app/models/marketing_tool_page.rb",
+        "web/config/marketing_benchmark_evidence.json",
+        "web/config/marketing_benchmark_snapshot.json",
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-spring-ai/29232864168"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-storybook/actions/runs/29234064969",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json",
+        "web/config/marketing_benchmark_snapshot.json",
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-storybook/29234064969"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-zed/actions/runs/29213266895",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json",
+        "web/config/marketing_benchmark_snapshot.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-zed/29213266895"
+    },
+    {
+      "url": "https://github.com/boringcache/benchmark-zed/actions/runs/36127607635",
+      "files": [
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "benchmark-zed/36127607635"
+    },
+    {
+      "url": "https://github.com/boringcache/discourse_docker/actions/runs/31700383222",
+      "files": [
+        "web/app/models/marketing_tool_page.rb",
+        "web/config/adapter-guide-content.json",
+        "web/config/marketing_benchmark_evidence.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "discourse_docker/31700383222"
+    },
+    {
+      "url": "https://github.com/boringcache/ferrum-edge/actions/runs/34332425858",
+      "files": [
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "ferrum-edge/34332425858"
+    },
+    {
+      "url": "https://github.com/boringcache/ferrum-edge/actions/runs/34332425858/job/102404067602",
+      "files": [
+        "web/app/views/blog/posts/_cache_not_bigger_runners.html.erb",
+        "web/app/views/blog/posts/_reusing_large_rust_builds.html.erb"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "ferrum-edge/34332425858"
+    },
+    {
+      "url": "https://github.com/boringcache/ferrum-edge/actions/runs/34778481280/job/103781019501",
+      "files": [
+        "web/app/views/blog/posts/_cache_not_bigger_runners.html.erb"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "ferrum-edge/34778481280"
+    },
+    {
+      "url": "https://github.com/boringcache/host-rust-core/actions/runs/35680338088",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "host-rust-core/35680338088"
+    },
+    {
+      "url": "https://github.com/boringcache/host-rust-core/actions/runs/35680338088/job/106595748413",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "host-rust-core/35680338088"
+    },
+    {
+      "url": "https://github.com/boringcache/mastodon/actions/runs/31702508770",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json",
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "mastodon/31702508770"
+    },
+    {
+      "url": "https://github.com/boringcache/mastodon/actions/runs/31703348790",
+      "files": [
+        "web/config/marketing_benchmark_evidence.json",
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "mastodon/31703348790"
+    },
+    {
+      "url": "https://github.com/boringcache/mastodon/actions/runs/31704136355",
+      "files": [
+        "web/app/views/blog/posts/_docker_layer_miss_inner_cache_hit.html.erb",
+        "web/config/marketing_benchmark_evidence.json",
+        "web/config/pilot_cases.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "mastodon/31704136355"
+    },
+    {
+      "url": "https://github.com/boringcache/proteus/actions/runs/31389897449/job/93458865408",
+      "files": [
+        "web/app/views/blog/posts/_docker_build_done_still_exporting_cache.html.erb"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "proteus/31389897449"
+    },
+    {
+      "url": "https://github.com/boringcache/proteus/actions/runs/31390497300",
+      "files": [
+        "web/app/models/marketing_tool_page.rb",
+        "web/config/adapter-guide-content.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "proteus/31390497300"
+    },
+    {
+      "url": "https://github.com/boringcache/proteus/actions/runs/31390497326",
+      "files": [
+        "web/app/models/marketing_tool_page.rb",
+        "web/config/adapter-guide-content.json"
+      ],
+      "kind": "historical_execution",
+      "migration_treatment": "Preserve original URL as provenance; add a central evidence destination only after verified export and publication review",
+      "evidence_audit": "scoped-complete",
+      "archive_directory": "proteus/31390497326"
+    }
+  ],
+  "run_inventories": [
+    {
+      "repository": "boringcache/Stirling-PDF",
+      "run_id": 32013847013,
+      "metadata_state": "available",
+      "created_at": "2026-08-17T09:10:09Z",
+      "head_sha": "e9d0bee185f8d4871db09c19da1a1cb288085091",
+      "path": ".github/workflows/build.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/Stirling-PDF/actions/runs/32013847013",
+      "artifacts": [
+        {
+          "id": 9282874879,
+          "name": "openapi-docs",
+          "size_in_bytes": 46611,
+          "expired": false,
+          "expires_at": "2026-11-15T09:10:11Z"
+        }
+      ],
+      "available_artifact_bytes": 46611,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 8,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "Stirling-PDF/32013847013",
+        "manifest_sha256": "5d1955ff5369ae9b229b5fe147ae0b808a2a6d857778c31c2191ce8224146dd7"
+      }
+    },
+    {
+      "repository": "boringcache/base-images",
+      "run_id": 31700820652,
+      "metadata_state": "available",
+      "created_at": "2026-08-13T12:36:12Z",
+      "head_sha": "bf463a96c04ca8582478303cd66bdf46002555ce",
+      "path": ".github/workflows/boringcache-base-images-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/base-images/actions/runs/31700820652",
+      "artifacts": [],
+      "available_artifact_bytes": 0,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 7,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "base-images/31700820652",
+        "manifest_sha256": "ae9da009c8bcda540d0cdbfb108919a50a70e66120d03e509a49f76788387644"
+      }
+    },
+    {
+      "repository": "boringcache/base-images",
+      "run_id": 31709427865,
+      "metadata_state": "available",
+      "created_at": "2026-08-13T14:17:55Z",
+      "head_sha": "04cbd47c035e7422ac6434bea481eb058aa675b0",
+      "path": ".github/workflows/boringcache-base-images-no-layer.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/base-images/actions/runs/31709427865",
+      "artifacts": [],
+      "available_artifact_bytes": 0,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 7,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "base-images/31709427865",
+        "manifest_sha256": "f4211baac4bc7397ca1913c5409c762bcc76ecb4ad24977c5e8a800ffd5f4e47"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-chroma",
+      "run_id": 31355272642,
+      "metadata_state": "available",
+      "created_at": "2026-08-10T04:22:24Z",
+      "head_sha": "b7368ee2f36bde9a56f2eafd4b889f44be544606",
+      "path": ".github/workflows/chroma-fresh-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-chroma/actions/runs/31355272642",
+      "artifacts": [
+        {
+          "id": 9050856787,
+          "name": "benchmark-chroma-actions-cache-fresh",
+          "size_in_bytes": 646,
+          "expired": false,
+          "expires_at": "2026-11-08T04:22:24Z"
+        },
+        {
+          "id": 9050856519,
+          "name": "benchmark-chroma-boringcache-fresh",
+          "size_in_bytes": 652,
+          "expired": false,
+          "expires_at": "2026-11-08T04:22:24Z"
+        },
+        {
+          "id": 9050853349,
+          "name": "phase-chroma-actions-cache-fresh-warm",
+          "size_in_bytes": 578,
+          "expired": false,
+          "expires_at": "2026-11-08T04:22:24Z"
+        },
+        {
+          "id": 9050851504,
+          "name": "phase-chroma-boringcache-fresh-warm",
+          "size_in_bytes": 630,
+          "expired": false,
+          "expires_at": "2026-11-08T04:22:24Z"
+        },
+        {
+          "id": 9050845033,
+          "name": "phase-chroma-actions-cache-fresh-cold",
+          "size_in_bytes": 580,
+          "expired": false,
+          "expires_at": "2026-11-08T04:22:24Z"
+        },
+        {
+          "id": 9050683146,
+          "name": "phase-chroma-boringcache-fresh-cold",
+          "size_in_bytes": 631,
+          "expired": false,
+          "expires_at": "2026-11-08T04:22:24Z"
+        }
+      ],
+      "available_artifact_bytes": 3717,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 13,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-chroma/31355272642",
+        "manifest_sha256": "84e4495421e6684881d6e432a8aa0b54dea6d0dced1f661ef8c10ca43a397a0e"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-deno",
+      "run_id": 31538912668,
+      "metadata_state": "available",
+      "created_at": "2026-08-11T21:39:37Z",
+      "head_sha": "5fd5ba85fbc1564529aaa450da355915d7e0869d",
+      "path": ".github/workflows/deno-cargo-product.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-deno/actions/runs/31538912668",
+      "artifacts": [
+        {
+          "id": 9122321678,
+          "name": "deno-cargo-product-head",
+          "size_in_bytes": 3030,
+          "expired": false,
+          "expires_at": "2026-11-09T21:39:38Z"
+        },
+        {
+          "id": 9121470803,
+          "name": "deno-cargo-product-base",
+          "size_in_bytes": 2982,
+          "expired": false,
+          "expires_at": "2026-11-09T21:39:38Z"
+        }
+      ],
+      "available_artifact_bytes": 6012,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 9,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-deno/31538912668",
+        "manifest_sha256": "7a0d4e606509da64370757ed7851712eb3f7db5ca1971176651b3aa2403f2ec6"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-deno",
+      "run_id": 32838898789,
+      "metadata_state": "available",
+      "created_at": "2026-08-25T10:46:31Z",
+      "head_sha": "1872882f72f12be7fd489200725a637564ed2220",
+      "path": ".github/workflows/deno-cargo-rolling-chain.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-deno/actions/runs/32838898789",
+      "artifacts": [
+        {
+          "id": 9561268915,
+          "name": "deno-cargo-rolling-5d5600f8b4abb4c94e63bfce1cc5a29373295580",
+          "size_in_bytes": 3386,
+          "expired": false,
+          "expires_at": "2026-11-23T10:46:33Z"
+        },
+        {
+          "id": 9561268212,
+          "name": "benchmark-deno-cargo-boringcache-rolling",
+          "size_in_bytes": 735,
+          "expired": false,
+          "expires_at": "2026-11-23T10:46:33Z"
+        }
+      ],
+      "available_artifact_bytes": 4121,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 9,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-deno/32838898789",
+        "manifest_sha256": "0e7b6b8b6112040c9555bc75d3e4ca5414ce12c2a3f7b5baf09517f61fbfd9a2"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-deno",
+      "run_id": 35673704230,
+      "metadata_state": "available",
+      "created_at": "2026-09-22T00:52:34Z",
+      "head_sha": "48b6eee306ddcb5de35da6b6774ae5540479ddc3",
+      "path": ".github/workflows/deno-cargo-rolling-chain.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-deno/actions/runs/35673704230",
+      "artifacts": [
+        {
+          "id": 10672887851,
+          "name": "deno-cargo-rolling-461f32ec6174d88b7e43654a054d46d67ae2fdab",
+          "size_in_bytes": 3374,
+          "expired": false,
+          "expires_at": "2026-12-21T00:52:36Z"
+        },
+        {
+          "id": 10672429626,
+          "name": "benchmark-deno-cargo-boringcache-rolling",
+          "size_in_bytes": 719,
+          "expired": false,
+          "expires_at": "2026-12-21T00:52:36Z"
+        }
+      ],
+      "available_artifact_bytes": 4093,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 9,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-deno/35673704230",
+        "manifest_sha256": "863a95a0ce0cbfbe9bf3d38e8931fd56066dab71bdf351bd6dde1fb4f99a5758"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-deno",
+      "run_id": 36121614000,
+      "metadata_state": "available",
+      "created_at": "2026-09-25T10:00:40Z",
+      "head_sha": "449235bccea725695a53abb3d89be6cbb311e92d",
+      "path": ".github/workflows/deno-runs-on-cache.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-deno/actions/runs/36121614000",
+      "artifacts": [
+        {
+          "id": 10862962117,
+          "name": "phase-deno-runson-boringcache-source_change",
+          "size_in_bytes": 2738,
+          "expired": false,
+          "expires_at": "2026-12-24T10:00:42Z"
+        },
+        {
+          "id": 10862808098,
+          "name": "deno-runson-cache-comparison",
+          "size_in_bytes": 5329,
+          "expired": false,
+          "expires_at": "2026-12-24T10:00:42Z"
+        },
+        {
+          "id": 10862307575,
+          "name": "phase-deno-runson-runs-on-cache-source_change",
+          "size_in_bytes": 1152,
+          "expired": false,
+          "expires_at": "2026-12-24T10:00:42Z"
+        },
+        {
+          "id": 10861817015,
+          "name": "phase-deno-runson-runs-on-cache-cold",
+          "size_in_bytes": 1118,
+          "expired": false,
+          "expires_at": "2026-12-24T10:00:42Z"
+        },
+        {
+          "id": 10861377408,
+          "name": "phase-deno-runson-boringcache-cold",
+          "size_in_bytes": 2530,
+          "expired": false,
+          "expires_at": "2026-12-24T10:00:42Z"
+        }
+      ],
+      "available_artifact_bytes": 12867,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 12,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-deno/36121614000",
+        "manifest_sha256": "af31f4f2af941b62ced0607dbe9c7171be6d5d6239005c7bbe507f8dc4075a1c"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-discourse",
+      "run_id": 29234025211,
+      "metadata_state": "available",
+      "created_at": "2026-07-13T08:02:24Z",
+      "head_sha": "57bed373c42e8153c96c1b18445316dbf507765e",
+      "path": ".github/workflows/discourse-docker-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-discourse/actions/runs/29234025211",
+      "artifacts": [
+        {
+          "id": 8272743611,
+          "name": "benchmark-discourse-docker-boringcache-rolling",
+          "size_in_bytes": 2747,
+          "expired": false,
+          "expires_at": "2026-10-11T08:02:25Z"
+        },
+        {
+          "id": 8272742240,
+          "name": "benchmark-diagnostics-discourse-docker-boringcache-rolling",
+          "size_in_bytes": 9269,
+          "expired": false,
+          "expires_at": "2026-10-11T08:02:25Z"
+        },
+        {
+          "id": 8272731166,
+          "name": "benchmark-discourse-docker-ecr-cache-rolling",
+          "size_in_bytes": 2178,
+          "expired": false,
+          "expires_at": "2026-10-11T08:02:25Z"
+        },
+        {
+          "id": 8272731030,
+          "name": "benchmark-discourse-docker-actions-cache-rolling",
+          "size_in_bytes": 2287,
+          "expired": false,
+          "expires_at": "2026-10-11T08:02:25Z"
+        },
+        {
+          "id": 8272729491,
+          "name": "benchmark-discourse-docker-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 12801,
+          "expired": false,
+          "expires_at": "2026-10-11T08:02:25Z"
+        },
+        {
+          "id": 8272728237,
+          "name": "benchmark-diagnostics-discourse-docker-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 27952,
+          "expired": false,
+          "expires_at": "2026-10-11T08:02:25Z"
+        }
+      ],
+      "available_artifact_bytes": 57234,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 13,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-discourse/29234025211",
+        "manifest_sha256": "58bef1439e211b1f4001045e0d61817ab74dee5cf3a6b39be270c7f2a936e91f"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-discourse",
+      "run_id": 29240137345,
+      "metadata_state": "available",
+      "created_at": "2026-07-13T09:42:56Z",
+      "head_sha": "0f85eae4b87fe4672cedd7950b683687bd3848f8",
+      "path": ".github/workflows/discourse-image-factory-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-discourse/actions/runs/29240137345",
+      "artifacts": [
+        {
+          "id": 8275061740,
+          "name": "benchmark-discourse-base-deps-boringcache-rolling",
+          "size_in_bytes": 2824,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        },
+        {
+          "id": 8275060934,
+          "name": "benchmark-discourse-test-release-boringcache-rolling",
+          "size_in_bytes": 2843,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        },
+        {
+          "id": 8275060591,
+          "name": "benchmark-diagnostics-discourse-base-deps-boringcache-rolling",
+          "size_in_bytes": 5784,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        },
+        {
+          "id": 8275060461,
+          "name": "benchmark-discourse-test-release-ecr-cache-rolling",
+          "size_in_bytes": 2366,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        },
+        {
+          "id": 8275060456,
+          "name": "benchmark-discourse-base-web-only-actions-cache-rolling",
+          "size_in_bytes": 2380,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        },
+        {
+          "id": 8275060241,
+          "name": "benchmark-discourse-base-deps-ecr-cache-rolling",
+          "size_in_bytes": 2352,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        },
+        {
+          "id": 8275059807,
+          "name": "benchmark-diagnostics-discourse-test-release-boringcache-rolling",
+          "size_in_bytes": 5903,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        },
+        {
+          "id": 8275058780,
+          "name": "benchmark-discourse-base-web-only-ecr-cache-rolling",
+          "size_in_bytes": 2372,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        },
+        {
+          "id": 8275058507,
+          "name": "benchmark-discourse-base-release-ecr-cache-rolling",
+          "size_in_bytes": 2365,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        },
+        {
+          "id": 8275058125,
+          "name": "benchmark-discourse-test-release-actions-cache-rolling",
+          "size_in_bytes": 2368,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        },
+        {
+          "id": 8275057815,
+          "name": "benchmark-discourse-base-web-only-boringcache-rolling",
+          "size_in_bytes": 2854,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        },
+        {
+          "id": 8275057399,
+          "name": "benchmark-discourse-base-deps-actions-cache-rolling",
+          "size_in_bytes": 2355,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        },
+        {
+          "id": 8275056938,
+          "name": "benchmark-diagnostics-discourse-base-web-only-boringcache-rolling",
+          "size_in_bytes": 5937,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        },
+        {
+          "id": 8275056541,
+          "name": "benchmark-discourse-base-release-boringcache-rolling",
+          "size_in_bytes": 2847,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        },
+        {
+          "id": 8275056350,
+          "name": "benchmark-discourse-base-release-actions-cache-rolling",
+          "size_in_bytes": 2370,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        },
+        {
+          "id": 8275055891,
+          "name": "benchmark-diagnostics-discourse-base-release-boringcache-rolling",
+          "size_in_bytes": 6007,
+          "expired": false,
+          "expires_at": "2026-10-11T09:42:57Z"
+        }
+      ],
+      "available_artifact_bytes": 53927,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 23,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-discourse/29240137345",
+        "manifest_sha256": "c18d95612318dcef0bc8e9a3f9e091120e74138470aa55d4006a1e496d2498a3"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-docker",
+      "run_id": 30089375174,
+      "metadata_state": "available",
+      "created_at": "2026-07-24T11:23:08Z",
+      "head_sha": "c8b7927e196c671097b1686a156aae03e2183686",
+      "path": ".github/workflows/docker-cache-proofs.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-docker/actions/runs/30089375174",
+      "artifacts": [
+        {
+          "id": 8595340089,
+          "name": "benchmark-formbricks-web-f95191edde93-gha-actions-cache-rolling",
+          "size_in_bytes": 2349,
+          "expired": false,
+          "expires_at": "2026-10-22T11:23:09Z"
+        },
+        {
+          "id": 8595097398,
+          "name": "benchmark-formbricks-web-f95191edde93-bc-boringcache-rolling",
+          "size_in_bytes": 2863,
+          "expired": false,
+          "expires_at": "2026-10-22T11:23:09Z"
+        },
+        {
+          "id": 8595096063,
+          "name": "benchmark-session-summary-formbricks-web-f95191edde93-bc-boringcache-rolling",
+          "size_in_bytes": 2669,
+          "expired": false,
+          "expires_at": "2026-10-22T11:23:09Z"
+        },
+        {
+          "id": 8595095587,
+          "name": "benchmark-diagnostics-formbricks-web-f95191edde93-bc-boringcache-rolling",
+          "size_in_bytes": 15700,
+          "expired": false,
+          "expires_at": "2026-10-22T11:23:09Z"
+        }
+      ],
+      "available_artifact_bytes": 23581,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 11,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-docker/30089375174",
+        "manifest_sha256": "82229c869bae5609ab65dbb3c8aecf07b3991a4210ecb7dc66a94cd9d9049b6d"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-docker",
+      "run_id": 30090229757,
+      "metadata_state": "available",
+      "created_at": "2026-07-24T11:38:02Z",
+      "head_sha": "c8b7927e196c671097b1686a156aae03e2183686",
+      "path": ".github/workflows/docker-cache-proofs.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-docker/actions/runs/30090229757",
+      "artifacts": [
+        {
+          "id": 8595584119,
+          "name": "benchmark-formbricks-web-7aa4b484b2a4-gha-actions-cache-rolling",
+          "size_in_bytes": 2357,
+          "expired": false,
+          "expires_at": "2026-10-22T11:38:03Z"
+        },
+        {
+          "id": 8595499354,
+          "name": "benchmark-formbricks-web-7aa4b484b2a4-bc-boringcache-rolling",
+          "size_in_bytes": 2872,
+          "expired": false,
+          "expires_at": "2026-10-22T11:38:03Z"
+        },
+        {
+          "id": 8595498087,
+          "name": "benchmark-session-summary-formbricks-web-7aa4b484b2a4-bc-boringcache-rolling",
+          "size_in_bytes": 2707,
+          "expired": false,
+          "expires_at": "2026-10-22T11:38:03Z"
+        },
+        {
+          "id": 8595497791,
+          "name": "benchmark-diagnostics-formbricks-web-7aa4b484b2a4-bc-boringcache-rolling",
+          "size_in_bytes": 17634,
+          "expired": false,
+          "expires_at": "2026-10-22T11:38:03Z"
+        }
+      ],
+      "available_artifact_bytes": 25570,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 11,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-docker/30090229757",
+        "manifest_sha256": "a66ae3d6dab6b67f93a6aa55b2d4116ce62b6754937b6d9864e4ba864f7959e4"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-docker",
+      "run_id": 30090831887,
+      "metadata_state": "available",
+      "created_at": "2026-07-24T11:48:29Z",
+      "head_sha": "c8b7927e196c671097b1686a156aae03e2183686",
+      "path": ".github/workflows/docker-cache-proofs.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-docker/actions/runs/30090831887",
+      "artifacts": [
+        {
+          "id": 8595980419,
+          "name": "benchmark-formbricks-web-218a2ae95ab3-gha-actions-cache-rolling",
+          "size_in_bytes": 2359,
+          "expired": false,
+          "expires_at": "2026-10-22T11:48:30Z"
+        },
+        {
+          "id": 8595702156,
+          "name": "benchmark-formbricks-web-218a2ae95ab3-bc-boringcache-rolling",
+          "size_in_bytes": 2870,
+          "expired": false,
+          "expires_at": "2026-10-22T11:48:30Z"
+        },
+        {
+          "id": 8595700653,
+          "name": "benchmark-session-summary-formbricks-web-218a2ae95ab3-bc-boringcache-rolling",
+          "size_in_bytes": 2675,
+          "expired": false,
+          "expires_at": "2026-10-22T11:48:30Z"
+        },
+        {
+          "id": 8595700181,
+          "name": "benchmark-diagnostics-formbricks-web-218a2ae95ab3-bc-boringcache-rolling",
+          "size_in_bytes": 16911,
+          "expired": false,
+          "expires_at": "2026-10-22T11:48:30Z"
+        }
+      ],
+      "available_artifact_bytes": 24815,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 11,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-docker/30090831887",
+        "manifest_sha256": "b1f9b6b2a501c4a70d2f3e0f839956e99579802c7ac990264001fd386d230128"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-grpc",
+      "run_id": 29232804148,
+      "metadata_state": "available",
+      "created_at": "2026-07-13T07:39:56Z",
+      "head_sha": "c261976da85c93e8df68dd029bc267258b125471",
+      "path": ".github/workflows/grpc-bazel-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/29232804148",
+      "artifacts": [
+        {
+          "id": 8272532619,
+          "name": "benchmark-grpc-bazel-buildbuddy-cache-rolling",
+          "size_in_bytes": 2418,
+          "expired": false,
+          "expires_at": "2026-10-11T07:39:58Z"
+        },
+        {
+          "id": 8272528129,
+          "name": "benchmark-grpc-bazel-actions-cache-rolling",
+          "size_in_bytes": 2606,
+          "expired": false,
+          "expires_at": "2026-10-11T07:39:58Z"
+        },
+        {
+          "id": 8272416249,
+          "name": "benchmark-grpc-bazel-boringcache-rolling",
+          "size_in_bytes": 6577,
+          "expired": false,
+          "expires_at": "2026-10-11T07:39:58Z"
+        },
+        {
+          "id": 8272409853,
+          "name": "benchmark-session-summary-grpc-bazel-boringcache-rolling",
+          "size_in_bytes": 2388,
+          "expired": false,
+          "expires_at": "2026-10-11T07:39:58Z"
+        },
+        {
+          "id": 8272409439,
+          "name": "boringcache-diag-grpc-bazel-rolling-boringcache",
+          "size_in_bytes": 201797,
+          "expired": false,
+          "expires_at": "2026-10-11T07:39:58Z"
+        }
+      ],
+      "available_artifact_bytes": 215786,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 12,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-grpc/29232804148",
+        "manifest_sha256": "54d56016eac4684ad88ddeede329318325866c6aee12cf618192828293a3b680"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-grpc",
+      "run_id": 31382784321,
+      "metadata_state": "available",
+      "created_at": "2026-08-10T11:16:25Z",
+      "head_sha": "0bf3842d9019b85a5f1f2fba09df5a3f9d985747",
+      "path": ".github/workflows/grpc-bazel-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/31382784321",
+      "artifacts": [
+        {
+          "id": 9060680142,
+          "name": "benchmark-grpc-bazel-buildbuddy-rolling",
+          "size_in_bytes": 609,
+          "expired": false,
+          "expires_at": "2026-11-08T11:16:25Z"
+        },
+        {
+          "id": 9060679652,
+          "name": "benchmark-grpc-bazel-actions-cache-rolling",
+          "size_in_bytes": 614,
+          "expired": false,
+          "expires_at": "2026-11-08T11:16:25Z"
+        },
+        {
+          "id": 9060679117,
+          "name": "benchmark-grpc-bazel-boringcache-rolling",
+          "size_in_bytes": 626,
+          "expired": false,
+          "expires_at": "2026-11-08T11:16:25Z"
+        },
+        {
+          "id": 9060674501,
+          "name": "phase-grpc-bazel-actions-cache-rolling-commit",
+          "size_in_bytes": 597,
+          "expired": false,
+          "expires_at": "2026-11-08T11:16:25Z"
+        },
+        {
+          "id": 9060666560,
+          "name": "phase-grpc-bazel-buildbuddy-rolling-commit",
+          "size_in_bytes": 588,
+          "expired": false,
+          "expires_at": "2026-11-08T11:16:25Z"
+        },
+        {
+          "id": 9060624193,
+          "name": "phase-grpc-bazel-boringcache-rolling-commit",
+          "size_in_bytes": 656,
+          "expired": false,
+          "expires_at": "2026-11-08T11:16:25Z"
+        }
+      ],
+      "available_artifact_bytes": 3690,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 13,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-grpc/31382784321",
+        "manifest_sha256": "98cf26c98de46192314b0bcff0f8e34fd08856d84a63e8588cdee9d02e30ca06"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-grpc",
+      "run_id": 35822236227,
+      "metadata_state": "available",
+      "created_at": "2026-09-23T05:23:52Z",
+      "head_sha": "afbb91844e9918279f4e99a931e2d2dd491e106e",
+      "path": ".github/workflows/grpc-bazel-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/35822236227",
+      "artifacts": [
+        {
+          "id": 10734027957,
+          "name": "benchmark-grpc-bazel-actions-cache-rolling",
+          "size_in_bytes": 693,
+          "expired": false,
+          "expires_at": "2026-12-22T05:23:53Z"
+        },
+        {
+          "id": 10733903417,
+          "name": "benchmark-grpc-bazel-buildbuddy-rolling",
+          "size_in_bytes": 634,
+          "expired": false,
+          "expires_at": "2026-12-22T05:23:53Z"
+        },
+        {
+          "id": 10733557453,
+          "name": "phase-grpc-bazel-actions-cache-rolling-commit",
+          "size_in_bytes": 667,
+          "expired": false,
+          "expires_at": "2026-12-22T05:23:53Z"
+        },
+        {
+          "id": 10732969711,
+          "name": "phase-grpc-bazel-boringcache-rolling-commit",
+          "size_in_bytes": 776,
+          "expired": false,
+          "expires_at": "2026-12-22T05:23:53Z"
+        },
+        {
+          "id": 10732959798,
+          "name": "phase-grpc-bazel-buildbuddy-rolling-commit",
+          "size_in_bytes": 606,
+          "expired": false,
+          "expires_at": "2026-12-22T05:23:53Z"
+        },
+        {
+          "id": 10732954849,
+          "name": "benchmark-grpc-bazel-boringcache-rolling",
+          "size_in_bytes": 763,
+          "expired": false,
+          "expires_at": "2026-12-22T05:23:53Z"
+        }
+      ],
+      "available_artifact_bytes": 4139,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 13,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-grpc/35822236227",
+        "manifest_sha256": "85d4b416f940135c549319ab48fbb3e9d7541da8dee8be0b3d92b12b2a73bad6"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-grpc-bazel",
+      "run_id": 31382784321,
+      "metadata_state": "unavailable",
+      "metadata_error": "gh: Not Found (HTTP 404)",
+      "preservation": {
+        "state": "unavailable",
+        "reason": "gh: Not Found (HTTP 404)"
+      },
+      "verified_original_run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/31382784321",
+      "website_correction": "The unavailable legacy repository URL is corrected to the verified original run repository in companion PR 1014; no new execution location is claimed"
+    },
+    {
+      "repository": "boringcache/benchmark-hugo",
+      "run_id": 29223295753,
+      "metadata_state": "available",
+      "created_at": "2026-07-13T04:10:42Z",
+      "head_sha": "b0602cfc5b2064e555323a88274d8ae64a4039ca",
+      "path": ".github/workflows/hugo-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/29223295753",
+      "artifacts": [
+        {
+          "id": 8268886803,
+          "name": "benchmark-hugo-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 3161,
+          "expired": false,
+          "expires_at": "2026-10-11T04:10:42Z"
+        },
+        {
+          "id": 8268886230,
+          "name": "benchmark-hugo-boringcache-rolling",
+          "size_in_bytes": 3002,
+          "expired": false,
+          "expires_at": "2026-10-11T04:10:42Z"
+        },
+        {
+          "id": 8268886180,
+          "name": "benchmark-diagnostics-hugo-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 6355,
+          "expired": false,
+          "expires_at": "2026-10-11T04:10:42Z"
+        },
+        {
+          "id": 8268885591,
+          "name": "benchmark-hugo-actions-cache-rolling",
+          "size_in_bytes": 2507,
+          "expired": false,
+          "expires_at": "2026-10-11T04:10:42Z"
+        },
+        {
+          "id": 8268885570,
+          "name": "benchmark-diagnostics-hugo-boringcache-rolling",
+          "size_in_bytes": 4767,
+          "expired": false,
+          "expires_at": "2026-10-11T04:10:42Z"
+        },
+        {
+          "id": 8268884897,
+          "name": "benchmark-hugo-ecr-cache-rolling",
+          "size_in_bytes": 2442,
+          "expired": false,
+          "expires_at": "2026-10-11T04:10:42Z"
+        }
+      ],
+      "available_artifact_bytes": 22234,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 13,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-hugo/29223295753",
+        "manifest_sha256": "5705a550ece936d08619f25100f14f0a7df27308cfc2d921176c121c4c523c70"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-hugo",
+      "run_id": 31569885431,
+      "metadata_state": "available",
+      "created_at": "2026-08-12T06:24:34Z",
+      "head_sha": "2c173f3be096aa9c410889dc720d4b416e426a58",
+      "path": ".github/workflows/hugo-fresh-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/31569885431",
+      "artifacts": [
+        {
+          "id": 9130995104,
+          "name": "benchmark-hugo-actions-cache-fresh",
+          "size_in_bytes": 657,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:34Z"
+        },
+        {
+          "id": 9130994882,
+          "name": "benchmark-hugo-boringcache-fresh",
+          "size_in_bytes": 731,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:34Z"
+        },
+        {
+          "id": 9130991178,
+          "name": "phase-hugo-actions-cache-fresh-warm",
+          "size_in_bytes": 584,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:34Z"
+        },
+        {
+          "id": 9130991017,
+          "name": "phase-hugo-boringcache-fresh-warm",
+          "size_in_bytes": 702,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:34Z"
+        },
+        {
+          "id": 9130975187,
+          "name": "phase-hugo-actions-cache-fresh-cold",
+          "size_in_bytes": 584,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:34Z"
+        },
+        {
+          "id": 9130965883,
+          "name": "phase-hugo-boringcache-fresh-cold",
+          "size_in_bytes": 702,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:34Z"
+        }
+      ],
+      "available_artifact_bytes": 3960,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 13,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-hugo/31569885431",
+        "manifest_sha256": "490a5af2d09dfdce331de186c73f4533034ce7e49854ea00dc0a6bf45f6c3d18"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-hugo-go",
+      "run_id": 27092625118,
+      "metadata_state": "available",
+      "created_at": "2026-06-07T12:30:39Z",
+      "head_sha": "3da9d9240624cc7d00f10d84ee3aeadda8fcd697",
+      "path": ".github/workflows/hugo-go-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-hugo-go/actions/runs/27092625118",
+      "artifacts": [],
+      "available_artifact_bytes": 0,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "partial",
+        "verified_files": 6,
+        "gaps": [
+          {
+            "resource": "attempts/1/logs.zip",
+            "reason": "GitHub download unavailable for repos/boringcache/benchmark-hugo-go/actions/runs/27092625118/attempts/1/logs"
+          }
+        ],
+        "missing_files": [
+          "attempts/1/logs.zip"
+        ],
+        "archive_directory": "benchmark-hugo-go/27092625118",
+        "manifest_sha256": "57fe380ef6678843b20a6742fab717cadd999e37a5250fec05213b2a2d2162f7"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-immich",
+      "run_id": 29121976944,
+      "metadata_state": "available",
+      "created_at": "2026-07-10T20:36:30Z",
+      "head_sha": "1e436d37e57cc67b1f444b02ba0a657c65875536",
+      "path": ".github/workflows/immich-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-immich/actions/runs/29121976944",
+      "artifacts": [
+        {
+          "id": 8238867568,
+          "name": "benchmark-immich-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 3181,
+          "expired": false,
+          "expires_at": "2026-10-08T20:36:32Z"
+        },
+        {
+          "id": 8238866640,
+          "name": "benchmark-diagnostics-immich-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 9489,
+          "expired": false,
+          "expires_at": "2026-10-08T20:36:32Z"
+        },
+        {
+          "id": 8238862557,
+          "name": "benchmark-immich-ecr-cache-rolling",
+          "size_in_bytes": 2523,
+          "expired": false,
+          "expires_at": "2026-10-08T20:36:32Z"
+        },
+        {
+          "id": 8238858933,
+          "name": "benchmark-immich-boringcache-rolling",
+          "size_in_bytes": 3015,
+          "expired": false,
+          "expires_at": "2026-10-08T20:36:32Z"
+        },
+        {
+          "id": 8238858214,
+          "name": "benchmark-diagnostics-immich-boringcache-rolling",
+          "size_in_bytes": 6792,
+          "expired": false,
+          "expires_at": "2026-10-08T20:36:32Z"
+        },
+        {
+          "id": 8238856369,
+          "name": "benchmark-immich-actions-cache-rolling",
+          "size_in_bytes": 2523,
+          "expired": false,
+          "expires_at": "2026-10-08T20:36:32Z"
+        }
+      ],
+      "available_artifact_bytes": 27523,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 13,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-immich/29121976944",
+        "manifest_sha256": "b92e48b2f20b9e8d40b30fdb453070aa6ee529bce238b98010bfe972f3bcdf8f"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-immich",
+      "run_id": 31569890271,
+      "metadata_state": "available",
+      "created_at": "2026-08-12T06:24:38Z",
+      "head_sha": "87ece83862cf4b2811d67c0222bc190a4a882905",
+      "path": ".github/workflows/immich-fresh-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-immich/actions/runs/31569890271",
+      "artifacts": [
+        {
+          "id": 9131074459,
+          "name": "benchmark-immich-actions-cache-fresh",
+          "size_in_bytes": 660,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:38Z"
+        },
+        {
+          "id": 9131074149,
+          "name": "benchmark-immich-boringcache-fresh",
+          "size_in_bytes": 734,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:38Z"
+        },
+        {
+          "id": 9131069889,
+          "name": "phase-immich-boringcache-fresh-warm",
+          "size_in_bytes": 701,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:38Z"
+        },
+        {
+          "id": 9131068984,
+          "name": "phase-immich-actions-cache-fresh-warm",
+          "size_in_bytes": 585,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:38Z"
+        },
+        {
+          "id": 9131053501,
+          "name": "phase-immich-actions-cache-fresh-cold",
+          "size_in_bytes": 586,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:38Z"
+        },
+        {
+          "id": 9130957502,
+          "name": "phase-immich-boringcache-fresh-cold",
+          "size_in_bytes": 702,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:38Z"
+        }
+      ],
+      "available_artifact_bytes": 3968,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 13,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-immich/31569890271",
+        "manifest_sha256": "c16ab6742fe9e544969797ccb6519ac2526c5f147437169ed0b2f6d1cd254414"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-linkerd2",
+      "run_id": 31569891810,
+      "metadata_state": "available",
+      "created_at": "2026-08-12T06:24:40Z",
+      "head_sha": "6a742e8ee1f3fd4f00a039a924febf43a94d7f7e",
+      "path": ".github/workflows/linkerd2-fresh-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-linkerd2/actions/runs/31569891810",
+      "artifacts": [
+        {
+          "id": 9130991749,
+          "name": "benchmark-linkerd2-v2-actions-cache-fresh",
+          "size_in_bytes": 676,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:40Z"
+        },
+        {
+          "id": 9130991166,
+          "name": "benchmark-linkerd2-v2-boringcache-fresh",
+          "size_in_bytes": 752,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:40Z"
+        },
+        {
+          "id": 9130986632,
+          "name": "phase-linkerd2-v2-actions-cache-fresh-warm",
+          "size_in_bytes": 601,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:40Z"
+        },
+        {
+          "id": 9130982908,
+          "name": "phase-linkerd2-v2-boringcache-fresh-warm",
+          "size_in_bytes": 720,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:40Z"
+        },
+        {
+          "id": 9130972366,
+          "name": "phase-linkerd2-v2-actions-cache-fresh-cold",
+          "size_in_bytes": 603,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:40Z"
+        },
+        {
+          "id": 9130947583,
+          "name": "phase-linkerd2-v2-boringcache-fresh-cold",
+          "size_in_bytes": 721,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:40Z"
+        }
+      ],
+      "available_artifact_bytes": 4073,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 13,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-linkerd2/31569891810",
+        "manifest_sha256": "d850d575e2e6c0ce3135eb3cfff832359a2575d4b034c2dcc930fc56f2250e4a"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-mastodon",
+      "run_id": 29238089830,
+      "metadata_state": "available",
+      "created_at": "2026-07-13T09:10:50Z",
+      "head_sha": "8de517dc2f5042bb620b819300130f17abd50139",
+      "path": ".github/workflows/mastodon-streaming-docker-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/29238089830",
+      "artifacts": [
+        {
+          "id": 8274266941,
+          "name": "benchmark-mastodon-streaming-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 3216,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:52Z"
+        },
+        {
+          "id": 8274265527,
+          "name": "benchmark-mastodon-streaming-boringcache-rolling",
+          "size_in_bytes": 3151,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:52Z"
+        },
+        {
+          "id": 8274265293,
+          "name": "benchmark-diagnostics-mastodon-streaming-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 6104,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:52Z"
+        },
+        {
+          "id": 8274264348,
+          "name": "benchmark-diagnostics-mastodon-streaming-boringcache-rolling",
+          "size_in_bytes": 6036,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:52Z"
+        },
+        {
+          "id": 8274264200,
+          "name": "benchmark-mastodon-streaming-ecr-cache-rolling",
+          "size_in_bytes": 2665,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:52Z"
+        },
+        {
+          "id": 8274263391,
+          "name": "benchmark-mastodon-streaming-actions-cache-rolling",
+          "size_in_bytes": 2681,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:52Z"
+        }
+      ],
+      "available_artifact_bytes": 23853,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 13,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-mastodon/29238089830",
+        "manifest_sha256": "da35b53d5513c418555e3bce953366a549515947cad876da519c2f13f33f053b"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-mastodon",
+      "run_id": 29238090976,
+      "metadata_state": "available",
+      "created_at": "2026-07-13T09:10:51Z",
+      "head_sha": "8de517dc2f5042bb620b819300130f17abd50139",
+      "path": ".github/workflows/mastodon-docker-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/29238090976",
+      "artifacts": [
+        {
+          "id": 8274336555,
+          "name": "benchmark-mastodon-boringcache-rolling",
+          "size_in_bytes": 3031,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:53Z"
+        },
+        {
+          "id": 8274335187,
+          "name": "benchmark-diagnostics-mastodon-boringcache-rolling",
+          "size_in_bytes": 9560,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:53Z"
+        },
+        {
+          "id": 8274314436,
+          "name": "benchmark-mastodon-oci-sccache-boringcache-rolling",
+          "size_in_bytes": 8684,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:53Z"
+        },
+        {
+          "id": 8274313069,
+          "name": "benchmark-diagnostics-mastodon-oci-sccache-boringcache-rolling",
+          "size_in_bytes": 53371,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:53Z"
+        },
+        {
+          "id": 8274311201,
+          "name": "benchmark-mastodon-ecr-cache-rolling",
+          "size_in_bytes": 2566,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:53Z"
+        },
+        {
+          "id": 8274307725,
+          "name": "benchmark-mastodon-actions-cache-rolling",
+          "size_in_bytes": 2574,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:53Z"
+        },
+        {
+          "id": 8274298636,
+          "name": "benchmark-mastodon-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 3092,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:53Z"
+        },
+        {
+          "id": 8274298298,
+          "name": "benchmark-mastodon-bc-buildkit-sccache-boringcache-rolling",
+          "size_in_bytes": 15684,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:53Z"
+        },
+        {
+          "id": 8274297452,
+          "name": "benchmark-diagnostics-mastodon-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 8429,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:53Z"
+        },
+        {
+          "id": 8274297052,
+          "name": "benchmark-diagnostics-mastodon-bc-buildkit-sccache-boringcache-rolling",
+          "size_in_bytes": 35325,
+          "expired": false,
+          "expires_at": "2026-10-11T09:10:53Z"
+        }
+      ],
+      "available_artifact_bytes": 142316,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 17,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-mastodon/29238090976",
+        "manifest_sha256": "829b0e78aa47be0e03cdeeedfff4eefd87bb1d26ac1e7d8fb348753a31a66f30"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-mastodon",
+      "run_id": 35861702773,
+      "metadata_state": "available",
+      "created_at": "2026-09-23T12:37:57Z",
+      "head_sha": "ddd4bf7e61196daac7d1a2fc2a749c4c7a508ecd",
+      "path": ".github/workflows/mastodon-docker-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/35861702773",
+      "artifacts": [
+        {
+          "id": 10750832563,
+          "name": "benchmark-mastodon-streaming-boringcache-rolling",
+          "size_in_bytes": 741,
+          "expired": false,
+          "expires_at": "2026-12-22T12:37:58Z"
+        },
+        {
+          "id": 10750722319,
+          "name": "phase-mastodon-boringcache-rolling-commit",
+          "size_in_bytes": 743,
+          "expired": false,
+          "expires_at": "2026-12-22T12:37:58Z"
+        },
+        {
+          "id": 10750627703,
+          "name": "benchmark-mastodon-actions-cache-rolling",
+          "size_in_bytes": 636,
+          "expired": false,
+          "expires_at": "2026-12-22T12:37:58Z"
+        },
+        {
+          "id": 10750617720,
+          "name": "benchmark-mastodon-boringcache-rolling",
+          "size_in_bytes": 715,
+          "expired": false,
+          "expires_at": "2026-12-22T12:37:58Z"
+        },
+        {
+          "id": 10750582447,
+          "name": "phase-mastodon-sccache-boringcache-rolling-commit",
+          "size_in_bytes": 762,
+          "expired": false,
+          "expires_at": "2026-12-22T12:37:58Z"
+        },
+        {
+          "id": 10750417725,
+          "name": "benchmark-mastodon-sccache-boringcache-rolling",
+          "size_in_bytes": 736,
+          "expired": false,
+          "expires_at": "2026-12-22T12:37:58Z"
+        },
+        {
+          "id": 10750352751,
+          "name": "benchmark-mastodon-streaming-actions-cache-rolling",
+          "size_in_bytes": 660,
+          "expired": false,
+          "expires_at": "2026-12-22T12:37:58Z"
+        },
+        {
+          "id": 10750347771,
+          "name": "phase-mastodon-actions-cache-rolling-commit",
+          "size_in_bytes": 611,
+          "expired": false,
+          "expires_at": "2026-12-22T12:37:58Z"
+        },
+        {
+          "id": 10749954613,
+          "name": "phase-mastodon-streaming-actions-cache-rolling-commit",
+          "size_in_bytes": 631,
+          "expired": false,
+          "expires_at": "2026-12-22T12:37:58Z"
+        },
+        {
+          "id": 10749704761,
+          "name": "phase-mastodon-streaming-boringcache-rolling-commit",
+          "size_in_bytes": 768,
+          "expired": false,
+          "expires_at": "2026-12-22T12:37:58Z"
+        }
+      ],
+      "available_artifact_bytes": 7003,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 17,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-mastodon/35861702773",
+        "manifest_sha256": "9aa886b29e71454a0d7ae3e063fc06f9d9d5c5f0bc1b0ce317346c6a0d0ec2da"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-n8n",
+      "run_id": 29237867482,
+      "metadata_state": "available",
+      "created_at": "2026-07-13T09:07:22Z",
+      "head_sha": "4ffecd12afac798f11e339a7eabbae709dd5cd5d",
+      "path": ".github/workflows/n8n-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-n8n/actions/runs/29237867482",
+      "artifacts": [
+        {
+          "id": 8274305971,
+          "name": "benchmark-n8n-actions-cache-rolling",
+          "size_in_bytes": 2495,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:24Z"
+        },
+        {
+          "id": 8274287286,
+          "name": "benchmark-n8n-boringcache-rolling",
+          "size_in_bytes": 2855,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:24Z"
+        }
+      ],
+      "available_artifact_bytes": 5350,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 9,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-n8n/29237867482",
+        "manifest_sha256": "5c798edc05c2b8f331f526a72b1e64287cf061a5f200d9760894dc5301d7eda4"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-n8n",
+      "run_id": 29237868570,
+      "metadata_state": "available",
+      "created_at": "2026-07-13T09:07:23Z",
+      "head_sha": "4ffecd12afac798f11e339a7eabbae709dd5cd5d",
+      "path": ".github/workflows/n8n-docker-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-n8n/actions/runs/29237868570",
+      "artifacts": [
+        {
+          "id": 8274494858,
+          "name": "benchmark-n8n-docker-boringcache-rolling",
+          "size_in_bytes": 3053,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274493461,
+          "name": "benchmark-diagnostics-n8n-docker-boringcache-rolling",
+          "size_in_bytes": 7296,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274476752,
+          "name": "benchmark-n8n-docker-actions-cache-rolling",
+          "size_in_bytes": 2443,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274467680,
+          "name": "benchmark-n8n-docker-ecr-cache-rolling",
+          "size_in_bytes": 2554,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274450013,
+          "name": "benchmark-n8n-docker-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 3216,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274449113,
+          "name": "benchmark-diagnostics-n8n-docker-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 7368,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274417905,
+          "name": "benchmark-n8n-runners-distroless-actions-cache-rolling",
+          "size_in_bytes": 2510,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274399689,
+          "name": "benchmark-n8n-runners-actions-cache-rolling",
+          "size_in_bytes": 2450,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274381543,
+          "name": "benchmark-n8n-runners-distroless-ecr-cache-rolling",
+          "size_in_bytes": 2550,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274368027,
+          "name": "benchmark-n8n-runners-ecr-cache-rolling",
+          "size_in_bytes": 2538,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274367550,
+          "name": "benchmark-n8n-runners-distroless-boringcache-rolling",
+          "size_in_bytes": 3133,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274366182,
+          "name": "benchmark-n8n-runners-distroless-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 3106,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274366156,
+          "name": "benchmark-diagnostics-n8n-runners-distroless-boringcache-rolling",
+          "size_in_bytes": 9625,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274364686,
+          "name": "benchmark-diagnostics-n8n-runners-distroless-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 4784,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274362798,
+          "name": "benchmark-n8n-runners-boringcache-rolling",
+          "size_in_bytes": 3072,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274361378,
+          "name": "benchmark-diagnostics-n8n-runners-boringcache-rolling",
+          "size_in_bytes": 8077,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274357120,
+          "name": "benchmark-n8n-runners-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 3035,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        },
+        {
+          "id": 8274356073,
+          "name": "benchmark-diagnostics-n8n-runners-bc-buildkit-boringcache-rolling",
+          "size_in_bytes": 7659,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:25Z"
+        }
+      ],
+      "available_artifact_bytes": 78469,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 25,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-n8n/29237868570",
+        "manifest_sha256": "9d53ba19d3a23955babf14dd4ab181e61570dcd229774ba3fefc131e4d39e187"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-obs-studio",
+      "run_id": 30664501753,
+      "metadata_state": "available",
+      "created_at": "2026-07-31T20:52:01Z",
+      "head_sha": "27e5301f5f6847e323cf545522a4c99edf678b38",
+      "path": ".github/workflows/obs-xcode-continuation.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-obs-studio/actions/runs/30664501753",
+      "artifacts": [],
+      "available_artifact_bytes": 0,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 7,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-obs-studio/30664501753",
+        "manifest_sha256": "3fad50cf70c7c12954674c46d273774175bc44ec10dd81f503b126eb7707b26e"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-obs-studio",
+      "run_id": 31538912306,
+      "metadata_state": "available",
+      "created_at": "2026-08-11T21:39:37Z",
+      "head_sha": "3cc0c496e2d7543bc4f7e6b5617cf326467508fb",
+      "path": ".github/workflows/obs-boringcache.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-obs-studio/actions/runs/31538912306",
+      "artifacts": [],
+      "available_artifact_bytes": 0,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 7,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-obs-studio/31538912306",
+        "manifest_sha256": "9f223a739c6de7ebefc618a402207a7249e605369ec65d60b2871f8397cc65d7"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-opentelemetry-java",
+      "run_id": 29118580746,
+      "metadata_state": "available",
+      "created_at": "2026-07-10T19:36:34Z",
+      "head_sha": "c919cb9ecd6fa1004d3fc1ca1b6a97ef0d43955a",
+      "path": ".github/workflows/opentelemetry-java-gradle-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/29118580746",
+      "artifacts": [
+        {
+          "id": 8237811906,
+          "name": "benchmark-otel-gradle-actions-cache-rolling",
+          "size_in_bytes": 2611,
+          "expired": false,
+          "expires_at": "2026-10-08T19:36:36Z"
+        },
+        {
+          "id": 8237810255,
+          "name": "benchmark-otel-gradle-boringcache-rolling",
+          "size_in_bytes": 2956,
+          "expired": false,
+          "expires_at": "2026-10-08T19:36:36Z"
+        }
+      ],
+      "available_artifact_bytes": 5567,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 9,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-opentelemetry-java/29118580746",
+        "manifest_sha256": "160fc7168d633ef0a51a025292c7733b52698bc3bf3a5ea34bf9c1e68cda86ea"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-posthog",
+      "run_id": 29116728265,
+      "metadata_state": "available",
+      "created_at": "2026-07-10T19:03:50Z",
+      "head_sha": "da3e2b4f52e9e0d9dc2df50332b4dc454eed42a7",
+      "path": ".github/workflows/state-sync-real.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/29116728265",
+      "artifacts": [
+        {
+          "id": 8237272233,
+          "name": "benchmark-posthog-bc-buildkit-mountcache-boringcache-rolling",
+          "size_in_bytes": 3446,
+          "expired": false,
+          "expires_at": "2026-10-08T19:03:51Z"
+        },
+        {
+          "id": 8237271130,
+          "name": "benchmark-diagnostics-posthog-bc-buildkit-mountcache-boringcache-rolling",
+          "size_in_bytes": 5301,
+          "expired": false,
+          "expires_at": "2026-10-08T19:03:51Z"
+        }
+      ],
+      "available_artifact_bytes": 8747,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 9,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-posthog/29116728265",
+        "manifest_sha256": "c0e00da5710d12f47f7cc4ee3a6dd80af0289dec0d80b011a11b16545066c812"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-posthog",
+      "run_id": 29237882152,
+      "metadata_state": "available",
+      "created_at": "2026-07-13T09:07:36Z",
+      "head_sha": "dd1c96ff66bf9434d362a3dd2f1df11607c6072a",
+      "path": ".github/workflows/posthog-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/29237882152",
+      "artifacts": [
+        {
+          "id": 8274692036,
+          "name": "benchmark-posthog-actions-cache-rolling",
+          "size_in_bytes": 2885,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:38Z"
+        },
+        {
+          "id": 8274583470,
+          "name": "benchmark-posthog-ecr-cache-rolling",
+          "size_in_bytes": 2881,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:38Z"
+        },
+        {
+          "id": 8274511709,
+          "name": "benchmark-posthog-boringcache-rolling",
+          "size_in_bytes": 3488,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:38Z"
+        },
+        {
+          "id": 8274510546,
+          "name": "benchmark-diagnostics-posthog-boringcache-rolling",
+          "size_in_bytes": 12387,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:38Z"
+        },
+        {
+          "id": 8274405132,
+          "name": "benchmark-arm-posthog-bc-buildkit-mountcache-boringcache-rolling",
+          "size_in_bytes": 26139,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:38Z"
+        },
+        {
+          "id": 8274403730,
+          "name": "benchmark-diagnostics-arm-posthog-bc-buildkit-mountcache-boringcache-rolling",
+          "size_in_bytes": 61814,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:38Z"
+        },
+        {
+          "id": 8274373514,
+          "name": "benchmark-posthog-bc-buildkit-mountcache-boringcache-rolling",
+          "size_in_bytes": 26699,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:38Z"
+        },
+        {
+          "id": 8274372145,
+          "name": "benchmark-diagnostics-posthog-bc-buildkit-mountcache-boringcache-rolling",
+          "size_in_bytes": 66460,
+          "expired": false,
+          "expires_at": "2026-10-11T09:07:38Z"
+        }
+      ],
+      "available_artifact_bytes": 202753,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 15,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-posthog/29237882152",
+        "manifest_sha256": "0f5a5fb0ff7570d4640313362f2cca68bc66540b8423bd798c1bb51d35b1ad9a"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-posthog",
+      "run_id": 29772448203,
+      "metadata_state": "available",
+      "created_at": "2026-07-20T19:33:05Z",
+      "head_sha": "11b3f00a890de2a7c1a715af70725a10d83a3395",
+      "path": ".github/workflows/state-sync-v13-cas.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/29772448203",
+      "artifacts": [],
+      "available_artifact_bytes": 0,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 7,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-posthog/29772448203",
+        "manifest_sha256": "dad23d98e56232d55dbae13bfb24c76a09ab422d6cedbea006a295495df9d4b6"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-posthog",
+      "run_id": 31569900357,
+      "metadata_state": "available",
+      "created_at": "2026-08-12T06:24:48Z",
+      "head_sha": "568c2001685cb230faa9ffdc0cae1660d9603610",
+      "path": ".github/workflows/posthog-fresh-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/31569900357",
+      "artifacts": [
+        {
+          "id": 9131848966,
+          "name": "benchmark-posthog-toolcache-boringcache-fresh",
+          "size_in_bytes": 775,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:48Z"
+        },
+        {
+          "id": 9131848687,
+          "name": "benchmark-posthog-actions-cache-fresh",
+          "size_in_bytes": 671,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:48Z"
+        },
+        {
+          "id": 9131848392,
+          "name": "benchmark-posthog-boringcache-fresh",
+          "size_in_bytes": 744,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:48Z"
+        },
+        {
+          "id": 9131843762,
+          "name": "phase-posthog-actions-cache-fresh-warm",
+          "size_in_bytes": 595,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:48Z"
+        },
+        {
+          "id": 9131797827,
+          "name": "phase-posthog-actions-cache-fresh-cold",
+          "size_in_bytes": 598,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:48Z"
+        },
+        {
+          "id": 9131328462,
+          "name": "phase-posthog-toolcache-boringcache-fresh-warm",
+          "size_in_bytes": 741,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:48Z"
+        },
+        {
+          "id": 9131301877,
+          "name": "phase-posthog-toolcache-boringcache-fresh-cold",
+          "size_in_bytes": 741,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:48Z"
+        },
+        {
+          "id": 9131269343,
+          "name": "phase-posthog-boringcache-fresh-warm",
+          "size_in_bytes": 710,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:48Z"
+        },
+        {
+          "id": 9131244361,
+          "name": "phase-posthog-boringcache-fresh-cold",
+          "size_in_bytes": 709,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:48Z"
+        }
+      ],
+      "available_artifact_bytes": 6284,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 16,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-posthog/31569900357",
+        "manifest_sha256": "ff8f959f5d53a0e6bcd01ec4ea549f42abb25a1e449f737b177ca43cb6810d9c"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-posthog",
+      "run_id": 36533112590,
+      "metadata_state": "available",
+      "created_at": "2026-09-29T06:49:28Z",
+      "head_sha": "98b0e41b6f9d0c835a45aaabf04af09028b03969",
+      "path": ".github/workflows/posthog-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/36533112590",
+      "artifacts": [
+        {
+          "id": 11018690168,
+          "name": "benchmark-posthog-toolcache-mountcache-boringcache-rolling",
+          "size_in_bytes": 932,
+          "expired": false,
+          "expires_at": "2026-12-28T06:49:29Z"
+        },
+        {
+          "id": 11018101514,
+          "name": "benchmark-posthog-boringcache-linux-arm64-rolling",
+          "size_in_bytes": 896,
+          "expired": false,
+          "expires_at": "2026-12-28T06:49:29Z"
+        },
+        {
+          "id": 11018101510,
+          "name": "benchmark-posthog-boringcache-rolling",
+          "size_in_bytes": 869,
+          "expired": false,
+          "expires_at": "2026-12-28T06:49:29Z"
+        },
+        {
+          "id": 11018037219,
+          "name": "benchmark-posthog-actions-cache-rolling",
+          "size_in_bytes": 739,
+          "expired": false,
+          "expires_at": "2026-12-28T06:49:29Z"
+        },
+        {
+          "id": 11018016045,
+          "name": "phase-posthog-boringcache-linux-arm64-rolling-commit",
+          "size_in_bytes": 913,
+          "expired": false,
+          "expires_at": "2026-12-28T06:49:29Z"
+        },
+        {
+          "id": 11018013717,
+          "name": "benchmark-posthog-no-layer-toolcache-mountcache-boringcache-rolling",
+          "size_in_bytes": 955,
+          "expired": false,
+          "expires_at": "2026-12-28T06:49:29Z"
+        },
+        {
+          "id": 11017828572,
+          "name": "phase-posthog-no-layer-toolcache-mountcache-boringcache-rolling-commit",
+          "size_in_bytes": 974,
+          "expired": false,
+          "expires_at": "2026-12-28T06:49:29Z"
+        },
+        {
+          "id": 11017813268,
+          "name": "phase-posthog-boringcache-rolling-commit",
+          "size_in_bytes": 887,
+          "expired": false,
+          "expires_at": "2026-12-28T06:49:29Z"
+        },
+        {
+          "id": 11017723992,
+          "name": "phase-posthog-toolcache-mountcache-boringcache-rolling-commit",
+          "size_in_bytes": 952,
+          "expired": false,
+          "expires_at": "2026-12-28T06:49:29Z"
+        },
+        {
+          "id": 11017089312,
+          "name": "phase-posthog-actions-cache-rolling-commit",
+          "size_in_bytes": 711,
+          "expired": false,
+          "expires_at": "2026-12-28T06:49:29Z"
+        }
+      ],
+      "available_artifact_bytes": 8828,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 17,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-posthog/36533112590",
+        "manifest_sha256": "6cd631d16f5d0d4aebde43f7c5b310cb9acf0c8aa8e41c35c32689d32b94d693"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-posthog",
+      "run_id": 36538060810,
+      "metadata_state": "available",
+      "created_at": "2026-09-29T07:40:41Z",
+      "head_sha": "af326430bfd3d851ed66f4d151598b97a5c31227",
+      "path": ".github/workflows/posthog-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/36538060810",
+      "artifacts": [
+        {
+          "id": 11020580325,
+          "name": "benchmark-posthog-toolcache-mountcache-boringcache-rolling",
+          "size_in_bytes": 931,
+          "expired": false,
+          "expires_at": "2026-12-28T07:40:42Z"
+        },
+        {
+          "id": 11020525471,
+          "name": "benchmark-posthog-actions-cache-rolling",
+          "size_in_bytes": 741,
+          "expired": false,
+          "expires_at": "2026-12-28T07:40:42Z"
+        },
+        {
+          "id": 11020520506,
+          "name": "benchmark-posthog-boringcache-linux-arm64-rolling",
+          "size_in_bytes": 900,
+          "expired": false,
+          "expires_at": "2026-12-28T07:40:42Z"
+        },
+        {
+          "id": 11020420454,
+          "name": "phase-posthog-actions-cache-rolling-commit",
+          "size_in_bytes": 714,
+          "expired": false,
+          "expires_at": "2026-12-28T07:40:42Z"
+        },
+        {
+          "id": 11019941808,
+          "name": "phase-posthog-boringcache-rolling-commit",
+          "size_in_bytes": 888,
+          "expired": false,
+          "expires_at": "2026-12-28T07:40:42Z"
+        },
+        {
+          "id": 11019916502,
+          "name": "phase-posthog-boringcache-linux-arm64-rolling-commit",
+          "size_in_bytes": 916,
+          "expired": false,
+          "expires_at": "2026-12-28T07:40:42Z"
+        },
+        {
+          "id": 11019854039,
+          "name": "benchmark-posthog-boringcache-rolling",
+          "size_in_bytes": 871,
+          "expired": false,
+          "expires_at": "2026-12-28T07:40:42Z"
+        },
+        {
+          "id": 11019817429,
+          "name": "phase-posthog-toolcache-mountcache-boringcache-rolling-commit",
+          "size_in_bytes": 949,
+          "expired": false,
+          "expires_at": "2026-12-28T07:40:42Z"
+        },
+        {
+          "id": 11019464979,
+          "name": "benchmark-posthog-no-layer-toolcache-mountcache-boringcache-rolling",
+          "size_in_bytes": 957,
+          "expired": false,
+          "expires_at": "2026-12-28T07:40:42Z"
+        },
+        {
+          "id": 11019289197,
+          "name": "phase-posthog-no-layer-toolcache-mountcache-boringcache-rolling-commit",
+          "size_in_bytes": 976,
+          "expired": false,
+          "expires_at": "2026-12-28T07:40:42Z"
+        }
+      ],
+      "available_artifact_bytes": 8843,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 17,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-posthog/36538060810",
+        "manifest_sha256": "9d821a931184c0865d4ba7b4308ddb00f96a5760511c854236eb8bf5f4606921"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-posthog",
+      "run_id": 36539746463,
+      "metadata_state": "available",
+      "created_at": "2026-09-29T07:57:35Z",
+      "head_sha": "522af5684f669c1d7ef185c9317be5a3c61e72a8",
+      "path": ".github/workflows/posthog-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/36539746463",
+      "artifacts": [
+        {
+          "id": 11021420174,
+          "name": "phase-posthog-actions-cache-rolling-commit",
+          "size_in_bytes": 711,
+          "expired": false,
+          "expires_at": "2026-12-28T07:57:36Z"
+        },
+        {
+          "id": 11021162971,
+          "name": "benchmark-posthog-no-layer-toolcache-mountcache-boringcache-rolling",
+          "size_in_bytes": 955,
+          "expired": false,
+          "expires_at": "2026-12-28T07:57:36Z"
+        },
+        {
+          "id": 11021023791,
+          "name": "benchmark-posthog-boringcache-linux-arm64-rolling",
+          "size_in_bytes": 897,
+          "expired": false,
+          "expires_at": "2026-12-28T07:57:36Z"
+        },
+        {
+          "id": 11021018810,
+          "name": "benchmark-posthog-toolcache-mountcache-boringcache-rolling",
+          "size_in_bytes": 930,
+          "expired": false,
+          "expires_at": "2026-12-28T07:57:36Z"
+        },
+        {
+          "id": 11020863407,
+          "name": "phase-posthog-no-layer-toolcache-mountcache-boringcache-rolling-commit",
+          "size_in_bytes": 975,
+          "expired": false,
+          "expires_at": "2026-12-28T07:57:36Z"
+        },
+        {
+          "id": 11020841734,
+          "name": "phase-posthog-boringcache-rolling-commit",
+          "size_in_bytes": 887,
+          "expired": false,
+          "expires_at": "2026-12-28T07:57:36Z"
+        },
+        {
+          "id": 11020267532,
+          "name": "phase-posthog-toolcache-mountcache-boringcache-rolling-commit",
+          "size_in_bytes": 950,
+          "expired": false,
+          "expires_at": "2026-12-28T07:57:36Z"
+        },
+        {
+          "id": 11020214769,
+          "name": "benchmark-posthog-actions-cache-rolling",
+          "size_in_bytes": 737,
+          "expired": false,
+          "expires_at": "2026-12-28T07:57:36Z"
+        },
+        {
+          "id": 11020089988,
+          "name": "benchmark-posthog-boringcache-rolling",
+          "size_in_bytes": 870,
+          "expired": false,
+          "expires_at": "2026-12-28T07:57:36Z"
+        },
+        {
+          "id": 11020022651,
+          "name": "phase-posthog-boringcache-linux-arm64-rolling-commit",
+          "size_in_bytes": 913,
+          "expired": false,
+          "expires_at": "2026-12-28T07:57:36Z"
+        }
+      ],
+      "available_artifact_bytes": 8825,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 17,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-posthog/36539746463",
+        "manifest_sha256": "453de2eba2a01a2acd131df7604dda5ef655adb14a9a9ba237914d6a8b7208ca"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-qdrant",
+      "run_id": 31569902388,
+      "metadata_state": "available",
+      "created_at": "2026-08-12T06:24:50Z",
+      "head_sha": "76d717232f1a8d93c9a57536a2e57fd446933f22",
+      "path": ".github/workflows/qdrant-fresh-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-qdrant/actions/runs/31569902388",
+      "artifacts": [
+        {
+          "id": 9131266249,
+          "name": "benchmark-qdrant-actions-cache-fresh",
+          "size_in_bytes": 662,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:50Z"
+        },
+        {
+          "id": 9131265744,
+          "name": "benchmark-qdrant-boringcache-fresh",
+          "size_in_bytes": 739,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:50Z"
+        },
+        {
+          "id": 9131260285,
+          "name": "phase-qdrant-actions-cache-fresh-warm",
+          "size_in_bytes": 585,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:50Z"
+        },
+        {
+          "id": 9131259021,
+          "name": "phase-qdrant-boringcache-fresh-warm",
+          "size_in_bytes": 703,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:50Z"
+        },
+        {
+          "id": 9131242592,
+          "name": "phase-qdrant-actions-cache-fresh-cold",
+          "size_in_bytes": 585,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:50Z"
+        },
+        {
+          "id": 9131112918,
+          "name": "phase-qdrant-boringcache-fresh-cold",
+          "size_in_bytes": 706,
+          "expired": false,
+          "expires_at": "2026-11-10T06:24:50Z"
+        }
+      ],
+      "available_artifact_bytes": 3980,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 13,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-qdrant/31569902388",
+        "manifest_sha256": "4478030a8cb137db32453eff46e77db9ff5608ff5b1d18f79df142794d9d7b30"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-spring-ai",
+      "run_id": 29232864168,
+      "metadata_state": "available",
+      "created_at": "2026-07-13T07:41:03Z",
+      "head_sha": "92c9bcf4c3174880e6f828b24bf45164b87739b9",
+      "path": ".github/workflows/spring-ai-maven-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/29232864168",
+      "artifacts": [
+        {
+          "id": 8272252035,
+          "name": "benchmark-spring-ai-maven-boringcache-rolling",
+          "size_in_bytes": 2808,
+          "expired": false,
+          "expires_at": "2026-10-11T07:41:04Z"
+        },
+        {
+          "id": 8272243336,
+          "name": "benchmark-spring-ai-maven-actions-cache-rolling",
+          "size_in_bytes": 2565,
+          "expired": false,
+          "expires_at": "2026-10-11T07:41:04Z"
+        }
+      ],
+      "available_artifact_bytes": 5373,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 9,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-spring-ai/29232864168",
+        "manifest_sha256": "d0794d7f2bd3d3ed5110e8dd78d9cc2d3ce66d93fe5eda6e20b1a85d785957f3"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-storybook",
+      "run_id": 29234064969,
+      "metadata_state": "available",
+      "created_at": "2026-07-13T08:03:07Z",
+      "head_sha": "a2d7084f5fef8a95099f04e7c4883c4050067cbb",
+      "path": ".github/workflows/storybook-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-storybook/actions/runs/29234064969",
+      "artifacts": [
+        {
+          "id": 8272726912,
+          "name": "benchmark-storybook-actions-cache-rolling",
+          "size_in_bytes": 2522,
+          "expired": false,
+          "expires_at": "2026-10-11T08:03:09Z"
+        },
+        {
+          "id": 8272700793,
+          "name": "benchmark-storybook-boringcache-rolling",
+          "size_in_bytes": 2975,
+          "expired": false,
+          "expires_at": "2026-10-11T08:03:09Z"
+        }
+      ],
+      "available_artifact_bytes": 5497,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 9,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-storybook/29234064969",
+        "manifest_sha256": "0140d27d27369e7207e72c6c82300c905f262c0f8d1991665d7eb7680f9c609b"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-zed",
+      "run_id": 29213266895,
+      "metadata_state": "available",
+      "created_at": "2026-07-12T23:21:56Z",
+      "head_sha": "36a1c395df7bcb68313953f2bbaae48f75eb8adc",
+      "path": ".github/workflows/zed-sccache-benchmark.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-zed/actions/runs/29213266895",
+      "artifacts": [
+        {
+          "id": 8266484874,
+          "name": "benchmark-zed-sccache-boringcache-rolling",
+          "size_in_bytes": 6827,
+          "expired": false,
+          "expires_at": "2026-10-10T23:21:57Z"
+        },
+        {
+          "id": 8266478745,
+          "name": "benchmark-session-summary-zed-sccache-boringcache-rolling",
+          "size_in_bytes": 1840,
+          "expired": false,
+          "expires_at": "2026-10-10T23:21:57Z"
+        },
+        {
+          "id": 8266478571,
+          "name": "boringcache-diag-zed-sccache-rolling-boringcache",
+          "size_in_bytes": 242787,
+          "expired": false,
+          "expires_at": "2026-10-10T23:21:57Z"
+        },
+        {
+          "id": 8266478087,
+          "name": "benchmark-native-tool-zed-sccache-boringcache-build",
+          "size_in_bytes": 590,
+          "expired": false,
+          "expires_at": "2026-10-10T23:21:57Z"
+        },
+        {
+          "id": 8266473079,
+          "name": "benchmark-zed-sccache-actions-cache-rolling",
+          "size_in_bytes": 3123,
+          "expired": false,
+          "expires_at": "2026-10-10T23:21:57Z"
+        },
+        {
+          "id": 8266459295,
+          "name": "benchmark-native-tool-zed-sccache-actions-cache-build",
+          "size_in_bytes": 641,
+          "expired": false,
+          "expires_at": "2026-10-10T23:21:57Z"
+        }
+      ],
+      "available_artifact_bytes": 255808,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 13,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-zed/29213266895",
+        "manifest_sha256": "0ebe860c4edd1c85b0292d6c17c51a90b8426ab00c8e012a8285665f139c82a2"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-zed",
+      "run_id": 36127607635,
+      "metadata_state": "available",
+      "created_at": "2026-09-25T11:06:40Z",
+      "head_sha": "6d2f670dab06d405bc83d4d719bd9e3dd7c1a6d5",
+      "path": ".github/workflows/zed-runs-on-cache.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/benchmark-zed/actions/runs/36127607635",
+      "artifacts": [
+        {
+          "id": 10861838153,
+          "name": "phase-zed-runson-boringcache-source_change",
+          "size_in_bytes": 2639,
+          "expired": false,
+          "expires_at": "2026-12-24T11:06:42Z"
+        },
+        {
+          "id": 10861683306,
+          "name": "phase-zed-runson-runs-on-cache-source_change",
+          "size_in_bytes": 1084,
+          "expired": false,
+          "expires_at": "2026-12-24T11:06:42Z"
+        },
+        {
+          "id": 10861276032,
+          "name": "phase-zed-runson-boringcache-cold",
+          "size_in_bytes": 2640,
+          "expired": false,
+          "expires_at": "2026-12-24T11:06:42Z"
+        },
+        {
+          "id": 10861256057,
+          "name": "phase-zed-runson-runs-on-cache-cold",
+          "size_in_bytes": 1050,
+          "expired": false,
+          "expires_at": "2026-12-24T11:06:42Z"
+        },
+        {
+          "id": 10860904346,
+          "name": "zed-runson-cache-comparison",
+          "size_in_bytes": 2254,
+          "expired": false,
+          "expires_at": "2026-12-24T11:06:42Z"
+        }
+      ],
+      "available_artifact_bytes": 9667,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 12,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "benchmark-zed/36127607635",
+        "manifest_sha256": "584742fd3026674e5f754945dd61c94453c21146991fe766d55433a1820cf0f2"
+      }
+    },
+    {
+      "repository": "boringcache/discourse_docker",
+      "run_id": 31700383222,
+      "metadata_state": "available",
+      "created_at": "2026-08-13T12:30:47Z",
+      "head_sha": "53338986d7f9b9de9c852254df0e3f13432b201e",
+      "path": ".github/workflows/boringcache-container-cache.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/discourse_docker/actions/runs/31700383222",
+      "artifacts": [],
+      "available_artifact_bytes": 0,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 7,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "discourse_docker/31700383222",
+        "manifest_sha256": "98060053f32763bb9feb5498cf2fdc8f57ef08de1d9d1f2aeb376f324b0fe37e"
+      }
+    },
+    {
+      "repository": "boringcache/ferrum-edge",
+      "run_id": 34332425858,
+      "metadata_state": "available",
+      "created_at": "2026-09-09T09:02:11Z",
+      "head_sha": "416c966062ea8e391c64b66d75d2bf3570eb8d1f",
+      "path": ".github/workflows/ci.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/ferrum-edge/actions/runs/34332425858",
+      "artifacts": [
+        {
+          "id": 10096334748,
+          "name": "third-party-licenses",
+          "size_in_bytes": 6035,
+          "expired": false,
+          "expires_at": "2026-10-09T09:03:20Z"
+        }
+      ],
+      "available_artifact_bytes": 6035,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 8,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "ferrum-edge/34332425858",
+        "manifest_sha256": "3c8405b3789354a60d1a4d3e2c40b295adacfaa84053ffc8ce56e434a47c3bf2"
+      }
+    },
+    {
+      "repository": "boringcache/ferrum-edge",
+      "run_id": 34778481280,
+      "metadata_state": "available",
+      "created_at": "2026-09-13T19:41:51Z",
+      "head_sha": "c8dd30211fae44381aa8ebd46b8895a1708818e0",
+      "path": ".github/workflows/fuzz-cache-inspection.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/ferrum-edge/actions/runs/34778481280",
+      "artifacts": [],
+      "available_artifact_bytes": 0,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 7,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "ferrum-edge/34778481280",
+        "manifest_sha256": "221e069b73564d755b13f1ccde4491c06fb63aaa58767eb447846ae53b574c05"
+      }
+    },
+    {
+      "repository": "boringcache/host-rust-core",
+      "run_id": 35680338088,
+      "metadata_state": "available",
+      "created_at": "2026-09-22T02:40:53Z",
+      "head_sha": "8f17fa371db39a2cbf6aa33fb277fa5d1478b2c9",
+      "path": ".github/workflows/boringcache-rolling.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/host-rust-core/actions/runs/35680338088",
+      "artifacts": [
+        {
+          "id": 10675057562,
+          "name": "GitHub-commit",
+          "size_in_bytes": 18513,
+          "expired": false,
+          "expires_at": "2026-10-22T02:48:21Z"
+        },
+        {
+          "id": 10674641898,
+          "name": "BoringCache-commit",
+          "size_in_bytes": 21061,
+          "expired": false,
+          "expires_at": "2026-10-22T02:48:29Z"
+        }
+      ],
+      "available_artifact_bytes": 39574,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 9,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "host-rust-core/35680338088",
+        "manifest_sha256": "c2c93f526df565b04c6bc8fde1acd07f86808fe00c952a056b8827357c3dbce3"
+      }
+    },
+    {
+      "repository": "boringcache/mastodon",
+      "run_id": 31702508770,
+      "metadata_state": "available",
+      "created_at": "2026-08-13T12:57:18Z",
+      "head_sha": "d3b834cde029c68ee1c33304689e2fb3d2a2fc11",
+      "path": ".github/workflows/boringcache-container-cache.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/mastodon/actions/runs/31702508770",
+      "artifacts": [],
+      "available_artifact_bytes": 0,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 7,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "mastodon/31702508770",
+        "manifest_sha256": "191e067cc7f29234c71abccc0a57758cebc76e50bb78936d8e124b5f8c56195b"
+      }
+    },
+    {
+      "repository": "boringcache/mastodon",
+      "run_id": 31703348790,
+      "metadata_state": "available",
+      "created_at": "2026-08-13T13:07:26Z",
+      "head_sha": "c79b0061b02e7db288acfab1073ab1e2d9906843",
+      "path": ".github/workflows/boringcache-container-cache.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/mastodon/actions/runs/31703348790",
+      "artifacts": [],
+      "available_artifact_bytes": 0,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 7,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "mastodon/31703348790",
+        "manifest_sha256": "1ead50dc860b0b9195fb2374bcbc0be478eff105b7188480fa4a62c18464498e"
+      }
+    },
+    {
+      "repository": "boringcache/mastodon",
+      "run_id": 31704136355,
+      "metadata_state": "available",
+      "created_at": "2026-08-13T13:17:02Z",
+      "head_sha": "64caf4a4c31b114bdb485a7a7e80f5bf2e1e3fc4",
+      "path": ".github/workflows/boringcache-container-cache.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/mastodon/actions/runs/31704136355",
+      "artifacts": [],
+      "available_artifact_bytes": 0,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 7,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "mastodon/31704136355",
+        "manifest_sha256": "01e03a44d876a8b5a516c9060ee1c48659dd0eaf150b45adbf1c7bf366cacbe4"
+      }
+    },
+    {
+      "repository": "boringcache/proteus",
+      "run_id": 31389897449,
+      "metadata_state": "available",
+      "created_at": "2026-08-10T12:50:18Z",
+      "head_sha": "4341e405ea4210df747bf5500235bb5d6678c1d2",
+      "path": ".github/workflows/image.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/proteus/actions/runs/31389897449",
+      "artifacts": [],
+      "available_artifact_bytes": 0,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 7,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "proteus/31389897449",
+        "manifest_sha256": "0cd0d69dc3e5fa202e0d255248512926e618fb586b0e70d71123384d3380e458"
+      }
+    },
+    {
+      "repository": "boringcache/proteus",
+      "run_id": 31390497300,
+      "metadata_state": "available",
+      "created_at": "2026-08-10T12:57:50Z",
+      "head_sha": "d536ce7f513d5af5d9b3f659337b0288d701af91",
+      "path": ".github/workflows/image.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/proteus/actions/runs/31390497300",
+      "artifacts": [],
+      "available_artifact_bytes": 0,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 7,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "proteus/31390497300",
+        "manifest_sha256": "f3c4b9abbff97c2c42d44a1fe2490e5ef6225229fb1cde59965ddb217beeb109"
+      }
+    },
+    {
+      "repository": "boringcache/proteus",
+      "run_id": 31390497326,
+      "metadata_state": "available",
+      "created_at": "2026-08-10T12:57:50Z",
+      "head_sha": "d536ce7f513d5af5d9b3f659337b0288d701af91",
+      "path": ".github/workflows/check.yml",
+      "run_attempt": 1,
+      "conclusion": "success",
+      "html_url": "https://github.com/boringcache/proteus/actions/runs/31390497326",
+      "artifacts": [],
+      "available_artifact_bytes": 0,
+      "expired_artifact_count": 0,
+      "preservation": {
+        "state": "complete",
+        "verified_files": 7,
+        "gaps": [],
+        "missing_files": [],
+        "archive_directory": "proteus/31390497326",
+        "manifest_sha256": "41122a2b86da68ad5a70a6918bbccd319ed20aae9c805ae052b6c1062460a136"
+      }
+    }
+  ],
+  "limits": "Listed website run resources were exported and independently verified against their manifests. One export has unavailable logs and remains partial. This does not audit every branch, experiment, outside reference, or historical claim methodology. Original execution URLs remain provenance.",
+  "bundle": {
+    "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+    "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-website-runs-2026-10-02/website-runs-2026-10-02.tar",
+    "sha256": "17e8454a83b9baa1344addbd18391b954400fc44dbe446784a4b2bdbb589c720",
+    "bundle_bytes": 46902784,
+    "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified each exported run's listed files and inventory",
+    "verified_on": "2026-10-02",
+    "scope": "Listed website references and available run resources; not all branches, experiments, or outside references"
+  }
+}

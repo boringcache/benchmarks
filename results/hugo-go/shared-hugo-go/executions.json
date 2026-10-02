@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "executions": [
+    {
+      "run_id": 37017469085,
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37017469085",
+      "head_sha": "e6a4030e908cff132c942db574a8819597caccea",
+      "ref": "benchmark-consolidation",
+      "sample": 1,
+      "caller_workflow": ".github/workflows/guardrails.yml",
+      "called_workflow": ".github/workflows/native-fresh-benchmark.yml",
+      "qualification": "hugo-go",
+      "series_id": "shared-hugo-go",
+      "created_at": "2026-10-02T14:05:43Z",
+      "event": "workflow_dispatch",
+      "provenance_source": "Preserved run metadata, phase records, and reviewed qualification caller; original dispatch response was not retained"
+    },
+    {
+      "run_id": 37017742296,
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37017742296",
+      "head_sha": "e6a4030e908cff132c942db574a8819597caccea",
+      "ref": "benchmark-consolidation",
+      "sample": 2,
+      "caller_workflow": ".github/workflows/guardrails.yml",
+      "called_workflow": ".github/workflows/native-fresh-benchmark.yml",
+      "qualification": "hugo-go",
+      "series_id": "shared-hugo-go",
+      "created_at": "2026-10-02T14:08:07Z",
+      "event": "workflow_dispatch",
+      "provenance_source": "Preserved run metadata, phase records, and reviewed qualification caller; original dispatch response was not retained"
+    }
+  ]
+}

@@ -1,0 +1,220 @@
+name: Run n8n Turbo benchmark phase
+description: Runs one n8n Turbo cache provider and phase.
+inputs:
+  benchmark_id:
+    required: true
+  strategy:
+    required: true
+  cache_lane:
+    required: true
+  phase:
+    required: true
+  cli_version:
+    required: false
+    default: ''
+  node_version:
+    required: true
+runs:
+  using: composite
+  steps:
+  - name: Start the workflow timer
+    id: workflow_timer
+    shell: bash
+    run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+  - name: Validate benchmark strategy
+    shell: bash
+    env:
+      STRATEGY: "${{ inputs.strategy }}"
+    run: |
+      case "$STRATEGY" in
+        actions-cache|boringcache) ;;
+        *)
+          echo "Unsupported benchmark strategy: $STRATEGY" >&2
+          exit 1
+          ;;
+      esac
+  - name: Checkout pinned n8n source
+    shell: bash
+    run: |
+      git submodule sync --recursive
+      git -c protocol.version=2 submodule update --init --depth 1 --recommend-shallow --jobs 4 upstream
+  - name: Verify the upstream benchmark recipe
+    shell: bash
+    run: ruby ./scripts/verify-upstream-recipe.rb
+  - name: Prepare clean n8n source
+    shell: bash
+    env:
+      PREPARE_PHASE: "${{ inputs.phase == 'warm' && 'warm1' || 'base' }}"
+    run: ruby ./scripts/prepare-source.rb "$PREPARE_PHASE"
+  - name: Select the cache cohort
+    id: scope
+    shell: bash
+    env:
+      BENCHMARK_ID: "${{ inputs.benchmark_id }}"
+      CACHE_LANE: "${{ inputs.cache_lane }}"
+    run: |
+      set -euo pipefail
+      ref_slug="$(printf '%s' "$GITHUB_REF_NAME" | tr -c 'A-Za-z0-9._-' '-')"
+      ref_slug="${ref_slug#-}"
+      ref_slug="${ref_slug%-}"
+      ref_slug="${ref_slug:-main}"
+      if [[ "$CACHE_LANE" == "rolling" ]]; then
+        cache_scope="${BENCHMARK_ID}-rolling-${ref_slug}"
+      else
+        cache_scope="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
+      fi
+      if [[ -n "${BENCHMARK_SERIES_ID:-}" ]]; then
+        [[ "$BENCHMARK_SERIES_ID" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]] || exit 1
+        [[ "${BENCHMARK_SAMPLE:-}" =~ ^[1-9][0-9]*$ ]] || exit 1
+        if [[ "$CACHE_LANE" == "rolling" ]]; then
+          cache_scope="${BENCHMARK_ID:-benchmark}-series-${BENCHMARK_SERIES_ID}"
+        else
+          cache_scope="${BENCHMARK_ID:-benchmark}-series-${BENCHMARK_SERIES_ID}-s${BENCHMARK_SAMPLE}-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
+        fi
+      fi
+      ruby ./scripts/scope-case-cache.rb "$cache_scope"
+      source_sha="$(git rev-parse HEAD:upstream)"
+      echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
+      echo "cache_key=turbo-${cache_scope}-${source_sha}" >> "$GITHUB_OUTPUT"
+      echo "source_repository=n8n-io/n8n" >> "$GITHUB_OUTPUT"
+      echo "source_sha=${source_sha}" >> "$GITHUB_OUTPUT"
+  - name: Set up Node.js
+    uses: ./.github/actions/setup-node
+    with:
+      node-version: "${{ inputs.node_version }}"
+  - name: Enable the pinned pnpm release
+    shell: bash
+    working-directory: upstream
+    run: |
+      corepack enable
+      corepack install
+  - name: Start the provider setup timer
+    id: setup_timer
+    shell: bash
+    run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+  - name: Restore the GitHub Actions cache
+    if: inputs.strategy == 'actions-cache' && inputs.phase == 'publish'
+    uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25
+    with:
+      path: upstream/.turbo
+      key: "${{ steps.scope.outputs.cache_key }}"
+      restore-keys: 'turbo-${{ steps.scope.outputs.cache_scope }}-
+
+        '
+    id: actions_cache_0
+  - name: Restore the exact GitHub Actions cache
+    if: inputs.strategy == 'actions-cache' && inputs.phase == 'warm'
+    uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25
+    with:
+      path: upstream/.turbo
+      key: "${{ steps.scope.outputs.cache_key }}"
+      fail-on-cache-miss: true
+    id: actions_cache_1
+  - name: Publish with BoringCache
+    id: boringcache-publish
+    if: inputs.strategy == 'boringcache' && inputs.phase == 'publish'
+    uses: ./.github/actions/boringcache
+    with:
+      cli-version: "${{ inputs.cli_version }}"
+      mode: turbo
+      trust-policy: publish
+      working-directory: upstream
+  - name: Restore with BoringCache
+    id: boringcache-restore
+    if: inputs.strategy == 'boringcache' && inputs.phase == 'warm'
+    uses: ./.github/actions/boringcache
+    with:
+      cli-version: "${{ inputs.cli_version }}"
+      mode: turbo
+      trust-policy: restore
+      working-directory: upstream
+      fail-on-cache-miss: true
+  - name: Start the build timer
+    id: build_timer
+    shell: bash
+    env:
+      SETUP_STARTED_AT: "${{ steps.setup_timer.outputs.started_at }}"
+    run: |
+      set -euo pipefail
+      now="$(date +%s)"
+      echo "setup_seconds=$(( now - SETUP_STARTED_AT ))" >> "$GITHUB_OUTPUT"
+      echo "started_at=${now}" >> "$GITHUB_OUTPUT"
+  - name: Install n8n dependencies
+    shell: bash
+    working-directory: upstream
+    env:
+      CI: '1'
+      GITHUB_TOKEN: "${{ github.token }}"
+    run: corepack pnpm install --frozen-lockfile
+  - name: Build n8n
+    shell: bash
+    env:
+      CI: '1'
+    run: ruby ./scripts/run-benchmark-plan.rb turbo --working-directory upstream
+  - name: Capture the build timing
+    id: build_timing
+    shell: bash
+    env:
+      BUILD_STARTED_AT: "${{ steps.build_timer.outputs.started_at }}"
+    run: echo "build_seconds=$(( $(date +%s) - BUILD_STARTED_AT ))" >> "$GITHUB_OUTPUT"
+  - name: Verify the n8n build
+    shell: bash
+    run: test -s upstream/packages/cli/dist/index.js
+  - name: Retain publish evidence
+    if: inputs.strategy == 'boringcache' && inputs.phase == 'publish'
+    uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+    with:
+      name: n8n-turbo-${{ inputs.cache_lane }}-publish
+      path: "${{ steps.boringcache-publish.outputs.evidence-path }}"
+      if-no-files-found: error
+  - name: Retain warm evidence
+    if: inputs.strategy == 'boringcache' && inputs.phase == 'warm'
+    uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+    with:
+      name: n8n-turbo-fresh-restore
+      path: "${{ steps.boringcache-restore.outputs.evidence-path }}"
+      if-no-files-found: error
+  - name: Write the benchmark phase evidence
+    shell: bash
+    env:
+      BENCHMARK_ID: "${{ inputs.benchmark_id }}"
+      STRATEGY: "${{ inputs.strategy }}"
+      CACHE_LANE: "${{ inputs.cache_lane }}"
+      REPORT_PHASE: "${{ inputs.cache_lane == 'rolling' && 'commit' || inputs.phase
+        == 'warm' && 'warm' || 'cold' }}"
+      WORKFLOW_STARTED_AT: "${{ steps.workflow_timer.outputs.started_at }}"
+      SETUP_SECONDS: "${{ steps.build_timer.outputs.setup_seconds }}"
+      BUILD_SECONDS: "${{ steps.build_timing.outputs.build_seconds }}"
+      CACHE_HIT: "${{ steps.boringcache-publish.outputs.cache-hit || steps.boringcache-restore.outputs.cache-hit
+        || steps.actions_cache_0.outputs.cache-hit || steps.actions_cache_1.outputs.cache-hit
+        }}"
+      EVIDENCE_PATH: "${{ steps.boringcache-publish.outputs.evidence-path || steps.boringcache-restore.outputs.evidence-path
+        }}"
+      STORAGE_KEY: "${{ steps.scope.outputs.cache_key }}"
+      GITHUB_TOKEN: "${{ github.token }}"
+      SOURCE_REPOSITORY: "${{ steps.scope.outputs.source_repository }}"
+      SOURCE_SHA: "${{ steps.scope.outputs.source_sha }}"
+    run: |
+      set -euo pipefail
+      ruby ./scripts/benchmark-report.rb phase --verified-output \
+        --benchmark "$BENCHMARK_ID" \
+        --strategy "$STRATEGY" \
+        --lane "$CACHE_LANE" \
+        --phase "$REPORT_PHASE" \
+        --mode turbo \
+        --restore-or-setup-seconds "$SETUP_SECONDS" \
+        --workflow-seconds "$(( $(date +%s) - WORKFLOW_STARTED_AT ))" \
+        --build-seconds "$BUILD_SECONDS" \
+        --cache-hit "$CACHE_HIT" \
+        --source-repository "$SOURCE_REPOSITORY" \
+        --source-sha "$SOURCE_SHA" \
+        --storage-key "$STORAGE_KEY" \
+        --evidence "$EVIDENCE_PATH"
+  - name: Retain the benchmark phase evidence
+    uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+    with:
+      name: phase-${{ inputs.benchmark_id }}-${{ inputs.strategy }}-${{ inputs.cache_lane
+        }}-${{ inputs.cache_lane == 'rolling' && 'commit' || inputs.phase == 'warm'
+        && 'warm' || 'cold' }}
+      path: benchmark-results/
+      if-no-files-found: error

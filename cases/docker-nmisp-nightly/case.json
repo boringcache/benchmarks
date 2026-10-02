@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "id": "docker-nmisp-nightly",
+  "kind": "evaluation",
+  "adapter": "docker",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "kangwonlee/nmisp",
+    "pins": [
+      {
+        "path": "recipe.json",
+        "revision": "593c05fd675ed2bc9bc9884d0d12f829ced1438e",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "2695cef895e6ae33d1f5cd77c85ef98f58688324",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "72bf502e51fbbf2a19ea828078b9a50a347e4bfa",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "1177d6062e41fd843d37032702c610a6a385c6a9",
+        "kind": "recipe"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-docker",
+    "branch": "main",
+    "revision": "9683d048b619c39dfd4cda87d81648dff5862c27"
+  },
+  "execution": {
+    "sync": "fixed",
+    "workflows": [
+      {
+        "path": ".github/workflows/docker-cache-proofs.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "nmisp-nightly",
+          "ref_key": "main",
+          "cache_lane": "fresh"
+        },
+        "variants": [
+          "linux-amd64",
+          "linux-arm64"
+        ]
+      },
+      {
+        "path": ".github/workflows/docker-cache-proofs.yml",
+        "lane": "rolling",
+        "inputs": {
+          "case_id": "nmisp-nightly",
+          "ref_key": "main",
+          "cache_lane": "rolling"
+        },
+        "variants": [
+          "linux-amd64",
+          "linux-arm64"
+        ]
+      }
+    ]
+  },
+  "reporting": {
+    "entries": [],
+    "publication": "evaluation-only"
+  },
+  "verification": [
+    "Pinned upstream workflow fidelity",
+    "Declared Docker output"
+  ],
+  "comparison": {
+    "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+    "providers": [
+      "boringcache"
+    ],
+    "timed_scope": "Declared Docker build, including dependencies, cache import/export and declared image output",
+    "primary_metric": "correctness",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}

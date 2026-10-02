@@ -1,0 +1,45 @@
+name: Propose Upstream Source Updates
+on:
+  workflow_dispatch:
+    inputs:
+      case_id:
+        description: Optional case ID; empty inspects all maintained source schedules
+        type: string
+        default: ''
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: benchmark-source-proposals
+  cancel-in-progress: false
+jobs:
+  propose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+        with:
+          ruby-version: 3.4.4
+      - run: bundle install --jobs 4 --retry 2
+      - name: Prepare reviewed source proposals
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CASE_ID: ${{ inputs.case_id }}
+        run: |
+          args=()
+          [[ -z "$CASE_ID" ]] || args+=(--case "$CASE_ID")
+          ruby scripts/sync-sources.rb "${args[@]}" --output "$RUNNER_TEMP/source-proposals.json"
+      - name: Retain proposed definitions and qualification requirements
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: source-proposals
+          path: |
+            ${{ runner.temp }}/source-proposals.json
+            cases/*/case.json
+            cases/*/payload/benchmark-source.env
+          if-no-files-found: error
+          retention-days: 90

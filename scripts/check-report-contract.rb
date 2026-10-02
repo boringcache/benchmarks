@@ -1,7 +1,17 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require "rbconfig"
+
 require "yaml"
+
+if ARGV.empty? && !ENV["BENCHMARK_REPOS_DIR"]
+  require "bundler/setup"
+  require_relative "benchmark-cases"
+  BenchmarkCases.contract_views do |directory|
+    exit(system(RbConfig.ruby, __FILE__, directory) ? 0 : 1)
+  end
+end
 
 def default_repos_dir
   candidates = [
@@ -183,7 +193,7 @@ def action_variant_input(repo_dir, uses)
 end
 
 def phase_flags(run)
-  segment = run[/benchmark-report\.py\s+phase\b.*/m].to_s
+  segment = run[/benchmark-report\.rb\s+phase\b.*/m].to_s
   segment.scan(/--(benchmark|strategy|lane|phase|variant)[= ]+"?([^"\s\\]*)"?/).to_h
 end
 
@@ -204,7 +214,7 @@ def producers_for(workflow:, repo_dir:, job_id:, job:)
           "phase" => workflow.resolve(with["phase"].to_s, matrix),
           "variant" => variant_input && variant != DEFAULT_PLATFORM ? variant : ""
         }
-      elsif step["run"].to_s.match?(/benchmark-report\.py\s+phase\b/)
+      elsif step["run"].to_s.match?(/benchmark-report\.rb\s+phase\b/)
         shell_env = workflow.shell_env_for(job, step, matrix)
         fields = phase_flags(step["run"].to_s).transform_values { |value| workflow.resolve(value, matrix, shell_env) }
       else
@@ -253,16 +263,16 @@ def download_patterns(workflow:, job:)
 end
 
 def summarizing?(job)
-  Array(job["steps"]).any? { |step| step.is_a?(Hash) && step["run"].to_s.include?("benchmark-report.py summarize") }
+  Array(job["steps"]).any? { |step| step.is_a?(Hash) && step["run"].to_s.include?("benchmark-report.rb summarize") }
 end
 
-SUMMARIZE_FLAGS = %w[title input-dir output-dir].freeze
+SUMMARIZE_FLAGS = %w[title input-dir output-dir baseline-strategy].freeze
 
 def summarize_flags(job)
   Array(job["steps"]).flat_map do |step|
     next [] unless step.is_a?(Hash)
 
-    step["run"].to_s[/benchmark-report\.py\s+summarize\b.*/m].to_s.scan(/--([a-z-]+)/).flatten
+    step["run"].to_s[/benchmark-report\.rb\s+summarize\b.*/m].to_s.scan(/--([a-z-]+)/).flatten
   end.uniq
 end
 
@@ -271,17 +281,17 @@ CANARY_SUFFIX = "-canary"
 repos_dir = ARGV[0] || ENV.fetch("BENCHMARK_REPOS_DIR", default_repos_dir)
 abort "benchmark repos directory not found: #{repos_dir}" unless Dir.exist?(repos_dir)
 
-canonical_reporter = File.expand_path("canonical/benchmark-report.py", __dir__)
+canonical_reporter = File.expand_path("canonical/benchmark-report.rb", __dir__)
 errors = []
 checked = 0
 
 Dir[File.join(repos_dir, "benchmark-*")].select { |path| File.directory?(path) }.sort.each do |repo_dir|
   repo = File.basename(repo_dir)
 
-  reporter = File.join(repo_dir, "scripts", "benchmark-report.py")
+  reporter = File.join(repo_dir, "scripts", "benchmark-report.rb")
   # Chroma adds sccache proof fields to the shared reporter.
-  if repo != "benchmark-chroma" && File.file?(reporter) && File.file?(canonical_reporter) && File.read(reporter) != File.read(canonical_reporter)
-    errors << "#{repo}/scripts/benchmark-report.py: has drifted from scripts/canonical/benchmark-report.py"
+  if File.file?(reporter) && File.file?(canonical_reporter) && File.read(reporter) != File.read(canonical_reporter)
+    errors << "#{repo}/scripts/benchmark-report.rb: has drifted from scripts/canonical/benchmark-report.rb"
   end
 
   Dir[File.join(repo_dir, ".github", "workflows", "*.{yml,yaml}")].sort.each do |path|

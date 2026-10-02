@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "upstream_files": {
+    ".github/workflows/docker.yml": "79f9b93dc0bdfc5c9e55550331522837329ce061bebfa5737d97a27ea3b4b795",
+    "server/Dockerfile": "b64d6daffd88147d57fae1ff115fe92f520b6df9a6f33a8da66648f80a0821da"
+  },
+  "commands": {
+    "docker": [
+      "docker",
+      "buildx",
+      "build",
+      "--file",
+      "upstream/server/Dockerfile",
+      "--platform",
+      "linux/amd64",
+      "--build-arg",
+      "BUILD_ID=__BUILD_ID__",
+      "--build-arg",
+      "BUILD_IMAGE=ghcr.io/immich-app/immich-server:__SOURCE_REF__",
+      "--build-arg",
+      "BUILD_SOURCE_REF=__SOURCE_REF__",
+      "--build-arg",
+      "BUILD_SOURCE_COMMIT=__SOURCE_SHA__",
+      "--build-arg",
+      "DEVICE=cpu",
+      "--tag",
+      "immich-server-benchmark:local",
+      "upstream"
+    ]
+  }
+}

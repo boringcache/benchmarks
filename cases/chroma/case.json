@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "id": "chroma",
+  "kind": "benchmark",
+  "adapter": "workflow",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "chroma-core/chroma",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "848cf58dd6dd952f8d0ff672af7b30cbf4d67f81",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-chroma",
+    "branch": "main",
+    "revision": "edf3931449fd113176a09059c5d8c0f5df9ec03f"
+  },
+  "execution": {
+    "workflows": [
+      {
+        "path": ".github/workflows/native-rolling-benchmark.yml",
+        "lane": "rolling",
+        "inputs": {
+          "case_id": "chroma"
+        },
+        "historical_workflow": "chroma-benchmark.yml"
+      },
+      {
+        "path": ".github/workflows/native-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "chroma"
+        },
+        "historical_workflow": "chroma-fresh-benchmark.yml"
+      }
+    ],
+    "sync": "upstream-head",
+    "sync_minute": 1,
+    "native": {
+      "action": ".github/actions/chroma-docker-benchmark",
+      "benchmark_id": "chroma",
+      "rolling_inputs": {
+        "push_image": "true"
+      },
+      "environment": {},
+      "fresh_inputs": {}
+    },
+    "cache_tags": {
+      "chroma-docker-local": "{scope}-docker",
+      "chroma-sccache-local": "{scope}-sccache"
+    }
+  },
+  "reporting": {
+    "entries": [
+      "chroma"
+    ],
+    "publication": "reviewed"
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}
