@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "upstream_files": {
+    ".github/workflows/spring-ai-integration-tests.yml": "2d334d482ae00b534191188b5a695d58f176036389d856b8b8556d68a19f118e"
+  },
+  "commands": {
+    "maven": [
+      "./mvnw",
+      "--batch-mode",
+      "-ntp",
+      "--update-snapshots",
+      "clean",
+      "install",
+      "-DskipTests"
+    ]
+  }
+}

@@ -1,55 +1,51 @@
-name: "Publish Benchmark Index"
-
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: "30 */4 * * *"
-  push:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/publish-index.yml"
-      - ".tool-versions"
-      - "scripts/**"
-
+name: Publish Benchmark Index
 permissions:
   contents: write
   actions: read
-
 concurrency:
   group: publish-benchmark-index
   cancel-in-progress: true
-
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-        with:
-          ref: main
+    - name: Checkout repository
+      uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      with:
+        ref: main
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      with:
+        ruby-version: 3.4.4
+    - name: Build index JSON
+      env:
+        GH_TOKEN: "${{ secrets.BENCHMARKS_READ_TOKEN || secrets.GH_TOKEN || github.token
+          }}"
+        GITHUB_TOKEN: "${{ secrets.BENCHMARKS_READ_TOKEN || secrets.GH_TOKEN || github.token
+          }}"
+      run: 'ruby scripts/publish-index.rb
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.4.4"
+'
+    - name: Commit and push index
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add data/latest
+        if git diff --cached --quiet; then
+          echo "No index changes detected"
+          exit 0
+        fi
 
-      - name: Build index JSON
-        env:
-          GH_TOKEN: ${{ secrets.BENCHMARKS_READ_TOKEN || secrets.GH_TOKEN || github.token }}
-          GITHUB_TOKEN: ${{ secrets.BENCHMARKS_READ_TOKEN || secrets.GH_TOKEN || github.token }}
-        run: |
-          ruby scripts/publish-index.rb
-
-      - name: Commit and push index
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/latest
-          if git diff --cached --quiet; then
-            echo "No index changes detected"
-            exit 0
-          fi
-
-          git commit -m "data: refresh benchmark index"
-          git push origin main
+        git commit -m "data: refresh benchmark index"
+        git push origin main
+'on':
+  workflow_dispatch:
+  schedule:
+  - cron: 30 */4 * * *
+  push:
+    branches:
+    - main
+    paths:
+    - ".github/workflows/publish-index.yml"
+    - ".tool-versions"
+    - scripts/**
