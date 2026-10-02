@@ -38,6 +38,32 @@ class BenchmarkCasesTest < Minitest::Test
     %w[obs-studio-obs-actions-cache.yml obs-studio-obs-boringcache.yml].each do |workflow|
       assert_equal "ccache", BenchmarkCases.plan(obs, workflow: workflow, variant: "ccache").dig("inputs", "cache_tool")
     end
+    zed = BenchmarkCases.load_case("zed")
+    %w[target-only sccache-only combined].each do |variant|
+      assert_equal variant, BenchmarkCases.plan(zed, variant: variant).dig("inputs", "cache_layer")
+    end
+  end
+
+  def test_zed_workflow_selects_only_the_requested_restore_variants
+    workflow = YAML.safe_load_file(File.join(BenchmarkCases::ROOT, ".github/workflows/zed-zed-cargo-product.yml"))
+    script = workflow.fetch("jobs").fetch("source").fetch("steps").find { |step| step["id"] == "source" }.fetch("run")
+    Dir.mktmpdir("zed-variants-") do |directory|
+      FileUtils.cp(File.join(BenchmarkCases::ROOT, "cases/zed/payload/cargo-layer-source.env"), directory)
+      output_path = File.join(directory, "outputs")
+      variants = %w[target-only sccache-only combined]
+      [*variants, "all"].each do |selected|
+        File.write(output_path, "")
+        _output, errors, status = Open3.capture3({"GITHUB_OUTPUT" => output_path, "INPUT_CACHE_LAYER" => selected}, "bash", "-c", script, chdir: directory)
+        assert status.success?, errors
+        outputs = File.readlines(output_path).to_h { |line| line.strip.split("=", 2) }
+        assert_match(/\A[0-9a-f]{40}\z/, outputs.fetch("base_sha"))
+        assert_match(/\A[0-9a-f]{40}\z/, outputs.fetch("head_sha"))
+        assert_equal selected == "all" ? variants : [selected], JSON.parse(outputs.fetch("cache_layers"))
+      end
+      _output, errors, status = Open3.capture3({"GITHUB_OUTPUT" => output_path, "INPUT_CACHE_LAYER" => "unsupported"}, "bash", "-c", script, chdir: directory)
+      refute status.success?
+      assert_includes errors, "Unsupported Zed cache layer"
+    end
   end
 
   def test_draft_cannot_remove_its_blocker_without_an_execution_path
