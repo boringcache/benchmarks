@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "docker-cloudcost-exporter-amd64",
+  "series_id": "wrapper-qualification",
+  "sample": 1,
+  "run_id": "37021507888",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37021507888",
+  "source_sha": "2329a034fea00236488cfc4aa73a281b4807bd2c",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "03ae77d8a227b3c0b2552d9bc4947e9bf76a0a68900d37047314bf7cc130fdf3"
+}

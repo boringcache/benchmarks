@@ -139,6 +139,12 @@ Recording rejects duplicate slots. Reporting checks matched source, case, varian
 and runner environment across provider pairs. It reports every declared
 observation, missing slots, medians, ranges, and measured storage counts. Missing
 storage stays unmeasured. Reports require publication review.
+Provider-reported bytes describe the selected cache, not total workspace usage
+or billable storage. The BoringCache probe uses exact resolved tags and its
+reported KV or archive size; the GitHub probe uses the selected cache key's
+reported archive size. Keep those sources explicit. Do not infer equivalent
+compression, cross-tag deduplication, or physical storage efficiency from these
+counts alone.
 
 ## 6. Preserve and review
 

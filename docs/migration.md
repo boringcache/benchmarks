@@ -44,3 +44,18 @@ artifacts, commit, and workflow. The [archived bundle](https://github.com/boring
 was downloaded after upload, checked against its SHA-256, extracted, and verified
 against its run inventory. `migration/evidence.json` records that verification.
 This scoped export is not a completeness audit of the fork.
+
+The shared wrapper now has verified live qualification for a two-sample
+[Hugo Go fresh comparison](../results/hugo-go/wrapper-qualification/interpretation.md)
+and an AMD64 [Docker cold/warm product proof](../results/docker-cloudcost-exporter-amd64/wrapper-qualification/interpretation.md).
+Their evidence was published, downloaded again, and checked against the bundle
+digests and exported inventories. Earlier runs that failed post-step checks remain
+preserved and unqualified. Cargo qualification and per-case caller cutover remain
+pending. These representative runs do not qualify every imported workload.
+
+The first live qualification uses the already registered `guardrails.yml` caller
+on this branch to invoke the actual reusable workflows. `executions.json` records
+that caller and the workflow it invoked. It does not claim that the new workflow
+was dispatched directly or reconstruct a missing original dispatch response.
+Once the workflows are registered on the default branch, use the documented
+`bin/bench run` path and retain its dispatch receipt.
