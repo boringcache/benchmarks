@@ -132,7 +132,6 @@ runs:
       cli-version: "${{ inputs.cli_version }}"
       mode: docker
       trust-policy: publish
-      fail-on-cache-error: true
   - name: Restore with BoringCache
     id: restore
     if: inputs.strategy == 'boringcache' && inputs.phase == 'warm'
@@ -144,7 +143,6 @@ runs:
       mode: docker
       trust-policy: restore
       fail-on-cache-miss: true
-      fail-on-cache-error: true
   - name: Capture the build timing
     id: build_timing
     shell: bash

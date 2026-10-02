@@ -22,9 +22,6 @@ inputs:
   diagnostics:
     description: Public Action diagnostic level.
     default: auto
-  fail-on-cache-error:
-    description: Fail this observation when the product reports a cache error.
-    default: 'false'
   fail-on-cache-miss:
     description: Require an existing cache seed for this observation.
     default: 'false'
@@ -48,5 +45,5 @@ runs:
         cli-platform: ${{ inputs.cli-platform }}
         cache-profiles: ${{ inputs.cache-profiles }}
         diagnostics: ${{ inputs.diagnostics }}
-        fail-on-cache-error: ${{ inputs.fail-on-cache-error }}
-        fail-on-cache-miss: ${{ inputs.fail-on-cache-miss }}
+        fail-on-cache-error: true
+        fail-on-cache-miss: ${{ inputs.fail-on-cache-miss == 'true' }}

@@ -4,6 +4,7 @@ require "json"
 require "digest"
 require "fileutils"
 require "time"
+require "open3"
 
 module BenchmarkSeries
   class Error < StandardError; end
@@ -103,6 +104,50 @@ module BenchmarkSeries
     raise Error, "Incomplete run record: #{error.message}"
   end
 
+  def self.finish(directory, evidence_directory:, sample:)
+    require_relative "benchmark-evidence"
+    plan = load(directory)
+    verified = BenchmarkEvidence.verify(evidence_directory)
+    raise Error, "Completion requires a complete verified evidence export" unless verified["state"] == "complete"
+    run = JSON.parse(File.read(File.join(evidence_directory, "run.json")))
+    manifest = JSON.parse(File.read(File.join(evidence_directory, "manifest.json")))
+    raise Error, "Completion requires a finished workflow run" unless run["status"] == "completed"
+    raise Error, "Completion belongs to another repository" unless manifest["repository"] == BenchmarkCases::REPOSITORY
+    raise Error, "Sample is outside the declared series" unless sample.is_a?(Integer) && (1..plan.fetch("sample_count")).cover?(sample)
+    run_id = run.fetch("id").to_s
+    records = Dir[File.join(directory, "runs", "*.json")].map { |path| JSON.parse(File.read(path)) }
+    matching = records.select { |record| record.dig("github", "run_id").to_s == run_id }
+    raise Error, "Run records belong to another sample" if matching.any? { |record| record.dig("series", "sample") != sample }
+    errors = []
+    errors << "Workflow concluded #{run['conclusion']}" unless run["conclusion"] == "success"
+    manifest.fetch("attempts").each do |attempt|
+      prefix = File.join(evidence_directory, "attempts", attempt.fetch("attempt").to_s)
+      jobs = JSON.parse(File.read(File.join(prefix, "jobs.json"))).fetch("jobs")
+      jobs.reject { |job| %w[success skipped].include?(job["conclusion"]) }.each do |job|
+        errors << "#{job.fetch('name')}: #{job['conclusion'] || job['status']}"
+      end
+      Open3.popen2e("unzip", "-p", File.join(prefix, "logs.zip")) do |input, output, process|
+        input.close
+        output.each_line do |line|
+          if errors.length < 100 && line.match?(%r{boringcache/one save failed|Machine connection (?:failed|cleanup failed)})
+            errors << line.gsub(/\e\[[\d;]*m/, "").strip[0, 2000]
+          end
+        end
+        raise Error, "Cannot inspect preserved logs in #{prefix}" unless process.value.success?
+      end
+    end
+    raise Error, "Successful completion requires phase records from this run" if errors.empty? && matching.empty?
+    result = {"schema_version" => 1, "case_id" => plan.fetch("case_id"), "series_id" => plan.fetch("series_id"),
+      "sample" => sample, "run_id" => run_id, "run_url" => manifest.fetch("run_url"), "source_sha" => manifest.fetch("source_sha"),
+      "github_conclusion" => run["conclusion"], "status" => errors.empty? ? "success" : "failed", "errors" => errors.uniq,
+      "evidence_manifest_sha256" => Digest::SHA256.file(File.join(evidence_directory, "manifest.json")).hexdigest}
+    target = File.join(directory, "completions", "#{run_id}.json")
+    raise Error, "This run already has a completion record" if File.exist?(target)
+    FileUtils.mkdir_p(File.dirname(target))
+    write_json(target, result)
+    result
+  end
+
   def self.report(directory)
     plan = load(directory)
     records = Dir[File.join(directory, "runs", "*.json")].sort.map { |path| JSON.parse(File.read(path)) }
@@ -130,6 +175,18 @@ module BenchmarkSeries
     expected = (1..plan.fetch("sample_count")).flat_map { |sample| plan.fetch("phases").product(providers).map { |phase, provider| [sample, phase, provider] } }
     observed = records.map { |row| [row.dig("series", "sample"), row.fetch("phase"), row.fetch("strategy")] }
     missing = expected - observed
+    completions = Dir[File.join(directory, "completions", "*.json")].map { |path| JSON.parse(File.read(path)) }
+    completions.each do |completion|
+      unless completion["case_id"] == plan["case_id"] && completion["series_id"] == plan["series_id"] &&
+          %w[success failed].include?(completion["status"]) && completion["errors"].is_a?(Array)
+        raise Error, "Completion record belongs to another case or series, or has an invalid status"
+      end
+      raise Error, "Completion status conflicts with its errors" unless (completion["status"] == "success") == completion["errors"].empty?
+    end
+    run_ids = records.map { |record| record.dig("github", "run_id").to_s }.uniq
+    missing_completions = run_ids - completions.map { |completion| completion.fetch("run_id") }
+    failed_completions = completions.reject { |completion| completion["status"] == "success" }
+    execution_verified = !run_ids.empty? && !run_ids.include?("") && missing_completions.empty? && failed_completions.empty?
     metric = plan.dig("comparison", "primary_metric")
     summaries = measured.group_by { |row| [row.fetch("phase"), row.fetch("strategy")] }.map do |(phase, provider), rows|
       timings = rows.filter_map { |row| row.dig("timing", metric) if metric.end_with?("seconds") }
@@ -138,13 +195,16 @@ module BenchmarkSeries
         "storage" => statistics(storage), "storage_measured_count" => storage.length}
     end
     result = {"schema_version" => 1, "plan_sha256" => plan.fetch("plan_sha256"), "complete" => missing.empty?,
-      "valid_for_comparison" => missing.empty? && failures.empty?, "failures" => failures,
+      "valid_for_comparison" => missing.empty? && failures.empty? && execution_verified, "failures" => failures,
+      "execution_verified" => execution_verified, "missing_completions" => missing_completions,
+      "failed_completions" => failed_completions, "completions" => completions,
       "publication" => "unreviewed", "evidence_preservation" => "requires-review", "primary_metric" => metric, "missing" => missing, "summaries" => summaries,
       "records" => records, "exclusions" => []}
     write_json(File.join(directory, "report.json"), result)
     lines = ["# #{plan.fetch('case_id')}: #{plan.fetch('series_id')}", "",
       "Question: #{plan.dig('comparison', 'question')}", "", "Measured scope: #{plan.dig('comparison', 'timed_scope')}", "",
       "Status: #{missing.empty? ? 'all declared observations collected' : "#{missing.length} declared observations missing"}; #{failures.length} failed. Publication requires review.", "",
+      "Execution: #{execution_verified ? 'preserved job completion and post-step logs verified' : 'unqualified; missing or failed job completion checks'}. Timings alone do not qualify the series.", "",
       "Queue time, dependency setup outside the declared scope, and job duration are context. They are excluded from the comparison. No observations were excluded.", "",
       "| Phase | Provider | Successful observations | Median #{metric} | Range | Storage median (bytes) | Storage observations |",
       "| --- | --- | ---: | ---: | --- | ---: | ---: |"]
@@ -155,6 +215,10 @@ module BenchmarkSeries
     unless failures.empty?
       lines.concat(["", "Failed observations do not contribute timings. They remain in the report and prevent a complete performance comparison.", ""])
       failures.each { |value| lines << "- Sample #{value.dig('series', 'sample')}, #{value.fetch('strategy')}, #{value.fetch('phase')}: #{value.fetch('error')}" }
+    end
+    failed_completions.each do |completion|
+      lines.concat(["", "Run #{completion.fetch('run_id')} failed completion checks:", ""])
+      completion.fetch("errors").each { |error| lines << "- #{error}" }
     end
     lines.concat(["", "Each run record retains its source, runner environment, verification, provider storage source, and evidence links. Missing storage is unmeasured; it is not zero. Original Actions URLs remain subject to retention; durable evidence publication must be verified before publication review.", ""])
     File.write(File.join(directory, "report.md"), lines.join("\n"))

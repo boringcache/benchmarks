@@ -83,7 +83,6 @@ jobs:
         mode: cargo
         trust-policy: publish
         working-directory: upstream
-        fail-on-cache-error: true
         diagnostics: summary
       env:
         RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib"
@@ -97,7 +96,6 @@ jobs:
         mode: cargo
         trust-policy: publish
         working-directory: upstream
-        fail-on-cache-error: true
         diagnostics: summary
       env:
         RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib -C
@@ -188,7 +186,6 @@ jobs:
         mode: cargo
         trust-policy: restore
         working-directory: upstream
-        fail-on-cache-error: true
         diagnostics: summary
       env:
         RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib"
@@ -202,7 +199,6 @@ jobs:
         mode: cargo
         trust-policy: restore
         working-directory: upstream
-        fail-on-cache-error: true
         diagnostics: summary
       env:
         RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib -C
@@ -298,7 +294,6 @@ jobs:
         mode: cargo
         trust-policy: restore
         working-directory: upstream
-        fail-on-cache-error: true
         diagnostics: summary
       env:
         RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib"
@@ -312,7 +307,6 @@ jobs:
         mode: cargo
         trust-policy: restore
         working-directory: upstream
-        fail-on-cache-error: true
         diagnostics: summary
       env:
         RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib -C
@@ -407,7 +401,6 @@ jobs:
         mode: cargo
         trust-policy: restore
         working-directory: upstream
-        fail-on-cache-error: true
         diagnostics: summary
       env:
         RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib"
@@ -421,7 +414,6 @@ jobs:
         mode: cargo
         trust-policy: restore
         working-directory: upstream
-        fail-on-cache-error: true
         diagnostics: summary
       env:
         RUSTFLAGS: "-C link-args=-Wl,--disable-new-dtags,-rpath,$ORIGIN/../lib -C

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "case_id": "hugo-go",
+  "series_id": "shared-hugo-go",
+  "sample": 2,
+  "run_id": "37017742296",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37017742296",
+  "source_sha": "e6a4030e908cff132c942db574a8819597caccea",
+  "github_conclusion": "success",
+  "status": "failed",
+  "errors": [
+    "2026-10-02T14:12:29.9176397Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss",
+    "2026-10-02T14:12:29.9176349Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss",
+    "2026-10-02T14:11:31.8617554Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss",
+    "2026-10-02T14:11:31.8617514Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss"
+  ],
+  "evidence_manifest_sha256": "043a3a2adf6766392284d8cbdac77509b1b4c28be4f3ca735cb1b01d25019233"
+}

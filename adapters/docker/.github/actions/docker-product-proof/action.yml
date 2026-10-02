@@ -164,7 +164,6 @@ runs:
       cli-platform: "${{ inputs.cli_platform }}"
       mode: docker
       trust-policy: publish
-      fail-on-cache-error: true
       working-directory: "${{ inputs.plan_directory }}"
   - name: Restore BoringCache on a fresh runner
     id: restore
@@ -178,7 +177,6 @@ runs:
       mode: docker
       trust-policy: restore
       fail-on-cache-miss: true
-      fail-on-cache-error: true
       working-directory: "${{ inputs.plan_directory }}"
   - name: Capture build and reuse timing
     id: timing

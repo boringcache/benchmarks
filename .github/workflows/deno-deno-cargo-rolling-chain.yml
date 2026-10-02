@@ -156,7 +156,6 @@ jobs:
         trust-policy: publish
         mode: cargo
         working-directory: upstream
-        fail-on-cache-error: true
       env:
         DENO_SNAPSHOT_MINIFY_SOURCES: '1'
     - name: Select Deno's denort_desktop release command
@@ -169,7 +168,6 @@ jobs:
         trust-policy: publish
         mode: cargo
         working-directory: upstream
-        fail-on-cache-error: true
       env:
         DENO_SNAPSHOT_MINIFY_SOURCES: '1'
     - name: Capture the build timing

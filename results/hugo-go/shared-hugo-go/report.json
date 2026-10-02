@@ -2,8 +2,86 @@
   "schema_version": 1,
   "plan_sha256": "ccd52e95b2380ca3e05635f9e982a9be9df0a51913192469eddf13c9f713f06d",
   "complete": true,
-  "valid_for_comparison": true,
+  "valid_for_comparison": false,
   "failures": [],
+  "execution_verified": false,
+  "missing_completions": [],
+  "failed_completions": [
+    {
+      "schema_version": 1,
+      "case_id": "hugo-go",
+      "series_id": "shared-hugo-go",
+      "sample": 1,
+      "run_id": "37017469085",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37017469085",
+      "source_sha": "e6a4030e908cff132c942db574a8819597caccea",
+      "github_conclusion": "success",
+      "status": "failed",
+      "errors": [
+        "2026-10-02T14:08:59.5369049Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss",
+        "2026-10-02T14:08:59.5369023Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss",
+        "2026-10-02T14:07:51.0368756Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss",
+        "2026-10-02T14:07:51.0368713Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss"
+      ],
+      "evidence_manifest_sha256": "a312eaccab1d4ade29a08b60d56838f2c112212a35e85e1280dadab188790f72"
+    },
+    {
+      "schema_version": 1,
+      "case_id": "hugo-go",
+      "series_id": "shared-hugo-go",
+      "sample": 2,
+      "run_id": "37017742296",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37017742296",
+      "source_sha": "e6a4030e908cff132c942db574a8819597caccea",
+      "github_conclusion": "success",
+      "status": "failed",
+      "errors": [
+        "2026-10-02T14:12:29.9176397Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss",
+        "2026-10-02T14:12:29.9176349Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss",
+        "2026-10-02T14:11:31.8617554Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss",
+        "2026-10-02T14:11:31.8617514Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss"
+      ],
+      "evidence_manifest_sha256": "043a3a2adf6766392284d8cbdac77509b1b4c28be4f3ca735cb1b01d25019233"
+    }
+  ],
+  "completions": [
+    {
+      "schema_version": 1,
+      "case_id": "hugo-go",
+      "series_id": "shared-hugo-go",
+      "sample": 1,
+      "run_id": "37017469085",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37017469085",
+      "source_sha": "e6a4030e908cff132c942db574a8819597caccea",
+      "github_conclusion": "success",
+      "status": "failed",
+      "errors": [
+        "2026-10-02T14:08:59.5369049Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss",
+        "2026-10-02T14:08:59.5369023Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss",
+        "2026-10-02T14:07:51.0368756Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss",
+        "2026-10-02T14:07:51.0368713Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss"
+      ],
+      "evidence_manifest_sha256": "a312eaccab1d4ade29a08b60d56838f2c112212a35e85e1280dadab188790f72"
+    },
+    {
+      "schema_version": 1,
+      "case_id": "hugo-go",
+      "series_id": "shared-hugo-go",
+      "sample": 2,
+      "run_id": "37017742296",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37017742296",
+      "source_sha": "e6a4030e908cff132c942db574a8819597caccea",
+      "github_conclusion": "success",
+      "status": "failed",
+      "errors": [
+        "2026-10-02T14:12:29.9176397Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss",
+        "2026-10-02T14:12:29.9176349Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss",
+        "2026-10-02T14:11:31.8617554Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss",
+        "2026-10-02T14:11:31.8617514Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 \"Core Schema\" specification: fail-on-cache-miss"
+      ],
+      "evidence_manifest_sha256": "043a3a2adf6766392284d8cbdac77509b1b4c28be4f3ca735cb1b01d25019233"
+    }
+  ],
   "publication": "unreviewed",
   "evidence_preservation": "requires-review",
   "primary_metric": "build_and_reuse_seconds",
