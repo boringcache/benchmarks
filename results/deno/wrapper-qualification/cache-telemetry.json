@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-02T16:23:35Z",
+  "source": "boringcache-prod boringcache_list_runs",
+  "identity": {
+    "run_uid": "github-actions:boringcache/benchmarks:37021502943",
+    "run_label": "github-actions/37021502943#1",
+    "run_kind": "ci",
+    "provider": "github-actions",
+    "provider_run_uid": "37021502943",
+    "attempt": "1",
+    "repository": "boringcache/benchmarks",
+    "ref_type": "branch",
+    "ref_name": "benchmark-consolidation",
+    "commit_sha": "2329a034fea00236488cfc4aa73a281b4807bd2c",
+    "summary_session_id": "proxy-summary-727591a5-7d68-4fd8-a8a8-445635aa4609",
+    "tools": [
+      "archive",
+      "sccache"
+    ]
+  },
+  "metrics": {
+    "session_count": 35,
+    "total_hits": 1899,
+    "total_misses": 3077,
+    "total_errors": 0,
+    "total_bytes_read": 3859031702,
+    "total_bytes_written": 5099511036,
+    "duration_seconds": 5733.4,
+    "read_label": "Remote read lookups",
+    "hit_label": "Remote hits",
+    "miss_label": "Missed lookups",
+    "hit_count_label": "remote hit",
+    "miss_count_label": "missed lookup"
+  },
+  "jobs": [
+    {
+      "job": "consume-head",
+      "phases": [],
+      "tools": [
+        "archive",
+        "sccache"
+      ],
+      "cache_layers": [
+        "dependencies",
+        "target",
+        "sccache"
+      ],
+      "hits": 1837,
+      "misses": 59,
+      "errors": 0,
+      "bytes_read": 3855440312,
+      "bytes_written": 0,
+      "duration_seconds": 2052.9,
+      "state": "warm_with_misses"
+    },
+    {
+      "job": "publish-base",
+      "phases": [],
+      "tools": [
+        "archive",
+        "sccache"
+      ],
+      "cache_layers": [
+        "dependencies",
+        "target",
+        "sccache"
+      ],
+      "hits": 62,
+      "misses": 3018,
+      "errors": 0,
+      "bytes_read": 3591390,
+      "bytes_written": 5099511036,
+      "duration_seconds": 3717.7,
+      "state": "warm_with_misses"
+    }
+  ],
+  "limits": "Remote read lookups span archive and sccache activity. They are not native compiler hit rates, physical or billable storage, or additive wall-clock phases."
+}

@@ -49,7 +49,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "verified single-provider Cargo product cold/adjacent-source proof; compiler-only and rolling paths remain unverified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -70,6 +70,14 @@
           "complete": 4
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "qualification": {
+        "case_id": "deno",
+        "series_id": "wrapper-qualification",
+        "run_ids": [
+          37021502943
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-deno-wrapper-qualification-37021502943"
       }
     },
     {

@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "benchmark": "deno-cargo",
+  "strategy": "boringcache",
+  "lane": "fresh",
+  "phase": "cold",
+  "variant": "cargo-product",
+  "mode": "cargo",
+  "adapter": "sccache",
+  "case": {
+    "schema_version": 1,
+    "case_id": "deno",
+    "workspace": "boringcache/benchmarks",
+    "definition_sha256": "ced28980e66dcef13404b417ff26cae0479de997e9f32882961e57feec944a5a",
+    "source": {
+      "repository": "denoland/deno",
+      "pins": [
+        {
+          "path": "payload/benchmark-source.env",
+          "revision": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+          "kind": "env"
+        },
+        {
+          "path": "payload/benchmark-source.env",
+          "revision": "b4f08f127652d8442b4d3dbabc277aca3840bc1d",
+          "kind": "env"
+        }
+      ]
+    },
+    "origin": {
+      "repository": "boringcache/benchmark-deno",
+      "branch": "main",
+      "revision": "a9dc6263ba3e32b3c0d2e8666ad9e06cb37d4055"
+    },
+    "verification": [
+      "Verify Deno Linux release recipe",
+      "Require a clean product starting point",
+      "Verify the Deno base build",
+      "Require an empty destination",
+      "Verify the Deno head build",
+      "Require one-commit source cadence",
+      "Verify the Deno build"
+    ],
+    "comparison": {
+      "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+      "providers": [
+        "boringcache"
+      ],
+      "timed_scope": "The two BoringCache Cargo release operations, including their restore, build, and publication; output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.",
+      "primary_metric": "correctness",
+      "storage": "provider-reported",
+      "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+      "sample_count": 10
+    },
+    "execution": {
+      "workflows": [
+        {
+          "path": ".github/workflows/deno-deno-cargo-product.yml",
+          "lane": "fresh",
+          "inputs": {},
+          "phases": [
+            "cold",
+            "commit"
+          ],
+          "variants": [
+            "cargo-product",
+            "compiler-only"
+          ]
+        },
+        {
+          "path": ".github/workflows/deno-deno-cargo-rolling-chain.yml",
+          "lane": "rolling",
+          "inputs": {},
+          "variants": [
+            "cargo-product",
+            "compiler-only"
+          ]
+        }
+      ],
+      "sync": "adjacent-pair",
+      "sync_minute": 2,
+      "source_prefix": "DENO"
+    }
+  },
+  "timing": {
+    "restore_or_setup_seconds": 0,
+    "build_seconds": 3591,
+    "workflow_seconds": null,
+    "total_seconds": 3591,
+    "dependency_setup_seconds": null,
+    "compile_seconds": null,
+    "verification_seconds": null,
+    "save_seconds": null,
+    "comparison_scope": "The two BoringCache Cargo release operations, including their restore, build, and publication; output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.",
+    "build_and_reuse_seconds": 3591
+  },
+  "cache": {
+    "hit": false,
+    "sccache_proof": null,
+    "import_ready": null,
+    "import_refs": 0,
+    "docker_plan": null,
+    "tag": "deno-cargo-target-r37021502943-a1",
+    "workspace": "boringcache/benchmarks",
+    "storage_bytes": 1998300451,
+    "storage_source": "boringcache-check",
+    "storage_breakdown": {
+      "workspace": "boringcache/benchmarks",
+      "tags": [
+        "deno-cargo-registry-cache-r37021502943-a1-ubuntu-24-x86_64",
+        "deno-cargo-registry-index-r37021502943-a1-ubuntu-24-x86_64",
+        "deno-cargo-git-db-r37021502943-a1-ubuntu-24-x86_64",
+        "deno-cargo-target-r37021502943-a1-ubuntu-24-x86_64",
+        "deno-rust-cache-r37021502943-a1-ubuntu-24-x86_64"
+      ],
+      "total_bytes": 1998300451
+    }
+  },
+  "source": {
+    "repository": "denoland/deno",
+    "sha": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a"
+  },
+  "product_refs": {
+    "schema_version": 1,
+    "cli_version": "v1.33.0",
+    "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+    "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+  },
+  "action": {
+    "resolved_mode": "cargo",
+    "resolved_tags": [
+      "deno-cargo-registry-cache-r37021502943-a1-ubuntu-24-x86_64",
+      "deno-cargo-registry-index-r37021502943-a1-ubuntu-24-x86_64",
+      "deno-cargo-git-db-r37021502943-a1-ubuntu-24-x86_64",
+      "deno-cargo-target-r37021502943-a1-ubuntu-24-x86_64",
+      "deno-rust-cache-r37021502943-a1-ubuntu-24-x86_64"
+    ],
+    "trust_state": null,
+    "diagnostics_level": "off"
+  },
+  "github": {
+    "repository": "boringcache/benchmarks",
+    "run_id": "37021502943",
+    "run_attempt": "1",
+    "job": "publish-base",
+    "workflow": "Benchmark Guardrails",
+    "ref_name": "benchmark-consolidation",
+    "runner_os": "Linux",
+    "runner_arch": "X64",
+    "runner_name": "GitHub Actions 1000168719",
+    "runner_environment": "github-hosted",
+    "runner_image": "ubuntu24",
+    "runner_image_version": "20260927.320.1"
+  },
+  "run_uid": "gh-37021502943-1",
+  "series": {
+    "id": "wrapper-qualification",
+    "sample": 1
+  },
+  "environment": {
+    "os": "Linux",
+    "arch": "X64",
+    "image": "ubuntu24",
+    "image_version": "20260927.320.1",
+    "machine": "ubuntu-24.04"
+  },
+  "verification": {
+    "passed": true,
+    "checks": [
+      "Verify Deno Linux release recipe",
+      "Require a clean product starting point",
+      "Verify the Deno base build",
+      "Require an empty destination",
+      "Verify the Deno head build",
+      "Require one-commit source cadence",
+      "Verify the Deno build"
+    ]
+  },
+  "evidence_links": [
+    "https://github.com/boringcache/benchmarks/actions/runs/37021502943"
+  ]
+}
