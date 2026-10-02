@@ -101,7 +101,6 @@ jobs:
         mode: cargo
         trust-policy: publish
         working-directory: upstream
-        fail-on-cache-error: true
     - name: Capture the build timing
       id: build_timing
       env:

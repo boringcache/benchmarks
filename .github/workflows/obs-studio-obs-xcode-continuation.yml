@@ -149,7 +149,6 @@ jobs:
         trust-policy: publish
         mode: xcode
         working-directory: "./upstream"
-        fail-on-cache-error: true
     - name: Capture cache setup timing
       id: restore
       run: echo "seconds=$(( $(date +%s) - ${{ steps.restore_start.outputs.started_at

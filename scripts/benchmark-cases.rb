@@ -417,6 +417,13 @@ module BenchmarkCases
         unknown = supplied.keys - declared.keys
         raise Error, "Unsupported BoringCache wrapper inputs: #{unknown.join(', ')}" unless unknown.empty?
         resolved = invocation.fetch("with").transform_values do |value|
+          next value if [true, false].include?(value)
+          if (match = value.match(/\A\$\{\{ inputs\.([a-z-]+) == 'true' \}\}\z/))
+            flag = supplied.fetch(match[1], declared.fetch(match[1]).fetch("default", "")).to_s
+            next flag if flag.match?(/\A\$\{\{.+\}\}\z/)
+            raise Error, "Use true or false for #{match[1]}" unless %w[true false].include?(flag)
+            next flag == "true"
+          end
           match = value.match(/\A\$\{\{ inputs\.([a-z-]+) \}\}\z/)
           raise Error, "Provider wrapper must forward declared inputs directly" unless match
           name = match[1]

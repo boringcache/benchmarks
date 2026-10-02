@@ -49,14 +49,21 @@ class NativeCaseTest < Minitest::Test
 
   def test_product_contract_view_resolves_the_wrapper_without_losing_adapter_or_failure_policy
     provider = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/actions/boringcache/action.yml")))
-    step = {"uses" => "./.github/actions/boringcache", "id" => "cache", "with" => {"mode" => "cargo", "trust-policy" => "restore", "fail-on-cache-miss" => "true", "fail-on-cache-error" => "true"}}
+    step = {"uses" => "./.github/actions/boringcache", "id" => "cache", "with" => {"mode" => "cargo", "trust-policy" => "restore", "fail-on-cache-miss" => "true"}}
     resolved = BenchmarkCases.resolve_provider_steps(step, provider)
     assert_equal provider.dig("runs", "steps", 0, "uses"), resolved["uses"]
     assert_equal "cache", resolved["id"]
     assert_equal "cargo", resolved.dig("with", "mode")
     assert_equal "restore", resolved.dig("with", "trust-policy")
-    assert_equal "true", resolved.dig("with", "fail-on-cache-miss")
-    assert_equal "true", resolved.dig("with", "fail-on-cache-error")
+    assert_equal true, resolved.dig("with", "fail-on-cache-miss")
+    assert_equal true, resolved.dig("with", "fail-on-cache-error")
+    cold = BenchmarkCases.resolve_provider_steps({"uses" => "./.github/actions/boringcache", "with" => {"mode" => "go"}}, provider)
+    assert_equal false, cold.dig("with", "fail-on-cache-miss")
+    assert_equal true, cold.dig("with", "fail-on-cache-error")
+    conditional = BenchmarkCases.resolve_provider_steps({"uses" => "./.github/actions/boringcache", "with" => {"mode" => "docker", "fail-on-cache-miss" => "${{ inputs.phase == 'warm' }}"}}, provider)
+    assert_equal "${{ inputs.phase == 'warm' }}", conditional.dig("with", "fail-on-cache-miss")
+    assert_equal true, provider.dig("runs", "steps", 0, "with", "fail-on-cache-error")
+    assert_equal "${{ inputs.fail-on-cache-miss == 'true' }}", provider.dig("runs", "steps", 0, "with", "fail-on-cache-miss")
     assert_raises(BenchmarkCases::Error) { BenchmarkCases.resolve_provider_steps({"uses" => "./.github/actions/boringcache", "with" => {"obsolete" => "true"}}, provider) }
   end
 end

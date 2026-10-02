@@ -112,7 +112,6 @@ runs:
     with:
       mode: docker
       trust-policy: publish
-      fail-on-cache-error: true
   - name: Restore the BoringCache rebuild
     id: restore
     if: startsWith(inputs.strategy, 'boringcache') && inputs.phase == 'rebuild'
@@ -120,7 +119,6 @@ runs:
     with:
       mode: docker
       trust-policy: restore
-      fail-on-cache-error: true
   - name: Capture the build timing
     id: build_timing
     shell: bash

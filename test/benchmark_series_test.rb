@@ -3,6 +3,7 @@
 require "minitest/autorun"
 require "tmpdir"
 require_relative "../scripts/benchmark-series"
+require_relative "../scripts/benchmark-evidence"
 
 class BenchmarkSeriesTest < Minitest::Test
   def setup
@@ -26,6 +27,7 @@ class BenchmarkSeriesTest < Minitest::Test
       "environment" => {"os" => "Linux", "arch" => "X64", "image" => "ubuntu26", "image_version" => "20261001", "machine" => "ubuntu-26.04"},
       "verification" => {"passed" => true, "checks" => ["Output runs"]}, "evidence_links" => ["https://example.org/evidence"],
       "product_refs" => {"cli_version" => "v1.33.0", "action_sha" => "e" * 40},
+      "github" => {"run_id" => sample.to_s},
       "timing" => {"comparison_scope" => "Restore and compile", "build_and_reuse_seconds" => seconds, "workflow_seconds" => 9999},
       "cache" => {"storage_bytes" => storage, "storage_source" => storage && "provider-api"}}
   end
@@ -34,6 +36,29 @@ class BenchmarkSeriesTest < Minitest::Test
     path = File.join(@root, "record.json")
     File.write(path, JSON.generate(value))
     BenchmarkSeries.record(@directory, path)
+  end
+
+  def evidence(run_id: 1, conclusion: "success", logs: "Build and cleanup completed\n", repository: BenchmarkCases::REPOSITORY)
+    directory = File.join(@root, "evidence-#{run_id}")
+    FileUtils.mkdir_p(File.join(directory, "attempts", "1"))
+    run = {"id" => run_id, "head_sha" => "a" * 40, "run_attempt" => 1, "status" => "completed", "conclusion" => conclusion}
+    manifest = {"repository" => repository, "run_id" => run_id, "run_url" => "https://github.com/#{repository}/actions/runs/#{run_id}",
+      "source_sha" => "a" * 40, "state" => "complete", "gaps" => [], "attempts" => [{"attempt" => 1, "job_ids" => [10]}], "artifacts" => [], "files" => {}}
+    BenchmarkEvidence.retain_json(directory, "run.json", run, manifest)
+    BenchmarkEvidence.retain_json(directory, "attempts/1/run.json", run, manifest)
+    BenchmarkEvidence.retain_json(directory, "attempts/1/jobs.json", {"total_count" => 1, "jobs" => [{"id" => 10, "name" => "Build", "conclusion" => conclusion}]}, manifest)
+    BenchmarkEvidence.retain_json(directory, "artifacts.json", {"total_count" => 0, "artifacts" => []}, manifest)
+    BenchmarkEvidence.retain_json(directory, "commit.json", {"sha" => "a" * 40}, manifest)
+    File.write(File.join(directory, "workflow.yml"), "name: Build\n")
+    File.write(File.join(@root, "log.txt"), logs)
+    _stdout, stderr, status = Open3.capture3("zip", "-q", File.join(directory, "attempts/1/logs.zip"), "log.txt", chdir: @root)
+    raise stderr unless status.success?
+    %w[workflow.yml attempts/1/logs.zip].each do |relative|
+      path = File.join(directory, relative)
+      manifest["files"][relative] = {"bytes" => File.size(path), "sha256" => Digest::SHA256.file(path).hexdigest}
+    end
+    File.write(File.join(directory, "manifest.json"), JSON.generate(manifest))
+    directory
   end
 
   def test_reports_all_predeclared_samples_and_keeps_slow_measurements
@@ -155,5 +180,34 @@ class BenchmarkSeriesTest < Minitest::Test
     add(other)
     error = assert_raises(BenchmarkSeries::Error) { BenchmarkSeries.report(@directory) }
     assert_includes error.message, "different CLI or Action versions"
+  end
+
+  def test_phase_timings_require_verified_workflow_completion
+    [1, 2].each { |sample| %w[boringcache actions-cache].each { |provider| add(record(sample: sample, provider: provider)) } }
+    refute BenchmarkSeries.report(@directory)["valid_for_comparison"]
+    [1, 2].each { |sample| BenchmarkSeries.finish(@directory, evidence_directory: evidence(run_id: sample), sample: sample) }
+    assert BenchmarkSeries.report(@directory)["valid_for_comparison"]
+    assert_raises(BenchmarkSeries::Error) { BenchmarkSeries.finish(@directory, evidence_directory: File.join(@root, "evidence-1"), sample: 1) }
+  end
+
+  def test_green_jobs_with_post_step_warnings_cannot_qualify_a_series
+    add(record)
+    result = BenchmarkSeries.finish(@directory, evidence_directory: evidence(logs: "##[warning]boringcache/one save failed: empty boolean input\n"), sample: 1)
+    assert_equal "success", result["github_conclusion"]
+    assert_equal "failed", result["status"]
+    assert_includes result["errors"].first, "empty boolean input"
+    report = BenchmarkSeries.report(@directory)
+    refute report["execution_verified"]
+    refute report["valid_for_comparison"]
+    assert_equal 1, report["failed_completions"].length
+  end
+
+  def test_failed_runs_and_foreign_or_changed_exports_are_not_qualified
+    result = BenchmarkSeries.finish(@directory, evidence_directory: evidence(conclusion: "cancelled"), sample: 1)
+    assert_equal "failed", result["status"]
+    assert_raises(BenchmarkSeries::Error) { BenchmarkSeries.finish(@directory, evidence_directory: evidence(run_id: 2, repository: "other/repository"), sample: 2) }
+    path = File.join(@root, "evidence-1", "workflow.yml")
+    File.write(path, "changed\n")
+    assert_raises(BenchmarkCases::Error) { BenchmarkSeries.finish(@directory, evidence_directory: File.join(@root, "evidence-1"), sample: 1) }
   end
 end
