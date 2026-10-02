@@ -1,0 +1,304 @@
+name: 'immich: Immich Benchmark'
+run-name: "${{ inputs.base_images_ccache_experiment && format('Base images ccache
+  | {0}', github.ref_name) || format('Benchmark {0} | {1}', inputs.cli_version !=
+  '' && 'Canary' || 'Rolling', github.event_name == 'push' && 'Upstream update' ||
+  format('Manual dispatch ({0})', github.ref_name)) }}"
+concurrency:
+  group: benchmark-provider-comparisons
+  cancel-in-progress: false
+permissions:
+  contents: read
+  actions: read
+  packages: write
+env:
+  BORINGCACHE_NO_GIT: 'true'
+  BENCHMARK_ID: "${{ inputs.base_images_ccache_experiment && format('immich-base-images-ccache{0}',
+    inputs.benchmark_id_suffix) || format('immich{0}', inputs.benchmark_id_suffix)
+    }}"
+  BASE_IMAGES_SEED_SOURCE_SHA: 6a64828581dea1086a4d6b764c74a2d93bf122ff
+  BASE_IMAGES_REBUILD_SOURCE_SHA: 6fdb212261ad1ece0a722e17ad17b60ac1b697ba
+  BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
+  BENCHMARK_SAMPLE: "${{ inputs.sample }}"
+jobs:
+  commit:
+    name: "${{ matrix.provider }} Immich commit"
+    if: "${{ !inputs.base_images_ccache_experiment && (inputs.runner_label == '' ||
+      github.ref_name == 'main') }}"
+    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
+      && inputs.runner_label || 'ubuntu-latest' }}"
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - provider: GitHub Actions
+          strategy: actions-cache
+        - provider: BoringCache
+          strategy: boringcache
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Set up benchmark Ruby
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      with:
+        ruby-version: 3.4.4
+        working-directory: ".harness"
+    - name: Install benchmark dependencies
+      working-directory: ".harness"
+      run: bundle install --jobs 4 --retry 2
+    - name: Prepare declared case
+      env:
+        BENCHMARK_CASE_ID: immich
+        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
+      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+    - uses: "./.github/actions/immich-docker-benchmark"
+      with:
+        strategy: "${{ matrix.strategy }}"
+        cache_lane: rolling
+        phase: publish
+        benchmark_id: "${{ format('immich{0}', inputs.benchmark_id_suffix) }}"
+        cli_version: "${{ inputs.cli_version }}"
+        buildkit_image: "${{ inputs.buildkit_image }}"
+        push_image: 'true'
+    permissions:
+      contents: read
+      actions: read
+      packages: write
+      id-token: write
+    env:
+      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
+        == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
+  report:
+    name: Immich Docker rolling report
+    needs: commit
+    if: "${{ !inputs.base_images_ccache_experiment }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Set up benchmark Ruby
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      with:
+        ruby-version: 3.4.4
+        working-directory: ".harness"
+    - name: Install benchmark dependencies
+      working-directory: ".harness"
+      run: bundle install --jobs 4 --retry 2
+    - name: Prepare declared case
+      env:
+        BENCHMARK_CASE_ID: immich
+        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
+      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+    - name: Download the benchmark phase evidence
+      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        pattern: phase-${{ env.BENCHMARK_ID }}-*
+        path: phase-evidence
+    - name: Publish the Immich Docker benchmark report
+      run: |
+        ruby ./scripts/benchmark-report.rb summarize \
+          --title "Immich Docker rolling benchmark" \
+          --input-dir phase-evidence \
+          --output-dir benchmark-results
+    - name: Retain the BoringCache rolling result
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ env.BENCHMARK_ID }}-boringcache-rolling
+        path: benchmark-results/${{ env.BENCHMARK_ID }}-boringcache-rolling.json
+        if-no-files-found: error
+    - name: Retain the GitHub Actions rolling result
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache-rolling
+        path: benchmark-results/${{ env.BENCHMARK_ID }}-actions-cache-rolling.json
+        if-no-files-found: error
+    env:
+      BENCHMARK_RUNNER_CLASS: ubuntu-latest
+  base_images_seed:
+    name: "${{ matrix.provider }} base-images seed"
+    if: "${{ inputs.base_images_ccache_experiment }}"
+    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
+      && inputs.runner_label || 'ubuntu-latest' }}"
+    timeout-minutes: 60
+    strategy: &1
+      fail-fast: false
+      matrix:
+        include:
+        - provider: GitHub Actions
+          strategy: actions-cache
+        - provider: BoringCache
+          strategy: boringcache
+        - provider: BoringCache + ccache
+          strategy: boringcache-ccache
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Set up benchmark Ruby
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      with:
+        ruby-version: 3.4.4
+        working-directory: ".harness"
+    - name: Install benchmark dependencies
+      working-directory: ".harness"
+      run: bundle install --jobs 4 --retry 2
+    - name: Prepare declared case
+      env:
+        BENCHMARK_CASE_ID: immich
+        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
+      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+    - uses: "./.github/actions/immich-base-images-benchmark"
+      with:
+        strategy: "${{ matrix.strategy }}"
+        phase: seed
+        source_sha: "${{ env.BASE_IMAGES_SEED_SOURCE_SHA }}"
+        benchmark_id: "${{ env.BENCHMARK_ID }}"
+    permissions:
+      contents: read
+      actions: read
+      packages: write
+      id-token: write
+    env:
+      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
+        == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
+  base_images_rebuild:
+    name: "${{ matrix.provider }} base-images rebuild"
+    if: "${{ inputs.base_images_ccache_experiment }}"
+    needs: base_images_seed
+    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
+      && inputs.runner_label || 'ubuntu-latest' }}"
+    timeout-minutes: 60
+    strategy: *1
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Set up benchmark Ruby
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      with:
+        ruby-version: 3.4.4
+        working-directory: ".harness"
+    - name: Install benchmark dependencies
+      working-directory: ".harness"
+      run: bundle install --jobs 4 --retry 2
+    - name: Prepare declared case
+      env:
+        BENCHMARK_CASE_ID: immich
+        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
+      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+    - uses: "./.github/actions/immich-base-images-benchmark"
+      with:
+        strategy: "${{ matrix.strategy }}"
+        phase: rebuild
+        source_sha: "${{ env.BASE_IMAGES_REBUILD_SOURCE_SHA }}"
+        benchmark_id: "${{ env.BENCHMARK_ID }}"
+    permissions:
+      contents: read
+      actions: read
+      packages: write
+      id-token: write
+    env:
+      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
+        == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
+  base_images_report:
+    name: Immich base-images ccache report
+    if: "${{ inputs.base_images_ccache_experiment }}"
+    needs: base_images_rebuild
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Set up benchmark Ruby
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      with:
+        ruby-version: 3.4.4
+        working-directory: ".harness"
+    - name: Install benchmark dependencies
+      working-directory: ".harness"
+      run: bundle install --jobs 4 --retry 2
+    - name: Prepare declared case
+      env:
+        BENCHMARK_CASE_ID: immich
+        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
+      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+    - name: Download the benchmark phase evidence
+      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        pattern: phase-${{ env.BENCHMARK_ID }}-*
+        path: phase-evidence
+    - name: Publish the comparison
+      run: |
+        ruby ./scripts/benchmark-report.rb summarize \
+          --title "Immich base-images native Node base-image rebuild" \
+          --input-dir phase-evidence \
+          --output-dir benchmark-results
+    - name: Retain the benchmark report
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ env.BENCHMARK_ID }}
+        path: benchmark-results/
+        if-no-files-found: error
+    env:
+      BENCHMARK_RUNNER_CLASS: ubuntu-latest
+'on':
+  workflow_dispatch:
+    inputs:
+      base_images_ccache_experiment:
+        description: Run the pinned base-images native ccache experiment instead of
+          the app benchmark.
+        required: false
+        type: boolean
+        default: false
+      buildkit_image:
+        description: Optional managed BoringCache BuildKit image.
+        required: false
+        type: string
+        default: ''
+      cli_version:
+        description: Optional exact BoringCache CLI release tag.
+        required: false
+        type: string
+        default: ''
+      benchmark_id_suffix:
+        description: Optional suffix for isolated comparison runs.
+        required: false
+        type: string
+        default: ''
+      runner_label:
+        description: Optional runner label for a manual main-branch experiment.
+        required: false
+        type: string
+        default: ''
+      series_id:
+        description: Predeclared series ID; empty for legacy diagnostics
+        type: string
+        required: false
+        default: ''
+      sample:
+        description: Observation number in the predeclared series
+        type: string
+        required: false
+        default: '1'
+  push:
+    branches:
+    - main
+    paths:
+    - cases/immich/**
+    - adapters/**
+    - scripts/canonical/**
+    - ".github/workflows/immich-immich-benchmark.yml"

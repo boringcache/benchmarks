@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "id": "mastodon",
+  "kind": "benchmark",
+  "adapter": "workflow",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "mastodon/mastodon",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-mastodon",
+    "branch": "main",
+    "revision": "af806ebb3a531c4196b47bfc655da5448db5ba54"
+  },
+  "execution": {
+    "workflows": [
+      {
+        "path": ".github/workflows/mastodon-mastodon-docker-benchmark.yml",
+        "lane": "rolling",
+        "inputs": {}
+      },
+      {
+        "path": ".github/workflows/mastodon-mastodon-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {}
+      }
+    ],
+    "sync": "upstream-head",
+    "sync_minute": 15
+  },
+  "reporting": {
+    "entries": [
+      "mastodon-docker",
+      "mastodon-streaming"
+    ],
+    "publication": "reviewed"
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}

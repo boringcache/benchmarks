@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "msgpack-sbt",
+  "kind": "evaluation",
+  "adapter": "workflow",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "msgpack/msgpack-java",
+    "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+        "kind": "snapshot"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "msgpack/msgpack-java",
+    "branch": "main",
+    "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4"
+  },
+  "execution": {
+    "workflows": [],
+    "sync": "fixed",
+    "blockers": [
+      "Qualify a released CLI/Action with the required native REAPI client support",
+      "Add and verify a reviewed workflow and its provider configuration",
+      "Record addRemoteCachePlugin and remoteCache settings as an explicit patch",
+      "Select the upstream Java 21 matrix member and preserve its normal test command"
+    ]
+  },
+  "reporting": {
+    "entries": [],
+    "publication": "evaluation-only"
+  },
+  "verification": [
+    "Require upstream unit tests to pass",
+    "Verify expected class and JAR outputs",
+    "Clear target and local result state before proving remote reuse"
+  ],
+  "comparison": {
+    "question": "Does sbt 2.0.9 reuse MessagePack compilation through its native gRPC client?",
+    "providers": [
+      "boringcache",
+      "bazel-remote"
+    ],
+    "timed_scope": "Native build and cache reuse after toolchain and dependency preparation; record cache upload completion separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Isolated case, series, and provider identity; warm workers retain remote state and remove local action results",
+    "sample_count": 2
+  }
+}

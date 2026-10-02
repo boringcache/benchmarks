@@ -124,7 +124,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
     with_repo do |repo_dir|
       scripts_dir = File.join(repo_dir, "scripts")
       FileUtils.mkdir_p(scripts_dir)
-      File.write(File.join(scripts_dir, "benchmark-report.py"), <<~PYTHON)
+      File.write(File.join(scripts_dir, "benchmark-report.rb"), <<~PYTHON)
         import subprocess
         subprocess.run(["boringcache", "check", "example", "tag", "--exact"])
       PYTHON

@@ -1,85 +1,231 @@
-name: "Benchmark Guardrails"
-
-on:
-  workflow_dispatch:
-  pull_request:
-    paths:
-      - ".github/workflows/guardrails.yml"
-      - ".github/workflows/nightly-canaries.yml"
-      - ".github/actions/nightly-canary/**"
-      - "README.md"
-      - "scripts/**"
-      - "test/**"
-  push:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/guardrails.yml"
-      - ".github/workflows/nightly-canaries.yml"
-      - ".github/actions/nightly-canary/**"
-      - "README.md"
-      - "scripts/**"
-      - "test/**"
-
+name: Benchmark Guardrails
 permissions:
   contents: read
-
 jobs:
   guardrails:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
-      - name: Checkout benchmark aggregate repo
-        uses: actions/checkout@v6
-        with:
-          path: benchmarks
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.4.4"
-
-      - name: Checkout standalone benchmark repos
-        working-directory: benchmarks
-        env:
-          GH_TOKEN: ${{ secrets.BENCHMARKS_READ_TOKEN || github.token }}
-          STANDALONE_REF: ${{ github.event_name == 'pull_request' && github.head_ref || '' }}
-          BENCHMARK_OWNER: ${{ github.repository_owner }}
-        run: |
-          set -euo pipefail
-          mkdir -p ../benchmarks-repos
-
-          checkout_repo() {
-            local repo="$1"
-            local target="$2"
-
-            if [[ -n "$STANDALONE_REF" ]]; then
-              echo "Trying coordinated branch ${STANDALONE_REF} in ${repo}"
-              if gh repo clone "$repo" "$target" -- --branch "$STANDALONE_REF" --single-branch --depth 1; then
-                return 0
-              fi
-              rm -rf -- "$target"
-              echo "Falling back to the default branch in ${repo}"
-            fi
-
-            gh repo clone "$repo" "$target" -- --depth 1
-          }
-
-          gh repo list "$BENCHMARK_OWNER" --limit 300 --json name,nameWithOwner,isArchived,isFork \
-            --jq '.[] | select((.name | startswith("benchmark-")) and (.isArchived | not) and (.isFork | not)) | .nameWithOwner' \
-            | sort | while IFS= read -r repo; do
-            target="../benchmarks-repos/${repo##*/}"
-            echo "Checking out ${repo} -> ${target}"
-            checkout_repo "$repo" "$target"
-          done
-
-      - name: Run benchmark tests
-        working-directory: benchmarks
-        run: |
-          set -euo pipefail
-          ruby test/publish_index_test.rb
-          ruby test/nightly_canaries_test.rb
-          ruby test/benchmark_reporting_test.rb
-          ruby test/benchmark_registry_alignment_test.rb
-          ruby test/benchmark_workflow_guardrails_test.rb
-          ruby test/benchmark_report_contract_test.rb
-          ruby test/public_benchmark_proof_test.rb
+    - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      with:
+        persist-credentials: false
+    - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      with:
+        ruby-version: 3.4.4
+    - run: bundle install --jobs 4 --retry 2
+    - name: Validate cases and suites
+      run: bundle exec ruby bin/bench check
+    - name: Check publication registry
+      run: bundle exec ruby scripts/check-registry-alignment.rb
+    - name: Check execution contracts
+      run: bundle exec ruby scripts/check-workflow-guardrails.rb
+    - name: Check report contracts
+      run: bundle exec ruby scripts/check-report-contract.rb
+    - name: Run Ruby tests
+      run: bundle exec ruby -Itest -e 'Dir["test/*_test.rb"].sort.each { |file| require_relative
+        file }'
+    - name: Lint workflows
+      run: |-
+        go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
+        "$(go env GOPATH)/bin/actionlint"
+  connect-ci:
+    if: github.event_name == 'workflow_dispatch' && inputs.connect_ci
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+    - name: Install the released CLI through the official installer
+      env:
+        BORINGCACHE_VERIFY_SIGNATURE: '1'
+      run: |-
+        curl -fsSL https://install.boringcache.com/install.sh | sh
+        boringcache --version
+    - name: Connect GitHub OIDC
+      run: boringcache ci connect --oidc-provider github-actions < /dev/null
+  cold:
+    name: "${{ matrix.provider }} Hugo Go cold"
+    if: github.event_name == 'workflow_dispatch' && inputs.qualification == 'hugo-go'
+      && !inputs.connect_ci
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - provider: GitHub Actions
+          strategy: actions-cache
+        - provider: BoringCache
+          strategy: boringcache
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Set up benchmark Ruby
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      with:
+        ruby-version: 3.4.4
+        working-directory: ".harness"
+    - name: Install benchmark dependencies
+      working-directory: ".harness"
+      run: bundle install --jobs 4 --retry 2
+    - name: Prepare declared case
+      env:
+        BENCHMARK_CASE_ID: hugo-go
+        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
+      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+    - uses: "./.github/actions/hugo-go-benchmark"
+      with:
+        strategy: "${{ matrix.strategy }}"
+        cache_lane: fresh
+        phase: publish
+        benchmark_id: hugo-go
+        cli_version: "${{ inputs.cli_version }}"
+        go_version: 1.27.0
+    permissions:
+      contents: read
+      actions: write
+      id-token: write
+    env:
+      BENCHMARK_RUNNER_CLASS: ubuntu-24.04
+  warm:
+    name: "${{ matrix.provider }} Hugo Go warm"
+    needs: cold
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - provider: GitHub Actions
+          strategy: actions-cache
+        - provider: BoringCache
+          strategy: boringcache
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Set up benchmark Ruby
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      with:
+        ruby-version: 3.4.4
+        working-directory: ".harness"
+    - name: Install benchmark dependencies
+      working-directory: ".harness"
+      run: bundle install --jobs 4 --retry 2
+    - name: Prepare declared case
+      env:
+        BENCHMARK_CASE_ID: hugo-go
+        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
+      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+    - uses: "./.github/actions/hugo-go-benchmark"
+      with:
+        strategy: "${{ matrix.strategy }}"
+        cache_lane: fresh
+        phase: warm
+        benchmark_id: hugo-go
+        cli_version: "${{ inputs.cli_version }}"
+        go_version: 1.27.0
+    permissions:
+      contents: read
+      actions: write
+      id-token: write
+    env:
+      BENCHMARK_RUNNER_CLASS: ubuntu-24.04
+    if: github.event_name == 'workflow_dispatch' && inputs.qualification == 'hugo-go'
+      && !inputs.connect_ci
+  report:
+    name: Hugo Go fresh report
+    needs: warm
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Set up benchmark Ruby
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      with:
+        ruby-version: 3.4.4
+        working-directory: ".harness"
+    - name: Install benchmark dependencies
+      working-directory: ".harness"
+      run: bundle install --jobs 4 --retry 2
+    - name: Prepare declared case
+      env:
+        BENCHMARK_CASE_ID: hugo-go
+        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
+      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+    - name: Download the benchmark phase evidence
+      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        pattern: phase-${{ env.BENCHMARK_ID }}-*
+        path: phase-evidence
+    - name: Publish the Hugo Go benchmark report
+      run: |
+        ruby ./scripts/benchmark-report.rb summarize \
+          --title "Hugo Go fresh benchmark" \
+          --input-dir phase-evidence \
+          --output-dir benchmark-results
+    - name: Retain the BoringCache fresh result
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ env.BENCHMARK_ID }}-boringcache-fresh
+        path: benchmark-results/${{ env.BENCHMARK_ID }}-boringcache-fresh.json
+        if-no-files-found: error
+    - name: Retain the GitHub Actions fresh result
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache-fresh
+        path: benchmark-results/${{ env.BENCHMARK_ID }}-actions-cache-fresh.json
+        if-no-files-found: error
+    env:
+      BENCHMARK_RUNNER_CLASS: ubuntu-24.04
+    if: github.event_name == 'workflow_dispatch' && inputs.qualification == 'hugo-go'
+      && !inputs.connect_ci
+'on':
+  workflow_dispatch:
+    inputs:
+      connect_ci:
+        description: Connect this repository to the existing BoringCache workspace
+        type: boolean
+        default: false
+      qualification:
+        description: Bounded case qualification using the shared executor
+        type: choice
+        options:
+        - none
+        - hugo-go
+        default: none
+      cli_version:
+        description: Optional exact released CLI or canary
+        type: string
+        default: ''
+      runner_label:
+        description: Optional main-branch runner
+        type: string
+        default: ''
+      series_id:
+        description: Predeclared series ID
+        type: string
+        default: ''
+      sample:
+        description: Declared observation number
+        type: string
+        default: '1'
+  pull_request:
+  push:
+    branches:
+    - main
+env:
+  BORINGCACHE_NO_GIT: 'true'
+  BENCHMARK_ID: hugo-go
+  BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
+  BENCHMARK_SAMPLE: "${{ inputs.sample }}"

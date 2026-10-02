@@ -1,0 +1,195 @@
+name: 'opentelemetry-java: OpenTelemetry Java Gradle Fresh'
+run-name: "${{ format('Benchmark {0} | {1}', github.event_name == 'pull_request' &&
+  'Validation' || inputs.cli_version != '' && 'Canary' || 'Fresh', github.event_name
+  == 'schedule' && 'Weekly' || github.event_name == 'pull_request' && format('PR #{0}',
+  github.event.pull_request.number) || format('Manual dispatch ({0})', github.ref_name))
+  }}"
+permissions:
+  contents: read
+  actions: read
+env:
+  BORINGCACHE_NO_GIT: 'true'
+  BENCHMARK_ID: otel-gradle
+  GRADLE_USER_HOME: "${{ github.workspace }}/.gradle-user-home"
+  BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
+  BENCHMARK_SAMPLE: "${{ inputs.sample }}"
+jobs:
+  cold:
+    name: "${{ matrix.provider }} OpenTelemetry Gradle cold"
+    if: inputs.runner_label == '' || github.ref_name == 'main'
+    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
+      && inputs.runner_label || 'ubuntu-latest' }}"
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - provider: GitHub Actions
+          strategy: actions-cache
+        - provider: BoringCache
+          strategy: boringcache
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Set up benchmark Ruby
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      with:
+        ruby-version: 3.4.4
+        working-directory: ".harness"
+    - name: Install benchmark dependencies
+      working-directory: ".harness"
+      run: bundle install --jobs 4 --retry 2
+    - name: Prepare declared case
+      env:
+        BENCHMARK_CASE_ID: opentelemetry-java
+        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
+      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+    - uses: "./.github/actions/opentelemetry-gradle-benchmark"
+      with:
+        strategy: "${{ matrix.strategy }}"
+        cache_lane: fresh
+        phase: publish
+        benchmark_id: otel-gradle
+        cli_version: "${{ inputs.cli_version }}"
+        java_version: '21'
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    env:
+      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
+        == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
+  warm:
+    name: "${{ matrix.provider }} OpenTelemetry Gradle warm"
+    needs: cold
+    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
+      && inputs.runner_label || 'ubuntu-latest' }}"
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - provider: GitHub Actions
+          strategy: actions-cache
+        - provider: BoringCache
+          strategy: boringcache
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Set up benchmark Ruby
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      with:
+        ruby-version: 3.4.4
+        working-directory: ".harness"
+    - name: Install benchmark dependencies
+      working-directory: ".harness"
+      run: bundle install --jobs 4 --retry 2
+    - name: Prepare declared case
+      env:
+        BENCHMARK_CASE_ID: opentelemetry-java
+        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
+      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+    - uses: "./.github/actions/opentelemetry-gradle-benchmark"
+      with:
+        strategy: "${{ matrix.strategy }}"
+        cache_lane: fresh
+        phase: warm
+        benchmark_id: otel-gradle
+        cli_version: "${{ inputs.cli_version }}"
+        java_version: '21'
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    env:
+      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
+        == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
+  report:
+    name: OpenTelemetry Java Gradle fresh report
+    needs: warm
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Set up benchmark Ruby
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      with:
+        ruby-version: 3.4.4
+        working-directory: ".harness"
+    - name: Install benchmark dependencies
+      working-directory: ".harness"
+      run: bundle install --jobs 4 --retry 2
+    - name: Prepare declared case
+      env:
+        BENCHMARK_CASE_ID: opentelemetry-java
+        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
+      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+    - name: Download the benchmark phase evidence
+      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        pattern: phase-${{ env.BENCHMARK_ID }}-*
+        path: phase-evidence
+    - name: Publish the OpenTelemetry Java Gradle benchmark report
+      run: |
+        ruby ./scripts/benchmark-report.rb summarize \
+          --title "OpenTelemetry Java Gradle fresh benchmark" \
+          --input-dir phase-evidence \
+          --output-dir benchmark-results
+    - name: Retain the BoringCache fresh result
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ env.BENCHMARK_ID }}-boringcache-fresh
+        path: benchmark-results/${{ env.BENCHMARK_ID }}-boringcache-fresh.json
+        if-no-files-found: error
+    - name: Retain the GitHub Actions fresh result
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache-fresh
+        path: benchmark-results/${{ env.BENCHMARK_ID }}-actions-cache-fresh.json
+        if-no-files-found: error
+    env:
+      BENCHMARK_RUNNER_CLASS: ubuntu-latest
+'on':
+  workflow_dispatch:
+    inputs:
+      cli_version:
+        description: Optional exact BoringCache CLI release tag.
+        required: false
+        type: string
+        default: ''
+      runner_label:
+        description: Optional runner label for a manual main-branch experiment.
+        required: false
+        type: string
+        default: ''
+      series_id:
+        description: Predeclared series ID; empty for legacy diagnostics
+        type: string
+        required: false
+        default: ''
+      sample:
+        description: Observation number in the predeclared series
+        type: string
+        required: false
+        default: '1'
+  schedule:
+  - cron: 0 3 * * 4
+  pull_request:
+    paths:
+    - cases/opentelemetry-java/**
+    - adapters/**
+    - scripts/canonical/**
+    - ".github/workflows/opentelemetry-java-opentelemetry-java-gradle-fresh-benchmark.yml"
+concurrency:
+  group: benchmark-provider-comparisons
+  cancel-in-progress: false

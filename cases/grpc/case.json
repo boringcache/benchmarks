@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "id": "grpc",
+  "kind": "benchmark",
+  "adapter": "workflow",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "grpc/grpc",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-grpc",
+    "branch": "main",
+    "revision": "00119b2080dd8c4d20cfb4647316a28417b4e1a6"
+  },
+  "execution": {
+    "workflows": [
+      {
+        "path": ".github/workflows/grpc-grpc-bazel-benchmark.yml",
+        "lane": "rolling",
+        "inputs": {}
+      },
+      {
+        "path": ".github/workflows/grpc-grpc-bazel-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {}
+      }
+    ],
+    "sync": "upstream-head",
+    "sync_minute": 7
+  },
+  "reporting": {
+    "entries": [
+      "grpc-bazel"
+    ],
+    "publication": "reviewed"
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}

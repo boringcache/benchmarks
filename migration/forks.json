@@ -1,0 +1,1030 @@
+{
+  "schema_version": 1,
+  "status": "Deferred from the maintained benchmark migration",
+  "branches": [
+    {
+      "id": "agents-at-scale-ark-validation",
+      "source": {
+        "repository": "mckinsey/agents-at-scale-ark",
+        "revision": "cc08cdc658acb53632ceb0007a23c93ac276f967"
+      },
+      "origin": {
+        "repository": "boringcache/agents-at-scale-ark",
+        "branch": "boringcache-validation",
+        "revision": "de9edd89fdbd75023834c83e628201f146cff4dd"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "asterinas-validation",
+      "source": {
+        "repository": "asterinas/asterinas",
+        "revision": "c27a1ab9b7108ea1a44e5090bc580a92405f787c"
+      },
+      "origin": {
+        "repository": "boringcache/asterinas",
+        "branch": "boringcache-validation",
+        "revision": "3c385d19d689616a37c8436cf8680949ea5e2123"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "bigname-validation",
+      "source": {
+        "repository": "ensdomains/bigname",
+        "revision": "6dbe2b4ae6791eedf1c17af1f816c03dae85fed0"
+      },
+      "origin": {
+        "repository": "boringcache/bigname",
+        "branch": "boringcache-validation",
+        "revision": "68f5f0f2e8c805438e59a65ba42730eb9451460f"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "bingle-rust-compiler-cache-validation",
+      "source": {
+        "repository": "binglefoundation/bingle_rust",
+        "revision": "8cf33ac3b8fa97b5c6902fe8a720322a1eb114dd"
+      },
+      "origin": {
+        "repository": "boringcache/bingle_rust",
+        "branch": "compiler-cache-validation",
+        "revision": "4f2142d3f4dc9e69b85117d353afee5e0ed46c02"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "bingle-rust-validation",
+      "source": {
+        "repository": "binglefoundation/bingle_rust",
+        "revision": "8cf33ac3b8fa97b5c6902fe8a720322a1eb114dd"
+      },
+      "origin": {
+        "repository": "boringcache/bingle_rust",
+        "branch": "boringcache-validation",
+        "revision": "23a784ce2e88785c96c3d5ec65189e632ba291be"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "board-games-empire-backend-validation",
+      "source": {
+        "repository": "BoardGamesEmpire/board-games-empire-backend",
+        "revision": "8a81678db2c23754094383f9696ad11bdce9a4f9"
+      },
+      "origin": {
+        "repository": "boringcache/board-games-empire-backend",
+        "branch": "boringcache-validation",
+        "revision": "4b9a77cdbdce6076995cd4bad5fcd2821e2b2f8a"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "conary-validation",
+      "source": {
+        "repository": "FieldmouseWorks/Conary",
+        "revision": "5dc83cc284d0a565f5d5c94e466cc6eeae3ddad0"
+      },
+      "origin": {
+        "repository": "boringcache/Conary",
+        "branch": "boringcache-validation",
+        "revision": "a1cd00f0f018182289799ca48da0e0fd26bde697"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "connectedhomeip-validation",
+      "source": {
+        "repository": "project-chip/connectedhomeip",
+        "revision": "8d5d99f158f67c51852652769a3d95fc8c279f98"
+      },
+      "origin": {
+        "repository": "boringcache/connectedhomeip",
+        "branch": "boringcache-validation",
+        "revision": "845e1e1e4ee482f3c202ab3b4e868dba7a56d573"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "datafusion-validation",
+      "source": {
+        "repository": "apache/datafusion",
+        "revision": "7917a9a65a0343a6b5536299de5482a899d77c51"
+      },
+      "origin": {
+        "repository": "boringcache/datafusion",
+        "branch": "boringcache-validation",
+        "revision": "b273ee7c010f1f3d0335f4256fbf47ca070a7937"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "deno-agent-boringcache-integration",
+      "source": {
+        "repository": "denoland/deno",
+        "revision": "2cccbb87a5853c21834f7832a21b96386e637d94"
+      },
+      "origin": {
+        "repository": "boringcache/deno",
+        "branch": "agent/boringcache-integration",
+        "revision": "bcf24310493d1381b7c75c5f0f2b526f583d10a4"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "deno-main",
+      "source": {
+        "repository": "denoland/deno",
+        "revision": "2cccbb87a5853c21834f7832a21b96386e637d94"
+      },
+      "origin": {
+        "repository": "boringcache/deno",
+        "branch": "main",
+        "revision": "e338fecd5503a1f30d351ea07cb90ae230f3cbaf"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "dependabot-core-validation",
+      "source": {
+        "repository": "dependabot/dependabot-core",
+        "revision": "6d1537b8c7617a23211ecaa46e71ee69bd1c3018"
+      },
+      "origin": {
+        "repository": "boringcache/dependabot-core",
+        "branch": "boringcache-validation",
+        "revision": "8e5518cd2f448ed671b7387b38a5566278e599d1"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "discourse-docker-cache-integration",
+      "source": {
+        "repository": "discourse/discourse_docker",
+        "revision": "9c35fe8f6f4eb66d399f756e3bae773292e34db2"
+      },
+      "origin": {
+        "repository": "boringcache/discourse_docker",
+        "branch": "boringcache-cache-integration",
+        "revision": "1606dfdbe6d19324cf61a84a0152b2a3f4cbfcbf"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "discourse-docker-image-builds",
+      "source": {
+        "repository": "discourse/discourse_docker",
+        "revision": "9c35fe8f6f4eb66d399f756e3bae773292e34db2"
+      },
+      "origin": {
+        "repository": "boringcache/discourse_docker",
+        "branch": "boringcache-image-builds",
+        "revision": "4aa955288e1743e351b9ac09b3ea45a811b17775"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "discourse-docker-image-cache",
+      "source": {
+        "repository": "discourse/discourse_docker",
+        "revision": "e6d7b508b43f9610950166f53cb1be1bd78435a9"
+      },
+      "origin": {
+        "repository": "boringcache/discourse_docker",
+        "branch": "boringcache-image-cache",
+        "revision": "5f5a0c000e18e7e397a9303becfa1564e6f69404"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "discourse-docker-main",
+      "source": {
+        "repository": "discourse/discourse_docker",
+        "revision": "9c35fe8f6f4eb66d399f756e3bae773292e34db2"
+      },
+      "origin": {
+        "repository": "boringcache/discourse_docker",
+        "branch": "main",
+        "revision": "2e796724dda572b5cd9897c163850760869c0872"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "docker-starter-validation",
+      "source": {
+        "repository": "jolicode/docker-starter",
+        "revision": "5a99bb9bfeab347fe4bd70016187469e180224af"
+      },
+      "origin": {
+        "repository": "boringcache/docker-starter",
+        "branch": "boringcache-validation",
+        "revision": "f469072a2cbbd37217db81e3fe0c13c21fceca90"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "dot-agent-deck-validation",
+      "source": {
+        "repository": "vfarcic/dot-agent-deck",
+        "revision": "443433a12520817ca81f4204535dc0e735dd93ab"
+      },
+      "origin": {
+        "repository": "boringcache/dot-agent-deck",
+        "branch": "boringcache-validation",
+        "revision": "9fb1bad74fcd2777fc5cd1f52c753b616cea087d"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "edgezero-rolling",
+      "source": {
+        "repository": "stackpop/edgezero",
+        "revision": "593fc9282a1c56e12bae15f91eef2162f4b6a1b7"
+      },
+      "origin": {
+        "repository": "boringcache/edgezero",
+        "branch": "boringcache-rolling",
+        "revision": "a3586ba7f1de206bcc45d59e87023ae03323f743"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "edgezero-validation",
+      "source": {
+        "repository": "stackpop/edgezero",
+        "revision": "98930917d96cb665c7255f36ca8bbd61fc7539e1"
+      },
+      "origin": {
+        "repository": "boringcache/edgezero",
+        "branch": "boringcache-validation",
+        "revision": "65217b6bc4dcf30af396b4acb64421c8d3282d44"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "erun-validation",
+      "source": {
+        "repository": "sophium/erun",
+        "revision": "be6819742f3e377f29bac1b83501696c56a89cb0"
+      },
+      "origin": {
+        "repository": "boringcache/erun",
+        "branch": "boringcache-validation",
+        "revision": "a0410815ceff4c7cd4e53001b4c1eefd371df50f"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "ferrum-edge-feature-boringcache-ferrum-ci",
+      "source": {
+        "repository": "ferrum-edge/ferrum-edge",
+        "revision": "8af40af9ebdfcfbfcf90685308cfac4544329d3a"
+      },
+      "origin": {
+        "repository": "boringcache/ferrum-edge",
+        "branch": "feature/boringcache-ferrum-ci",
+        "revision": "88fa70d93e146757bc4e5bde29fedadf1802ad7c"
+      },
+      "status": "candidate",
+      "retirement": "Keep the original fork until selected work and evidence are verified",
+      "next_action": "Keep the fork. Activate a reviewed case through docs/process.md when the evaluation is selected."
+    },
+    {
+      "id": "ferrum-edge-feature-boringcache-ferrum-pilot",
+      "source": {
+        "repository": "ferrum-edge/ferrum-edge",
+        "revision": "fbfee2f0d6ae8342e4e70ae7d22c95a9dafef793"
+      },
+      "origin": {
+        "repository": "boringcache/ferrum-edge",
+        "branch": "feature/boringcache-ferrum-pilot",
+        "revision": "3fc0ebefdff646d7f968ec15a1b8ac598df1a55e"
+      },
+      "status": "candidate",
+      "retirement": "Keep the original fork until selected work and evidence are verified",
+      "next_action": "Keep the fork. Activate a reviewed case through docs/process.md when the evaluation is selected."
+    },
+    {
+      "id": "ferrum-edge-feature-ferrum-boringcache-pilot",
+      "source": {
+        "repository": "ferrum-edge/ferrum-edge",
+        "revision": "8af40af9ebdfcfbfcf90685308cfac4544329d3a"
+      },
+      "origin": {
+        "repository": "boringcache/ferrum-edge",
+        "branch": "feature/ferrum-boringcache-pilot",
+        "revision": "8e908ea9766f2b98b71bc063e1f1cdaa92506a0c"
+      },
+      "status": "candidate",
+      "retirement": "Keep the original fork until selected work and evidence are verified",
+      "next_action": "Keep the fork. Activate a reviewed case through docs/process.md when the evaluation is selected."
+    },
+    {
+      "id": "ferrum-edge-validation",
+      "source": {
+        "repository": "ferrum-edge/ferrum-edge",
+        "revision": "ba5797f9e7f0f3845186b35f8f3914328bf0f168"
+      },
+      "origin": {
+        "repository": "boringcache/ferrum-edge",
+        "branch": "boringcache-validation",
+        "revision": "1347f1c16e3fd634f64442207bfc688ea122c209"
+      },
+      "status": "candidate",
+      "retirement": "Keep the original fork until selected work and evidence are verified",
+      "next_action": "Keep the fork. Activate a reviewed case through docs/process.md when the evaluation is selected."
+    },
+    {
+      "id": "finance-query-validation",
+      "source": {
+        "repository": "Verdenroz/finance-query",
+        "revision": "cb249658c8ca64ad4a86207a68c7496d34c0b519"
+      },
+      "origin": {
+        "repository": "boringcache/finance-query",
+        "branch": "boringcache-validation",
+        "revision": "2bc772e48cf78163763f6c8b2dfde3298d36da99"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "finch-validation",
+      "source": {
+        "repository": "darwin-finch/finch",
+        "revision": "5472fb65e322a755b0d08e9e1f961a3f32df688b"
+      },
+      "origin": {
+        "repository": "boringcache/finch",
+        "branch": "boringcache-validation",
+        "revision": "a3f50ff8091d2ca91f8ad31182d1eb07efe43b5f"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "fixpp-validation",
+      "source": {
+        "repository": "CatalinSerafimescu/fixpp",
+        "revision": "da39a6bea1bf7b0e4dba54952aed6852f3921877"
+      },
+      "origin": {
+        "repository": "boringcache/fixpp",
+        "branch": "boringcache-validation",
+        "revision": "bdfcfb572d806b54fd6fea698624281ec9632d1e"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "gluten-validation",
+      "source": {
+        "repository": "apache/gluten",
+        "revision": "9f6dcb599d3ebb8ef9f55450163aae4f025300e9"
+      },
+      "origin": {
+        "repository": "boringcache/gluten",
+        "branch": "boringcache-validation",
+        "revision": "9ca7d6280c3ce2afc06e70a854794958e152fe88"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "goobers-validation",
+      "source": {
+        "repository": "Agent-Clubhouse/Goobers",
+        "revision": "c13cafdbeb1917b90d8701f4d59c986e5a0db8b3"
+      },
+      "origin": {
+        "repository": "boringcache/Goobers",
+        "branch": "boringcache-validation",
+        "revision": "f741b3c95e79f754f9752fb99580e8d3b5aecc31"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "graphql-core-validation",
+      "source": {
+        "repository": "Jahia/graphql-core",
+        "revision": "c309b6f66c958091ed13bf8ae525131e091c76cc"
+      },
+      "origin": {
+        "repository": "boringcache/graphql-core",
+        "branch": "boringcache-validation",
+        "revision": "2179e01a712d7fd68a686826699c69e3f7fe974a"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "hiero-gradle-conventions-validation",
+      "source": {
+        "repository": "hiero-ledger/hiero-gradle-conventions",
+        "revision": "118b0f8e2735d97eb6dd90ee1e333ea61003d1c6"
+      },
+      "origin": {
+        "repository": "boringcache/hiero-gradle-conventions",
+        "branch": "boringcache-validation",
+        "revision": "6c4af35c5d019b0a46e27c013a7a66431793e621"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "host-rust-core-validation",
+      "source": {
+        "repository": "paritytech/host-rust-core",
+        "revision": "94a913de5c745897ccc696861467552baf6d7531"
+      },
+      "origin": {
+        "repository": "boringcache/host-rust-core",
+        "branch": "boringcache-validation",
+        "revision": "646153f19502f9464234240cae3e2ed0ae759a3d"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "hyperswitch-router-cache-validation",
+      "source": {
+        "repository": "juspay/hyperswitch",
+        "revision": "08eef46631225e98ba4ba4573801a5318c579f6a"
+      },
+      "origin": {
+        "repository": "boringcache/hyperswitch",
+        "branch": "router-cache-validation",
+        "revision": "64e5c42a1cc3b014e021922c78e4fa0340716ba7"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "hyperswitch-validation",
+      "source": {
+        "repository": "juspay/hyperswitch",
+        "revision": "02ba5ea0b4cc0ad8debea4cefd28a7de5916d9db"
+      },
+      "origin": {
+        "repository": "boringcache/hyperswitch",
+        "branch": "boringcache-validation",
+        "revision": "03d28c24205583c09844872771298dceafd4998a"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "jazz-validation",
+      "source": {
+        "repository": "garden-co/jazz",
+        "revision": "7a113ff8b673c702ceb75dead96bd7a985965c81"
+      },
+      "origin": {
+        "repository": "boringcache/jazz",
+        "branch": "boringcache-validation",
+        "revision": "689d635c1559818afd9021c95e1594b19df4753e"
+      },
+      "status": "candidate",
+      "retirement": "Keep the original fork until selected work and evidence are verified",
+      "follow_up_urls": [
+        "https://github.com/garden-co/jazz/issues/3428"
+      ],
+      "next_action": "Keep the fork while the upstream follow-up is open. Activate a selected evaluation through docs/process.md."
+    },
+    {
+      "id": "kukuri-validation",
+      "source": {
+        "repository": "kukuri-app/kukuri",
+        "revision": "c52b971f65fdf3c6c5ee152dce63aa2a6f7fb53b"
+      },
+      "origin": {
+        "repository": "boringcache/kukuri",
+        "branch": "boringcache-validation",
+        "revision": "ba7448c516e26ff12fdf6e61e65424cd22360c50"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "llama-cpp-master",
+      "source": {
+        "repository": "ggml-org/llama.cpp",
+        "revision": "d775ebf363f777bc862a8659b6c55eec9419cf35"
+      },
+      "origin": {
+        "repository": "boringcache/llama.cpp",
+        "branch": "master",
+        "revision": "ef92d6bfc5773f0bbb483e3573c6f1442d10ce86"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "llama-cpp-validation",
+      "source": {
+        "repository": "ggml-org/llama.cpp",
+        "revision": "d775ebf363f777bc862a8659b6c55eec9419cf35"
+      },
+      "origin": {
+        "repository": "boringcache/llama.cpp",
+        "branch": "boringcache-validation",
+        "revision": "4f41a77867c9ba64f20537c64bda97a39c6067c0"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "localai-llamacpp-cpu",
+      "source": {
+        "repository": "mudler/LocalAI",
+        "revision": "7cadb5748a3312d31561f5cb9cb6d50c8e761371"
+      },
+      "origin": {
+        "repository": "boringcache/LocalAI",
+        "branch": "boringcache-validation",
+        "revision": "9249c1adcbf6bc2392eb1183f98140894e9df546"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "loomarr-replay-v1304",
+      "source": {
+        "repository": "loomarr/loomarr",
+        "revision": "38ed1123597f8d7a757a9172aedaa17299ac1ac2"
+      },
+      "origin": {
+        "repository": "boringcache/loomarr",
+        "branch": "boringcache-replay-v1304",
+        "revision": "c365ea930b57412b85ca40cd0dbc463ee32e5eab"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "loomarr-replay",
+      "source": {
+        "repository": "loomarr/loomarr",
+        "revision": "7c461430294d24fecfaac040edb979e22c4fd2fc"
+      },
+      "origin": {
+        "repository": "boringcache/loomarr",
+        "branch": "boringcache-replay",
+        "revision": "ad90013611e59ec0bf15592e18c23e9113185cac"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "loomarr-validation",
+      "source": {
+        "repository": "loomarr/loomarr",
+        "revision": "c5f5acff2bc9cd76796a8a1f620066e5fb60e437"
+      },
+      "origin": {
+        "repository": "boringcache/loomarr",
+        "branch": "boringcache-validation",
+        "revision": "feca05f875a6f87f72dd03b73d5b1a3dc8bbf08a"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "marty-core-compiler-cache-validation",
+      "source": {
+        "repository": "ElevenID/marty-core",
+        "revision": "0cfef3337e9a47288e90e325b495d050c07f70e2"
+      },
+      "origin": {
+        "repository": "boringcache/marty-core",
+        "branch": "compiler-cache-validation",
+        "revision": "8533fd7de22cea43f83f279aa4357db602a645c8"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "marty-core-validation",
+      "source": {
+        "repository": "ElevenID/marty-core",
+        "revision": "0cfef3337e9a47288e90e325b495d050c07f70e2"
+      },
+      "origin": {
+        "repository": "boringcache/marty-core",
+        "branch": "boringcache-validation",
+        "revision": "f5b89b239df53585b4e4cefbf594a6b42cd7bdc4"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "mastodon-chore-boringcache-release-cache",
+      "source": {
+        "repository": "mastodon/mastodon",
+        "revision": "348a66890b75401cfc5fd5a42cd1af74f2d0546c"
+      },
+      "origin": {
+        "repository": "boringcache/mastodon",
+        "branch": "chore/boringcache-release-cache",
+        "revision": "6d681cf9f6751cbdba498659a78014ecd0f58a35"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "mastodon-onboarding",
+      "source": {
+        "repository": "mastodon/mastodon",
+        "revision": "348a66890b75401cfc5fd5a42cd1af74f2d0546c"
+      },
+      "origin": {
+        "repository": "boringcache/mastodon",
+        "branch": "boringcache-onboarding",
+        "revision": "64caf4a4c31b114bdb485a7a7e80f5bf2e1e3fc4"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "moagan-validation",
+      "source": {
+        "repository": "airvzxf/moagan",
+        "revision": "5929527a011ddcd63a58e26e4aa5b3e78c6467f0"
+      },
+      "origin": {
+        "repository": "boringcache/moagan",
+        "branch": "boringcache-validation",
+        "revision": "a1b1a7320a75d9d54cc6c5e6ddacbe7ff1c3f388"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "notarization-validation",
+      "source": {
+        "repository": "iotaledger/notarization",
+        "revision": "06968cbc306df046ddd0ece11a2a7c048280a8c5"
+      },
+      "origin": {
+        "repository": "boringcache/notarization",
+        "branch": "boringcache-validation",
+        "revision": "f1f8d2db58d7bb9c9af393657131388d3aa5d6f9"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "nx-s3-cache-2gib-repro-validation",
+      "source": {
+        "repository": "schiewe/nx-s3-cache-2gib-repro",
+        "revision": "5f3c091f4787bd94c64e471d2182930b1b88d0d8"
+      },
+      "origin": {
+        "repository": "boringcache/nx-s3-cache-2gib-repro",
+        "branch": "boringcache-validation",
+        "revision": "46816549e48267005000a9f6dbebd02f925b8750"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "oloenginebase-validation",
+      "source": {
+        "repository": "drsnuggles8/OloEngineBase",
+        "revision": "921bce0947865feb3024ce50820dc50cf94d53a3"
+      },
+      "origin": {
+        "repository": "boringcache/OloEngineBase",
+        "branch": "boringcache-validation",
+        "revision": "4b0047061becf26ebeb267b43e6abf35ce0a6aa1"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "osquery-validation",
+      "source": {
+        "repository": "osquery/osquery",
+        "revision": "2aa456c42e8841f713df27f374a14c73166d6f6a"
+      },
+      "origin": {
+        "repository": "boringcache/osquery",
+        "branch": "boringcache-validation",
+        "revision": "08015e69c32cde5f6981a1358d4190ebba95da09"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "oxid-ghac-diagnostic",
+      "source": {
+        "repository": "MediaNoxLabs/oxid",
+        "revision": "8c2affc86279ec94a3bff33ed68ca8c0fd38cee2"
+      },
+      "origin": {
+        "repository": "boringcache/oxid",
+        "branch": "boringcache-ghac-diagnostic",
+        "revision": "d9861d2746f48bf4d13a474edc6c221c3b1bcdf7"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "oxid-validation",
+      "source": {
+        "repository": "MediaNoxLabs/oxid",
+        "revision": "8c2affc86279ec94a3bff33ed68ca8c0fd38cee2"
+      },
+      "origin": {
+        "repository": "boringcache/oxid",
+        "branch": "boringcache-validation",
+        "revision": "498c6db1919e0f73ef3e0a5b54440f8a6bb30529"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "proteus-chore-boringcache-onboarding",
+      "source": {
+        "repository": "CraftingTech/proteus",
+        "revision": "2f4f17d5654cda15b0725298778c6c12fae50972"
+      },
+      "origin": {
+        "repository": "boringcache/proteus",
+        "branch": "chore/boringcache-onboarding",
+        "revision": "816627c624ab0474c3244e18be4d1fc6fcde100a"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "proteus-integration-proof",
+      "source": {
+        "repository": "CraftingTech/proteus",
+        "revision": "6db93ed8b27074cf4a18d486e40e52bfc1c90016"
+      },
+      "origin": {
+        "repository": "boringcache/proteus",
+        "branch": "boringcache-integration-proof",
+        "revision": "597f9fe16c5eb34c11a8a7afdef71ad3c0422a44"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "py-lintro-compiler-cache-validation",
+      "source": {
+        "repository": "lgtm-hq/py-lintro",
+        "revision": "e8773c533caff41403dc40f37eee608c20143f01"
+      },
+      "origin": {
+        "repository": "boringcache/py-lintro",
+        "branch": "compiler-cache-validation",
+        "revision": "8121e04b63256a60452b741f26ae97ada22f51bd"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "py-lintro-validation",
+      "source": {
+        "repository": "lgtm-hq/py-lintro",
+        "revision": "e8773c533caff41403dc40f37eee608c20143f01"
+      },
+      "origin": {
+        "repository": "boringcache/py-lintro",
+        "branch": "boringcache-validation",
+        "revision": "01a33db63c1ee23f138d8731d8f35388c0aab4c8"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "riscv-gnu-toolchain-validation",
+      "source": {
+        "repository": "riscv-collab/riscv-gnu-toolchain",
+        "revision": "d118e5335a33d4dc77fdc64e5a5223931ab422a0"
+      },
+      "origin": {
+        "repository": "boringcache/riscv-gnu-toolchain",
+        "branch": "boringcache-validation",
+        "revision": "955074df087add478908b606c4ea8c74cd0b15ca"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "spiceai-validation",
+      "source": {
+        "repository": "spiceai/spiceai",
+        "revision": "4ad5e8415d3541ff9c3926dc8ac1e266d473a2f1"
+      },
+      "origin": {
+        "repository": "boringcache/spiceai",
+        "branch": "boringcache-validation",
+        "revision": "218bdb0d04828fe028e6ebc7a7c8b9b3f2335246"
+      },
+      "status": "candidate",
+      "retirement": "Keep the original fork until selected work and evidence are verified",
+      "next_action": "Keep the fork while the upstream follow-up is open. Activate a selected evaluation through docs/process.md.",
+      "follow_up_urls": [
+        "https://github.com/spiceai/spiceai/issues/12770"
+      ]
+    },
+    {
+      "id": "status-list-server-validation",
+      "source": {
+        "repository": "adorsys/status-list-server",
+        "revision": "3289d23094ae8b4d80ea2c825dd8e9b40f0be1d9"
+      },
+      "origin": {
+        "repository": "boringcache/status-list-server",
+        "branch": "boringcache-validation",
+        "revision": "e101bdda35eb6420b96cc8541cc8338593ab7d14"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "stirling-pdf-ci",
+      "source": {
+        "repository": "Stirling-Tools/Stirling-PDF",
+        "revision": "49c1e75ced43fe5035f5ed1027b38ff7bbdf4eec"
+      },
+      "origin": {
+        "repository": "boringcache/Stirling-PDF",
+        "branch": "boringcache-ci",
+        "revision": "8d81b34b372e0dedbc5ee4d5cd82dfbfea36a69a"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "stirling-pdf-main",
+      "source": {
+        "repository": "Stirling-Tools/Stirling-PDF",
+        "revision": "ce7f74a3c11d2f82fbd360002926c5b6e8c7ac01"
+      },
+      "origin": {
+        "repository": "boringcache/Stirling-PDF",
+        "branch": "main",
+        "revision": "b0c31702a1cf82ac3e1ec371029a2911474db18d"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "stirling-pdf-optional-boringcache-ci",
+      "source": {
+        "repository": "Stirling-Tools/Stirling-PDF",
+        "revision": "8db44ddbaf48a84c8482df1dc3ec091bd2d5e2d7"
+      },
+      "origin": {
+        "repository": "boringcache/Stirling-PDF",
+        "branch": "optional-boringcache-ci",
+        "revision": "4aa9d33e07834060716ba5f41fc5abde739c2e8d"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "stirling-pdf-pr-native-boringcache-proof",
+      "source": {
+        "repository": "Stirling-Tools/Stirling-PDF",
+        "revision": "a380a822342c4e399b200f40204edf705a00e906"
+      },
+      "origin": {
+        "repository": "boringcache/Stirling-PDF",
+        "branch": "pr/native-boringcache-proof",
+        "revision": "27f2c2b5d9e605005a588e099430a99aa243c531"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "tcl-lsp-validation",
+      "source": {
+        "repository": "bitwisecook/tcl-lsp",
+        "revision": "5a86bc09671a4a68e89fed3bb7375ff5f91d2407"
+      },
+      "origin": {
+        "repository": "boringcache/tcl-lsp",
+        "branch": "boringcache-validation",
+        "revision": "c4ba56d51872e1fbff4e805c4cb2039d47e66b00"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "tiled-cache",
+      "source": {
+        "repository": "bluesky/tiled",
+        "revision": "e1f3efe6f7d5eff5445a0da260a0b073f12b1622"
+      },
+      "origin": {
+        "repository": "boringcache/tiled",
+        "branch": "boringcache-cache",
+        "revision": "944573f5bf5d16598dc1b8cd0c5b6cdd82d02787"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "twenty-main",
+      "source": {
+        "repository": "twentyhq/twenty",
+        "revision": "3c48e27b2ea91c097f01a51b759a987c29caeeac"
+      },
+      "origin": {
+        "repository": "boringcache/twenty",
+        "branch": "main",
+        "revision": "28b5a5473e75443b8a1df80e75f07e2e6d64d04b"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "vsag-validation",
+      "source": {
+        "repository": "antgroup/vsag",
+        "revision": "30c217bc3ec0bb7395d5dea843fbee094365e8b6"
+      },
+      "origin": {
+        "repository": "boringcache/vsag",
+        "branch": "boringcache-validation",
+        "revision": "04c20ea28ff629ca5564d963be84bac12e5bb9c8"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "waterui-validation",
+      "source": {
+        "repository": "water-rs/waterui",
+        "revision": "809805d4ebb83ad4b74f69aa8fd04dc01e29f51c"
+      },
+      "origin": {
+        "repository": "boringcache/waterui",
+        "branch": "boringcache-validation",
+        "revision": "809805d4ebb83ad4b74f69aa8fd04dc01e29f51c"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "wavehouse-validation",
+      "source": {
+        "repository": "Wave-RF/WaveHouse",
+        "revision": "1bb38112f0c15953e8fa7eeb721915105ec3da6e"
+      },
+      "origin": {
+        "repository": "boringcache/WaveHouse",
+        "branch": "boringcache-validation",
+        "revision": "8f3c94fa1725521a178475e1cca151b158c4e041"
+      },
+      "status": "deferred",
+      "retirement": "Keep the original fork until selected work and evidence are verified"
+    },
+    {
+      "id": "zeroclaw-validation",
+      "source": {
+        "repository": "zeroclaw-labs/zeroclaw",
+        "revision": "d6b832646221733154293f5a94e8972ead476787"
+      },
+      "origin": {
+        "repository": "boringcache/zeroclaw",
+        "branch": "boringcache-validation",
+        "revision": "1ccd6ae19b78ce28646a39a66644d7b196954aff"
+      },
+      "status": "candidate",
+      "retirement": "Keep the original fork until selected work and evidence are verified",
+      "follow_up_urls": [
+        "https://github.com/zeroclaw-labs/zeroclaw/issues/7108"
+      ],
+      "next_action": "Keep the fork while the upstream follow-up is open. Activate a selected evaluation through docs/process.md."
+    }
+  ]
+}

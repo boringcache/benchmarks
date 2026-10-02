@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BoringCache benchmark case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "kind", "adapter", "workspace", "source", "origin", "execution", "reporting", "verification"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "kind": {"enum": ["benchmark", "evaluation", "retained"]},
+    "adapter": {"enum": ["workflow", "docker"]},
+    "workspace": {"const": "boringcache/benchmarks"},
+    "comparison": {
+      "type": "object", "additionalProperties": false,
+      "required": ["question", "providers", "timed_scope", "primary_metric", "storage", "cache_scope", "sample_count"],
+      "properties": {
+        "question": {"type": "string", "minLength": 1},
+        "providers": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z0-9-]+$"}},
+        "timed_scope": {"type": "string", "minLength": 1},
+        "primary_metric": {"enum": ["build_and_reuse_seconds", "build_seconds", "storage_bytes", "correctness"]},
+        "storage": {"enum": ["provider-reported", "unmeasured"]},
+        "cache_scope": {"type": "string", "minLength": 1},
+        "sample_count": {"type": "integer", "minimum": 1, "maximum": 100}
+      }
+    },
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["repository", "pins"],
+      "properties": {
+        "repository": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+        "revision": {"$ref": "#/$defs/sha"},
+        "patch": {"$ref": "#/$defs/path"},
+        "pins": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["path", "revision"],
+            "properties": {"path": {"$ref": "#/$defs/path"}, "revision": {"$ref": "#/$defs/sha"}, "repository": {"type": "string"}, "kind": {"enum": ["gitlink", "env", "recipe", "snapshot"]}}
+          }
+        }
+      }
+    },
+    "origin": {
+      "type": "object", "additionalProperties": false,
+      "required": ["repository", "branch", "revision"],
+      "properties": {"repository": {"type": "string"}, "branch": {"type": "string"}, "revision": {"$ref": "#/$defs/sha"}}
+    },
+    "execution": {
+      "type": "object", "additionalProperties": false,
+      "required": ["workflows"],
+      "properties": {
+        "workflows": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["path", "lane", "inputs"],
+            "properties": {"path": {"$ref": "#/$defs/path"}, "lane": {"enum": ["fresh", "rolling", "diagnostic"]}, "inputs": {"type": "object", "additionalProperties": {"type": "string"}},
+              "phases": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["cold", "warm", "commit"]}},
+              "variants": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"}}}
+          }
+        },
+        "sync": {"enum": ["upstream-head", "adjacent-pair", "verified-pair", "fixed"]},
+        "sync_minute": {"type": "integer", "minimum": 1, "maximum": 29},
+        "source_prefix": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
+        "blockers": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "reporting": {
+      "type": "object", "additionalProperties": false,
+      "required": ["entries", "publication"],
+      "properties": {"entries": {"type": "array", "items": {"type": "string"}}, "publication": {"enum": ["reviewed", "evaluation-only", "historical-only"]}}
+    },
+    "verification": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9_./-]+$"}
+  },
+  "allOf": [
+    {"if": {"properties": {"kind": {"enum": ["benchmark", "evaluation"]}}}, "then": {"required": ["comparison"]}},
+    {"if": {"properties": {"execution": {"properties": {"workflows": {"maxItems": 0}}}}},
+     "then": {"properties": {"kind": {"const": "evaluation"}, "reporting": {"properties": {"publication": {"const": "evaluation-only"}}},
+       "execution": {"required": ["blockers"], "properties": {"blockers": {"minItems": 1}}}}}}
+  ]
+}

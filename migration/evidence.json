@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "exports": [
+    {
+      "repository": "boringcache/llama.cpp",
+      "run_id": 36902057374,
+      "inventory_state": "complete",
+      "verified_files": 11,
+      "gaps": [],
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-llama-cpp-36902057374",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-llama-cpp-36902057374/llama-cpp-36902057374.tar",
+      "bundle_bytes": 503352320,
+      "sha256": "d4bc61bf7b847a3fc809d6739fd3ea79ec2b0acbf6618a96bbce4c21e9a5ce0b",
+      "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory",
+      "verified_on": "2026-10-02",
+      "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of the whole fork",
+      "repository_retirement": "keep until the remaining branch, evidence, caller, and upstream-follow-up audit passes"
+    }
+  ]
+}

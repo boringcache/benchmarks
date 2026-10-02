@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "id": "opentelemetry-java",
+  "kind": "benchmark",
+  "adapter": "workflow",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "open-telemetry/opentelemetry-java",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "a674ff1acea16754a2ed413fb8966084220fbd8b",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-opentelemetry-java",
+    "branch": "main",
+    "revision": "b4694de47a6595986d88a56c45910e832b7053bf"
+  },
+  "execution": {
+    "workflows": [
+      {
+        "path": ".github/workflows/opentelemetry-java-opentelemetry-java-gradle-benchmark.yml",
+        "lane": "rolling",
+        "inputs": {}
+      },
+      {
+        "path": ".github/workflows/opentelemetry-java-opentelemetry-java-gradle-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {}
+      }
+    ],
+    "sync": "upstream-head",
+    "sync_minute": 20
+  },
+  "reporting": {
+    "entries": [
+      "otel-gradle"
+    ],
+    "publication": "reviewed"
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}

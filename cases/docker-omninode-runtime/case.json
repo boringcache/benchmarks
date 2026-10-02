@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "id": "docker-omninode-runtime",
+  "kind": "evaluation",
+  "adapter": "docker",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "OmniNode-ai/omnibase_infra",
+    "pins": [
+      {
+        "path": "recipe.json",
+        "revision": "7d624a5c995b7d282f001430feb5ab912fcf6cfc",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "a71937520bbd491cdb023aeb0331b540440a72c9",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "7d624a5c995b7d282f001430feb5ab912fcf6cfc",
+        "kind": "recipe"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-docker",
+    "branch": "main",
+    "revision": "9683d048b619c39dfd4cda87d81648dff5862c27"
+  },
+  "execution": {
+    "sync": "fixed",
+    "workflows": [
+      {
+        "path": ".github/workflows/docker-cache-proofs.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "omninode-runtime",
+          "ref_key": "main",
+          "cache_lane": "fresh"
+        },
+        "variants": [
+          "linux-amd64",
+          "linux-arm64"
+        ]
+      },
+      {
+        "path": ".github/workflows/docker-cache-proofs.yml",
+        "lane": "rolling",
+        "inputs": {
+          "case_id": "omninode-runtime",
+          "ref_key": "main",
+          "cache_lane": "rolling"
+        },
+        "variants": [
+          "linux-amd64",
+          "linux-arm64"
+        ]
+      }
+    ]
+  },
+  "reporting": {
+    "entries": [],
+    "publication": "evaluation-only"
+  },
+  "verification": [
+    "Pinned upstream workflow fidelity",
+    "Declared Docker output"
+  ],
+  "comparison": {
+    "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+    "providers": [
+      "boringcache"
+    ],
+    "timed_scope": "Declared Docker build, including dependencies, cache import/export and declared image output",
+    "primary_metric": "correctness",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}

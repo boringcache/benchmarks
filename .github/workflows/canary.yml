@@ -1,0 +1,40 @@
+name: Dispatch CLI Canary Cases
+on:
+  workflow_dispatch:
+    inputs:
+      cli_version:
+        description: Optional exact published CLI canary; empty selects the latest
+        type: string
+        default: ''
+permissions:
+  contents: read
+concurrency:
+  group: benchmark-canary-dispatch
+  cancel-in-progress: false
+jobs:
+  dispatch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+        with:
+          ruby-version: 3.4.4
+      - name: Dispatch registered cases
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CLI_VERSION: ${{ inputs.cli_version }}
+        run: ruby scripts/nightly-canaries.rb --repository "$GITHUB_REPOSITORY" --version "$CLI_VERSION" --output "$RUNNER_TEMP/nightly-canaries.json" --summary "$GITHUB_STEP_SUMMARY"
+      - name: Retain dispatch receipt
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: nightly-canaries
+          path: ${{ runner.temp }}/nightly-canaries.json
+          if-no-files-found: error
+          retention-days: 90

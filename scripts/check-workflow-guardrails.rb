@@ -1,8 +1,18 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require "rbconfig"
+
 require_relative "publish-index"
 require "yaml"
+
+if ARGV.empty? && !ENV["BENCHMARK_REPOS_DIR"]
+  require "bundler/setup"
+  require_relative "benchmark-cases"
+  BenchmarkCases.contract_views do |directory|
+    exit(system(RbConfig.ruby, __FILE__, directory) ? 0 : 1)
+  end
+end
 
 def default_repos_dir
   candidates = [
@@ -16,14 +26,15 @@ repos_dir = ARGV[0] || ENV.fetch("BENCHMARK_REPOS_DIR", default_repos_dir)
 abort "benchmark repos directory not found: #{repos_dir}" unless Dir.exist?(repos_dir)
 
 repo_names = BENCHMARKS
-  .map { |benchmark| benchmark.fetch("source_repo").split("/").last }
+  .map { |benchmark| benchmark.fetch("historical_source_repo", benchmark.fetch("source_repo")).split("/").last }
   .concat(%w[benchmark-docker benchmark-obs-studio])
+  .concat(Dir[File.join(repos_dir, "benchmark-*")].select { |path| File.directory?(path) }.map { |path| File.basename(path) })
   .uniq
   .sort
 
 docker_repo_names = BENCHMARKS
   .select { |benchmark| benchmark.fetch("category") == "docker" }
-  .map { |benchmark| benchmark.fetch("source_repo").split("/").last }
+  .map { |benchmark| benchmark.fetch("historical_source_repo", benchmark.fetch("source_repo")).split("/").last }
   .concat(%w[benchmark-docker])
   .uniq
   .sort
@@ -70,9 +81,9 @@ PUBLIC_BOUNDARY_MARKERS = [
 
 PRODUCT_INVOCATION = /(?:\bboringcache\s+(?:bazel|cargo|ccache|docker|go|gradle|maven|nx|sccache|turbo|xcode)\b|boringcache\/one@)/
 CLI_CANARY_INPUT = /^\s+cli_version:\s*(?:$|\{)/
-CLI_CANARY_FORWARD = /(?:cli-version|cli_version):\s*\$\{\{\s*inputs\.cli_version\b/
+CLI_CANARY_FORWARD = /(?:cli-version|cli_version):\s*["\x27]?\$\{\{\s*inputs\.cli_version\b/
 BUILDKIT_CANARY_INPUT = /^\s+buildkit_image:\s*(?:$|\{)/
-BUILDKIT_CANARY_FORWARD = /(?:managed-buildkit-image|buildkit_image|BORINGCACHE_MANAGED_BUILDKIT_IMAGE):\s*\$\{\{[^\n]*inputs\.buildkit_image\b/
+BUILDKIT_CANARY_FORWARD = /(?:managed-buildkit-image|buildkit_image|BORINGCACHE_MANAGED_BUILDKIT_IMAGE):\s*["\x27]?\$\{\{[^\n]*inputs\.buildkit_image\b/
 
 DEPENDENCY_CACHE_PATHS = {
   /(?:^|\/)node_modules(?:\/|$)/i => "node_modules",
@@ -147,7 +158,7 @@ repo_names.each do |repo_name|
       errors << "#{repo_name}/#{relative}: remove #{description}; this contract belongs to product E2E" if basename.match?(pattern)
     end
     FORBIDDEN_INTERNAL_PATTERNS.each do |pattern, description|
-      next if pattern == /\bboringcache\s+(?:check|inspect|cache-registry)\b/ && relative == "scripts/benchmark-report.py"
+      next if pattern == /\bboringcache\s+(?:check|inspect|cache-registry)\b/ && relative == "scripts/benchmark-report.rb"
       next unless text.match?(pattern)
 
       errors << "#{repo_name}/#{relative}: #{description}"

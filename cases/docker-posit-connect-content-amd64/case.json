@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "id": "docker-posit-connect-content-amd64",
+  "kind": "evaluation",
+  "adapter": "docker",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "posit-dev/images-connect",
+    "pins": [
+      {
+        "path": "recipe.json",
+        "revision": "a629ff884db05c69d7947dca6ae6113db6b915cf",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "caa8c46ecba63a8e1092bd5316e6e0041258ddde",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "a73b3390d574f7a150e2b73f4637270bea9d7f4f",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "b29a5dc63b1a170cc478f1de149fddf7dbae6458",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "06a2999cd4de9d95d893109386ea39963ae5ba16",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "a629ff884db05c69d7947dca6ae6113db6b915cf",
+        "kind": "recipe"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-docker",
+    "branch": "main",
+    "revision": "9683d048b619c39dfd4cda87d81648dff5862c27"
+  },
+  "execution": {
+    "sync": "fixed",
+    "workflows": [
+      {
+        "path": ".github/workflows/docker-cache-proofs.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "posit-connect-content-amd64",
+          "ref_key": "main",
+          "cache_lane": "fresh"
+        },
+        "variants": [
+          "linux-amd64",
+          "linux-arm64"
+        ]
+      },
+      {
+        "path": ".github/workflows/docker-cache-proofs.yml",
+        "lane": "rolling",
+        "inputs": {
+          "case_id": "posit-connect-content-amd64",
+          "ref_key": "main",
+          "cache_lane": "rolling"
+        },
+        "variants": [
+          "linux-amd64",
+          "linux-arm64"
+        ]
+      }
+    ]
+  },
+  "reporting": {
+    "entries": [],
+    "publication": "evaluation-only"
+  },
+  "verification": [
+    "Pinned upstream workflow fidelity",
+    "Declared Docker output"
+  ],
+  "comparison": {
+    "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+    "providers": [
+      "boringcache"
+    ],
+    "timed_scope": "Declared Docker build, including dependencies, cache import/export and declared image output",
+    "primary_metric": "correctness",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}

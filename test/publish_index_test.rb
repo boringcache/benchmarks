@@ -1,10 +1,39 @@
 # frozen_string_literal: true
 
 require "minitest/autorun"
+require "minitest/mock"
 require "rbconfig"
 require_relative "../scripts/publish-index"
 
 class PublishIndexTest < Minitest::Test
+  def test_migration_keeps_historical_execution_repository
+    benchmark = {"source_repo" => "boringcache/benchmarks", "historical_source_repo" => "boringcache/benchmark-hugo", "case_id" => "hugo"}
+    calls = []
+    lookup = lambda do |repo:, workflow_name:|
+      calls << [repo, workflow_name]
+      raise "HTTP 404: Not Found" if repo == "boringcache/benchmarks"
+      [{"databaseId" => 123, "createdAt" => "2026-10-01T00:00:00Z"}]
+    end
+    stub(:latest_successful_runs, lookup) do
+      runs = benchmark_workflow_runs(benchmark, "hugo-hugo-fresh-benchmark.yml", {})
+      assert_equal "boringcache/benchmark-hugo", runs.first.fetch("repository")
+    end
+    assert_equal [["boringcache/benchmarks", "hugo-hugo-fresh-benchmark.yml"], ["boringcache/benchmark-hugo", "hugo-fresh-benchmark.yml"]], calls
+    stub(:latest_successful_runs, ->(**) { raise "HTTP 403: Forbidden" }) do
+      assert_raises(RuntimeError) { benchmark_workflow_runs(benchmark, "hugo-hugo-fresh-benchmark.yml", {}) }
+    end
+  end
+
+  def test_artifact_lookup_uses_original_run_repository_after_migration
+    run = {"databaseId" => 123, "createdAt" => "2026-10-01T00:00:00Z", "repository" => "boringcache/benchmark-hugo"}
+    requests = []
+    stub(:run_cmd, lambda { |*args| requests << args; '{"artifacts":[{"name":"benchmark-hugo-boringcache-fresh","expired":false}]}' }) do
+      found = latest_run_with_artifact(runs_for_head: [run], repo: "boringcache/benchmarks", benchmark_id: "hugo", strategy: "boringcache", lane: "fresh", artifacts_cache: {})
+      assert_equal run, found
+    end
+    assert_equal ["gh", "api", "repos/boringcache/benchmark-hugo/actions/runs/123/artifacts"], requests.first
+  end
+
   PRODUCT_REFS = {
     "schema_version" => 1,
     "action_ref" => "boringcache/one@v1",

@@ -56,296 +56,7 @@ RUNNER_VARIANCE_MIN_COMPILER_DEVIATION_RATIO = 0.20
 RUNNER_VARIANCE_MIN_COMPILER_DEVIATION_SECONDS = 5.0
 RUNNER_VARIANCE_CACHE_ERROR_KEYS = %w[cache_errors cache_read_errors cache_write_errors].freeze
 
-BENCHMARKS = [
-  {
-    "benchmark" => "hugo",
-    "name" => "Hugo",
-    "logo" => "hugo",
-    "repo" => "gohugoio/hugo",
-    "source_repo" => "boringcache/benchmark-hugo",
-    "public" => true,
-    "category" => "docker",
-    "step" => "Docker build (Go)",
-    "workflow" => "hugo-benchmark.yml",
-    "fresh_workflow" => "hugo-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "hugo-go",
-    "name" => "Hugo Go",
-    "logo" => "hugo",
-    "repo" => "gohugoio/hugo",
-    "source_repo" => "boringcache/benchmark-hugo-go",
-    "public" => true,
-    "category" => "go",
-    "step" => "Go build (native build cache)",
-    "workflow" => "hugo-go-benchmark.yml",
-    "fresh_workflow" => "hugo-go-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "immich",
-    "workflow_benchmark_ids" => ["immich-server"],
-    "name" => "Immich",
-    "logo" => "immich",
-    "repo" => "immich-app/immich",
-    "source_repo" => "boringcache/benchmark-immich",
-    "public" => true,
-    "category" => "docker",
-    "step" => "Docker build (server)",
-    "workflow" => "immich-benchmark.yml",
-    "fresh_workflow" => "immich-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "mastodon-docker",
-    "aliases" => ["mastodon"],
-    "workflow_benchmark_ids" => ["mastodon-sccache"],
-    "name" => "Mastodon",
-    "logo" => "mastodon",
-    "repo" => "mastodon/mastodon",
-    "source_repo" => "boringcache/benchmark-mastodon",
-    "public" => true,
-    "category" => "docker",
-    "step" => "Docker build (Ruby+Node)",
-    "workflow" => "mastodon-docker-benchmark.yml",
-    "fresh_workflow" => "mastodon-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "mastodon-streaming",
-    "name" => "Mastodon Streaming",
-    "logo" => "mastodon",
-    "repo" => "mastodon/mastodon",
-    "source_repo" => "boringcache/benchmark-mastodon",
-    "public" => false,
-    "category" => "docker",
-    "step" => "Docker build (streaming service)",
-    "workflow" => "mastodon-docker-benchmark.yml",
-    "fresh_workflow" => "mastodon-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "discourse-image-factory-amd64",
-    "aliases" => ["discourse", "discourse-image-factory"],
-    "workflow_benchmark_ids" => ["discourse-image-factory"],
-    "artifact_benchmark" => "discourse-image-factory",
-    "artifact_variants" => {"actions-cache" => ["amd64"], "boringcache" => ["amd64"]},
-    "name" => "Discourse Image Factory (amd64)",
-    "logo" => "docker",
-    "repo" => "discourse/discourse_docker",
-    "source_repo" => "boringcache/benchmark-discourse",
-    "archived" => true,
-    "public" => true,
-    "category" => "docker",
-    "step" => "Docker Bake (base and test image graph, amd64)",
-    "workflow" => "discourse-image-factory.yml",
-    "fresh_workflow" => "discourse-image-factory-fresh.yml"
-  },
-  {
-    "benchmark" => "discourse-image-factory-arm64",
-    "aliases" => ["discourse-arm64"],
-    "workflow_benchmark_ids" => ["discourse-image-factory"],
-    "artifact_benchmark" => "discourse-image-factory",
-    "artifact_variants" => {"actions-cache" => ["arm64"], "boringcache" => ["arm64"]},
-    "name" => "Discourse Image Factory (arm64)",
-    "logo" => "docker",
-    "repo" => "discourse/discourse_docker",
-    "source_repo" => "boringcache/benchmark-discourse",
-    "archived" => true,
-    "public" => true,
-    "category" => "docker",
-    "step" => "Docker Bake (base and test image graph, arm64)",
-    "workflow" => "discourse-image-factory.yml",
-    "fresh_workflow" => "discourse-image-factory-fresh.yml"
-  },
-  {
-    "benchmark" => "posthog",
-    "workflow_benchmark_ids" => ["posthog-no-layer-toolcache-mountcache"],
-    "name" => "PostHog",
-    "logo" => "posthog",
-    "repo" => "PostHog/posthog",
-    "source_repo" => "boringcache/benchmark-posthog",
-    "public" => true,
-    "category" => "docker",
-    "step" => "Docker build (full stack)",
-    "workflow" => "posthog-benchmark.yml",
-    "fresh_workflow" => "posthog-fresh-benchmark.yml",
-    "extra_providers" => ["boringcache-toolcache", "boringcache-mountcache"]
-  },
-  {
-    "benchmark" => "storybook",
-    "name" => "Storybook",
-    "logo" => "storybook",
-    "repo" => "storybookjs/storybook",
-    "source_repo" => "boringcache/benchmark-storybook",
-    "public" => true,
-    "category" => "nodejs",
-    "step" => "Nx build (Yarn monorepo)",
-    "workflow" => "storybook-benchmark.yml",
-    "fresh_workflow" => "storybook-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "otel-gradle",
-    "aliases" => ["otel", "opentelemetry", "opentelemetry-java"],
-    "name" => "OpenTelemetry Java",
-    "logo" => "docker",
-    "repo" => "open-telemetry/opentelemetry-java",
-    "source_repo" => "boringcache/benchmark-opentelemetry-java",
-    "public" => false,
-    "category" => "gradle",
-    "step" => "Gradle build (native HTTP cache)",
-    "workflow" => "opentelemetry-java-gradle-benchmark.yml",
-    "fresh_workflow" => "opentelemetry-java-gradle-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "spring-ai-maven",
-    "aliases" => ["spring", "spring-ai"],
-    "name" => "Spring AI",
-    "logo" => "docker",
-    "repo" => "spring-projects/spring-ai",
-    "source_repo" => "boringcache/benchmark-spring-ai",
-    "public" => false,
-    "category" => "maven",
-    "step" => "Maven build (build-cache extension)",
-    "workflow" => "spring-ai-maven-benchmark.yml",
-    "fresh_workflow" => "spring-ai-maven-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "grpc-bazel",
-    "aliases" => ["grpc", "gRPC"],
-    "name" => "gRPC",
-    "logo" => "grpc",
-    "repo" => "grpc/grpc",
-    "source_repo" => "boringcache/benchmark-grpc",
-    "public" => false,
-    "category" => "bazel",
-    "step" => "Bazel build (remote cache)",
-    "workflow" => "grpc-bazel-benchmark.yml",
-    "fresh_workflow" => "grpc-bazel-fresh-benchmark.yml",
-    "extra_providers" => ["buildbuddy-cache"]
-  },
-  {
-    "benchmark" => "zed-cargo",
-    "aliases" => ["zed", "zed-sccache"],
-    "name" => "Zed",
-    "logo" => "zed",
-    "repo" => "zed-industries/zed",
-    "source_repo" => "boringcache/benchmark-zed",
-    "public" => false,
-    "category" => "rust",
-    "step" => "Cargo build (target + sccache)",
-    "workflow" => "zed-cargo-rolling-chain.yml",
-    "fresh_workflow" => "zed-cargo-product.yml"
-  },
-  {
-    "benchmark" => "deno-cargo",
-    "aliases" => ["deno"],
-    "name" => "Deno",
-    "logo" => "deno",
-    "repo" => "denoland/deno",
-    "source_repo" => "boringcache/benchmark-deno",
-    "public" => false,
-    "category" => "rust",
-    "step" => "Cargo build (target + sccache)",
-    "workflow" => "deno-cargo-rolling-chain.yml",
-    "fresh_workflow" => "deno-cargo-product.yml"
-  },
-  {
-    "benchmark" => "duckgres",
-    "name" => "Duckgres",
-    "logo" => "docker",
-    "repo" => "PostHog/duckgres",
-    "source_repo" => "boringcache/benchmark-duckgres",
-    "public" => true,
-    "category" => "docker",
-    "step" => "Docker build (Postgres extension image)",
-    "workflow" => "duckgres-benchmark.yml",
-    "fresh_workflow" => "duckgres-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "chroma",
-    "workflow_benchmark_ids" => ["chroma-sccache-control", "chroma-sccache-tool", "chroma-full-bake-control", "chroma-full-bake-tool-v2"],
-    "name" => "Chroma",
-    "logo" => "docker",
-    "repo" => "chroma-core/chroma",
-    "source_repo" => "boringcache/benchmark-chroma",
-    "public" => true,
-    "category" => "docker",
-    "step" => "Docker build (Rust CLI image)",
-    "workflow" => "chroma-benchmark.yml",
-    "fresh_workflow" => "chroma-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "linkerd2-v2",
-    "aliases" => ["linkerd", "linkerd2", "linkerd2-web"],
-    "name" => "Linkerd2 Web",
-    "logo" => "docker",
-    "repo" => "linkerd/linkerd2",
-    "source_repo" => "boringcache/benchmark-linkerd2",
-    "public" => true,
-    "category" => "docker",
-    "step" => "Docker build (web image)",
-    "workflow" => "linkerd2-benchmark.yml",
-    "fresh_workflow" => "linkerd2-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "qdrant",
-    "name" => "Qdrant",
-    "logo" => "docker",
-    "repo" => "qdrant/qdrant",
-    "source_repo" => "boringcache/benchmark-qdrant",
-    "public" => true,
-    "category" => "docker",
-    "step" => "Docker build (Rust vector database)",
-    "workflow" => "qdrant-benchmark.yml",
-    "fresh_workflow" => "qdrant-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "n8n",
-    "workflow_benchmark_ids" => ["n8n-turbo"],
-    "name" => "n8n",
-    "logo" => "n8n",
-    "repo" => "n8n-io/n8n",
-    "source_repo" => "boringcache/benchmark-n8n",
-    "public" => true,
-    "category" => "nodejs",
-    "step" => "Turbo build (pnpm monorepo)",
-    "workflow" => "n8n-benchmark.yml",
-    "fresh_workflow" => "n8n-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "n8n-docker",
-    "name" => "n8n Docker",
-    "logo" => "n8n",
-    "repo" => "n8n-io/n8n",
-    "source_repo" => "boringcache/benchmark-n8n",
-    "public" => false,
-    "category" => "docker",
-    "step" => "Docker build (n8n image)",
-    "workflow" => "n8n-docker-benchmark.yml",
-    "fresh_workflow" => "n8n-docker-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "n8n-runners",
-    "name" => "n8n Runners",
-    "logo" => "n8n",
-    "repo" => "n8n-io/n8n",
-    "source_repo" => "boringcache/benchmark-n8n",
-    "public" => false,
-    "category" => "docker",
-    "step" => "Docker build (task runners)",
-    "workflow" => "n8n-docker-benchmark.yml",
-    "fresh_workflow" => "n8n-docker-fresh-benchmark.yml"
-  },
-  {
-    "benchmark" => "n8n-runners-distroless",
-    "name" => "n8n Runners Distroless",
-    "logo" => "n8n",
-    "repo" => "n8n-io/n8n",
-    "source_repo" => "boringcache/benchmark-n8n",
-    "public" => false,
-    "category" => "docker",
-    "step" => "Docker build (distroless task runners)",
-    "workflow" => "n8n-docker-benchmark.yml",
-    "fresh_workflow" => "n8n-docker-fresh-benchmark.yml"
-  }
-].freeze
+BENCHMARKS = JSON.parse(File.read(File.expand_path("../suites/published.json", __dir__))).freeze
 
 EXCLUDED_PROVIDER_RUNS = {
   "boringcache/benchmark-posthog" => {
@@ -749,6 +460,23 @@ def latest_successful_runs(repo:, workflow_name:, limit: RUN_HISTORY_LIMIT)
     .reverse
 end
 
+def benchmark_workflow_runs(benchmark, workflow_name, cache)
+  repo = benchmark.fetch("source_repo")
+  historical_repo = benchmark["historical_source_repo"]
+  current = cache[[repo, workflow_name]] ||= begin
+    latest_successful_runs(repo: repo, workflow_name: workflow_name).map { |run| run.merge("repository" => repo) }
+  rescue StandardError => error
+    raise unless historical_repo && error.message.match?(/HTTP 404|could not find any workflows? named/)
+    []
+  end
+  return current unless historical_repo
+
+  historical_workflow = workflow_name.delete_prefix("#{benchmark.fetch('case_id')}-")
+  historical = cache[[historical_repo, historical_workflow]] ||= latest_successful_runs(repo: historical_repo, workflow_name: historical_workflow)
+    .map { |run| run.merge("repository" => historical_repo) }
+  (current + historical).sort_by { |run| parse_timestamp(run.fetch("createdAt")) }.reverse.first(RUN_HISTORY_LIMIT)
+end
+
 def benchmark_artifact_name(repo:, run_id:, benchmark_id:, strategy:)
   output = run_cmd("gh", "api", "repos/#{repo}/actions/runs/#{run_id}/artifacts")
   artifacts = JSON.parse(output).fetch("artifacts", [])
@@ -844,7 +572,7 @@ def latest_run_with_artifact(runs_for_head:, repo:, benchmark_id:, strategy:, la
   candidate_names = lane_artifact_names(benchmark_id: benchmark_id, strategy: strategy, lane: lane, variants: variants)
   sorted = runs_for_head.sort_by { |run| parse_timestamp(run["createdAt"]) || Time.at(0) }.reverse
   sorted.find do |run|
-    artifacts = list_run_artifacts(repo: repo, run_id: run["databaseId"], cache: artifacts_cache)
+    artifacts = list_run_artifacts(repo: run.fetch("repository", repo), run_id: run["databaseId"], cache: artifacts_cache)
     artifacts.any? { |item| candidate_names.include?(item["name"].to_s) }
   end
 end
@@ -1070,6 +798,8 @@ def headline_candidates(actions_metrics:, boringcache_metrics:)
 end
 
 def load_strategy_data(temp_root:, repo:, run:, benchmark_id:, strategy:, lane:, cache:, variants: [])
+  repo = run.fetch("repository", repo)
+  repo = run.fetch("repository", repo)
   run_id = run.fetch("databaseId")
   cache_key = [repo, run_id, benchmark_id, strategy, lane, variants]
   return cache[cache_key] if cache.key?(cache_key)
@@ -2530,7 +2260,7 @@ def main
           provider_workflows = provider_workflows_for(benchmark)
           log_progress("loading #{benchmark_id} workflow runs")
           provider_runs = provider_workflows.transform_values do |workflow_name|
-            workflow_runs_cache[[repo, workflow_name]] ||= latest_successful_runs(repo: repo, workflow_name: workflow_name)
+            benchmark_workflow_runs(benchmark, workflow_name, workflow_runs_cache)
           end
           latest_lane_entries = {}
           window_lane_entries = {}
@@ -2539,7 +2269,7 @@ def main
           LANE_IDS.each do |lane|
             log_progress("loading #{benchmark_id} #{lane} lane")
             lane_runs = provider_workflows_for(benchmark, lane: lane).transform_values do |workflow_name|
-              workflow_runs_cache[[repo, workflow_name]] ||= latest_successful_runs(repo: repo, workflow_name: workflow_name)
+              benchmark_workflow_runs(benchmark, workflow_name, workflow_runs_cache)
             end
             lane_data = load_lane_data(
               temp_root: tmp,
