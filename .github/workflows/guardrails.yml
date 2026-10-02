@@ -11,8 +11,6 @@ jobs:
       with:
         persist-credentials: false
     - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
     - run: bundle install --jobs 4 --retry 2
     - name: Validate cases and suites
       run: bundle exec ruby bin/bench check
@@ -29,6 +27,29 @@ jobs:
       run: |-
         go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
         bundle exec ruby scripts/lint-workflows.rb "$(go env GOPATH)/bin/actionlint"
+  runtime:
+    name: Prepare harness on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-26.04, macos-26]
+    steps:
+    - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      with:
+        path: .harness
+        persist-credentials: false
+    - uses: ./.harness/.github/actions/prepare-case
+      with:
+        case-id: obs-studio
+    - name: Check the prepared harness and case
+      env:
+        BUNDLE_GEMFILE: ${{ github.workspace }}/.harness/Gemfile
+      run: |
+        ruby --version
+        bundle exec ruby .harness/bin/bench check obs-studio
+        test -f benchmark-context.json
   connect-ci:
     if: github.event_name == 'workflow_dispatch' && inputs.connect_ci
     runs-on: ubuntu-24.04
