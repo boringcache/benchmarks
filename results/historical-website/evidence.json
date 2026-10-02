@@ -1,0 +1,416 @@
+{
+  "generated_at": "2026-09-23T09:38:17Z",
+  "selection": "reviewed_product_evidence_v1",
+  "summaries": [
+    {
+      "key": "mastodon-no-layer-reuse",
+      "kind": "paired_timing_series",
+      "homepage": false,
+      "tool_page_slugs": [
+        "docker-build-cache"
+      ],
+      "evidence_url": "https://github.com/boringcache/mastodon/actions/runs/31704136355",
+      "samples": [
+        {
+          "project": "mastodon/mastodon",
+          "tool": "Docker · no layer hits",
+          "tool_page_slug": "docker-build-cache",
+          "before_seconds": 536,
+          "after_seconds": 175,
+          "comparator": "cache:false",
+          "scenario": "Translation update · linux/amd64",
+          "run_url": "https://github.com/boringcache/mastodon/actions/runs/31702508770",
+          "product_refs": {
+            "cli_version": "v1.19.1",
+            "action_ref": "boringcache/one@e24257b122813ad11d53b9ed024b474ca4946ad2"
+          }
+        },
+        {
+          "project": "mastodon/mastodon",
+          "tool": "Docker · no layer hits",
+          "tool_page_slug": "docker-build-cache",
+          "before_seconds": 363,
+          "after_seconds": 147,
+          "comparator": "cache:false",
+          "scenario": "Translation update · linux/arm64",
+          "run_url": "https://github.com/boringcache/mastodon/actions/runs/31702508770",
+          "product_refs": {
+            "cli_version": "v1.19.1",
+            "action_ref": "boringcache/one@e24257b122813ad11d53b9ed024b474ca4946ad2"
+          }
+        },
+        {
+          "project": "mastodon/mastodon",
+          "tool": "Docker · no layer hits",
+          "tool_page_slug": "docker-build-cache",
+          "before_seconds": 518,
+          "after_seconds": 175,
+          "comparator": "cache:false",
+          "scenario": "Ruby task update · linux/amd64",
+          "run_url": "https://github.com/boringcache/mastodon/actions/runs/31703348790",
+          "product_refs": {
+            "cli_version": "v1.19.1",
+            "action_ref": "boringcache/one@e24257b122813ad11d53b9ed024b474ca4946ad2"
+          }
+        },
+        {
+          "project": "mastodon/mastodon",
+          "tool": "Docker · no layer hits",
+          "tool_page_slug": "docker-build-cache",
+          "before_seconds": 389,
+          "after_seconds": 129,
+          "comparator": "cache:false",
+          "scenario": "Ruby task update · linux/arm64",
+          "run_url": "https://github.com/boringcache/mastodon/actions/runs/31703348790",
+          "product_refs": {
+            "cli_version": "v1.19.1",
+            "action_ref": "boringcache/one@e24257b122813ad11d53b9ed024b474ca4946ad2"
+          }
+        },
+        {
+          "project": "mastodon/mastodon",
+          "tool": "Docker · no layer hits",
+          "tool_page_slug": "docker-build-cache",
+          "before_seconds": 536,
+          "after_seconds": 191,
+          "comparator": "cache:false",
+          "scenario": "Poll-duration redesign · linux/amd64",
+          "run_url": "https://github.com/boringcache/mastodon/actions/runs/31704136355",
+          "product_refs": {
+            "cli_version": "v1.19.1",
+            "action_ref": "boringcache/one@e24257b122813ad11d53b9ed024b474ca4946ad2"
+          }
+        },
+        {
+          "feature_rank": 1,
+          "project": "mastodon/mastodon",
+          "tool": "Docker · no layer hits",
+          "tool_page_slug": "docker-build-cache",
+          "before_seconds": 380,
+          "after_seconds": 134,
+          "comparator": "cache:false",
+          "scenario": "Poll-duration redesign · linux/arm64",
+          "run_url": "https://github.com/boringcache/mastodon/actions/runs/31704136355",
+          "product_refs": {
+            "cli_version": "v1.19.1",
+            "action_ref": "boringcache/one@e24257b122813ad11d53b9ed024b474ca4946ad2"
+          }
+        }
+      ]
+    },
+    {
+      "key": "docker-speed",
+      "kind": "paired_timing_range",
+      "homepage": true,
+      "tool_page_slugs": ["docker-build-cache"],
+      "evidence_url": "https://github.com/boringcache/benchmarks/tree/076f3d1ce82b30a33b39decf8e554bb99e32d7f3",
+      "samples": [
+        {
+          "before_seconds": 257,
+          "after_seconds": 230,
+          "run_url": "https://github.com/boringcache/benchmark-hugo/actions/runs/31569885431",
+          "product_refs": {
+            "cli_version": "v1.19.0",
+            "action_ref": "boringcache/one@1d01e5dbf19ce259f921aa353d5e3e4ac5f942e4"
+          }
+        },
+        {
+          "feature_rank": 3,
+          "project": "immich-app/immich",
+          "tool": "Docker",
+          "tool_page_slug": "docker-build-cache",
+          "before_seconds": 443,
+          "after_seconds": 204,
+          "run_url": "https://github.com/boringcache/benchmark-immich/actions/runs/31569890271",
+          "product_refs": {
+            "cli_version": "v1.19.0",
+            "action_ref": "boringcache/one@1d01e5dbf19ce259f921aa353d5e3e4ac5f942e4"
+          }
+        },
+        {
+          "feature_rank": 2,
+          "project": "posthog/posthog",
+          "tool": "Docker",
+          "tool_page_slug": "docker-build-cache",
+          "before_seconds": 2204,
+          "after_seconds": 871,
+          "run_url": "https://github.com/boringcache/benchmark-posthog/actions/runs/31569900357",
+          "product_refs": {
+            "cli_version": "v1.19.0",
+            "action_ref": "boringcache/one@1d01e5dbf19ce259f921aa353d5e3e4ac5f942e4"
+          }
+        },
+        {
+          "before_seconds": 13,
+          "after_seconds": 8,
+          "run_url": "https://github.com/boringcache/benchmark-linkerd2/actions/runs/31569891810",
+          "product_refs": {
+            "cli_version": "v1.19.0",
+            "action_ref": "boringcache/one@1d01e5dbf19ce259f921aa353d5e3e4ac5f942e4"
+          }
+        },
+        {
+          "before_seconds": 887,
+          "after_seconds": 577,
+          "run_url": "https://github.com/boringcache/benchmark-qdrant/actions/runs/31569902388",
+          "product_refs": {
+            "cli_version": "v1.19.0",
+            "action_ref": "boringcache/one@1d01e5dbf19ce259f921aa353d5e3e4ac5f942e4"
+          }
+        },
+        {
+          "before_seconds": 1507,
+          "after_seconds": 973,
+          "run_url": "https://github.com/boringcache/benchmark-chroma/actions/runs/31355272642",
+          "product_refs": {
+            "cli_version": "v1.18.0",
+            "action_ref": "boringcache/one@78e1fd3257bbdf27722c46b500a39b6626fc8d27"
+          }
+        }
+      ]
+    },
+    {
+      "key": "immich-base-images-rebuild",
+      "kind": "paired_timing",
+      "homepage": false,
+      "tool_page_slugs": [
+        "docker-build-cache"
+      ],
+      "evidence_url": "https://github.com/boringcache/base-images/actions/runs/31700820652",
+      "sample": {
+        "project": "immich-app/base-images",
+        "tool": "Docker + ccache + mount cache",
+        "tool_page_slug": "docker-build-cache",
+        "before_seconds": 6947,
+        "after_seconds": 4463,
+        "layer_seconds": 6787,
+        "comparator": "upstream-style GHCR registry",
+        "scenario": "Node 24.14.1 to 24.18.0 rebuilds across dev, prod, AMD64, and ARM64",
+        "trial_count": 3,
+        "observation_count": 12,
+        "paired_wins": 12,
+        "passed_jobs": 98,
+        "cache_errors": 0,
+        "issue_candidates": 0,
+        "final_image_push": false,
+        "seed_source_sha": "a645c0ebfe59d53112d8773dca7936b5f90c684d",
+        "rebuild_source_sha": "9163399e7675da7e9087171a4ff2a49f815acc27",
+        "run_url": "https://github.com/boringcache/base-images/actions/runs/31700820652",
+        "product_refs": {
+          "cli_version": "v1.19.1",
+          "action_ref": "boringcache/one@e24257b122813ad11d53b9ed024b474ca4946ad2"
+        }
+      }
+    },
+    {
+      "key": "discourse-arm64-cold-seed",
+      "kind": "paired_timing",
+      "homepage": false,
+      "tool_page_slugs": [
+        "docker-build-cache"
+      ],
+      "evidence_url": "https://github.com/boringcache/discourse_docker/actions/runs/31700383222",
+      "sample": {
+        "project": "discourse/discourse",
+        "tool": "Docker + ccache + mount cache",
+        "tool_page_slug": "docker-build-cache",
+        "before_seconds": 1406,
+        "after_seconds": 1206,
+        "layer_seconds": 1316,
+        "comparator": "actions/cache",
+        "scenario": "Cold ARM64 image-factory seed across eight Bake targets",
+        "architecture": "arm64",
+        "source_sha": "eedf0ac2344c37d66a2c9ab05dc8a83bf3efd9bb",
+        "run_url": "https://github.com/boringcache/discourse_docker/actions/runs/31700383222",
+        "product_refs": {
+          "cli_version": "v1.19.1",
+          "action_ref": "boringcache/one@e24257b122813ad11d53b9ed024b474ca4946ad2"
+        }
+      }
+    },
+    {
+      "key": "bazel-remote-cache",
+      "kind": "paired_provider_timing",
+      "homepage": true,
+      "tool_page_slugs": ["bazel-remote-cache"],
+      "evidence_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/31382784321",
+      "sample": {
+        "feature_rank": 4,
+        "project": "grpc/grpc",
+        "tool": "Bazel",
+        "tool_page_slug": "bazel-remote-cache",
+        "boringcache_seconds": 260,
+        "comparator_seconds": 360,
+        "comparator": "BuildBuddy",
+        "same_source": true,
+        "run_url": "https://github.com/boringcache/benchmark-grpc/actions/runs/31382784321",
+        "product_refs": {
+          "cli_version": "v1.18.0",
+          "action_ref": "boringcache/one@78e1fd3257bbdf27722c46b500a39b6626fc8d27"
+        }
+      }
+    },
+    {
+      "key": "tool-cache-storage",
+      "kind": "paired_storage_range",
+      "homepage": true,
+      "tools": ["Go", "Gradle", "Maven", "Nx", "Turbo", "sccache"],
+      "tool_page_slugs": [
+        "go-build-cache",
+        "gradle-build-cache",
+        "maven-build-cache",
+        "nx-remote-cache",
+        "turborepo-remote-cache",
+        "sccache-remote-cache"
+      ],
+      "evidence_url": "https://github.com/boringcache/benchmarks",
+      "samples": [
+        {
+          "project": "Hugo",
+          "tool_page_slug": "go-build-cache",
+          "before_gib": 1.457,
+          "after_gib": 0.279,
+          "run_url": "https://github.com/boringcache/benchmark-hugo-go/actions/runs/27092625118",
+          "product_refs": {
+            "cli_version": "v1.13.40",
+            "action_ref": "boringcache/one@4ba2a2c1afa5aa9a45b407674bf21456cfa884c6"
+          }
+        },
+        {
+          "project": "Storybook",
+          "tool_page_slug": "nx-remote-cache",
+          "before_gib": 6.045,
+          "after_gib": 0.841,
+          "run_url": "https://github.com/boringcache/benchmark-storybook/actions/runs/29234064969",
+          "product_refs": {
+            "cli_version": "v1.13.92",
+            "action_ref": "boringcache/one@d39427a8c278c17670e2fbb1b2ba9a699b61075f"
+          }
+        },
+        {
+          "project": "OpenTelemetry Java",
+          "tool_page_slug": "gradle-build-cache",
+          "before_gib": 3.511,
+          "after_gib": 0.758,
+          "run_url": "https://github.com/boringcache/benchmark-opentelemetry-java/actions/runs/29118580746",
+          "product_refs": {
+            "cli_version": "v1.13.92",
+            "action_ref": "boringcache/one@d39427a8c278c17670e2fbb1b2ba9a699b61075f"
+          }
+        },
+        {
+          "project": "Spring AI",
+          "tool_page_slug": "maven-build-cache",
+          "before_gib": 4.574,
+          "after_gib": 1.356,
+          "run_url": "https://github.com/boringcache/benchmark-spring-ai/actions/runs/29232864168",
+          "product_refs": {
+            "cli_version": "v1.13.92",
+            "action_ref": "boringcache/one@d39427a8c278c17670e2fbb1b2ba9a699b61075f"
+          }
+        },
+        {
+          "feature_rank": 5,
+          "project": "n8n-io/n8n",
+          "tool": "Turbo",
+          "tool_page_slug": "turborepo-remote-cache",
+          "before_gib": 12.773,
+          "after_gib": 0.775,
+          "run_url": "https://github.com/boringcache/benchmark-n8n/actions/runs/29237867482",
+          "product_refs": {
+            "cli_version": "v1.13.92",
+            "action_ref": "boringcache/one@d39427a8c278c17670e2fbb1b2ba9a699b61075f"
+          }
+        },
+        {
+          "project": "Zed",
+          "tool_page_slug": "sccache-remote-cache",
+          "before_gib": 11.46,
+          "after_gib": 0.882,
+          "run_url": "https://github.com/boringcache/benchmark-zed/actions/runs/29213266895",
+          "product_refs": {
+            "cli_version": "v1.13.92",
+            "action_ref": "boringcache/one@d39427a8c278c17670e2fbb1b2ba9a699b61075f"
+          }
+        }
+      ]
+    },
+    {
+      "key": "cargo-reuse",
+      "kind": "cache_reuse",
+      "homepage": true,
+      "tool_page_slugs": ["rust-build-cache", "sccache-remote-cache"],
+      "evidence_url": "https://github.com/boringcache/benchmark-deno/actions/runs/31538912668",
+      "sample": {
+        "feature_rank": 6,
+        "project": "denoland/deno",
+        "tool": "Cargo + sccache",
+        "tool_page_slug": "rust-build-cache",
+        "hits": 1333,
+        "misses": 58,
+        "precision": 1,
+        "context": "Cargo target and sccache",
+        "run_url": "https://github.com/boringcache/benchmark-deno/actions/runs/31538912668",
+        "product_refs": {
+          "cli_version": "v1.19.0",
+          "action_ref": "boringcache/one@1d01e5dbf19ce259f921aa353d5e3e4ac5f942e4"
+        }
+      }
+    },
+    {
+      "key": "ccache-reuse",
+      "kind": "cache_reuse",
+      "homepage": true,
+      "tool_page_slugs": ["ccache-remote-cache"],
+      "evidence_url": "https://github.com/boringcache/benchmark-obs-studio/actions/runs/31538912306",
+      "sample": {
+        "project": "obsproject/obs-studio",
+        "tool": "ccache",
+        "tool_page_slug": "ccache-remote-cache",
+        "hits": 447,
+        "misses": 131,
+        "precision": 0,
+        "context": "ccache remote compiler results",
+        "run_url": "https://github.com/boringcache/benchmark-obs-studio/actions/runs/31538912306",
+        "product_refs": {
+          "cli_version": "v1.19.0",
+          "action_ref": "boringcache/one@1d01e5dbf19ce259f921aa353d5e3e4ac5f942e4"
+        }
+      }
+    },
+    {
+      "key": "docker-tool-cache-catalog",
+      "kind": "workload_catalog",
+      "homepage": false,
+      "tool_page_slugs": ["docker-build-cache", "go-build-cache", "sccache-remote-cache", "rust-build-cache"],
+      "evidence_url": "https://github.com/boringcache/benchmark-docker/tree/02a87084f7891060a8d2815c9ab76e4b89063b18",
+      "workload_count": 47,
+      "coverage": ["Go build cache", "sccache", "Rust target cache mounts"],
+      "source_revision": "02a87084f7891060a8d2815c9ab76e4b89063b18"
+    },
+    {
+      "key": "sccache-read-hit-latency",
+      "kind": "cache_read_latency",
+      "homepage": false,
+      "tool_page_slugs": [
+        "build-cache"
+      ],
+      "evidence_url": "https://github.com/boringcache/host-rust-core/actions/runs/35680338088/job/106595748413",
+      "sample": {
+        "project": "boringcache/host-rust-core",
+        "measurement": "sccache_cache_read_hit",
+        "tool_version": "0.17.0",
+        "platform": "macOS ARM64",
+        "hits": 1287,
+        "cache_read_hit_duration_ns": 6465764927,
+        "run_url": "https://github.com/boringcache/host-rust-core/actions/runs/35680338088",
+        "artifact_id": 10674641898,
+        "artifact_file": "sccache.json",
+        "product_refs": {
+          "cli_version": "v1.31.0",
+          "action_ref": "boringcache/one@9ca311f9b247835b3cc87639321c79bac8018145"
+        }
+      }
+    }
+  ]
+}

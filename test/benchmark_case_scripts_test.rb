@@ -7,9 +7,24 @@ require "rbconfig"
 require "toml-rb"
 require "json"
 require "fileutils"
+require "yaml"
 
 class BenchmarkCaseScriptsTest < Minitest::Test
   ROOT = File.expand_path("..", __dir__)
+
+  def test_grpc_declares_every_comparison_arm_and_limits_its_provider_credential
+    item = JSON.parse(File.read(File.join(ROOT, "cases", "grpc", "case.json")))
+    item.fetch("execution").fetch("workflows").each do |entry|
+      workflow = YAML.safe_load(File.read(File.join(ROOT, entry.fetch("path"))), aliases: true)
+      refute workflow.fetch("env").key?("BUILDBUDDY_API_KEY")
+      workflow.fetch("jobs").each_value do |job|
+        next unless job.dig("strategy", "matrix", "include")
+        providers = job.dig("strategy", "matrix", "include").map { |row| row.fetch("strategy") }
+        assert_equal item.dig("comparison", "providers").sort, providers.sort
+        assert_equal "${{ matrix.strategy == 'buildbuddy' && secrets.BUILDBUDDY_API_KEY || '' }}", job.dig("env", "BUILDBUDDY_API_KEY")
+      end
+    end
+  end
 
   def with_case(id)
     Dir.mktmpdir("benchmark-recipe-") do |directory|

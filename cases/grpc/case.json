@@ -51,7 +51,8 @@
     "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
     "providers": [
       "boringcache",
-      "actions-cache"
+      "actions-cache",
+      "buildbuddy"
     ],
     "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
     "primary_metric": "build_and_reuse_seconds",

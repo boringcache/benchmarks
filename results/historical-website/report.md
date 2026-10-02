@@ -1,6 +1,6 @@
 # Historical website benchmark evidence
 
-This report preserves the website's ten reviewed evidence summaries from [the source configuration](https://github.com/boringcache/monorepo/blob/2f1b67184d63f59de1343995a83a3edf99b6ecc4/web/config/marketing_benchmark_evidence.json). Measurements and product versions are copied without recalculation. These are historical observations, not results from the consolidated executor or qualification of the current product.
+This report preserves the website's ten reviewed evidence summaries in [the source data](evidence.json). Measurements and product versions are copied without recalculation. These are historical observations, not results from the consolidated executor or qualification of the current product.
 
 The [evidence archive](https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02) contains 52 website-linked run exports: 51 complete scoped exports and one partial Hugo Go export whose logs are unavailable. The uploaded bundle was independently downloaded, checked against its SHA-256, extracted, and verified against each export's inventory. Preservation does not establish that every historical claim has a complete experimental design.
 
