@@ -119,7 +119,6 @@ runs:
       mode: turbo
       trust-policy: publish
       working-directory: upstream
-      fail-on-cache-error: true
   - name: Restore with BoringCache
     id: boringcache-restore
     if: inputs.strategy == 'boringcache' && inputs.phase == 'warm'
@@ -130,7 +129,6 @@ runs:
       trust-policy: restore
       working-directory: upstream
       fail-on-cache-miss: true
-      fail-on-cache-error: true
   - name: Start the build timer
     id: build_timer
     shell: bash

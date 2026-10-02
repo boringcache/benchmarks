@@ -237,7 +237,6 @@ runs:
       mode: docker
       trust-policy: publish
       fail-on-cache-miss: "${{ inputs.phase == 'warm' }}"
-      fail-on-cache-error: true
   - name: Build from the BoringCache cache
     id: restore
     if: inputs.strategy == 'boringcache' && inputs.phase == 'warm' && inputs.publish_on_warm
@@ -251,7 +250,6 @@ runs:
       mode: docker
       trust-policy: restore
       fail-on-cache-miss: true
-      fail-on-cache-error: true
   - name: Verify the completed image
     if: inputs.load_image == 'true'
     shell: bash

@@ -50,6 +50,11 @@ fresh and rolling workflows support both dispatch and `workflow_call`. Use them
 for evaluations and published cases without copying the provider lifecycle.
 Docker tool caches remain product-plan settings rather than a second implementation
 of the product's proxy or cache lifecycle.
+Cache errors always fail benchmark observations. The wrapper sets that policy
+literally and converts the optional cache-miss input to a boolean expression.
+Nested composite post steps can receive a different input context; forwarding a
+boolean as an unchecked string can become empty during cleanup. Qualification
+must inspect post-job logs and evidence as well as the job conclusion.
 
 ## 3. Validate before execution
 
@@ -128,7 +133,6 @@ support a new series claim.
 
 ```sh
 bin/bench record <case-id> --series screening-01 --record /tmp/phase.json
-bin/bench report <case-id> --series screening-01
 ```
 
 Recording rejects duplicate slots. Reporting checks matched source, case, variant,
@@ -141,12 +145,18 @@ storage stays unmeasured. Reports require publication review.
 ```sh
 bin/bench preserve --repository boringcache/benchmarks --run <run-id> --directory /tmp/evidence-<run-id>
 bin/bench verify-evidence --directory /tmp/evidence-<run-id>
+bin/bench finish <case-id> --series screening-01 --sample 1 --directory /tmp/evidence-<run-id>
+bin/bench report <case-id> --series screening-01
 ```
 
 Publish the verified bundle to durable storage with a stable link. Experimental
 cache retention is not permanent evidence retention. The exporter includes all
 available attempts and records gaps; partial exports remain partial. Keep
 original execution URLs as provenance.
+`finish` checks the preserved run and job conclusions and post-step logs. A
+green job with a reported BoringCache post-step failure remains unqualified.
+Reports require a completion check for every run represented by their phase
+records; complete timing records alone cannot qualify a comparison.
 
 Review correctness, matched arms, storage semantics, sample completeness,
 environment variance, and claim limits. Parity and no material improvement are

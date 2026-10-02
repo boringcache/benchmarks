@@ -111,7 +111,6 @@ runs:
       trust-policy: publish
       working-directory: "."
       cache-profiles: storybook-nx
-      fail-on-cache-error: true
   - name: Restore with BoringCache
     id: boringcache-restore
     if: inputs.strategy == 'boringcache' && inputs.phase == 'warm'
@@ -123,7 +122,6 @@ runs:
       working-directory: "."
       cache-profiles: storybook-nx
       fail-on-cache-miss: true
-      fail-on-cache-error: true
   - name: Install Storybook dependencies
     shell: bash
     working-directory: upstream

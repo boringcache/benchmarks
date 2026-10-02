@@ -70,6 +70,8 @@ jobs:
       actions: read
       id-token: write
     with:
+      cli_version: "${{ inputs.cli_version }}"
+      cache_profile: cargo-product
       series_id: "${{ inputs.series_id }}"
       sample: "${{ inputs.sample }}"
   qualification-docker:
@@ -84,6 +86,7 @@ jobs:
       case_id: cloudcost-exporter-amd64
       ref_key: main
       cache_lane: fresh
+      cli_version: "${{ inputs.cli_version }}"
       series_id: "${{ inputs.series_id }}"
       sample: "${{ inputs.sample }}"
 'on':
