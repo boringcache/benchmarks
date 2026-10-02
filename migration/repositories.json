@@ -49,7 +49,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "verified single-provider Cargo product cold/adjacent-source proof; compiler-only and rolling paths remain unverified",
+      "consolidated_execution": "verified direct single-provider Cargo product and compiler-only cold/adjacent-source proofs; native cache errors retained; Cargo storage total unqualified; rolling and full release caller paths remain unverified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -78,6 +78,19 @@
           37021502943
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-deno-wrapper-qualification-37021502943"
+      },
+      "direct_dispatch_qualification": {
+        "case_id": "deno",
+        "series_ids": [
+          "direct-cargo-product-qualification",
+          "direct-compiler-only-qualification"
+        ],
+        "run_ids": [
+          37041630583,
+          37041656850
+        ],
+        "scope": "One correctness sample per cache profile; output, reuse and post-step completion verified; no provider performance claim; rolling publication and full release caller pending",
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-direct-dispatch-2026-10-02"
       }
     },
     {
@@ -677,6 +690,27 @@
           "complete": 2
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "recipe_verification": {
+        "verified_on": "2026-10-02",
+        "scope": "Disposable pinned source file and committed command checks; dependency setup, compilation and release output checks remain unverified",
+        "review": "cases/zed/recipe-review.md",
+        "contracts": [
+          {
+            "path": "cases/zed/payload/cargo-layer-recipe.json",
+            "source_revisions": [
+              "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+              "ee3b5558c581429633937e458fad8d109f29e9ee"
+            ],
+            "declared_plan_count": 8
+          },
+          {
+            "path": "cases/zed/payload/recipe-contract.json",
+            "source_revisions": [
+              "54edefa0832e4728bcf077e4a48b25912eea5433"
+            ]
+          }
+        ]
       }
     }
   ]

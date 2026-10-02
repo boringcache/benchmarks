@@ -6,6 +6,7 @@ require "open3"
 require "rbconfig"
 require "toml-rb"
 require "json"
+require "digest"
 require "fileutils"
 require "yaml"
 
@@ -100,6 +101,26 @@ class BenchmarkCaseScriptsTest < Minitest::Test
       _, error, status = run_script(directory, "verify-upstream-recipe")
       refute status.success?
       assert_includes error, "Upstream recipe changed"
+    end
+  end
+
+  def test_selected_recipe_contract_checks_each_declared_plan
+    with_case("zed") do |directory|
+      source = File.join(directory, "upstream")
+      FileUtils.mkdir_p(source)
+      File.write(File.join(source, "recipe.txt"), "reviewed recipe\n")
+      command = ["cargo", "build", "--release"]
+      paths = %w[primary.toml remote.toml]
+      paths.each { |path| File.write(File.join(directory, path), "[adapters.cargo]\ncommand = #{JSON.generate(command)}\n") }
+      contract = {"upstream_files" => {"recipe.txt" => Digest::SHA256.file(File.join(source, "recipe.txt")).hexdigest},
+        "commands" => {}, "plans" => [{"adapter" => "cargo", "paths" => paths, "command" => command}]}
+      File.write(File.join(directory, "selected-recipe.json"), JSON.generate(contract))
+      _, error, status = run_script(directory, "verify-upstream-recipe", source, "selected-recipe.json")
+      assert status.success?, error
+      File.write(File.join(directory, "remote.toml"), "[adapters.cargo]\ncommand = [\"cargo\", \"check\"]\n")
+      _, error, status = run_script(directory, "verify-upstream-recipe", source, "selected-recipe.json")
+      refute status.success?
+      assert_includes error, "remote.toml differs from the reviewed recipe"
     end
   end
 
