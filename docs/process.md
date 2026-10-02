@@ -138,7 +138,9 @@ When a variant selects a workflow input, declare `variant_input` in the workflow
 entry. The plan fills that input from `--variant` and rejects a conflicting value.
 The Zed layer proof uses the same combined cold seed for its target-only,
 sccache-only, and combined restore probes; it establishes output correctness and
-cache behavior rather than a comparison between providers.
+cache behavior rather than a comparison between providers. The frozen variant
+selects `cache_layer`; one shared restore matrix runs only that selected probe.
+Manual `cache_layer: all` runs the diagnostic matrix against a common cold seed.
 Inspect the planned receipt before retrying an uncertain dispatch. Never
 redispatch blindly after an interrupted request.
 
