@@ -31,7 +31,7 @@ runs:
     shell: bash
     env:
       PREPARE_PHASE: "${{ inputs.phase == 'warm' && 'warm1' || 'base' }}"
-    run: ./scripts/prepare-source.sh "$PREPARE_PHASE"
+    run: ruby ./scripts/prepare-source.rb "$PREPARE_PHASE"
   - name: Select the cache cohort
     id: scope
     shell: bash
@@ -55,7 +55,7 @@ runs:
         gha_key="${gha_prefix}cold"
         buildbuddy_instance="${BENCHMARK_ID}/run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
       fi
-      ./scripts/scope-boringcache-run.sh "$cohort"
+      ruby ./scripts/scope-case-cache.rb "$cohort"
       {
         echo "cohort=${cohort}"
         echo "gha_prefix=${gha_prefix}"
@@ -82,7 +82,7 @@ runs:
   - name: Configure BoringCache publish
     id: publish
     if: inputs.strategy == 'boringcache' && inputs.phase == 'publish'
-    uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+    uses: ./.github/actions/boringcache
     with:
       cli-version: "${{ inputs.cli_version }}"
       mode: bazel
@@ -92,7 +92,7 @@ runs:
   - name: Configure BoringCache restore
     id: restore
     if: inputs.strategy == 'boringcache' && inputs.phase == 'warm'
-    uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+    uses: ./.github/actions/boringcache
     with:
       cli-version: "${{ inputs.cli_version }}"
       mode: bazel

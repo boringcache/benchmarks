@@ -33,7 +33,11 @@
       }
     ],
     "sync": "upstream-head",
-    "sync_minute": 21
+    "sync_minute": 21,
+    "cache_tags": {
+      "posthog-docker-local": "{scope}-docker",
+      "posthog-turbo-local": "{scope}-turbo"
+    }
   },
   "reporting": {
     "entries": [

@@ -1,17 +1,19 @@
 {
   "schema_version": 1,
   "case_id": "hugo-go",
-  "series_id": "consolidation-hugo-go",
-  "created_at": "2026-10-02T13:03:35Z",
+  "series_id": "shared-wrapper-hugo-go",
+  "created_at": "2026-10-02T13:50:15Z",
   "lane": "fresh",
   "phases": [
     "cold",
     "warm"
   ],
   "sample_count": 2,
-  "definition_sha256": "fa8e65ad0de9a9bd1b218c29d79b089d3e0b69443a36e7889ba3ef681d7485c7",
+  "definition_sha256": "84705a9f57f077e0e3c709fe51a47f51cb31a4a65f0b405666d5bc902a593fcd",
   "variant": null,
-  "workflow_inputs": {},
+  "workflow_inputs": {
+    "case_id": "hugo-go"
+  },
   "comparison": {
     "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
     "providers": [
@@ -37,5 +39,5 @@
   "verification": [
     "Pinned upstream recipe and build success"
   ],
-  "plan_sha256": "21c4ef92a004939c2682638c70942c9c29be3cc1edab4a8a1795610322a3f9ce"
+  "plan_sha256": "e4e5c089894237d95efa24688f5b8c5dc6e72faa4d8818e421a787923d77849b"
 }

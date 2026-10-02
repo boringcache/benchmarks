@@ -22,18 +22,40 @@
   "execution": {
     "workflows": [
       {
-        "path": ".github/workflows/opentelemetry-java-opentelemetry-java-gradle-benchmark.yml",
+        "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
-        "inputs": {}
+        "inputs": {
+          "case_id": "opentelemetry-java"
+        },
+        "historical_workflow": "opentelemetry-java-gradle-benchmark.yml"
       },
       {
-        "path": ".github/workflows/opentelemetry-java-opentelemetry-java-gradle-fresh-benchmark.yml",
+        "path": ".github/workflows/native-fresh-benchmark.yml",
         "lane": "fresh",
-        "inputs": {}
+        "inputs": {
+          "case_id": "opentelemetry-java"
+        },
+        "historical_workflow": "opentelemetry-java-gradle-fresh-benchmark.yml"
       }
     ],
     "sync": "upstream-head",
-    "sync_minute": 20
+    "sync_minute": 20,
+    "native": {
+      "action": ".github/actions/opentelemetry-gradle-benchmark",
+      "benchmark_id": "otel-gradle",
+      "rolling_inputs": {
+        "java_version": "21"
+      },
+      "environment": {
+        "GRADLE_USER_HOME": "${{ github.workspace }}/.gradle-user-home"
+      },
+      "fresh_inputs": {
+        "java_version": "21"
+      }
+    },
+    "cache_tags": {
+      "otel-gradle-local": "{scope}-gradle-remote"
+    }
   },
   "reporting": {
     "entries": [

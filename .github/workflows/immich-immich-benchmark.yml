@@ -1,3 +1,4 @@
+---
 name: 'immich: Immich Benchmark'
 run-name: "${{ inputs.base_images_ccache_experiment && format('Base images ccache
   | {0}', github.ref_name) || format('Benchmark {0} | {1}', inputs.cli_version !=
@@ -6,6 +7,7 @@ run-name: "${{ inputs.base_images_ccache_experiment && format('Base images ccach
 concurrency:
   group: benchmark-provider-comparisons
   cancel-in-progress: false
+  queue: max
 permissions:
   contents: read
   actions: read
@@ -41,19 +43,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: immich
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: immich
     - uses: "./.github/actions/immich-docker-benchmark"
       with:
         strategy: "${{ matrix.strategy }}"
@@ -83,19 +76,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: immich
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: immich
     - name: Download the benchmark phase evidence
       uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
       with:
@@ -143,19 +127,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: immich
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: immich
     - uses: "./.github/actions/immich-base-images-benchmark"
       with:
         strategy: "${{ matrix.strategy }}"
@@ -184,19 +159,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: immich
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: immich
     - uses: "./.github/actions/immich-base-images-benchmark"
       with:
         strategy: "${{ matrix.strategy }}"
@@ -223,19 +189,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: immich
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: immich
     - name: Download the benchmark phase evidence
       uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
       with:
@@ -294,11 +251,3 @@ jobs:
         type: string
         required: false
         default: '1'
-  push:
-    branches:
-    - main
-    paths:
-    - cases/immich/**
-    - adapters/**
-    - scripts/canonical/**
-    - ".github/workflows/immich-immich-benchmark.yml"

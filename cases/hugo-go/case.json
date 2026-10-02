@@ -22,18 +22,38 @@
   "execution": {
     "workflows": [
       {
-        "path": ".github/workflows/hugo-go-hugo-go-benchmark.yml",
+        "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
-        "inputs": {}
+        "inputs": {
+          "case_id": "hugo-go"
+        },
+        "historical_workflow": "hugo-go-benchmark.yml"
       },
       {
-        "path": ".github/workflows/hugo-go-hugo-go-fresh-benchmark.yml",
+        "path": ".github/workflows/native-fresh-benchmark.yml",
         "lane": "fresh",
-        "inputs": {}
+        "inputs": {
+          "case_id": "hugo-go"
+        },
+        "historical_workflow": "hugo-go-fresh-benchmark.yml"
       }
     ],
     "sync": "upstream-head",
-    "sync_minute": 10
+    "sync_minute": 10,
+    "native": {
+      "action": ".github/actions/hugo-go-benchmark",
+      "benchmark_id": "hugo-go",
+      "rolling_inputs": {
+        "go_version": "1.27.0"
+      },
+      "environment": {},
+      "fresh_inputs": {
+        "go_version": "1.27.0"
+      }
+    },
+    "cache_tags": {
+      "hugo-go-local": "{scope}"
+    }
   },
   "reporting": {
     "entries": [

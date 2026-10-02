@@ -22,18 +22,36 @@
   "execution": {
     "workflows": [
       {
-        "path": ".github/workflows/duckgres-duckgres-benchmark.yml",
+        "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
-        "inputs": {}
+        "inputs": {
+          "case_id": "duckgres"
+        },
+        "historical_workflow": "duckgres-benchmark.yml"
       },
       {
-        "path": ".github/workflows/duckgres-duckgres-fresh-benchmark.yml",
+        "path": ".github/workflows/native-fresh-benchmark.yml",
         "lane": "fresh",
-        "inputs": {}
+        "inputs": {
+          "case_id": "duckgres"
+        },
+        "historical_workflow": "duckgres-fresh-benchmark.yml"
       }
     ],
     "sync": "upstream-head",
-    "sync_minute": 5
+    "sync_minute": 5,
+    "native": {
+      "action": ".github/actions/duckgres-docker-benchmark",
+      "benchmark_id": "duckgres",
+      "rolling_inputs": {
+        "push_image": "true"
+      },
+      "environment": {},
+      "fresh_inputs": {}
+    },
+    "cache_tags": {
+      "duckgres-docker-local": "{scope}-docker"
+    }
   },
   "reporting": {
     "entries": [

@@ -1,3 +1,4 @@
+---
 name: Docker Product Proof
 run-name: "${{ format('{0} | {1} | {2} | rust-target={3}', inputs.case_id, inputs.ref_key,
   inputs.cache_lane, inputs.rust_target_cache && 'on' || 'off') }}"
@@ -44,19 +45,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: docker-${{ inputs.case_id }}
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: docker-${{ inputs.case_id }}
     - run: ruby ./scripts/verify-upstream-recipe.rb
     - id: case
       run: ./scripts/emit-case-outputs.sh "${{ inputs.case_id }}" "${{ inputs.ref_key
@@ -97,19 +89,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: docker-${{ inputs.case_id }}
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: docker-${{ inputs.case_id }}
     - uses: "./.github/actions/docker-product-proof"
       with:
         cache_lane: "${{ inputs.cache_lane }}"
@@ -165,19 +148,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: docker-${{ inputs.case_id }}
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: docker-${{ inputs.case_id }}
     - uses: "./.github/actions/docker-product-proof"
       with:
         cache_lane: "${{ inputs.cache_lane }}"
@@ -232,19 +206,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: docker-${{ inputs.case_id }}
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: docker-${{ inputs.case_id }}
     - uses: "./.github/actions/docker-product-proof"
       with:
         cache_lane: "${{ inputs.cache_lane }}"
@@ -302,19 +267,10 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Set up benchmark Ruby
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      with:
-        ruby-version: 3.4.4
-        working-directory: ".harness"
-    - name: Install benchmark dependencies
-      working-directory: ".harness"
-      run: bundle install --jobs 4 --retry 2
     - name: Prepare declared case
-      env:
-        BENCHMARK_CASE_ID: docker-${{ inputs.case_id }}
-        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
-      run: ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE"
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: docker-${{ inputs.case_id }}
     - uses: "./.github/actions/docker-product-proof"
       with:
         cache_lane: "${{ inputs.cache_lane }}"

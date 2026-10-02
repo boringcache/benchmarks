@@ -449,7 +449,7 @@ def latest_successful_runs(repo:, workflow_name:, limit: RUN_HISTORY_LIMIT)
     "--workflow", workflow_name,
     "--status", "completed",
     "--limit", limit.to_s,
-    "--json", "databaseId,conclusion,createdAt,url,headSha"
+    "--json", "databaseId,conclusion,createdAt,url,headSha,displayTitle"
   )
 
   runs = JSON.parse(output)
@@ -469,9 +469,13 @@ def benchmark_workflow_runs(benchmark, workflow_name, cache)
     raise unless historical_repo && error.message.match?(/HTTP 404|could not find any workflows? named/)
     []
   end
+  if workflow_name.start_with?("native-")
+    current = current.select { |run| run.fetch("displayTitle").start_with?("#{benchmark.fetch('case_id')} ") }
+  end
   return current unless historical_repo
 
-  historical_workflow = workflow_name.delete_prefix("#{benchmark.fetch('case_id')}-")
+  field = workflow_name == benchmark["fresh_workflow"] ? "fresh_workflow" : "workflow"
+  historical_workflow = benchmark.fetch("historical_#{field}", workflow_name.delete_prefix("#{benchmark.fetch('case_id')}-"))
   historical = cache[[historical_repo, historical_workflow]] ||= latest_successful_runs(repo: historical_repo, workflow_name: historical_workflow)
     .map { |run| run.merge("repository" => historical_repo) }
   (current + historical).sort_by { |run| parse_timestamp(run.fetch("createdAt")) }.reverse.first(RUN_HISTORY_LIMIT)
