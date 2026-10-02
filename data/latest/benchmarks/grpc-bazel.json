@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-02T13:58:57Z",
+  "generated_at": "2026-10-02T18:50:13Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -9,7 +9,7 @@
     "name": "gRPC",
     "logo": "grpc",
     "repo": "grpc/grpc",
-    "source_repo": "boringcache/benchmark-grpc",
+    "source_repo": "boringcache/benchmarks",
     "public": false,
     "category": "bazel",
     "step": "Bazel build (remote cache)",
@@ -176,7 +176,7 @@
         "name": "gRPC",
         "logo": "grpc",
         "repo": "grpc/grpc",
-        "source_repo": "boringcache/benchmark-grpc",
+        "source_repo": "boringcache/benchmarks",
         "public": false,
         "category": "bazel",
         "step": "Bazel build (remote cache)",

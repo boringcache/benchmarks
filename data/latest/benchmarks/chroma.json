@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-02T13:58:57Z",
+  "generated_at": "2026-10-02T18:50:13Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -9,7 +9,7 @@
     "name": "Chroma",
     "logo": "docker",
     "repo": "chroma-core/chroma",
-    "source_repo": "boringcache/benchmark-chroma",
+    "source_repo": "boringcache/benchmarks",
     "public": true,
     "category": "docker",
     "step": "Docker build (Rust CLI image)",
@@ -168,7 +168,7 @@
         "name": "Chroma",
         "logo": "docker",
         "repo": "chroma-core/chroma",
-        "source_repo": "boringcache/benchmark-chroma",
+        "source_repo": "boringcache/benchmarks",
         "public": false,
         "category": "docker",
         "step": "Docker build (Rust CLI image)",
@@ -322,7 +322,7 @@
         "name": "Chroma",
         "logo": "docker",
         "repo": "chroma-core/chroma",
-        "source_repo": "boringcache/benchmark-chroma",
+        "source_repo": "boringcache/benchmarks",
         "public": true,
         "category": "docker",
         "step": "Docker build (Rust CLI image)",

@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-10-02 13:58 UTC
+Generated: 2026-10-02 18:50 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 9/20.
 
@@ -35,12 +35,12 @@ Rows are latest complete same-commit pairs.
 
 | Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |
 | --- | --- | --- | --- | --- | --- |
-| Hugo | Commit Build | 3m 0s | 2m 47s | 7% faster | 792.74 MB less (69.52%) |
+| Hugo | Commit Build | 0m 13s | 0m 13s | near tie | 1.18 GB less (77.73%) |
 | Hugo Go | Commit Build | 0m 23s | 0m 30s | 30% slower | 471.28 MB less (76.54%) |
+| Mastodon | Commit Build | 2m 4s | 1m 55s | 7% faster | 8.95 GB less (89.72%) |
+| Storybook | Commit Build | 3m 16s | 3m 52s | 18% slower | 1.86 GB less (57.94%) |
 | OpenTelemetry Java | Commit Build | 1m 0s | 1m 11s | 18% slower | 957.32 MB less (47.17%) |
 | Spring AI | Commit Build | 3m 56s | 3m 57s | near tie | 941.65 MB less (34.39%) |
 | Chroma | Commit Build | 20m 21s | 10m 54s | 46% faster | n/a |
 | Linkerd2 Web | Commit Build | 0m 16s | 0m 9s | 44% faster | n/a |
-| n8n Docker | Commit Build | 4m 14s | 3m 2s | investigation only | n/a |
-| n8n Runners | Commit Build | 0m 54s | 0m 40s | 26% faster | n/a |
-| n8n Runners Distroless | Commit Build | 1m 52s | 1m 48s | 4% faster | n/a |
+| n8n | Commit Build | 4m 11s | 3m 31s | 16% faster | 1.96 GB less (41.64%) |

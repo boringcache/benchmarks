@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-02T13:58:57Z",
+  "generated_at": "2026-10-02T18:50:13Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -9,7 +9,7 @@
     "name": "Duckgres",
     "logo": "docker",
     "repo": "PostHog/duckgres",
-    "source_repo": "boringcache/benchmark-duckgres",
+    "source_repo": "boringcache/benchmarks",
     "public": false,
     "category": "docker",
     "step": "Docker build (Postgres extension image)",
@@ -167,7 +167,7 @@
         "name": "Duckgres",
         "logo": "docker",
         "repo": "PostHog/duckgres",
-        "source_repo": "boringcache/benchmark-duckgres",
+        "source_repo": "boringcache/benchmarks",
         "public": false,
         "category": "docker",
         "step": "Docker build (Postgres extension image)",
