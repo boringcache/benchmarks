@@ -76,3 +76,8 @@ that caller and the workflow it invoked. It does not claim that the new workflow
 was dispatched directly or reconstruct a missing original dispatch response.
 Once the workflows are registered on the default branch, use the documented
 `bin/bench run` path and retain its dispatch receipt.
+
+The legacy index collector continues to read the original execution repositories.
+It cannot publish raw central Actions summaries or mix them into historical
+windows. New central claims use reviewed canonical series reports. Migrating the
+legacy index to those records remains a reporting cutover gate.

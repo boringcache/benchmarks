@@ -462,23 +462,17 @@ end
 
 def benchmark_workflow_runs(benchmark, workflow_name, cache)
   repo = benchmark.fetch("source_repo")
-  historical_repo = benchmark["historical_source_repo"]
-  current = cache[[repo, workflow_name]] ||= begin
-    latest_successful_runs(repo: repo, workflow_name: workflow_name).map { |run| run.merge("repository" => repo) }
-  rescue StandardError => error
-    raise unless historical_repo && error.message.match?(/HTTP 404|could not find any workflows? named/)
-    []
-  end
-  if workflow_name.start_with?("native-")
-    current = current.select { |run| run.fetch("displayTitle").start_with?("#{benchmark.fetch('case_id')} ") }
-  end
-  return current unless historical_repo
+  if repo == "boringcache/benchmarks"
+    # Central series require preserved completion and publication review. Raw
+    # Actions summaries cannot qualify a series or join a historical window.
+    repo = benchmark["historical_source_repo"]
+    return [] unless repo
 
-  field = workflow_name == benchmark["fresh_workflow"] ? "fresh_workflow" : "workflow"
-  historical_workflow = benchmark.fetch("historical_#{field}", workflow_name.delete_prefix("#{benchmark.fetch('case_id')}-"))
-  historical = cache[[historical_repo, historical_workflow]] ||= latest_successful_runs(repo: historical_repo, workflow_name: historical_workflow)
-    .map { |run| run.merge("repository" => historical_repo) }
-  (current + historical).sort_by { |run| parse_timestamp(run.fetch("createdAt")) }.reverse.first(RUN_HISTORY_LIMIT)
+    field = workflow_name == benchmark["fresh_workflow"] ? "fresh_workflow" : "workflow"
+    workflow_name = benchmark.fetch("historical_#{field}", workflow_name.delete_prefix("#{benchmark.fetch('case_id')}-"))
+  end
+  cache[[repo, workflow_name]] ||= latest_successful_runs(repo: repo, workflow_name: workflow_name)
+    .map { |run| run.merge("repository" => repo) }
 end
 
 def benchmark_artifact_name(repo:, run_id:, benchmark_id:, strategy:)
@@ -802,7 +796,6 @@ def headline_candidates(actions_metrics:, boringcache_metrics:)
 end
 
 def load_strategy_data(temp_root:, repo:, run:, benchmark_id:, strategy:, lane:, cache:, variants: [])
-  repo = run.fetch("repository", repo)
   repo = run.fetch("repository", repo)
   run_id = run.fetch("databaseId")
   cache_key = [repo, run_id, benchmark_id, strategy, lane, variants]
