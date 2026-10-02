@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "deno",
+  "series_id": "wrapper-qualification",
+  "sample": 1,
+  "run_id": "37021502943",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37021502943",
+  "source_sha": "2329a034fea00236488cfc4aa73a281b4807bd2c",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "3a3079c1127bf97d2925824fa26752b15a975e59375bc0b116b97ccb4f7cef57"
+}

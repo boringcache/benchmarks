@@ -1,0 +1,448 @@
+---
+name: 'obs-studio: OBS Studio BoringCache benchmark'
+run-name: "${{ github.event_name == 'pull_request' && format('OBS validation | PR
+  #{0}', github.event.pull_request.number) || inputs.cli_version != '' && format('OBS
+  canary | CLI {0}', inputs.cli_version) || github.event_name == 'push' && 'OBS rolling
+  | Upstream update' || format('OBS BoringCache | Manual dispatch ({0})', github.ref_name)
+  }}"
+permissions:
+  actions: read
+  contents: read
+concurrency:
+  group: benchmark-provider-comparisons
+  cancel-in-progress: false
+  queue: max
+env:
+  BENCHMARK_ID: obs-studio-compiler-cache
+  BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
+  BENCHMARK_SAMPLE: "${{ inputs.sample }}"
+jobs:
+  ccache-base:
+    name: BoringCache OBS ccache cold
+    if: inputs.cache_tool != 'xcode' && inputs.source_run_id == '' && (inputs.runner_label
+      == '' || github.ref_name == 'main')
+    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
+      && inputs.runner_label || 'ubuntu-26.04' }}"
+    timeout-minutes: 120
+    env:
+      CCACHE_DIR: "${{ github.workspace }}/.boringcache-local-ccache"
+      CCACHE_BASEDIR: "${{ github.workspace }}/upstream"
+      CCACHE_NOHASHDIR: '1'
+      CCACHE_COMPILERCHECK: content
+      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
+        == 'main' && inputs.runner_label || 'ubuntu-26.04' }}"
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Prepare declared case
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: obs-studio
+    - name: Read pinned source
+      id: source
+      run: sed '/^$/d' benchmark-source.env >> "$GITHUB_OUTPUT"
+    - name: Checkout pinned OBS source
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      with:
+        repository: "${{ steps.source.outputs.OBS_SOURCE_REPOSITORY }}"
+        ref: "${{ steps.source.outputs.OBS_HEAD_SHA }}"
+        path: upstream
+        fetch-depth: 0
+        submodules: recursive
+        persist-credentials: false
+    - name: Prepare base source and run-scoped cache plan
+      run: |
+        ./scripts/prepare-source.sh base
+        ./scripts/scope_boringcache_plan.rb ccache "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
+    - name: Install the upstream Linux build shell
+      run: |
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        echo "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin" >> "$GITHUB_PATH"
+        brew install --quiet zsh
+    - name: Install the benchmark ccache release
+      run: "./scripts/install-ccache.sh"
+    - name: Start cache setup timing
+      id: restore_start
+      run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+    - name: Configure BoringCache ccache adapter
+      id: cache
+      uses: "./.github/actions/boringcache"
+      with:
+        cli-version: "${{ inputs.cli_version }}"
+        trust-policy: publish
+        mode: ccache
+        working-directory: "./upstream"
+    - name: Capture cache setup timing
+      id: restore
+      run: echo "seconds=$(( $(date +%s) - ${{ steps.restore_start.outputs.started_at
+        }} ))" >> "$GITHUB_OUTPUT"
+    - name: Build base commit
+      id: build
+      run: |
+        set -euo pipefail
+        ruby ./scripts/measure-build.rb --output benchmark-results/ccache-boringcache-base-timing.json -- ruby ./scripts/run-benchmark-plan.rb ccache --working-directory upstream \
+          2>&1 | tee benchmark-results/ccache-boringcache-base.log
+        ruby -rjson -e 'puts "seconds=#{JSON.parse(File.read(ARGV.fetch(0))).fetch("build_seconds")}"' benchmark-results/ccache-boringcache-base-timing.json >> "$GITHUB_OUTPUT"
+    - name: Capture and verify native remote evidence
+      run: |
+        ccache --print-log-stats --format=json > benchmark-results/ccache-boringcache-base-native.json
+        ./scripts/verify_ccache_evidence.rb \
+          --path benchmark-results/ccache-boringcache-base-native.json \
+          --phase base \
+          --strategy boringcache
+    - name: Write base result
+      run: |
+        ./scripts/write_phase_result.rb \
+          --surface ccache \
+          --strategy boringcache \
+          --phase base \
+          --source-sha "${{ steps.source.outputs.OBS_BASE_SHA }}" \
+          --restore-seconds "${{ steps.restore.outputs.seconds }}" \
+          --build-seconds "${{ steps.build.outputs.seconds }}" \
+          --action-evidence "${{ steps.cache.outputs.evidence-path }}" \
+          --native-evidence benchmark-results/ccache-boringcache-base-native.json
+    - name: Upload base result
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: phase-${{ env.BENCHMARK_ID }}-ccache-boringcache-base
+        path: benchmark-results
+        if-no-files-found: error
+        retention-days: 30
+    - name: Retain BoringCache product evidence
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: boringcache-product-ccache-base
+        path: "${{ steps.cache.outputs.evidence-path }}"
+        if-no-files-found: error
+        retention-days: 30
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+  ccache-rolling:
+    name: BoringCache OBS ccache commit
+    needs: ccache-base
+    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
+      && inputs.runner_label || 'ubuntu-26.04' }}"
+    timeout-minutes: 120
+    env:
+      CCACHE_DIR: "${{ github.workspace }}/.boringcache-local-ccache"
+      CCACHE_BASEDIR: "${{ github.workspace }}/upstream"
+      CCACHE_NOHASHDIR: '1'
+      CCACHE_COMPILERCHECK: content
+      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
+        == 'main' && inputs.runner_label || 'ubuntu-26.04' }}"
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Prepare declared case
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: obs-studio
+    - name: Read pinned source
+      id: source
+      run: sed '/^$/d' benchmark-source.env >> "$GITHUB_OUTPUT"
+    - name: Checkout pinned OBS source
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      with:
+        repository: "${{ steps.source.outputs.OBS_SOURCE_REPOSITORY }}"
+        ref: "${{ steps.source.outputs.OBS_HEAD_SHA }}"
+        path: upstream
+        fetch-depth: 0
+        submodules: recursive
+        persist-credentials: false
+    - name: Prepare rolling source and matching cache plan
+      run: |
+        ./scripts/prepare-source.sh rolling
+        ./scripts/scope_boringcache_plan.rb ccache "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
+    - name: Install the upstream Linux build shell
+      run: |
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        echo "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin" >> "$GITHUB_PATH"
+        brew install --quiet zsh
+    - name: Install the benchmark ccache release
+      run: "./scripts/install-ccache.sh"
+    - name: Start cache setup timing
+      id: restore_start
+      run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+    - name: Restore BoringCache ccache adapter
+      id: cache
+      uses: "./.github/actions/boringcache"
+      with:
+        cli-version: "${{ inputs.cli_version }}"
+        trust-policy: restore
+        mode: ccache
+        working-directory: "./upstream"
+        fail-on-cache-miss: true
+    - name: Capture cache setup timing
+      id: restore
+      run: echo "seconds=$(( $(date +%s) - ${{ steps.restore_start.outputs.started_at
+        }} ))" >> "$GITHUB_OUTPUT"
+    - name: Build rolling commit
+      id: build
+      run: |
+        set -euo pipefail
+        ruby ./scripts/measure-build.rb --output benchmark-results/ccache-boringcache-rolling-timing.json -- ruby ./scripts/run-benchmark-plan.rb ccache --working-directory upstream \
+          2>&1 | tee benchmark-results/ccache-boringcache-rolling.log
+        ruby -rjson -e 'puts "seconds=#{JSON.parse(File.read(ARGV.fetch(0))).fetch("build_seconds")}"' benchmark-results/ccache-boringcache-rolling-timing.json >> "$GITHUB_OUTPUT"
+    - name: Capture and verify native remote evidence
+      run: |
+        ccache --print-log-stats --format=json > benchmark-results/ccache-boringcache-rolling-native.json
+        ./scripts/verify_ccache_evidence.rb \
+          --path benchmark-results/ccache-boringcache-rolling-native.json \
+          --phase rolling \
+          --strategy boringcache
+    - name: Write rolling result
+      run: |
+        ./scripts/write_phase_result.rb \
+          --surface ccache \
+          --strategy boringcache \
+          --phase rolling \
+          --source-sha "${{ steps.source.outputs.OBS_HEAD_SHA }}" \
+          --restore-seconds "${{ steps.restore.outputs.seconds }}" \
+          --build-seconds "${{ steps.build.outputs.seconds }}" \
+          --action-evidence "${{ steps.cache.outputs.evidence-path }}" \
+          --native-evidence benchmark-results/ccache-boringcache-rolling-native.json
+    - name: Upload rolling result
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: phase-${{ env.BENCHMARK_ID }}-ccache-boringcache-rolling
+        path: benchmark-results
+        if-no-files-found: error
+        retention-days: 30
+    - name: Retain BoringCache product evidence
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: boringcache-product-ccache-rolling
+        path: "${{ steps.cache.outputs.evidence-path }}"
+        if-no-files-found: error
+        retention-days: 30
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+  xcode-base:
+    name: BoringCache OBS Xcode cold
+    if: inputs.cache_tool != 'ccache' && inputs.source_run_id == ''
+    runs-on: macos-26
+    timeout-minutes: 120
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Prepare declared case
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: obs-studio
+    - name: Read pinned source
+      id: source
+      run: sed '/^$/d' benchmark-source.env >> "$GITHUB_OUTPUT"
+    - name: Checkout pinned OBS source
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      with:
+        repository: "${{ steps.source.outputs.OBS_SOURCE_REPOSITORY }}"
+        ref: "${{ steps.source.outputs.OBS_HEAD_SHA }}"
+        path: upstream
+        fetch-depth: 0
+        submodules: recursive
+        persist-credentials: false
+    - name: Prepare base source and Xcode cohort
+      run: |
+        ./scripts/prepare-source.sh base
+        ./scripts/scope_boringcache_plan.rb xcode "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
+        sudo xcode-select --switch "${{ steps.source.outputs.OBS_XCODE_PATH }}"
+    - name: Start cache setup timing
+      id: restore_start
+      run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+    - name: Configure BoringCache Xcode adapter
+      id: cache
+      uses: "./.github/actions/boringcache"
+      with:
+        cli-version: "${{ inputs.cli_version }}"
+        trust-policy: publish
+        mode: xcode
+        working-directory: "./upstream"
+    - name: Capture cache setup timing
+      id: restore
+      run: echo "seconds=$(( $(date +%s) - ${{ steps.restore_start.outputs.started_at
+        }} ))" >> "$GITHUB_OUTPUT"
+    - name: Build base commit
+      id: build
+      run: |
+        set -euo pipefail
+        ruby ./scripts/measure-build.rb --output benchmark-results/xcode-boringcache-base-timing.json -- ruby ./scripts/run-benchmark-plan.rb xcode --working-directory upstream \
+          2>&1 | tee benchmark-results/xcode-boringcache-base.log
+        ruby -rjson -e 'puts "seconds=#{JSON.parse(File.read(ARGV.fetch(0))).fetch("build_seconds")}"' benchmark-results/xcode-boringcache-base-timing.json >> "$GITHUB_OUTPUT"
+    - name: Write base result
+      run: |
+        ./scripts/write_phase_result.rb \
+          --surface xcode \
+          --strategy boringcache \
+          --phase base \
+          --source-sha "${{ steps.source.outputs.OBS_BASE_SHA }}" \
+          --restore-seconds "${{ steps.restore.outputs.seconds }}" \
+          --build-seconds "${{ steps.build.outputs.seconds }}" \
+          --action-evidence "${{ steps.cache.outputs.evidence-path }}"
+    - name: Upload base result
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: phase-${{ env.BENCHMARK_ID }}-xcode-boringcache-base
+        path: benchmark-results
+        if-no-files-found: error
+        retention-days: 30
+    - name: Retain BoringCache product evidence
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: boringcache-product-xcode-base
+        path: "${{ steps.cache.outputs.evidence-path }}"
+        if-no-files-found: error
+        retention-days: 30
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+    env:
+      BENCHMARK_RUNNER_CLASS: macos-26
+  xcode-rolling:
+    name: BoringCache OBS Xcode commit
+    needs: xcode-base
+    if: always() && inputs.cache_tool != 'ccache' && (needs.xcode-base.result == 'success'
+      || inputs.source_run_id != '')
+    runs-on: macos-26
+    timeout-minutes: 120
+    steps:
+    - name: Checkout benchmark definitions
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - name: Prepare declared case
+      uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: obs-studio
+    - name: Read pinned source
+      id: source
+      run: sed '/^$/d' benchmark-source.env >> "$GITHUB_OUTPUT"
+    - name: Checkout pinned OBS source
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      with:
+        repository: "${{ steps.source.outputs.OBS_SOURCE_REPOSITORY }}"
+        ref: "${{ steps.source.outputs.OBS_HEAD_SHA }}"
+        path: upstream
+        fetch-depth: 0
+        submodules: recursive
+        persist-credentials: false
+    - name: Prepare rolling source and matching Xcode cohort
+      env:
+        CACHE_COHORT_RUN_ID: "${{ inputs.source_run_id || github.run_id }}"
+        CACHE_COHORT_RUN_ATTEMPT: "${{ inputs.source_run_attempt || github.run_attempt
+          }}"
+      run: |
+        ./scripts/prepare-source.sh rolling
+        ./scripts/scope_boringcache_plan.rb xcode "$CACHE_COHORT_RUN_ID" "$CACHE_COHORT_RUN_ATTEMPT"
+        sudo xcode-select --switch "${{ steps.source.outputs.OBS_XCODE_PATH }}"
+    - name: Start cache setup timing
+      id: restore_start
+      run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+    - name: Restore BoringCache Xcode adapter
+      id: cache
+      uses: "./.github/actions/boringcache"
+      with:
+        cli-version: "${{ inputs.cli_version }}"
+        trust-policy: restore
+        mode: xcode
+        working-directory: "./upstream"
+        fail-on-cache-miss: true
+    - name: Capture cache setup timing
+      id: restore
+      run: echo "seconds=$(( $(date +%s) - ${{ steps.restore_start.outputs.started_at
+        }} ))" >> "$GITHUB_OUTPUT"
+    - name: Build rolling commit
+      id: build
+      run: |
+        set -euo pipefail
+        ruby ./scripts/measure-build.rb --output benchmark-results/xcode-boringcache-rolling-timing.json -- ruby ./scripts/run-benchmark-plan.rb xcode --working-directory upstream \
+          2>&1 | tee benchmark-results/xcode-boringcache-rolling.log
+        ruby -rjson -e 'puts "seconds=#{JSON.parse(File.read(ARGV.fetch(0))).fetch("build_seconds")}"' benchmark-results/xcode-boringcache-rolling-timing.json >> "$GITHUB_OUTPUT"
+    - name: Require native Xcode build evidence
+      run: "./scripts/verify_xcode_build_log.rb benchmark-results/xcode-boringcache-rolling.log"
+    - name: Write rolling result
+      run: |
+        ./scripts/write_phase_result.rb \
+          --surface xcode \
+          --strategy boringcache \
+          --phase rolling \
+          --source-sha "${{ steps.source.outputs.OBS_HEAD_SHA }}" \
+          --restore-seconds "${{ steps.restore.outputs.seconds }}" \
+          --build-seconds "${{ steps.build.outputs.seconds }}" \
+          --action-evidence "${{ steps.cache.outputs.evidence-path }}"
+    - name: Upload rolling result
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: phase-${{ env.BENCHMARK_ID }}-xcode-boringcache-rolling
+        path: benchmark-results
+        if-no-files-found: error
+        retention-days: 30
+    - name: Retain BoringCache product evidence
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      with:
+        name: boringcache-product-xcode-rolling
+        path: "${{ steps.cache.outputs.evidence-path }}"
+        if-no-files-found: error
+        retention-days: 30
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+    env:
+      BENCHMARK_RUNNER_CLASS: macos-26
+'on':
+  workflow_dispatch:
+    inputs:
+      cli_version:
+        description: Optional exact BoringCache CLI release or prerelease tag
+        required: false
+        default: ''
+        type: string
+      cache_tool:
+        description: Select one tool for a focused retry, or both tools.
+        required: false
+        type: choice
+        options:
+        - all
+        - ccache
+        - xcode
+        default: all
+      source_run_id:
+        description: Optional proof run whose Xcode cache cohort should be reused
+        required: false
+        default: ''
+        type: string
+      source_run_attempt:
+        description: Attempt number that created the source Xcode cache cohort
+        required: false
+        default: '1'
+        type: string
+      runner_label:
+        description: Optional Linux runner label for a manual main-branch experiment.
+        required: false
+        default: ''
+        type: string
+      series_id:
+        description: Predeclared series ID; empty for legacy diagnostics
+        type: string
+        required: false
+        default: ''
+      sample:
+        description: Observation number in the predeclared series
+        type: string
+        required: false
+        default: '1'

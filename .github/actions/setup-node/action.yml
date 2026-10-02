@@ -1,0 +1,13 @@
+name: Set up Node workload
+description: Installs the case's declared Node version without a provider dependency cache.
+inputs:
+  node-version:
+    description: Exact Node version declared by the case.
+    required: true
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+      with:
+        node-version: ${{ inputs.node-version }}
+        package-manager-cache: false

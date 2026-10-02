@@ -1,0 +1,664 @@
+{
+  "schema_version": 1,
+  "repositories": [
+    {
+      "repository": "boringcache/benchmark-chroma",
+      "cases": [
+        "chroma"
+      ],
+      "definition_revision": "edf3931449fd113176a09059c5d8c0f5df9ec03f",
+      "branches": [
+        "main",
+        "nightly-auth"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          31355272642
+        ],
+        "inventory_states": {
+          "complete": 1
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-deno",
+      "cases": [
+        "deno"
+      ],
+      "definition_revision": "a9dc6263ba3e32b3c0d2e8666ad9e06cb37d4055",
+      "branches": [
+        "deno-rolling-cache-profiles",
+        "main",
+        "nightly-auth",
+        "nightly-canaries",
+        "pr/action-v1.20.1",
+        "pr/compare-cargo-cache-layers"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "verified single-provider Cargo product cold/adjacent-source proof; compiler-only and rolling paths remain unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          31538912668,
+          32838898789,
+          35673704230,
+          36121614000
+        ],
+        "inventory_states": {
+          "complete": 4
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "qualification": {
+        "case_id": "deno",
+        "series_id": "wrapper-qualification",
+        "run_ids": [
+          37021502943
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-deno-wrapper-qualification-37021502943"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-docker",
+      "cases": [
+        "docker-anythingllm-primary",
+        "docker-anythingllm-primary-arm64",
+        "docker-auto-mobile-docker",
+        "docker-biar-automation-orchestrator",
+        "docker-biar-datalakehouse-api",
+        "docker-biar-jupyterhub",
+        "docker-blockscout-frontend",
+        "docker-cardstack-realm-server",
+        "docker-chatwoot-docker",
+        "docker-cloudcost-exporter-amd64",
+        "docker-cloudcost-exporter-amd64-go",
+        "docker-dependabot-updater-core",
+        "docker-formbricks-web",
+        "docker-ghostfolio-docker",
+        "docker-grist-oss",
+        "docker-heyform-community",
+        "docker-hoppscotch-backend",
+        "docker-hoppscotch-backend-arm64",
+        "docker-iggy-rust-server",
+        "docker-iggy-rust-server-sccache",
+        "docker-karakeep-aio",
+        "docker-kvrocks-docker",
+        "docker-kvrocks-docker-sccache",
+        "docker-misskey-develop-amd64",
+        "docker-mozilla-bedrock-release",
+        "docker-mozilla-fxa-mono",
+        "docker-nmisp-nightly",
+        "docker-omninode-runtime",
+        "docker-open-webui-ollama",
+        "docker-openstatus-dashboard",
+        "docker-openstatus-dashboard-arm64",
+        "docker-phentrieve-api",
+        "docker-posit-connect-content-amd64",
+        "docker-prefect-conda",
+        "docker-proteus-controller-multiarch",
+        "docker-pythonitalia-pycon-pretix",
+        "docker-stirling-pdf-embedded",
+        "docker-supabase-storage-api",
+        "docker-supabase-storage-api-arm64",
+        "docker-supabase-studio",
+        "docker-teable-community",
+        "docker-tiled-container-canary",
+        "docker-typebot-builder",
+        "docker-umami-release",
+        "docker-vellum-assistant",
+        "docker-windmill-extra",
+        "docker-wormhole-solana"
+      ],
+      "definition_revision": "9683d048b619c39dfd4cda87d81648dff5862c27",
+      "branches": [
+        "main"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "cloudcost-exporter AMD64 cold/warm product proof verified; remaining workloads and variants unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "qualification": {
+        "case_id": "docker-cloudcost-exporter-amd64",
+        "series_id": "wrapper-qualification",
+        "run_ids": [
+          37021507888
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-wrapper-qualification-2026-10-02"
+      },
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          30089375174,
+          30090229757,
+          30090831887
+        ],
+        "inventory_states": {
+          "complete": 3
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-duckgres",
+      "cases": [
+        "duckgres"
+      ],
+      "definition_revision": "43060b6b39cff5aecd2138b6cf99571f6876d98b",
+      "branches": [
+        "main",
+        "nightly-auth"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "incomplete; only recent run metadata inventoried",
+      "consolidated_execution": "unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-grpc",
+      "cases": [
+        "grpc"
+      ],
+      "definition_revision": "00119b2080dd8c4d20cfb4647316a28417b4e1a6",
+      "branches": [
+        "cachely-grpc",
+        "main"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          29232804148,
+          31382784321,
+          35822236227
+        ],
+        "inventory_states": {
+          "complete": 3
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-hugo",
+      "cases": [
+        "hugo"
+      ],
+      "definition_revision": "ecc41a3b3e250f5268000ddde142d61a15959e95",
+      "branches": [
+        "main"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          29223295753,
+          31569885431
+        ],
+        "inventory_states": {
+          "complete": 2
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-hugo-go",
+      "cases": [
+        "hugo-go"
+      ],
+      "definition_revision": "d6186956df7f400627bb2566bd907431801b191c",
+      "branches": [
+        "main"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked exports include missing logs; broader history and branch audit incomplete",
+      "consolidated_execution": "verified two-sample fresh Go comparison; rolling/source-advance execution remains unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "qualification": {
+        "case_id": "hugo-go",
+        "series_id": "wrapper-qualification",
+        "run_ids": [
+          37021492460,
+          37021496989
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-wrapper-qualification-2026-10-02"
+      },
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          27092625118
+        ],
+        "inventory_states": {
+          "partial": 1
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-immich",
+      "cases": [
+        "immich"
+      ],
+      "definition_revision": "ec958a4d8bc0c427319922c00ed973a201235025",
+      "branches": [
+        "main"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          29121976944,
+          31569890271
+        ],
+        "inventory_states": {
+          "complete": 2
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-linkerd2",
+      "cases": [
+        "linkerd2"
+      ],
+      "definition_revision": "2afa5040b567d1cdb6ac35e3a84ec764befe8711",
+      "branches": [
+        "main",
+        "nightly-auth"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          31569891810
+        ],
+        "inventory_states": {
+          "complete": 1
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-mastodon",
+      "cases": [
+        "mastodon"
+      ],
+      "definition_revision": "af806ebb3a531c4196b47bfc655da5448db5ba54",
+      "branches": [
+        "main",
+        "mastodon-ccache",
+        "prepared-state"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          29238089830,
+          29238090976,
+          35861702773
+        ],
+        "inventory_states": {
+          "complete": 3
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-n8n",
+      "cases": [
+        "n8n"
+      ],
+      "definition_revision": "dd69b0de722c645f9b4719556e390446010f7fcc",
+      "branches": [
+        "main"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          29237867482,
+          29237868570
+        ],
+        "inventory_states": {
+          "complete": 2
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-obs-studio",
+      "cases": [
+        "obs-studio"
+      ],
+      "definition_revision": "74322882037cad76d0fda72b5ba6058ded815343",
+      "branches": [
+        "main",
+        "pr/fix-continuation-logs",
+        "pr/thin-action-boundary"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          30664501753,
+          31538912306
+        ],
+        "inventory_states": {
+          "complete": 2
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-opentelemetry-java",
+      "cases": [
+        "opentelemetry-java"
+      ],
+      "definition_revision": "b4694de47a6595986d88a56c45910e832b7053bf",
+      "branches": [
+        "main"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          29118580746
+        ],
+        "inventory_states": {
+          "complete": 1
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-posthog",
+      "cases": [
+        "posthog"
+      ],
+      "definition_revision": "19348dee23ef8b06302f95f179a524852518d373",
+      "branches": [
+        "main",
+        "posthog-runs-on-rolling5",
+        "pr/transfer-recovery"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          29116728265,
+          29237882152,
+          29772448203,
+          31569900357,
+          36533112590,
+          36538060810,
+          36539746463
+        ],
+        "inventory_states": {
+          "complete": 7
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-qdrant",
+      "cases": [
+        "qdrant"
+      ],
+      "definition_revision": "22f17e82abcbe9227a6f60a385fba47eadb9aade",
+      "branches": [
+        "main",
+        "nightly-auth",
+        "pr/thin-action-boundary"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          31569902388
+        ],
+        "inventory_states": {
+          "complete": 1
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-spring-ai",
+      "cases": [
+        "spring-ai"
+      ],
+      "definition_revision": "a7c6468d2f7c4d7d6f96692e52875c7b4c6b499b",
+      "branches": [
+        "main"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          29232864168
+        ],
+        "inventory_states": {
+          "complete": 1
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-storybook",
+      "cases": [
+        "storybook"
+      ],
+      "definition_revision": "a21c17fbfbb0f903ee7664e0b59d17726d8c5301",
+      "branches": [
+        "main"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          29234064969
+        ],
+        "inventory_states": {
+          "complete": 1
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    },
+    {
+      "repository": "boringcache/benchmark-zed",
+      "cases": [
+        "zed"
+      ],
+      "definition_revision": "b874b511e77f76aba9618c9a9c7bb3808ee563b1",
+      "branches": [
+        "claude/zed-deno-benchmark-compare-w2u0d8",
+        "main",
+        "pr/zed-cargo-layer-matrix",
+        "zed-runs-on-native-s3"
+      ],
+      "branch_names_inventoried": true,
+      "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
+      "consolidated_execution": "unverified",
+      "caller_cutover": "pending consolidated qualification",
+      "retirement": "keep",
+      "gates": [
+        "Review non-default branches and unique work",
+        "Run the declared case with OIDC and verify outputs",
+        "Export required Actions evidence and verify durable storage",
+        "Verify source-sync, schedules, release callers, and website links"
+      ],
+      "website_evidence": {
+        "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+        "run_ids": [
+          29213266895,
+          36127607635
+        ],
+        "inventory_states": {
+          "complete": 2
+        },
+        "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      }
+    }
+  ]
+}

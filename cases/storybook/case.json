@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "id": "storybook",
+  "kind": "benchmark",
+  "adapter": "workflow",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "storybookjs/storybook",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "474a5399b5b2728b562d61ddc952ce4caa750fa0",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-storybook",
+    "branch": "main",
+    "revision": "a21c17fbfbb0f903ee7664e0b59d17726d8c5301"
+  },
+  "execution": {
+    "workflows": [
+      {
+        "path": ".github/workflows/native-rolling-benchmark.yml",
+        "lane": "rolling",
+        "inputs": {
+          "case_id": "storybook"
+        },
+        "historical_workflow": "storybook-benchmark.yml"
+      },
+      {
+        "path": ".github/workflows/native-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "storybook"
+        },
+        "historical_workflow": "storybook-fresh-benchmark.yml"
+      }
+    ],
+    "sync": "upstream-head",
+    "sync_minute": 26,
+    "native": {
+      "action": ".github/actions/storybook-nx-benchmark",
+      "benchmark_id": "storybook",
+      "rolling_inputs": {
+        "node_version": "22.22.3"
+      },
+      "environment": {},
+      "fresh_inputs": {
+        "node_version": "22.22.3"
+      }
+    },
+    "cache_tags": {
+      "storybook-nx-cache-local": "{scope}-nx-cache",
+      "storybook-nx-workspace-data-local": "{scope}-nx-workspace-data"
+    }
+  },
+  "reporting": {
+    "entries": [
+      "storybook"
+    ],
+    "publication": "reviewed"
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}

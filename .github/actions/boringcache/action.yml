@@ -1,0 +1,49 @@
+name: BoringCache benchmark provider
+description: Calls the reviewed BoringCache One release and preserves its public evidence outputs.
+inputs:
+  mode:
+    description: Product adapter declared by the case plan.
+    required: true
+  working-directory:
+    description: Directory containing the product plan.
+    default: '.'
+  trust-policy:
+    description: Declared restore or publication behavior for this observation.
+    default: auto
+  cli-version:
+    description: Optional exact CLI release or canary; empty uses the product default.
+    default: ''
+  cli-platform:
+    description: Optional canonical CLI package platform.
+    default: ''
+  cache-profiles:
+    description: Declared product cache profiles.
+    default: ''
+  diagnostics:
+    description: Public Action diagnostic level.
+    default: auto
+  fail-on-cache-miss:
+    description: Require an existing cache seed for this observation.
+    default: 'false'
+outputs:
+  cache-hit:
+    description: Cache outcome emitted by the public product Action.
+    value: ${{ steps.provider.outputs.cache-hit }}
+  evidence-path:
+    description: Product evidence file retained by the case reporter.
+    value: ${{ steps.provider.outputs.evidence-path }}
+runs:
+  using: composite
+  steps:
+    - id: provider
+      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      with:
+        mode: ${{ inputs.mode }}
+        working-directory: ${{ inputs.working-directory }}
+        trust-policy: ${{ inputs.trust-policy }}
+        cli-version: ${{ inputs.cli-version }}
+        cli-platform: ${{ inputs.cli-platform }}
+        cache-profiles: ${{ inputs.cache-profiles }}
+        diagnostics: ${{ inputs.diagnostics }}
+        fail-on-cache-error: true
+        fail-on-cache-miss: ${{ inputs.fail-on-cache-miss == 'true' }}

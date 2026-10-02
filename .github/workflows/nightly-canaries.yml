@@ -1,31 +1,27 @@
 name: Canary Benchmarks
 run-name: Canary benchmark results
-
-on:
-  schedule:
-    - cron: "47 * * * *"
-  workflow_dispatch:
-
 permissions:
   contents: read
   actions: read
-
 concurrency:
   group: nightly-canary-results
   cancel-in-progress: false
-
 jobs:
   results:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
-      GH_TOKEN: ${{ github.token }}
+      GH_TOKEN: "${{ github.token }}"
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
-        with:
-          ruby-version: "3.4.4"
-      - name: Check repository canaries
-        run: ruby scripts/nightly-canaries.rb --collect --summary "${GITHUB_STEP_SUMMARY}"
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: false
+    - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      with:
+        ruby-version: 3.4.4
+    - name: Check repository canaries
+      run: ruby scripts/nightly-canaries.rb --collect --summary "${GITHUB_STEP_SUMMARY}"
+'on':
+  schedule:
+  - cron: 47 * * * *
+  workflow_dispatch:

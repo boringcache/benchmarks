@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "id": "deno",
+  "kind": "benchmark",
+  "adapter": "workflow",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "denoland/deno",
+    "pins": [
+      {
+        "path": "payload/benchmark-source.env",
+        "revision": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+        "kind": "env"
+      },
+      {
+        "path": "payload/benchmark-source.env",
+        "revision": "b4f08f127652d8442b4d3dbabc277aca3840bc1d",
+        "kind": "env"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-deno",
+    "branch": "main",
+    "revision": "a9dc6263ba3e32b3c0d2e8666ad9e06cb37d4055"
+  },
+  "execution": {
+    "workflows": [
+      {
+        "path": ".github/workflows/deno-deno-cargo-product.yml",
+        "lane": "fresh",
+        "inputs": {},
+        "phases": [
+          "cold",
+          "commit"
+        ],
+        "variants": [
+          "cargo-product",
+          "compiler-only"
+        ]
+      },
+      {
+        "path": ".github/workflows/deno-deno-cargo-rolling-chain.yml",
+        "lane": "rolling",
+        "inputs": {},
+        "variants": [
+          "cargo-product",
+          "compiler-only"
+        ]
+      }
+    ],
+    "sync": "adjacent-pair",
+    "sync_minute": 2,
+    "source_prefix": "DENO"
+  },
+  "reporting": {
+    "entries": [
+      "deno-cargo"
+    ],
+    "publication": "reviewed"
+  },
+  "verification": [
+    "Verify Deno Linux release recipe",
+    "Require a clean product starting point",
+    "Verify the Deno base build",
+    "Require an empty destination",
+    "Verify the Deno head build",
+    "Require one-commit source cadence",
+    "Verify the Deno build"
+  ],
+  "comparison": {
+    "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+    "providers": [
+      "boringcache"
+    ],
+    "timed_scope": "The two BoringCache Cargo release operations, including restore, build, and any permitted publication. Changed-source consumers use restore-only trust. Output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.",
+    "primary_metric": "correctness",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}

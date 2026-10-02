@@ -1,3 +1,4 @@
+require "rbconfig"
 # frozen_string_literal: true
 
 require "json"
@@ -7,7 +8,21 @@ require "socket"
 require "tmpdir"
 
 class BenchmarkReportStorageTest < Minitest::Test
-  CANONICAL = File.expand_path("../scripts/canonical/benchmark-report.py", __dir__)
+  CANONICAL = File.expand_path("../scripts/canonical/benchmark-report.rb", __dir__)
+
+  def test_phase_verification_does_not_claim_every_case_check_has_run
+    Dir.mktmpdir do |dir|
+      File.write(File.join(dir, "benchmark-context.json"), JSON.generate(
+        "comparison" => {"timed_scope" => "Restore and compile"},
+        "verification" => ["Verify cold output", "Verify changed-source output"]
+      ))
+      env = {"BENCHMARK_SERIES_ID" => "screening", "BENCHMARK_SAMPLE" => "1"}
+      payload = write_phase(dir, strategy: "actions-cache", evidence: false, extra_args: ["--verified-output"], env: env)
+      assert_equal true, payload.dig("verification", "passed")
+      assert_equal ["Output verification completed before recording this phase"], payload.dig("verification", "checks")
+      assert_equal ["Verify cold output", "Verify changed-source output"], payload.dig("verification", "declared_checks")
+    end
+  end
 
   def test_boringcache_storage_uses_exact_resolved_tags_and_deduplicates_entries
     Dir.mktmpdir do |dir|
@@ -166,13 +181,15 @@ class BenchmarkReportStorageTest < Minitest::Test
     output_dir = File.join(dir, "output")
     stdout, stderr, status = Open3.capture3(
       env,
-      "python3", CANONICAL, "phase",
+      RbConfig.ruby, CANONICAL, "phase",
       "--benchmark", "example", "--strategy", strategy,
+      "--source-repository", "example/upstream", "--source-sha", "a" * 40,
       "--lane", "rolling", "--phase", "commit", "--mode", "gradle",
       "--build-seconds", "20",
       "--output-dir", output_dir,
       *(evidence ? ["--evidence", evidence_path] : []),
-      *extra_args
+      *extra_args,
+      chdir: dir
     )
     assert status.success?, "reporter failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
 
@@ -183,7 +200,7 @@ class BenchmarkReportStorageTest < Minitest::Test
     phase_dir = File.join(dir, "output")
     output_dir = File.join(dir, "lanes")
     stdout, stderr, status = Open3.capture3(
-      "python3", CANONICAL, "summarize",
+      RbConfig.ruby, CANONICAL, "summarize",
       "--title", "Example", "--input-dir", phase_dir, "--output-dir", output_dir
     )
     assert status.success?, "reporter failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"

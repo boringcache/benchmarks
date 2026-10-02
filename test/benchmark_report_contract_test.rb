@@ -1,3 +1,4 @@
+require "rbconfig"
 # frozen_string_literal: true
 
 require "minitest/autorun"
@@ -8,7 +9,7 @@ require "tmpdir"
 
 class BenchmarkReportContractTest < Minitest::Test
   SCRIPT = File.expand_path("../scripts/check-report-contract.rb", __dir__)
-  CANONICAL = File.expand_path("../scripts/canonical/benchmark-report.py", __dir__)
+  CANONICAL = File.expand_path("../scripts/canonical/benchmark-report.rb", __dir__)
   REPOS_DIR = ENV["BENCHMARK_REPOS_DIR"] || [
     File.expand_path("../../benchmarks-repos", __dir__),
     File.expand_path("../../benchmark-repos", __dir__)
@@ -61,7 +62,7 @@ class BenchmarkReportContractTest < Minitest::Test
     _, stderr, status = run_against(reporter: "print('drifted')\n")
 
     refute status.success?
-    assert_includes stderr, "has drifted from scripts/canonical/benchmark-report.py"
+    assert_includes stderr, "has drifted from scripts/canonical/benchmark-report.rb"
   end
 
   def test_reporter_carries_action_product_refs_into_the_lane
@@ -82,7 +83,7 @@ class BenchmarkReportContractTest < Minitest::Test
       }))
 
       _, stderr, status = Open3.capture3(
-        "python3", CANONICAL, "phase",
+        RbConfig.ruby, CANONICAL, "phase",
         "--benchmark", "hugo", "--strategy", "boringcache",
         "--lane", "rolling", "--phase", "commit", "--mode", "docker",
         "--build-seconds", "37", "--evidence", evidence_path,
@@ -92,7 +93,7 @@ class BenchmarkReportContractTest < Minitest::Test
       assert status.success?, stderr
 
       _, stderr, status = Open3.capture3(
-        "python3", CANONICAL, "summarize",
+        RbConfig.ruby, CANONICAL, "summarize",
         "--title", "Hugo", "--input-dir", phase_dir, "--output-dir", output_dir
       )
       assert status.success?, stderr
@@ -112,7 +113,7 @@ class BenchmarkReportContractTest < Minitest::Test
       FileUtils.mkdir_p(File.join(repo, ".github", "workflows"))
       FileUtils.mkdir_p(File.join(repo, ".github", "actions", "acme-docker-benchmark"))
       FileUtils.mkdir_p(File.join(repo, "scripts"))
-      File.write(File.join(repo, "scripts", "benchmark-report.py"), reporter || File.read(CANONICAL))
+      File.write(File.join(repo, "scripts", "benchmark-report.rb"), reporter || File.read(CANONICAL))
       File.write(File.join(repo, ".github", "actions", "acme-docker-benchmark", "action.yml"), action_yaml)
       File.write(File.join(repo, ".github", "workflows", "acme-benchmark.yml"), workflow_yaml(
         uploaded: uploaded == :default ? "acme-docker#{suffixed ? SUFFIX : ""}-boringcache-rolling.json" : uploaded,
@@ -137,7 +138,7 @@ class BenchmarkReportContractTest < Minitest::Test
         using: composite
         steps:
           - shell: bash
-            run: python3 ./scripts/benchmark-report.py phase --benchmark x --strategy y --lane rolling --phase commit --mode docker --build-seconds 1
+            run: ruby ./scripts/benchmark-report.rb phase --benchmark x --strategy y --lane rolling --phase commit --mode docker --build-seconds 1
     YAML
   end
 
@@ -175,7 +176,7 @@ class BenchmarkReportContractTest < Minitest::Test
                 with:
                   pattern: phase-*
                   path: phase-evidence
-              - run: python3 ./scripts/benchmark-report.py summarize #{summarize_flags}--title Acme --input-dir phase-evidence --output-dir benchmark-results
+              - run: ruby ./scripts/benchmark-report.rb summarize #{summarize_flags}--title Acme --input-dir phase-evidence --output-dir benchmark-results
       YAML
       *retain
     ].join("\n") + "\n"
