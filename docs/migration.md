@@ -96,9 +96,16 @@ pair failed before building because Ruby 3.4.4 has no Ubuntu 26.04 binary. Both
 failed completions and their [verified evidence](../results/obs-studio/direct-ccache-qualification/evidence.md)
 are retained. The harness now reads Ruby 3.4.10 from one project pin and checks
 preparation on the declared Ubuntu 26.04 and macOS 26 runners. A replacement ccache
-series has its own frozen plan. Xcode, rolling Deno, replacement ccache, and hosted
-runtime checks remain unqualified. Original schedules and repositories remain
-active.
+series has its own frozen plan. Hosted preparation now passes on both runners.
+BoringCache's Xcode cold/adjacent-source run passed output and completion checks;
+its Actions Cache peer is still running. The replacement ccache pair is queued.
+Deno's Cargo-product rolling run passed builds and output checks, then failed
+uploading the profile-specific report. Its [failed completion and scoped archive](../results/deno/rolling-cargo-product-qualification/evidence.md)
+are retained; the original phase and product files were not uploaded. The uploader
+now selects the profile-specific filename and retains raw evidence even after a
+later reporting failure. Xcode comparison, rolling Deno, replacement ccache,
+and the full release caller remain unqualified. Original schedules and
+repositories remain active.
 
 The legacy index collector continues to read the original execution repositories.
 It cannot publish raw central Actions summaries or mix them into historical

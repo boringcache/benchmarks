@@ -30,6 +30,15 @@ class BenchmarkReportContractTest < Minitest::Test
     assert_includes stderr, "retains acme-boringcache-rolling.json, which no benchmark job in this workflow produces"
   end
 
+  def test_profile_variant_must_be_in_the_retained_report_filename
+    _, stderr, status = run_profile_workflow(uploaded_variant: nil)
+    refute status.success?
+    assert_includes stderr, "produce acme-boringcache-cargo-product-rolling.json, which the report never retains"
+
+    _, stderr, status = run_profile_workflow(uploaded_variant: "cargo-product")
+    assert status.success?, stderr
+  end
+
   def test_a_lane_the_report_never_retains_fails
     _, stderr, status = run_against(uploaded: nil)
 
@@ -106,6 +115,34 @@ class BenchmarkReportContractTest < Minitest::Test
   end
 
   private
+
+  def run_profile_workflow(uploaded_variant:)
+    Dir.mktmpdir do |root|
+      repo = File.join(root, "benchmark-acme")
+      FileUtils.mkdir_p(File.join(repo, ".github/workflows"))
+      slug = uploaded_variant ? "-#{uploaded_variant}" : ""
+      File.write(File.join(repo, ".github/workflows/profile.yml"), <<~YAML)
+        on:
+          workflow_dispatch:
+            inputs:
+              cache_profile: {type: choice, default: cargo-product, options: [cargo-product, compiler-only]}
+        env:
+          CACHE_PROFILE: ${{ inputs.cache_profile || 'cargo-product' }}
+        jobs:
+          commit:
+            runs-on: ubuntu-latest
+            steps:
+              - run: ruby ./scripts/benchmark-report.rb phase --benchmark acme --strategy boringcache --lane rolling --phase commit --variant "$CACHE_PROFILE"
+              - run: ruby ./scripts/benchmark-report.rb summarize --title Acme --input-dir benchmark-results --output-dir benchmark-results
+              - uses: actions/upload-artifact@v6
+                with:
+                  name: benchmark-acme-boringcache#{slug}-rolling
+                  path: benchmark-results/acme-boringcache#{slug}-rolling.json
+                  if-no-files-found: error
+      YAML
+      Open3.capture3(SCRIPT, root)
+    end
+  end
 
   def run_against(uploaded: :default, artifact_name: nil, suffixed: true, reporter: nil, summarize_flags: "")
     Dir.mktmpdir do |root|
