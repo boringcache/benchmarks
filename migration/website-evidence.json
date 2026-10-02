@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_repository": "boringcache/monorepo",
+  "source_surface": "website",
   "source_revision": "8b90b40fe0a12e3b3f93d806d100b05483aa0c92",
   "references": [
     {

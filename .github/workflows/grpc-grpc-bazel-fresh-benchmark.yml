@@ -14,7 +14,6 @@ concurrency:
   queue: max
 env:
   BORINGCACHE_NO_GIT: 'true'
-  BUILDBUDDY_API_KEY: "${{ secrets.BUILDBUDDY_API_KEY }}"
   BAZEL_OUTPUT_USER_ROOT: "/tmp/boringcache-grpc-bazel/output-root"
   BAZEL_OUTPUT_BASE: "/tmp/boringcache-grpc-bazel/output-base"
   BAZEL_DISK_CACHE: "/tmp/boringcache-grpc-bazel/disk-cache"
@@ -60,6 +59,7 @@ jobs:
       actions: read
       id-token: write
     env:
+      BUILDBUDDY_API_KEY: "${{ matrix.strategy == 'buildbuddy' && secrets.BUILDBUDDY_API_KEY || '' }}"
       BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
         == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
   warm:
@@ -91,6 +91,7 @@ jobs:
       actions: read
       id-token: write
     env:
+      BUILDBUDDY_API_KEY: "${{ matrix.strategy == 'buildbuddy' && secrets.BUILDBUDDY_API_KEY || '' }}"
       BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
         == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
   report:

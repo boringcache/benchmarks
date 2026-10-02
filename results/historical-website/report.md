@@ -1,5 +1,7 @@
 # Historical website benchmark evidence
 
+This report preserves the website's ten reviewed evidence summaries in [the source data](evidence.json). Measurements and product versions are copied without recalculation. These are historical observations, not results from the consolidated executor or qualification of the current product.
+
 The [evidence archive](https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02) contains 52 website-linked run exports: 51 complete scoped exports and one partial Hugo Go export whose logs are unavailable. The uploaded bundle was independently downloaded, checked against its SHA-256, extracted, and verified against each export's inventory. Preservation does not establish that every historical claim has a complete experimental design.
 
 Bundle SHA-256: `17e8454a83b9baa1344addbd18391b954400fc44dbe446784a4b2bdbb589c720`. [The inventory](../../migration/website-evidence.json) identifies each original run, export directory, checksum, and gap.
