@@ -488,3 +488,33 @@ Export: **complete**, 9 listed files, archive directory `host-rust-core/35680338
 | artifact_file | sccache.json |
 | product_refs.cli_version | v1.31.0 |
 | product_refs.action_ref | boringcache/one@9ca311f9b247835b3cc87639321c79bac8018145 |
+
+## proteus-docker
+
+This additional website link points to an original workload run. This subsection preserves its execution and exported evidence; it adds no timing claim.
+
+Original execution: [boringcache/proteus run 31390497300](https://github.com/boringcache/proteus/actions/runs/31390497300).
+
+Source commit: `d536ce7f513d5af5d9b3f659337b0288d701af91`. Workflow: `.github/workflows/image.yml`. Original conclusion: `success`.
+
+Export: **complete**, 7 listed files, archive directory `proteus/31390497300`. The bundle and inventory links above identify the preserved resources.
+
+## proteus-cargo
+
+This additional website link points to an original workload run. This subsection preserves its execution and exported evidence; it adds no timing claim.
+
+Original execution: [boringcache/proteus run 31390497326](https://github.com/boringcache/proteus/actions/runs/31390497326).
+
+Source commit: `d536ce7f513d5af5d9b3f659337b0288d701af91`. Workflow: `.github/workflows/check.yml`. Original conclusion: `success`.
+
+Export: **complete**, 7 listed files, archive directory `proteus/31390497326`. The bundle and inventory links above identify the preserved resources.
+
+## obs-xcode
+
+This additional website link points to an original workload run. This subsection preserves its execution and exported evidence; it adds no timing claim.
+
+Original execution: [boringcache/benchmark-obs-studio run 30664501753](https://github.com/boringcache/benchmark-obs-studio/actions/runs/30664501753).
+
+Source commit: `27e5301f5f6847e323cf545522a4c99edf678b38`. Workflow: `.github/workflows/obs-xcode-continuation.yml`. Original conclusion: `success`.
+
+Export: **complete**, 7 listed files, archive directory `benchmark-obs-studio/30664501753`. The bundle and inventory links above identify the preserved resources.
