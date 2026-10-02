@@ -10,6 +10,20 @@ require "tmpdir"
 class BenchmarkReportStorageTest < Minitest::Test
   CANONICAL = File.expand_path("../scripts/canonical/benchmark-report.rb", __dir__)
 
+  def test_phase_verification_does_not_claim_every_case_check_has_run
+    Dir.mktmpdir do |dir|
+      File.write(File.join(dir, "benchmark-context.json"), JSON.generate(
+        "comparison" => {"timed_scope" => "Restore and compile"},
+        "verification" => ["Verify cold output", "Verify changed-source output"]
+      ))
+      env = {"BENCHMARK_SERIES_ID" => "screening", "BENCHMARK_SAMPLE" => "1"}
+      payload = write_phase(dir, strategy: "actions-cache", evidence: false, extra_args: ["--verified-output"], env: env)
+      assert_equal true, payload.dig("verification", "passed")
+      assert_equal ["Output verification completed before recording this phase"], payload.dig("verification", "checks")
+      assert_equal ["Verify cold output", "Verify changed-source output"], payload.dig("verification", "declared_checks")
+    end
+  end
+
   def test_boringcache_storage_uses_exact_resolved_tags_and_deduplicates_entries
     Dir.mktmpdir do |dir|
       evidence_path = File.join(dir, "action-evidence.json")
@@ -174,7 +188,8 @@ class BenchmarkReportStorageTest < Minitest::Test
       "--build-seconds", "20",
       "--output-dir", output_dir,
       *(evidence ? ["--evidence", evidence_path] : []),
-      *extra_args
+      *extra_args,
+      chdir: dir
     )
     assert status.success?, "reporter failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
 

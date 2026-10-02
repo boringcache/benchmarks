@@ -263,11 +263,14 @@ module BenchmarkCases
     Dir.mktmpdir("benchmark-source-") do |directory|
       workload = prepare(item, directory: File.join(directory, "workload"), root: root)
       if kind == "upstream-head"
-        command("git", "submodule", "update", "--init", "--remote", "--checkout", "upstream", chdir: workload)
-        next_sha = command("git", "rev-parse", "HEAD", chdir: File.join(workload, "upstream")).strip
+        command("git", "submodule", "update", "--init", "--checkout", "upstream", chdir: workload)
+        source = File.join(workload, "upstream")
+        command("git", "fetch", "--depth", "1", "origin", "refs/heads/#{branch}", chdir: source)
+        next_sha = command("git", "rev-parse", "FETCH_HEAD", chdir: source).strip
         current_sha = item.fetch("source").fetch("pins").find { |pin| pin["kind"] == "gitlink" }.fetch("revision")
         return {"case_id" => item.fetch("id"), "updated" => false} if next_sha == current_sha
         raise Error, "Upstream moved during source inspection; retry with new inputs" unless next_sha == target_sha
+        command("git", "checkout", "--detach", next_sha, chdir: source)
         comparison = JSON.parse(command("gh", "api", "repos/#{item.dig('source', 'repository')}/compare/#{current_sha}...#{next_sha}"))
         raise Error, "Upstream source is not a fast-forward from the declared pin" unless comparison["status"] == "ahead" && comparison.dig("merge_base_commit", "sha") == current_sha
         verify_recipe(workload)

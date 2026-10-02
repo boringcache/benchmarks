@@ -193,7 +193,10 @@ module BenchmarkReport
       payload["series"] = {"id" => series, "sample" => sample}
       payload["environment"] = {"os" => ENV["RUNNER_OS"], "arch" => ENV["RUNNER_ARCH"], "image" => ENV["ImageOS"],
         "image_version" => ENV["ImageVersion"], "machine" => ENV["BENCHMARK_RUNNER_CLASS"]}
-      payload["verification"] = {"passed" => args["verification_passed"] == true, "checks" => context.fetch("verification")}
+      verified = args["verification_passed"] == true
+      payload["verification"] = {"passed" => verified,
+        "checks" => verified ? ["Output verification completed before recording this phase"] : [],
+        "declared_checks" => context.fetch("verification")}
       payload["evidence_links"] = Array(args["evidence_links"])
       if ENV["GITHUB_REPOSITORY"] && ENV["GITHUB_RUN_ID"]
         payload["evidence_links"] << "https://github.com/#{ENV['GITHUB_REPOSITORY']}/actions/runs/#{ENV['GITHUB_RUN_ID']}"

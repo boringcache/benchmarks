@@ -1878,27 +1878,7 @@ def provider_lane_samples(providers, lane)
   end
 end
 
-def rebuild_provider_lane_with_runner_variance_outliers(lane_payload:, lane:, outliers:)
-  rejected_run_ids = outliers.map { |row| row["run_id"] }.compact
-  remaining_samples = Array(lane_payload["samples"]).reject { |snapshot| rejected_run_ids.include?(snapshot["run_id"]) }
-
-  rebuilt = provider_lane_payload(
-    lane: lane,
-    runs: Array.new(lane_payload["successful_run_count"].to_i),
-    unique_head_count: lane_payload["unique_head_count"].to_i,
-    snapshots: remaining_samples,
-    storage_available: lane_payload["storage_available"]
-  )
-
-  rebuilt["source_sample_count"] = Array(lane_payload["samples"]).length
-  rebuilt["excluded_sample_count"] = outliers.length
-  rebuilt["excluded_runner_variance_outlier_count"] = outliers.length
-  rebuilt["runner_variance_outliers"] = outliers
-  rebuilt["reporting_note"] = "#{outliers.length}/#{Array(lane_payload["samples"]).length} samples excluded as conservative runner-variance outliers."
-  rebuilt
-end
-
-def apply_runner_variance_outlier_filter(providers)
+def annotate_runner_variance(providers)
   LANE_IDS.each do |lane|
     outliers = runner_variance_outliers_for_samples(provider_lane_samples(providers, lane))
     next if outliers.empty?
@@ -1908,11 +1888,8 @@ def apply_runner_variance_outlier_filter(providers)
       lane_payload = providers.dig(strategy, "lanes", lane)
       next unless lane_payload.is_a?(Hash)
 
-      providers[strategy]["lanes"][lane] = rebuild_provider_lane_with_runner_variance_outliers(
-        lane_payload: lane_payload,
-        lane: lane,
-        outliers: strategy_outliers
-      )
+      lane_payload["runner_variance_candidates"] = strategy_outliers
+      lane_payload["reporting_note"] = "#{strategy_outliers.length}/#{Array(lane_payload['samples']).length} samples flagged for possible runner variance; all samples retained."
     end
   end
 
@@ -2011,7 +1988,7 @@ def load_provider_entry(temp_root:, benchmark:, provider_workflows:, provider_ru
       "lanes" => lanes
     }
   end
-  providers = apply_runner_variance_outlier_filter(providers)
+  providers = annotate_runner_variance(providers)
 
   {
     "benchmark" => benchmark.fetch("benchmark"),

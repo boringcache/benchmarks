@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "minitest/autorun"
+require "minitest/mock"
 require "tmpdir"
 require_relative "../scripts/benchmark-cases"
 
@@ -58,6 +59,61 @@ class BenchmarkCasesTest < Minitest::Test
       File.write(File.join(workload, "benchmark-source.env"), original.sub("example/upstream", "other/upstream"))
       assert_raises(BenchmarkCases::Error) { BenchmarkCases.update_source(item, workload, root: root) }
       assert_equal original, File.read(File.join(root, "cases/example/payload/benchmark-source.env"))
+    end
+  end
+
+  def test_source_sync_fetches_the_declared_branch_from_a_single_branch_shallow_checkout
+    with_root do |root|
+      git = ->(*args, directory:) { BenchmarkCases.command("git", "-c", "user.name=Benchmark test", "-c", "user.email=benchmark@localhost", "-c", "commit.gpgsign=false", *args, chdir: directory) }
+      origin = File.join(root, "origin")
+      FileUtils.mkdir_p(origin)
+      git.call("init", "-b", "main", directory: origin)
+      File.write(File.join(origin, "source.txt"), "base\n")
+      git.call("add", ".", directory: origin)
+      git.call("commit", "-m", "Base source", directory: origin)
+      base = git.call("rev-parse", "HEAD", directory: origin).strip
+      git.call("checkout", "-b", "dev", directory: origin)
+      File.write(File.join(origin, "source.txt"), "changed\n")
+      git.call("commit", "-am", "Changed source", directory: origin)
+      head = git.call("rev-parse", "HEAD", directory: origin).strip
+      git.call("checkout", "main", directory: origin)
+
+      workload = File.join(root, "workload")
+      FileUtils.mkdir_p(workload)
+      git.call("init", directory: workload)
+      git.call("-c", "protocol.file.allow=always", "submodule", "add", "--depth", "1", "--branch", "main", "file://#{origin}", "upstream", directory: workload)
+      git.call("config", "-f", ".gitmodules", "submodule.upstream.branch", "dev", directory: workload)
+      git.call("add", ".", directory: workload)
+      git.call("commit", "-m", "Pinned workload", directory: workload)
+      refute_includes git.call("branch", "-r", directory: File.join(workload, "upstream")), "origin/dev"
+
+      item = BenchmarkCases.create("example", repository: "example/upstream", revision: base, question: "Reuse?", root: root)
+      item.fetch("source").delete("revision")
+      item["source"]["pins"] = [{"path" => "upstream", "kind" => "gitlink", "revision" => base}]
+      item["execution"]["sync"] = "upstream-head"
+      FileUtils.mkdir_p(File.join(root, "cases/example/payload"))
+      FileUtils.cp(File.join(workload, ".gitmodules"), File.join(root, "cases/example/payload/.gitmodules"))
+      original_command = BenchmarkCases.method(:command)
+      command = lambda do |*args, **options|
+        next original_command.call(*args, **options) unless args.first == "gh"
+        case args.last
+        when "repos/example/upstream/commits/dev" then JSON.generate({"sha" => head})
+        when "repos/example/upstream/compare/#{base}...#{head}" then JSON.generate({"status" => "ahead", "merge_base_commit" => {"sha" => base}})
+        else raise "Unexpected GitHub lookup: #{args.last}"
+        end
+      end
+      verified_sha = nil
+      BenchmarkCases.stub(:command, command) do
+        BenchmarkCases.stub(:prepare, ->(*, **) { workload }) do
+          BenchmarkCases.stub(:verify_recipe, ->(directory) { verified_sha = original_command.call("git", "rev-parse", "HEAD", chdir: File.join(directory, "upstream")).strip }) do
+            result = BenchmarkCases.sync_source(item, root: root)
+            assert_equal true, result["updated"]
+            assert_equal head, result["head_sha"]
+          end
+        end
+      end
+      assert_equal head, verified_sha
+      assert_equal head, JSON.parse(File.read(File.join(root, "cases/example/case.json"))).dig("source", "pins", 0, "revision")
     end
   end
 end
