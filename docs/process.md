@@ -84,6 +84,13 @@ scope, phases, and sample count before execution. Use a new series for a changed
 plan. Publication series normally use the case's declared ten measurements where
 cost permits. Smaller screening series must be identified as screening.
 
+Keep execution files at the reviewed harness ref when creating and dispatching
+the series, and commit the plan before execution. The definition digest includes
+shared execution and reporting code as well as the case. A later code change
+invalidates the plan for that checkout. Return to the original harness ref to
+continue its declared observations, or start a new series before execution.
+Adding result records does not change the execution definition.
+
 Fresh series declare either a cold build and identical-source replay, or a cold
 parent seed and changed-source build. The workflow's `phases` declares the latter
 as `["cold", "commit"]`; it must never be labelled an identical-source warm replay.
@@ -105,7 +112,7 @@ the remaining workflow syntax; that linter version does not recognize `queue`.
 
 ## 5. Execute and record
 
-Use `bin/bench run <case-id> --series <series-id> --sample 1` for a registered workflow.
+Use `bin/bench run <case-id> --series <series-id> --sample 1 --ref <reviewed-ref>` for a registered workflow.
 Repeat with the next declared sample number. Use `--workflow <filename>` when a
 case has more than one execution path. A receipt is retained for each sample and
 workflow; a changed case requires a new series. Use `--variant` at series creation
