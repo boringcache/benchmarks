@@ -114,6 +114,14 @@ module BenchmarkCases
         end
         errors << "#{id}: workflow is not dispatchable" unless item["kind"] == "retained" || (events.is_a?(Hash) && events.key?("workflow_dispatch"))
         (entry.fetch("inputs").keys - inputs.keys).each { |name| errors << "#{id}: unknown input #{name}" }
+        if entry["variant_input"]
+          name = entry.fetch("variant_input")
+          errors << "#{id}: variant_input must name a workflow input" unless inputs.key?(name)
+          errors << "#{id}: variant_input requires declared variants" unless entry["variants"]
+          if inputs.dig(name, "type") == "choice" && (Array(entry["variants"]) - inputs.dig(name, "options")).any?
+            errors << "#{id}: variants differ from the workflow input choices"
+          end
+        end
         if inputs["cli_version"] && !inputs["cli_version"].fetch("default", "").to_s.empty?
           errors << "#{id}: cli_version must default to the Action's version"
         end
@@ -187,13 +195,19 @@ module BenchmarkCases
     cases
   end
 
-  def self.plan(item, lane: "fresh", workflow: nil, inputs: {}, root: ROOT)
+  def self.plan(item, lane: "fresh", workflow: nil, inputs: {}, variant: nil, root: ROOT)
     blockers = item.fetch("execution").fetch("blockers", [])
     raise Error, "#{item.fetch('id')}: #{blockers.join('; ')}" unless blockers.empty?
     entries = item.fetch("execution").fetch("workflows")
     entry = workflow ? entries.find { |value| File.basename(value.fetch("path")) == workflow } : entries.find { |value| value.fetch("lane") == lane }
     raise Error, "#{item.fetch('id')} has no #{workflow || lane} workflow" unless entry
     combined = entry.fetch("inputs").merge(inputs)
+    if variant && entry["variant_input"]
+      raise Error, "Variant is not supported by this workflow" unless entry.fetch("variants").include?(variant)
+      name = entry.fetch("variant_input")
+      raise Error, "#{name} differs from the declared variant" if combined.key?(name) && combined[name] != variant
+      combined[name] = variant
+    end
     if item.dig("execution", "native") && combined["case_id"] != item.fetch("id")
       raise Error, "case_id must match the selected case"
     end

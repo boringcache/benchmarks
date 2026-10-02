@@ -1,0 +1,5 @@
+# Ubuntu 26.04 is a GitHub-hosted image added after actionlint 1.7.12.
+# This setting teaches that version the label; it does not select runner hosting.
+self-hosted-runner:
+  labels:
+    - ubuntu-26.04
