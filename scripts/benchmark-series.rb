@@ -187,6 +187,10 @@ module BenchmarkSeries
     missing_completions = run_ids - completions.map { |completion| completion.fetch("run_id") }
     failed_completions = completions.reject { |completion| completion["status"] == "success" }
     execution_verified = !run_ids.empty? && !run_ids.include?("") && missing_completions.empty? && failed_completions.empty?
+    methodology_issues = []
+    if plan.fetch("lane") == "rolling"
+      methodology_issues << "Rolling observations have no verified seed and changed-source sequence; retain them as diagnostic."
+    end
     metric = plan.dig("comparison", "primary_metric")
     summaries = measured.group_by { |row| [row.fetch("phase"), row.fetch("strategy")] }.map do |(phase, provider), rows|
       timings = rows.filter_map { |row| row.dig("timing", metric) if metric.end_with?("seconds") }
@@ -195,7 +199,8 @@ module BenchmarkSeries
         "storage" => statistics(storage), "storage_measured_count" => storage.length}
     end
     result = {"schema_version" => 1, "plan_sha256" => plan.fetch("plan_sha256"), "complete" => missing.empty?,
-      "valid_for_comparison" => missing.empty? && failures.empty? && execution_verified, "failures" => failures,
+      "valid_for_comparison" => missing.empty? && failures.empty? && execution_verified && methodology_issues.empty?, "failures" => failures,
+      "methodology_issues" => methodology_issues,
       "execution_verified" => execution_verified, "missing_completions" => missing_completions,
       "failed_completions" => failed_completions, "completions" => completions,
       "publication" => "unreviewed", "evidence_preservation" => "requires-review", "primary_metric" => metric, "missing" => missing, "summaries" => summaries,
@@ -211,6 +216,10 @@ module BenchmarkSeries
     summaries.each do |row|
       values = row["measurement"]
       lines << "| #{row['phase']} | #{row['provider']} | #{row['count']} | #{values && values['median']} | #{values && "#{values['min']}–#{values['max']}"} | #{row.dig('storage', 'median') || 'unmeasured'} | #{row['storage_measured_count']} |"
+    end
+    unless methodology_issues.empty?
+      lines.concat(["", "Methodology prevents a comparative claim:", ""])
+      methodology_issues.each { |issue| lines << "- #{issue}" }
     end
     unless failures.empty?
       lines.concat(["", "Failed observations do not contribute timings. They remain in the report and prevent a complete performance comparison.", ""])

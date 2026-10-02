@@ -128,5 +128,23 @@
       "execution_qualification": "passed preserved completion checks; publication remains unreviewed",
       "repository_retirement": "Original repositories remain until all migration gates pass"
     }
+  ],
+  "bundles": [
+    {
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-website-runs-2026-10-02/website-runs-2026-10-02.tar",
+      "sha256": "17e8454a83b9baa1344addbd18391b954400fc44dbe446784a4b2bdbb589c720",
+      "bundle_bytes": 46902784,
+      "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified each exported run's listed files and inventory",
+      "verified_on": "2026-10-02",
+      "scope": "Listed website references and available run resources; not all branches, experiments, or outside references",
+      "inventory": "migration/website-evidence.json",
+      "exported_run_count": 52,
+      "inventory_states": {
+        "complete": 51,
+        "partial": 1
+      },
+      "unavailable_reference_count": 1
+    }
   ]
 }

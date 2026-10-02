@@ -45,6 +45,22 @@ was downloaded after upload, checked against its SHA-256, extracted, and verifie
 against its run inventory. `migration/evidence.json` records that verification.
 This scoped export is not a completeness audit of the fork.
 
+The [historical website run archive](https://github.com/boringcache/benchmarks/releases/tag/evidence-website-runs-2026-10-02)
+preserves 52 runs linked from the website's snapshot, reviewed evidence, demo,
+pilot data, adapter guide, tool-page models, and blog views. Independent download,
+digest, and inventory checks passed for 51 complete scoped exports. Hugo Go run
+`27092625118` remains partial because its logs are unavailable. One legacy gRPC
+URL returned 404; the same run ID is verified in its original `benchmark-grpc`
+repository, and companion PR 1014 corrects that link. Measurements are unchanged.
+[`migration/website-evidence.json`](../migration/website-evidence.json) records
+the exact references, original repositories, preserved directories, and gaps.
+This is an evidence inventory, not a branch/fork completeness audit.
+The [historical website report](../results/historical-website/report.md) preserves
+the ten reviewed summaries with exact measurements, product versions, original
+execution links, and the export state for each cited run. It provides specific
+destinations for the companion website change without presenting historical
+observations as results from the new executor.
+
 The shared wrapper now has verified live qualification for a two-sample
 [Hugo Go fresh comparison](../results/hugo-go/wrapper-qualification/interpretation.md)
 and an AMD64 [Docker cold/warm product proof](../results/docker-cloudcost-exporter-amd64/wrapper-qualification/interpretation.md).
