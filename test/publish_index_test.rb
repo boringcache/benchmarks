@@ -1,10 +1,66 @@
 # frozen_string_literal: true
 
 require "minitest/autorun"
+require "minitest/mock"
 require "rbconfig"
 require_relative "../scripts/publish-index"
 
 class PublishIndexTest < Minitest::Test
+  def test_legacy_index_does_not_auto_publish_central_actions_results
+    benchmark = {"source_repo" => "boringcache/benchmarks", "historical_source_repo" => "boringcache/benchmark-hugo", "case_id" => "hugo",
+      "fresh_workflow" => "native-fresh-benchmark.yml", "historical_fresh_workflow" => "hugo-fresh-benchmark.yml"}
+    calls = []
+    lookup = lambda do |repo:, workflow_name:|
+      calls << [repo, workflow_name]
+      if repo == "boringcache/benchmarks"
+        [{"databaseId" => 1, "createdAt" => "2026-10-02T00:00:00Z", "displayTitle" => "hugo fresh screening sample 1"},
+          {"databaseId" => 2, "createdAt" => "2026-10-02T00:00:00Z", "displayTitle" => "hugo-go fresh screening sample 1"}]
+      else
+        [{"databaseId" => 3, "createdAt" => "2026-10-01T00:00:00Z"}]
+      end
+    end
+    stub(:latest_successful_runs, lookup) do
+      runs = benchmark_workflow_runs(benchmark, "native-fresh-benchmark.yml", {})
+      assert_equal [3], runs.map { |run| run.fetch("databaseId") }
+      assert_equal "boringcache/benchmark-hugo", runs.last.fetch("repository")
+    end
+    assert_equal [["boringcache/benchmark-hugo", "hugo-fresh-benchmark.yml"]], calls
+  end
+
+  def test_new_central_case_has_no_legacy_publication_feed
+    benchmark = {"source_repo" => "boringcache/benchmarks", "case_id" => "evaluation", "fresh_workflow" => "native-fresh-benchmark.yml"}
+    stub(:latest_successful_runs, ->(**) { flunk "Central artifacts must use the reviewed series publication path" }) do
+      assert_empty benchmark_workflow_runs(benchmark, "native-fresh-benchmark.yml", {})
+    end
+  end
+  def test_migration_keeps_historical_execution_repository
+    benchmark = {"source_repo" => "boringcache/benchmarks", "historical_source_repo" => "boringcache/benchmark-hugo", "case_id" => "hugo"}
+    calls = []
+    lookup = lambda do |repo:, workflow_name:|
+      calls << [repo, workflow_name]
+      raise "HTTP 404: Not Found" if repo == "boringcache/benchmarks"
+      [{"databaseId" => 123, "createdAt" => "2026-10-01T00:00:00Z"}]
+    end
+    stub(:latest_successful_runs, lookup) do
+      runs = benchmark_workflow_runs(benchmark, "hugo-hugo-fresh-benchmark.yml", {})
+      assert_equal "boringcache/benchmark-hugo", runs.first.fetch("repository")
+    end
+    assert_equal [["boringcache/benchmark-hugo", "hugo-fresh-benchmark.yml"]], calls
+    stub(:latest_successful_runs, ->(**) { raise "HTTP 403: Forbidden" }) do
+      assert_raises(RuntimeError) { benchmark_workflow_runs(benchmark, "hugo-hugo-fresh-benchmark.yml", {}) }
+    end
+  end
+
+  def test_artifact_lookup_uses_original_run_repository_after_migration
+    run = {"databaseId" => 123, "createdAt" => "2026-10-01T00:00:00Z", "repository" => "boringcache/benchmark-hugo"}
+    requests = []
+    stub(:run_cmd, lambda { |*args| requests << args; '{"artifacts":[{"name":"benchmark-hugo-boringcache-fresh","expired":false}]}' }) do
+      found = latest_run_with_artifact(runs_for_head: [run], repo: "boringcache/benchmarks", benchmark_id: "hugo", strategy: "boringcache", lane: "fresh", artifacts_cache: {})
+      assert_equal run, found
+    end
+    assert_equal ["gh", "api", "repos/boringcache/benchmark-hugo/actions/runs/123/artifacts"], requests.first
+  end
+
   PRODUCT_REFS = {
     "schema_version" => 1,
     "action_ref" => "boringcache/one@v1",
@@ -445,7 +501,7 @@ class PublishIndexTest < Minitest::Test
     refute payload.key?("samples")
   end
 
-  def test_runner_variance_filter_excludes_only_matching_native_tool_outlier
+  def test_runner_variance_annotation_retains_a_faster_comparator_sample
     providers = provider_matrix({
       "actions-cache" => [
         provider_native_snapshot(run_id: "actions", compiler_seconds: 37.475, hits: 2290, misses: 84, seconds: 2_131)
@@ -458,22 +514,42 @@ class PublishIndexTest < Minitest::Test
       ]
     })
 
-    filtered = apply_runner_variance_outlier_filter(providers)
+    filtered = annotate_runner_variance(providers)
     depot_lane = filtered.dig("depot-cache", "lanes", "rolling")
 
-    assert_equal "missing_sample", depot_lane["state"]
-    assert_equal 1, depot_lane["source_sample_count"]
-    assert_equal 1, depot_lane["excluded_runner_variance_outlier_count"]
-    assert_equal ["depot"], depot_lane["runner_variance_outliers"].map { |row| row["run_id"] }
-    assert_equal "faster", depot_lane.dig("runner_variance_outliers", 0, "outlier_direction")
-    assert_equal ["actions", "boringcache"], depot_lane.dig("runner_variance_outliers", 0, "peer_run_ids")
+    assert_equal "healthy", depot_lane["state"]
+    assert_equal 1, depot_lane["selected_sample_count"]
+    assert_equal 1_821, depot_lane.dig("headline", "seconds")
+    assert_equal ["depot"], depot_lane["samples"].map { |row| row["run_id"] }
+    assert_equal ["depot"], depot_lane["runner_variance_candidates"].map { |row| row["run_id"] }
+    assert_equal "faster", depot_lane.dig("runner_variance_candidates", 0, "outlier_direction")
+    assert_equal ["actions", "boringcache"], depot_lane.dig("runner_variance_candidates", 0, "peer_run_ids")
+    refute depot_lane.key?("excluded_sample_count")
+    assert_equal "1/1 samples flagged for possible runner variance; all samples retained.", depot_lane["reporting_note"]
     assert_equal 1, filtered.dig("actions-cache", "lanes", "rolling", "selected_sample_count")
     assert_equal 1, filtered.dig("boringcache", "lanes", "rolling", "selected_sample_count")
-    refute filtered.dig("actions-cache", "lanes", "rolling").key?("runner_variance_outliers")
-    refute filtered.dig("boringcache", "lanes", "rolling").key?("runner_variance_outliers")
+    refute filtered.dig("actions-cache", "lanes", "rolling").key?("runner_variance_candidates")
+    refute filtered.dig("boringcache", "lanes", "rolling").key?("runner_variance_candidates")
   end
 
-  def test_runner_variance_filter_keeps_sample_when_cache_work_differs
+  def test_runner_variance_annotation_retains_a_slower_boringcache_sample
+    providers = provider_matrix({
+      "actions-cache" => [provider_native_snapshot(run_id: "actions", compiler_seconds: 37.475, seconds: 2_131)],
+      "depot-cache" => [provider_native_snapshot(run_id: "depot", compiler_seconds: 37.329, seconds: 2_128)],
+      "boringcache" => [provider_native_snapshot(run_id: "boringcache", compiler_seconds: 50.0, seconds: 2_600)]
+    })
+
+    annotated = annotate_runner_variance(providers)
+    lane = annotated.dig("boringcache", "lanes", "rolling")
+
+    assert_equal "healthy", lane["state"]
+    assert_equal 2_600, lane.dig("headline", "seconds")
+    assert_equal ["boringcache"], lane["samples"].map { |row| row["run_id"] }
+    assert_equal "slower", lane.dig("runner_variance_candidates", 0, "outlier_direction")
+    refute lane.key?("excluded_sample_count")
+  end
+
+  def test_runner_variance_annotation_keeps_sample_when_cache_work_differs
     providers = provider_matrix({
       "actions-cache" => [
         provider_native_snapshot(run_id: "actions", compiler_seconds: 37.475, hits: 2290, misses: 84, seconds: 2_131)
@@ -486,15 +562,15 @@ class PublishIndexTest < Minitest::Test
       ]
     })
 
-    filtered = apply_runner_variance_outlier_filter(providers)
+    filtered = annotate_runner_variance(providers)
     depot_lane = filtered.dig("depot-cache", "lanes", "rolling")
 
     assert_equal "healthy", depot_lane["state"]
     assert_equal 1, depot_lane["selected_sample_count"]
-    refute depot_lane.key?("runner_variance_outliers")
+    refute depot_lane.key?("runner_variance_candidates")
   end
 
-  def test_runner_variance_filter_keeps_sample_when_headline_timing_is_not_distorted
+  def test_runner_variance_annotation_keeps_sample_when_headline_timing_is_not_distorted
     providers = provider_matrix({
       "actions-cache" => [
         provider_native_snapshot(run_id: "actions", compiler_seconds: 63.691, hits: 2296, misses: 3, seconds: 1_287)
@@ -507,15 +583,15 @@ class PublishIndexTest < Minitest::Test
       ]
     })
 
-    filtered = apply_runner_variance_outlier_filter(providers)
+    filtered = annotate_runner_variance(providers)
     depot_lane = filtered.dig("depot-cache", "lanes", "rolling")
 
     assert_equal "healthy", depot_lane["state"]
     assert_equal 1, depot_lane["selected_sample_count"]
-    refute depot_lane.key?("runner_variance_outliers")
+    refute depot_lane.key?("runner_variance_candidates")
   end
 
-  def test_runner_variance_filter_needs_two_comparable_peers
+  def test_runner_variance_annotation_needs_two_comparable_peers
     providers = provider_matrix({
       "actions-cache" => [
         provider_native_snapshot(run_id: "actions", compiler_seconds: 37.475, seconds: 2_131)
@@ -525,13 +601,13 @@ class PublishIndexTest < Minitest::Test
       ]
     })
 
-    filtered = apply_runner_variance_outlier_filter(providers)
+    filtered = annotate_runner_variance(providers)
 
     assert_equal 1, filtered.dig("depot-cache", "lanes", "rolling", "selected_sample_count")
-    refute filtered.dig("depot-cache", "lanes", "rolling").key?("runner_variance_outliers")
+    refute filtered.dig("depot-cache", "lanes", "rolling").key?("runner_variance_candidates")
   end
 
-  def test_runner_variance_filter_keeps_samples_when_peers_disagree
+  def test_runner_variance_annotation_keeps_samples_when_peers_disagree
     providers = provider_matrix({
       "actions-cache" => [
         provider_native_snapshot(run_id: "actions", compiler_seconds: 32.0, seconds: 2_131)
@@ -544,13 +620,13 @@ class PublishIndexTest < Minitest::Test
       ]
     })
 
-    filtered = apply_runner_variance_outlier_filter(providers)
+    filtered = annotate_runner_variance(providers)
 
     filtered.each_value do |provider|
       lane = provider.dig("lanes", "rolling")
       assert_equal "healthy", lane["state"]
       assert_equal 1, lane["selected_sample_count"]
-      refute lane.key?("runner_variance_outliers")
+      refute lane.key?("runner_variance_candidates")
     end
   end
 

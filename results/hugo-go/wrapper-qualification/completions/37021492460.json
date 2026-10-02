@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "hugo-go",
+  "series_id": "wrapper-qualification",
+  "sample": 1,
+  "run_id": "37021492460",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37021492460",
+  "source_sha": "2329a034fea00236488cfc4aa73a281b4807bd2c",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "042ce2d393e2cee1a99df5f1b71f17efcdbb2f51371ccc84531269bf38133c7e"
+}

@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "id": "duckgres",
+  "kind": "benchmark",
+  "adapter": "workflow",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "PostHog/duckgres",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "12e26cf3a900823cf415d826ab2a9b8f0d57b2a3",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-duckgres",
+    "branch": "main",
+    "revision": "43060b6b39cff5aecd2138b6cf99571f6876d98b"
+  },
+  "execution": {
+    "workflows": [
+      {
+        "path": ".github/workflows/native-rolling-benchmark.yml",
+        "lane": "rolling",
+        "inputs": {
+          "case_id": "duckgres"
+        },
+        "historical_workflow": "duckgres-benchmark.yml"
+      },
+      {
+        "path": ".github/workflows/native-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "duckgres"
+        },
+        "historical_workflow": "duckgres-fresh-benchmark.yml"
+      }
+    ],
+    "sync": "upstream-head",
+    "sync_minute": 5,
+    "native": {
+      "action": ".github/actions/duckgres-docker-benchmark",
+      "benchmark_id": "duckgres",
+      "rolling_inputs": {
+        "push_image": "true"
+      },
+      "environment": {},
+      "fresh_inputs": {}
+    },
+    "cache_tags": {
+      "duckgres-docker-local": "{scope}-docker"
+    }
+  },
+  "reporting": {
+    "entries": [
+      "duckgres"
+    ],
+    "publication": "reviewed"
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}

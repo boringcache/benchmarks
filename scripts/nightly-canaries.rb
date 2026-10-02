@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "optparse"
+require "set"
 require_relative "publish-index"
 
 module NightlyCanaries
@@ -36,7 +37,10 @@ module NightlyCanaries
     end
 
     def targets(benchmarks)
-      benchmarks.reject { |item| item["archived"] }.map { |item| item.values_at("source_repo", "fresh_workflow") }.uniq
+      benchmarks.reject { |item| item["archived"] }.map do |item|
+        inputs = item.fetch("fresh_workflow").start_with?("native-") ? {"case_id" => item.fetch("case_id")} : {}
+        [item.fetch("source_repo"), item.fetch("fresh_workflow"), inputs]
+      end.uniq
     end
 
     def dispatch(repository:, output:, summary: nil, version: nil, dry_run: false, benchmarks: BENCHMARKS)
@@ -50,9 +54,9 @@ module NightlyCanaries
       end
       record = {"cli_version" => version, "created_at" => Time.now.utc.iso8601,
                 "state" => "dispatching", "runs" => []}
-      selected.each do |repository, workflow|
+      selected.each do |repository, workflow, inputs|
         raise Error, "Benchmark lacks a fresh workflow" if repository.nil? || workflow.nil?
-        record["runs"] << {"repository" => repository, "workflow" => workflow, "state" => "planned"}
+        record["runs"] << {"repository" => repository, "workflow" => workflow, "inputs" => inputs, "state" => "planned"}
       end
       write(output, record)
       # Validate every target before starting any expensive builds.
@@ -63,7 +67,7 @@ module NightlyCanaries
       record["runs"].each do |run|
         next if dry_run
         result = api("repos/#{run.fetch('repository')}/actions/workflows/#{run.fetch('workflow')}/dispatches",
-          body: {"ref" => "main", "inputs" => {"cli_version" => version}, "return_run_details" => true})
+          body: {"ref" => "main", "inputs" => run.fetch("inputs").merge("cli_version" => version), "return_run_details" => true})
         id = result["workflow_run_id"]
         raise Error, "Dispatch returned no run ID; inspect the workflow before retrying" unless id.is_a?(Integer) && id.positive?
         run.merge!("id" => id, "url" => "https://github.com/#{run.fetch('repository')}/actions/runs/#{id}", "state" => "requested")
@@ -129,15 +133,15 @@ module NightlyCanaries
 
           passed = false unless parent["conclusion"] == "success"
           record = receipt(repository, parent_id)
-          recorded = record.fetch("runs").map { |run| run.values_at("repository", "workflow") }
-          unless recorded.sort == expected.sort && record.fetch("cli_version").match?(/\Avcli-canary-[0-9a-f]{9,40}\z/)
+          recorded = record.fetch("runs").map { |run| [run.fetch("repository"), run.fetch("workflow"), run.fetch("inputs", {})] }
+          unless recorded.to_set == expected.to_set && recorded.length == expected.length && record.fetch("cli_version").match?(/\Avcli-canary-[0-9a-f]{9,40}\z/)
             raise Error, "Dispatch receipt does not match this repository's registered workflows"
           end
           healthy = check(record, summary: nil)
           passed = false unless healthy
           lines << "CLI: `#{record.fetch('cli_version')}`. Dispatch: **#{record.fetch('state')}**."
           record.fetch("runs").each do |run|
-            name = run.fetch("workflow")
+            name = [run.fetch("workflow"), run.dig("inputs", "case_id")].compact.join(" ")
             name = "[#{name}](https://github.com/#{repository}/actions/runs/#{run.fetch('id')})" if run["id"]
             lines << "- #{name}: **#{run.fetch('state')}**"
           end
@@ -164,7 +168,7 @@ module NightlyCanaries
       lines = ["## CLI canary benchmarks", "", "CLI: `#{record.fetch('cli_version')}`", "",
                "Dispatch: **#{record.fetch('state')}**. Benchmark outcomes are listed separately.", ""]
       record.fetch("runs").each do |run|
-        name = "#{run.fetch('repository')} / #{run.fetch('workflow')}"
+        name = "#{run.fetch('repository')} / #{[run.fetch('workflow'), run.dig('inputs', 'case_id')].compact.join(' ')}"
         name = "[#{name}](#{run.fetch('url')})" if run["url"]
         lines << "- #{name}: **#{run.fetch('state')}**"
       end

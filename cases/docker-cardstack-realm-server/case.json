@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "id": "docker-cardstack-realm-server",
+  "kind": "evaluation",
+  "adapter": "docker",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "cardstack/boxel",
+    "pins": [
+      {
+        "path": "recipe.json",
+        "revision": "cd677626e541c64cd899af7c5b07d6636c924b59",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "52e6282f7d4a043b3a8d84fb474d6f0030710d3e",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "621cf9813a1cfee953aeb49ba916bbbba6f17d3e",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "12ca827dfef36705dc39a646f68c74e7888e99ed",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "4907fde3472b46db3d97b0a8a0c00118fe376c85",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "ddb08ae78dc57196e2d36b383b213ce3ea56fb03",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "a5e2a714fe6a7b3e7805d291268a5866c8c31560",
+        "kind": "recipe"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "boringcache/benchmark-docker",
+    "branch": "main",
+    "revision": "9683d048b619c39dfd4cda87d81648dff5862c27"
+  },
+  "execution": {
+    "sync": "fixed",
+    "workflows": [
+      {
+        "path": ".github/workflows/docker-cache-proofs.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "cardstack-realm-server",
+          "ref_key": "main",
+          "cache_lane": "fresh"
+        },
+        "variants": [
+          "linux-amd64",
+          "linux-arm64"
+        ]
+      },
+      {
+        "path": ".github/workflows/docker-cache-proofs.yml",
+        "lane": "rolling",
+        "inputs": {
+          "case_id": "cardstack-realm-server",
+          "ref_key": "main",
+          "cache_lane": "rolling"
+        },
+        "variants": [
+          "linux-amd64",
+          "linux-arm64"
+        ]
+      }
+    ]
+  },
+  "reporting": {
+    "entries": [],
+    "publication": "evaluation-only"
+  },
+  "verification": [
+    "Pinned upstream workflow fidelity",
+    "Declared Docker output"
+  ],
+  "comparison": {
+    "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+    "providers": [
+      "boringcache"
+    ],
+    "timed_scope": "Declared Docker build, including dependencies, cache import/export and declared image output",
+    "primary_metric": "correctness",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  }
+}

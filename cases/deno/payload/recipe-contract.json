@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "upstream_files": {
+    "rust-toolchain.toml": "62a76263c7b819f8493c9099e1a13f78ecc31ef7fac7a51e7dfe1c8550ae613c",
+    ".github/workflows/ci.generated.yml": "0fe8f2e40ebc8924602fc6e6033a3dd52379dc790df7bcc80f3b12065cb768f8"
+  },
+  "commands": {
+    "cargo": [
+      "cargo",
+      "build",
+      "-Zbuild-std=core,alloc,std,proc_macro,panic_abort",
+      "--release",
+      "--locked",
+      "-p",
+      "deno",
+      "-p",
+      "denort",
+      "-p",
+      "test_server",
+      "--bin",
+      "deno",
+      "--bin",
+      "denort",
+      "--bin",
+      "test_server",
+      "--features=deno/panic-trace-frame-pointer"
+    ]
+  }
+}

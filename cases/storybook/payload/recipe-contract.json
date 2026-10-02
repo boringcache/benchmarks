@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "upstream_files": {
+    "scripts/ci/sandboxes.ts": "f3265c9200e669f3d87b0d748e18a57be759799894babdd24f1a606c357781a5",
+    ".nvmrc": "c79baaa1b07c2c4dd1e547a04cc14624c673e43c065b099e8dc6cbc3145643a2"
+  },
+  "commands": {
+    "nx": [
+      "corepack",
+      "yarn",
+      "task",
+      "build",
+      "--template",
+      "react-vite/default-ts",
+      "--no-link",
+      "-s",
+      "build"
+    ]
+  }
+}
