@@ -183,11 +183,31 @@ class BenchmarkSeriesTest < Minitest::Test
   end
 
   def test_phase_timings_require_verified_workflow_completion
-    [1, 2].each { |sample| %w[boringcache actions-cache].each { |provider| add(record(sample: sample, provider: provider)) } }
+    @directory = File.join(@root, "replay-completion")
+    BenchmarkSeries.create(@case, directory: @directory, series: "screening", lane: "fresh", variant: "release")
+    [1, 2].each do |sample|
+      %w[boringcache actions-cache].each do |provider|
+        %w[cold warm].each { |phase| add(record(sample: sample, provider: provider).merge("phase" => phase, "lane" => "fresh")) }
+      end
+    end
     refute BenchmarkSeries.report(@directory)["valid_for_comparison"]
     [1, 2].each { |sample| BenchmarkSeries.finish(@directory, evidence_directory: evidence(run_id: sample), sample: sample) }
     assert BenchmarkSeries.report(@directory)["valid_for_comparison"]
     assert_raises(BenchmarkSeries::Error) { BenchmarkSeries.finish(@directory, evidence_directory: File.join(@root, "evidence-1"), sample: 1) }
+  end
+
+  def test_completed_rolling_runs_without_seed_lineage_remain_diagnostic
+    [1, 2].each do |sample|
+      %w[boringcache actions-cache].each { |provider| add(record(sample: sample, provider: provider)) }
+      BenchmarkSeries.finish(@directory, evidence_directory: evidence(run_id: sample), sample: sample)
+    end
+    result = BenchmarkSeries.report(@directory)
+    assert result["complete"]
+    assert result["execution_verified"]
+    refute result["valid_for_comparison"]
+    assert_includes result["methodology_issues"].first, "no verified seed and changed-source sequence"
+    assert_equal 4, result["records"].length
+    assert_includes File.read(File.join(@directory, "report.md")), "retain them as diagnostic"
   end
 
   def test_green_jobs_with_post_step_warnings_cannot_qualify_a_series

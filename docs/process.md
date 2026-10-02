@@ -130,6 +130,10 @@ scope, storage with its measurement source, and evidence links. The canonical
 Ruby reporter keeps legacy phase and lane fields for existing consumers. Series
 records add explicit comparison fields; legacy records without them cannot
 support a new series claim.
+The phase verification flag confirms output checks preceding that record.
+`verification.declared_checks` lists the case's requirements; it does not claim
+that checks for later phases have already run. Preserved job logs establish the
+executed checks. Earlier imported records retain their original fields.
 
 ```sh
 bin/bench record <case-id> --series screening-01 --record /tmp/phase.json
@@ -139,6 +143,9 @@ Recording rejects duplicate slots. Reporting checks matched source, case, varian
 and runner environment across provider pairs. It reports every declared
 observation, missing slots, medians, ranges, and measured storage counts. Missing
 storage stays unmeasured. Reports require publication review.
+Aggregate reporting retains suspected runner-variance samples and attaches its
+diagnostic evidence. A variance flag does not establish the cause of a slow or
+fast run and must not remove its timing from the comparison.
 Provider-reported bytes describe the selected cache, not total workspace usage
 or billable storage. The BoringCache probe uses exact resolved tags and its
 reported KV or archive size; the GitHub probe uses the selected cache key's
@@ -168,3 +175,25 @@ Review correctness, matched arms, storage semantics, sample completeness,
 environment variance, and claim limits. Parity and no material improvement are
 valid outcomes. Promotion changes metadata or suite membership. Website claims
 link to specific reports and preserved evidence, not only the homepage.
+
+## 7. Review source updates
+
+Use `bin/bench sync <case-id> --output /tmp/<case-id>-source-proposal.json` in a
+disposable harness checkout, or the manual `source-sync.yml` workflow. It inspects
+the declared upstream branch, fetches the observed revision, checks fast-forward
+history and recipe fidelity, and produces a proposal. A passing source proposal
+does not verify the new build.
+
+For verified source pairs, keep the candidate source environment from the proposal,
+run its required build and output checks, then use `bin/bench update-source
+<case-id> --directory <verified-candidate>` to update the reviewed pins. Create a
+new series whenever the frozen definition changes. Retain the prior series and
+its evidence.
+
+Changed-source comparisons must declare the exact seed and destination revisions
+and prove the intended cache continuity. Repeating one frozen source revision
+does not establish changed-source performance. Legacy rolling workflows remain
+diagnostic until their source sequence, seed lineage, and central caller have
+been qualified. Do not enable their schedule or promote their timing merely
+because the workflow completed. The series reporter keeps rolling observations
+but marks them invalid for comparison while seed lineage is unsupported.

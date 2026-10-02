@@ -51,6 +51,7 @@ Published interfaces remain available:
 - [`data/latest/index.json`](data/latest/index.json): machine-readable workload index
 - [`data/latest/providers.json`](data/latest/providers.json): provider comparisons
 - [`suites/published.json`](suites/published.json): shared publication registry
+- [`results/historical-website/report.md`](results/historical-website/report.md): reviewed historical website observations and preserved evidence
 
 Historical run URLs retain their original execution repository. A moved case does
 not move an Actions run. Evidence preservation exports each attempt, jobs, logs,
