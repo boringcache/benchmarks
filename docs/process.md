@@ -210,6 +210,9 @@ original execution URLs as provenance.
 green job with a reported BoringCache post-step failure remains unqualified.
 Reports require a completion check for every run represented by their phase
 records; complete timing records alone cannot qualify a comparison.
+Retain the raw phase and product evidence when a later reporting step fails.
+Summary artifact paths and names must include the reporter's selected variant
+and lane. `scripts/check-report-contract.rb` checks that naming contract.
 
 Review correctness, matched arms, storage semantics, sample completeness,
 environment variance, and claim limits. Parity and no material improvement are

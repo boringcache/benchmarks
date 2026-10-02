@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "case_id": "deno",
+  "series_id": "rolling-cargo-product-qualification",
+  "sample": 1,
+  "run_id": "37063477982",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37063477982",
+  "source_sha": "50f069f123cef134e307db653c853d39eee08404",
+  "github_conclusion": "failure",
+  "status": "failed",
+  "errors": [
+    "Workflow concluded failure",
+    "BoringCache Deno Cargo commit: failure"
+  ],
+  "evidence_manifest_sha256": "b7a48ba5a883a62036d0ec5ec1adf7374be322219e1f4665b806473e580ef0aa"
+}
