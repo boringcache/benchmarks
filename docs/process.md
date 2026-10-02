@@ -143,6 +143,9 @@ Recording rejects duplicate slots. Reporting checks matched source, case, varian
 and runner environment across provider pairs. It reports every declared
 observation, missing slots, medians, ranges, and measured storage counts. Missing
 storage stays unmeasured. Reports require publication review.
+Correctness proofs retain successful observations and execution checks without
+a numeric correctness median or provider-comparison status. A storage comparison
+uses the declared provider byte measurement for its primary median and range.
 Aggregate reporting retains suspected runner-variance samples and attaches its
 diagnostic evidence. A variance flag does not establish the cause of a slow or
 fast run and must not remove its timing from the comparison.

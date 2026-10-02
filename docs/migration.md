@@ -77,6 +77,16 @@ was dispatched directly or reconstruct a missing original dispatch response.
 Once the workflows are registered on the default branch, use the documented
 `bin/bench run` path and retain its dispatch receipt.
 
+The shared harness is merged. The direct
+[Hugo Go comparison](../results/hugo-go/direct-dispatch-qualification/interpretation.md)
+and [Docker AMD64 proof](../results/docker-cloudcost-exporter-amd64/direct-dispatch-qualification/interpretation.md)
+pass preserved completion checks with exact dispatch receipts. Their
+[archive release](https://github.com/boringcache/benchmarks/releases/tag/evidence-direct-dispatch-2026-10-02)
+was independently downloaded and verified. Deno's Cargo product and compiler-only
+direct runs each have a predeclared one-sample correctness plan; their completion
+and full release-path qualification remain pending. Original schedules and
+repositories remain active.
+
 The legacy index collector continues to read the original execution repositories.
 It cannot publish raw central Actions summaries or mix them into historical
 windows. New central claims use reviewed canonical series reports. Migrating the
