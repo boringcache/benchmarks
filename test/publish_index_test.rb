@@ -6,7 +6,7 @@ require "rbconfig"
 require_relative "../scripts/publish-index"
 
 class PublishIndexTest < Minitest::Test
-  def test_shared_workflow_keeps_cases_separate_and_uses_the_original_historical_workflow
+  def test_legacy_index_does_not_auto_publish_central_actions_results
     benchmark = {"source_repo" => "boringcache/benchmarks", "historical_source_repo" => "boringcache/benchmark-hugo", "case_id" => "hugo",
       "fresh_workflow" => "native-fresh-benchmark.yml", "historical_fresh_workflow" => "hugo-fresh-benchmark.yml"}
     calls = []
@@ -21,10 +21,17 @@ class PublishIndexTest < Minitest::Test
     end
     stub(:latest_successful_runs, lookup) do
       runs = benchmark_workflow_runs(benchmark, "native-fresh-benchmark.yml", {})
-      assert_equal [1, 3], runs.map { |run| run.fetch("databaseId") }
+      assert_equal [3], runs.map { |run| run.fetch("databaseId") }
       assert_equal "boringcache/benchmark-hugo", runs.last.fetch("repository")
     end
-    assert_equal "hugo-fresh-benchmark.yml", calls.last.last
+    assert_equal [["boringcache/benchmark-hugo", "hugo-fresh-benchmark.yml"]], calls
+  end
+
+  def test_new_central_case_has_no_legacy_publication_feed
+    benchmark = {"source_repo" => "boringcache/benchmarks", "case_id" => "evaluation", "fresh_workflow" => "native-fresh-benchmark.yml"}
+    stub(:latest_successful_runs, ->(**) { flunk "Central artifacts must use the reviewed series publication path" }) do
+      assert_empty benchmark_workflow_runs(benchmark, "native-fresh-benchmark.yml", {})
+    end
   end
   def test_migration_keeps_historical_execution_repository
     benchmark = {"source_repo" => "boringcache/benchmarks", "historical_source_repo" => "boringcache/benchmark-hugo", "case_id" => "hugo"}
@@ -38,7 +45,7 @@ class PublishIndexTest < Minitest::Test
       runs = benchmark_workflow_runs(benchmark, "hugo-hugo-fresh-benchmark.yml", {})
       assert_equal "boringcache/benchmark-hugo", runs.first.fetch("repository")
     end
-    assert_equal [["boringcache/benchmarks", "hugo-hugo-fresh-benchmark.yml"], ["boringcache/benchmark-hugo", "hugo-fresh-benchmark.yml"]], calls
+    assert_equal [["boringcache/benchmark-hugo", "hugo-fresh-benchmark.yml"]], calls
     stub(:latest_successful_runs, ->(**) { raise "HTTP 403: Forbidden" }) do
       assert_raises(RuntimeError) { benchmark_workflow_runs(benchmark, "hugo-hugo-fresh-benchmark.yml", {}) }
     end
