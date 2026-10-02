@@ -62,6 +62,30 @@ jobs:
       cli_version: "${{ inputs.cli_version }}"
       series_id: "${{ inputs.series_id }}"
       sample: "${{ inputs.sample }}"
+  qualification-deno:
+    if: github.event_name == 'workflow_dispatch' && inputs.qualification == 'deno' && !inputs.connect_ci
+    uses: "./.github/workflows/deno-deno-cargo-product.yml"
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    with:
+      series_id: "${{ inputs.series_id }}"
+      sample: "${{ inputs.sample }}"
+  qualification-docker:
+    if: github.event_name == 'workflow_dispatch' && inputs.qualification == 'docker' && !inputs.connect_ci
+    uses: "./.github/workflows/docker-cache-proofs.yml"
+    permissions:
+      contents: read
+      actions: read
+      packages: write
+      id-token: write
+    with:
+      case_id: cloudcost-exporter-amd64
+      ref_key: main
+      cache_lane: fresh
+      series_id: "${{ inputs.series_id }}"
+      sample: "${{ inputs.sample }}"
 'on':
   workflow_dispatch:
     inputs:
@@ -75,6 +99,8 @@ jobs:
         options:
         - none
         - hugo-go
+        - deno
+        - docker
         default: none
       cli_version:
         description: Optional exact released CLI or canary

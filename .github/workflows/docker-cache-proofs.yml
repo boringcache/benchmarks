@@ -412,6 +412,57 @@ jobs:
         type: string
         required: false
         default: '1'
+  workflow_call:
+    inputs:
+      case_id:
+        description: Real Buildx workload to run.
+        required: true
+        type: string
+      ref_key:
+        description: Committed case ref plan name.
+        required: true
+        type: string
+      cache_lane:
+        description: Fresh proves an exact cold/warm pair; rolling reuses the case
+          graph.
+        required: true
+        type: string
+      buildkit_image:
+        description: Optional managed BoringCache BuildKit image.
+        required: false
+        type: string
+        default: ''
+      cli_version:
+        description: Optional exact BoringCache CLI release tag.
+        required: false
+        type: string
+        default: ''
+      cache_scope_suffix:
+        description: Optional isolated suffix for a controlled rolling series.
+        required: false
+        type: string
+        default: ''
+      rust_target_cache:
+        description: Exercise the declared Cargo target cache mount through managed
+          mount-cache offload.
+        required: false
+        type: boolean
+        default: false
+      runner_label:
+        description: Optional runner label for a manual main-branch experiment.
+        required: false
+        type: string
+        default: ''
+      series_id:
+        description: Predeclared series ID; empty for legacy diagnostics
+        type: string
+        required: false
+        default: ''
+      sample:
+        description: Observation number in the predeclared series
+        type: string
+        required: false
+        default: '1'
 env:
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
   BENCHMARK_SAMPLE: "${{ inputs.sample }}"
