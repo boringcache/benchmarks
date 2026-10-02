@@ -82,9 +82,16 @@ The shared harness is merged. The direct
 and [Docker AMD64 proof](../results/docker-cloudcost-exporter-amd64/direct-dispatch-qualification/interpretation.md)
 pass preserved completion checks with exact dispatch receipts. Their
 [archive release](https://github.com/boringcache/benchmarks/releases/tag/evidence-direct-dispatch-2026-10-02)
-was independently downloaded and verified. Deno's Cargo product and compiler-only
-direct runs each have a predeclared one-sample correctness plan; their completion
-and full release-path qualification remain pending. Original schedules and
+was independently downloaded and verified. Deno's
+[Cargo product](../results/deno/direct-cargo-product-qualification/interpretation.md)
+and [compiler-only](../results/deno/direct-compiler-only-qualification/interpretation.md)
+direct runs pass their predeclared one-sample output, cache-reuse, and completion
+checks. Their archived bundles were independently downloaded and verified. Native
+compiler-cache errors remain in the evidence. The Cargo product's original storage
+probe does not establish coverage of every selected tag and cannot support a total
+storage claim. These runs do not qualify provider performance, the rolling
+publication workflows, or the full release caller. OBS ccache/Xcode and Deno
+rolling plans are prepared but have not been dispatched. Original schedules and
 repositories remain active.
 
 The legacy index collector continues to read the original execution repositories.
@@ -97,3 +104,12 @@ so a series cannot omit the third provider's observations. Its credential is
 passed only to BuildBuddy matrix jobs. The existing organization secret is
 restricted to `benchmark-grpc`; central access must be configured before gRPC
 qualification or caller cutover.
+
+Zed's imported layer preparation initially selected the newer rolling recipe
+contract and failed its toolchain digest check. The layer path now selects a
+separate reviewed contract through the shared verifier. Both pinned layer sources
+and the rolling source pass file and command verification in a disposable
+checkout. The layer contract checks all eight active plans. This corrects
+preparation; full live builds and output qualification remain pending. The
+[recipe review](../cases/zed/recipe-review.md) records the two toolchains and
+the release-build projection's limitations.

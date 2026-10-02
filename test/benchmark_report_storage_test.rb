@@ -24,6 +24,17 @@ class BenchmarkReportStorageTest < Minitest::Test
     end
   end
 
+  def test_phase_preserves_the_product_trust_decision
+    Dir.mktmpdir do |dir|
+      evidence = action_evidence
+      decision = {"status" => "restore_only", "requested_policy" => "restore", "resolved_policy" => "restore", "write_allowed" => false}
+      evidence.fetch("phases").fetch("restore")["trust_state"] = decision
+      File.write(File.join(dir, "action-evidence.json"), JSON.generate(evidence))
+      payload = write_phase(dir, strategy: "actions-cache")
+      assert_equal decision, payload.dig("action", "trust_state")
+    end
+  end
+
   def test_boringcache_storage_uses_exact_resolved_tags_and_deduplicates_entries
     Dir.mktmpdir do |dir|
       evidence_path = File.join(dir, "action-evidence.json")
@@ -77,6 +88,69 @@ class BenchmarkReportStorageTest < Minitest::Test
 
       assert_nil payload.dig("cache", "storage_bytes")
       assert_nil payload.dig("cache", "storage_source")
+    end
+  end
+
+  def test_boringcache_storage_does_not_report_a_partial_probe_as_the_selected_total
+    Dir.mktmpdir do |dir|
+      bin_dir = File.join(dir, "bin")
+      Dir.mkdir(bin_dir)
+      check_path = File.join(dir, "check.json")
+      invocation_path = File.join(dir, "check-invocation.json")
+      File.write(check_path, JSON.generate("results" => [
+        {"status" => "hit", "requested_tag" => "cache-one", "cache_entry_id" => "entry-one", "kv_total_size" => 200},
+        {"status" => "hit", "requested_tag" => "cache-two", "cache_entry_id" => "entry-two"}
+      ]))
+      write_fake_boringcache(File.join(bin_dir, "boringcache"))
+      payload = write_phase(dir, env: {"PATH" => "#{bin_dir}:#{ENV.fetch('PATH')}",
+        "FAKE_CHECK_PATH" => check_path, "FAKE_CHECK_INVOCATION_PATH" => invocation_path})
+
+      assert_nil payload.dig("cache", "storage_bytes")
+      assert_nil payload.dig("cache", "storage_source")
+      assert_equal false, payload.dig("cache", "storage_breakdown", "complete")
+      assert_equal 200, payload.dig("cache", "storage_breakdown", "measured_bytes")
+      assert_equal ["cache-two"], payload.dig("cache", "storage_breakdown", "unmeasured_tags")
+      assert_equal JSON.parse(File.read(check_path)).fetch("results"), payload.dig("cache", "storage_breakdown", "observations")
+    end
+  end
+
+  def test_archive_storage_does_not_use_an_unrelated_zero_byte_kv_observation
+    Dir.mktmpdir do |dir|
+      check_path = File.join(dir, "check.json")
+      bin_dir = File.join(dir, "bin")
+      Dir.mkdir(bin_dir)
+      File.write(check_path, JSON.generate("results" => [
+        {"status" => "hit", "requested_tag" => "archive-tag", "cache_type" => "cache_entry",
+         "cache_entry_id" => "archive-one", "kv_total_size" => 0, "compressed_size" => 75}
+      ]))
+      write_fake_boringcache(File.join(bin_dir, "boringcache"))
+      payload = write_phase(dir, evidence: false,
+        extra_args: ["--workspace", "boringcache/benchmark-direct", "--cache-tag", "archive-tag"],
+        env: {"PATH" => "#{bin_dir}:#{ENV.fetch('PATH')}", "FAKE_CHECK_PATH" => check_path,
+          "FAKE_CHECK_INVOCATION_PATH" => File.join(dir, "invocation.json")})
+
+      assert_equal 75, payload.dig("cache", "storage_bytes")
+      assert_equal true, payload.dig("cache", "storage_breakdown", "complete")
+    end
+  end
+
+  def test_storage_zero_requires_an_explicit_zero_byte_measurement
+    Dir.mktmpdir do |dir|
+      check_path = File.join(dir, "check.json")
+      bin_dir = File.join(dir, "bin")
+      Dir.mkdir(bin_dir)
+      File.write(check_path, JSON.generate("results" => [
+        {"status" => "hit", "requested_tag" => "empty-tag", "cache_type" => "kv", "kv_total_size" => 0}
+      ]))
+      write_fake_boringcache(File.join(bin_dir, "boringcache"))
+      payload = write_phase(dir, evidence: false,
+        extra_args: ["--workspace", "boringcache/benchmark-direct", "--cache-tag", "empty-tag"],
+        env: {"PATH" => "#{bin_dir}:#{ENV.fetch('PATH')}", "FAKE_CHECK_PATH" => check_path,
+          "FAKE_CHECK_INVOCATION_PATH" => File.join(dir, "invocation.json")})
+
+      assert_equal 0, payload.dig("cache", "storage_bytes")
+      assert_equal "boringcache-check", payload.dig("cache", "storage_source")
+      assert_equal [], payload.dig("cache", "storage_breakdown", "unmeasured_tags")
     end
   end
 

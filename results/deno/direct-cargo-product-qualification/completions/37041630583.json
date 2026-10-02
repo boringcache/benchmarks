@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "deno",
+  "series_id": "direct-cargo-product-qualification",
+  "sample": 1,
+  "run_id": "37041630583",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37041630583",
+  "source_sha": "aef10ff570e92395652bc8c5d7a4fe7cfd0bd114",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "d240b9ee0e2c049870c0e94ca8a598b9c218464d8d5fc15fd5d5ca51c984d8fb"
+}

@@ -191,6 +191,38 @@
       "scope": "This run's attempts, jobs, logs, artifacts, commit metadata, and workflow; not the original repository history",
       "execution_qualification": "Direct dispatch passed preserved output and post-step completion checks; website publication remains unreviewed",
       "repository_retirement": "Keep originals until all migration gates pass"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37041630583,
+      "verified_files": 9,
+      "gaps": [],
+      "sha256": "dd74cdf3d630bcac7da3553bd942fbd6c589ec8219fa29263704cf776f6fd002",
+      "bundle_bytes": 467968,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-direct-dispatch-2026-10-02",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-direct-dispatch-2026-10-02/benchmarks-37041630583.tar",
+      "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory",
+      "verified_on": "2026-10-02",
+      "scope": "This run's attempts, jobs, logs, artifacts, commit metadata, and workflow; not the original repository history",
+      "execution_qualification": "Direct single-provider cold/adjacent-source proof passed output and post-step completion checks; native cache errors retained; rolling execution and website publication remain unqualified",
+      "repository_retirement": "Keep originals until all migration gates pass"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37041656850,
+      "verified_files": 9,
+      "gaps": [],
+      "sha256": "3a17cb56ba8b3606da970d5f5a79bc0e6ae4fa80b320681c104e350eecfe06fb",
+      "bundle_bytes": 489984,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-direct-dispatch-2026-10-02",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-direct-dispatch-2026-10-02/benchmarks-37041656850.tar",
+      "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory",
+      "verified_on": "2026-10-02",
+      "scope": "This run's attempts, jobs, logs, artifacts, commit metadata, and workflow; not the original repository history",
+      "execution_qualification": "Direct single-provider cold/adjacent-source proof passed output and post-step completion checks; native cache errors retained; rolling execution and website publication remain unqualified",
+      "repository_retirement": "Keep originals until all migration gates pass"
     }
   ],
   "bundles": [

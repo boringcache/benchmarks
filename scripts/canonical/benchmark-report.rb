@@ -116,15 +116,29 @@ module BenchmarkReport
     end
     payload = JSON.parse(output)
     entries = {}
+    measured_tags = []
+    observations = []
     Array(payload["results"]).each do |item|
-      next unless item.is_a?(Hash) && item["status"] == "hit"
+      next unless item.is_a?(Hash)
+      tag = %w[requested_tag requestedTag tag].filter_map { |field| item[field] }.find { |value| tags.include?(value) }
+      next unless tag
+      observations << item.slice("requested_tag", "requestedTag", "tag", "status", "cache_type", "cache_entry_id", "cacheEntryId",
+        "manifest_root_digest", "manifestRootDigest", "kv_total_size", "kvTotalSize", "compressed_size", "compressedSize", "size_bytes", "sizeBytes", "size")
+      next unless item["status"] == "hit"
       key = %w[cache_entry_id cacheEntryId manifest_root_digest manifestRootDigest requested_tag requestedTag tag].filter_map { |field| item[field] }.find { |value| value.is_a?(String) && !value.empty? }
-      size = %w[kv_total_size kvTotalSize compressed_size compressedSize size_bytes sizeBytes size].filter_map { |field| integer(item[field]) }.first
-      entries[key] = [entries.fetch(key, 0), size].max if key && size
+      size_fields = item["cache_type"] == "cache_entry" ? %w[compressed_size compressedSize size_bytes sizeBytes size] : %w[kv_total_size kvTotalSize compressed_size compressedSize size_bytes sizeBytes size]
+      size = size_fields.filter_map { |field| integer(item[field]) }.first
+      next unless tag && key && size
+      measured_tags << tag
+      entries[key] = [entries.fetch(key, 0), size].max
     end
     total = entries.values.sum
-    return unless total.positive?
-    {"bytes" => total, "source" => "boringcache-check", "breakdown" => identity.slice("workspace", "tags").merge("total_bytes" => total)}
+    unmeasured_tags = tags - measured_tags
+    complete = unmeasured_tags.empty?
+    {"bytes" => complete ? total : nil, "source" => complete ? "boringcache-check" : nil,
+      "breakdown" => identity.slice("workspace", "tags").merge("complete" => complete,
+        "measured_bytes" => total, "unmeasured_tags" => unmeasured_tags,
+        "total_bytes" => complete ? total : nil, "observations" => observations)}
   rescue Errno::ENOENT, Timeout::Error, JSON::ParserError
     nil
   end
@@ -182,7 +196,7 @@ module BenchmarkReport
         "storage_bytes" => storage&.fetch("bytes"), "storage_source" => storage&.fetch("source"), "storage_breakdown" => storage&.fetch("breakdown")},
       "source" => {"repository" => args["source_repository"], "sha" => args["source_sha"]}, "product_refs" => refs,
       "action" => {"resolved_mode" => restore["mode"], "resolved_tags" => restore["resolved_tags"],
-        "trust_state" => restore.dig("trust_state", "policy"), "diagnostics_level" => restore["diagnostics_level"]},
+        "trust_state" => restore["trust_state"], "diagnostics_level" => restore["diagnostics_level"]},
       "github" => github_identity, "run_uid" => ENV["GITHUB_RUN_ID"] && "gh-#{ENV['GITHUB_RUN_ID']}-#{ENV.fetch('GITHUB_RUN_ATTEMPT', '1')}"}
     series = args["series"] || ENV["BENCHMARK_SERIES_ID"]
     unless series.to_s.empty?
