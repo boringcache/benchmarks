@@ -1,0 +1,34 @@
+{
+  "case_id": "hugo-go",
+  "repository": "boringcache/benchmarks",
+  "workflow": "native-fresh-benchmark.yml",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "gohugoio/hugo",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "lane": "fresh",
+  "inputs": {
+    "case_id": "hugo-go",
+    "cli_version": "v1.33.0",
+    "series_id": "direct-dispatch-qualification",
+    "sample": "2"
+  },
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "variants": null,
+  "schema_version": 1,
+  "requested_at": "2026-10-02T17:03:46Z",
+  "ref": "benchmark-consolidation-2026-10-02",
+  "state": "requested",
+  "run_id": 37038157657,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37038157657"
+}

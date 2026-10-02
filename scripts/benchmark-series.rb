@@ -192,10 +192,15 @@ module BenchmarkSeries
       methodology_issues << "Rolling observations have no verified seed and changed-source sequence; retain them as diagnostic."
     end
     metric = plan.dig("comparison", "primary_metric")
+    if metric == "correctness" || providers.length < 2
+      methodology_issues << "This series does not declare a comparison of provider performance."
+    end
     summaries = measured.group_by { |row| [row.fetch("phase"), row.fetch("strategy")] }.map do |(phase, provider), rows|
-      timings = rows.filter_map { |row| row.dig("timing", metric) if metric.end_with?("seconds") }
+      measurements = rows.filter_map do |row|
+        metric == "storage_bytes" ? row.dig("cache", "storage_bytes") : row.dig("timing", metric)
+      end
       storage = rows.filter_map { |row| row.dig("cache", "storage_bytes") }
-      {"phase" => phase, "provider" => provider, "count" => rows.length, "measurement" => statistics(timings),
+      {"phase" => phase, "provider" => provider, "count" => rows.length, "measurement" => metric == "correctness" ? nil : statistics(measurements),
         "storage" => statistics(storage), "storage_measured_count" => storage.length}
     end
     result = {"schema_version" => 1, "plan_sha256" => plan.fetch("plan_sha256"), "complete" => missing.empty?,
@@ -210,12 +215,27 @@ module BenchmarkSeries
       "Question: #{plan.dig('comparison', 'question')}", "", "Measured scope: #{plan.dig('comparison', 'timed_scope')}", "",
       "Status: #{missing.empty? ? 'all declared observations collected' : "#{missing.length} declared observations missing"}; #{failures.length} failed. Publication requires review.", "",
       "Execution: #{execution_verified ? 'preserved job completion and post-step logs verified' : 'unqualified; missing or failed job completion checks'}. Timings alone do not qualify the series.", "",
-      "Queue time, dependency setup outside the declared scope, and job duration are context. They are excluded from the comparison. No observations were excluded.", "",
-      "| Phase | Provider | Successful observations | Median #{metric} | Range | Storage median (bytes) | Storage observations |",
-      "| --- | --- | ---: | ---: | --- | ---: | ---: |"]
+      "Queue time, dependency setup outside the declared scope, and job duration are context. They are excluded from the comparison. No observations were excluded.", ""]
+    columns = ["Phase", "Provider", "Successful observations"]
+    alignment = ["---", "---", "---:"]
+    unless metric == "correctness"
+      columns.concat(["Median #{metric}", "Range"])
+      alignment.concat(["---:", "---"])
+    end
+    unless metric == "storage_bytes"
+      columns << "Storage median (bytes)"
+      alignment << "---:"
+    end
+    columns << "Storage observations"
+    alignment << "---:"
+    lines.concat(["| #{columns.join(' | ')} |", "| #{alignment.join(' | ')} |"])
     summaries.each do |row|
       values = row["measurement"]
-      lines << "| #{row['phase']} | #{row['provider']} | #{row['count']} | #{values && values['median']} | #{values && "#{values['min']}–#{values['max']}"} | #{row.dig('storage', 'median') || 'unmeasured'} | #{row['storage_measured_count']} |"
+      cells = [row["phase"], row["provider"], row["count"]]
+      cells.concat([values ? values.fetch("median") : "unmeasured", values ? "#{values['min']}–#{values['max']}" : "unmeasured"]) unless metric == "correctness"
+      cells << (row.dig("storage", "median") || "unmeasured") unless metric == "storage_bytes"
+      cells << row["storage_measured_count"]
+      lines << "| #{cells.join(' | ')} |"
     end
     unless methodology_issues.empty?
       lines.concat(["", "Methodology prevents a comparative claim:", ""])
