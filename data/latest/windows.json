@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-02T05:52:10Z",
+  "generated_at": "2026-10-02T10:23:29Z",
   "window_pair_target": 3,
   "entries": [
     {
@@ -2945,8 +2945,8 @@
                 "steady_state_candidate_count": 0,
                 "product_cohort": {
                   "basis": "latest_boringcache_product_refs",
-                  "source_sample_count": 2,
-                  "excluded_sample_count": 1,
+                  "source_sample_count": 3,
+                  "excluded_sample_count": 2,
                   "product_refs": {
                     "action_ref": "boringcache/one@bf810e34331db84f9f11930e83b8813b5ad31ba1",
                     "action_sha": "bf810e34331db84f9f11930e83b8813b5ad31ba1",
@@ -2969,8 +2969,8 @@
             "storage_saved_bytes": 494173650,
             "product_cohort": {
               "basis": "latest_boringcache_product_refs",
-              "source_sample_count": 2,
-              "excluded_sample_count": 1,
+              "source_sample_count": 3,
+              "excluded_sample_count": 2,
               "product_refs": {
                 "action_ref": "boringcache/one@bf810e34331db84f9f11930e83b8813b5ad31ba1",
                 "action_sha": "bf810e34331db84f9f11930e83b8813b5ad31ba1",
@@ -3486,7 +3486,8 @@
       },
       "default_lane": "fresh",
       "available_lanes": [
-        "fresh"
+        "fresh",
+        "rolling"
       ],
       "lanes": {
         "fresh": {
@@ -3652,6 +3653,470 @@
                 "schema_version": 1
               }
             }
+          }
+        },
+        "rolling": {
+          "lane": "rolling",
+          "lane_label": "Rolling",
+          "first_build_label": "Commit build",
+          "sample_count": 3,
+          "benchmark": "mastodon-docker",
+          "name": "Mastodon",
+          "logo": "mastodon",
+          "repo": "mastodon/mastodon",
+          "source_repo": "boringcache/benchmark-mastodon",
+          "public": false,
+          "category": "docker",
+          "step": "Docker build (Ruby+Node)",
+          "headline_scenario": "cold",
+          "headline_label": "Commit Build",
+          "before": "2m 7s",
+          "after": "1m 59s",
+          "before_seconds": 126.67,
+          "after_seconds": 119.0,
+          "faster": "6",
+          "comparison": {
+            "paired_on_head_sha": true,
+            "pairing_head_sha": null,
+            "pairing_head_shas": [
+              "e389fae706f6931689c177a788e3f729e7bf7785",
+              "a8bf0ee507d234004b012c30578e3a9f68ef81ee",
+              "5ef70a02915e3f16fb0ceb54e1bf8fe98a751201"
+            ],
+            "sample_count": 3,
+            "actions_cache": {
+              "run_id": 29592489461,
+              "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/29592489461",
+              "head_sha": "e389fae706f6931689c177a788e3f729e7bf7785",
+              "created_at": "2026-07-17T15:31:52Z",
+              "sample_count": 3,
+              "sample_run_ids": [
+                29592489461,
+                29588651215,
+                29576882468
+              ],
+              "sample_run_urls": [
+                "https://github.com/boringcache/benchmark-mastodon/actions/runs/29592489461",
+                "https://github.com/boringcache/benchmark-mastodon/actions/runs/29588651215",
+                "https://github.com/boringcache/benchmark-mastodon/actions/runs/29576882468"
+              ],
+              "head_shas": [
+                "e389fae706f6931689c177a788e3f729e7bf7785",
+                "a8bf0ee507d234004b012c30578e3a9f68ef81ee",
+                "5ef70a02915e3f16fb0ceb54e1bf8fe98a751201"
+              ],
+              "cold_seconds": 126.66666666666667,
+              "cold_build_seconds": 120.66666666666667,
+              "cold_restore_or_setup_seconds": 6.0,
+              "warm1_seconds": null,
+              "warm1_build_seconds": null,
+              "warm1_restore_or_setup_seconds": null,
+              "warm2_seconds": null,
+              "warm_average_seconds": null,
+              "warm_steady_seconds": null,
+              "rolling_first_build_seconds": 126.66666666666667,
+              "rolling_warm_seconds": null,
+              "run_total_seconds": 197.33333333333334,
+              "storage_bytes": 10715263553,
+              "network_bytes_uploaded": null,
+              "docker_cache_import_seconds": 0.16666666666666666,
+              "docker_cache_export_seconds": 50.03333333333333,
+              "slow_reason": {
+                "schema_version": "benchmark_slow_reason.v1",
+                "benchmark": "mastodon",
+                "strategy": "actions-cache",
+                "lane": "rolling",
+                "run_uid": "gh-29592489461-1",
+                "paired_run_id": 29592489461,
+                "build_seconds": 120.66666666666667,
+                "setup_seconds": 6.0,
+                "post_cleanup_seconds": null,
+                "cache_restore_seconds": 0.16666666666666666,
+                "cache_save_export_seconds": 50.03333333333333,
+                "buildkit_cached_steps": 23,
+                "hit_count": null,
+                "miss_count": null,
+                "hit_rate": null,
+                "prior_cache_state": "unknown",
+                "new_blob_bytes": null,
+                "native_tool": null,
+                "issue_candidates": [],
+                "hypotheses": [
+                  {
+                    "id": "cache_save_export_overhead",
+                    "confidence": "high",
+                    "summary": "Cache save/export time is a likely slow-build contributor.",
+                    "evidence": {
+                      "cache_save_export_seconds": 45.6,
+                      "build_seconds": 117
+                    }
+                  }
+                ],
+                "sample_count": 3,
+                "sample_run_ids": [
+                  29592489461,
+                  29588651215,
+                  29576882468
+                ],
+                "hypothesis_ids": [
+                  "cache_save_export_overhead"
+                ],
+                "samples": [
+                  {
+                    "schema_version": "benchmark_slow_reason.v1",
+                    "benchmark": "mastodon",
+                    "strategy": "actions-cache",
+                    "lane": "rolling",
+                    "run_uid": "gh-29592489461-1",
+                    "paired_run_id": 29592489461,
+                    "build_seconds": 117,
+                    "setup_seconds": 8,
+                    "post_cleanup_seconds": null,
+                    "cache_restore_seconds": 0.1,
+                    "cache_save_export_seconds": 45.6,
+                    "buildkit_cached_steps": 23,
+                    "hit_count": null,
+                    "miss_count": null,
+                    "hit_rate": null,
+                    "prior_cache_state": "unknown",
+                    "new_blob_bytes": null,
+                    "native_tool": null,
+                    "issue_candidates": [],
+                    "hypotheses": [
+                      {
+                        "id": "cache_save_export_overhead",
+                        "confidence": "high",
+                        "summary": "Cache save/export time is a likely slow-build contributor.",
+                        "evidence": {
+                          "cache_save_export_seconds": 45.6,
+                          "build_seconds": 117
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "schema_version": "benchmark_slow_reason.v1",
+                    "benchmark": "mastodon",
+                    "strategy": "actions-cache",
+                    "lane": "rolling",
+                    "run_uid": "gh-29588651215-1",
+                    "paired_run_id": 29588651215,
+                    "build_seconds": 124,
+                    "setup_seconds": 5,
+                    "post_cleanup_seconds": null,
+                    "cache_restore_seconds": 0.1,
+                    "cache_save_export_seconds": 47.4,
+                    "buildkit_cached_steps": 22,
+                    "hit_count": null,
+                    "miss_count": null,
+                    "hit_rate": null,
+                    "prior_cache_state": "unknown",
+                    "new_blob_bytes": null,
+                    "native_tool": null,
+                    "issue_candidates": [],
+                    "hypotheses": [
+                      {
+                        "id": "cache_save_export_overhead",
+                        "confidence": "high",
+                        "summary": "Cache save/export time is a likely slow-build contributor.",
+                        "evidence": {
+                          "cache_save_export_seconds": 47.4,
+                          "build_seconds": 124
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "schema_version": "benchmark_slow_reason.v1",
+                    "benchmark": "mastodon",
+                    "strategy": "actions-cache",
+                    "lane": "rolling",
+                    "run_uid": "gh-29576882468-1",
+                    "paired_run_id": 29576882468,
+                    "build_seconds": 121,
+                    "setup_seconds": 5,
+                    "post_cleanup_seconds": null,
+                    "cache_restore_seconds": 0.3,
+                    "cache_save_export_seconds": 57.1,
+                    "buildkit_cached_steps": 22,
+                    "hit_count": null,
+                    "miss_count": null,
+                    "hit_rate": null,
+                    "prior_cache_state": "unknown",
+                    "new_blob_bytes": null,
+                    "native_tool": null,
+                    "issue_candidates": [],
+                    "hypotheses": [
+                      {
+                        "id": "cache_save_export_overhead",
+                        "confidence": "high",
+                        "summary": "Cache save/export time is a likely slow-build contributor.",
+                        "evidence": {
+                          "cache_save_export_seconds": 57.1,
+                          "build_seconds": 121
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "storage_source": "github-actions-cache-api",
+              "product_refs": {
+                "api_url": "https://api.boringcache.com",
+                "web_revision": "1552d25f9"
+              },
+              "product_refs_consistent": true,
+              "run_uid": "gh-29592489461-1",
+              "mode": "docker",
+              "adapter": "oci"
+            },
+            "boringcache": {
+              "run_id": 29592489461,
+              "run_url": "https://github.com/boringcache/benchmark-mastodon/actions/runs/29592489461",
+              "head_sha": "e389fae706f6931689c177a788e3f729e7bf7785",
+              "created_at": "2026-07-17T15:31:52Z",
+              "sample_count": 3,
+              "sample_run_ids": [
+                29592489461,
+                29588651215,
+                29576882468
+              ],
+              "sample_run_urls": [
+                "https://github.com/boringcache/benchmark-mastodon/actions/runs/29592489461",
+                "https://github.com/boringcache/benchmark-mastodon/actions/runs/29588651215",
+                "https://github.com/boringcache/benchmark-mastodon/actions/runs/29576882468"
+              ],
+              "head_shas": [
+                "e389fae706f6931689c177a788e3f729e7bf7785",
+                "a8bf0ee507d234004b012c30578e3a9f68ef81ee",
+                "5ef70a02915e3f16fb0ceb54e1bf8fe98a751201"
+              ],
+              "cold_seconds": 119.0,
+              "cold_build_seconds": 111.33333333333333,
+              "cold_restore_or_setup_seconds": 7.666666666666667,
+              "warm1_seconds": null,
+              "warm1_build_seconds": null,
+              "warm1_restore_or_setup_seconds": null,
+              "warm2_seconds": null,
+              "warm_average_seconds": null,
+              "warm_steady_seconds": null,
+              "rolling_first_build_seconds": 119.0,
+              "rolling_warm_seconds": null,
+              "run_total_seconds": 197.33333333333334,
+              "storage_bytes": 1107838025,
+              "network_bytes_uploaded": null,
+              "docker_cache_import_seconds": 0.16666666666666666,
+              "docker_cache_export_seconds": 30.899999999999995,
+              "slow_reason": {
+                "schema_version": "benchmark_slow_reason.v1",
+                "benchmark": "mastodon",
+                "strategy": "boringcache",
+                "lane": "rolling",
+                "run_uid": "gh-29592489461-1",
+                "paired_run_id": 29592489461,
+                "build_seconds": 111.33333333333333,
+                "setup_seconds": 7.666666666666667,
+                "post_cleanup_seconds": null,
+                "cache_restore_seconds": 0.16666666666666666,
+                "cache_save_export_seconds": 30.899999999999995,
+                "buildkit_cached_steps": 20,
+                "hit_count": null,
+                "miss_count": null,
+                "hit_rate": null,
+                "prior_cache_state": "usable_import",
+                "new_blob_bytes": null,
+                "native_tool": null,
+                "issue_candidates": [],
+                "hypotheses": [
+                  {
+                    "id": "cache_save_export_overhead",
+                    "confidence": "high",
+                    "summary": "Cache save/export time is a likely slow-build contributor.",
+                    "evidence": {
+                      "cache_save_export_seconds": 32.4,
+                      "build_seconds": 104
+                    }
+                  }
+                ],
+                "sample_count": 3,
+                "sample_run_ids": [
+                  29592489461,
+                  29588651215,
+                  29576882468
+                ],
+                "hypothesis_ids": [
+                  "cache_save_export_overhead"
+                ],
+                "samples": [
+                  {
+                    "schema_version": "benchmark_slow_reason.v1",
+                    "benchmark": "mastodon",
+                    "strategy": "boringcache",
+                    "lane": "rolling",
+                    "run_uid": "gh-29592489461-1",
+                    "paired_run_id": 29592489461,
+                    "build_seconds": 104,
+                    "setup_seconds": 7,
+                    "post_cleanup_seconds": null,
+                    "cache_restore_seconds": 0.1,
+                    "cache_save_export_seconds": 32.4,
+                    "buildkit_cached_steps": 20,
+                    "hit_count": null,
+                    "miss_count": null,
+                    "hit_rate": null,
+                    "prior_cache_state": "usable_import",
+                    "new_blob_bytes": null,
+                    "native_tool": null,
+                    "issue_candidates": [],
+                    "hypotheses": [
+                      {
+                        "id": "cache_save_export_overhead",
+                        "confidence": "high",
+                        "summary": "Cache save/export time is a likely slow-build contributor.",
+                        "evidence": {
+                          "cache_save_export_seconds": 32.4,
+                          "build_seconds": 104
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "schema_version": "benchmark_slow_reason.v1",
+                    "benchmark": "mastodon",
+                    "strategy": "boringcache",
+                    "lane": "rolling",
+                    "run_uid": "gh-29588651215-1",
+                    "paired_run_id": 29588651215,
+                    "build_seconds": 119,
+                    "setup_seconds": 9,
+                    "post_cleanup_seconds": null,
+                    "cache_restore_seconds": 0.2,
+                    "cache_save_export_seconds": 29.9,
+                    "buildkit_cached_steps": 21,
+                    "hit_count": null,
+                    "miss_count": null,
+                    "hit_rate": null,
+                    "prior_cache_state": "usable_import",
+                    "new_blob_bytes": null,
+                    "native_tool": null,
+                    "issue_candidates": [],
+                    "hypotheses": [
+                      {
+                        "id": "cache_save_export_overhead",
+                        "confidence": "high",
+                        "summary": "Cache save/export time is a likely slow-build contributor.",
+                        "evidence": {
+                          "cache_save_export_seconds": 29.9,
+                          "build_seconds": 119
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "schema_version": "benchmark_slow_reason.v1",
+                    "benchmark": "mastodon",
+                    "strategy": "boringcache",
+                    "lane": "rolling",
+                    "run_uid": "gh-29576882468-1",
+                    "paired_run_id": 29576882468,
+                    "build_seconds": 111,
+                    "setup_seconds": 7,
+                    "post_cleanup_seconds": null,
+                    "cache_restore_seconds": 0.2,
+                    "cache_save_export_seconds": 30.4,
+                    "buildkit_cached_steps": 21,
+                    "hit_count": null,
+                    "miss_count": null,
+                    "hit_rate": null,
+                    "prior_cache_state": "usable_import",
+                    "new_blob_bytes": null,
+                    "native_tool": null,
+                    "issue_candidates": [],
+                    "hypotheses": [
+                      {
+                        "id": "cache_save_export_overhead",
+                        "confidence": "high",
+                        "summary": "Cache save/export time is a likely slow-build contributor.",
+                        "evidence": {
+                          "cache_save_export_seconds": 30.4,
+                          "build_seconds": 111
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "oci": {
+                "body_local_hits": 13.0,
+                "body_remote_fetches": 13.0,
+                "body_local_bytes": 274378878.6666667,
+                "body_remote_bytes": 359501170.3333333,
+                "body_local_duration_ms": 1.6666666666666667,
+                "body_remote_duration_ms": 14884.333333333334,
+                "startup_body_inserted": 0.0,
+                "startup_body_failures": 0.0,
+                "startup_body_cold_blobs": 42.0,
+                "startup_body_duration_ms": 0.0,
+                "hydration_policy": "metadata-only"
+              },
+              "storage_breakdown": {
+                "total_bytes": 1107838025,
+                "summary": {
+                  "remote_cas_bytes": 1107838025,
+                  "dependency_archive_bytes": 0,
+                  "tool_runtime_archive_bytes": 0,
+                  "unknown_bytes": 0
+                },
+                "components": [
+                  {
+                    "component_type": "remote_cas",
+                    "component_label": "remote CAS",
+                    "storage_mode": "cas",
+                    "bytes": 1107838025,
+                    "sample_count": 3,
+                    "tags": [
+                      "mastodon-run-rolling-main"
+                    ]
+                  }
+                ]
+              },
+              "storage_source": "boringcache-check",
+              "product_refs": {
+                "action_ref": "boringcache/one@v1",
+                "action_sha": "d39427a8c278c17670e2fbb1b2ba9a699b61075f",
+                "api_url": "https://api.boringcache.com",
+                "cli_version": "v1.13.92",
+                "web_revision": "1552d25f9"
+              },
+              "product_refs_consistent": true,
+              "run_uid": "gh-29592489461-1",
+              "mode": "docker",
+              "adapter": "oci",
+              "classification": {
+                "sample_count": 3,
+                "sample_valid_count": 3,
+                "invalid_count": 0,
+                "investigation_only_count": 0,
+                "comparative_count": 3,
+                "reporting_mode": "comparative",
+                "reporting_reason": null,
+                "reporting_note": null,
+                "validity_reason": null,
+                "cache_import_status": "ok",
+                "rolling_bootstrap_count": 0,
+                "rolling_reseed_count": 0,
+                "steady_state_candidate_count": 3
+              }
+            },
+            "reporting": {
+              "comparative": true
+            },
+            "warm_improvement_pct": null,
+            "warm_build_improvement_pct": null,
+            "cold_improvement_pct": 6.05,
+            "cold_build_improvement_pct": 7.73,
+            "storage_improvement_pct": 89.66,
+            "storage_saved_bytes": 9607425528
           }
         }
       }
