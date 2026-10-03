@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "plan_sha256": "cfa4c56832b46420bd7ddc24e90cd7a7d364f487a7498ca29658395a356c7700",
+  "complete": false,
+  "valid_for_comparison": false,
+  "failures": [],
+  "methodology_issues": [],
+  "execution_verified": false,
+  "missing_completions": [],
+  "failed_completions": [
+    {
+      "schema_version": 1,
+      "case_id": "hugo",
+      "series_id": "image-output-qualification-01",
+      "sample": 1,
+      "run_id": "37104595025",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104595025",
+      "source_sha": "35e10981f5e27824d81b19c575a91691592905e9",
+      "github_conclusion": "failure",
+      "status": "failed",
+      "errors": [
+        "Workflow concluded failure",
+        "BoringCache hugo cold: failure",
+        "GitHub Actions hugo cold: failure"
+      ],
+      "evidence_manifest_sha256": "12aebc138373729492fa362c157080777851485d91d328d4d7a0209618719ce5"
+    }
+  ],
+  "completions": [
+    {
+      "schema_version": 1,
+      "case_id": "hugo",
+      "series_id": "image-output-qualification-01",
+      "sample": 1,
+      "run_id": "37104595025",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104595025",
+      "source_sha": "35e10981f5e27824d81b19c575a91691592905e9",
+      "github_conclusion": "failure",
+      "status": "failed",
+      "errors": [
+        "Workflow concluded failure",
+        "BoringCache hugo cold: failure",
+        "GitHub Actions hugo cold: failure"
+      ],
+      "evidence_manifest_sha256": "12aebc138373729492fa362c157080777851485d91d328d4d7a0209618719ce5"
+    }
+  ],
+  "publication": "unreviewed",
+  "evidence_preservation": "requires-review",
+  "primary_metric": "build_and_reuse_seconds",
+  "missing": [
+    [
+      1,
+      "cold",
+      "boringcache"
+    ],
+    [
+      1,
+      "cold",
+      "actions-cache"
+    ],
+    [
+      1,
+      "warm",
+      "boringcache"
+    ],
+    [
+      1,
+      "warm",
+      "actions-cache"
+    ]
+  ],
+  "summaries": [],
+  "records": [],
+  "exclusions": []
+}
