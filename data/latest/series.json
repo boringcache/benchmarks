@@ -3492,7 +3492,7 @@
       },
       "plan_sha256": "3795707ead334fd02443574fd818023c3f29e42680b1cffe9693d54da38610af",
       "definition_sha256": "6bd5fa5df953cc47d2b50d2e72997344cb1eb73532b5b0c7ecfc3e39c0d96ea5",
-      "state": "planned",
+      "state": "requested",
       "publication": "unreviewed",
       "valid_for_comparison": false,
       "execution_verified": false,
@@ -3520,13 +3520,34 @@
         ]
       ],
       "summaries": [],
-      "dispatches": [],
+      "dispatches": [
+        {
+          "case_id": "mastodon",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "mastodon",
+            "cli_version": "v1.33.0",
+            "variant": "streaming",
+            "series_id": "streaming-output-qualification-01",
+            "sample": "1"
+          },
+          "ref": "active-variant-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T19:45:29Z",
+          "run_id": 37149053291,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149053291"
+        }
+      ],
       "completions": [],
       "report_state": "missing",
       "report_path": null,
       "interpretation_path": null,
       "evidence": [],
-      "runs_without_archives": []
+      "runs_without_archives": [
+        "37149053291"
+      ]
     },
     {
       "case_id": "n8n",
@@ -3559,7 +3580,7 @@
       },
       "plan_sha256": "08b518d5c7cd45195e1817738316c065e60de1805ae26927f3b1c572b2aeef55",
       "definition_sha256": "454acd4311833555c8086d1e9437e3cb618f6dfd3eadf93c9757aa51816c68b2",
-      "state": "planned",
+      "state": "requested",
       "publication": "unreviewed",
       "valid_for_comparison": false,
       "execution_verified": false,
@@ -3587,13 +3608,34 @@
         ]
       ],
       "summaries": [],
-      "dispatches": [],
+      "dispatches": [
+        {
+          "case_id": "n8n",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "n8n",
+            "cli_version": "v1.33.0",
+            "variant": "distroless",
+            "series_id": "distroless-output-qualification-01",
+            "sample": "1"
+          },
+          "ref": "active-variant-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T19:45:33Z",
+          "run_id": 37149056843,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149056843"
+        }
+      ],
       "completions": [],
       "report_state": "missing",
       "report_path": null,
       "interpretation_path": null,
       "evidence": [],
-      "runs_without_archives": []
+      "runs_without_archives": [
+        "37149056843"
+      ]
     },
     {
       "case_id": "n8n",
@@ -3776,7 +3818,7 @@
       },
       "plan_sha256": "9ce0493c6b520b2ecadc9a13123edee5590770d648062b0376a8195ee06f489e",
       "definition_sha256": "454acd4311833555c8086d1e9437e3cb618f6dfd3eadf93c9757aa51816c68b2",
-      "state": "planned",
+      "state": "requested",
       "publication": "unreviewed",
       "valid_for_comparison": false,
       "execution_verified": false,
@@ -3804,13 +3846,34 @@
         ]
       ],
       "summaries": [],
-      "dispatches": [],
+      "dispatches": [
+        {
+          "case_id": "n8n",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "n8n",
+            "cli_version": "v1.33.0",
+            "variant": "runners",
+            "series_id": "runners-output-qualification-01",
+            "sample": "1"
+          },
+          "ref": "active-variant-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T19:45:31Z",
+          "run_id": 37149055130,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149055130"
+        }
+      ],
       "completions": [],
       "report_state": "missing",
       "report_path": null,
       "interpretation_path": null,
       "evidence": [],
-      "runs_without_archives": []
+      "runs_without_archives": [
+        "37149055130"
+      ]
     },
     {
       "case_id": "n8n",
