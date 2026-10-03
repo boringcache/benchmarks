@@ -280,6 +280,19 @@ runs:
     env:
       BUILD_STARTED_AT: "${{ steps.build_timer.outputs.started_at }}"
     run: echo "build_seconds=$(( $(date +%s) - BUILD_STARTED_AT ))" >> "$GITHUB_OUTPUT"
+  - name: Verify the Docker output
+    id: output_verification
+    shell: bash
+    env:
+      STRATEGY: "${{ inputs.strategy == 'runs-on-cache' && 'actions-cache' || inputs.strategy
+        }}"
+      LOAD_IMAGE: "${{ inputs.load_image }}"
+      PUSH_IMAGE: "${{ inputs.push_image == 'true' && github.ref == 'refs/heads/main'
+        }}"
+      IMAGE: ghcr.io/${{ github.repository_owner }}/posthog-benchmark:${{ inputs.image_tag
+        || 'actions-cache' }}
+    run: ruby ./scripts/verify-docker-output.rb --strategy "$STRATEGY" --load "$LOAD_IMAGE"
+      --push "$PUSH_IMAGE" --image "$IMAGE"
   - name: Write the benchmark phase evidence
     shell: bash
     env:
@@ -300,9 +313,12 @@ runs:
       GITHUB_TOKEN: "${{ github.token }}"
       SOURCE_REPOSITORY: "${{ steps.scope.outputs.source_repository }}"
       SOURCE_SHA: "${{ steps.scope.outputs.source_sha }}"
+      OUTPUT_VERIFIED: "${{ steps.output_verification.outputs.verified }}"
     run: |
       set -euo pipefail
-      ruby ./scripts/benchmark-report.rb phase \
+      verification=()
+      [[ "$OUTPUT_VERIFIED" != 'true' ]] || verification=(--verified-output)
+      ruby ./scripts/benchmark-report.rb phase "${verification[@]}" \
         --benchmark "$BENCHMARK_ID" \
         --strategy "$STRATEGY" \
         --lane "$CACHE_LANE" \

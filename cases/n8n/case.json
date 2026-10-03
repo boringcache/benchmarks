@@ -79,7 +79,8 @@
           "benchmark_id": "n8n-docker",
           "fresh_inputs": {
             "dockerfile_path": "upstream/docker/images/n8n/Dockerfile",
-            "image": "n8n-benchmark"
+            "image": "n8n-benchmark",
+            "load_image": "true"
           },
           "rolling_inputs": {
             "dockerfile_path": "upstream/docker/images/n8n/Dockerfile",
@@ -91,7 +92,8 @@
           "benchmark_id": "n8n-runners",
           "fresh_inputs": {
             "dockerfile_path": "upstream/docker/images/runners/Dockerfile",
-            "image": "n8n-runners-benchmark"
+            "image": "n8n-runners-benchmark",
+            "load_image": "true"
           },
           "rolling_inputs": {
             "dockerfile_path": "upstream/docker/images/runners/Dockerfile",
@@ -103,7 +105,8 @@
           "benchmark_id": "n8n-runners-distroless",
           "fresh_inputs": {
             "dockerfile_path": "upstream/docker/images/runners/Dockerfile.distroless",
-            "image": "n8n-runners-distroless-benchmark"
+            "image": "n8n-runners-distroless-benchmark",
+            "load_image": "true"
           },
           "rolling_inputs": {
             "dockerfile_path": "upstream/docker/images/runners/Dockerfile.distroless",
@@ -123,7 +126,8 @@
     "publication": "reviewed"
   },
   "verification": [
-    "Pinned upstream recipe and build success"
+    "Pinned upstream recipe and build success",
+    "Turbo variant: built CLI entrypoint exists; Docker variants: freshly loaded output image exists"
   ],
   "comparison": {
     "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
@@ -131,7 +135,7 @@
       "boringcache",
       "actions-cache"
     ],
-    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
     "primary_metric": "build_and_reuse_seconds",
     "storage": "provider-reported",
     "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",

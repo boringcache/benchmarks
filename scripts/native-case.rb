@@ -67,6 +67,20 @@ module NativeCase
     recipe
   end
 
+  def self.verify_report(recipe, payload:, lane:)
+    action = YAML.safe_load(File.read(File.join(payload, recipe.fetch("action"), "action.yml")), aliases: true)
+    reports = action.dig("runs", "steps").filter_map do |step|
+      command = step["run"].to_s
+      command if command.match?(/benchmark-report\.rb\s+phase\b/)
+    end
+    unless !reports.empty? && reports.all? { |command| command.match?(/(?:\A|[\s(])--verified-output(?=[\s)]|\z)/) }
+      raise Error, "Selected native action does not report verified output; add and review its output check before execution"
+    end
+    if action.fetch("inputs").key?("load_image") && recipe.fetch("#{lane}_inputs").fetch("load_image", "false") != "true"
+      raise Error, "Native Docker comparison requires load_image=true; publication and cache-only lanes remain diagnostic"
+    end
+  end
+
   def self.write_action(item, directory:, lane:, suffix: "", variant: nil)
     variant = nil if variant.to_s.empty?
     base = validate(item, payload: directory)
