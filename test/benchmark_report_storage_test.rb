@@ -3,9 +3,11 @@ require "rbconfig"
 
 require "json"
 require "minitest/autorun"
+require "minitest/mock"
 require "open3"
 require "socket"
 require "tmpdir"
+require_relative "../scripts/canonical/benchmark-report"
 
 class BenchmarkReportStorageTest < Minitest::Test
   CANONICAL = File.expand_path("../scripts/canonical/benchmark-report.rb", __dir__)
@@ -183,6 +185,70 @@ class BenchmarkReportStorageTest < Minitest::Test
   end
 
   def test_actions_cache_storage_uses_only_the_requested_cache_key
+    entries = [
+      {"id" => 1, "key" => "gradle-example-rolling-main", "size_in_bytes" => 100},
+      {"id" => 2, "key" => "gradle-example-rolling-main", "size_in_bytes" => 250},
+      {"id" => 3, "key" => "gradle-example-rolling-main-older", "size_in_bytes" => 900}
+    ]
+    with_actions_cache_api(entries) do |payload, request|
+      assert_equal 350, payload.dig("cache", "storage_bytes")
+      assert_equal "github-actions-cache-api", payload.dig("cache", "storage_source")
+      assert_equal "gradle-example-rolling-main", payload.dig("cache", "storage_breakdown", "key")
+      assert_equal true, payload.dig("cache", "storage_breakdown", "complete")
+      assert_equal entries.take(2), payload.dig("cache", "storage_breakdown", "observations")
+      assert_includes request, "key=gradle-example-rolling-main"
+    end
+  end
+
+  def test_actions_cache_storage_keeps_a_partial_measurement_unqualified
+    [nil, -1, "unknown"].each do |missing_size|
+      entries = [
+        {"id" => 1, "key" => "gradle-example-rolling-main", "size_in_bytes" => 100},
+        {"id" => 2, "key" => "gradle-example-rolling-main", "size_in_bytes" => missing_size}
+      ]
+      with_actions_cache_api(entries) do |payload, _request|
+        assert_nil payload.dig("cache", "storage_bytes")
+        assert_nil payload.dig("cache", "storage_source")
+        assert_equal false, payload.dig("cache", "storage_breakdown", "complete")
+        assert_equal 100, payload.dig("cache", "storage_breakdown", "measured_bytes")
+        assert_equal entries, payload.dig("cache", "storage_breakdown", "observations")
+      end
+    end
+  end
+
+  def test_actions_cache_storage_distinguishes_a_measured_zero_from_no_matching_cache
+    with_actions_cache_api([{"key" => "gradle-example-rolling-main", "size_in_bytes" => 0}]) do |payload, _request|
+      assert_equal 0, payload.dig("cache", "storage_bytes")
+      assert_equal "github-actions-cache-api", payload.dig("cache", "storage_source")
+      assert_equal true, payload.dig("cache", "storage_breakdown", "complete")
+    end
+    with_actions_cache_api([{"key" => "another-cache", "size_in_bytes" => 0}]) do |payload, _request|
+      assert_nil payload.dig("cache", "storage_bytes")
+      assert_nil payload.dig("cache", "storage_source")
+      assert_equal false, payload.dig("cache", "storage_breakdown", "complete")
+      assert_equal [], payload.dig("cache", "storage_breakdown", "observations")
+    end
+  end
+
+  def test_actions_cache_pagination_does_not_forward_credentials_to_another_origin
+    original = ENV.to_h.slice("GITHUB_REPOSITORY", "GITHUB_TOKEN", "GITHUB_API_URL")
+    ENV.update("GITHUB_REPOSITORY" => "boringcache/benchmark-example", "GITHUB_TOKEN" => "test-token",
+      "GITHUB_API_URL" => "http://127.0.0.1:8000")
+    response = Net::HTTPOK.new("1.1", "200", "OK")
+    response.body = JSON.generate("actions_caches" => [{"key" => "selected", "size_in_bytes" => 100}])
+    response["Link"] = '<http://127.0.0.1:9000/next>; rel="next"'
+    requests = []
+    Net::HTTP.stub(:start, ->(*args, **_options) { requests << args; response }) do
+      assert_nil BenchmarkReport.actions_storage("selected")
+    end
+    assert_equal [["127.0.0.1", 8000]], requests
+  ensure
+    %w[GITHUB_REPOSITORY GITHUB_TOKEN GITHUB_API_URL].each { |key| ENV[key] = original[key] }
+  end
+
+  private
+
+  def with_actions_cache_api(entries)
     server = TCPServer.new("127.0.0.1", 0)
     port = server.addr[1]
     requests = Queue.new
@@ -193,11 +259,7 @@ class BenchmarkReportStorageTest < Minitest::Test
       while (header = socket.gets)
         break if header == "\r\n"
       end
-      body = JSON.generate("actions_caches" => [
-        { "key" => "gradle-example-rolling-main", "size_in_bytes" => 100 },
-        { "key" => "gradle-example-rolling-main", "size_in_bytes" => 250 },
-        { "key" => "gradle-example-rolling-main-older", "size_in_bytes" => 900 }
-      ])
+      body = JSON.generate("actions_caches" => entries)
       socket.write("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: #{body.bytesize}\r\n\r\n#{body}")
       socket.close
     end
@@ -214,17 +276,12 @@ class BenchmarkReportStorageTest < Minitest::Test
         }
       )
 
-      assert_equal 350, payload.dig("cache", "storage_bytes")
-      assert_equal "github-actions-cache-api", payload.dig("cache", "storage_source")
-      assert_equal "gradle-example-rolling-main", payload.dig("cache", "storage_breakdown", "key")
-      assert_includes requests.pop, "key=gradle-example-rolling-main"
+      yield payload, requests.pop
     end
   ensure
     server&.close
     server_thread&.join
   end
-
-  private
 
   def action_evidence
     {

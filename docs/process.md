@@ -182,6 +182,10 @@ reported KV or archive size; the GitHub probe uses the selected cache key's
 reported archive size. Keep those sources explicit. Do not infer equivalent
 compression, cross-tag deduplication, or physical storage efficiency from these
 counts alone.
+GitHub storage reporting receives the read-only token only in the reporting step.
+The selected exact-key rows are retained with their cache IDs, refs, versions,
+timestamps, and byte fields. A missing row or byte field remains unmeasured;
+an explicit zero-byte row is measured zero.
 The selected storage total requires byte measurements for every resolved tag.
 A partial probe retains its measured subtotal and unmeasured tags in
 `storage_breakdown`; `storage_bytes` remains unmeasured. A missing tag or byte
