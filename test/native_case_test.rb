@@ -157,7 +157,8 @@ class NativeCaseTest < Minitest::Test
   end
 
   def test_native_docker_variants_use_the_shared_loaded_image_check
-    {"mastodon" => %w[server server-sccache streaming], "posthog" => %w[layers combined], "immich" => [nil]}.each do |id, variants|
+    {"chroma" => [nil], "duckgres" => [nil], "hugo" => [nil], "linkerd2" => [nil], "n8n" => %w[docker runners distroless],
+     "mastodon" => %w[server server-sccache streaming], "posthog" => %w[layers combined], "immich" => [nil]}.each do |id, variants|
       variants.each do |variant|
         item = BenchmarkCases.load_case(id)
         assert_equal "native-fresh-benchmark.yml", BenchmarkCases.plan(item, variant: variant).fetch("workflow")
@@ -166,9 +167,70 @@ class NativeCaseTest < Minitest::Test
         action = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, "cases", id, "payload", recipe.fetch("action"), "action.yml")))
         steps = action.dig("runs", "steps")
         assert_operator steps.index { |step| step["id"] == "build_timing" }, :<, steps.index { |step| step["id"] == "output_verification" }
+        steps.each_with_index do |step, index|
+          next unless step["run"].to_s.match?(/\bdocker\s+(?:image|buildx\s+imagetools)\s+inspect\b|verify-docker-output\.rb/)
+          assert_operator steps.index { |entry| entry["id"] == "build_timing" }, :<, index, "#{id}: #{step['name']} must run after build timing"
+        end
         assert_operator steps.index { |step| step["id"] == "output_verification" }, :<, steps.index { |step| step["name"] == "Write the benchmark phase evidence" }
       end
     end
+  end
+
+  def test_posthog_wrapper_resolves_the_same_series_scope_for_cold_and_warm
+    with_payload("posthog") do |item, directory|
+      %w[layers combined].each do |variant|
+        wrapper = NativeCase.write_action(item, directory: directory, lane: "fresh", variant: variant)
+        recipe = NativeCase.resolve(item.dig("execution", "native"), variant)
+        action = YAML.safe_load(File.read(File.join(directory, recipe.fetch("action"), "action.yml")))
+        step = action.dig("runs", "steps").find { |entry| entry["id"] == "scope" }
+        defaults = action.fetch("inputs").transform_values { |input| input.fetch("default", "") }
+        %w[boringcache actions-cache].each do |provider|
+          scopes = %w[publish warm].map do |phase|
+            runtime = {"strategy" => provider, "phase" => phase, "benchmark_id" => recipe.fetch("benchmark_id")}
+            inputs = defaults.merge(wrapper.dig("runs", "steps", 0, "with").transform_values do |value|
+              value.gsub(/\$\{\{ inputs\.(\w+) \}\}/) { runtime.fetch(Regexp.last_match(1), "") }
+            end)
+            environment = step.fetch("env").transform_values do |value|
+              value.gsub(/\$\{\{ inputs\.(\w+) \}\}/) { inputs.fetch(Regexp.last_match(1)) }
+            end
+            assert_equal "", environment.fetch("PUBLISHED_SCOPE")
+            run_posthog_scope(item, directory, step, environment.merge("BENCHMARK_SERIES_ID" => "scope-screening-01", "BENCHMARK_SAMPLE" => "1"))
+          end
+          assert_equal scopes.first, scopes.last
+          assert_equal "#{recipe.fetch('benchmark_id')}-series-scope-screening-01-s1-r123-a2", scopes.first
+        end
+      end
+    end
+  end
+
+  def test_posthog_legacy_warm_requires_and_keeps_the_explicit_published_scope
+    with_payload("posthog") do |item, directory|
+      action = YAML.safe_load(File.read(File.join(directory, item.dig("execution", "native", "action"), "action.yml")))
+      step = action.dig("runs", "steps").find { |entry| entry["id"] == "scope" }
+      environment = {"BENCHMARK_ID" => "posthog", "CACHE_LANE" => "fresh", "PHASE" => "warm", "PLATFORM" => "linux/amd64", "PUBLISHED_SCOPE" => "seed-scope"}
+      assert_equal "seed-scope", run_posthog_scope(item, directory, step, environment)
+      assert_nil run_posthog_scope(item, directory, step, environment.merge("PUBLISHED_SCOPE" => ""), success: false)
+    end
+  end
+
+  def run_posthog_scope(item, directory, step, environment, success: true)
+    FileUtils.cp(File.join(BenchmarkCases::ROOT, "scripts/scope-case-cache.rb"), File.join(directory, "scripts"))
+    File.write(File.join(directory, "benchmark-context.json"), JSON.generate(item))
+    FileUtils.cp(File.join(BenchmarkCases::ROOT, "cases/posthog/payload/.boringcache.toml"), directory)
+    commands = File.join(directory, "commands")
+    FileUtils.mkdir_p(commands)
+    git = File.join(commands, "git")
+    File.write(git, "#!/bin/sh\ncase \"$*\" in\n  'config -f .gitmodules submodule.upstream.url') echo 'https://github.com/PostHog/posthog.git' ;;\n  '-C upstream rev-parse HEAD') echo '#{item.dig('source', 'pins', 0, 'revision')}' ;;\n  *) exit 1 ;;\nesac\n")
+    File.chmod(0o755, git)
+    output = File.join(directory, "scope-output")
+    File.write(output, "")
+    env = {"PATH" => "#{commands}:#{ENV.fetch('PATH')}", "GITHUB_OUTPUT" => output,
+      "GITHUB_RUN_ID" => "123", "GITHUB_RUN_ATTEMPT" => "2", "GITHUB_REF_NAME" => "main",
+      "BENCHMARK_SERIES_ID" => nil, "BENCHMARK_SAMPLE" => nil}.merge(environment)
+    _, errors, status = Open3.capture3(env, "bash", "-c", step.fetch("run"), chdir: directory)
+    assert_equal success, status.success?, errors
+    return unless status.success?
+    File.readlines(output).to_h { |line| line.strip.split("=", 2) }.fetch("cache_scope")
   end
 
   def test_unreviewed_recipe_input_and_unsafe_suffix_are_rejected
