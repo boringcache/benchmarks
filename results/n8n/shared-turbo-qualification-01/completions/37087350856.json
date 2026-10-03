@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "n8n",
+  "series_id": "shared-turbo-qualification-01",
+  "sample": 1,
+  "run_id": "37087350856",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37087350856",
+  "source_sha": "6eda03c19ffe66ff3d0d6b3d9f76fb2a2860ac0c",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "25fcd514b9aa761dbc44baa4a988e563bf43e071a2538617921e2c23a7e5c5b0"
+}
