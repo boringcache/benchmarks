@@ -22,13 +22,26 @@
   "execution": {
     "workflows": [
       {
+        "path": ".github/workflows/native-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "posthog"
+        },
+        "historical_workflow": "posthog-posthog-fresh-benchmark.yml",
+        "variants": [
+          "layers",
+          "combined"
+        ],
+        "variant_input": "variant"
+      },
+      {
         "path": ".github/workflows/posthog-posthog-benchmark.yml",
-        "lane": "rolling",
+        "lane": "diagnostic",
         "inputs": {}
       },
       {
         "path": ".github/workflows/posthog-posthog-fresh-benchmark.yml",
-        "lane": "fresh",
+        "lane": "diagnostic",
         "inputs": {}
       }
     ],
@@ -37,6 +50,36 @@
     "cache_tags": {
       "posthog-docker-local": "{scope}-docker",
       "posthog-turbo-local": "{scope}-turbo"
+    },
+    "native": {
+      "action": ".github/actions/posthog-docker-benchmark",
+      "benchmark_id": "posthog",
+      "fresh_inputs": {
+        "platform": "linux/amd64"
+      },
+      "rolling_inputs": {
+        "platform": "linux/amd64"
+      },
+      "variants": {
+        "layers": {},
+        "combined": {
+          "benchmark_id": "posthog-toolcache-mountcache",
+          "fresh_inputs": {
+            "docker_tool_cache": "true",
+            "docker_mount_cache": "true"
+          },
+          "rolling_inputs": {
+            "docker_tool_cache": "true",
+            "docker_mount_cache": "true"
+          },
+          "provider_flags": {
+            "actions-cache": {
+              "docker_tool_cache": "false",
+              "docker_mount_cache": "false"
+            }
+          }
+        }
+      }
     }
   },
   "reporting": {

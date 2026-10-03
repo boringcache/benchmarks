@@ -22,13 +22,21 @@
   "execution": {
     "workflows": [
       {
+        "path": ".github/workflows/native-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "immich"
+        },
+        "historical_workflow": "immich-immich-fresh-benchmark.yml"
+      },
+      {
         "path": ".github/workflows/immich-immich-benchmark.yml",
-        "lane": "rolling",
+        "lane": "diagnostic",
         "inputs": {}
       },
       {
         "path": ".github/workflows/immich-immich-fresh-benchmark.yml",
-        "lane": "fresh",
+        "lane": "diagnostic",
         "inputs": {}
       }
     ],
@@ -37,6 +45,12 @@
     "cache_tags": {
       "immich-docker-local": "{scope}-docker",
       "immich-ccache-local": "{scope}-ccache"
+    },
+    "native": {
+      "action": ".github/actions/immich-docker-benchmark",
+      "benchmark_id": "immich-server",
+      "fresh_inputs": {},
+      "rolling_inputs": {}
     }
   },
   "reporting": {

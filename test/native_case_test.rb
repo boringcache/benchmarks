@@ -38,6 +38,82 @@ class NativeCaseTest < Minitest::Test
     assert_raises(BenchmarkCases::Error) { BenchmarkCases.plan(item, inputs: {"case_id" => "storybook"}) }
   end
 
+  def test_workload_variants_select_one_reviewed_recipe_and_report_identity
+    with_payload("n8n") do |item, directory|
+      %w[turbo docker runners distroless].each do |variant|
+        plan = BenchmarkCases.plan(item, variant: variant)
+        assert_equal variant, plan.dig("inputs", "variant")
+        assert_equal "native-fresh-benchmark.yml", plan.fetch("workflow")
+        action = NativeCase.write_action(item, directory: directory, lane: "fresh", variant: variant)
+        step = action.dig("runs", "steps", 0)
+        assert_equal variant, step.dig("with", "report_variant")
+        assert_equal "26.7.0", step.dig("with", "node_version")
+        if variant == "turbo"
+          assert_equal "./.github/actions/n8n-turbo-benchmark", step.fetch("uses")
+        else
+          assert_equal "./.github/actions/n8n-docker-benchmark", step.fetch("uses")
+          assert_match(/upstream\/docker\/images\//, step.dig("with", "dockerfile_path"))
+        end
+      end
+      assert_raises(NativeCase::Error) { NativeCase.write_action(item, directory: directory, lane: "fresh") }
+      assert_raises(NativeCase::Error) { NativeCase.write_action(item, directory: directory, lane: "fresh", variant: "unknown") }
+      assert_raises(BenchmarkCases::Error) { BenchmarkCases.plan(item, variant: "turbo", inputs: {"variant" => "docker"}) }
+    end
+  end
+
+  def test_native_variant_recipes_are_validated_before_selection
+    with_payload("mastodon") do |item, directory|
+      action = NativeCase.write_action(item, directory: directory, lane: "fresh", variant: "server-sccache")
+      assert_equal "server", action.dig("runs", "steps", 0, "with", "workload")
+      assert_equal "${{ inputs.strategy == 'actions-cache' && 'false' || 'true' }}", action.dig("runs", "steps", 0, "with", "docker_tool_cache")
+      item["execution"]["native"]["variants"]["streaming"]["fresh_inputs"]["workload"] = "${{ inputs.workload }}"
+      assert_raises(NativeCase::Error) { NativeCase.write_action(item, directory: directory, lane: "fresh", variant: "server") }
+    end
+  end
+
+  def test_n8n_dependency_installation_does_not_increase_build_and_reuse_time
+    path = File.join(BenchmarkCases::ROOT, "cases/n8n/payload/.github/actions/n8n-turbo-benchmark/action.yml")
+    steps = YAML.safe_load(File.read(path)).dig("runs", "steps")
+    install = steps.index { |step| step["name"] == "Install n8n dependencies" }
+    timer = steps.index { |step| step["id"] == "build_timer" }
+    assert_operator install, :<, timer
+    assert_operator timer, :<, steps.index { |step| step["name"] == "Build n8n" }
+    reporter = steps.find { |step| step["name"] == "Write the benchmark phase evidence" }
+    assert_equal "${{ steps.setup_timing.outputs.setup_seconds }}", reporter.dig("env", "SETUP_SECONDS")
+    Dir.mktmpdir("n8n-timing-") do |directory|
+      clock = File.join(directory, "clock")
+      output = File.join(directory, "output")
+      date = File.join(directory, "date")
+      File.write(date, "#!/bin/sh\ncat \"$CLOCK_FILE\"\n")
+      File.chmod(0o755, date)
+      environment = {"PATH" => "#{directory}:#{ENV.fetch('PATH')}", "CLOCK_FILE" => clock, "GITHUB_OUTPUT" => output}
+      {"setup_timing" => [103, {"SETUP_STARTED_AT" => "100"}],
+       "build_timer" => [113, {}], "build_timing" => [120, {"BUILD_STARTED_AT" => "113"}]}.each do |id, (time, inputs)|
+        File.write(clock, time.to_s)
+        step = steps.find { |entry| entry["id"] == id }
+        _, errors, status = Open3.capture3(environment.merge(inputs), "bash", "-c", step.fetch("run"))
+        assert status.success?, errors
+      end
+      values = File.readlines(output).to_h { |line| line.strip.split("=", 2) }
+      assert_equal "3", values.fetch("setup_seconds")
+      assert_equal "7", values.fetch("build_seconds")
+    end
+  end
+
+  def test_provider_flags_preserve_the_comparator_and_cannot_change_phase_identity
+    with_payload("posthog") do |item, directory|
+      item["execution"]["native"]["provider_flags"] = {"actions-cache" => {"docker_tool_cache" => "false"}}
+      item["execution"]["native"]["variants"]["combined"]["provider_flags"] = {"actions-cache" => {"docker_mount_cache" => "false"}}
+      action = NativeCase.write_action(item, directory: directory, lane: "fresh", variant: "combined")
+      %w[docker_tool_cache docker_mount_cache].each do |name|
+        assert_equal "${{ inputs.strategy == 'actions-cache' && 'false' || 'true' }}", action.dig("runs", "steps", 0, "with", name)
+      end
+      item["execution"]["native"]["provider_flags"]["actions-cache"]["phase"] = "true"
+      error = assert_raises(NativeCase::Error) { NativeCase.write_action(item, directory: directory, lane: "fresh", variant: "combined") }
+      assert_includes error.message, "cannot change shared runtime inputs"
+    end
+  end
+
   def test_unreviewed_recipe_input_and_unsafe_suffix_are_rejected
     with_payload("hugo-go") do |item, directory|
       assert_raises(NativeCase::Error) { NativeCase.write_action(item, directory: directory, lane: "fresh", suffix: "\nOTHER=value") }

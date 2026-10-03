@@ -1,3 +1,4 @@
+---
 name: Run n8n Turbo benchmark phase
 description: Runs one n8n Turbo cache provider and phase.
 inputs:
@@ -14,6 +15,10 @@ inputs:
     default: ''
   node_version:
     required: true
+  report_variant:
+    required: false
+    default: ''
+    description: Declared series workload variant.
 runs:
   using: composite
   steps:
@@ -79,7 +84,7 @@ runs:
       echo "source_repository=n8n-io/n8n" >> "$GITHUB_OUTPUT"
       echo "source_sha=${source_sha}" >> "$GITHUB_OUTPUT"
   - name: Set up Node.js
-    uses: ./.github/actions/setup-node
+    uses: "./.github/actions/setup-node"
     with:
       node-version: "${{ inputs.node_version }}"
   - name: Enable the pinned pnpm release
@@ -113,7 +118,7 @@ runs:
   - name: Publish with BoringCache
     id: boringcache-publish
     if: inputs.strategy == 'boringcache' && inputs.phase == 'publish'
-    uses: ./.github/actions/boringcache
+    uses: "./.github/actions/boringcache"
     with:
       cli-version: "${{ inputs.cli_version }}"
       mode: turbo
@@ -122,15 +127,15 @@ runs:
   - name: Restore with BoringCache
     id: boringcache-restore
     if: inputs.strategy == 'boringcache' && inputs.phase == 'warm'
-    uses: ./.github/actions/boringcache
+    uses: "./.github/actions/boringcache"
     with:
       cli-version: "${{ inputs.cli_version }}"
       mode: turbo
       trust-policy: restore
       working-directory: upstream
       fail-on-cache-miss: true
-  - name: Start the build timer
-    id: build_timer
+  - name: Capture cache setup timing
+    id: setup_timing
     shell: bash
     env:
       SETUP_STARTED_AT: "${{ steps.setup_timer.outputs.started_at }}"
@@ -138,7 +143,6 @@ runs:
       set -euo pipefail
       now="$(date +%s)"
       echo "setup_seconds=$(( now - SETUP_STARTED_AT ))" >> "$GITHUB_OUTPUT"
-      echo "started_at=${now}" >> "$GITHUB_OUTPUT"
   - name: Install n8n dependencies
     shell: bash
     working-directory: upstream
@@ -146,6 +150,10 @@ runs:
       CI: '1'
       GITHUB_TOKEN: "${{ github.token }}"
     run: corepack pnpm install --frozen-lockfile
+  - name: Start the build timer
+    id: build_timer
+    shell: bash
+    run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
   - name: Build n8n
     shell: bash
     env:
@@ -183,7 +191,7 @@ runs:
       REPORT_PHASE: "${{ inputs.cache_lane == 'rolling' && 'commit' || inputs.phase
         == 'warm' && 'warm' || 'cold' }}"
       WORKFLOW_STARTED_AT: "${{ steps.workflow_timer.outputs.started_at }}"
-      SETUP_SECONDS: "${{ steps.build_timer.outputs.setup_seconds }}"
+      SETUP_SECONDS: "${{ steps.setup_timing.outputs.setup_seconds }}"
       BUILD_SECONDS: "${{ steps.build_timing.outputs.build_seconds }}"
       CACHE_HIT: "${{ steps.boringcache-publish.outputs.cache-hit || steps.boringcache-restore.outputs.cache-hit
         || steps.actions_cache_0.outputs.cache-hit || steps.actions_cache_1.outputs.cache-hit
@@ -194,6 +202,7 @@ runs:
       GITHUB_TOKEN: "${{ github.token }}"
       SOURCE_REPOSITORY: "${{ steps.scope.outputs.source_repository }}"
       SOURCE_SHA: "${{ steps.scope.outputs.source_sha }}"
+      REPORT_VARIANT: "${{ inputs.report_variant }}"
     run: |
       set -euo pipefail
       ruby ./scripts/benchmark-report.rb phase --verified-output \
@@ -201,7 +210,7 @@ runs:
         --strategy "$STRATEGY" \
         --lane "$CACHE_LANE" \
         --phase "$REPORT_PHASE" \
-        --mode turbo \
+        --variant "$REPORT_VARIANT" --mode turbo \
         --restore-or-setup-seconds "$SETUP_SECONDS" \
         --workflow-seconds "$(( $(date +%s) - WORKFLOW_STARTED_AT ))" \
         --build-seconds "$BUILD_SECONDS" \

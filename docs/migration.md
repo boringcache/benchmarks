@@ -32,6 +32,17 @@ and reporting qualification remain required.
 Imported execution workflows accept explicit dispatch only until their live
 qualification passes. Schedules and source-triggered execution must be enabled
 as part of the reviewed caller cutover. PR validation runs the harness guards.
+
+The shared native fresh path also selects individual n8n Turbo/Docker, Mastodon
+server/streaming, and PostHog cache profiles from reviewed variant metadata;
+Immich's server uses the same path without a variant. Their imported matrices
+remain registered diagnostics while output checks and live execution are
+qualified. The new Docker paths do not establish a loaded or published image,
+or qualify the original rolling publication behavior. Existing callers and
+schedules still use the original repositories.
+n8n Turbo's primary measurement now captures cache setup and the build separately
+from its dependency installation. The install still runs before the build. Earlier
+results retain their original timed scope and must not be mixed with this series.
 GitHub's default CodeQL configuration now scans Ruby and Actions. Python was
 removed from its language list because this branch removes the maintained Python
 reporter; query suite, threat model, weekly schedule, and runner settings were
