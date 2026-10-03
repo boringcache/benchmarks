@@ -100,6 +100,22 @@ class BenchmarkCaseScriptsTest < Minitest::Test
     end
   end
 
+  def test_hugo_loaded_image_disables_attestations_and_keeps_the_publication_recipe
+    %w[true false].each do |load|
+      with_case("hugo") do |directory|
+        _, errors, status = run_script(directory, "activate-docker-plan", "--load", load)
+        assert status.success?, errors
+        command = TomlRB.load_file(File.join(directory, ".boringcache.toml")).dig("adapters", "docker", "command")
+        assert_equal load == "true" ? "false" : "mode=max", command.fetch(command.index("--provenance") + 1)
+        assert_equal load == "true" ? "false" : "true", command.fetch(command.index("--sbom") + 1)
+        action = YAML.safe_load(File.read(File.join(directory, ".github/actions/hugo-docker-benchmark/action.yml")))
+        build = action.dig("runs", "steps").find { |step| step["name"] == "Build with the GitHub Actions cache" }.fetch("with")
+        assert_equal "${{ inputs.load_image != 'true' && 'mode=max' || 'false' }}", build.fetch("provenance")
+        assert_equal "${{ inputs.load_image != 'true' }}", build.fetch("sbom")
+      end
+    end
+  end
+
   def test_posthog_no_cache_option_preserves_its_declared_boolean_value
     with_case("posthog") do |directory|
       %w[false true].each do |value|
