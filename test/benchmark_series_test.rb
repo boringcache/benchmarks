@@ -38,21 +38,26 @@ class BenchmarkSeriesTest < Minitest::Test
     BenchmarkSeries.record(@directory, path)
   end
 
-  def evidence(run_id: 1, conclusion: "success", logs: "Build and cleanup completed\n", repository: BenchmarkCases::REPOSITORY)
+  def evidence(run_id: 1, conclusion: "success", logs: "Build and cleanup completed\n", repository: BenchmarkCases::REPOSITORY, no_jobs: false)
     directory = File.join(@root, "evidence-#{run_id}")
     FileUtils.mkdir_p(File.join(directory, "attempts", "1"))
     run = {"id" => run_id, "head_sha" => "a" * 40, "run_attempt" => 1, "status" => "completed", "conclusion" => conclusion}
+    jobs = no_jobs ? [] : [{"id" => 10, "name" => "Build", "conclusion" => conclusion}]
     manifest = {"repository" => repository, "run_id" => run_id, "run_url" => "https://github.com/#{repository}/actions/runs/#{run_id}",
-      "source_sha" => "a" * 40, "state" => "complete", "gaps" => [], "attempts" => [{"attempt" => 1, "job_ids" => [10]}], "artifacts" => [], "files" => {}}
+      "source_sha" => "a" * 40, "state" => "complete", "gaps" => [], "attempts" => [{"attempt" => 1, "job_ids" => jobs.map { |job| job.fetch("id") }}], "artifacts" => [], "files" => {}}
     BenchmarkEvidence.retain_json(directory, "run.json", run, manifest)
     BenchmarkEvidence.retain_json(directory, "attempts/1/run.json", run, manifest)
-    BenchmarkEvidence.retain_json(directory, "attempts/1/jobs.json", {"total_count" => 1, "jobs" => [{"id" => 10, "name" => "Build", "conclusion" => conclusion}]}, manifest)
+    BenchmarkEvidence.retain_json(directory, "attempts/1/jobs.json", {"total_count" => jobs.length, "jobs" => jobs}, manifest)
     BenchmarkEvidence.retain_json(directory, "artifacts.json", {"total_count" => 0, "artifacts" => []}, manifest)
     BenchmarkEvidence.retain_json(directory, "commit.json", {"sha" => "a" * 40}, manifest)
     File.write(File.join(directory, "workflow.yml"), "name: Build\n")
-    File.write(File.join(@root, "log.txt"), logs)
-    _stdout, stderr, status = Open3.capture3("zip", "-q", File.join(directory, "attempts/1/logs.zip"), "log.txt", chdir: @root)
-    raise stderr unless status.success?
+    if no_jobs
+      File.binwrite(File.join(directory, "attempts/1/logs.zip"), "PK\x05\x06" + "\x00" * 18)
+    else
+      File.write(File.join(@root, "log.txt"), logs)
+      _stdout, stderr, status = Open3.capture3("zip", "-q", File.join(directory, "attempts/1/logs.zip"), "log.txt", chdir: @root)
+      raise stderr unless status.success?
+    end
     %w[workflow.yml attempts/1/logs.zip].each do |relative|
       path = File.join(directory, relative)
       manifest["files"][relative] = {"bytes" => File.size(path), "sha256" => Digest::SHA256.file(path).hexdigest}
@@ -256,5 +261,16 @@ class BenchmarkSeriesTest < Minitest::Test
     path = File.join(@root, "evidence-1", "workflow.yml")
     File.write(path, "changed\n")
     assert_raises(BenchmarkCases::Error) { BenchmarkSeries.finish(@directory, evidence_directory: File.join(@root, "evidence-1"), sample: 1) }
+  end
+
+  def test_cancellation_before_jobs_start_is_retained_without_measurements
+    result = BenchmarkSeries.finish(@directory, evidence_directory: evidence(conclusion: "cancelled", no_jobs: true), sample: 1)
+    assert_equal "cancelled", result["github_conclusion"]
+    assert_equal "failed", result["status"]
+    assert_includes result["errors"], "Workflow concluded cancelled"
+    report = BenchmarkSeries.report(@directory)
+    assert_empty report["records"]
+    refute report["valid_for_comparison"]
+    assert_equal 1, report["failed_completions"].length
   end
 end

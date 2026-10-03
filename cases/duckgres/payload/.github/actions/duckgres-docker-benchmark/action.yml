@@ -12,6 +12,9 @@ inputs:
   push_image:
     required: false
     default: 'false'
+  load_image:
+    required: false
+    default: 'false'
   cli_version:
     required: false
     default: ''
@@ -73,12 +76,13 @@ runs:
     if: inputs.strategy == 'boringcache'
     shell: bash
     env:
+      LOAD_IMAGE: "${{ inputs.load_image }}"
       SOURCE_SHA: "${{ steps.scope.outputs.source_sha }}"
       PUSH_IMAGE: "${{ inputs.push_image == 'true' && github.ref == 'refs/heads/main'
         }}"
       IMAGE: ghcr.io/${{ github.repository_owner }}/duckgres-benchmark:boringcache
     run: ruby ./scripts/activate-docker-plan.rb --source-sha "$SOURCE_SHA" --push
-      "$PUSH_IMAGE" --image "$IMAGE"
+      "$PUSH_IMAGE" --image "$IMAGE" --load "$LOAD_IMAGE"
   - name: Log in to the GitHub Container Registry
     if: inputs.push_image == 'true' && github.ref == 'refs/heads/main'
     uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
@@ -115,6 +119,7 @@ runs:
       platforms: linux/amd64
       tags: ghcr.io/${{ github.repository_owner }}/duckgres-benchmark:actions-cache
       push: "${{ inputs.push_image == 'true' && github.ref == 'refs/heads/main' }}"
+      load: "${{ inputs.load_image == 'true' }}"
       build-args: |
         VERSION=build-${{ steps.scope.outputs.source_sha }}
         COMMIT=${{ steps.scope.outputs.source_sha }}
@@ -149,9 +154,19 @@ runs:
     env:
       BUILD_STARTED_AT: "${{ steps.build_timer.outputs.started_at }}"
     run: echo "build_seconds=$(( $(date +%s) - BUILD_STARTED_AT ))" >> "$GITHUB_OUTPUT"
+  - name: Verify the Docker output
+    id: output_verification
+    shell: bash
+    env:
+      STRATEGY: "${{ inputs.strategy }}"
+      LOAD_IMAGE: "${{ inputs.load_image }}"
+      PUSH_IMAGE: "${{ inputs.push_image == 'true' && github.ref == 'refs/heads/main' }}"
+      IMAGE: ghcr.io/${{ github.repository_owner }}/duckgres-benchmark:actions-cache
+    run: ruby ./scripts/verify-docker-output.rb --strategy "$STRATEGY" --load "$LOAD_IMAGE" --push "$PUSH_IMAGE" --image "$IMAGE"
   - name: Write the benchmark phase evidence
     shell: bash
     env:
+      OUTPUT_VERIFIED: "${{ steps.output_verification.outputs.verified }}"
       BENCHMARK_ID: "${{ inputs.benchmark_id }}"
       STRATEGY: "${{ inputs.strategy }}"
       CACHE_LANE: "${{ inputs.cache_lane }}"
@@ -170,7 +185,9 @@ runs:
       SOURCE_SHA: "${{ steps.scope.outputs.source_sha }}"
     run: |
       set -euo pipefail
-      ruby ./scripts/benchmark-report.rb phase \
+      verification=()
+      [[ "$OUTPUT_VERIFIED" != 'true' ]] || verification=(--verified-output)
+      ruby ./scripts/benchmark-report.rb phase "${verification[@]}" \
         --benchmark "$BENCHMARK_ID" \
         --strategy "$STRATEGY" \
         --lane "$CACHE_LANE" \

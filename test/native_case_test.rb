@@ -18,7 +18,7 @@ class NativeCaseTest < Minitest::Test
       fresh = NativeCase.write_action(item, directory: directory, lane: "fresh")
       rolling = NativeCase.write_action(item, directory: directory, lane: "rolling")
       assert_equal fresh.dig("runs", "steps", 0, "uses"), rolling.dig("runs", "steps", 0, "uses")
-      refute fresh.dig("runs", "steps", 0, "with").key?("push_image")
+      assert_equal "true", fresh.dig("runs", "steps", 0, "with", "load_image")
       assert_equal "true", rolling.dig("runs", "steps", 0, "with", "push_image")
       assert_equal "${{ inputs.cli_version }}", fresh.dig("runs", "steps", 0, "with", "cli_version")
     end
@@ -111,6 +111,52 @@ class NativeCaseTest < Minitest::Test
       item["execution"]["native"]["provider_flags"]["actions-cache"]["phase"] = "true"
       error = assert_raises(NativeCase::Error) { NativeCase.write_action(item, directory: directory, lane: "fresh", variant: "combined") }
       assert_includes error.message, "cannot change shared runtime inputs"
+    end
+  end
+
+  def test_native_planning_rejects_missing_output_verification_before_dispatch
+    %w[chroma duckgres hugo linkerd2].each do |id|
+      item = BenchmarkCases.load_case(id)
+      assert_equal "native-fresh-benchmark.yml", BenchmarkCases.plan(item).fetch("workflow")
+      error = assert_raises(NativeCase::Error) { BenchmarkCases.plan(item, lane: "rolling") }
+      assert_includes error.message, "requires load_image=true"
+    end
+    with_payload("hugo-go") do |item, directory|
+      path = File.join(directory, item.dig("execution", "native", "action"), "action.yml")
+      File.write(path, File.read(path).gsub("--verified-output", ""))
+      error = assert_raises(NativeCase::Error) { NativeCase.verify_report(item.dig("execution", "native"), payload: directory, lane: "fresh") }
+      assert_includes error.message, "does not report verified output"
+    end
+    %w[hugo-go qdrant spring-ai storybook opentelemetry-java].each do |id|
+      assert_equal "native-fresh-benchmark.yml", BenchmarkCases.plan(BenchmarkCases.load_case(id)).fetch("workflow")
+    end
+  end
+
+  def test_native_preparation_rejects_unverified_output_before_creating_a_checkout
+    Dir.mktmpdir("native-preflight-") do |directory|
+      target = File.join(directory, "workload")
+      error = assert_raises(NativeCase::Error) do
+        item = BenchmarkCases.load_case("n8n")
+        item["execution"]["native"]["variants"]["docker"]["fresh_inputs"]["load_image"] = "false"
+        BenchmarkCases.prepare(item, directory: target, native_lane: "fresh", variant: "docker")
+      end
+      assert_includes error.message, "requires load_image=true"
+      refute Dir.exist?(target)
+    end
+  end
+
+  def test_native_docker_variants_use_the_shared_loaded_image_check
+    {"mastodon" => %w[server server-sccache streaming], "posthog" => %w[layers combined], "immich" => [nil]}.each do |id, variants|
+      variants.each do |variant|
+        item = BenchmarkCases.load_case(id)
+        assert_equal "native-fresh-benchmark.yml", BenchmarkCases.plan(item, variant: variant).fetch("workflow")
+        recipe = NativeCase.resolve(item.dig("execution", "native"), variant)
+        assert_equal "true", recipe.dig("fresh_inputs", "load_image")
+        action = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, "cases", id, "payload", recipe.fetch("action"), "action.yml")))
+        steps = action.dig("runs", "steps")
+        assert_operator steps.index { |step| step["id"] == "build_timing" }, :<, steps.index { |step| step["id"] == "output_verification" }
+        assert_operator steps.index { |step| step["id"] == "output_verification" }, :<, steps.index { |step| step["name"] == "Write the benchmark phase evidence" }
+      end
     end
   end
 
