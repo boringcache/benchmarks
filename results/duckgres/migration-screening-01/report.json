@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "plan_sha256": "b9b612cdb4560e8398457398e0985872b63cf337fc96949edc8073dfff4304fe",
+  "complete": false,
+  "valid_for_comparison": false,
+  "failures": [],
+  "methodology_issues": [],
+  "execution_verified": false,
+  "missing_completions": [],
+  "failed_completions": [
+    {
+      "schema_version": 1,
+      "case_id": "duckgres",
+      "series_id": "migration-screening-01",
+      "sample": 1,
+      "run_id": "37085335883",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37085335883",
+      "source_sha": "da6400b319991a6b5e36b1e2fc70eaca2619a560",
+      "github_conclusion": "cancelled",
+      "status": "failed",
+      "errors": [
+        "Workflow concluded cancelled"
+      ],
+      "evidence_manifest_sha256": "b62a9f2b4643b1e582c483ba56b84e0ee2140452b2a8cf37a8d438e9af861ad2"
+    }
+  ],
+  "completions": [
+    {
+      "schema_version": 1,
+      "case_id": "duckgres",
+      "series_id": "migration-screening-01",
+      "sample": 1,
+      "run_id": "37085335883",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37085335883",
+      "source_sha": "da6400b319991a6b5e36b1e2fc70eaca2619a560",
+      "github_conclusion": "cancelled",
+      "status": "failed",
+      "errors": [
+        "Workflow concluded cancelled"
+      ],
+      "evidence_manifest_sha256": "b62a9f2b4643b1e582c483ba56b84e0ee2140452b2a8cf37a8d438e9af861ad2"
+    }
+  ],
+  "publication": "unreviewed",
+  "evidence_preservation": "requires-review",
+  "primary_metric": "build_and_reuse_seconds",
+  "missing": [
+    [
+      1,
+      "cold",
+      "boringcache"
+    ],
+    [
+      1,
+      "cold",
+      "actions-cache"
+    ],
+    [
+      1,
+      "warm",
+      "boringcache"
+    ],
+    [
+      1,
+      "warm",
+      "actions-cache"
+    ]
+  ],
+  "summaries": [],
+  "records": [],
+  "exclusions": []
+}
