@@ -72,15 +72,26 @@ class NativeCaseTest < Minitest::Test
   end
 
   def test_n8n_dependency_installation_does_not_increase_build_and_reuse_time
-    path = File.join(BenchmarkCases::ROOT, "cases/n8n/payload/.github/actions/n8n-turbo-benchmark/action.yml")
+    assert_dependency_setup_excluded("n8n", "n8n-turbo-benchmark", ["Install n8n dependencies"], "Build n8n")
+  end
+
+  def test_storybook_installation_and_sandbox_creation_do_not_increase_build_and_reuse_time
+    assert_dependency_setup_excluded("storybook", "storybook-nx-benchmark", ["Install Storybook dependencies", "Create the upstream Storybook sandbox"], "Build the Storybook benchmark sandbox")
+  end
+
+  def assert_dependency_setup_excluded(case_id, action, setup_names, build_name)
+    path = File.join(BenchmarkCases::ROOT, "cases", case_id, "payload/.github/actions", action, "action.yml")
     steps = YAML.safe_load(File.read(path)).dig("runs", "steps")
-    install = steps.index { |step| step["name"] == "Install n8n dependencies" }
     timer = steps.index { |step| step["id"] == "build_timer" }
-    assert_operator install, :<, timer
-    assert_operator timer, :<, steps.index { |step| step["name"] == "Build n8n" }
+    setup_names.each do |name|
+      setup = steps.index { |step| step["name"] == name }
+      assert_operator steps.index { |step| step["id"] == "setup_timing" }, :<, setup
+      assert_operator setup, :<, timer
+    end
+    assert_operator timer, :<, steps.index { |step| step["name"] == build_name }
     reporter = steps.find { |step| step["name"] == "Write the benchmark phase evidence" }
     assert_equal "${{ steps.setup_timing.outputs.setup_seconds }}", reporter.dig("env", "SETUP_SECONDS")
-    Dir.mktmpdir("n8n-timing-") do |directory|
+    Dir.mktmpdir("benchmark-timing-") do |directory|
       clock = File.join(directory, "clock")
       output = File.join(directory, "output")
       date = File.join(directory, "date")
