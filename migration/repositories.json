@@ -13,7 +13,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "Initial screen cancelled after missing output-image verification was found; completion and zero-observation report retained; a corrected definition requires a new series",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -31,6 +31,14 @@
           "complete": 1
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "cancelled_screening": {
+        "case_id": "chroma",
+        "series_id": "migration-screening-01",
+        "run_ids": [
+          37085333990
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/active-case-qualification-2026-10-03"
       }
     },
     {
@@ -107,6 +115,17 @@
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-deno-compiler-rolling-failure-2026-10-02",
         "scope": "Builds and output checks passed; report upload failed; original phase/product files were never uploaded"
+      },
+      "rolling_seed_qualification": {
+        "case_id": "deno",
+        "series_ids": [
+          "rolling-seed-cargo-product-01"
+        ],
+        "run_ids": [
+          37085348479
+        ],
+        "scope": "Cargo-product fresh parent and restore-only adjacent source passed output and completion checks; native cache errors retained; selected storage total unmeasured; compiler-only seed and rolling publication remain pending",
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/active-case-qualification-2026-10-03"
       }
     },
     {
@@ -217,7 +236,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "incomplete; only recent run metadata inventoried",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "Initial screen cancelled after missing output-image verification was found; completion and zero-observation report retained; a corrected definition requires a new series",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -225,7 +244,15 @@
         "Run the declared case with OIDC and verify outputs",
         "Export required Actions evidence and verify durable storage",
         "Verify source-sync, schedules, release callers, and website links"
-      ]
+      ],
+      "cancelled_screening": {
+        "case_id": "duckgres",
+        "series_id": "migration-screening-01",
+        "run_ids": [
+          37085335883
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/active-case-qualification-2026-10-03"
+      }
     },
     {
       "repository": "boringcache/benchmark-grpc",
@@ -272,7 +299,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "Initial screen cancelled after missing output-image verification was found; completion and zero-observation report retained; a corrected definition requires a new series",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -291,6 +318,14 @@
           "complete": 2
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "cancelled_screening": {
+        "case_id": "hugo",
+        "series_id": "migration-screening-01",
+        "run_ids": [
+          37085337504
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/active-case-qualification-2026-10-03"
       }
     },
     {
@@ -387,7 +422,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "Initial screen cancelled after missing output-image verification was found; completion and zero-observation report retained; a corrected definition requires a new series",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -405,6 +440,14 @@
           "complete": 1
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "cancelled_screening": {
+        "case_id": "linkerd2",
+        "series_id": "migration-screening-01",
+        "run_ids": [
+          37085339156
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/active-case-qualification-2026-10-03"
       }
     },
     {
@@ -537,7 +580,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "Verified one-sample native fresh provider comparison with output and completion checks and an independently downloaded archive; publication unreviewed; rolling source changes and callers remain unqualified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -555,6 +598,15 @@
           "complete": 1
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "active_screening": {
+        "case_id": "opentelemetry-java",
+        "series_id": "migration-screening-01",
+        "run_ids": [
+          37085341225
+        ],
+        "scope": "One cold and identical-source replay sample per provider; missing storage remains unmeasured; no publication-quality performance claim",
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/active-case-qualification-2026-10-03"
       }
     },
     {
@@ -609,7 +661,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "Verified one-sample native fresh provider comparison with output and completion checks and an independently downloaded archive; publication unreviewed; rolling source changes and callers remain unqualified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -627,6 +679,15 @@
           "complete": 1
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "active_screening": {
+        "case_id": "qdrant",
+        "series_id": "migration-screening-01",
+        "run_ids": [
+          37085343088
+        ],
+        "scope": "One cold and identical-source replay sample per provider; missing storage remains unmeasured; no publication-quality performance claim",
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/active-case-qualification-2026-10-03"
       }
     },
     {
