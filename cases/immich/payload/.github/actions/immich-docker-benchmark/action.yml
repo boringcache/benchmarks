@@ -23,6 +23,9 @@ inputs:
     required: false
     default: ''
     description: Declared series workload variant.
+  load_image:
+    required: false
+    default: 'false'
 runs:
   using: composite
   steps:
@@ -80,9 +83,10 @@ runs:
       PUSH_IMAGE: "${{ inputs.push_image == 'true' && github.ref == 'refs/heads/main'
         }}"
       IMAGE: ghcr.io/${{ github.repository_owner }}/immich-server-benchmark:boringcache
+      LOAD_IMAGE: "${{ inputs.load_image }}"
     run: ruby ./scripts/activate-docker-plan.rb --scenario server --source-sha "$SOURCE_SHA"
       --build-id "$BUILD_ID" --source-ref "$SOURCE_REF" --push "$PUSH_IMAGE" --image
-      "$IMAGE"
+      "$IMAGE" --load "$LOAD_IMAGE"
   - name: Log in to the GitHub Container Registry
     if: inputs.push_image == 'true' && github.ref == 'refs/heads/main'
     uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
@@ -127,6 +131,7 @@ runs:
         DEVICE=cpu
       cache-from: type=gha,scope=${{ steps.scope.outputs.cache_scope }}
       cache-to: type=gha,scope=${{ steps.scope.outputs.cache_scope }},mode=max
+      load: "${{ inputs.load_image == 'true' }}"
   - name: Publish with BoringCache
     id: publish
     if: inputs.strategy == 'boringcache' && inputs.phase == 'publish'
@@ -154,6 +159,17 @@ runs:
     env:
       BUILD_STARTED_AT: "${{ steps.build_timer.outputs.started_at }}"
     run: echo "build_seconds=$(( $(date +%s) - BUILD_STARTED_AT ))" >> "$GITHUB_OUTPUT"
+  - name: Verify the Docker output
+    id: output_verification
+    shell: bash
+    env:
+      STRATEGY: "${{ inputs.strategy }}"
+      LOAD_IMAGE: "${{ inputs.load_image }}"
+      PUSH_IMAGE: "${{ inputs.push_image == 'true' && github.ref == 'refs/heads/main'
+        }}"
+      IMAGE: ghcr.io/${{ github.repository_owner }}/immich-server-benchmark:actions-cache
+    run: ruby ./scripts/verify-docker-output.rb --strategy "$STRATEGY" --load "$LOAD_IMAGE"
+      --push "$PUSH_IMAGE" --image "$IMAGE"
   - name: Write the benchmark phase evidence
     shell: bash
     env:
@@ -174,9 +190,12 @@ runs:
       SOURCE_REPOSITORY: "${{ steps.scope.outputs.source_repository }}"
       SOURCE_SHA: "${{ steps.scope.outputs.source_sha }}"
       REPORT_VARIANT: "${{ inputs.report_variant }}"
+      OUTPUT_VERIFIED: "${{ steps.output_verification.outputs.verified }}"
     run: |
       set -euo pipefail
-      ruby ./scripts/benchmark-report.rb phase \
+      verification=()
+      [[ "$OUTPUT_VERIFIED" != 'true' ]] || verification=(--verified-output)
+      ruby ./scripts/benchmark-report.rb phase "${verification[@]}" \
         --benchmark "$BENCHMARK_ID" \
         --strategy "$STRATEGY" \
         --lane "$CACHE_LANE" \

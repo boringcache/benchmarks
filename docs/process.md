@@ -60,6 +60,19 @@ All variants use the same provider lifecycle and canonical reporter. Missing or
 unknown variants fail before dispatch. Contract checks prepare every registered
 native variant, including its report filenames. A fresh variant passing does not
 qualify another variant or the original rolling matrix.
+Native planning also rejects a phase action that does not report verified output.
+Add and review the actual output check before setting `--verified-output`; the
+flag alone does not verify a workload. Schema and file-contract checks can pass
+while an imported recipe still lacks that execution requirement.
+For native Docker comparisons that declare `load_image`, fresh inputs must set
+it to `true`. Both arms then export and load their built image during the timed
+build. The shared `verify-docker-output.rb` checks the selected provider's image
+after timing and passes verification to the reporter only after inspection
+succeeds. The image check establishes that the build produced the declared image;
+application behavior requires any additional checks declared by the case.
+Publication and cache-only projections remain diagnostic until their output and
+comparison boundary have been reviewed. Do not add the verification flag to a
+cache-only build.
 
 Keep different provider sets, architectures, source-change sequences, and output
 behavior explicit in their adapters or case actions. OBS, Cargo product proofs,
@@ -231,6 +244,11 @@ Publish the verified bundle to durable storage with a stable link. Experimental
 cache retention is not permanent evidence retention. The exporter includes all
 available attempts and records gaps; partial exports remain partial. Keep
 original execution URLs as provenance.
+Cancelled requests remain in their original series. A run cancelled before any
+jobs start can have a valid empty log ZIP and a complete scoped export, with no
+measurements. Empty logs for a run that has jobs remain an evidence gap. Use a
+new series after correcting an execution contract; do not replace the old request
+or infer phase measurements from its logs.
 `finish` checks the preserved run and job conclusions and post-step logs. A
 green job with a reported BoringCache post-step failure remains unqualified.
 Reports require a completion check for every run represented by their phase

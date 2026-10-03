@@ -25,10 +25,19 @@ module BenchmarkEvidence
       end
       raise BenchmarkCases::Error, "GitHub returned an empty download for #{path}" if File.size(target).zero?
       if target.end_with?(".zip")
-        BenchmarkCases.command("unzip", "-tqq", target)
+        BenchmarkEvidence.verify_zip(target)
       end
       File.chmod(0o600, target)
     end
+  end
+
+  def self.empty_zip?(path)
+    File.size(path) == 22 && File.binread(path) == "PK\x05\x06" + "\x00" * 18
+  end
+
+  def self.verify_zip(path)
+    return if empty_zip?(path)
+    BenchmarkCases.command("unzip", "-tqq", path)
   end
 
   def self.export(repository:, run_id:, directory:, github: GitHub.new)
@@ -55,6 +64,9 @@ module BenchmarkEvidence
         retain_json(directory, "#{prefix}/jobs.json", {"total_count" => jobs.length, "jobs" => jobs}, manifest)
         manifest["attempts"] << {"attempt" => attempt, "job_ids" => jobs.map { |job| job.fetch("id") }}
         retain_download(directory, "#{prefix}/logs.zip", "#{attempt_path}/logs", github, manifest)
+        if jobs.any? && manifest.fetch("files").key?("#{prefix}/logs.zip") && empty_zip?(File.join(directory, "#{prefix}/logs.zip"))
+          manifest["gaps"] << {"resource" => "#{prefix}/logs.zip", "reason" => "Jobs exist but the log archive has no entries"}
+        end
       rescue BenchmarkCases::Error => error
         manifest["gaps"] << {"resource" => "#{prefix}/metadata", "reason" => error.message}
       end

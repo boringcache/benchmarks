@@ -47,7 +47,9 @@
         "push_image": "true"
       },
       "environment": {},
-      "fresh_inputs": {}
+      "fresh_inputs": {
+        "load_image": "true"
+      }
     },
     "cache_tags": {
       "duckgres-docker-local": "{scope}-docker"
@@ -60,7 +62,8 @@
     "publication": "reviewed"
   },
   "verification": [
-    "Pinned upstream recipe and build success"
+    "Pinned upstream recipe and build success",
+    "The freshly loaded output image exists in the local Docker image store"
   ],
   "comparison": {
     "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
@@ -68,7 +71,7 @@
       "boringcache",
       "actions-cache"
     ],
-    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
     "primary_metric": "build_and_reuse_seconds",
     "storage": "provider-reported",
     "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",

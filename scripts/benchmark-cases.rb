@@ -22,7 +22,7 @@ module BenchmarkCases
   ROOT = File.expand_path("..", __dir__)
   WORKSPACE = "boringcache/benchmarks"
   REPOSITORY = "boringcache/benchmarks"
-  HELPERS = %w[benchmark-plan run-benchmark-plan activate-docker-plan summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache].freeze
+  HELPERS = %w[benchmark-plan run-benchmark-plan activate-docker-plan verify-docker-output summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache].freeze
   class Error < StandardError; end
 
   def self.command(*args, chdir: nil, stdin: "", env: {})
@@ -214,7 +214,8 @@ module BenchmarkCases
     end
     if item.dig("execution", "native") && File.basename(entry.fetch("path")).start_with?("native-")
       raise Error, "case_id must match the selected case" unless combined["case_id"] == item.fetch("id")
-      NativeCase.resolve(item.dig("execution", "native"), variant || combined["variant"])
+      recipe = NativeCase.resolve(item.dig("execution", "native"), variant || combined["variant"])
+      NativeCase.verify_report(recipe, payload: File.join(root, "cases", item.fetch("id"), "payload"), lane: entry.fetch("lane"))
     end
     revisions = item.fetch("source").fetch("pins").map { |pin| pin.fetch("revision") }
     combined.each do |name, value|
@@ -348,6 +349,11 @@ module BenchmarkCases
   def self.prepare(item, directory:, root: ROOT, native_lane: nil, suffix: "", variant: nil)
     blockers = item.fetch("execution").fetch("blockers", [])
     raise Error, "#{item.fetch('id')}: #{blockers.join('; ')}" unless blockers.empty?
+    if native_lane
+      native = item.dig("execution", "native") or raise Error, "This case does not use the shared native comparison"
+      recipe = NativeCase.resolve(native, variant)
+      NativeCase.verify_report(recipe, payload: File.join(root, "cases", item.fetch("id"), "payload"), lane: native_lane)
+    end
     target = File.expand_path(directory)
     entries = Dir.exist?(target) ? Dir.children(target) : []
     raise Error, "Prepare requires an empty disposable directory or only the .harness checkout" unless (entries - [".harness"]).empty?
