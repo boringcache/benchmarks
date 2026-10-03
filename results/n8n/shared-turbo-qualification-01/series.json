@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "case_id": "n8n",
+  "series_id": "shared-turbo-qualification-01",
+  "created_at": "2026-10-03T01:45:05Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "c2930c6848f23cb393381f93848cea9037caba566e8e476405c4b40cb2329ec3",
+  "variant": "turbo",
+  "workflow_inputs": {
+    "case_id": "n8n",
+    "cli_version": "v1.33.0",
+    "variant": "turbo"
+  },
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "n8n-io/n8n",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "plan_sha256": "035df772551717a7a2d369d39994c744f270815a5481833e7a494a06097dcae9"
+}

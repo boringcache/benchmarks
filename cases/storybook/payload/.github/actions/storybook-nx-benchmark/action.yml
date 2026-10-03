@@ -122,6 +122,15 @@ runs:
       working-directory: "."
       cache-profiles: storybook-nx
       fail-on-cache-miss: true
+  - name: Capture cache setup timing
+    id: setup_timing
+    shell: bash
+    env:
+      SETUP_STARTED_AT: "${{ steps.setup_timer.outputs.started_at }}"
+    run: |
+      set -euo pipefail
+      now="$(date +%s)"
+      echo "setup_seconds=$(( now - SETUP_STARTED_AT ))" >> "$GITHUB_OUTPUT"
   - name: Install Storybook dependencies
     shell: bash
     working-directory: upstream
@@ -134,13 +143,7 @@ runs:
   - name: Start the build timer
     id: build_timer
     shell: bash
-    env:
-      SETUP_STARTED_AT: "${{ steps.setup_timer.outputs.started_at }}"
-    run: |
-      set -euo pipefail
-      now="$(date +%s)"
-      echo "setup_seconds=$(( now - SETUP_STARTED_AT ))" >> "$GITHUB_OUTPUT"
-      echo "started_at=${now}" >> "$GITHUB_OUTPUT"
+    run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
   - name: Build the Storybook benchmark sandbox
     shell: bash
     run: ruby ./scripts/run-benchmark-plan.rb nx --working-directory upstream
@@ -176,7 +179,7 @@ runs:
       REPORT_PHASE: "${{ inputs.cache_lane == 'rolling' && 'commit' || inputs.phase
         == 'warm' && 'warm' || 'cold' }}"
       WORKFLOW_STARTED_AT: "${{ steps.workflow_timer.outputs.started_at }}"
-      SETUP_SECONDS: "${{ steps.build_timer.outputs.setup_seconds }}"
+      SETUP_SECONDS: "${{ steps.setup_timing.outputs.setup_seconds }}"
       BUILD_SECONDS: "${{ steps.build_timing.outputs.build_seconds }}"
       CACHE_HIT: "${{ steps.boringcache-publish.outputs.cache-hit || steps.boringcache-restore.outputs.cache-hit
         || steps.actions_cache_0.outputs.cache-hit || steps.actions_cache_1.outputs.cache-hit

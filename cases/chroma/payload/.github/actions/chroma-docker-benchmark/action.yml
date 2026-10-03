@@ -12,6 +12,9 @@ inputs:
   push_image:
     required: false
     default: 'false'
+  load_image:
+    required: false
+    default: 'false'
   cli_version:
     required: false
     default: ''
@@ -37,7 +40,7 @@ runs:
     shell: bash
     env:
       PREPARE_PHASE: "${{ inputs.phase == 'warm' && 'warm1' || 'base' }}"
-    run: ./scripts/prepare-source.sh "$PREPARE_PHASE"
+    run: ruby ./scripts/prepare-source.rb "$PREPARE_PHASE"
   - name: Select the cache cohort
     id: scope
     shell: bash
@@ -73,10 +76,11 @@ runs:
     if: inputs.strategy == 'boringcache'
     shell: bash
     env:
+      LOAD_IMAGE: "${{ inputs.load_image }}"
       PUSH_IMAGE: "${{ inputs.push_image == 'true' && github.ref == 'refs/heads/main'
         }}"
       IMAGE: ghcr.io/${{ github.repository_owner }}/chroma-benchmark:boringcache
-    run: ruby ./scripts/activate-docker-plan.rb --push "$PUSH_IMAGE" --image "$IMAGE"
+    run: ruby ./scripts/activate-docker-plan.rb --push "$PUSH_IMAGE" --image "$IMAGE" --load "$LOAD_IMAGE"
   - name: Log in to the GitHub Container Registry
     if: inputs.push_image == 'true' && github.ref == 'refs/heads/main'
     uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
@@ -114,6 +118,7 @@ runs:
       platforms: linux/amd64
       tags: ghcr.io/${{ github.repository_owner }}/chroma-benchmark:actions-cache
       push: "${{ inputs.push_image == 'true' && github.ref == 'refs/heads/main' }}"
+      load: "${{ inputs.load_image == 'true' }}"
       build-args: RELEASE_MODE=1
       provenance: false
       cache-from: type=gha,scope=${{ steps.scope.outputs.cache_scope }}
@@ -147,9 +152,19 @@ runs:
     env:
       BUILD_STARTED_AT: "${{ steps.build_timer.outputs.started_at }}"
     run: echo "build_seconds=$(( $(date +%s) - BUILD_STARTED_AT ))" >> "$GITHUB_OUTPUT"
+  - name: Verify the Docker output
+    id: output_verification
+    shell: bash
+    env:
+      STRATEGY: "${{ inputs.strategy }}"
+      LOAD_IMAGE: "${{ inputs.load_image }}"
+      PUSH_IMAGE: "${{ inputs.push_image == 'true' && github.ref == 'refs/heads/main' }}"
+      IMAGE: ghcr.io/${{ github.repository_owner }}/chroma-benchmark:actions-cache
+    run: ruby ./scripts/verify-docker-output.rb --strategy "$STRATEGY" --load "$LOAD_IMAGE" --push "$PUSH_IMAGE" --image "$IMAGE"
   - name: Write the benchmark phase evidence
     shell: bash
     env:
+      OUTPUT_VERIFIED: "${{ steps.output_verification.outputs.verified }}"
       BENCHMARK_ID: "${{ inputs.benchmark_id }}"
       STRATEGY: "${{ inputs.strategy }}"
       CACHE_LANE: "${{ inputs.cache_lane }}"
@@ -169,7 +184,9 @@ runs:
       SOURCE_SHA: "${{ steps.scope.outputs.source_sha }}"
     run: |
       set -euo pipefail
-      ruby ./scripts/benchmark-report.rb phase \
+      verification=()
+      [[ "$OUTPUT_VERIFIED" != 'true' ]] || verification=(--verified-output)
+      ruby ./scripts/benchmark-report.rb phase "${verification[@]}" \
         --benchmark "$BENCHMARK_ID" \
         --strategy "$STRATEGY" \
         --lane "$CACHE_LANE" \

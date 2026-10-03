@@ -41,6 +41,35 @@ and reporting qualification remain required.
 Imported execution workflows accept explicit dispatch only until their live
 qualification passes. Schedules and source-triggered execution must be enabled
 as part of the reviewed caller cutover. PR validation runs the harness guards.
+
+The shared native fresh path also selects individual n8n Turbo/Docker, Mastodon
+server/streaming, and PostHog cache profiles from reviewed variant metadata;
+Immich's server uses the same path without a variant. Their imported matrices
+remain registered diagnostics while output checks and live execution are
+qualified. The new Docker paths do not establish a loaded or published image,
+or qualify the original rolling publication behavior. Existing callers and
+schedules still use the original repositories.
+Four initial screens (Chroma, Duckgres, Hugo Docker, and Linkerd2) were cancelled
+after review found missing image output checks. Their original plans, receipts,
+cancelled completions, and scoped evidence remain preserved. Their replacement
+fresh recipes load an image in both arms and use the shared output checker;
+timing includes export and load. Those replacement definitions still require
+live qualification. Original rolling publication projections remain diagnostic.
+The same checker and load projection apply to the selected n8n Docker, Mastodon,
+PostHog, and Immich server recipes. Native preparation enforces the output
+requirement before creating a source checkout. No image load or application
+behavior is claimed for their older cache-only results.
+The native Docker actions also use the shared Ruby source preparer. Chroma's
+[recipe review](../cases/chroma/recipe-review.md) records the removal of its old
+diagnostic source-layer marker from the identical-source replay. The replacement
+timings must not be combined with that earlier projection.
+n8n Turbo's primary measurement now captures cache setup and the build separately
+from its dependency installation. The install still runs before the build. Earlier
+results retain their original timed scope and must not be mixed with this series.
+Storybook's first fresh screen also timed dependency installation and sandbox
+creation in its setup metric. Its plan-bound methodology review prevents a
+comparative claim while retaining every original observation. The replacement
+recipe stops the setup timer before those operations and needs a new series.
 GitHub's default CodeQL configuration now scans Ruby and Actions. Python was
 removed from its language list because this branch removes the maintained Python
 reporter; query suite, threat model, weekly schedule, and runner settings were

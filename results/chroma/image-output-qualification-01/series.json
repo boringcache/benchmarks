@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "case_id": "chroma",
+  "series_id": "image-output-qualification-01",
+  "created_at": "2026-10-03T02:46:28Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "6a50efe5eda093d17fd5abc3d6967183cd287e3b2203b8876d83b1937d3b7301",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "chroma",
+    "cli_version": "v1.33.0"
+  },
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "chroma-core/chroma",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "848cf58dd6dd952f8d0ff672af7b30cbf4d67f81",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream recipe and build success",
+    "Fresh cold and warm builds use the unchanged pinned source; diagnostic source-layer invalidation is excluded",
+    "The freshly loaded output image exists in the local Docker image store"
+  ],
+  "plan_sha256": "c7cadaea12f1ef9c03029ddfd676f4d17e8395dba5d53dd806d12ba12c8671e7"
+}

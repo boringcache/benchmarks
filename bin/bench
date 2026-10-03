@@ -83,7 +83,7 @@ begin
     puts JSON.pretty_generate(BenchmarkCases.dispatch(item, **options.slice(:lane, :workflow, :inputs, :ref), output: output))
   when "prepare"
     raise BenchmarkCases::Error, "Select a case ID and --directory" unless item && options[:directory]
-    puts BenchmarkCases.prepare(item, **options.slice(:directory, :native_lane, :suffix))
+    puts BenchmarkCases.prepare(item, **options.slice(:directory, :native_lane, :suffix, :variant))
   when "contracts"
     raise BenchmarkCases::Error, "Use --directory for disposable contract views" unless options[:directory]
     BenchmarkCases.validate

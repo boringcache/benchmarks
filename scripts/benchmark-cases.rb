@@ -22,7 +22,7 @@ module BenchmarkCases
   ROOT = File.expand_path("..", __dir__)
   WORKSPACE = "boringcache/benchmarks"
   REPOSITORY = "boringcache/benchmarks"
-  HELPERS = %w[benchmark-plan run-benchmark-plan activate-docker-plan summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache].freeze
+  HELPERS = %w[benchmark-plan run-benchmark-plan activate-docker-plan verify-docker-output summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache].freeze
   class Error < StandardError; end
 
   def self.command(*args, chdir: nil, stdin: "", env: {})
@@ -122,6 +122,10 @@ module BenchmarkCases
             errors << "#{id}: variants differ from the workflow input choices"
           end
         end
+        if File.basename(entry.fetch("path")).start_with?("native-") && item.dig("execution", "native", "variants")
+          variants = item.dig("execution", "native", "variants").keys
+          errors << "#{id}: native workflow variants differ from the reviewed recipes" unless entry["variant_input"] == "variant" && entry["variants"]&.sort == variants.sort
+        end
         if inputs["cli_version"] && !inputs["cli_version"].fetch("default", "").to_s.empty?
           errors << "#{id}: cli_version must default to the Action's version"
         end
@@ -208,8 +212,10 @@ module BenchmarkCases
       raise Error, "#{name} differs from the declared variant" if combined.key?(name) && combined[name] != variant
       combined[name] = variant
     end
-    if item.dig("execution", "native") && combined["case_id"] != item.fetch("id")
-      raise Error, "case_id must match the selected case"
+    if item.dig("execution", "native") && File.basename(entry.fetch("path")).start_with?("native-")
+      raise Error, "case_id must match the selected case" unless combined["case_id"] == item.fetch("id")
+      recipe = NativeCase.resolve(item.dig("execution", "native"), variant || combined["variant"])
+      NativeCase.verify_report(recipe, payload: File.join(root, "cases", item.fetch("id"), "payload"), lane: entry.fetch("lane"))
     end
     revisions = item.fetch("source").fetch("pins").map { |pin| pin.fetch("revision") }
     combined.each do |name, value|
@@ -340,9 +346,14 @@ module BenchmarkCases
     receipt
   end
 
-  def self.prepare(item, directory:, root: ROOT, native_lane: nil, suffix: "")
+  def self.prepare(item, directory:, root: ROOT, native_lane: nil, suffix: "", variant: nil)
     blockers = item.fetch("execution").fetch("blockers", [])
     raise Error, "#{item.fetch('id')}: #{blockers.join('; ')}" unless blockers.empty?
+    if native_lane
+      native = item.dig("execution", "native") or raise Error, "This case does not use the shared native comparison"
+      recipe = NativeCase.resolve(native, variant)
+      NativeCase.verify_report(recipe, payload: File.join(root, "cases", item.fetch("id"), "payload"), lane: native_lane)
+    end
     target = File.expand_path(directory)
     entries = Dir.exist?(target) ? Dir.children(target) : []
     raise Error, "Prepare requires an empty disposable directory or only the .harness checkout" unless (entries - [".harness"]).empty?
@@ -407,7 +418,7 @@ module BenchmarkCases
                "comparison" => item.fetch("comparison"), "execution" => item.fetch("execution")}
     write_json(File.join(target, "benchmark-context.json"), context)
     if native_lane
-      NativeCase.write_action(item, directory: target, lane: native_lane, suffix: suffix)
+      NativeCase.write_action(item, directory: target, lane: native_lane, suffix: suffix, variant: variant)
     end
     target
   end
@@ -459,8 +470,13 @@ module BenchmarkCases
   def self.write_contract_views(directory, root: ROOT)
     FileUtils.mkdir_p(directory)
     raise Error, "Contract destination must be empty" unless Dir.children(directory).empty?
-    documents(root).reject { |item| item["kind"] == "retained" || !item.dig("execution", "blockers").to_a.empty? }.each do |item|
-        target = File.join(directory, "benchmark-#{item.fetch('id')}")
+    runnable = documents(root).reject { |item| item["kind"] == "retained" || !item.dig("execution", "blockers").to_a.empty? }
+    runnable.flat_map do |item|
+      variants = item.dig("execution", "native", "variants")&.keys || [nil]
+      variants.map { |variant| [item, variant] }
+    end.each do |item, native_variant|
+        name = "benchmark-#{item.fetch('id')}#{native_variant ? "-#{native_variant}" : ""}"
+        target = File.join(directory, name)
         FileUtils.mkdir_p(target)
         payload = File.join(root, "cases", item.fetch("id"), "payload")
         if item["adapter"] == "docker"
@@ -484,7 +500,7 @@ module BenchmarkCases
           FileUtils.cp(File.join(root, "scripts", "#{name}.rb"), File.join(target, "scripts", "#{name}.rb"))
         end
         copy_shared_actions(target, root: root)
-        NativeCase.write_action(item, directory: target, lane: "fresh") if item.dig("execution", "native")
+        NativeCase.write_action(item, directory: target, lane: "fresh", variant: native_variant) if item.dig("execution", "native")
         # Legacy product guards consume the resolved public Action invocation.
         # Expand the shared wrapper in these disposable views, preserving its
         # defaults and each caller's phase, adapter, and strict failure settings.
@@ -495,9 +511,13 @@ module BenchmarkCases
           next if path == provider_path
           document = YAML.safe_load(File.read(path), aliases: true)
           if item.dig("execution", "native") && File.basename(path).start_with?("native-")
-            recipe = item.dig("execution", "native")
+            recipe = NativeCase.resolve(item.dig("execution", "native"), native_variant)
             document["env"]["BENCHMARK_ID"] = "${{ format('#{recipe.fetch('benchmark_id')}{0}', inputs.benchmark_id_suffix) }}"
+            document["env"]["BENCHMARK_VARIANT_SUFFIX"] = native_variant ? "-#{native_variant}" : ""
             (document["on"] || document[true])["workflow_dispatch"]["inputs"]["case_id"]["default"] = item.fetch("id")
+            (document["on"] || document[true]).values.each do |trigger|
+              trigger["inputs"]["variant"]["default"] = native_variant.to_s if trigger.is_a?(Hash) && trigger.dig("inputs", "variant")
+            end
           end
           resolved = resolve_provider_steps(document, provider)
           File.write(path, YAML.dump(resolved))

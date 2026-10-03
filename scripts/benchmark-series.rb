@@ -126,6 +126,7 @@ module BenchmarkSeries
       jobs.reject { |job| %w[success skipped].include?(job["conclusion"]) }.each do |job|
         errors << "#{job.fetch('name')}: #{job['conclusion'] || job['status']}"
       end
+      next if jobs.empty?
       Open3.popen2e("unzip", "-p", File.join(prefix, "logs.zip")) do |input, output, process|
         input.close
         output.each_line do |line|

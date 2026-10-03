@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "case_id": "posthog",
+  "series_id": "image-output-qualification-01",
+  "created_at": "2026-10-03T02:46:29Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "0c34f204ef6467f2d367e5ed76ad8991a3ced222d9e1f5703ea6a21a5fd8a960",
+  "variant": "layers",
+  "workflow_inputs": {
+    "case_id": "posthog",
+    "cli_version": "v1.33.0",
+    "variant": "layers"
+  },
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "PostHog/posthog",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream recipe and build success",
+    "The freshly loaded output image exists in the local Docker image store"
+  ],
+  "plan_sha256": "5bae03dfe4b1b09e3163a65a65a9cc480adf19f61e620dcdff993864b59433f2"
+}

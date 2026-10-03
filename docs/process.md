@@ -43,6 +43,37 @@ do not copy workflow setup or reporting into each new case. Declare tag mappings
 in `execution.cache_tags` and use `scope-case-cache.rb`. Use `prepare-source.rb`
 for an unchanged pinned upstream checkout.
 
+When one case has several workloads, declare their recipe overrides in
+`execution.native.variants` and register the same variants on the shared workflow
+entry with `variant_input: variant`. Select one variant before execution:
+
+```sh
+bin/bench plan n8n --variant turbo
+bin/bench prepare n8n --native-lane fresh --variant turbo --directory /tmp/n8n-turbo
+bin/bench start n8n --series screening-turbo-01 --variant turbo --samples 1
+```
+
+The selected variant fixes the case action, benchmark ID, toolchain inputs, and
+report identity. Provider-specific boolean flags belong in `provider_flags`;
+for example, the Actions Cache arm keeps BoringCache's tool-proxy flags disabled.
+All variants use the same provider lifecycle and canonical reporter. Missing or
+unknown variants fail before dispatch. Contract checks prepare every registered
+native variant, including its report filenames. A fresh variant passing does not
+qualify another variant or the original rolling matrix.
+Native planning also rejects a phase action that does not report verified output.
+Add and review the actual output check before setting `--verified-output`; the
+flag alone does not verify a workload. Schema and file-contract checks can pass
+while an imported recipe still lacks that execution requirement.
+For native Docker comparisons that declare `load_image`, fresh inputs must set
+it to `true`. Both arms then export and load their built image during the timed
+build. The shared `verify-docker-output.rb` checks the selected provider's image
+after timing and passes verification to the reporter only after inspection
+succeeds. The image check establishes that the build produced the declared image;
+application behavior requires any additional checks declared by the case.
+Publication and cache-only projections remain diagnostic until their output and
+comparison boundary have been reviewed. Do not add the verification flag to a
+cache-only build.
+
 Keep different provider sets, architectures, source-change sequences, and output
 behavior explicit in their adapters or case actions. OBS, Cargo product proofs,
 and the Docker corpus retain their distinct execution shapes. Add a workflow
@@ -57,6 +88,9 @@ shared actions such as `prepare-case`, `setup-docker`, and `setup-node`; case
 actions retain their upstream commands, patches, and output verification. Native
 fresh and rolling workflows support both dispatch and `workflow_call`. Use them
 for evaluations and published cases without copying the provider lifecycle.
+Reusable callers declare `contents: read`, `actions: read`, `packages: read`, and
+`id-token: write` for the called job. GitHub checks these permissions when loading
+the workflow, including calls whose execution condition is false.
 Docker tool caches remain product-plan settings rather than a second implementation
 of the product's proxy or cache lifecycle.
 The harness Ruby version is pinned once in `.tool-versions`. Ruby setup reads
@@ -216,6 +250,11 @@ Publish the verified bundle to durable storage with a stable link. Experimental
 cache retention is not permanent evidence retention. The exporter includes all
 available attempts and records gaps; partial exports remain partial. Keep
 original execution URLs as provenance.
+Cancelled requests remain in their original series. A run cancelled before any
+jobs start can have a valid empty log ZIP and a complete scoped export, with no
+measurements. Empty logs for a run that has jobs remain an evidence gap. Use a
+new series after correcting an execution contract; do not replace the old request
+or infer phase measurements from its logs.
 `finish` checks the preserved run and job conclusions and post-step logs. A
 green job with a reported BoringCache post-step failure remains unqualified.
 Reports require a completion check for every run represented by their phase
