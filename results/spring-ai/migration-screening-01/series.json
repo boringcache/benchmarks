@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "case_id": "spring-ai",
+  "series_id": "migration-screening-01",
+  "created_at": "2026-10-03T01:13:19Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "74bcd4a8848bd296578e9c56f18f5a7d83b33908b2e54f1a9f95f79ea24fd9be",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "spring-ai",
+    "cli_version": "v1.33.0"
+  },
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "spring-projects/spring-ai",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "46d05c2fdbab52f6ef04207abe19b12687a47453",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "plan_sha256": "f1c6eb6db912cb6be471ab7649e5cc30d8222754a6055aeb81fd02f87b7768e7"
+}
