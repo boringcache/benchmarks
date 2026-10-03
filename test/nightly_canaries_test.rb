@@ -83,6 +83,26 @@ class NightlyCanariesTest < Minitest::Test
     assert posts.all? { |request| request[:body].dig("inputs", "cli_version") == VERSION }
   end
 
+  def test_shared_workflow_keeps_distinct_reviewed_variants_in_requests_and_receipts
+    first = {"source_repo" => "boringcache/benchmarks", "fresh_workflow" => "native-fresh-benchmark.yml", "case_id" => "n8n", "fresh_inputs" => {"variant" => "turbo"}}
+    second = first.merge("fresh_inputs" => {"variant" => "docker"})
+    record = @runner.dispatch(repository: "boringcache/benchmarks", output: @output, summary: @summary, benchmarks: [first, first, second])
+    posts = @runner.requests.select { |request| request[:body] }
+    assert_equal 2, posts.length
+    assert_equal %w[turbo docker], posts.map { |request| request[:body].dig("inputs", "variant") }
+    assert_equal %w[turbo docker], record["runs"].map { |run| run.dig("inputs", "variant") }
+    assert_includes File.read(@summary), "native-fresh-benchmark.yml n8n turbo"
+    assert_includes File.read(@summary), "native-fresh-benchmark.yml n8n docker"
+  end
+
+  def test_invalid_workload_selectors_fail_before_any_network_or_build_request
+    item = {"source_repo" => "boringcache/benchmarks", "fresh_workflow" => "native-fresh-benchmark.yml", "case_id" => "n8n"}
+    [{"case_id" => "another-case"}, {"variant" => true}, {"cli_version" => VERSION}].each do |inputs|
+      assert_raises(NightlyCanaries::Error) { @runner.dispatch(repository: "boringcache/benchmarks", output: @output, benchmarks: [item.merge("fresh_inputs" => inputs)]) }
+    end
+    assert_empty @runner.requests
+  end
+
   def test_incomplete_latest_canary_does_not_fall_back_to_an_older_one
     @runner.releases << @runner.releases.first.merge("tag_name" => "vcli-canary-abcdef012345", "published_at" => "2026-09-30T02:00:00Z", "assets" => [])
     assert_raises(NightlyCanaries::Error) { dispatch }

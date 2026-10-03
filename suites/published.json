@@ -44,9 +44,10 @@
     "category": "docker",
     "step": "Docker build (server)",
     "workflow": "immich-immich-benchmark.yml",
-    "fresh_workflow": "immich-immich-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-immich",
-    "case_id": "immich"
+    "case_id": "immich",
+    "historical_fresh_workflow": "immich-fresh-benchmark.yml"
   },
   {
     "benchmark": "mastodon-docker",
@@ -64,9 +65,13 @@
     "category": "docker",
     "step": "Docker build (Ruby+Node)",
     "workflow": "mastodon-mastodon-docker-benchmark.yml",
-    "fresh_workflow": "mastodon-mastodon-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-mastodon",
-    "case_id": "mastodon"
+    "case_id": "mastodon",
+    "historical_fresh_workflow": "mastodon-fresh-benchmark.yml",
+    "fresh_inputs": {
+      "variant": "server"
+    }
   },
   {
     "benchmark": "mastodon-streaming",
@@ -78,9 +83,13 @@
     "category": "docker",
     "step": "Docker build (streaming service)",
     "workflow": "mastodon-mastodon-docker-benchmark.yml",
-    "fresh_workflow": "mastodon-mastodon-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-mastodon",
-    "case_id": "mastodon"
+    "case_id": "mastodon",
+    "historical_fresh_workflow": "mastodon-fresh-benchmark.yml",
+    "fresh_inputs": {
+      "variant": "streaming"
+    }
   },
   {
     "benchmark": "discourse-image-factory-amd64",
@@ -152,13 +161,17 @@
     "category": "docker",
     "step": "Docker build (full stack)",
     "workflow": "posthog-posthog-benchmark.yml",
-    "fresh_workflow": "posthog-posthog-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "extra_providers": [
       "boringcache-toolcache",
       "boringcache-mountcache"
     ],
     "historical_source_repo": "boringcache/benchmark-posthog",
-    "case_id": "posthog"
+    "case_id": "posthog",
+    "historical_fresh_workflow": "posthog-fresh-benchmark.yml",
+    "fresh_inputs": {
+      "variant": "layers"
+    }
   },
   {
     "benchmark": "storybook",
@@ -254,7 +267,10 @@
     "workflow": "zed-zed-cargo-rolling-chain.yml",
     "fresh_workflow": "zed-zed-cargo-product.yml",
     "historical_source_repo": "boringcache/benchmark-zed",
-    "case_id": "zed"
+    "case_id": "zed",
+    "fresh_inputs": {
+      "cache_layer": "combined"
+    }
   },
   {
     "benchmark": "deno-cargo",
@@ -271,7 +287,10 @@
     "workflow": "deno-deno-cargo-rolling-chain.yml",
     "fresh_workflow": "deno-deno-cargo-product.yml",
     "historical_source_repo": "boringcache/benchmark-deno",
-    "case_id": "deno"
+    "case_id": "deno",
+    "fresh_inputs": {
+      "cache_profile": "cargo-product"
+    }
   },
   {
     "benchmark": "duckgres",
@@ -361,9 +380,13 @@
     "category": "nodejs",
     "step": "Turbo build (pnpm monorepo)",
     "workflow": "n8n-n8n-benchmark.yml",
-    "fresh_workflow": "n8n-n8n-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-n8n",
-    "case_id": "n8n"
+    "case_id": "n8n",
+    "historical_fresh_workflow": "n8n-fresh-benchmark.yml",
+    "fresh_inputs": {
+      "variant": "turbo"
+    }
   },
   {
     "benchmark": "n8n-docker",
@@ -375,9 +398,13 @@
     "category": "docker",
     "step": "Docker build (n8n image)",
     "workflow": "n8n-n8n-docker-benchmark.yml",
-    "fresh_workflow": "n8n-n8n-docker-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-n8n",
-    "case_id": "n8n"
+    "case_id": "n8n",
+    "historical_fresh_workflow": "n8n-docker-fresh-benchmark.yml",
+    "fresh_inputs": {
+      "variant": "docker"
+    }
   },
   {
     "benchmark": "n8n-runners",
@@ -389,9 +416,13 @@
     "category": "docker",
     "step": "Docker build (task runners)",
     "workflow": "n8n-n8n-docker-benchmark.yml",
-    "fresh_workflow": "n8n-n8n-docker-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-n8n",
-    "case_id": "n8n"
+    "case_id": "n8n",
+    "historical_fresh_workflow": "n8n-docker-fresh-benchmark.yml",
+    "fresh_inputs": {
+      "variant": "runners"
+    }
   },
   {
     "benchmark": "n8n-runners-distroless",
@@ -403,8 +434,12 @@
     "category": "docker",
     "step": "Docker build (distroless task runners)",
     "workflow": "n8n-n8n-docker-benchmark.yml",
-    "fresh_workflow": "n8n-n8n-docker-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-n8n",
-    "case_id": "n8n"
+    "case_id": "n8n",
+    "historical_fresh_workflow": "n8n-docker-fresh-benchmark.yml",
+    "fresh_inputs": {
+      "variant": "distroless"
+    }
   }
 ]

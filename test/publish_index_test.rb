@@ -33,6 +33,22 @@ class PublishIndexTest < Minitest::Test
       assert_empty benchmark_workflow_runs(benchmark, "native-fresh-benchmark.yml", {})
     end
   end
+
+  def test_shared_canary_selectors_do_not_change_original_publication_workflows
+    expected = {"immich" => "immich-fresh-benchmark.yml", "mastodon-docker" => "mastodon-fresh-benchmark.yml",
+      "mastodon-streaming" => "mastodon-fresh-benchmark.yml", "posthog" => "posthog-fresh-benchmark.yml",
+      "n8n" => "n8n-fresh-benchmark.yml", "n8n-docker" => "n8n-docker-fresh-benchmark.yml",
+      "n8n-runners" => "n8n-docker-fresh-benchmark.yml", "n8n-runners-distroless" => "n8n-docker-fresh-benchmark.yml"}
+    expected.each do |id, workflow|
+      item = BENCHMARKS.find { |row| row.fetch("benchmark") == id }
+      calls = []
+      stub(:latest_successful_runs, ->(repo:, workflow_name:) { calls << [repo, workflow_name]; [] }) do
+        benchmark_workflow_runs(item, item.fetch("fresh_workflow"), {})
+      end
+      assert_equal [[item.fetch("historical_source_repo"), workflow]], calls
+    end
+  end
+
   def test_migration_keeps_historical_execution_repository
     benchmark = {"source_repo" => "boringcache/benchmarks", "historical_source_repo" => "boringcache/benchmark-hugo", "case_id" => "hugo"}
     calls = []
