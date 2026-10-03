@@ -97,13 +97,23 @@ failed completions and their [verified evidence](../results/obs-studio/direct-cc
 are retained. The harness now reads Ruby 3.4.10 from one project pin and checks
 preparation on the declared Ubuntu 26.04 and macOS 26 runners. A replacement ccache
 series has its own frozen plan. Hosted preparation now passes on both runners.
-BoringCache's Xcode cold/adjacent-source run passed output and completion checks;
-its Actions Cache peer is still running. The replacement ccache pair is queued.
+The [Xcode pair](../results/obs-studio/direct-xcode-qualification/interpretation.md)
+passed preserved output and completion checks, and both evidence bundles were
+independently downloaded and verified. This one-sample screen retains BoringCache's
+slower changed-source observation. Actions Cache storage was unmeasured; its
+reporting token is now scoped to future reporting steps. Existing records remain
+unchanged. The [replacement ccache pair](../results/obs-studio/direct-ccache-runtime-qualification/interpretation.md)
+passed output and completion checks. Its one-sample timings retain both arms and
+the missing Actions Cache storage; both archives were independently downloaded
+and verified.
 Deno's Cargo-product rolling run passed builds and output checks, then failed
 uploading the profile-specific report. Its [failed completion and scoped archive](../results/deno/rolling-cargo-product-qualification/evidence.md)
-are retained; the original phase and product files were not uploaded. The uploader
+are retained; the original phase and product files were not uploaded. The
+[compiler-only rolling run](../results/deno/rolling-compiler-only-qualification/interpretation.md)
+failed the same upload path at the older harness; its failed completion and
+incomplete report and independently verified scoped archive are retained. The uploader
 now selects the profile-specific filename and retains raw evidence even after a
-later reporting failure. Xcode comparison, rolling Deno, replacement ccache,
+later reporting failure. Reviewed Xcode publication, rolling Deno, replacement ccache,
 and the full release caller remain unqualified. Original schedules and
 repositories remain active.
 
@@ -123,6 +133,9 @@ contract and failed its toolchain digest check. The layer path now selects a
 separate reviewed contract through the shared verifier. Both pinned layer sources
 and the rolling source pass file and command verification in a disposable
 checkout. The layer contract checks all eight active plans. This corrects
-preparation; full live builds and output qualification remain pending. The
+preparation. The [combined variant](../results/zed/direct-combined-qualification/interpretation.md)
+passed its one-sample cold/adjacent-source output and completion checks with an
+independently verified archive. Other variants, rolling recipe, and caller
+qualification remain pending. The
 [recipe review](../cases/zed/recipe-review.md) records the two toolchains and
 the release-build projection's limitations.
