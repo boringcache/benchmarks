@@ -28,6 +28,29 @@ begin
     %w[workflow fresh_workflow].each do |field|
       errors << "#{id}: unregistered #{row[field]}" if row[field] && !paths.include?(row[field])
     end
+    next unless item && row["fresh_workflow"]
+    entry = item.dig("execution", "workflows").find { |candidate| File.basename(candidate.fetch("path")) == row.fetch("fresh_workflow") }
+    next unless entry
+    if entry.fetch("lane") != "fresh"
+      errors << "#{id}: fresh callers must select a reviewed fresh workflow, not a diagnostic matrix"
+      next
+    end
+    inputs = row.fetch("fresh_inputs", {})
+    unless inputs.is_a?(Hash) && inputs.all? { |name, value| name.is_a?(String) && value.is_a?(String) } && !inputs.key?("cli_version")
+      errors << "#{id}: fresh selectors must be string inputs without cli_version"
+      next
+    end
+    inputs = {"case_id" => id}.merge(inputs) if row.fetch("fresh_workflow").start_with?("native-")
+    variant = inputs[entry["variant_input"]]
+    if entry["variants"] && !entry.fetch("variants").include?(variant)
+      errors << "#{id}: fresh caller must select an explicit reviewed variant"
+      next
+    end
+    begin
+      BenchmarkCases.plan(item, lane: "fresh", workflow: row.fetch("fresh_workflow"), inputs: inputs, variant: variant)
+    rescue BenchmarkCases::Error, NativeCase::Error => error
+      errors << "#{id}: #{error.message}"
+    end
   end
   ids = published.map { |row| row.fetch("benchmark") }
   errors << "Duplicate published benchmark IDs" unless ids.uniq.length == ids.length
