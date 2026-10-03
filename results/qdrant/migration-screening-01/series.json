@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "case_id": "qdrant",
+  "series_id": "migration-screening-01",
+  "created_at": "2026-10-03T01:13:19Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "e05d45d9cb64f12d4e8b734ca13bc253a3a03c7f2833add246c8981abe668bf7",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "qdrant",
+    "cli_version": "v1.33.0"
+  },
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "qdrant/qdrant",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "9ae05efdc1ef96352889b2a6b6b574c35232b974",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "plan_sha256": "56f373789edbd2cc069a8e6feed14f4fca492f1c1381fe86ff3f20152050571f"
+}
