@@ -581,7 +581,7 @@
       },
       "plan_sha256": "1fcb4e930c7efb0c363b76bb4a92c3ed26305ce8ddf087c465aa0481d009fbe9",
       "definition_sha256": "fe3d0639e3684a12c63b1599ce267083d1ece052b5d76f13eb72cf628c448506",
-      "state": "planned",
+      "state": "requested",
       "publication": "unreviewed",
       "valid_for_comparison": false,
       "execution_verified": false,
@@ -597,13 +597,36 @@
         ]
       ],
       "summaries": [],
-      "dispatches": [],
+      "dispatches": [
+        {
+          "case_id": "deno",
+          "repository": "boringcache/benchmarks",
+          "workflow": "deno-deno-cargo-rolling-chain.yml",
+          "lane": "rolling",
+          "inputs": {
+            "cli_version": "v1.33.0",
+            "cache_scope": "r37085348479-a1",
+            "base_sha": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+            "head_sha": "b4f08f127652d8442b4d3dbabc277aca3840bc1d",
+            "cache_profile": "cargo-product",
+            "series_id": "rolling-cargo-product-seed-advance-01",
+            "sample": "1"
+          },
+          "ref": "build-reuse-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T07:10:39Z",
+          "run_id": 37105483797,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37105483797"
+        }
+      ],
       "completions": [],
       "report_state": "missing",
       "report_path": null,
       "interpretation_path": null,
       "evidence": [],
-      "runs_without_archives": []
+      "runs_without_archives": [
+        "37105483797"
+      ]
     },
     {
       "case_id": "deno",
@@ -755,7 +778,7 @@
       },
       "plan_sha256": "184bb3883ff8ca58307b51e80cb069ecd6f0867f90dd2ead6492a78414585a26",
       "definition_sha256": "fe3d0639e3684a12c63b1599ce267083d1ece052b5d76f13eb72cf628c448506",
-      "state": "planned",
+      "state": "requested",
       "publication": "unreviewed",
       "valid_for_comparison": false,
       "execution_verified": false,
@@ -771,13 +794,36 @@
         ]
       ],
       "summaries": [],
-      "dispatches": [],
+      "dispatches": [
+        {
+          "case_id": "deno",
+          "repository": "boringcache/benchmarks",
+          "workflow": "deno-deno-cargo-rolling-chain.yml",
+          "lane": "rolling",
+          "inputs": {
+            "cli_version": "v1.33.0",
+            "cache_scope": "r37085349929-a1",
+            "base_sha": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+            "head_sha": "b4f08f127652d8442b4d3dbabc277aca3840bc1d",
+            "cache_profile": "compiler-only",
+            "series_id": "rolling-compiler-only-seed-advance-01",
+            "sample": "1"
+          },
+          "ref": "build-reuse-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T07:10:41Z",
+          "run_id": 37105485279,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37105485279"
+        }
+      ],
       "completions": [],
       "report_state": "missing",
       "report_path": null,
       "interpretation_path": null,
       "evidence": [],
-      "runs_without_archives": []
+      "runs_without_archives": [
+        "37105485279"
+      ]
     },
     {
       "case_id": "deno",
@@ -3146,7 +3192,7 @@
       },
       "plan_sha256": "d463583c8fb964e5c3721430687e155f6579a1a423afa5508f758069e22942b5",
       "definition_sha256": "25acb76c77bd69ce87f69a875238a0a71ad6b1a8acda4cac8ef51092bd3dfc28",
-      "state": "planned",
+      "state": "requested",
       "publication": "unreviewed",
       "valid_for_comparison": false,
       "execution_verified": false,
@@ -3174,13 +3220,33 @@
         ]
       ],
       "summaries": [],
-      "dispatches": [],
+      "dispatches": [
+        {
+          "case_id": "storybook",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "storybook",
+            "cli_version": "v1.33.0",
+            "series_id": "build-reuse-qualification-01",
+            "sample": "1"
+          },
+          "ref": "build-reuse-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T07:10:42Z",
+          "run_id": 37105487087,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37105487087"
+        }
+      ],
       "completions": [],
       "report_state": "missing",
       "report_path": null,
       "interpretation_path": null,
       "evidence": [],
-      "runs_without_archives": []
+      "runs_without_archives": [
+        "37105487087"
+      ]
     },
     {
       "case_id": "zed",
