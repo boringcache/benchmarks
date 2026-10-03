@@ -188,7 +188,7 @@ module BenchmarkSeries
     missing_completions = run_ids - completions.map { |completion| completion.fetch("run_id") }
     failed_completions = completions.reject { |completion| completion["status"] == "success" }
     execution_verified = !run_ids.empty? && !run_ids.include?("") && missing_completions.empty? && failed_completions.empty?
-    methodology_issues = []
+    methodology_issues = methodology_review(directory, plan)
     if plan.fetch("lane") == "rolling"
       methodology_issues << "Rolling observations have no verified seed and changed-source sequence; retain them as diagnostic."
     end
@@ -254,6 +254,26 @@ module BenchmarkSeries
     lines.concat(["", "Each run record retains its source, runner environment, verification, provider storage source, and evidence links. Missing storage is unmeasured; it is not zero. Original Actions URLs remain subject to retention; durable evidence publication must be verified before publication review.", ""])
     File.write(File.join(directory, "report.md"), lines.join("\n"))
     result
+  end
+
+  def self.methodology_review(directory, plan)
+    path = File.join(directory, "methodology-review.json")
+    return [] unless File.file?(path)
+
+    review = JSON.parse(File.read(path))
+    unless review.is_a?(Hash) && review.keys.sort == %w[evidence_links issues plan_sha256 schema_version] && review["schema_version"] == 1
+      raise Error, "Invalid methodology review contract"
+    end
+    raise Error, "Methodology review belongs to another plan" unless review["plan_sha256"] == plan.fetch("plan_sha256")
+    issues = review["issues"]
+    unless issues.is_a?(Array) && !issues.empty? && issues.all? { |issue| issue.is_a?(String) && !issue.strip.empty? }
+      raise Error, "Methodology review requires explicit issues"
+    end
+    links = review["evidence_links"]
+    unless links.is_a?(Array) && !links.empty? && links.all? { |link| link.is_a?(String) && link.match?(%r{\Ahttps://[^\s]+\z}) }
+      raise Error, "Methodology review requires evidence links"
+    end
+    issues.uniq
   end
 
   def self.statistics(values)
