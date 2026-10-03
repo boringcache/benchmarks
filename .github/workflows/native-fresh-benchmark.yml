@@ -5,6 +5,7 @@ run-name: "${{ inputs.case_id }} fresh ${{ inputs.series_id }} sample ${{ inputs
 permissions:
   contents: read
   actions: read
+  packages: read
 env:
   BORINGCACHE_NO_GIT: 'true'
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
@@ -36,6 +37,7 @@ jobs:
         case-id: "${{ inputs.case_id }}"
         native-lane: fresh
         suffix: "${{ inputs.benchmark_id_suffix }}"
+        variant: "${{ inputs.variant }}"
     - uses: "./.github/actions/benchmark-phase"
       with:
         strategy: "${{ matrix.strategy }}"
@@ -45,10 +47,12 @@ jobs:
         cli_version: "${{ inputs.cli_version }}"
         buildkit_image: "${{ inputs.buildkit_image }}"
         cli_platform: "${{ inputs.cli_platform }}"
+        report_variant: "${{ inputs.variant }}"
     permissions:
       contents: read
       actions: read
       id-token: write
+      packages: read
     env:
       BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
         == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
@@ -78,6 +82,7 @@ jobs:
         case-id: "${{ inputs.case_id }}"
         native-lane: fresh
         suffix: "${{ inputs.benchmark_id_suffix }}"
+        variant: "${{ inputs.variant }}"
     - uses: "./.github/actions/benchmark-phase"
       with:
         strategy: "${{ matrix.strategy }}"
@@ -87,10 +92,12 @@ jobs:
         cli_version: "${{ inputs.cli_version }}"
         buildkit_image: "${{ inputs.buildkit_image }}"
         cli_platform: "${{ inputs.cli_platform }}"
+        report_variant: "${{ inputs.variant }}"
     permissions:
       contents: read
       actions: read
       id-token: write
+      packages: read
     env:
       BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
         == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
@@ -111,6 +118,7 @@ jobs:
         case-id: "${{ inputs.case_id }}"
         native-lane: fresh
         suffix: "${{ inputs.benchmark_id_suffix }}"
+        variant: "${{ inputs.variant }}"
     - name: Download the benchmark phase evidence
       uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
       with:
@@ -125,14 +133,18 @@ jobs:
     - name: Retain the BoringCache fresh result
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: benchmark-${{ env.BENCHMARK_ID }}-boringcache-fresh
-        path: benchmark-results/${{ env.BENCHMARK_ID }}-boringcache-fresh.json
+        name: benchmark-${{ env.BENCHMARK_ID }}-boringcache${{ env.BENCHMARK_VARIANT_SUFFIX
+          }}-fresh
+        path: benchmark-results/${{ env.BENCHMARK_ID }}-boringcache${{ env.BENCHMARK_VARIANT_SUFFIX
+          }}-fresh.json
         if-no-files-found: error
     - name: Retain the GitHub Actions fresh result
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache-fresh
-        path: benchmark-results/${{ env.BENCHMARK_ID }}-actions-cache-fresh.json
+        name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache${{ env.BENCHMARK_VARIANT_SUFFIX
+          }}-fresh
+        path: benchmark-results/${{ env.BENCHMARK_ID }}-actions-cache${{ env.BENCHMARK_VARIANT_SUFFIX
+          }}-fresh.json
         if-no-files-found: error
     env:
       BENCHMARK_RUNNER_CLASS: ubuntu-latest
@@ -178,6 +190,12 @@ jobs:
         required: false
         type: string
         default: ''
+      variant:
+        type: string
+        required: false
+        default: ''
+        description: Reviewed native workload variant; required when the case declares
+          variants.
   workflow_call:
     inputs:
       cli_version:
@@ -210,6 +228,10 @@ jobs:
       benchmark_id_suffix:
         required: false
         type: string
+        default: ''
+      variant:
+        type: string
+        required: false
         default: ''
 concurrency:
   group: benchmark-provider-comparisons

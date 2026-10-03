@@ -22,23 +22,38 @@
   "execution": {
     "workflows": [
       {
+        "path": ".github/workflows/native-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "n8n"
+        },
+        "historical_workflow": "n8n-n8n-docker-fresh-benchmark.yml",
+        "variants": [
+          "turbo",
+          "docker",
+          "runners",
+          "distroless"
+        ],
+        "variant_input": "variant"
+      },
+      {
         "path": ".github/workflows/n8n-n8n-benchmark.yml",
-        "lane": "rolling",
+        "lane": "diagnostic",
         "inputs": {}
       },
       {
         "path": ".github/workflows/n8n-n8n-docker-benchmark.yml",
-        "lane": "rolling",
+        "lane": "diagnostic",
         "inputs": {}
       },
       {
         "path": ".github/workflows/n8n-n8n-docker-fresh-benchmark.yml",
-        "lane": "fresh",
+        "lane": "diagnostic",
         "inputs": {}
       },
       {
         "path": ".github/workflows/n8n-n8n-fresh-benchmark.yml",
-        "lane": "fresh",
+        "lane": "diagnostic",
         "inputs": {}
       }
     ],
@@ -47,6 +62,55 @@
     "cache_tags": {
       "n8n-docker": "{scope}-docker",
       "n8n-turbo-local": "{scope}-turbo"
+    },
+    "native": {
+      "action": ".github/actions/n8n-turbo-benchmark",
+      "benchmark_id": "n8n",
+      "fresh_inputs": {
+        "node_version": "26.7.0"
+      },
+      "rolling_inputs": {
+        "node_version": "26.7.0"
+      },
+      "variants": {
+        "turbo": {},
+        "docker": {
+          "action": ".github/actions/n8n-docker-benchmark",
+          "benchmark_id": "n8n-docker",
+          "fresh_inputs": {
+            "dockerfile_path": "upstream/docker/images/n8n/Dockerfile",
+            "image": "n8n-benchmark"
+          },
+          "rolling_inputs": {
+            "dockerfile_path": "upstream/docker/images/n8n/Dockerfile",
+            "image": "n8n-benchmark"
+          }
+        },
+        "runners": {
+          "action": ".github/actions/n8n-docker-benchmark",
+          "benchmark_id": "n8n-runners",
+          "fresh_inputs": {
+            "dockerfile_path": "upstream/docker/images/runners/Dockerfile",
+            "image": "n8n-runners-benchmark"
+          },
+          "rolling_inputs": {
+            "dockerfile_path": "upstream/docker/images/runners/Dockerfile",
+            "image": "n8n-runners-benchmark"
+          }
+        },
+        "distroless": {
+          "action": ".github/actions/n8n-docker-benchmark",
+          "benchmark_id": "n8n-runners-distroless",
+          "fresh_inputs": {
+            "dockerfile_path": "upstream/docker/images/runners/Dockerfile.distroless",
+            "image": "n8n-runners-distroless-benchmark"
+          },
+          "rolling_inputs": {
+            "dockerfile_path": "upstream/docker/images/runners/Dockerfile.distroless",
+            "image": "n8n-runners-distroless-benchmark"
+          }
+        }
+      }
     }
   },
   "reporting": {
