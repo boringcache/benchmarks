@@ -3462,6 +3462,140 @@
       "runs_without_archives": []
     },
     {
+      "case_id": "mastodon",
+      "series_id": "streaming-output-qualification-01",
+      "plan_path": "results/mastodon/streaming-output-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": "streaming",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "mastodon/mastodon",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "3795707ead334fd02443574fd818023c3f29e42680b1cffe9693d54da38610af",
+      "definition_sha256": "6bd5fa5df953cc47d2b50d2e72997344cb1eb73532b5b0c7ecfc3e39c0d96ea5",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "interpretation_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "n8n",
+      "series_id": "distroless-output-qualification-01",
+      "plan_path": "results/n8n/distroless-output-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": "distroless",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "n8n-io/n8n",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "08b518d5c7cd45195e1817738316c065e60de1805ae26927f3b1c572b2aeef55",
+      "definition_sha256": "454acd4311833555c8086d1e9437e3cb618f6dfd3eadf93c9757aa51816c68b2",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "interpretation_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
       "case_id": "n8n",
       "series_id": "image-output-qualification-01",
       "plan_path": "results/n8n/image-output-qualification-01/series.json",
@@ -3609,6 +3743,73 @@
           "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
         }
       ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "n8n",
+      "series_id": "runners-output-qualification-01",
+      "plan_path": "results/n8n/runners-output-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": "runners",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "n8n-io/n8n",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "9ce0493c6b520b2ecadc9a13123edee5590770d648062b0376a8195ee06f489e",
+      "definition_sha256": "454acd4311833555c8086d1e9437e3cb618f6dfd3eadf93c9757aa51816c68b2",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "interpretation_path": null,
+      "evidence": [],
       "runs_without_archives": []
     },
     {
