@@ -148,7 +148,7 @@ module BenchmarkReport
     return unless repository && token && key && !key.empty?
     api = ENV.fetch("GITHUB_API_URL", "https://api.github.com").delete_suffix("/")
     url = URI("#{api}/repos/#{repository}/actions/caches?#{URI.encode_www_form(per_page: 100, key: key)}")
-    total = 0
+    observations = []
     seen = {}
     while url
       raise Error, "Cache pagination repeated a page" if seen[url.to_s]
@@ -158,14 +158,22 @@ module BenchmarkReport
       return unless response.is_a?(Net::HTTPSuccess)
       entries = JSON.parse(response.body)["actions_caches"]
       return unless entries.is_a?(Array)
-      entries.each { |entry| total += integer(entry["size_in_bytes"]) || 0 if entry["key"] == key }
+      entries.each do |entry|
+        next unless entry.is_a?(Hash) && entry["key"] == key
+        observations << entry.slice("id", "key", "ref", "version", "created_at", "last_accessed_at", "size_in_bytes")
+      end
       next_link = response["Link"].to_s.split(",").find { |link| link.include?('rel="next"') }
       url = next_link && URI(next_link[/<([^>]+)>/, 1])
-      raise Error, "Cache pagination changed API host" if url && url.host != URI(api).host
+      origin = URI(api)
+      raise Error, "Cache pagination changed API origin" if url && [url.scheme, url.host, url.port] != [origin.scheme, origin.host, origin.port]
     end
-    return unless total.positive?
-    {"bytes" => total, "source" => "github-actions-cache-api", "breakdown" => {"key" => key, "total_bytes" => total}}
-  rescue IOError, SystemCallError, Timeout::Error, JSON::ParserError, Error
+    sizes = observations.map { |entry| integer(entry["size_in_bytes"]) }
+    complete = !observations.empty? && sizes.none?(&:nil?)
+    total = sizes.compact.sum
+    {"bytes" => complete ? total : nil, "source" => complete ? "github-actions-cache-api" : nil,
+      "breakdown" => {"key" => key, "complete" => complete, "measured_bytes" => total,
+        "total_bytes" => complete ? total : nil, "observations" => observations}}
+  rescue IOError, SystemCallError, Timeout::Error, JSON::ParserError, URI::InvalidURIError, Error
     nil
   end
 

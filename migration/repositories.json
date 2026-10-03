@@ -99,6 +99,14 @@
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-deno-rolling-failure-2026-10-02",
         "scope": "Cargo operations and output checks passed; summary upload failed because its path omitted the profile; original structured phase and product files were not retained"
+      },
+      "failed_compiler_rolling_qualification": {
+        "series_id": "rolling-compiler-only-qualification",
+        "run_ids": [
+          37063481150
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-deno-compiler-rolling-failure-2026-10-02",
+        "scope": "Builds and output checks passed; report upload failed; original phase/product files were never uploaded"
       }
     },
     {
@@ -479,7 +487,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "First direct ccache pair failed during Ruby setup and was preserved; replacement ccache plan and Xcode execution remain unqualified",
+      "consolidated_execution": "Both one-sample ccache and Xcode cold/changed-source pairs passed preserved output and completion checks with independently verified archives; Actions Cache storage remains unmeasured. Caller cutover remains pending.",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -507,6 +515,15 @@
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-obs-preparation-2026-10-02",
         "scope": "Both providers failed before build/cache setup because Ruby 3.4.4 lacked an Ubuntu 26.04 binary; no measurements completed"
+      },
+      "direct_xcode_qualification": {
+        "series_id": "direct-xcode-qualification",
+        "run_ids": [
+          37063471110,
+          37063474452
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-obs-xcode-2026-10-02",
+        "scope": "One paired screening sample; BoringCache was slower on changed-source reuse. No broad performance or storage comparison claim is reviewed."
       }
     },
     {
@@ -728,6 +745,14 @@
             ]
           }
         ]
+      },
+      "direct_combined_qualification": {
+        "series_id": "direct-combined-qualification",
+        "run_ids": [
+          37067843340
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-zed-combined-2026-10-03",
+        "scope": "Combined variant passed its one-sample cold/changed-source correctness and completion checks; other variants, rolling recipe, and caller cutover remain pending"
       }
     }
   ]

@@ -81,6 +81,8 @@ jobs:
         key: gha-obs-studio-ccache-r${{ github.run_id }}-a${{ github.run_attempt }}
         path: ".ccache"
     - name: Write base result
+      env:
+        GITHUB_TOKEN: "${{ github.token }}"
       run: |
         ./scripts/write_phase_result.rb \
           --surface ccache \
@@ -171,6 +173,8 @@ jobs:
           --phase rolling \
           --strategy actions-cache
     - name: Write rolling result
+      env:
+        GITHUB_TOKEN: "${{ github.token }}"
       run: |
         ./scripts/write_phase_result.rb \
           --surface ccache \
@@ -238,6 +242,8 @@ jobs:
         key: gha-obs-studio-xcode-r${{ github.run_id }}-a${{ github.run_attempt }}
         path: ".xcode-compilation-cache"
     - name: Write base result
+      env:
+        GITHUB_TOKEN: "${{ github.token }}"
       run: |
         ./scripts/write_phase_result.rb \
           --surface xcode \
@@ -312,6 +318,8 @@ jobs:
     - name: Require native Xcode build evidence
       run: "./scripts/verify_xcode_build_log.rb benchmark-results/xcode-actions-cache-rolling.log"
     - name: Write rolling result
+      env:
+        GITHUB_TOKEN: "${{ github.token }}"
       run: |
         ./scripts/write_phase_result.rb \
           --surface xcode \
