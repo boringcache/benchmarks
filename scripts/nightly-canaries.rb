@@ -38,7 +38,16 @@ module NightlyCanaries
 
     def targets(benchmarks)
       benchmarks.reject { |item| item["archived"] }.map do |item|
-        inputs = item.fetch("fresh_workflow").start_with?("native-") ? {"case_id" => item.fetch("case_id")} : {}
+        inputs = item.fetch("fresh_inputs", {})
+        unless inputs.is_a?(Hash) && inputs.all? { |key, value| key.is_a?(String) && value.is_a?(String) } && !inputs.key?("cli_version")
+          raise Error, "Fresh workflow selectors must be string inputs; cli_version belongs to the dispatch"
+        end
+        inputs = inputs.dup
+        if item.fetch("fresh_workflow").start_with?("native-")
+          id = item.fetch("case_id")
+          raise Error, "Fresh workflow selector belongs to another case" if inputs.key?("case_id") && inputs["case_id"] != id
+          inputs["case_id"] = id
+        end
         [item.fetch("source_repo"), item.fetch("fresh_workflow"), inputs]
       end.uniq
     end
@@ -141,7 +150,7 @@ module NightlyCanaries
           passed = false unless healthy
           lines << "CLI: `#{record.fetch('cli_version')}`. Dispatch: **#{record.fetch('state')}**."
           record.fetch("runs").each do |run|
-            name = [run.fetch("workflow"), run.dig("inputs", "case_id")].compact.join(" ")
+            name = workload_name(run)
             name = "[#{name}](https://github.com/#{repository}/actions/runs/#{run.fetch('id')})" if run["id"]
             lines << "- #{name}: **#{run.fetch('state')}**"
           end
@@ -168,12 +177,17 @@ module NightlyCanaries
       lines = ["## CLI canary benchmarks", "", "CLI: `#{record.fetch('cli_version')}`", "",
                "Dispatch: **#{record.fetch('state')}**. Benchmark outcomes are listed separately.", ""]
       record.fetch("runs").each do |run|
-        name = "#{run.fetch('repository')} / #{[run.fetch('workflow'), run.dig('inputs', 'case_id')].compact.join(' ')}"
+        name = "#{run.fetch('repository')} / #{workload_name(run)}"
         name = "[#{name}](#{run.fetch('url')})" if run["url"]
         lines << "- #{name}: **#{run.fetch('state')}**"
       end
       lines += ["", record["error"]] if record["error"]
       File.write(path, lines.join("\n") + "\n")
+    end
+
+    def workload_name(run)
+      inputs = run.fetch("inputs", {})
+      [run.fetch("workflow"), *inputs.values_at("case_id", "variant", "cache_layer", "cache_profile")].compact.join(" ")
     end
   end
 end
