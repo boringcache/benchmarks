@@ -210,6 +210,12 @@ uses the declared provider byte measurement for its primary median and range.
 Aggregate reporting retains suspected runner-variance samples and attaches its
 diagnostic evidence. A variance flag does not establish the cause of a slow or
 fast run and must not remove its timing from the comparison.
+When review finds a measurement or fairness issue, keep the original plan and
+records. Add `methodology-review.json` beside the series plan with
+`schema_version: 1`, the exact `plan_sha256`, nonempty `issues`, and HTTPS
+`evidence_links`. Reporting and the catalog retain all observations and mark the
+series ineligible for a comparative claim. A corrected definition needs a new
+series before execution; an old successful run must not acquire a revised scope.
 Provider-reported bytes describe the selected cache, not total workspace usage
 or billable storage. The BoringCache probe uses exact resolved tags and its
 reported KV or archive size; the GitHub probe uses the selected cache key's
