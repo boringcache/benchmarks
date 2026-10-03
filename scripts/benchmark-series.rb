@@ -148,7 +148,7 @@ module BenchmarkSeries
     result
   end
 
-  def self.report(directory)
+  def self.report(directory, write: true)
     plan = load(directory)
     records = Dir[File.join(directory, "runs", "*.json")].sort.map { |path| JSON.parse(File.read(path)) }
     records.each { |value| validate_record(plan, value) }
@@ -210,6 +210,7 @@ module BenchmarkSeries
       "failed_completions" => failed_completions, "completions" => completions,
       "publication" => "unreviewed", "evidence_preservation" => "requires-review", "primary_metric" => metric, "missing" => missing, "summaries" => summaries,
       "records" => records, "exclusions" => []}
+    return result unless write
     write_json(File.join(directory, "report.json"), result)
     lines = ["# #{plan.fetch('case_id')}: #{plan.fetch('series_id')}", "",
       "Question: #{plan.dig('comparison', 'question')}", "", "Measured scope: #{plan.dig('comparison', 'timed_scope')}", "",
