@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "obs-studio",
+  "series_id": "direct-ccache-runtime-qualification",
+  "sample": 1,
+  "run_id": "37065979394",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37065979394",
+  "source_sha": "d69d3332963eb6728f33982ac8292f9f28f82fb6",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "357ed07d87e17cd0c70d427b1c906f040263e31ad984a41cf3386ce26559d6c8"
+}

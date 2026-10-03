@@ -66,6 +66,25 @@ class BenchmarkCasesTest < Minitest::Test
     end
   end
 
+  def test_obs_actions_storage_token_is_available_only_to_the_reporter
+    workflow = YAML.safe_load_file(File.join(BenchmarkCases::ROOT, ".github/workflows/obs-studio-obs-actions-cache.yml"))
+    assert_equal "read", workflow.dig("permissions", "actions")
+    refute workflow.fetch("env").key?("GITHUB_TOKEN")
+    writers = []
+    workflow.fetch("jobs").each_value do |job|
+      refute job.fetch("env").key?("GITHUB_TOKEN")
+      job.fetch("steps").each do |step|
+        if step.fetch("run", "").include?("./scripts/write_phase_result.rb")
+          writers << step
+          assert_equal "${{ github.token }}", step.dig("env", "GITHUB_TOKEN")
+        else
+          refute step.fetch("env", {}).key?("GITHUB_TOKEN")
+        end
+      end
+    end
+    assert_equal 4, writers.length
+  end
+
   def test_draft_cannot_remove_its_blocker_without_an_execution_path
     with_root do |root|
       item = BenchmarkCases.create("example", repository: "example/upstream", revision: "a" * 40, question: "Can task outputs be reused?", root: root)
