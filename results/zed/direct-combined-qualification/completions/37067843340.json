@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "zed",
+  "series_id": "direct-combined-qualification",
+  "sample": 1,
+  "run_id": "37067843340",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37067843340",
+  "source_sha": "086c025de4c974032f8aab6e3f5d6a8144f19845",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "99d2ee6a173bc44e490a6beb5e3ab68f0fbbac2a1f000aa3829ba8d2396eb040"
+}
