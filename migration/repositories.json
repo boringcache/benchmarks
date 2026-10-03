@@ -119,13 +119,18 @@
       "rolling_seed_qualification": {
         "case_id": "deno",
         "series_ids": [
-          "rolling-seed-cargo-product-01"
+          "rolling-seed-cargo-product-01",
+          "rolling-seed-compiler-only-01"
         ],
         "run_ids": [
-          37085348479
+          37085348479,
+          37085349929
         ],
-        "scope": "Cargo-product fresh parent and restore-only adjacent source passed output and completion checks; native cache errors retained; selected storage total unmeasured; compiler-only seed and rolling publication remain pending",
-        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/active-case-qualification-2026-10-03"
+        "scope": "Both fresh parents and restore-only adjacent sources passed output and completion checks; native cache errors retained; Cargo-product selected storage total unmeasured; rolling publication and source lineage remain pending",
+        "evidence_releases": [
+          "https://github.com/boringcache/benchmarks/releases/tag/active-case-qualification-2026-10-03",
+          "https://github.com/boringcache/benchmarks/releases/tag/evidence-active-completion-2026-10-03"
+        ]
       }
     },
     {
@@ -701,7 +706,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "Verified one-sample native fresh provider comparison with output and completion checks and an independently downloaded archive; publication unreviewed; rolling source changes and callers remain unqualified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -719,6 +724,15 @@
           "complete": 1
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "active_screening": {
+        "case_id": "spring-ai",
+        "series_id": "migration-screening-01",
+        "run_ids": [
+          37085344978
+        ],
+        "scope": "One cold and identical-source replay sample per provider; missing storage remains unmeasured; no publication-quality performance claim",
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-active-completion-2026-10-03"
       }
     },
     {
@@ -732,7 +746,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "One-sample fresh output and completion checks passed; setup timing includes dependency installation and sandbox creation, so the methodology review rejects comparative use; corrected boundary requires a new series",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -750,6 +764,15 @@
           "complete": 1
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "active_screening": {
+        "case_id": "storybook",
+        "series_id": "migration-screening-01",
+        "run_ids": [
+          37085346780
+        ],
+        "scope": "Diagnostic combined measurement; all original observations retained; no build-and-reuse comparison",
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-active-completion-2026-10-03"
       }
     },
     {

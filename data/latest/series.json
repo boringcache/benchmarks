@@ -843,26 +843,40 @@
       },
       "plan_sha256": "7a7ecd5451745d33880c485cbc0947624ee89073877b9190833d03eec5b99295",
       "definition_sha256": "1e63c9b27971c2067d4babbb80112ff9303b0d3f0768e70629e10038deee82bc",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
       "valid_for_comparison": false,
-      "execution_verified": false,
+      "execution_verified": true,
       "methodology_issues": [
         "This series does not declare a comparison of provider performance."
       ],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "commit",
-          "boringcache"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": {
+            "median": 1998300801,
+            "min": 1998300801,
+            "max": 1998300801
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "commit",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": {
+            "median": 1998300801,
+            "min": 1998300801,
+            "max": 1998300801
+          },
+          "storage_measured_count": 1
+        }
       ],
-      "summaries": [],
       "dispatches": [
         {
           "case_id": "deno",
@@ -882,14 +896,40 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37085349929"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37085349929"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "deno",
+          "series_id": "rolling-seed-compiler-only-01",
+          "sample": 1,
+          "run_id": "37085349929",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37085349929",
+          "source_sha": "da6400b319991a6b5e36b1e2fc70eaca2619a560",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "deb5717c6e2b2639e4cd0600fd0c3116cd5b1d09be7e78987b170d5e714d8139"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/deno/rolling-seed-compiler-only-01/report.json",
+      "interpretation_path": "results/deno/rolling-seed-compiler-only-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37085349929,
+          "inventory_state": "complete",
+          "verified_files": 9,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-active-completion-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-active-completion-2026-10-03/benchmarks-37085349929.tar",
+          "bundle_bytes": 352768,
+          "sha256": "c7eef7b21dae90382208229c3394f0f164a5c8dea1ee9d42ccc418b2bc8eec66",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "deno",
@@ -3139,34 +3179,74 @@
       },
       "plan_sha256": "f1c6eb6db912cb6be471ab7649e5cc30d8222754a6055aeb81fd02f87b7768e7",
       "definition_sha256": "74bcd4a8848bd296578e9c56f18f5a7d83b33908b2e54f1a9f95f79ea24fd9be",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": false,
-      "execution_verified": false,
+      "valid_for_comparison": true,
+      "execution_verified": true,
       "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 514,
+            "min": 514,
+            "max": 514
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 118,
+            "min": 118,
+            "max": 118
+          },
+          "storage": {
+            "median": 189388365,
+            "min": 189388365,
+            "max": 189388365
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 519,
+            "min": 519,
+            "max": 519
+          },
+          "storage": {
+            "median": 207205552,
+            "min": 207205552,
+            "max": 207205552
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 83,
+            "min": 83,
+            "max": 83
+          },
+          "storage": {
+            "median": 210696542,
+            "min": 210696542,
+            "max": 210696542
+          },
+          "storage_measured_count": 1
+        }
       ],
-      "summaries": [],
       "dispatches": [
         {
           "case_id": "spring-ai",
@@ -3186,14 +3266,40 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37085344978"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37085344978"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "spring-ai",
+          "series_id": "migration-screening-01",
+          "sample": 1,
+          "run_id": "37085344978",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37085344978",
+          "source_sha": "da6400b319991a6b5e36b1e2fc70eaca2619a560",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "3920c72a124f43895cc37e27f4821bfd943f0f2e8d0433d94459383dad97092e"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/spring-ai/migration-screening-01/report.json",
+      "interpretation_path": "results/spring-ai/migration-screening-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37085344978,
+          "inventory_state": "complete",
+          "verified_files": 15,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-active-completion-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-active-completion-2026-10-03/benchmarks-37085344978.tar",
+          "bundle_bytes": 749568,
+          "sha256": "92f61ac07e77a9c656e4389158a3281012175e4e43857965b383e392a7519829",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "storybook",
@@ -3226,34 +3332,72 @@
       },
       "plan_sha256": "8b1b299a648dfb18dfbbc71abfb306477408b29b9b1fcb604c7f57ffb63def50",
       "definition_sha256": "6233d40fab0516e23f88aeddaf2e9d42882b5cb76acccb23f9a9e4c2dc391d5f",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
       "valid_for_comparison": false,
-      "execution_verified": false,
-      "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ]
+      "execution_verified": true,
+      "methodology_issues": [
+        "Setup timing includes dependency installation and sandbox creation; retain this series as diagnostic rather than a build-and-reuse comparison"
       ],
-      "summaries": [],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 245,
+            "min": 245,
+            "max": 245
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 270,
+            "min": 270,
+            "max": 270
+          },
+          "storage": {
+            "median": 1229434,
+            "min": 1229434,
+            "max": 1229434
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 307,
+            "min": 307,
+            "max": 307
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 268,
+            "min": 268,
+            "max": 268
+          },
+          "storage": {
+            "median": 1213639,
+            "min": 1213639,
+            "max": 1213639
+          },
+          "storage_measured_count": 1
+        }
+      ],
       "dispatches": [
         {
           "case_id": "storybook",
@@ -3273,14 +3417,40 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37085346780"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37085346780"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "storybook",
+          "series_id": "migration-screening-01",
+          "sample": 1,
+          "run_id": "37085346780",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37085346780",
+          "source_sha": "da6400b319991a6b5e36b1e2fc70eaca2619a560",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "572fe096e10fb2834d881b7ec9489f9da6674365303462798cd9641147f2d991"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/storybook/migration-screening-01/report.json",
+      "interpretation_path": "results/storybook/migration-screening-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37085346780,
+          "inventory_state": "complete",
+          "verified_files": 15,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-active-completion-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-active-completion-2026-10-03/benchmarks-37085346780.tar",
+          "bundle_bytes": 377856,
+          "sha256": "64727fdce8b9e5bad43a3f219188a6adde48951e7a16d3b9b243fef648a957d6",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "zed",
