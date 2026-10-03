@@ -13,7 +13,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "Initial screen cancelled after missing output-image verification was found; completion and zero-observation report retained; a corrected definition requires a new series",
+      "consolidated_execution": "Selected one-sample cold/replay image materialization and completion checks passed with a verified scoped archive; publication, other variants, rolling behavior, and caller cutover remain unqualified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -39,6 +39,15 @@
           37085333990
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/active-case-qualification-2026-10-03"
+      },
+      "image_output_screening": {
+        "case_id": "chroma",
+        "series_id": "image-output-qualification-01",
+        "run_ids": [
+          37104573058
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+        "scope": "Selected one-sample cold/replay image materialization and completion checks passed; publication, other variants, rolling behavior, and caller cutover remain unqualified"
       }
     },
     {
@@ -57,7 +66,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "verified direct single-provider Cargo product and compiler-only cold/adjacent-source proofs; native cache errors retained; Cargo storage total unqualified; rolling and full release caller paths remain unverified",
+      "consolidated_execution": "Both fresh parent/restore-only proofs and publication-capable adjacent-source runs completed for Cargo-product and compiler-only profiles; native errors retained; Cargo storage total unmeasured; generic verified lineage and full caller cutover remain unqualified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -131,6 +140,18 @@
           "https://github.com/boringcache/benchmarks/releases/tag/active-case-qualification-2026-10-03",
           "https://github.com/boringcache/benchmarks/releases/tag/evidence-active-completion-2026-10-03"
         ]
+      },
+      "rolling_seed_advance": {
+        "series_ids": [
+          "rolling-cargo-product-seed-advance-01",
+          "rolling-compiler-only-seed-advance-01"
+        ],
+        "run_ids": [
+          37105483797,
+          37105485279
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-build-reuse-2026-10-03",
+        "scope": "Retained parent cohorts, verified binaries, publication-capable operations, and preserved completion; single-provider correctness evidence; native errors, incomplete selected-tag storage, and unverified generic lineage remain explicit"
       }
     },
     {
@@ -241,7 +262,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "incomplete; only recent run metadata inventoried",
-      "consolidated_execution": "Initial screen cancelled after missing output-image verification was found; completion and zero-observation report retained; a corrected definition requires a new series",
+      "consolidated_execution": "Selected one-sample cold/replay image materialization and completion checks passed with a verified scoped archive; publication, other variants, rolling behavior, and caller cutover remain unqualified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -257,6 +278,15 @@
           37085335883
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/active-case-qualification-2026-10-03"
+      },
+      "image_output_screening": {
+        "case_id": "duckgres",
+        "series_id": "image-output-qualification-01",
+        "run_ids": [
+          37104593175
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+        "scope": "Selected one-sample cold/replay image materialization and completion checks passed; publication, other variants, rolling behavior, and caller cutover remain unqualified"
       }
     },
     {
@@ -304,7 +334,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "Initial screen cancelled after missing output-image verification was found; completion and zero-observation report retained; a corrected definition requires a new series",
+      "consolidated_execution": "Both loaded-image cold builds failed on the attestation manifest list; no verified measurements; a separate corrected loaded-image series is requested",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -331,6 +361,15 @@
           37085337504
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/active-case-qualification-2026-10-03"
+      },
+      "image_output_screening": {
+        "case_id": "hugo",
+        "series_id": "image-output-qualification-01",
+        "run_ids": [
+          37104595025
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+        "scope": "Original failed request and any phase records retained; corrected execution requires a separate frozen series"
       }
     },
     {
@@ -394,7 +433,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "Selected one-sample cold/replay image materialization and completion checks passed with a verified scoped archive; publication, other variants, rolling behavior, and caller cutover remain unqualified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -413,6 +452,15 @@
           "complete": 2
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "image_output_screening": {
+        "case_id": "immich",
+        "series_id": "image-output-qualification-01",
+        "run_ids": [
+          37104602471
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+        "scope": "Selected one-sample cold/replay image materialization and completion checks passed; publication, other variants, rolling behavior, and caller cutover remain unqualified"
       }
     },
     {
@@ -427,7 +475,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "Initial screen cancelled after missing output-image verification was found; completion and zero-observation report retained; a corrected definition requires a new series",
+      "consolidated_execution": "Selected one-sample cold/replay image materialization and completion checks passed with a verified scoped archive; publication, other variants, rolling behavior, and caller cutover remain unqualified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -453,6 +501,15 @@
           37085339156
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/active-case-qualification-2026-10-03"
+      },
+      "image_output_screening": {
+        "case_id": "linkerd2",
+        "series_id": "image-output-qualification-01",
+        "run_ids": [
+          37104596700
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+        "scope": "Selected one-sample cold/replay image materialization and completion checks passed; publication, other variants, rolling behavior, and caller cutover remain unqualified"
       }
     },
     {
@@ -468,7 +525,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "Selected one-sample cold/replay image materialization and completion checks passed with a verified scoped archive; publication, other variants, rolling behavior, and caller cutover remain unqualified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -488,6 +545,15 @@
           "complete": 3
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "image_output_screening": {
+        "case_id": "mastodon",
+        "series_id": "image-output-qualification-01",
+        "run_ids": [
+          37104599574
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+        "scope": "Selected one-sample cold/replay image materialization and completion checks passed; publication, other variants, rolling behavior, and caller cutover remain unqualified"
       }
     },
     {
@@ -501,7 +567,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "Turbo and Docker selected one-sample cold/replay output and completion checks passed with verified archives; runners, distroless, rolling behavior, and caller cutover remain unqualified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -520,6 +586,15 @@
           "complete": 2
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "image_output_screening": {
+        "case_id": "n8n",
+        "series_id": "image-output-qualification-01",
+        "run_ids": [
+          37104598178
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+        "scope": "Selected one-sample cold/replay image materialization and completion checks passed; publication, other variants, rolling behavior, and caller cutover remain unqualified"
       }
     },
     {
@@ -627,7 +702,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "Both warm jobs failed during scope selection; original cold timings include inspection contrary to the declared scope; methodology review rejects comparison; corrected layers and combined series are requested",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -651,6 +726,15 @@
           "complete": 7
         },
         "scope": "Website-linked run resources only; non-default branches, other run history, callers, and external references remain unaudited"
+      },
+      "image_output_screening": {
+        "case_id": "posthog",
+        "series_id": "image-output-qualification-01",
+        "run_ids": [
+          37104600856
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+        "scope": "Original failed request and any phase records retained; corrected execution requires a separate frozen series"
       }
     },
     {
@@ -746,7 +830,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "One-sample fresh output and completion checks passed; setup timing includes dependency installation and sandbox creation, so the methodology review rejects comparative use; corrected boundary requires a new series",
+      "consolidated_execution": "Corrected one-sample cold/replay output and completion checks passed with dependency installation and sandbox creation outside the metric; the original combined-scope screen remains diagnostic; publication and caller cutover unqualified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -773,6 +857,14 @@
         ],
         "scope": "Diagnostic combined measurement; all original observations retained; no build-and-reuse comparison",
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-active-completion-2026-10-03"
+      },
+      "build_reuse_screening": {
+        "series_id": "build-reuse-qualification-01",
+        "run_ids": [
+          37105487087
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-build-reuse-2026-10-03",
+        "scope": "Corrected timing boundary; one sample; slower BoringCache measurements retained; missing storage unmeasured; publication unreviewed"
       }
     },
     {
@@ -789,7 +881,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "unverified",
+      "consolidated_execution": "Combined cold/changed-source one-sample proof passed output and preserved completion checks with a verified archive; other layers, rolling behavior, and caller cutover remain unqualified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
