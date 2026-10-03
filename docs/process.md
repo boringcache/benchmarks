@@ -75,6 +75,9 @@ shared actions such as `prepare-case`, `setup-docker`, and `setup-node`; case
 actions retain their upstream commands, patches, and output verification. Native
 fresh and rolling workflows support both dispatch and `workflow_call`. Use them
 for evaluations and published cases without copying the provider lifecycle.
+Reusable callers declare `contents: read`, `actions: read`, `packages: read`, and
+`id-token: write` for the called job. GitHub checks these permissions when loading
+the workflow, including calls whose execution condition is false.
 Docker tool caches remain product-plan settings rather than a second implementation
 of the product's proxy or cache lifecycle.
 The harness Ruby version is pinned once in `.tool-versions`. Ruby setup reads
