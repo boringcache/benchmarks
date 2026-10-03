@@ -22,13 +22,27 @@
   "execution": {
     "workflows": [
       {
+        "path": ".github/workflows/native-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "mastodon"
+        },
+        "historical_workflow": "mastodon-mastodon-fresh-benchmark.yml",
+        "variants": [
+          "server",
+          "server-sccache",
+          "streaming"
+        ],
+        "variant_input": "variant"
+      },
+      {
         "path": ".github/workflows/mastodon-mastodon-docker-benchmark.yml",
-        "lane": "rolling",
+        "lane": "diagnostic",
         "inputs": {}
       },
       {
         "path": ".github/workflows/mastodon-mastodon-fresh-benchmark.yml",
-        "lane": "fresh",
+        "lane": "diagnostic",
         "inputs": {}
       }
     ],
@@ -37,6 +51,42 @@
     "cache_tags": {
       "mastodon-docker-local": "{scope}-docker",
       "mastodon-sccache-local": "{scope}-sccache"
+    },
+    "native": {
+      "action": ".github/actions/mastodon-docker-benchmark",
+      "benchmark_id": "mastodon",
+      "fresh_inputs": {
+        "workload": "server"
+      },
+      "rolling_inputs": {
+        "workload": "server"
+      },
+      "variants": {
+        "server": {},
+        "server-sccache": {
+          "benchmark_id": "mastodon-sccache",
+          "fresh_inputs": {
+            "docker_tool_cache": "true"
+          },
+          "rolling_inputs": {
+            "docker_tool_cache": "true"
+          },
+          "provider_flags": {
+            "actions-cache": {
+              "docker_tool_cache": "false"
+            }
+          }
+        },
+        "streaming": {
+          "benchmark_id": "mastodon-streaming",
+          "fresh_inputs": {
+            "workload": "streaming"
+          },
+          "rolling_inputs": {
+            "workload": "streaming"
+          }
+        }
+      }
     }
   },
   "reporting": {

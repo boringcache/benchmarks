@@ -1,3 +1,4 @@
+---
 name: Run PostHog Docker benchmark phase
 description: Runs one PostHog cache provider and phase through the public product
   path.
@@ -67,6 +68,10 @@ inputs:
     description: Exact published cohort used by a warm phase.
     required: false
     default: ''
+  report_variant:
+    required: false
+    default: ''
+    description: Declared series workload variant.
 outputs:
   cache_scope:
     description: Published cache cohort.
@@ -194,7 +199,7 @@ runs:
     run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
   - name: Set up Buildx for the Actions cache protocol
     if: inputs.strategy == 'actions-cache' || inputs.strategy == 'runs-on-cache'
-    uses: ./.github/actions/setup-docker
+    uses: "./.github/actions/setup-docker"
   - name: Start the build timer
     id: build_timer
     shell: bash
@@ -228,7 +233,7 @@ runs:
     id: publish
     if: inputs.strategy == 'boringcache' && (inputs.phase == 'publish' || (inputs.phase
       == 'warm' && inputs.publish_on_warm == 'true'))
-    uses: ./.github/actions/boringcache
+    uses: "./.github/actions/boringcache"
     env:
       BORINGCACHE_MANAGED_BUILDKIT_IMAGE: "${{ inputs.buildkit_image }}"
       POSTHOG_SOURCEMAP_API_KEY: "${{ inputs.posthog_sourcemap_api_key }}"
@@ -241,7 +246,7 @@ runs:
     id: restore
     if: inputs.strategy == 'boringcache' && inputs.phase == 'warm' && inputs.publish_on_warm
       != 'true'
-    uses: ./.github/actions/boringcache
+    uses: "./.github/actions/boringcache"
     env:
       BORINGCACHE_MANAGED_BUILDKIT_IMAGE: "${{ inputs.buildkit_image }}"
       POSTHOG_SOURCEMAP_API_KEY: "${{ inputs.posthog_sourcemap_api_key }}"
@@ -283,7 +288,7 @@ runs:
       CACHE_LANE: "${{ inputs.cache_lane }}"
       REPORT_PHASE: "${{ inputs.report_phase || inputs.cache_lane == 'rolling' &&
         'commit' || inputs.phase == 'warm' && 'warm' || 'cold' }}"
-      REPORT_VARIANT: "${{ steps.scope.outputs.variant }}"
+      REPORT_VARIANT: "${{ inputs.report_variant || steps.scope.outputs.variant }}"
       WORKFLOW_STARTED_AT: "${{ steps.workflow_timer.outputs.started_at }}"
       SETUP_SECONDS: "${{ steps.build_timer.outputs.setup_seconds }}"
       BUILD_SECONDS: "${{ steps.build_timing.outputs.build_seconds }}"

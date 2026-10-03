@@ -1,3 +1,4 @@
+---
 name: Run Immich Docker benchmark phase
 description: Runs one Immich Docker cache provider and phase.
 inputs:
@@ -18,6 +19,10 @@ inputs:
   buildkit_image:
     required: false
     default: ''
+  report_variant:
+    required: false
+    default: ''
+    description: Declared series workload variant.
 runs:
   using: composite
   steps:
@@ -91,7 +96,7 @@ runs:
     run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
   - name: Set up Buildx for the GitHub Actions comparison
     if: inputs.strategy == 'actions-cache'
-    uses: ./.github/actions/setup-docker
+    uses: "./.github/actions/setup-docker"
   - name: Start the build timer
     id: build_timer
     shell: bash
@@ -125,7 +130,7 @@ runs:
   - name: Publish with BoringCache
     id: publish
     if: inputs.strategy == 'boringcache' && inputs.phase == 'publish'
-    uses: ./.github/actions/boringcache
+    uses: "./.github/actions/boringcache"
     env:
       BORINGCACHE_MANAGED_BUILDKIT_IMAGE: "${{ inputs.buildkit_image }}"
     with:
@@ -135,7 +140,7 @@ runs:
   - name: Restore with BoringCache
     id: restore
     if: inputs.strategy == 'boringcache' && inputs.phase == 'warm'
-    uses: ./.github/actions/boringcache
+    uses: "./.github/actions/boringcache"
     env:
       BORINGCACHE_MANAGED_BUILDKIT_IMAGE: "${{ inputs.buildkit_image }}"
     with:
@@ -168,6 +173,7 @@ runs:
       GITHUB_TOKEN: "${{ github.token }}"
       SOURCE_REPOSITORY: "${{ steps.scope.outputs.source_repository }}"
       SOURCE_SHA: "${{ steps.scope.outputs.source_sha }}"
+      REPORT_VARIANT: "${{ inputs.report_variant }}"
     run: |
       set -euo pipefail
       ruby ./scripts/benchmark-report.rb phase \
@@ -175,7 +181,7 @@ runs:
         --strategy "$STRATEGY" \
         --lane "$CACHE_LANE" \
         --phase "$REPORT_PHASE" \
-        --mode docker \
+        --variant "$REPORT_VARIANT" --mode docker \
         --restore-or-setup-seconds "$SETUP_SECONDS" \
         --workflow-seconds "$(( $(date +%s) - WORKFLOW_STARTED_AT ))" \
         --build-seconds "$BUILD_SECONDS" \

@@ -43,6 +43,24 @@ do not copy workflow setup or reporting into each new case. Declare tag mappings
 in `execution.cache_tags` and use `scope-case-cache.rb`. Use `prepare-source.rb`
 for an unchanged pinned upstream checkout.
 
+When one case has several workloads, declare their recipe overrides in
+`execution.native.variants` and register the same variants on the shared workflow
+entry with `variant_input: variant`. Select one variant before execution:
+
+```sh
+bin/bench plan n8n --variant turbo
+bin/bench prepare n8n --native-lane fresh --variant turbo --directory /tmp/n8n-turbo
+bin/bench start n8n --series screening-turbo-01 --variant turbo --samples 1
+```
+
+The selected variant fixes the case action, benchmark ID, toolchain inputs, and
+report identity. Provider-specific boolean flags belong in `provider_flags`;
+for example, the Actions Cache arm keeps BoringCache's tool-proxy flags disabled.
+All variants use the same provider lifecycle and canonical reporter. Missing or
+unknown variants fail before dispatch. Contract checks prepare every registered
+native variant, including its report filenames. A fresh variant passing does not
+qualify another variant or the original rolling matrix.
+
 Keep different provider sets, architectures, source-change sequences, and output
 behavior explicit in their adapters or case actions. OBS, Cargo product proofs,
 and the Docker corpus retain their distinct execution shapes. Add a workflow
