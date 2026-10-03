@@ -132,7 +132,15 @@ runs:
       PLATFORM: "${{ inputs.platform }}"
     run: |
       set -euo pipefail
-      if [[ "$PHASE" == "warm" ]]; then
+      if [[ -n "${BENCHMARK_SERIES_ID:-}" ]]; then
+        [[ "$BENCHMARK_SERIES_ID" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]] || exit 1
+        [[ "${BENCHMARK_SAMPLE:-}" =~ ^[1-9][0-9]*$ ]] || exit 1
+        if [[ "$CACHE_LANE" == "rolling" ]]; then
+          cache_scope="${BENCHMARK_ID:-benchmark}-series-${BENCHMARK_SERIES_ID}"
+        else
+          cache_scope="${BENCHMARK_ID:-benchmark}-series-${BENCHMARK_SERIES_ID}-s${BENCHMARK_SAMPLE}-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
+        fi
+      elif [[ "$PHASE" == "warm" ]]; then
         [[ -n "$PUBLISHED_SCOPE" ]]
         cache_scope="$PUBLISHED_SCOPE"
       else
@@ -144,15 +152,6 @@ runs:
           cache_scope="${BENCHMARK_ID}-rolling-${ref_slug}"
         else
           cache_scope="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
-        fi
-      fi
-      if [[ -n "${BENCHMARK_SERIES_ID:-}" ]]; then
-        [[ "$BENCHMARK_SERIES_ID" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]] || exit 1
-        [[ "${BENCHMARK_SAMPLE:-}" =~ ^[1-9][0-9]*$ ]] || exit 1
-        if [[ "$CACHE_LANE" == "rolling" ]]; then
-          cache_scope="${BENCHMARK_ID:-benchmark}-series-${BENCHMARK_SERIES_ID}"
-        else
-          cache_scope="${BENCHMARK_ID:-benchmark}-series-${BENCHMARK_SERIES_ID}-s${BENCHMARK_SAMPLE}-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
         fi
       fi
       ruby ./scripts/scope-case-cache.rb "$cache_scope"
@@ -255,25 +254,6 @@ runs:
       mode: docker
       trust-policy: restore
       fail-on-cache-miss: true
-  - name: Verify the completed image
-    if: inputs.load_image == 'true'
-    shell: bash
-    env:
-      IMAGE: "${{ inputs.strategy == 'boringcache' && 'posthog-benchmark:local' ||
-        format('ghcr.io/{0}/posthog-benchmark:{1}', github.repository_owner, inputs.image_tag
-        || 'actions-cache') }}"
-    run: 'docker image inspect "$IMAGE" --format ''Image ID: {{.Id}}; size: {{.Size}}
-      bytes''
-
-      '
-  - name: Verify the pushed image
-    if: inputs.push_image == 'true'
-    shell: bash
-    env:
-      IMAGE: ghcr.io/${{ github.repository_owner }}/posthog-benchmark:${{ inputs.image_tag
-        || (inputs.strategy == 'boringcache' && 'boringcache' || 'actions-cache')
-        }}
-    run: docker buildx imagetools inspect "$IMAGE"
   - name: Capture the build timing
     id: build_timing
     shell: bash

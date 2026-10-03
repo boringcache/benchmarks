@@ -117,8 +117,8 @@ runs:
       push: "${{ inputs.push_image == 'true' && github.ref == 'refs/heads/main' }}"
       load: "${{ inputs.load_image == 'true' }}"
       build-args: HUGO_BUILD_TAGS=extended,withdeploy
-      provenance: mode=max
-      sbom: true
+      provenance: "${{ inputs.load_image != 'true' && 'mode=max' || 'false' }}"
+      sbom: "${{ inputs.load_image != 'true' }}"
       cache-from: type=gha,scope=${{ steps.scope.outputs.cache_scope }}
       cache-to: type=gha,scope=${{ steps.scope.outputs.cache_scope }},mode=max
   - name: Publish with BoringCache

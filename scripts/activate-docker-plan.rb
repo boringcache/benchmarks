@@ -34,6 +34,11 @@ raise "Source SHA must be a full lowercase commit SHA" if sha && !sha.match?(/\A
 case case_id
 when "hugo", "chroma", "linkerd2", "duckgres", "n8n"
   case case_id
+  when "hugo"
+    if load
+      replace.call('"--provenance", "mode=max"', '"--provenance", "false"')
+      replace.call('"--sbom", "true"', '"--sbom", "false"')
+    end
   when "linkerd2"
     replace.call('"LINKERD_VERSION=__SOURCE_TAG__"', JSON.generate("LINKERD_VERSION=#{args.fetch('source_tag')}"))
   when "duckgres"
