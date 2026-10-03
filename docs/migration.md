@@ -57,6 +57,10 @@ timings must not be combined with that earlier projection.
 n8n Turbo's primary measurement now captures cache setup and the build separately
 from its dependency installation. The install still runs before the build. Earlier
 results retain their original timed scope and must not be mixed with this series.
+Storybook's first fresh screen also timed dependency installation and sandbox
+creation in its setup metric. Its plan-bound methodology review prevents a
+comparative claim while retaining every original observation. The replacement
+recipe stops the setup timer before those operations and needs a new series.
 GitHub's default CodeQL configuration now scans Ruby and Actions. Python was
 removed from its language list because this branch removes the maintained Python
 reporter; query suite, threat model, weekly schedule, and runner settings were
