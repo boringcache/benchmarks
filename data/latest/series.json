@@ -494,7 +494,7 @@
       },
       "plan_sha256": "eb2ef5e3bb765a0ef42ee36de6fe33c7970561077bef49a79361e5f2aec151d8",
       "definition_sha256": "37f2cfebf067a83d95355316cf8fcd4cc2f2a3c640d34a44c3eef748e8dbf050",
-      "state": "requested",
+      "state": "failed",
       "publication": "unreviewed",
       "valid_for_comparison": false,
       "execution_verified": false,
@@ -532,14 +532,47 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37063481150"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37063481150"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "deno",
+          "series_id": "rolling-compiler-only-qualification",
+          "sample": 1,
+          "run_id": "37063481150",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37063481150",
+          "source_sha": "50f069f123cef134e307db653c853d39eee08404",
+          "github_conclusion": "failure",
+          "status": "failed",
+          "errors": [
+            "Workflow concluded failure",
+            "BoringCache Deno Cargo commit: failure"
+          ],
+          "evidence_manifest_sha256": "df8c1c260bb3b1d10ec66504d61b78c3af4a5f01b83c0eb6b2751d79a0bae67d"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/deno/rolling-compiler-only-qualification/report.json",
+      "interpretation_path": "results/deno/rolling-compiler-only-qualification/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37063481150,
+          "inventory_state": "complete",
+          "verified_files": 7,
+          "gaps": [],
+          "scope": "Available attempts, jobs, logs, commit metadata, and workflow; original phase and product files were never uploaded",
+          "unavailable_workflow_evidence": [
+            "Original structured phase record",
+            "Original product evidence files"
+          ],
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-deno-compiler-rolling-failure-2026-10-02",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-deno-compiler-rolling-failure-2026-10-02/benchmarks-37063481150.tar",
+          "bundle_bytes": 413696,
+          "sha256": "13bf0a9cf34066f2e134ec96e54a2c4337c7b39f40dd5fe6f1fc4060bdf547bf",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "deno",
@@ -1753,34 +1786,70 @@
       },
       "plan_sha256": "ffab8b2597d68c290ec801ec02818603718d78d6e3da18b74ec79f32646773bc",
       "definition_sha256": "cb8f88cb8f67ec398827c90005ccd49a117d89ccf31e35977ed36a941f59b4e5",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": false,
-      "execution_verified": false,
+      "valid_for_comparison": true,
+      "execution_verified": true,
       "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "commit",
-          "boringcache"
-        ],
-        [
-          1,
-          "commit",
-          "actions-cache"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 486.020332187,
+            "min": 486.020332187,
+            "max": 486.020332187
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "commit",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 37.84547679900001,
+            "min": 37.84547679900001,
+            "max": 37.84547679900001
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 489.142139402,
+            "min": 489.142139402,
+            "max": 489.142139402
+          },
+          "storage": {
+            "median": 172198996,
+            "min": 172198996,
+            "max": 172198996
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "commit",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 39.12283147599999,
+            "min": 39.12283147599999,
+            "max": 39.12283147599999
+          },
+          "storage": {
+            "median": 172198996,
+            "min": 172198996,
+            "max": 172198996
+          },
+          "storage_measured_count": 1
+        }
       ],
-      "summaries": [],
       "dispatches": [
         {
           "case_id": "obs-studio",
@@ -1817,15 +1886,66 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37065916863"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37065979394",
-        "37065916863"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "obs-studio",
+          "series_id": "direct-ccache-runtime-qualification",
+          "sample": 1,
+          "run_id": "37065916863",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37065916863",
+          "source_sha": "d69d3332963eb6728f33982ac8292f9f28f82fb6",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "5c0fcfcca196cefdc1a81e2462ee3d3a243bacf42197315ae5ad8d020e7c283b"
+        },
+        {
+          "schema_version": 1,
+          "case_id": "obs-studio",
+          "series_id": "direct-ccache-runtime-qualification",
+          "sample": 1,
+          "run_id": "37065979394",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37065979394",
+          "source_sha": "d69d3332963eb6728f33982ac8292f9f28f82fb6",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "357ed07d87e17cd0c70d427b1c906f040263e31ad984a41cf3386ce26559d6c8"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/obs-studio/direct-ccache-runtime-qualification/report.json",
+      "interpretation_path": "results/obs-studio/direct-ccache-runtime-qualification/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37065979394,
+          "inventory_state": "complete",
+          "verified_files": 9,
+          "gaps": [],
+          "scope": "Available attempts, jobs, logs, artifacts, commit metadata, and workflow for this run; not an original-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-obs-ccache-2026-10-02",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-obs-ccache-2026-10-02/benchmarks-37065979394.tar",
+          "bundle_bytes": 591360,
+          "sha256": "68406fab4a85d2626e0caba1dd232049ff7176b2c4a34672e5272e28f04f693c",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        },
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37065916863,
+          "inventory_state": "complete",
+          "verified_files": 11,
+          "gaps": [],
+          "scope": "Available attempts, jobs, logs, artifacts, commit metadata, and workflow for this run; not an original-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-obs-ccache-2026-10-02",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-obs-ccache-2026-10-02/benchmarks-37065916863.tar",
+          "bundle_bytes": 627200,
+          "sha256": "3e8273299f12ab4f5c2f9636ac63424a9922b1504a3d69bd1c636b725f8ee073",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "obs-studio",
@@ -1863,24 +1983,37 @@
       },
       "plan_sha256": "e4844c0a8e0f0e62c33b4c96b883c4af866cd5cf1b96a2a322eaff8021389f4a",
       "definition_sha256": "c6884e149cd5173da069bef0b27f987dd82be8f48814a51c0a2cb2a265beb763",
-      "state": "incomplete",
+      "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": false,
+      "valid_for_comparison": true,
       "execution_verified": true,
       "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "commit",
-          "actions-cache"
-        ]
-      ],
+      "missing_observations": [],
       "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 656.8639490000003,
+            "min": 656.8639490000003,
+            "max": 656.8639490000003
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "commit",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 100.81440899999996,
+            "min": 100.81440899999996,
+            "max": 100.81440899999996
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
         {
           "phase": "cold",
           "provider": "boringcache",
@@ -1963,16 +2096,53 @@
           "status": "success",
           "errors": [],
           "evidence_manifest_sha256": "0796f950e9144c52105fa2b0850aeac7b5b703d8b8adaae2fcab8795af410897"
+        },
+        {
+          "schema_version": 1,
+          "case_id": "obs-studio",
+          "series_id": "direct-xcode-qualification",
+          "sample": 1,
+          "run_id": "37063474452",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37063474452",
+          "source_sha": "50f069f123cef134e307db653c853d39eee08404",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "0b9e1dcef017afdb0ad148f037682a33c3cde8edaab05d1f22502190325df3eb"
         }
       ],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37063471110",
-        "37063474452"
-      ]
+      "report_state": "current",
+      "report_path": "results/obs-studio/direct-xcode-qualification/report.json",
+      "interpretation_path": "results/obs-studio/direct-xcode-qualification/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37063474452,
+          "inventory_state": "complete",
+          "verified_files": 9,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of the original repository",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-obs-xcode-2026-10-02",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-obs-xcode-2026-10-02/benchmarks-37063474452.tar",
+          "bundle_bytes": 551424,
+          "sha256": "96a08a7bd4e57db69820bd77169440b1e9f2cd3845835a53c0f27e6cb068f9a2",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        },
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37063471110,
+          "inventory_state": "complete",
+          "verified_files": 11,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of the original repository",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-obs-xcode-2026-10-02",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-obs-xcode-2026-10-02/benchmarks-37063471110.tar",
+          "bundle_bytes": 590848,
+          "sha256": "d1b342fadf7c9d3bb561fa84829b11cde4a7b90a5710d5ccc6f81142d0c4b492",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "zed",
@@ -2024,26 +2194,40 @@
       },
       "plan_sha256": "12d9e460fd1d33c059e5b4867be737a242592e300cbb2e94fdb54008f0c99f09",
       "definition_sha256": "e9c009aff7866ba90ffbe06c9c8c2f9803dddcf88198f53739c04c921c8ab50d",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
       "valid_for_comparison": false,
-      "execution_verified": false,
+      "execution_verified": true,
       "methodology_issues": [
         "This series does not declare a comparison of provider performance."
       ],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "commit",
-          "boringcache"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": {
+            "median": 8994101532,
+            "min": 8994101532,
+            "max": 8994101532
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "commit",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": {
+            "median": 8994101532,
+            "min": 8994101532,
+            "max": 8994101532
+          },
+          "storage_measured_count": 1
+        }
       ],
-      "summaries": [],
       "dispatches": [
         {
           "case_id": "zed",
@@ -2065,14 +2249,40 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37067843340"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37067843340"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "zed",
+          "series_id": "direct-combined-qualification",
+          "sample": 1,
+          "run_id": "37067843340",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37067843340",
+          "source_sha": "086c025de4c974032f8aab6e3f5d6a8144f19845",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "99d2ee6a173bc44e490a6beb5e3ab68f0fbbac2a1f000aa3829ba8d2396eb040"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/zed/direct-combined-qualification/report.json",
+      "interpretation_path": "results/zed/direct-combined-qualification/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37067843340,
+          "inventory_state": "complete",
+          "verified_files": 10,
+          "gaps": [],
+          "scope": "Available attempts, jobs, logs, artifacts, commit metadata, and workflow for this run; not an original-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-zed-combined-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-zed-combined-2026-10-03/benchmarks-37067843340.tar",
+          "bundle_bytes": 264704,
+          "sha256": "dc348f421d6e968583137d3c116e6c56782ae0851cf6ce4bea179a8f65a80d6f",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
     }
   ]
 }
