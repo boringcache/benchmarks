@@ -109,6 +109,42 @@ class BenchmarkSeriesTest < Minitest::Test
     refute_includes File.read(File.join(@directory, "report.md")), "Median correctness"
   end
 
+  def test_methodology_review_keeps_complete_observations_but_blocks_comparative_claims
+    @directory = File.join(@root, "reviewed")
+    plan = BenchmarkSeries.create(@case, directory: @directory, series: "screening", lane: "fresh", variant: "release")
+    [1, 2].each do |sample|
+      %w[cold warm].each do |phase|
+        %w[boringcache actions-cache].each { |provider| add(record(sample: sample, provider: provider).merge("phase" => phase, "lane" => "fresh")) }
+      end
+      BenchmarkSeries.finish(@directory, evidence_directory: evidence(run_id: sample), sample: sample)
+    end
+    assert BenchmarkSeries.report(@directory)["valid_for_comparison"]
+    review = {"schema_version" => 1, "plan_sha256" => plan.fetch("plan_sha256"),
+      "issues" => ["Setup timing includes dependency installation"], "evidence_links" => ["https://example.org/evidence"]}
+    File.write(File.join(@directory, "methodology-review.json"), JSON.generate(review))
+    result = BenchmarkSeries.report(@directory)
+    assert result["complete"]
+    assert result["execution_verified"]
+    refute result["valid_for_comparison"]
+    assert_equal 8, result["records"].length
+    assert_equal [], result["exclusions"]
+    assert_equal review["issues"], result["methodology_issues"]
+    assert_includes File.read(File.join(@directory, "report.md")), review["issues"].first
+  end
+
+  def test_rejects_methodology_reviews_for_another_plan_or_without_evidence
+    plan = BenchmarkSeries.load(@directory)
+    review = {"schema_version" => 1, "plan_sha256" => "0" * 64,
+      "issues" => ["Timing issue"], "evidence_links" => ["https://example.org/evidence"]}
+    path = File.join(@directory, "methodology-review.json")
+    File.write(path, JSON.generate(review))
+    assert_raises(BenchmarkSeries::Error) { BenchmarkSeries.report(@directory) }
+    review["plan_sha256"] = plan.fetch("plan_sha256")
+    review["evidence_links"] = []
+    File.write(path, JSON.generate(review))
+    assert_raises(BenchmarkSeries::Error) { BenchmarkSeries.report(@directory) }
+  end
+
   def test_storage_comparison_uses_provider_bytes_for_the_primary_measurement
     @case["comparison"]["primary_metric"] = "storage_bytes"
     @directory = File.join(@root, "storage")

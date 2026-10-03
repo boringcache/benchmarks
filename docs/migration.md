@@ -5,6 +5,15 @@ The first cutover migrates the 18 maintained `benchmark-*` repositories:
 in `migration/forks.json`. Original forks and benchmark repositories remain
 unchanged until verification.
 
+[Active screening requests](../migration/active-screening-2026-10-03.json) record
+eight one-sample native comparisons and two fresh Deno seed proofs dispatched
+from signed harness `da6400b3`. Each series was committed before dispatch. These
+requests do not establish completion or approve publication. Repository-wide
+cache API snapshots record 2,181,622,414 bytes in 146 entries and a 10 GB limit.
+They are context, not per-phase occupancy or proof that no eviction occurred.
+Native comparisons share a serial queue; Deno's two fresh seeds use separate
+BoringCache identities for the later rolling qualification.
+
 The branch imports pinned recipes and historical reports, uses one workspace,
 replaces maintained Python tooling with Ruby, and shares the publication registry.
 Historical reports retain their original interpretation and execution URLs.
