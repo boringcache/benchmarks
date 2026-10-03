@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "case_id": "linkerd2",
+  "series_id": "migration-screening-01",
+  "created_at": "2026-10-03T01:13:19Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "9458671ff40345d67431c0b0cdb14a6d4e7c6ca38a2a40766e11eb85ee3eae02",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "linkerd2",
+    "cli_version": "v1.33.0"
+  },
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "linkerd/linkerd2",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "e7c15f3a6c933d4d92a4959575d5f9d093fdffc5",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "plan_sha256": "8dc741e2abd94953818d2db8a9f0d4648b7ca290e1f1972e87be1fa0c9eb3cd5"
+}
