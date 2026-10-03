@@ -15,6 +15,10 @@ jobs:
         ref: main
     - name: Set up Ruby
       uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      with:
+        bundler-cache: true
+    - name: Build canonical series catalog
+      run: bin/bench catalog
     - name: Build index JSON
       env:
         GH_TOKEN: "${{ secrets.BENCHMARKS_READ_TOKEN || secrets.GH_TOKEN || github.token
@@ -47,3 +51,6 @@ jobs:
     - ".github/workflows/publish-index.yml"
     - ".tool-versions"
     - scripts/**
+    - bin/bench
+    - results/**
+    - migration/evidence.json

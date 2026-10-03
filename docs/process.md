@@ -231,6 +231,22 @@ evidence selection to an immutable report link. A green workflow or a case's
 existing publication status does not approve a new series. Replacing the legacy
 feed requires a separately qualified adapter for canonical series reports.
 
+Generate the common series catalog after recording or completing an evaluation:
+
+```sh
+bin/bench catalog
+```
+
+`data/latest/series.json` indexes every declared series through the same report
+validator and calculations. It includes planned, requested, incomplete, failed,
+completed, and invalid series, their sample counts, measurements, original runs,
+completion errors, and scoped archive links. Requested means a dispatch receipt
+exists; this offline catalog does not assert that GitHub queued or started a job.
+Missing or stale stored reports are identified without rewriting them. Run
+`bin/bench report <case-id> --series <series-id>` to generate the report after
+reviewing new records. Catalog generation does not approve publication or merge
+central observations into historical reporting windows.
+
 ## 7. Review source updates
 
 Use `bin/bench sync <case-id> --output /tmp/<case-id>-source-proposal.json` in a

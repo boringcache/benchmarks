@@ -14,7 +14,7 @@ id = ARGV.first unless ARGV.first&.start_with?("--")
 ARGV.shift if id
 options = {lane: "fresh", inputs: {}, ref: "main"}
 parser = OptionParser.new do |value|
-  value.banner = "Usage: bin/bench <list|new|check|plan|start|run|record|finish|prepare|sync|update-source|report|preserve|verify-evidence> [case-id] [options]"
+  value.banner = "Usage: bin/bench <list|new|check|plan|start|run|record|finish|prepare|sync|update-source|report|catalog|preserve|verify-evidence> [case-id] [options]"
   value.on("--lane LANE") { |input| options[:lane] = input }
   value.on("--workflow NAME") { |input| options[:workflow] = input }
   value.on("--input NAME=VALUE") do |input|
@@ -45,6 +45,13 @@ begin
   case command
   when "list"
     BenchmarkCases.documents.each { |entry| puts "#{entry.fetch('id')}\t#{entry.fetch('kind')}\t#{entry.fetch('adapter')}" }
+  when "catalog"
+    raise BenchmarkCases::Error, "The catalog includes all series; omit the case ID" if id
+    require_relative "../scripts/benchmark-catalog"
+    catalog = BenchmarkCatalog.build
+    output = options[:output] || File.join(BenchmarkCases::ROOT, "data/latest/series.json")
+    BenchmarkCases.write_json(output, catalog)
+    puts "Indexed #{catalog.fetch('series').length} series in #{output}"
   when "new"
     raise BenchmarkCases::Error, "Select a case ID, --repository, --revision, and --question" unless id && options.values_at(:repository, :revision, :question).all?
     BenchmarkCases.create(id, **options.slice(:repository, :revision, :question))

@@ -11,6 +11,10 @@ not change the case's identity or copy its executor.
 
 Follow [`docs/process.md`](docs/process.md) to add or run a case.
 [`AGENTS.md`](AGENTS.md) applies the same requirements to agents and humans.
+`bin/bench catalog` generates [`data/latest/series.json`](data/latest/series.json),
+the common index for planned, requested, incomplete, failed, and completed
+evaluations. It uses the canonical report validator and calculations, retains
+evidence gaps, and leaves publication review explicit.
 
 Standard comparisons use two shared fresh and rolling workflows, which also
 support `workflow_call`. All cases use one [BoringCache wrapper](.github/actions/boringcache/action.yml)
