@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "deno",
+  "series_id": "rolling-cargo-product-seed-advance-01",
+  "sample": 1,
+  "run_id": "37105483797",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37105483797",
+  "source_sha": "b3ab6324aeccebbb38cc7e2fc1c921ae4f0b399e",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "8cb31998c2a1e30dd44c1b3c2e154a355f5918e0afcc9c5d2c626755277c8d63"
+}

@@ -1,0 +1,833 @@
+{
+  "schema_version": 1,
+  "plan_sha256": "ae86ce031289490b5b7c93f169fa0308d90cec5cd3e0281f4dce333e386f427a",
+  "complete": true,
+  "valid_for_comparison": true,
+  "failures": [],
+  "methodology_issues": [],
+  "execution_verified": true,
+  "missing_completions": [],
+  "failed_completions": [],
+  "completions": [
+    {
+      "schema_version": 1,
+      "case_id": "linkerd2",
+      "series_id": "image-output-qualification-01",
+      "sample": 1,
+      "run_id": "37104596700",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104596700",
+      "source_sha": "35e10981f5e27824d81b19c575a91691592905e9",
+      "github_conclusion": "success",
+      "status": "success",
+      "errors": [],
+      "evidence_manifest_sha256": "3eba28538f46405b75d696f6c8071d56e26bf96e6b1be1f7fc5479893e282adf"
+    }
+  ],
+  "publication": "unreviewed",
+  "evidence_preservation": "requires-review",
+  "primary_metric": "build_and_reuse_seconds",
+  "missing": [],
+  "summaries": [
+    {
+      "phase": "cold",
+      "provider": "actions-cache",
+      "count": 1,
+      "measurement": {
+        "median": 306,
+        "min": 306,
+        "max": 306
+      },
+      "storage": null,
+      "storage_measured_count": 0
+    },
+    {
+      "phase": "warm",
+      "provider": "actions-cache",
+      "count": 1,
+      "measurement": {
+        "median": 15,
+        "min": 15,
+        "max": 15
+      },
+      "storage": null,
+      "storage_measured_count": 0
+    },
+    {
+      "phase": "cold",
+      "provider": "boringcache",
+      "count": 1,
+      "measurement": {
+        "median": 200,
+        "min": 200,
+        "max": 200
+      },
+      "storage": {
+        "median": 1230761384,
+        "min": 1230761384,
+        "max": 1230761384
+      },
+      "storage_measured_count": 1
+    },
+    {
+      "phase": "warm",
+      "provider": "boringcache",
+      "count": 1,
+      "measurement": {
+        "median": 12,
+        "min": 12,
+        "max": 12
+      },
+      "storage": {
+        "median": 1230761384,
+        "min": 1230761384,
+        "max": 1230761384
+      },
+      "storage_measured_count": 1
+    }
+  ],
+  "records": [
+    {
+      "schema_version": 1,
+      "benchmark": "linkerd2-v2",
+      "strategy": "actions-cache",
+      "lane": "fresh",
+      "phase": "cold",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "linkerd2",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "e55db4e3f59df4ea63c2886c2e8189f56ee238c9fb14f0eea7bbabaeaa3c83ef",
+        "source": {
+          "repository": "linkerd/linkerd2",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "e7c15f3a6c933d4d92a4959575d5f9d093fdffc5",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-linkerd2",
+          "branch": "main",
+          "revision": "2afa5040b567d1cdb6ac35e3a84ec764befe8711"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "linkerd2"
+              },
+              "historical_workflow": "linkerd2-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "linkerd2"
+              },
+              "historical_workflow": "linkerd2-fresh-benchmark.yml"
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 13,
+          "native": {
+            "action": ".github/actions/linkerd2-docker-benchmark",
+            "benchmark_id": "linkerd2-v2",
+            "rolling_inputs": {
+              "push_image": "true"
+            },
+            "environment": {},
+            "fresh_inputs": {
+              "load_image": "true"
+            }
+          },
+          "cache_tags": {
+            "linkerd2-docker-local": "{scope}-docker"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 8,
+        "build_seconds": 298,
+        "workflow_seconds": 308,
+        "total_seconds": 306,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 306
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": null,
+        "workspace": null,
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": {
+          "key": "linkerd2-v2-series-image-output-qualification-01-s1-r37104596700-a1",
+          "complete": false,
+          "measured_bytes": 0,
+          "total_bytes": null,
+          "observations": []
+        }
+      },
+      "source": {
+        "repository": "linkerd/linkerd2",
+        "sha": "e7c15f3a6c933d4d92a4959575d5f9d093fdffc5"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37104596700",
+        "run_attempt": "1",
+        "job": "cold",
+        "workflow": "Native comparison fresh",
+        "ref_name": "image-output-qualification-2026-10-03",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000170523",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37104596700-1",
+      "series": {
+        "id": "image-output-qualification-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37104596700"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "linkerd2-v2",
+      "strategy": "actions-cache",
+      "lane": "fresh",
+      "phase": "warm",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "linkerd2",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "e55db4e3f59df4ea63c2886c2e8189f56ee238c9fb14f0eea7bbabaeaa3c83ef",
+        "source": {
+          "repository": "linkerd/linkerd2",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "e7c15f3a6c933d4d92a4959575d5f9d093fdffc5",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-linkerd2",
+          "branch": "main",
+          "revision": "2afa5040b567d1cdb6ac35e3a84ec764befe8711"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "linkerd2"
+              },
+              "historical_workflow": "linkerd2-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "linkerd2"
+              },
+              "historical_workflow": "linkerd2-fresh-benchmark.yml"
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 13,
+          "native": {
+            "action": ".github/actions/linkerd2-docker-benchmark",
+            "benchmark_id": "linkerd2-v2",
+            "rolling_inputs": {
+              "push_image": "true"
+            },
+            "environment": {},
+            "fresh_inputs": {
+              "load_image": "true"
+            }
+          },
+          "cache_tags": {
+            "linkerd2-docker-local": "{scope}-docker"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 10,
+        "build_seconds": 5,
+        "workflow_seconds": 17,
+        "total_seconds": 15,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 15
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": null,
+        "workspace": null,
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": {
+          "key": "linkerd2-v2-series-image-output-qualification-01-s1-r37104596700-a1",
+          "complete": false,
+          "measured_bytes": 0,
+          "total_bytes": null,
+          "observations": []
+        }
+      },
+      "source": {
+        "repository": "linkerd/linkerd2",
+        "sha": "e7c15f3a6c933d4d92a4959575d5f9d093fdffc5"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37104596700",
+        "run_attempt": "1",
+        "job": "warm",
+        "workflow": "Native comparison fresh",
+        "ref_name": "image-output-qualification-2026-10-03",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000170535",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37104596700-1",
+      "series": {
+        "id": "image-output-qualification-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37104596700"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "linkerd2-v2",
+      "strategy": "boringcache",
+      "lane": "fresh",
+      "phase": "cold",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "linkerd2",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "e55db4e3f59df4ea63c2886c2e8189f56ee238c9fb14f0eea7bbabaeaa3c83ef",
+        "source": {
+          "repository": "linkerd/linkerd2",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "e7c15f3a6c933d4d92a4959575d5f9d093fdffc5",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-linkerd2",
+          "branch": "main",
+          "revision": "2afa5040b567d1cdb6ac35e3a84ec764befe8711"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "linkerd2"
+              },
+              "historical_workflow": "linkerd2-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "linkerd2"
+              },
+              "historical_workflow": "linkerd2-fresh-benchmark.yml"
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 13,
+          "native": {
+            "action": ".github/actions/linkerd2-docker-benchmark",
+            "benchmark_id": "linkerd2-v2",
+            "rolling_inputs": {
+              "push_image": "true"
+            },
+            "environment": {},
+            "fresh_inputs": {
+              "load_image": "true"
+            }
+          },
+          "cache_tags": {
+            "linkerd2-docker-local": "{scope}-docker"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 200,
+        "workflow_seconds": 202,
+        "total_seconds": 200,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 200
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": {
+          "import_tags": [
+            "linkerd2-v2-series-image-output-qualification-01-s1-r37104596700-a1-docker-ubuntu-24-x86_64"
+          ],
+          "planned_import_refs": 1,
+          "export_tag": "linkerd2-v2-series-image-output-qualification-01-s1-r37104596700-a1-docker-ubuntu-24-x86_64"
+        },
+        "tag": "linkerd2-v2-series-image-output-qualification-01-s1-r37104596700-a1-docker",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": 1230761384,
+        "storage_source": "boringcache-check",
+        "storage_breakdown": {
+          "workspace": "boringcache/benchmarks",
+          "tags": [
+            "linkerd2-v2-series-image-output-qualification-01-s1-r37104596700-a1-docker-ubuntu-24-x86_64"
+          ],
+          "complete": true,
+          "measured_bytes": 1230761384,
+          "unmeasured_tags": [],
+          "total_bytes": 1230761384,
+          "observations": [
+            {
+              "requested_tag": "linkerd2-v2-series-image-output-qualification-01-s1-r37104596700-a1-docker-ubuntu-24-x86_64",
+              "tag": "linkerd2-v2-series-image-output-qualification-01-s1-r37104596700-a1-docker-ubuntu-24-x86_64",
+              "status": "hit",
+              "cache_type": "cache_entry",
+              "cache_entry_id": "b542bd96-10d5-4849-96bc-e547137715ba",
+              "manifest_root_digest": "sha256:edb5fa1af4afd692a6cd8e570386819e7a508ccfa7b3d081483fd8440a631072",
+              "kv_total_size": 0,
+              "compressed_size": 1230761384,
+              "size": 1230761384
+            }
+          ]
+        }
+      },
+      "source": {
+        "repository": "linkerd/linkerd2",
+        "sha": "e7c15f3a6c933d4d92a4959575d5f9d093fdffc5"
+      },
+      "product_refs": {
+        "schema_version": 1,
+        "cli_version": "v1.33.0",
+        "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+        "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+      },
+      "action": {
+        "resolved_mode": "docker",
+        "resolved_tags": [
+          "linkerd2-v2-series-image-output-qualification-01-s1-r37104596700-a1-docker-ubuntu-24-x86_64"
+        ],
+        "trust_state": {
+          "status": "publish",
+          "event_name": "workflow_dispatch",
+          "requested_policy": "publish",
+          "resolved_policy": "publish",
+          "write_allowed": true,
+          "decision_source": "cli",
+          "reason": "explicit_request",
+          "provider": "github-actions",
+          "detail": "Publication updates the published cache tag.",
+          "next_step": "Let the run finish; the next matching run restores what it publishes.",
+          "token_capabilities": {
+            "restore": true,
+            "stage": true,
+            "save": true
+          }
+        },
+        "diagnostics_level": "off"
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37104596700",
+        "run_attempt": "1",
+        "job": "cold",
+        "workflow": "Native comparison fresh",
+        "ref_name": "image-output-qualification-2026-10-03",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000170524",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37104596700-1",
+      "series": {
+        "id": "image-output-qualification-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37104596700"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "linkerd2-v2",
+      "strategy": "boringcache",
+      "lane": "fresh",
+      "phase": "warm",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "linkerd2",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "e55db4e3f59df4ea63c2886c2e8189f56ee238c9fb14f0eea7bbabaeaa3c83ef",
+        "source": {
+          "repository": "linkerd/linkerd2",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "e7c15f3a6c933d4d92a4959575d5f9d093fdffc5",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-linkerd2",
+          "branch": "main",
+          "revision": "2afa5040b567d1cdb6ac35e3a84ec764befe8711"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "linkerd2"
+              },
+              "historical_workflow": "linkerd2-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "linkerd2"
+              },
+              "historical_workflow": "linkerd2-fresh-benchmark.yml"
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 13,
+          "native": {
+            "action": ".github/actions/linkerd2-docker-benchmark",
+            "benchmark_id": "linkerd2-v2",
+            "rolling_inputs": {
+              "push_image": "true"
+            },
+            "environment": {},
+            "fresh_inputs": {
+              "load_image": "true"
+            }
+          },
+          "cache_tags": {
+            "linkerd2-docker-local": "{scope}-docker"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 12,
+        "workflow_seconds": 15,
+        "total_seconds": 12,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 12
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": {
+          "import_tags": [
+            "linkerd2-v2-series-image-output-qualification-01-s1-r37104596700-a1-docker-ubuntu-24-x86_64"
+          ],
+          "planned_import_refs": 1,
+          "export_tag": null
+        },
+        "tag": "linkerd2-v2-series-image-output-qualification-01-s1-r37104596700-a1-docker",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": 1230761384,
+        "storage_source": "boringcache-check",
+        "storage_breakdown": {
+          "workspace": "boringcache/benchmarks",
+          "tags": [
+            "linkerd2-v2-series-image-output-qualification-01-s1-r37104596700-a1-docker-ubuntu-24-x86_64"
+          ],
+          "complete": true,
+          "measured_bytes": 1230761384,
+          "unmeasured_tags": [],
+          "total_bytes": 1230761384,
+          "observations": [
+            {
+              "requested_tag": "linkerd2-v2-series-image-output-qualification-01-s1-r37104596700-a1-docker-ubuntu-24-x86_64",
+              "tag": "linkerd2-v2-series-image-output-qualification-01-s1-r37104596700-a1-docker-ubuntu-24-x86_64",
+              "status": "hit",
+              "cache_type": "cache_entry",
+              "cache_entry_id": "b542bd96-10d5-4849-96bc-e547137715ba",
+              "manifest_root_digest": "sha256:edb5fa1af4afd692a6cd8e570386819e7a508ccfa7b3d081483fd8440a631072",
+              "kv_total_size": 0,
+              "compressed_size": 1230761384,
+              "size": 1230761384
+            }
+          ]
+        }
+      },
+      "source": {
+        "repository": "linkerd/linkerd2",
+        "sha": "e7c15f3a6c933d4d92a4959575d5f9d093fdffc5"
+      },
+      "product_refs": {
+        "schema_version": 1,
+        "cli_version": "v1.33.0",
+        "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+        "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+      },
+      "action": {
+        "resolved_mode": "docker",
+        "resolved_tags": [
+          "linkerd2-v2-series-image-output-qualification-01-s1-r37104596700-a1-docker-ubuntu-24-x86_64"
+        ],
+        "trust_state": {
+          "status": "restore_only",
+          "event_name": "workflow_dispatch",
+          "requested_policy": "restore",
+          "resolved_policy": "restore",
+          "write_allowed": false,
+          "decision_source": "cli",
+          "reason": "explicit_request",
+          "provider": "github-actions",
+          "detail": "trust-policy is restore.",
+          "next_step": "Use trust-policy stage or publish only when this job is trusted for that operation.",
+          "token_capabilities": {
+            "restore": true,
+            "stage": true,
+            "save": true
+          }
+        },
+        "diagnostics_level": "off"
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37104596700",
+        "run_attempt": "1",
+        "job": "warm",
+        "workflow": "Native comparison fresh",
+        "ref_name": "image-output-qualification-2026-10-03",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000170536",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37104596700-1",
+      "series": {
+        "id": "image-output-qualification-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37104596700"
+      ]
+    }
+  ],
+  "exclusions": []
+}

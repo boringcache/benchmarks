@@ -45,16 +45,19 @@ as part of the reviewed caller cutover. PR validation runs the harness guards.
 The shared native fresh path also selects individual n8n Turbo/Docker, Mastodon
 server/streaming, and PostHog cache profiles from reviewed variant metadata;
 Immich's server uses the same path without a variant. Their imported matrices
-remain registered diagnostics while output checks and live execution are
-qualified. The new Docker paths do not establish a loaded or published image,
-or qualify the original rolling publication behavior. Existing callers and
-schedules still use the original repositories.
+remain registered diagnostics. Loaded-image checks and live execution are
+qualified per selected variant; they do not establish application runtime
+behavior or qualify the original rolling publication behavior. Existing callers
+and schedules still use the original repositories.
 Four initial screens (Chroma, Duckgres, Hugo Docker, and Linkerd2) were cancelled
 after review found missing image output checks. Their original plans, receipts,
 cancelled completions, and scoped evidence remain preserved. Their replacement
 fresh recipes load an image in both arms and use the shared output checker;
-timing includes export and load. Those replacement definitions still require
-live qualification. Original rolling publication projections remain diagnostic.
+timing includes export and load. Chroma, Duckgres, and Linkerd2 completed their
+replacement screens. Hugo's first replacement failed in both providers because
+the Docker exporter rejected its attestation manifest list; a separate corrected
+plan disables those attestations for loaded output in both arms. Original rolling
+publication projections remain diagnostic.
 The same checker and load projection apply to the selected n8n Docker, Mastodon,
 PostHog, and Immich server recipes. Native preparation enforces the output
 requirement before creating a source checkout. No image load or application
@@ -69,7 +72,30 @@ results retain their original timed scope and must not be mixed with this series
 Storybook's first fresh screen also timed dependency installation and sandbox
 creation in its setup metric. Its plan-bound methodology review prevents a
 comparative claim while retaining every original observation. The replacement
-recipe stops the setup timer before those operations and needs a new series.
+recipe stops the setup timer before those operations. Its new one-sample series
+completed output and preserved completion checks, retaining the slower
+BoringCache measurements.
+
+The [image-output archive](https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03)
+preserves all eight frozen requests at `35e10981`, including the failed Hugo and
+PostHog executions. Six selected paths completed cold/replay output and completion
+checks: Chroma, Duckgres, Linkerd2, n8n Docker, Mastodon server, and Immich server.
+The PostHog cold records also include inspection inside the timer, contrary to
+their declared scope. A plan-bound methodology review prevents comparative use.
+The [PostHog review](../cases/posthog/recipe-review.md) records the scope and timer
+fixes; the [Hugo review](../cases/hugo/recipe-review.md) records its loaded-output
+projection. New plans at signed `docker-output-correction-2026-10-03` request
+PostHog layers, PostHog combined, and Hugo qualification without changing the
+earlier declarations.
+
+The [build/reuse archive](https://github.com/boringcache/benchmarks/releases/tag/evidence-build-reuse-2026-10-03)
+preserves the corrected Storybook screen and both Deno seed-advance runs at
+`b3ab6324`. Deno's publication-capable operations completed against the declared
+parent cohorts, but remain diagnostic correctness investigations pending a generic
+verified lineage contract. Native errors and unmeasured selected-tag storage
+remain visible. Both archive releases were independently downloaded, checked
+against archive digests, extracted, and verified against their scoped inventories.
+One-sample screens do not approve publication, caller cutover, or deletion.
 GitHub's default CodeQL configuration now scans Ruby and Actions. Python was
 removed from its language list because this branch removes the maintained Python
 reporter; query suite, threat model, weekly schedule, and runner settings were
