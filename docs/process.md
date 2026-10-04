@@ -109,6 +109,10 @@ steps; it does not interpret product measurements or implement cache behavior.
 Its dependencies install during preparation, outside the comparison timer.
 The Ruby reporter retains its structured measurements; the original envelope
 remains a separate artifact so post-step status and future product fields survive.
+Storage measurements pass the resolved tags to `boringcache check --no-git
+--no-platform --json`. The CLI checks those exact tags; the former `--exact`
+option is unnecessary and is rejected by CLI 1.34.0. A failed probe leaves storage
+unmeasured.
 The harness Ruby version is pinned once in `.tool-versions`. Ruby setup reads
 that file from the harness checkout, including when a shared action is called
 from an older benchmark repository. Guardrails verify preparation on Ubuntu
@@ -134,6 +138,12 @@ For a standard native comparison, add `--native-lane fresh` to prepare and inspe
 the resolved `.github/actions/benchmark-phase/action.yml`. Its cache publication
 behavior and toolchain come from the case definition. Runtime canary inputs pass
 through the shared workflow; they do not replace the case identity or recipe.
+
+Fresh diagnostics without a series ID pass the cold action's `cache_scope`
+output through the generated wrapper and job output into the warm action.
+Both provider matrix jobs must publish the same cohort value. Keep this handoff
+covered alongside declared-series execution; testing only a series can hide a
+missing legacy input because the series scope is resolved independently.
 
 Check prepared source, recipe, commands, and output verification. Recipe digest
 changes require review. Schema and workflow checks do not establish that a build

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "repository": "boringcache/benchmarks",
+  "case_id": "posthog",
+  "publication": "diagnostic-only",
+  "failed_run": {
+    "run_id": 37231020335,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37231020335",
+    "source_sha": "3ebdc9c8a41fe354115143f12c31b9dfe2f5d343",
+    "dispatcher_run_id": 37231001488,
+    "cli_version": "vcli-canary-4c236cd7ee00",
+    "variant": "layers",
+    "series_id": "",
+    "cold": "Both providers built and verified their output images successfully",
+    "warm": "Both providers failed in scope selection before building",
+    "cause": "The generated wrapper exposed neither the cache_scope input nor output, and the shared workflow omitted the cold-to-warm handoff. With no series ID, the warm action correctly rejected an empty published scope.",
+    "storage": "BoringCache storage was unmeasured. The reporter invoked check --exact, which this CLI rejects. Missing storage remains unmeasured; it is not zero.",
+    "evidence_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-posthog-canary-2026-10-04"
+  },
+  "qualification_plan": {
+    "purpose": "Exercise the canary handoff without a series ID and the supported CLI storage probe",
+    "workflow": "native-fresh-benchmark.yml",
+    "inputs": {
+      "case_id": "posthog",
+      "variant": "layers",
+      "cli_version": "vcli-canary-4c236cd7ee00",
+      "series_id": "",
+      "sample": "1"
+    },
+    "sample_count": 1,
+    "providers": ["actions-cache", "boringcache"],
+    "phases": ["cold", "warm"],
+    "source_revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+    "timed_scope": "The unchanged case definition: Docker build including export/load and measured provider setup, excluding output inspection",
+    "acceptance": [
+      "Both cold jobs export the same nonempty scope",
+      "Both warm jobs receive the cold scope and execute their builds",
+      "Every phase verifies its loaded output image",
+      "BoringCache warm consumption remains restore-only and requires a cache hit",
+      "The storage probe uses supported CLI arguments; absent byte measurements remain unmeasured",
+      "Final product evidence and all job conclusions are preserved"
+    ],
+    "limits": "This deliberately omits a series ID to exercise the failing canary path. It is a diagnostic, not a publication series or a performance claim. The full local regression also exercises both providers with the combined variant and preserves legacy missing-scope rejection.",
+    "state": "planned"
+  }
+}
