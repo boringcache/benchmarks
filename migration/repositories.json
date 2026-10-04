@@ -48,6 +48,13 @@
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
         "scope": "Selected one-sample cold/replay image materialization and completion checks passed; publication, other variants, rolling behavior, and caller cutover remain unqualified"
+      },
+      "lifecycle_review": {
+        "reviewed_on": "2026-10-04",
+        "status": "Original output/completion evidence retained; affected Docker series are invalid for comparative claims until equal publication lifecycle is rerun",
+        "series_reviews": [
+          "results/chroma/image-output-qualification-01/methodology-review.json"
+        ]
       }
     },
     {
@@ -287,6 +294,13 @@
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
         "scope": "Selected one-sample cold/replay image materialization and completion checks passed; publication, other variants, rolling behavior, and caller cutover remain unqualified"
+      },
+      "lifecycle_review": {
+        "reviewed_on": "2026-10-04",
+        "status": "Original output/completion evidence retained; affected Docker series are invalid for comparative claims until equal publication lifecycle is rerun",
+        "series_reviews": [
+          "results/duckgres/image-output-qualification-01/methodology-review.json"
+        ]
       }
     },
     {
@@ -370,6 +384,13 @@
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
         "scope": "Original failed request and any phase records retained; corrected execution requires a separate frozen series"
+      },
+      "lifecycle_review": {
+        "reviewed_on": "2026-10-04",
+        "status": "Original output/completion evidence retained; affected Docker series are invalid for comparative claims until equal publication lifecycle is rerun",
+        "series_reviews": [
+          "results/hugo/image-output-qualification-02/methodology-review.json"
+        ]
       }
     },
     {
@@ -461,6 +482,13 @@
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
         "scope": "Selected one-sample cold/replay image materialization and completion checks passed; publication, other variants, rolling behavior, and caller cutover remain unqualified"
+      },
+      "lifecycle_review": {
+        "reviewed_on": "2026-10-04",
+        "status": "Original output/completion evidence retained; affected Docker series are invalid for comparative claims until equal publication lifecycle is rerun",
+        "series_reviews": [
+          "results/immich/image-output-qualification-01/methodology-review.json"
+        ]
       }
     },
     {
@@ -510,6 +538,13 @@
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
         "scope": "Selected one-sample cold/replay image materialization and completion checks passed; publication, other variants, rolling behavior, and caller cutover remain unqualified"
+      },
+      "lifecycle_review": {
+        "reviewed_on": "2026-10-04",
+        "status": "Original output/completion evidence retained; affected Docker series are invalid for comparative claims until equal publication lifecycle is rerun",
+        "series_reviews": [
+          "results/linkerd2/image-output-qualification-01/methodology-review.json"
+        ]
       }
     },
     {
@@ -554,6 +589,14 @@
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
         "scope": "Selected one-sample cold/replay image materialization and completion checks passed; publication, other variants, rolling behavior, and caller cutover remain unqualified"
+      },
+      "lifecycle_review": {
+        "reviewed_on": "2026-10-04",
+        "status": "Original output/completion evidence retained; affected Docker series are invalid for comparative claims until equal publication lifecycle is rerun",
+        "series_reviews": [
+          "results/mastodon/image-output-qualification-01/methodology-review.json",
+          "results/mastodon/streaming-output-qualification-01/methodology-review.json"
+        ]
       }
     },
     {
@@ -595,6 +638,15 @@
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
         "scope": "Selected one-sample cold/replay image materialization and completion checks passed; publication, other variants, rolling behavior, and caller cutover remain unqualified"
+      },
+      "lifecycle_review": {
+        "reviewed_on": "2026-10-04",
+        "status": "Original output/completion evidence retained; affected Docker series are invalid for comparative claims until equal publication lifecycle is rerun",
+        "series_reviews": [
+          "results/n8n/distroless-output-qualification-01/methodology-review.json",
+          "results/n8n/image-output-qualification-01/methodology-review.json",
+          "results/n8n/runners-output-qualification-01/methodology-review.json"
+        ]
       }
     },
     {
@@ -735,6 +787,15 @@
         ],
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
         "scope": "Original failed request and any phase records retained; corrected execution requires a separate frozen series"
+      },
+      "lifecycle_review": {
+        "reviewed_on": "2026-10-04",
+        "status": "Original output/completion evidence retained; affected Docker series are invalid for comparative claims until equal publication lifecycle is rerun",
+        "series_reviews": [
+          "results/posthog/image-output-combined-qualification-01/methodology-review.json",
+          "results/posthog/image-output-qualification-01/methodology-review.json",
+          "results/posthog/image-output-qualification-02/methodology-review.json"
+        ]
       }
     },
     {
@@ -777,6 +838,13 @@
         ],
         "scope": "One cold and identical-source replay sample per provider; missing storage remains unmeasured; no publication-quality performance claim",
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/active-case-qualification-2026-10-03"
+      },
+      "lifecycle_review": {
+        "reviewed_on": "2026-10-04",
+        "status": "Original output/completion evidence retained; affected Docker series are invalid for comparative claims until equal publication lifecycle is rerun",
+        "series_reviews": [
+          "results/qdrant/migration-screening-01/methodology-review.json"
+        ]
       }
     },
     {

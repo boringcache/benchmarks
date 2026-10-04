@@ -58,6 +58,19 @@ class BenchmarkCasesTest < Minitest::Test
     end
   end
 
+  def test_contract_views_check_only_the_docker_adapter_used_by_the_case
+    Dir.mktmpdir("benchmark-contract-view-") do |directory|
+      items = %w[hugo-go hugo].map { |id| BenchmarkCases.load_case(id) }
+      BenchmarkCases.stub(:documents, items) { BenchmarkCases.write_contract_views(directory) }
+      refute File.exist?(File.join(directory, "benchmark-hugo-go/.github/actions/docker-benchmark/action.yml"))
+      path = File.join(directory, "benchmark-hugo/.github/actions/docker-benchmark/action.yml")
+      steps = YAML.safe_load_file(path).dig("runs", "steps")
+      calls = steps.select { |step| step["uses"].to_s.start_with?("boringcache/one@") }
+      assert_equal %w[publish restore], calls.map { |step| step.dig("with", "trust-policy") }
+      assert calls.all? { |step| step.dig("with", "mode") == "docker" && step.dig("with", "fail-on-cache-error") == true }
+    end
+  end
+
   def test_zed_workflow_selects_only_the_requested_restore_variants
     workflow = YAML.safe_load_file(File.join(BenchmarkCases::ROOT, ".github/workflows/zed-zed-cargo-product.yml"))
     script = workflow.fetch("jobs").fetch("source").fetch("steps").find { |step| step["id"] == "source" }.fetch("run")
