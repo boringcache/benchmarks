@@ -8,15 +8,8 @@ require "tmpdir"
 
 class BenchmarkWorkflowGuardrailsTest < Minitest::Test
   SCRIPT = File.expand_path("../scripts/check-workflow-guardrails.rb", __dir__)
-  REPOS_DIR = ENV["BENCHMARK_REPOS_DIR"] || [
-    File.expand_path("../../benchmarks-repos", __dir__),
-    File.expand_path("../../benchmark-repos", __dir__)
-  ].find { |candidate| Dir.exist?(candidate) }
-
-  def test_current_benchmarks_keep_the_leaf_boundary
-    skip "benchmark repositories checkout not available" unless REPOS_DIR
-
-    stdout, stderr, status = Open3.capture3(RbConfig.ruby, SCRIPT, REPOS_DIR)
+  def test_central_benchmarks_keep_the_leaf_boundary
+    stdout, stderr, status = Open3.capture3({"BENCHMARK_REPOS_DIR" => nil}, RbConfig.ruby, SCRIPT)
 
     assert status.success?, "leaf boundary failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
     assert_includes stdout, "benchmark leaf boundary passed"
