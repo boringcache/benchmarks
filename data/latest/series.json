@@ -617,6 +617,69 @@
     },
     {
       "case_id": "deno",
+      "series_id": "merged-main-qualification-03",
+      "plan_path": "results/deno/merged-main-qualification-03/series.json",
+      "lane": "fresh",
+      "variant": "cargo-product",
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+        "providers": [
+          "boringcache"
+        ],
+        "timed_scope": "The two BoringCache Cargo release operations, including restore, build, and any permitted publication. Fresh changed-source consumers use restore-only trust; rolling jobs permit publication to the declared cohort. Output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.",
+        "primary_metric": "correctness",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "denoland/deno",
+        "pins": [
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+            "kind": "env"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "b4f08f127652d8442b4d3dbabc277aca3840bc1d",
+            "kind": "env"
+          }
+        ]
+      },
+      "plan_sha256": "876673894a09e3b07c7eeb4e033cb14679d1dba1363a34f4cc661c8086fcab58",
+      "definition_sha256": "52905a400cd73743dd63ecbc168b449305b22a880acc70f56034ee6d4b6fe318",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "commit",
+          "boringcache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "interpretation_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "deno",
       "series_id": "rolling-cargo-product-qualification",
       "plan_path": "results/deno/rolling-cargo-product-qualification/series.json",
       "lane": "rolling",
@@ -1675,6 +1738,89 @@
     },
     {
       "case_id": "docker-cloudcost-exporter-amd64",
+      "series_id": "merged-main-qualification-03",
+      "plan_path": "results/docker-cloudcost-exporter-amd64/merged-main-qualification-03/series.json",
+      "lane": "fresh",
+      "variant": "linux-amd64",
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+        "providers": [
+          "boringcache"
+        ],
+        "timed_scope": "Declared Docker build, including dependencies, cache import/export and declared image output",
+        "primary_metric": "correctness",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "grafana/cloudcost-exporter",
+        "pins": [
+          {
+            "path": "recipe.json",
+            "revision": "e2bf02e3b91909f3e7c2e47561f2a3b897bf7ab4",
+            "kind": "recipe"
+          },
+          {
+            "path": "recipe.json",
+            "revision": "9565ae6cbef0759e53e1e54a5efec36219eabeaf",
+            "kind": "recipe"
+          },
+          {
+            "path": "recipe.json",
+            "revision": "b55648776f0d9eb8f245a7fdbd6121a59446e174",
+            "kind": "recipe"
+          },
+          {
+            "path": "recipe.json",
+            "revision": "0304705af4cbc54dc4a6a9cadbca9ab59f8c690b",
+            "kind": "recipe"
+          },
+          {
+            "path": "recipe.json",
+            "revision": "26977e7e0066177ef80cce649b5071745f566a86",
+            "kind": "recipe"
+          },
+          {
+            "path": "recipe.json",
+            "revision": "580113c9610da388dda767eaa0acbf8d0cc2fbeb",
+            "kind": "recipe"
+          }
+        ]
+      },
+      "plan_sha256": "fdb2a363f80f8dc1e98397af7cf4e3a0c81f86ee4d1b2ecac3bc5ebdac890a6f",
+      "definition_sha256": "5a69f70b97fef520ef0208417a41eed6d999b541f60aa009ff30bca374b085e7",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "interpretation_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "docker-cloudcost-exporter-amd64",
       "series_id": "wrapper-qualification",
       "plan_path": "results/docker-cloudcost-exporter-amd64/wrapper-qualification/series.json",
       "lane": "fresh",
@@ -2251,6 +2397,73 @@
           "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
         }
       ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "hugo-go",
+      "series_id": "merged-main-qualification-03",
+      "plan_path": "results/hugo-go/merged-main-qualification-03/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "fb020c5ffe80dad97e564738deb8f4192835b3551b3ab025d42c2103ada169c5",
+      "definition_sha256": "8575b4c7e5c1a048ccb9a3a36f7653474e78b0aea76f6166818bd51560409a39",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "interpretation_path": null,
+      "evidence": [],
       "runs_without_archives": []
     },
     {
@@ -3005,6 +3218,73 @@
           "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
         }
       ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "hugo",
+      "series_id": "merged-main-qualification-03",
+      "plan_path": "results/hugo/merged-main-qualification-03/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "09be21445afddc73425c579f525bf67ebdedf7a1fba0047db1f97b68f2a5f578",
+      "definition_sha256": "8522975a5e5fe5e8671da5ad5777b878e1b030e127caa4053e27483667e0bed7",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "interpretation_path": null,
+      "evidence": [],
       "runs_without_archives": []
     },
     {

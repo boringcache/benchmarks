@@ -164,14 +164,11 @@ One-sample screens do not approve publication, caller cutover, or deletion.
 GitHub's default CodeQL configuration now scans Ruby and Actions. Python was
 removed from its language list because this branch removes the maintained Python
 reporter; query suite, threat model, weekly schedule, and runner settings were
-preserved. The new evidence post hook adds maintained JavaScript on this branch.
-After it reaches the default branch, verify that default CodeQL setup includes
-`javascript-typescript` and its analysis passes. [GitHub automatically detects
-new supported languages](https://docs.github.com/en/code-security/concepts/code-scanning/setup-types)
-and can revert a failing new configuration. Correct missing coverage while
-preserving Ruby and Actions, the existing query suite and threat model, weekly
-schedule, and runner settings.
-The hook's Node regression already runs in PR guardrails.
+preserved. After the evidence hook merged, JavaScript was added to default setup.
+The [validation run](https://github.com/boringcache/benchmarks/actions/runs/37217667455)
+passed with Ruby, Actions, and JavaScript coverage while preserving the existing
+query suite, threat model, weekly schedule, and runner settings. The hook's Node
+regression also runs in PR guardrails.
 Archiving does not preserve expiring Actions evidence. Missing evidence and
 unverified execution remain explicit in the inventory.
 

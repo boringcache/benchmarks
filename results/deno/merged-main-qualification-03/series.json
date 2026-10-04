@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "case_id": "deno",
+  "series_id": "merged-main-qualification-03",
+  "created_at": "2026-10-04T16:56:59Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "commit"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "52905a400cd73743dd63ecbc168b449305b22a880acc70f56034ee6d4b6fe318",
+  "variant": "cargo-product",
+  "workflow_inputs": {
+    "cli_version": "v1.33.0",
+    "cache_profile": "cargo-product"
+  },
+  "comparison": {
+    "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+    "providers": [
+      "boringcache"
+    ],
+    "timed_scope": "The two BoringCache Cargo release operations, including restore, build, and any permitted publication. Fresh changed-source consumers use restore-only trust; rolling jobs permit publication to the declared cohort. Output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.",
+    "primary_metric": "correctness",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "denoland/deno",
+    "pins": [
+      {
+        "path": "payload/benchmark-source.env",
+        "revision": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+        "kind": "env"
+      },
+      {
+        "path": "payload/benchmark-source.env",
+        "revision": "b4f08f127652d8442b4d3dbabc277aca3840bc1d",
+        "kind": "env"
+      }
+    ]
+  },
+  "verification": [
+    "Verify Deno Linux release recipe",
+    "Require a clean product starting point",
+    "Verify the Deno base build",
+    "Require an empty destination",
+    "Verify the Deno head build",
+    "Require one-commit source cadence",
+    "Verify the Deno build"
+  ],
+  "plan_sha256": "876673894a09e3b07c7eeb4e033cb14679d1dba1363a34f4cc661c8086fcab58"
+}
