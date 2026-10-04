@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "n8n",
+  "series_id": "runners-output-qualification-01",
+  "sample": 1,
+  "run_id": "37149055130",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149055130",
+  "source_sha": "b759879316279afa06a7e8166c905429547adb34",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "c52e6d5bedd2e1d5e4333c820e0895b30eee8eb5c5ec02389cb5d669dc6f7017"
+}

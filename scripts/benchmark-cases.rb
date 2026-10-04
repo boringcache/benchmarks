@@ -22,7 +22,7 @@ module BenchmarkCases
   ROOT = File.expand_path("..", __dir__)
   WORKSPACE = "boringcache/benchmarks"
   REPOSITORY = "boringcache/benchmarks"
-  HELPERS = %w[benchmark-plan run-benchmark-plan activate-docker-plan verify-docker-output summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache].freeze
+  HELPERS = %w[benchmark-plan benchmark-phase run-benchmark-plan activate-docker-plan verify-docker-output summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache].freeze
   class Error < StandardError; end
 
   def self.command(*args, chdir: nil, stdin: "", env: {})
@@ -44,7 +44,7 @@ module BenchmarkCases
     files += item.dig("execution", "workflows").map { |entry| File.join(root, entry.fetch("path")) }
     files += HELPERS.map { |name| File.join(root, "scripts", "#{name}.rb") }
     files += %w[scripts/canonical/benchmark-report.rb scripts/verify-upstream-recipe.rb scripts/benchmark-cases.rb scripts/benchmark-series.rb bin/bench Gemfile.lock .tool-versions].map { |path| File.join(root, path) }
-    files += Dir.glob(File.join(root, ".github", "actions", "**", "*"), File::FNM_DOTMATCH).select { |path| File.file?(path) }
+    files += shared_action_files(root: root)
     files += Dir.glob(File.join(root, "adapters", "docker", "**", "*"), File::FNM_DOTMATCH).select { |path| File.file?(path) } if item["adapter"] == "docker"
     manifest = files.uniq.sort.to_h { |path| [path.delete_prefix(root + "/"), Digest::SHA256.file(path).hexdigest] }
     Digest::SHA256.hexdigest(JSON.generate({"case" => item, "files" => manifest}))
@@ -431,15 +431,28 @@ module BenchmarkCases
   end
 
   def self.copy_shared_actions(target, root: ROOT)
-    FileUtils.mkdir_p(File.join(target, ".github", "actions"))
-    FileUtils.cp_r(Dir[File.join(root, ".github", "actions", "*")], File.join(target, ".github", "actions"))
+    shared_action_files(root: root).each do |source|
+      destination = File.join(target, source.delete_prefix("#{root}/"))
+      FileUtils.mkdir_p(File.dirname(destination))
+      FileUtils.cp(source, destination)
+    end
+  end
+
+  def self.shared_action_files(root: ROOT)
+    require "find"
+    directory = File.join(root, ".github", "actions")
+    return [] unless Dir.exist?(directory)
+    Find.find(directory).filter_map do |path|
+      Find.prune if File.directory?(path) && File.basename(path) == "node_modules"
+      path if File.file?(path)
+    end
   end
 
   def self.resolve_provider_steps(document, provider)
     case document
     when Hash
       if document["uses"] == "./.github/actions/boringcache"
-        invocation = provider.fetch("runs").fetch("steps").fetch(0)
+        invocation = provider.fetch("runs").fetch("steps").find { |step| step["id"] == "provider" }
         supplied = document.fetch("with", {})
         declared = provider.fetch("inputs")
         unknown = supplied.keys - declared.keys
@@ -506,7 +519,7 @@ module BenchmarkCases
         # defaults and each caller's phase, adapter, and strict failure settings.
         provider_path = File.join(target, ".github", "actions", "boringcache", "action.yml")
         provider = YAML.safe_load(File.read(provider_path), aliases: true)
-        raise Error, "The provider wrapper must contain one product call" unless provider.dig("runs", "steps").length == 1
+        raise Error, "The provider wrapper must contain one product call" unless provider.dig("runs", "steps").count { |step| step["uses"].to_s.start_with?("boringcache/one@") } == 1
         Dir[File.join(target, ".github", "**", "*.{yml,yaml}")].each do |path|
           next if path == provider_path
           document = YAML.safe_load(File.read(path), aliases: true)

@@ -121,7 +121,17 @@ module NightlyCanaries
     def collect(summary:, benchmarks: BENCHMARKS, now: Time.now.utc)
       lines = ["## CLI canary benchmark results", "", "Dispatch and workload states are reported separately.", ""]
       passed = true
-      targets(benchmarks).group_by(&:first).each do |repository, expected|
+      monitored = benchmarks.map do |item|
+        case item.fetch("canary_location", "central")
+        when "central" then item
+        when "historical"
+          workflow = item.fetch("historical_fresh_workflow") { item.fetch("fresh_workflow").delete_prefix("#{item.fetch('case_id')}-") }
+          item.merge("source_repo" => item.fetch("historical_source_repo"), "fresh_workflow" => workflow, "fresh_inputs" => {})
+        else
+          raise Error, "Canary location must be central or historical"
+        end
+      end
+      targets(monitored).group_by(&:first).each do |repository, expected|
         lines << "### #{repository}"
         begin
           parents = api("repos/#{repository}/actions/workflows/canary.yml/runs?branch=main&per_page=100").fetch("workflow_runs")

@@ -23,3 +23,5 @@ The [durable evidence](evidence.md) was independently downloaded and verified.
 Publication remains unreviewed. Image inspection does not test application
 runtime behavior. Rolling source changes, source advancement, schedules, and
 canary/release caller cutover require separate qualification.
+
+The October 4 methodology review found unequal warm cache publication: Actions Cache exported state while BoringCache restored without publishing. The original final One evidence envelope was not retained. These observations remain useful output/execution evidence, but cannot support a comparative claim. See [the plan-bound review](methodology-review.json). A corrected execution definition requires a new series.

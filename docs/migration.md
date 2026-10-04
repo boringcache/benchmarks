@@ -66,6 +66,29 @@ The native Docker actions also use the shared Ruby source preparer. Chroma's
 [recipe review](../cases/chroma/recipe-review.md) records the removal of its old
 diagnostic source-layer marker from the identical-source replay. The replacement
 timings must not be combined with that earlier projection.
+
+The October 4 review found a shared fairness error in those Docker comparisons:
+Actions Cache exported warm state while BoringCache restored without publishing.
+Plan-bound reviews now mark all affected recorded Docker series ineligible for a
+comparative claim, retaining the original measurements and successful output
+checks. The shared `docker-benchmark` action now owns setup, timing, and the same
+publication decision for both providers. Cold publishes; ordinary warm replay
+does not. Explicit warm publication applies to both arms.
+
+The [lifecycle screening archive](https://github.com/boringcache/benchmarks/releases/tag/evidence-lifecycle-review-2026-10-04)
+preserves the six completed PostHog layers/combined, Hugo, Mastodon streaming, and
+n8n runners/distroless runs requested on October 3. Their four phase records per
+run are imported through `bin/bench collect`; each published bundle was downloaded
+again and verified against its checksum and 13-file inventory. These runs retain
+the same publication-policy limitation. They also lack the original final One
+evidence envelope. The new provider post hook retains that envelope after product
+cleanup. Corrected execution requires new frozen series and live qualification.
+
+Canary monitoring now follows the active historical schedules through explicit
+registry metadata. Its October 4 read-only collection verified all 16 repository
+receipts and 17 child runs successfully. Central dispatch remains manual until
+each schedule is qualified and cut over. This fixes monitoring without treating
+an imported definition as an active central schedule.
 n8n Turbo's primary measurement now captures cache setup and the build separately
 from its dependency installation. The install still runs before the build. Earlier
 results retain their original timed scope and must not be mixed with this series.

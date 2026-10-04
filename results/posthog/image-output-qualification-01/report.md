@@ -19,6 +19,8 @@ Methodology prevents a comparative claim:
 
 - Both warm jobs failed before building because legacy published-scope validation ran before native series scope resolution.
 - Cold build_seconds includes the superseded loaded-image inspection, contrary to the declared timing scope. Preserve as diagnostic; corrected execution uses a new series.
+- The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.
+- The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup.
 
 Run 37104600856 failed completion checks:
 

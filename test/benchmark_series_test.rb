@@ -4,6 +4,7 @@ require "minitest/autorun"
 require "tmpdir"
 require_relative "../scripts/benchmark-series"
 require_relative "../scripts/benchmark-evidence"
+require_relative "../scripts/collect-series"
 
 class BenchmarkSeriesTest < Minitest::Test
   def setup
@@ -79,6 +80,54 @@ class BenchmarkSeriesTest < Minitest::Test
     assert_equal 100, summary.dig("storage", "median")
     assert_equal 1, summary["storage_measured_count"]
     assert_equal "unreviewed", result["publication"]
+  end
+
+  def phase_export(values)
+    directory = evidence
+    manifest = JSON.parse(File.read(File.join(directory, "manifest.json")))
+    FileUtils.mkdir_p(File.join(directory, "artifacts"))
+    values.each_with_index do |value, index|
+      id = index + 1
+      name = "phase-#{id}.json"
+      File.write(File.join(@root, name), JSON.generate(value))
+      relative = "artifacts/#{id}.zip"
+      path = File.join(directory, relative)
+      _output, error, status = Open3.capture3("zip", "-q", path, name, chdir: @root)
+      raise error unless status.success?
+      manifest["artifacts"] << {"id" => id, "name" => "phase-#{id}"}
+      manifest["files"][relative] = {"bytes" => File.size(path), "sha256" => Digest::SHA256.file(path).hexdigest}
+    end
+    BenchmarkEvidence.retain_json(directory, "artifacts.json", {"total_count" => values.length, "artifacts" => manifest["artifacts"]}, manifest)
+    File.write(File.join(directory, "manifest.json"), JSON.generate(manifest))
+    FileUtils.mkdir_p(File.join(@directory, "dispatches"))
+    BenchmarkSeries.write_json(File.join(@directory, "dispatches", "1-build.json"),
+      {"run_id" => 1, "repository" => BenchmarkCases::REPOSITORY, "case_id" => "example", "inputs" => {"series_id" => "screening", "sample" => "1"}})
+    directory
+  end
+
+  def test_collects_original_phase_artifacts_and_can_resume_without_overwriting
+    value = record
+    directory = phase_export([value, record(provider: "actions-cache"), value])
+    result = CollectSeries.call(@directory, evidence_directory: directory, sample: 1)
+    assert_equal 2, result["records"]
+    assert_equal "success", result.dig("completion", "status")
+    assert_equal value, JSON.parse(File.read(File.join(@directory, "runs", "1-boringcache-commit.json")))
+    assert_equal result, CollectSeries.call(@directory, evidence_directory: directory, sample: 1)
+    assert File.file?(File.join(@directory, "report.json"))
+  end
+
+  def test_collection_preflights_conflicting_records_before_writing_any_observation
+    directory = phase_export([record, record(seconds: 99)])
+    assert_raises(BenchmarkSeries::Error) { CollectSeries.call(@directory, evidence_directory: directory, sample: 1) }
+    assert_empty Dir[File.join(@directory, "runs", "*.json")]
+  end
+
+  def test_collection_requires_the_original_dispatch_and_matching_run
+    directory = phase_export([record.merge("github" => {"run_id" => "2"})])
+    assert_raises(BenchmarkSeries::Error) { CollectSeries.call(@directory, evidence_directory: directory, sample: 1) }
+    FileUtils.rm(File.join(@directory, "dispatches", "1-build.json"))
+    assert_raises(BenchmarkSeries::Error) { CollectSeries.call(@directory, evidence_directory: directory, sample: 1) }
+    assert_empty Dir[File.join(@directory, "runs", "*.json")]
   end
 
   def test_incomplete_series_reports_missing_samples_without_a_complete_claim

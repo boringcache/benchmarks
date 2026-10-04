@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "benchmark": "mastodon-streaming",
+  "strategy": "actions-cache",
+  "lane": "fresh",
+  "phase": "cold",
+  "variant": "streaming",
+  "mode": "docker",
+  "adapter": "oci",
+  "case": {
+    "schema_version": 1,
+    "case_id": "mastodon",
+    "workspace": "boringcache/benchmarks",
+    "definition_sha256": "6bd5fa5df953cc47d2b50d2e72997344cb1eb73532b5b0c7ecfc3e39c0d96ea5",
+    "source": {
+      "repository": "mastodon/mastodon",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "origin": {
+      "repository": "boringcache/benchmark-mastodon",
+      "branch": "main",
+      "revision": "af806ebb3a531c4196b47bfc655da5448db5ba54"
+    },
+    "verification": [
+      "Pinned upstream recipe and build success",
+      "The freshly loaded output image exists in the local Docker image store"
+    ],
+    "comparison": {
+      "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+      "providers": [
+        "boringcache",
+        "actions-cache"
+      ],
+      "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+      "primary_metric": "build_and_reuse_seconds",
+      "storage": "provider-reported",
+      "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+      "sample_count": 10
+    },
+    "execution": {
+      "workflows": [
+        {
+          "path": ".github/workflows/native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "mastodon"
+          },
+          "historical_workflow": "mastodon-mastodon-fresh-benchmark.yml",
+          "variants": [
+            "server",
+            "server-sccache",
+            "streaming"
+          ],
+          "variant_input": "variant"
+        },
+        {
+          "path": ".github/workflows/mastodon-mastodon-docker-benchmark.yml",
+          "lane": "diagnostic",
+          "inputs": {}
+        },
+        {
+          "path": ".github/workflows/mastodon-mastodon-fresh-benchmark.yml",
+          "lane": "diagnostic",
+          "inputs": {}
+        }
+      ],
+      "sync": "upstream-head",
+      "sync_minute": 15,
+      "cache_tags": {
+        "mastodon-docker-local": "{scope}-docker",
+        "mastodon-sccache-local": "{scope}-sccache"
+      },
+      "native": {
+        "action": ".github/actions/mastodon-docker-benchmark",
+        "benchmark_id": "mastodon",
+        "fresh_inputs": {
+          "workload": "server",
+          "load_image": "true"
+        },
+        "rolling_inputs": {
+          "workload": "server"
+        },
+        "variants": {
+          "server": {},
+          "server-sccache": {
+            "benchmark_id": "mastodon-sccache",
+            "fresh_inputs": {
+              "docker_tool_cache": "true"
+            },
+            "rolling_inputs": {
+              "docker_tool_cache": "true"
+            },
+            "provider_flags": {
+              "actions-cache": {
+                "docker_tool_cache": "false"
+              }
+            }
+          },
+          "streaming": {
+            "benchmark_id": "mastodon-streaming",
+            "fresh_inputs": {
+              "workload": "streaming"
+            },
+            "rolling_inputs": {
+              "workload": "streaming"
+            }
+          }
+        }
+      }
+    }
+  },
+  "timing": {
+    "restore_or_setup_seconds": 11,
+    "build_seconds": 41,
+    "workflow_seconds": 59,
+    "total_seconds": 52,
+    "dependency_setup_seconds": null,
+    "compile_seconds": null,
+    "verification_seconds": null,
+    "save_seconds": null,
+    "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+    "build_and_reuse_seconds": 52
+  },
+  "cache": {
+    "hit": null,
+    "sccache_proof": null,
+    "import_ready": null,
+    "import_refs": 0,
+    "docker_plan": null,
+    "tag": null,
+    "workspace": null,
+    "storage_bytes": null,
+    "storage_source": null,
+    "storage_breakdown": {
+      "key": "mastodon-streaming-series-streaming-output-qualification-01-s1-r37149053291-a1",
+      "complete": false,
+      "measured_bytes": 0,
+      "total_bytes": null,
+      "observations": []
+    }
+  },
+  "source": {
+    "repository": "mastodon/mastodon",
+    "sha": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c"
+  },
+  "product_refs": {},
+  "action": {
+    "resolved_mode": null,
+    "resolved_tags": null,
+    "trust_state": null,
+    "diagnostics_level": null
+  },
+  "github": {
+    "repository": "boringcache/benchmarks",
+    "run_id": "37149053291",
+    "run_attempt": "1",
+    "job": "cold",
+    "workflow": "Native comparison fresh",
+    "ref_name": "active-variant-qualification-2026-10-03",
+    "runner_os": "Linux",
+    "runner_arch": "X64",
+    "runner_name": "GitHub Actions 1000171234",
+    "runner_environment": "github-hosted",
+    "runner_image": "ubuntu24",
+    "runner_image_version": "20260927.320.1"
+  },
+  "run_uid": "gh-37149053291-1",
+  "series": {
+    "id": "streaming-output-qualification-01",
+    "sample": 1
+  },
+  "environment": {
+    "os": "Linux",
+    "arch": "X64",
+    "image": "ubuntu24",
+    "image_version": "20260927.320.1",
+    "machine": "ubuntu-latest"
+  },
+  "verification": {
+    "passed": true,
+    "checks": [
+      "Output verification completed before recording this phase"
+    ],
+    "declared_checks": [
+      "Pinned upstream recipe and build success",
+      "The freshly loaded output image exists in the local Docker image store"
+    ]
+  },
+  "evidence_links": [
+    "https://github.com/boringcache/benchmarks/actions/runs/37149053291"
+  ]
+}
