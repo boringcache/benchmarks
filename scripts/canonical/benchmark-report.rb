@@ -110,7 +110,7 @@ module BenchmarkReport
     workspace, tags = identity.values_at("workspace", "tags")
     return unless workspace.is_a?(String) && !workspace.empty? && !tags.empty?
     output = Timeout.timeout(30) do
-      stdout, _stderr, status = Open3.capture3("boringcache", "check", workspace, tags.join(","), "--no-git", "--no-platform", "--exact", "--json")
+      stdout, _stderr, status = Open3.capture3("boringcache", "check", workspace, tags.join(","), "--no-git", "--no-platform", "--json")
       return unless status.success?
       stdout
     end
