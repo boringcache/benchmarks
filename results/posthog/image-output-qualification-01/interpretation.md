@@ -9,3 +9,5 @@ The [generated report](report.md) retains 2 original phase records. Completion i
 Provider-reported storage stays labelled by its source. Missing measurements remain unmeasured; no cross-provider total storage saving is established. Repository-wide cache snapshots do not prove per-phase occupancy or absence of eviction.
 
 Evidence preservation is scoped to this run. It does not qualify every variant, caller cutover, website publication, or repository deletion.
+
+The October 4 methodology review found unequal warm cache publication: Actions Cache exported state while BoringCache restored without publishing. The original final One evidence envelope was not retained. These observations remain useful output/execution evidence, but cannot support a comparative claim. See [the plan-bound review](methodology-review.json). A corrected execution definition requires a new series.

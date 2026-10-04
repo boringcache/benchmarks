@@ -17,4 +17,9 @@ Queue time, dependency setup outside the declared scope, and job duration are co
 | cold | boringcache | 1 | 200 | 200–200 | 1230761384 | 1 |
 | warm | boringcache | 1 | 12 | 12–12 | 1230761384 | 1 |
 
+Methodology prevents a comparative claim:
+
+- The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.
+- The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup.
+
 Each run record retains its source, runner environment, verification, provider storage source, and evidence links. Missing storage is unmeasured; it is not zero. Original Actions URLs remain subject to retention; durable evidence publication must be verified before publication review.

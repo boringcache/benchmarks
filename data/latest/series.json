@@ -36,9 +36,12 @@
       "definition_sha256": "6a50efe5eda093d17fd5abc3d6967183cd287e3b2203b8876d83b1937d3b7301",
       "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": true,
+      "valid_for_comparison": false,
       "execution_verified": true,
-      "methodology_issues": [],
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
       "missing_observations": [],
       "summaries": [
         {
@@ -1820,9 +1823,12 @@
       "definition_sha256": "1b406d174de4de92e0c62265436e2e130d2c04966378bab14e734ff70ec50044",
       "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": true,
+      "valid_for_comparison": false,
       "execution_verified": true,
-      "methodology_issues": [],
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
       "missing_observations": [],
       "summaries": [
         {
@@ -2727,34 +2733,73 @@
       },
       "plan_sha256": "6b9cbe6a1abe5039dfa929d5fa898b3316a3fa019123db5473d97ec461aba485",
       "definition_sha256": "d93cf392d1d565e2d563f3e5e7b947f28616e7c830f3a3c3a84fa10f4033ccb0",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
       "valid_for_comparison": false,
-      "execution_verified": false,
-      "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ]
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
       ],
-      "summaries": [],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 270,
+            "min": 270,
+            "max": 270
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 28,
+            "min": 28,
+            "max": 28
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 223,
+            "min": 223,
+            "max": 223
+          },
+          "storage": {
+            "median": 411514484,
+            "min": 411514484,
+            "max": 411514484
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 28,
+            "min": 28,
+            "max": 28
+          },
+          "storage": {
+            "median": 411514484,
+            "min": 411514484,
+            "max": 411514484
+          },
+          "storage_measured_count": 1
+        }
+      ],
       "dispatches": [
         {
           "case_id": "hugo",
@@ -2774,14 +2819,40 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148378881"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37148378881"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "hugo",
+          "series_id": "image-output-qualification-02",
+          "sample": 1,
+          "run_id": "37148378881",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148378881",
+          "source_sha": "ebe9215a904081d279458722339ef85d2b742db6",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "6560d3ffaa57bd746e57c74503987869c470c24ad4b4a02632b6392ad18239aa"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/hugo/image-output-qualification-02/report.json",
+      "interpretation_path": "results/hugo/image-output-qualification-02/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37148378881,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-lifecycle-review-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-lifecycle-review-2026-10-04/benchmarks-37148378881.tar",
+          "bundle_bytes": 263168,
+          "sha256": "de853e9d1c1b0b6bead7e1822a5efbc3a0bb92b15e37e1e53c400757b2354c56",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "hugo",
@@ -2931,9 +3002,12 @@
       "definition_sha256": "aa7edd687de2be1ba9ea1393766e01359e5a0ac10d0ac59ec556f9c4d536eaab",
       "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": true,
+      "valid_for_comparison": false,
       "execution_verified": true,
-      "methodology_issues": [],
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
       "missing_observations": [],
       "summaries": [
         {
@@ -3080,9 +3154,12 @@
       "definition_sha256": "e55db4e3f59df4ea63c2886c2e8189f56ee238c9fb14f0eea7bbabaeaa3c83ef",
       "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": true,
+      "valid_for_comparison": false,
       "execution_verified": true,
-      "methodology_issues": [],
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
       "missing_observations": [],
       "summaries": [
         {
@@ -3344,9 +3421,12 @@
       "definition_sha256": "b3fdf15ac786c8f1a57ed78bfb7c3aa772d97f8624cb172cbf7443b80b8720ef",
       "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": true,
+      "valid_for_comparison": false,
       "execution_verified": true,
-      "methodology_issues": [],
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
       "missing_observations": [],
       "summaries": [
         {
@@ -3492,34 +3572,73 @@
       },
       "plan_sha256": "3795707ead334fd02443574fd818023c3f29e42680b1cffe9693d54da38610af",
       "definition_sha256": "6bd5fa5df953cc47d2b50d2e72997344cb1eb73532b5b0c7ecfc3e39c0d96ea5",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
       "valid_for_comparison": false,
-      "execution_verified": false,
-      "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ]
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
       ],
-      "summaries": [],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 52,
+            "min": 52,
+            "max": 52
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 21,
+            "min": 21,
+            "max": 21
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 40,
+            "min": 40,
+            "max": 40
+          },
+          "storage": {
+            "median": 106281953,
+            "min": 106281953,
+            "max": 106281953
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 22,
+            "min": 22,
+            "max": 22
+          },
+          "storage": {
+            "median": 106281953,
+            "min": 106281953,
+            "max": 106281953
+          },
+          "storage_measured_count": 1
+        }
+      ],
       "dispatches": [
         {
           "case_id": "mastodon",
@@ -3540,14 +3659,40 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149053291"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37149053291"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "mastodon",
+          "series_id": "streaming-output-qualification-01",
+          "sample": 1,
+          "run_id": "37149053291",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149053291",
+          "source_sha": "b759879316279afa06a7e8166c905429547adb34",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "530bf111ae6b4a6f70347e2e293b0ad75cec21dd175728be464cf8ecfc1ebfec"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/mastodon/streaming-output-qualification-01/report.json",
+      "interpretation_path": "results/mastodon/streaming-output-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37149053291,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-lifecycle-review-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-lifecycle-review-2026-10-04/benchmarks-37149053291.tar",
+          "bundle_bytes": 266240,
+          "sha256": "899c7adc2f77d143cfdda44d59b9f12884877c5a5fcf65bed1c5989341c8b2a9",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "n8n",
@@ -3580,34 +3725,73 @@
       },
       "plan_sha256": "08b518d5c7cd45195e1817738316c065e60de1805ae26927f3b1c572b2aeef55",
       "definition_sha256": "454acd4311833555c8086d1e9437e3cb618f6dfd3eadf93c9757aa51816c68b2",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
       "valid_for_comparison": false,
-      "execution_verified": false,
-      "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ]
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
       ],
-      "summaries": [],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 214,
+            "min": 214,
+            "max": 214
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 132,
+            "min": 132,
+            "max": 132
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 81,
+            "min": 81,
+            "max": 81
+          },
+          "storage": {
+            "median": 581055738,
+            "min": 581055738,
+            "max": 581055738
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 110,
+            "min": 110,
+            "max": 110
+          },
+          "storage": {
+            "median": 581055738,
+            "min": 581055738,
+            "max": 581055738
+          },
+          "storage_measured_count": 1
+        }
+      ],
       "dispatches": [
         {
           "case_id": "n8n",
@@ -3628,14 +3812,40 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149056843"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37149056843"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "n8n",
+          "series_id": "distroless-output-qualification-01",
+          "sample": 1,
+          "run_id": "37149056843",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149056843",
+          "source_sha": "b759879316279afa06a7e8166c905429547adb34",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "4bbc22e12b0a3e5e9c1c5c481f68f29002291e60a1bcc748ea3e18eaaed8566e"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/n8n/distroless-output-qualification-01/report.json",
+      "interpretation_path": "results/n8n/distroless-output-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37149056843,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-lifecycle-review-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-lifecycle-review-2026-10-04/benchmarks-37149056843.tar",
+          "bundle_bytes": 1658880,
+          "sha256": "b1b97061460c375759d37184868d53cddad9c1b980b4e69d8e6a67cce374ce09",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "n8n",
@@ -3670,9 +3880,12 @@
       "definition_sha256": "009c1fb0a0a062a44f7a4aee84a48e3570585410de8bce2bc23fee0de426aa24",
       "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": true,
+      "valid_for_comparison": false,
       "execution_verified": true,
-      "methodology_issues": [],
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
       "missing_observations": [],
       "summaries": [
         {
@@ -3818,34 +4031,73 @@
       },
       "plan_sha256": "9ce0493c6b520b2ecadc9a13123edee5590770d648062b0376a8195ee06f489e",
       "definition_sha256": "454acd4311833555c8086d1e9437e3cb618f6dfd3eadf93c9757aa51816c68b2",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
       "valid_for_comparison": false,
-      "execution_verified": false,
-      "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ]
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
       ],
-      "summaries": [],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 144,
+            "min": 144,
+            "max": 144
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 89,
+            "min": 89,
+            "max": 89
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 62,
+            "min": 62,
+            "max": 62
+          },
+          "storage": {
+            "median": 413827357,
+            "min": 413827357,
+            "max": 413827357
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 60,
+            "min": 60,
+            "max": 60
+          },
+          "storage": {
+            "median": 413827357,
+            "min": 413827357,
+            "max": 413827357
+          },
+          "storage_measured_count": 1
+        }
+      ],
       "dispatches": [
         {
           "case_id": "n8n",
@@ -3866,14 +4118,40 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149055130"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37149055130"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "n8n",
+          "series_id": "runners-output-qualification-01",
+          "sample": 1,
+          "run_id": "37149055130",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149055130",
+          "source_sha": "b759879316279afa06a7e8166c905429547adb34",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "c52e6d5bedd2e1d5e4333c820e0895b30eee8eb5c5ec02389cb5d669dc6f7017"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/n8n/runners-output-qualification-01/report.json",
+      "interpretation_path": "results/n8n/runners-output-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37149055130,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-lifecycle-review-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-lifecycle-review-2026-10-04/benchmarks-37149055130.tar",
+          "bundle_bytes": 1602560,
+          "sha256": "36d2b8fe86fbfe42fa9df155468b0beda3b6a1baabec398dd3a577e04feafafd",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "n8n",
@@ -4774,34 +5052,73 @@
       },
       "plan_sha256": "1cfc86fd12483a24861a1b5e25e6e705b2e057e4ec730b177b2d4bae1b9c36ad",
       "definition_sha256": "6575963f1c26bb20deabd14c54d92bf87354df90a4c8e0171c6674aaaf579644",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
       "valid_for_comparison": false,
-      "execution_verified": false,
-      "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ]
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
       ],
-      "summaries": [],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 1889,
+            "min": 1889,
+            "max": 1889
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 187,
+            "min": 187,
+            "max": 187
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 1016,
+            "min": 1016,
+            "max": 1016
+          },
+          "storage": {
+            "median": 6237909312,
+            "min": 6237909312,
+            "max": 6237909312
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 162,
+            "min": 162,
+            "max": 162
+          },
+          "storage": {
+            "median": 6237909312,
+            "min": 6237909312,
+            "max": 6237909312
+          },
+          "storage_measured_count": 1
+        }
+      ],
       "dispatches": [
         {
           "case_id": "posthog",
@@ -4822,14 +5139,40 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148377350"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37148377350"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "posthog",
+          "series_id": "image-output-combined-qualification-01",
+          "sample": 1,
+          "run_id": "37148377350",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148377350",
+          "source_sha": "ebe9215a904081d279458722339ef85d2b742db6",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "7d2cf7f6e9b12c476c9b3e23b73d31fbe8f25176a91bf7d18fc29a027e819895"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/posthog/image-output-combined-qualification-01/report.json",
+      "interpretation_path": "results/posthog/image-output-combined-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37148377350,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-lifecycle-review-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-lifecycle-review-2026-10-04/benchmarks-37148377350.tar",
+          "bundle_bytes": 373248,
+          "sha256": "bf89e6b23b5517ca298ff620dde1885fce19ec9a9a8d92fce5092a2dfd93e893",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "posthog",
@@ -4868,7 +5211,9 @@
       "execution_verified": false,
       "methodology_issues": [
         "Both warm jobs failed before building because legacy published-scope validation ran before native series scope resolution.",
-        "Cold build_seconds includes the superseded loaded-image inspection, contrary to the declared timing scope. Preserve as diagnostic; corrected execution uses a new series."
+        "Cold build_seconds includes the superseded loaded-image inspection, contrary to the declared timing scope. Preserve as diagnostic; corrected execution uses a new series.",
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
       ],
       "missing_observations": [
         [
@@ -5002,34 +5347,73 @@
       },
       "plan_sha256": "927f06fe53938ebf630a4e155e08ce958db2636f839a15b4f299c1c916f448fc",
       "definition_sha256": "6575963f1c26bb20deabd14c54d92bf87354df90a4c8e0171c6674aaaf579644",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
       "valid_for_comparison": false,
-      "execution_verified": false,
-      "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ]
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
       ],
-      "summaries": [],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 1609,
+            "min": 1609,
+            "max": 1609
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 175,
+            "min": 175,
+            "max": 175
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 778,
+            "min": 778,
+            "max": 778
+          },
+          "storage": {
+            "median": 6237262375,
+            "min": 6237262375,
+            "max": 6237262375
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 136,
+            "min": 136,
+            "max": 136
+          },
+          "storage": {
+            "median": 6237262375,
+            "min": 6237262375,
+            "max": 6237262375
+          },
+          "storage_measured_count": 1
+        }
+      ],
       "dispatches": [
         {
           "case_id": "posthog",
@@ -5050,14 +5434,40 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148375181"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37148375181"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "posthog",
+          "series_id": "image-output-qualification-02",
+          "sample": 1,
+          "run_id": "37148375181",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148375181",
+          "source_sha": "ebe9215a904081d279458722339ef85d2b742db6",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "ad47456c459688cb932e9d232c57790b64b694616f587246c3bb3b3c07e77e25"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/posthog/image-output-qualification-02/report.json",
+      "interpretation_path": "results/posthog/image-output-qualification-02/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37148375181,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-lifecycle-review-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-lifecycle-review-2026-10-04/benchmarks-37148375181.tar",
+          "bundle_bytes": 372736,
+          "sha256": "49df16499aee7a038dfea048f8ec82e605cbfa22fa8822e0060bc7ce213e65b4",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "qdrant",
@@ -5092,9 +5502,12 @@
       "definition_sha256": "e05d45d9cb64f12d4e8b734ca13bc253a3a03c7f2833add246c8981abe668bf7",
       "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": true,
+      "valid_for_comparison": false,
       "execution_verified": true,
-      "methodology_issues": [],
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
       "missing_observations": [],
       "summaries": [
         {

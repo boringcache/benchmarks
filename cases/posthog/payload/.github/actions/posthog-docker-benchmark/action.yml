@@ -132,28 +132,7 @@ runs:
       PLATFORM: "${{ inputs.platform }}"
     run: |
       set -euo pipefail
-      if [[ -n "${BENCHMARK_SERIES_ID:-}" ]]; then
-        [[ "$BENCHMARK_SERIES_ID" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]] || exit 1
-        [[ "${BENCHMARK_SAMPLE:-}" =~ ^[1-9][0-9]*$ ]] || exit 1
-        if [[ "$CACHE_LANE" == "rolling" ]]; then
-          cache_scope="${BENCHMARK_ID:-benchmark}-series-${BENCHMARK_SERIES_ID}"
-        else
-          cache_scope="${BENCHMARK_ID:-benchmark}-series-${BENCHMARK_SERIES_ID}-s${BENCHMARK_SAMPLE}-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
-        fi
-      elif [[ "$PHASE" == "warm" ]]; then
-        [[ -n "$PUBLISHED_SCOPE" ]]
-        cache_scope="$PUBLISHED_SCOPE"
-      else
-        ref_slug="$(printf '%s' "$GITHUB_REF_NAME" | tr -c 'A-Za-z0-9._-' '-')"
-        ref_slug="${ref_slug#-}"
-        ref_slug="${ref_slug%-}"
-        ref_slug="${ref_slug:-main}"
-        if [[ "$CACHE_LANE" == "rolling" ]]; then
-          cache_scope="${BENCHMARK_ID}-rolling-${ref_slug}"
-        else
-          cache_scope="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
-        fi
-      fi
+      cache_scope="$(ruby ./scripts/benchmark-phase.rb scope --require-published)"
       ruby ./scripts/scope-case-cache.rb "$cache_scope"
       echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
       source_url="$(git config -f .gitmodules submodule.upstream.url)"
@@ -192,29 +171,9 @@ runs:
       registry: ghcr.io
       username: "${{ github.actor }}"
       password: "${{ github.token }}"
-  - name: Start the provider setup timer
-    id: setup_timer
-    shell: bash
-    run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
-  - name: Set up Buildx for the Actions cache protocol
-    if: inputs.strategy == 'actions-cache' || inputs.strategy == 'runs-on-cache'
-    uses: "./.github/actions/setup-docker"
-  - name: Start the build timer
-    id: build_timer
-    shell: bash
-    env:
-      SETUP_STARTED_AT: "${{ steps.setup_timer.outputs.started_at }}"
-    run: |
-      set -euo pipefail
-      now="$(date +%s)"
-      echo "setup_seconds=$(( now - SETUP_STARTED_AT ))" >> "$GITHUB_OUTPUT"
-      echo "started_at=${now}" >> "$GITHUB_OUTPUT"
-  - name: Build with the Actions cache protocol
-    if: inputs.strategy == 'actions-cache' || inputs.strategy == 'runs-on-cache'
-    uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
-    env:
-      DOCKER_BUILD_SUMMARY: 'false'
-      DOCKER_BUILD_RECORD_UPLOAD: 'false'
+  - name: Build with the declared cache provider
+    id: provider_build
+    uses: "./.github/actions/docker-benchmark"
     with:
       context: upstream
       file: "${{ steps.dockerfile.outputs.path }}"
@@ -223,43 +182,19 @@ runs:
         || 'actions-cache' }}
       push: "${{ inputs.push_image == 'true' && github.ref == 'refs/heads/main' }}"
       load: "${{ inputs.load_image == 'true' }}"
-      provenance: false
+      provenance: 'false'
       secrets: "${{ inputs.posthog_sourcemap_api_key != '' && format('posthog_upload_sourcemaps_cli_api_key={0}',
         inputs.posthog_sourcemap_api_key) || '' }}"
-      cache-from: type=gha,scope=${{ steps.scope.outputs.cache_scope }}
-      cache-to: type=gha,scope=${{ steps.scope.outputs.cache_scope }},mode=max
-  - name: Publish with BoringCache
-    id: publish
-    if: inputs.strategy == 'boringcache' && (inputs.phase == 'publish' || (inputs.phase
-      == 'warm' && inputs.publish_on_warm == 'true'))
-    uses: "./.github/actions/boringcache"
-    env:
-      BORINGCACHE_MANAGED_BUILDKIT_IMAGE: "${{ inputs.buildkit_image }}"
-      POSTHOG_SOURCEMAP_API_KEY: "${{ inputs.posthog_sourcemap_api_key }}"
-    with:
+      strategy: "${{ inputs.strategy == 'runs-on-cache' && 'actions-cache' || inputs.strategy
+        }}"
+      phase: "${{ inputs.phase }}"
+      cache-scope: "${{ steps.scope.outputs.cache_scope }}"
       cli-version: "${{ inputs.cli_version }}"
-      mode: docker
-      trust-policy: publish
-      fail-on-cache-miss: "${{ inputs.phase == 'warm' }}"
-  - name: Build from the BoringCache cache
-    id: restore
-    if: inputs.strategy == 'boringcache' && inputs.phase == 'warm' && inputs.publish_on_warm
-      != 'true'
-    uses: "./.github/actions/boringcache"
+      buildkit-image: "${{ inputs.buildkit_image }}"
+      publish-on-warm: "${{ inputs.publish_on_warm }}"
+      no-cache: "${{ inputs.no_cache }}"
     env:
-      BORINGCACHE_MANAGED_BUILDKIT_IMAGE: "${{ inputs.buildkit_image }}"
       POSTHOG_SOURCEMAP_API_KEY: "${{ inputs.posthog_sourcemap_api_key }}"
-    with:
-      cli-version: "${{ inputs.cli_version }}"
-      mode: docker
-      trust-policy: restore
-      fail-on-cache-miss: true
-  - name: Capture the build timing
-    id: build_timing
-    shell: bash
-    env:
-      BUILD_STARTED_AT: "${{ steps.build_timer.outputs.started_at }}"
-    run: echo "build_seconds=$(( $(date +%s) - BUILD_STARTED_AT ))" >> "$GITHUB_OUTPUT"
   - name: Verify the Docker output
     id: output_verification
     shell: bash
@@ -283,12 +218,10 @@ runs:
         'commit' || inputs.phase == 'warm' && 'warm' || 'cold' }}"
       REPORT_VARIANT: "${{ inputs.report_variant || steps.scope.outputs.variant }}"
       WORKFLOW_STARTED_AT: "${{ steps.workflow_timer.outputs.started_at }}"
-      SETUP_SECONDS: "${{ steps.build_timer.outputs.setup_seconds }}"
-      BUILD_SECONDS: "${{ steps.build_timing.outputs.build_seconds }}"
-      CACHE_HIT: "${{ steps.publish.outputs.cache-hit || steps.restore.outputs.cache-hit
-        }}"
-      EVIDENCE_PATH: "${{ steps.publish.outputs.evidence-path || steps.restore.outputs.evidence-path
-        }}"
+      SETUP_SECONDS: "${{ steps.provider_build.outputs.setup-seconds }}"
+      BUILD_SECONDS: "${{ steps.provider_build.outputs.build-seconds }}"
+      CACHE_HIT: "${{ steps.provider_build.outputs.cache-hit }}"
+      EVIDENCE_PATH: "${{ steps.provider_build.outputs.evidence-path }}"
       STORAGE_KEY: "${{ steps.scope.outputs.cache_scope }}"
       GITHUB_TOKEN: "${{ github.token }}"
       SOURCE_REPOSITORY: "${{ steps.scope.outputs.source_repository }}"

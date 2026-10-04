@@ -235,4 +235,26 @@ class NightlyCanariesTest < Minitest::Test
     assert @runner.collect(summary: @summary, benchmarks: [BENCHMARK.merge("archived" => true)])
     assert_empty @runner.requests
   end
+
+  def test_collects_the_active_historical_canary_until_cutover
+    prepare_collection
+    item = BENCHMARK.merge("source_repo" => "boringcache/benchmarks", "case_id" => "example",
+      "fresh_workflow" => "native-fresh-benchmark.yml", "fresh_inputs" => {"variant" => "layers"},
+      "historical_source_repo" => BENCHMARK.fetch("source_repo"), "historical_fresh_workflow" => "fresh.yml",
+      "canary_location" => "historical")
+    assert @runner.collect(summary: @summary, benchmarks: [item], now: Time.utc(2026, 9, 30, 12))
+    assert_equal [[BENCHMARK.fetch("source_repo"), 21]], @runner.receipt_requests
+    refute @runner.requests.any? { |request| request[:path].start_with?("repos/boringcache/benchmarks/") }
+
+    @runner.conclusion = "failure"
+    refute @runner.collect(summary: @summary, benchmarks: [item], now: Time.utc(2026, 9, 30, 12))
+    assert_includes File.read(@summary), "**failure**"
+  end
+
+  def test_canary_cutover_requires_a_known_location
+    assert_raises(NightlyCanaries::Error) do
+      @runner.collect(summary: @summary, benchmarks: [BENCHMARK.merge("canary_location" => "typo")])
+    end
+    assert_empty @runner.requests
+  end
 end

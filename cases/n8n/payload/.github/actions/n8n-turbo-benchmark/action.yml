@@ -59,24 +59,7 @@ runs:
       CACHE_LANE: "${{ inputs.cache_lane }}"
     run: |
       set -euo pipefail
-      ref_slug="$(printf '%s' "$GITHUB_REF_NAME" | tr -c 'A-Za-z0-9._-' '-')"
-      ref_slug="${ref_slug#-}"
-      ref_slug="${ref_slug%-}"
-      ref_slug="${ref_slug:-main}"
-      if [[ "$CACHE_LANE" == "rolling" ]]; then
-        cache_scope="${BENCHMARK_ID}-rolling-${ref_slug}"
-      else
-        cache_scope="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
-      fi
-      if [[ -n "${BENCHMARK_SERIES_ID:-}" ]]; then
-        [[ "$BENCHMARK_SERIES_ID" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]] || exit 1
-        [[ "${BENCHMARK_SAMPLE:-}" =~ ^[1-9][0-9]*$ ]] || exit 1
-        if [[ "$CACHE_LANE" == "rolling" ]]; then
-          cache_scope="${BENCHMARK_ID:-benchmark}-series-${BENCHMARK_SERIES_ID}"
-        else
-          cache_scope="${BENCHMARK_ID:-benchmark}-series-${BENCHMARK_SERIES_ID}-s${BENCHMARK_SAMPLE}-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
-        fi
-      fi
+      cache_scope="$(ruby ./scripts/benchmark-phase.rb scope)"
       ruby ./scripts/scope-case-cache.rb "$cache_scope"
       source_sha="$(git rev-parse HEAD:upstream)"
       echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
