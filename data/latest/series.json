@@ -2426,6 +2426,73 @@
     },
     {
       "case_id": "hugo-go",
+      "series_id": "shared-lifecycle-qualification-01",
+      "plan_path": "results/hugo-go/shared-lifecycle-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "35a2dc05b7b87a66a9da5682af58e51e412316e72c350c17078ed04080c4a312",
+      "definition_sha256": "908a8962c0bcdca6e1d3842c2e64bfe3ba71735a16821012d5767acd775693cb",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "interpretation_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "hugo-go",
       "series_id": "wrapper-qualification",
       "plan_path": "results/hugo-go/wrapper-qualification/series.json",
       "lane": "fresh",
@@ -2967,6 +3034,73 @@
           "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
         }
       ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "hugo",
+      "series_id": "shared-lifecycle-qualification-01",
+      "plan_path": "results/hugo/shared-lifecycle-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "5a0c3c4b9e6cd65dc8a629f125534a1fcdd5ba9015d2f5b6aa3ba312145e53e4",
+      "definition_sha256": "8efc5a2368ac2012b1d1264006447fe93436d593e309aa867826b42a2d127750",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "interpretation_path": null,
+      "evidence": [],
       "runs_without_archives": []
     },
     {
@@ -5467,6 +5601,140 @@
           "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
         }
       ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "posthog",
+      "series_id": "shared-combined-lifecycle-01",
+      "plan_path": "results/posthog/shared-combined-lifecycle-01/series.json",
+      "lane": "fresh",
+      "variant": "combined",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "PostHog/posthog",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "683444f5363548d3815f9e55d6a56a023d9d15a9300582fe02bfeb322f2da2e7",
+      "definition_sha256": "6d012067d6265b02726f6c5df471c31178c21c92c4471ce712ae7a3d4125f653",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "interpretation_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "posthog",
+      "series_id": "shared-layers-lifecycle-01",
+      "plan_path": "results/posthog/shared-layers-lifecycle-01/series.json",
+      "lane": "fresh",
+      "variant": "layers",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "PostHog/posthog",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "13c3bd7351df48d08972ba6d0c33f266205703b66a417ce6b3b96d8de674ae44",
+      "definition_sha256": "6d012067d6265b02726f6c5df471c31178c21c92c4471ce712ae7a3d4125f653",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "interpretation_path": null,
+      "evidence": [],
       "runs_without_archives": []
     },
     {
