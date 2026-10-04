@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-04T18:16:42Z",
+  "metrics": {
+    "session_count": 28,
+    "total_hits": 1899,
+    "total_misses": 3077,
+    "total_errors": 0,
+    "total_bytes_read": 3859029339,
+    "total_bytes_written": 2069101903,
+    "duration_seconds": 4286.9,
+    "read_label": "Remote read lookups",
+    "hit_label": "Remote hits",
+    "miss_label": "Missed lookups",
+    "hit_count_label": "remote hit",
+    "miss_count_label": "missed lookup"
+  },
+  "identity": {
+    "provider_run_uid": "37219039939",
+    "attempt": "1",
+    "repository": "boringcache/benchmarks",
+    "commit_sha": "fac4677ae1b217db78662291b34fa89d6253f92c"
+  },
+  "jobs": [
+    {
+      "job": "consume-head",
+      "phases": [],
+      "tools": [
+        "archive",
+        "sccache"
+      ],
+      "cache_layers": [
+        "dependencies",
+        "target",
+        "sccache"
+      ],
+      "hits": 1837,
+      "misses": 59,
+      "errors": 0,
+      "bytes_read": 3855437948,
+      "bytes_written": 0,
+      "duration_seconds": 1487.6
+    },
+    {
+      "job": "publish-base",
+      "phases": [],
+      "tools": [
+        "archive",
+        "sccache"
+      ],
+      "cache_layers": [
+        "dependencies",
+        "target",
+        "sccache"
+      ],
+      "hits": 62,
+      "misses": 3018,
+      "errors": 0,
+      "bytes_read": 3591391,
+      "bytes_written": 2069101903,
+      "duration_seconds": 2837.5
+    }
+  ]
+}
