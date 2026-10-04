@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "repository": "boringcache/benchmarks",
+  "source_sha": "35e10981f5e27824d81b19c575a91691592905e9",
+  "scope": "One-sample loaded-image qualification; cache API snapshots are context, not per-phase occupancy or evidence that eviction did not occur",
+  "publication": "unreviewed",
+  "cache_observations": {
+    "usage": {
+      "endpoint": "repos/boringcache/benchmarks/actions/cache/usage",
+      "collected_at": "2026-10-03T06:54:17Z",
+      "response": {
+        "full_name": "boringcache/benchmarks",
+        "active_caches_size_in_bytes": 4709831954,
+        "active_caches_count": 182
+      }
+    },
+    "storage-limit": {
+      "endpoint": "repos/boringcache/benchmarks/actions/cache/storage-limit",
+      "collected_at": "2026-10-03T06:54:17Z",
+      "response": {
+        "max_cache_size_gb": 10
+      }
+    }
+  },
+  "dispatches": [
+    {
+      "case_id": "chroma",
+      "workflow": "native-fresh-benchmark.yml",
+      "run_id": 37104573058,
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104573058",
+      "requested_at": "2026-10-03T06:54:28Z",
+      "ref": "image-output-qualification-2026-10-03",
+      "inputs": {
+        "case_id": "chroma",
+        "cli_version": "v1.33.0",
+        "series_id": "image-output-qualification-01",
+        "sample": "1"
+      }
+    },
+    {
+      "case_id": "duckgres",
+      "workflow": "native-fresh-benchmark.yml",
+      "run_id": 37104593175,
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104593175",
+      "requested_at": "2026-10-03T06:54:48Z",
+      "ref": "image-output-qualification-2026-10-03",
+      "inputs": {
+        "case_id": "duckgres",
+        "cli_version": "v1.33.0",
+        "series_id": "image-output-qualification-01",
+        "sample": "1"
+      }
+    },
+    {
+      "case_id": "hugo",
+      "workflow": "native-fresh-benchmark.yml",
+      "run_id": 37104595025,
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104595025",
+      "requested_at": "2026-10-03T06:54:50Z",
+      "ref": "image-output-qualification-2026-10-03",
+      "inputs": {
+        "case_id": "hugo",
+        "cli_version": "v1.33.0",
+        "series_id": "image-output-qualification-01",
+        "sample": "1"
+      }
+    },
+    {
+      "case_id": "immich",
+      "workflow": "native-fresh-benchmark.yml",
+      "run_id": 37104602471,
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104602471",
+      "requested_at": "2026-10-03T06:54:59Z",
+      "ref": "image-output-qualification-2026-10-03",
+      "inputs": {
+        "case_id": "immich",
+        "cli_version": "v1.33.0",
+        "series_id": "image-output-qualification-01",
+        "sample": "1"
+      }
+    },
+    {
+      "case_id": "linkerd2",
+      "workflow": "native-fresh-benchmark.yml",
+      "run_id": 37104596700,
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104596700",
+      "requested_at": "2026-10-03T06:54:52Z",
+      "ref": "image-output-qualification-2026-10-03",
+      "inputs": {
+        "case_id": "linkerd2",
+        "cli_version": "v1.33.0",
+        "series_id": "image-output-qualification-01",
+        "sample": "1"
+      }
+    },
+    {
+      "case_id": "mastodon",
+      "workflow": "native-fresh-benchmark.yml",
+      "run_id": 37104599574,
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104599574",
+      "requested_at": "2026-10-03T06:54:55Z",
+      "ref": "image-output-qualification-2026-10-03",
+      "inputs": {
+        "case_id": "mastodon",
+        "cli_version": "v1.33.0",
+        "variant": "server",
+        "series_id": "image-output-qualification-01",
+        "sample": "1"
+      }
+    },
+    {
+      "case_id": "n8n",
+      "workflow": "native-fresh-benchmark.yml",
+      "run_id": 37104598178,
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104598178",
+      "requested_at": "2026-10-03T06:54:54Z",
+      "ref": "image-output-qualification-2026-10-03",
+      "inputs": {
+        "case_id": "n8n",
+        "cli_version": "v1.33.0",
+        "variant": "docker",
+        "series_id": "image-output-qualification-01",
+        "sample": "1"
+      }
+    },
+    {
+      "case_id": "posthog",
+      "workflow": "native-fresh-benchmark.yml",
+      "run_id": 37104600856,
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104600856",
+      "requested_at": "2026-10-03T06:54:57Z",
+      "ref": "image-output-qualification-2026-10-03",
+      "inputs": {
+        "case_id": "posthog",
+        "cli_version": "v1.33.0",
+        "variant": "layers",
+        "series_id": "image-output-qualification-01",
+        "sample": "1"
+      }
+    }
+  ],
+  "outcomes": [
+    {
+      "run_id": 37104573058,
+      "case_id": "chroma",
+      "series_id": "image-output-qualification-01",
+      "variant": null,
+      "completion": "success",
+      "observations": 4,
+      "valid_for_comparison": true,
+      "methodology_issues": []
+    },
+    {
+      "run_id": 37104593175,
+      "case_id": "duckgres",
+      "series_id": "image-output-qualification-01",
+      "variant": null,
+      "completion": "success",
+      "observations": 4,
+      "valid_for_comparison": true,
+      "methodology_issues": []
+    },
+    {
+      "run_id": 37104595025,
+      "case_id": "hugo",
+      "series_id": "image-output-qualification-01",
+      "variant": null,
+      "completion": "failed",
+      "observations": 0,
+      "valid_for_comparison": false,
+      "methodology_issues": []
+    },
+    {
+      "run_id": 37104602471,
+      "case_id": "immich",
+      "series_id": "image-output-qualification-01",
+      "variant": null,
+      "completion": "success",
+      "observations": 4,
+      "valid_for_comparison": true,
+      "methodology_issues": []
+    },
+    {
+      "run_id": 37104596700,
+      "case_id": "linkerd2",
+      "series_id": "image-output-qualification-01",
+      "variant": null,
+      "completion": "success",
+      "observations": 4,
+      "valid_for_comparison": true,
+      "methodology_issues": []
+    },
+    {
+      "run_id": 37104599574,
+      "case_id": "mastodon",
+      "series_id": "image-output-qualification-01",
+      "variant": "server",
+      "completion": "success",
+      "observations": 4,
+      "valid_for_comparison": true,
+      "methodology_issues": []
+    },
+    {
+      "run_id": 37104598178,
+      "case_id": "n8n",
+      "series_id": "image-output-qualification-01",
+      "variant": "docker",
+      "completion": "success",
+      "observations": 4,
+      "valid_for_comparison": true,
+      "methodology_issues": []
+    },
+    {
+      "run_id": 37104600856,
+      "case_id": "posthog",
+      "series_id": "image-output-qualification-01",
+      "variant": "layers",
+      "completion": "failed",
+      "observations": 2,
+      "valid_for_comparison": false,
+      "methodology_issues": [
+        "Both warm jobs failed before building because legacy published-scope validation ran before native series scope resolution.",
+        "Cold build_seconds includes the superseded loaded-image inspection, contrary to the declared timing scope. Preserve as diagnostic; corrected execution uses a new series."
+      ]
+    }
+  ]
+}

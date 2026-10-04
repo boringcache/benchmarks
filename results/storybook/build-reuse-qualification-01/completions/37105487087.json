@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "storybook",
+  "series_id": "build-reuse-qualification-01",
+  "sample": 1,
+  "run_id": "37105487087",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37105487087",
+  "source_sha": "b3ab6324aeccebbb38cc7e2fc1c921ae4f0b399e",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "93bb5bb3faf15c087bb8fc3d967d8355c1246960603f6dc637057920c5b7c245"
+}

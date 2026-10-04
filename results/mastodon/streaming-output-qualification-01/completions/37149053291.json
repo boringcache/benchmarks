@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "mastodon",
+  "series_id": "streaming-output-qualification-01",
+  "sample": 1,
+  "run_id": "37149053291",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149053291",
+  "source_sha": "b759879316279afa06a7e8166c905429547adb34",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "530bf111ae6b4a6f70347e2e293b0ad75cec21dd175728be464cf8ecfc1ebfec"
+}

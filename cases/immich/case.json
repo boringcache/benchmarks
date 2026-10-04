@@ -22,13 +22,21 @@
   "execution": {
     "workflows": [
       {
+        "path": ".github/workflows/native-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "immich"
+        },
+        "historical_workflow": "immich-immich-fresh-benchmark.yml"
+      },
+      {
         "path": ".github/workflows/immich-immich-benchmark.yml",
-        "lane": "rolling",
+        "lane": "diagnostic",
         "inputs": {}
       },
       {
         "path": ".github/workflows/immich-immich-fresh-benchmark.yml",
-        "lane": "fresh",
+        "lane": "diagnostic",
         "inputs": {}
       }
     ],
@@ -37,6 +45,14 @@
     "cache_tags": {
       "immich-docker-local": "{scope}-docker",
       "immich-ccache-local": "{scope}-ccache"
+    },
+    "native": {
+      "action": ".github/actions/immich-docker-benchmark",
+      "benchmark_id": "immich-server",
+      "fresh_inputs": {
+        "load_image": "true"
+      },
+      "rolling_inputs": {}
     }
   },
   "reporting": {
@@ -46,7 +62,8 @@
     "publication": "reviewed"
   },
   "verification": [
-    "Pinned upstream recipe and build success"
+    "Pinned upstream recipe and build success",
+    "The freshly loaded output image exists in the local Docker image store"
   ],
   "comparison": {
     "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
@@ -54,7 +71,7 @@
       "boringcache",
       "actions-cache"
     ],
-    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
     "primary_metric": "build_and_reuse_seconds",
     "storage": "provider-reported",
     "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",

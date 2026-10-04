@@ -1,5 +1,30 @@
 # Consolidation acceptance
 
+## Current cutover gates
+
+The central definitions and shared harness exist. Active schedules, the historical
+index feed, and original repositories still require a verified cutover. Use the
+same [case process](process.md) for a maintained benchmark or a selected evaluation;
+adding an evaluation does not require a fork or another harness.
+
+| Area | Current state | Remaining acceptance |
+| --- | --- | --- |
+| Definitions and execution | 17 maintained cases, 47 Docker workloads, and four blocked gRPC evaluation drafts; one provider wrapper and workspace | Qualify each scheduled workload and variant, including output checks and cache source lineage |
+| Docker lifecycle | One shared provider/timing action; equal publication policy; corrected Hugo and both PostHog profiles pass cold/warm execution with final product evidence retained after cleanup | Qualify the remaining workload and rolling paths |
+| Reporting and evidence | One canonical phase/series format, verified collection, generated catalog, preserved failures and methodology reviews | Reviewed central publication feed and complete required evidence for each retiring repository |
+| Product updates | One Action pin; pin-sync and product-interface checks inspect shared execution views | Complete companion integration and released-product qualification before caller activation |
+| Scheduling | Monitoring reads the existing active schedules | Qualify central source-sync/canary/release callers, then retire each replaced schedule |
+| Shared GitHub capacity | Serial comparisons; capacity snapshots retained | Choose retention/capacity policy and verify seed availability for rolling comparisons |
+| Fork retirement | Deferred inventory and selected candidates retained | Audit unique work, evidence, external links, and active upstream contributions before each decision |
+
+The [October 4 capacity snapshot](../migration/cache-capacity-2026-10-04.json)
+records 10,650,140,305 bytes in 274 cache entries and the API's `max_cache_size_gb`
+setting of 10. This is repository context, not a per-phase measurement or proof
+of eviction. A later contextual snapshot records 11,885,301,507 bytes in 289
+entries. Neither snapshot establishes that a particular seed survived. Capacity
+and seed checks remain required before activating central schedules.
+
+
 The first cutover migrates the 18 maintained `benchmark-*` repositories:
 17 benchmark cases and Docker's 47 pinned workloads. Fork evaluations are deferred
 in `migration/forks.json`. Original forks and benchmark repositories remain
@@ -41,10 +66,112 @@ and reporting qualification remain required.
 Imported execution workflows accept explicit dispatch only until their live
 qualification passes. Schedules and source-triggered execution must be enabled
 as part of the reviewed caller cutover. PR validation runs the harness guards.
+
+The shared native fresh path also selects individual n8n Turbo/Docker, Mastodon
+server/streaming, and PostHog cache profiles from reviewed variant metadata;
+Immich's server uses the same path without a variant. Their imported matrices
+remain registered diagnostics. Loaded-image checks and live execution are
+qualified per selected variant; they do not establish application runtime
+behavior or qualify the original rolling publication behavior. Existing callers
+and schedules still use the original repositories.
+Four initial screens (Chroma, Duckgres, Hugo Docker, and Linkerd2) were cancelled
+after review found missing image output checks. Their original plans, receipts,
+cancelled completions, and scoped evidence remain preserved. Their replacement
+fresh recipes load an image in both arms and use the shared output checker;
+timing includes export and load. Chroma, Duckgres, and Linkerd2 completed their
+replacement screens. Hugo's first replacement failed in both providers because
+the Docker exporter rejected its attestation manifest list; a separate corrected
+plan disables those attestations for loaded output in both arms. Original rolling
+publication projections remain diagnostic.
+The same checker and load projection apply to the selected n8n Docker, Mastodon,
+PostHog, and Immich server recipes. Native preparation enforces the output
+requirement before creating a source checkout. No image load or application
+behavior is claimed for their older cache-only results.
+The native Docker actions also use the shared Ruby source preparer. Chroma's
+[recipe review](../cases/chroma/recipe-review.md) records the removal of its old
+diagnostic source-layer marker from the identical-source replay. The replacement
+timings must not be combined with that earlier projection.
+
+The October 4 review found a shared fairness error in those Docker comparisons:
+Actions Cache exported warm state while BoringCache restored without publishing.
+Plan-bound reviews now mark all affected recorded Docker series ineligible for a
+comparative claim, retaining the original measurements and successful output
+checks. The shared `docker-benchmark` action now owns setup, timing, and the same
+publication decision for both providers. Cold publishes; ordinary warm replay
+does not. Explicit warm publication applies to both arms.
+
+The [lifecycle screening archive](https://github.com/boringcache/benchmarks/releases/tag/evidence-lifecycle-review-2026-10-04)
+preserves the six completed PostHog layers/combined, Hugo, Mastodon streaming, and
+n8n runners/distroless runs requested on October 3. Their four phase records per
+run are imported through `bin/bench collect`; each published bundle was downloaded
+again and verified against its checksum and 13-file inventory. These runs retain
+the same publication-policy limitation. They also lack the original final One
+evidence envelope. The new provider post hook retains that envelope after product
+cleanup. Corrected execution requires new frozen series and live qualification.
+
+The corrected [Hugo Go](../results/hugo-go/shared-lifecycle-qualification-01/interpretation.md)
+and [Hugo Docker](../results/hugo/shared-lifecycle-qualification-02/interpretation.md)
+screens pass cold/warm output, post-step completion, and final product evidence
+retention. Their one-sample records preserve BoringCache's slower warm results
+and missing Actions Cache storage. The three initial Docker requests failed
+before building on unsupported helper output names. All five completed requests
+are retained in the [verified shared-lifecycle archive](https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04),
+with 53 listed files verified after download. Corrected PostHog
+[layers](../results/posthog/shared-layers-lifecycle-02/interpretation.md) and
+[combined](../results/posthog/shared-combined-lifecycle-02/interpretation.md)
+screens also pass both providers' cold/warm output and completion checks. Their
+original final product evidence is retained after cleanup. Actions Cache storage
+is unmeasured. The combined record's selected Docker-tag bytes do not establish
+coverage of tool-cache storage, and identical-source replay does not isolate
+tool-cache benefit. Durable publication verification for these two exports is
+recorded separately in the evidence inventory.
+
+Canary monitoring now follows the active historical schedules through explicit
+registry metadata. Its October 4 read-only collection verified all 16 repository
+receipts and 17 child runs successfully. Central dispatch remains manual until
+each schedule is qualified and cut over. This fixes monitoring without treating
+an imported definition as an active central schedule.
+n8n Turbo's primary measurement now captures cache setup and the build separately
+from its dependency installation. The install still runs before the build. Earlier
+results retain their original timed scope and must not be mixed with this series.
+Storybook's first fresh screen also timed dependency installation and sandbox
+creation in its setup metric. Its plan-bound methodology review prevents a
+comparative claim while retaining every original observation. The replacement
+recipe stops the setup timer before those operations. Its new one-sample series
+completed output and preserved completion checks, retaining the slower
+BoringCache measurements.
+
+The [image-output archive](https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03)
+preserves all eight frozen requests at `35e10981`, including the failed Hugo and
+PostHog executions. Six selected paths completed cold/replay output and completion
+checks: Chroma, Duckgres, Linkerd2, n8n Docker, Mastodon server, and Immich server.
+The PostHog cold records also include inspection inside the timer, contrary to
+their declared scope. A plan-bound methodology review prevents comparative use.
+The [PostHog review](../cases/posthog/recipe-review.md) records the scope and timer
+fixes; the [Hugo review](../cases/hugo/recipe-review.md) records its loaded-output
+projection. New plans at signed `docker-output-correction-2026-10-03` request
+PostHog layers, PostHog combined, and Hugo qualification without changing the
+earlier declarations.
+
+The [build/reuse archive](https://github.com/boringcache/benchmarks/releases/tag/evidence-build-reuse-2026-10-03)
+preserves the corrected Storybook screen and both Deno seed-advance runs at
+`b3ab6324`. Deno's publication-capable operations completed against the declared
+parent cohorts, but remain diagnostic correctness investigations pending a generic
+verified lineage contract. Native errors and unmeasured selected-tag storage
+remain visible. Both archive releases were independently downloaded, checked
+against archive digests, extracted, and verified against their scoped inventories.
+One-sample screens do not approve publication, caller cutover, or deletion.
 GitHub's default CodeQL configuration now scans Ruby and Actions. Python was
 removed from its language list because this branch removes the maintained Python
 reporter; query suite, threat model, weekly schedule, and runner settings were
-preserved.
+preserved. The new evidence post hook adds maintained JavaScript on this branch.
+After it reaches the default branch, verify that default CodeQL setup includes
+`javascript-typescript` and its analysis passes. [GitHub automatically detects
+new supported languages](https://docs.github.com/en/code-security/concepts/code-scanning/setup-types)
+and can revert a failing new configuration. Correct missing coverage while
+preserving Ruby and Actions, the existing query suite and threat model, weekly
+schedule, and runner settings.
+The hook's Node regression already runs in PR guardrails.
 Archiving does not preserve expiring Actions evidence. Missing evidence and
 unverified execution remain explicit in the inventory.
 

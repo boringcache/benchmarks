@@ -43,6 +43,37 @@ do not copy workflow setup or reporting into each new case. Declare tag mappings
 in `execution.cache_tags` and use `scope-case-cache.rb`. Use `prepare-source.rb`
 for an unchanged pinned upstream checkout.
 
+When one case has several workloads, declare their recipe overrides in
+`execution.native.variants` and register the same variants on the shared workflow
+entry with `variant_input: variant`. Select one variant before execution:
+
+```sh
+bin/bench plan n8n --variant turbo
+bin/bench prepare n8n --native-lane fresh --variant turbo --directory /tmp/n8n-turbo
+bin/bench start n8n --series screening-turbo-01 --variant turbo --samples 1
+```
+
+The selected variant fixes the case action, benchmark ID, toolchain inputs, and
+report identity. Provider-specific boolean flags belong in `provider_flags`;
+for example, the Actions Cache arm keeps BoringCache's tool-proxy flags disabled.
+All variants use the same provider lifecycle and canonical reporter. Missing or
+unknown variants fail before dispatch. Contract checks prepare every registered
+native variant, including its report filenames. A fresh variant passing does not
+qualify another variant or the original rolling matrix.
+Native planning also rejects a phase action that does not report verified output.
+Add and review the actual output check before setting `--verified-output`; the
+flag alone does not verify a workload. Schema and file-contract checks can pass
+while an imported recipe still lacks that execution requirement.
+For native Docker comparisons that declare `load_image`, fresh inputs must set
+it to `true`. Both arms then export and load their built image during the timed
+build. The shared `verify-docker-output.rb` checks the selected provider's image
+after timing and passes verification to the reporter only after inspection
+succeeds. The image check establishes that the build produced the declared image;
+application behavior requires any additional checks declared by the case.
+Publication and cache-only projections remain diagnostic until their output and
+comparison boundary have been reviewed. Do not add the verification flag to a
+cache-only build.
+
 Keep different provider sets, architectures, source-change sequences, and output
 behavior explicit in their adapters or case actions. OBS, Cargo product proofs,
 and the Docker corpus retain their distinct execution shapes. Add a workflow
@@ -57,8 +88,27 @@ shared actions such as `prepare-case`, `setup-docker`, and `setup-node`; case
 actions retain their upstream commands, patches, and output verification. Native
 fresh and rolling workflows support both dispatch and `workflow_call`. Use them
 for evaluations and published cases without copying the provider lifecycle.
+Reusable callers declare `contents: read`, `actions: read`, `packages: read`, and
+`id-token: write` for the called job. GitHub checks these permissions when loading
+the workflow, including calls whose execution condition is false.
 Docker tool caches remain product-plan settings rather than a second implementation
 of the product's proxy or cache lifecycle.
+Docker case actions call `.github/actions/docker-benchmark` for provider setup,
+timing, and execution. One phase policy controls cache publication in both arms:
+cold publishes; an identical-source warm replay restores without publishing;
+an explicitly declared `publish-on-warm` observation publishes in both arms.
+Image loading stays inside this action's timer. Output inspection runs after it.
+Use `benchmark-phase.rb scope` for the shared case/series identity, and keep
+tool-specific tags in the product plan.
+
+The provider wrapper registers `.github/actions/retain-product-evidence` before
+calling One. Its GitHub post hook runs after One's cleanup, then uploads the
+original final evidence JSON using GitHub's artifact SDK. Missing or invalid
+evidence fails retention. The small JavaScript hook is required for GitHub post
+steps; it does not interpret product measurements or implement cache behavior.
+Its dependencies install during preparation, outside the comparison timer.
+The Ruby reporter retains its structured measurements; the original envelope
+remains a separate artifact so post-step status and future product fields survive.
 The harness Ruby version is pinned once in `.tool-versions`. Ruby setup reads
 that file from the harness checkout, including when a shared action is called
 from an older benchmark repository. Guardrails verify preparation on Ubuntu
@@ -112,7 +162,10 @@ parent seed and changed-source build. The workflow's `phases` declares the latte
 as `["cold", "commit"]`; it must never be labelled an identical-source warm replay.
 Rolling series contain changed-source commit observations and retain the parent cache seed.
 Identities include case and series. Cases share a workspace but must not share
-cold cache identity accidentally.
+cold cache identity accidentally. A fresh tag or scope establishes a logical
+cold seed; it does not establish an empty physical provider store. Keep existing
+workspace/repository storage context and do not claim zero prior stored content
+from namespace isolation alone.
 
 GitHub cache quota remains repository-wide. Control concurrency and record
 occupancy and eviction. Key prefixes do not create separate quotas. Keep fixture
@@ -188,6 +241,10 @@ reported KV or archive size; the GitHub probe uses the selected cache key's
 reported archive size. Keep those sources explicit. Do not infer equivalent
 compression, cross-tag deduplication, or physical storage efficiency from these
 counts alone.
+Check coverage against the selected cache profile. For a combined Docker and
+tool-cache profile, Docker-tag bytes alone do not establish total selected-profile
+storage. State the measured subset in the interpretation and retain any missing
+coverage; do not infer additional product tags in the harness.
 GitHub storage reporting receives the read-only token only in the reporting step.
 The selected exact-key rows are retained with their cache IDs, refs, versions,
 timestamps, and byte fields. A missing row or byte field remains unmeasured;
@@ -208,14 +265,24 @@ do not infer publication permission from a successful build or a cache hit.
 ```sh
 bin/bench preserve --repository boringcache/benchmarks --run <run-id> --directory /tmp/evidence-<run-id>
 bin/bench verify-evidence --directory /tmp/evidence-<run-id>
-bin/bench finish <case-id> --series screening-01 --sample 1 --directory /tmp/evidence-<run-id>
-bin/bench report <case-id> --series screening-01
+bin/bench collect <case-id> --series screening-01 --sample 1 --directory /tmp/evidence-<run-id>
 ```
+
+`collect` checks the verified export against the retained dispatch, imports the
+original phase artifacts, checks completion, and regenerates the report. It
+rejects conflicting records before importing them and can resume an identical
+import. It never derives missing phase measurements from logs. `record`, `finish`,
+and `report` remain available separately for reviewed historical imports.
 
 Publish the verified bundle to durable storage with a stable link. Experimental
 cache retention is not permanent evidence retention. The exporter includes all
 available attempts and records gaps; partial exports remain partial. Keep
 original execution URLs as provenance.
+Cancelled requests remain in their original series. A run cancelled before any
+jobs start can have a valid empty log ZIP and a complete scoped export, with no
+measurements. Empty logs for a run that has jobs remain an evidence gap. Use a
+new series after correcting an execution contract; do not replace the old request
+or infer phase measurements from its logs.
 `finish` checks the preserved run and job conclusions and post-step logs. A
 green job with a reported BoringCache post-step failure remains unqualified.
 Reports require a completion check for every run represented by their phase
@@ -236,6 +303,12 @@ report after evidence and methodology review; update the website's reviewed
 evidence selection to an immutable report link. A green workflow or a case's
 existing publication status does not approve a new series. Replacing the legacy
 feed requires a separately qualified adapter for canonical series reports.
+
+Canary monitoring follows `canary_location` in `suites/published.json`. Keep it
+`historical` while the original repository owns the schedule. Set it to `central`
+only when its central dispatcher and receipt have been qualified and its old
+schedule retired. Missing, stale, or failed executions remain failures; importing
+a definition does not move its active schedule.
 
 Generate the common series catalog after recording or completing an evaluation:
 
@@ -274,3 +347,25 @@ diagnostic until their source sequence, seed lineage, and central caller have
 been qualified. Do not enable their schedule or promote their timing merely
 because the workflow completed. The series reporter keeps rolling observations
 but marks them invalid for comparison while seed lineage is unsupported.
+
+## 8. Review product updates
+
+The immutable `boringcache/one` pin in `.github/actions/boringcache/action.yml` is
+the only maintained product Action pin. Its released default owns the ordinary
+CLI version. Use the existing runtime `cli_version` input for an exact release or
+canary experiment; do not add separate version constants to case actions.
+
+For an Action or CLI update, read the released Action metadata and public plan
+contract, update the one pin when needed, then run the case, workflow, report,
+and product-owned interface checks. Start new screening series for affected
+adapters from a committed ref. Inspect output correctness, trust state, raw final
+evidence, native errors, storage coverage, and post-step completion before
+switching scheduled callers. A package download or passing schema check alone
+does not qualify the new product version.
+
+Keep previous series, pins, and observations unchanged. New fields in product
+evidence must survive in the raw artifact even before the canonical reporter
+uses them. Update the shared reporter when measurement semantics change, and
+retain explicit unknown or unmeasured values. Fix missing product capabilities
+in the product; do not reproduce its installers, cache identity, proxy lifecycle,
+or internal evidence normalization in individual benchmark cases.

@@ -10,6 +10,9 @@ inputs:
   suffix:
     description: Optional diagnostic result suffix.
     default: ''
+  variant:
+    description: Reviewed native workload variant.
+    default: ''
 runs:
   using: composite
   steps:
@@ -27,10 +30,17 @@ runs:
         BENCHMARK_CASE_ID: ${{ inputs.case-id }}
         NATIVE_LANE: ${{ inputs.native-lane }}
         BENCHMARK_ID_SUFFIX: ${{ inputs.suffix }}
+        BENCHMARK_VARIANT: ${{ inputs.variant }}
         BUNDLE_GEMFILE: ${{ github.workspace }}/.harness/Gemfile
       run: |
         args=()
         if [[ -n "$NATIVE_LANE" ]]; then
           args+=(--native-lane "$NATIVE_LANE" --suffix "$BENCHMARK_ID_SUFFIX")
+          if [[ -n "$BENCHMARK_VARIANT" ]]; then
+            args+=(--variant "$BENCHMARK_VARIANT")
+          fi
         fi
         ruby .harness/bin/bench prepare "$BENCHMARK_CASE_ID" --directory "$GITHUB_WORKSPACE" "${args[@]}"
+    - name: Install the GitHub artifact client
+      shell: bash
+      run: npm ci --ignore-scripts --no-audit --no-fund --prefix .github/actions/retain-product-evidence

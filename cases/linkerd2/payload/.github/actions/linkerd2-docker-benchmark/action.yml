@@ -1,3 +1,4 @@
+---
 name: Run Linkerd2 Docker benchmark phase
 description: Runs one Linkerd2 Docker cache provider and phase.
 inputs:
@@ -10,6 +11,9 @@ inputs:
   benchmark_id:
     required: true
   push_image:
+    required: false
+    default: 'false'
+  load_image:
     required: false
     default: 'false'
   cli_version:
@@ -46,20 +50,7 @@ runs:
       CACHE_LANE: "${{ inputs.cache_lane }}"
     run: |
       set -euo pipefail
-      ref_slug="$(printf '%s' "$GITHUB_REF_NAME" | tr -c 'A-Za-z0-9._-' '-')"
-      ref_slug="${ref_slug#-}"
-      ref_slug="${ref_slug%-}"
-      ref_slug="${ref_slug:-main}"
-      if [[ "$CACHE_LANE" == "rolling" ]]; then cache_scope="${BENCHMARK_ID}-rolling-${ref_slug}"; else cache_scope="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"; fi
-      if [[ -n "${BENCHMARK_SERIES_ID:-}" ]]; then
-        [[ "$BENCHMARK_SERIES_ID" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]] || exit 1
-        [[ "${BENCHMARK_SAMPLE:-}" =~ ^[1-9][0-9]*$ ]] || exit 1
-        if [[ "$CACHE_LANE" == "rolling" ]]; then
-          cache_scope="${BENCHMARK_ID:-benchmark}-series-${BENCHMARK_SERIES_ID}"
-        else
-          cache_scope="${BENCHMARK_ID:-benchmark}-series-${BENCHMARK_SERIES_ID}-s${BENCHMARK_SAMPLE}-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
-        fi
-      fi
+      cache_scope="$(ruby ./scripts/benchmark-phase.rb scope)"
       ruby ./scripts/scope-case-cache.rb "$cache_scope"
       echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
       source_url="$(git config -f .gitmodules submodule.upstream.url)"
@@ -70,12 +61,13 @@ runs:
     if: inputs.strategy == 'boringcache'
     shell: bash
     env:
+      LOAD_IMAGE: "${{ inputs.load_image }}"
       SOURCE_TAG: "${{ steps.scope.outputs.source_tag }}"
       PUSH_IMAGE: "${{ inputs.push_image == 'true' && github.ref == 'refs/heads/main'
         }}"
       IMAGE: ghcr.io/${{ github.repository_owner }}/linkerd2-benchmark:boringcache
     run: ruby ./scripts/activate-docker-plan.rb --source-tag "$SOURCE_TAG" --push
-      "$PUSH_IMAGE" --image "$IMAGE"
+      "$PUSH_IMAGE" --image "$IMAGE" --load "$LOAD_IMAGE"
   - name: Log in to the GitHub Container Registry
     if: inputs.push_image == 'true' && github.ref == 'refs/heads/main'
     uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
@@ -83,87 +75,57 @@ runs:
       registry: ghcr.io
       username: "${{ github.actor }}"
       password: "${{ github.token }}"
-  - name: Start the provider setup timer
-    id: setup_timer
-    shell: bash
-    run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
-  - name: Set up Buildx for the GitHub Actions comparison
-    if: inputs.strategy == 'actions-cache'
-    uses: ./.github/actions/setup-docker
-  - name: Start the build timer
-    id: build_timer
-    shell: bash
-    env:
-      SETUP_STARTED_AT: "${{ steps.setup_timer.outputs.started_at }}"
-    run: |
-      set -euo pipefail
-      now="$(date +%s)"
-      echo "setup_seconds=$(( now - SETUP_STARTED_AT ))" >> "$GITHUB_OUTPUT"
-      echo "started_at=${now}" >> "$GITHUB_OUTPUT"
-  - name: Build with the GitHub Actions cache
-    if: inputs.strategy == 'actions-cache'
-    uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
-    env:
-      DOCKER_BUILD_SUMMARY: 'false'
-      DOCKER_BUILD_RECORD_UPLOAD: 'false'
+  - name: Build with the declared cache provider
+    id: provider_build
+    uses: "./.github/actions/docker-benchmark"
     with:
       context: upstream
       file: upstream/web/Dockerfile
       tags: ghcr.io/${{ github.repository_owner }}/linkerd2-benchmark:actions-cache
       push: "${{ inputs.push_image == 'true' && github.ref == 'refs/heads/main' }}"
+      load: "${{ inputs.load_image == 'true' }}"
       build-args: LINKERD_VERSION=${{ steps.scope.outputs.source_tag }}
-      provenance: false
-      cache-from: type=gha,scope=${{ steps.scope.outputs.cache_scope }}
-      cache-to: type=gha,scope=${{ steps.scope.outputs.cache_scope }},mode=max
-  - name: Publish with BoringCache
-    id: publish
-    if: inputs.strategy == 'boringcache' && inputs.phase == 'publish'
-    uses: ./.github/actions/boringcache
-    env:
-      BORINGCACHE_MANAGED_BUILDKIT_IMAGE: "${{ inputs.buildkit_image }}"
-    with:
+      provenance: 'false'
+      strategy: "${{ inputs.strategy == 'runs-on-cache' && 'actions-cache' || inputs.strategy
+        }}"
+      phase: "${{ inputs.phase }}"
+      cache-scope: "${{ steps.scope.outputs.cache_scope }}"
       cli-version: "${{ inputs.cli_version }}"
-      mode: docker
-      trust-policy: publish
-  - name: Restore with BoringCache
-    id: restore
-    if: inputs.strategy == 'boringcache' && inputs.phase == 'warm'
-    uses: ./.github/actions/boringcache
-    env:
-      BORINGCACHE_MANAGED_BUILDKIT_IMAGE: "${{ inputs.buildkit_image }}"
-    with:
-      cli-version: "${{ inputs.cli_version }}"
-      mode: docker
-      trust-policy: restore
-      fail-on-cache-miss: true
-  - name: Capture the build timing
-    id: build_timing
+      buildkit-image: "${{ inputs.buildkit_image }}"
+  - name: Verify the Docker output
+    id: output_verification
     shell: bash
     env:
-      BUILD_STARTED_AT: "${{ steps.build_timer.outputs.started_at }}"
-    run: echo "build_seconds=$(( $(date +%s) - BUILD_STARTED_AT ))" >> "$GITHUB_OUTPUT"
+      STRATEGY: "${{ inputs.strategy }}"
+      LOAD_IMAGE: "${{ inputs.load_image }}"
+      PUSH_IMAGE: "${{ inputs.push_image == 'true' && github.ref == 'refs/heads/main'
+        }}"
+      IMAGE: ghcr.io/${{ github.repository_owner }}/linkerd2-benchmark:actions-cache
+    run: ruby ./scripts/verify-docker-output.rb --strategy "$STRATEGY" --load "$LOAD_IMAGE"
+      --push "$PUSH_IMAGE" --image "$IMAGE"
   - name: Write the benchmark phase evidence
     shell: bash
     env:
+      OUTPUT_VERIFIED: "${{ steps.output_verification.outputs.verified }}"
       BENCHMARK_ID: "${{ inputs.benchmark_id }}"
       STRATEGY: "${{ inputs.strategy }}"
       CACHE_LANE: "${{ inputs.cache_lane }}"
       REPORT_PHASE: "${{ inputs.cache_lane == 'rolling' && 'commit' || inputs.phase
         == 'warm' && 'warm' || 'cold' }}"
       WORKFLOW_STARTED_AT: "${{ steps.workflow_timer.outputs.started_at }}"
-      SETUP_SECONDS: "${{ steps.build_timer.outputs.setup_seconds }}"
-      BUILD_SECONDS: "${{ steps.build_timing.outputs.build_seconds }}"
-      CACHE_HIT: "${{ steps.publish.outputs.cache-hit || steps.restore.outputs.cache-hit
-        }}"
-      EVIDENCE_PATH: "${{ steps.publish.outputs.evidence-path || steps.restore.outputs.evidence-path
-        }}"
+      SETUP_SECONDS: "${{ steps.provider_build.outputs.setup-seconds }}"
+      BUILD_SECONDS: "${{ steps.provider_build.outputs.build-seconds }}"
+      CACHE_HIT: "${{ steps.provider_build.outputs.cache-hit }}"
+      EVIDENCE_PATH: "${{ steps.provider_build.outputs.evidence-path }}"
       STORAGE_KEY: "${{ steps.scope.outputs.cache_scope }}"
       GITHUB_TOKEN: "${{ github.token }}"
       SOURCE_REPOSITORY: "${{ steps.scope.outputs.source_repository }}"
       SOURCE_SHA: "${{ steps.scope.outputs.source_sha }}"
     run: |
       set -euo pipefail
-      ruby ./scripts/benchmark-report.rb phase \
+      verification=()
+      [[ "$OUTPUT_VERIFIED" != 'true' ]] || verification=(--verified-output)
+      ruby ./scripts/benchmark-report.rb phase "${verification[@]}" \
         --benchmark "$BENCHMARK_ID" \
         --strategy "$STRATEGY" \
         --lane "$CACHE_LANE" \

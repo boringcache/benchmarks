@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "benchmark": "chroma",
+  "strategy": "boringcache",
+  "lane": "fresh",
+  "phase": "warm",
+  "variant": null,
+  "mode": "docker",
+  "adapter": "oci",
+  "case": {
+    "schema_version": 1,
+    "case_id": "chroma",
+    "workspace": "boringcache/benchmarks",
+    "definition_sha256": "6a50efe5eda093d17fd5abc3d6967183cd287e3b2203b8876d83b1937d3b7301",
+    "source": {
+      "repository": "chroma-core/chroma",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "848cf58dd6dd952f8d0ff672af7b30cbf4d67f81",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "origin": {
+      "repository": "boringcache/benchmark-chroma",
+      "branch": "main",
+      "revision": "edf3931449fd113176a09059c5d8c0f5df9ec03f"
+    },
+    "verification": [
+      "Pinned upstream recipe and build success",
+      "Fresh cold and warm builds use the unchanged pinned source; diagnostic source-layer invalidation is excluded",
+      "The freshly loaded output image exists in the local Docker image store"
+    ],
+    "comparison": {
+      "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+      "providers": [
+        "boringcache",
+        "actions-cache"
+      ],
+      "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+      "primary_metric": "build_and_reuse_seconds",
+      "storage": "provider-reported",
+      "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+      "sample_count": 10
+    },
+    "execution": {
+      "workflows": [
+        {
+          "path": ".github/workflows/native-rolling-benchmark.yml",
+          "lane": "rolling",
+          "inputs": {
+            "case_id": "chroma"
+          },
+          "historical_workflow": "chroma-benchmark.yml"
+        },
+        {
+          "path": ".github/workflows/native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "chroma"
+          },
+          "historical_workflow": "chroma-fresh-benchmark.yml"
+        }
+      ],
+      "sync": "upstream-head",
+      "sync_minute": 1,
+      "native": {
+        "action": ".github/actions/chroma-docker-benchmark",
+        "benchmark_id": "chroma",
+        "rolling_inputs": {
+          "push_image": "true"
+        },
+        "environment": {},
+        "fresh_inputs": {
+          "load_image": "true"
+        }
+      },
+      "cache_tags": {
+        "chroma-docker-local": "{scope}-docker",
+        "chroma-sccache-local": "{scope}-sccache"
+      }
+    }
+  },
+  "timing": {
+    "restore_or_setup_seconds": 0,
+    "build_seconds": 31,
+    "workflow_seconds": 35,
+    "total_seconds": 31,
+    "dependency_setup_seconds": null,
+    "compile_seconds": null,
+    "verification_seconds": null,
+    "save_seconds": null,
+    "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+    "build_and_reuse_seconds": 31
+  },
+  "cache": {
+    "hit": null,
+    "sccache_proof": true,
+    "import_ready": null,
+    "import_refs": 0,
+    "docker_plan": {
+      "import_tags": [
+        "chroma-series-image-output-qualification-01-s1-r37104573058-a1-docker-linux-amd64",
+        "chroma-series-image-output-qualification-01-s1-r37104573058-a1-docker-ubuntu-24-x86_64"
+      ],
+      "planned_import_refs": 2,
+      "export_tag": null
+    },
+    "tag": "chroma-series-image-output-qualification-01-s1-r37104573058-a1-docker",
+    "workspace": "boringcache/benchmarks",
+    "storage_bytes": 2365446028,
+    "storage_source": "boringcache-check",
+    "storage_breakdown": {
+      "workspace": "boringcache/benchmarks",
+      "tags": [
+        "chroma-series-image-output-qualification-01-s1-r37104573058-a1-docker-linux-amd64"
+      ],
+      "complete": true,
+      "measured_bytes": 2365446028,
+      "unmeasured_tags": [],
+      "total_bytes": 2365446028,
+      "observations": [
+        {
+          "requested_tag": "chroma-series-image-output-qualification-01-s1-r37104573058-a1-docker-linux-amd64",
+          "tag": "chroma-series-image-output-qualification-01-s1-r37104573058-a1-docker-linux-amd64",
+          "status": "hit",
+          "cache_type": "cache_entry",
+          "cache_entry_id": "e2f910d8-c942-48d2-bed3-d62d6930583b",
+          "manifest_root_digest": "sha256:933a7e55badbd0063d05542d4c457aaed5fb9985f57a93efd4bbcb51f854a850",
+          "kv_total_size": 0,
+          "compressed_size": 2365446028,
+          "size": 2365446028
+        }
+      ]
+    }
+  },
+  "source": {
+    "repository": "chroma-core/chroma",
+    "sha": "848cf58dd6dd952f8d0ff672af7b30cbf4d67f81"
+  },
+  "product_refs": {
+    "schema_version": 1,
+    "cli_version": "v1.33.0",
+    "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+    "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+  },
+  "action": {
+    "resolved_mode": "docker",
+    "resolved_tags": [
+      "chroma-series-image-output-qualification-01-s1-r37104573058-a1-docker-linux-amd64"
+    ],
+    "trust_state": {
+      "status": "restore_only",
+      "event_name": "workflow_dispatch",
+      "requested_policy": "restore",
+      "resolved_policy": "restore",
+      "write_allowed": false,
+      "decision_source": "cli",
+      "reason": "explicit_request",
+      "provider": "github-actions",
+      "detail": "trust-policy is restore.",
+      "next_step": "Use trust-policy stage or publish only when this job is trusted for that operation.",
+      "token_capabilities": {
+        "restore": true,
+        "stage": true,
+        "save": true
+      }
+    },
+    "diagnostics_level": "off"
+  },
+  "github": {
+    "repository": "boringcache/benchmarks",
+    "run_id": "37104573058",
+    "run_attempt": "1",
+    "job": "warm",
+    "workflow": "Native comparison fresh",
+    "ref_name": "image-output-qualification-2026-10-03",
+    "runner_os": "Linux",
+    "runner_arch": "X64",
+    "runner_name": "GitHub Actions 1000170504",
+    "runner_environment": "github-hosted",
+    "runner_image": "ubuntu24",
+    "runner_image_version": "20260927.320.1"
+  },
+  "run_uid": "gh-37104573058-1",
+  "series": {
+    "id": "image-output-qualification-01",
+    "sample": 1
+  },
+  "environment": {
+    "os": "Linux",
+    "arch": "X64",
+    "image": "ubuntu24",
+    "image_version": "20260927.320.1",
+    "machine": "ubuntu-latest"
+  },
+  "verification": {
+    "passed": true,
+    "checks": [
+      "Output verification completed before recording this phase"
+    ],
+    "declared_checks": [
+      "Pinned upstream recipe and build success",
+      "Fresh cold and warm builds use the unchanged pinned source; diagnostic source-layer invalidation is excluded",
+      "The freshly loaded output image exists in the local Docker image store"
+    ]
+  },
+  "evidence_links": [
+    "https://github.com/boringcache/benchmarks/actions/runs/37104573058"
+  ]
+}

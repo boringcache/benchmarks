@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "case_id": "hugo-go",
+  "series_id": "shared-lifecycle-qualification-01",
+  "created_at": "2026-10-04T13:08:11Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "908a8962c0bcdca6e1d3842c2e64bfe3ba71735a16821012d5767acd775693cb",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "hugo-go",
+    "cli_version": "v1.33.0"
+  },
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "gohugoio/hugo",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "plan_sha256": "35a2dc05b7b87a66a9da5682af58e51e412316e72c350c17078ed04080c4a312"
+}

@@ -44,6 +44,33 @@ class BenchmarkCasesTest < Minitest::Test
     end
   end
 
+  def test_installed_action_dependencies_do_not_change_definitions_or_prepared_source
+    with_root do |root|
+      action = File.join(root, ".github/actions/retain-product-evidence")
+      FileUtils.mkdir_p(File.join(action, "node_modules/client"))
+      File.write(File.join(action, "package-lock.json"), "locked dependencies")
+      File.write(File.join(action, "node_modules/client/index.js"), "installed code")
+      assert_equal [File.join(action, "package-lock.json")], BenchmarkCases.shared_action_files(root: root)
+      target = File.join(root, "prepared")
+      BenchmarkCases.copy_shared_actions(target, root: root)
+      assert_equal "locked dependencies", File.read(File.join(target, ".github/actions/retain-product-evidence/package-lock.json"))
+      refute Dir.exist?(File.join(target, ".github/actions/retain-product-evidence/node_modules"))
+    end
+  end
+
+  def test_contract_views_check_only_the_docker_adapter_used_by_the_case
+    Dir.mktmpdir("benchmark-contract-view-") do |directory|
+      items = %w[hugo-go hugo].map { |id| BenchmarkCases.load_case(id) }
+      BenchmarkCases.stub(:documents, items) { BenchmarkCases.write_contract_views(directory) }
+      refute File.exist?(File.join(directory, "benchmark-hugo-go/.github/actions/docker-benchmark/action.yml"))
+      path = File.join(directory, "benchmark-hugo/.github/actions/docker-benchmark/action.yml")
+      steps = YAML.safe_load_file(path).dig("runs", "steps")
+      calls = steps.select { |step| step["uses"].to_s.start_with?("boringcache/one@") }
+      assert_equal %w[publish restore], calls.map { |step| step.dig("with", "trust-policy") }
+      assert calls.all? { |step| step.dig("with", "mode") == "docker" && step.dig("with", "fail-on-cache-error") == true }
+    end
+  end
+
   def test_zed_workflow_selects_only_the_requested_restore_variants
     workflow = YAML.safe_load_file(File.join(BenchmarkCases::ROOT, ".github/workflows/zed-zed-cargo-product.yml"))
     script = workflow.fetch("jobs").fetch("source").fetch("steps").find { |step| step["id"] == "source" }.fetch("run")

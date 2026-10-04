@@ -14,7 +14,7 @@ id = ARGV.first unless ARGV.first&.start_with?("--")
 ARGV.shift if id
 options = {lane: "fresh", inputs: {}, ref: "main"}
 parser = OptionParser.new do |value|
-  value.banner = "Usage: bin/bench <list|new|check|plan|start|run|record|finish|prepare|sync|update-source|report|catalog|preserve|verify-evidence> [case-id] [options]"
+  value.banner = "Usage: bin/bench <list|new|check|plan|start|run|record|collect|finish|prepare|sync|update-source|report|catalog|preserve|verify-evidence> [case-id] [options]"
   value.on("--lane LANE") { |input| options[:lane] = input }
   value.on("--workflow NAME") { |input| options[:workflow] = input }
   value.on("--input NAME=VALUE") do |input|
@@ -83,7 +83,7 @@ begin
     puts JSON.pretty_generate(BenchmarkCases.dispatch(item, **options.slice(:lane, :workflow, :inputs, :ref), output: output))
   when "prepare"
     raise BenchmarkCases::Error, "Select a case ID and --directory" unless item && options[:directory]
-    puts BenchmarkCases.prepare(item, **options.slice(:directory, :native_lane, :suffix))
+    puts BenchmarkCases.prepare(item, **options.slice(:directory, :native_lane, :suffix, :variant))
   when "contracts"
     raise BenchmarkCases::Error, "Use --directory for disposable contract views" unless options[:directory]
     BenchmarkCases.validate
@@ -97,11 +97,16 @@ begin
     raise BenchmarkCases::Error, "Select a case ID and --directory" unless item && options[:directory]
     BenchmarkCases.update_source(item, options.fetch(:directory))
     puts "Updated #{item.fetch('id')} source pins"
-  when "finish"
+  when "finish", "collect"
     raise BenchmarkCases::Error, "Select a case ID, --series, --sample, and --directory for preserved evidence" unless item && options.values_at(:series, :sample, :directory).all?
     directory = File.join(BenchmarkCases::ROOT, "results", id, options.fetch(:series))
     raise BenchmarkCases::Error, "Series belongs to another case" unless BenchmarkSeries.load(directory).fetch("case_id") == id
-    puts JSON.pretty_generate(BenchmarkSeries.finish(directory, evidence_directory: options.fetch(:directory), sample: options.fetch(:sample)))
+    if command == "collect"
+      require_relative "../scripts/collect-series"
+      puts JSON.pretty_generate(CollectSeries.call(directory, evidence_directory: options.fetch(:directory), sample: options.fetch(:sample)))
+    else
+      puts JSON.pretty_generate(BenchmarkSeries.finish(directory, evidence_directory: options.fetch(:directory), sample: options.fetch(:sample)))
+    end
   when "report"
     raise BenchmarkCases::Error, "Select a case ID and --series" unless item && options[:series]
     directory = options[:directory] || File.join(BenchmarkCases::ROOT, "results", id, options.fetch(:series))
