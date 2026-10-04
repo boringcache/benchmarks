@@ -28,8 +28,14 @@
       "sample": "1"
     },
     "sample_count": 1,
-    "providers": ["actions-cache", "boringcache"],
-    "phases": ["cold", "warm"],
+    "providers": [
+      "actions-cache",
+      "boringcache"
+    ],
+    "phases": [
+      "cold",
+      "warm"
+    ],
     "source_revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
     "timed_scope": "The unchanged case definition: Docker build including export/load and measured provider setup, excluding output inspection",
     "acceptance": [
@@ -42,5 +48,13 @@
     ],
     "limits": "This deliberately omits a series ID to exercise the failing canary path. It is a diagnostic, not a publication series or a performance claim. The full local regression also exercises both providers with the combined variant and preserves legacy missing-scope rejection.",
     "state": "planned"
+  },
+  "qualification_dispatch": {
+    "state": "requested",
+    "run_id": 37237063294,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37237063294",
+    "source_sha": "c346b35b35d83b43bc2158ff26718d0e89aed834",
+    "ref": "posthog-canary-scope",
+    "requested_at": "2026-10-04T21:41:26Z"
   }
 }
