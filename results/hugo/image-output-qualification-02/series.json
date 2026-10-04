@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "case_id": "hugo",
+  "series_id": "image-output-qualification-02",
+  "created_at": "2026-10-03T19:32:57Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "d93cf392d1d565e2d563f3e5e7b947f28616e7c830f3a3c3a84fa10f4033ccb0",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "hugo",
+    "cli_version": "v1.33.0"
+  },
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "gohugoio/hugo",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream recipe and build success",
+    "The freshly loaded output image exists in the local Docker image store"
+  ],
+  "plan_sha256": "6b9cbe6a1abe5039dfa929d5fa898b3316a3fa019123db5473d97ec461aba485"
+}

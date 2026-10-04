@@ -1,3 +1,4 @@
+---
 name: Run Immich base-images benchmark phase
 description: Builds Immich's pinned native dependency graph with one cache provider.
 inputs:
@@ -72,59 +73,19 @@ runs:
       TOOL_CACHE: "${{ inputs.strategy == 'boringcache-ccache' }}"
     run: ruby ./scripts/activate-docker-plan.rb --scenario base-images --tool-cache
       "$TOOL_CACHE"
-  - name: Start the provider setup timer
-    id: setup_timer
-    shell: bash
-    run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
-  - name: Set up Buildx for the GitHub Actions comparison
-    if: inputs.strategy == 'actions-cache'
-    uses: ./.github/actions/setup-docker
-  - name: Start the build timer
-    id: build_timer
-    shell: bash
-    env:
-      SETUP_STARTED_AT: "${{ steps.setup_timer.outputs.started_at }}"
-    run: |
-      set -euo pipefail
-      now="$(date +%s)"
-      echo "setup_seconds=$(( now - SETUP_STARTED_AT ))" >> "$GITHUB_OUTPUT"
-      echo "started_at=${now}" >> "$GITHUB_OUTPUT"
-  - name: Build with the GitHub Actions cache
-    if: inputs.strategy == 'actions-cache'
-    uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
-    env:
-      DOCKER_BUILD_SUMMARY: 'false'
-      DOCKER_BUILD_RECORD_UPLOAD: 'false'
+  - name: Build with the declared cache provider
+    id: provider_build
+    uses: "./.github/actions/docker-benchmark"
     with:
       context: base-images-upstream/server
       file: base-images-upstream/server/Dockerfile
       platforms: linux/amd64
       target: libvips
-      push: false
-      cache-from: "${{ inputs.phase == 'rebuild' && format('type=gha,scope={0}', steps.scope.outputs.cache_scope)
-        || '' }}"
-      cache-to: "${{ inputs.phase == 'seed' && format('type=gha,scope={0},mode=max',
-        steps.scope.outputs.cache_scope) || '' }}"
-  - name: Publish the BoringCache seed
-    id: publish
-    if: startsWith(inputs.strategy, 'boringcache') && inputs.phase == 'seed'
-    uses: ./.github/actions/boringcache
-    with:
-      mode: docker
-      trust-policy: publish
-  - name: Restore the BoringCache rebuild
-    id: restore
-    if: startsWith(inputs.strategy, 'boringcache') && inputs.phase == 'rebuild'
-    uses: ./.github/actions/boringcache
-    with:
-      mode: docker
-      trust-policy: restore
-  - name: Capture the build timing
-    id: build_timing
-    shell: bash
-    env:
-      BUILD_STARTED_AT: "${{ steps.build_timer.outputs.started_at }}"
-    run: echo "build_seconds=$(( $(date +%s) - BUILD_STARTED_AT ))" >> "$GITHUB_OUTPUT"
+      push: 'false'
+      strategy: "${{ startsWith(inputs.strategy, 'boringcache') && 'boringcache' ||
+        inputs.strategy }}"
+      phase: "${{ inputs.phase == 'seed' && 'publish' || 'warm' }}"
+      cache-scope: "${{ steps.scope.outputs.cache_scope }}"
   - name: Write the benchmark phase evidence
     shell: bash
     env:
@@ -132,12 +93,10 @@ runs:
       STRATEGY: "${{ inputs.strategy }}"
       REPORT_PHASE: "${{ inputs.phase == 'seed' && 'cold' || 'warm' }}"
       WORKFLOW_STARTED_AT: "${{ steps.workflow_timer.outputs.started_at }}"
-      SETUP_SECONDS: "${{ steps.build_timer.outputs.setup_seconds }}"
-      BUILD_SECONDS: "${{ steps.build_timing.outputs.build_seconds }}"
-      CACHE_HIT: "${{ steps.publish.outputs.cache-hit || steps.restore.outputs.cache-hit
-        }}"
-      EVIDENCE_PATH: "${{ steps.publish.outputs.evidence-path || steps.restore.outputs.evidence-path
-        }}"
+      SETUP_SECONDS: "${{ steps.provider_build.outputs.setup-seconds }}"
+      BUILD_SECONDS: "${{ steps.provider_build.outputs.build-seconds }}"
+      CACHE_HIT: "${{ steps.provider_build.outputs.cache-hit }}"
+      EVIDENCE_PATH: "${{ steps.provider_build.outputs.evidence-path }}"
       STORAGE_KEY: "${{ steps.scope.outputs.cache_scope }}"
       GITHUB_TOKEN: "${{ github.token }}"
       SOURCE_SHA: "${{ steps.scope.outputs.source_sha }}"

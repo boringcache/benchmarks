@@ -35,6 +35,9 @@ outputs:
 runs:
   using: composite
   steps:
+    # Register first so retention runs after the product's post step.
+    - id: retention
+      uses: ./.github/actions/retain-product-evidence
     - id: provider
       uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
       with:
@@ -47,3 +50,10 @@ runs:
         diagnostics: ${{ inputs.diagnostics }}
         fail-on-cache-error: true
         fail-on-cache-miss: ${{ inputs.fail-on-cache-miss == 'true' }}
+    - name: Register the original product evidence
+      if: always()
+      shell: bash
+      env:
+        EVIDENCE_PATH: ${{ steps.provider.outputs.evidence-path }}
+        REGISTRY_PATH: ${{ steps.retention.outputs.registry-path }}
+      run: printf '%s\n' "$EVIDENCE_PATH" > "$REGISTRY_PATH"

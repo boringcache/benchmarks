@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "deno",
+  "series_id": "rolling-compiler-only-seed-advance-01",
+  "sample": 1,
+  "run_id": "37105485279",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37105485279",
+  "source_sha": "b3ab6324aeccebbb38cc7e2fc1c921ae4f0b399e",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "89569d3d42cf58d029ba9647845e91ed77457624a109ab5d6bf6b70c342fa3d5"
+}

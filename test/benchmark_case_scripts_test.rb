@@ -31,7 +31,7 @@ class BenchmarkCaseScriptsTest < Minitest::Test
     Dir.mktmpdir("benchmark-recipe-") do |directory|
       FileUtils.cp_r(Dir[File.join(ROOT, "cases", id, "payload", "{*,.[!.]*}")], directory)
       FileUtils.mkdir_p(File.join(directory, "scripts"))
-      %w[benchmark-plan activate-docker-plan run-benchmark-plan verify-upstream-recipe scope-case-cache prepare-source].each do |name|
+      %w[benchmark-plan activate-docker-plan verify-docker-output run-benchmark-plan verify-upstream-recipe scope-case-cache prepare-source].each do |name|
         FileUtils.cp(File.join(ROOT, "scripts", "#{name}.rb"), File.join(directory, "scripts", "#{name}.rb"))
       end
       item = JSON.parse(File.read(File.join(ROOT, "cases", id, "case.json")))
@@ -42,6 +42,129 @@ class BenchmarkCaseScriptsTest < Minitest::Test
 
   def run_script(directory, name, *args)
     Open3.capture3(RbConfig.ruby, File.join(directory, "scripts", "#{name}.rb"), *args, chdir: directory)
+  end
+
+  def test_docker_output_projection_loads_each_native_image_without_publication
+    %w[chroma duckgres hugo linkerd2 n8n mastodon posthog immich].each do |id|
+      with_case(id) do |directory|
+        action = YAML.safe_load(File.read(File.join(directory, ".github", "actions", "#{id}-docker-benchmark", "action.yml")))
+        activate = action.dig("runs", "steps").find { |step| step["name"] == "Activate the BoringCache Docker plan" }
+        environment = {"PATH" => "#{File.dirname(RbConfig.ruby)}:#{ENV.fetch('PATH')}",
+          "LOAD_IMAGE" => "true", "PUSH_IMAGE" => "false", "IMAGE" => "example/image:local", "SOURCE_SHA" => "a" * 40, "SOURCE_TAG" => "test",
+          "DOCKERFILE" => id == "n8n" ? "upstream/docker/images/n8n/Dockerfile" : "upstream/Dockerfile", "NODE_VERSION" => "26.7.0",
+          "WORKLOAD" => "server", "TOOL_CACHE" => "false", "PRERELEASE" => "nightly.2026-10-03", "PLATFORM" => "linux/amd64",
+          "MOUNT_CACHE" => "false", "NO_CACHE" => "false", "SOURCEMAP_SECRET" => "false", "BUILD_ID" => "123", "SOURCE_REF" => "main"}
+        _, errors, status = Open3.capture3(environment, "bash", "-c", activate.fetch("run"), chdir: directory)
+        assert status.success?, errors
+        command = TomlRB.load_file(File.join(directory, ".boringcache.toml")).dig("adapters", "docker", "command")
+        assert_includes command, "--load"
+        refute_includes command, "--push"
+        before = File.read(File.join(directory, ".boringcache.toml"))
+        _, errors, status = run_script(directory, "activate-docker-plan", "--load", "true", "--push", "true", "--image", "example/image")
+        refute status.success?
+        assert_includes errors, "Choose either push or load"
+        assert_equal before, File.read(File.join(directory, ".boringcache.toml"))
+      end
+    end
+  end
+
+  def test_docker_output_check_uses_each_provider_image_and_rejects_failed_inspection
+    with_case("hugo") do |directory|
+      executable = File.join(directory, "docker")
+      File.write(executable, "#!/bin/sh\nprintf '%s\\n' \"$@\" > \"$DOCKER_ARGUMENTS\"\nexit \"$INSPECT_STATUS\"\n")
+      File.chmod(0o755, executable)
+      arguments = File.join(directory, "docker-arguments")
+      output = File.join(directory, "outputs")
+      environment = {"PATH" => "#{directory}:#{ENV.fetch('PATH')}", "DOCKER_ARGUMENTS" => arguments,
+        "INSPECT_STATUS" => "0", "GITHUB_OUTPUT" => output}
+      script = File.join(directory, "scripts", "verify-docker-output.rb")
+      %w[boringcache actions-cache].each do |provider|
+        _, errors, status = Open3.capture3(environment, RbConfig.ruby, script, "--strategy", provider, "--load", "true", "--image", "example/actions:local")
+        assert status.success?, errors
+        expected = provider == "boringcache" ? "hugo-benchmark:local" : "example/actions:local"
+        assert_equal ["image", "inspect", expected], File.readlines(arguments, chomp: true)
+        assert_includes File.read(output), "verified=true"
+      end
+      File.delete(arguments)
+      File.delete(output)
+      _, errors, status = Open3.capture3(environment, RbConfig.ruby, script, "--strategy", "actions-cache", "--load", "false", "--push", "false")
+      assert status.success?, errors
+      refute File.exist?(arguments)
+      assert_equal "verified=false\n", File.read(output)
+      File.delete(output)
+      _, errors, status = Open3.capture3(environment.merge("INSPECT_STATUS" => "1"), RbConfig.ruby, script,
+        "--strategy", "actions-cache", "--load", "true", "--image", "example/missing:local")
+      refute status.success?
+      assert_includes errors, "Cannot verify Docker output"
+      refute File.exist?(output)
+    end
+  end
+
+  def test_hugo_loaded_image_disables_attestations_and_keeps_the_publication_recipe
+    %w[true false].each do |load|
+      with_case("hugo") do |directory|
+        _, errors, status = run_script(directory, "activate-docker-plan", "--load", load)
+        assert status.success?, errors
+        command = TomlRB.load_file(File.join(directory, ".boringcache.toml")).dig("adapters", "docker", "command")
+        assert_equal load == "true" ? "false" : "mode=max", command.fetch(command.index("--provenance") + 1)
+        assert_equal load == "true" ? "false" : "true", command.fetch(command.index("--sbom") + 1)
+        action = YAML.safe_load(File.read(File.join(directory, ".github/actions/hugo-docker-benchmark/action.yml")))
+        build = action.dig("runs", "steps").find { |step| step["id"] == "provider_build" }.fetch("with")
+        assert_equal "${{ inputs.load_image != 'true' && 'mode=max' || 'false' }}", build.fetch("provenance")
+        assert_equal "${{ inputs.load_image != 'true' }}", build.fetch("sbom")
+      end
+    end
+  end
+
+  def test_posthog_no_cache_option_preserves_its_declared_boolean_value
+    with_case("posthog") do |directory|
+      %w[false true].each do |value|
+        _, errors, status = run_script(directory, "activate-docker-plan", "--dockerfile", "upstream/Dockerfile",
+          "--platform", "linux/amd64", "--no-cache", value)
+        assert status.success?, errors
+        command = TomlRB.load_file(File.join(directory, ".boringcache.toml")).dig("adapters", "docker", "command")
+        assert_equal value == "true", command.include?("--no-cache")
+      end
+      before = File.read(File.join(directory, ".boringcache.toml"))
+      _, _, status = run_script(directory, "activate-docker-plan", "--no-cache", "unknown")
+      refute status.success?
+      assert_equal before, File.read(File.join(directory, ".boringcache.toml"))
+    end
+  end
+
+  def test_clean_source_replay_checks_the_pin_before_removing_untracked_files
+    with_case("hugo") do |directory|
+      source = File.join(directory, "upstream")
+      FileUtils.mkdir_p(source)
+      [directory, source].each do |path|
+        _, errors, status = Open3.capture3("git", "init", path)
+        assert status.success?, errors
+      end
+      File.write(File.join(source, "source.txt"), "pinned source\n")
+      _, errors, status = Open3.capture3("git", "-C", source, "add", "source.txt")
+      assert status.success?, errors
+      _, errors, status = Open3.capture3("git", "-C", source, "-c", "user.name=Benchmark test", "-c", "user.email=test@localhost",
+        "-c", "commit.gpgsign=false", "commit", "-m", "Pin source")
+      assert status.success?, errors
+      sha, _, status = Open3.capture3("git", "-C", source, "rev-parse", "HEAD")
+      assert status.success?
+      untracked = File.join(source, "untracked.txt")
+      File.write(untracked, "retain on mismatched pin\n")
+      ["a" * 40, sha.strip].each do |pin|
+        _, errors, status = Open3.capture3("git", "-C", directory, "update-index", "--add", "--cacheinfo", "160000,#{pin},upstream")
+        assert status.success?, errors
+        _, errors, status = run_script(directory, "prepare-source", "warm1")
+        if pin == sha.strip
+          assert status.success?, errors
+          refute File.exist?(untracked)
+          assert_equal "pinned source\n", File.read(File.join(source, "source.txt"))
+        else
+          refute status.success?
+          assert_includes errors, "differs from the declared source pin"
+          assert File.exist?(untracked)
+        end
+      end
+    end
   end
 
   def test_mastodon_streaming_does_not_acquire_server_tool_cache

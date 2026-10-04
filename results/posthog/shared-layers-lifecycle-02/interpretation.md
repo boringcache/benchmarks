@@ -1,0 +1,9 @@
+# PostHog layers shared lifecycle qualification
+
+[Run 37205112800](https://github.com/boringcache/benchmarks/actions/runs/37205112800) completed all four declared phases at signed harness `d045da272fae61c96d06727459055f1a31eca48f`. Both cold arms publish; both warm arms restore without publishing. The Actions Cache warm build has no cache export, and BoringCache uses restore trust with `--read-only`. Images are loaded within timing and inspected after timing. All jobs and post steps completed successfully, and original final One evidence was retained after product cleanup.
+
+The [report](report.md) retains Actions Cache/BoringCache build-and-reuse measurements of 1845/953 seconds cold and 226/139 seconds warm. These include provider setup, build, cache export where declared, and image loading; they are not compile-only or complete-job durations. The Actions Cache cold log records 893.2 seconds in cache export. That work is inside the declared comparison. This one-sample screen does not establish typical performance or the cause of provider differences.
+
+Both warm logs show cached build steps, demonstrating identical-source layer reuse. The screen does not establish changed-source reuse or rolling seed advancement. Actions Cache storage is unmeasured. BoringCache reports 6,238,377,174 bytes for the selected Docker tag; this is not physical workspace usage or a storage-efficiency comparison. [Repository cache capacity](../../../migration/cache-capacity-2026-10-04.json) is contextual and does not establish per-phase occupancy or absence of eviction.
+
+The [archive](https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04) was downloaded again and verified against its SHA-256 and 15-file scoped inventory. Earlier failed and methodologically invalid series remain unchanged. Publication, schedule cutover, and repository retirement remain unapproved.

@@ -22,13 +22,26 @@
   "execution": {
     "workflows": [
       {
+        "path": ".github/workflows/native-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "posthog"
+        },
+        "historical_workflow": "posthog-posthog-fresh-benchmark.yml",
+        "variants": [
+          "layers",
+          "combined"
+        ],
+        "variant_input": "variant"
+      },
+      {
         "path": ".github/workflows/posthog-posthog-benchmark.yml",
-        "lane": "rolling",
+        "lane": "diagnostic",
         "inputs": {}
       },
       {
         "path": ".github/workflows/posthog-posthog-fresh-benchmark.yml",
-        "lane": "fresh",
+        "lane": "diagnostic",
         "inputs": {}
       }
     ],
@@ -37,6 +50,37 @@
     "cache_tags": {
       "posthog-docker-local": "{scope}-docker",
       "posthog-turbo-local": "{scope}-turbo"
+    },
+    "native": {
+      "action": ".github/actions/posthog-docker-benchmark",
+      "benchmark_id": "posthog",
+      "fresh_inputs": {
+        "platform": "linux/amd64",
+        "load_image": "true"
+      },
+      "rolling_inputs": {
+        "platform": "linux/amd64"
+      },
+      "variants": {
+        "layers": {},
+        "combined": {
+          "benchmark_id": "posthog-toolcache-mountcache",
+          "fresh_inputs": {
+            "docker_tool_cache": "true",
+            "docker_mount_cache": "true"
+          },
+          "rolling_inputs": {
+            "docker_tool_cache": "true",
+            "docker_mount_cache": "true"
+          },
+          "provider_flags": {
+            "actions-cache": {
+              "docker_tool_cache": "false",
+              "docker_mount_cache": "false"
+            }
+          }
+        }
+      }
     }
   },
   "reporting": {
@@ -46,7 +90,8 @@
     "publication": "reviewed"
   },
   "verification": [
-    "Pinned upstream recipe and build success"
+    "Pinned upstream recipe and build success",
+    "The freshly loaded output image exists in the local Docker image store"
   ],
   "comparison": {
     "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
@@ -54,7 +99,7 @@
       "boringcache",
       "actions-cache"
     ],
-    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
     "primary_metric": "build_and_reuse_seconds",
     "storage": "provider-reported",
     "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",

@@ -9,10 +9,12 @@ class BenchmarkEvidenceTest < Minitest::Test
   class GitHub
     attr_reader :requests
 
-    def initialize(expired: false, unavailable_attempt: nil)
+    def initialize(expired: false, unavailable_attempt: nil, empty_logs: false, no_jobs: false)
       @requests = []
       @expired = expired
       @unavailable_attempt = unavailable_attempt
+      @empty_logs = empty_logs
+      @no_jobs = no_jobs
     end
 
     def api(path)
@@ -30,9 +32,11 @@ class BenchmarkEvidenceTest < Minitest::Test
     def pages(path, key)
       @requests << path
       if key == "jobs"
+        return [] if @no_jobs
         attempt = path[%r{/attempts/(\d+)/}, 1].to_i
         [{"id" => 100 + attempt, "run_id" => 42, "run_attempt" => attempt}]
       else
+        return [] if @no_jobs
         [{"id" => 99, "name" => "phase", "expired" => @expired}]
       end
     end
@@ -42,7 +46,8 @@ class BenchmarkEvidenceTest < Minitest::Test
       if path.include?("/attempts/#{@unavailable_attempt}/")
         raise BenchmarkCases::Error, "Logs expired"
       end
-      File.binwrite(target, "download from #{path}\n")
+      contents = @empty_logs && path.end_with?("/logs") ? "PK\x05\x06" + "\x00" * 18 : "download from #{path}\n"
+      File.binwrite(target, contents)
     end
   end
 
@@ -71,6 +76,26 @@ class BenchmarkEvidenceTest < Minitest::Test
       assert_includes result["missing_files"], "attempts/1/logs.zip"
       assert_includes result["missing_files"], "artifacts/99.zip"
       assert_equal 2, result["gaps"].length
+    end
+  end
+
+  def test_valid_empty_log_archives_are_retained_for_runs_with_no_jobs
+    with_export(empty_logs: true, no_jobs: true) do |target, result, _|
+      assert_equal "complete", result.fetch("state")
+      path = File.join(target, "attempts/1/logs.zip")
+      assert BenchmarkEvidence.empty_zip?(path)
+      BenchmarkEvidence.verify_zip(path)
+      File.binwrite(path, "PK\x05\x06" + "\x00" * 17 + "\x01")
+      assert_raises(BenchmarkCases::Error) { BenchmarkEvidence.verify_zip(path) }
+    end
+  end
+
+  def test_empty_log_archives_with_jobs_remain_partial
+    with_export(empty_logs: true) do |target, result, _|
+      assert_equal "partial", result.fetch("state")
+      assert_equal "Jobs exist but the log archive has no entries", result.fetch("gaps").first.fetch("reason")
+      manifest = JSON.parse(File.read(File.join(target, "manifest.json")))
+      assert_equal 22, manifest.dig("files", "attempts/1/logs.zip", "bytes")
     end
   end
 

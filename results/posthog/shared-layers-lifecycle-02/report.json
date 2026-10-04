@@ -1,0 +1,947 @@
+{
+  "schema_version": 1,
+  "plan_sha256": "9440f1ecc87acfc5f42121a9b72a446881769df6f188c1a27f50070c209dd0d1",
+  "complete": true,
+  "valid_for_comparison": true,
+  "failures": [],
+  "methodology_issues": [],
+  "execution_verified": true,
+  "missing_completions": [],
+  "failed_completions": [],
+  "completions": [
+    {
+      "schema_version": 1,
+      "case_id": "posthog",
+      "series_id": "shared-layers-lifecycle-02",
+      "sample": 1,
+      "run_id": "37205112800",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37205112800",
+      "source_sha": "d045da272fae61c96d06727459055f1a31eca48f",
+      "github_conclusion": "success",
+      "status": "success",
+      "errors": [],
+      "evidence_manifest_sha256": "7b265e188abeb7d75f9a8be7a820e25d864b76ff43db00e9267f8606bf3f6c18"
+    }
+  ],
+  "publication": "unreviewed",
+  "evidence_preservation": "requires-review",
+  "primary_metric": "build_and_reuse_seconds",
+  "missing": [],
+  "summaries": [
+    {
+      "phase": "cold",
+      "provider": "actions-cache",
+      "count": 1,
+      "measurement": {
+        "median": 1845,
+        "min": 1845,
+        "max": 1845
+      },
+      "storage": null,
+      "storage_measured_count": 0
+    },
+    {
+      "phase": "warm",
+      "provider": "actions-cache",
+      "count": 1,
+      "measurement": {
+        "median": 226,
+        "min": 226,
+        "max": 226
+      },
+      "storage": null,
+      "storage_measured_count": 0
+    },
+    {
+      "phase": "cold",
+      "provider": "boringcache",
+      "count": 1,
+      "measurement": {
+        "median": 953,
+        "min": 953,
+        "max": 953
+      },
+      "storage": {
+        "median": 6238377174,
+        "min": 6238377174,
+        "max": 6238377174
+      },
+      "storage_measured_count": 1
+    },
+    {
+      "phase": "warm",
+      "provider": "boringcache",
+      "count": 1,
+      "measurement": {
+        "median": 139,
+        "min": 139,
+        "max": 139
+      },
+      "storage": {
+        "median": 6238377174,
+        "min": 6238377174,
+        "max": 6238377174
+      },
+      "storage_measured_count": 1
+    }
+  ],
+  "records": [
+    {
+      "schema_version": 1,
+      "benchmark": "posthog",
+      "strategy": "actions-cache",
+      "lane": "fresh",
+      "phase": "cold",
+      "variant": "layers",
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "posthog",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "5ed26c35a502999eb61efd535b39249af12b0d86f1694be37b0d020c4202178d",
+        "source": {
+          "repository": "PostHog/posthog",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-posthog",
+          "branch": "main",
+          "revision": "19348dee23ef8b06302f95f179a524852518d373"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "posthog"
+              },
+              "historical_workflow": "posthog-posthog-fresh-benchmark.yml",
+              "variants": [
+                "layers",
+                "combined"
+              ],
+              "variant_input": "variant"
+            },
+            {
+              "path": ".github/workflows/posthog-posthog-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/posthog-posthog-fresh-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 21,
+          "cache_tags": {
+            "posthog-docker-local": "{scope}-docker",
+            "posthog-turbo-local": "{scope}-turbo"
+          },
+          "native": {
+            "action": ".github/actions/posthog-docker-benchmark",
+            "benchmark_id": "posthog",
+            "fresh_inputs": {
+              "platform": "linux/amd64",
+              "load_image": "true"
+            },
+            "rolling_inputs": {
+              "platform": "linux/amd64"
+            },
+            "variants": {
+              "layers": {},
+              "combined": {
+                "benchmark_id": "posthog-toolcache-mountcache",
+                "fresh_inputs": {
+                  "docker_tool_cache": "true",
+                  "docker_mount_cache": "true"
+                },
+                "rolling_inputs": {
+                  "docker_tool_cache": "true",
+                  "docker_mount_cache": "true"
+                },
+                "provider_flags": {
+                  "actions-cache": {
+                    "docker_tool_cache": "false",
+                    "docker_mount_cache": "false"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 10,
+        "build_seconds": 1835,
+        "workflow_seconds": 1880,
+        "total_seconds": 1845,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 1845
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": null,
+        "workspace": null,
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": {
+          "key": "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1",
+          "complete": false,
+          "measured_bytes": 0,
+          "total_bytes": null,
+          "observations": []
+        }
+      },
+      "source": {
+        "repository": "PostHog/posthog",
+        "sha": "662f459147d2df2a44b008e4a9b6e75d8ac46e93"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37205112800",
+        "run_attempt": "1",
+        "job": "cold",
+        "workflow": "Native comparison fresh",
+        "ref_name": "shared-lifecycle-correction-2026-10-04",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000172034",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37205112800-1",
+      "series": {
+        "id": "shared-layers-lifecycle-02",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37205112800"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "posthog",
+      "strategy": "actions-cache",
+      "lane": "fresh",
+      "phase": "warm",
+      "variant": "layers",
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "posthog",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "5ed26c35a502999eb61efd535b39249af12b0d86f1694be37b0d020c4202178d",
+        "source": {
+          "repository": "PostHog/posthog",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-posthog",
+          "branch": "main",
+          "revision": "19348dee23ef8b06302f95f179a524852518d373"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "posthog"
+              },
+              "historical_workflow": "posthog-posthog-fresh-benchmark.yml",
+              "variants": [
+                "layers",
+                "combined"
+              ],
+              "variant_input": "variant"
+            },
+            {
+              "path": ".github/workflows/posthog-posthog-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/posthog-posthog-fresh-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 21,
+          "cache_tags": {
+            "posthog-docker-local": "{scope}-docker",
+            "posthog-turbo-local": "{scope}-turbo"
+          },
+          "native": {
+            "action": ".github/actions/posthog-docker-benchmark",
+            "benchmark_id": "posthog",
+            "fresh_inputs": {
+              "platform": "linux/amd64",
+              "load_image": "true"
+            },
+            "rolling_inputs": {
+              "platform": "linux/amd64"
+            },
+            "variants": {
+              "layers": {},
+              "combined": {
+                "benchmark_id": "posthog-toolcache-mountcache",
+                "fresh_inputs": {
+                  "docker_tool_cache": "true",
+                  "docker_mount_cache": "true"
+                },
+                "rolling_inputs": {
+                  "docker_tool_cache": "true",
+                  "docker_mount_cache": "true"
+                },
+                "provider_flags": {
+                  "actions-cache": {
+                    "docker_tool_cache": "false",
+                    "docker_mount_cache": "false"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 12,
+        "build_seconds": 214,
+        "workflow_seconds": 262,
+        "total_seconds": 226,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 226
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": null,
+        "workspace": null,
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": {
+          "key": "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1",
+          "complete": false,
+          "measured_bytes": 0,
+          "total_bytes": null,
+          "observations": []
+        }
+      },
+      "source": {
+        "repository": "PostHog/posthog",
+        "sha": "662f459147d2df2a44b008e4a9b6e75d8ac46e93"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37205112800",
+        "run_attempt": "1",
+        "job": "warm",
+        "workflow": "Native comparison fresh",
+        "ref_name": "shared-lifecycle-correction-2026-10-04",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000172073",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37205112800-1",
+      "series": {
+        "id": "shared-layers-lifecycle-02",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37205112800"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "posthog",
+      "strategy": "boringcache",
+      "lane": "fresh",
+      "phase": "cold",
+      "variant": "layers",
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "posthog",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "5ed26c35a502999eb61efd535b39249af12b0d86f1694be37b0d020c4202178d",
+        "source": {
+          "repository": "PostHog/posthog",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-posthog",
+          "branch": "main",
+          "revision": "19348dee23ef8b06302f95f179a524852518d373"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "posthog"
+              },
+              "historical_workflow": "posthog-posthog-fresh-benchmark.yml",
+              "variants": [
+                "layers",
+                "combined"
+              ],
+              "variant_input": "variant"
+            },
+            {
+              "path": ".github/workflows/posthog-posthog-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/posthog-posthog-fresh-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 21,
+          "cache_tags": {
+            "posthog-docker-local": "{scope}-docker",
+            "posthog-turbo-local": "{scope}-turbo"
+          },
+          "native": {
+            "action": ".github/actions/posthog-docker-benchmark",
+            "benchmark_id": "posthog",
+            "fresh_inputs": {
+              "platform": "linux/amd64",
+              "load_image": "true"
+            },
+            "rolling_inputs": {
+              "platform": "linux/amd64"
+            },
+            "variants": {
+              "layers": {},
+              "combined": {
+                "benchmark_id": "posthog-toolcache-mountcache",
+                "fresh_inputs": {
+                  "docker_tool_cache": "true",
+                  "docker_mount_cache": "true"
+                },
+                "rolling_inputs": {
+                  "docker_tool_cache": "true",
+                  "docker_mount_cache": "true"
+                },
+                "provider_flags": {
+                  "actions-cache": {
+                    "docker_tool_cache": "false",
+                    "docker_mount_cache": "false"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 953,
+        "workflow_seconds": 986,
+        "total_seconds": 953,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 953
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": {
+          "import_tags": [
+            "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1-docker-linux-amd64",
+            "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1-docker-ubuntu-24-x86_64"
+          ],
+          "planned_import_refs": 2,
+          "export_tag": "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1-docker-linux-amd64"
+        },
+        "tag": "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1-docker",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": 6238377174,
+        "storage_source": "boringcache-check",
+        "storage_breakdown": {
+          "workspace": "boringcache/benchmarks",
+          "tags": [
+            "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1-docker-linux-amd64"
+          ],
+          "complete": true,
+          "measured_bytes": 6238377174,
+          "unmeasured_tags": [],
+          "total_bytes": 6238377174,
+          "observations": [
+            {
+              "requested_tag": "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1-docker-linux-amd64",
+              "tag": "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1-docker-linux-amd64",
+              "status": "hit",
+              "cache_type": "cache_entry",
+              "cache_entry_id": "f6036eb2-9fed-48e3-98ff-0f40d050ffaa",
+              "manifest_root_digest": "sha256:28fb1734c8ad1590a8c631b3425271a66ad55de68316f052bb35f5372aa3a486",
+              "kv_total_size": 0,
+              "compressed_size": 6238377174,
+              "size": 6238377174
+            }
+          ]
+        }
+      },
+      "source": {
+        "repository": "PostHog/posthog",
+        "sha": "662f459147d2df2a44b008e4a9b6e75d8ac46e93"
+      },
+      "product_refs": {
+        "schema_version": 1,
+        "cli_version": "v1.33.0",
+        "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+        "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+      },
+      "action": {
+        "resolved_mode": "docker",
+        "resolved_tags": [
+          "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1-docker-linux-amd64"
+        ],
+        "trust_state": {
+          "status": "publish",
+          "event_name": "workflow_dispatch",
+          "requested_policy": "publish",
+          "resolved_policy": "publish",
+          "write_allowed": true,
+          "decision_source": "cli",
+          "reason": "explicit_request",
+          "provider": "github-actions",
+          "detail": "Publication updates the published cache tag.",
+          "next_step": "Let the run finish; the next matching run restores what it publishes.",
+          "token_capabilities": {
+            "restore": true,
+            "stage": true,
+            "save": true
+          }
+        },
+        "diagnostics_level": "off"
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37205112800",
+        "run_attempt": "1",
+        "job": "cold",
+        "workflow": "Native comparison fresh",
+        "ref_name": "shared-lifecycle-correction-2026-10-04",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000172035",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37205112800-1",
+      "series": {
+        "id": "shared-layers-lifecycle-02",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37205112800"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "posthog",
+      "strategy": "boringcache",
+      "lane": "fresh",
+      "phase": "warm",
+      "variant": "layers",
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "posthog",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "5ed26c35a502999eb61efd535b39249af12b0d86f1694be37b0d020c4202178d",
+        "source": {
+          "repository": "PostHog/posthog",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-posthog",
+          "branch": "main",
+          "revision": "19348dee23ef8b06302f95f179a524852518d373"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "posthog"
+              },
+              "historical_workflow": "posthog-posthog-fresh-benchmark.yml",
+              "variants": [
+                "layers",
+                "combined"
+              ],
+              "variant_input": "variant"
+            },
+            {
+              "path": ".github/workflows/posthog-posthog-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/posthog-posthog-fresh-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 21,
+          "cache_tags": {
+            "posthog-docker-local": "{scope}-docker",
+            "posthog-turbo-local": "{scope}-turbo"
+          },
+          "native": {
+            "action": ".github/actions/posthog-docker-benchmark",
+            "benchmark_id": "posthog",
+            "fresh_inputs": {
+              "platform": "linux/amd64",
+              "load_image": "true"
+            },
+            "rolling_inputs": {
+              "platform": "linux/amd64"
+            },
+            "variants": {
+              "layers": {},
+              "combined": {
+                "benchmark_id": "posthog-toolcache-mountcache",
+                "fresh_inputs": {
+                  "docker_tool_cache": "true",
+                  "docker_mount_cache": "true"
+                },
+                "rolling_inputs": {
+                  "docker_tool_cache": "true",
+                  "docker_mount_cache": "true"
+                },
+                "provider_flags": {
+                  "actions-cache": {
+                    "docker_tool_cache": "false",
+                    "docker_mount_cache": "false"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 139,
+        "workflow_seconds": 174,
+        "total_seconds": 139,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 139
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": {
+          "import_tags": [
+            "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1-docker-linux-amd64",
+            "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1-docker-ubuntu-24-x86_64"
+          ],
+          "planned_import_refs": 2,
+          "export_tag": null
+        },
+        "tag": "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1-docker",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": 6238377174,
+        "storage_source": "boringcache-check",
+        "storage_breakdown": {
+          "workspace": "boringcache/benchmarks",
+          "tags": [
+            "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1-docker-linux-amd64"
+          ],
+          "complete": true,
+          "measured_bytes": 6238377174,
+          "unmeasured_tags": [],
+          "total_bytes": 6238377174,
+          "observations": [
+            {
+              "requested_tag": "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1-docker-linux-amd64",
+              "tag": "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1-docker-linux-amd64",
+              "status": "hit",
+              "cache_type": "cache_entry",
+              "cache_entry_id": "f6036eb2-9fed-48e3-98ff-0f40d050ffaa",
+              "manifest_root_digest": "sha256:28fb1734c8ad1590a8c631b3425271a66ad55de68316f052bb35f5372aa3a486",
+              "kv_total_size": 0,
+              "compressed_size": 6238377174,
+              "size": 6238377174
+            }
+          ]
+        }
+      },
+      "source": {
+        "repository": "PostHog/posthog",
+        "sha": "662f459147d2df2a44b008e4a9b6e75d8ac46e93"
+      },
+      "product_refs": {
+        "schema_version": 1,
+        "cli_version": "v1.33.0",
+        "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+        "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+      },
+      "action": {
+        "resolved_mode": "docker",
+        "resolved_tags": [
+          "posthog-series-shared-layers-lifecycle-02-s1-r37205112800-a1-docker-linux-amd64"
+        ],
+        "trust_state": {
+          "status": "restore_only",
+          "event_name": "workflow_dispatch",
+          "requested_policy": "restore",
+          "resolved_policy": "restore",
+          "write_allowed": false,
+          "decision_source": "cli",
+          "reason": "explicit_request",
+          "provider": "github-actions",
+          "detail": "trust-policy is restore.",
+          "next_step": "Use trust-policy stage or publish only when this job is trusted for that operation.",
+          "token_capabilities": {
+            "restore": true,
+            "stage": true,
+            "save": true
+          }
+        },
+        "diagnostics_level": "off"
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37205112800",
+        "run_attempt": "1",
+        "job": "warm",
+        "workflow": "Native comparison fresh",
+        "ref_name": "shared-lifecycle-correction-2026-10-04",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000172072",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37205112800-1",
+      "series": {
+        "id": "shared-layers-lifecycle-02",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37205112800"
+      ]
+    }
+  ],
+  "exclusions": []
+}

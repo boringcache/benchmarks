@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "plan_sha256": "5bae03dfe4b1b09e3163a65a65a9cc480adf19f61e620dcdff993864b59433f2",
+  "issues": [
+    "Both warm jobs failed before building because legacy published-scope validation ran before native series scope resolution.",
+    "Cold build_seconds includes the superseded loaded-image inspection, contrary to the declared timing scope. Preserve as diagnostic; corrected execution uses a new series.",
+    "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+    "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+  ],
+  "evidence_links": [
+    "https://github.com/boringcache/benchmarks/actions/runs/37104600856"
+  ]
+}

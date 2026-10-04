@@ -1,0 +1,836 @@
+{
+  "schema_version": 1,
+  "plan_sha256": "6b9cbe6a1abe5039dfa929d5fa898b3316a3fa019123db5473d97ec461aba485",
+  "complete": true,
+  "valid_for_comparison": false,
+  "failures": [],
+  "methodology_issues": [
+    "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+    "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+  ],
+  "execution_verified": true,
+  "missing_completions": [],
+  "failed_completions": [],
+  "completions": [
+    {
+      "schema_version": 1,
+      "case_id": "hugo",
+      "series_id": "image-output-qualification-02",
+      "sample": 1,
+      "run_id": "37148378881",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148378881",
+      "source_sha": "ebe9215a904081d279458722339ef85d2b742db6",
+      "github_conclusion": "success",
+      "status": "success",
+      "errors": [],
+      "evidence_manifest_sha256": "6560d3ffaa57bd746e57c74503987869c470c24ad4b4a02632b6392ad18239aa"
+    }
+  ],
+  "publication": "unreviewed",
+  "evidence_preservation": "requires-review",
+  "primary_metric": "build_and_reuse_seconds",
+  "missing": [],
+  "summaries": [
+    {
+      "phase": "cold",
+      "provider": "actions-cache",
+      "count": 1,
+      "measurement": {
+        "median": 270,
+        "min": 270,
+        "max": 270
+      },
+      "storage": null,
+      "storage_measured_count": 0
+    },
+    {
+      "phase": "warm",
+      "provider": "actions-cache",
+      "count": 1,
+      "measurement": {
+        "median": 28,
+        "min": 28,
+        "max": 28
+      },
+      "storage": null,
+      "storage_measured_count": 0
+    },
+    {
+      "phase": "cold",
+      "provider": "boringcache",
+      "count": 1,
+      "measurement": {
+        "median": 223,
+        "min": 223,
+        "max": 223
+      },
+      "storage": {
+        "median": 411514484,
+        "min": 411514484,
+        "max": 411514484
+      },
+      "storage_measured_count": 1
+    },
+    {
+      "phase": "warm",
+      "provider": "boringcache",
+      "count": 1,
+      "measurement": {
+        "median": 28,
+        "min": 28,
+        "max": 28
+      },
+      "storage": {
+        "median": 411514484,
+        "min": 411514484,
+        "max": 411514484
+      },
+      "storage_measured_count": 1
+    }
+  ],
+  "records": [
+    {
+      "schema_version": 1,
+      "benchmark": "hugo",
+      "strategy": "actions-cache",
+      "lane": "fresh",
+      "phase": "cold",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "hugo",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "d93cf392d1d565e2d563f3e5e7b947f28616e7c830f3a3c3a84fa10f4033ccb0",
+        "source": {
+          "repository": "gohugoio/hugo",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-hugo",
+          "branch": "main",
+          "revision": "ecc41a3b3e250f5268000ddde142d61a15959e95"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "hugo"
+              },
+              "historical_workflow": "hugo-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "hugo"
+              },
+              "historical_workflow": "hugo-fresh-benchmark.yml"
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 9,
+          "native": {
+            "action": ".github/actions/hugo-docker-benchmark",
+            "benchmark_id": "hugo",
+            "rolling_inputs": {
+              "push_image": "true"
+            },
+            "environment": {},
+            "fresh_inputs": {
+              "load_image": "true"
+            }
+          },
+          "cache_tags": {
+            "hugo-docker-local": "{scope}-docker"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 6,
+        "build_seconds": 264,
+        "workflow_seconds": 272,
+        "total_seconds": 270,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 270
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": null,
+        "workspace": null,
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": {
+          "key": "hugo-series-image-output-qualification-02-s1-r37148378881-a1",
+          "complete": false,
+          "measured_bytes": 0,
+          "total_bytes": null,
+          "observations": []
+        }
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "sha": "6b3ba3a7e22ae2809605b8118aeed08b244f1955"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37148378881",
+        "run_attempt": "1",
+        "job": "cold",
+        "workflow": "Native comparison fresh",
+        "ref_name": "docker-output-correction-2026-10-03",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000171227",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37148378881-1",
+      "series": {
+        "id": "image-output-qualification-02",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37148378881"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "hugo",
+      "strategy": "actions-cache",
+      "lane": "fresh",
+      "phase": "warm",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "hugo",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "d93cf392d1d565e2d563f3e5e7b947f28616e7c830f3a3c3a84fa10f4033ccb0",
+        "source": {
+          "repository": "gohugoio/hugo",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-hugo",
+          "branch": "main",
+          "revision": "ecc41a3b3e250f5268000ddde142d61a15959e95"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "hugo"
+              },
+              "historical_workflow": "hugo-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "hugo"
+              },
+              "historical_workflow": "hugo-fresh-benchmark.yml"
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 9,
+          "native": {
+            "action": ".github/actions/hugo-docker-benchmark",
+            "benchmark_id": "hugo",
+            "rolling_inputs": {
+              "push_image": "true"
+            },
+            "environment": {},
+            "fresh_inputs": {
+              "load_image": "true"
+            }
+          },
+          "cache_tags": {
+            "hugo-docker-local": "{scope}-docker"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 10,
+        "build_seconds": 18,
+        "workflow_seconds": 31,
+        "total_seconds": 28,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 28
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": null,
+        "workspace": null,
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": {
+          "key": "hugo-series-image-output-qualification-02-s1-r37148378881-a1",
+          "complete": false,
+          "measured_bytes": 0,
+          "total_bytes": null,
+          "observations": []
+        }
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "sha": "6b3ba3a7e22ae2809605b8118aeed08b244f1955"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37148378881",
+        "run_attempt": "1",
+        "job": "warm",
+        "workflow": "Native comparison fresh",
+        "ref_name": "docker-output-correction-2026-10-03",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000171229",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37148378881-1",
+      "series": {
+        "id": "image-output-qualification-02",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37148378881"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "hugo",
+      "strategy": "boringcache",
+      "lane": "fresh",
+      "phase": "cold",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "hugo",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "d93cf392d1d565e2d563f3e5e7b947f28616e7c830f3a3c3a84fa10f4033ccb0",
+        "source": {
+          "repository": "gohugoio/hugo",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-hugo",
+          "branch": "main",
+          "revision": "ecc41a3b3e250f5268000ddde142d61a15959e95"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "hugo"
+              },
+              "historical_workflow": "hugo-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "hugo"
+              },
+              "historical_workflow": "hugo-fresh-benchmark.yml"
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 9,
+          "native": {
+            "action": ".github/actions/hugo-docker-benchmark",
+            "benchmark_id": "hugo",
+            "rolling_inputs": {
+              "push_image": "true"
+            },
+            "environment": {},
+            "fresh_inputs": {
+              "load_image": "true"
+            }
+          },
+          "cache_tags": {
+            "hugo-docker-local": "{scope}-docker"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 223,
+        "workflow_seconds": 227,
+        "total_seconds": 223,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 223
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": {
+          "import_tags": [
+            "hugo-series-image-output-qualification-02-s1-r37148378881-a1-docker-ubuntu-24-x86_64"
+          ],
+          "planned_import_refs": 1,
+          "export_tag": "hugo-series-image-output-qualification-02-s1-r37148378881-a1-docker-ubuntu-24-x86_64"
+        },
+        "tag": "hugo-series-image-output-qualification-02-s1-r37148378881-a1-docker",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": 411514484,
+        "storage_source": "boringcache-check",
+        "storage_breakdown": {
+          "workspace": "boringcache/benchmarks",
+          "tags": [
+            "hugo-series-image-output-qualification-02-s1-r37148378881-a1-docker-ubuntu-24-x86_64"
+          ],
+          "complete": true,
+          "measured_bytes": 411514484,
+          "unmeasured_tags": [],
+          "total_bytes": 411514484,
+          "observations": [
+            {
+              "requested_tag": "hugo-series-image-output-qualification-02-s1-r37148378881-a1-docker-ubuntu-24-x86_64",
+              "tag": "hugo-series-image-output-qualification-02-s1-r37148378881-a1-docker-ubuntu-24-x86_64",
+              "status": "hit",
+              "cache_type": "cache_entry",
+              "cache_entry_id": "96e3380c-67d8-44b4-a951-c1dc410c6bd4",
+              "manifest_root_digest": "sha256:709249e89b6c464bb7165b66f4dd9fb708780f3d74dc65d7456b59f21bf02446",
+              "kv_total_size": 0,
+              "compressed_size": 411514484,
+              "size": 411514484
+            }
+          ]
+        }
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "sha": "6b3ba3a7e22ae2809605b8118aeed08b244f1955"
+      },
+      "product_refs": {
+        "schema_version": 1,
+        "cli_version": "v1.33.0",
+        "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+        "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+      },
+      "action": {
+        "resolved_mode": "docker",
+        "resolved_tags": [
+          "hugo-series-image-output-qualification-02-s1-r37148378881-a1-docker-ubuntu-24-x86_64"
+        ],
+        "trust_state": {
+          "status": "publish",
+          "event_name": "workflow_dispatch",
+          "requested_policy": "publish",
+          "resolved_policy": "publish",
+          "write_allowed": true,
+          "decision_source": "cli",
+          "reason": "explicit_request",
+          "provider": "github-actions",
+          "detail": "Publication updates the published cache tag.",
+          "next_step": "Let the run finish; the next matching run restores what it publishes.",
+          "token_capabilities": {
+            "restore": true,
+            "stage": true,
+            "save": true
+          }
+        },
+        "diagnostics_level": "off"
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37148378881",
+        "run_attempt": "1",
+        "job": "cold",
+        "workflow": "Native comparison fresh",
+        "ref_name": "docker-output-correction-2026-10-03",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000171226",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37148378881-1",
+      "series": {
+        "id": "image-output-qualification-02",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37148378881"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "hugo",
+      "strategy": "boringcache",
+      "lane": "fresh",
+      "phase": "warm",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "hugo",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "d93cf392d1d565e2d563f3e5e7b947f28616e7c830f3a3c3a84fa10f4033ccb0",
+        "source": {
+          "repository": "gohugoio/hugo",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-hugo",
+          "branch": "main",
+          "revision": "ecc41a3b3e250f5268000ddde142d61a15959e95"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "hugo"
+              },
+              "historical_workflow": "hugo-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "hugo"
+              },
+              "historical_workflow": "hugo-fresh-benchmark.yml"
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 9,
+          "native": {
+            "action": ".github/actions/hugo-docker-benchmark",
+            "benchmark_id": "hugo",
+            "rolling_inputs": {
+              "push_image": "true"
+            },
+            "environment": {},
+            "fresh_inputs": {
+              "load_image": "true"
+            }
+          },
+          "cache_tags": {
+            "hugo-docker-local": "{scope}-docker"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 28,
+        "workflow_seconds": 30,
+        "total_seconds": 28,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 28
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": {
+          "import_tags": [
+            "hugo-series-image-output-qualification-02-s1-r37148378881-a1-docker-ubuntu-24-x86_64"
+          ],
+          "planned_import_refs": 1,
+          "export_tag": null
+        },
+        "tag": "hugo-series-image-output-qualification-02-s1-r37148378881-a1-docker",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": 411514484,
+        "storage_source": "boringcache-check",
+        "storage_breakdown": {
+          "workspace": "boringcache/benchmarks",
+          "tags": [
+            "hugo-series-image-output-qualification-02-s1-r37148378881-a1-docker-ubuntu-24-x86_64"
+          ],
+          "complete": true,
+          "measured_bytes": 411514484,
+          "unmeasured_tags": [],
+          "total_bytes": 411514484,
+          "observations": [
+            {
+              "requested_tag": "hugo-series-image-output-qualification-02-s1-r37148378881-a1-docker-ubuntu-24-x86_64",
+              "tag": "hugo-series-image-output-qualification-02-s1-r37148378881-a1-docker-ubuntu-24-x86_64",
+              "status": "hit",
+              "cache_type": "cache_entry",
+              "cache_entry_id": "96e3380c-67d8-44b4-a951-c1dc410c6bd4",
+              "manifest_root_digest": "sha256:709249e89b6c464bb7165b66f4dd9fb708780f3d74dc65d7456b59f21bf02446",
+              "kv_total_size": 0,
+              "compressed_size": 411514484,
+              "size": 411514484
+            }
+          ]
+        }
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "sha": "6b3ba3a7e22ae2809605b8118aeed08b244f1955"
+      },
+      "product_refs": {
+        "schema_version": 1,
+        "cli_version": "v1.33.0",
+        "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+        "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+      },
+      "action": {
+        "resolved_mode": "docker",
+        "resolved_tags": [
+          "hugo-series-image-output-qualification-02-s1-r37148378881-a1-docker-ubuntu-24-x86_64"
+        ],
+        "trust_state": {
+          "status": "restore_only",
+          "event_name": "workflow_dispatch",
+          "requested_policy": "restore",
+          "resolved_policy": "restore",
+          "write_allowed": false,
+          "decision_source": "cli",
+          "reason": "explicit_request",
+          "provider": "github-actions",
+          "detail": "trust-policy is restore.",
+          "next_step": "Use trust-policy stage or publish only when this job is trusted for that operation.",
+          "token_capabilities": {
+            "restore": true,
+            "stage": true,
+            "save": true
+          }
+        },
+        "diagnostics_level": "off"
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37148378881",
+        "run_attempt": "1",
+        "job": "warm",
+        "workflow": "Native comparison fresh",
+        "ref_name": "docker-output-correction-2026-10-03",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000171228",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37148378881-1",
+      "series": {
+        "id": "image-output-qualification-02",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37148378881"
+      ]
+    }
+  ],
+  "exclusions": []
+}
