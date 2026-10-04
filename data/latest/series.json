@@ -2455,41 +2455,115 @@
       },
       "plan_sha256": "35a2dc05b7b87a66a9da5682af58e51e412316e72c350c17078ed04080c4a312",
       "definition_sha256": "908a8962c0bcdca6e1d3842c2e64bfe3ba71735a16821012d5767acd775693cb",
-      "state": "planned",
+      "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": false,
-      "execution_verified": false,
+      "valid_for_comparison": true,
+      "execution_verified": true,
       "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 84,
+            "min": 84,
+            "max": 84
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 8,
+            "min": 8,
+            "max": 8
+          },
+          "storage": {
+            "median": 161784439,
+            "min": 161784439,
+            "max": 161784439
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 63,
+            "min": 63,
+            "max": 63
+          },
+          "storage": {
+            "median": 608031575,
+            "min": 608031575,
+            "max": 608031575
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 15,
+            "min": 15,
+            "max": 15
+          },
+          "storage": {
+            "median": 811503108,
+            "min": 811503108,
+            "max": 811503108
+          },
+          "storage_measured_count": 1
+        }
       ],
-      "summaries": [],
-      "dispatches": [],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
+      "dispatches": [
+        {
+          "case_id": "hugo-go",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "hugo-go",
+            "cli_version": "v1.33.0",
+            "series_id": "shared-lifecycle-qualification-01",
+            "sample": "1"
+          },
+          "ref": "shared-lifecycle-2026-10-04",
+          "state": "requested",
+          "requested_at": "2026-10-04T13:08:54Z",
+          "run_id": 37204582423,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204582423"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "hugo-go",
+          "series_id": "shared-lifecycle-qualification-01",
+          "sample": 1,
+          "run_id": "37204582423",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204582423",
+          "source_sha": "f6bcde907231d8e70c34d05e522e393db799713d",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "3154a932609e31cbdab09aa47b7e0671d9563ad8f438ae2a9b8b1c218c17a3d5"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/hugo-go/shared-lifecycle-qualification-01/report.json",
       "interpretation_path": null,
       "evidence": [],
-      "runs_without_archives": []
+      "runs_without_archives": [
+        "37204582423"
+      ]
     },
     {
       "case_id": "hugo-go",
@@ -3067,6 +3141,111 @@
       },
       "plan_sha256": "5a0c3c4b9e6cd65dc8a629f125534a1fcdd5ba9015d2f5b6aa3ba312145e53e4",
       "definition_sha256": "8efc5a2368ac2012b1d1264006447fe93436d593e309aa867826b42a2d127750",
+      "state": "failed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "hugo",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "hugo",
+            "cli_version": "v1.33.0",
+            "series_id": "shared-lifecycle-qualification-01",
+            "sample": "1"
+          },
+          "ref": "shared-lifecycle-2026-10-04",
+          "state": "requested",
+          "requested_at": "2026-10-04T13:08:56Z",
+          "run_id": 37204584632,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204584632"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "hugo",
+          "series_id": "shared-lifecycle-qualification-01",
+          "sample": 1,
+          "run_id": "37204584632",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204584632",
+          "source_sha": "f6bcde907231d8e70c34d05e522e393db799713d",
+          "github_conclusion": "failure",
+          "status": "failed",
+          "errors": [
+            "Workflow concluded failure",
+            "BoringCache hugo cold: failure",
+            "GitHub Actions hugo cold: failure"
+          ],
+          "evidence_manifest_sha256": "18e637ca4b6502539b929702e3dacedee83940a51a1a2b75c82632c4dec2ad70"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/hugo/shared-lifecycle-qualification-01/report.json",
+      "interpretation_path": null,
+      "evidence": [],
+      "runs_without_archives": [
+        "37204584632"
+      ]
+    },
+    {
+      "case_id": "hugo",
+      "series_id": "shared-lifecycle-qualification-02",
+      "plan_path": "results/hugo/shared-lifecycle-qualification-02/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "047e1f8caac9070ad94eb62149d671a69d3a1214a5a917c374cc2ca3e43ae8f2",
+      "definition_sha256": "142454ba72794a7253d4db6b10e9209939361a495bb53094bae503fd830b044d",
       "state": "planned",
       "publication": "unreviewed",
       "valid_for_comparison": false,
@@ -5634,6 +5813,112 @@
       },
       "plan_sha256": "683444f5363548d3815f9e55d6a56a023d9d15a9300582fe02bfeb322f2da2e7",
       "definition_sha256": "6d012067d6265b02726f6c5df471c31178c21c92c4471ce712ae7a3d4125f653",
+      "state": "failed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "posthog",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "posthog",
+            "cli_version": "v1.33.0",
+            "variant": "combined",
+            "series_id": "shared-combined-lifecycle-01",
+            "sample": "1"
+          },
+          "ref": "shared-lifecycle-2026-10-04",
+          "state": "requested",
+          "requested_at": "2026-10-04T13:09:00Z",
+          "run_id": 37204588491,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204588491"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "posthog",
+          "series_id": "shared-combined-lifecycle-01",
+          "sample": 1,
+          "run_id": "37204588491",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204588491",
+          "source_sha": "f6bcde907231d8e70c34d05e522e393db799713d",
+          "github_conclusion": "failure",
+          "status": "failed",
+          "errors": [
+            "Workflow concluded failure",
+            "BoringCache posthog cold: failure",
+            "GitHub Actions posthog cold: failure"
+          ],
+          "evidence_manifest_sha256": "d60cbda03aeda419341ff8112992d81f32b476fbe508da86851a1f4994d2be7f"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/posthog/shared-combined-lifecycle-01/report.json",
+      "interpretation_path": null,
+      "evidence": [],
+      "runs_without_archives": [
+        "37204588491"
+      ]
+    },
+    {
+      "case_id": "posthog",
+      "series_id": "shared-combined-lifecycle-02",
+      "plan_path": "results/posthog/shared-combined-lifecycle-02/series.json",
+      "lane": "fresh",
+      "variant": "combined",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "PostHog/posthog",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "1b354ee844ed380919a4c5c1abf0cdb45d63489c658b706c3d280c68ab5830f2",
+      "definition_sha256": "5ed26c35a502999eb61efd535b39249af12b0d86f1694be37b0d020c4202178d",
       "state": "planned",
       "publication": "unreviewed",
       "valid_for_comparison": false,
@@ -5701,6 +5986,112 @@
       },
       "plan_sha256": "13c3bd7351df48d08972ba6d0c33f266205703b66a417ce6b3b96d8de674ae44",
       "definition_sha256": "6d012067d6265b02726f6c5df471c31178c21c92c4471ce712ae7a3d4125f653",
+      "state": "failed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "posthog",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "posthog",
+            "cli_version": "v1.33.0",
+            "variant": "layers",
+            "series_id": "shared-layers-lifecycle-01",
+            "sample": "1"
+          },
+          "ref": "shared-lifecycle-2026-10-04",
+          "state": "requested",
+          "requested_at": "2026-10-04T13:08:58Z",
+          "run_id": 37204586535,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204586535"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "posthog",
+          "series_id": "shared-layers-lifecycle-01",
+          "sample": 1,
+          "run_id": "37204586535",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204586535",
+          "source_sha": "f6bcde907231d8e70c34d05e522e393db799713d",
+          "github_conclusion": "failure",
+          "status": "failed",
+          "errors": [
+            "Workflow concluded failure",
+            "GitHub Actions posthog cold: failure",
+            "BoringCache posthog cold: failure"
+          ],
+          "evidence_manifest_sha256": "05001c070314e7cfead2f2e271c9af2fda780684c6a7ce1ff30d49b38db2e70a"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/posthog/shared-layers-lifecycle-01/report.json",
+      "interpretation_path": null,
+      "evidence": [],
+      "runs_without_archives": [
+        "37204586535"
+      ]
+    },
+    {
+      "case_id": "posthog",
+      "series_id": "shared-layers-lifecycle-02",
+      "plan_path": "results/posthog/shared-layers-lifecycle-02/series.json",
+      "lane": "fresh",
+      "variant": "layers",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "PostHog/posthog",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "9440f1ecc87acfc5f42121a9b72a446881769df6f188c1a27f50070c209dd0d1",
+      "definition_sha256": "5ed26c35a502999eb61efd535b39249af12b0d86f1694be37b0d020c4202178d",
       "state": "planned",
       "publication": "unreviewed",
       "valid_for_comparison": false,

@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "plan_sha256": "683444f5363548d3815f9e55d6a56a023d9d15a9300582fe02bfeb322f2da2e7",
+  "complete": false,
+  "valid_for_comparison": false,
+  "failures": [],
+  "methodology_issues": [],
+  "execution_verified": false,
+  "missing_completions": [],
+  "failed_completions": [
+    {
+      "schema_version": 1,
+      "case_id": "posthog",
+      "series_id": "shared-combined-lifecycle-01",
+      "sample": 1,
+      "run_id": "37204588491",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204588491",
+      "source_sha": "f6bcde907231d8e70c34d05e522e393db799713d",
+      "github_conclusion": "failure",
+      "status": "failed",
+      "errors": [
+        "Workflow concluded failure",
+        "BoringCache posthog cold: failure",
+        "GitHub Actions posthog cold: failure"
+      ],
+      "evidence_manifest_sha256": "d60cbda03aeda419341ff8112992d81f32b476fbe508da86851a1f4994d2be7f"
+    }
+  ],
+  "completions": [
+    {
+      "schema_version": 1,
+      "case_id": "posthog",
+      "series_id": "shared-combined-lifecycle-01",
+      "sample": 1,
+      "run_id": "37204588491",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204588491",
+      "source_sha": "f6bcde907231d8e70c34d05e522e393db799713d",
+      "github_conclusion": "failure",
+      "status": "failed",
+      "errors": [
+        "Workflow concluded failure",
+        "BoringCache posthog cold: failure",
+        "GitHub Actions posthog cold: failure"
+      ],
+      "evidence_manifest_sha256": "d60cbda03aeda419341ff8112992d81f32b476fbe508da86851a1f4994d2be7f"
+    }
+  ],
+  "publication": "unreviewed",
+  "evidence_preservation": "requires-review",
+  "primary_metric": "build_and_reuse_seconds",
+  "missing": [
+    [
+      1,
+      "cold",
+      "boringcache"
+    ],
+    [
+      1,
+      "cold",
+      "actions-cache"
+    ],
+    [
+      1,
+      "warm",
+      "boringcache"
+    ],
+    [
+      1,
+      "warm",
+      "actions-cache"
+    ]
+  ],
+  "summaries": [],
+  "records": [],
+  "exclusions": []
+}

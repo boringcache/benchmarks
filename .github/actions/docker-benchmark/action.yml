@@ -47,10 +47,10 @@ outputs:
     value: ${{ steps.build_timing.outputs.build_seconds }}
     description: Build, image output and declared cache publication duration.
   cache-hit:
-    value: ${{ steps.provider.outputs.cache-hit }}
+    value: ${{ steps.publish.outputs.cache-hit || steps.restore.outputs.cache-hit }}
     description: Product-reported cache outcome, when measured.
   evidence-path:
-    value: ${{ steps.provider.outputs.evidence-path }}
+    value: ${{ steps.publish.outputs.evidence-path || steps.restore.outputs.evidence-path }}
     description: Original product evidence file.
 runs:
   using: composite
@@ -98,10 +98,10 @@ runs:
         secrets: ${{ inputs.secrets }}
         no-cache: ${{ inputs.no-cache == 'true' }}
         cache-from: type=gha,scope=${{ inputs.cache-scope }}
-        cache-to: ${{ steps.policy.outputs.publish-cache == 'true' && format('type=gha,scope={0},mode=max', inputs.cache-scope) || '' }}
-    - name: Build with BoringCache
-      id: provider
-      if: inputs.strategy == 'boringcache'
+        cache-to: ${{ steps.policy.outputs.publish_cache == 'true' && format('type=gha,scope={0},mode=max', inputs.cache-scope) || '' }}
+    - name: Build and publish with BoringCache
+      id: publish
+      if: inputs.strategy == 'boringcache' && steps.policy.outputs.publish_cache == 'true'
       uses: ./.github/actions/boringcache
       env:
         BORINGCACHE_MANAGED_BUILDKIT_IMAGE: ${{ inputs.buildkit-image }}
@@ -109,8 +109,20 @@ runs:
         mode: docker
         cli-version: ${{ inputs.cli-version }}
         cli-platform: ${{ inputs.cli-platform }}
-        trust-policy: ${{ steps.policy.outputs.trust-policy }}
-        fail-on-cache-miss: ${{ steps.policy.outputs.require-hit }}
+        trust-policy: publish
+        fail-on-cache-miss: ${{ steps.policy.outputs.require_hit }}
+    - name: Build from the BoringCache seed
+      id: restore
+      if: inputs.strategy == 'boringcache' && steps.policy.outputs.publish_cache == 'false'
+      uses: ./.github/actions/boringcache
+      env:
+        BORINGCACHE_MANAGED_BUILDKIT_IMAGE: ${{ inputs.buildkit-image }}
+      with:
+        mode: docker
+        cli-version: ${{ inputs.cli-version }}
+        cli-platform: ${{ inputs.cli-platform }}
+        trust-policy: restore
+        fail-on-cache-miss: ${{ steps.policy.outputs.require_hit }}
     - name: Capture the build timing
       id: build_timing
       shell: bash

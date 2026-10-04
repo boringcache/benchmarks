@@ -514,6 +514,12 @@ module BenchmarkCases
         end
         copy_shared_actions(target, root: root)
         NativeCase.write_action(item, directory: target, lane: "fresh", variant: native_variant) if item.dig("execution", "native")
+        # A copied, unused adapter is not an invocation by this case.
+        docker_action = File.join(target, ".github/actions/docker-benchmark")
+        sources = Dir[File.join(target, ".github", "**", "*.{yml,yaml}")].reject { |path| path.start_with?(docker_action + "/") }
+        unless sources.any? { |path| File.read(path).include?("./.github/actions/docker-benchmark") }
+          FileUtils.remove_entry(docker_action)
+        end
         # Legacy product guards consume the resolved public Action invocation.
         # Expand the shared wrapper in these disposable views, preserving its
         # defaults and each caller's phase, adapter, and strict failure settings.
