@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "deno",
+  "series_id": "merged-main-qualification-03",
+  "sample": 1,
+  "run_id": "37219039939",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37219039939",
+  "source_sha": "fac4677ae1b217db78662291b34fa89d6253f92c",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "1a2606464ee5cfb62126c6ad22e6e72fd3795d9a0e6ddfb91381da254c114e97"
+}
