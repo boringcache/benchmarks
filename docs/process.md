@@ -340,3 +340,25 @@ diagnostic until their source sequence, seed lineage, and central caller have
 been qualified. Do not enable their schedule or promote their timing merely
 because the workflow completed. The series reporter keeps rolling observations
 but marks them invalid for comparison while seed lineage is unsupported.
+
+## 8. Review product updates
+
+The immutable `boringcache/one` pin in `.github/actions/boringcache/action.yml` is
+the only maintained product Action pin. Its released default owns the ordinary
+CLI version. Use the existing runtime `cli_version` input for an exact release or
+canary experiment; do not add separate version constants to case actions.
+
+For an Action or CLI update, read the released Action metadata and public plan
+contract, update the one pin when needed, then run the case, workflow, report,
+and product-owned interface checks. Start new screening series for affected
+adapters from a committed ref. Inspect output correctness, trust state, raw final
+evidence, native errors, storage coverage, and post-step completion before
+switching scheduled callers. A package download or passing schema check alone
+does not qualify the new product version.
+
+Keep previous series, pins, and observations unchanged. New fields in product
+evidence must survive in the raw artifact even before the canonical reporter
+uses them. Update the shared reporter when measurement semantics change, and
+retain explicit unknown or unmeasured values. Fix missing product capabilities
+in the product; do not reproduce its installers, cache identity, proxy lifecycle,
+or internal evidence normalization in individual benchmark cases.

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "repository": "boringcache/benchmarks",
+  "scope": "Read-only cache-capacity snapshots during lifecycle qualification. Not per-phase occupancy or evidence that eviction did not occur.",
+  "observations": {
+    "usage": {
+      "collected_at": "2026-10-04T13:26:35Z",
+      "endpoint": "repos/boringcache/benchmarks/actions/cache/usage",
+      "response": {
+        "full_name": "boringcache/benchmarks",
+        "active_caches_size_in_bytes": 10650140305,
+        "active_caches_count": 274
+      }
+    },
+    "storage-limit": {
+      "collected_at": "2026-10-04T13:26:35Z",
+      "endpoint": "repos/boringcache/benchmarks/actions/cache/storage-limit",
+      "response": {
+        "max_cache_size_gb": 10
+      }
+    }
+  }
+}

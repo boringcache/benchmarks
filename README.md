@@ -20,6 +20,10 @@ Standard comparisons use two shared fresh and rolling workflows, which also
 support `workflow_call`. All cases use one [BoringCache wrapper](.github/actions/boringcache/action.yml)
 for the product invocation and release pin. Preparation and common tool setup
 use shared actions; case payloads keep their upstream recipe and output checks.
+Docker cases also share [provider setup, timing, and publication policy](.github/actions/docker-benchmark/action.yml).
+`bin/bench collect` imports preserved phase artifacts and generates a report after
+checking the dispatch and completed jobs. Original product evidence is retained
+after product cleanup.
 
 ```mermaid
 flowchart LR

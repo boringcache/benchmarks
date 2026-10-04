@@ -391,6 +391,15 @@
         "series_reviews": [
           "results/hugo/image-output-qualification-02/methodology-review.json"
         ]
+      },
+      "shared_lifecycle_qualification": {
+        "case_id": "hugo",
+        "series_id": "shared-lifecycle-qualification-02",
+        "run_ids": [
+          37205110890
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04",
+        "scope": "Selected one-sample cold/warm execution and final product-evidence retention passed; publication, rolling behavior and caller cutover remain unqualified"
       }
     },
     {
@@ -441,6 +450,15 @@
         "scope": "Direct fresh comparison with two predeclared samples; rolling and remaining caller/schedule gates pending",
         "series_id": "direct-dispatch-qualification",
         "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-direct-dispatch-2026-10-02"
+      },
+      "shared_lifecycle_qualification": {
+        "case_id": "hugo-go",
+        "series_id": "shared-lifecycle-qualification-01",
+        "run_ids": [
+          37204582423
+        ],
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04",
+        "scope": "Selected one-sample cold/warm execution and final product-evidence retention passed; publication, rolling behavior and caller cutover remain unqualified"
       }
     },
     {

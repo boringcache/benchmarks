@@ -1,5 +1,29 @@
 # Consolidation acceptance
 
+## Current cutover gates
+
+The central definitions and shared harness exist. Active schedules, the historical
+index feed, and original repositories still require a verified cutover. Use the
+same [case process](process.md) for a maintained benchmark or a selected evaluation;
+adding an evaluation does not require a fork or another harness.
+
+| Area | Current state | Remaining acceptance |
+| --- | --- | --- |
+| Definitions and execution | 17 maintained cases, 47 Docker workloads, and four blocked gRPC evaluation drafts; one provider wrapper and workspace | Qualify each scheduled workload and variant, including output checks and cache source lineage |
+| Docker lifecycle | One shared provider/timing action; equal publication policy; original final product evidence retained after cleanup | Corrected live qualification, followed by the remaining workload and rolling paths |
+| Reporting and evidence | One canonical phase/series format, verified collection, generated catalog, preserved failures and methodology reviews | Reviewed central publication feed and complete required evidence for each retiring repository |
+| Product updates | One Action pin; pin-sync and product-interface checks inspect shared execution views | Complete companion integration and released-product qualification before caller activation |
+| Scheduling | Monitoring reads the existing active schedules | Qualify central source-sync/canary/release callers, then retire each replaced schedule |
+| Shared GitHub capacity | Serial comparisons; capacity snapshots retained | Choose retention/capacity policy and verify seed availability for rolling comparisons |
+| Fork retirement | Deferred inventory and selected candidates retained | Audit unique work, evidence, external links, and active upstream contributions before each decision |
+
+The [October 4 capacity snapshot](../migration/cache-capacity-2026-10-04.json)
+records 10,650,140,305 bytes in 274 cache entries and the API's `max_cache_size_gb`
+setting of 10. This is repository context, not a per-phase measurement or proof
+of eviction. It does not establish that a particular seed survived. Capacity and
+seed checks remain required before activating central schedules.
+
+
 The first cutover migrates the 18 maintained `benchmark-*` repositories:
 17 benchmark cases and Docker's 47 pinned workloads. Fork evaluations are deferred
 in `migration/forks.json`. Original forks and benchmark repositories remain
@@ -83,6 +107,16 @@ again and verified against its checksum and 13-file inventory. These runs retain
 the same publication-policy limitation. They also lack the original final One
 evidence envelope. The new provider post hook retains that envelope after product
 cleanup. Corrected execution requires new frozen series and live qualification.
+
+The corrected [Hugo Go](../results/hugo-go/shared-lifecycle-qualification-01/interpretation.md)
+and [Hugo Docker](../results/hugo/shared-lifecycle-qualification-02/interpretation.md)
+screens pass cold/warm output, post-step completion, and final product evidence
+retention. Their one-sample records preserve BoringCache's slower warm results
+and missing Actions Cache storage. The three initial Docker requests failed
+before building on unsupported helper output names. All five completed requests
+are retained in the [verified shared-lifecycle archive](https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04),
+with 53 listed files verified after download. Corrected PostHog qualification
+remains pending.
 
 Canary monitoring now follows the active historical schedules through explicit
 registry metadata. Its October 4 read-only collection verified all 16 repository
