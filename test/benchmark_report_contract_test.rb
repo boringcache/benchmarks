@@ -10,15 +10,8 @@ require "tmpdir"
 class BenchmarkReportContractTest < Minitest::Test
   SCRIPT = File.expand_path("../scripts/check-report-contract.rb", __dir__)
   CANONICAL = File.expand_path("../scripts/canonical/benchmark-report.rb", __dir__)
-  REPOS_DIR = ENV["BENCHMARK_REPOS_DIR"] || [
-    File.expand_path("../../benchmarks-repos", __dir__),
-    File.expand_path("../../benchmark-repos", __dir__)
-  ].find { |path| Dir.exist?(path) }
-
-  def test_every_summarized_lane_is_retained
-    skip "benchmark repos checkout not available" unless REPOS_DIR
-
-    stdout, stderr, status = Open3.capture3(SCRIPT, REPOS_DIR)
+  def test_every_central_summarized_lane_is_retained
+    stdout, stderr, status = Open3.capture3({"BENCHMARK_REPOS_DIR" => nil}, RbConfig.ruby, SCRIPT)
     assert status.success?, "report contract failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
     assert_includes stdout, "benchmark report contract aligned"
   end

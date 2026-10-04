@@ -17,11 +17,13 @@ module CollectSeries
     manifest = JSON.parse(File.read(File.join(evidence_directory, "manifest.json")))
     records = {}
     manifest.fetch("artifacts").each do |artifact|
-      next unless artifact.fetch("name").start_with?("phase-")
       archive = File.join(evidence_directory, "artifacts", "#{artifact.fetch('id')}.zip")
       names, error, status = Open3.capture3("unzip", "-Z1", archive)
       raise BenchmarkSeries::Error, "Cannot list phase artifact: #{error.strip}" unless status.success?
       names.lines.map(&:strip).grep(/\.json\z/).each do |name|
+        # Proof bundles also contain raw product evidence. Only collect canonical
+        # phase filenames or the contents of a dedicated phase artifact.
+        next unless artifact.fetch("name").start_with?("phase-") || name.match?(/-(?:fresh-(?:cold|warm)|rolling-commit)\.json\z/)
         value = JSON.parse(read_record(archive, name))
         BenchmarkSeries.validate_record(plan, value)
         unless value.dig("github", "run_id").to_s == run_id && value.dig("series", "sample") == sample
