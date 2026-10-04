@@ -23,6 +23,14 @@ jobs:
     - name: Run Ruby tests
       run: bundle exec ruby -Itest -e 'Dir["test/*_test.rb"].sort.each { |file| require_relative
         file }'
+    - uses: ./.github/actions/setup-node
+      with:
+        node-version: '24'
+    - name: Install and audit evidence upload dependencies
+      working-directory: .github/actions/retain-product-evidence
+      run: |
+        npm ci --ignore-scripts
+        npm audit --omit=dev
     - name: Check product evidence retention
       run: node --test test/product_evidence_test.cjs
     - name: Lint workflows

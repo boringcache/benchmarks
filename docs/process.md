@@ -363,6 +363,12 @@ evidence, native errors, storage coverage, and post-step completion before
 switching scheduled callers. A package download or passing schema check alone
 does not qualify the new product version.
 
+Dependabot proposes weekly updates for the evidence hook's official GitHub SDKs.
+Guardrails install the exact lockfile, audit its dependencies, and execute the
+hook against the installed SDKs. SDK changes also require a live run that retains
+the original evidence after product cleanup. This dependency path does not update
+the BoringCache Action pin.
+
 Keep previous series, pins, and observations unchanged. New fields in product
 evidence must survive in the raw artifact even before the canonical reporter
 uses them. Update the shared reporter when measurement semantics change, and
