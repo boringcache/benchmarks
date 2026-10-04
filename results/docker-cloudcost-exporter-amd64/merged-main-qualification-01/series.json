@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "case_id": "docker-cloudcost-exporter-amd64",
+  "series_id": "merged-main-qualification-01",
+  "created_at": "2026-10-04T16:43:11Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "bd780d30da731a3eb5a70f3a2426975f7424d352047d4216c6772f6a2287ef92",
+  "variant": "linux-amd64",
+  "workflow_inputs": {
+    "case_id": "cloudcost-exporter-amd64",
+    "ref_key": "main",
+    "cache_lane": "fresh",
+    "cli_version": "v1.33.0"
+  },
+  "comparison": {
+    "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+    "providers": [
+      "boringcache"
+    ],
+    "timed_scope": "Declared Docker build, including dependencies, cache import/export and declared image output",
+    "primary_metric": "correctness",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "grafana/cloudcost-exporter",
+    "pins": [
+      {
+        "path": "recipe.json",
+        "revision": "e2bf02e3b91909f3e7c2e47561f2a3b897bf7ab4",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "9565ae6cbef0759e53e1e54a5efec36219eabeaf",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "b55648776f0d9eb8f245a7fdbd6121a59446e174",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "0304705af4cbc54dc4a6a9cadbca9ab59f8c690b",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "26977e7e0066177ef80cce649b5071745f566a86",
+        "kind": "recipe"
+      },
+      {
+        "path": "recipe.json",
+        "revision": "580113c9610da388dda767eaa0acbf8d0cc2fbeb",
+        "kind": "recipe"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream workflow fidelity",
+    "Declared Docker output"
+  ],
+  "plan_sha256": "8c33f7da272792f283f6579510febe46ec64ad9ed4423bf2fb356ba651615e34"
+}
