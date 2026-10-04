@@ -17,6 +17,8 @@ jobs:
     runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
       && inputs.runner_label || 'ubuntu-latest' }}"
     timeout-minutes: 120
+    outputs:
+      cache_scope: "${{ steps.benchmark.outputs.cache_scope }}"
     strategy:
       fail-fast: false
       matrix:
@@ -38,7 +40,8 @@ jobs:
         native-lane: fresh
         suffix: "${{ inputs.benchmark_id_suffix }}"
         variant: "${{ inputs.variant }}"
-    - uses: "./.github/actions/benchmark-phase"
+    - id: benchmark
+      uses: "./.github/actions/benchmark-phase"
       with:
         strategy: "${{ matrix.strategy }}"
         cache_lane: fresh
@@ -88,6 +91,7 @@ jobs:
         strategy: "${{ matrix.strategy }}"
         cache_lane: fresh
         phase: warm
+        cache_scope: "${{ needs.cold.outputs.cache_scope }}"
         benchmark_id: "${{ env.BENCHMARK_ID }}"
         cli_version: "${{ inputs.cli_version }}"
         buildkit_image: "${{ inputs.buildkit_image }}"

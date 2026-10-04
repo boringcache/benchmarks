@@ -6,7 +6,7 @@ require "fileutils"
 
 module NativeCase
   class Error < StandardError; end
-  INPUTS = %w[strategy phase cache_lane benchmark_id cli_version buildkit_image cli_platform report_variant].freeze
+  INPUTS = %w[strategy phase cache_lane cache_scope benchmark_id cli_version buildkit_image cli_platform report_variant].freeze
 
   def self.validate(item, payload:)
     recipe = item.dig("execution", "native")
@@ -89,7 +89,8 @@ module NativeCase
     raise Error, "Use fresh or rolling for the native lane" unless %w[fresh rolling].include?(lane)
     raise Error, "Use an empty suffix or a lowercase suffix beginning with a hyphen" unless suffix.match?(/\A(?:-[a-z0-9]+(?:-[a-z0-9]+)*)?\z/)
     benchmark_id = recipe.fetch("benchmark_id") + suffix
-    declared = YAML.safe_load(File.read(File.join(directory, recipe.fetch("action"), "action.yml")), aliases: true).fetch("inputs")
+    action = YAML.safe_load(File.read(File.join(directory, recipe.fetch("action"), "action.yml")), aliases: true)
+    declared = action.fetch("inputs")
     settings = recipe.fetch("#{lane}_inputs").merge(INPUTS.to_h { |name| [name, "${{ inputs.#{name} }}"] }.select { |name, _| declared.key?(name) })
     settings["cache_lane"] = lane
     settings["report_variant"] = variant.to_s if declared.key?("report_variant")
@@ -102,7 +103,10 @@ module NativeCase
     end
     document = {"name" => "Declared benchmark phase", "description" => "Executes the reviewed native case recipe.",
       "inputs" => INPUTS.to_h { |name| [name, {"required" => %w[strategy phase benchmark_id].include?(name), "default" => ""}] },
-      "runs" => {"using" => "composite", "steps" => [{"uses" => "./#{recipe.fetch('action')}", "with" => settings, "env" => recipe.fetch("environment", {})}]}}
+      "runs" => {"using" => "composite", "steps" => [{"id" => "phase", "uses" => "./#{recipe.fetch('action')}", "with" => settings, "env" => recipe.fetch("environment", {})}]}}
+    if action.fetch("outputs", {}).key?("cache_scope")
+      document["outputs"] = {"cache_scope" => {"description" => "Published cache cohort", "value" => "${{ steps.phase.outputs.cache_scope }}"}}
+    end
     path = File.join(directory, ".github", "actions", "benchmark-phase", "action.yml")
     FileUtils.mkdir_p(File.dirname(path))
     File.write(path, YAML.dump(document))
