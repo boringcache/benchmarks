@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-04T17:12:32Z",
+  "scope": "Read-only cache-side summary joined by original repository, run, and harness commit. Remote metrics are not compiler hit rates, complete storage accounting, or additive wall-clock measurements.",
+  "identity": {
+    "run_uid": "github-actions:boringcache/benchmarks:37219016891",
+    "run_label": "github-actions/37219016891#1",
+    "run_kind": "ci",
+    "provider": "github-actions",
+    "provider_run_uid": "37219016891",
+    "attempt": "1",
+    "repository": "boringcache/benchmarks",
+    "ref_type": "branch",
+    "ref_name": "main",
+    "commit_sha": "fac4677ae1b217db78662291b34fa89d6253f92c",
+    "summary_session_id": "proxy-summary-99cdb569-ac8d-4e01-bda6-a66a0ad79ded",
+    "tools": [
+      "gocache"
+    ]
+  },
+  "metrics": {
+    "session_count": 4,
+    "total_hits": 1583,
+    "total_misses": 1706,
+    "total_errors": 0,
+    "total_bytes_read": 810208772,
+    "total_bytes_written": 812751452,
+    "duration_seconds": 127.5,
+    "read_label": "Go build actions",
+    "hit_label": "Action hits",
+    "miss_label": "Missed actions",
+    "hit_count_label": "action hit",
+    "miss_count_label": "missed action"
+  },
+  "jobs": [
+    {
+      "job": "cold",
+      "phases": [],
+      "tools": [
+        "gocache"
+      ],
+      "cache_layers": [],
+      "hits": 0,
+      "misses": 1274,
+      "errors": 0,
+      "bytes_read": 0,
+      "bytes_written": 811504297,
+      "duration_seconds": 68.2,
+      "state": "cold"
+    },
+    {
+      "job": "warm",
+      "phases": [],
+      "tools": [
+        "gocache"
+      ],
+      "cache_layers": [],
+      "hits": 1583,
+      "misses": 432,
+      "errors": 0,
+      "bytes_read": 810208772,
+      "bytes_written": 1247155,
+      "duration_seconds": 15.8,
+      "state": "warm_with_misses"
+    }
+  ],
+  "sessions": [
+    {
+      "session_id": "proxy-summary-99cdb569-ac8d-4e01-bda6-a66a0ad79ded",
+      "tool": "gocache",
+      "metrics": {
+        "hit_count": 1583,
+        "miss_count": 432,
+        "error_count": 0,
+        "bytes_read": 810208772,
+        "bytes_written": 1247155,
+        "duration_seconds": 15.8,
+        "hit_rate": 78.6
+      },
+      "read_only": true,
+      "backend_api": {
+        "total_error_count": 0,
+        "total_retry_count": 0,
+        "p50_ms_by_operation": {
+          "cache_kv_entries_download_urls": "[redacted]"
+        },
+        "p95_ms_by_operation": {
+          "cache_kv_entries_download_urls": "[redacted]"
+        },
+        "total_request_count": 1,
+        "reporting_error_count": 0,
+        "error_count_by_operation": {
+          "cache_kv_entries_download_urls": "[redacted]"
+        },
+        "retry_count_by_operation": {
+          "cache_kv_entries_download_urls": "[redacted]"
+        },
+        "request_count_by_operation": {
+          "cache_kv_entries_download_urls": "[redacted]"
+        },
+        "cache_operation_error_count": 0
+      },
+      "tool_counters": {
+        "cache_read_bytes": 810208772,
+        "cache_write_bytes": 1247155,
+        "cache_write_count": 432,
+        "cache_read_hit_count": 1583,
+        "cache_read_miss_count": 432,
+        "cache_read_error_count": 0,
+        "cache_write_error_count": 0,
+        "cache_write_degraded_count": 0
+      }
+    },
+    {
+      "session_id": "proxy-summary-27726fa3-5a1c-4a06-9815-786f49e31fce",
+      "tool": "gocache",
+      "metrics": {
+        "hit_count": 0,
+        "miss_count": 1274,
+        "error_count": 0,
+        "bytes_read": 0,
+        "bytes_written": 811504297,
+        "duration_seconds": 68.2,
+        "hit_rate": 0
+      },
+      "read_only": false,
+      "backend_api": {
+        "total_error_count": 0,
+        "total_retry_count": 1,
+        "p50_ms_by_operation": {
+          "cache_rollups_ingest": 205,
+          "cache_blobs_upload_urls": "[redacted]",
+          "cache_kv_entries_upsert": 47,
+          "cache_kv_entries_current_version": 613
+        },
+        "p95_ms_by_operation": {
+          "cache_rollups_ingest": 718,
+          "cache_blobs_upload_urls": "[redacted]",
+          "cache_kv_entries_upsert": 868,
+          "cache_kv_entries_current_version": 613
+        },
+        "total_request_count": 589,
+        "reporting_error_count": 0,
+        "error_count_by_operation": {
+          "cache_rollups_ingest": 0,
+          "cache_blobs_upload_urls": "[redacted]",
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entries_current_version": 0
+        },
+        "retry_count_by_operation": {
+          "cache_rollups_ingest": 0,
+          "cache_blobs_upload_urls": "[redacted]",
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entries_current_version": 0
+        },
+        "request_count_by_operation": {
+          "cache_rollups_ingest": 4,
+          "cache_blobs_upload_urls": "[redacted]",
+          "cache_kv_entries_upsert": 10,
+          "cache_kv_entries_current_version": 1
+        },
+        "cache_operation_error_count": 0
+      },
+      "tool_counters": {
+        "cache_read_bytes": 0,
+        "cache_write_bytes": 811504297,
+        "cache_write_count": 2756,
+        "cache_read_hit_count": 0,
+        "cache_read_miss_count": 1274,
+        "cache_read_error_count": 0,
+        "cache_write_error_count": 0,
+        "cache_write_degraded_count": 0
+      }
+    }
+  ]
+}
