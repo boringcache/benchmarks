@@ -37,7 +37,7 @@ module BenchmarkPhase
     raise "Phase must be publish or warm" unless %w[publish warm].include?(phase)
     raise "publish-on-warm must be true or false" unless %w[true false].include?(publish_on_warm)
     publish = phase == "publish" || publish_on_warm == "true"
-    {"publish-cache" => publish, "trust-policy" => publish ? "publish" : "restore", "require-hit" => phase == "warm"}
+    {"publish_cache" => publish, "require_hit" => phase == "warm"}
   end
 end
 
