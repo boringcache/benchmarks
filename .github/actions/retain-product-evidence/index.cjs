@@ -12,13 +12,17 @@ function register(core) {
 
 async function retain(core, artifact) {
   const directory = core.getState('evidence-directory');
-  const source = fs.readFileSync(path.join(directory, 'evidence-path'), 'utf8').trim();
-  if (!source) {
+  const supplied = fs.readFileSync(path.join(directory, 'evidence-path'), 'utf8').trim();
+  if (!supplied) {
     throw new Error('The product did not return an evidence path.');
   }
-  const name = path.basename(source);
+  const name = path.basename(supplied);
   if (!/^boringcache-one-evidence-[a-f0-9]{64}\.json$/.test(name)) {
     throw new Error('The product returned an unexpected evidence filename.');
+  }
+  const source = path.join(os.tmpdir(), name);
+  if (path.resolve(supplied) !== source) {
+    throw new Error('Product evidence must be in the runner temporary directory.');
   }
   const stat = fs.lstatSync(source);
   if (!stat.isFile() || stat.size > 8 * 1024 * 1024) {
