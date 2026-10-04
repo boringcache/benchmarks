@@ -617,8 +617,8 @@
     },
     {
       "case_id": "deno",
-      "series_id": "merged-main-qualification-02",
-      "plan_path": "results/deno/merged-main-qualification-02/series.json",
+      "series_id": "merged-main-qualification-03",
+      "plan_path": "results/deno/merged-main-qualification-03/series.json",
       "lane": "fresh",
       "variant": "cargo-product",
       "sample_count": 1,
@@ -648,8 +648,8 @@
           }
         ]
       },
-      "plan_sha256": "b25d7eaae128758182775c8376d59bc7243ee106e8075e3325a4be0e97a3fddc",
-      "definition_sha256": "1f04d83e268306f3d81b761d2233a5784834c143029b9759ca1673587abec490",
+      "plan_sha256": "876673894a09e3b07c7eeb4e033cb14679d1dba1363a34f4cc661c8086fcab58",
+      "definition_sha256": "52905a400cd73743dd63ecbc168b449305b22a880acc70f56034ee6d4b6fe318",
       "state": "planned",
       "publication": "unreviewed",
       "valid_for_comparison": false,
@@ -1738,8 +1738,8 @@
     },
     {
       "case_id": "docker-cloudcost-exporter-amd64",
-      "series_id": "merged-main-qualification-02",
-      "plan_path": "results/docker-cloudcost-exporter-amd64/merged-main-qualification-02/series.json",
+      "series_id": "merged-main-qualification-03",
+      "plan_path": "results/docker-cloudcost-exporter-amd64/merged-main-qualification-03/series.json",
       "lane": "fresh",
       "variant": "linux-amd64",
       "sample_count": 1,
@@ -1789,8 +1789,8 @@
           }
         ]
       },
-      "plan_sha256": "4b82209d1df934797e3f079d4f9acc04dd26a21ae469391e4e6b8171baeff5fb",
-      "definition_sha256": "05b152b13b9aadc781a837a6dac638ee1fc8a75d2f15aab939d611409de21e11",
+      "plan_sha256": "fdb2a363f80f8dc1e98397af7cf4e3a0c81f86ee4d1b2ecac3bc5ebdac890a6f",
+      "definition_sha256": "5a69f70b97fef520ef0208417a41eed6d999b541f60aa009ff30bca374b085e7",
       "state": "planned",
       "publication": "unreviewed",
       "valid_for_comparison": false,
@@ -2401,8 +2401,8 @@
     },
     {
       "case_id": "hugo-go",
-      "series_id": "merged-main-qualification-02",
-      "plan_path": "results/hugo-go/merged-main-qualification-02/series.json",
+      "series_id": "merged-main-qualification-03",
+      "plan_path": "results/hugo-go/merged-main-qualification-03/series.json",
       "lane": "fresh",
       "variant": null,
       "sample_count": 1,
@@ -2428,8 +2428,8 @@
           }
         ]
       },
-      "plan_sha256": "ed5589aa7d86745d1f6485a77520a7f4417485a7b647ff331080e2ed1f51baf2",
-      "definition_sha256": "5d76d434011d04621e91c8ecf931184fc5a3bf7e4bda4248a32aa207fdca083f",
+      "plan_sha256": "fb020c5ffe80dad97e564738deb8f4192835b3551b3ab025d42c2103ada169c5",
+      "definition_sha256": "8575b4c7e5c1a048ccb9a3a36f7653474e78b0aea76f6166818bd51560409a39",
       "state": "planned",
       "publication": "unreviewed",
       "valid_for_comparison": false,
@@ -3222,8 +3222,8 @@
     },
     {
       "case_id": "hugo",
-      "series_id": "merged-main-qualification-02",
-      "plan_path": "results/hugo/merged-main-qualification-02/series.json",
+      "series_id": "merged-main-qualification-03",
+      "plan_path": "results/hugo/merged-main-qualification-03/series.json",
       "lane": "fresh",
       "variant": null,
       "sample_count": 1,
@@ -3249,8 +3249,8 @@
           }
         ]
       },
-      "plan_sha256": "a7dd668f6da09ee4c620f61a30b1375ca6e6fb50adb6f003872b35c71b1a45c3",
-      "definition_sha256": "0bef9ab3abedc169513388a200974614169382c403d722a788aa069750533ffe",
+      "plan_sha256": "09be21445afddc73425c579f525bf67ebdedf7a1fba0047db1f97b68f2a5f578",
+      "definition_sha256": "8522975a5e5fe5e8671da5ad5777b878e1b030e127caa4053e27483667e0bed7",
       "state": "planned",
       "publication": "unreviewed",
       "valid_for_comparison": false,

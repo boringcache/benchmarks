@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
   "case_id": "deno",
-  "series_id": "merged-main-qualification-02",
-  "created_at": "2026-10-04T16:49:59Z",
+  "series_id": "merged-main-qualification-03",
+  "created_at": "2026-10-04T16:56:59Z",
   "lane": "fresh",
   "phases": [
     "cold",
     "commit"
   ],
   "sample_count": 1,
-  "definition_sha256": "1f04d83e268306f3d81b761d2233a5784834c143029b9759ca1673587abec490",
+  "definition_sha256": "52905a400cd73743dd63ecbc168b449305b22a880acc70f56034ee6d4b6fe318",
   "variant": "cargo-product",
   "workflow_inputs": {
     "cli_version": "v1.33.0",
@@ -50,5 +50,5 @@
     "Require one-commit source cadence",
     "Verify the Deno build"
   ],
-  "plan_sha256": "b25d7eaae128758182775c8376d59bc7243ee106e8075e3325a4be0e97a3fddc"
+  "plan_sha256": "876673894a09e3b07c7eeb4e033cb14679d1dba1363a34f4cc661c8086fcab58"
 }
