@@ -7,6 +7,19 @@ index feed, and original repositories still require a verified cutover. Use the
 same [case process](process.md) for a maintained benchmark or a selected evaluation;
 adding an evaluation does not require a fork or another harness.
 
+The shared execution and evidence fixes are merged. Post-merge qualification at
+`fac4677a` passes native Hugo Go, the shared Hugo Docker comparison, and the AMD64
+Docker corpus proof. Their [preserved evidence](https://github.com/boringcache/benchmarks/releases/tag/evidence-merged-harness-2026-10-04)
+was downloaded again and checked against archive digests and all 43 listed files.
+The Deno Cargo cold/changed-source proof is still running. These selected paths
+do not qualify every imported case or authorize schedule cutover.
+
+The evidence hook uses updated official GitHub SDKs, with runtime import tests,
+dependency auditing, and weekly grouped updates. Ruby, Actions, and JavaScript
+CodeQL checks pass. The common collector also recognizes canonical records inside
+Docker and Cargo proof bundles; it applies the same original plan and dispatch
+checks as dedicated phase artifacts.
+
 | Area | Current state | Remaining acceptance |
 | --- | --- | --- |
 | Definitions and execution | 17 maintained cases, 47 Docker workloads, and four blocked gRPC evaluation drafts; one provider wrapper and workspace | Qualify each scheduled workload and variant, including output checks and cache source lineage |

@@ -82,19 +82,28 @@ class BenchmarkSeriesTest < Minitest::Test
     assert_equal "unreviewed", result["publication"]
   end
 
-  def phase_export(values)
+  def phase_export(values, artifact_name: nil, filenames: nil, extra_files: {})
     directory = evidence
     manifest = JSON.parse(File.read(File.join(directory, "manifest.json")))
     FileUtils.mkdir_p(File.join(directory, "artifacts"))
     values.each_with_index do |value, index|
       id = index + 1
-      name = "phase-#{id}.json"
+      name = filenames ? filenames.fetch(index) : "phase-#{id}.json"
+      FileUtils.mkdir_p(File.dirname(File.join(@root, name)))
       File.write(File.join(@root, name), JSON.generate(value))
       relative = "artifacts/#{id}.zip"
       path = File.join(directory, relative)
-      _output, error, status = Open3.capture3("zip", "-q", path, name, chdir: @root)
+      files = [name]
+      if index.zero?
+        extra_files.each do |filename, content|
+          FileUtils.mkdir_p(File.dirname(File.join(@root, filename)))
+          File.write(File.join(@root, filename), JSON.generate(content))
+          files << filename
+        end
+      end
+      _output, error, status = Open3.capture3("zip", "-q", path, *files, chdir: @root)
       raise error unless status.success?
-      manifest["artifacts"] << {"id" => id, "name" => "phase-#{id}"}
+      manifest["artifacts"] << {"id" => id, "name" => artifact_name || "phase-#{id}"}
       manifest["files"][relative] = {"bytes" => File.size(path), "sha256" => Digest::SHA256.file(path).hexdigest}
     end
     BenchmarkEvidence.retain_json(directory, "artifacts.json", {"total_count" => values.length, "artifacts" => manifest["artifacts"]}, manifest)
@@ -118,6 +127,35 @@ class BenchmarkSeriesTest < Minitest::Test
 
   def test_collection_preflights_conflicting_records_before_writing_any_observation
     directory = phase_export([record, record(seconds: 99)])
+    assert_raises(BenchmarkSeries::Error) { CollectSeries.call(@directory, evidence_directory: directory, sample: 1) }
+    assert_empty Dir[File.join(@directory, "runs", "*.json")]
+  end
+
+  def test_collects_canonical_records_from_docker_proof_artifacts
+    @directory = File.join(@root, "fresh-series")
+    BenchmarkSeries.create(@case, directory: @directory, series: "screening", lane: "fresh", variant: "release")
+    values = %w[cold warm].map { |phase| record.merge("lane" => "fresh", "phase" => phase) }
+    directory = phase_export(values, artifact_name: "proof-example-linux-amd64",
+      filenames: %w[example-boringcache-release-fresh-cold.json example-boringcache-release-fresh-warm.json])
+    assert_equal 2, CollectSeries.call(@directory, evidence_directory: directory, sample: 1)["records"]
+    values.each do |value|
+      assert_equal value, JSON.parse(File.read(File.join(@directory, "runs", "1-boringcache-#{value.fetch('phase')}.json")))
+    end
+  end
+
+  def test_collects_canonical_records_and_ignores_product_json_in_mixed_bundles
+    value = record
+    directory = phase_export([value], artifact_name: "deno-cargo-product-head",
+      filenames: ["home/runner/work/example/benchmark-results/example-boringcache-release-rolling-commit.json"],
+      extra_files: {"tmp/deno-head-primary-action.json" => {"phases" => {"restore" => {}}}})
+    result = CollectSeries.call(@directory, evidence_directory: directory, sample: 1)
+    assert_equal 1, result["records"]
+    assert_equal value, JSON.parse(File.read(File.join(@directory, "runs", "1-boringcache-commit.json")))
+  end
+
+  def test_proof_bundle_records_still_require_matching_case_and_dispatch
+    directory = phase_export([record.merge("github" => {"run_id" => "2"})], artifact_name: "proof-example-publish-linux-amd64",
+      filenames: ["example-boringcache-release-rolling-commit.json"])
     assert_raises(BenchmarkSeries::Error) { CollectSeries.call(@directory, evidence_directory: directory, sample: 1) }
     assert_empty Dir[File.join(@directory, "runs", "*.json")]
   end
