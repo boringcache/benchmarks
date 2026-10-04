@@ -1,0 +1,38 @@
+{
+  "case_id": "posthog",
+  "repository": "boringcache/benchmarks",
+  "workflow": "native-fresh-benchmark.yml",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "PostHog/posthog",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "lane": "fresh",
+  "inputs": {
+    "case_id": "posthog",
+    "cli_version": "v1.33.0",
+    "variant": "layers",
+    "series_id": "shared-layers-lifecycle-02",
+    "sample": "1"
+  },
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "variants": [
+    "layers",
+    "combined"
+  ],
+  "schema_version": 1,
+  "requested_at": "2026-10-04T13:17:48Z",
+  "ref": "shared-lifecycle-correction-2026-10-04",
+  "state": "requested",
+  "run_id": 37205112800,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37205112800"
+}

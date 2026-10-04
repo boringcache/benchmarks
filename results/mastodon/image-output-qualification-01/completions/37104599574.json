@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "mastodon",
+  "series_id": "image-output-qualification-01",
+  "sample": 1,
+  "run_id": "37104599574",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104599574",
+  "source_sha": "35e10981f5e27824d81b19c575a91691592905e9",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "2e2e3c52be0fbdb8c2ea7924416d0bc1530b9ee9b391a13b8f3fc03b0ab61e52"
+}

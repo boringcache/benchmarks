@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "hugo-go",
+  "series_id": "shared-lifecycle-qualification-01",
+  "sample": 1,
+  "run_id": "37204582423",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204582423",
+  "source_sha": "f6bcde907231d8e70c34d05e522e393db799713d",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "3154a932609e31cbdab09aa47b7e0671d9563ad8f438ae2a9b8b1c218c17a3d5"
+}

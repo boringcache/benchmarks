@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "repository": "boringcache/benchmarks",
+  "source_sha": "ebe9215a904081d279458722339ef85d2b742db6",
+  "publication": "unreviewed",
+  "scope": "Corrected PostHog and Hugo one-sample requests. This cache snapshot was collected after dispatch and is context, not per-phase occupancy or proof of absence of eviction. Original requests are unchanged.",
+  "cache_observations": {
+    "usage": {
+      "endpoint": "repos/boringcache/benchmarks/actions/cache/usage",
+      "collected_at": "2026-10-03T19:40:13Z",
+      "response": {
+        "full_name": "boringcache/benchmarks",
+        "active_caches_size_in_bytes": 10645321407,
+        "active_caches_count": 267
+      }
+    },
+    "storage-limit": {
+      "endpoint": "repos/boringcache/benchmarks/actions/cache/storage-limit",
+      "collected_at": "2026-10-03T19:40:13Z",
+      "response": {
+        "max_cache_size_gb": 10
+      }
+    }
+  },
+  "dispatches": [
+    {
+      "case_id": "posthog",
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "workspace": "boringcache/benchmarks",
+      "source": {
+        "repository": "PostHog/posthog",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "lane": "fresh",
+      "inputs": {
+        "case_id": "posthog",
+        "cli_version": "v1.33.0",
+        "variant": "layers",
+        "series_id": "image-output-qualification-02",
+        "sample": "1"
+      },
+      "phases": [
+        "cold",
+        "warm"
+      ],
+      "variants": [
+        "layers",
+        "combined"
+      ],
+      "schema_version": 1,
+      "requested_at": "2026-10-03T19:34:19Z",
+      "ref": "docker-output-correction-2026-10-03",
+      "state": "requested",
+      "run_id": 37148375181,
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148375181"
+    },
+    {
+      "case_id": "posthog",
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "workspace": "boringcache/benchmarks",
+      "source": {
+        "repository": "PostHog/posthog",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "lane": "fresh",
+      "inputs": {
+        "case_id": "posthog",
+        "cli_version": "v1.33.0",
+        "variant": "combined",
+        "series_id": "image-output-combined-qualification-01",
+        "sample": "1"
+      },
+      "phases": [
+        "cold",
+        "warm"
+      ],
+      "variants": [
+        "layers",
+        "combined"
+      ],
+      "schema_version": 1,
+      "requested_at": "2026-10-03T19:34:21Z",
+      "ref": "docker-output-correction-2026-10-03",
+      "state": "requested",
+      "run_id": 37148377350,
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148377350"
+    },
+    {
+      "case_id": "hugo",
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "workspace": "boringcache/benchmarks",
+      "source": {
+        "repository": "gohugoio/hugo",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "lane": "fresh",
+      "inputs": {
+        "case_id": "hugo",
+        "cli_version": "v1.33.0",
+        "series_id": "image-output-qualification-02",
+        "sample": "1"
+      },
+      "phases": [
+        "cold",
+        "warm"
+      ],
+      "variants": null,
+      "schema_version": 1,
+      "requested_at": "2026-10-03T19:34:23Z",
+      "ref": "docker-output-correction-2026-10-03",
+      "state": "requested",
+      "run_id": 37148378881,
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148378881"
+    }
+  ]
+}

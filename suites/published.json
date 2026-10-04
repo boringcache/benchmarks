@@ -13,7 +13,8 @@
     "historical_source_repo": "boringcache/benchmark-hugo",
     "case_id": "hugo",
     "historical_workflow": "hugo-benchmark.yml",
-    "historical_fresh_workflow": "hugo-fresh-benchmark.yml"
+    "historical_fresh_workflow": "hugo-fresh-benchmark.yml",
+    "canary_location": "historical"
   },
   {
     "benchmark": "hugo-go",
@@ -29,7 +30,8 @@
     "historical_source_repo": "boringcache/benchmark-hugo-go",
     "case_id": "hugo-go",
     "historical_workflow": "hugo-go-benchmark.yml",
-    "historical_fresh_workflow": "hugo-go-fresh-benchmark.yml"
+    "historical_fresh_workflow": "hugo-go-fresh-benchmark.yml",
+    "canary_location": "historical"
   },
   {
     "benchmark": "immich",
@@ -44,9 +46,11 @@
     "category": "docker",
     "step": "Docker build (server)",
     "workflow": "immich-immich-benchmark.yml",
-    "fresh_workflow": "immich-immich-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-immich",
-    "case_id": "immich"
+    "case_id": "immich",
+    "historical_fresh_workflow": "immich-fresh-benchmark.yml",
+    "canary_location": "historical"
   },
   {
     "benchmark": "mastodon-docker",
@@ -64,9 +68,14 @@
     "category": "docker",
     "step": "Docker build (Ruby+Node)",
     "workflow": "mastodon-mastodon-docker-benchmark.yml",
-    "fresh_workflow": "mastodon-mastodon-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-mastodon",
-    "case_id": "mastodon"
+    "case_id": "mastodon",
+    "historical_fresh_workflow": "mastodon-fresh-benchmark.yml",
+    "fresh_inputs": {
+      "variant": "server"
+    },
+    "canary_location": "historical"
   },
   {
     "benchmark": "mastodon-streaming",
@@ -78,9 +87,14 @@
     "category": "docker",
     "step": "Docker build (streaming service)",
     "workflow": "mastodon-mastodon-docker-benchmark.yml",
-    "fresh_workflow": "mastodon-mastodon-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-mastodon",
-    "case_id": "mastodon"
+    "case_id": "mastodon",
+    "historical_fresh_workflow": "mastodon-fresh-benchmark.yml",
+    "fresh_inputs": {
+      "variant": "streaming"
+    },
+    "canary_location": "historical"
   },
   {
     "benchmark": "discourse-image-factory-amd64",
@@ -152,13 +166,18 @@
     "category": "docker",
     "step": "Docker build (full stack)",
     "workflow": "posthog-posthog-benchmark.yml",
-    "fresh_workflow": "posthog-posthog-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "extra_providers": [
       "boringcache-toolcache",
       "boringcache-mountcache"
     ],
     "historical_source_repo": "boringcache/benchmark-posthog",
-    "case_id": "posthog"
+    "case_id": "posthog",
+    "historical_fresh_workflow": "posthog-fresh-benchmark.yml",
+    "fresh_inputs": {
+      "variant": "layers"
+    },
+    "canary_location": "historical"
   },
   {
     "benchmark": "storybook",
@@ -174,7 +193,8 @@
     "historical_source_repo": "boringcache/benchmark-storybook",
     "case_id": "storybook",
     "historical_workflow": "storybook-benchmark.yml",
-    "historical_fresh_workflow": "storybook-fresh-benchmark.yml"
+    "historical_fresh_workflow": "storybook-fresh-benchmark.yml",
+    "canary_location": "historical"
   },
   {
     "benchmark": "otel-gradle",
@@ -195,7 +215,8 @@
     "historical_source_repo": "boringcache/benchmark-opentelemetry-java",
     "case_id": "opentelemetry-java",
     "historical_workflow": "opentelemetry-java-gradle-benchmark.yml",
-    "historical_fresh_workflow": "opentelemetry-java-gradle-fresh-benchmark.yml"
+    "historical_fresh_workflow": "opentelemetry-java-gradle-fresh-benchmark.yml",
+    "canary_location": "historical"
   },
   {
     "benchmark": "spring-ai-maven",
@@ -215,7 +236,8 @@
     "historical_source_repo": "boringcache/benchmark-spring-ai",
     "case_id": "spring-ai",
     "historical_workflow": "spring-ai-maven-benchmark.yml",
-    "historical_fresh_workflow": "spring-ai-maven-fresh-benchmark.yml"
+    "historical_fresh_workflow": "spring-ai-maven-fresh-benchmark.yml",
+    "canary_location": "historical"
   },
   {
     "benchmark": "grpc-bazel",
@@ -236,7 +258,8 @@
       "buildbuddy-cache"
     ],
     "historical_source_repo": "boringcache/benchmark-grpc",
-    "case_id": "grpc"
+    "case_id": "grpc",
+    "canary_location": "historical"
   },
   {
     "benchmark": "zed-cargo",
@@ -254,7 +277,11 @@
     "workflow": "zed-zed-cargo-rolling-chain.yml",
     "fresh_workflow": "zed-zed-cargo-product.yml",
     "historical_source_repo": "boringcache/benchmark-zed",
-    "case_id": "zed"
+    "case_id": "zed",
+    "fresh_inputs": {
+      "cache_layer": "combined"
+    },
+    "canary_location": "historical"
   },
   {
     "benchmark": "deno-cargo",
@@ -271,7 +298,11 @@
     "workflow": "deno-deno-cargo-rolling-chain.yml",
     "fresh_workflow": "deno-deno-cargo-product.yml",
     "historical_source_repo": "boringcache/benchmark-deno",
-    "case_id": "deno"
+    "case_id": "deno",
+    "fresh_inputs": {
+      "cache_profile": "cargo-product"
+    },
+    "canary_location": "historical"
   },
   {
     "benchmark": "duckgres",
@@ -287,7 +318,8 @@
     "historical_source_repo": "boringcache/benchmark-duckgres",
     "case_id": "duckgres",
     "historical_workflow": "duckgres-benchmark.yml",
-    "historical_fresh_workflow": "duckgres-fresh-benchmark.yml"
+    "historical_fresh_workflow": "duckgres-fresh-benchmark.yml",
+    "canary_location": "historical"
   },
   {
     "benchmark": "chroma",
@@ -309,7 +341,8 @@
     "historical_source_repo": "boringcache/benchmark-chroma",
     "case_id": "chroma",
     "historical_workflow": "chroma-benchmark.yml",
-    "historical_fresh_workflow": "chroma-fresh-benchmark.yml"
+    "historical_fresh_workflow": "chroma-fresh-benchmark.yml",
+    "canary_location": "historical"
   },
   {
     "benchmark": "linkerd2-v2",
@@ -330,7 +363,8 @@
     "historical_source_repo": "boringcache/benchmark-linkerd2",
     "case_id": "linkerd2",
     "historical_workflow": "linkerd2-benchmark.yml",
-    "historical_fresh_workflow": "linkerd2-fresh-benchmark.yml"
+    "historical_fresh_workflow": "linkerd2-fresh-benchmark.yml",
+    "canary_location": "historical"
   },
   {
     "benchmark": "qdrant",
@@ -346,7 +380,8 @@
     "historical_source_repo": "boringcache/benchmark-qdrant",
     "case_id": "qdrant",
     "historical_workflow": "qdrant-benchmark.yml",
-    "historical_fresh_workflow": "qdrant-fresh-benchmark.yml"
+    "historical_fresh_workflow": "qdrant-fresh-benchmark.yml",
+    "canary_location": "historical"
   },
   {
     "benchmark": "n8n",
@@ -361,9 +396,14 @@
     "category": "nodejs",
     "step": "Turbo build (pnpm monorepo)",
     "workflow": "n8n-n8n-benchmark.yml",
-    "fresh_workflow": "n8n-n8n-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-n8n",
-    "case_id": "n8n"
+    "case_id": "n8n",
+    "historical_fresh_workflow": "n8n-fresh-benchmark.yml",
+    "fresh_inputs": {
+      "variant": "turbo"
+    },
+    "canary_location": "historical"
   },
   {
     "benchmark": "n8n-docker",
@@ -375,9 +415,14 @@
     "category": "docker",
     "step": "Docker build (n8n image)",
     "workflow": "n8n-n8n-docker-benchmark.yml",
-    "fresh_workflow": "n8n-n8n-docker-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-n8n",
-    "case_id": "n8n"
+    "case_id": "n8n",
+    "historical_fresh_workflow": "n8n-docker-fresh-benchmark.yml",
+    "fresh_inputs": {
+      "variant": "docker"
+    },
+    "canary_location": "historical"
   },
   {
     "benchmark": "n8n-runners",
@@ -389,9 +434,14 @@
     "category": "docker",
     "step": "Docker build (task runners)",
     "workflow": "n8n-n8n-docker-benchmark.yml",
-    "fresh_workflow": "n8n-n8n-docker-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-n8n",
-    "case_id": "n8n"
+    "case_id": "n8n",
+    "historical_fresh_workflow": "n8n-docker-fresh-benchmark.yml",
+    "fresh_inputs": {
+      "variant": "runners"
+    },
+    "canary_location": "historical"
   },
   {
     "benchmark": "n8n-runners-distroless",
@@ -403,8 +453,13 @@
     "category": "docker",
     "step": "Docker build (distroless task runners)",
     "workflow": "n8n-n8n-docker-benchmark.yml",
-    "fresh_workflow": "n8n-n8n-docker-fresh-benchmark.yml",
+    "fresh_workflow": "native-fresh-benchmark.yml",
     "historical_source_repo": "boringcache/benchmark-n8n",
-    "case_id": "n8n"
+    "case_id": "n8n",
+    "historical_fresh_workflow": "n8n-docker-fresh-benchmark.yml",
+    "fresh_inputs": {
+      "variant": "distroless"
+    },
+    "canary_location": "historical"
   }
 ]

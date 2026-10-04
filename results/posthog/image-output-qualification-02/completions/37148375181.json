@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "posthog",
+  "series_id": "image-output-qualification-02",
+  "sample": 1,
+  "run_id": "37148375181",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148375181",
+  "source_sha": "ebe9215a904081d279458722339ef85d2b742db6",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "ad47456c459688cb932e9d232c57790b64b694616f587246c3bb3b3c07e77e25"
+}

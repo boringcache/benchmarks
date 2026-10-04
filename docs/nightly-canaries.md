@@ -4,6 +4,13 @@ Central `canary.yml` dispatches the active fresh workflows registered in
 `suites/published.json`. It selects the latest published CLI canary with a complete
 set of release assets and dispatches its registered fresh workflows with that
 exact `cli_version`. Archived repositories are excluded.
+Entries with several workload variants declare `fresh_inputs` in that registry.
+The dispatcher keeps case and variant selectors in each requested run and in
+its receipt; distinct variants of a shared workflow remain distinct requests.
+Registry checks resolve those inputs through the case planner and reject an
+unselected variant or a diagnostic matrix before caller configuration is accepted.
+The selected PostHog layer, Mastodon server/streaming, n8n workloads, Zed combined
+layer, and Deno Cargo-product paths do not imply coverage of every other variant.
 
 Central dispatch is manual until OIDC and workload qualification pass. The
 original repositories retain their nightly schedules during cutover. Enable the

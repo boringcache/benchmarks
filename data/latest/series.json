@@ -5,6 +5,158 @@
   "series": [
     {
       "case_id": "chroma",
+      "series_id": "image-output-qualification-01",
+      "plan_path": "results/chroma/image-output-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "chroma-core/chroma",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "848cf58dd6dd952f8d0ff672af7b30cbf4d67f81",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "c7cadaea12f1ef9c03029ddfd676f4d17e8395dba5d53dd806d12ba12c8671e7",
+      "definition_sha256": "6a50efe5eda093d17fd5abc3d6967183cd287e3b2203b8876d83b1937d3b7301",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 4079,
+            "min": 4079,
+            "max": 4079
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 21,
+            "min": 21,
+            "max": 21
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 5097,
+            "min": 5097,
+            "max": 5097
+          },
+          "storage": {
+            "median": 2365446028,
+            "min": 2365446028,
+            "max": 2365446028
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 31,
+            "min": 31,
+            "max": 31
+          },
+          "storage": {
+            "median": 2365446028,
+            "min": 2365446028,
+            "max": 2365446028
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "chroma",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "chroma",
+            "cli_version": "v1.33.0",
+            "series_id": "image-output-qualification-01",
+            "sample": "1"
+          },
+          "ref": "image-output-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T06:54:28Z",
+          "run_id": 37104573058,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104573058"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "chroma",
+          "series_id": "image-output-qualification-01",
+          "sample": 1,
+          "run_id": "37104573058",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104573058",
+          "source_sha": "35e10981f5e27824d81b19c575a91691592905e9",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "4ec2f8ff8a5307fe991773f741058c5ee838c844b9647d2807473a0eec5f67d9"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/chroma/image-output-qualification-01/report.json",
+      "interpretation_path": "results/chroma/image-output-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37104573058,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-image-output-2026-10-03/benchmarks-37104573058.tar",
+          "bundle_bytes": 407040,
+          "sha256": "a2ebee35d448295a2e3b9a9b26eedd72efadd291a4845da08fb86fdafa2e95ba",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "chroma",
       "series_id": "migration-screening-01",
       "plan_path": "results/chroma/migration-screening-01/series.json",
       "lane": "fresh",
@@ -580,6 +732,117 @@
     },
     {
       "case_id": "deno",
+      "series_id": "rolling-cargo-product-seed-advance-01",
+      "plan_path": "results/deno/rolling-cargo-product-seed-advance-01/series.json",
+      "lane": "rolling",
+      "variant": "cargo-product",
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+        "providers": [
+          "boringcache"
+        ],
+        "timed_scope": "The two BoringCache Cargo release operations, including restore, build, and any permitted publication. Fresh changed-source consumers use restore-only trust; rolling jobs permit publication to the declared cohort. Output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.",
+        "primary_metric": "correctness",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "denoland/deno",
+        "pins": [
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+            "kind": "env"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "b4f08f127652d8442b4d3dbabc277aca3840bc1d",
+            "kind": "env"
+          }
+        ]
+      },
+      "plan_sha256": "1fcb4e930c7efb0c363b76bb4a92c3ed26305ce8ddf087c465aa0481d009fbe9",
+      "definition_sha256": "fe3d0639e3684a12c63b1599ce267083d1ece052b5d76f13eb72cf628c448506",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "Rolling observations have no verified seed and changed-source sequence; retain them as diagnostic.",
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "commit",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "deno",
+          "repository": "boringcache/benchmarks",
+          "workflow": "deno-deno-cargo-rolling-chain.yml",
+          "lane": "rolling",
+          "inputs": {
+            "cli_version": "v1.33.0",
+            "cache_scope": "r37085348479-a1",
+            "base_sha": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+            "head_sha": "b4f08f127652d8442b4d3dbabc277aca3840bc1d",
+            "cache_profile": "cargo-product",
+            "series_id": "rolling-cargo-product-seed-advance-01",
+            "sample": "1"
+          },
+          "ref": "build-reuse-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T07:10:39Z",
+          "run_id": 37105483797,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37105483797"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "deno",
+          "series_id": "rolling-cargo-product-seed-advance-01",
+          "sample": 1,
+          "run_id": "37105483797",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37105483797",
+          "source_sha": "b3ab6324aeccebbb38cc7e2fc1c921ae4f0b399e",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "8cb31998c2a1e30dd44c1b3c2e154a355f5918e0afcc9c5d2c626755277c8d63"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/deno/rolling-cargo-product-seed-advance-01/report.json",
+      "interpretation_path": "results/deno/rolling-cargo-product-seed-advance-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37105483797,
+          "inventory_state": "complete",
+          "verified_files": 9,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-build-reuse-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-build-reuse-2026-10-03/benchmarks-37105483797.tar",
+          "bundle_bytes": 319488,
+          "sha256": "8310584c8ddf50e5ae2905782dae9d74a7338b4c95cc592976c198eb6dad226d",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "deno",
       "series_id": "rolling-compiler-only-qualification",
       "plan_path": "results/deno/rolling-compiler-only-qualification/series.json",
       "lane": "rolling",
@@ -688,6 +951,121 @@
           "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-deno-compiler-rolling-failure-2026-10-02/benchmarks-37063481150.tar",
           "bundle_bytes": 413696,
           "sha256": "13bf0a9cf34066f2e134ec96e54a2c4337c7b39f40dd5fe6f1fc4060bdf547bf",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "deno",
+      "series_id": "rolling-compiler-only-seed-advance-01",
+      "plan_path": "results/deno/rolling-compiler-only-seed-advance-01/series.json",
+      "lane": "rolling",
+      "variant": "compiler-only",
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+        "providers": [
+          "boringcache"
+        ],
+        "timed_scope": "The two BoringCache Cargo release operations, including restore, build, and any permitted publication. Fresh changed-source consumers use restore-only trust; rolling jobs permit publication to the declared cohort. Output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.",
+        "primary_metric": "correctness",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "denoland/deno",
+        "pins": [
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+            "kind": "env"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "b4f08f127652d8442b4d3dbabc277aca3840bc1d",
+            "kind": "env"
+          }
+        ]
+      },
+      "plan_sha256": "184bb3883ff8ca58307b51e80cb069ecd6f0867f90dd2ead6492a78414585a26",
+      "definition_sha256": "fe3d0639e3684a12c63b1599ce267083d1ece052b5d76f13eb72cf628c448506",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "Rolling observations have no verified seed and changed-source sequence; retain them as diagnostic.",
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "commit",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": {
+            "median": 2085530204,
+            "min": 2085530204,
+            "max": 2085530204
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "deno",
+          "repository": "boringcache/benchmarks",
+          "workflow": "deno-deno-cargo-rolling-chain.yml",
+          "lane": "rolling",
+          "inputs": {
+            "cli_version": "v1.33.0",
+            "cache_scope": "r37085349929-a1",
+            "base_sha": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+            "head_sha": "b4f08f127652d8442b4d3dbabc277aca3840bc1d",
+            "cache_profile": "compiler-only",
+            "series_id": "rolling-compiler-only-seed-advance-01",
+            "sample": "1"
+          },
+          "ref": "build-reuse-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T07:10:41Z",
+          "run_id": 37105485279,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37105485279"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "deno",
+          "series_id": "rolling-compiler-only-seed-advance-01",
+          "sample": 1,
+          "run_id": "37105485279",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37105485279",
+          "source_sha": "b3ab6324aeccebbb38cc7e2fc1c921ae4f0b399e",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "89569d3d42cf58d029ba9647845e91ed77457624a109ab5d6bf6b70c342fa3d5"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/deno/rolling-compiler-only-seed-advance-01/report.json",
+      "interpretation_path": "results/deno/rolling-compiler-only-seed-advance-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37105485279,
+          "inventory_state": "complete",
+          "verified_files": 9,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-build-reuse-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-build-reuse-2026-10-03/benchmarks-37105485279.tar",
+          "bundle_bytes": 327168,
+          "sha256": "b3c8161fad67811b144b654474c048277af884d088fe215d93788d95c0b61e06",
           "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
         }
       ],
@@ -1414,6 +1792,158 @@
     },
     {
       "case_id": "duckgres",
+      "series_id": "image-output-qualification-01",
+      "plan_path": "results/duckgres/image-output-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "PostHog/duckgres",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "12e26cf3a900823cf415d826ab2a9b8f0d57b2a3",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "33a5d7375e15d5747d7e19e330c812f6c9690e95a62b4cdf71697173fdc7bd20",
+      "definition_sha256": "1b406d174de4de92e0c62265436e2e130d2c04966378bab14e734ff70ec50044",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 404,
+            "min": 404,
+            "max": 404
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 18,
+            "min": 18,
+            "max": 18
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 193,
+            "min": 193,
+            "max": 193
+          },
+          "storage": {
+            "median": 1880170140,
+            "min": 1880170140,
+            "max": 1880170140
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 20,
+            "min": 20,
+            "max": 20
+          },
+          "storage": {
+            "median": 1880170140,
+            "min": 1880170140,
+            "max": 1880170140
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "duckgres",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "duckgres",
+            "cli_version": "v1.33.0",
+            "series_id": "image-output-qualification-01",
+            "sample": "1"
+          },
+          "ref": "image-output-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T06:54:48Z",
+          "run_id": 37104593175,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104593175"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "duckgres",
+          "series_id": "image-output-qualification-01",
+          "sample": 1,
+          "run_id": "37104593175",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104593175",
+          "source_sha": "35e10981f5e27824d81b19c575a91691592905e9",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "c1e65a0a5ced80b50b20bf280565be3beae9686631ead32052c2963add521670"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/duckgres/image-output-qualification-01/report.json",
+      "interpretation_path": "results/duckgres/image-output-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37104593175,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-image-output-2026-10-03/benchmarks-37104593175.tar",
+          "bundle_bytes": 355840,
+          "sha256": "22418e290a76b7cd5f32e6d07429b08d96119b7137aa9944a3f4bc3df53675cf",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "duckgres",
       "series_id": "migration-screening-01",
       "plan_path": "results/duckgres/migration-screening-01/series.json",
       "lane": "fresh",
@@ -1896,6 +2426,159 @@
     },
     {
       "case_id": "hugo-go",
+      "series_id": "shared-lifecycle-qualification-01",
+      "plan_path": "results/hugo-go/shared-lifecycle-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "35a2dc05b7b87a66a9da5682af58e51e412316e72c350c17078ed04080c4a312",
+      "definition_sha256": "908a8962c0bcdca6e1d3842c2e64bfe3ba71735a16821012d5767acd775693cb",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": true,
+      "execution_verified": true,
+      "methodology_issues": [],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 84,
+            "min": 84,
+            "max": 84
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 8,
+            "min": 8,
+            "max": 8
+          },
+          "storage": {
+            "median": 161784439,
+            "min": 161784439,
+            "max": 161784439
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 63,
+            "min": 63,
+            "max": 63
+          },
+          "storage": {
+            "median": 608031575,
+            "min": 608031575,
+            "max": 608031575
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 15,
+            "min": 15,
+            "max": 15
+          },
+          "storage": {
+            "median": 811503108,
+            "min": 811503108,
+            "max": 811503108
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "hugo-go",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "hugo-go",
+            "cli_version": "v1.33.0",
+            "series_id": "shared-lifecycle-qualification-01",
+            "sample": "1"
+          },
+          "ref": "shared-lifecycle-2026-10-04",
+          "state": "requested",
+          "requested_at": "2026-10-04T13:08:54Z",
+          "run_id": 37204582423,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204582423"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "hugo-go",
+          "series_id": "shared-lifecycle-qualification-01",
+          "sample": 1,
+          "run_id": "37204582423",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204582423",
+          "source_sha": "f6bcde907231d8e70c34d05e522e393db799713d",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "3154a932609e31cbdab09aa47b7e0671d9563ad8f438ae2a9b8b1c218c17a3d5"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/hugo-go/shared-lifecycle-qualification-01/report.json",
+      "interpretation_path": "results/hugo-go/shared-lifecycle-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37204582423,
+          "inventory_state": "complete",
+          "verified_files": 17,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-shared-lifecycle-2026-10-04/benchmarks-37204582423.tar",
+          "bundle_bytes": 335872,
+          "sha256": "f995093328e6357a396811765a14993f43011983d20190c2b91dd0d9518e5368",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "hugo-go",
       "series_id": "wrapper-qualification",
       "plan_path": "results/hugo-go/wrapper-qualification/series.json",
       "lane": "fresh",
@@ -2057,6 +2740,275 @@
     },
     {
       "case_id": "hugo",
+      "series_id": "image-output-qualification-01",
+      "plan_path": "results/hugo/image-output-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "cfa4c56832b46420bd7ddc24e90cd7a7d364f487a7498ca29658395a356c7700",
+      "definition_sha256": "200bdce61b6cbba1361be02b435abbe9c4750e77dd72058281ba1c1e8a8882f4",
+      "state": "failed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "hugo",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "hugo",
+            "cli_version": "v1.33.0",
+            "series_id": "image-output-qualification-01",
+            "sample": "1"
+          },
+          "ref": "image-output-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T06:54:50Z",
+          "run_id": 37104595025,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104595025"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "hugo",
+          "series_id": "image-output-qualification-01",
+          "sample": 1,
+          "run_id": "37104595025",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104595025",
+          "source_sha": "35e10981f5e27824d81b19c575a91691592905e9",
+          "github_conclusion": "failure",
+          "status": "failed",
+          "errors": [
+            "Workflow concluded failure",
+            "BoringCache hugo cold: failure",
+            "GitHub Actions hugo cold: failure"
+          ],
+          "evidence_manifest_sha256": "12aebc138373729492fa362c157080777851485d91d328d4d7a0209618719ce5"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/hugo/image-output-qualification-01/report.json",
+      "interpretation_path": "results/hugo/image-output-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37104595025,
+          "inventory_state": "complete",
+          "verified_files": 7,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-image-output-2026-10-03/benchmarks-37104595025.tar",
+          "bundle_bytes": 235520,
+          "sha256": "af483c8478fcd8b726aff693fd2cea0281e91030e70a9af77218c6c3ad342f01",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "hugo",
+      "series_id": "image-output-qualification-02",
+      "plan_path": "results/hugo/image-output-qualification-02/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "6b9cbe6a1abe5039dfa929d5fa898b3316a3fa019123db5473d97ec461aba485",
+      "definition_sha256": "d93cf392d1d565e2d563f3e5e7b947f28616e7c830f3a3c3a84fa10f4033ccb0",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 270,
+            "min": 270,
+            "max": 270
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 28,
+            "min": 28,
+            "max": 28
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 223,
+            "min": 223,
+            "max": 223
+          },
+          "storage": {
+            "median": 411514484,
+            "min": 411514484,
+            "max": 411514484
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 28,
+            "min": 28,
+            "max": 28
+          },
+          "storage": {
+            "median": 411514484,
+            "min": 411514484,
+            "max": 411514484
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "hugo",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "hugo",
+            "cli_version": "v1.33.0",
+            "series_id": "image-output-qualification-02",
+            "sample": "1"
+          },
+          "ref": "docker-output-correction-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T19:34:23Z",
+          "run_id": 37148378881,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148378881"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "hugo",
+          "series_id": "image-output-qualification-02",
+          "sample": 1,
+          "run_id": "37148378881",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148378881",
+          "source_sha": "ebe9215a904081d279458722339ef85d2b742db6",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "6560d3ffaa57bd746e57c74503987869c470c24ad4b4a02632b6392ad18239aa"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/hugo/image-output-qualification-02/report.json",
+      "interpretation_path": "results/hugo/image-output-qualification-02/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37148378881,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-lifecycle-review-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-lifecycle-review-2026-10-04/benchmarks-37148378881.tar",
+          "bundle_bytes": 263168,
+          "sha256": "de853e9d1c1b0b6bead7e1822a5efbc3a0bb92b15e37e1e53c400757b2354c56",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "hugo",
       "series_id": "migration-screening-01",
       "plan_path": "results/hugo/migration-screening-01/series.json",
       "lane": "fresh",
@@ -2165,6 +3117,576 @@
           "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/active-case-qualification-2026-10-03/benchmarks-37085337504.tar",
           "bundle_bytes": 87040,
           "sha256": "a0e0ada74707cf049f32c6efb77d9a2aa9e983e1d8a9eaa79a4ff7b414ad973c",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "hugo",
+      "series_id": "shared-lifecycle-qualification-01",
+      "plan_path": "results/hugo/shared-lifecycle-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "5a0c3c4b9e6cd65dc8a629f125534a1fcdd5ba9015d2f5b6aa3ba312145e53e4",
+      "definition_sha256": "8efc5a2368ac2012b1d1264006447fe93436d593e309aa867826b42a2d127750",
+      "state": "failed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "hugo",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "hugo",
+            "cli_version": "v1.33.0",
+            "series_id": "shared-lifecycle-qualification-01",
+            "sample": "1"
+          },
+          "ref": "shared-lifecycle-2026-10-04",
+          "state": "requested",
+          "requested_at": "2026-10-04T13:08:56Z",
+          "run_id": 37204584632,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204584632"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "hugo",
+          "series_id": "shared-lifecycle-qualification-01",
+          "sample": 1,
+          "run_id": "37204584632",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204584632",
+          "source_sha": "f6bcde907231d8e70c34d05e522e393db799713d",
+          "github_conclusion": "failure",
+          "status": "failed",
+          "errors": [
+            "Workflow concluded failure",
+            "BoringCache hugo cold: failure",
+            "GitHub Actions hugo cold: failure"
+          ],
+          "evidence_manifest_sha256": "18e637ca4b6502539b929702e3dacedee83940a51a1a2b75c82632c4dec2ad70"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/hugo/shared-lifecycle-qualification-01/report.json",
+      "interpretation_path": "results/hugo/shared-lifecycle-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37204584632,
+          "inventory_state": "complete",
+          "verified_files": 7,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-shared-lifecycle-2026-10-04/benchmarks-37204584632.tar",
+          "bundle_bytes": 147968,
+          "sha256": "0b21b4ea8ef41cc7fc8f14200aaa13a58e398da102d4a983f5673f64d3091544",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "hugo",
+      "series_id": "shared-lifecycle-qualification-02",
+      "plan_path": "results/hugo/shared-lifecycle-qualification-02/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "047e1f8caac9070ad94eb62149d671a69d3a1214a5a917c374cc2ca3e43ae8f2",
+      "definition_sha256": "142454ba72794a7253d4db6b10e9209939361a495bb53094bae503fd830b044d",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": true,
+      "execution_verified": true,
+      "methodology_issues": [],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 229,
+            "min": 229,
+            "max": 229
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 17,
+            "min": 17,
+            "max": 17
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 226,
+            "min": 226,
+            "max": 226
+          },
+          "storage": {
+            "median": 411517974,
+            "min": 411517974,
+            "max": 411517974
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 27,
+            "min": 27,
+            "max": 27
+          },
+          "storage": {
+            "median": 411517974,
+            "min": 411517974,
+            "max": 411517974
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "hugo",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "hugo",
+            "cli_version": "v1.33.0",
+            "series_id": "shared-lifecycle-qualification-02",
+            "sample": "1"
+          },
+          "ref": "shared-lifecycle-correction-2026-10-04",
+          "state": "requested",
+          "requested_at": "2026-10-04T13:17:46Z",
+          "run_id": 37205110890,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37205110890"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "hugo",
+          "series_id": "shared-lifecycle-qualification-02",
+          "sample": 1,
+          "run_id": "37205110890",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37205110890",
+          "source_sha": "d045da272fae61c96d06727459055f1a31eca48f",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "6f45e249bf9659845af18a99f80367c298095a20957e661418f78bba9b15c2ac"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/hugo/shared-lifecycle-qualification-02/report.json",
+      "interpretation_path": "results/hugo/shared-lifecycle-qualification-02/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37205110890,
+          "inventory_state": "complete",
+          "verified_files": 15,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-shared-lifecycle-2026-10-04/benchmarks-37205110890.tar",
+          "bundle_bytes": 517120,
+          "sha256": "d199516ad802b33ea4d5789998a4693c224a3c992f7e59750536e4e6358cc472",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "immich",
+      "series_id": "image-output-qualification-01",
+      "plan_path": "results/immich/image-output-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "immich-app/immich",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "007c18aec6cc9552fb7d8b7c791c41d7424876b0",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "f2b98c3031e2c795b68c4eb5d0ad15b805c1bf4c8a70f015e2d0446ddc44a77f",
+      "definition_sha256": "aa7edd687de2be1ba9ea1393766e01359e5a0ac10d0ac59ec556f9c4d536eaab",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 371,
+            "min": 371,
+            "max": 371
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 57,
+            "min": 57,
+            "max": 57
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 207,
+            "min": 207,
+            "max": 207
+          },
+          "storage": {
+            "median": 1758920230,
+            "min": 1758920230,
+            "max": 1758920230
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 38,
+            "min": 38,
+            "max": 38
+          },
+          "storage": {
+            "median": 1758920230,
+            "min": 1758920230,
+            "max": 1758920230
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "immich",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "immich",
+            "cli_version": "v1.33.0",
+            "series_id": "image-output-qualification-01",
+            "sample": "1"
+          },
+          "ref": "image-output-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T06:54:59Z",
+          "run_id": 37104602471,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104602471"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "immich",
+          "series_id": "image-output-qualification-01",
+          "sample": 1,
+          "run_id": "37104602471",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104602471",
+          "source_sha": "35e10981f5e27824d81b19c575a91691592905e9",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "a232a9c86cf53c4945b672566ad89e76085267e61bdd5d7b0226606108e41521"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/immich/image-output-qualification-01/report.json",
+      "interpretation_path": "results/immich/image-output-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37104602471,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-image-output-2026-10-03/benchmarks-37104602471.tar",
+          "bundle_bytes": 416256,
+          "sha256": "89dd58ddf791fbd4b2d66280cca759c2cff6f2f6bdbc4498ffeda57ed9185c87",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "linkerd2",
+      "series_id": "image-output-qualification-01",
+      "plan_path": "results/linkerd2/image-output-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "linkerd/linkerd2",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "e7c15f3a6c933d4d92a4959575d5f9d093fdffc5",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "ae86ce031289490b5b7c93f169fa0308d90cec5cd3e0281f4dce333e386f427a",
+      "definition_sha256": "e55db4e3f59df4ea63c2886c2e8189f56ee238c9fb14f0eea7bbabaeaa3c83ef",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 306,
+            "min": 306,
+            "max": 306
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 15,
+            "min": 15,
+            "max": 15
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 200,
+            "min": 200,
+            "max": 200
+          },
+          "storage": {
+            "median": 1230761384,
+            "min": 1230761384,
+            "max": 1230761384
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 12,
+            "min": 12,
+            "max": 12
+          },
+          "storage": {
+            "median": 1230761384,
+            "min": 1230761384,
+            "max": 1230761384
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "linkerd2",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "linkerd2",
+            "cli_version": "v1.33.0",
+            "series_id": "image-output-qualification-01",
+            "sample": "1"
+          },
+          "ref": "image-output-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T06:54:52Z",
+          "run_id": 37104596700,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104596700"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "linkerd2",
+          "series_id": "image-output-qualification-01",
+          "sample": 1,
+          "run_id": "37104596700",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104596700",
+          "source_sha": "35e10981f5e27824d81b19c575a91691592905e9",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "3eba28538f46405b75d696f6c8071d56e26bf96e6b1be1f7fc5479893e282adf"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/linkerd2/image-output-qualification-01/report.json",
+      "interpretation_path": "results/linkerd2/image-output-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37104596700,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-image-output-2026-10-03/benchmarks-37104596700.tar",
+          "bundle_bytes": 354816,
+          "sha256": "63efd14ac9e14ffd6b09b3ec57786f72aba962deda6f19fb773296b7428e1a60",
           "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
         }
       ],
@@ -2280,6 +3802,925 @@
           "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/active-case-qualification-2026-10-03/benchmarks-37085339156.tar",
           "bundle_bytes": 87040,
           "sha256": "f7d828874085433b11447c700c224bb24d3f7237a290a9cfdb31ef0ef4d52880",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "mastodon",
+      "series_id": "image-output-qualification-01",
+      "plan_path": "results/mastodon/image-output-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": "server",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "mastodon/mastodon",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "c8ae9766cb832203e9984cda74e804fa1e746eecf842c469c2222f70f863d413",
+      "definition_sha256": "b3fdf15ac786c8f1a57ed78bfb7c3aa772d97f8624cb172cbf7443b80b8720ef",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 736,
+            "min": 736,
+            "max": 736
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 59,
+            "min": 59,
+            "max": 59
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 424,
+            "min": 424,
+            "max": 424
+          },
+          "storage": {
+            "median": 1130445165,
+            "min": 1130445165,
+            "max": 1130445165
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 38,
+            "min": 38,
+            "max": 38
+          },
+          "storage": {
+            "median": 1130445165,
+            "min": 1130445165,
+            "max": 1130445165
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "mastodon",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "mastodon",
+            "cli_version": "v1.33.0",
+            "variant": "server",
+            "series_id": "image-output-qualification-01",
+            "sample": "1"
+          },
+          "ref": "image-output-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T06:54:55Z",
+          "run_id": 37104599574,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104599574"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "mastodon",
+          "series_id": "image-output-qualification-01",
+          "sample": 1,
+          "run_id": "37104599574",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104599574",
+          "source_sha": "35e10981f5e27824d81b19c575a91691592905e9",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "2e2e3c52be0fbdb8c2ea7924416d0bc1530b9ee9b391a13b8f3fc03b0ab61e52"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/mastodon/image-output-qualification-01/report.json",
+      "interpretation_path": "results/mastodon/image-output-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37104599574,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-image-output-2026-10-03/benchmarks-37104599574.tar",
+          "bundle_bytes": 694784,
+          "sha256": "8b6a772ff39503d0e9aac23a96e13f627e9ffbba1f4e84ece45598857559ee60",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "mastodon",
+      "series_id": "streaming-output-qualification-01",
+      "plan_path": "results/mastodon/streaming-output-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": "streaming",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "mastodon/mastodon",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "3795707ead334fd02443574fd818023c3f29e42680b1cffe9693d54da38610af",
+      "definition_sha256": "6bd5fa5df953cc47d2b50d2e72997344cb1eb73532b5b0c7ecfc3e39c0d96ea5",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 52,
+            "min": 52,
+            "max": 52
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 21,
+            "min": 21,
+            "max": 21
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 40,
+            "min": 40,
+            "max": 40
+          },
+          "storage": {
+            "median": 106281953,
+            "min": 106281953,
+            "max": 106281953
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 22,
+            "min": 22,
+            "max": 22
+          },
+          "storage": {
+            "median": 106281953,
+            "min": 106281953,
+            "max": 106281953
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "mastodon",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "mastodon",
+            "cli_version": "v1.33.0",
+            "variant": "streaming",
+            "series_id": "streaming-output-qualification-01",
+            "sample": "1"
+          },
+          "ref": "active-variant-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T19:45:29Z",
+          "run_id": 37149053291,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149053291"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "mastodon",
+          "series_id": "streaming-output-qualification-01",
+          "sample": 1,
+          "run_id": "37149053291",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149053291",
+          "source_sha": "b759879316279afa06a7e8166c905429547adb34",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "530bf111ae6b4a6f70347e2e293b0ad75cec21dd175728be464cf8ecfc1ebfec"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/mastodon/streaming-output-qualification-01/report.json",
+      "interpretation_path": "results/mastodon/streaming-output-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37149053291,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-lifecycle-review-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-lifecycle-review-2026-10-04/benchmarks-37149053291.tar",
+          "bundle_bytes": 266240,
+          "sha256": "899c7adc2f77d143cfdda44d59b9f12884877c5a5fcf65bed1c5989341c8b2a9",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "n8n",
+      "series_id": "distroless-output-qualification-01",
+      "plan_path": "results/n8n/distroless-output-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": "distroless",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "n8n-io/n8n",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "08b518d5c7cd45195e1817738316c065e60de1805ae26927f3b1c572b2aeef55",
+      "definition_sha256": "454acd4311833555c8086d1e9437e3cb618f6dfd3eadf93c9757aa51816c68b2",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 214,
+            "min": 214,
+            "max": 214
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 132,
+            "min": 132,
+            "max": 132
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 81,
+            "min": 81,
+            "max": 81
+          },
+          "storage": {
+            "median": 581055738,
+            "min": 581055738,
+            "max": 581055738
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 110,
+            "min": 110,
+            "max": 110
+          },
+          "storage": {
+            "median": 581055738,
+            "min": 581055738,
+            "max": 581055738
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "n8n",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "n8n",
+            "cli_version": "v1.33.0",
+            "variant": "distroless",
+            "series_id": "distroless-output-qualification-01",
+            "sample": "1"
+          },
+          "ref": "active-variant-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T19:45:33Z",
+          "run_id": 37149056843,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149056843"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "n8n",
+          "series_id": "distroless-output-qualification-01",
+          "sample": 1,
+          "run_id": "37149056843",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149056843",
+          "source_sha": "b759879316279afa06a7e8166c905429547adb34",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "4bbc22e12b0a3e5e9c1c5c481f68f29002291e60a1bcc748ea3e18eaaed8566e"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/n8n/distroless-output-qualification-01/report.json",
+      "interpretation_path": "results/n8n/distroless-output-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37149056843,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-lifecycle-review-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-lifecycle-review-2026-10-04/benchmarks-37149056843.tar",
+          "bundle_bytes": 1658880,
+          "sha256": "b1b97061460c375759d37184868d53cddad9c1b980b4e69d8e6a67cce374ce09",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "n8n",
+      "series_id": "image-output-qualification-01",
+      "plan_path": "results/n8n/image-output-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": "docker",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "n8n-io/n8n",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "b37a573111c573f83938292e8aba01df839799e18ea821f07dadca5e869b74a5",
+      "definition_sha256": "009c1fb0a0a062a44f7a4aee84a48e3570585410de8bce2bc23fee0de426aa24",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 446,
+            "min": 446,
+            "max": 446
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 150,
+            "min": 150,
+            "max": 150
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 319,
+            "min": 319,
+            "max": 319
+          },
+          "storage": {
+            "median": 483433384,
+            "min": 483433384,
+            "max": 483433384
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 162,
+            "min": 162,
+            "max": 162
+          },
+          "storage": {
+            "median": 483433384,
+            "min": 483433384,
+            "max": 483433384
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "n8n",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "n8n",
+            "cli_version": "v1.33.0",
+            "variant": "docker",
+            "series_id": "image-output-qualification-01",
+            "sample": "1"
+          },
+          "ref": "image-output-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T06:54:54Z",
+          "run_id": 37104598178,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104598178"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "n8n",
+          "series_id": "image-output-qualification-01",
+          "sample": 1,
+          "run_id": "37104598178",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104598178",
+          "source_sha": "35e10981f5e27824d81b19c575a91691592905e9",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "5f0af1311b0f43733e4562504aed6f42dde1420f1c800abe59315d5f97a55214"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/n8n/image-output-qualification-01/report.json",
+      "interpretation_path": "results/n8n/image-output-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37104598178,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-image-output-2026-10-03/benchmarks-37104598178.tar",
+          "bundle_bytes": 1748480,
+          "sha256": "0bb9fc327d8fef9a8af1eb8bdcf8ec699508a46715bae610a28c12b0fc1dd49f",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "n8n",
+      "series_id": "runners-output-qualification-01",
+      "plan_path": "results/n8n/runners-output-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": "runners",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "n8n-io/n8n",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "9ce0493c6b520b2ecadc9a13123edee5590770d648062b0376a8195ee06f489e",
+      "definition_sha256": "454acd4311833555c8086d1e9437e3cb618f6dfd3eadf93c9757aa51816c68b2",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 144,
+            "min": 144,
+            "max": 144
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 89,
+            "min": 89,
+            "max": 89
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 62,
+            "min": 62,
+            "max": 62
+          },
+          "storage": {
+            "median": 413827357,
+            "min": 413827357,
+            "max": 413827357
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 60,
+            "min": 60,
+            "max": 60
+          },
+          "storage": {
+            "median": 413827357,
+            "min": 413827357,
+            "max": 413827357
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "n8n",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "n8n",
+            "cli_version": "v1.33.0",
+            "variant": "runners",
+            "series_id": "runners-output-qualification-01",
+            "sample": "1"
+          },
+          "ref": "active-variant-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T19:45:31Z",
+          "run_id": 37149055130,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149055130"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "n8n",
+          "series_id": "runners-output-qualification-01",
+          "sample": 1,
+          "run_id": "37149055130",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37149055130",
+          "source_sha": "b759879316279afa06a7e8166c905429547adb34",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "c52e6d5bedd2e1d5e4333c820e0895b30eee8eb5c5ec02389cb5d669dc6f7017"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/n8n/runners-output-qualification-01/report.json",
+      "interpretation_path": "results/n8n/runners-output-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37149055130,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-lifecycle-review-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-lifecycle-review-2026-10-04/benchmarks-37149055130.tar",
+          "bundle_bytes": 1602560,
+          "sha256": "36d2b8fe86fbfe42fa9df155468b0beda3b6a1baabec398dd3a577e04feafafd",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "n8n",
+      "series_id": "shared-turbo-qualification-01",
+      "plan_path": "results/n8n/shared-turbo-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": "turbo",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "n8n-io/n8n",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "035df772551717a7a2d369d39994c744f270815a5481833e7a494a06097dcae9",
+      "definition_sha256": "c2930c6848f23cb393381f93848cea9037caba566e8e476405c4b40cb2329ec3",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": true,
+      "execution_verified": true,
+      "methodology_issues": [],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 125,
+            "min": 125,
+            "max": 125
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 4,
+            "min": 4,
+            "max": 4
+          },
+          "storage": {
+            "median": 52937490,
+            "min": 52937490,
+            "max": 52937490
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 132,
+            "min": 132,
+            "max": 132
+          },
+          "storage": {
+            "median": 46409937,
+            "min": 46409937,
+            "max": 46409937
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 9,
+            "min": 9,
+            "max": 9
+          },
+          "storage": {
+            "median": 51597365,
+            "min": 51597365,
+            "max": 51597365
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "n8n",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "n8n",
+            "cli_version": "v1.33.0",
+            "variant": "turbo",
+            "series_id": "shared-turbo-qualification-01",
+            "sample": "1"
+          },
+          "ref": "native-workload-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T01:46:05Z",
+          "run_id": 37087350856,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37087350856"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "n8n",
+          "series_id": "shared-turbo-qualification-01",
+          "sample": 1,
+          "run_id": "37087350856",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37087350856",
+          "source_sha": "6eda03c19ffe66ff3d0d6b3d9f76fb2a2860ac0c",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "25fcd514b9aa761dbc44baa4a988e563bf43e071a2538617921e2c23a7e5c5b0"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/n8n/shared-turbo-qualification-01/report.json",
+      "interpretation_path": "results/n8n/shared-turbo-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37087350856,
+          "inventory_state": "complete",
+          "verified_files": 15,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-n8n-turbo-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-n8n-turbo-2026-10-03/benchmarks-37087350856.tar",
+          "bundle_bytes": 484864,
+          "sha256": "8ebeab6ffdf273e07caa14b311620c1889a43ba722f2b4ce64e592237835e383",
           "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
         }
       ],
@@ -3000,6 +5441,990 @@
       "runs_without_archives": []
     },
     {
+      "case_id": "posthog",
+      "series_id": "image-output-combined-qualification-01",
+      "plan_path": "results/posthog/image-output-combined-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": "combined",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "PostHog/posthog",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "1cfc86fd12483a24861a1b5e25e6e705b2e057e4ec730b177b2d4bae1b9c36ad",
+      "definition_sha256": "6575963f1c26bb20deabd14c54d92bf87354df90a4c8e0171c6674aaaf579644",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 1889,
+            "min": 1889,
+            "max": 1889
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 187,
+            "min": 187,
+            "max": 187
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 1016,
+            "min": 1016,
+            "max": 1016
+          },
+          "storage": {
+            "median": 6237909312,
+            "min": 6237909312,
+            "max": 6237909312
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 162,
+            "min": 162,
+            "max": 162
+          },
+          "storage": {
+            "median": 6237909312,
+            "min": 6237909312,
+            "max": 6237909312
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "posthog",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "posthog",
+            "cli_version": "v1.33.0",
+            "variant": "combined",
+            "series_id": "image-output-combined-qualification-01",
+            "sample": "1"
+          },
+          "ref": "docker-output-correction-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T19:34:21Z",
+          "run_id": 37148377350,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148377350"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "posthog",
+          "series_id": "image-output-combined-qualification-01",
+          "sample": 1,
+          "run_id": "37148377350",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148377350",
+          "source_sha": "ebe9215a904081d279458722339ef85d2b742db6",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "7d2cf7f6e9b12c476c9b3e23b73d31fbe8f25176a91bf7d18fc29a027e819895"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/posthog/image-output-combined-qualification-01/report.json",
+      "interpretation_path": "results/posthog/image-output-combined-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37148377350,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-lifecycle-review-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-lifecycle-review-2026-10-04/benchmarks-37148377350.tar",
+          "bundle_bytes": 373248,
+          "sha256": "bf89e6b23b5517ca298ff620dde1885fce19ec9a9a8d92fce5092a2dfd93e893",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "posthog",
+      "series_id": "image-output-qualification-01",
+      "plan_path": "results/posthog/image-output-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": "layers",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "PostHog/posthog",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "5bae03dfe4b1b09e3163a65a65a9cc480adf19f61e620dcdff993864b59433f2",
+      "definition_sha256": "0c34f204ef6467f2d367e5ed76ad8991a3ced222d9e1f5703ea6a21a5fd8a960",
+      "state": "failed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "Both warm jobs failed before building because legacy published-scope validation ran before native series scope resolution.",
+        "Cold build_seconds includes the superseded loaded-image inspection, contrary to the declared timing scope. Preserve as diagnostic; corrected execution uses a new series.",
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 1579,
+            "min": 1579,
+            "max": 1579
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 813,
+            "min": 813,
+            "max": 813
+          },
+          "storage": {
+            "median": 6237669195,
+            "min": 6237669195,
+            "max": 6237669195
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "posthog",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "posthog",
+            "cli_version": "v1.33.0",
+            "variant": "layers",
+            "series_id": "image-output-qualification-01",
+            "sample": "1"
+          },
+          "ref": "image-output-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T06:54:57Z",
+          "run_id": 37104600856,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104600856"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "posthog",
+          "series_id": "image-output-qualification-01",
+          "sample": 1,
+          "run_id": "37104600856",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104600856",
+          "source_sha": "35e10981f5e27824d81b19c575a91691592905e9",
+          "github_conclusion": "failure",
+          "status": "failed",
+          "errors": [
+            "Workflow concluded failure",
+            "GitHub Actions posthog warm: failure",
+            "BoringCache posthog warm: failure"
+          ],
+          "evidence_manifest_sha256": "61aee72e30eb1e9f7e21dc0bf4c65e62b3d33de24057f5343593919036e6f320"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/posthog/image-output-qualification-01/report.json",
+      "interpretation_path": "results/posthog/image-output-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37104600856,
+          "inventory_state": "complete",
+          "verified_files": 9,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-image-output-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-image-output-2026-10-03/benchmarks-37104600856.tar",
+          "bundle_bytes": 392704,
+          "sha256": "6a38f37864533c9921020e3d994a21914adf337775f42b734e74fd894eebc7e2",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "posthog",
+      "series_id": "image-output-qualification-02",
+      "plan_path": "results/posthog/image-output-qualification-02/series.json",
+      "lane": "fresh",
+      "variant": "layers",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "PostHog/posthog",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "927f06fe53938ebf630a4e155e08ce958db2636f839a15b4f299c1c916f448fc",
+      "definition_sha256": "6575963f1c26bb20deabd14c54d92bf87354df90a4c8e0171c6674aaaf579644",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 1609,
+            "min": 1609,
+            "max": 1609
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 175,
+            "min": 175,
+            "max": 175
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 778,
+            "min": 778,
+            "max": 778
+          },
+          "storage": {
+            "median": 6237262375,
+            "min": 6237262375,
+            "max": 6237262375
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 136,
+            "min": 136,
+            "max": 136
+          },
+          "storage": {
+            "median": 6237262375,
+            "min": 6237262375,
+            "max": 6237262375
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "posthog",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "posthog",
+            "cli_version": "v1.33.0",
+            "variant": "layers",
+            "series_id": "image-output-qualification-02",
+            "sample": "1"
+          },
+          "ref": "docker-output-correction-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T19:34:19Z",
+          "run_id": 37148375181,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148375181"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "posthog",
+          "series_id": "image-output-qualification-02",
+          "sample": 1,
+          "run_id": "37148375181",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37148375181",
+          "source_sha": "ebe9215a904081d279458722339ef85d2b742db6",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "ad47456c459688cb932e9d232c57790b64b694616f587246c3bb3b3c07e77e25"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/posthog/image-output-qualification-02/report.json",
+      "interpretation_path": "results/posthog/image-output-qualification-02/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37148375181,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-lifecycle-review-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-lifecycle-review-2026-10-04/benchmarks-37148375181.tar",
+          "bundle_bytes": 372736,
+          "sha256": "49df16499aee7a038dfea048f8ec82e605cbfa22fa8822e0060bc7ce213e65b4",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "posthog",
+      "series_id": "shared-combined-lifecycle-01",
+      "plan_path": "results/posthog/shared-combined-lifecycle-01/series.json",
+      "lane": "fresh",
+      "variant": "combined",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "PostHog/posthog",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "683444f5363548d3815f9e55d6a56a023d9d15a9300582fe02bfeb322f2da2e7",
+      "definition_sha256": "6d012067d6265b02726f6c5df471c31178c21c92c4471ce712ae7a3d4125f653",
+      "state": "failed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "posthog",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "posthog",
+            "cli_version": "v1.33.0",
+            "variant": "combined",
+            "series_id": "shared-combined-lifecycle-01",
+            "sample": "1"
+          },
+          "ref": "shared-lifecycle-2026-10-04",
+          "state": "requested",
+          "requested_at": "2026-10-04T13:09:00Z",
+          "run_id": 37204588491,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204588491"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "posthog",
+          "series_id": "shared-combined-lifecycle-01",
+          "sample": 1,
+          "run_id": "37204588491",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204588491",
+          "source_sha": "f6bcde907231d8e70c34d05e522e393db799713d",
+          "github_conclusion": "failure",
+          "status": "failed",
+          "errors": [
+            "Workflow concluded failure",
+            "BoringCache posthog cold: failure",
+            "GitHub Actions posthog cold: failure"
+          ],
+          "evidence_manifest_sha256": "d60cbda03aeda419341ff8112992d81f32b476fbe508da86851a1f4994d2be7f"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/posthog/shared-combined-lifecycle-01/report.json",
+      "interpretation_path": "results/posthog/shared-combined-lifecycle-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37204588491,
+          "inventory_state": "complete",
+          "verified_files": 7,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-shared-lifecycle-2026-10-04/benchmarks-37204588491.tar",
+          "bundle_bytes": 153088,
+          "sha256": "cb696ffd068cbf8d95731d03230d730d084c21c43b067ddf516d74e388ef575a",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "posthog",
+      "series_id": "shared-combined-lifecycle-02",
+      "plan_path": "results/posthog/shared-combined-lifecycle-02/series.json",
+      "lane": "fresh",
+      "variant": "combined",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "PostHog/posthog",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "1b354ee844ed380919a4c5c1abf0cdb45d63489c658b706c3d280c68ab5830f2",
+      "definition_sha256": "5ed26c35a502999eb61efd535b39249af12b0d86f1694be37b0d020c4202178d",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": true,
+      "execution_verified": true,
+      "methodology_issues": [],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 1703,
+            "min": 1703,
+            "max": 1703
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 172,
+            "min": 172,
+            "max": 172
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 842,
+            "min": 842,
+            "max": 842
+          },
+          "storage": {
+            "median": 6242034116,
+            "min": 6242034116,
+            "max": 6242034116
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 145,
+            "min": 145,
+            "max": 145
+          },
+          "storage": {
+            "median": 6242034116,
+            "min": 6242034116,
+            "max": 6242034116
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "posthog",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "posthog",
+            "cli_version": "v1.33.0",
+            "variant": "combined",
+            "series_id": "shared-combined-lifecycle-02",
+            "sample": "1"
+          },
+          "ref": "shared-lifecycle-correction-2026-10-04",
+          "state": "requested",
+          "requested_at": "2026-10-04T13:17:50Z",
+          "run_id": 37205114269,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37205114269"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "posthog",
+          "series_id": "shared-combined-lifecycle-02",
+          "sample": 1,
+          "run_id": "37205114269",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37205114269",
+          "source_sha": "d045da272fae61c96d06727459055f1a31eca48f",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "fb53406ccf8cfb4dabca781b2ce43e740bffb2ba0aee9c24a6af88cb3fc3f8ca"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/posthog/shared-combined-lifecycle-02/report.json",
+      "interpretation_path": "results/posthog/shared-combined-lifecycle-02/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37205114269,
+          "inventory_state": "complete",
+          "verified_files": 15,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-shared-lifecycle-2026-10-04/benchmarks-37205114269.tar",
+          "bundle_bytes": 742912,
+          "sha256": "0775152becae67e1be4aaf4082be989879111190ddc8aeb66c820bc82a6f3d31",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "posthog",
+      "series_id": "shared-layers-lifecycle-01",
+      "plan_path": "results/posthog/shared-layers-lifecycle-01/series.json",
+      "lane": "fresh",
+      "variant": "layers",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "PostHog/posthog",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "13c3bd7351df48d08972ba6d0c33f266205703b66a417ce6b3b96d8de674ae44",
+      "definition_sha256": "6d012067d6265b02726f6c5df471c31178c21c92c4471ce712ae7a3d4125f653",
+      "state": "failed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "posthog",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "posthog",
+            "cli_version": "v1.33.0",
+            "variant": "layers",
+            "series_id": "shared-layers-lifecycle-01",
+            "sample": "1"
+          },
+          "ref": "shared-lifecycle-2026-10-04",
+          "state": "requested",
+          "requested_at": "2026-10-04T13:08:58Z",
+          "run_id": 37204586535,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204586535"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "posthog",
+          "series_id": "shared-layers-lifecycle-01",
+          "sample": 1,
+          "run_id": "37204586535",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37204586535",
+          "source_sha": "f6bcde907231d8e70c34d05e522e393db799713d",
+          "github_conclusion": "failure",
+          "status": "failed",
+          "errors": [
+            "Workflow concluded failure",
+            "GitHub Actions posthog cold: failure",
+            "BoringCache posthog cold: failure"
+          ],
+          "evidence_manifest_sha256": "05001c070314e7cfead2f2e271c9af2fda780684c6a7ce1ff30d49b38db2e70a"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/posthog/shared-layers-lifecycle-01/report.json",
+      "interpretation_path": "results/posthog/shared-layers-lifecycle-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37204586535,
+          "inventory_state": "complete",
+          "verified_files": 7,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-shared-lifecycle-2026-10-04/benchmarks-37204586535.tar",
+          "bundle_bytes": 153088,
+          "sha256": "03afa636a012405786868313088132c167e9a5e3b305c0d53761604fce3f3558",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "posthog",
+      "series_id": "shared-layers-lifecycle-02",
+      "plan_path": "results/posthog/shared-layers-lifecycle-02/series.json",
+      "lane": "fresh",
+      "variant": "layers",
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "PostHog/posthog",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "9440f1ecc87acfc5f42121a9b72a446881769df6f188c1a27f50070c209dd0d1",
+      "definition_sha256": "5ed26c35a502999eb61efd535b39249af12b0d86f1694be37b0d020c4202178d",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": true,
+      "execution_verified": true,
+      "methodology_issues": [],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 1845,
+            "min": 1845,
+            "max": 1845
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 226,
+            "min": 226,
+            "max": 226
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 953,
+            "min": 953,
+            "max": 953
+          },
+          "storage": {
+            "median": 6238377174,
+            "min": 6238377174,
+            "max": 6238377174
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 139,
+            "min": 139,
+            "max": 139
+          },
+          "storage": {
+            "median": 6238377174,
+            "min": 6238377174,
+            "max": 6238377174
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "posthog",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "posthog",
+            "cli_version": "v1.33.0",
+            "variant": "layers",
+            "series_id": "shared-layers-lifecycle-02",
+            "sample": "1"
+          },
+          "ref": "shared-lifecycle-correction-2026-10-04",
+          "state": "requested",
+          "requested_at": "2026-10-04T13:17:48Z",
+          "run_id": 37205112800,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37205112800"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "posthog",
+          "series_id": "shared-layers-lifecycle-02",
+          "sample": 1,
+          "run_id": "37205112800",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37205112800",
+          "source_sha": "d045da272fae61c96d06727459055f1a31eca48f",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "7b265e188abeb7d75f9a8be7a820e25d864b76ff43db00e9267f8606bf3f6c18"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/posthog/shared-layers-lifecycle-02/report.json",
+      "interpretation_path": "results/posthog/shared-layers-lifecycle-02/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37205112800,
+          "inventory_state": "complete",
+          "verified_files": 15,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-shared-lifecycle-2026-10-04/benchmarks-37205112800.tar",
+          "bundle_bytes": 738304,
+          "sha256": "6206f8fad70e7ef25ca0b49fc4fde438477aa7c633f3e901d7f12c992d89c6ed",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
       "case_id": "qdrant",
       "series_id": "migration-screening-01",
       "plan_path": "results/qdrant/migration-screening-01/series.json",
@@ -3032,9 +6457,12 @@
       "definition_sha256": "e05d45d9cb64f12d4e8b734ca13bc253a3a03c7f2833add246c8981abe668bf7",
       "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": true,
+      "valid_for_comparison": false,
       "execution_verified": true,
-      "methodology_issues": [],
+      "methodology_issues": [
+        "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+        "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+      ],
       "missing_observations": [],
       "summaries": [
         {
@@ -3296,6 +6724,155 @@
           "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-active-completion-2026-10-03/benchmarks-37085344978.tar",
           "bundle_bytes": 749568,
           "sha256": "92f61ac07e77a9c656e4389158a3281012175e4e43857965b383e392a7519829",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "storybook",
+      "series_id": "build-reuse-qualification-01",
+      "plan_path": "results/storybook/build-reuse-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Storybook sandbox build plus measured cache restore/setup; dependency installation and sandbox creation are excluded; output checks and unmeasured post-job save are reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "storybookjs/storybook",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "474a5399b5b2728b562d61ddc952ce4caa750fa0",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "d463583c8fb964e5c3721430687e155f6579a1a423afa5508f758069e22942b5",
+      "definition_sha256": "25acb76c77bd69ce87f69a875238a0a71ad6b1a8acda4cac8ef51092bd3dfc28",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": true,
+      "execution_verified": true,
+      "methodology_issues": [],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 15,
+            "min": 15,
+            "max": 15
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 17,
+            "min": 17,
+            "max": 17
+          },
+          "storage": {
+            "median": 1226001,
+            "min": 1226001,
+            "max": 1226001
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 18,
+            "min": 18,
+            "max": 18
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 19,
+            "min": 19,
+            "max": 19
+          },
+          "storage": {
+            "median": 1212413,
+            "min": 1212413,
+            "max": 1212413
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "storybook",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "storybook",
+            "cli_version": "v1.33.0",
+            "series_id": "build-reuse-qualification-01",
+            "sample": "1"
+          },
+          "ref": "build-reuse-qualification-2026-10-03",
+          "state": "requested",
+          "requested_at": "2026-10-03T07:10:42Z",
+          "run_id": 37105487087,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37105487087"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "storybook",
+          "series_id": "build-reuse-qualification-01",
+          "sample": 1,
+          "run_id": "37105487087",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37105487087",
+          "source_sha": "b3ab6324aeccebbb38cc7e2fc1c921ae4f0b399e",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "93bb5bb3faf15c087bb8fc3d967d8355c1246960603f6dc637057920c5b7c245"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/storybook/build-reuse-qualification-01/report.json",
+      "interpretation_path": "results/storybook/build-reuse-qualification-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37105487087,
+          "inventory_state": "complete",
+          "verified_files": 15,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not a whole-repository audit",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-build-reuse-2026-10-03",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-build-reuse-2026-10-03/benchmarks-37105487087.tar",
+          "bundle_bytes": 509440,
+          "sha256": "512f07883a0dfbf61d823c68aca104b02abe640bc216f25f1b6d61805cf322bd",
           "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
         }
       ],

@@ -184,12 +184,13 @@ def matrix_combinations(matrix)
   combinations
 end
 
-def action_variant_input(repo_dir, uses)
+def action_variant_input(repo_dir, uses, inputs)
   action_dir = uses.delete_prefix("./")
   path = ["action.yml", "action.yaml"].map { |basename| File.join(repo_dir, action_dir, basename) }.find { |candidate| File.file?(candidate) }
   return nil unless path
 
   source = File.read(path)
+  return "report_variant" if inputs.key?("report_variant") && YAML.safe_load(source, aliases: true).fetch("inputs", {}).key?("report_variant")
   return nil unless source.include?("--variant")
 
   return "arch" if source.match?(/--variant\s+["']?\$ARCH\b/)
@@ -210,7 +211,7 @@ def producers_for(workflow:, repo_dir:, job_id:, job:)
       uses = step["uses"].to_s
       if uses.start_with?("./.github/actions/")
         with = step["with"].is_a?(Hash) ? step["with"] : {}
-        variant_input = action_variant_input(repo_dir, uses)
+        variant_input = action_variant_input(repo_dir, uses, with)
         variant = workflow.resolve(with[variant_input].to_s, matrix).to_s if variant_input
         fields = {
           "benchmark" => workflow.resolve(with["benchmark_id"].to_s, matrix),

@@ -1,0 +1,838 @@
+{
+  "schema_version": 1,
+  "plan_sha256": "f2b98c3031e2c795b68c4eb5d0ad15b805c1bf4c8a70f015e2d0446ddc44a77f",
+  "complete": true,
+  "valid_for_comparison": false,
+  "failures": [],
+  "methodology_issues": [
+    "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+    "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+  ],
+  "execution_verified": true,
+  "missing_completions": [],
+  "failed_completions": [],
+  "completions": [
+    {
+      "schema_version": 1,
+      "case_id": "immich",
+      "series_id": "image-output-qualification-01",
+      "sample": 1,
+      "run_id": "37104602471",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37104602471",
+      "source_sha": "35e10981f5e27824d81b19c575a91691592905e9",
+      "github_conclusion": "success",
+      "status": "success",
+      "errors": [],
+      "evidence_manifest_sha256": "a232a9c86cf53c4945b672566ad89e76085267e61bdd5d7b0226606108e41521"
+    }
+  ],
+  "publication": "unreviewed",
+  "evidence_preservation": "requires-review",
+  "primary_metric": "build_and_reuse_seconds",
+  "missing": [],
+  "summaries": [
+    {
+      "phase": "cold",
+      "provider": "actions-cache",
+      "count": 1,
+      "measurement": {
+        "median": 371,
+        "min": 371,
+        "max": 371
+      },
+      "storage": null,
+      "storage_measured_count": 0
+    },
+    {
+      "phase": "warm",
+      "provider": "actions-cache",
+      "count": 1,
+      "measurement": {
+        "median": 57,
+        "min": 57,
+        "max": 57
+      },
+      "storage": null,
+      "storage_measured_count": 0
+    },
+    {
+      "phase": "cold",
+      "provider": "boringcache",
+      "count": 1,
+      "measurement": {
+        "median": 207,
+        "min": 207,
+        "max": 207
+      },
+      "storage": {
+        "median": 1758920230,
+        "min": 1758920230,
+        "max": 1758920230
+      },
+      "storage_measured_count": 1
+    },
+    {
+      "phase": "warm",
+      "provider": "boringcache",
+      "count": 1,
+      "measurement": {
+        "median": 38,
+        "min": 38,
+        "max": 38
+      },
+      "storage": {
+        "median": 1758920230,
+        "min": 1758920230,
+        "max": 1758920230
+      },
+      "storage_measured_count": 1
+    }
+  ],
+  "records": [
+    {
+      "schema_version": 1,
+      "benchmark": "immich-server",
+      "strategy": "actions-cache",
+      "lane": "fresh",
+      "phase": "cold",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "immich",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "aa7edd687de2be1ba9ea1393766e01359e5a0ac10d0ac59ec556f9c4d536eaab",
+        "source": {
+          "repository": "immich-app/immich",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "007c18aec6cc9552fb7d8b7c791c41d7424876b0",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-immich",
+          "branch": "main",
+          "revision": "ec958a4d8bc0c427319922c00ed973a201235025"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "immich"
+              },
+              "historical_workflow": "immich-immich-fresh-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/immich-immich-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/immich-immich-fresh-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 12,
+          "cache_tags": {
+            "immich-docker-local": "{scope}-docker",
+            "immich-ccache-local": "{scope}-ccache"
+          },
+          "native": {
+            "action": ".github/actions/immich-docker-benchmark",
+            "benchmark_id": "immich-server",
+            "fresh_inputs": {
+              "load_image": "true"
+            },
+            "rolling_inputs": {}
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 8,
+        "build_seconds": 363,
+        "workflow_seconds": 378,
+        "total_seconds": 371,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 371
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": null,
+        "workspace": null,
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": {
+          "key": "immich-server-series-image-output-qualification-01-s1-r37104602471-a1",
+          "complete": false,
+          "measured_bytes": 0,
+          "total_bytes": null,
+          "observations": []
+        }
+      },
+      "source": {
+        "repository": "immich-app/immich",
+        "sha": "007c18aec6cc9552fb7d8b7c791c41d7424876b0"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37104602471",
+        "run_attempt": "1",
+        "job": "cold",
+        "workflow": "Native comparison fresh",
+        "ref_name": "image-output-qualification-2026-10-03",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000170611",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37104602471-1",
+      "series": {
+        "id": "image-output-qualification-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37104602471"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "immich-server",
+      "strategy": "actions-cache",
+      "lane": "fresh",
+      "phase": "warm",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "immich",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "aa7edd687de2be1ba9ea1393766e01359e5a0ac10d0ac59ec556f9c4d536eaab",
+        "source": {
+          "repository": "immich-app/immich",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "007c18aec6cc9552fb7d8b7c791c41d7424876b0",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-immich",
+          "branch": "main",
+          "revision": "ec958a4d8bc0c427319922c00ed973a201235025"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "immich"
+              },
+              "historical_workflow": "immich-immich-fresh-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/immich-immich-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/immich-immich-fresh-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 12,
+          "cache_tags": {
+            "immich-docker-local": "{scope}-docker",
+            "immich-ccache-local": "{scope}-ccache"
+          },
+          "native": {
+            "action": ".github/actions/immich-docker-benchmark",
+            "benchmark_id": "immich-server",
+            "fresh_inputs": {
+              "load_image": "true"
+            },
+            "rolling_inputs": {}
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 7,
+        "build_seconds": 50,
+        "workflow_seconds": 62,
+        "total_seconds": 57,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 57
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": null,
+        "workspace": null,
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": {
+          "key": "immich-server-series-image-output-qualification-01-s1-r37104602471-a1",
+          "complete": false,
+          "measured_bytes": 0,
+          "total_bytes": null,
+          "observations": []
+        }
+      },
+      "source": {
+        "repository": "immich-app/immich",
+        "sha": "007c18aec6cc9552fb7d8b7c791c41d7424876b0"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37104602471",
+        "run_attempt": "1",
+        "job": "warm",
+        "workflow": "Native comparison fresh",
+        "ref_name": "image-output-qualification-2026-10-03",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000170620",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37104602471-1",
+      "series": {
+        "id": "image-output-qualification-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37104602471"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "immich-server",
+      "strategy": "boringcache",
+      "lane": "fresh",
+      "phase": "cold",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "immich",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "aa7edd687de2be1ba9ea1393766e01359e5a0ac10d0ac59ec556f9c4d536eaab",
+        "source": {
+          "repository": "immich-app/immich",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "007c18aec6cc9552fb7d8b7c791c41d7424876b0",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-immich",
+          "branch": "main",
+          "revision": "ec958a4d8bc0c427319922c00ed973a201235025"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "immich"
+              },
+              "historical_workflow": "immich-immich-fresh-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/immich-immich-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/immich-immich-fresh-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 12,
+          "cache_tags": {
+            "immich-docker-local": "{scope}-docker",
+            "immich-ccache-local": "{scope}-ccache"
+          },
+          "native": {
+            "action": ".github/actions/immich-docker-benchmark",
+            "benchmark_id": "immich-server",
+            "fresh_inputs": {
+              "load_image": "true"
+            },
+            "rolling_inputs": {}
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 207,
+        "workflow_seconds": 213,
+        "total_seconds": 207,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 207
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": {
+          "import_tags": [
+            "immich-server-series-image-output-qualification-01-s1-r37104602471-a1-docker-linux-amd64",
+            "immich-server-series-image-output-qualification-01-s1-r37104602471-a1-docker-ubuntu-24-x86_64"
+          ],
+          "planned_import_refs": 2,
+          "export_tag": "immich-server-series-image-output-qualification-01-s1-r37104602471-a1-docker-linux-amd64"
+        },
+        "tag": "immich-server-series-image-output-qualification-01-s1-r37104602471-a1-docker",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": 1758920230,
+        "storage_source": "boringcache-check",
+        "storage_breakdown": {
+          "workspace": "boringcache/benchmarks",
+          "tags": [
+            "immich-server-series-image-output-qualification-01-s1-r37104602471-a1-docker-linux-amd64"
+          ],
+          "complete": true,
+          "measured_bytes": 1758920230,
+          "unmeasured_tags": [],
+          "total_bytes": 1758920230,
+          "observations": [
+            {
+              "requested_tag": "immich-server-series-image-output-qualification-01-s1-r37104602471-a1-docker-linux-amd64",
+              "tag": "immich-server-series-image-output-qualification-01-s1-r37104602471-a1-docker-linux-amd64",
+              "status": "hit",
+              "cache_type": "cache_entry",
+              "cache_entry_id": "a76c6543-c983-4ce3-92bb-706077ad7f54",
+              "manifest_root_digest": "sha256:e31c9fd2e3cd65ec01f0d76023be83ba3ce9dd74e397edba07489a17496ce3c9",
+              "kv_total_size": 0,
+              "compressed_size": 1758920230,
+              "size": 1758920230
+            }
+          ]
+        }
+      },
+      "source": {
+        "repository": "immich-app/immich",
+        "sha": "007c18aec6cc9552fb7d8b7c791c41d7424876b0"
+      },
+      "product_refs": {
+        "schema_version": 1,
+        "cli_version": "v1.33.0",
+        "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+        "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+      },
+      "action": {
+        "resolved_mode": "docker",
+        "resolved_tags": [
+          "immich-server-series-image-output-qualification-01-s1-r37104602471-a1-docker-linux-amd64"
+        ],
+        "trust_state": {
+          "status": "publish",
+          "event_name": "workflow_dispatch",
+          "requested_policy": "publish",
+          "resolved_policy": "publish",
+          "write_allowed": true,
+          "decision_source": "cli",
+          "reason": "explicit_request",
+          "provider": "github-actions",
+          "detail": "Publication updates the published cache tag.",
+          "next_step": "Let the run finish; the next matching run restores what it publishes.",
+          "token_capabilities": {
+            "restore": true,
+            "stage": true,
+            "save": true
+          }
+        },
+        "diagnostics_level": "off"
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37104602471",
+        "run_attempt": "1",
+        "job": "cold",
+        "workflow": "Native comparison fresh",
+        "ref_name": "image-output-qualification-2026-10-03",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000170612",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37104602471-1",
+      "series": {
+        "id": "image-output-qualification-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37104602471"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "immich-server",
+      "strategy": "boringcache",
+      "lane": "fresh",
+      "phase": "warm",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "immich",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "aa7edd687de2be1ba9ea1393766e01359e5a0ac10d0ac59ec556f9c4d536eaab",
+        "source": {
+          "repository": "immich-app/immich",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "007c18aec6cc9552fb7d8b7c791c41d7424876b0",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-immich",
+          "branch": "main",
+          "revision": "ec958a4d8bc0c427319922c00ed973a201235025"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "immich"
+              },
+              "historical_workflow": "immich-immich-fresh-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/immich-immich-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/immich-immich-fresh-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 12,
+          "cache_tags": {
+            "immich-docker-local": "{scope}-docker",
+            "immich-ccache-local": "{scope}-ccache"
+          },
+          "native": {
+            "action": ".github/actions/immich-docker-benchmark",
+            "benchmark_id": "immich-server",
+            "fresh_inputs": {
+              "load_image": "true"
+            },
+            "rolling_inputs": {}
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 38,
+        "workflow_seconds": 44,
+        "total_seconds": 38,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 38
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": {
+          "import_tags": [
+            "immich-server-series-image-output-qualification-01-s1-r37104602471-a1-docker-linux-amd64",
+            "immich-server-series-image-output-qualification-01-s1-r37104602471-a1-docker-ubuntu-24-x86_64"
+          ],
+          "planned_import_refs": 2,
+          "export_tag": null
+        },
+        "tag": "immich-server-series-image-output-qualification-01-s1-r37104602471-a1-docker",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": 1758920230,
+        "storage_source": "boringcache-check",
+        "storage_breakdown": {
+          "workspace": "boringcache/benchmarks",
+          "tags": [
+            "immich-server-series-image-output-qualification-01-s1-r37104602471-a1-docker-linux-amd64"
+          ],
+          "complete": true,
+          "measured_bytes": 1758920230,
+          "unmeasured_tags": [],
+          "total_bytes": 1758920230,
+          "observations": [
+            {
+              "requested_tag": "immich-server-series-image-output-qualification-01-s1-r37104602471-a1-docker-linux-amd64",
+              "tag": "immich-server-series-image-output-qualification-01-s1-r37104602471-a1-docker-linux-amd64",
+              "status": "hit",
+              "cache_type": "cache_entry",
+              "cache_entry_id": "a76c6543-c983-4ce3-92bb-706077ad7f54",
+              "manifest_root_digest": "sha256:e31c9fd2e3cd65ec01f0d76023be83ba3ce9dd74e397edba07489a17496ce3c9",
+              "kv_total_size": 0,
+              "compressed_size": 1758920230,
+              "size": 1758920230
+            }
+          ]
+        }
+      },
+      "source": {
+        "repository": "immich-app/immich",
+        "sha": "007c18aec6cc9552fb7d8b7c791c41d7424876b0"
+      },
+      "product_refs": {
+        "schema_version": 1,
+        "cli_version": "v1.33.0",
+        "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+        "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+      },
+      "action": {
+        "resolved_mode": "docker",
+        "resolved_tags": [
+          "immich-server-series-image-output-qualification-01-s1-r37104602471-a1-docker-linux-amd64"
+        ],
+        "trust_state": {
+          "status": "restore_only",
+          "event_name": "workflow_dispatch",
+          "requested_policy": "restore",
+          "resolved_policy": "restore",
+          "write_allowed": false,
+          "decision_source": "cli",
+          "reason": "explicit_request",
+          "provider": "github-actions",
+          "detail": "trust-policy is restore.",
+          "next_step": "Use trust-policy stage or publish only when this job is trusted for that operation.",
+          "token_capabilities": {
+            "restore": true,
+            "stage": true,
+            "save": true
+          }
+        },
+        "diagnostics_level": "off"
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37104602471",
+        "run_attempt": "1",
+        "job": "warm",
+        "workflow": "Native comparison fresh",
+        "ref_name": "image-output-qualification-2026-10-03",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000170621",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37104602471-1",
+      "series": {
+        "id": "image-output-qualification-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37104602471"
+      ]
+    }
+  ],
+  "exclusions": []
+}
