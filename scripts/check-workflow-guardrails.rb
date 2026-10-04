@@ -198,6 +198,11 @@ repo_names.each do |repo_name|
 
     begin
       document = YAML.safe_load(text, aliases: true)
+      workflow_steps(document).each do |step|
+        if step["run"].to_s.match?(%r{\bpython(?:3)?\s+["']?(?:\./)?scripts/[^\s"']+\.rb\b})
+          errors << "#{repo_name}/#{relative} (#{step.fetch('name', 'unnamed step')}): invoke maintained Ruby scripts with ruby"
+        end
+      end
       runs = document.is_a?(Hash) ? document["runs"] : nil
       if runs.is_a?(Hash) && runs["using"] == "composite"
         if text.match?(/\$\{\{\s*secrets\./)
