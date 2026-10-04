@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
   "case_id": "hugo",
-  "series_id": "merged-main-qualification-01",
-  "created_at": "2026-10-04T16:43:11Z",
+  "series_id": "merged-main-qualification-02",
+  "created_at": "2026-10-04T16:49:58Z",
   "lane": "fresh",
   "phases": [
     "cold",
     "warm"
   ],
   "sample_count": 1,
-  "definition_sha256": "142454ba72794a7253d4db6b10e9209939361a495bb53094bae503fd830b044d",
+  "definition_sha256": "0bef9ab3abedc169513388a200974614169382c403d722a788aa069750533ffe",
   "variant": null,
   "workflow_inputs": {
     "case_id": "hugo",
@@ -41,5 +41,5 @@
     "Pinned upstream recipe and build success",
     "The freshly loaded output image exists in the local Docker image store"
   ],
-  "plan_sha256": "54ff3e56edcfba8a878edf00c9a51d63e69c9ab3fbecd61b9828d2dda7c9e70b"
+  "plan_sha256": "a7dd668f6da09ee4c620f61a30b1375ca6e6fb50adb6f003872b35c71b1a45c3"
 }

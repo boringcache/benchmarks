@@ -37,12 +37,19 @@ async function retain(core, artifact) {
 module.exports = { register, retain };
 
 if (require.main === module) {
-  const core = require('@actions/core');
-  Promise.resolve().then(() => {
-    if (core.getState('evidence-directory')) {
-      const { DefaultArtifactClient } = require('@actions/artifact');
-      return retain(core, new DefaultArtifactClient());
+  import('@actions/core').then(async core => {
+    try {
+      if (core.getState('evidence-directory')) {
+        const { DefaultArtifactClient } = await import('@actions/artifact');
+        await retain(core, new DefaultArtifactClient());
+      } else {
+        register(core);
+      }
+    } catch (error) {
+      core.setFailed(`Product evidence was not retained: ${error.message}`);
     }
-    register(core);
-  }).catch(error => core.setFailed(`Product evidence was not retained: ${error.message}`));
+  }).catch(error => {
+    console.error(`Evidence dependencies could not be loaded: ${error.message}`);
+    process.exitCode = 1;
+  });
 }

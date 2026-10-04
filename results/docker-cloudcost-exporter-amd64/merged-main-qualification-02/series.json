@@ -1,15 +1,15 @@
 {
   "schema_version": 1,
   "case_id": "docker-cloudcost-exporter-amd64",
-  "series_id": "merged-main-qualification-01",
-  "created_at": "2026-10-04T16:43:11Z",
+  "series_id": "merged-main-qualification-02",
+  "created_at": "2026-10-04T16:49:59Z",
   "lane": "fresh",
   "phases": [
     "cold",
     "warm"
   ],
   "sample_count": 1,
-  "definition_sha256": "bd780d30da731a3eb5a70f3a2426975f7424d352047d4216c6772f6a2287ef92",
+  "definition_sha256": "05b152b13b9aadc781a837a6dac638ee1fc8a75d2f15aab939d611409de21e11",
   "variant": "linux-amd64",
   "workflow_inputs": {
     "case_id": "cloudcost-exporter-amd64",
@@ -67,5 +67,5 @@
     "Pinned upstream workflow fidelity",
     "Declared Docker output"
   ],
-  "plan_sha256": "8c33f7da272792f283f6579510febe46ec64ad9ed4423bf2fb356ba651615e34"
+  "plan_sha256": "4b82209d1df934797e3f079d4f9acc04dd26a21ae469391e4e6b8171baeff5fb"
 }
