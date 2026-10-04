@@ -12,13 +12,17 @@ function register(core) {
 
 async function retain(core, artifact) {
   const directory = core.getState('evidence-directory');
-  const source = fs.readFileSync(path.join(directory, 'evidence-path'), 'utf8').trim();
-  if (!source) {
+  const supplied = fs.readFileSync(path.join(directory, 'evidence-path'), 'utf8').trim();
+  if (!supplied) {
     throw new Error('The product did not return an evidence path.');
   }
-  const name = path.basename(source);
+  const name = path.basename(supplied);
   if (!/^boringcache-one-evidence-[a-f0-9]{64}\.json$/.test(name)) {
     throw new Error('The product returned an unexpected evidence filename.');
+  }
+  const source = path.join(os.tmpdir(), name);
+  if (path.resolve(supplied) !== source) {
+    throw new Error('Product evidence must be in the runner temporary directory.');
   }
   const stat = fs.lstatSync(source);
   if (!stat.isFile() || stat.size > 8 * 1024 * 1024) {
@@ -37,12 +41,19 @@ async function retain(core, artifact) {
 module.exports = { register, retain };
 
 if (require.main === module) {
-  const core = require('@actions/core');
-  Promise.resolve().then(() => {
-    if (core.getState('evidence-directory')) {
-      const { DefaultArtifactClient } = require('@actions/artifact');
-      return retain(core, new DefaultArtifactClient());
+  import('@actions/core').then(async core => {
+    try {
+      if (core.getState('evidence-directory')) {
+        const { DefaultArtifactClient } = await import('@actions/artifact');
+        await retain(core, new DefaultArtifactClient());
+      } else {
+        register(core);
+      }
+    } catch (error) {
+      core.setFailed(`Product evidence was not retained: ${error.message}`);
     }
-    register(core);
-  }).catch(error => core.setFailed(`Product evidence was not retained: ${error.message}`));
+  }).catch(error => {
+    console.error(`Evidence dependencies could not be loaded: ${error.message}`);
+    process.exitCode = 1;
+  });
 }
