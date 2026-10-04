@@ -220,6 +220,10 @@ scope, storage with its measurement source, and evidence links. The canonical
 Ruby reporter keeps legacy phase and lane fields for existing consumers. Series
 records add explicit comparison fields; legacy records without them cannot
 support a new series claim.
+In legacy phase JSON, a `commit` record carries `lane: rolling`, including the
+changed-source step of a fresh Cargo proof. The declared series lane and phase
+sequence identify that evaluation as fresh `cold` plus `commit`. The legacy
+phase label does not establish a rolling chain or an identical-source replay.
 The phase verification flag confirms output checks preceding that record.
 `verification.declared_checks` lists the case's requirements; it does not claim
 that checks for later phases have already run. Preserved job logs establish the

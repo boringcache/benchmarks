@@ -23,6 +23,20 @@ CodeQL checks pass. The common collector also recognizes canonical records insid
 Docker and Cargo proof bundles; it applies the same original plan and dispatch
 checks as dedicated phase artifacts.
 
+The October 4 CLI canary exposed two additional harness failures. The
+[PostHog record](../migration/posthog-canary-scope-2026-10-04.json) preserves the
+missing cold-to-warm scope handoff in diagnostics without a series ID and the
+unsupported storage-probe argument. Both are corrected in
+[PR #29](https://github.com/boringcache/benchmarks/pull/29); the record links its
+replacement diagnostic request. The
+[gRPC record](../migration/grpc-canary-interpreter-2026-10-04.json) preserves the
+Ruby verifier invoked through Python. [PR #30](https://github.com/boringcache/benchmarks/pull/30)
+corrects that invocation and guards maintained Ruby scripts against this error.
+The original failures remain available in verified evidence bundles. Passing
+local regressions does not establish completed cold/warm execution. The gRPC
+three-provider comparison also requires the missing BuildBuddy credential before
+another dispatch.
+
 | Area | Current state | Remaining acceptance |
 | --- | --- | --- |
 | Definitions and execution | 17 maintained cases, 47 Docker workloads, and four blocked gRPC evaluation drafts; one provider wrapper and workspace | Qualify each scheduled workload and variant, including output checks and cache source lineage |
