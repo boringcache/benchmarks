@@ -53,6 +53,45 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
     end
   end
 
+  def test_workflows_and_composites_use_ruby_for_the_migrated_scripts
+    with_repo do |repo_dir|
+      action_dir = File.join(repo_dir, ".github/actions/verify")
+      FileUtils.mkdir_p(action_dir)
+      {"python3" => false, "ruby" => true}.each do |interpreter, expected|
+        write_workflow(repo_dir, <<~YAML)
+          on:
+            workflow_dispatch:
+              inputs:
+                cli_version: {required: false, type: string}
+                buildkit_image: {required: false, type: string}
+          jobs:
+            verify:
+              runs-on: ubuntu-latest
+              steps:
+                - run: #{interpreter} ./scripts/verify-upstream-recipe.rb
+                - uses: boringcache/one@0123456789012345678901234567890123456789
+                  with:
+                    mode: docker
+                    cli-version: ${{ inputs.cli_version }}
+                    managed-buildkit-image: ${{ inputs.buildkit_image }}
+        YAML
+        File.write(File.join(action_dir, "action.yml"), <<~YAML)
+          runs:
+            using: composite
+            steps:
+              - shell: bash
+                run: #{interpreter} ./scripts/verify-upstream-recipe.rb
+        YAML
+        stdout, stderr, status = run_guard(repo_dir)
+        assert_equal expected, status.success?, "#{stdout}\n#{stderr}"
+        unless expected
+          assert_includes stderr, ".github/workflows/benchmark.yml (unnamed step): invoke maintained Ruby scripts with ruby"
+          assert_includes stderr, ".github/actions/verify/action.yml (unnamed step): invoke maintained Ruby scripts with ruby"
+        end
+      end
+    end
+  end
+
   def test_product_assertions_installers_and_lifecycle_wrappers_are_rejected
     with_repo do |repo_dir|
       scripts_dir = File.join(repo_dir, "scripts")
