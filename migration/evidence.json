@@ -953,6 +953,54 @@
       "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
       "execution_qualification": "Selected one-sample cold/warm output and completion checks passed; publication and complete migration remain unqualified",
       "repository_retirement": "Original repositories remain until all migration gates pass"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37219016891,
+      "verified_files": 17,
+      "gaps": [],
+      "sha256": "33a7ad7853c1ea64a9a923dc74389a5dd850fc6197af5dfa59bc0091891bef06",
+      "bundle_bytes": 202782,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-merged-harness-2026-10-04",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-merged-harness-2026-10-04/benchmarks-37219016891.tar.gz",
+      "publication_verification": "Downloaded published assets, compared archive digests, extracted each bundle, and verified scoped file inventory and completeness",
+      "verified_on": "2026-10-04",
+      "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+      "execution_qualification": "Passed preserved output and completion checks; publication remains unreviewed",
+      "repository_retirement": "Original repositories remain until all migration gates pass"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37219031314,
+      "verified_files": 11,
+      "gaps": [],
+      "sha256": "5531c7ebc85e22a1ba765e676aa468da139c6e005ebf45db63fa97e5f76d054f",
+      "bundle_bytes": 196898,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-merged-harness-2026-10-04",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-merged-harness-2026-10-04/benchmarks-37219031314.tar.gz",
+      "publication_verification": "Downloaded published assets, compared archive digests, extracted each bundle, and verified scoped file inventory and completeness",
+      "verified_on": "2026-10-04",
+      "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+      "execution_qualification": "Passed preserved output and completion checks; publication remains unreviewed",
+      "repository_retirement": "Original repositories remain until all migration gates pass"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37219024516,
+      "verified_files": 15,
+      "gaps": [],
+      "sha256": "54c5c9372f50d6e94a73123cbff792adba3901a8862d8588c8c71ffc0d93ea51",
+      "bundle_bytes": 274236,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-merged-harness-2026-10-04",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-merged-harness-2026-10-04/benchmarks-37219024516.tar.gz",
+      "publication_verification": "Downloaded published assets, compared archive digests, extracted each bundle, and verified scoped file inventory and completeness",
+      "verified_on": "2026-10-04",
+      "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+      "execution_qualification": "Passed preserved output and completion checks; publication remains unreviewed",
+      "repository_retirement": "Original repositories remain until all migration gates pass"
     }
   ]
 }

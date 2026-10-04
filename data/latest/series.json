@@ -650,7 +650,7 @@
       },
       "plan_sha256": "876673894a09e3b07c7eeb4e033cb14679d1dba1363a34f4cc661c8086fcab58",
       "definition_sha256": "52905a400cd73743dd63ecbc168b449305b22a880acc70f56034ee6d4b6fe318",
-      "state": "planned",
+      "state": "requested",
       "publication": "unreviewed",
       "valid_for_comparison": false,
       "execution_verified": false,
@@ -670,13 +670,33 @@
         ]
       ],
       "summaries": [],
-      "dispatches": [],
+      "dispatches": [
+        {
+          "case_id": "deno",
+          "repository": "boringcache/benchmarks",
+          "workflow": "deno-deno-cargo-product.yml",
+          "lane": "fresh",
+          "inputs": {
+            "cli_version": "v1.33.0",
+            "cache_profile": "cargo-product",
+            "series_id": "merged-main-qualification-03",
+            "sample": "1"
+          },
+          "ref": "main",
+          "state": "requested",
+          "requested_at": "2026-10-04T17:03:04Z",
+          "run_id": 37219039939,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37219039939"
+        }
+      ],
       "completions": [],
       "report_state": "missing",
       "report_path": null,
       "interpretation_path": null,
       "evidence": [],
-      "runs_without_archives": []
+      "runs_without_archives": [
+        "37219039939"
+      ]
     },
     {
       "case_id": "deno",
@@ -1791,32 +1811,94 @@
       },
       "plan_sha256": "fdb2a363f80f8dc1e98397af7cf4e3a0c81f86ee4d1b2ecac3bc5ebdac890a6f",
       "definition_sha256": "5a69f70b97fef520ef0208417a41eed6d999b541f60aa009ff30bca374b085e7",
-      "state": "planned",
+      "state": "completed",
       "publication": "unreviewed",
       "valid_for_comparison": false,
-      "execution_verified": false,
+      "execution_verified": true,
       "methodology_issues": [
         "This series does not declare a comparison of provider performance."
       ],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": {
+            "median": 580038317,
+            "min": 580038317,
+            "max": 580038317
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": {
+            "median": 580038317,
+            "min": 580038317,
+            "max": 580038317
+          },
+          "storage_measured_count": 1
+        }
       ],
-      "summaries": [],
-      "dispatches": [],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
+      "dispatches": [
+        {
+          "case_id": "docker-cloudcost-exporter-amd64",
+          "repository": "boringcache/benchmarks",
+          "workflow": "docker-cache-proofs.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "cloudcost-exporter-amd64",
+            "ref_key": "main",
+            "cache_lane": "fresh",
+            "cli_version": "v1.33.0",
+            "series_id": "merged-main-qualification-03",
+            "sample": "1"
+          },
+          "ref": "main",
+          "state": "requested",
+          "requested_at": "2026-10-04T17:02:56Z",
+          "run_id": 37219031314,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37219031314"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "docker-cloudcost-exporter-amd64",
+          "series_id": "merged-main-qualification-03",
+          "sample": 1,
+          "run_id": "37219031314",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37219031314",
+          "source_sha": "fac4677ae1b217db78662291b34fa89d6253f92c",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "1934f00054ea5e68baed28ddeb1b0f9107657496884a056723332e5c0f8b26c2"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/docker-cloudcost-exporter-amd64/merged-main-qualification-03/report.json",
+      "interpretation_path": "results/docker-cloudcost-exporter-amd64/merged-main-qualification-03/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37219031314,
+          "inventory_state": "complete",
+          "verified_files": 11,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-merged-harness-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-merged-harness-2026-10-04/benchmarks-37219031314.tar.gz",
+          "bundle_bytes": 196898,
+          "sha256": "5531c7ebc85e22a1ba765e676aa468da139c6e005ebf45db63fa97e5f76d054f",
+          "publication_verification": "Downloaded published assets, compared archive digests, extracted each bundle, and verified scoped file inventory and completeness"
+        }
+      ],
       "runs_without_archives": []
     },
     {
@@ -2430,40 +2512,126 @@
       },
       "plan_sha256": "fb020c5ffe80dad97e564738deb8f4192835b3551b3ab025d42c2103ada169c5",
       "definition_sha256": "8575b4c7e5c1a048ccb9a3a36f7653474e78b0aea76f6166818bd51560409a39",
-      "state": "planned",
+      "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": false,
-      "execution_verified": false,
+      "valid_for_comparison": true,
+      "execution_verified": true,
       "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 53,
+            "min": 53,
+            "max": 53
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 10,
+            "min": 10,
+            "max": 10
+          },
+          "storage": {
+            "median": 161848750,
+            "min": 161848750,
+            "max": 161848750
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 69,
+            "min": 69,
+            "max": 69
+          },
+          "storage": {
+            "median": 588257602,
+            "min": 588257602,
+            "max": 588257602
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 16,
+            "min": 16,
+            "max": 16
+          },
+          "storage": {
+            "median": 811503108,
+            "min": 811503108,
+            "max": 811503108
+          },
+          "storage_measured_count": 1
+        }
       ],
-      "summaries": [],
-      "dispatches": [],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
+      "dispatches": [
+        {
+          "case_id": "hugo-go",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "hugo-go",
+            "cli_version": "v1.33.0",
+            "series_id": "merged-main-qualification-03",
+            "sample": "1"
+          },
+          "ref": "main",
+          "state": "requested",
+          "requested_at": "2026-10-04T17:02:40Z",
+          "run_id": 37219016891,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37219016891"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "hugo-go",
+          "series_id": "merged-main-qualification-03",
+          "sample": 1,
+          "run_id": "37219016891",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37219016891",
+          "source_sha": "fac4677ae1b217db78662291b34fa89d6253f92c",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "d7c4ede0806a1b7450b24d025ffa50ff9baec7de1d7e9adf12fd34c1d783a413"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/hugo-go/merged-main-qualification-03/report.json",
+      "interpretation_path": "results/hugo-go/merged-main-qualification-03/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37219016891,
+          "inventory_state": "complete",
+          "verified_files": 17,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-merged-harness-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-merged-harness-2026-10-04/benchmarks-37219016891.tar.gz",
+          "bundle_bytes": 202782,
+          "sha256": "33a7ad7853c1ea64a9a923dc74389a5dd850fc6197af5dfa59bc0091891bef06",
+          "publication_verification": "Downloaded published assets, compared archive digests, extracted each bundle, and verified scoped file inventory and completeness"
+        }
+      ],
       "runs_without_archives": []
     },
     {
@@ -3251,40 +3419,122 @@
       },
       "plan_sha256": "09be21445afddc73425c579f525bf67ebdedf7a1fba0047db1f97b68f2a5f578",
       "definition_sha256": "8522975a5e5fe5e8671da5ad5777b878e1b030e127caa4053e27483667e0bed7",
-      "state": "planned",
+      "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": false,
-      "execution_verified": false,
+      "valid_for_comparison": true,
+      "execution_verified": true,
       "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 211,
+            "min": 211,
+            "max": 211
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 22,
+            "min": 22,
+            "max": 22
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 222,
+            "min": 222,
+            "max": 222
+          },
+          "storage": {
+            "median": 411516403,
+            "min": 411516403,
+            "max": 411516403
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 25,
+            "min": 25,
+            "max": 25
+          },
+          "storage": {
+            "median": 411516403,
+            "min": 411516403,
+            "max": 411516403
+          },
+          "storage_measured_count": 1
+        }
       ],
-      "summaries": [],
-      "dispatches": [],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
+      "dispatches": [
+        {
+          "case_id": "hugo",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "hugo",
+            "cli_version": "v1.33.0",
+            "series_id": "merged-main-qualification-03",
+            "sample": "1"
+          },
+          "ref": "main",
+          "state": "requested",
+          "requested_at": "2026-10-04T17:02:48Z",
+          "run_id": 37219024516,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37219024516"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "hugo",
+          "series_id": "merged-main-qualification-03",
+          "sample": 1,
+          "run_id": "37219024516",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37219024516",
+          "source_sha": "fac4677ae1b217db78662291b34fa89d6253f92c",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "a7c622eb9e7b6ed0162f9d8f609bfab1660e0cc89d0b533a6c28132831969b20"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/hugo/merged-main-qualification-03/report.json",
+      "interpretation_path": "results/hugo/merged-main-qualification-03/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37219024516,
+          "inventory_state": "complete",
+          "verified_files": 15,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-merged-harness-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-merged-harness-2026-10-04/benchmarks-37219024516.tar.gz",
+          "bundle_bytes": 274236,
+          "sha256": "54c5c9372f50d6e94a73123cbff792adba3901a8862d8588c8c71ffc0d93ea51",
+          "publication_verification": "Downloaded published assets, compared archive digests, extracted each bundle, and verified scoped file inventory and completeness"
+        }
+      ],
       "runs_without_archives": []
     },
     {

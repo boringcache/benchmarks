@@ -30,6 +30,32 @@
         "active_caches_size_in_bytes": 11885301507,
         "active_caches_count": 289
       }
+    },
+    {
+      "collected_at": "2026-10-04T17:05:32Z",
+      "context": "During merged-main-qualification-03 execution; repository context, not per-phase occupancy or proof of seed availability",
+      "endpoint": "repos/boringcache/benchmarks/actions/cache/usage",
+      "response": {
+        "full_name": "boringcache/benchmarks",
+        "active_caches_size_in_bytes": 10649421351,
+        "active_caches_count": 126
+      }
+    },
+    {
+      "collected_at": "2026-10-04T17:05:32Z",
+      "context": "During merged-main-qualification-03 execution; repository context, not per-phase occupancy or proof of seed availability",
+      "endpoint": "repos/boringcache/benchmarks/actions/cache/storage-limit",
+      "response": {
+        "max_cache_size_gb": 10
+      }
+    },
+    {
+      "collected_at": "2026-10-04T17:05:33Z",
+      "context": "During merged-main-qualification-03 execution; repository context, not per-phase occupancy or proof of seed availability",
+      "endpoint": "repos/boringcache/benchmarks/actions/cache/retention-limit",
+      "response": {
+        "max_cache_retention_days": 7
+      }
     }
   ]
 }
