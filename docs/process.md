@@ -271,7 +271,9 @@ bin/bench collect <case-id> --series screening-01 --sample 1 --directory /tmp/ev
 `collect` checks the verified export against the retained dispatch, imports the
 original phase artifacts, checks completion, and regenerates the report. It
 rejects conflicting records before importing them and can resume an identical
-import. It never derives missing phase measurements from logs. `record`, `finish`,
+import. It reads dedicated phase artifacts and canonical phase filenames inside
+mixed proof bundles, retaining raw product JSON separately. It never derives
+missing phase measurements from logs. `record`, `finish`,
 and `report` remain available separately for reviewed historical imports.
 
 Publish the verified bundle to durable storage with a stable link. Experimental
