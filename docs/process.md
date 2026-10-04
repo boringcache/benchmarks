@@ -162,7 +162,10 @@ parent seed and changed-source build. The workflow's `phases` declares the latte
 as `["cold", "commit"]`; it must never be labelled an identical-source warm replay.
 Rolling series contain changed-source commit observations and retain the parent cache seed.
 Identities include case and series. Cases share a workspace but must not share
-cold cache identity accidentally.
+cold cache identity accidentally. A fresh tag or scope establishes a logical
+cold seed; it does not establish an empty physical provider store. Keep existing
+workspace/repository storage context and do not claim zero prior stored content
+from namespace isolation alone.
 
 GitHub cache quota remains repository-wide. Control concurrency and record
 occupancy and eviction. Key prefixes do not create separate quotas. Keep fixture
@@ -238,6 +241,10 @@ reported KV or archive size; the GitHub probe uses the selected cache key's
 reported archive size. Keep those sources explicit. Do not infer equivalent
 compression, cross-tag deduplication, or physical storage efficiency from these
 counts alone.
+Check coverage against the selected cache profile. For a combined Docker and
+tool-cache profile, Docker-tag bytes alone do not establish total selected-profile
+storage. State the measured subset in the interpretation and retain any missing
+coverage; do not infer additional product tags in the harness.
 GitHub storage reporting receives the read-only token only in the reporting step.
 The selected exact-key rows are retained with their cache IDs, refs, versions,
 timestamps, and byte fields. A missing row or byte field remains unmeasured;

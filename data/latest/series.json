@@ -6037,34 +6037,70 @@
       },
       "plan_sha256": "1b354ee844ed380919a4c5c1abf0cdb45d63489c658b706c3d280c68ab5830f2",
       "definition_sha256": "5ed26c35a502999eb61efd535b39249af12b0d86f1694be37b0d020c4202178d",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": false,
-      "execution_verified": false,
+      "valid_for_comparison": true,
+      "execution_verified": true,
       "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 1703,
+            "min": 1703,
+            "max": 1703
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 172,
+            "min": 172,
+            "max": 172
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 842,
+            "min": 842,
+            "max": 842
+          },
+          "storage": {
+            "median": 6242034116,
+            "min": 6242034116,
+            "max": 6242034116
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 145,
+            "min": 145,
+            "max": 145
+          },
+          "storage": {
+            "median": 6242034116,
+            "min": 6242034116,
+            "max": 6242034116
+          },
+          "storage_measured_count": 1
+        }
       ],
-      "summaries": [],
       "dispatches": [
         {
           "case_id": "posthog",
@@ -6085,14 +6121,40 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37205114269"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37205114269"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "posthog",
+          "series_id": "shared-combined-lifecycle-02",
+          "sample": 1,
+          "run_id": "37205114269",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37205114269",
+          "source_sha": "d045da272fae61c96d06727459055f1a31eca48f",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "fb53406ccf8cfb4dabca781b2ce43e740bffb2ba0aee9c24a6af88cb3fc3f8ca"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/posthog/shared-combined-lifecycle-02/report.json",
+      "interpretation_path": "results/posthog/shared-combined-lifecycle-02/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37205114269,
+          "inventory_state": "complete",
+          "verified_files": 15,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-shared-lifecycle-2026-10-04/benchmarks-37205114269.tar",
+          "bundle_bytes": 742912,
+          "sha256": "0775152becae67e1be4aaf4082be989879111190ddc8aeb66c820bc82a6f3d31",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "posthog",
@@ -6243,34 +6305,70 @@
       },
       "plan_sha256": "9440f1ecc87acfc5f42121a9b72a446881769df6f188c1a27f50070c209dd0d1",
       "definition_sha256": "5ed26c35a502999eb61efd535b39249af12b0d86f1694be37b0d020c4202178d",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": false,
-      "execution_verified": false,
+      "valid_for_comparison": true,
+      "execution_verified": true,
       "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 1845,
+            "min": 1845,
+            "max": 1845
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 226,
+            "min": 226,
+            "max": 226
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 953,
+            "min": 953,
+            "max": 953
+          },
+          "storage": {
+            "median": 6238377174,
+            "min": 6238377174,
+            "max": 6238377174
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 139,
+            "min": 139,
+            "max": 139
+          },
+          "storage": {
+            "median": 6238377174,
+            "min": 6238377174,
+            "max": 6238377174
+          },
+          "storage_measured_count": 1
+        }
       ],
-      "summaries": [],
       "dispatches": [
         {
           "case_id": "posthog",
@@ -6291,14 +6389,40 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37205112800"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37205112800"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "posthog",
+          "series_id": "shared-layers-lifecycle-02",
+          "sample": 1,
+          "run_id": "37205112800",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37205112800",
+          "source_sha": "d045da272fae61c96d06727459055f1a31eca48f",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "7b265e188abeb7d75f9a8be7a820e25d864b76ff43db00e9267f8606bf3f6c18"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/posthog/shared-layers-lifecycle-02/report.json",
+      "interpretation_path": "results/posthog/shared-layers-lifecycle-02/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37205112800,
+          "inventory_state": "complete",
+          "verified_files": 15,
+          "gaps": [],
+          "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow; not an audit of an original repository",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-shared-lifecycle-2026-10-04/benchmarks-37205112800.tar",
+          "bundle_bytes": 738304,
+          "sha256": "6206f8fad70e7ef25ca0b49fc4fde438477aa7c633f3e901d7f12c992d89c6ed",
+          "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "qdrant",

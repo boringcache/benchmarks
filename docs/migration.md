@@ -10,7 +10,7 @@ adding an evaluation does not require a fork or another harness.
 | Area | Current state | Remaining acceptance |
 | --- | --- | --- |
 | Definitions and execution | 17 maintained cases, 47 Docker workloads, and four blocked gRPC evaluation drafts; one provider wrapper and workspace | Qualify each scheduled workload and variant, including output checks and cache source lineage |
-| Docker lifecycle | One shared provider/timing action; equal publication policy; original final product evidence retained after cleanup | Corrected live qualification, followed by the remaining workload and rolling paths |
+| Docker lifecycle | One shared provider/timing action; equal publication policy; corrected Hugo and both PostHog profiles pass cold/warm execution with final product evidence retained after cleanup | Qualify the remaining workload and rolling paths |
 | Reporting and evidence | One canonical phase/series format, verified collection, generated catalog, preserved failures and methodology reviews | Reviewed central publication feed and complete required evidence for each retiring repository |
 | Product updates | One Action pin; pin-sync and product-interface checks inspect shared execution views | Complete companion integration and released-product qualification before caller activation |
 | Scheduling | Monitoring reads the existing active schedules | Qualify central source-sync/canary/release callers, then retire each replaced schedule |
@@ -20,8 +20,9 @@ adding an evaluation does not require a fork or another harness.
 The [October 4 capacity snapshot](../migration/cache-capacity-2026-10-04.json)
 records 10,650,140,305 bytes in 274 cache entries and the API's `max_cache_size_gb`
 setting of 10. This is repository context, not a per-phase measurement or proof
-of eviction. It does not establish that a particular seed survived. Capacity and
-seed checks remain required before activating central schedules.
+of eviction. A later contextual snapshot records 11,885,301,507 bytes in 289
+entries. Neither snapshot establishes that a particular seed survived. Capacity
+and seed checks remain required before activating central schedules.
 
 
 The first cutover migrates the 18 maintained `benchmark-*` repositories:
@@ -115,8 +116,15 @@ retention. Their one-sample records preserve BoringCache's slower warm results
 and missing Actions Cache storage. The three initial Docker requests failed
 before building on unsupported helper output names. All five completed requests
 are retained in the [verified shared-lifecycle archive](https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04),
-with 53 listed files verified after download. Corrected PostHog qualification
-remains pending.
+with 53 listed files verified after download. Corrected PostHog
+[layers](../results/posthog/shared-layers-lifecycle-02/interpretation.md) and
+[combined](../results/posthog/shared-combined-lifecycle-02/interpretation.md)
+screens also pass both providers' cold/warm output and completion checks. Their
+original final product evidence is retained after cleanup. Actions Cache storage
+is unmeasured. The combined record's selected Docker-tag bytes do not establish
+coverage of tool-cache storage, and identical-source replay does not isolate
+tool-cache benefit. Durable publication verification for these two exports is
+recorded separately in the evidence inventory.
 
 Canary monitoring now follows the active historical schedules through explicit
 registry metadata. Its October 4 read-only collection verified all 16 repository
@@ -156,7 +164,14 @@ One-sample screens do not approve publication, caller cutover, or deletion.
 GitHub's default CodeQL configuration now scans Ruby and Actions. Python was
 removed from its language list because this branch removes the maintained Python
 reporter; query suite, threat model, weekly schedule, and runner settings were
-preserved.
+preserved. The new evidence post hook adds maintained JavaScript on this branch.
+After it reaches the default branch, verify that default CodeQL setup includes
+`javascript-typescript` and its analysis passes. [GitHub automatically detects
+new supported languages](https://docs.github.com/en/code-security/concepts/code-scanning/setup-types)
+and can revert a failing new configuration. Correct missing coverage while
+preserving Ruby and Actions, the existing query suite and threat model, weekly
+schedule, and runner settings.
+The hook's Node regression already runs in PR guardrails.
 Archiving does not preserve expiring Actions evidence. Missing evidence and
 unverified execution remain explicit in the inventory.
 

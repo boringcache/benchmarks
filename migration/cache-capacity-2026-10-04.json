@@ -19,5 +19,17 @@
         "max_cache_size_gb": 10
       }
     }
-  }
+  },
+  "follow_up_observations": [
+    {
+      "collected_at": "2026-10-04T14:03:33Z",
+      "context": "After PostHog layers completed and while the combined cold phases are running; not per-phase occupancy or evidence of eviction",
+      "endpoint": "repos/boringcache/benchmarks/actions/cache/usage",
+      "response": {
+        "full_name": "boringcache/benchmarks",
+        "active_caches_size_in_bytes": 11885301507,
+        "active_caches_count": 289
+      }
+    }
+  ]
 }

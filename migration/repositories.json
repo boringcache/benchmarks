@@ -348,7 +348,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "Both loaded-image cold builds failed on the attestation manifest list; no verified measurements; a separate corrected loaded-image series is requested",
+      "consolidated_execution": "Corrected one-sample loaded-image cold/warm comparison passed with equal publication policy and final product evidence retained; original failed and invalid comparisons remain preserved; rolling and caller cutover remain unqualified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -772,7 +772,7 @@
       ],
       "branch_names_inventoried": true,
       "historical_evidence_audit": "Website-linked run exports verified; broader history and branch audit incomplete",
-      "consolidated_execution": "Both warm jobs failed during scope selection; original cold timings include inspection contrary to the declared scope; methodology review rejects comparison; corrected layers and combined series are requested",
+      "consolidated_execution": "Corrected layers and combined one-sample cold/warm comparisons passed with equal publication policy, image inspection after timing, and final product evidence retained; original failures remain preserved; rolling, publication and caller cutover remain unqualified",
       "caller_cutover": "pending consolidated qualification",
       "retirement": "keep",
       "gates": [
@@ -814,6 +814,19 @@
           "results/posthog/image-output-qualification-01/methodology-review.json",
           "results/posthog/image-output-qualification-02/methodology-review.json"
         ]
+      },
+      "shared_lifecycle_qualification": {
+        "case_id": "posthog",
+        "series_ids": [
+          "shared-layers-lifecycle-02",
+          "shared-combined-lifecycle-02"
+        ],
+        "run_ids": [
+          37205112800,
+          37205114269
+        ],
+        "scope": "Selected one-sample cold/warm output and completion checks passed; Actions Cache storage unmeasured; combined Docker-tag bytes do not establish complete tool-cache storage; publication, rolling behavior and caller cutover remain unqualified",
+        "evidence_release": "https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-lifecycle-2026-10-04"
       }
     },
     {
