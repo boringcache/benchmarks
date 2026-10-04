@@ -2,9 +2,12 @@
   "schema_version": 1,
   "plan_sha256": "b37a573111c573f83938292e8aba01df839799e18ea821f07dadca5e869b74a5",
   "complete": true,
-  "valid_for_comparison": true,
+  "valid_for_comparison": false,
   "failures": [],
-  "methodology_issues": [],
+  "methodology_issues": [
+    "The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.",
+    "The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup."
+  ],
   "execution_verified": true,
   "missing_completions": [],
   "failed_completions": [],

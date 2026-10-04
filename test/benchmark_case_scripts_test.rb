@@ -109,7 +109,7 @@ class BenchmarkCaseScriptsTest < Minitest::Test
         assert_equal load == "true" ? "false" : "mode=max", command.fetch(command.index("--provenance") + 1)
         assert_equal load == "true" ? "false" : "true", command.fetch(command.index("--sbom") + 1)
         action = YAML.safe_load(File.read(File.join(directory, ".github/actions/hugo-docker-benchmark/action.yml")))
-        build = action.dig("runs", "steps").find { |step| step["name"] == "Build with the GitHub Actions cache" }.fetch("with")
+        build = action.dig("runs", "steps").find { |step| step["id"] == "provider_build" }.fetch("with")
         assert_equal "${{ inputs.load_image != 'true' && 'mode=max' || 'false' }}", build.fetch("provenance")
         assert_equal "${{ inputs.load_image != 'true' }}", build.fetch("sbom")
       end

@@ -93,6 +93,22 @@ Reusable callers declare `contents: read`, `actions: read`, `packages: read`, an
 the workflow, including calls whose execution condition is false.
 Docker tool caches remain product-plan settings rather than a second implementation
 of the product's proxy or cache lifecycle.
+Docker case actions call `.github/actions/docker-benchmark` for provider setup,
+timing, and execution. One phase policy controls cache publication in both arms:
+cold publishes; an identical-source warm replay restores without publishing;
+an explicitly declared `publish-on-warm` observation publishes in both arms.
+Image loading stays inside this action's timer. Output inspection runs after it.
+Use `benchmark-phase.rb scope` for the shared case/series identity, and keep
+tool-specific tags in the product plan.
+
+The provider wrapper registers `.github/actions/retain-product-evidence` before
+calling One. Its GitHub post hook runs after One's cleanup, then uploads the
+original final evidence JSON using GitHub's artifact SDK. Missing or invalid
+evidence fails retention. The small JavaScript hook is required for GitHub post
+steps; it does not interpret product measurements or implement cache behavior.
+Its dependencies install during preparation, outside the comparison timer.
+The Ruby reporter retains its structured measurements; the original envelope
+remains a separate artifact so post-step status and future product fields survive.
 The harness Ruby version is pinned once in `.tool-versions`. Ruby setup reads
 that file from the harness checkout, including when a shared action is called
 from an older benchmark repository. Guardrails verify preparation on Ubuntu
@@ -242,9 +258,14 @@ do not infer publication permission from a successful build or a cache hit.
 ```sh
 bin/bench preserve --repository boringcache/benchmarks --run <run-id> --directory /tmp/evidence-<run-id>
 bin/bench verify-evidence --directory /tmp/evidence-<run-id>
-bin/bench finish <case-id> --series screening-01 --sample 1 --directory /tmp/evidence-<run-id>
-bin/bench report <case-id> --series screening-01
+bin/bench collect <case-id> --series screening-01 --sample 1 --directory /tmp/evidence-<run-id>
 ```
+
+`collect` checks the verified export against the retained dispatch, imports the
+original phase artifacts, checks completion, and regenerates the report. It
+rejects conflicting records before importing them and can resume an identical
+import. It never derives missing phase measurements from logs. `record`, `finish`,
+and `report` remain available separately for reviewed historical imports.
 
 Publish the verified bundle to durable storage with a stable link. Experimental
 cache retention is not permanent evidence retention. The exporter includes all
@@ -275,6 +296,12 @@ report after evidence and methodology review; update the website's reviewed
 evidence selection to an immutable report link. A green workflow or a case's
 existing publication status does not approve a new series. Replacing the legacy
 feed requires a separately qualified adapter for canonical series reports.
+
+Canary monitoring follows `canary_location` in `suites/published.json`. Keep it
+`historical` while the original repository owns the schedule. Set it to `central`
+only when its central dispatcher and receipt have been qualified and its old
+schedule retired. Missing, stale, or failed executions remain failures; importing
+a definition does not move its active schedule.
 
 Generate the common series catalog after recording or completing an evaluation:
 

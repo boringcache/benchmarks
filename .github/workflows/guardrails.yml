@@ -23,6 +23,8 @@ jobs:
     - name: Run Ruby tests
       run: bundle exec ruby -Itest -e 'Dir["test/*_test.rb"].sort.each { |file| require_relative
         file }'
+    - name: Check product evidence retention
+      run: node --test test/product_evidence_test.cjs
     - name: Lint workflows
       run: |-
         go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12

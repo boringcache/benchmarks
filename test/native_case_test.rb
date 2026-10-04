@@ -166,10 +166,10 @@ class NativeCaseTest < Minitest::Test
         assert_equal "true", recipe.dig("fresh_inputs", "load_image")
         action = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, "cases", id, "payload", recipe.fetch("action"), "action.yml")))
         steps = action.dig("runs", "steps")
-        assert_operator steps.index { |step| step["id"] == "build_timing" }, :<, steps.index { |step| step["id"] == "output_verification" }
+        assert_operator steps.index { |step| step["id"] == "provider_build" }, :<, steps.index { |step| step["id"] == "output_verification" }
         steps.each_with_index do |step, index|
           next unless step["run"].to_s.match?(/\bdocker\s+(?:image|buildx\s+imagetools)\s+inspect\b|verify-docker-output\.rb/)
-          assert_operator steps.index { |entry| entry["id"] == "build_timing" }, :<, index, "#{id}: #{step['name']} must run after build timing"
+          assert_operator steps.index { |entry| entry["id"] == "provider_build" }, :<, index, "#{id}: #{step['name']} must run after build timing"
         end
         assert_operator steps.index { |step| step["id"] == "output_verification" }, :<, steps.index { |step| step["name"] == "Write the benchmark phase evidence" }
       end
@@ -214,7 +214,7 @@ class NativeCaseTest < Minitest::Test
   end
 
   def run_posthog_scope(item, directory, step, environment, success: true)
-    FileUtils.cp(File.join(BenchmarkCases::ROOT, "scripts/scope-case-cache.rb"), File.join(directory, "scripts"))
+    %w[benchmark-plan benchmark-phase scope-case-cache].each { |name| FileUtils.cp(File.join(BenchmarkCases::ROOT, "scripts", "#{name}.rb"), File.join(directory, "scripts")) }
     File.write(File.join(directory, "benchmark-context.json"), JSON.generate(item))
     FileUtils.cp(File.join(BenchmarkCases::ROOT, "cases/posthog/payload/.boringcache.toml"), directory)
     commands = File.join(directory, "commands")
@@ -244,9 +244,14 @@ class NativeCaseTest < Minitest::Test
 
   def test_product_contract_view_resolves_the_wrapper_without_losing_adapter_or_failure_policy
     provider = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/actions/boringcache/action.yml")))
+    steps = provider.dig("runs", "steps")
+    assert_equal "./.github/actions/retain-product-evidence", steps.first.fetch("uses")
+    assert_equal "provider", steps[1].fetch("id")
+    assert_equal "always()", steps.last.fetch("if")
+    assert_equal "${{ steps.provider.outputs.evidence-path }}", steps.last.dig("env", "EVIDENCE_PATH")
     step = {"uses" => "./.github/actions/boringcache", "id" => "cache", "with" => {"mode" => "cargo", "trust-policy" => "restore", "fail-on-cache-miss" => "true"}}
     resolved = BenchmarkCases.resolve_provider_steps(step, provider)
-    assert_equal provider.dig("runs", "steps", 0, "uses"), resolved["uses"]
+    assert_equal provider.dig("runs", "steps", 1, "uses"), resolved["uses"]
     assert_equal "cache", resolved["id"]
     assert_equal "cargo", resolved.dig("with", "mode")
     assert_equal "restore", resolved.dig("with", "trust-policy")
@@ -257,8 +262,8 @@ class NativeCaseTest < Minitest::Test
     assert_equal true, cold.dig("with", "fail-on-cache-error")
     conditional = BenchmarkCases.resolve_provider_steps({"uses" => "./.github/actions/boringcache", "with" => {"mode" => "docker", "fail-on-cache-miss" => "${{ inputs.phase == 'warm' }}"}}, provider)
     assert_equal "${{ inputs.phase == 'warm' }}", conditional.dig("with", "fail-on-cache-miss")
-    assert_equal true, provider.dig("runs", "steps", 0, "with", "fail-on-cache-error")
-    assert_equal "${{ inputs.fail-on-cache-miss == 'true' }}", provider.dig("runs", "steps", 0, "with", "fail-on-cache-miss")
+    assert_equal true, provider.dig("runs", "steps", 1, "with", "fail-on-cache-error")
+    assert_equal "${{ inputs.fail-on-cache-miss == 'true' }}", provider.dig("runs", "steps", 1, "with", "fail-on-cache-miss")
     assert_raises(BenchmarkCases::Error) { BenchmarkCases.resolve_provider_steps({"uses" => "./.github/actions/boringcache", "with" => {"obsolete" => "true"}}, provider) }
   end
 end
