@@ -68,7 +68,7 @@ class BenchmarkReportStorageTest < Minitest::Test
       assert_equal "boringcache-check", payload.dig("cache", "storage_source")
       assert_equal "boringcache/benchmark-example", payload.dig("cache", "workspace")
       assert_equal ["cache-one", "cache-two"], payload.dig("cache", "storage_breakdown", "tags")
-      assert_equal ["check", "boringcache/benchmark-example", "cache-one,cache-two", "--no-git", "--no-platform", "--exact", "--json"], JSON.parse(File.read(invocation_path))
+      assert_equal ["check", "boringcache/benchmark-example", "cache-one,cache-two", "--no-git", "--no-platform", "--json"], JSON.parse(File.read(invocation_path))
 
       lane = summarize(dir)
       assert_equal 200, lane.dig("cache", "storage_bytes")
@@ -301,6 +301,11 @@ class BenchmarkReportStorageTest < Minitest::Test
       #!/usr/bin/env bash
       set -euo pipefail
       printf '%s\n' "$(printf '%s\n' "$@" | jq -R . | jq -s .)" > "$FAKE_CHECK_INVOCATION_PATH"
+      for argument in "$@"; do
+        if [ "$argument" = "--exact" ]; then
+          exit 2
+        fi
+      done
       cat "$FAKE_CHECK_PATH"
     SH
     File.chmod(0o755, path)

@@ -213,6 +213,47 @@ class NativeCaseTest < Minitest::Test
     end
   end
 
+  def test_shared_fresh_workflow_preserves_the_published_posthog_scope
+    workflow = YAML.safe_load_file(File.join(BenchmarkCases::ROOT, ".github/workflows/native-fresh-benchmark.yml"))
+    cold = workflow.fetch("jobs").fetch("cold")
+    warm = workflow.fetch("jobs").fetch("warm")
+    assert_equal "${{ steps.benchmark.outputs.cache_scope }}", cold.dig("outputs", "cache_scope")
+    assert cold.fetch("steps").any? { |step| step["id"] == "benchmark" && step["uses"] == "./.github/actions/benchmark-phase" }
+    assert_equal "${{ needs.cold.outputs.cache_scope }}", warm.fetch("steps").find { |step| step["uses"] == "./.github/actions/benchmark-phase" }.dig("with", "cache_scope")
+
+    with_payload("posthog") do |item, directory|
+      %w[layers combined].each do |variant|
+        wrapper = NativeCase.write_action(item, directory: directory, lane: "fresh", variant: variant, suffix: "-canary")
+        recipe = NativeCase.resolve(item.dig("execution", "native"), variant)
+        assert_equal "${{ steps.phase.outputs.cache_scope }}", wrapper.dig("outputs", "cache_scope", "value")
+        assert_equal "phase", wrapper.dig("runs", "steps", 0, "id")
+        assert_equal "${{ inputs.cache_scope }}", wrapper.dig("runs", "steps", 0, "with", "cache_scope")
+        action = YAML.safe_load_file(File.join(directory, recipe.fetch("action"), "action.yml"))
+        assert_equal "${{ steps.scope.outputs.cache_scope }}", action.dig("outputs", "cache_scope", "value")
+        step = action.dig("runs", "steps").find { |entry| entry["id"] == "scope" }
+        defaults = action.fetch("inputs").transform_values { |input| input.fetch("default", "") }
+        published_scopes = %w[boringcache actions-cache].map do |provider|
+          published = ""
+          %w[publish warm].each do |phase|
+            runtime = {"strategy" => provider, "phase" => phase, "benchmark_id" => "#{recipe.fetch('benchmark_id')}-canary", "cache_scope" => published}
+            inputs = defaults.merge(wrapper.dig("runs", "steps", 0, "with").transform_values do |value|
+              value.gsub(/\$\{\{ inputs\.(\w+) \}\}/) { runtime.fetch(Regexp.last_match(1), "") }
+            end)
+            environment = step.fetch("env").transform_values do |value|
+              value.gsub(/\$\{\{ inputs\.(\w+) \}\}/) { inputs.fetch(Regexp.last_match(1)) }
+            end
+            resolved = run_posthog_scope(item, directory, step, environment)
+            assert_equal published, resolved if phase == "warm"
+            published = resolved
+          end
+          assert_equal "#{recipe.fetch('benchmark_id')}-canary-run-r123-a2", published
+          published
+        end
+        assert_equal 1, published_scopes.uniq.length, "The cold matrix output must be identical for both providers"
+      end
+    end
+  end
+
   def run_posthog_scope(item, directory, step, environment, success: true)
     %w[benchmark-plan benchmark-phase scope-case-cache].each { |name| FileUtils.cp(File.join(BenchmarkCases::ROOT, "scripts", "#{name}.rb"), File.join(directory, "scripts")) }
     File.write(File.join(directory, "benchmark-context.json"), JSON.generate(item))
