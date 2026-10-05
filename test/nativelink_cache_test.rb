@@ -49,6 +49,41 @@ class NativeLinkCacheTest < Minitest::Test
     end
   end
 
+  def test_warm_requires_remote_hits_and_identical_outputs_before_reporting_storage
+    script = File.expand_path("../cases/grpc/payload/scripts/nativelink-cache.rb", __dir__)
+    Dir.mktmpdir do |directory|
+      evidence = File.join(directory, "benchmark-results/nativelink")
+      outputs = File.join(directory, "upstream/bazel-bin/examples/cpp/csm")
+      tools = File.join(directory, "tools")
+      FileUtils.mkdir_p([evidence, outputs, tools])
+      hashes = %w[client server].to_h do |name|
+        path = File.join(outputs, "csm_greeter_#{name}")
+        File.write(path, "#!/bin/sh\nexit 0\n")
+        File.chmod(0o755, path)
+        [name, Digest::SHA256.file(path).hexdigest]
+      end
+      File.write(File.join(evidence, "previous-seed.json"), JSON.generate("outputs" => hashes))
+      aws = File.join(tools, "aws")
+      File.write(aws, "#!/bin/sh\nprintf '%s' '{\"Contents\":[{\"Key\":\"nativelink/test-one/cas/blob\",\"Size\":42}]}'\n")
+      File.chmod(0o755, aws)
+      env = {"PATH" => "#{tools}:#{ENV.fetch('PATH')}", "PHASE" => "warm", "NATIVELINK_INSTANCE" => "test-one",
+        "GITHUB_OUTPUT" => File.join(directory, "outputs")}
+      File.write(File.join(evidence, "build.log"), "INFO: 3 processes: 3 internal.\n")
+      _, stderr, status = Open3.capture3(env, RbConfig.ruby, script, "finish", chdir: directory)
+      refute status.success?
+      assert_includes stderr, "no remote cache hits"
+      File.write(File.join(evidence, "build.log"), "INFO: 5 processes: 3 remote cache hit, 2 internal.\n")
+      _, stderr, status = Open3.capture3(env, RbConfig.ruby, script, "finish", chdir: directory)
+      assert status.success?, stderr
+      assert_equal 42, JSON.parse(File.read(File.join(evidence, "storage.json"))).fetch("bytes")
+      assert_equal "cache_hit=true\n", File.read(env.fetch("GITHUB_OUTPUT"))
+      File.write(File.join(outputs, "csm_greeter_client"), "changed output")
+      _, stderr, status = Open3.capture3(env, RbConfig.ruby, script, "finish", chdir: directory)
+      refute status.success?
+      assert_includes stderr, "output hashes differ"
+    end
+  end
+
   private
 
   def with_env(values)
