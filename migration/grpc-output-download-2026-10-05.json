@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "case_id": "grpc",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288249894",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/37288249894/job/111711754575",
+  "source_harness_sha": "874ab9890b328d8583f0b67e46a02f72393cf015",
+  "provider": "boringcache",
+  "phase": "warm",
+  "build_exit_status": "success",
+  "bazel_elapsed_seconds": 72.869,
+  "bazel_remote_cache_hits": 3790,
+  "output_verification": "failed",
+  "phase_record": "not_written",
+  "replacement_command_option": "--remote_download_outputs=toplevel",
+  "replacement_series_required": true
+}

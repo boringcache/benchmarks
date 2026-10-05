@@ -1,0 +1,21 @@
+{
+  "upstream_files": {
+    "flake.nix": "ea381afd3454aaac17c8c2e09e910d4e4930436ae79fdd635cc1d2f15d352e5f",
+    "flake.lock": "4009403d40c03d4c178794e8ba0b9e22b44eda2097c9bcb06cb2494d7d134cea",
+    "nix/toolchain.nix": "2ffc73b12e732fbfa81d4f099af29f6e9399873651c39471c1f2b432959aaa8a",
+    "nix/modules/packages.nix": "837893cc8ceda91199bb873c41d0962c122b63aeaa929abef400fc4ae8dd4f23",
+    "nix/build.nix": "527bd94c139e337a5ab2d575cb0d3fe1da048d5ce6a658124f7ff0bfb21a1cb0"
+  },
+  "commands": {
+    "nix": [
+      "nix",
+      "build",
+      "github:zed-industries/zed/96837d78cb0f2128c1965716f8df56b8aea59742#default",
+      "-L",
+      "--no-update-lock-file",
+      "--option",
+      "accept-flake-config",
+      "false"
+    ]
+  }
+}

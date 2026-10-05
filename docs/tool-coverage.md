@@ -21,7 +21,7 @@ limitations. This inventory describes the case definitions as of October 5, 2026
 | Pants | [StackStorm](../cases/stackstorm-pants/proposal.md), Pants JVM drafts | Qualify the pinned clients; review service-dependent test cacheability |
 | Buck2 | [ExecuTorch](../cases/executorch-buck2/proposal.md), Buck2 Prelude drafts | Verify public targets, native action-cache use and output checks |
 | sbt | [MessagePack Java](../cases/msgpack-sbt/proposal.md) draft | Qualify sbt 2 remote-cache configuration and compiled outputs |
-| Nix | [Zed](../cases/zed-nix/proposal.md), [Helix](../cases/helix-nix/proposal.md) drafts | Qualify fresh-store substitution, closure checks and benchmark-owned Cachix comparison |
+| Nix | [Zed](../cases/zed-nix/proposal.md), [Helix](../cases/helix-nix/proposal.md) | Shared Nix workflow implemented; cold/warm qualification pending |
 | Archive | Storybook's Nx cache directories | Qualify rolling source and seed lineage |
 | Artifact, GHA compatibility service | No dedicated active comparison case | GitHub artifact uploads inside a benchmark do not qualify these BoringCache products |
 
@@ -30,11 +30,12 @@ benchmark adapter. Product support includes Bazel, ccache, Go, Gradle, Maven, Nx
 sccache, and Turbo; this repository does not yet qualify every injected family.
 Cargo target mounts use the product's managed freshness behavior and can compose
 sccache. Nix's daemon/store and macOS Xcode are not Linux Docker injection modes.
-The [REAPI drafts](reapi-evaluations.md) and Nix drafts have no executable
-workflows, measurements or schedules. Each family now has a pinned OSS workload;
-this is definition coverage, not completed benchmark qualification. Release and
-client qualification, provider configuration and reviewed execution remain
-explicit blockers in each case. MessagePack keeps its existing case ID and pin.
+The [REAPI drafts](reapi-evaluations.md) have no executable workflows or measurements.
+The Nix cases use one shared fresh workflow and the public Nix product mode;
+qualification remains pending. The Cachix cache name and token are repository
+configuration. No new schedules are enabled. Each family has a pinned OSS
+workload; definitions and workflows do not establish measured coverage.
+MessagePack keeps its existing case ID and pin.
 
 For a new tool or option, follow [the existing case process](process.md). Keep
 product configuration in `.boringcache.toml`, pass the mode through the shared

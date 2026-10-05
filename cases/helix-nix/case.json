@@ -22,14 +22,20 @@
   },
   "execution": {
     "sync": "fixed",
-    "workflows": [],
-    "blockers": [
-      "Qualify the reviewed public Action/CLI Nix path with this workload",
-      "Pin Nix, Linux x86_64 runner and dependency-store preparation for both providers",
-      "Configure an authorized benchmark-owned Cachix cache; upstream cache credentials are not available",
-      "Record and verify a substituter configuration patch that prevents upstream caches from satisfying the measured package closure",
-      "Add and verify fresh-store producer and consumer jobs through the shared provider wrapper and canonical reporter"
-    ]
+    "workflows": [
+      {
+        "path": ".github/workflows/nix-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "helix-nix",
+          "provider": "all"
+        }
+      }
+    ],
+    "blockers": [],
+    "cache_tags": {
+      "helix-nix": "helix-nix-{scope}"
+    }
   },
   "reporting": {
     "entries": [],
@@ -49,9 +55,9 @@
       "cachix"
     ],
     "primary_metric": "build_and_reuse_seconds",
-    "timed_scope": "nix build .#default -L after Nix installation and declared dependency-store preparation; measure cache setup/restore and closure upload completion separately",
+    "timed_scope": "Nix package derivation build or substitution after its build dependencies are realized; dependency preparation, output verification and provider post-step publication are outside the build timer",
     "storage": "provider-reported",
-    "cache_scope": "Isolated case and series remote seed per provider; identical dependency-store baseline and fresh local output store for every worker; public caches cannot satisfy measured package outputs",
+    "cache_scope": "BoringCache case/series tag; Cachix content-addressed cache shared across series. Cold disables substitution after dependency preparation. Warm uses a fresh local output store and only the selected provider; compare exact output and dependency closure hashes.",
     "sample_count": 2
   }
 }

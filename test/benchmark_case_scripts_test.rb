@@ -13,7 +13,7 @@ require "yaml"
 class BenchmarkCaseScriptsTest < Minitest::Test
   ROOT = File.expand_path("..", __dir__)
 
-  def test_grpc_materializes_the_same_reviewed_outputs_for_every_provider
+  def test_grpc_requests_the_same_reviewed_outputs_for_every_provider
     with_case("grpc") do |directory|
       tools = File.join(directory, "upstream/tools")
       FileUtils.mkdir_p(tools)
