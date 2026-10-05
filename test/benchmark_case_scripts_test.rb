@@ -13,6 +13,27 @@ require "yaml"
 class BenchmarkCaseScriptsTest < Minitest::Test
   ROOT = File.expand_path("..", __dir__)
 
+  def test_grpc_materializes_top_level_outputs_for_every_provider
+    with_case("grpc") do |directory|
+      tools = File.join(directory, "upstream/tools")
+      FileUtils.mkdir_p(tools)
+      bazel = File.join(tools, "bazel")
+      File.write(bazel, "#!#{RbConfig.ruby}\nrequire 'json'\nputs JSON.generate(ARGV)\n")
+      File.chmod(0o755, bazel)
+      %w[actions-cache buildbuddy boringcache].each do |provider|
+        env = {"PATH" => "#{File.dirname(RbConfig.ruby)}:#{ENV.fetch('PATH')}",
+          "BAZEL_CACHE_STRATEGY" => provider, "BAZEL_OUTPUT_USER_ROOT" => File.join(directory, "root"),
+          "BAZEL_OUTPUT_BASE" => File.join(directory, "base"), "BAZEL_DISK_CACHE" => File.join(directory, "disk"),
+          "BUILDBUDDY_API_KEY" => "test-key", "BUILDBUDDY_REMOTE_INSTANCE_NAME" => "test-instance"}
+        output, error, status = Open3.capture3(env, "bash", "scripts/run-grpc-bazel-build.sh", chdir: directory)
+        assert status.success?, error
+        command = JSON.parse(output)
+        assert_includes command, "--remote_download_outputs=toplevel"
+        assert_equal %w[//examples/cpp/csm:csm_greeter_client //examples/cpp/csm:csm_greeter_server], command.last(2)
+      end
+    end
+  end
+
   def test_grpc_uses_one_scope_for_each_sample_and_retains_only_rolling_seeds
     with_case("grpc") do |directory|
       steps = YAML.safe_load_file(File.join(directory, ".github/actions/grpc-bazel-benchmark/action.yml")).dig("runs", "steps")

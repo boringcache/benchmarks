@@ -1,0 +1,7 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.nix]
+tag = "zed-nix"
+no-platform = true
+no-git = true
+command = ["nix", "build", "github:zed-industries/zed/96837d78cb0f2128c1965716f8df56b8aea59742#default", "-L", "--no-update-lock-file", "--option", "accept-flake-config", "false"]
