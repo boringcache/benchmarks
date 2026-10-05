@@ -1225,6 +1225,22 @@
       "scope": "One declared Hugo Go sample, including its attempts, jobs, logs, artifacts, commit and workflow",
       "execution_qualification": "Cold/warm output, isolated sample scope, overlapping execution and post-step evidence passed; two-sample harness screening only",
       "repository_retirement": "This run does not approve retirement of any original repository"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37294037661,
+      "verified_files": 15,
+      "gaps": [],
+      "sha256": "8c73e249492a866a38764b6f155bdf9d31c32b41f7dd7a41d8210b29efd66441",
+      "bundle_bytes": 184087,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-evidence-2026-10-05",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-shared-evidence-2026-10-05/benchmarks-37294037661.tar.gz",
+      "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory",
+      "verified_on": "2026-10-05",
+      "scope": "One Hugo Go cold/warm sample, including attempts, jobs, logs, artifacts, commit and workflow",
+      "execution_qualification": "Four verified phase records and two final product evidence artifacts, each with completed post phase; one sample, publication unreviewed",
+      "repository_retirement": "This run does not approve retirement of any original repository"
     }
   ]
 }
