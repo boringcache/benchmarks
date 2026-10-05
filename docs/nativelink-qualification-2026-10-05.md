@@ -1,7 +1,7 @@
 # NativeLink R2 qualification
 
-Status: cold and rolling seed jobs passed; warm and source-advancement
-qualification is waiting on GitHub-hosted runners during an Actions incident. NativeLink is a cache-only gRPC
+Status: NativeLink passed one cold/warm sample and its changed-source replay.
+The second fresh sample is running. NativeLink is a cache-only gRPC
 provider; see [its configuration and measurement boundary](../cases/grpc/nativelink.md).
 This screening checks cache persistence, source continuity, and executable
 outputs. It does not establish a performance ranking.
@@ -10,11 +10,12 @@ outputs. It does not establish a performance ranking.
 | --- | --- | --- |
 | Initial fresh sample 1 | [37357216555](https://github.com/boringcache/benchmarks/actions/runs/37357216555) | Cold passed; three warm jobs never acquired runners; failed run archived; timing comparison excluded |
 | Initial fresh sample 2 | [37357215892](https://github.com/boringcache/benchmarks/actions/runs/37357215892) | NativeLink warm job never acquired a runner; preserved failed run |
-| Corrected fresh sample 1 | [37358851818](https://github.com/boringcache/benchmarks/actions/runs/37358851818) | All cold jobs passed; warm jobs queued |
-| Corrected fresh sample 2 | [37358852206](https://github.com/boringcache/benchmarks/actions/runs/37358852206) | All cold jobs passed; warm jobs queued |
+| Corrected fresh sample 1 | [37358851818](https://github.com/boringcache/benchmarks/actions/runs/37358851818) | Cold passed; NativeLink warm never acquired a runner; failed run archived |
+| Corrected fresh sample 2 | [37358852206](https://github.com/boringcache/benchmarks/actions/runs/37358852206) | NativeLink cold and warm passed; other warm providers lost runners; whole run failed and is archived |
+| Replacement fresh sample | [37374167360](https://github.com/boringcache/benchmarks/actions/runs/37374167360) | Running the final implementation; warm result pending |
 | Initial rolling seed | [37357537232](https://github.com/boringcache/benchmarks/actions/runs/37357537232) | Cancelled; preserved |
 | Replacement rolling seed | [37357892389](https://github.com/boringcache/benchmarks/actions/runs/37357892389) | Passed and archived |
-| Rolling source advancement | [37365008673](https://github.com/boringcache/benchmarks/actions/runs/37365008673) | Queued/running after all seed provider jobs passed |
+| Rolling source advancement | [37365008673](https://github.com/boringcache/benchmarks/actions/runs/37365008673) | NativeLink attempt 2 passed with 3,787 remote hits and verified parent/child lineage; whole run failed; all attempts archived |
 
 The initial fresh series excluded NativeLink installation from setup timing while
 including BoringCache installation. Its methodology review excludes a timing
@@ -54,4 +55,13 @@ not a completed warm observation. Preserve these failures without inventing timi
 
 The final implementation passes 259 tests / 2,043 assertions and hosted guardrails.
 PR #43 is merged; Zed Nix passed both fresh samples and its rolling seed/advance.
-PR #44 remains open pending NativeLink warm and source-advancement qualification.
+PR #44 remains open pending the second successful NativeLink cold/warm sample.
+
+The rolling replay verified 3,787 remote hits from an empty local cache, retained
+the seed run and source revision, and verified the changed-source client and
+server executables. The R2 inventory contains 19,893 objects totalling
+756,897,941 bytes; the raw inventory checksum matches its phase receipt.
+Attempt 2 has a separate verified evidence archive, preserving the earlier
+attempt export. The series remains failed because the complete provider cohort
+did not finish successfully; NativeLink correctness does not approve a provider
+timing comparison.

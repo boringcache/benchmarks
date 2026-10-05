@@ -5423,6 +5423,240 @@
       },
       "plan_sha256": "67c3cde1b46e4a883bf47d7ab6ffc92f0b48b0e4065ce60a4cce0ba12f2b0c75",
       "definition_sha256": "56feb3c43b11465a2c58e93140abd49c9a56d16aa2f3fda6e21b5cd373ddac28",
+      "state": "failed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "nativelink"
+        ],
+        [
+          2,
+          "warm",
+          "boringcache"
+        ],
+        [
+          2,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 2,
+          "measurement": {
+            "median": 2685.5,
+            "min": 2185,
+            "max": 3186
+          },
+          "storage": {
+            "median": 163721900.0,
+            "min": 163716238,
+            "max": 163727562
+          },
+          "storage_measured_count": 2
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 2,
+          "measurement": {
+            "median": 2177.5,
+            "min": 2075,
+            "max": 2280
+          },
+          "storage": {
+            "median": 617735474.5,
+            "min": 589631401,
+            "max": 645839548
+          },
+          "storage_measured_count": 2
+        },
+        {
+          "phase": "cold",
+          "provider": "buildbuddy",
+          "count": 2,
+          "measurement": {
+            "median": 2466.0,
+            "min": 1624,
+            "max": 3308
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "buildbuddy",
+          "count": 2,
+          "measurement": {
+            "median": 160.5,
+            "min": 126,
+            "max": 195
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "nativelink",
+          "count": 2,
+          "measurement": {
+            "median": 3093.5,
+            "min": 2910,
+            "max": 3277
+          },
+          "storage": {
+            "median": 707856621.0,
+            "min": 707856618,
+            "max": 707856624
+          },
+          "storage_measured_count": 2
+        },
+        {
+          "phase": "warm",
+          "provider": "nativelink",
+          "count": 1,
+          "measurement": {
+            "median": 967,
+            "min": 967,
+            "max": 967
+          },
+          "storage": {
+            "median": 707856618,
+            "min": 707856618,
+            "max": 707856618
+          },
+          "storage_measured_count": 1
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "grpc",
+          "repository": "boringcache/benchmarks",
+          "workflow": "grpc-grpc-bazel-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "cli_version": "vcli-canary-7a5b27146ebe",
+            "series_id": "nativelink-r2-fresh-02",
+            "sample": "1"
+          },
+          "ref": "grpc-nativelink",
+          "state": "requested",
+          "requested_at": "2026-10-05T18:49:23Z",
+          "run_id": 37358851818,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37358851818"
+        },
+        {
+          "case_id": "grpc",
+          "repository": "boringcache/benchmarks",
+          "workflow": "grpc-grpc-bazel-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "cli_version": "vcli-canary-7a5b27146ebe",
+            "series_id": "nativelink-r2-fresh-02",
+            "sample": "2"
+          },
+          "ref": "grpc-nativelink",
+          "state": "requested",
+          "requested_at": "2026-10-05T18:49:23Z",
+          "run_id": 37358852206,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37358852206"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "grpc",
+          "series_id": "nativelink-r2-fresh-02",
+          "sample": 1,
+          "run_id": "37358851818",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37358851818",
+          "source_sha": "ed4626fc7f627c729022538e043d983accd5f1d8",
+          "github_conclusion": "failure",
+          "status": "failed",
+          "errors": [
+            "Workflow concluded failure",
+            "NativeLink (R2) gRPC Bazel warm: cancelled",
+            "BoringCache gRPC Bazel warm: cancelled",
+            "GitHub Actions gRPC Bazel warm: cancelled"
+          ],
+          "evidence_manifest_sha256": "889ca39acdc2a28c484684f6cddbd6de11254992f29758c36ec198895bdeb75a"
+        },
+        {
+          "schema_version": 1,
+          "case_id": "grpc",
+          "series_id": "nativelink-r2-fresh-02",
+          "sample": 2,
+          "run_id": "37358852206",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37358852206",
+          "source_sha": "ed4626fc7f627c729022538e043d983accd5f1d8",
+          "github_conclusion": "failure",
+          "status": "failed",
+          "errors": [
+            "Workflow concluded failure",
+            "BoringCache gRPC Bazel warm: cancelled",
+            "GitHub Actions gRPC Bazel warm: cancelled"
+          ],
+          "evidence_manifest_sha256": "34d9c9db30528b9b9db06e77f10d839a7cf4fcce62e0f2f76165a2c66842ab8f"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/grpc/nativelink-r2-fresh-02/report.json",
+      "evidence": [],
+      "runs_without_archives": [
+        "37358851818",
+        "37358852206"
+      ]
+    },
+    {
+      "case_id": "grpc",
+      "series_id": "nativelink-r2-fresh-03",
+      "plan_path": "results/grpc/nativelink-r2-fresh-03/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache",
+          "buildbuddy",
+          "nativelink"
+        ],
+        "timed_scope": "Bazel build with local top-level outputs plus measured cache restore/setup; output checks and post-job cache save are outside build timing",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "grpc/grpc",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "2eacde0ce5d145a040fcc35289ebbc44e0e03b76bce07414c9ecc9fddc8d75b0",
+      "definition_sha256": "e2aa1ebb6a7d48e446f1b8d88edc7b8f4d4f1fee44e10046be33b32c90e641cf",
       "state": "requested",
       "publication": "unreviewed",
       "valid_for_comparison": false,
@@ -5468,46 +5702,6 @@
           1,
           "warm",
           "nativelink"
-        ],
-        [
-          2,
-          "cold",
-          "boringcache"
-        ],
-        [
-          2,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          2,
-          "cold",
-          "buildbuddy"
-        ],
-        [
-          2,
-          "cold",
-          "nativelink"
-        ],
-        [
-          2,
-          "warm",
-          "boringcache"
-        ],
-        [
-          2,
-          "warm",
-          "actions-cache"
-        ],
-        [
-          2,
-          "warm",
-          "buildbuddy"
-        ],
-        [
-          2,
-          "warm",
-          "nativelink"
         ]
       ],
       "summaries": [],
@@ -5519,30 +5713,14 @@
           "lane": "fresh",
           "inputs": {
             "cli_version": "vcli-canary-7a5b27146ebe",
-            "series_id": "nativelink-r2-fresh-02",
+            "series_id": "nativelink-r2-fresh-03",
             "sample": "1"
           },
           "ref": "grpc-nativelink",
           "state": "requested",
-          "requested_at": "2026-10-05T18:49:23Z",
-          "run_id": 37358851818,
-          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37358851818"
-        },
-        {
-          "case_id": "grpc",
-          "repository": "boringcache/benchmarks",
-          "workflow": "grpc-grpc-bazel-fresh-benchmark.yml",
-          "lane": "fresh",
-          "inputs": {
-            "cli_version": "vcli-canary-7a5b27146ebe",
-            "series_id": "nativelink-r2-fresh-02",
-            "sample": "2"
-          },
-          "ref": "grpc-nativelink",
-          "state": "requested",
-          "requested_at": "2026-10-05T18:49:23Z",
-          "run_id": 37358852206,
-          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37358852206"
+          "requested_at": "2026-10-05T21:09:53Z",
+          "run_id": 37374167360,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37374167360"
         }
       ],
       "completions": [],
@@ -5550,8 +5728,7 @@
       "report_path": null,
       "evidence": [],
       "runs_without_archives": [
-        "37358851818",
-        "37358852206"
+        "37374167360"
       ]
     },
     {
@@ -5587,7 +5764,7 @@
       },
       "plan_sha256": "f69c219694fca0952c372144251b49c8c7766eb2da0c2179af760dfd94f8af5d",
       "definition_sha256": "3910f37df42140ca9b2b79f0e8959d86541ce3825e2ee5cd47682050ef6ef617",
-      "state": "requested",
+      "state": "failed",
       "publication": "unreviewed",
       "valid_for_comparison": false,
       "execution_verified": false,
@@ -5599,24 +5776,54 @@
           1,
           "commit",
           "boringcache"
-        ],
-        [
-          1,
-          "commit",
-          "actions-cache"
-        ],
-        [
-          1,
-          "commit",
-          "buildbuddy"
-        ],
-        [
-          1,
-          "commit",
-          "nativelink"
         ]
       ],
-      "summaries": [],
+      "summaries": [
+        {
+          "phase": "commit",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 89,
+            "min": 89,
+            "max": 89
+          },
+          "storage": {
+            "median": 178632079,
+            "min": 178632079,
+            "max": 178632079
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "commit",
+          "provider": "buildbuddy",
+          "count": 1,
+          "measurement": {
+            "median": 180,
+            "min": 180,
+            "max": 180
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "commit",
+          "provider": "nativelink",
+          "count": 1,
+          "measurement": {
+            "median": 970,
+            "min": 970,
+            "max": 970
+          },
+          "storage": {
+            "median": 756897941,
+            "min": 756897941,
+            "max": 756897941
+          },
+          "storage_measured_count": 1
+        }
+      ],
       "dispatches": [
         {
           "case_id": "grpc",
@@ -5635,9 +5842,27 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37365008673"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "grpc",
+          "series_id": "nativelink-r2-rolling-advance-04",
+          "sample": 1,
+          "run_id": "37365008673",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37365008673",
+          "source_sha": "d987fd8d0f65753c1f27a87cca33c5792f599ccb",
+          "github_conclusion": "failure",
+          "status": "failed",
+          "errors": [
+            "Workflow concluded failure",
+            "BoringCache gRPC Bazel commit: cancelled",
+            "NativeLink (R2) gRPC Bazel commit: cancelled"
+          ],
+          "evidence_manifest_sha256": "43920b06d4f28eddd2954d39c18c91aa73b8a6cbde65c2f3565af653e16a893d"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/grpc/nativelink-r2-rolling-advance-04/report.json",
       "evidence": [],
       "runs_without_archives": [
         "37365008673"
