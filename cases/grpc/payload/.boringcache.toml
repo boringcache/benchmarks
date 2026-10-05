@@ -5,7 +5,7 @@ tag = "grpc-bazel-local"
 no-platform = true
 no-git = true
 metadata-hints = ["benchmark=grpc", "workload=csm-client-server"]
-command = ["./tools/bazel", "build", "--config=opt", "//examples/cpp/csm:csm_greeter_client", "//examples/cpp/csm:csm_greeter_server"]
+command = ["./tools/bazel", "build", "--config=opt", "--remote_download_outputs=toplevel", "//examples/cpp/csm:csm_greeter_client", "//examples/cpp/csm:csm_greeter_server"]
 
 # Bazel remote-cache benchmark. The measured BoringCache surface is
 # boringcache/one mode=bazel configuring Bazel's --remote_cache through

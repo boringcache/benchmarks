@@ -11,6 +11,7 @@ expected=(
   "./tools/bazel"
   "build"
   "--config=opt"
+  "--remote_download_outputs=toplevel"
   "//examples/cpp/csm:csm_greeter_client"
   "//examples/cpp/csm:csm_greeter_server"
 )
