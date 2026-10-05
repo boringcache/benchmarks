@@ -108,7 +108,7 @@ runs:
         }}"
       BUILDBUDDY_REMOTE_UPLOAD_LOCAL_RESULTS: "${{ inputs.phase == 'warm' && 'false'
         || 'true' }}"
-    run: "./scripts/run-grpc-bazel-build.sh"
+    run: ruby ./scripts/run-grpc-bazel-build.rb
   - name: Capture the build timing
     id: build_timing
     shell: bash
