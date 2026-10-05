@@ -3473,44 +3473,102 @@
       },
       "plan_sha256": "eec4dd52b91d8f3cd6698c0c4be58b3c8b1643777cfd72ddebebb1f11d054b25",
       "definition_sha256": "3ba398321d9ad7a08f2517505bc3762cb29463f172c824b254de38e59e02cc6d",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": false,
-      "execution_verified": false,
+      "valid_for_comparison": true,
+      "execution_verified": true,
       "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "cold",
-          "buildbuddy"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "buildbuddy"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 3237,
+            "min": 3237,
+            "max": 3237
+          },
+          "storage": {
+            "median": 163735443,
+            "min": 163735443,
+            "max": 163735443
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 71,
+            "min": 71,
+            "max": 71
+          },
+          "storage": {
+            "median": 163735443,
+            "min": 163735443,
+            "max": 163735443
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 2245,
+            "min": 2245,
+            "max": 2245
+          },
+          "storage": {
+            "median": 642012320,
+            "min": 642012320,
+            "max": 642012320
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 109,
+            "min": 109,
+            "max": 109
+          },
+          "storage": {
+            "median": 718160920,
+            "min": 718160920,
+            "max": 718160920
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "cold",
+          "provider": "buildbuddy",
+          "count": 1,
+          "measurement": {
+            "median": 3273,
+            "min": 3273,
+            "max": 3273
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "buildbuddy",
+          "count": 1,
+          "measurement": {
+            "median": 121,
+            "min": 121,
+            "max": 121
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        }
       ],
-      "summaries": [],
       "dispatches": [
         {
           "case_id": "grpc",
@@ -3529,13 +3587,39 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37295807809"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37295807809"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "grpc",
+          "series_id": "local-outputs-01",
+          "sample": 1,
+          "run_id": "37295807809",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37295807809",
+          "source_sha": "a901b8bb6d2564c802c4b1b77162702336e56f71",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "06a1309ad3d421131b7a2ecfb6ea90119d8a16e89bdd588dec27d594b91305cb"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/grpc/local-outputs-01/report.json",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37295807809,
+          "inventory_state": "complete",
+          "verified_files": 18,
+          "gaps": [],
+          "scope": "One gRPC cold/warm sample across three providers, including attempts, jobs, logs, artifacts, commit and workflow",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-grpc-local-outputs-2026-10-05",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-grpc-local-outputs-2026-10-05/benchmarks-37295807809.tar.gz",
+          "bundle_bytes": 2498374,
+          "sha256": "95152ee3c8bd1d0e3ef11bb97f587cc43dc3a2f34333f36d10a771707848e9c2",
+          "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "grpc",
