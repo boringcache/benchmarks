@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T08:36:30Z",
+  "generated_at": "2026-10-05T14:01:51Z",
   "entry": {
     "lane": "fresh",
     "lane_label": "Fresh",
@@ -14,12 +14,12 @@
     "category": "go",
     "step": "Go build (native build cache)",
     "headline_scenario": "cold",
-    "headline_label": "Cold Build",
-    "before": "1m 11s",
-    "after": "1m 17s",
+    "headline_label": "Cold build",
+    "before": "71.0s",
+    "after": "77.0s",
     "before_seconds": 71.0,
     "after_seconds": 77.0,
-    "faster": "0",
+    "faster": "-8",
     "comparison": {
       "paired_on_head_sha": true,
       "pairing_head_sha": "d6186956df7f400627bb2566bd907431801b191c",
@@ -120,7 +120,7 @@
         "classification": {
           "sample_valid": true,
           "reporting_mode": "comparative",
-          "validity_reason": "warm build restored the cold cache on a fresh runner",
+          "validity_reason": "warm cache restore reported a hit",
           "cache_import_status": "ok"
         },
         "product_refs": {
@@ -182,12 +182,12 @@
         "category": "go",
         "step": "Go build (native build cache)",
         "headline_scenario": "cold",
-        "headline_label": "Cold Build",
-        "before": "1m 11s",
-        "after": "1m 17s",
+        "headline_label": "Cold build",
+        "before": "71.0s",
+        "after": "77.0s",
         "before_seconds": 71.0,
         "after_seconds": 77.0,
-        "faster": "0",
+        "faster": "-8",
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": "d6186956df7f400627bb2566bd907431801b191c",
@@ -288,7 +288,7 @@
             "classification": {
               "sample_valid": true,
               "reporting_mode": "comparative",
-              "validity_reason": "warm build restored the cold cache on a fresh runner",
+              "validity_reason": "warm cache restore reported a hit",
               "cache_import_status": "ok"
             },
             "product_refs": {
@@ -345,12 +345,12 @@
         "category": "go",
         "step": "Go build (native build cache)",
         "headline_scenario": "cold",
-        "headline_label": "Commit Build",
-        "before": "0m 23s",
-        "after": "0m 30s",
+        "headline_label": "Changed-source build",
+        "before": "23.0s",
+        "after": "30.0s",
         "before_seconds": 23.0,
         "after_seconds": 30.0,
-        "faster": "0",
+        "faster": "-30",
         "comparison": {
           "paired_on_head_sha": true,
           "pairing_head_sha": "4e96acd775ea16281886cc1f2e4cb00eacd0833e",
