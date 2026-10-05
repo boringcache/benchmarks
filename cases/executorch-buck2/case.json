@@ -13,7 +13,8 @@
         "kind": "snapshot",
         "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
       }
-    ]
+    ],
+    "patch": "cache.patch"
   },
   "origin": {
     "repository": "pytorch/executorch",

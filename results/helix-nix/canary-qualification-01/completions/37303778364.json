@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "helix-nix",
+  "series_id": "canary-qualification-01",
+  "sample": 1,
+  "run_id": "37303778364",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37303778364",
+  "source_sha": "53c7e37db7f7655990fc976badaa65c0fa5bced7",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "880d2235b66f0ab9592277fa606c35fa343bc1307db3169f6fd7b80fa27acfb9"
+}

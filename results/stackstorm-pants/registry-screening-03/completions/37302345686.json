@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "case_id": "stackstorm-pants",
+  "series_id": "registry-screening-03",
+  "sample": 1,
+  "run_id": "37302345686",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37302345686",
+  "source_sha": "6aebc8f9f33a9e8de209e747b48c0a4f2fdda60a",
+  "github_conclusion": "failure",
+  "status": "failed",
+  "errors": [
+    "Workflow concluded failure",
+    "boringcache stackstorm-pants cold: failure",
+    "bazel-remote stackstorm-pants cold: failure"
+  ],
+  "evidence_manifest_sha256": "84e6a78d443c929f68096abc6c210d3a6783cfdd3f5fd444bed40c34c7b957cf"
+}

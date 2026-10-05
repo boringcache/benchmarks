@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "stackstorm-pants",
+  "series_id": "registry-qualification-01",
+  "sample": 2,
+  "run_id": "37303670119",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37303670119",
+  "source_sha": "c99edae5024cbe6e0f845f4b3e34fc691c671bc9",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "314c3c10a84c6538172ddcd5977feda6592c73d39bc987efa4250cd1757f7808"
+}
