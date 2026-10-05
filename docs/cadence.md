@@ -1,10 +1,12 @@
 # Benchmark schedules
 
-Central activation remains off. Historical repositories still own the active
+PR #42 is merged. Central activation remains off. Historical repositories still own the active
 weekly, canary and source schedules. Central scheduled jobs require
 `BENCHMARK_CADENCE_ACTIVE=true`; merging this branch does not activate them.
 Manual qualification remains available. Historical triggers must be retired
-before ownership changes, so the migration does not duplicate runs.
+before ownership changes, so the migration does not duplicate runs. The
+[cutover procedure](cadence-cutover.md) includes the observed inventory and
+prepared patches for 48 cron triggers in 17 repositories; none are applied yet.
 
 `suites/scheduled.json` selects the maintained suite plus Moon, Pants, Buck2,
 sbt and Nix: 24 source cases and 31 fresh targets. It excludes Docker corpus and
@@ -71,8 +73,12 @@ keeping strict package and dependency comparisons. The earlier Zed Nix screen
 restored both providers' package outputs correctly but failed the dependency
 baseline comparison; that failed run remains retained.
 
-Shared workflows use case, variant, lane, provider and phase labels. REAPI, Nix
-and OBS rolling results use the canonical benchmark report and retain both
+Run names use the case, optional variant, CLI channel and lane, followed by the
+series or branch and sample. For example, `n8n / turbo | Canary fresh | main /
+sample 1` and `n8n / turbo | Stable rolling | main / sample 1`. Stable tags are
+not labelled as canaries merely because an exact CLI version was supplied.
+Provider and phase remain visible in job labels. REAPI, Nix and OBS rolling
+results use the canonical benchmark report and retain both
 structured evidence and the comparison summary. Reports contain measurements
 and verification results, without performance verdicts.
 
@@ -83,22 +89,29 @@ The October 5 preflight rejected stable `v1.33.0`: it does not expose
 31-target preflight. Weekly activation must wait for a compatible stable release;
 it must not substitute a canary or silently omit the REAPI cases.
 
-The first hosted source matrix completed the cases independently and identified
+The complete controller rehearsal passed all 24 cases and planned changed-source
+rolling requests with the canary without publishing or dispatching builds.
+The earlier source matrix completed the cases independently and identified
 recipe changes in Immich, Qdrant, msgpack and Zed. Their reviewed changes are
 recorded in [the recipe review](recipe-reviews-2026-10-05.md). New source pins and
-changed recipes still require live qualification.
+changed recipes are covered by the
+[live qualification review](cadence-qualification-2026-10-05.md), which retains
+successful, failed and pending observations separately.
 
 The repository's Actions cache limit is 200 GB, with seven-day retention.
 Capacity alone does not establish that a particular rolling seed was retained
 or restored.
 
-Remaining activation requirements:
+All seventeen rolling targets passed seed and changed-source runs. Helix and
+Zed Nix each passed two fresh cold/warm samples with the common dependency seed.
+Sixty qualification and rehearsal archives have been published and verified;
+hosted checks and 252 local tests pass.
 
-- Pass hosted checks for the complete controller and rolling changes.
-- Qualify the new and changed rolling paths with actual source advancement,
-  retained seeds, verified outputs and canary CLI execution.
-- Pass the corrected Zed Nix cold/warm screen using the common dependency seed.
-- Verify publication and receipt reconciliation in a bounded rehearsal.
+Remaining activation requirements:
+- Verify main-branch workflow-token publication at cutover. The
+  [isolated publication rehearsal](../migration/rehearsals/mastodon-publication/review.md)
+  passed conditional commits, dispatch and reconciliation with the operator's
+  GitHub CLI; the hosted rehearsal passed inspection and dry-run publication.
 - Retire replaced historical cron triggers while preserving manual and release
   entrypoints; verify no outstanding duplicate dispatches.
 - After a compatible stable release, change monitoring and publication ownership

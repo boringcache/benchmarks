@@ -208,6 +208,24 @@ class BenchmarkSeriesTest < Minitest::Test
     assert_empty Dir[File.join(@directory, "runs", "*.json")]
   end
 
+  def test_phase_bundles_can_retain_native_counters_alongside_the_canonical_record
+    value = record
+    directory = phase_export([value], artifact_name: "phase-example-boringcache-release-rolling-commit",
+      filenames: ["example-boringcache-release-rolling-commit.json"],
+      extra_files: {"ccache-native.json" => {"direct_cache_hit" => 8},
+        "ccache-rolling.json" => {"schema_version" => 2, "timing" => {"build_seconds" => 3}}})
+    result = CollectSeries.call(@directory, evidence_directory: directory, sample: 1)
+    assert_equal 1, result["records"]
+    assert_equal value, JSON.parse(File.read(File.join(@directory, "runs", "1-boringcache-commit.json")))
+  end
+
+  def test_canonical_phase_filename_cannot_hide_a_missing_series_contract
+    directory = phase_export([record.except("series")],
+      filenames: ["example-boringcache-release-rolling-commit.json"])
+    assert_raises(BenchmarkSeries::Error) { CollectSeries.call(@directory, evidence_directory: directory, sample: 1) }
+    assert_empty Dir[File.join(@directory, "runs", "*.json")]
+  end
+
   def test_collection_requires_the_original_dispatch_and_matching_run
     directory = phase_export([record.merge("github" => {"run_id" => "2"})])
     assert_raises(BenchmarkSeries::Error) { CollectSeries.call(@directory, evidence_directory: directory, sample: 1) }

@@ -1,0 +1,42 @@
+{
+  "case_id": "obs-studio",
+  "repository": "boringcache/benchmarks",
+  "workflow": "obs-rolling-benchmark.yml",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "obsproject/obs-studio",
+    "pins": [
+      {
+        "path": "payload/benchmark-source.env",
+        "revision": "97ca37291c4e5f5c5c8a0719b8c7b897d2fbc6b5",
+        "kind": "env"
+      },
+      {
+        "path": "payload/benchmark-source.env",
+        "revision": "04d8967656361ab4b90ccaeec1c591f9c024449d",
+        "kind": "env"
+      }
+    ]
+  },
+  "lane": "rolling",
+  "inputs": {
+    "cli_version": "vcli-canary-7a5b27146ebe",
+    "cache_scope": "cadence-20261005-obs-studio-xcode-v2",
+    "cache_tool": "xcode",
+    "series_id": "cadence-rolling-advance-xcode-02",
+    "sample": "1"
+  },
+  "phases": [
+    "commit"
+  ],
+  "variants": [
+    "ccache",
+    "xcode"
+  ],
+  "schema_version": 1,
+  "requested_at": "2026-10-05T14:38:30Z",
+  "ref": "cadence-rehearsal-rolling",
+  "state": "requested",
+  "run_id": 37326340221,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37326340221"
+}

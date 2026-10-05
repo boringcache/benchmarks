@@ -1,0 +1,26 @@
+[
+  {
+    "writer": "a",
+    "error": "Source publication failed: is at 332d1ef92f7a1fd59d1a11f33a9f7f85cc0858ff but expected dbb5e9401a676589cfeabef936bcf08436bb0e10",
+    "conflicts": [
+      {
+        "type": "FORBIDDEN",
+        "path": [
+          "createCommitOnBranch"
+        ],
+        "locations": [
+          {
+            "line": 1,
+            "column": 48
+          }
+        ],
+        "message": "is at 332d1ef92f7a1fd59d1a11f33a9f7f85cc0858ff but expected dbb5e9401a676589cfeabef936bcf08436bb0e10"
+      }
+    ]
+  },
+  {
+    "writer": "b",
+    "commit": "332d1ef92f7a1fd59d1a11f33a9f7f85cc0858ff",
+    "conflicts": []
+  }
+]

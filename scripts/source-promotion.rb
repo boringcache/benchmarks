@@ -122,7 +122,15 @@ module SourcePromotion
         errors = result.fetch("errors", [])
         # Only an optimistic-concurrency conflict is safe to retry. Other API
         # failures may have an uncertain outcome and need their receipt inspected.
-        raise Error, "Source publication failed: #{errors.map { |error| error['message'] }.join('; ')}" unless errors.any? { |error| error["type"] == "STALE_DATA" }
+        retryable = errors.any? && errors.all? do |error|
+          # A ref-lock race after GraphQL's initial check is reported as
+          # FORBIDDEN. Retry only its exact old/new SHA response, not permission
+          # failures or an uncertain request outcome.
+          race = error["message"].to_s.match(/\Ais at ([0-9a-f]{40}) but expected #{Regexp.escape(head)}\z/)
+          error["type"] == "STALE_DATA" ||
+            (error["type"] == "FORBIDDEN" && error["path"] == ["createCommitOnBranch"] && race && race[1] != head)
+        end
+        raise Error, "Source publication failed: #{errors.map { |error| error['message'] }.join('; ')}" unless retryable
       end
       raise Error, "Source publication could not acquire the current branch head"
     end

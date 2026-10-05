@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "n8n",
+  "series_id": "cadence-rolling-seed-runners",
+  "sample": 1,
+  "run_id": "37321762921",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37321762921",
+  "source_sha": "410dd8bbf3d13a5a4dbe14acb9d66d1923c3d361",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "8f8db69bea3b4b1a7cc45f393989c159db64f5e95d90152f7beb9484b6382961"
+}

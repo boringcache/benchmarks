@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "helix-nix",
+  "series_id": "cadence-fresh-01",
+  "sample": 2,
+  "run_id": "37325075463",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37325075463",
+  "source_sha": "a7d4c03f6e18931e07e20e6e9149c9ee30f99713",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "75038a56e31f991df749665d605a95fc42c71a9b68c90c9bd5545534c0df3a25"
+}

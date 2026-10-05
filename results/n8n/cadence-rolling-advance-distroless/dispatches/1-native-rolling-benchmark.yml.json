@@ -1,0 +1,40 @@
+{
+  "case_id": "n8n",
+  "repository": "boringcache/benchmarks",
+  "workflow": "native-rolling-benchmark.yml",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "n8n-io/n8n",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "206fc6f317e353a98f7359801376a22d6bd136a2",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "lane": "rolling",
+  "inputs": {
+    "case_id": "n8n",
+    "cli_version": "vcli-canary-7a5b27146ebe",
+    "cache_scope": "cadence-20261005-n8n-distroless",
+    "variant": "distroless",
+    "series_id": "cadence-rolling-advance-distroless",
+    "sample": "1"
+  },
+  "phases": [
+    "commit"
+  ],
+  "variants": [
+    "turbo",
+    "docker",
+    "runners",
+    "distroless"
+  ],
+  "schema_version": 1,
+  "requested_at": "2026-10-05T14:14:43Z",
+  "ref": "cadence-rehearsal-rolling",
+  "state": "requested",
+  "run_id": 37323140444,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323140444"
+}

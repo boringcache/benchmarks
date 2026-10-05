@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "case_id": "msgpack-sbt",
+  "series_id": "cadence-rolling-advance",
+  "created_at": "2026-10-05T14:13:46Z",
+  "lane": "rolling",
+  "phases": [
+    "commit"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "80307420630483e2c47545a5deeca56f262b5772eb594db79cde6c03b2c477b2",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "msgpack-sbt",
+    "cli_version": "vcli-canary-7a5b27146ebe",
+    "cache_scope": "cadence-20261005-msgpack-sbt"
+  },
+  "comparison": {
+    "question": "Does sbt reuse MessagePack compilation and test results on a clean worker?",
+    "providers": [
+      "boringcache",
+      "bazel-remote"
+    ],
+    "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
+    "primary_metric": "correctness",
+    "storage": "unmeasured",
+    "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+    "sample_count": 2
+  },
+  "source": {
+    "repository": "msgpack/msgpack-java",
+    "revision": "ec75ffc01364adc6ea9b5f4d9129fd63602e6a45",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "revision": "ec75ffc01364adc6ea9b5f4d9129fd63602e6a45",
+        "kind": "snapshot"
+      }
+    ],
+    "patch": "cache.patch"
+  },
+  "verification": [
+    "Require the declared native command to succeed",
+    "Require declared outputs and successful output checks",
+    "Require native remote-hit evidence and the same output hashes on the warm worker",
+    "Require registry shutdown to complete successfully"
+  ],
+  "plan_sha256": "cd2354c80ad3f6fa4d0543772b2ced703b776abc0cdadab4a02aa9d4889483e6"
+}

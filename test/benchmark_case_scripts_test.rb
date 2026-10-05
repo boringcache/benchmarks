@@ -318,6 +318,21 @@ class BenchmarkCaseScriptsTest < Minitest::Test
     end
   end
 
+  def test_continuous_obs_report_keeps_an_absent_cache_hit_unmeasured
+    with_case("obs-studio") do |directory|
+      FileUtils.cp(File.join(ROOT, "scripts/canonical/benchmark-report.rb"), File.join(directory, "scripts/benchmark-report.rb"))
+      _, error, status = run_script(directory, "write_phase_result", "--surface", "xcode",
+        "--strategy", "boringcache", "--phase", "rolling", "--continuous", "--cache-hit", "",
+        "--source-sha", "a" * 40, "--restore-seconds", "0", "--build-seconds", "3")
+      assert status.success?, error
+      native = JSON.parse(File.read(File.join(directory, "benchmark-results/xcode-boringcache-rolling.json")))
+      assert_equal "unmeasured", native.dig("classification", "cache_import_status")
+      record = JSON.parse(File.read(File.join(directory, "benchmark-results/obs-studio-boringcache-xcode-rolling-commit.json")))
+      assert_nil record.dig("cache", "hit")
+      assert_equal 3.0, record.dig("timing", "build_seconds")
+    end
+  end
+
   def test_selected_recipe_contract_checks_each_declared_plan
     with_case("zed") do |directory|
       source = File.join(directory, "upstream")
@@ -370,6 +385,31 @@ class BenchmarkCaseScriptsTest < Minitest::Test
       _, error, status = run_script(directory, "verify-upstream-recipe")
       refute status.success?
       assert_includes error, "changes the reviewed file set"
+    end
+  end
+
+  def test_prepared_snapshot_recipe_uses_only_its_verified_upstream_parent
+    with_case("hugo-go") do |directory|
+      git = ->(*args) { Open3.capture2e("git", "-C", directory, "-c", "user.name=Benchmark test", "-c", "user.email=benchmark@localhost", "-c", "commit.gpgsign=false", *args) }
+      git.call("init")
+      File.write(File.join(directory, "recipe.txt"), "parent recipe\n")
+      git.call("add", ".")
+      _, status = git.call("commit", "-m", "Upstream source")
+      assert status.success?
+      revision, = git.call("rev-parse", "HEAD")
+      contract = {"upstream_files" => {"recipe.txt" => Digest::SHA256.hexdigest("new recipe\n")},
+        "upstream_files_by_revision" => {revision.strip => {"recipe.txt" => Digest::SHA256.hexdigest("parent recipe\n")}}, "commands" => {}}
+      File.write(File.join(directory, "recipe-contract.json"), JSON.generate(contract))
+      git.call("add", ".")
+      git.call("commit", "-m", "Prepare workload")
+      context = File.join(directory, "benchmark-context.json")
+      File.write(context, JSON.generate({"source" => {"revision" => revision.strip}}))
+      _, error, status = run_script(directory, "verify-upstream-recipe", directory)
+      assert status.success?, error
+      git.call("commit", "--allow-empty", "-m", "Unexpected wrapper")
+      _, error, status = run_script(directory, "verify-upstream-recipe", directory)
+      refute status.success?
+      assert_includes error, "does not have the declared upstream parent"
     end
   end
 

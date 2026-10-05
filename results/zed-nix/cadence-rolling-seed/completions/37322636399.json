@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "zed-nix",
+  "series_id": "cadence-rolling-seed",
+  "sample": 1,
+  "run_id": "37322636399",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37322636399",
+  "source_sha": "694acf2b29d055602938d869ef1815c42de6ee11",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "92a34678c864473869b9cad390bfbed9cc47760dc727a0ed17f43691a744855e"
+}

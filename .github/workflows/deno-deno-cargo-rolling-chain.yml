@@ -1,8 +1,6 @@
 ---
 name: 'deno: Deno Cargo rolling run'
-run-name: "${{ github.event_name == 'push' && 'Deno Cargo rolling pinned source update'
-  || format('Deno Cargo rolling {0} | {1} to {2}', inputs.cache_profile || 'cargo-product',
-  inputs.base_sha, inputs.head_sha) }}"
+run-name: "Deno Cargo / ${{ inputs.cache_profile || 'cargo-product' }} | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} rolling | ${{ inputs.base_sha }} to ${{ inputs.head_sha }}"
 permissions:
   actions: read
   contents: read

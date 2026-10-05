@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "posthog",
+  "series_id": "cadence-rolling-seed-layers",
+  "sample": 1,
+  "run_id": "37321772493",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37321772493",
+  "source_sha": "410dd8bbf3d13a5a4dbe14acb9d66d1923c3d361",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "663ed2039ee1f1f48a2cf710d82909d9f3b7530f78dc1fea94b2a5e984134623"
+}

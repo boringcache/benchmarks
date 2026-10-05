@@ -1,10 +1,6 @@
 ---
 name: 'grpc: gRPC Bazel Fresh'
-run-name: "${{ format('Benchmark {0} | {1}', github.event_name == 'pull_request' &&
-  'Validation' || inputs.cli_version != '' && 'Canary' || 'Fresh', github.event_name
-  == 'schedule' && 'Weekly' || github.event_name == 'pull_request' && format('PR #{0}',
-  github.event.pull_request.number) || format('Manual dispatch ({0})', github.ref_name))
-  }}"
+run-name: "gRPC Bazel | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} fresh | ${{ inputs.series_id || github.ref_name }} / sample ${{ inputs.sample || '1' }}"
 permissions:
   contents: read
   actions: read

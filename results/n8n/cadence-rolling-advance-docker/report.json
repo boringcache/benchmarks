@@ -1,0 +1,573 @@
+{
+  "schema_version": 1,
+  "plan_sha256": "85ee37fee93a651e47f12c7a5fff50734381e919b02763f2c371359baa239de3",
+  "complete": true,
+  "valid_for_comparison": false,
+  "failures": [],
+  "methodology_issues": [
+    "Rolling seed and changed-source sequence are unverified."
+  ],
+  "execution_verified": true,
+  "missing_completions": [],
+  "failed_completions": [],
+  "completions": [
+    {
+      "schema_version": 1,
+      "case_id": "n8n",
+      "series_id": "cadence-rolling-advance-docker",
+      "sample": 1,
+      "run_id": "37323145174",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323145174",
+      "source_sha": "915ea2921d4b4d23f0238a4b7e28ecce1bbcc880",
+      "github_conclusion": "success",
+      "status": "success",
+      "errors": [],
+      "evidence_manifest_sha256": "6ad802f0c8845d5f11e782410c92ba8ef0ac2ac46866b617108445404349e986"
+    }
+  ],
+  "publication": "unreviewed",
+  "evidence_preservation": "requires-review",
+  "primary_metric": "build_and_reuse_seconds",
+  "missing": [],
+  "summaries": [
+    {
+      "phase": "commit",
+      "provider": "actions-cache",
+      "count": 1,
+      "measurement": {
+        "median": 178,
+        "min": 178,
+        "max": 178
+      },
+      "storage": null,
+      "storage_measured_count": 0
+    },
+    {
+      "phase": "commit",
+      "provider": "boringcache",
+      "count": 1,
+      "measurement": {
+        "median": 152,
+        "min": 152,
+        "max": 152
+      },
+      "storage": {
+        "median": 483880710,
+        "min": 483880710,
+        "max": 483880710
+      },
+      "storage_measured_count": 1
+    }
+  ],
+  "records": [
+    {
+      "schema_version": 1,
+      "benchmark": "n8n-docker",
+      "strategy": "actions-cache",
+      "lane": "rolling",
+      "phase": "commit",
+      "variant": "docker",
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "n8n",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "39c7440d0ecceca994df1dbeb3c7953d4571dd8fef30105f1639c50e53b17de5",
+        "source": {
+          "repository": "n8n-io/n8n",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "206fc6f317e353a98f7359801376a22d6bd136a2",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-n8n",
+          "branch": "main",
+          "revision": "dd69b0de722c645f9b4719556e390446010f7fcc"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "Turbo variant: built CLI entrypoint exists; Docker variants: freshly loaded output image exists"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "n8n"
+              },
+              "historical_workflow": "n8n-n8n-docker-fresh-benchmark.yml",
+              "variants": [
+                "turbo",
+                "docker",
+                "runners",
+                "distroless"
+              ],
+              "variant_input": "variant"
+            },
+            {
+              "path": ".github/workflows/n8n-n8n-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/n8n-n8n-docker-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/native-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "n8n"
+              },
+              "variants": [
+                "turbo",
+                "docker",
+                "runners",
+                "distroless"
+              ],
+              "variant_input": "variant"
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 17,
+          "cache_tags": {
+            "n8n-docker": "{scope}-docker",
+            "n8n-turbo-local": "{scope}-turbo"
+          },
+          "native": {
+            "action": ".github/actions/n8n-turbo-benchmark",
+            "benchmark_id": "n8n",
+            "fresh_inputs": {
+              "node_version": "26.7.0"
+            },
+            "rolling_inputs": {
+              "node_version": "26.7.0"
+            },
+            "variants": {
+              "turbo": {},
+              "docker": {
+                "action": ".github/actions/n8n-docker-benchmark",
+                "benchmark_id": "n8n-docker",
+                "fresh_inputs": {
+                  "dockerfile_path": "upstream/docker/images/n8n/Dockerfile",
+                  "image": "n8n-benchmark",
+                  "load_image": "true"
+                },
+                "rolling_inputs": {
+                  "dockerfile_path": "upstream/docker/images/n8n/Dockerfile",
+                  "image": "n8n-benchmark",
+                  "load_image": "true"
+                }
+              },
+              "runners": {
+                "action": ".github/actions/n8n-docker-benchmark",
+                "benchmark_id": "n8n-runners",
+                "fresh_inputs": {
+                  "dockerfile_path": "upstream/docker/images/runners/Dockerfile",
+                  "image": "n8n-runners-benchmark",
+                  "load_image": "true"
+                },
+                "rolling_inputs": {
+                  "dockerfile_path": "upstream/docker/images/runners/Dockerfile",
+                  "image": "n8n-runners-benchmark",
+                  "load_image": "true"
+                }
+              },
+              "distroless": {
+                "action": ".github/actions/n8n-docker-benchmark",
+                "benchmark_id": "n8n-runners-distroless",
+                "fresh_inputs": {
+                  "dockerfile_path": "upstream/docker/images/runners/Dockerfile.distroless",
+                  "image": "n8n-runners-distroless-benchmark",
+                  "load_image": "true"
+                },
+                "rolling_inputs": {
+                  "dockerfile_path": "upstream/docker/images/runners/Dockerfile.distroless",
+                  "image": "n8n-runners-distroless-benchmark",
+                  "load_image": "true"
+                }
+              }
+            }
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 5,
+        "build_seconds": 173,
+        "workflow_seconds": 384,
+        "total_seconds": 178,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+        "build_and_reuse_seconds": 178
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": null,
+        "workspace": null,
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": {
+          "key": "n8n-docker-rolling-cadence-20261005-n8n-docker",
+          "complete": false,
+          "measured_bytes": 0,
+          "total_bytes": null,
+          "observations": []
+        }
+      },
+      "source": {
+        "repository": "n8n-io/n8n",
+        "sha": "206fc6f317e353a98f7359801376a22d6bd136a2"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37323145174",
+        "run_attempt": "1",
+        "job": "publish",
+        "workflow": "Native comparison rolling",
+        "ref_name": "cadence-rehearsal-rolling",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000174488",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37323145174-1",
+      "series": {
+        "id": "cadence-rolling-advance-docker",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "Turbo variant: built CLI entrypoint exists; Docker variants: freshly loaded output image exists"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37323145174"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "n8n-docker",
+      "strategy": "boringcache",
+      "lane": "rolling",
+      "phase": "commit",
+      "variant": "docker",
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "n8n",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "39c7440d0ecceca994df1dbeb3c7953d4571dd8fef30105f1639c50e53b17de5",
+        "source": {
+          "repository": "n8n-io/n8n",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "206fc6f317e353a98f7359801376a22d6bd136a2",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-n8n",
+          "branch": "main",
+          "revision": "dd69b0de722c645f9b4719556e390446010f7fcc"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "Turbo variant: built CLI entrypoint exists; Docker variants: freshly loaded output image exists"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "n8n"
+              },
+              "historical_workflow": "n8n-n8n-docker-fresh-benchmark.yml",
+              "variants": [
+                "turbo",
+                "docker",
+                "runners",
+                "distroless"
+              ],
+              "variant_input": "variant"
+            },
+            {
+              "path": ".github/workflows/n8n-n8n-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/n8n-n8n-docker-benchmark.yml",
+              "lane": "diagnostic",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/native-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "n8n"
+              },
+              "variants": [
+                "turbo",
+                "docker",
+                "runners",
+                "distroless"
+              ],
+              "variant_input": "variant"
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 17,
+          "cache_tags": {
+            "n8n-docker": "{scope}-docker",
+            "n8n-turbo-local": "{scope}-turbo"
+          },
+          "native": {
+            "action": ".github/actions/n8n-turbo-benchmark",
+            "benchmark_id": "n8n",
+            "fresh_inputs": {
+              "node_version": "26.7.0"
+            },
+            "rolling_inputs": {
+              "node_version": "26.7.0"
+            },
+            "variants": {
+              "turbo": {},
+              "docker": {
+                "action": ".github/actions/n8n-docker-benchmark",
+                "benchmark_id": "n8n-docker",
+                "fresh_inputs": {
+                  "dockerfile_path": "upstream/docker/images/n8n/Dockerfile",
+                  "image": "n8n-benchmark",
+                  "load_image": "true"
+                },
+                "rolling_inputs": {
+                  "dockerfile_path": "upstream/docker/images/n8n/Dockerfile",
+                  "image": "n8n-benchmark",
+                  "load_image": "true"
+                }
+              },
+              "runners": {
+                "action": ".github/actions/n8n-docker-benchmark",
+                "benchmark_id": "n8n-runners",
+                "fresh_inputs": {
+                  "dockerfile_path": "upstream/docker/images/runners/Dockerfile",
+                  "image": "n8n-runners-benchmark",
+                  "load_image": "true"
+                },
+                "rolling_inputs": {
+                  "dockerfile_path": "upstream/docker/images/runners/Dockerfile",
+                  "image": "n8n-runners-benchmark",
+                  "load_image": "true"
+                }
+              },
+              "distroless": {
+                "action": ".github/actions/n8n-docker-benchmark",
+                "benchmark_id": "n8n-runners-distroless",
+                "fresh_inputs": {
+                  "dockerfile_path": "upstream/docker/images/runners/Dockerfile.distroless",
+                  "image": "n8n-runners-distroless-benchmark",
+                  "load_image": "true"
+                },
+                "rolling_inputs": {
+                  "dockerfile_path": "upstream/docker/images/runners/Dockerfile.distroless",
+                  "image": "n8n-runners-distroless-benchmark",
+                  "load_image": "true"
+                }
+              }
+            }
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 152,
+        "workflow_seconds": 351,
+        "total_seconds": 152,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+        "build_and_reuse_seconds": 152
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": {
+          "import_tags": [
+            "n8n-docker-rolling-cadence-20261005-n8n-docker-docker-linux-amd64",
+            "n8n-docker-rolling-cadence-20261005-n8n-docker-docker-ubuntu-24-x86_64"
+          ],
+          "planned_import_refs": 2,
+          "export_tag": "n8n-docker-rolling-cadence-20261005-n8n-docker-docker-linux-amd64"
+        },
+        "tag": "n8n-docker-rolling-cadence-20261005-n8n-docker-docker",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": 483880710,
+        "storage_source": "boringcache-check",
+        "storage_breakdown": {
+          "workspace": "boringcache/benchmarks",
+          "tags": [
+            "n8n-docker-rolling-cadence-20261005-n8n-docker-docker-linux-amd64"
+          ],
+          "complete": true,
+          "measured_bytes": 483880710,
+          "unmeasured_tags": [],
+          "total_bytes": 483880710,
+          "observations": [
+            {
+              "requested_tag": "n8n-docker-rolling-cadence-20261005-n8n-docker-docker-linux-amd64",
+              "tag": "n8n-docker-rolling-cadence-20261005-n8n-docker-docker-linux-amd64",
+              "status": "hit",
+              "cache_type": "cache_entry",
+              "cache_entry_id": "68ec16be-5a23-408a-aaef-3d4cdcd6d219",
+              "manifest_root_digest": "sha256:340b591e8568dcd06731dc4a0585f64e5c735a7da2b952f6eb31614e1190c243",
+              "kv_total_size": 0,
+              "compressed_size": 483880710,
+              "size": 483880710
+            }
+          ]
+        }
+      },
+      "source": {
+        "repository": "n8n-io/n8n",
+        "sha": "206fc6f317e353a98f7359801376a22d6bd136a2"
+      },
+      "product_refs": {
+        "schema_version": 1,
+        "cli_version": "1.34.0",
+        "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+        "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+      },
+      "action": {
+        "resolved_mode": "docker",
+        "resolved_tags": [
+          "n8n-docker-rolling-cadence-20261005-n8n-docker-docker-linux-amd64"
+        ],
+        "trust_state": {
+          "status": "publish",
+          "event_name": "workflow_dispatch",
+          "requested_policy": "publish",
+          "resolved_policy": "publish",
+          "write_allowed": true,
+          "decision_source": "cli",
+          "reason": "explicit_request",
+          "provider": "github-actions",
+          "detail": "Publication updates the published cache tag.",
+          "next_step": "Let the run finish; the next matching run restores what it publishes.",
+          "token_capabilities": {
+            "restore": true,
+            "stage": true,
+            "save": true
+          }
+        },
+        "diagnostics_level": "off"
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37323145174",
+        "run_attempt": "1",
+        "job": "publish",
+        "workflow": "Native comparison rolling",
+        "ref_name": "cadence-rehearsal-rolling",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000174489",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37323145174-1",
+      "series": {
+        "id": "cadence-rolling-advance-docker",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "Turbo variant: built CLI entrypoint exists; Docker variants: freshly loaded output image exists"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37323145174"
+      ]
+    }
+  ],
+  "exclusions": []
+}
