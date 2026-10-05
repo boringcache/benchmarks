@@ -39,6 +39,13 @@ class BenchmarkCaseScriptsTest < Minitest::Test
           assert_includes arguments, "--remote_instance_name=test-series"
         end
       end
+      File.unlink(output)
+      _, errors, status = Open3.capture3(environment.merge("BAZEL_CACHE_STRATEGY" => "buildbuddy",
+        "BUILDBUDDY_REMOTE_INSTANCE_NAME" => ""), RbConfig.ruby,
+        File.join(directory, "scripts/run-grpc-bazel-build.rb"), chdir: directory)
+      refute status.success?
+      assert_includes errors, "BUILDBUDDY_REMOTE_INSTANCE_NAME must not be empty"
+      refute File.exist?(output)
     end
   end
 
