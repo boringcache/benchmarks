@@ -10,6 +10,13 @@
   ],
   "prepare": [
     [
+      "git",
+      "submodule",
+      "update",
+      "--init",
+      "--recursive"
+    ],
+    [
       "pants",
       "--version"
     ]
