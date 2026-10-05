@@ -20,6 +20,10 @@ source verifier and canonical reporter. Tool installation and dependency
 preparation run before timing. Required dependency tasks that the native client
 runs again remain inside the command measurement.
 
+C++ rules explicitly enable cache uploads through the upstream runtime wrapper.
+The execution platform allows uploads only during the cold phase; generator
+rules retain their upstream cache policy.
+
 ## Cache and verification
 
 BoringCache runs through `boringcache ci run` and `cache-registry --reapi-port`.

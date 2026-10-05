@@ -70,7 +70,8 @@ module ReapiSetup
       "--workspace", "boringcache/benchmarks", "--cache-tag", BenchmarkPhase.scope(ENV),
       "--source-repository", context.dig("source", "repository"), "--source-sha", context.dig("source", "revision"),
       "--build-seconds", timings.fetch("build_seconds").to_s, "--restore-or-setup-seconds", timings.fetch("restore_or_setup_seconds").to_s,
-      "--save-seconds", timings.fetch("save_seconds").to_s, "--cache-hit", (ENV.fetch("PHASE") == "warm").to_s]
+      "--save-seconds", timings.fetch("save_seconds").to_s]
+    args += ["--cache-hit", "true"] if ReapiClient.remote_cache_hit?
     if ENV.fetch("PROVIDER") == "boringcache"
       version, status = Open3.capture2("boringcache", "--version")
       raise "Cannot read CLI version" unless status.success?
