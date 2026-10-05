@@ -4,4 +4,4 @@ workspace = "boringcache/benchmarks"
 tag = "helix-nix"
 no-platform = true
 no-git = true
-command = ["nix", "build", "github:helix-editor/helix/ba40e547426b0f9896c8bdc699a4ab11f2b37dbc#default", "-L", "--no-update-lock-file", "--option", "accept-flake-config", "false"]
+command = ["nix", "build", "github:helix-editor/helix/e0842e6aaebf53a317fcb686b08b2ac2413d251e#default", "-L", "--no-update-lock-file", "--option", "accept-flake-config", "false"]

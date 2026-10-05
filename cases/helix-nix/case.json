@@ -6,12 +6,12 @@
   "workspace": "boringcache/benchmarks",
   "source": {
     "repository": "helix-editor/helix",
-    "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc",
+    "revision": "e0842e6aaebf53a317fcb686b08b2ac2413d251e",
     "pins": [
       {
         "path": "proposal.md",
         "kind": "snapshot",
-        "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc"
+        "revision": "e0842e6aaebf53a317fcb686b08b2ac2413d251e"
       }
     ]
   },

@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "case_id": "msgpack-sbt",
+  "series_id": "cadence-rolling-seed",
+  "created_at": "2026-10-05T14:09:57Z",
+  "lane": "rolling",
+  "phases": [
+    "commit"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "341246f8f54281a887bc161ede26db9479390372429d49012c2db909a153b614",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "msgpack-sbt",
+    "cli_version": "vcli-canary-7a5b27146ebe",
+    "cache_scope": "cadence-20261005-msgpack-sbt"
+  },
+  "comparison": {
+    "question": "Does sbt reuse MessagePack compilation and test results on a clean worker?",
+    "providers": [
+      "boringcache",
+      "bazel-remote"
+    ],
+    "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
+    "primary_metric": "correctness",
+    "storage": "unmeasured",
+    "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+    "sample_count": 2
+  },
+  "source": {
+    "repository": "msgpack/msgpack-java",
+    "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+        "kind": "snapshot"
+      }
+    ],
+    "patch": "cache.patch"
+  },
+  "verification": [
+    "Require the declared native command to succeed",
+    "Require declared outputs and successful output checks",
+    "Require native remote-hit evidence and the same output hashes on the warm worker",
+    "Require registry shutdown to complete successfully"
+  ],
+  "plan_sha256": "e563c124fae3f2f6a44f5c7921ea7dfc79ded103d502dd402e643463bab6cde7"
+}
