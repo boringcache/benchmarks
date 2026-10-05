@@ -1,0 +1,58 @@
+name: Preserve cadence qualification evidence
+run-name: Cadence evidence | Zed Nix qualification
+on:
+  push:
+    branches: [cadence-evidence]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  preserve:
+    name: Preserve run ${{ matrix.run_id }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    permissions:
+      contents: write
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - run_id: '37320869828'
+            series: cadence-fresh-01
+            sample: 1
+          - run_id: '37327069343'
+            series: cadence-fresh-01
+            sample: 2
+          - run_id: '37322636399'
+            series: cadence-rolling-seed
+            sample: 1
+          - run_id: '37323174641'
+            series: cadence-rolling-advance
+            sample: 1
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+        with:
+          ruby-version: '3.4'
+      - name: Preserve completed run and verify published archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVIDENCE_RUN_ID: ${{ matrix.run_id }}
+          EVIDENCE_SERIES: ${{ matrix.series }}
+          EVIDENCE_SAMPLE: ${{ matrix.sample }}
+        run: |
+          ruby scripts/preserve-cadence-run.rb
+      - name: Retain collection and publication receipts
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: cadence-evidence-${{ matrix.run_id }}
+          path: |
+            /tmp/cadence-archive-index.json
+            /tmp/cadence-evidence-${{ matrix.run_id }}/manifest.json
+            results/zed-nix/${{ matrix.series }}/
+          if-no-files-found: error
