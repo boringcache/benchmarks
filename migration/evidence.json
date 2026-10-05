@@ -100,6 +100,20 @@
       "publication_verification": "Downloaded the published archive, checked its SHA-256, extracted it, and verified every listed file and the run inventory",
       "verified_on": "2026-10-05",
       "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37376762709,
+      "verified_files": 19,
+      "gaps": [],
+      "inventory_state": "complete",
+      "sha256": "c6cf0d80d3cd727db0b572cec06badc9d0d44c745e33db3a567705a1cc0c0c92",
+      "bundle_bytes": 16188649,
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-native-adapters-2026-10-05",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-native-adapters-2026-10-05/benchmarks-37376762709.tar.gz",
+      "publication_verification": "Downloaded the published archive, checked its SHA-256, extracted it, and verified every listed file and the run inventory",
+      "verified_on": "2026-10-05",
+      "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow"
     }
   ],
   "exports": [

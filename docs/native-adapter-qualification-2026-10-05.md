@@ -59,7 +59,7 @@ samples must use predeclared plans and fresh scopes.
 
 ## First completed observations
 
-OpenCut Moon, Gogs Moon, StackStorm Pants and MsgPack sbt completed one cold and
+OpenCut Moon, Gogs Moon, StackStorm Pants, ExecuTorch Buck2 and MsgPack sbt completed one cold and
 read-only warm sample on both BoringCache and bazel-remote. Warm records report
 remote hits and verified matching outputs. Completion checks passed, and the
 original logs and artifacts were archived and downloaded again for verification.
@@ -71,5 +71,6 @@ The new `native-mbx-02` series moves `build` before `--config` in the reviewed
 Cargo layer plans; both argument orders load the same explicit configuration
 in a local compile probe. The pinned mbx binary forwards the revised arguments
 to Cargo. Source revisions, configuration path, targets and packages are unchanged.
-Buck2 and the remaining compiler-cache observations were still running at this
-checkpoint. Cadence activation remains held.
+The replacement [Zed mbx run 37377947724](https://github.com/boringcache/benchmarks/actions/runs/37377947724) reached its primary build step with the revised arguments.
+The compiler-cache observations are still running; successful cold publication
+and changed-source reuse remain unverified. Cadence activation remains held.
