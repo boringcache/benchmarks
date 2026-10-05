@@ -4,16 +4,20 @@ Question: Does the pinned workload produce verified output and reuse its declare
 
 Measured scope: Declared Docker build, including dependencies, cache import/export and declared image output
 
-Status: all declared observations collected; 0 failed. Publication requires review.
+Observations: 2/2 recorded; 0 failed; 0 missing.
 
-Execution: unqualified; missing or failed job completion checks. Timings alone do not qualify the series.
+Completion checks: missing or failed.
 
-Queue time, dependency setup outside the declared scope, and job duration are context. They are excluded from the comparison. No observations were excluded.
+Publication: unreviewed.
 
-| Phase | Provider | Successful observations | Median correctness | Range | Storage median (bytes) | Storage observations |
-| --- | --- | ---: | ---: | --- | ---: | ---: |
-| cold | boringcache | 1 |  |  | unmeasured | 0 |
-| warm | boringcache | 1 |  |  | unmeasured | 0 |
+| Phase | Provider | Successful observations | Storage median (bytes) | Storage observations |
+| --- | --- | ---: | ---: | ---: |
+| Cold build | BoringCache | 1 | unmeasured | 0 |
+| Warm build | BoringCache | 1 | unmeasured | 0 |
+
+Comparison checks:
+
+- This series does not declare a comparison of provider performance.
 
 Run 37018647268 failed completion checks:
 
@@ -22,4 +26,11 @@ Run 37018647268 failed completion checks:
 - 2026-10-02T14:19:17.9309442Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 "Core Schema" specification: fail-on-cache-miss
 - 2026-10-02T14:19:17.9309396Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 "Core Schema" specification: fail-on-cache-miss
 
-Each run record retains its source, runner environment, verification, provider storage source, and evidence links. Missing storage is unmeasured; it is not zero. Original Actions URLs remain subject to retention; durable evidence publication must be verified before publication review.
+## Observations
+
+| Sample | Provider | Phase | Cache setup/restore (s) | Build (s) | Build and cache reuse (s) | Storage (bytes) | Storage source | Cache | Record |
+| ---: | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
+| 1 | BoringCache | Cold build | 0 | 163.0 | 163.0 | unmeasured | unmeasured | reuse not measured (1 refs planned) | [JSON](runs/1-boringcache-cold.json) |
+| 1 | BoringCache | Warm build | 0 | 152.0 | 152.0 | unmeasured | unmeasured | reuse not measured (1 refs planned) | [JSON](runs/1-boringcache-warm.json) |
+
+[Full records and checks](report.json)

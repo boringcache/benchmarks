@@ -45,6 +45,12 @@ class BenchmarkCatalogTest < Minitest::Test
         "status" => status, "errors" => status == "success" ? [] : ["Report upload failed"]})
   end
 
+  def test_catalog_does_not_include_interpretation_documents
+    File.write(File.join(@directory, "interpretation.md"), "A separate historical review")
+    refute entry.key?("interpretation_path")
+    assert File.file?(File.join(@directory, "interpretation.md"))
+  end
+
   def test_planned_requested_and_incomplete_states_do_not_claim_execution
     assert_equal "planned", entry.fetch("state")
     refute entry.fetch("execution_verified")

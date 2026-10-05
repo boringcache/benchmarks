@@ -8,6 +8,21 @@ require "tmpdir"
 
 class BenchmarkWorkflowGuardrailsTest < Minitest::Test
   SCRIPT = File.expand_path("../scripts/check-workflow-guardrails.rb", __dir__)
+  def test_unrelated_cases_cannot_share_a_central_workflow_queue
+    with_repo do |repo_dir|
+      write_workflow(repo_dir, <<~YAML)
+        concurrency:
+          group: benchmark-provider-comparisons
+          cancel-in-progress: false
+          queue: max
+        jobs: {}
+      YAML
+      _stdout, stderr, status = Open3.capture3(RbConfig.ruby, SCRIPT, File.dirname(repo_dir), "--central")
+      refute status.success?
+      assert_includes stderr, "unrelated benchmark cases must not share one workflow queue"
+    end
+  end
+
   def test_central_benchmarks_keep_the_leaf_boundary
     stdout, stderr, status = Open3.capture3({"BENCHMARK_REPOS_DIR" => nil}, RbConfig.ruby, SCRIPT)
 

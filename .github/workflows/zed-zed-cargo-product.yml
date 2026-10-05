@@ -4,10 +4,6 @@ run-name: "${{ format('Zed Cargo layers | CLI {0}', inputs.cli_version || 'Actio
 permissions:
   actions: read
   contents: read
-concurrency:
-  group: benchmark-zed-cargo-layer-matrix
-  cancel-in-progress: false
-  queue: max
 env:
   CARGO_INCREMENTAL: '0'
   ZED_BUNDLE: 'true'

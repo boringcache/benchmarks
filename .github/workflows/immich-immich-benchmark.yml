@@ -5,7 +5,7 @@ run-name: "${{ inputs.base_images_ccache_experiment && format('Base images ccach
   '' && 'Canary' || 'Rolling', github.event_name == 'push' && 'Upstream update' ||
   format('Manual dispatch ({0})', github.ref_name)) }}"
 concurrency:
-  group: benchmark-provider-comparisons
+  group: benchmark-rolling-immich-${{ inputs.series_id || github.ref_name }}
   cancel-in-progress: false
   queue: max
 permissions:

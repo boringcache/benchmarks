@@ -5,10 +5,6 @@ run-name: "${{ format('Benchmark {0} | {1}', github.event_name == 'pull_request'
   == 'schedule' && 'Weekly' || github.event_name == 'pull_request' && format('PR #{0}',
   github.event.pull_request.number) || format('Manual dispatch ({0})', github.ref_name))
   }}"
-concurrency:
-  group: benchmark-provider-comparisons
-  cancel-in-progress: false
-  queue: max
 permissions:
   contents: read
   actions: read

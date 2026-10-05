@@ -12,12 +12,14 @@ require "timeout"
 module BenchmarkReport
   SCHEMA_VERSION = 1
   PRODUCT_REF_FIELDS = %w[schema_version cli_version action_ref action_sha web_revision api_url].freeze
-  PROVIDERS = {"actions-cache" => "GitHub Actions", "boringcache" => "BoringCache",
-    "boringcache-mountcache" => "BoringCache mountcache", "boringcache-native" => "BoringCache native",
-    "boringcache-toolcache" => "BoringCache toolcache", "boringcache-turbo" => "BoringCache Turbo",
-    "buildbuddy" => "BuildBuddy", "buildbuddy-cache" => "BuildBuddy", "ecr-cache" => "Amazon ECR",
-    "registry-cache" => "Registry cache"}.freeze
-  PHASES = {"cold" => "Cold build", "warm" => "Warm build", "commit" => "Commit build"}.freeze
+  PROVIDERS = {"actions-cache" => "Actions Cache", "boringcache" => "BoringCache",
+    "boringcache-mountcache" => "BoringCache mount cache", "boringcache-native" => "BoringCache native",
+    "boringcache-toolcache" => "BoringCache tool cache", "boringcache-turbo" => "BoringCache Turbo",
+    "buildbuddy" => "BuildBuddy", "buildbuddy-cache" => "BuildBuddy", "ecr-cache" => "Amazon ECR (retired)",
+    "registry-cache" => "Registry cache", "depot-cache" => "Depot Cache"}.freeze
+  PHASES = {"cold" => "Cold build", "warm" => "Warm build", "commit" => "Changed-source build"}.freeze
+  METRICS = {"build_and_reuse_seconds" => "build and cache reuse (s)", "build_seconds" => "build (s)",
+    "storage_bytes" => "storage (bytes)", "total_seconds" => "cache and build (s)"}.freeze
   LANES = {"fresh" => %w[cold warm], "rolling" => %w[commit]}.freeze
   RUN_FIELDS = {"cold" => %w[cold_seconds cold_build_seconds cold_restore_or_setup_seconds],
     "warm" => %w[warm1_seconds warm1_build_seconds warm1_restore_or_setup_seconds],
@@ -262,13 +264,12 @@ module BenchmarkReport
   end
 
   def self.seconds(value)
-    return "n/a" if value.nil?
-    value = value.to_i
-    value < 60 ? "#{value}s" : format("%dm%02ds", value / 60, value % 60)
+    return "unmeasured" if value.nil?
+    "#{value}s"
   end
 
   def self.cache_state(payload)
-    cache = payload.fetch("cache")
+    cache = payload.fetch("cache", {})
     return "import not ready" if cache["import_ready"] == false
     if %w[docker buildkit].include?(payload["mode"])
       if cache["import_ready"].nil?
@@ -282,8 +283,7 @@ module BenchmarkReport
   end
 
   def self.markdown(title, phases, baseline)
-    lines = ["## #{title}", "", "These are individual run measurements. Timing claims require a reviewed series with matched samples.", "",
-      "Build includes every operation inside the timed build command. Missing component timings are unmeasured.", "",
+    lines = ["## #{title}", "",
       "| Workload | Lane | Provider | Phase | Cache setup | Build | Dependency setup* | Compile* | Cache + build | Workflow | Cache |",
       "| --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |"]
     phases.sort_by { |item| [item["benchmark"], item["lane"], item["phase"], item["strategy"], item["variant"].to_s] }.each do |item|
@@ -293,8 +293,8 @@ module BenchmarkReport
       values = %w[restore_or_setup_seconds build_seconds dependency_setup_seconds compile_seconds total_seconds workflow_seconds].map { |name| seconds(timing[name]) }
       lines << "| #{item['benchmark']} | #{item['lane']} | #{label} | #{PHASES.fetch(item['phase'])} | #{values.join(' | ')} | #{cache_state(item)} |"
     end
-    lines += ["", "*Component measurements may overlap Build; do not add them to Build. Workflow time can include queue or dependency waits and is not a cache comparison metric.", "",
-      "Comparator: #{PROVIDERS.fetch(baseline, baseline)}. Seed, identical-source replay, and changed-source measurements remain separate.", ""]
+    lines += ["", "*Dependency setup and compile can overlap the build measurement. Workflow time is measured separately.", "",
+      "Comparator: #{PROVIDERS.fetch(baseline, baseline)}.", ""]
     phases.map { |item| item["source"] }.uniq.each { |source| lines << "Source: `#{source['repository']}@#{source['sha']}`" }
     lines.join("\n") + "\n"
   end

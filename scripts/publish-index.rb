@@ -29,33 +29,12 @@ PRODUCT_REF_KEYS = %w[schema_version cli_version action_ref action_sha web_revis
 LEGACY_PUBLIC_PRODUCT_REF_KEYS = %w[cli_version web_revision].freeze
 CURRENT_PUBLIC_PRODUCT_REF_KEYS = %w[cli_version action_ref action_sha web_revision].freeze
 PUBLIC_CACHE_IMPORT_STATUSES = %w[ok hit].freeze
-PROVIDER_LABELS = {
-  "actions-cache" => "GitHub Actions Cache",
-  "boringcache" => "BoringCache",
-  "boringcache-native" => "BoringCache Native",
-  "boringcache-toolcache" => "BoringCache Toolcache",
-  "boringcache-mountcache" => "BoringCache Mount Cache",
-  "ecr-cache" => "ECR (retired control)",
-  "depot-cache" => "Depot Cache",
-  "buildbuddy-cache" => "BuildBuddy Cache"
-}.freeze
+PROVIDER_LABELS = BenchmarkReport::PROVIDERS
 PROVIDER_STORAGE_STRATEGIES = %w[actions-cache boringcache boringcache-toolcache boringcache-mountcache ecr-cache].freeze
 SLOW_REASON_NUMERIC_KEYS = %w[
   build_seconds setup_seconds post_cleanup_seconds cache_restore_seconds cache_save_export_seconds
   hit_count miss_count hit_rate new_blob_bytes
 ].freeze
-RUNNER_VARIANCE_MIN_PROVIDER_SAMPLES = 3
-RUNNER_VARIANCE_MAX_CACHE_COUNT_DELTA = 2
-RUNNER_VARIANCE_MAX_HIT_RATE_DELTA = 0.2
-RUNNER_VARIANCE_MAX_CACHE_TIMEOUT_DELTA = 1
-RUNNER_VARIANCE_MAX_CACHE_TIMEOUTS = 1
-RUNNER_VARIANCE_MAX_PEER_SPREAD_RATIO = 0.10
-RUNNER_VARIANCE_MIN_TOOL_ELAPSED_DEVIATION_RATIO = 0.05
-RUNNER_VARIANCE_MIN_TOOL_ELAPSED_DEVIATION_SECONDS = 60.0
-RUNNER_VARIANCE_MIN_COMPILER_DEVIATION_RATIO = 0.20
-RUNNER_VARIANCE_MIN_COMPILER_DEVIATION_SECONDS = 5.0
-RUNNER_VARIANCE_CACHE_ERROR_KEYS = %w[cache_errors cache_read_errors cache_write_errors].freeze
-
 BENCHMARKS = JSON.parse(File.read(File.expand_path("../suites/published.json", __dir__))).freeze
 
 EXCLUDED_PROVIDER_RUNS = {
@@ -191,10 +170,7 @@ rescue StandardError => e
 end
 
 def seconds_to_text(value)
-  total = value.round
-  minutes = total / 60
-  seconds = total % 60
-  "#{minutes}m #{seconds}s"
+  BenchmarkReport.seconds(value)
 end
 
 def markdown_escape(value)
@@ -202,30 +178,11 @@ def markdown_escape(value)
 end
 
 def bytes_to_text(value)
-  return "n/a" if value.nil?
-
-  units = ["B", "KB", "MB", "GB", "TB"].freeze
-  size = value.to_f.abs
-  unit_index = 0
-
-  while size >= 1024 && unit_index < units.length - 1
-    size /= 1024.0
-    unit_index += 1
-  end
-
-  format("%<size>.2f %<unit>s", size: size, unit: units[unit_index])
+  value.nil? ? "unmeasured" : "#{value} bytes"
 end
 
 def storage_summary_text(comparison)
-  saved_bytes = comparison["storage_saved_bytes"]
-  improvement_pct = comparison["storage_improvement_pct"]
-  return "n/a" if saved_bytes.nil?
-
-  if saved_bytes.to_f >= 0
-    "#{bytes_to_text(saved_bytes)} less (#{improvement_pct.to_f.abs}%)"
-  else
-    "#{bytes_to_text(saved_bytes.to_f.abs)} more (#{improvement_pct.to_f.abs}%)"
-  end
+  BenchmarkReporting.storage_difference(comparison["storage_saved_bytes"])
 end
 
 def normalize_storage_sample(bytes, source)
@@ -363,42 +320,6 @@ def average(values)
   return nil if values.empty?
 
   values.sum.to_f / values.length
-end
-
-def median(values)
-  values = values.compact.sort
-  return nil if values.empty?
-
-  midpoint = values.length / 2
-  return values[midpoint] if values.length.odd?
-
-  (values[midpoint - 1] + values[midpoint]) / 2.0
-end
-
-def timing_result_bucket(before_value, after_value)
-  delta_pct = percent_delta(before_value, after_value)
-  return nil if delta_pct.nil?
-
-  delta_seconds = (before_value.to_f - after_value.to_f).abs
-  longest = [before_value.to_f, after_value.to_f].max
-  return :tie if delta_seconds <= 5 && longest <= 60
-  return :tie if delta_pct.abs < 3.0
-
-  delta_pct.positive? ? :faster : :slower
-end
-
-def timing_result_text(before_value, after_value)
-  delta_pct = percent_delta(before_value, after_value)
-  return "n/a" if delta_pct.nil?
-
-  case timing_result_bucket(before_value, after_value)
-  when :faster
-    "#{delta_pct.round}% faster"
-  when :slower
-    "#{delta_pct.abs.round}% slower"
-  else
-    "near tie"
-  end
 end
 
 def provider_label(strategy)
@@ -966,7 +887,6 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:, lane:)
   headline_scenario, before_value, after_value = headline
   faster_pct = percent_delta(before_value, after_value)
   return nil if faster_pct.nil?
-  faster_pct = [faster_pct, 0].max
 
   {
     "lane" => lane,
@@ -987,7 +907,7 @@ def build_entry(benchmark:, pair:, actions_data:, boringcache_data:, lane:)
     "after" => seconds_to_text(after_value),
     "before_seconds" => before_value.round(2),
     "after_seconds" => after_value.round(2),
-    "faster" => reporting["comparative"] ? faster_pct.round.to_s : nil,
+    "faster" => reporting["comparative"] ? faster_pct&.round&.to_s : nil,
     "comparison" => {
       "paired_on_head_sha" => pair[:paired_on_head_sha],
       "pairing_head_sha" => pair[:pairing_head_sha],
@@ -1320,7 +1240,6 @@ def average_lane_entries(entries, benchmark:, lane:)
   headline_scenario, before_value, after_value = headline
   faster_pct = percent_delta(before_value, after_value)
   return nil if faster_pct.nil?
-  faster_pct = [faster_pct, 0].max
 
   lane_entry = {
     "lane" => lane,
@@ -1341,7 +1260,7 @@ def average_lane_entries(entries, benchmark:, lane:)
     "after" => seconds_to_text(after_value),
     "before_seconds" => before_value.round(2),
     "after_seconds" => after_value.round(2),
-    "faster" => reporting["comparative"] ? faster_pct.round.to_s : nil,
+    "faster" => reporting["comparative"] ? faster_pct&.round&.to_s : nil,
     "comparison" => {
       "paired_on_head_sha" => true,
       "pairing_head_sha" => head_shas.one? ? head_shas.first : nil,
@@ -1427,11 +1346,12 @@ def lane_report_row(entry, lane)
 
   [
     entry.fetch("name"),
-    lane_entry["headline_label"] || reporting["headline_label"] || BenchmarkReporting.headline_label(lane: lane, scenario: lane_entry["headline_scenario"]),
-    lane_entry["before"],
-    lane_entry["after"],
-    reporting.fetch("comparative", true) ? timing_result_text(lane_entry["before_seconds"], lane_entry["after_seconds"]) : reporting["result_text"],
-    storage_summary_text(comparison)
+    BenchmarkReporting.headline_label(lane: lane, scenario: reporting["headline_scenario"] || lane_entry["headline_scenario"]),
+    BenchmarkReport.seconds(lane_entry["before_seconds"]),
+    BenchmarkReport.seconds(lane_entry["after_seconds"]),
+    BenchmarkReporting.timing_difference(lane_entry["before_seconds"], lane_entry["after_seconds"]),
+    storage_summary_text(comparison),
+    reporting.fetch("comparative", true) ? "recorded" : reporting["result_text"]
   ]
 end
 
@@ -1458,7 +1378,7 @@ end
 
 def build_report(entries, generated_at:)
   generated_label = Time.parse(generated_at).utc.strftime("%Y-%m-%d %H:%M UTC")
-  headers = ["Benchmark", "Metric", "GitHub Actions Cache", "BoringCache", "Result", "Storage"]
+  headers = ["Benchmark", "Metric", "Actions Cache", "BoringCache", "Time difference (BoringCache − Actions Cache)", "Storage difference (BoringCache − Actions Cache)", "Sample status"]
   fresh_rows = entries.map { |entry| lane_report_row(entry, "fresh") }.compact
   rolling_rows = entries.map { |entry| lane_report_row(entry, "rolling") }.compact
 
@@ -1608,186 +1528,6 @@ def provider_tool_elapsed_components(snapshot)
   }.reject { |_, value| value.nil? }
 end
 
-def native_tool_snapshot(snapshot)
-  native_tool = snapshot["native_tool"]
-  native_tool.is_a?(Hash) ? native_tool : {}
-end
-
-def native_tool_number(snapshot, key)
-  parse_number(native_tool_snapshot(snapshot)[key])
-end
-
-def native_tool_hash(snapshot, key)
-  value = native_tool_snapshot(snapshot)[key]
-  value.is_a?(Hash) ? value : {}
-end
-
-def similar_native_tool_count?(left, right, key)
-  left_value = native_tool_number(left, key)
-  right_value = native_tool_number(right, key)
-  return false if left_value.nil? || right_value.nil?
-
-  (left_value - right_value).abs <= RUNNER_VARIANCE_MAX_CACHE_COUNT_DELTA
-end
-
-def similar_native_tool_hash_counts?(left, right, key)
-  left_counts = native_tool_hash(left, key)
-  right_counts = native_tool_hash(right, key)
-  return false if left_counts.empty? || right_counts.empty?
-  return false unless left_counts.keys.sort == right_counts.keys.sort
-
-  left_counts.keys.all? do |count_key|
-    left_value = parse_number(left_counts[count_key])
-    right_value = parse_number(right_counts[count_key])
-    left_value && right_value && (left_value - right_value).abs <= RUNNER_VARIANCE_MAX_CACHE_COUNT_DELTA
-  end
-end
-
-def cache_error_free_for_runner_variance?(snapshot)
-  RUNNER_VARIANCE_CACHE_ERROR_KEYS.all? do |key|
-    value = native_tool_number(snapshot, key)
-    !value.nil? && value.zero?
-  end
-end
-
-def cache_timeouts_similar_for_runner_variance?(left, right)
-  left_timeouts = native_tool_number(left, "cache_timeouts")
-  right_timeouts = native_tool_number(right, "cache_timeouts")
-  return false if left_timeouts.nil? || right_timeouts.nil?
-  return false if [left_timeouts, right_timeouts].max > RUNNER_VARIANCE_MAX_CACHE_TIMEOUTS
-
-  (left_timeouts - right_timeouts).abs <= RUNNER_VARIANCE_MAX_CACHE_TIMEOUT_DELTA
-end
-
-def comparable_native_tool_work?(left, right)
-  left_tool = native_tool_snapshot(left)["tool"].to_s
-  right_tool = native_tool_snapshot(right)["tool"].to_s
-  left_hit_rate = native_tool_number(left, "hit_rate")
-  right_hit_rate = native_tool_number(right, "hit_rate")
-  left_non_cacheable_signature = stable_hash_signature(native_tool_hash(left, "non_cacheable_reasons"))
-  right_non_cacheable_signature = stable_hash_signature(native_tool_hash(right, "non_cacheable_reasons"))
-  return false if left_tool.empty? || left_tool != right_tool
-  return false if left_hit_rate.nil? || right_hit_rate.nil?
-  return false if left_non_cacheable_signature.nil? || right_non_cacheable_signature.nil?
-  return false unless cache_error_free_for_runner_variance?(left) && cache_error_free_for_runner_variance?(right)
-  return false unless cache_timeouts_similar_for_runner_variance?(left, right)
-
-  %w[compile_requests compile_requests_executed cache_hits cache_misses non_cacheable_calls].all? do |key|
-    similar_native_tool_count?(left, right, key)
-  end &&
-    similar_native_tool_hash_counts?(left, right, "hit_counts") &&
-    similar_native_tool_hash_counts?(left, right, "miss_counts") &&
-    (left_hit_rate - right_hit_rate).abs <= RUNNER_VARIANCE_MAX_HIT_RATE_DELTA &&
-    left_non_cacheable_signature == right_non_cacheable_signature
-end
-
-def compiler_seconds_for_runner_variance(snapshot)
-  compiler_seconds = native_tool_number(snapshot, "average_compiler_seconds")
-  return nil if compiler_seconds.nil? || compiler_seconds <= 0
-
-  compiler_seconds
-end
-
-def tool_elapsed_seconds_for_runner_variance(snapshot)
-  elapsed_seconds = provider_tool_elapsed_seconds(snapshot)
-  return nil if elapsed_seconds.nil? || elapsed_seconds <= 0
-
-  elapsed_seconds
-end
-
-def spread_ratio(values)
-  peer_median = median(values)
-  return nil if peer_median.nil? || peer_median <= 0
-
-  (values.max - values.min) / peer_median
-end
-
-def runner_variance_outlier_evidence(candidate:, peers:)
-  candidate_compiler = compiler_seconds_for_runner_variance(candidate.fetch(:snapshot))
-  candidate_elapsed = tool_elapsed_seconds_for_runner_variance(candidate.fetch(:snapshot))
-  return nil unless candidate_compiler
-  return nil unless candidate_elapsed
-
-  comparable_peers = peers.select do |peer|
-    compiler_seconds_for_runner_variance(peer.fetch(:snapshot)) &&
-      tool_elapsed_seconds_for_runner_variance(peer.fetch(:snapshot)) &&
-      comparable_native_tool_work?(candidate.fetch(:snapshot), peer.fetch(:snapshot))
-  end
-  return nil if comparable_peers.length < RUNNER_VARIANCE_MIN_PROVIDER_SAMPLES - 1
-
-  peer_compilers = comparable_peers.map { |peer| compiler_seconds_for_runner_variance(peer.fetch(:snapshot)) }
-  peer_spread_ratio = spread_ratio(peer_compilers)
-  return nil if peer_spread_ratio.nil? || peer_spread_ratio > RUNNER_VARIANCE_MAX_PEER_SPREAD_RATIO
-  peer_elapsed_seconds = comparable_peers.map { |peer| tool_elapsed_seconds_for_runner_variance(peer.fetch(:snapshot)) }
-  peer_elapsed_spread_ratio = spread_ratio(peer_elapsed_seconds)
-  return nil if peer_elapsed_spread_ratio.nil? || peer_elapsed_spread_ratio > RUNNER_VARIANCE_MAX_PEER_SPREAD_RATIO
-
-  peer_median = median(peer_compilers)
-  compiler_delta = candidate_compiler - peer_median
-  compiler_deviation_seconds = compiler_delta.abs
-  compiler_deviation_ratio = compiler_deviation_seconds / peer_median
-  return nil unless compiler_deviation_seconds >= RUNNER_VARIANCE_MIN_COMPILER_DEVIATION_SECONDS &&
-    compiler_deviation_ratio >= RUNNER_VARIANCE_MIN_COMPILER_DEVIATION_RATIO
-
-  peer_elapsed_median = median(peer_elapsed_seconds)
-  elapsed_delta = candidate_elapsed - peer_elapsed_median
-  elapsed_deviation_seconds = elapsed_delta.abs
-  elapsed_deviation_ratio = elapsed_deviation_seconds / peer_elapsed_median
-  return nil if compiler_delta.positive? != elapsed_delta.positive?
-  return nil unless elapsed_deviation_seconds >= RUNNER_VARIANCE_MIN_TOOL_ELAPSED_DEVIATION_SECONDS &&
-    elapsed_deviation_ratio >= RUNNER_VARIANCE_MIN_TOOL_ELAPSED_DEVIATION_RATIO
-
-  {
-    "outlier_direction" => candidate_compiler > peer_median ? "slower" : "faster",
-    "peer_run_ids" => comparable_peers.map { |peer| peer.fetch(:snapshot)["run_id"] }.compact,
-    "peer_average_compiler_seconds" => peer_compilers.map { |value| value.round(3) },
-    "peer_average_compiler_median_seconds" => peer_median.round(3),
-    "peer_compiler_spread_ratio" => peer_spread_ratio.round(4),
-    "compiler_deviation_seconds" => compiler_deviation_seconds.round(3),
-    "compiler_deviation_ratio" => compiler_deviation_ratio.round(4),
-    "tool_elapsed_seconds" => candidate_elapsed.round(3),
-    "peer_tool_elapsed_seconds" => peer_elapsed_seconds.map { |value| value.round(3) },
-    "peer_tool_elapsed_median_seconds" => peer_elapsed_median.round(3),
-    "peer_tool_elapsed_spread_ratio" => peer_elapsed_spread_ratio.round(4),
-    "tool_elapsed_deviation_seconds" => elapsed_deviation_seconds.round(3),
-    "tool_elapsed_deviation_ratio" => elapsed_deviation_ratio.round(4)
-  }
-end
-
-def runner_variance_outlier_for_sample?(candidate:, peers:)
-  !runner_variance_outlier_evidence(candidate: candidate, peers: peers).nil?
-end
-
-def runner_variance_outliers_for_samples(samples)
-  samples_by_head = samples.group_by { |sample| sample.fetch(:snapshot)["head_sha"].to_s }.reject { |head, _| head.empty? }
-
-  samples_by_head.flat_map do |head_sha, head_samples|
-    next [] if head_samples.length < RUNNER_VARIANCE_MIN_PROVIDER_SAMPLES
-
-    head_samples.each_with_object([]) do |candidate, acc|
-      peers = head_samples.reject { |sample| sample.equal?(candidate) }
-      evidence = runner_variance_outlier_evidence(candidate: candidate, peers: peers)
-      next if evidence.nil?
-
-      snapshot = candidate.fetch(:snapshot)
-      acc << {
-        "strategy" => candidate.fetch(:strategy),
-        "run_id" => snapshot["run_id"],
-        "run_url" => snapshot["run_url"],
-        "head_sha" => head_sha,
-        "reason" => "runner_variance_outlier",
-        "average_compiler_seconds" => native_tool_number(snapshot, "average_compiler_seconds"),
-        "cache_hits" => native_tool_number(snapshot, "cache_hits")&.round,
-        "cache_misses" => native_tool_number(snapshot, "cache_misses")&.round,
-        "hit_rate" => native_tool_number(snapshot, "hit_rate"),
-        "compile_requests" => native_tool_number(snapshot, "compile_requests")&.round,
-        "compile_requests_executed" => native_tool_number(snapshot, "compile_requests_executed")&.round,
-        "non_cacheable_calls" => native_tool_number(snapshot, "non_cacheable_calls")&.round
-      }.merge(evidence).reject { |_, value| value.nil? }
-    end
-  end
-end
-
 def provider_snapshot(data, strategy:)
   snapshot = strategy_snapshot(data)
   scenario_seconds = provider_scenario_seconds(snapshot)
@@ -1855,38 +1595,6 @@ def provider_lane_payload(lane:, runs:, unique_head_count:, snapshots:, storage_
   end
 
   payload
-end
-
-def provider_lane_samples(providers, lane)
-  providers.flat_map do |strategy, provider|
-    lane_payload = provider.dig("lanes", lane)
-    next [] unless lane_payload.is_a?(Hash)
-
-    Array(lane_payload["samples"]).map do |snapshot|
-      {
-        strategy: strategy,
-        snapshot: snapshot
-      }
-    end
-  end
-end
-
-def annotate_runner_variance(providers)
-  LANE_IDS.each do |lane|
-    outliers = runner_variance_outliers_for_samples(provider_lane_samples(providers, lane))
-    next if outliers.empty?
-
-    outliers_by_strategy = outliers.group_by { |row| row.fetch("strategy") }
-    outliers_by_strategy.each do |strategy, strategy_outliers|
-      lane_payload = providers.dig(strategy, "lanes", lane)
-      next unless lane_payload.is_a?(Hash)
-
-      lane_payload["runner_variance_candidates"] = strategy_outliers
-      lane_payload["reporting_note"] = "#{strategy_outliers.length}/#{Array(lane_payload['samples']).length} samples flagged for possible runner variance; all samples retained."
-    end
-  end
-
-  providers
 end
 
 def provider_lane_outlier_payload(lane:, runs:, unique_head_count:, storage_available:, reason:)
@@ -1981,7 +1689,6 @@ def load_provider_entry(temp_root:, benchmark:, provider_workflows:, provider_ru
       "lanes" => lanes
     }
   end
-  providers = annotate_runner_variance(providers)
 
   {
     "benchmark" => benchmark.fetch("benchmark"),
