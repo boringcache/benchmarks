@@ -26,8 +26,13 @@ module CollectSeries
       names.lines.map(&:strip).grep(/\.json\z/).each do |name|
         # Proof bundles also contain raw product evidence. Only collect canonical
         # phase filenames or the contents of a dedicated phase artifact.
-        next unless artifact.fetch("name").start_with?("phase-") || name.match?(/-(?:fresh-(?:cold|warm)|rolling-commit)\.json\z/)
+        canonical_name = name.match?(/-(?:fresh-(?:cold|warm)|rolling-commit)\.json\z/)
+        next unless artifact.fetch("name").start_with?("phase-") || canonical_name
         value = JSON.parse(read_record(archive, name))
+        # Some phase bundles also retain native counters and provider receipts.
+        # Keep those in the export without treating them as series observations.
+        # A canonical filename still requires the complete record contract.
+        next unless canonical_name || (value.is_a?(Hash) && value.key?("series"))
         BenchmarkSeries.validate_record(plan, value)
         unless value.dig("github", "run_id").to_s == run_id && value.dig("series", "sample") == sample
           raise BenchmarkSeries::Error, "Phase artifact belongs to another run or sample"
