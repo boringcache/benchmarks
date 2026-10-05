@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "benchmark": "grpc-bazel",
+  "strategy": "buildbuddy",
+  "lane": "fresh",
+  "phase": "cold",
+  "variant": null,
+  "mode": "bazel",
+  "adapter": "bazel",
+  "case": {
+    "schema_version": 1,
+    "case_id": "grpc",
+    "workspace": "boringcache/benchmarks",
+    "definition_sha256": "3ba398321d9ad7a08f2517505bc3762cb29463f172c824b254de38e59e02cc6d",
+    "source": {
+      "repository": "grpc/grpc",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "origin": {
+      "repository": "boringcache/benchmark-grpc",
+      "branch": "main",
+      "revision": "00119b2080dd8c4d20cfb4647316a28417b4e1a6"
+    },
+    "verification": [
+      "Pinned upstream recipe and build success",
+      "Nonempty executable csm_greeter_client and csm_greeter_server outputs, checked outside build timing"
+    ],
+    "comparison": {
+      "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+      "providers": [
+        "boringcache",
+        "actions-cache",
+        "buildbuddy"
+      ],
+      "timed_scope": "Bazel build with local top-level outputs plus measured cache restore/setup; output checks and post-job cache save are outside build timing",
+      "primary_metric": "build_and_reuse_seconds",
+      "storage": "provider-reported",
+      "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+      "sample_count": 10
+    },
+    "execution": {
+      "workflows": [
+        {
+          "path": ".github/workflows/grpc-grpc-bazel-benchmark.yml",
+          "lane": "rolling",
+          "inputs": {}
+        },
+        {
+          "path": ".github/workflows/grpc-grpc-bazel-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {}
+        }
+      ],
+      "sync": "upstream-head",
+      "sync_minute": 7,
+      "cache_tags": {
+        "grpc-bazel-local": "{scope}"
+      }
+    }
+  },
+  "timing": {
+    "restore_or_setup_seconds": 0,
+    "build_seconds": 3273,
+    "workflow_seconds": 3280,
+    "total_seconds": 3273,
+    "dependency_setup_seconds": null,
+    "compile_seconds": null,
+    "verification_seconds": null,
+    "save_seconds": null,
+    "comparison_scope": "Bazel build with local top-level outputs plus measured cache restore/setup; output checks and post-job cache save are outside build timing",
+    "build_and_reuse_seconds": 3273
+  },
+  "cache": {
+    "hit": null,
+    "sccache_proof": null,
+    "import_ready": null,
+    "import_refs": 0,
+    "docker_plan": null,
+    "tag": null,
+    "workspace": null,
+    "storage_bytes": null,
+    "storage_source": null,
+    "storage_breakdown": null
+  },
+  "source": {
+    "repository": "grpc/grpc",
+    "sha": "e1245717f658d10fee8fa0ea7b6f301a872330f2"
+  },
+  "product_refs": {},
+  "action": {
+    "resolved_mode": null,
+    "resolved_tags": null,
+    "trust_state": null,
+    "diagnostics_level": null
+  },
+  "github": {
+    "repository": "boringcache/benchmarks",
+    "run_id": "37295807809",
+    "run_attempt": "1",
+    "job": "cold",
+    "workflow": "grpc: gRPC Bazel Fresh",
+    "ref_name": "grpc-local-outputs",
+    "runner_os": "Linux",
+    "runner_arch": "X64",
+    "runner_name": "GitHub Actions 1000173703",
+    "runner_environment": "github-hosted",
+    "runner_image": "ubuntu24",
+    "runner_image_version": "20260927.320.1"
+  },
+  "run_uid": "gh-37295807809-1",
+  "series": {
+    "id": "local-outputs-01",
+    "sample": 1
+  },
+  "environment": {
+    "os": "Linux",
+    "arch": "X64",
+    "image": "ubuntu24",
+    "image_version": "20260927.320.1",
+    "machine": "ubuntu-latest"
+  },
+  "verification": {
+    "passed": true,
+    "checks": [
+      "Output verification completed before recording this phase"
+    ],
+    "declared_checks": [
+      "Pinned upstream recipe and build success",
+      "Nonempty executable csm_greeter_client and csm_greeter_server outputs, checked outside build timing"
+    ]
+  },
+  "evidence_links": [
+    "https://github.com/boringcache/benchmarks/actions/runs/37295807809"
+  ]
+}
