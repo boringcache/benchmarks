@@ -16,6 +16,7 @@ module BenchmarkReport
     "boringcache-mountcache" => "BoringCache mount cache", "boringcache-native" => "BoringCache native",
     "boringcache-toolcache" => "BoringCache tool cache", "boringcache-turbo" => "BoringCache Turbo",
     "buildbuddy" => "BuildBuddy", "buildbuddy-cache" => "BuildBuddy", "ecr-cache" => "Amazon ECR (retired)",
+    "cachix" => "Cachix", "bazel-remote" => "bazel-remote",
     "registry-cache" => "Registry cache", "depot-cache" => "Depot Cache"}.freeze
   PHASES = {"cold" => "Cold build", "warm" => "Warm build", "commit" => "Changed-source build"}.freeze
   METRICS = {"build_and_reuse_seconds" => "build and cache reuse (s)", "build_seconds" => "build (s)",

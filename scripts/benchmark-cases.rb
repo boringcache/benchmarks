@@ -22,7 +22,7 @@ module BenchmarkCases
   ROOT = File.expand_path("..", __dir__)
   WORKSPACE = "boringcache/benchmarks"
   REPOSITORY = "boringcache/benchmarks"
-  HELPERS = %w[benchmark-plan benchmark-phase run-benchmark-plan activate-docker-plan verify-docker-output summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache].freeze
+  HELPERS = %w[benchmark-plan benchmark-phase run-benchmark-plan activate-docker-plan verify-docker-output summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache nix-benchmark].freeze
   class Error < StandardError; end
 
   def self.command(*args, chdir: nil, stdin: "", env: {})
@@ -515,10 +515,13 @@ module BenchmarkCases
         copy_shared_actions(target, root: root)
         NativeCase.write_action(item, directory: target, lane: "fresh", variant: native_variant) if item.dig("execution", "native")
         # A copied, unused adapter is not an invocation by this case.
-        docker_action = File.join(target, ".github/actions/docker-benchmark")
-        sources = Dir[File.join(target, ".github", "**", "*.{yml,yaml}")].reject { |path| path.start_with?(docker_action + "/") }
-        unless sources.any? { |path| File.read(path).include?("./.github/actions/docker-benchmark") }
-          FileUtils.remove_entry(docker_action)
+        %w[docker-benchmark nix-benchmark].each do |name|
+          relative = ".github/actions/#{name}"
+          action = File.join(target, relative)
+          sources = Dir[File.join(target, ".github", "**", "*.{yml,yaml}")].reject { |path| path.start_with?(action + "/") }
+          unless sources.any? { |path| File.read(path).include?("./#{relative}") }
+            FileUtils.remove_entry(action)
+          end
         end
         # Legacy product guards consume the resolved public Action invocation.
         # Expand the shared wrapper in these disposable views, preserving its
