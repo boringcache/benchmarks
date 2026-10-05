@@ -318,6 +318,21 @@ class BenchmarkCaseScriptsTest < Minitest::Test
     end
   end
 
+  def test_continuous_obs_report_keeps_an_absent_cache_hit_unmeasured
+    with_case("obs-studio") do |directory|
+      FileUtils.cp(File.join(ROOT, "scripts/canonical/benchmark-report.rb"), File.join(directory, "scripts/benchmark-report.rb"))
+      _, error, status = run_script(directory, "write_phase_result", "--surface", "xcode",
+        "--strategy", "boringcache", "--phase", "rolling", "--continuous", "--cache-hit", "",
+        "--source-sha", "a" * 40, "--restore-seconds", "0", "--build-seconds", "3")
+      assert status.success?, error
+      native = JSON.parse(File.read(File.join(directory, "benchmark-results/xcode-boringcache-rolling.json")))
+      assert_equal "unmeasured", native.dig("classification", "cache_import_status")
+      record = JSON.parse(File.read(File.join(directory, "benchmark-results/obs-studio-boringcache-xcode-rolling-commit.json")))
+      assert_nil record.dig("cache", "hit")
+      assert_equal 3.0, record.dig("timing", "build_seconds")
+    end
+  end
+
   def test_selected_recipe_contract_checks_each_declared_plan
     with_case("zed") do |directory|
       source = File.join(directory, "upstream")
