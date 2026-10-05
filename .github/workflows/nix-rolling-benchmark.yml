@@ -1,6 +1,6 @@
 ---
-name: Nix comparison fresh
-run-name: "${{ inputs.case_id }} fresh ${{ inputs.series_id }} sample ${{ inputs.sample
+name: Nix comparison rolling
+run-name: "${{ inputs.case_id }} rolling ${{ inputs.series_id }} sample ${{ inputs.sample
   }}"
 permissions:
   contents: read
@@ -10,6 +10,7 @@ env:
   BENCHMARK_SAMPLE: "${{ inputs.sample }}"
   BENCHMARK_RUNNER_CLASS: ubuntu-24.04
   BORINGCACHE_NO_GIT: 'true'
+  BENCHMARK_ROLLING_SCOPE: "${{ inputs.cache_scope }}"
 jobs:
   providers:
     runs-on: ubuntu-24.04
@@ -67,9 +68,9 @@ jobs:
         path: nix-evidence/
         if-no-files-found: error
         retention-days: 90
-  cold:
+  commit:
     name: "${{ matrix.provider == 'boringcache' && 'BoringCache' || matrix.provider
-      == 'cachix' && 'Cachix' || matrix.provider }} ${{ inputs.case_id }} cold"
+      == 'cachix' && 'Cachix' || matrix.provider }} ${{ inputs.case_id }} commit"
     needs:
     - providers
     - dependencies
@@ -100,55 +101,16 @@ jobs:
       with:
         case-id: "${{ inputs.case_id }}"
         provider: "${{ matrix.provider }}"
-        phase: cold
+        phase: commit
         cli-version: "${{ inputs.cli_version }}"
         cachix-cache: "${{ inputs.cachix_cache || vars.CACHIX_CACHE }}"
         cachix-token: "${{ matrix.provider == 'cachix' && secrets.CACHIX_AUTH_TOKEN
           || '' }}"
-        dependency-seed: nix-dependencies
-  warm:
-    name: "${{ matrix.provider == 'boringcache' && 'BoringCache' || matrix.provider
-      == 'cachix' && 'Cachix' || matrix.provider }} ${{ inputs.case_id }} warm"
-    needs:
-    - providers
-    - cold
-    - dependencies
-    runs-on: ubuntu-24.04
-    timeout-minutes: 180
-    permissions:
-      contents: read
-      actions: read
-      id-token: write
-    strategy:
-      fail-fast: false
-      matrix:
-        provider: "${{ fromJSON(needs.providers.outputs.matrix) }}"
-    steps:
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      with:
-        path: ".harness"
-        persist-credentials: false
-    - uses: "./.harness/.github/actions/prepare-case"
-      with:
-        case-id: "${{ inputs.case_id }}"
-    - name: Download the common dependency store
-      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
-      with:
-        name: nix-dependencies-${{ inputs.case_id }}
-        path: nix-dependencies
-    - uses: "./.github/actions/nix-benchmark"
-      with:
-        case-id: "${{ inputs.case_id }}"
-        provider: "${{ matrix.provider }}"
-        phase: warm
-        cli-version: "${{ inputs.cli_version }}"
-        cachix-cache: "${{ inputs.cachix_cache || vars.CACHIX_CACHE }}"
-        cachix-token: "${{ matrix.provider == 'cachix' && secrets.CACHIX_AUTH_TOKEN
-          || '' }}"
+        lane: rolling
         dependency-seed: nix-dependencies
   compare:
     if: inputs.provider == 'all'
-    needs: warm
+    needs: commit
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -159,19 +121,18 @@ jobs:
     - run: bundle install --jobs 4 --retry 2
     - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
       with:
-        pattern: nix-*-cold
+        pattern: nix-*-commit
         path: checks
     - name: Compare provider outputs and dependency stores
       env:
         CASE_ID: "${{ inputs.case_id }}"
       run: |
         bundle exec ruby -r ./scripts/nix-benchmark -e \
-          'id = ENV.fetch("CASE_ID"); NixBenchmark.compare(seed: "checks/nix-#{id}-boringcache-cold", current: "checks/nix-#{id}-cachix-cold")'
+          'id = ENV.fetch("CASE_ID"); NixBenchmark.compare(seed: "checks/nix-#{id}-boringcache-commit", current: "checks/nix-#{id}-cachix-commit")'
   report:
-    name: "${{ inputs.case_id }} fresh report"
+    name: "${{ inputs.case_id }} rolling report"
     needs:
-    - cold
-    - warm
+    - commit
     if: always() && !cancelled()
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -187,32 +148,37 @@ jobs:
         path: phase-evidence
     - name: Generate the benchmark report
       env:
-        REPORT_TITLE: "${{ inputs.case_id }} fresh benchmark"
+        REPORT_TITLE: "${{ inputs.case_id }} rolling benchmark"
       run: ruby scripts/canonical/benchmark-report.rb summarize --title "$REPORT_TITLE"
         --input-dir phase-evidence --output-dir benchmark-results
     - name: Retain boringcache result
       if: inputs.provider == 'all' || inputs.provider == 'boringcache'
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: benchmark-${{ inputs.case_id }}-boringcache-fresh
-        path: benchmark-results/${{ inputs.case_id }}-boringcache-fresh.json
+        name: benchmark-${{ inputs.case_id }}-boringcache-rolling
+        path: benchmark-results/${{ inputs.case_id }}-boringcache-rolling.json
         if-no-files-found: error
         retention-days: 90
     - name: Retain cachix result
       if: inputs.provider == 'all' || inputs.provider == 'cachix'
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: benchmark-${{ inputs.case_id }}-cachix-fresh
-        path: benchmark-results/${{ inputs.case_id }}-cachix-fresh.json
+        name: benchmark-${{ inputs.case_id }}-cachix-rolling
+        path: benchmark-results/${{ inputs.case_id }}-cachix-rolling.json
         if-no-files-found: error
         retention-days: 90
     - name: Retain comparison summary
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: comparison-nix-fresh
+        name: comparison-nix-rolling
         path: benchmark-results/comparison.md
         if-no-files-found: error
         retention-days: 90
+concurrency:
+  group: benchmark-nix-rolling-${{ inputs.case_id }}-${{ inputs.cache_scope || inputs.series_id
+    || github.ref_name }}
+  cancel-in-progress: false
+  queue: max
 'on':
   workflow_dispatch:
     inputs:
@@ -244,3 +210,6 @@ jobs:
       sample:
         type: string
         default: '1'
+      cache_scope:
+        type: string
+        default: ''

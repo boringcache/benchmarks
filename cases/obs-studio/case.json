@@ -30,7 +30,8 @@
         "path": ".github/workflows/obs-studio-obs-actions-cache.yml",
         "variant_input": "cache_tool",
         "lane": "fresh",
-        "inputs": {},
+        "inputs": {
+        },
         "phases": [
           "cold",
           "commit"
@@ -44,7 +45,8 @@
         "path": ".github/workflows/obs-studio-obs-boringcache.yml",
         "variant_input": "cache_tool",
         "lane": "fresh",
-        "inputs": {},
+        "inputs": {
+        },
         "phases": [
           "cold",
           "commit"
@@ -57,15 +59,33 @@
       {
         "path": ".github/workflows/obs-studio-obs-xcode-continuation.yml",
         "lane": "diagnostic",
-        "inputs": {}
+        "inputs": {
+        }
+      },
+      {
+        "path": ".github/workflows/obs-rolling-benchmark.yml",
+        "variant_input": "cache_tool",
+        "lane": "rolling",
+        "inputs": {
+        },
+        "variants": [
+          "ccache",
+          "xcode"
+        ]
       }
     ],
-    "sync": "adjacent-pair",
+    "sync": "build-relevant-pair",
+    "cache_tags": {
+      "obs-studio-ccache": "{scope}-ccache",
+      "obs-studio-xcode": "{scope}-xcode"
+    },
     "sync_minute": 18,
     "source_prefix": "OBS"
   },
   "reporting": {
-    "entries": [],
+    "entries": [
+
+    ],
     "publication": "reviewed"
   },
   "verification": [

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "upstream_files": {
-    ".github/workflows/integration-tests.yml": "b8ce312d966388b4ea8b748eedc9ad61d15934d684ae06e4cf29b546a5084418",
+    ".github/workflows/integration-tests.yml": "ca7026d1a1e15e45bd40cf92dbc4a44828b374e3fae71cbf64fc70d830c871cf",
     "Dockerfile": "e5796337f4c1fa080ddad9dd4260e5b8eec9dc6920ded0b4a3332e73bfb1db7f"
   },
   "commands": {
@@ -20,5 +20,11 @@
       "qdrant/qdrant:e2e-tests",
       "upstream"
     ]
+  },
+  "upstream_files_by_revision": {
+    "9ae05efdc1ef96352889b2a6b6b574c35232b974": {
+      ".github/workflows/integration-tests.yml": "b8ce312d966388b4ea8b748eedc9ad61d15934d684ae06e4cf29b546a5084418",
+      "Dockerfile": "e5796337f4c1fa080ddad9dd4260e5b8eec9dc6920ded0b4a3332e73bfb1db7f"
+    }
   }
 }

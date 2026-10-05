@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream_files": {
     "rust-toolchain.toml": "3d9002e97d5c3de93d49a1a36649153da4f40c29b061d0f2e09ea84ee143ba3e",
-    "script/bundle-linux": "6c8ceb443cb364259aeadebbfb47dba829cef81fccef304bd19d20724f1f0be7"
+    "script/bundle-linux": "8d269b2d6f304440f3a0951d5dfd79837c08fb2cf2bd5e8fbf59bb589428e43d"
   },
   "commands": {
     "cargo": [
@@ -11,5 +11,11 @@
       "--release",
       "--locked"
     ]
+  },
+  "upstream_files_by_revision": {
+    "54edefa0832e4728bcf077e4a48b25912eea5433": {
+      "rust-toolchain.toml": "3d9002e97d5c3de93d49a1a36649153da4f40c29b061d0f2e09ea84ee143ba3e",
+      "script/bundle-linux": "6c8ceb443cb364259aeadebbfb47dba829cef81fccef304bd19d20724f1f0be7"
+    }
   }
 }

@@ -304,6 +304,7 @@ module BenchmarkCases
         {"case_id" => item.fetch("id"), "updated" => true, "base_sha" => current_sha, "head_sha" => next_sha}
       else
         old_source = File.read(File.join(workload, "benchmark-source.env"))
+        old_settings = BenchmarkPlan.settings(File.join(workload, "benchmark-source.env"))
         output_path = File.join(directory, "outputs")
         args = ["bash", "scripts/advance-source-pair.sh", "benchmark-source.env", item.fetch("execution").fetch("source_prefix")]
         args << "check_dependencies" if kind == "verified-pair"
@@ -326,6 +327,8 @@ module BenchmarkCases
           end
         end
         update_source(item, workload, root: root) if updated && kind != "verified-pair"
+        fields.merge!("base_sha" => values.fetch("#{prefix}_BASE_SHA"), "head_sha" => values.fetch("#{prefix}_HEAD_SHA"),
+          "previous_sha" => old_settings.fetch("#{prefix}_HEAD_SHA")) if updated
         fields.merge("case_id" => item.fetch("id"), "updated" => updated, "requires_verified_build" => kind == "verified-pair",
           "candidate_source_env" => updated && File.read(File.join(workload, "benchmark-source.env")))
       end
@@ -578,6 +581,16 @@ module BenchmarkCases
         Dir[File.join(target, ".github", "**", "*.{yml,yaml}")].each do |path|
           next if path == provider_path
           document = YAML.safe_load(File.read(path), aliases: true)
+          if File.basename(path).match?(/\A(?:reapi|nix)-(?:fresh|rolling)-benchmark\.yml\z/)
+            inputs = (document["on"] || document[true]).dig("workflow_dispatch", "inputs")
+            inputs.fetch("case_id")["default"] = item.fetch("id")
+            providers = inputs.fetch("provider").fetch("options") - ["all"]
+            raise Error, "Provider selector differs from the declared comparison" unless providers.sort == item.dig("comparison", "providers").sort
+            document.fetch("jobs").each_value do |job|
+              matrix = job.dig("strategy", "matrix")
+              matrix["provider"] = providers if matrix && matrix["provider"].is_a?(String)
+            end
+          end
           if item.dig("execution", "native") && File.basename(path).start_with?("native-")
             recipe = NativeCase.resolve(item.dig("execution", "native"), native_variant)
             document["env"]["BENCHMARK_ID"] = "${{ format('#{recipe.fetch('benchmark_id')}{0}', inputs.benchmark_id_suffix) }}"

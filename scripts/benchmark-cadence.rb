@@ -39,15 +39,18 @@ module BenchmarkCadence
     ids.select { |id| !case_id || id == case_id }.map { |id| BenchmarkCases.load_case(id, root) }
   end
 
-  def self.rolling_targets(root: BenchmarkCases::ROOT, case_id:)
+  def self.rolling_targets(root: BenchmarkCases::ROOT, case_id:, inputs: {}, item: nil)
     source_cases(root: root, case_id: case_id)
-    item = BenchmarkCases.load_case(case_id, root)
+    item ||= BenchmarkCases.load_case(case_id, root)
     workflows = item.fetch("execution").fetch("workflows").select { |workflow| workflow.fetch("lane") == "rolling" }
+    if (selected = item.dig("execution", "rolling_workflow"))
+      workflows.select! { |workflow| workflow.fetch("path") == selected }
+    end
     raise Error, "#{case_id} has no rolling workflow" if workflows.empty?
     cases(root: root).select { |entry| entry.fetch("case_id") == case_id }.flat_map do |entry|
       workflows.map do |workflow|
         BenchmarkCases.plan(item, lane: "rolling", workflow: File.basename(workflow.fetch("path")),
-          variant: entry["variant"], root: root)
+          variant: entry["variant"], inputs: inputs, root: root)
       end
     end.uniq
   end

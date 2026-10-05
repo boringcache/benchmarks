@@ -30,6 +30,13 @@
           "case_id": "helix-nix",
           "provider": "all"
         }
+      },
+      {
+        "path": ".github/workflows/nix-rolling-benchmark.yml",
+        "lane": "rolling",
+        "inputs": {
+          "case_id": "helix-nix"
+        }
       }
     ],
     "blockers": [],
@@ -55,9 +62,9 @@
       "cachix"
     ],
     "primary_metric": "build_and_reuse_seconds",
-    "timed_scope": "Nix package derivation build or substitution after its build dependencies are realized; dependency preparation, output verification and provider post-step publication are outside the build timer",
+    "timed_scope": "Nix package derivation build or substitution after its build dependencies are realized; dependency preparation, output verification and provider post-step publication are outside the build timer. All workers import the same checksummed dependency-store export before timing; its derivation and NAR hashes must match, and the measured package is excluded from the seed.",
     "storage": "provider-reported",
-    "cache_scope": "BoringCache case/series tag; Cachix content-addressed cache shared across series. Cold disables substitution after dependency preparation. Warm uses a fresh local output store and only the selected provider; compare exact output and dependency closure hashes.",
+    "cache_scope": "BoringCache case/series tag; Cachix content-addressed cache shared across series. Cold disables substitution after dependency preparation. Warm uses a fresh local output store and only the selected provider; compare exact output and dependency closure hashes. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
     "sample_count": 2
   }
 }

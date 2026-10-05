@@ -61,12 +61,31 @@ module ReapiSetup
     ReapiClient.recipe.fetch("prepare").each { |command| run(*command) }
   end
 
+  def self.rolling_seed
+    context = JSON.parse(File.read("benchmark-context.json"))
+    path = "reapi-store/benchmark-source.json"
+    previous = File.file?(path) ? JSON.parse(File.read(path)) : nil
+    if previous && previous.fetch("case_id") != ENV.fetch("BENCHMARK_ID")
+      raise "Rolling comparator seed belongs to another case"
+    end
+    seed = {"cache_key" => ENV.fetch("RESTORED_CACHE_KEY", ""), "previous" => previous,
+      "current" => {"case_id" => ENV.fetch("BENCHMARK_ID"), "source" => context.fetch("source"),
+        "run_id" => ENV.fetch("GITHUB_RUN_ID"), "run_attempt" => ENV.fetch("GITHUB_RUN_ATTEMPT")}}
+    File.write("reapi-evidence/rolling-seed.json", JSON.pretty_generate(seed) + "\n")
+  end
+
+  def self.publish_seed
+    seed = JSON.parse(File.read("reapi-evidence/rolling-seed.json"))
+    FileUtils.mkdir_p("reapi-store")
+    File.write("reapi-store/benchmark-source.json", JSON.pretty_generate(seed.fetch("current")) + "\n")
+  end
+
   def self.report
     require_relative "benchmark-report"
     context = JSON.parse(File.read("benchmark-context.json"))
     timings = JSON.parse(File.read("reapi-evidence/timing.json"))
     args = ["phase", "--verified-output", "--benchmark", ENV.fetch("BENCHMARK_ID"), "--strategy", ENV.fetch("PROVIDER"),
-      "--lane", "fresh", "--phase", ENV.fetch("PHASE"), "--mode", "reapi",
+      "--lane", ENV.fetch("CACHE_LANE", "fresh"), "--phase", ENV.fetch("PHASE"), "--mode", "reapi",
       "--workspace", "boringcache/benchmarks", "--cache-tag", BenchmarkPhase.scope(ENV),
       "--source-repository", context.dig("source", "repository"), "--source-sha", context.dig("source", "revision"),
       "--build-seconds", timings.fetch("build_seconds").to_s, "--restore-or-setup-seconds", timings.fetch("restore_or_setup_seconds").to_s,
@@ -87,6 +106,8 @@ if $PROGRAM_NAME == __FILE__
   when "install" then ReapiSetup.install
   when "prepare" then ReapiSetup.prepare
   when "report" then ReapiSetup.report
+  when "rolling-seed" then ReapiSetup.rolling_seed
+  when "publish-seed" then ReapiSetup.publish_seed
   else abort "Use install, prepare or report"
   end
 end

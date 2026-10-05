@@ -1,84 +1,105 @@
 # Benchmark schedules
 
-The schedule migration is incomplete. Historical repositories still own the
-active weekly, canary and upstream-sync schedules. Do not enable duplicate
-central schedules before removing the corresponding historical triggers.
-Central scheduled jobs require the repository variable
-`BENCHMARK_CADENCE_ACTIVE=true`. Manual checks remain available while it is
-unset. Canary monitoring continues to inspect the historical repositories until
-that same switch changes ownership.
+Central activation remains off. Historical repositories still own the active
+weekly, canary and source schedules. Central scheduled jobs require
+`BENCHMARK_CADENCE_ACTIVE=true`; merging this branch does not activate them.
+Manual qualification remains available. Historical triggers must be retired
+before ownership changes, so the migration does not duplicate runs.
 
-`suites/scheduled.json` selects the maintained suite and the new Moon, Pants,
-Buck2, sbt and Nix workloads. It excludes Docker corpus and prospect drafts.
-The same selections feed fresh dispatch and source checks. Case definitions own
-workflow paths and variant inputs; the suite does not copy them.
-
-The proposed central cadence is:
+`suites/scheduled.json` selects the maintained suite plus Moon, Pants, Buck2,
+sbt and Nix: 24 source cases and 31 fresh targets. It excludes Docker corpus and
+prospect drafts. Case definitions own workflow paths and variant inputs.
 
 | Run | UTC schedule | CLI | Source |
 | --- | --- | --- | --- |
-| Weekly fresh | Monday 04:00 | Latest published stable release, with all required assets | Declared pins |
-| Nightly fresh | Daily 01:17 | Latest published canary, with all required assets | Declared pins |
-| Source check | Hourly, at :11 | No build | Check upstream against declared pins |
+| Weekly fresh | Monday 04:00 | Latest compatible published stable release | Declared pins |
+| Nightly fresh | Daily 01:17 | Latest published canary | Declared pins |
+| Rolling source check | Hourly, at :11 | Stable after activation; canary for pre-activation planning | Reviewed upstream candidates |
 
-Fresh dispatch resolves one exact release tag for every selected workflow. It
-validates all targets before dispatch and retains each requested run ID. A
-matrix requests each target independently; a failed request does not prevent
-other targets from being requested. Each target retains its own receipt, and
-the combined receipt keeps failed, uncertain and missing requests visible. A
-dispatch succeeding does not establish that its builds passed. A dry run starts
-no builds. Inspect the retained receipt before retrying an interrupted dispatch.
-When the selection includes REAPI cases, preflight downloads the exact CLI,
-verifies its release checksum, and requires `cache-registry --reapi-port` in its
-command interface before dispatching any target. This check also runs in dry runs.
+## Independent dispatch and ordered rolling caches
 
-The October 5 capability check rejected stable `v1.33.0` before dispatch: it
-does not expose `--reapi-port`. Canary `vcli-canary-7a5b27146ebe` passed the same
-31-target check. Stable activation remains pending a compatible release; the
-weekly caller must not silently substitute a canary or omit the new families.
+Fresh dispatch validates the whole suite and resolves one exact CLI tag before
+starting a matrix of independent requests. Each target retains its own receipt.
+The combined receipt preserves requested run IDs, failed or uncertain requests,
+and missing targets. A dispatch succeeding does not establish that the builds
+passed. Dry runs request no builds. Interrupted requests require receipt review
+before retrying; an absent HTTP response does not prove GitHub rejected a run.
 
-Source checks currently retain proposals only. The seven new snapshot cases now
-check their declared upstream branches, require fast-forward ancestry, and verify
-the reviewed recipe against an exact candidate commit. Nix proposals update the
-matching source URI in the plan and command contract; they do not change recipe
-digests or build flags. A recipe or patch failure leaves the declared pin unchanged.
-An unchanged source is recorded as unchanged; a recipe mismatch or fixed source
-is recorded as blocked. A later
-failure does not remove earlier case checks. The workflow does not commit source
-changes, promote candidates or start rolling builds.
-Each case has an independent job and artifact. A failed or slow source check
-does not prevent the other cases from being checked. Checks for the same case
-are serialized.
+Source checks fan out by case, with six checks running at a time. Each case owns
+its source-controller lock; one failed or slow case does not stop the others.
+Rolling workflows serialize publication to the same cache with `queue: max`.
+The next source cycle inspects the previous requested runs before advancing that
+case again. An unchanged source does not request another build.
 
-Immich, Mastodon, PostHog and n8n now register the shared native rolling workflow.
-Their Docker variants load and inspect output in both providers. The same output
-contract now applies to Hugo, Chroma, Duckgres and Linkerd2 rolling definitions,
-which previously selected image publication. These definitions need live rolling
-qualification; passing schema and workflow checks does not establish seed reuse.
+Source inspection runs with read-only repository permissions. A separate job
+reconstructs only permitted source-pin changes, verifies the expected case and
+shared harness, then conditionally publishes against the current branch head.
+It records dispatch intent before making requests and retains receipts under
+`migration/rolling/`, including an observation per candidate source. A concurrent
+edit to the same case or shared harness blocks publication; an unrelated case's
+commit can be retried against its new branch head. Publication uses GitHub's
+[conditional commit API](https://docs.github.com/en/graphql/reference/commits#createcommitonbranch).
 
-The repository's Actions cache limit was increased from 10 GB to 200 GB on
-October 5. Retention is still seven days. This provides more capacity, but does
-not prove that an individual rolling seed was available or restored.
+Deno retains adjacent-commit order. OBS retains its existing selection of the
+next build-relevant change and its immediate parent, recording the previous
+source separately. Zed selects dependency-verified candidates and promotes a
+source only after its rolling build succeeds. Other cases retain their existing
+promote-then-build order. Failed builds remain observations. Uncertain requests
+block that case from automatic redispatch until their receipts are reviewed.
 
-## Work remaining before schedule migration
+Before activation, the publication job only plans with a canary. It does not
+change `main` or request rolling builds. Both the workflow and publisher require
+active central ownership on `main` before publication.
 
-- Connect reviewed source advancement to rolling dispatch and retain the exact
-  parent source, cache seed and requested run. Skip unchanged sources. Preserve
-  failed observations and serialize updates to each rolling cache.
-- Qualify the registered rolling paths for Immich, Mastodon, PostHog and n8n,
-  and add and qualify OBS rolling. Their existing diagnostic paths do not
-  establish the current comparison contract.
-- Qualify source advancement and add rolling paths for the seven new REAPI and
-  Nix cases. Their successful cold/warm screens use fixed source pins.
-- Preserve Zed's build-verified source promotion and Deno's adjacent-commit
-  sequence when moving their current source controllers.
-- Run the central dispatch on GitHub, check receipts and workload completion,
-  and verify the selected stable release supports each scheduled case.
-- Remove replaced historical cron triggers, preserving manual and release
-  entrypoints. Change monitoring and publication ownership with that migration.
+## Workloads and reports
 
-After a compatible stable release and qualification, remove replaced historical
-cron triggers, verify there are no outstanding duplicate dispatches, then set
-`BENCHMARK_CADENCE_ACTIVE=true`. Merging this branch alone does not activate the
-central jobs. Passing configuration tests does not complete the rolling or
-source promotion work above.
+Every scheduled case now registers a rolling path, including the four native
+cases, OBS, five REAPI cases and two Nix cases previously missing one. Definitions
+and passing local checks do not establish live rolling qualification.
+
+Native Docker runs load and inspect their output for both providers. REAPI
+rolling runs retain the case/series cache; bazel-remote restores and publishes a
+GitHub Actions cache and records the previous source and restored key. Nix and
+OBS rolling runs permit both restore and publication. Missing seeds remain
+bootstrap observations; they must not be described as proven cache reuse.
+
+Nix workers import one common dependency store prepared outside the measured
+build. The export excludes the measured package, checksums the archive and
+checks the imported dependency hashes against the declared derivation. This
+avoids independently rebuilding a nondeterministic dependency for each arm while
+keeping strict package and dependency comparisons. The earlier Zed Nix screen
+restored both providers' package outputs correctly but failed the dependency
+baseline comparison; that failed run remains retained.
+
+Shared workflows use case, variant, lane, provider and phase labels. REAPI, Nix
+and OBS rolling results use the canonical benchmark report and retain both
+structured evidence and the comparison summary. Reports contain measurements
+and verification results, without performance verdicts.
+
+## Qualification and activation
+
+The October 5 preflight rejected stable `v1.33.0`: it does not expose
+`cache-registry --reapi-port`. Canary `vcli-canary-7a5b27146ebe` passed the full
+31-target preflight. Weekly activation must wait for a compatible stable release;
+it must not substitute a canary or silently omit the REAPI cases.
+
+The first hosted source matrix completed the cases independently and identified
+recipe changes in Immich, Qdrant, msgpack and Zed. Their reviewed changes are
+recorded in [the recipe review](recipe-reviews-2026-10-05.md). New source pins and
+changed recipes still require live qualification.
+
+The repository's Actions cache limit is 200 GB, with seven-day retention.
+Capacity alone does not establish that a particular rolling seed was retained
+or restored.
+
+Remaining activation requirements:
+
+- Pass hosted checks for the complete controller and rolling changes.
+- Qualify the new and changed rolling paths with actual source advancement,
+  retained seeds, verified outputs and canary CLI execution.
+- Pass the corrected Zed Nix cold/warm screen using the common dependency seed.
+- Verify publication and receipt reconciliation in a bounded rehearsal.
+- Retire replaced historical cron triggers while preserving manual and release
+  entrypoints; verify no outstanding duplicate dispatches.
+- After a compatible stable release, change monitoring and publication ownership
+  and set `BENCHMARK_CADENCE_ACTIVE=true`.

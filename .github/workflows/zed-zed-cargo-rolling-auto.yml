@@ -166,7 +166,7 @@ jobs:
     permissions:
       actions: read
       checks: read
-      contents: write
+      contents: read
       id-token: write
   publish-source:
     name: Publish the verified Zed source

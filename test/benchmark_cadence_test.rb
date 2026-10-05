@@ -115,7 +115,12 @@ class BenchmarkCadenceTest < Minitest::Test
       assert targets.all? { |target| target.fetch("workflow") == "native-rolling-benchmark.yml" }
       assert_equal selections.map { |entry| entry["variant"] }, targets.map { |target| target.dig("inputs", "variant") }
     end
-    assert_raises(BenchmarkCadence::Error) { BenchmarkCadence.rolling_targets(case_id: "helix-nix") }
+    %w[gogs-moon opencut-moon stackstorm-pants executorch-buck2 msgpack-sbt helix-nix zed-nix].each do |id|
+      targets = BenchmarkCadence.rolling_targets(case_id: id)
+      assert_equal 1, targets.length
+      assert_equal id, targets.first.dig("inputs", "case_id")
+      assert_equal "rolling", targets.first.fetch("lane")
+    end
   end
 
   def test_schedules_require_explicit_cutover_and_preserve_historical_monitoring
