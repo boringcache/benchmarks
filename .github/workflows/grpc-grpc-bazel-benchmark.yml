@@ -9,6 +9,7 @@ concurrency:
   cancel-in-progress: false
   queue: max
 env:
+  BENCHMARK_ROLLING_SCOPE: nativelink-r2-20261005
   BORINGCACHE_NO_GIT: 'true'
   BAZEL_OUTPUT_USER_ROOT: "/tmp/boringcache-grpc-bazel/output-root"
   BAZEL_OUTPUT_BASE: "/tmp/boringcache-grpc-bazel/output-base"

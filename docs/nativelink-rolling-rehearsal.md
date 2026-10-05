@@ -1,0 +1,16 @@
+# NativeLink rolling qualification
+
+This isolated branch seeds all four gRPC providers at parent commit
+`08455f8f03d2b1508ae233d950704ec06cb19017`, then advances to
+`e1245717f658d10fee8fa0ea7b6f301a872330f2`. The latter changes the compiled
+gRPC core version and associated build metadata. The reviewed CSM target
+contract is identical at both commits.
+
+Both observations use `BENCHMARK_ROLLING_SCOPE=nativelink-r2-20261005`.
+This explicit rehearsal scope preserves provider caches across two source-specific
+frozen series. It is not a production scope change. Do not merge the isolated
+source pin or workflow override. Preserve both successful and failed attempts.
+
+Require the NativeLink advancement evidence to identify the seed source/run,
+report remote hits, and verify both executable outputs. The seed alone does not
+qualify rolling reuse. Two fresh samples run separately with isolated prefixes.
