@@ -85,7 +85,9 @@ module BenchmarkSeries
       refs = value.fetch("product_refs")
       raise Error, "BoringCache record has no CLI version" unless refs["cli_version"].is_a?(String) && !refs["cli_version"].empty?
       expected = plan.fetch("workflow_inputs")["cli_version"]
-      if !expected.to_s.empty? && refs.fetch("cli_version").delete_prefix("v") != expected.delete_prefix("v")
+      # Canary tags identify artifacts; the CLI reports its package version.
+      canary = expected.to_s.match?(/\Avcli-canary-[0-9a-f]{9,40}\z/)
+      if !expected.to_s.empty? && !canary && refs.fetch("cli_version").delete_prefix("v") != expected.delete_prefix("v")
         raise Error, "CLI version differs from the declared series"
       end
     end
@@ -306,6 +308,7 @@ module BenchmarkSeries
   end
 
   def self.write_json(path, value)
+    FileUtils.mkdir_p(File.dirname(path))
     File.write(path, JSON.pretty_generate(value) + "\n")
   end
 end

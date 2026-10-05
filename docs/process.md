@@ -233,6 +233,12 @@ scope, storage with its measurement source, and evidence links. The canonical
 Ruby reporter keeps legacy phase and lane fields for existing consumers. Series
 records add explicit comparison fields; legacy records without them cannot
 support a new series claim.
+The series and dispatch retain the requested CLI release name. Product evidence
+retains the version the CLI reports. A canary such as `vcli-canary-<commit>` can
+report `1.34.0`; those are different identifiers. Preserve the installer logs for
+the selected artifact. The reported version alone does not identify a canary's
+source commit. Released version requests must match the reported version, and
+every BoringCache observation in a series must use the same reported CLI and Action.
 In legacy phase JSON, a `commit` record carries `lane: rolling`, including the
 changed-source step of a fresh Cargo proof. The declared series lane and phase
 sequence identify that evaluation as fresh `cold` plus `commit`. The legacy
