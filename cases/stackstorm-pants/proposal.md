@@ -1,6 +1,7 @@
 # stackstorm-pants
 
-Status: native REAPI correctness screen implemented; hosted qualification pending.
+Status: two cold/warm samples passed for both providers.
+[Recorded results](../../results/stackstorm-pants/registry-qualification-01/report.md).
 
 Source: [StackStorm/st2 at `9824de4dfd0c869869e310dee729308f398ad83a`](https://github.com/StackStorm/st2/tree/9824de4dfd0c869869e310dee729308f398ad83a).
 

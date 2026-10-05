@@ -1,14 +1,15 @@
 # Native gRPC cache evaluations
 
-These eight source-pinned evaluations use the existing case contract. Five have
-a shared native registry workflow awaiting hosted qualification. ZITADEL, Pants
+These eight source-pinned evaluations use the existing case contract. Five use
+the shared native registry workflow. Moon, Pants and sbt have completed two
+cold/warm samples per selected workload; Buck2 qualification is running. ZITADEL, Pants
 JVM and Buck2 Prelude remain blocked drafts. None has an active schedule.
 
 | Case | Workload | Reason to evaluate | Limitation |
 | --- | --- | --- | --- |
-| [opencut-moon](../cases/opencut-moon/proposal.md) | OpenCut web assets | Existing Moon build and CI graph | Qualify upstream Moon 2.3.3 and native remote output restoration |
+| [opencut-moon](../cases/opencut-moon/proposal.md) | OpenCut web assets | Existing Moon build and CI graph | Moon 2.5.6 replaces upstream 2.3.3; web assets only |
 | [gogs-moon](../cases/gogs-moon/proposal.md) | Gogs frontend | Upstream Moon web build | Web assets only; Go server compilation is outside this screen |
-| [executorch-buck2](../cases/executorch-buck2/proposal.md) | ExecuTorch portable executor | Native C++ runtime and kernel compilation | Verify the public target with upstream Buck2 2025-05-06 and pinned submodules |
+| [executorch-buck2](../cases/executorch-buck2/proposal.md) | ExecuTorch portable executor | Native C++ runtime and kernel compilation | Buck2 2025-06-01 replaces upstream 2025-05-06; executable checks do not run a model |
 | [stackstorm-pants](../cases/stackstorm-pants/proposal.md) | StackStorm plugin tests | Existing Pants test CI job | Pack metadata unit tests only; service-dependent tests are outside this screen |
 | [zitadel-moon](../cases/zitadel-moon/proposal.md) | ZITADEL console assets | Existing Moon task graph and remote-cache configuration | Resolve its lockfile client version and record the instance-name change |
 | [pants-jvm](../cases/pants-jvm/proposal.md) | Pants Java/Scala example | Native JVM compile, test, and package operations | Small correctness screen; upstream client differs from product qualification |
@@ -48,7 +49,12 @@ and whether uploads complete inside or outside the timed command. Follow
 
 OpenCut, Gogs, StackStorm, ExecuTorch and MessagePack now declare the shared
 native registry correctness workflow. Their proposals record selected targets,
-recipe changes and verification requirements. Hosted qualification remains
-pending. BoringCache uses a fresh remote tag and a read-only warm process;
+recipe changes and verification requirements. The two-sample reports for
+[Gogs](../results/gogs-moon/registry-qualification-01/report.md),
+[OpenCut](../results/opencut-moon/registry-qualification-01/report.md),
+[StackStorm](../results/stackstorm-pants/registry-qualification-01/report.md) and
+[MessagePack](../results/msgpack-sbt/registry-qualification-01/report.md) retain
+each provider and phase. Buck2 qualification remains pending.
+BoringCache uses a fresh remote tag and a read-only warm process;
 bazel-remote transfers its store as an artifact outside timing. No performance
 comparison or completed family qualification follows from implementation alone.

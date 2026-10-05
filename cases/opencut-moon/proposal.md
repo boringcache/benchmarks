@@ -1,6 +1,7 @@
 # opencut-moon
 
-Status: native REAPI correctness screen implemented; hosted qualification pending.
+Status: two cold/warm samples passed for both providers.
+[Recorded results](../../results/opencut-moon/registry-qualification-01/report.md).
 
 The benchmark uses Moon 2.5.6 instead of upstream's 2.3.3. The older client rejects
 a registry that advertises disabled action-cache updates, including a read-only
