@@ -17,8 +17,11 @@ limitations. This inventory describes the case definitions as of October 5, 2026
 | Nx remote cache | No active case | Storybook archives Nx directories; it does not exercise the native Nx remote-cache adapter |
 | Turbo | n8n; PostHog plan | Qualify each selected workload and timing boundary |
 | Bazel | gRPC C++ client and server | Complete the repaired three-provider cold/warm proof with the repository BuildBuddy secret |
-| Native REAPI clients | Moon, Pants, Buck2, sbt evaluation drafts | Blocked pending released product/client compatibility and reviewed execution; see [evaluation plans](reapi-evaluations.md) |
-| Nix | No active case | Add a pinned workload and correctness check before claiming coverage |
+| Moon | [OpenCut](../cases/opencut-moon/proposal.md), [Gogs](../cases/gogs-moon/proposal.md), ZITADEL drafts | Qualify the pinned clients, remote task restoration and output checks |
+| Pants | [StackStorm](../cases/stackstorm-pants/proposal.md), Pants JVM drafts | Qualify the pinned clients; review service-dependent test cacheability |
+| Buck2 | [ExecuTorch](../cases/executorch-buck2/proposal.md), Buck2 Prelude drafts | Verify public targets, native action-cache use and output checks |
+| sbt | [MessagePack Java](../cases/msgpack-sbt/proposal.md) draft | Qualify sbt 2 remote-cache configuration and compiled outputs |
+| Nix | [Zed](../cases/zed-nix/proposal.md), [Helix](../cases/helix-nix/proposal.md) drafts | Qualify fresh-store substitution, closure checks and benchmark-owned Cachix comparison |
 | Archive | Storybook's Nx cache directories | Qualify rolling source and seed lineage |
 | Artifact, GHA compatibility service | No dedicated active comparison case | GitHub artifact uploads inside a benchmark do not qualify these BoringCache products |
 
@@ -27,7 +30,11 @@ benchmark adapter. Product support includes Bazel, ccache, Go, Gradle, Maven, Nx
 sccache, and Turbo; this repository does not yet qualify every injected family.
 Cargo target mounts use the product's managed freshness behavior and can compose
 sccache. Nix's daemon/store and macOS Xcode are not Linux Docker injection modes.
-The new REAPI clients also need their own released-product qualification.
+The [REAPI drafts](reapi-evaluations.md) and Nix drafts have no executable
+workflows, measurements or schedules. Each family now has a pinned OSS workload;
+this is definition coverage, not completed benchmark qualification. Release and
+client qualification, provider configuration and reviewed execution remain
+explicit blockers in each case. MessagePack keeps its existing case ID and pin.
 
 For a new tool or option, follow [the existing case process](process.md). Keep
 product configuration in `.boringcache.toml`, pass the mode through the shared

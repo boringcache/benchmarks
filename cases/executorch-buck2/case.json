@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "id": "executorch-buck2",
+  "kind": "evaluation",
+  "adapter": "workflow",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "pytorch/executorch",
+    "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "pytorch/executorch",
+    "branch": "main",
+    "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+  },
+  "execution": {
+    "sync": "fixed",
+    "workflows": [],
+    "blockers": [
+      "Qualify a released CLI/Action with the required native REAPI client support",
+      "Add and verify a workflow through the shared provider wrapper and canonical reporter",
+      "Verify the public portable executor target builds with pinned submodules and Buck2 2025-05-06",
+      "Qualify this Buck2 version and cache-only settings without remote execution",
+      "Pin a model fixture and verify its expected inference output"
+    ]
+  },
+  "reporting": {
+    "entries": [],
+    "publication": "evaluation-only"
+  },
+  "verification": [
+    "Resolve the executor binary from Buck2 output and require it to be executable",
+    "Run the same pinned model and verify expected inference output in both arms",
+    "Remove buck-out and local action state before warm replay; require native remote-hit evidence",
+    "Compare the output binary digest across provider arms"
+  ],
+  "comparison": {
+    "question": "Does Buck2 reuse ExecuTorch runtime compilation through a remote action cache?",
+    "providers": [
+      "boringcache",
+      "bazel-remote"
+    ],
+    "primary_metric": "build_and_reuse_seconds",
+    "timed_scope": "Declared native command after toolchain, dependency and service preparation; measure cache setup/restore and upload completion separately",
+    "storage": "provider-reported",
+    "cache_scope": "Isolated case, series and provider identity; fresh local result state for cold and identical-source warm workers; warm retains its remote seed",
+    "sample_count": 2
+  }
+}
