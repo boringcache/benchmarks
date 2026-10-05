@@ -33,11 +33,6 @@
         "path": ".github/workflows/immich-immich-benchmark.yml",
         "lane": "diagnostic",
         "inputs": {}
-      },
-      {
-        "path": ".github/workflows/immich-immich-fresh-benchmark.yml",
-        "lane": "diagnostic",
-        "inputs": {}
       }
     ],
     "sync": "upstream-head",

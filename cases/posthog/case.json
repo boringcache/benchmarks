@@ -38,11 +38,6 @@
         "path": ".github/workflows/posthog-posthog-benchmark.yml",
         "lane": "diagnostic",
         "inputs": {}
-      },
-      {
-        "path": ".github/workflows/posthog-posthog-fresh-benchmark.yml",
-        "lane": "diagnostic",
-        "inputs": {}
       }
     ],
     "sync": "upstream-head",

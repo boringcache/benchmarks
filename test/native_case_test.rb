@@ -283,6 +283,24 @@ class NativeCaseTest < Minitest::Test
     end
   end
 
+  def test_case_actions_leave_product_evidence_uploads_to_the_shared_post_step
+    Dir[File.join(BenchmarkCases::ROOT, "cases/*/payload/.github/actions/*/action.yml")].each do |path|
+      steps = YAML.safe_load_file(path, aliases: true).dig("runs", "steps")
+      steps.select { |step| step["uses"].to_s.start_with?("actions/upload-artifact@") }.each do |step|
+        refute_match(/outputs\.evidence-path/, step.dig("with", "path").to_s, path)
+      end
+    end
+  end
+
+  def test_storybook_reports_the_archive_mode_it_runs
+    path = File.join(BenchmarkCases::ROOT, "cases/storybook/payload/.github/actions/storybook-nx-benchmark/action.yml")
+    steps = YAML.safe_load_file(path).dig("runs", "steps")
+    calls = steps.select { |step| step["uses"] == "./.github/actions/boringcache" }
+    assert_equal ["archive"], calls.map { |step| step.dig("with", "mode") }.uniq
+    report = steps.find { |step| step["run"].to_s.include?("benchmark-report.rb phase") }
+    assert_includes report.fetch("run"), "--mode archive"
+  end
+
   def test_product_contract_view_resolves_the_wrapper_without_losing_adapter_or_failure_policy
     provider = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/actions/boringcache/action.yml")))
     steps = provider.dig("runs", "steps")

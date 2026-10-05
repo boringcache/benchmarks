@@ -110,6 +110,8 @@ steps; it does not interpret product measurements or implement cache behavior.
 Its dependencies install during preparation, outside the comparison timer.
 The Ruby reporter retains its structured measurements; the original envelope
 remains a separate artifact so post-step status and future product fields survive.
+Case actions upload their phase records. They do not upload a second copy of
+product evidence before cleanup.
 Storage measurements pass the resolved tags to `boringcache check --no-git
 --no-platform --json`. The CLI checks those exact tags; the former `--exact`
 option is unnecessary and is rejected by CLI 1.34.0. A failed probe leaves storage
