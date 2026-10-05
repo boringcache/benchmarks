@@ -1,7 +1,8 @@
 # Helix / Nix
 
-Status: workflow implemented; cold/warm qualification is pending.
-No benchmark measurements have been collected.
+Status: the cold/warm screen passed for both providers, including matching NAR
+hashes. [Recorded results](../../results/helix-nix/canary-screening-02/report.md).
+The two-sample repeat is running.
 
 Source: [helix-editor/helix at `ba40e547426b0f9896c8bdc699a4ab11f2b37dbc`](https://github.com/helix-editor/helix/tree/ba40e547426b0f9896c8bdc699a4ab11f2b37dbc).
 
