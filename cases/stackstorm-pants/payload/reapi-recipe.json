@@ -4,6 +4,9 @@
     "pants",
     "--no-pantsd",
     "--stats-log",
+    "--pytest-install-from-resolve=pants-plugins",
+    "--pytest-requirements=['pytest==7.0.1']",
+    "--no-python-infer-conftests",
     "test",
     "--report",
     "pants-plugins/pack_metadata/target_types_test.py"
