@@ -1,19 +1,19 @@
 # Native gRPC cache evaluations
 
-These eight source-pinned evaluation drafts use the existing case contract. They
-are blocked from execution and scheduling until their client, product release,
-workflow, and output verification are qualified. They contain no measurements.
+These eight source-pinned evaluations use the existing case contract. Five have
+a shared native registry workflow awaiting hosted qualification. ZITADEL, Pants
+JVM and Buck2 Prelude remain blocked drafts. None has an active schedule.
 
 | Case | Workload | Reason to evaluate | Limitation |
 | --- | --- | --- | --- |
 | [opencut-moon](../cases/opencut-moon/proposal.md) | OpenCut web assets | Existing Moon build and CI graph | Qualify upstream Moon 2.3.3 and native remote output restoration |
-| [gogs-moon](../cases/gogs-moon/proposal.md) | Gogs production binary and frontend | Existing Moon Go and frontend tasks | Fix the embedded build timestamp and review dependency-task timing |
+| [gogs-moon](../cases/gogs-moon/proposal.md) | Gogs frontend | Upstream Moon web build | Web assets only; Go server compilation is outside this screen |
 | [executorch-buck2](../cases/executorch-buck2/proposal.md) | ExecuTorch portable executor | Native C++ runtime and kernel compilation | Verify the public target with upstream Buck2 2025-05-06 and pinned submodules |
-| [stackstorm-pants](../cases/stackstorm-pants/proposal.md) | StackStorm plugin tests | Existing Pants test CI job | Qualify Pants 2.25.0 and review service dependencies and result cacheability |
+| [stackstorm-pants](../cases/stackstorm-pants/proposal.md) | StackStorm plugin tests | Existing Pants test CI job | Pack metadata unit tests only; service-dependent tests are outside this screen |
 | [zitadel-moon](../cases/zitadel-moon/proposal.md) | ZITADEL console assets | Existing Moon task graph and remote-cache configuration | Resolve its lockfile client version and record the instance-name change |
 | [pants-jvm](../cases/pants-jvm/proposal.md) | Pants Java/Scala example | Native JVM compile, test, and package operations | Small correctness screen; upstream client differs from product qualification |
 | [buck2-prelude](../cases/buck2-prelude/proposal.md) | Buck2 Rust/C++ examples | Native Buck2 action-cache use | Cargo compilation of Buck2 itself is a different workload |
-| [msgpack-sbt](../cases/msgpack-sbt/proposal.md) | MessagePack Java tests | Upstream sbt 2.0.9 and a normal Java 21 CI matrix member | Remote-cache settings require a declared patch |
+| [msgpack-sbt](../cases/msgpack-sbt/proposal.md) | MessagePack Java tests | Upstream sbt 2.0.9 and a normal Java 21 CI matrix member | Remote-cache plugin and stable benchmark version are explicit recipe changes |
 
 OpenCut, ExecuTorch, StackStorm and MessagePack are the initial application
 workloads. Gogs provides another Moon workload. The existing ZITADEL, Pants JVM
@@ -26,10 +26,9 @@ also supports Depot. [Moon remote-cache documentation](https://moonrepo.dev/docs
 sbt 2.x ships a gRPC remote-cache client and requires `addRemoteCachePlugin` plus
 the endpoint setting. [sbt remote-cache documentation](https://www.scala-sbt.org/2.x/docs/en/reference/remote-cache-setup.html).
 
-The cache-only REAPI candidate is the motivation for these cases. Its proof does not establish that
-the currently pinned public Action/CLI supports these workloads. Product client
-qualification remains in the product repository; this repository measures real
-workload behavior after that gate passes.
+The selected CLI release exposes the native REAPI registry endpoint. Protocol
+fixtures remain in the product repository. These cases qualify selected OSS
+workloads through that endpoint; they do not imply managed native Action modes.
 
 Begin with `bazel-remote` as a protocol comparator. Compare providers only after
 declaring equivalent cache-only behavior, supported digest/compression/instance
@@ -44,3 +43,12 @@ local action results and outputs while retaining the intended remote seed.
 Record native hit/miss evidence, output manifests, storage measurement source,
 and whether uploads complete inside or outside the timed command. Follow
 [the same process](process.md) used by maintained benchmarks.
+
+## Shared native registry execution
+
+OpenCut, Gogs, StackStorm, ExecuTorch and MessagePack now declare the shared
+native registry correctness workflow. Their proposals record selected targets,
+recipe changes and verification requirements. Hosted qualification remains
+pending. BoringCache uses a fresh remote tag and a read-only warm process;
+bazel-remote transfers its store as an artifact outside timing. No performance
+comparison or completed family qualification follows from implementation alone.

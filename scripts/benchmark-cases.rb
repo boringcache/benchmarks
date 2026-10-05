@@ -22,7 +22,7 @@ module BenchmarkCases
   ROOT = File.expand_path("..", __dir__)
   WORKSPACE = "boringcache/benchmarks"
   REPOSITORY = "boringcache/benchmarks"
-  HELPERS = %w[benchmark-plan benchmark-phase run-benchmark-plan activate-docker-plan verify-docker-output summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache nix-benchmark].freeze
+  HELPERS = %w[benchmark-plan benchmark-phase run-benchmark-plan activate-docker-plan verify-docker-output summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache nix-benchmark reapi-registry reapi-client reapi-setup].freeze
   class Error < StandardError; end
 
   def self.command(*args, chdir: nil, stdin: "", env: {})
@@ -403,10 +403,12 @@ module BenchmarkCases
       FileUtils.cp(File.join(root, "scripts", "#{name}.rb"), File.join(target, "scripts", "#{name}.rb"))
     end
     copy_shared_actions(target, root: root)
+    unless File.file?(File.join(target, "reapi-recipe.json"))
+      %w[reapi-registry reapi-client reapi-setup].each { |name| FileUtils.rm_f(File.join(target, "scripts", "#{name}.rb")) }
+    end
     # The workload's submodule commands need an index and a local source tree.
     # This commit stays on the disposable worker and has no publication remote.
-    files = Dir.children(target) - %w[.git .harness]
-    command("git", "add", "--", *files, chdir: target) unless files.empty?
+    command("git", "add", "--all", "--", ".", ":(exclude).harness", chdir: target)
     source.fetch("pins").select { |pin| pin["kind"] == "gitlink" }.each do |pin|
       command("git", "update-index", "--add", "--cacheinfo", "160000,#{pin.fetch('revision')},#{pin.fetch('path')}", chdir: target)
     end
@@ -513,9 +515,12 @@ module BenchmarkCases
           FileUtils.cp(File.join(root, "scripts", "#{name}.rb"), File.join(target, "scripts", "#{name}.rb"))
         end
         copy_shared_actions(target, root: root)
+        unless File.file?(File.join(target, "reapi-recipe.json"))
+          %w[reapi-registry reapi-client reapi-setup].each { |name| FileUtils.rm_f(File.join(target, "scripts", "#{name}.rb")) }
+        end
         NativeCase.write_action(item, directory: target, lane: "fresh", variant: native_variant) if item.dig("execution", "native")
         # A copied, unused adapter is not an invocation by this case.
-        %w[docker-benchmark nix-benchmark].each do |name|
+        %w[docker-benchmark nix-benchmark reapi-benchmark].each do |name|
           relative = ".github/actions/#{name}"
           action = File.join(target, relative)
           sources = Dir[File.join(target, ".github", "**", "*.{yml,yaml}")].reject { |path| path.start_with?(action + "/") }

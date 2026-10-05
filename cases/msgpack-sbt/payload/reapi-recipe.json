@@ -1,0 +1,19 @@
+{
+  "tool": "sbt",
+  "command": [
+    "./sbt",
+    "--debug",
+    "test"
+  ],
+  "prepare": [
+    [
+      "./sbt",
+      "update"
+    ]
+  ],
+  "outputs": [
+    "msgpack-core/target/**/*.class",
+    "msgpack-jackson/target/**/*.class"
+  ],
+  "warm_hit_pattern": "remote.*cache.*hit|cache.*hit.*remote"
+}

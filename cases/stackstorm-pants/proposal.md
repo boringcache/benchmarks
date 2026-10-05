@@ -1,33 +1,37 @@
-# StackStorm / Pants
+# stackstorm-pants
 
-Status: source-pinned evaluation; execution is blocked by `case.json`.
-No benchmark measurements have been collected.
+Status: native REAPI correctness screen implemented; hosted qualification pending.
 
 Source: [StackStorm/st2 at `9824de4dfd0c869869e310dee729308f398ad83a`](https://github.com/StackStorm/st2/tree/9824de4dfd0c869869e310dee729308f398ad83a).
 
-Reviewed upstream files:
-
-- [pants.toml](https://github.com/StackStorm/st2/blob/9824de4dfd0c869869e310dee729308f398ad83a/pants.toml)
-- [.github/workflows/test.yaml](https://github.com/StackStorm/st2/blob/9824de4dfd0c869869e310dee729308f398ad83a/.github/workflows/test.yaml)
-
 ## Workload
 
-Use upstream Pants 2.25.0 and Python 3.11 for the plugin test workload. Prepare locked dependencies and the upstream MongoDB, RabbitMQ and Redis services before timing on Linux x86_64.
+This screen selects `pants-plugins/pack_metadata/target_types_test.py`, a plugin test file that does not require MongoDB, RabbitMQ or Redis services. Pants 2.25.0 and Python 3.11.14 are pinned. Test reports must contain tests and no failures or errors. Full StackStorm service tests are outside this screen.
 
-Proposed timed command: `pants test pants-plugins/::`.
+Declared command: `pants --no-pantsd --stats-log test --report pants-plugins/pack_metadata/target_types_test.py`.
 
-This selects the existing Pants plugin-test CI job. The full StackStorm unit and integration suites are separate workloads. Service versions and configuration must match between providers; inspect the selected tests for external state before enabling remote result reuse.
+The case uses the shared `reapi-fresh-benchmark.yml` workflow, registry runner,
+source verifier and canonical reporter. Tool installation and dependency
+preparation run before timing. Required dependency tasks that the native client
+runs again remain inside the command measurement.
 
-## Comparison
+## Cache and verification
 
-Start with two cold builds and their identical-source warm replays per provider.
-Compare BoringCache with `bazel-remote` using the same source, client, runner,
-outputs and local execution. Declare endpoint settings and configuration patches
-before execution. Keep remote execution disabled.
+BoringCache runs through `boringcache ci run` and `cache-registry --reapi-port`.
+The CLI owns OIDC renewal, storage, cache publication and shutdown flushing.
+Cold uses a fresh case/series/sample/run tag. Warm uses a separate worker and a
+read-only registry. Native client result state is not transferred between workers.
 
-Record cache setup/restore, the declared command, upload completion, native
-hit/miss evidence, output checks and provider storage sources. Missing storage
-remains unmeasured. Failed observations remain in the series.
+The protocol comparator is bazel-remote 2.6.2. Its local store is transferred as a
+GitHub artifact before the warm registry starts. That transfer is outside timing,
+so this is a correctness screen, not an end-to-end provider performance comparison.
+Registry startup, native command and shutdown durations are recorded separately.
+Storage is unmeasured. No schedule or performance publication is enabled.
 
-Follow [the shared case process](../../docs/process.md). The case has no schedule
-or published results. `case.json` lists the remaining activation checks.
+Warm qualification requires native remote-hit evidence, verified outputs matching
+the cold hashes and successful registry shutdown. Failed runs and their logs are
+retained. The initial screen uses one sample; repeat qualification uses the case's
+two-sample declaration. Neither establishes a general performance advantage.
+
+This temporary shared registry entrypoint can be replaced by the product adapter
+without changing the source recipes or output checks.

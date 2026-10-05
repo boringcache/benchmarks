@@ -1,0 +1,103 @@
+name: Native REAPI screening
+run-name: '${{ inputs.case_id }} REAPI ${{ inputs.series_id }} sample ${{ inputs.sample }}'
+on:
+  workflow_dispatch:
+    inputs:
+      case_id:
+        type: choice
+        options: [gogs-moon, opencut-moon, stackstorm-pants, executorch-buck2, msgpack-sbt]
+        required: true
+      provider:
+        description: Selected provider for a native cache correctness screen.
+        type: choice
+        options: [all, boringcache, bazel-remote]
+        default: all
+      cli_version:
+        description: Exact CLI release or canary; required for BoringCache execution.
+        type: string
+        default: ''
+      series_id:
+        type: string
+        default: ''
+      sample:
+        type: string
+        default: '1'
+permissions:
+  contents: read
+  actions: read
+env:
+  BENCHMARK_SERIES_ID: ${{ inputs.series_id }}
+  BENCHMARK_SAMPLE: ${{ inputs.sample }}
+  BENCHMARK_RUNNER_CLASS: ubuntu-24.04
+  BORINGCACHE_NO_GIT: 'true'
+jobs:
+  providers:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.providers.outputs.matrix }}
+    steps:
+      - id: providers
+        env:
+          PROVIDER: ${{ inputs.provider }}
+        run: |
+          case "$PROVIDER" in
+            all) echo 'matrix=["boringcache","bazel-remote"]' >> "$GITHUB_OUTPUT" ;;
+            boringcache) echo 'matrix=["boringcache"]' >> "$GITHUB_OUTPUT" ;;
+            bazel-remote) echo 'matrix=["bazel-remote"]' >> "$GITHUB_OUTPUT" ;;
+            *) exit 1 ;;
+          esac
+  cold:
+    name: '${{ matrix.provider }} ${{ inputs.case_id }} cold'
+    needs: providers
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        provider: ${{ fromJSON(needs.providers.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: .harness
+          persist-credentials: false
+      - uses: ./.harness/.github/actions/prepare-case
+        with:
+          case-id: ${{ inputs.case_id }}
+      - uses: ./.github/actions/reapi-benchmark
+        with:
+          case-id: ${{ inputs.case_id }}
+          provider: ${{ matrix.provider }}
+          phase: cold
+          cli-version: ${{ inputs.cli_version }}
+  warm:
+    name: '${{ matrix.provider }} ${{ inputs.case_id }} warm'
+    needs: [providers, cold]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        provider: ${{ fromJSON(needs.providers.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: .harness
+          persist-credentials: false
+      - uses: ./.harness/.github/actions/prepare-case
+        with:
+          case-id: ${{ inputs.case_id }}
+      - uses: ./.github/actions/reapi-benchmark
+        with:
+          case-id: ${{ inputs.case_id }}
+          provider: ${{ matrix.provider }}
+          phase: warm
+          cli-version: ${{ inputs.cli_version }}
