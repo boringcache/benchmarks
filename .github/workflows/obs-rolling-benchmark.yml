@@ -1,7 +1,6 @@
 ---
 name: OBS Studio comparison rolling
-run-name: obs-studio ${{ inputs.cache_tool }} rolling ${{ inputs.series_id }} sample
-  ${{ inputs.sample }}
+run-name: "obs-studio / ${{ inputs.cache_tool || 'all' }} | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} rolling | ${{ inputs.series_id || github.ref_name }} / sample ${{ inputs.sample || '1' }}"
 'on':
   workflow_dispatch:
     inputs:

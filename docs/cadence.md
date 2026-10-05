@@ -73,8 +73,12 @@ keeping strict package and dependency comparisons. The earlier Zed Nix screen
 restored both providers' package outputs correctly but failed the dependency
 baseline comparison; that failed run remains retained.
 
-Shared workflows use case, variant, lane, provider and phase labels. REAPI, Nix
-and OBS rolling results use the canonical benchmark report and retain both
+Run names use the case, optional variant, CLI channel and lane, followed by the
+series or branch and sample. For example, `n8n / turbo | Canary fresh | main /
+sample 1` and `n8n / turbo | Stable rolling | main / sample 1`. Stable tags are
+not labelled as canaries merely because an exact CLI version was supplied.
+Provider and phase remain visible in job labels. REAPI, Nix and OBS rolling
+results use the canonical benchmark report and retain both
 structured evidence and the comparison summary. Reports contain measurements
 and verification results, without performance verdicts.
 

@@ -1,6 +1,6 @@
 ---
 name: 'zed: Zed Cargo layer matrix'
-run-name: "${{ format('Zed Cargo layers | CLI {0}', inputs.cli_version || 'Action default') }}"
+run-name: "Zed Cargo layers | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} fresh | ${{ inputs.series_id || github.ref_name }} / sample ${{ inputs.sample || '1' }}"
 permissions:
   actions: read
   contents: read

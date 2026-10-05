@@ -1,9 +1,6 @@
 ---
 name: 'obs-studio: OBS Studio Actions Cache benchmark'
-run-name: "${{ github.event_name == 'pull_request' && format('OBS validation | PR
-  #{0}', github.event.pull_request.number) || github.event_name == 'push' && 'OBS
-  rolling | Upstream update' || format('OBS Actions Cache | Manual dispatch ({0})',
-  github.ref_name) }}"
+run-name: "obs-studio / ${{ inputs.cache_tool || 'all' }} / Actions Cache | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} fresh | ${{ inputs.series_id || github.ref_name }} / sample ${{ inputs.sample || '1' }}"
 permissions:
   actions: read
   contents: read
