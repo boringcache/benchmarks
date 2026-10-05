@@ -373,6 +373,31 @@ class BenchmarkCaseScriptsTest < Minitest::Test
     end
   end
 
+  def test_prepared_snapshot_recipe_uses_only_its_verified_upstream_parent
+    with_case("hugo-go") do |directory|
+      git = ->(*args) { Open3.capture2e("git", "-C", directory, "-c", "user.name=Benchmark test", "-c", "user.email=benchmark@localhost", "-c", "commit.gpgsign=false", *args) }
+      git.call("init")
+      File.write(File.join(directory, "recipe.txt"), "parent recipe\n")
+      git.call("add", ".")
+      _, status = git.call("commit", "-m", "Upstream source")
+      assert status.success?
+      revision, = git.call("rev-parse", "HEAD")
+      contract = {"upstream_files" => {"recipe.txt" => Digest::SHA256.hexdigest("new recipe\n")},
+        "upstream_files_by_revision" => {revision.strip => {"recipe.txt" => Digest::SHA256.hexdigest("parent recipe\n")}}, "commands" => {}}
+      File.write(File.join(directory, "recipe-contract.json"), JSON.generate(contract))
+      git.call("add", ".")
+      git.call("commit", "-m", "Prepare workload")
+      context = File.join(directory, "benchmark-context.json")
+      File.write(context, JSON.generate({"source" => {"revision" => revision.strip}}))
+      _, error, status = run_script(directory, "verify-upstream-recipe", directory)
+      assert status.success?, error
+      git.call("commit", "--allow-empty", "-m", "Unexpected wrapper")
+      _, error, status = run_script(directory, "verify-upstream-recipe", directory)
+      refute status.success?
+      assert_includes error, "does not have the declared upstream parent"
+    end
+  end
+
   def test_deno_profile_selects_exactly_one_declared_profile
     with_case("deno") do |directory|
       path = File.join(directory, ".boringcache.toml")

@@ -16,6 +16,20 @@
         "partial": 1
       },
       "unavailable_reference_count": 1
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37296214039,
+      "verified_files": 15,
+      "gaps": [],
+      "sha256": "02cedef26b2bf4a6e4fd58b6ba454be3d6ea10e8a2daf6c08d92e511abdb5a67",
+      "bundle_bytes": 6100745,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-cadence-2026-10-05",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37296214039.tar.gz",
+      "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory",
+      "verified_on": "2026-10-05",
+      "scope": "This failed run, including available attempts, jobs, logs, artifacts, commit and workflow"
     }
   ],
   "exports": [
