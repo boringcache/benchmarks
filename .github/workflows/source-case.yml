@@ -58,8 +58,16 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
-          ref: ${{ needs.previous.outputs.ref }}
+          ref: ${{ vars.BENCHMARK_CADENCE_ACTIVE == 'true' && github.ref_name == 'main' && 'main' || github.sha }}
+          fetch-depth: 0
           persist-credentials: false
+      - name: Select the inspected revision from trusted history
+        env:
+          INSPECTED_REF: ${{ needs.previous.outputs.ref }}
+        run: |
+          [[ "$INSPECTED_REF" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          git merge-base --is-ancestor "$INSPECTED_REF" HEAD
+          git checkout --detach "$INSPECTED_REF"
       - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
       - run: bundle install --jobs 4 --retry 2
       - name: Inspect upstream against the reviewed recipe
@@ -90,8 +98,16 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
-          ref: ${{ needs.previous.outputs.ref }}
+          ref: ${{ vars.BENCHMARK_CADENCE_ACTIVE == 'true' && github.ref_name == 'main' && 'main' || github.sha }}
+          fetch-depth: 0
           persist-credentials: false
+      - name: Select the inspected revision from trusted history
+        env:
+          INSPECTED_REF: ${{ needs.previous.outputs.ref }}
+        run: |
+          [[ "$INSPECTED_REF" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          git merge-base --is-ancestor "$INSPECTED_REF" HEAD
+          git checkout --detach "$INSPECTED_REF"
       - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
       - run: bundle install --jobs 4 --retry 2
       - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
