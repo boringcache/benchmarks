@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "case_id": "obs-studio",
+  "series_id": "cadence-rolling-advance-xcode-02",
+  "created_at": "2026-10-05T14:38:27Z",
+  "lane": "rolling",
+  "phases": [
+    "commit"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "8f533cf9f917db17ddc72b7108b9666ddecaf44002a0ab817ee63a9e55c4348d",
+  "variant": "xcode",
+  "workflow_inputs": {
+    "cli_version": "vcli-canary-7a5b27146ebe",
+    "cache_scope": "cadence-20261005-obs-studio-xcode-v2",
+    "cache_tool": "xcode"
+  },
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Cache restore/setup plus the upstream Building obs-studio log group; dependency installation, CMake configuration, queueing, and post-job cache save are excluded",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "obsproject/obs-studio",
+    "pins": [
+      {
+        "path": "payload/benchmark-source.env",
+        "revision": "97ca37291c4e5f5c5c8a0719b8c7b897d2fbc6b5",
+        "kind": "env"
+      },
+      {
+        "path": "payload/benchmark-source.env",
+        "revision": "04d8967656361ab4b90ccaeec1c591f9c024449d",
+        "kind": "env"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream recipe and commands",
+    "Successful upstream build",
+    "Native ccache or Xcode output verification for reuse observations"
+  ],
+  "plan_sha256": "71a4a39bcc095f6bcf55fbb038323631597c2974ccb8b14c437ed5ee04d4c9d8"
+}

@@ -53,7 +53,8 @@ module BenchmarkCatalog
     end
     archives = run_ids.filter_map { |id| evidence[[BenchmarkCases::REPOSITORY, id]] }.map do |archive|
       archive.slice("repository", "run_id", "inventory_state", "verified_files", "gaps", "scope",
-        "unavailable_workflow_evidence", "release_url", "bundle_url", "bundle_bytes", "sha256", "publication_verification")
+        "unavailable_workflow_evidence", "release_url", "bundle_url", "bundle_bytes", "sha256", "publication_verification",
+        "bundle_format", "archive_sha256", "archive_bytes", "bundle_parts")
     end
     base.merge(plan.slice("lane", "variant", "sample_count", "comparison", "source", "plan_sha256", "definition_sha256"),
       "state" => state, "publication" => report.fetch("publication"),

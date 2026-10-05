@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "n8n",
+  "series_id": "cadence-rolling-next-turbo",
+  "sample": 1,
+  "run_id": "37325183094",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37325183094",
+  "source_sha": "173fbed3116e31cad526e2e4d777f3f8594c47ce",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "c1a7d6899fa0e314c6a68699f3312ef3c9e51b950b3a62522960b1e371057e50"
+}

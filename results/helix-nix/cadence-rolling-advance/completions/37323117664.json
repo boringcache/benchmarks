@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "helix-nix",
+  "series_id": "cadence-rolling-advance",
+  "sample": 1,
+  "run_id": "37323117664",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323117664",
+  "source_sha": "915ea2921d4b4d23f0238a4b7e28ecce1bbcc880",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "6ccb6af059c8aae587960411129f7d4c7908c4555fe54f657899e18aa3e2b060"
+}

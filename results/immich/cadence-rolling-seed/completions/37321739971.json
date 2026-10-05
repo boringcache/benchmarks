@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "immich",
+  "series_id": "cadence-rolling-seed",
+  "sample": 1,
+  "run_id": "37321739971",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37321739971",
+  "source_sha": "410dd8bbf3d13a5a4dbe14acb9d66d1923c3d361",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "07eb4d0fc8d5073ad36895d85586e3b25a17b6d8671c966903a76bacd3f7f27d"
+}

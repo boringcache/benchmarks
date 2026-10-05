@@ -94,7 +94,9 @@ rolling requests with the canary without publishing or dispatching builds.
 The earlier source matrix completed the cases independently and identified
 recipe changes in Immich, Qdrant, msgpack and Zed. Their reviewed changes are
 recorded in [the recipe review](recipe-reviews-2026-10-05.md). New source pins and
-changed recipes still require live qualification.
+changed recipes are covered by the
+[live qualification review](cadence-qualification-2026-10-05.md), which retains
+successful, failed and pending observations separately.
 
 The repository's Actions cache limit is 200 GB, with seven-day retention.
 Capacity alone does not establish that a particular rolling seed was retained
@@ -102,9 +104,9 @@ or restored.
 
 Remaining activation requirements:
 
-- Pass hosted checks for the complete controller and rolling changes.
-- Qualify the new and changed rolling paths with actual source advancement,
-  retained seeds, verified outputs and canary CLI execution.
+- Finish PostHog and Zed Nix rolling qualification and evidence preservation.
+  The other fifteen rolling targets have passed seed and changed-source runs;
+  hosted checks and 252 local tests pass.
 - Pass the corrected Zed Nix cold/warm screen using the common dependency seed.
 - Verify main-branch workflow-token publication at cutover. The
   [isolated publication rehearsal](../migration/rehearsals/mastodon-publication/review.md)

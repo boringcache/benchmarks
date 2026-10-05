@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "executorch-buck2",
+  "series_id": "cadence-rolling-seed",
+  "sample": 1,
+  "run_id": "37322592957",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37322592957",
+  "source_sha": "694acf2b29d055602938d869ef1815c42de6ee11",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "ef10d1633ac3cbe6e9b49652f2d4e421147ab1558ec026da88982303d2dc9521"
+}

@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "benchmark": "obs-studio",
+  "strategy": "actions-cache",
+  "lane": "rolling",
+  "phase": "commit",
+  "variant": "ccache",
+  "mode": "ccache",
+  "adapter": "ccache",
+  "case": {
+    "schema_version": 1,
+    "case_id": "obs-studio",
+    "workspace": "boringcache/benchmarks",
+    "definition_sha256": "971d068999fdb986de97e99f67123b94fd3c4fccc1bdeda4ed454ccacb7b0ec3",
+    "source": {
+      "repository": "obsproject/obs-studio",
+      "pins": [
+        {
+          "path": "payload/benchmark-source.env",
+          "revision": "e7136951c052db9a74de853f2f0ec5d1bc8f6f4a",
+          "kind": "env"
+        },
+        {
+          "path": "payload/benchmark-source.env",
+          "revision": "ef5814431c6af9061874470201d0b799bc84602b",
+          "kind": "env"
+        }
+      ]
+    },
+    "origin": {
+      "repository": "boringcache/benchmark-obs-studio",
+      "branch": "main",
+      "revision": "74322882037cad76d0fda72b5ba6058ded815343"
+    },
+    "verification": [
+      "Pinned upstream recipe and commands",
+      "Successful upstream build",
+      "Native ccache or Xcode output verification for reuse observations"
+    ],
+    "comparison": {
+      "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+      "providers": [
+        "boringcache",
+        "actions-cache"
+      ],
+      "timed_scope": "Cache restore/setup plus the upstream Building obs-studio log group; dependency installation, CMake configuration, queueing, and post-job cache save are excluded",
+      "primary_metric": "build_and_reuse_seconds",
+      "storage": "provider-reported",
+      "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+      "sample_count": 10
+    },
+    "execution": {
+      "workflows": [
+        {
+          "path": ".github/workflows/obs-studio-obs-actions-cache.yml",
+          "variant_input": "cache_tool",
+          "lane": "fresh",
+          "inputs": {},
+          "phases": [
+            "cold",
+            "commit"
+          ],
+          "variants": [
+            "ccache",
+            "xcode"
+          ]
+        },
+        {
+          "path": ".github/workflows/obs-studio-obs-boringcache.yml",
+          "variant_input": "cache_tool",
+          "lane": "fresh",
+          "inputs": {},
+          "phases": [
+            "cold",
+            "commit"
+          ],
+          "variants": [
+            "ccache",
+            "xcode"
+          ]
+        },
+        {
+          "path": ".github/workflows/obs-studio-obs-xcode-continuation.yml",
+          "lane": "diagnostic",
+          "inputs": {}
+        },
+        {
+          "path": ".github/workflows/obs-rolling-benchmark.yml",
+          "variant_input": "cache_tool",
+          "lane": "rolling",
+          "inputs": {},
+          "variants": [
+            "ccache",
+            "xcode"
+          ]
+        }
+      ],
+      "sync": "build-relevant-pair",
+      "cache_tags": {
+        "obs-studio-ccache": "{scope}-ccache",
+        "obs-studio-xcode": "{scope}-xcode"
+      },
+      "sync_minute": 18,
+      "source_prefix": "OBS"
+    }
+  },
+  "timing": {
+    "restore_or_setup_seconds": 0,
+    "build_seconds": 577.6759015939999,
+    "total_seconds": 577.6759015939999,
+    "dependency_setup_seconds": null,
+    "compile_seconds": null,
+    "verification_seconds": null,
+    "save_seconds": null,
+    "comparison_scope": "Cache restore/setup plus the upstream Building obs-studio log group; dependency installation, CMake configuration, queueing, and post-job cache save are excluded",
+    "build_and_reuse_seconds": 577.6759015939999
+  },
+  "cache": {
+    "hit": false,
+    "sccache_proof": null,
+    "import_ready": null,
+    "import_refs": 0,
+    "docker_plan": null,
+    "tag": null,
+    "workspace": null,
+    "storage_bytes": null,
+    "storage_source": null,
+    "storage_breakdown": null
+  },
+  "source": {
+    "repository": "obsproject/obs-studio",
+    "sha": "ef5814431c6af9061874470201d0b799bc84602b"
+  },
+  "product_refs": {},
+  "action": {
+    "resolved_mode": null,
+    "resolved_tags": null,
+    "trust_state": null,
+    "diagnostics_level": null
+  },
+  "github": {
+    "repository": "boringcache/benchmarks",
+    "run_id": "37322616359",
+    "run_attempt": "1",
+    "job": "actions-cache-ccache",
+    "workflow": "OBS Studio comparison rolling",
+    "ref_name": "cadence-rehearsal-rolling",
+    "runner_os": "Linux",
+    "runner_arch": "X64",
+    "runner_name": "GitHub Actions 1000174437",
+    "runner_environment": "github-hosted",
+    "runner_image": "ubuntu26",
+    "runner_image_version": "20260927.149.1"
+  },
+  "run_uid": "gh-37322616359-1",
+  "series": {
+    "id": "cadence-rolling-seed-ccache",
+    "sample": 1
+  },
+  "environment": {
+    "os": "Linux",
+    "arch": "X64",
+    "image": "ubuntu26",
+    "image_version": "20260927.149.1",
+    "machine": "ubuntu-26.04"
+  },
+  "verification": {
+    "passed": true,
+    "checks": [
+      "Output verification completed before recording this phase"
+    ],
+    "declared_checks": [
+      "Pinned upstream recipe and commands",
+      "Successful upstream build",
+      "Native ccache or Xcode output verification for reuse observations"
+    ]
+  },
+  "evidence_links": [
+    "https://github.com/boringcache/benchmarks/actions/runs/37322616359"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "obs-studio",
+  "series_id": "cadence-rolling-seed-xcode-02",
+  "sample": 1,
+  "run_id": "37326133177",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37326133177",
+  "source_sha": "e6e7a3da41e0e94deaae9dbcb4ed530aaa3c59f1",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "1494eea0f15a03a25bb4547ac541b315520ae761dc4a1cd57d90d9a731899297"
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "case_id": "opencut-moon",
+  "series_id": "cadence-rolling-advance-02",
+  "created_at": "2026-10-05T14:22:36Z",
+  "lane": "rolling",
+  "phases": [
+    "commit"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "66deccb1e54523e9fe2e6912379bfb779717bccb1e78f566a84b2dc7095d4b2f",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "opencut-moon",
+    "cli_version": "vcli-canary-7a5b27146ebe",
+    "cache_scope": "cadence-20261005-opencut-moon-v2"
+  },
+  "comparison": {
+    "question": "Does Moon restore the OpenCut web build on a clean worker?",
+    "providers": [
+      "boringcache",
+      "bazel-remote"
+    ],
+    "primary_metric": "correctness",
+    "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
+    "storage": "unmeasured",
+    "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+    "sample_count": 2
+  },
+  "source": {
+    "repository": "OpenCut-app/OpenCut",
+    "revision": "e668010778568641babef2cc40be4703ae6916d6",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "e668010778568641babef2cc40be4703ae6916d6"
+      }
+    ]
+  },
+  "verification": [
+    "Require the declared native command to succeed",
+    "Require declared outputs and successful output checks",
+    "Require native remote-hit evidence and the same output hashes on the warm worker",
+    "Require registry shutdown to complete successfully"
+  ],
+  "plan_sha256": "78b7796942758265e9ac7bab7cce6a7a579307fdafc10566522875719f33976d"
+}

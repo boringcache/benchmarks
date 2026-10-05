@@ -1,0 +1,936 @@
+{
+  "schema_version": 1,
+  "reviewed_on": "2026-10-05",
+  "cli_version": "vcli-canary-7a5b27146ebe",
+  "cases": 12,
+  "targets": 17,
+  "activation": "deferred until a compatible stable CLI release and schedule cutover",
+  "observations": "All executed earlier cohorts remain retained, including failed and cancelled runs. Corrected cohorts are separate frozen plans.",
+  "rolling": [
+    {
+      "case_id": "immich",
+      "variant": null,
+      "seed": {
+        "series": "results/immich/cadence-rolling-seed",
+        "run_id": 37321739971,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37321739971",
+        "source": {
+          "repository": "immich-app/immich",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "007c18aec6cc9552fb7d8b7c791c41d7424876b0",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-immich",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/immich/cadence-rolling-advance",
+        "run_id": 37323121773,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323121773",
+        "source": {
+          "repository": "immich-app/immich",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "0521a662dd4c135fc311fd1803d33756971af9c5",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-immich",
+        "completion": "success"
+      },
+      "state": "executions-passed",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification"
+    },
+    {
+      "case_id": "mastodon",
+      "variant": "server",
+      "seed": {
+        "series": "results/mastodon/cadence-rolling-seed-server",
+        "run_id": 37321744434,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37321744434",
+        "source": {
+          "repository": "mastodon/mastodon",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-mastodon-server",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/mastodon/cadence-rolling-advance-server",
+        "run_id": 37323126507,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323126507",
+        "source": {
+          "repository": "mastodon/mastodon",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "842b86096dbe3067a02e3f16809e2368eaeddce9",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-mastodon-server",
+        "completion": "success"
+      },
+      "state": "executions-passed",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification"
+    },
+    {
+      "case_id": "mastodon",
+      "variant": "streaming",
+      "seed": {
+        "series": "results/mastodon/cadence-rolling-seed-streaming",
+        "run_id": 37321748690,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37321748690",
+        "source": {
+          "repository": "mastodon/mastodon",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-mastodon-streaming",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/mastodon/cadence-rolling-advance-streaming",
+        "run_id": 37323131290,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323131290",
+        "source": {
+          "repository": "mastodon/mastodon",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "842b86096dbe3067a02e3f16809e2368eaeddce9",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-mastodon-streaming",
+        "completion": "success"
+      },
+      "state": "executions-passed",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification"
+    },
+    {
+      "case_id": "n8n",
+      "variant": "distroless",
+      "seed": {
+        "series": "results/n8n/cadence-rolling-seed-distroless",
+        "run_id": 37321753318,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37321753318",
+        "source": {
+          "repository": "n8n-io/n8n",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-n8n-distroless",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/n8n/cadence-rolling-advance-distroless",
+        "run_id": 37323140444,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323140444",
+        "source": {
+          "repository": "n8n-io/n8n",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "206fc6f317e353a98f7359801376a22d6bd136a2",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-n8n-distroless",
+        "completion": "success"
+      },
+      "state": "executions-passed",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification"
+    },
+    {
+      "case_id": "n8n",
+      "variant": "docker",
+      "seed": {
+        "series": "results/n8n/cadence-rolling-seed-docker",
+        "run_id": 37321758035,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37321758035",
+        "source": {
+          "repository": "n8n-io/n8n",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-n8n-docker",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/n8n/cadence-rolling-advance-docker",
+        "run_id": 37323145174,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323145174",
+        "source": {
+          "repository": "n8n-io/n8n",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "206fc6f317e353a98f7359801376a22d6bd136a2",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-n8n-docker",
+        "completion": "success"
+      },
+      "state": "executions-passed",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification"
+    },
+    {
+      "case_id": "n8n",
+      "variant": "runners",
+      "seed": {
+        "series": "results/n8n/cadence-rolling-seed-runners",
+        "run_id": 37321762921,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37321762921",
+        "source": {
+          "repository": "n8n-io/n8n",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-n8n-runners",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/n8n/cadence-rolling-advance-runners",
+        "run_id": 37323150431,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323150431",
+        "source": {
+          "repository": "n8n-io/n8n",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "206fc6f317e353a98f7359801376a22d6bd136a2",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-n8n-runners",
+        "completion": "success"
+      },
+      "state": "executions-passed",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification"
+    },
+    {
+      "case_id": "n8n",
+      "variant": "turbo",
+      "seed": {
+        "series": "results/n8n/cadence-rolling-seed-turbo",
+        "run_id": 37321767409,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37321767409",
+        "source": {
+          "repository": "n8n-io/n8n",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-n8n-turbo",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/n8n/cadence-rolling-advance-turbo",
+        "run_id": 37323155106,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323155106",
+        "source": {
+          "repository": "n8n-io/n8n",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "206fc6f317e353a98f7359801376a22d6bd136a2",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-n8n-turbo",
+        "completion": "success"
+      },
+      "state": "executions-passed",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification",
+      "additional_advancement": {
+        "series": "results/n8n/cadence-rolling-next-turbo",
+        "run_id": 37325183094,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37325183094",
+        "source": {
+          "repository": "n8n-io/n8n",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "b7071c91c7ef959e1cc3d703495e4fee9fcc9744",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-n8n-turbo",
+        "completion": "success"
+      },
+      "reuse_observation": "The first advancement retained a usable BoringCache entry but reported zero native hits. The next actual upstream revision reported 70 native hits and 2 misses. Both observations are retained."
+    },
+    {
+      "case_id": "posthog",
+      "variant": "layers",
+      "seed": {
+        "series": "results/posthog/cadence-rolling-seed-layers",
+        "run_id": 37321772493,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37321772493",
+        "source": {
+          "repository": "PostHog/posthog",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-posthog-layers",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/posthog/cadence-rolling-advance-layers",
+        "run_id": 37323164071,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323164071",
+        "source": {
+          "repository": "PostHog/posthog",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "a6f293b70c41b00c8af78275619bab0ada2d0a4a",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-posthog-layers",
+        "completion": "awaiting-completion-evidence"
+      },
+      "state": "pending",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification"
+    },
+    {
+      "case_id": "executorch-buck2",
+      "variant": null,
+      "seed": {
+        "series": "results/executorch-buck2/cadence-rolling-seed-02",
+        "run_id": 37324032100,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37324032100",
+        "source": {
+          "repository": "pytorch/executorch",
+          "revision": "91d26b3140533172f2557eabb1476e22f0b98bc3",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "91d26b3140533172f2557eabb1476e22f0b98bc3"
+            }
+          ],
+          "patch": "cache.patch"
+        },
+        "cache_scope": "cadence-20261005-executorch-buck2-v2",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/executorch-buck2/cadence-rolling-advance-02",
+        "run_id": 37324204556,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37324204556",
+        "source": {
+          "repository": "pytorch/executorch",
+          "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+            }
+          ],
+          "patch": "cache.patch"
+        },
+        "cache_scope": "cadence-20261005-executorch-buck2-v2",
+        "completion": "success"
+      },
+      "state": "executions-passed",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification",
+      "comparator_lineage": {
+        "cache_key": "reapi-executorch-buck2-cadence-20261005-executorch-buck2-v2-Linux-X64-37324032100-1",
+        "previous": {
+          "case_id": "executorch-buck2",
+          "source": {
+            "repository": "pytorch/executorch",
+            "revision": "91d26b3140533172f2557eabb1476e22f0b98bc3",
+            "pins": [
+              {
+                "path": "proposal.md",
+                "kind": "snapshot",
+                "revision": "91d26b3140533172f2557eabb1476e22f0b98bc3"
+              }
+            ],
+            "patch": "cache.patch"
+          },
+          "run_id": "37324032100",
+          "run_attempt": "1"
+        },
+        "current": {
+          "case_id": "executorch-buck2",
+          "source": {
+            "repository": "pytorch/executorch",
+            "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb",
+            "pins": [
+              {
+                "path": "proposal.md",
+                "kind": "snapshot",
+                "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+              }
+            ],
+            "patch": "cache.patch"
+          },
+          "run_id": "37324204556",
+          "run_attempt": "1"
+        }
+      }
+    },
+    {
+      "case_id": "gogs-moon",
+      "variant": null,
+      "seed": {
+        "series": "results/gogs-moon/cadence-rolling-seed-03",
+        "run_id": 37325135541,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37325135541",
+        "source": {
+          "repository": "gogs/gogs",
+          "revision": "103893ed5f78d2f138f5286a2dd3b4e94d18fb0b",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "103893ed5f78d2f138f5286a2dd3b4e94d18fb0b"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-gogs-moon-v3",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/gogs-moon/cadence-rolling-advance-03",
+        "run_id": 37325282767,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37325282767",
+        "source": {
+          "repository": "gogs/gogs",
+          "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-gogs-moon-v3",
+        "completion": "success"
+      },
+      "state": "executions-passed",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification",
+      "comparator_lineage": {
+        "cache_key": "reapi-gogs-moon-cadence-20261005-gogs-moon-v3-Linux-X64-37325135541-1",
+        "previous": {
+          "case_id": "gogs-moon",
+          "source": {
+            "repository": "gogs/gogs",
+            "revision": "103893ed5f78d2f138f5286a2dd3b4e94d18fb0b",
+            "pins": [
+              {
+                "path": "proposal.md",
+                "kind": "snapshot",
+                "revision": "103893ed5f78d2f138f5286a2dd3b4e94d18fb0b"
+              }
+            ]
+          },
+          "run_id": "37325135541",
+          "run_attempt": "1"
+        },
+        "current": {
+          "case_id": "gogs-moon",
+          "source": {
+            "repository": "gogs/gogs",
+            "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0",
+            "pins": [
+              {
+                "path": "proposal.md",
+                "kind": "snapshot",
+                "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+              }
+            ]
+          },
+          "run_id": "37325282767",
+          "run_attempt": "1"
+        }
+      }
+    },
+    {
+      "case_id": "opencut-moon",
+      "variant": null,
+      "seed": {
+        "series": "results/opencut-moon/cadence-rolling-seed-03",
+        "run_id": 37325140807,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37325140807",
+        "source": {
+          "repository": "OpenCut-app/OpenCut",
+          "revision": "400f097becba5db0fbc305d5a65348cb81c20356",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "400f097becba5db0fbc305d5a65348cb81c20356"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-opencut-moon-v3",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/opencut-moon/cadence-rolling-advance-03",
+        "run_id": 37325287254,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37325287254",
+        "source": {
+          "repository": "OpenCut-app/OpenCut",
+          "revision": "e668010778568641babef2cc40be4703ae6916d6",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "e668010778568641babef2cc40be4703ae6916d6"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-opencut-moon-v3",
+        "completion": "success"
+      },
+      "state": "executions-passed",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification",
+      "comparator_lineage": {
+        "cache_key": "reapi-opencut-moon-cadence-20261005-opencut-moon-v3-Linux-X64-37325140807-1",
+        "previous": {
+          "case_id": "opencut-moon",
+          "source": {
+            "repository": "OpenCut-app/OpenCut",
+            "revision": "400f097becba5db0fbc305d5a65348cb81c20356",
+            "pins": [
+              {
+                "path": "proposal.md",
+                "kind": "snapshot",
+                "revision": "400f097becba5db0fbc305d5a65348cb81c20356"
+              }
+            ]
+          },
+          "run_id": "37325140807",
+          "run_attempt": "1"
+        },
+        "current": {
+          "case_id": "opencut-moon",
+          "source": {
+            "repository": "OpenCut-app/OpenCut",
+            "revision": "e668010778568641babef2cc40be4703ae6916d6",
+            "pins": [
+              {
+                "path": "proposal.md",
+                "kind": "snapshot",
+                "revision": "e668010778568641babef2cc40be4703ae6916d6"
+              }
+            ]
+          },
+          "run_id": "37325287254",
+          "run_attempt": "1"
+        }
+      }
+    },
+    {
+      "case_id": "stackstorm-pants",
+      "variant": null,
+      "seed": {
+        "series": "results/stackstorm-pants/cadence-rolling-seed-02",
+        "run_id": 37324025714,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37324025714",
+        "source": {
+          "repository": "StackStorm/st2",
+          "revision": "8c57959f3a23cafc55312e28c5beb7b2dab045a3",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "8c57959f3a23cafc55312e28c5beb7b2dab045a3"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-stackstorm-pants-v2",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/stackstorm-pants/cadence-rolling-advance-02",
+        "run_id": 37324228460,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37324228460",
+        "source": {
+          "repository": "StackStorm/st2",
+          "revision": "9824de4dfd0c869869e310dee729308f398ad83a",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "9824de4dfd0c869869e310dee729308f398ad83a"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-stackstorm-pants-v2",
+        "completion": "success"
+      },
+      "state": "executions-passed",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification",
+      "comparator_lineage": {
+        "cache_key": "reapi-stackstorm-pants-cadence-20261005-stackstorm-pants-v2-Linux-X64-37324025714-1",
+        "previous": {
+          "case_id": "stackstorm-pants",
+          "source": {
+            "repository": "StackStorm/st2",
+            "revision": "8c57959f3a23cafc55312e28c5beb7b2dab045a3",
+            "pins": [
+              {
+                "path": "proposal.md",
+                "kind": "snapshot",
+                "revision": "8c57959f3a23cafc55312e28c5beb7b2dab045a3"
+              }
+            ]
+          },
+          "run_id": "37324025714",
+          "run_attempt": "1"
+        },
+        "current": {
+          "case_id": "stackstorm-pants",
+          "source": {
+            "repository": "StackStorm/st2",
+            "revision": "9824de4dfd0c869869e310dee729308f398ad83a",
+            "pins": [
+              {
+                "path": "proposal.md",
+                "kind": "snapshot",
+                "revision": "9824de4dfd0c869869e310dee729308f398ad83a"
+              }
+            ]
+          },
+          "run_id": "37324228460",
+          "run_attempt": "1"
+        }
+      }
+    },
+    {
+      "case_id": "msgpack-sbt",
+      "variant": null,
+      "seed": {
+        "series": "results/msgpack-sbt/cadence-rolling-seed-02",
+        "run_id": 37324036688,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37324036688",
+        "source": {
+          "repository": "msgpack/msgpack-java",
+          "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+              "kind": "snapshot"
+            }
+          ],
+          "patch": "cache.patch"
+        },
+        "cache_scope": "cadence-20261005-msgpack-sbt-v2",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/msgpack-sbt/cadence-rolling-advance-02",
+        "run_id": 37324214890,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37324214890",
+        "source": {
+          "repository": "msgpack/msgpack-java",
+          "revision": "ec75ffc01364adc6ea9b5f4d9129fd63602e6a45",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "revision": "ec75ffc01364adc6ea9b5f4d9129fd63602e6a45",
+              "kind": "snapshot"
+            }
+          ],
+          "patch": "cache.patch"
+        },
+        "cache_scope": "cadence-20261005-msgpack-sbt-v2",
+        "completion": "success"
+      },
+      "state": "executions-passed",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification",
+      "comparator_lineage": {
+        "cache_key": "reapi-msgpack-sbt-cadence-20261005-msgpack-sbt-v2-Linux-X64-37324036688-1",
+        "previous": {
+          "case_id": "msgpack-sbt",
+          "source": {
+            "repository": "msgpack/msgpack-java",
+            "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+            "pins": [
+              {
+                "path": "proposal.md",
+                "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+                "kind": "snapshot"
+              }
+            ],
+            "patch": "cache.patch"
+          },
+          "run_id": "37324036688",
+          "run_attempt": "1"
+        },
+        "current": {
+          "case_id": "msgpack-sbt",
+          "source": {
+            "repository": "msgpack/msgpack-java",
+            "revision": "ec75ffc01364adc6ea9b5f4d9129fd63602e6a45",
+            "pins": [
+              {
+                "path": "proposal.md",
+                "revision": "ec75ffc01364adc6ea9b5f4d9129fd63602e6a45",
+                "kind": "snapshot"
+              }
+            ],
+            "patch": "cache.patch"
+          },
+          "run_id": "37324214890",
+          "run_attempt": "1"
+        }
+      }
+    },
+    {
+      "case_id": "obs-studio",
+      "variant": "ccache",
+      "seed": {
+        "series": "results/obs-studio/cadence-rolling-seed-ccache-02",
+        "run_id": 37323465858,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323465858",
+        "source": {
+          "repository": "obsproject/obs-studio",
+          "pins": [
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "e7136951c052db9a74de853f2f0ec5d1bc8f6f4a",
+              "kind": "env"
+            },
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "ef5814431c6af9061874470201d0b799bc84602b",
+              "kind": "env"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-obs-studio-ccache-v2",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/obs-studio/cadence-rolling-advance-ccache-02",
+        "run_id": 37324219008,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37324219008",
+        "source": {
+          "repository": "obsproject/obs-studio",
+          "pins": [
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "97ca37291c4e5f5c5c8a0719b8c7b897d2fbc6b5",
+              "kind": "env"
+            },
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "04d8967656361ab4b90ccaeec1c591f9c024449d",
+              "kind": "env"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-obs-studio-ccache-v2",
+        "completion": "success"
+      },
+      "state": "executions-passed",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification",
+      "comparator_lineage": {
+        "source_sha": "ef5814431c6af9061874470201d0b799bc84602b",
+        "run_id": "37323465858",
+        "run_attempt": "1"
+      }
+    },
+    {
+      "case_id": "obs-studio",
+      "variant": "xcode",
+      "seed": {
+        "series": "results/obs-studio/cadence-rolling-seed-xcode-02",
+        "run_id": 37326133177,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37326133177",
+        "source": {
+          "repository": "obsproject/obs-studio",
+          "pins": [
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "e7136951c052db9a74de853f2f0ec5d1bc8f6f4a",
+              "kind": "env"
+            },
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "ef5814431c6af9061874470201d0b799bc84602b",
+              "kind": "env"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-obs-studio-xcode-v2",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/obs-studio/cadence-rolling-advance-xcode-02",
+        "run_id": 37326340221,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37326340221",
+        "source": {
+          "repository": "obsproject/obs-studio",
+          "pins": [
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "97ca37291c4e5f5c5c8a0719b8c7b897d2fbc6b5",
+              "kind": "env"
+            },
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "04d8967656361ab4b90ccaeec1c591f9c024449d",
+              "kind": "env"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-obs-studio-xcode-v2",
+        "completion": "success"
+      },
+      "state": "executions-passed",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification",
+      "comparator_lineage": {
+        "source_sha": "ef5814431c6af9061874470201d0b799bc84602b",
+        "run_id": "37326133177",
+        "run_attempt": "1"
+      }
+    },
+    {
+      "case_id": "helix-nix",
+      "variant": null,
+      "seed": {
+        "series": "results/helix-nix/cadence-rolling-seed",
+        "run_id": 37322604229,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37322604229",
+        "source": {
+          "repository": "helix-editor/helix",
+          "revision": "e0842e6aaebf53a317fcb686b08b2ac2413d251e",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "e0842e6aaebf53a317fcb686b08b2ac2413d251e"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-helix-nix",
+        "completion": "success"
+      },
+      "advance": {
+        "series": "results/helix-nix/cadence-rolling-advance",
+        "run_id": 37323117664,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323117664",
+        "source": {
+          "repository": "helix-editor/helix",
+          "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-helix-nix",
+        "completion": "success"
+      },
+      "state": "executions-passed",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification"
+    },
+    {
+      "case_id": "zed-nix",
+      "variant": null,
+      "seed": {
+        "series": "results/zed-nix/cadence-rolling-seed",
+        "run_id": 37322636399,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37322636399",
+        "source": {
+          "repository": "zed-industries/zed",
+          "revision": "96837d78cb0f2128c1965716f8df56b8aea59742",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "96837d78cb0f2128c1965716f8df56b8aea59742"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-zed-nix",
+        "completion": "awaiting-completion-evidence"
+      },
+      "advance": {
+        "series": "results/zed-nix/cadence-rolling-advance",
+        "run_id": 37323174641,
+        "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323174641",
+        "source": {
+          "repository": "zed-industries/zed",
+          "revision": "a6169ca96987105be7d60a5051f3155eb6225ccc",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "a6169ca96987105be7d60a5051f3155eb6225ccc"
+            }
+          ]
+        },
+        "cache_scope": "cadence-20261005-zed-nix",
+        "completion": "awaiting-completion-evidence"
+      },
+      "state": "pending",
+      "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification"
+    }
+  ]
+}

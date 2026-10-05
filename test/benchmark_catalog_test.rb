@@ -97,6 +97,8 @@ class BenchmarkCatalogTest < Minitest::Test
     completion(run_id: "12", status: "failed")
     archive = {"repository" => BenchmarkCases::REPOSITORY, "run_id" => 12, "inventory_state" => "complete",
       "release_url" => "https://github.com/boringcache/benchmarks/releases/tag/evidence-example",
+      "bundle_format" => "split-tar-gzip-index", "archive_sha256" => "f" * 64, "archive_bytes" => 3_000_000_000,
+      "bundle_parts" => [{"name" => "evidence.tar.gz.part001", "sha256" => "e" * 64, "bytes" => 1_900_000_000}],
       "scope" => "Available logs only", "unavailable_workflow_evidence" => ["Original phase JSON was never uploaded"]}
     BenchmarkCases.write_json(File.join(@root, "migration/evidence.json"), {"exports" => [archive]})
     result = entry
