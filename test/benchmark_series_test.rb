@@ -93,6 +93,15 @@ class BenchmarkSeriesTest < Minitest::Test
     refute_match(/claims|qualify|requires review|before publication review/, markdown)
   end
 
+  def test_observation_table_escapes_backslashes_and_pipes_in_storage_sources
+    value = record(storage: 100)
+    value.fetch("cache")["storage_source"] = "provider\\|api\nsource"
+    add(value)
+    BenchmarkSeries.report(@directory)
+    row = File.readlines(File.join(@directory, "report.md")).find { |line| line.include?("[JSON](runs/1-boringcache-commit.json)") }
+    assert_includes row, "provider" + "\\" * 3 + "|api source"
+  end
+
   def phase_export(values, artifact_name: nil, filenames: nil, extra_files: {})
     directory = evidence
     manifest = JSON.parse(File.read(File.join(directory, "manifest.json")))

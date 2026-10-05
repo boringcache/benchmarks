@@ -270,7 +270,7 @@ module BenchmarkSeries
         row.dig("timing", "restore_or_setup_seconds"), row.dig("timing", "build_seconds"), row.dig("timing", "build_and_reuse_seconds"),
         row.dig("cache", "storage_bytes"), row.dig("cache", "storage_source"), BenchmarkReport.cache_state(row),
         "[JSON](runs/#{sample}-#{provider}-#{phase}.json)"]
-      lines << "| #{values.map { |value| value.nil? ? 'unmeasured' : value.to_s.gsub('|', '\\|').gsub(/\r?\n/, ' ') }.join(' | ')} |"
+      lines << "| #{values.map { |value| value.nil? ? 'unmeasured' : value.to_s.gsub(/[\\|]/) { |character| "\\#{character}" }.gsub(/\r?\n/, " ") }.join(' | ')} |"
     end
     lines.concat(["", "[Full records and checks](report.json)", ""])
     File.write(File.join(directory, "report.md"), lines.join("\n"))
