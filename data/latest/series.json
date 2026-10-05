@@ -2412,7 +2412,168 @@
       },
       "plan_sha256": "3bad3fe86f24dd2597d4fe3052b82d5b5144b705d6265f219b67a9f2820f238e",
       "definition_sha256": "c427f90c3baea4391aef672f3a11f126a4fa812a7a76f1a9928e74b5a375a39e",
-      "state": "requested",
+      "state": "failed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "warm",
+          "boringcache"
+        ]
+      ],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 3281,
+            "min": 3281,
+            "max": 3281
+          },
+          "storage": {
+            "median": 163728649,
+            "min": 163728649,
+            "max": 163728649
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 72,
+            "min": 72,
+            "max": 72
+          },
+          "storage": {
+            "median": 163728649,
+            "min": 163728649,
+            "max": 163728649
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 2144,
+            "min": 2144,
+            "max": 2144
+          },
+          "storage": {
+            "median": 632637546,
+            "min": 632637546,
+            "max": 632637546
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "cold",
+          "provider": "buildbuddy",
+          "count": 1,
+          "measurement": {
+            "median": 2152,
+            "min": 2152,
+            "max": 2152
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "buildbuddy",
+          "count": 1,
+          "measurement": {
+            "median": 135,
+            "min": 135,
+            "max": 135
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "grpc",
+          "repository": "boringcache/benchmarks",
+          "workflow": "grpc-grpc-bazel-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "cli_version": "vcli-canary-4c236cd7ee00",
+            "series_id": "fresh-canary-repair-01",
+            "sample": "1"
+          },
+          "ref": "independent-benchmark-samples",
+          "state": "requested",
+          "requested_at": "2026-10-05T09:10:05Z",
+          "run_id": 37288249894,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288249894"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "grpc",
+          "series_id": "fresh-canary-repair-01",
+          "sample": 1,
+          "run_id": "37288249894",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288249894",
+          "source_sha": "874ab9890b328d8583f0b67e46a02f72393cf015",
+          "github_conclusion": "failure",
+          "status": "failed",
+          "errors": [
+            "Workflow concluded failure",
+            "BoringCache gRPC Bazel warm: failure"
+          ],
+          "evidence_manifest_sha256": "2b0066c0d1a1fb732ab879c3b888b0d12b311252a6c17fdd222280e5b51e9cc5"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/grpc/fresh-canary-repair-01/report.json",
+      "evidence": [],
+      "runs_without_archives": [
+        "37288249894"
+      ]
+    },
+    {
+      "case_id": "grpc",
+      "series_id": "local-outputs-01",
+      "plan_path": "results/grpc/local-outputs-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache",
+          "buildbuddy"
+        ],
+        "timed_scope": "Bazel build with local top-level outputs plus measured cache restore/setup; output checks and post-job cache save are outside build timing",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "grpc/grpc",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "eec4dd52b91d8f3cd6698c0c4be58b3c8b1643777cfd72ddebebb1f11d054b25",
+      "definition_sha256": "3ba398321d9ad7a08f2517505bc3762cb29463f172c824b254de38e59e02cc6d",
+      "state": "planned",
       "publication": "unreviewed",
       "valid_for_comparison": false,
       "execution_verified": false,
@@ -2450,31 +2611,12 @@
         ]
       ],
       "summaries": [],
-      "dispatches": [
-        {
-          "case_id": "grpc",
-          "repository": "boringcache/benchmarks",
-          "workflow": "grpc-grpc-bazel-fresh-benchmark.yml",
-          "lane": "fresh",
-          "inputs": {
-            "cli_version": "vcli-canary-4c236cd7ee00",
-            "series_id": "fresh-canary-repair-01",
-            "sample": "1"
-          },
-          "ref": "independent-benchmark-samples",
-          "state": "requested",
-          "requested_at": "2026-10-05T09:10:05Z",
-          "run_id": 37288249894,
-          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288249894"
-        }
-      ],
+      "dispatches": [],
       "completions": [],
-      "report_state": "current",
-      "report_path": "results/grpc/fresh-canary-repair-01/report.json",
+      "report_state": "missing",
+      "report_path": null,
       "evidence": [],
-      "runs_without_archives": [
-        "37288249894"
-      ]
+      "runs_without_archives": []
     },
     {
       "case_id": "hugo-go",
@@ -3150,10 +3292,22 @@
       ],
       "report_state": "current",
       "report_path": "results/hugo-go/shared-evidence-01/report.json",
-      "evidence": [],
-      "runs_without_archives": [
-        "37294037661"
-      ]
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37294037661,
+          "inventory_state": "complete",
+          "verified_files": 15,
+          "gaps": [],
+          "scope": "One Hugo Go cold/warm sample, including attempts, jobs, logs, artifacts, commit and workflow",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-evidence-2026-10-05",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-shared-evidence-2026-10-05/benchmarks-37294037661.tar.gz",
+          "bundle_bytes": 184087,
+          "sha256": "8c73e249492a866a38764b6f155bdf9d31c32b41f7dd7a41d8210b29efd66441",
+          "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "hugo-go",
