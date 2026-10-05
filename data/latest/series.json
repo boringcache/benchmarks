@@ -2432,7 +2432,7 @@
       },
       "plan_sha256": "3bad3fe86f24dd2597d4fe3052b82d5b5144b705d6265f219b67a9f2820f238e",
       "definition_sha256": "c427f90c3baea4391aef672f3a11f126a4fa812a7a76f1a9928e74b5a375a39e",
-      "state": "planned",
+      "state": "requested",
       "publication": "unreviewed",
       "valid_for_comparison": false,
       "execution_verified": false,
@@ -2470,13 +2470,32 @@
         ]
       ],
       "summaries": [],
-      "dispatches": [],
+      "dispatches": [
+        {
+          "case_id": "grpc",
+          "repository": "boringcache/benchmarks",
+          "workflow": "grpc-grpc-bazel-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "cli_version": "vcli-canary-4c236cd7ee00",
+            "series_id": "fresh-canary-repair-01",
+            "sample": "1"
+          },
+          "ref": "independent-benchmark-samples",
+          "state": "requested",
+          "requested_at": "2026-10-05T09:10:05Z",
+          "run_id": 37288249894,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288249894"
+        }
+      ],
       "completions": [],
       "report_state": "missing",
       "report_path": null,
-      "interpretation_path": null,
+      "interpretation_path": "results/grpc/fresh-canary-repair-01/interpretation.md",
       "evidence": [],
-      "runs_without_archives": []
+      "runs_without_archives": [
+        "37288249894"
+      ]
     },
     {
       "case_id": "hugo-go",
@@ -2705,60 +2724,167 @@
       },
       "plan_sha256": "fc20058701dd1bf0b6a94acf40bf1d76adda8e37695472b295ec9bcc4b4da562",
       "definition_sha256": "21702e83473c3a7a99cae19b7b4aa108243f49e8064878e4632804d315988a52",
-      "state": "planned",
+      "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": false,
-      "execution_verified": false,
+      "valid_for_comparison": true,
+      "execution_verified": true,
       "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ],
-        [
-          2,
-          "cold",
-          "boringcache"
-        ],
-        [
-          2,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          2,
-          "warm",
-          "boringcache"
-        ],
-        [
-          2,
-          "warm",
-          "actions-cache"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 2,
+          "measurement": {
+            "median": 70.0,
+            "min": 61,
+            "max": 79
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 2,
+          "measurement": {
+            "median": 9.0,
+            "min": 9,
+            "max": 9
+          },
+          "storage": {
+            "median": 161808547.0,
+            "min": 161804322,
+            "max": 161812772
+          },
+          "storage_measured_count": 2
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 2,
+          "measurement": {
+            "median": 87.5,
+            "min": 85,
+            "max": 90
+          },
+          "storage": {
+            "median": 612837451.5,
+            "min": 610123303,
+            "max": 615551600
+          },
+          "storage_measured_count": 2
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 2,
+          "measurement": {
+            "median": 21.0,
+            "min": 18,
+            "max": 24
+          },
+          "storage": {
+            "median": 811503108.0,
+            "min": 811503108,
+            "max": 811503108
+          },
+          "storage_measured_count": 2
+        }
       ],
-      "summaries": [],
-      "dispatches": [],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": null,
-      "evidence": [],
+      "dispatches": [
+        {
+          "case_id": "hugo-go",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "hugo-go",
+            "series_id": "independent-samples-01",
+            "sample": "1"
+          },
+          "ref": "independent-benchmark-samples",
+          "state": "requested",
+          "requested_at": "2026-10-05T09:10:00Z",
+          "run_id": 37288240708,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288240708"
+        },
+        {
+          "case_id": "hugo-go",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "hugo-go",
+            "series_id": "independent-samples-01",
+            "sample": "2"
+          },
+          "ref": "independent-benchmark-samples",
+          "state": "requested",
+          "requested_at": "2026-10-05T09:10:02Z",
+          "run_id": 37288246103,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288246103"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "hugo-go",
+          "series_id": "independent-samples-01",
+          "sample": 1,
+          "run_id": "37288240708",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288240708",
+          "source_sha": "874ab9890b328d8583f0b67e46a02f72393cf015",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "4fd9ad410330fc0e34949e2b298d079f188b543286ed7c662e52bcb969d5c925"
+        },
+        {
+          "schema_version": 1,
+          "case_id": "hugo-go",
+          "series_id": "independent-samples-01",
+          "sample": 2,
+          "run_id": "37288246103",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288246103",
+          "source_sha": "874ab9890b328d8583f0b67e46a02f72393cf015",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "67db601ec3dfd03345ef6540efe4716d76d8398fb6b1d4c1f6dfbfa8737c4909"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/hugo-go/independent-samples-01/report.json",
+      "interpretation_path": "results/hugo-go/independent-samples-01/interpretation.md",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37288240708,
+          "inventory_state": "complete",
+          "verified_files": 17,
+          "gaps": [],
+          "scope": "One declared Hugo Go sample, including its attempts, jobs, logs, artifacts, commit and workflow",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-independent-samples-2026-10-05",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-independent-samples-2026-10-05/benchmarks-37288240708.tar.gz",
+          "bundle_bytes": 192719,
+          "sha256": "5d1eba3f14c045aebe3dd0a8926ca435d8ed5a994794f8050e121a2917621ef3",
+          "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory"
+        },
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37288246103,
+          "inventory_state": "complete",
+          "verified_files": 17,
+          "gaps": [],
+          "scope": "One declared Hugo Go sample, including its attempts, jobs, logs, artifacts, commit and workflow",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-independent-samples-2026-10-05",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-independent-samples-2026-10-05/benchmarks-37288246103.tar.gz",
+          "bundle_bytes": 192849,
+          "sha256": "9cbbc3f43c428fec36a3d6c642826156335170204c098af683034b5168d7d67a",
+          "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory"
+        }
+      ],
       "runs_without_archives": []
     },
     {
