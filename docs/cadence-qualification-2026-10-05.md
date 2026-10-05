@@ -1,7 +1,7 @@
 # Cadence qualification — October 5, 2026
 
-Fifteen of seventeen rolling targets have passed a seed run and an actual source
-advancement with both providers. PostHog and Zed Nix are still running. This is
+Sixteen of seventeen rolling targets have passed a seed run and an actual source
+advancement with both providers. Zed Nix is still running. This is
 an operational correctness review; these single-sample pairs do not establish
 comparative performance. All runs use `vcli-canary-7a5b27146ebe`.
 
@@ -10,6 +10,12 @@ records frozen plans, exact sources, cache scopes and selected run IDs. Earlier
 failed and cancelled cohorts remain in `results/`; corrected cohorts have new
 plans. The [evidence inventory](../migration/evidence.json) links archives that
 were downloaded again and verified after publication.
+
+Large archives use a JSON index as `bundle_url`. Its `sha256` and `bundle_bytes`
+describe that index; `archive_sha256` and `archive_bytes` describe the reconstructed
+tar.gz file. Download and verify each listed part, concatenate the parts in order,
+verify the resulting archive, then extract it. The hosted preservation workflow
+performs those checks and verifies every exported file before recording success.
 
 | Case / variant | Seed | Changed source | Result |
 | --- | --- | --- | --- |
@@ -20,7 +26,7 @@ were downloaded again and verified after publication.
 | n8n / docker | [37321758035](https://github.com/boringcache/benchmarks/actions/runs/37321758035) | [37323145174](https://github.com/boringcache/benchmarks/actions/runs/37323145174) | Passed |
 | n8n / runners | [37321762921](https://github.com/boringcache/benchmarks/actions/runs/37321762921) | [37323150431](https://github.com/boringcache/benchmarks/actions/runs/37323150431) | Passed |
 | n8n / turbo | [37321767409](https://github.com/boringcache/benchmarks/actions/runs/37321767409) | [37323155106](https://github.com/boringcache/benchmarks/actions/runs/37323155106) | Passed |
-| posthog / layers | [37321772493](https://github.com/boringcache/benchmarks/actions/runs/37321772493) | [37323164071](https://github.com/boringcache/benchmarks/actions/runs/37323164071) | Pending |
+| posthog / layers | [37321772493](https://github.com/boringcache/benchmarks/actions/runs/37321772493) | [37323164071](https://github.com/boringcache/benchmarks/actions/runs/37323164071) | Passed |
 | executorch-buck2 | [37324032100](https://github.com/boringcache/benchmarks/actions/runs/37324032100) | [37324204556](https://github.com/boringcache/benchmarks/actions/runs/37324204556) | Passed |
 | gogs-moon | [37325135541](https://github.com/boringcache/benchmarks/actions/runs/37325135541) | [37325282767](https://github.com/boringcache/benchmarks/actions/runs/37325282767) | Passed |
 | opencut-moon | [37325140807](https://github.com/boringcache/benchmarks/actions/runs/37325140807) | [37325287254](https://github.com/boringcache/benchmarks/actions/runs/37325287254) | Passed |

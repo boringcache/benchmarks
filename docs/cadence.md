@@ -104,8 +104,8 @@ or restored.
 
 Remaining activation requirements:
 
-- Finish PostHog and Zed Nix rolling qualification and evidence preservation.
-  The other fifteen rolling targets have passed seed and changed-source runs;
+- Finish Zed Nix rolling qualification and evidence preservation.
+  The other sixteen rolling targets have passed seed and changed-source runs;
   hosted checks and 252 local tests pass.
 - Pass the corrected Zed Nix cold/warm screen using the common dependency seed.
 - Verify main-branch workflow-token publication at cutover. The

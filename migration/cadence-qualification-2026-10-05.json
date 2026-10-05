@@ -340,9 +340,9 @@
           ]
         },
         "cache_scope": "cadence-20261005-posthog-layers",
-        "completion": "awaiting-completion-evidence"
+        "completion": "success"
       },
-      "state": "pending",
+      "state": "executions-passed",
       "scope": "One seed and one actual source advancement for both providers; correctness and retained-cache operation, not a comparative performance qualification"
     },
     {
