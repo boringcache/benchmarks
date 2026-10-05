@@ -1,6 +1,7 @@
 # executorch-buck2
 
-Status: native REAPI correctness screen implemented; hosted qualification pending.
+Status: two cold/warm samples passed for both providers.
+[Recorded results](../../results/executorch-buck2/registry-qualification-01/report.md).
 
 Source: [pytorch/executorch at `5e21c13cc9e34fa2922d5708ba5962e3e365afdb`](https://github.com/pytorch/executorch/tree/5e21c13cc9e34fa2922d5708ba5962e3e365afdb).
 

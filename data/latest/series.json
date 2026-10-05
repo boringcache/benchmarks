@@ -2414,6 +2414,177 @@
     },
     {
       "case_id": "executorch-buck2",
+      "series_id": "registry-qualification-01",
+      "plan_path": "results/executorch-buck2/registry-qualification-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 2,
+      "comparison": {
+        "question": "Does Buck2 restore the ExecuTorch portable runner on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "primary_metric": "correctness",
+        "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "pytorch/executorch",
+        "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+          }
+        ],
+        "patch": "cache.patch"
+      },
+      "plan_sha256": "f63d3cd794609256c2260642e2fb62087c1c0d96eb6e41e9f7ae440048d137f0",
+      "definition_sha256": "3cd44619ccb92779907808414e3ebd5257214cd68e324bea16a2cf7a3b6ee6c3",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "bazel-remote",
+          "count": 2,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "bazel-remote",
+          "count": 2,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 2,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 2,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "executorch-buck2",
+          "repository": "boringcache/benchmarks",
+          "workflow": "reapi-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "executorch-buck2",
+            "cli_version": "vcli-canary-7a5b27146ebe",
+            "series_id": "registry-qualification-01",
+            "sample": "1"
+          },
+          "ref": "qualify-native-registry",
+          "state": "requested",
+          "requested_at": "2026-10-05T11:54:13Z",
+          "run_id": 37305928053,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37305928053"
+        },
+        {
+          "case_id": "executorch-buck2",
+          "repository": "boringcache/benchmarks",
+          "workflow": "reapi-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "executorch-buck2",
+            "cli_version": "vcli-canary-7a5b27146ebe",
+            "series_id": "registry-qualification-01",
+            "sample": "2"
+          },
+          "ref": "qualify-native-registry",
+          "state": "requested",
+          "requested_at": "2026-10-05T11:54:15Z",
+          "run_id": 37305931541,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37305931541"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "executorch-buck2",
+          "series_id": "registry-qualification-01",
+          "sample": 1,
+          "run_id": "37305928053",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37305928053",
+          "source_sha": "9571a4dc1b8b6474f4d1071803ce7e076e41ab7e",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "6a44d187a5c0f8c62166263688939389de943d7f222a79dd3699db9987c78fc3"
+        },
+        {
+          "schema_version": 1,
+          "case_id": "executorch-buck2",
+          "series_id": "registry-qualification-01",
+          "sample": 2,
+          "run_id": "37305931541",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37305931541",
+          "source_sha": "9571a4dc1b8b6474f4d1071803ce7e076e41ab7e",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "e2548766980e6b60fb29b2630a93f483ace5e01a6079f66dec8131385ab4c0d2"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/executorch-buck2/registry-qualification-01/report.json",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37305928053,
+          "inventory_state": "complete",
+          "verified_files": 16,
+          "gaps": [],
+          "scope": "This run, including available attempts, jobs, logs, artifacts, commit and workflow",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-native-registry-2026-10-05",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-native-registry-2026-10-05/benchmarks-37305928053.tar.gz",
+          "bundle_bytes": 15825799,
+          "sha256": "5419d8d1d4902525675999c18c9a2c1a07acc402a76a902255f9d3a26799be2e",
+          "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory"
+        },
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37305931541,
+          "inventory_state": "complete",
+          "verified_files": 16,
+          "gaps": [],
+          "scope": "This run, including available attempts, jobs, logs, artifacts, commit and workflow",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-native-registry-2026-10-05",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-native-registry-2026-10-05/benchmarks-37305931541.tar.gz",
+          "bundle_bytes": 15819622,
+          "sha256": "422fc735aef24c0483203fe1626293f729442fcd8160f3a1643e292f13fcbf2f",
+          "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "executorch-buck2",
       "series_id": "registry-screening-01",
       "plan_path": "results/executorch-buck2/registry-screening-01/series.json",
       "lane": "fresh",
@@ -2998,36 +3169,48 @@
       },
       "plan_sha256": "173938e78307c1da76ab31da0b375e31949d07113e431d885fc2f44dfb30711f",
       "definition_sha256": "3cd44619ccb92779907808414e3ebd5257214cd68e324bea16a2cf7a3b6ee6c3",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
       "valid_for_comparison": false,
-      "execution_verified": false,
+      "execution_verified": true,
       "methodology_issues": [
         "This series does not declare a comparison of provider performance."
       ],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "bazel-remote"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "bazel-remote"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "bazel-remote",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "bazel-remote",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        }
       ],
-      "summaries": [],
       "dispatches": [
         {
           "case_id": "executorch-buck2",
@@ -3047,13 +3230,39 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37304834734"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37304834734"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "executorch-buck2",
+          "series_id": "registry-screening-06",
+          "sample": 1,
+          "run_id": "37304834734",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37304834734",
+          "source_sha": "2a7352597935f9089b8a13dcbcb0a3a6767cd844",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "afa3955ade9abf0b0937a24a2f29fe919d8bcb50c27dc9eb2a6c1112d991bf80"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/executorch-buck2/registry-screening-06/report.json",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37304834734,
+          "inventory_state": "complete",
+          "verified_files": 16,
+          "gaps": [],
+          "scope": "This run, including available attempts, jobs, logs, artifacts, commit and workflow",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-native-registry-2026-10-05",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-native-registry-2026-10-05/benchmarks-37304834734.tar.gz",
+          "bundle_bytes": 15821832,
+          "sha256": "fce1489f5705846e42377adcde5442794498fc26a4319e172ed76f434d6055e8",
+          "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "gogs-moon",
@@ -3986,54 +4195,66 @@
       },
       "plan_sha256": "3bddda0d7d318cd12969b28360ee49e7582621978f904b5041b480c2ff4d0a25",
       "definition_sha256": "c3a3dcec6a8465f0634261b7d62ffc766c1d7f5a5ddcebbdc1dd618b405dba51",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": false,
-      "execution_verified": false,
+      "valid_for_comparison": true,
+      "execution_verified": true,
       "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "cachix"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "cachix"
-        ],
-        [
-          2,
-          "cold",
-          "boringcache"
-        ],
-        [
-          2,
-          "cold",
-          "cachix"
-        ],
-        [
-          2,
-          "warm",
-          "boringcache"
-        ],
-        [
-          2,
-          "warm",
-          "cachix"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 2,
+          "measurement": {
+            "median": 300.72452188230534,
+            "min": 240.000149676342,
+            "max": 361.4488940882686
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 2,
+          "measurement": {
+            "median": 6.814367409298967,
+            "min": 5.505685232007409,
+            "max": 8.123049586590525
+          },
+          "storage": {
+            "median": 46172357.0,
+            "min": 46172357,
+            "max": 46172357
+          },
+          "storage_measured_count": 2
+        },
+        {
+          "phase": "cold",
+          "provider": "cachix",
+          "count": 2,
+          "measurement": {
+            "median": 325.39567017044965,
+            "min": 283.539126630117,
+            "max": 367.2522137107823
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "cachix",
+          "count": 2,
+          "measurement": {
+            "median": 4.294964134722619,
+            "min": 3.6862304045152428,
+            "max": 4.903697864929995
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        }
       ],
-      "summaries": [],
       "dispatches": [
         {
           "case_id": "helix-nix",
@@ -4072,14 +4293,65 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37303782303"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37303778364",
-        "37303782303"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "helix-nix",
+          "series_id": "canary-qualification-01",
+          "sample": 1,
+          "run_id": "37303778364",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37303778364",
+          "source_sha": "53c7e37db7f7655990fc976badaa65c0fa5bced7",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "880d2235b66f0ab9592277fa606c35fa343bc1307db3169f6fd7b80fa27acfb9"
+        },
+        {
+          "schema_version": 1,
+          "case_id": "helix-nix",
+          "series_id": "canary-qualification-01",
+          "sample": 2,
+          "run_id": "37303782303",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37303782303",
+          "source_sha": "53c7e37db7f7655990fc976badaa65c0fa5bced7",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "09b11096f5ab537eb3c8f34e082f2044beb959f7ac4e605cf08d43ab9591d9bf"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/helix-nix/canary-qualification-01/report.json",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37303778364,
+          "inventory_state": "complete",
+          "verified_files": 17,
+          "gaps": [],
+          "scope": "This run, including available attempts, jobs, logs, artifacts, commit and workflow",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-native-registry-2026-10-05",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-native-registry-2026-10-05/benchmarks-37303778364.tar.gz",
+          "bundle_bytes": 1787128,
+          "sha256": "6b434d9c02eb13b2ecd080f2b9fef85332498860b48b7a91bf017b737e295061",
+          "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory"
+        },
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37303782303,
+          "inventory_state": "complete",
+          "verified_files": 17,
+          "gaps": [],
+          "scope": "This run, including available attempts, jobs, logs, artifacts, commit and workflow",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-native-registry-2026-10-05",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-native-registry-2026-10-05/benchmarks-37303782303.tar.gz",
+          "bundle_bytes": 1798989,
+          "sha256": "c1e5234bf49c6f25c9f71b4bbe5e04d05df3e0412fd31b7803c534f579917e77",
+          "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "helix-nix",
