@@ -1,6 +1,7 @@
 # Tool coverage
 
-All cases use the same workspace, provider wrapper, and report format. A plan
+All cases use the same workspace and report format. Managed Action cases use
+one provider wrapper; direct CLI evaluations declare that execution path. A plan
 for a tool does not establish that every option or workload has been qualified.
 Use the [series catalog](../data/latest/series.json) for recorded outcomes and
 limitations. This inventory describes the case definitions as of October 5, 2026.
@@ -16,7 +17,7 @@ limitations. This inventory describes the case definitions as of October 5, 2026
 | Maven | Spring AI | Qualify rolling source and seed lineage |
 | Nx remote cache | No active case | Storybook archives Nx directories; it does not exercise the native Nx remote-cache adapter |
 | Turbo | n8n; PostHog plan | Qualify each selected workload and timing boundary |
-| Bazel | gRPC C++ client and server | Complete the repaired three-provider cold/warm proof with the repository BuildBuddy secret |
+| Bazel | gRPC C++ client and server | [One three-provider cold/warm sample passed](../results/grpc/local-outputs-01/report.md), including local output checks; BuildBuddy storage remains unmeasured; publication and rolling qualification remain open |
 | Moon | [OpenCut](../cases/opencut-moon/proposal.md), [Gogs](../cases/gogs-moon/proposal.md), ZITADEL drafts | Qualify the pinned clients, remote task restoration and output checks |
 | Pants | [StackStorm](../cases/stackstorm-pants/proposal.md), Pants JVM drafts | Qualify the pinned clients; review service-dependent test cacheability |
 | Buck2 | [ExecuTorch](../cases/executorch-buck2/proposal.md), Buck2 Prelude drafts | Verify public targets, native action-cache use and output checks |

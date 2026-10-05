@@ -2413,6 +2413,282 @@
       "runs_without_archives": []
     },
     {
+      "case_id": "executorch-buck2",
+      "series_id": "registry-screening-01",
+      "plan_path": "results/executorch-buck2/registry-screening-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Buck2 restore the ExecuTorch portable runner on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "primary_metric": "correctness",
+        "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "pytorch/executorch",
+        "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+          }
+        ]
+      },
+      "plan_sha256": "42c1b64a7a5085d9eff94d9dc59d3478767045b9375686358e6c88ae98364de8",
+      "definition_sha256": "41f28f4fc5f029e5ae30496d77ed4c4410eae41389bc54550caf802bf3cae1ce",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "bazel-remote"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "bazel-remote"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "executorch-buck2",
+      "series_id": "registry-screening-02",
+      "plan_path": "results/executorch-buck2/registry-screening-02/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Buck2 restore the ExecuTorch portable runner on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "primary_metric": "correctness",
+        "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "pytorch/executorch",
+        "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+          }
+        ]
+      },
+      "plan_sha256": "a5eda8a465657d35135c8cfb6188a55cffb58a62c7b207ce9e0ae265529dd667",
+      "definition_sha256": "e48b555d2371f86823c65e153c076ce13cf367ad1f37f51d67e5a205d43a2b74",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "bazel-remote"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "bazel-remote"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "gogs-moon",
+      "series_id": "registry-screening-01",
+      "plan_path": "results/gogs-moon/registry-screening-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Moon restore the Gogs web build on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "primary_metric": "correctness",
+        "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "gogs/gogs",
+        "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+          }
+        ]
+      },
+      "plan_sha256": "693789eeccd6bf2699d1b61cbf4c53d245f53a03314c7814c37fde270d7e9a3e",
+      "definition_sha256": "d48ebe1844ab9ee2551e9fb207de88cc9335a403841e4ad7c25579faeb481734",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "bazel-remote"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "bazel-remote"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "gogs-moon",
+      "series_id": "registry-screening-02",
+      "plan_path": "results/gogs-moon/registry-screening-02/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Moon restore the Gogs web build on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "primary_metric": "correctness",
+        "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "gogs/gogs",
+        "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+          }
+        ]
+      },
+      "plan_sha256": "470d098106a74bafaa7ac215832052f8406a2d8c86b298be4fbda5b9bc416a9c",
+      "definition_sha256": "5a08ae847e4a3d1af5973f60b6312a4ee9a330d304a6aa91ab51aa3929423697",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "bazel-remote"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "bazel-remote"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
       "case_id": "grpc",
       "series_id": "fresh-canary-repair-01",
       "plan_path": "results/grpc/fresh-canary-repair-01/series.json",
@@ -2617,44 +2893,102 @@
       },
       "plan_sha256": "eec4dd52b91d8f3cd6698c0c4be58b3c8b1643777cfd72ddebebb1f11d054b25",
       "definition_sha256": "3ba398321d9ad7a08f2517505bc3762cb29463f172c824b254de38e59e02cc6d",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
-      "valid_for_comparison": false,
-      "execution_verified": false,
+      "valid_for_comparison": true,
+      "execution_verified": true,
       "methodology_issues": [],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "cold",
-          "actions-cache"
-        ],
-        [
-          1,
-          "cold",
-          "buildbuddy"
-        ],
-        [
-          1,
-          "warm",
-          "boringcache"
-        ],
-        [
-          1,
-          "warm",
-          "actions-cache"
-        ],
-        [
-          1,
-          "warm",
-          "buildbuddy"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 3237,
+            "min": 3237,
+            "max": 3237
+          },
+          "storage": {
+            "median": 163735443,
+            "min": 163735443,
+            "max": 163735443
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 71,
+            "min": 71,
+            "max": 71
+          },
+          "storage": {
+            "median": 163735443,
+            "min": 163735443,
+            "max": 163735443
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 2245,
+            "min": 2245,
+            "max": 2245
+          },
+          "storage": {
+            "median": 642012320,
+            "min": 642012320,
+            "max": 642012320
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 109,
+            "min": 109,
+            "max": 109
+          },
+          "storage": {
+            "median": 718160920,
+            "min": 718160920,
+            "max": 718160920
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "cold",
+          "provider": "buildbuddy",
+          "count": 1,
+          "measurement": {
+            "median": 3273,
+            "min": 3273,
+            "max": 3273
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "buildbuddy",
+          "count": 1,
+          "measurement": {
+            "median": 121,
+            "min": 121,
+            "max": 121
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        }
       ],
-      "summaries": [],
       "dispatches": [
         {
           "case_id": "grpc",
@@ -2673,13 +3007,39 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37295807809"
         }
       ],
-      "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "evidence": [],
-      "runs_without_archives": [
-        "37295807809"
-      ]
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "grpc",
+          "series_id": "local-outputs-01",
+          "sample": 1,
+          "run_id": "37295807809",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37295807809",
+          "source_sha": "a901b8bb6d2564c802c4b1b77162702336e56f71",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "06a1309ad3d421131b7a2ecfb6ea90119d8a16e89bdd588dec27d594b91305cb"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/grpc/local-outputs-01/report.json",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37295807809,
+          "inventory_state": "complete",
+          "verified_files": 18,
+          "gaps": [],
+          "scope": "One gRPC cold/warm sample across three providers, including attempts, jobs, logs, artifacts, commit and workflow",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-grpc-local-outputs-2026-10-05",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-grpc-local-outputs-2026-10-05/benchmarks-37295807809.tar.gz",
+          "bundle_bytes": 2498374,
+          "sha256": "95152ee3c8bd1d0e3ef11bb97f587cc43dc3a2f34333f36d10a771707848e9c2",
+          "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "helix-nix",
@@ -5502,6 +5862,216 @@
       "runs_without_archives": []
     },
     {
+      "case_id": "msgpack-sbt",
+      "series_id": "registry-screening-01",
+      "plan_path": "results/msgpack-sbt/registry-screening-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does sbt reuse MessagePack compilation and test results on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+        "primary_metric": "correctness",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "msgpack/msgpack-java",
+        "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+            "kind": "snapshot"
+          }
+        ],
+        "patch": "cache.patch"
+      },
+      "plan_sha256": "010d8fda4af1a1392392d646834c8bf43fd65102320ec4be80dc0ee2384a7581",
+      "definition_sha256": "4cfe1a5d85a53dbf87f068d5fe79baac4bbd97aa666fd5c6c0d78fa68434a89c",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "bazel-remote"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "bazel-remote"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "msgpack-sbt",
+      "series_id": "registry-screening-02",
+      "plan_path": "results/msgpack-sbt/registry-screening-02/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does sbt reuse MessagePack compilation and test results on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+        "primary_metric": "correctness",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "msgpack/msgpack-java",
+        "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+            "kind": "snapshot"
+          }
+        ],
+        "patch": "cache.patch"
+      },
+      "plan_sha256": "fdbff89944ec0f7576b6fcb214ff2d2329a53afbea7453e1edc10948d3f9599d",
+      "definition_sha256": "7838f47d75d6765b8840f66b06cc3a0496411c0794d19a966da28926704a2782",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "bazel-remote"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "bazel-remote"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "msgpack-sbt",
+      "series_id": "registry-screening-03",
+      "plan_path": "results/msgpack-sbt/registry-screening-03/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does sbt reuse MessagePack compilation and test results on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+        "primary_metric": "correctness",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "msgpack/msgpack-java",
+        "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+            "kind": "snapshot"
+          }
+        ],
+        "patch": "cache.patch"
+      },
+      "plan_sha256": "d599b25c1d0c358d407f5915f5c3a7648565b1d4e16ffd5ece73fb88cac437b4",
+      "definition_sha256": "e7eefb10f88ec572f38a8bff543d2b1abac7eb1fb2cf99a7ef278e4105a7650a",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "bazel-remote"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "bazel-remote"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
       "case_id": "n8n",
       "series_id": "distroless-output-qualification-01",
       "plan_path": "results/n8n/distroless-output-qualification-01/series.json",
@@ -6666,6 +7236,144 @@
           "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
         }
       ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "opencut-moon",
+      "series_id": "registry-screening-01",
+      "plan_path": "results/opencut-moon/registry-screening-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Moon restore the OpenCut web build on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "primary_metric": "correctness",
+        "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "OpenCut-app/OpenCut",
+        "revision": "e668010778568641babef2cc40be4703ae6916d6",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "e668010778568641babef2cc40be4703ae6916d6"
+          }
+        ]
+      },
+      "plan_sha256": "dcef2403e83603a0c55dcaba78d5eb8374c2081b82b8ade78853270575b59799",
+      "definition_sha256": "499d217459705cbbb0b18b1a70570c04ebc72db19dfd6f2cc37e292abd141a0f",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "bazel-remote"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "bazel-remote"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "opencut-moon",
+      "series_id": "registry-screening-02",
+      "plan_path": "results/opencut-moon/registry-screening-02/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Moon restore the OpenCut web build on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "primary_metric": "correctness",
+        "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "OpenCut-app/OpenCut",
+        "revision": "e668010778568641babef2cc40be4703ae6916d6",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "e668010778568641babef2cc40be4703ae6916d6"
+          }
+        ]
+      },
+      "plan_sha256": "1cb918b67aa5053d594ead632e738134735a9a7d9b949a4d4291b2768ef0f1f8",
+      "definition_sha256": "eda0c45e12fb18b4ec347c6f7af2fa11fb1339cf771abb444e767d1952c82c63",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "bazel-remote"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "bazel-remote"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
       "runs_without_archives": []
     },
     {
@@ -8098,6 +8806,144 @@
           "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
         }
       ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "stackstorm-pants",
+      "series_id": "registry-screening-01",
+      "plan_path": "results/stackstorm-pants/registry-screening-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Pants restore StackStorm pack metadata test results on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "primary_metric": "correctness",
+        "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "StackStorm/st2",
+        "revision": "9824de4dfd0c869869e310dee729308f398ad83a",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "9824de4dfd0c869869e310dee729308f398ad83a"
+          }
+        ]
+      },
+      "plan_sha256": "940699d14bf7b7b7b27491b381437f2d9fc6571b83ee35108b4cd382259d48f0",
+      "definition_sha256": "c33c35df34ae6ddf04d9b337d377461b155873c879d93f4fdc4a7b1722cd22d2",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "bazel-remote"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "bazel-remote"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "stackstorm-pants",
+      "series_id": "registry-screening-02",
+      "plan_path": "results/stackstorm-pants/registry-screening-02/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Pants restore StackStorm pack metadata test results on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "primary_metric": "correctness",
+        "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "StackStorm/st2",
+        "revision": "9824de4dfd0c869869e310dee729308f398ad83a",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "9824de4dfd0c869869e310dee729308f398ad83a"
+          }
+        ]
+      },
+      "plan_sha256": "9fd0981ad3a1f8c068ad8be0ca85a799d4eef6d67e94e2bbf5851e9cce9662e6",
+      "definition_sha256": "6717b361fea80c5cd76c17181a11ced0dda003db1886b353840c494962e2f3a4",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "bazel-remote"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "bazel-remote"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
       "runs_without_archives": []
     },
     {
