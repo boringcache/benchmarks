@@ -1,7 +1,7 @@
 # Cadence qualification — October 5, 2026
 
-Sixteen of seventeen rolling targets have passed a seed run and an actual source
-advancement with both providers. Zed Nix is still running. This is
+All seventeen rolling targets have passed a seed run and an actual source
+advancement with both providers. Zed Nix also passed both fresh samples. This is
 an operational correctness review; these single-sample pairs do not establish
 comparative performance. All runs use `vcli-canary-7a5b27146ebe`.
 
@@ -35,7 +35,7 @@ performs those checks and verifies every exported file before recording success.
 | obs-studio / ccache | [37323465858](https://github.com/boringcache/benchmarks/actions/runs/37323465858) | [37324219008](https://github.com/boringcache/benchmarks/actions/runs/37324219008) | Passed |
 | obs-studio / xcode | [37326133177](https://github.com/boringcache/benchmarks/actions/runs/37326133177) | [37326340221](https://github.com/boringcache/benchmarks/actions/runs/37326340221) | Passed |
 | helix-nix | [37322604229](https://github.com/boringcache/benchmarks/actions/runs/37322604229) | [37323117664](https://github.com/boringcache/benchmarks/actions/runs/37323117664) | Passed |
-| zed-nix | [37322636399](https://github.com/boringcache/benchmarks/actions/runs/37322636399) | [37323174641](https://github.com/boringcache/benchmarks/actions/runs/37323174641) | Pending |
+| zed-nix | [37322636399](https://github.com/boringcache/benchmarks/actions/runs/37322636399) | [37323174641](https://github.com/boringcache/benchmarks/actions/runs/37323174641) | Passed |
 
 The five REAPI comparator archives identify the intended previous run and source
 in `rolling-seed.json`. Both OBS comparator archives likewise identify their
@@ -48,8 +48,7 @@ reported zero native hits. A further actual upstream revision in
 reported 70 native hits and 2 misses. Both observations remain retained. Changed
 source does not guarantee a hit; absence of a hit must not be reported as reuse.
 
-Helix Nix passed two fresh cold/warm samples and its rolling pair. Zed Nix fresh
-and rolling qualification remains pending. Each Nix run imports one checksummed
+Helix Nix passed two fresh cold/warm samples and its rolling pair. Zed Nix passed both fresh cold/warm samples and its rolling pair. Each Nix run imports one checksummed
 dependency store into its provider workers and checks the dependency baseline.
 The measured package is excluded from that seed. A changed package derivation
 may require a build even when the rolling provider cache is available.

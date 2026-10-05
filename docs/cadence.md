@@ -102,12 +102,12 @@ The repository's Actions cache limit is 200 GB, with seven-day retention.
 Capacity alone does not establish that a particular rolling seed was retained
 or restored.
 
-Remaining activation requirements:
+All seventeen rolling targets passed seed and changed-source runs. Helix and
+Zed Nix each passed two fresh cold/warm samples with the common dependency seed.
+Sixty qualification and rehearsal archives have been published and verified;
+hosted checks and 252 local tests pass.
 
-- Finish Zed Nix rolling qualification and evidence preservation.
-  The other sixteen rolling targets have passed seed and changed-source runs;
-  hosted checks and 252 local tests pass.
-- Pass the corrected Zed Nix cold/warm screen using the common dependency seed.
+Remaining activation requirements:
 - Verify main-branch workflow-token publication at cutover. The
   [isolated publication rehearsal](../migration/rehearsals/mastodon-publication/review.md)
   passed conditional commits, dispatch and reconciliation with the operator's

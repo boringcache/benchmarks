@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "zed-nix",
+  "series_id": "cadence-rolling-advance",
+  "sample": 1,
+  "run_id": "37323174641",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323174641",
+  "source_sha": "915ea2921d4b4d23f0238a4b7e28ecce1bbcc880",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "d08da02269663b3a462ecefe0217d0b46a159fd754cd916534bdb08ed54b3f29"
+}

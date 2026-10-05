@@ -2451,6 +2451,154 @@
       "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory",
       "verified_on": "2026-10-05",
       "scope": "run, attempts, jobs, logs, artifacts, commit, workflow"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37327069343,
+      "verified_files": 22,
+      "gaps": [],
+      "inventory_state": "complete",
+      "bundle_format": "split-tar-gzip-index",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37327069343.tar.gz.json",
+      "bundle_bytes": 1361,
+      "sha256": "31428770e26114ffca4544d0a1690b3788d06347bbda9deb75e2ceb4969ee04d",
+      "archive_bytes": 4449826654,
+      "archive_sha256": "6d8b1992002a2a8eddd65bf7b907a86d6a253ace6d6781d033164cc11c9eec29",
+      "bundle_parts": [
+        {
+          "name": "benchmarks-37327069343.tar.gz.part001",
+          "url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37327069343.tar.gz.part001",
+          "bytes": 1900000000,
+          "sha256": "b602d6ca0db9d499dbcd01cdd468c7e2daccd0092b75edab5d3965e02d35ad4b"
+        },
+        {
+          "name": "benchmarks-37327069343.tar.gz.part002",
+          "url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37327069343.tar.gz.part002",
+          "bytes": 1900000000,
+          "sha256": "95af559c1621c2d4da752dff1ee071eaf29fe78c036e154d37d7fcc7f62ea8ea"
+        },
+        {
+          "name": "benchmarks-37327069343.tar.gz.part003",
+          "url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37327069343.tar.gz.part003",
+          "bytes": 649826654,
+          "sha256": "840dc324c77d027725f1206ddc21b088f8eca1dcf5d5a765183f1e692d150640"
+        }
+      ],
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-cadence-2026-10-05",
+      "verified_on": "2026-10-05",
+      "publication_verification": "Downloaded the published index and every part, verified their SHA-256 values, reconstructed and verified the archive, then verified every listed file and the run inventory",
+      "scope": "run, attempts, jobs, logs, artifacts, commit, workflow"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37320869828,
+      "verified_files": 22,
+      "gaps": [],
+      "inventory_state": "complete",
+      "bundle_format": "split-tar-gzip-index",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37320869828.tar.gz.json",
+      "bundle_bytes": 1361,
+      "sha256": "439a6c1df950844804eff84b809058f83c942adaffab05f57898fcfe2f2ca21a",
+      "archive_bytes": 4449816162,
+      "archive_sha256": "eb77ba7aa040779bf26e7c392908510da97f2c69661012f5e35e3135bb12e631",
+      "bundle_parts": [
+        {
+          "name": "benchmarks-37320869828.tar.gz.part001",
+          "url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37320869828.tar.gz.part001",
+          "bytes": 1900000000,
+          "sha256": "2c2dcf9728a1046176a60b3eff3a9dcf7f8dd96a741f43e35946c28713f54639"
+        },
+        {
+          "name": "benchmarks-37320869828.tar.gz.part002",
+          "url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37320869828.tar.gz.part002",
+          "bytes": 1900000000,
+          "sha256": "116e6a0a753bd348572de3b7415212dd2ba8e10d26a7bc7d3c2f11d39e3ca2fc"
+        },
+        {
+          "name": "benchmarks-37320869828.tar.gz.part003",
+          "url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37320869828.tar.gz.part003",
+          "bytes": 649816162,
+          "sha256": "b4d202109538cdadc5854454497be2a0c25daa137c790a3509f51612723c742c"
+        }
+      ],
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-cadence-2026-10-05",
+      "verified_on": "2026-10-05",
+      "publication_verification": "Downloaded the published index and every part, verified their SHA-256 values, reconstructed and verified the archive, then verified every listed file and the run inventory",
+      "scope": "run, attempts, jobs, logs, artifacts, commit, workflow"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37323174641,
+      "verified_files": 17,
+      "gaps": [],
+      "inventory_state": "complete",
+      "bundle_format": "split-tar-gzip-index",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37323174641.tar.gz.json",
+      "bundle_bytes": 1361,
+      "sha256": "97f8de554fecc282a1aec272ee0144f9c1b37340b363d2608729f73c4105e83b",
+      "archive_bytes": 4399876552,
+      "archive_sha256": "48b7c9ecea8aeae7137e5993b1b69a2d68bcadc85c9e671995ca11c760991064",
+      "bundle_parts": [
+        {
+          "name": "benchmarks-37323174641.tar.gz.part001",
+          "url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37323174641.tar.gz.part001",
+          "bytes": 1900000000,
+          "sha256": "0c81dcfc13451dad46a56166d05949db7c10fc6a056ad63c30e4ca041e90cdc7"
+        },
+        {
+          "name": "benchmarks-37323174641.tar.gz.part002",
+          "url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37323174641.tar.gz.part002",
+          "bytes": 1900000000,
+          "sha256": "fba47b80d34745ec7dc91c2bd6ca2fa40915b2d75ca8ac72bf81e94aea99e023"
+        },
+        {
+          "name": "benchmarks-37323174641.tar.gz.part003",
+          "url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37323174641.tar.gz.part003",
+          "bytes": 599876552,
+          "sha256": "c1e3a6d1ba77c928ac09a55fa4c59b0fcc879220344bb93a56189ce6601cfaa0"
+        }
+      ],
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-cadence-2026-10-05",
+      "verified_on": "2026-10-05",
+      "publication_verification": "Downloaded the published index and every part, verified their SHA-256 values, reconstructed and verified the archive, then verified every listed file and the run inventory",
+      "scope": "run, attempts, jobs, logs, artifacts, commit, workflow"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37322636399,
+      "verified_files": 17,
+      "gaps": [],
+      "inventory_state": "complete",
+      "bundle_format": "split-tar-gzip-index",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37322636399.tar.gz.json",
+      "bundle_bytes": 1361,
+      "sha256": "1567a96ab8c6dacd98c285aadf34baae4b9ebe388ffcc35bdeb73a8d3e21e6da",
+      "archive_bytes": 4449189479,
+      "archive_sha256": "080b578d8fd21f65c302a24cce44f03770df87c8b3a7ecfb14e3f9f745819da9",
+      "bundle_parts": [
+        {
+          "name": "benchmarks-37322636399.tar.gz.part001",
+          "url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37322636399.tar.gz.part001",
+          "bytes": 1900000000,
+          "sha256": "883a9acbdc5b5b3187e16dc719471393ef6b2762d539d2ee9213041344ecb53d"
+        },
+        {
+          "name": "benchmarks-37322636399.tar.gz.part002",
+          "url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37322636399.tar.gz.part002",
+          "bytes": 1900000000,
+          "sha256": "4d711d9c693e459f98e9391ec923c1e53d3fff88c6b207dbf78506ba1f2a9e39"
+        },
+        {
+          "name": "benchmarks-37322636399.tar.gz.part003",
+          "url": "https://github.com/boringcache/benchmarks/releases/download/evidence-cadence-2026-10-05/benchmarks-37322636399.tar.gz.part003",
+          "bytes": 649189479,
+          "sha256": "a3d32aa094b484d950e84530dadc17e29185c81bf11d8f8a29bc6a4f0ffcbc09"
+        }
+      ],
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-cadence-2026-10-05",
+      "verified_on": "2026-10-05",
+      "publication_verification": "Downloaded the published index and every part, verified their SHA-256 values, reconstructed and verified the archive, then verified every listed file and the run inventory",
+      "scope": "run, attempts, jobs, logs, artifacts, commit, workflow"
     }
   ]
 }
