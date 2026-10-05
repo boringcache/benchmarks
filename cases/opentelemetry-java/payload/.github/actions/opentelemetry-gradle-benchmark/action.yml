@@ -138,20 +138,6 @@ runs:
       artifact="$(find upstream/sdk/all/build/libs -maxdepth 1 -type f -name 'opentelemetry-sdk-*.jar' -print -quit)"
       test -n "$artifact"
       test -s "$artifact"
-  - name: Retain publish evidence
-    if: inputs.strategy == 'boringcache' && inputs.phase == 'publish'
-    uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
-    with:
-      name: "${{ inputs.benchmark_id }}-${{ inputs.cache_lane }}-publish"
-      path: "${{ steps.boringcache-publish.outputs.evidence-path }}"
-      if-no-files-found: error
-  - name: Retain warm evidence
-    if: inputs.strategy == 'boringcache' && inputs.phase == 'warm'
-    uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
-    with:
-      name: "${{ inputs.benchmark_id }}-fresh-restore"
-      path: "${{ steps.boringcache-restore.outputs.evidence-path }}"
-      if-no-files-found: error
   - name: Write the benchmark phase evidence
     shell: bash
     env:

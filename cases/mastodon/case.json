@@ -39,11 +39,6 @@
         "path": ".github/workflows/mastodon-mastodon-docker-benchmark.yml",
         "lane": "diagnostic",
         "inputs": {}
-      },
-      {
-        "path": ".github/workflows/mastodon-mastodon-fresh-benchmark.yml",
-        "lane": "diagnostic",
-        "inputs": {}
       }
     ],
     "sync": "upstream-head",

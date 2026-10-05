@@ -45,16 +45,6 @@
         "path": ".github/workflows/n8n-n8n-docker-benchmark.yml",
         "lane": "diagnostic",
         "inputs": {}
-      },
-      {
-        "path": ".github/workflows/n8n-n8n-docker-fresh-benchmark.yml",
-        "lane": "diagnostic",
-        "inputs": {}
-      },
-      {
-        "path": ".github/workflows/n8n-n8n-fresh-benchmark.yml",
-        "lane": "diagnostic",
-        "inputs": {}
       }
     ],
     "sync": "upstream-head",
