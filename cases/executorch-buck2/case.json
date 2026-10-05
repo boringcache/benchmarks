@@ -22,7 +22,7 @@
     "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
   },
   "execution": {
-    "sync": "fixed",
+    "sync": "upstream-head",
     "workflows": [
       {
         "path": ".github/workflows/reapi-fresh-benchmark.yml",

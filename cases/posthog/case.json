@@ -38,6 +38,18 @@
         "path": ".github/workflows/posthog-posthog-benchmark.yml",
         "lane": "diagnostic",
         "inputs": {}
+      },
+      {
+        "path": ".github/workflows/native-rolling-benchmark.yml",
+        "lane": "rolling",
+        "inputs": {
+          "case_id": "posthog"
+        },
+        "variants": [
+          "layers",
+          "combined"
+        ],
+        "variant_input": "variant"
       }
     ],
     "sync": "upstream-head",
@@ -54,7 +66,8 @@
         "load_image": "true"
       },
       "rolling_inputs": {
-        "platform": "linux/amd64"
+        "platform": "linux/amd64",
+        "load_image": "true"
       },
       "variants": {
         "layers": {},

@@ -168,6 +168,66 @@ class BenchmarkCasesTest < Minitest::Test
     end
   end
 
+  def test_snapshot_advancement_verifies_before_changing_pins_or_nix_commands
+    Dir.mktmpdir do |root|
+      FileUtils.mkdir_p(File.join(root, "cases"))
+      FileUtils.cp_r(File.join(BenchmarkCases::ROOT, "cases/helix-nix"), File.join(root, "cases"))
+      item = BenchmarkCases.load_case("helix-nix", root)
+      base = item.dig("source", "revision")
+      head = "a" * 40
+      calls = []
+      command = lambda do |*args, **|
+        calls << args
+        if args.first == "gh"
+          args.last.include?("/compare/") ? JSON.generate({"status" => "ahead", "merge_base_commit" => {"sha" => base}}) : JSON.generate({"sha" => head})
+        else
+          assert_equal base, BenchmarkCases.load_case("helix-nix", root).dig("source", "revision")
+          "Verified"
+        end
+      end
+      prepare = lambda do |candidate, **|
+        assert_equal head, candidate.dig("source", "revision")
+        assert_equal [head], candidate.dig("source", "pins").map { |pin| pin.fetch("revision") }
+        root
+      end
+      BenchmarkCases.stub(:command, command) do
+        BenchmarkCases.stub(:prepare, prepare) do
+          result = BenchmarkCases.sync_source(item, root: root)
+          assert_equal base, result.fetch("base_sha")
+          assert_equal head, result.fetch("head_sha")
+        end
+      end
+      assert_equal head, BenchmarkCases.load_case("helix-nix", root).dig("source", "revision")
+      assert_equal base, item.dig("source", "revision"), "Inspection must not mutate the original declaration"
+      payload = File.join(root, "cases/helix-nix/payload")
+      assert_includes File.read(File.join(payload, ".boringcache.toml")), "/#{head}#default"
+      contract = JSON.parse(File.read(File.join(payload, "recipe-contract.json")))
+      original = JSON.parse(File.read(File.join(BenchmarkCases::ROOT, "cases/helix-nix/payload/recipe-contract.json")))
+      assert_equal original.fetch("upstream_files"), contract.fetch("upstream_files")
+      assert calls.any? { |args| args.include?(File.join(root, "scripts/verify-upstream-recipe.rb")) }
+    end
+  end
+
+  def test_snapshot_recipe_failure_leaves_definition_and_payload_unchanged
+    Dir.mktmpdir do |root|
+      FileUtils.mkdir_p(File.join(root, "cases"))
+      FileUtils.cp_r(File.join(BenchmarkCases::ROOT, "cases/helix-nix"), File.join(root, "cases"))
+      item = BenchmarkCases.load_case("helix-nix", root)
+      files = Dir.glob(File.join(root, "cases/helix-nix/**/{*,.*}")).select { |path| File.file?(path) }
+      original = files.to_h { |path| [path, File.binread(path)] }
+      command = lambda do |*args, **|
+        raise BenchmarkCases::Error, "Recipe changed" unless args.first == "gh"
+        args.last.include?("/compare/") ? JSON.generate({"status" => "ahead", "merge_base_commit" => {"sha" => item.dig("source", "revision")}}) : JSON.generate({"sha" => "a" * 40})
+      end
+      BenchmarkCases.stub(:command, command) do
+        BenchmarkCases.stub(:prepare, ->(*, **) { root }) do
+          assert_raises(BenchmarkCases::Error) { BenchmarkCases.sync_source(item, root: root) }
+        end
+      end
+      assert_equal original, files.to_h { |path| [path, File.binread(path)] }
+    end
+  end
+
   def test_source_sync_fetches_the_declared_branch_from_a_single_branch_shallow_checkout
     with_root do |root|
       git = ->(*args, directory:) { BenchmarkCases.command("git", "-c", "user.name=Benchmark test", "-c", "user.email=benchmark@localhost", "-c", "commit.gpgsign=false", *args, chdir: directory) }

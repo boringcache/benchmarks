@@ -17,6 +17,7 @@ permissions:
   actions: write
 jobs:
   dispatch:
+    if: github.event_name == 'workflow_dispatch' || vars.BENCHMARK_CADENCE_ACTIVE == 'true'
     concurrency:
       group: benchmark-weekly-dispatch
       cancel-in-progress: false

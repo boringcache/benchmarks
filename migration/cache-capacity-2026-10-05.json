@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "repository": "boringcache/benchmarks",
+  "scope": "Repository capacity after the approved limit increase. These observations do not establish per-phase seed availability or restoration.",
+  "observations": [
+    {
+      "collected_at": "2026-10-05T12:37:50Z",
+      "endpoint": "repos/boringcache/benchmarks/actions/cache/storage-limit",
+      "response": {
+        "max_cache_size_gb": 200
+      }
+    },
+    {
+      "collected_at": "2026-10-05T12:37:51Z",
+      "endpoint": "repos/boringcache/benchmarks/actions/cache/retention-limit",
+      "response": {
+        "max_cache_retention_days": 7
+      }
+    },
+    {
+      "collected_at": "2026-10-05T12:37:51Z",
+      "endpoint": "repos/boringcache/benchmarks/actions/cache/usage",
+      "response": {
+        "full_name": "boringcache/benchmarks",
+        "active_caches_size_in_bytes": 10135681922,
+        "active_caches_count": 262
+      }
+    }
+  ]
+}

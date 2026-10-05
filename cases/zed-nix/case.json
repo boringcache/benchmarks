@@ -21,7 +21,7 @@
     "revision": "96837d78cb0f2128c1965716f8df56b8aea59742"
   },
   "execution": {
-    "sync": "fixed",
+    "sync": "upstream-head",
     "workflows": [
       {
         "path": ".github/workflows/nix-fresh-benchmark.yml",

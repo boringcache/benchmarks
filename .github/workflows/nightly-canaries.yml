@@ -19,7 +19,14 @@ jobs:
     - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
     - run: bundle install --jobs 4 --retry 2
     - name: Check repository canaries
-      run: bundle exec ruby scripts/benchmark-cadence.rb --collect --summary "${GITHUB_STEP_SUMMARY}"
+      env:
+        CADENCE_ACTIVE: ${{ vars.BENCHMARK_CADENCE_ACTIVE }}
+      run: |
+        if [[ "$CADENCE_ACTIVE" == true ]]; then
+          bundle exec ruby scripts/benchmark-cadence.rb --collect --summary "$GITHUB_STEP_SUMMARY"
+        else
+          bundle exec ruby scripts/nightly-canaries.rb --collect --summary "$GITHUB_STEP_SUMMARY"
+        fi
 'on':
   schedule:
   - cron: 47 * * * *

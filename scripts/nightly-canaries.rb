@@ -67,7 +67,7 @@ module NightlyCanaries
       end.uniq
     end
 
-    def dispatch(repository:, output:, summary: nil, version: nil, dry_run: false, benchmarks: BENCHMARKS, channel: "canary", ref: "main")
+    def dispatch(repository:, output:, summary: nil, version: nil, dry_run: false, benchmarks: BENCHMARKS, channel: "canary", ref: "main", preflight: nil)
       raise Error, "Use stable or canary" unless %w[stable canary].include?(channel)
       selected = targets(benchmarks).select { |repo, _| repo == repository }
       raise Error, "No active fresh workflows registered for #{repository}" if selected.empty?
@@ -91,6 +91,7 @@ module NightlyCanaries
         workflow = api("repos/#{run.fetch('repository')}/actions/workflows/#{run.fetch('workflow')}")
         raise Error, "#{run.fetch('repository')} workflow is not active" unless workflow["state"] == "active"
       end
+      preflight.call(version, record.fetch("runs")) if preflight
       record["runs"].each do |run|
         next if dry_run
         result = api("repos/#{run.fetch('repository')}/actions/workflows/#{run.fetch('workflow')}/dispatches",

@@ -12,7 +12,7 @@ module ReapiSetup
     raise "Command failed: #{command.first}" unless system(*command)
   end
 
-  def self.download(repository, release, asset, binary, sha256: nil)
+  def self.download(repository, release, asset, binary, sha256: nil, destination: nil)
     Dir.mktmpdir("reapi-download-") do |directory|
       run("gh", "release", "download", release, "--repo", repository, "--pattern", asset, "--dir", directory)
       path = File.join(directory, asset)
@@ -22,7 +22,7 @@ module ReapiSetup
         sha256 = rows.find { |row| row[1] == asset }&.first
       end
       raise "Release checksum is missing or different: #{asset}" unless sha256&.match?(/\A[0-9a-f]{64}\z/) && Digest::SHA256.file(path).hexdigest == sha256
-      destination = File.join(ENV.fetch("RUNNER_TEMP"), "reapi-bin", binary)
+      destination ||= File.join(ENV.fetch("RUNNER_TEMP"), "reapi-bin", binary)
       FileUtils.mkdir_p(File.dirname(destination))
       if asset.end_with?(".zst")
         run("zstd", "-d", path, "-o", destination)

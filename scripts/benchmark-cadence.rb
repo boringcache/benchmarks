@@ -38,6 +38,44 @@ module BenchmarkCadence
     raise Error, "#{case_id} is not in the scheduled suite" if case_id && !ids.include?(case_id)
     ids.select { |id| !case_id || id == case_id }.map { |id| BenchmarkCases.load_case(id, root) }
   end
+
+  def self.rolling_targets(root: BenchmarkCases::ROOT, case_id:)
+    source_cases(root: root, case_id: case_id)
+    item = BenchmarkCases.load_case(case_id, root)
+    workflows = item.fetch("execution").fetch("workflows").select { |workflow| workflow.fetch("lane") == "rolling" }
+    raise Error, "#{case_id} has no rolling workflow" if workflows.empty?
+    cases(root: root).select { |entry| entry.fetch("case_id") == case_id }.flat_map do |entry|
+      workflows.map do |workflow|
+        BenchmarkCases.plan(item, lane: "rolling", workflow: File.basename(workflow.fetch("path")),
+          variant: entry["variant"], root: root)
+      end
+    end.uniq
+  end
+
+  def self.verify_cli(version, runs, probe: method(:cli_help))
+    return unless runs.any? { |run| run.fetch("workflow").start_with?("reapi-") }
+    help = probe.call(version, "cache-registry")
+    unless help.match?(/--reapi-port\b/)
+      raise Error, "#{version} does not support cache-registry --reapi-port required by the REAPI cases; no builds dispatched"
+    end
+  end
+
+  def self.cli_help(version, command)
+    require_relative "reapi-setup"
+    platform = RbConfig::CONFIG.fetch("host_os")
+    asset = if platform.include?("darwin")
+      "boringcache-macos-universal"
+    elsif platform.include?("linux")
+      "boringcache-linux-#{RbConfig::CONFIG.fetch('host_cpu').match?(/aarch64|arm64/) ? 'arm64' : 'amd64'}"
+    else
+      raise Error, "CLI capability inspection requires Linux or macOS"
+    end
+    Dir.mktmpdir("benchmark-cli-") do |directory|
+      binary = File.join(directory, "boringcache")
+      ReapiSetup.download("boringcache/cli", version, asset, "boringcache", destination: binary)
+      BenchmarkCases.command(binary, command, "--help")
+    end
+  end
 end
 
 if $PROGRAM_NAME == __FILE__
@@ -63,7 +101,8 @@ if $PROGRAM_NAME == __FILE__
     else
       raise BenchmarkCadence::Error, "Use stable or canary" unless %w[stable canary].include?(options[:channel])
       raise BenchmarkCadence::Error, "Inspect the previous receipt before retrying a dispatch" if ENV.fetch("GITHUB_RUN_ATTEMPT", "1").to_i > 1 && !options[:dry_run]
-      NightlyCanaries::Runner.new.dispatch(repository: BenchmarkCases::REPOSITORY, benchmarks: targets, **options)
+      NightlyCanaries::Runner.new.dispatch(repository: BenchmarkCases::REPOSITORY, benchmarks: targets,
+        preflight: BenchmarkCadence.method(:verify_cli), **options)
     end
   rescue BenchmarkCadence::Error, BenchmarkCases::Error, NightlyCanaries::Error, KeyError => error
     abort error.message

@@ -91,4 +91,52 @@ class BenchmarkCadenceTest < Minitest::Test
       assert_equal "Source recipe changed", inventory.fetch("records")[2].fetch("error")
     end
   end
+
+  def test_native_rolling_paths_verify_outputs_for_every_scheduled_variant
+    %w[hugo chroma duckgres linkerd2 immich mastodon posthog n8n].each do |id|
+      targets = BenchmarkCadence.rolling_targets(case_id: id)
+      selections = BenchmarkCadence.cases.select { |entry| entry.fetch("case_id") == id }
+      assert_equal selections.length, targets.length, id
+      assert targets.all? { |target| target.fetch("workflow") == "native-rolling-benchmark.yml" }
+      assert_equal selections.map { |entry| entry["variant"] }, targets.map { |target| target.dig("inputs", "variant") }
+    end
+    assert_raises(BenchmarkCadence::Error) { BenchmarkCadence.rolling_targets(case_id: "helix-nix") }
+  end
+
+  def test_schedules_require_explicit_cutover_and_preserve_historical_monitoring
+    %w[weekly-fresh canary source-sync].each do |name|
+      workflow = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/#{name}.yml")))
+      job = workflow.fetch("jobs").values.first
+      assert_equal "github.event_name == 'workflow_dispatch' || vars.BENCHMARK_CADENCE_ACTIVE == 'true'", job.fetch("if")
+    end
+    workflow = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/nightly-canaries.yml")))
+    step = workflow.dig("jobs", "results", "steps").find { |item| item["name"] == "Check repository canaries" }
+    assert_includes step.fetch("run"), 'scripts/nightly-canaries.rb --collect'
+    assert_includes step.fetch("run"), 'scripts/benchmark-cadence.rb --collect'
+  end
+
+  def test_incompatible_cli_stops_the_entire_dispatch_and_retains_a_failed_receipt
+    runner = Runner.new
+    preflight = ->(version, runs) { BenchmarkCadence.verify_cli(version, runs, probe: ->(*) { "--port PORT" }) }
+    Dir.mktmpdir do |directory|
+      path = File.join(directory, "receipt.json")
+      error = assert_raises(BenchmarkCadence::Error) do
+        runner.dispatch(repository: BenchmarkCases::REPOSITORY, benchmarks: BenchmarkCadence.fresh_targets,
+          channel: "stable", output: path, preflight: preflight)
+      end
+      assert_includes error.message, "--reapi-port"
+      assert_empty runner.dispatches
+      receipt = JSON.parse(File.read(path))
+      assert_equal "dispatch-failed", receipt.fetch("state")
+      assert_equal 31, receipt.fetch("runs").length
+      assert receipt.fetch("runs").all? { |run| run.fetch("state") == "planned" }
+    end
+  end
+
+  def test_cli_capability_probe_is_required_for_reapi_but_not_other_targets
+    runs = [{"workflow" => "reapi-fresh-benchmark.yml"}]
+    assert_nil BenchmarkCadence.verify_cli("v1.34.0", runs, probe: ->(*) { "--reapi-port PORT" })
+    assert_nil BenchmarkCadence.verify_cli("v1.33.0", [{"workflow" => "native-fresh-benchmark.yml"}],
+      probe: ->(*) { flunk "No REAPI capability is needed" })
+  end
 end

@@ -44,7 +44,7 @@
       "action": ".github/actions/chroma-docker-benchmark",
       "benchmark_id": "chroma",
       "rolling_inputs": {
-        "push_image": "true"
+        "load_image": "true"
       },
       "environment": {},
       "fresh_inputs": {

@@ -44,7 +44,7 @@
       "action": ".github/actions/duckgres-docker-benchmark",
       "benchmark_id": "duckgres",
       "rolling_inputs": {
-        "push_image": "true"
+        "load_image": "true"
       },
       "environment": {},
       "fresh_inputs": {

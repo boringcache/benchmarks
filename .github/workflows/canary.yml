@@ -20,6 +20,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   dispatch:
+    if: github.event_name == 'workflow_dispatch' || vars.BENCHMARK_CADENCE_ACTIVE == 'true'
     uses: ./.github/workflows/fresh-cadence.yml
     with:
       channel: canary

@@ -273,6 +273,7 @@ module BenchmarkCases
   def self.sync_source(item, root: ROOT)
     kind = item.fetch("execution").fetch("sync", "fixed")
     raise Error, "#{item.fetch('id')} has fixed source pins" if kind == "fixed"
+    return sync_snapshot(item, root: root) if kind == "upstream-head" && item.dig("source", "revision")
     if kind == "upstream-head"
       pin = item.fetch("source").fetch("pins").find { |value| value["kind"] == "gitlink" }
       branch, _, status = Open3.capture3("git", "config", "-f", File.join(root, "cases", item.fetch("id"), "payload", ".gitmodules"), "--get", "submodule.#{pin.fetch('path')}.branch")
@@ -295,7 +296,7 @@ module BenchmarkCases
         raise Error, "Upstream source is not a fast-forward from the declared pin" unless comparison["status"] == "ahead" && comparison.dig("merge_base_commit", "sha") == current_sha
         verify_recipe(workload)
         update_source(item, workload, root: root)
-        {"case_id" => item.fetch("id"), "updated" => true, "head_sha" => next_sha}
+        {"case_id" => item.fetch("id"), "updated" => true, "base_sha" => current_sha, "head_sha" => next_sha}
       else
         old_source = File.read(File.join(workload, "benchmark-source.env"))
         output_path = File.join(directory, "outputs")
@@ -324,6 +325,41 @@ module BenchmarkCases
           "candidate_source_env" => updated && File.read(File.join(workload, "benchmark-source.env")))
       end
     end
+  end
+
+  def self.sync_snapshot(item, root: ROOT)
+    repository = item.dig("source", "repository")
+    current = item.dig("source", "revision")
+    branch = item.dig("origin", "branch")
+    head = JSON.parse(command("gh", "api", "repos/#{repository}/commits/#{CGI.escape(branch)}")).fetch("sha")
+    return {"case_id" => item.fetch("id"), "updated" => false} if head == current
+    raise Error, "Upstream returned an invalid revision" unless head.match?(/\A[0-9a-f]{40}\z/)
+    comparison = JSON.parse(command("gh", "api", "repos/#{repository}/compare/#{current}...#{head}"))
+    unless comparison["status"] == "ahead" && comparison.dig("merge_base_commit", "sha") == current
+      raise Error, "Upstream source is not a fast-forward from the declared pin"
+    end
+    candidate = Marshal.load(Marshal.dump(item))
+    candidate.fetch("source")["revision"] = head
+    candidate.dig("source", "pins").each do |pin|
+      raise Error, "Snapshot has independently pinned sources; review them before advancement" unless pin["revision"] == current
+      pin["revision"] = head
+    end
+    Dir.mktmpdir("benchmark-source-") do |directory|
+      workload = prepare(candidate, directory: File.join(directory, "workload"), root: root)
+      command(RbConfig.ruby, File.join(workload, "scripts/verify-upstream-recipe.rb"), workload, chdir: workload)
+    end
+    # Only the exact source URI changes; recipe digests and build flags stay reviewed.
+    payload = File.join(root, "cases", item.fetch("id"), "payload")
+    reference = "github:#{repository}/#{current}#default"
+    replacement = "github:#{repository}/#{head}#default"
+    %w[.boringcache.toml recipe-contract.json].each do |name|
+      path = File.join(payload, name)
+      next unless File.file?(path)
+      content = File.read(path)
+      File.write(path, content.gsub(reference, replacement)) if content.include?(reference)
+    end
+    write_json(File.join(root, "cases", item.fetch("id"), "case.json"), candidate)
+    {"case_id" => item.fetch("id"), "updated" => true, "base_sha" => current, "head_sha" => head}
   end
 
   def self.verify_recipe(workload)
