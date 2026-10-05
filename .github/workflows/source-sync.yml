@@ -1,43 +1,52 @@
-name: Propose Upstream Source Updates
-on:
-  workflow_dispatch:
-    inputs:
-      case_id:
-        description: Optional case ID; empty inspects all maintained source schedules
-        type: string
-        default: ''
+---
+name: Check upstream source updates
 permissions:
   contents: read
   actions: read
-concurrency:
-  group: benchmark-source-proposals
-  cancel-in-progress: false
 jobs:
-  propose:
+  select:
+    if: github.event_name == 'workflow_dispatch' || vars.BENCHMARK_CADENCE_ACTIVE
+      == 'true'
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 10
+    outputs:
+      matrix: "${{ steps.cases.outputs.matrix }}"
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
-        with:
-          persist-credentials: false
-      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-      - run: bundle install --jobs 4 --retry 2
-      - name: Prepare reviewed source proposals
-        env:
-          GH_TOKEN: ${{ github.token }}
-          CASE_ID: ${{ inputs.case_id }}
-        run: |
-          args=()
-          [[ -z "$CASE_ID" ]] || args+=(--case "$CASE_ID")
-          ruby scripts/sync-sources.rb "${args[@]}" --output "$RUNNER_TEMP/source-proposals.json"
-      - name: Retain proposed definitions and qualification requirements
-        if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
-        with:
-          name: source-proposals
-          path: |
-            ${{ runner.temp }}/source-proposals.json
-            cases/*/case.json
-            cases/*/payload/benchmark-source.env
-          if-no-files-found: error
-          retention-days: 90
+    - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      with:
+        persist-credentials: false
+    - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+    - run: bundle install --jobs 4 --retry 2
+    - id: cases
+      env:
+        CASE_ID: "${{ inputs.case_id }}"
+      run: |
+        args=()
+        [[ -z "$CASE_ID" ]] || args+=(--case "$CASE_ID")
+        echo "matrix=$(ruby scripts/sync-sources.rb --matrix "${args[@]}")" >> "$GITHUB_OUTPUT"
+  sources:
+    name: "${{ matrix.case_id }}"
+    needs: select
+    permissions:
+      contents: write
+      actions: write
+    concurrency:
+      group: benchmark-source-${{ matrix.case_id }}
+      cancel-in-progress: false
+      queue: max
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix: "${{ fromJSON(needs.select.outputs.matrix) }}"
+    uses: "./.github/workflows/source-case.yml"
+    with:
+      case_id: "${{ matrix.case_id }}"
+'on':
+  schedule:
+  - cron: 11 * * * *
+  workflow_dispatch:
+    inputs:
+      case_id:
+        description: Optional case ID; empty checks the scheduled suite.
+        type: string
+        default: ''

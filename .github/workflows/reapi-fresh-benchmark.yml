@@ -1,16 +1,155 @@
-name: Native REAPI screening
-run-name: '${{ inputs.case_id }} REAPI ${{ inputs.series_id }} sample ${{ inputs.sample }}'
-on:
+---
+name: REAPI comparison fresh
+run-name: "${{ inputs.case_id }} fresh ${{ inputs.series_id }} sample ${{ inputs.sample
+  }}"
+permissions:
+  contents: read
+  actions: read
+env:
+  BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
+  BENCHMARK_SAMPLE: "${{ inputs.sample }}"
+  BENCHMARK_RUNNER_CLASS: ubuntu-24.04
+  BORINGCACHE_NO_GIT: 'true'
+jobs:
+  providers:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      matrix: "${{ steps.providers.outputs.matrix }}"
+    steps:
+    - id: providers
+      env:
+        PROVIDER: "${{ inputs.provider }}"
+      run: |
+        case "$PROVIDER" in
+          all) echo 'matrix=["boringcache","bazel-remote"]' >> "$GITHUB_OUTPUT" ;;
+          boringcache) echo 'matrix=["boringcache"]' >> "$GITHUB_OUTPUT" ;;
+          bazel-remote) echo 'matrix=["bazel-remote"]' >> "$GITHUB_OUTPUT" ;;
+          *) exit 1 ;;
+        esac
+  cold:
+    name: "${{ matrix.provider == 'boringcache' && 'BoringCache' || matrix.provider
+      == 'cachix' && 'Cachix' || matrix.provider }} ${{ inputs.case_id }} cold"
+    needs: providers
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        provider: "${{ fromJSON(needs.providers.outputs.matrix) }}"
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: "${{ inputs.case_id }}"
+    - uses: "./.github/actions/reapi-benchmark"
+      with:
+        case-id: "${{ inputs.case_id }}"
+        provider: "${{ matrix.provider }}"
+        phase: cold
+        cli-version: "${{ inputs.cli_version }}"
+  warm:
+    name: "${{ matrix.provider == 'boringcache' && 'BoringCache' || matrix.provider
+      == 'cachix' && 'Cachix' || matrix.provider }} ${{ inputs.case_id }} warm"
+    needs:
+    - providers
+    - cold
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        provider: "${{ fromJSON(needs.providers.outputs.matrix) }}"
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: "${{ inputs.case_id }}"
+    - uses: "./.github/actions/reapi-benchmark"
+      with:
+        case-id: "${{ inputs.case_id }}"
+        provider: "${{ matrix.provider }}"
+        phase: warm
+        cli-version: "${{ inputs.cli_version }}"
+  report:
+    name: "${{ inputs.case_id }} fresh report"
+    needs:
+    - cold
+    - warm
+    if: always() && !cancelled()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: false
+    - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+    - name: Download verified phase evidence
+      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        pattern: phase-${{ inputs.case_id }}-*
+        path: phase-evidence
+    - name: Generate the benchmark report
+      env:
+        REPORT_TITLE: "${{ inputs.case_id }} fresh benchmark"
+      run: ruby scripts/canonical/benchmark-report.rb summarize --title "$REPORT_TITLE"
+        --input-dir phase-evidence --output-dir benchmark-results
+    - name: Retain boringcache result
+      if: inputs.provider == 'all' || inputs.provider == 'boringcache'
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ inputs.case_id }}-boringcache-fresh
+        path: benchmark-results/${{ inputs.case_id }}-boringcache-fresh.json
+        if-no-files-found: error
+        retention-days: 90
+    - name: Retain bazel-remote result
+      if: inputs.provider == 'all' || inputs.provider == 'bazel-remote'
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ inputs.case_id }}-bazel-remote-fresh
+        path: benchmark-results/${{ inputs.case_id }}-bazel-remote-fresh.json
+        if-no-files-found: error
+        retention-days: 90
+    - name: Retain comparison summary
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: comparison-reapi-fresh
+        path: benchmark-results/comparison.md
+        if-no-files-found: error
+        retention-days: 90
+'on':
   workflow_dispatch:
     inputs:
       case_id:
         type: choice
-        options: [gogs-moon, opencut-moon, stackstorm-pants, executorch-buck2, msgpack-sbt]
+        options:
+        - gogs-moon
+        - opencut-moon
+        - stackstorm-pants
+        - executorch-buck2
+        - msgpack-sbt
         required: true
       provider:
         description: Selected provider for a native cache correctness screen.
         type: choice
-        options: [all, boringcache, bazel-remote]
+        options:
+        - all
+        - boringcache
+        - bazel-remote
         default: all
       cli_version:
         description: Exact CLI release or canary; required for BoringCache execution.
@@ -22,82 +161,3 @@ on:
       sample:
         type: string
         default: '1'
-permissions:
-  contents: read
-  actions: read
-env:
-  BENCHMARK_SERIES_ID: ${{ inputs.series_id }}
-  BENCHMARK_SAMPLE: ${{ inputs.sample }}
-  BENCHMARK_RUNNER_CLASS: ubuntu-24.04
-  BORINGCACHE_NO_GIT: 'true'
-jobs:
-  providers:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    outputs:
-      matrix: ${{ steps.providers.outputs.matrix }}
-    steps:
-      - id: providers
-        env:
-          PROVIDER: ${{ inputs.provider }}
-        run: |
-          case "$PROVIDER" in
-            all) echo 'matrix=["boringcache","bazel-remote"]' >> "$GITHUB_OUTPUT" ;;
-            boringcache) echo 'matrix=["boringcache"]' >> "$GITHUB_OUTPUT" ;;
-            bazel-remote) echo 'matrix=["bazel-remote"]' >> "$GITHUB_OUTPUT" ;;
-            *) exit 1 ;;
-          esac
-  cold:
-    name: '${{ matrix.provider }} ${{ inputs.case_id }} cold'
-    needs: providers
-    runs-on: ubuntu-24.04
-    timeout-minutes: 180
-    permissions:
-      contents: read
-      actions: read
-      id-token: write
-    strategy:
-      fail-fast: false
-      matrix:
-        provider: ${{ fromJSON(needs.providers.outputs.matrix) }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          path: .harness
-          persist-credentials: false
-      - uses: ./.harness/.github/actions/prepare-case
-        with:
-          case-id: ${{ inputs.case_id }}
-      - uses: ./.github/actions/reapi-benchmark
-        with:
-          case-id: ${{ inputs.case_id }}
-          provider: ${{ matrix.provider }}
-          phase: cold
-          cli-version: ${{ inputs.cli_version }}
-  warm:
-    name: '${{ matrix.provider }} ${{ inputs.case_id }} warm'
-    needs: [providers, cold]
-    runs-on: ubuntu-24.04
-    timeout-minutes: 180
-    permissions:
-      contents: read
-      actions: read
-      id-token: write
-    strategy:
-      fail-fast: false
-      matrix:
-        provider: ${{ fromJSON(needs.providers.outputs.matrix) }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          path: .harness
-          persist-credentials: false
-      - uses: ./.harness/.github/actions/prepare-case
-        with:
-          case-id: ${{ inputs.case_id }}
-      - uses: ./.github/actions/reapi-benchmark
-        with:
-          case-id: ${{ inputs.case_id }}
-          provider: ${{ matrix.provider }}
-          phase: warm
-          cli-version: ${{ inputs.cli_version }}

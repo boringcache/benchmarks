@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "case_id": "helix-nix",
+  "series_id": "cadence-fresh-01",
+  "created_at": "2026-10-05T13:54:56Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 2,
+  "definition_sha256": "2dd1df2356f578abac4510efe88128471d1c69e94ff80eb775b9ba0f5ef84e95",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "helix-nix",
+    "provider": "all",
+    "cli_version": "vcli-canary-7a5b27146ebe",
+    "cachix_cache": "benchmark-zed"
+  },
+  "comparison": {
+    "question": "Does Nix restore the Helix package closure on a fresh store?",
+    "providers": [
+      "boringcache",
+      "cachix"
+    ],
+    "primary_metric": "build_and_reuse_seconds",
+    "timed_scope": "Nix package derivation build or substitution after its build dependencies are realized; dependency preparation, output verification and provider post-step publication are outside the build timer. All workers import the same checksummed dependency-store export before timing; its derivation and NAR hashes must match, and the measured package is excluded from the seed.",
+    "storage": "provider-reported",
+    "cache_scope": "BoringCache case/series tag; Cachix content-addressed cache shared across series. Cold disables substitution after dependency preparation. Warm uses a fresh local output store and only the selected provider; compare exact output and dependency closure hashes. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+    "sample_count": 2
+  },
+  "source": {
+    "repository": "helix-editor/helix",
+    "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc"
+      }
+    ]
+  },
+  "verification": [
+    "Verify result/bin/hx exists and its version command succeeds",
+    "Record the output store path and recursive closure NAR hashes in both provider arms",
+    "Require identical output store paths and closure hashes for the same source and flake.lock",
+    "On a fresh warm store, forbid local builds and require substitution from the selected provider",
+    "Require completed closure publication before starting the warm consumer"
+  ],
+  "plan_sha256": "c2a0ba9332802d28a66f0938b4fd31a43ff928f6d8e7348f2f07f37e1c933421"
+}

@@ -1,0 +1,137 @@
+name: Check and queue one rolling case
+on:
+  workflow_call:
+    inputs:
+      case_id:
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  previous:
+    name: '${{ inputs.case_id }} previous rolling run'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      actions: read
+    outputs:
+      proceed: ${{ steps.previous.outputs.proceed }}
+      ref: ${{ steps.previous.outputs.ref }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: ${{ vars.BENCHMARK_CADENCE_ACTIVE == 'true' && github.ref_name == 'main' && 'main' || github.sha }}
+          persist-credentials: false
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      - run: bundle install --jobs 4 --retry 2
+      - id: previous
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CASE_ID: ${{ inputs.case_id }}
+          BENCHMARK_CADENCE_ACTIVE: ${{ vars.BENCHMARK_CADENCE_ACTIVE }}
+        run: |
+          if [[ "$BENCHMARK_CADENCE_ACTIVE" == true && "$GITHUB_REF_NAME" == main ]]; then
+            ruby scripts/source-promotion.rb --case "$CASE_ID" --reconcile \
+              --output "$RUNNER_TEMP/rolling-previous.json"
+          else
+            echo 'proceed=true' >> "$GITHUB_OUTPUT"
+            echo "ref=$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Retain previous rolling state
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: rolling-previous-${{ inputs.case_id }}
+          path: ${{ runner.temp }}/rolling-previous.json
+          if-no-files-found: ignore
+          retention-days: 90
+  inspect:
+    name: '${{ inputs.case_id }} source check'
+    needs: previous
+    if: needs.previous.outputs.proceed == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    outputs:
+      changed: ${{ steps.proposal.outputs.changed }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: ${{ vars.BENCHMARK_CADENCE_ACTIVE == 'true' && github.ref_name == 'main' && 'main' || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Select the inspected revision from trusted history
+        env:
+          INSPECTED_REF: ${{ needs.previous.outputs.ref }}
+        run: |
+          [[ "$INSPECTED_REF" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          git merge-base --is-ancestor "$INSPECTED_REF" HEAD
+          git checkout --detach "$INSPECTED_REF"
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      - run: bundle install --jobs 4 --retry 2
+      - name: Inspect upstream against the reviewed recipe
+        id: proposal
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CASE_ID: ${{ inputs.case_id }}
+        run: |
+          ruby scripts/sync-sources.rb --case "$CASE_ID" --output "$RUNNER_TEMP/source-proposals.json"
+          echo "changed=$(ruby -rjson -e 'puts JSON.parse(File.read(ARGV[0])).fetch("records").first.fetch("state") == "proposal"' "$RUNNER_TEMP/source-proposals.json")" >> "$GITHUB_OUTPUT"
+      - name: Retain the source observation
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: source-proposals-${{ inputs.case_id }}
+          path: ${{ runner.temp }}/source-proposals.json
+          if-no-files-found: error
+          retention-days: 90
+  publish:
+    name: '${{ inputs.case_id }} queue rolling runs'
+    needs: [previous, inspect]
+    if: needs.inspect.outputs.changed == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: ${{ vars.BENCHMARK_CADENCE_ACTIVE == 'true' && github.ref_name == 'main' && 'main' || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Select the inspected revision from trusted history
+        env:
+          INSPECTED_REF: ${{ needs.previous.outputs.ref }}
+        run: |
+          [[ "$INSPECTED_REF" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          git merge-base --is-ancestor "$INSPECTED_REF" HEAD
+          git checkout --detach "$INSPECTED_REF"
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      - run: bundle install --jobs 4 --retry 2
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+        with:
+          name: source-proposals-${{ inputs.case_id }}
+          path: ${{ runner.temp }}/proposal
+      - name: Publish source and request the declared rolling variants
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CASE_ID: ${{ inputs.case_id }}
+          BENCHMARK_CADENCE_ACTIVE: ${{ vars.BENCHMARK_CADENCE_ACTIVE }}
+        run: |
+          args=(--channel canary)
+          if [[ "$BENCHMARK_CADENCE_ACTIVE" == true && "$GITHUB_REF_NAME" == main ]]; then
+            args=(--channel stable --publish)
+          fi
+          ruby scripts/source-promotion.rb --case "$CASE_ID" "${args[@]}" \
+            --proposal "$RUNNER_TEMP/proposal/source-proposals.json" \
+            --output "$RUNNER_TEMP/rolling-dispatch.json"
+      - name: Retain rolling dispatch receipt
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: rolling-dispatch-${{ inputs.case_id }}
+          path: ${{ runner.temp }}/rolling-dispatch.json
+          if-no-files-found: error
+          retention-days: 90

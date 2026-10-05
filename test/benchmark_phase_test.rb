@@ -60,4 +60,14 @@ class BenchmarkPhaseTest < Minitest::Test
       refute_includes File.read(path), "docker/build-push-action@", "#{path}: Docker provider lifecycle must be shared"
     end
   end
+
+  def test_explicit_rolling_cohort_links_frozen_source_generations_without_changing_fresh_identity
+    env = {"BENCHMARK_ID" => "posthog", "CACHE_LANE" => "rolling", "BENCHMARK_SERIES_ID" => "parent-01",
+      "BENCHMARK_SAMPLE" => "1", "BENCHMARK_ROLLING_SCOPE" => "qualification-01", "GITHUB_RUN_ID" => "123", "GITHUB_RUN_ATTEMPT" => "1"}
+    assert_equal "posthog-rolling-qualification-01", BenchmarkPhase.scope(env)
+    assert_equal BenchmarkPhase.scope(env), BenchmarkPhase.scope(env.merge("BENCHMARK_SERIES_ID" => "child-01", "GITHUB_RUN_ID" => "456"))
+    fresh = env.merge("CACHE_LANE" => "fresh")
+    assert_equal BenchmarkPhase.scope(fresh.reject { |key, _| key == "BENCHMARK_ROLLING_SCOPE" }), BenchmarkPhase.scope(fresh)
+    assert_raises(RuntimeError) { BenchmarkPhase.scope(env.merge("BENCHMARK_ROLLING_SCOPE" => "../other")) }
+  end
 end

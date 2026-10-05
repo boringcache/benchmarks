@@ -21,11 +21,18 @@
     "revision": "9824de4dfd0c869869e310dee729308f398ad83a"
   },
   "execution": {
-    "sync": "fixed",
+    "sync": "upstream-head",
     "workflows": [
       {
         "path": ".github/workflows/reapi-fresh-benchmark.yml",
         "lane": "fresh",
+        "inputs": {
+          "case_id": "stackstorm-pants"
+        }
+      },
+      {
+        "path": ".github/workflows/reapi-rolling-benchmark.yml",
+        "lane": "rolling",
         "inputs": {
           "case_id": "stackstorm-pants"
         }
@@ -50,9 +57,9 @@
       "bazel-remote"
     ],
     "primary_metric": "correctness",
-    "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+    "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
     "storage": "unmeasured",
-    "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
+    "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
     "sample_count": 2
   }
 }

@@ -273,6 +273,7 @@ module BenchmarkCases
   def self.sync_source(item, root: ROOT)
     kind = item.fetch("execution").fetch("sync", "fixed")
     raise Error, "#{item.fetch('id')} has fixed source pins" if kind == "fixed"
+    return sync_snapshot(item, root: root) if kind == "upstream-head" && item.dig("source", "revision")
     if kind == "upstream-head"
       pin = item.fetch("source").fetch("pins").find { |value| value["kind"] == "gitlink" }
       branch, _, status = Open3.capture3("git", "config", "-f", File.join(root, "cases", item.fetch("id"), "payload", ".gitmodules"), "--get", "submodule.#{pin.fetch('path')}.branch")
@@ -283,8 +284,13 @@ module BenchmarkCases
     Dir.mktmpdir("benchmark-source-") do |directory|
       workload = prepare(item, directory: File.join(directory, "workload"), root: root)
       if kind == "upstream-head"
-        command("git", "submodule", "update", "--init", "--checkout", "upstream", chdir: workload)
         source = File.join(workload, "upstream")
+        # Inspect only the candidate tree. Ancestry is checked against the exact
+        # declared pin through the compare endpoint below.
+        unless File.exist?(File.join(source, ".git"))
+          command("git", "init", source)
+          command("git", "remote", "add", "origin", "https://github.com/#{item.dig('source', 'repository')}.git", chdir: source)
+        end
         command("git", "fetch", "--depth", "1", "origin", "refs/heads/#{branch}", chdir: source)
         next_sha = command("git", "rev-parse", "FETCH_HEAD", chdir: source).strip
         current_sha = item.fetch("source").fetch("pins").find { |pin| pin["kind"] == "gitlink" }.fetch("revision")
@@ -295,9 +301,10 @@ module BenchmarkCases
         raise Error, "Upstream source is not a fast-forward from the declared pin" unless comparison["status"] == "ahead" && comparison.dig("merge_base_commit", "sha") == current_sha
         verify_recipe(workload)
         update_source(item, workload, root: root)
-        {"case_id" => item.fetch("id"), "updated" => true, "head_sha" => next_sha}
+        {"case_id" => item.fetch("id"), "updated" => true, "base_sha" => current_sha, "head_sha" => next_sha}
       else
         old_source = File.read(File.join(workload, "benchmark-source.env"))
+        old_settings = BenchmarkPlan.settings(File.join(workload, "benchmark-source.env"))
         output_path = File.join(directory, "outputs")
         args = ["bash", "scripts/advance-source-pair.sh", "benchmark-source.env", item.fetch("execution").fetch("source_prefix")]
         args << "check_dependencies" if kind == "verified-pair"
@@ -320,10 +327,47 @@ module BenchmarkCases
           end
         end
         update_source(item, workload, root: root) if updated && kind != "verified-pair"
+        fields.merge!("base_sha" => values.fetch("#{prefix}_BASE_SHA"), "head_sha" => values.fetch("#{prefix}_HEAD_SHA"),
+          "previous_sha" => old_settings.fetch("#{prefix}_HEAD_SHA")) if updated
         fields.merge("case_id" => item.fetch("id"), "updated" => updated, "requires_verified_build" => kind == "verified-pair",
           "candidate_source_env" => updated && File.read(File.join(workload, "benchmark-source.env")))
       end
     end
+  end
+
+  def self.sync_snapshot(item, root: ROOT)
+    repository = item.dig("source", "repository")
+    current = item.dig("source", "revision")
+    branch = item.dig("origin", "branch")
+    head = JSON.parse(command("gh", "api", "repos/#{repository}/commits/#{CGI.escape(branch)}")).fetch("sha")
+    return {"case_id" => item.fetch("id"), "updated" => false} if head == current
+    raise Error, "Upstream returned an invalid revision" unless head.match?(/\A[0-9a-f]{40}\z/)
+    comparison = JSON.parse(command("gh", "api", "repos/#{repository}/compare/#{current}...#{head}"))
+    unless comparison["status"] == "ahead" && comparison.dig("merge_base_commit", "sha") == current
+      raise Error, "Upstream source is not a fast-forward from the declared pin"
+    end
+    candidate = Marshal.load(Marshal.dump(item))
+    candidate.fetch("source")["revision"] = head
+    candidate.dig("source", "pins").each do |pin|
+      raise Error, "Snapshot has independently pinned sources; review them before advancement" unless pin["revision"] == current
+      pin["revision"] = head
+    end
+    Dir.mktmpdir("benchmark-source-") do |directory|
+      workload = prepare(candidate, directory: File.join(directory, "workload"), root: root)
+      command(RbConfig.ruby, File.join(workload, "scripts/verify-upstream-recipe.rb"), workload, chdir: workload)
+    end
+    # Only the exact source URI changes; recipe digests and build flags stay reviewed.
+    payload = File.join(root, "cases", item.fetch("id"), "payload")
+    reference = "github:#{repository}/#{current}#default"
+    replacement = "github:#{repository}/#{head}#default"
+    %w[.boringcache.toml recipe-contract.json].each do |name|
+      path = File.join(payload, name)
+      next unless File.file?(path)
+      content = File.read(path)
+      File.write(path, content.gsub(reference, replacement)) if content.include?(reference)
+    end
+    write_json(File.join(root, "cases", item.fetch("id"), "case.json"), candidate)
+    {"case_id" => item.fetch("id"), "updated" => true, "base_sha" => current, "head_sha" => head}
   end
 
   def self.verify_recipe(workload)
@@ -537,6 +581,16 @@ module BenchmarkCases
         Dir[File.join(target, ".github", "**", "*.{yml,yaml}")].each do |path|
           next if path == provider_path
           document = YAML.safe_load(File.read(path), aliases: true)
+          if File.basename(path).match?(/\A(?:reapi|nix)-(?:fresh|rolling)-benchmark\.yml\z/)
+            inputs = (document["on"] || document[true]).dig("workflow_dispatch", "inputs")
+            inputs.fetch("case_id")["default"] = item.fetch("id")
+            providers = inputs.fetch("provider").fetch("options") - ["all"]
+            raise Error, "Provider selector differs from the declared comparison" unless providers.sort == item.dig("comparison", "providers").sort
+            document.fetch("jobs").each_value do |job|
+              matrix = job.dig("strategy", "matrix")
+              matrix["provider"] = providers if matrix && matrix["provider"].is_a?(String)
+            end
+          end
           if item.dig("execution", "native") && File.basename(path).start_with?("native-")
             recipe = NativeCase.resolve(item.dig("execution", "native"), native_variant)
             document["env"]["BENCHMARK_ID"] = "${{ format('#{recipe.fetch('benchmark_id')}{0}', inputs.benchmark_id_suffix) }}"

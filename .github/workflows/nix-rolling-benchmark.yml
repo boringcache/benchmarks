@@ -1,0 +1,215 @@
+---
+name: Nix comparison rolling
+run-name: "${{ inputs.case_id }} rolling ${{ inputs.series_id }} sample ${{ inputs.sample
+  }}"
+permissions:
+  contents: read
+  actions: read
+env:
+  BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
+  BENCHMARK_SAMPLE: "${{ inputs.sample }}"
+  BENCHMARK_RUNNER_CLASS: ubuntu-24.04
+  BORINGCACHE_NO_GIT: 'true'
+  BENCHMARK_ROLLING_SCOPE: "${{ inputs.cache_scope }}"
+jobs:
+  providers:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      matrix: "${{ steps.providers.outputs.matrix }}"
+    steps:
+    - id: providers
+      env:
+        PROVIDER: "${{ inputs.provider }}"
+        CACHIX_CACHE: "${{ inputs.cachix_cache || vars.CACHIX_CACHE }}"
+        CACHIX_AUTH_TOKEN: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+      run: |
+        if [[ "$PROVIDER" != boringcache ]]; then
+          test -n "$CACHIX_CACHE" || { echo 'Set the CACHIX_CACHE repository variable'; exit 1; }
+          test -n "$CACHIX_AUTH_TOKEN" || { echo 'Set the CACHIX_AUTH_TOKEN repository secret'; exit 1; }
+        fi
+        case "$PROVIDER" in
+          all) echo 'matrix=["boringcache","cachix"]' >> "$GITHUB_OUTPUT" ;;
+          boringcache) echo 'matrix=["boringcache"]' >> "$GITHUB_OUTPUT" ;;
+          cachix) echo 'matrix=["cachix"]' >> "$GITHUB_OUTPUT" ;;
+          *) exit 1 ;;
+        esac
+  dependencies:
+    name: "${{ inputs.case_id }} dependency seed"
+    needs: providers
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: "${{ inputs.case_id }}"
+    - uses: "./.github/actions/nix-environment"
+    - name: Prepare one dependency store for every measured worker
+      run: |
+        ruby scripts/nix-benchmark.rb prepare
+        ruby scripts/nix-benchmark.rb export-dependencies
+    - name: Retain the common dependency store
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: nix-dependencies-${{ inputs.case_id }}
+        path: nix-dependencies/
+        compression-level: 0
+        if-no-files-found: error
+        retention-days: 7
+    - name: Retain dependency preparation evidence
+      if: always()
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: nix-dependency-evidence-${{ inputs.case_id }}
+        path: nix-evidence/
+        if-no-files-found: error
+        retention-days: 90
+  commit:
+    name: "${{ matrix.provider == 'boringcache' && 'BoringCache' || matrix.provider
+      == 'cachix' && 'Cachix' || matrix.provider }} ${{ inputs.case_id }} commit"
+    needs:
+    - providers
+    - dependencies
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        provider: "${{ fromJSON(needs.providers.outputs.matrix) }}"
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        path: ".harness"
+        persist-credentials: false
+    - uses: "./.harness/.github/actions/prepare-case"
+      with:
+        case-id: "${{ inputs.case_id }}"
+    - name: Download the common dependency store
+      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        name: nix-dependencies-${{ inputs.case_id }}
+        path: nix-dependencies
+    - uses: "./.github/actions/nix-benchmark"
+      with:
+        case-id: "${{ inputs.case_id }}"
+        provider: "${{ matrix.provider }}"
+        phase: commit
+        cli-version: "${{ inputs.cli_version }}"
+        cachix-cache: "${{ inputs.cachix_cache || vars.CACHIX_CACHE }}"
+        cachix-token: "${{ matrix.provider == 'cachix' && secrets.CACHIX_AUTH_TOKEN
+          || '' }}"
+        lane: rolling
+        dependency-seed: nix-dependencies
+  compare:
+    if: inputs.provider == 'all'
+    needs: commit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: false
+    - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+    - run: bundle install --jobs 4 --retry 2
+    - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        pattern: nix-*-commit
+        path: checks
+    - name: Compare provider outputs and dependency stores
+      env:
+        CASE_ID: "${{ inputs.case_id }}"
+      run: |
+        bundle exec ruby -r ./scripts/nix-benchmark -e \
+          'id = ENV.fetch("CASE_ID"); NixBenchmark.compare(seed: "checks/nix-#{id}-boringcache-commit", current: "checks/nix-#{id}-cachix-commit")'
+  report:
+    name: "${{ inputs.case_id }} rolling report"
+    needs:
+    - commit
+    if: always() && !cancelled()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      with:
+        persist-credentials: false
+    - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+    - name: Download verified phase evidence
+      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        pattern: phase-${{ inputs.case_id }}-*
+        path: phase-evidence
+    - name: Generate the benchmark report
+      env:
+        REPORT_TITLE: "${{ inputs.case_id }} rolling benchmark"
+      run: ruby scripts/canonical/benchmark-report.rb summarize --title "$REPORT_TITLE"
+        --input-dir phase-evidence --output-dir benchmark-results
+    - name: Retain boringcache result
+      if: inputs.provider == 'all' || inputs.provider == 'boringcache'
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ inputs.case_id }}-boringcache-rolling
+        path: benchmark-results/${{ inputs.case_id }}-boringcache-rolling.json
+        if-no-files-found: error
+        retention-days: 90
+    - name: Retain cachix result
+      if: inputs.provider == 'all' || inputs.provider == 'cachix'
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ inputs.case_id }}-cachix-rolling
+        path: benchmark-results/${{ inputs.case_id }}-cachix-rolling.json
+        if-no-files-found: error
+        retention-days: 90
+    - name: Retain comparison summary
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: comparison-nix-rolling
+        path: benchmark-results/comparison.md
+        if-no-files-found: error
+        retention-days: 90
+concurrency:
+  group: benchmark-nix-rolling-${{ inputs.case_id }}-${{ inputs.cache_scope || inputs.series_id
+    || github.ref_name }}
+  cancel-in-progress: false
+  queue: max
+'on':
+  workflow_dispatch:
+    inputs:
+      case_id:
+        type: choice
+        options:
+        - helix-nix
+        - zed-nix
+        required: true
+      provider:
+        description: A single provider is a correctness screen, not a comparison.
+        type: choice
+        options:
+        - all
+        - boringcache
+        - cachix
+        default: all
+      cachix_cache:
+        description: Cachix cache name; empty uses the repository variable.
+        type: string
+        default: ''
+      cli_version:
+        description: Exact released CLI or canary; empty uses the Action default.
+        type: string
+        default: ''
+      series_id:
+        type: string
+        default: ''
+      sample:
+        type: string
+        default: '1'
+      cache_scope:
+        type: string
+        default: ''

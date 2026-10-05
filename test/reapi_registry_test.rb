@@ -31,6 +31,16 @@ class ReapiRegistryTest < Minitest::Test
     assert_includes args, "--allow_unauthenticated_reads"
   end
 
+  def test_changed_source_registries_allow_reads_and_publication
+    args = ReapiRegistry.command(provider: "boringcache", phase: "commit", workspace: "boringcache/benchmarks", tag: "case-series")
+    refute_includes args, "--read-only"
+    assert_includes args, "--fail-on-cache-error"
+    args = ReapiRegistry.command(provider: "bazel-remote", phase: "commit", workspace: "boringcache/benchmarks", tag: "case-series")
+    refute_includes args, "--htpasswd_file"
+    assert_includes args, "reapi-store"
+    assert_raises(ReapiRegistry::Error) { ReapiRegistry.command(provider: "boringcache", phase: "unknown", workspace: "boringcache/benchmarks", tag: "case-series") }
+  end
+
   def test_failed_shutdown_fails_after_a_successful_build
     Dir.mktmpdir do |directory|
       server = TCPServer.new("127.0.0.1", 0)

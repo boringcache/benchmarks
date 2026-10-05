@@ -1,7 +1,7 @@
 ---
 name: Native comparison rolling
-run-name: "${{ inputs.case_id }} rolling ${{ inputs.series_id }} sample ${{ inputs.sample
-  }}"
+run-name: "${{ inputs.case_id }} ${{ inputs.variant }} rolling ${{ inputs.series_id
+  }} sample ${{ inputs.sample }}"
 permissions:
   contents: read
   actions: read
@@ -10,6 +10,7 @@ env:
   BORINGCACHE_NO_GIT: 'true'
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
   BENCHMARK_SAMPLE: "${{ inputs.sample }}"
+  BENCHMARK_ROLLING_SCOPE: "${{ inputs.cache_scope }}"
 jobs:
   publish:
     name: "${{ matrix.provider }} ${{ inputs.case_id }} commit"
@@ -151,6 +152,9 @@ jobs:
         default: ''
         description: Reviewed native workload variant; required when the case declares
           variants.
+      cache_scope:
+        type: string
+        default: ''
   workflow_call:
     inputs:
       cli_version:
@@ -188,7 +192,11 @@ jobs:
         type: string
         required: false
         default: ''
+      cache_scope:
+        type: string
+        default: ''
 concurrency:
-  group: benchmark-rolling-${{ inputs.case_id }}-${{ inputs.series_id || github.ref_name }}
+  group: benchmark-rolling-${{ inputs.case_id }}-${{ inputs.cache_scope || inputs.series_id
+    || github.ref_name }}
   cancel-in-progress: false
   queue: max

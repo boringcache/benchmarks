@@ -44,7 +44,7 @@
       "action": ".github/actions/hugo-docker-benchmark",
       "benchmark_id": "hugo",
       "rolling_inputs": {
-        "push_image": "true"
+        "load_image": "true"
       },
       "environment": {},
       "fresh_inputs": {
