@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "id": "gogs-moon",
+  "kind": "evaluation",
+  "adapter": "workflow",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "gogs/gogs",
+    "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+      }
+    ]
+  },
+  "origin": {
+    "repository": "gogs/gogs",
+    "branch": "main",
+    "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+  },
+  "execution": {
+    "sync": "fixed",
+    "workflows": [],
+    "blockers": [
+      "Qualify a released CLI/Action with the required native REAPI client support",
+      "Add and verify a workflow through the shared provider wrapper and canonical reporter",
+      "Pin and qualify the upstream Moon, Go and pnpm versions",
+      "Record and verify a deterministic build timestamp patch in both provider arms",
+      "Review dependency task timing and remote-cache settings before registering execution"
+    ]
+  },
+  "reporting": {
+    "entries": [],
+    "publication": "evaluation-only"
+  },
+  "verification": [
+    "Verify .bin/gogs is executable and its version command succeeds",
+    "Verify public/dist contains nonempty frontend assets",
+    "Compare binary and asset digests across provider arms",
+    "Remove local Moon results and declared outputs before warm replay; require native remote-hit evidence"
+  ],
+  "comparison": {
+    "question": "Does Moon restore the Gogs binary and frontend outputs on a clean worker?",
+    "providers": [
+      "boringcache",
+      "bazel-remote"
+    ],
+    "primary_metric": "build_and_reuse_seconds",
+    "timed_scope": "Declared native command after toolchain, dependency and service preparation; measure cache setup/restore and upload completion separately",
+    "storage": "provider-reported",
+    "cache_scope": "Isolated case, series and provider identity; fresh local result state for cold and identical-source warm workers; warm retains its remote seed",
+    "sample_count": 2
+  }
+}
