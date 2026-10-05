@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ccache_version=4.14
+ccache_version=4.14.1
 ccache_archive="ccache-${ccache_version}-linux-x86_64-glibc.tar.gz"
-ccache_sha256=c64760b0b85ba86068f4cd162dc42e2dc39c6f46b0cb8c1990dfccbec7a1fed0
+ccache_sha256=67f8b4cd2620b0d7bc9e834b3baea76bcdca4f2f3f47fe658c343fee58f816fa
 ccache_url="https://github.com/ccache/ccache/releases/download/v${ccache_version}/${ccache_archive}"
 
 storage_version=0.10
