@@ -1,15 +1,25 @@
 # Native gRPC cache evaluations
 
-These four source-pinned evaluation drafts use the existing case contract. They
+These eight source-pinned evaluation drafts use the existing case contract. They
 are blocked from execution and scheduling until their client, product release,
 workflow, and output verification are qualified. They contain no measurements.
 
 | Case | Workload | Reason to evaluate | Limitation |
 | --- | --- | --- | --- |
+| [opencut-moon](../cases/opencut-moon/proposal.md) | OpenCut web assets | Existing Moon build and CI graph | Qualify upstream Moon 2.3.3 and native remote output restoration |
+| [gogs-moon](../cases/gogs-moon/proposal.md) | Gogs production binary and frontend | Existing Moon Go and frontend tasks | Fix the embedded build timestamp and review dependency-task timing |
+| [executorch-buck2](../cases/executorch-buck2/proposal.md) | ExecuTorch portable executor | Native C++ runtime and kernel compilation | Verify the public target with upstream Buck2 2025-05-06 and pinned submodules |
+| [stackstorm-pants](../cases/stackstorm-pants/proposal.md) | StackStorm plugin tests | Existing Pants test CI job | Qualify Pants 2.25.0 and review service dependencies and result cacheability |
 | [zitadel-moon](../cases/zitadel-moon/proposal.md) | ZITADEL console assets | Existing Moon task graph and remote-cache configuration | Resolve its lockfile client version and record the instance-name change |
 | [pants-jvm](../cases/pants-jvm/proposal.md) | Pants Java/Scala example | Native JVM compile, test, and package operations | Small correctness screen; upstream client differs from product qualification |
 | [buck2-prelude](../cases/buck2-prelude/proposal.md) | Buck2 Rust/C++ examples | Native Buck2 action-cache use | Cargo compilation of Buck2 itself is a different workload |
 | [msgpack-sbt](../cases/msgpack-sbt/proposal.md) | MessagePack Java tests | Upstream sbt 2.0.9 and a normal Java 21 CI matrix member | Remote-cache settings require a declared patch |
+
+OpenCut, ExecuTorch, StackStorm and MessagePack are the initial application
+workloads. Gogs provides another Moon workload. The existing ZITADEL, Pants JVM
+and Buck2 Prelude drafts retain their own source pins and correctness questions.
+Nix uses a separate binary-cache protocol; its Zed and Helix cases are listed in
+[tool coverage](tool-coverage.md).
 
 Moon documents REAPI action caching, CAS, SHA256, and gRPC support. Its configuration
 also supports Depot. [Moon remote-cache documentation](https://moonrepo.dev/docs/guides/remote-cache).
