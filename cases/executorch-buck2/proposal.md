@@ -1,34 +1,37 @@
-# ExecuTorch / Buck2
+# executorch-buck2
 
-Status: source-pinned evaluation; execution is blocked by `case.json`.
-No benchmark measurements have been collected.
+Status: native REAPI correctness screen implemented; hosted qualification pending.
 
 Source: [pytorch/executorch at `5e21c13cc9e34fa2922d5708ba5962e3e365afdb`](https://github.com/pytorch/executorch/tree/5e21c13cc9e34fa2922d5708ba5962e3e365afdb).
 
-Reviewed upstream files:
-
-- [.buckconfig](https://github.com/pytorch/executorch/blob/5e21c13cc9e34fa2922d5708ba5962e3e365afdb/.buckconfig)
-- [.ci/docker/ci_commit_pins/buck2.txt](https://github.com/pytorch/executorch/blob/5e21c13cc9e34fa2922d5708ba5962e3e365afdb/.ci/docker/ci_commit_pins/buck2.txt)
-- [examples/portable/executor_runner/targets.bzl](https://github.com/pytorch/executorch/blob/5e21c13cc9e34fa2922d5708ba5962e3e365afdb/examples/portable/executor_runner/targets.bzl)
-
 ## Workload
 
-Use the upstream Buck2 pin 2025-05-06, reviewed C++ and Python toolchains, and pinned submodules. Generate one fixed input model and prepare dependencies before timing on Linux x86_64.
+The upstream portable executor runner target and Buck2 2025-05-06 pin are retained. The payload adds a local execution platform with remote caching enabled and remote execution disabled. Source submodules retain upstream pins. Verification checks executable ELF output and cold/warm hashes; it does not run an exported model.
 
-Proposed timed command: `buck2 build //examples/portable/executor_runner:executor_runner --show-output`.
+Declared command: `buck2 build //examples/portable/executor_runner:executor_runner --show-output`.
 
-The portable executor target compiles the runtime and portable kernels. The proposed public target spelling must pass a clean local build before activation. CMake source-list generation alone does not exercise Buck2 action-cache reuse.
+The case uses the shared `reapi-fresh-benchmark.yml` workflow, registry runner,
+source verifier and canonical reporter. Tool installation and dependency
+preparation run before timing. Required dependency tasks that the native client
+runs again remain inside the command measurement.
 
-## Comparison
+## Cache and verification
 
-Start with two cold builds and their identical-source warm replays per provider.
-Compare BoringCache with `bazel-remote` using the same source, client, runner,
-outputs and local execution. Declare endpoint settings and configuration patches
-before execution. Keep remote execution disabled.
+BoringCache runs through `boringcache ci run` and `cache-registry --reapi-port`.
+The CLI owns OIDC renewal, storage, cache publication and shutdown flushing.
+Cold uses a fresh case/series/sample/run tag. Warm uses a separate worker and a
+read-only registry. Native client result state is not transferred between workers.
 
-Record cache setup/restore, the declared command, upload completion, native
-hit/miss evidence, output checks and provider storage sources. Missing storage
-remains unmeasured. Failed observations remain in the series.
+The protocol comparator is bazel-remote 2.6.2. Its local store is transferred as a
+GitHub artifact before the warm registry starts. That transfer is outside timing,
+so this is a correctness screen, not an end-to-end provider performance comparison.
+Registry startup, native command and shutdown durations are recorded separately.
+Storage is unmeasured. No schedule or performance publication is enabled.
 
-Follow [the shared case process](../../docs/process.md). The case has no schedule
-or published results. `case.json` lists the remaining activation checks.
+Warm qualification requires native remote-hit evidence, verified outputs matching
+the cold hashes and successful registry shutdown. Failed runs and their logs are
+retained. The initial screen uses one sample; repeat qualification uses the case's
+two-sample declaration. Neither establishes a general performance advantage.
+
+This temporary shared registry entrypoint can be replaced by the product adapter
+without changing the source recipes or output checks.

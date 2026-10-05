@@ -333,7 +333,11 @@ repo_names.each do |repo_name|
     .select { |file_path| file_path.match?(%r{/\.github/(?:workflows|actions)/}) }
     .map { |file_path| File.read(file_path) }
     .join("\n")
-  unless workflow_text.match?(PRODUCT_INVOCATION)
+  registry_action = File.join(repo_dir, ".github/actions/reapi-benchmark/action.yml")
+  registry_steps = File.file?(registry_action) ? YAML.safe_load(File.read(registry_action)).dig("runs", "steps") : []
+  registry_invocation = File.file?(File.join(repo_dir, "reapi-recipe.json")) &&
+    registry_steps.any? { |step| step["run"].to_s.strip == "boringcache ci run --oidc-provider github-actions -- ruby scripts/reapi-client.rb build" }
+  unless workflow_text.match?(PRODUCT_INVOCATION) || registry_invocation
     errors << "#{repo_name}: benchmark workflows must invoke one public BoringCache product lifecycle directly"
   end
 

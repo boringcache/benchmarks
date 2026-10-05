@@ -30,7 +30,7 @@ benchmark adapter. Product support includes Bazel, ccache, Go, Gradle, Maven, Nx
 sccache, and Turbo; this repository does not yet qualify every injected family.
 Cargo target mounts use the product's managed freshness behavior and can compose
 sccache. Nix's daemon/store and macOS Xcode are not Linux Docker injection modes.
-The [REAPI drafts](reapi-evaluations.md) have no executable workflows or measurements.
+The selected [REAPI cases](reapi-evaluations.md) use one shared native registry workflow. Hosted correctness qualification is pending; the remaining drafts stay blocked.
 The Nix cases use one shared fresh workflow and the public Nix product mode;
 qualification remains pending. The Cachix cache name and token are repository
 configuration. No new schedules are enabled. Each family has a pinned OSS

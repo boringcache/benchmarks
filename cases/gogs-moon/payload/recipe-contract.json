@@ -1,0 +1,10 @@
+{
+  "upstream_files": {
+    ".moon/workspace.yml": "74f75a4b2cc84d452c7911159396fc28ec858e67c6033a54ec30baa12696d73f",
+    "moon.yml": "e2c40b021b55a6a0c5de5c1de90bf659471cacfdedf684dd318ebfac74ff2616",
+    "web/moon.yml": "e800f64593003a6cdb5cd0cce17da3617b811bb712eb8263731e02de3a164cd2",
+    "pnpm-lock.yaml": "eb8bbc6812fbdfb3c847d99d4af09925e9b4c6b285e99472c4193d483d90f523",
+    "web/package.json": "e8e4ea83c1bdb84effa1ec14c45d63024e0f13b197a36847b8680dfd0b57aeb4"
+  },
+  "commands": {}
+}

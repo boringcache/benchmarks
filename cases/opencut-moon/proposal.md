@@ -1,35 +1,40 @@
-# OpenCut / Moon
+# opencut-moon
 
-Status: source-pinned evaluation; execution is blocked by `case.json`.
-No benchmark measurements have been collected.
+Status: native REAPI correctness screen implemented; hosted qualification pending.
+
+The shared Moon configuration enables `experiments.casOutputsCache`: the pinned
+Moon 2.3.3 uploads remote outputs through that cache path.
 
 Source: [OpenCut-app/OpenCut at `e668010778568641babef2cc40be4703ae6916d6`](https://github.com/OpenCut-app/OpenCut/tree/e668010778568641babef2cc40be4703ae6916d6).
 
-Reviewed upstream files:
-
-- [.prototools](https://github.com/OpenCut-app/OpenCut/blob/e668010778568641babef2cc40be4703ae6916d6/.prototools)
-- [.moon/toolchains.yml](https://github.com/OpenCut-app/OpenCut/blob/e668010778568641babef2cc40be4703ae6916d6/.moon/toolchains.yml)
-- [apps/web/moon.yml](https://github.com/OpenCut-app/OpenCut/blob/e668010778568641babef2cc40be4703ae6916d6/apps/web/moon.yml)
-- [.github/workflows/bun-ci.yml](https://github.com/OpenCut-app/OpenCut/blob/e668010778568641babef2cc40be4703ae6916d6/.github/workflows/bun-ci.yml)
-
 ## Workload
 
-Use upstream Moon 2.3.3 and Bun 1.3.11. Install the locked dependencies before timing on Linux x86_64.
+The upstream web build is unchanged. The pinned revision has no lockfile; the payload adds a Bun 1.3.11 lockfile resolved on October 5, 2026. This is an explicit dependency-resolution change. Both providers use frozen installation against that file. The case retains upstream Moon 2.3.3.
 
-Proposed timed command: `moon run web:build`.
+Declared command: `moon run web:build`.
 
-The upstream web task runs `bun run build` and declares `apps/web/dist`. CI runs the wider `moon ci` graph; this case selects only the web build. Do not run the deploy task.
+The case uses the shared `reapi-fresh-benchmark.yml` workflow, registry runner,
+source verifier and canonical reporter. Tool installation and dependency
+preparation run before timing. Required dependency tasks that the native client
+runs again remain inside the command measurement.
 
-## Comparison
+## Cache and verification
 
-Start with two cold builds and their identical-source warm replays per provider.
-Compare BoringCache with `bazel-remote` using the same source, client, runner,
-outputs and local execution. Declare endpoint settings and configuration patches
-before execution. Keep remote execution disabled.
+BoringCache runs through `boringcache ci run` and `cache-registry --reapi-port`.
+The CLI owns OIDC renewal, storage, cache publication and shutdown flushing.
+Cold uses a fresh case/series/sample/run tag. Warm uses a separate worker and a
+read-only registry. Native client result state is not transferred between workers.
 
-Record cache setup/restore, the declared command, upload completion, native
-hit/miss evidence, output checks and provider storage sources. Missing storage
-remains unmeasured. Failed observations remain in the series.
+The protocol comparator is bazel-remote 2.6.2. Its local store is transferred as a
+GitHub artifact before the warm registry starts. That transfer is outside timing,
+so this is a correctness screen, not an end-to-end provider performance comparison.
+Registry startup, native command and shutdown durations are recorded separately.
+Storage is unmeasured. No schedule or performance publication is enabled.
 
-Follow [the shared case process](../../docs/process.md). The case has no schedule
-or published results. `case.json` lists the remaining activation checks.
+Warm qualification requires native remote-hit evidence, verified outputs matching
+the cold hashes and successful registry shutdown. Failed runs and their logs are
+retained. The initial screen uses one sample; repeat qualification uses the case's
+two-sample declaration. Neither establishes a general performance advantage.
+
+This temporary shared registry entrypoint can be replaced by the product adapter
+without changing the source recipes or output checks.
