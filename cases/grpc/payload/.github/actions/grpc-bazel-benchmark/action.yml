@@ -63,14 +63,14 @@ runs:
       source_url="$(git config -f .gitmodules submodule.upstream.url)"
       echo "source_repository=$(printf '%s' "${source_url#https://github.com/}" | sed 's/\.git$//')" >> "$GITHUB_OUTPUT"
       echo "source_sha=$(git -C upstream rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-  - name: Install pinned NativeLink
-    if: inputs.strategy == 'nativelink'
-    shell: bash
-    run: ruby ./scripts/nativelink-cache.rb install
   - name: Start the provider setup timer
     id: setup_timer
     shell: bash
     run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+  - name: Install pinned NativeLink
+    if: inputs.strategy == 'nativelink'
+    shell: bash
+    run: ruby ./scripts/nativelink-cache.rb install
   - name: Start NativeLink with R2 storage
     if: inputs.strategy == 'nativelink'
     shell: bash
