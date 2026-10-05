@@ -1,5 +1,5 @@
 name: Native REAPI benchmark
-description: Runs a native client against the shared cache registry path.
+description: Runs native managed BoringCache adapters and the bazel-remote comparator.
 inputs:
   case-id:
     required: true
@@ -21,7 +21,7 @@ runs:
       uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db
       with:
         cache: false
-    - name: Install registry binaries
+    - name: Install cache binaries
       shell: bash
       env:
         GH_TOKEN: ${{ github.token }}

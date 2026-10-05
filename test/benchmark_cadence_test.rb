@@ -144,7 +144,7 @@ class BenchmarkCadenceTest < Minitest::Test
         runner.dispatch(repository: BenchmarkCases::REPOSITORY, benchmarks: BenchmarkCadence.fresh_targets,
           channel: "stable", output: path, preflight: preflight)
       end
-      assert_includes error.message, "--reapi-port"
+      assert_includes error.message, "native moon"
       assert_empty runner.dispatches
       receipt = JSON.parse(File.read(path))
       assert_equal "dispatch-failed", receipt.fetch("state")
@@ -155,7 +155,7 @@ class BenchmarkCadenceTest < Minitest::Test
 
   def test_cli_capability_probe_is_required_for_reapi_but_not_other_targets
     runs = [{"workflow" => "reapi-fresh-benchmark.yml"}]
-    assert_nil BenchmarkCadence.verify_cli("v1.34.0", runs, probe: ->(*) { "--reapi-port PORT" })
+    assert_nil BenchmarkCadence.verify_cli("v1.34.0", runs, probe: ->(_version, tool) { "Usage: boringcache #{tool}" })
     assert_nil BenchmarkCadence.verify_cli("v1.33.0", [{"workflow" => "native-fresh-benchmark.yml"}],
       probe: ->(*) { flunk "No REAPI capability is needed" })
   end

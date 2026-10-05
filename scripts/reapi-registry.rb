@@ -9,8 +9,7 @@ require "securerandom"
 require "digest"
 require "base64"
 
-# Temporary shared entrypoint for native clients without a managed adapter.
-# The CLI owns authentication, cache storage, publication and shutdown flushing.
+# Process lifecycle for the bazel-remote comparator.
 module ReapiRegistry
   class Error < StandardError; end
 
@@ -62,11 +61,6 @@ module ReapiRegistry
   def self.command(provider:, phase:, workspace:, tag:, port: 5060)
     raise Error, "Use cold, warm or commit" unless %w[cold warm commit].include?(phase)
     case provider
-    when "boringcache"
-      args = ["boringcache", "cache-registry", workspace, tag, "--port", "5061", "--reapi-port", port.to_s,
-        "--no-git", "--no-platform", "--fail-on-cache-error"]
-      args << "--read-only" if phase == "warm"
-      args
     when "bazel-remote"
       args = ["bazel-remote", "--dir", "reapi-store", "--max_size", "10", "--storage_mode", "uncompressed",
         "--http_address", "127.0.0.1:5061", "--grpc_address", "127.0.0.1:#{port}"]

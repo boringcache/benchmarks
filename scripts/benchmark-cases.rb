@@ -22,7 +22,7 @@ module BenchmarkCases
   ROOT = File.expand_path("..", __dir__)
   WORKSPACE = "boringcache/benchmarks"
   REPOSITORY = "boringcache/benchmarks"
-  HELPERS = %w[benchmark-plan benchmark-phase run-benchmark-plan activate-docker-plan verify-docker-output summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache nix-benchmark reapi-registry reapi-client reapi-setup].freeze
+  HELPERS = %w[benchmark-plan benchmark-phase run-benchmark-plan activate-docker-plan verify-docker-output summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache nix-benchmark benchmark-candidate compiler-cache-setup reapi-registry reapi-client reapi-setup].freeze
   class Error < StandardError; end
 
   def self.command(*args, chdir: nil, stdin: "", env: {})

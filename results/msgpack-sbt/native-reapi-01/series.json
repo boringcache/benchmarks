@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "case_id": "msgpack-sbt",
+  "series_id": "native-reapi-01",
+  "created_at": "2026-10-05T21:33:58Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "8f2b5fe7f83eb772d4bac756a9e4dce41ca99289832b118c1bbea399aa8eb4d0",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "msgpack-sbt",
+    "cli_version": "vcli-canary-b26bccd2becb"
+  },
+  "comparison": {
+    "question": "Does sbt reuse MessagePack compilation and test results on a clean worker?",
+    "providers": [
+      "boringcache",
+      "bazel-remote"
+    ],
+    "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+    "primary_metric": "correctness",
+    "storage": "unmeasured",
+    "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+    "sample_count": 2
+  },
+  "source": {
+    "repository": "msgpack/msgpack-java",
+    "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+        "kind": "snapshot"
+      }
+    ],
+    "patch": "cache.patch"
+  },
+  "verification": [
+    "Require the declared native command to succeed",
+    "Require declared outputs and successful output checks",
+    "Require native remote-hit evidence and the same output hashes on the warm worker",
+    "Require registry shutdown to complete successfully"
+  ],
+  "plan_sha256": "69f2211a27eece275fc5638cbc2a579c5a16b008861a8cfbcf97e4e26f3afb44"
+}
