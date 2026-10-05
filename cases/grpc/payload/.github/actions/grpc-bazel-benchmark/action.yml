@@ -81,6 +81,7 @@ runs:
       SOURCE_SHA: "${{ steps.scope.outputs.source_sha }}"
       CACHE_LANE: "${{ inputs.cache_lane }}"
       PHASE: "${{ inputs.phase }}"
+      NATIVELINK_ARTIFACT: "nativelink-${{ inputs.benchmark_id }}-${{ inputs.cache_lane }}-${{ inputs.phase }}"
     run: ruby ./scripts/nativelink-cache.rb start
   - name: Restore the GitHub Actions cache
     if: inputs.strategy == 'actions-cache'
@@ -165,6 +166,7 @@ runs:
       SOURCE_SHA: "${{ steps.scope.outputs.source_sha }}"
       CACHE_LANE: "${{ inputs.cache_lane }}"
       PHASE: "${{ inputs.phase }}"
+      NATIVELINK_ARTIFACT: "nativelink-${{ inputs.benchmark_id }}-${{ inputs.cache_lane }}-${{ inputs.phase }}"
     run: ruby ./scripts/nativelink-cache.rb finish
   - name: Save the GitHub Actions cache
     if: inputs.strategy == 'actions-cache' && inputs.phase == 'publish'
@@ -214,7 +216,7 @@ runs:
       name: phase-${{ inputs.benchmark_id }}-${{ inputs.strategy }}-${{ inputs.cache_lane
         }}-${{ inputs.cache_lane == 'rolling' && 'commit' || inputs.phase == 'warm'
         && 'warm' || 'cold' }}
-      path: benchmark-results/
+      path: benchmark-results/*.json
       if-no-files-found: error
   - name: Stop NativeLink
     if: always() && inputs.strategy == 'nativelink'
