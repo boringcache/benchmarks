@@ -1,0 +1,36 @@
+{
+  "tool": "buck2",
+  "command": [
+    "buck2",
+    "build",
+    "//examples/portable/executor_runner:executor_runner",
+    "--show-output"
+  ],
+  "prepare": [
+    [
+      "git",
+      "submodule",
+      "update",
+      "--init",
+      "--recursive"
+    ],
+    [
+      "python3",
+      "-m",
+      "pip",
+      "install",
+      "PyYAML==6.0.3"
+    ]
+  ],
+  "outputs": [
+    "buck-out/**/executor_runner"
+  ],
+  "warm_hit_pattern": "cache hits: [1-9]|[1-9][0-9]* cache hits",
+  "checks": [
+    [
+      "python3",
+      "-c",
+      "import glob,os; paths=[p for p in glob.glob(\"buck-out/**/executor_runner\",recursive=True) if os.path.isfile(p)]; assert paths and all(os.access(p,os.X_OK) and open(p,\"rb\").read(4)==b\"\\x7fELF\" for p in paths)"
+    ]
+  ]
+}
