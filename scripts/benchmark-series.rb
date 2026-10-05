@@ -5,6 +5,7 @@ require "digest"
 require "fileutils"
 require "time"
 require "open3"
+require_relative "canonical/benchmark-report"
 
 module BenchmarkSeries
   class Error < StandardError; end
@@ -190,7 +191,7 @@ module BenchmarkSeries
     execution_verified = !run_ids.empty? && !run_ids.include?("") && missing_completions.empty? && failed_completions.empty?
     methodology_issues = methodology_review(directory, plan)
     if plan.fetch("lane") == "rolling"
-      methodology_issues << "Rolling observations have no verified seed and changed-source sequence; retain them as diagnostic."
+      methodology_issues << "Rolling seed and changed-source sequence are unverified."
     end
     metric = plan.dig("comparison", "primary_metric")
     if metric == "correctness" || providers.length < 2
@@ -215,13 +216,13 @@ module BenchmarkSeries
     write_json(File.join(directory, "report.json"), result)
     lines = ["# #{plan.fetch('case_id')}: #{plan.fetch('series_id')}", "",
       "Question: #{plan.dig('comparison', 'question')}", "", "Measured scope: #{plan.dig('comparison', 'timed_scope')}", "",
-      "Status: #{missing.empty? ? 'all declared observations collected' : "#{missing.length} declared observations missing"}; #{failures.length} failed. Publication requires review.", "",
-      "Execution: #{execution_verified ? 'preserved job completion and post-step logs verified' : 'unqualified; missing or failed job completion checks'}. Timings alone do not qualify the series.", "",
-      "Queue time, dependency setup outside the declared scope, and job duration are context. They are excluded from the comparison. No observations were excluded.", ""]
+      "Observations: #{records.length}/#{expected.length} recorded; #{failures.length} failed; #{missing.length} missing.", "",
+      "Completion checks: #{execution_verified ? 'passed' : 'missing or failed'}.", "",
+      "Publication: #{result.fetch('publication')}.", ""]
     columns = ["Phase", "Provider", "Successful observations"]
     alignment = ["---", "---", "---:"]
     unless metric == "correctness"
-      columns.concat(["Median #{metric}", "Range"])
+      columns.concat(["Median #{BenchmarkReport::METRICS.fetch(metric, metric)}", "Range"])
       alignment.concat(["---:", "---"])
     end
     unless metric == "storage_bytes"
@@ -233,25 +234,45 @@ module BenchmarkSeries
     lines.concat(["| #{columns.join(' | ')} |", "| #{alignment.join(' | ')} |"])
     summaries.each do |row|
       values = row["measurement"]
-      cells = [row["phase"], row["provider"], row["count"]]
+      cells = [BenchmarkReport::PHASES.fetch(row["phase"], row["phase"]), BenchmarkReport::PROVIDERS.fetch(row["provider"], row["provider"]), row["count"]]
       cells.concat([values ? values.fetch("median") : "unmeasured", values ? "#{values['min']}–#{values['max']}" : "unmeasured"]) unless metric == "correctness"
       cells << (row.dig("storage", "median") || "unmeasured") unless metric == "storage_bytes"
       cells << row["storage_measured_count"]
       lines << "| #{cells.join(' | ')} |"
     end
     unless methodology_issues.empty?
-      lines.concat(["", "Methodology prevents a comparative claim:", ""])
+      lines.concat(["", "Comparison checks:", ""])
       methodology_issues.each { |issue| lines << "- #{issue}" }
     end
     unless failures.empty?
-      lines.concat(["", "Failed observations do not contribute timings. They remain in the report and prevent a complete performance comparison.", ""])
+      lines.concat(["", "Failed observations:", ""])
       failures.each { |value| lines << "- Sample #{value.dig('series', 'sample')}, #{value.fetch('strategy')}, #{value.fetch('phase')}: #{value.fetch('error')}" }
     end
     failed_completions.each do |completion|
       lines.concat(["", "Run #{completion.fetch('run_id')} failed completion checks:", ""])
       completion.fetch("errors").each { |error| lines << "- #{error}" }
     end
-    lines.concat(["", "Each run record retains its source, runner environment, verification, provider storage source, and evidence links. Missing storage is unmeasured; it is not zero. Original Actions URLs remain subject to retention; durable evidence publication must be verified before publication review.", ""])
+    unless missing.empty?
+      lines.concat(["", "Missing observations:", ""])
+      missing.each do |sample, phase, provider|
+        lines << "- Sample #{sample}, #{BenchmarkReport::PROVIDERS.fetch(provider, provider)}, #{BenchmarkReport::PHASES.fetch(phase, phase)}"
+      end
+    end
+    unless missing_completions.empty?
+      lines.concat(["", "Missing completion checks: #{missing_completions.join(', ')}", ""])
+    end
+    lines.concat(["", "## Observations", "",
+      "| Sample | Provider | Phase | Cache setup/restore (s) | Build (s) | Build and cache reuse (s) | Storage (bytes) | Storage source | Cache | Record |",
+      "| ---: | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- |"])
+    records.each do |row|
+      sample, provider, phase = row.dig("series", "sample"), row.fetch("strategy"), row.fetch("phase")
+      values = [sample, BenchmarkReport::PROVIDERS.fetch(provider, provider), BenchmarkReport::PHASES.fetch(phase, phase),
+        row.dig("timing", "restore_or_setup_seconds"), row.dig("timing", "build_seconds"), row.dig("timing", "build_and_reuse_seconds"),
+        row.dig("cache", "storage_bytes"), row.dig("cache", "storage_source"), BenchmarkReport.cache_state(row),
+        "[JSON](runs/#{sample}-#{provider}-#{phase}.json)"]
+      lines << "| #{values.map { |value| value.nil? ? 'unmeasured' : value.to_s.gsub('|', '\\|').gsub(/\r?\n/, ' ') }.join(' | ')} |"
+    end
+    lines.concat(["", "[Full records and checks](report.json)", ""])
     File.write(File.join(directory, "report.md"), lines.join("\n"))
     result
   end

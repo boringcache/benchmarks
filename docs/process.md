@@ -183,9 +183,11 @@ the declared sample numbers without waiting for earlier samples to finish.
 Each sample has a separate run/attempt scope. Its warm jobs still depend on its
 own cold jobs; they need the completed seed. Do not add a repository-wide queue.
 
-Rolling runs that update one cache series remain ordered. Their queue is scoped
+Native rolling comparisons that update one cache series remain ordered. Their queue is scoped
 to case and series, or the ref for legacy diagnostics. Deno and Zed retain their
 dedicated Cargo-chain locks because their seed identity is shared across runs.
+Docker-corpus rolling proofs remain diagnostic; their ordering and seed lineage
+must be qualified before scheduling. They are not independent fresh samples.
 Rolling groups use `queue: max` so newer requests do not replace waiting
 observations. [GitHub documents the 100-run queue limit](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency).
 `scripts/lint-workflows.rb` checks that property and runs Actionlint 1.7.12 for
@@ -249,9 +251,11 @@ storage stays unmeasured. Reports require publication review.
 Correctness proofs retain successful observations and execution checks without
 a numeric correctness median or provider-comparison status. A storage comparison
 uses the declared provider byte measurement for its primary median and range.
-Aggregate reporting retains suspected runner-variance samples and attaches its
-diagnostic evidence. A variance flag does not establish the cause of a slow or
-fast run and must not remove its timing from the comparison.
+Reports retain all declared observations, including slow and failed runs.
+Generated output contains measurements, sources, and check results. It does not
+assign causes, classify a time difference as a tie, or recommend a provider.
+Human or AI analysis is a separate activity; do not add it to generated reports
+or the series catalog. Historical reviews remain at their original paths.
 When review finds a measurement or fairness issue, keep the original plan and
 records. Add `methodology-review.json` beside the series plan with
 `schema_version: 1`, the exact `plan_sha256`, nonempty `issues`, and HTTPS
@@ -266,8 +270,8 @@ compression, cross-tag deduplication, or physical storage efficiency from these
 counts alone.
 Check coverage against the selected cache profile. For a combined Docker and
 tool-cache profile, Docker-tag bytes alone do not establish total selected-profile
-storage. State the measured subset in the interpretation and retain any missing
-coverage; do not infer additional product tags in the harness.
+storage. Record the measured subset and missing coverage in the storage fields; do not
+infer additional product tags in the harness.
 GitHub storage reporting receives the read-only token only in the reporting step.
 The selected exact-key rows are retained with their cache IDs, refs, versions,
 timestamps, and byte fields. A missing row or byte field remains unmeasured;
@@ -316,10 +320,9 @@ Retain the raw phase and product evidence when a later reporting step fails.
 Summary artifact paths and names must include the reporter's selected variant
 and lane. `scripts/check-report-contract.rb` checks that naming contract.
 
-Review correctness, matched arms, storage semantics, sample completeness,
-environment variance, and claim limits. Parity and no material improvement are
-valid outcomes. Promotion changes metadata or suite membership. Website claims
-link to specific reports and preserved evidence, not only the homepage.
+Review correctness, matched arms, storage semantics, sample completeness, and
+environment differences separately from the report. Publication decisions belong
+to that review. Website claims link to specific reports and preserved evidence.
 
 The legacy `data/latest/` collector remains a historical compatibility feed.
 It reads original execution repositories and does not mix central Actions

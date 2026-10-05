@@ -8,6 +8,7 @@ require "optparse"
 require "tempfile"
 require "time"
 require "tmpdir"
+require_relative "benchmark-reporting"
 
 BENCHMARK_ROOT = File.expand_path("..", __dir__)
 TABLE_SCRIPT = File.join(BENCHMARK_ROOT, "scripts", "benchmark-table.rb")
@@ -178,44 +179,7 @@ def average(values)
 end
 
 def seconds_text(value)
-  return "—" if value.nil?
-
-  total = value.round
-  "#{total / 60}m #{total % 60}s"
-end
-
-def bytes_text(value)
-  return "—" if value.nil?
-
-  units = %w[B KB MB GB TB]
-  size = value.to_f.abs
-  unit = 0
-  while size >= 1024.0 && unit < units.length - 1
-    size /= 1024.0
-    unit += 1
-  end
-  suffix = value.to_f.negative? ? " more" : ""
-  format("%.2f %s%s", size, units.fetch(unit), suffix)
-end
-
-def result_text(before_value, after_value)
-  delta = percent_delta(before_value, after_value)
-  return "—" if delta.nil?
-
-  longest = [before_value.to_f, after_value.to_f].max
-  delta_seconds = (before_value.to_f - after_value.to_f).abs
-  return "near tie" if delta_seconds <= 5 && longest <= 60
-  return "near tie" if delta.abs < 3.0
-
-  delta.positive? ? "#{delta.round}% faster" : "#{delta.abs.round}% slower"
-end
-
-def rolling_bootstrap_investigation?(row)
-  row.dig("reporting", "status") == "investigation_only"
-end
-
-def invalid_sample?(row)
-  row.dig("reporting", "status") == "invalid"
+  BenchmarkReport.seconds(value)
 end
 
 def most_common(values)
@@ -340,13 +304,7 @@ def build_report(aggregates, cohort)
 
   LANES.each do |lane|
     rows = aggregates.select { |row| row.fetch("lane") == lane }.map do |row|
-      cold_result = if invalid_sample?(row)
-        row.dig("reporting", "result_text") || "invalid sample"
-      elsif rolling_bootstrap_investigation?(row)
-        row.dig("reporting", "result_text") || "investigation only"
-      else
-        result_text(row.dig("actions_cache", "avg_cold_seconds"), row.dig("boringcache", "avg_cold_seconds"))
-      end
+      cold_result = BenchmarkReporting.timing_difference(row.dig("actions_cache", "avg_cold_seconds"), row.dig("boringcache", "avg_cold_seconds"))
 
       [
         row.fetch("name"),
@@ -357,12 +315,13 @@ def build_report(aggregates, cohort)
         cold_result,
         seconds_text(row.dig("actions_cache", "avg_warm_seconds")),
         seconds_text(row.dig("boringcache", "avg_warm_seconds")),
-        bytes_text(
+        BenchmarkReporting.storage_difference(
           if row.dig("actions_cache", "avg_storage_bytes") && row.dig("boringcache", "avg_storage_bytes")
             row.dig("actions_cache", "avg_storage_bytes") - row.dig("boringcache", "avg_storage_bytes")
           end
         ),
-        row.dig("boringcache", "cache_bootstrap_count").to_s
+        row.dig("boringcache", "cache_bootstrap_count").to_s,
+        row.dig("reporting", "result_text") || "recorded"
       ]
     end
     next if rows.empty?
@@ -370,20 +329,14 @@ def build_report(aggregates, cohort)
     sections << "## #{lane == 'fresh' ? 'Fresh' : 'Rolling'}"
     sections << ""
     sections << markdown_table(
-      ["Benchmark", "Category", "Pairs", "GitHub Actions Cache Cold/Commit Build", "BoringCache Cold/Commit Build", "Build Result", "GitHub Actions Cache Warm Build", "BoringCache Warm Build", "Avg Storage Delta", "BoringCache Bootstraps"],
+      ["Benchmark", "Category", "Pairs", "GitHub Actions Cache Cold/Commit Build", "BoringCache Cold/Commit Build", "Build difference (BoringCache − Actions Cache)", "GitHub Actions Cache Warm Build", "BoringCache Warm Build", "Mean storage difference (BoringCache − Actions Cache)", "BoringCache Bootstraps", "Sample status"],
       rows
     )
     sections << ""
   end
 
   docker_rows = aggregates.select { |row| row.fetch("category") == "docker" }.map do |row|
-    export_result = if invalid_sample?(row)
-      row.dig("reporting", "result_text") || "invalid sample"
-    elsif rolling_bootstrap_investigation?(row)
-      row.dig("reporting", "result_text") || "investigation only"
-    else
-      result_text(row.dig("actions_cache", "avg_docker_export_seconds"), row.dig("boringcache", "avg_docker_export_seconds"))
-    end
+    export_result = BenchmarkReporting.timing_difference(row.dig("actions_cache", "avg_docker_export_seconds"), row.dig("boringcache", "avg_docker_export_seconds"))
 
     [
       row.fetch("name"),
@@ -393,14 +346,15 @@ def build_report(aggregates, cohort)
       seconds_text(row.dig("boringcache", "avg_docker_export_seconds")),
       export_result,
       row.dig("boringcache", "avg_oci_new_blob_count")&.round(1)&.to_s || "—",
-      row.dig("boringcache", "cache_bootstrap_count").to_s
+      row.dig("boringcache", "cache_bootstrap_count").to_s,
+      row.dig("reporting", "result_text") || "recorded"
     ]
   end
   if docker_rows.any?
     sections << "## Docker Export Detail"
     sections << ""
     sections << markdown_table(
-      ["Benchmark", "Lane", "Pairs", "GitHub Actions Cache Export", "BoringCache Export", "Export Result", "Avg BoringCache New Blobs", "BoringCache Bootstraps"],
+      ["Benchmark", "Lane", "Pairs", "GitHub Actions Cache Export", "BoringCache Export", "Export difference (BoringCache − Actions Cache)", "Avg BoringCache New Blobs", "BoringCache Bootstraps", "Sample status"],
       docker_rows
     )
     sections << ""

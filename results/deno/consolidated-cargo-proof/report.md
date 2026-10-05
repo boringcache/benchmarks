@@ -4,14 +4,18 @@ Question: Does the pinned workload produce verified output and reuse its declare
 
 Measured scope: The two BoringCache Cargo release operations, including their restore, build, and publication; output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.
 
-Status: 2 declared observations missing; 0 failed. Publication requires review.
+Observations: 0/2 recorded; 0 failed; 2 missing.
 
-Execution: unqualified; missing or failed job completion checks. Timings alone do not qualify the series.
+Completion checks: missing or failed.
 
-Queue time, dependency setup outside the declared scope, and job duration are context. They are excluded from the comparison. No observations were excluded.
+Publication: unreviewed.
 
-| Phase | Provider | Successful observations | Median correctness | Range | Storage median (bytes) | Storage observations |
-| --- | --- | ---: | ---: | --- | ---: | ---: |
+| Phase | Provider | Successful observations | Storage median (bytes) | Storage observations |
+| --- | --- | ---: | ---: | ---: |
+
+Comparison checks:
+
+- This series does not declare a comparison of provider performance.
 
 Run 37018642899 failed completion checks:
 
@@ -19,4 +23,14 @@ Run 37018642899 failed completion checks:
 - qualification-deno / BoringCache Deno Cargo cold: cancelled
 - qualification-deno / BoringCache Deno Cargo changed source: cancelled
 
-Each run record retains its source, runner environment, verification, provider storage source, and evidence links. Missing storage is unmeasured; it is not zero. Original Actions URLs remain subject to retention; durable evidence publication must be verified before publication review.
+Missing observations:
+
+- Sample 1, BoringCache, Cold build
+- Sample 1, BoringCache, Changed-source build
+
+## Observations
+
+| Sample | Provider | Phase | Cache setup/restore (s) | Build (s) | Build and cache reuse (s) | Storage (bytes) | Storage source | Cache | Record |
+| ---: | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
+
+[Full records and checks](report.json)

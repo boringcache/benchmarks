@@ -4,19 +4,26 @@ Question: Does the pinned workload produce verified output and reuse its declare
 
 Measured scope: The BoringCache Cargo operations, including their restore, build, and publication; output verification and unrelated setup are excluded. The layer proof uses a combined cold seed for each restore-only variant and makes no provider timing comparison.
 
-Status: all declared observations collected; 0 failed. Publication requires review.
+Observations: 2/2 recorded; 0 failed; 0 missing.
 
-Execution: preserved job completion and post-step logs verified. Timings alone do not qualify the series.
+Completion checks: passed.
 
-Queue time, dependency setup outside the declared scope, and job duration are context. They are excluded from the comparison. No observations were excluded.
+Publication: unreviewed.
 
 | Phase | Provider | Successful observations | Storage median (bytes) | Storage observations |
 | --- | --- | ---: | ---: | ---: |
-| cold | boringcache | 1 | 8994101532 | 1 |
-| commit | boringcache | 1 | 8994101532 | 1 |
+| Cold build | BoringCache | 1 | 8994101532 | 1 |
+| Changed-source build | BoringCache | 1 | 8994101532 | 1 |
 
-Methodology prevents a comparative claim:
+Comparison checks:
 
 - This series does not declare a comparison of provider performance.
 
-Each run record retains its source, runner environment, verification, provider storage source, and evidence links. Missing storage is unmeasured; it is not zero. Original Actions URLs remain subject to retention; durable evidence publication must be verified before publication review.
+## Observations
+
+| Sample | Provider | Phase | Cache setup/restore (s) | Build (s) | Build and cache reuse (s) | Storage (bytes) | Storage source | Cache | Record |
+| ---: | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
+| 1 | BoringCache | Cold build | 0 | 3499 | 3499 | 8994101532 | boringcache-check | miss | [JSON](runs/1-boringcache-cold.json) |
+| 1 | BoringCache | Changed-source build | 0 | 2940 | 2940 | 8994101532 | boringcache-check | hit | [JSON](runs/1-boringcache-commit.json) |
+
+[Full records and checks](report.json)

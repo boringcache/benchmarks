@@ -4,18 +4,18 @@ Question: How do build and cache reuse time and measured storage compare for the
 
 Measured scope: Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately
 
-Status: all declared observations collected; 0 failed. Publication requires review.
+Observations: 8/8 recorded; 0 failed; 0 missing.
 
-Execution: unqualified; missing or failed job completion checks. Timings alone do not qualify the series.
+Completion checks: missing or failed.
 
-Queue time, dependency setup outside the declared scope, and job duration are context. They are excluded from the comparison. No observations were excluded.
+Publication: unreviewed.
 
-| Phase | Provider | Successful observations | Median build_and_reuse_seconds | Range | Storage median (bytes) | Storage observations |
+| Phase | Provider | Successful observations | Median build and cache reuse (s) | Range | Storage median (bytes) | Storage observations |
 | --- | --- | ---: | ---: | --- | ---: | ---: |
-| cold | actions-cache | 2 | 71.0 | 63–79 | unmeasured | 0 |
-| warm | actions-cache | 2 | 9.5 | 9–10 | 161823175.0 | 2 |
-| cold | boringcache | 2 | 93.0 | 91–95 | 732124253.5 | 2 |
-| warm | boringcache | 2 | 27.0 | 20–34 | 732124253.5 | 2 |
+| Cold build | Actions Cache | 2 | 71.0 | 63–79 | unmeasured | 0 |
+| Warm build | Actions Cache | 2 | 9.5 | 9–10 | 161823175.0 | 2 |
+| Cold build | BoringCache | 2 | 93.0 | 91–95 | 732124253.5 | 2 |
+| Warm build | BoringCache | 2 | 27.0 | 20–34 | 732124253.5 | 2 |
 
 Run 37017469085 failed completion checks:
 
@@ -31,4 +31,17 @@ Run 37017742296 failed completion checks:
 - 2026-10-02T14:11:31.8617554Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 "Core Schema" specification: fail-on-cache-miss
 - 2026-10-02T14:11:31.8617514Z ##[warning]boringcache/one save failed: Input does not meet YAML 1.2 "Core Schema" specification: fail-on-cache-miss
 
-Each run record retains its source, runner environment, verification, provider storage source, and evidence links. Missing storage is unmeasured; it is not zero. Original Actions URLs remain subject to retention; durable evidence publication must be verified before publication review.
+## Observations
+
+| Sample | Provider | Phase | Cache setup/restore (s) | Build (s) | Build and cache reuse (s) | Storage (bytes) | Storage source | Cache | Record |
+| ---: | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
+| 1 | Actions Cache | Cold build | 0 | 79 | 79 | unmeasured | unmeasured | not reported | [JSON](runs/1-actions-cache-cold.json) |
+| 1 | Actions Cache | Warm build | 3 | 7 | 10 | 161835626 | github-actions-cache-api | hit | [JSON](runs/1-actions-cache-warm.json) |
+| 1 | BoringCache | Cold build | 3 | 92 | 95 | 652745399 | boringcache-check | miss | [JSON](runs/1-boringcache-cold.json) |
+| 1 | BoringCache | Warm build | 10 | 24 | 34 | 652745399 | boringcache-check | hit | [JSON](runs/1-boringcache-warm.json) |
+| 2 | Actions Cache | Cold build | 0 | 63 | 63 | unmeasured | unmeasured | not reported | [JSON](runs/2-actions-cache-cold.json) |
+| 2 | Actions Cache | Warm build | 2 | 7 | 9 | 161810724 | github-actions-cache-api | hit | [JSON](runs/2-actions-cache-warm.json) |
+| 2 | BoringCache | Cold build | 6 | 85 | 91 | 811503108 | boringcache-check | miss | [JSON](runs/2-boringcache-cold.json) |
+| 2 | BoringCache | Warm build | 11 | 9 | 20 | 811503108 | boringcache-check | hit | [JSON](runs/2-boringcache-warm.json) |
+
+[Full records and checks](report.json)

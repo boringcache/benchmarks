@@ -1,8 +1,9 @@
 # BoringCache benchmarks
 
-This repository contains workload definitions, technical evaluations, execution
-tooling, and reporting contracts. The [product benchmark page](https://boringcache.com/benchmarks)
-uses reviewed results. New evaluations do not automatically become published claims.
+This repository runs benchmarks and reports their measurements: build and cache
+times, storage bytes, cache hits, output checks, failures, and source/run links.
+It uses one case format, shared execution workflows, and shared reporting.
+Performance explanations and recommendations belong in a separate review.
 
 Workloads live in [`cases/`](cases/). Each case pins its upstream source and declares
 its recipe, comparison, cache scope, and output verification. Exploratory technical
@@ -28,8 +29,8 @@ after product cleanup.
 
 Each fresh sample runs independently with its own cache scope. Providers start
 in parallel; the sample's warm builds follow its cold builds on fresh runners.
-Other samples and cases do not wait for it. Rolling runs keep a queue for the
-case and series whose cache they advance; the dedicated Cargo chains also keep
+Other samples and cases do not wait for it. Native rolling comparisons keep a
+queue for the case and series whose cache they advance; the Cargo chains also keep
 their seed ordering. GitHub runner availability can still cause waiting, and
 the repository's Actions Cache quota is shared.
 
@@ -57,10 +58,11 @@ existing workspace must be verified before cutover.
 
 Compare the declared build and cache reuse operation. Record storage with its
 provider and measurement source. Queue delay, unrelated dependency setup, and job
-duration explain a run but do not establish a cache-performance claim. Keep cold,
+duration are recorded separately from the measured operation. Keep cold,
 identical-source warm, and changed-source results separate. Collect the declared
 samples and report medians and ranges without discarding slow observations.
 
+The [product benchmark page](https://boringcache.com/benchmarks) uses separately reviewed results.
 Published interfaces remain available:
 
 - [`data/latest/report.md`](data/latest/report.md): latest published cohort report

@@ -5,7 +5,7 @@
   "valid_for_comparison": false,
   "failures": [],
   "methodology_issues": [
-    "Rolling observations have no verified seed and changed-source sequence; retain them as diagnostic.",
+    "Rolling seed and changed-source sequence are unverified.",
     "This series does not declare a comparison of provider performance."
   ],
   "execution_verified": false,
