@@ -6,6 +6,11 @@ Source: [pytorch/executorch at `5e21c13cc9e34fa2922d5708ba5962e3e365afdb`](https
 
 ## Workload
 
+Preparation installs the pinned PyTorch 2.14.0 CPU wheel, verified by its published
+SHA-256, for the upstream `torchgen_files` generator. It does not install CUDA
+dependencies.
+
+
 The upstream portable executor runner target and Buck2 2025-05-06 pin are retained. The payload adds a local execution platform with remote caching enabled and remote execution disabled. Source submodules retain upstream pins. Verification checks executable ELF output and cold/warm hashes; it does not run an exported model.
 
 Declared command: `buck2 build //examples/portable/executor_runner:executor_runner --show-output`.
