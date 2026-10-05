@@ -7,8 +7,42 @@
   "methodology_issues": [],
   "execution_verified": false,
   "missing_completions": [],
-  "failed_completions": [],
-  "completions": [],
+  "failed_completions": [
+    {
+      "schema_version": 1,
+      "case_id": "grpc",
+      "series_id": "fresh-canary-repair-01",
+      "sample": 1,
+      "run_id": "37288249894",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288249894",
+      "source_sha": "874ab9890b328d8583f0b67e46a02f72393cf015",
+      "github_conclusion": "failure",
+      "status": "failed",
+      "errors": [
+        "Workflow concluded failure",
+        "BoringCache gRPC Bazel warm: failure"
+      ],
+      "evidence_manifest_sha256": "c112207140d305597b40f61380bcf6b5769cb9cd1ac53684992b2107d6a3617e"
+    }
+  ],
+  "completions": [
+    {
+      "schema_version": 1,
+      "case_id": "grpc",
+      "series_id": "fresh-canary-repair-01",
+      "sample": 1,
+      "run_id": "37288249894",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288249894",
+      "source_sha": "874ab9890b328d8583f0b67e46a02f72393cf015",
+      "github_conclusion": "failure",
+      "status": "failed",
+      "errors": [
+        "Workflow concluded failure",
+        "BoringCache gRPC Bazel warm: failure"
+      ],
+      "evidence_manifest_sha256": "c112207140d305597b40f61380bcf6b5769cb9cd1ac53684992b2107d6a3617e"
+    }
+  ],
   "publication": "unreviewed",
   "evidence_preservation": "requires-review",
   "primary_metric": "build_and_reuse_seconds",

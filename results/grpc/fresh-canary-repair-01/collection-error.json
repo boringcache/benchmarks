@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "run_id": "37288249894",
+  "error": "CLI version differs from the declared series",
+  "declared_cli_release": "vcli-canary-4c236cd7ee00",
+  "reported_cli_version": "1.34.0",
+  "original_artifacts": "https://github.com/boringcache/benchmarks/releases/download/evidence-grpc-output-download-2026-10-05/benchmarks-37288249894.tar.gz"
+}

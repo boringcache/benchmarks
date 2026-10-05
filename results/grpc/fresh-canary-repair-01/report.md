@@ -13,6 +13,11 @@ Publication: unreviewed.
 | Phase | Provider | Successful observations | Median build and cache reuse (s) | Range | Storage median (bytes) | Storage observations |
 | --- | --- | ---: | ---: | --- | ---: | ---: |
 
+Run 37288249894 failed completion checks:
+
+- Workflow concluded failure
+- BoringCache gRPC Bazel warm: failure
+
 Missing observations:
 
 - Sample 1, BoringCache, Cold build
