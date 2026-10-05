@@ -70,19 +70,21 @@ module NativeLinkCache
     stdout.empty? ? {} : JSON.parse(stdout)
   end
 
-  def self.objects
-    # AWS CLI follows continuation tokens unless pagination is explicitly disabled.
-    s3("list-objects-v2", "--bucket", BUCKET, "--prefix", prefix).fetch("Contents", [])
+  def self.objects(key_prefix: prefix, limit: nil)
+    # AWS CLI follows continuation tokens unless pagination is explicitly bounded.
+    arguments = ["list-objects-v2", "--bucket", BUCKET, "--prefix", key_prefix]
+    arguments.concat(["--max-keys", limit.to_s, "--no-paginate"]) if limit
+    s3(*arguments).fetch("Contents", [])
   end
 
   def self.start
     %w[AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY].each { |name| abort "Missing #{name}" if ENV.fetch(name, "").empty? }
     FileUtils.mkdir_p(DIRECTORY)
-    entries = objects
     cold = ENV.fetch("CACHE_LANE") == "fresh" && ENV.fetch("PHASE") == "publish"
-    abort "Fresh NativeLink cache prefix is not empty" if cold && !entries.empty?
+    abort "Fresh NativeLink cache prefix is not empty" if cold && !objects(limit: 1).empty?
     previous = nil
-    if entries.any? { |row| row["Key"] == "#{prefix}seed.json" }
+    seeds = cold ? [] : objects(key_prefix: "#{prefix}seed.json", limit: 1)
+    if seeds.any? { |row| row["Key"] == "#{prefix}seed.json" }
       path = "#{DIRECTORY}/previous-seed.json"
       s3("get-object", "--bucket", BUCKET, "--key", "#{prefix}seed.json", path)
       previous = JSON.parse(File.read(path))
@@ -137,9 +139,12 @@ module NativeLinkCache
     entries = objects.select { |row| row.fetch("Key").start_with?("#{prefix}cas/", "#{prefix}ac/") }
     abort "NativeLink R2 cache contains no objects" if entries.empty?
     bytes = entries.sum { |row| Integer(row.fetch("Size")) }
+    inventory = "#{DIRECTORY}/objects.json"
+    write(inventory, {"bucket" => BUCKET, "prefix" => prefix, "objects" => entries})
     write("#{DIRECTORY}/storage.json", {"bytes" => bytes, "source" => "cloudflare-r2-list-objects-v2",
       "breakdown" => {"bucket" => BUCKET, "prefix" => prefix, "complete" => true,
-        "total_bytes" => bytes, "observations" => entries}})
+        "total_bytes" => bytes, "object_count" => entries.length,
+        "inventory_path" => "nativelink/objects.json", "inventory_sha256" => Digest::SHA256.file(inventory).hexdigest}})
     write("#{DIRECTORY}/verification.json", {"remote_cache_hits" => hits, "outputs" => outputs, "version" => VERSION})
     File.open(ENV.fetch("GITHUB_OUTPUT"), "a") { |file| file.puts "cache_hit=#{hits.positive?}" }
   end

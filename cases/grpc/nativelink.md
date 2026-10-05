@@ -29,7 +29,11 @@ Repository Actions secrets `NATIVELINK_R2_ACCESS_KEY_ID` and
 Only NativeLink startup and storage/verification steps receive them. The config
 artifact contains environment-variable placeholders. Evidence retains the
 release digest, server and Bazel logs, seed lineage, output hashes, and R2 object
-listing. Failed attempts retain diagnostics too.
+listing. Canonical phase records retain object counts, bytes, prefix, and the
+inventory SHA-256; the complete object list stays in the evidence artifact.
+Startup probes at most one object for cold emptiness or seed metadata, rather
+than scanning the accumulated rolling cache. Failed attempts retain diagnostics
+too.
 
 The hourly source dispatcher and fresh suite fan-out use the existing gRPC
 workflows, so this fourth provider does not add a duplicate schedule. Shared
