@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "hugo-go",
+  "series_id": "shared-evidence-01",
+  "sample": 1,
+  "run_id": "37294037661",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37294037661",
+  "source_sha": "aba77225af73e7064cd3ad3cbedd5fbac43217c3",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "806bba65ba732ca6135375b5021603315a6b6ae182614b9d37daa06d7cc9acbb"
+}

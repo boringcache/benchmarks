@@ -111,9 +111,10 @@ as part of the reviewed caller cutover. PR validation runs the harness guards.
 
 The shared native fresh path also selects individual n8n Turbo/Docker, Mastodon
 server/streaming, and PostHog cache profiles from reviewed variant metadata;
-Immich's server uses the same path without a variant. Their imported matrices
-remain registered diagnostics. Loaded-image checks and live execution are
-qualified per selected variant; they do not establish application runtime
+Immich's server uses the same path without a variant. The five replaced fresh
+workflows are removed; their earlier definitions and results remain in Git.
+Imported rolling matrices remain registered diagnostics. Loaded-image checks and
+live execution are qualified per selected variant; they do not establish application runtime
 behavior or qualify the original rolling publication behavior. Existing callers
 and schedules still use the original repositories.
 Four initial screens (Chroma, Duckgres, Hugo Docker, and Linkerd2) were cancelled
