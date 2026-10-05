@@ -37,6 +37,18 @@ local regressions does not establish completed cold/warm execution. The gRPC
 three-provider comparison also requires the missing BuildBuddy credential before
 another dispatch.
 
+The replacement PostHog diagnostic completed on October 5. All four phases used
+the same scope and verified their loaded images; warm BoringCache consumption
+retained restore-only policy and required a hit. The supported storage probe
+returned bytes for the selected Docker tag; GitHub storage remains unmeasured.
+Chroma, Linkerd2, Qdrant, and all four n8n variants also completed. These eight
+[scoped evidence bundles](https://github.com/boringcache/benchmarks/releases/tag/evidence-cli-canaries-2026-10-05)
+were downloaded again and verified against their archive digests and 122 listed
+files. They retain one-pair outcomes and missing storage. Different case
+definitions prevent treating the retained 1.33 comparisons as regression
+acceptance. Deno's bootstrap/verified-rolling distinction and performance
+qualification, and the gRPC BuildBuddy proof, remain open.
+
 | Area | Current state | Remaining acceptance |
 | --- | --- | --- |
 | Definitions and execution | 17 maintained cases, 47 Docker workloads, and four blocked gRPC evaluation drafts; one provider wrapper and workspace | Qualify each scheduled workload and variant, including output checks and cache source lineage |
