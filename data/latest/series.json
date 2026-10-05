@@ -3018,6 +3018,72 @@
     },
     {
       "case_id": "hugo-go",
+      "series_id": "shared-evidence-01",
+      "plan_path": "results/hugo-go/shared-evidence-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "5885c0cb1808992f61acfcdcb136173b0820f554c6d9f0417b10a97f24b1bbb4",
+      "definition_sha256": "21e92460ce19eeb2e7a57492824a3729ca2e34df345f66e94a0a905df1410e70",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "hugo-go",
       "series_id": "shared-hugo-go",
       "plan_path": "results/hugo-go/shared-hugo-go/series.json",
       "lane": "fresh",
