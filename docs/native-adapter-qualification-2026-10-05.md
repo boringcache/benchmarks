@@ -40,3 +40,19 @@ CLI/engine evidence and post-step status for hits, misses, write errors, output
 verification, and source lineage before marking an engine qualified. Failed or
 cancelled runs remain observations. Each first screening has one sample; further
 samples must use predeclared plans and fresh scopes.
+
+## Initial dispatches
+
+| Case | Series | Run |
+| --- | --- | --- |
+| opencut-moon | native-reapi-01 | [37376751453](https://github.com/boringcache/benchmarks/actions/runs/37376751453) |
+| gogs-moon | native-reapi-01 | [37376755061](https://github.com/boringcache/benchmarks/actions/runs/37376755061) |
+| stackstorm-pants | native-reapi-01 | [37376758991](https://github.com/boringcache/benchmarks/actions/runs/37376758991) |
+| executorch-buck2 | native-reapi-01 | [37376762709](https://github.com/boringcache/benchmarks/actions/runs/37376762709) |
+| msgpack-sbt | native-reapi-01 | [37376766204](https://github.com/boringcache/benchmarks/actions/runs/37376766204) |
+| zed | native-sccache-01 | [37376769643](https://github.com/boringcache/benchmarks/actions/runs/37376769643) |
+| zed | native-kache-01 | [37376772894](https://github.com/boringcache/benchmarks/actions/runs/37376772894) |
+| zed | native-mbx-01 | [37376777074](https://github.com/boringcache/benchmarks/actions/runs/37376777074) |
+| deno | native-sccache-01 | [37376780672](https://github.com/boringcache/benchmarks/actions/runs/37376780672) |
+| deno | native-kache-01 | [37376784408](https://github.com/boringcache/benchmarks/actions/runs/37376784408) |
+| deno | native-mbx-01 | [37376787731](https://github.com/boringcache/benchmarks/actions/runs/37376787731) |
