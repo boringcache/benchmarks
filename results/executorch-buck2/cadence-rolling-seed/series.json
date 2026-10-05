@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "case_id": "executorch-buck2",
+  "series_id": "cadence-rolling-seed",
+  "created_at": "2026-10-05T14:09:57Z",
+  "lane": "rolling",
+  "phases": [
+    "commit"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "753ba0c6b6c4e806bb24b21efb5f1c098da6c931155b4b45f84bb392ba43a8c3",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "executorch-buck2",
+    "cli_version": "vcli-canary-7a5b27146ebe",
+    "cache_scope": "cadence-20261005-executorch-buck2"
+  },
+  "comparison": {
+    "question": "Does Buck2 restore the ExecuTorch portable runner on a clean worker?",
+    "providers": [
+      "boringcache",
+      "bazel-remote"
+    ],
+    "primary_metric": "correctness",
+    "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
+    "storage": "unmeasured",
+    "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+    "sample_count": 2
+  },
+  "source": {
+    "repository": "pytorch/executorch",
+    "revision": "91d26b3140533172f2557eabb1476e22f0b98bc3",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "91d26b3140533172f2557eabb1476e22f0b98bc3"
+      }
+    ],
+    "patch": "cache.patch"
+  },
+  "verification": [
+    "Require the declared native command to succeed",
+    "Require declared outputs and successful output checks",
+    "Require native remote-hit evidence and the same output hashes on the warm worker",
+    "Require registry shutdown to complete successfully"
+  ],
+  "plan_sha256": "35d1e5b1e7d52193a77c09c26dfc6b92ffdd4d61738a3c856ff4c5245ee3792e"
+}

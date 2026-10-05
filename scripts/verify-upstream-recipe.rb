@@ -12,6 +12,17 @@ files = contract.fetch("upstream_files")
 if contract.key?("upstream_files_by_revision")
   revision, status = Open3.capture2("git", "-C", source, "rev-parse", "HEAD")
   raise "Cannot determine the source revision for recipe verification" unless status.success?
+  context_path = File.join(root, "benchmark-context.json")
+  if File.realpath(source) == File.realpath(root) && File.file?(context_path)
+    declared = JSON.parse(File.read(context_path)).dig("source", "revision")
+    if declared
+      parent, status = Open3.capture2("git", "-C", source, "rev-parse", "HEAD^")
+      unless declared.match?(/\A[0-9a-f]{40}\z/) && status.success? && parent.strip == declared
+        raise "Prepared snapshot does not have the declared upstream parent"
+      end
+      revision = declared
+    end
+  end
   overrides = contract.fetch("upstream_files_by_revision")
   raise "Recipe exceptions require exact source revisions" unless overrides.keys.all? { |sha| sha.match?(/\A[0-9a-f]{40}\z/) }
   files = overrides.fetch(revision.strip, files)

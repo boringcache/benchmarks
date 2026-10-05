@@ -1,7 +1,6 @@
 ---
 name: 'deno: Deno Cargo product run'
-run-name: "${{ format('Deno Cargo fresh | {0} | CLI {1}', inputs.cache_profile ||
-  'cargo-product', inputs.cli_version || 'Action default') }}"
+run-name: "Deno Cargo / ${{ inputs.cache_profile || 'cargo-product' }} | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} fresh | ${{ inputs.series_id || github.ref_name }} / sample ${{ inputs.sample || '1' }}"
 permissions:
   actions: read
   contents: read

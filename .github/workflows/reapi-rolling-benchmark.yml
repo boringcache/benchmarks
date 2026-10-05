@@ -1,7 +1,6 @@
 ---
 name: REAPI comparison rolling
-run-name: "${{ inputs.case_id }} rolling ${{ inputs.series_id }} sample ${{ inputs.sample
-  }}"
+run-name: "${{ inputs.case_id }} | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} rolling | ${{ inputs.series_id || github.ref_name }} / sample ${{ inputs.sample || '1' }}"
 permissions:
   contents: read
   actions: read

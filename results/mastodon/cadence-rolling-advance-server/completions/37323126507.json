@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "mastodon",
+  "series_id": "cadence-rolling-advance-server",
+  "sample": 1,
+  "run_id": "37323126507",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323126507",
+  "source_sha": "915ea2921d4b4d23f0238a4b7e28ecce1bbcc880",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "1c7cdaec26745cefee9e346dba7b3ca2260869793a5a43790bb7c2919576e8bc"
+}

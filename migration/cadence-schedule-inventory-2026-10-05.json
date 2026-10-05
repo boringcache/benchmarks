@@ -1,0 +1,765 @@
+{
+  "schema_version": 1,
+  "observed_on": "2026-10-05",
+  "state": "observed; historical schedules unchanged",
+  "repositories": [
+    {
+      "repository": "boringcache/benchmark-chroma",
+      "branch": "main",
+      "head_sha": "256f12b07ef648695134915651c1e03cf58cfd27",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "0e6e09dec41131d244295366fee4439f7b5673ff",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "2 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/chroma-fresh-benchmark.yml",
+          "blob_sha": "d6cfb307098fa27d68a35b61ab4eeb47a7147388",
+          "name": "Chroma Docker Fresh",
+          "schedule": [
+            {
+              "cron": "0 3 * * 1"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch",
+            "pull_request"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "94bb5ec56874b55fb3d8cc68c134a58e0aff5636",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "1,31 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-deno",
+      "branch": "main",
+      "head_sha": "bc8769a7f3eac04392354e710f39b322323a82f0",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "eacd2e8581720d6c3d94f40d259d9bb1676dac43",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "3 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "e7b2672f5154fce0ee7a8d219a7680c1d2cf21c7",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "2,32 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-duckgres",
+      "branch": "main",
+      "head_sha": "12a5323f222b7faf2c30bad5c21f4441dc233fb4",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "b045a246fd6123162d847d1fd2a2618991bcedf6",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "5 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/duckgres-fresh-benchmark.yml",
+          "blob_sha": "a746c482d1e9ea6cdd5a4e62122fa97e886efd8d",
+          "name": "Duckgres Docker Fresh",
+          "schedule": [
+            {
+              "cron": "0 3 * * 1"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch",
+            "pull_request"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "f59b3a6fd1d3f5e70c202cdacedfe4c3ddd97a30",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "5,35 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-grpc",
+      "branch": "main",
+      "head_sha": "b135b70ad1349cd7993f53fe70dd01353885772d",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "72561e3a4d68432dcc9ee05ab311742580c60c9f",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "7 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/grpc-bazel-fresh-benchmark.yml",
+          "blob_sha": "e6a91c9fa2ed76a9cefbe89090d9fc88d30e57a3",
+          "name": "gRPC Bazel Fresh",
+          "schedule": [
+            {
+              "cron": "0 3 * * 5"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch",
+            "pull_request"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "06633f53ceb3b98a58cc5a5f4dff859fd1d9598b",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "7,37 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-hugo",
+      "branch": "main",
+      "head_sha": "ecc41a3b3e250f5268000ddde142d61a15959e95",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "3437d0f6324e54b47df5d438bd6cfa6e96731ba8",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "9 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/hugo-fresh-benchmark.yml",
+          "blob_sha": "669a6acb6dd9aedb32a690c431bc60878be63c49",
+          "name": "Hugo Docker Fresh",
+          "schedule": [
+            {
+              "cron": "0 3 * * 1"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch",
+            "pull_request"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "b18761d26ae89ee4ba65aabf1519104f0d0baf59",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "9,39 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-hugo-go",
+      "branch": "main",
+      "head_sha": "d6186956df7f400627bb2566bd907431801b191c",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "fc672d87343291eba494deaf13219a55df60e282",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "11 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/hugo-go-fresh-benchmark.yml",
+          "blob_sha": "a0b5eded84c1dea44b276c265ccb66d6f88ab50d",
+          "name": "Hugo Go Fresh",
+          "schedule": [
+            {
+              "cron": "0 4 * * 1"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch",
+            "pull_request"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "a9afa0c852ccb9ea423715f5448c6327db6ed2dc",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "10,40 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-immich",
+      "branch": "main",
+      "head_sha": "46108490e1df3ac6edbe7e75fe220b25aab155eb",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "e1fbebad9cd370fdb2abcb341fd64debd4d5b979",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "12 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/immich-fresh-benchmark.yml",
+          "blob_sha": "b79f86d331337004a1288fdb6f88cb9387ab26d7",
+          "name": "Immich Fresh",
+          "schedule": [
+            {
+              "cron": "0 3 * * 2"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch",
+            "pull_request"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "91bc18a30a993893f2cff0814995dee6dbce34c9",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "12,42 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-linkerd2",
+      "branch": "main",
+      "head_sha": "574b7c5b2a7f138fa2cba78dbfb1a33f3448f89b",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "4843be080f498736d6b00f4f63d602aa9df16053",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "14 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/linkerd2-fresh-benchmark.yml",
+          "blob_sha": "9520528d53ec96f56024f8fb54783e16d348eab8",
+          "name": "Linkerd2 Docker Fresh",
+          "schedule": [
+            {
+              "cron": "0 3 * * 1"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch",
+            "pull_request"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "f6ccdc84f2b66c67163afd9d6f3cbc5069018852",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "13,43 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-mastodon",
+      "branch": "main",
+      "head_sha": "2a9f1c12c8099b3c4094028bcdc9801237924fd0",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "26016bac6319ff72f486e3ef56f3493a486a73ec",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "16 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/mastodon-fresh-benchmark.yml",
+          "blob_sha": "1add987ea7b0c126182287a7476c805547e58d4c",
+          "name": "Mastodon Docker Fresh",
+          "schedule": [
+            {
+              "cron": "0 4 * * 2"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch",
+            "pull_request"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "3fcf7fcac070ae5b1d87ce845f940eb37b8b5b99",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "15,45 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-n8n",
+      "branch": "main",
+      "head_sha": "52a6cb8d9acc3d569a8c156478242b85ffd2ff19",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "864b20860a0caf8c3038c392e38458dc536f2b8f",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "18 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/n8n-docker-fresh-benchmark.yml",
+          "blob_sha": "7fd5a970403e29deeae2acac3bb12587c32c1e57",
+          "name": "n8n Docker Fresh",
+          "schedule": [
+            {
+              "cron": "30 3 * * 6"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch",
+            "pull_request"
+          ]
+        },
+        {
+          "path": ".github/workflows/n8n-fresh-benchmark.yml",
+          "blob_sha": "774595c682017712b55deb7f20e02f60d232687a",
+          "name": "n8n Turbo Fresh",
+          "schedule": [
+            {
+              "cron": "0 3 * * 6"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch",
+            "pull_request"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "d53eb06298a1f306694c00820e71680a3c26f34b",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "17,47 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-obs-studio",
+      "branch": "main",
+      "head_sha": "42d22b7f50da7e225effcb9ec9a2aa97c47f97cb",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "c81c212fa2d9b2e8cc5591ae41e5bc9cd7dfdaa9",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "18,48 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-opentelemetry-java",
+      "branch": "main",
+      "head_sha": "b83cdf213f54cc9572f122d0dfbf40087e1d15fd",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "496246c8fc77d89c7e1e419c1ff24afb1e57db32",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "20 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/opentelemetry-java-gradle-fresh-benchmark.yml",
+          "blob_sha": "d90e47f33890233759446efb76e3139c068a4c62",
+          "name": "OpenTelemetry Java Gradle Fresh",
+          "schedule": [
+            {
+              "cron": "0 3 * * 4"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch",
+            "pull_request"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "fed2ce18754929d40cc75c0fcb731d56e05e97ae",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "20,50 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-posthog",
+      "branch": "main",
+      "head_sha": "0462819802f2b8a6393ee8221e2bc595f8b8f058",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "b5a974165b5eb4ee8b2d721c3da61096f43654c0",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "21 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/posthog-fresh-benchmark.yml",
+          "blob_sha": "64da0626ed0435e003d25afc524eeafee574d67c",
+          "name": "PostHog Fresh",
+          "schedule": [
+            {
+              "cron": "0 3 * * 3"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch",
+            "pull_request"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "862f73e4e5bfe01ba86dc16886fe46be6eb3074f",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "21,51 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-qdrant",
+      "branch": "main",
+      "head_sha": "6dc192c834f1ac641969dbc49a0f352369e05a18",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "886ad9d34bd80bb81c606501ec8dc422e9a5d0d8",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "23 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/qdrant-fresh-benchmark.yml",
+          "blob_sha": "60e5e575d08b285886f782764b808c4059042d3c",
+          "name": "Qdrant Docker Fresh",
+          "schedule": [
+            {
+              "cron": "0 3 * * 1"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch",
+            "pull_request"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "c77b7926b59082e33f988d30a42ff49ec3efc866",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "23,53 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-spring-ai",
+      "branch": "main",
+      "head_sha": "a7c6468d2f7c4d7d6f96692e52875c7b4c6b499b",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "3746cb6f27d3de5c90cc684005edde78c14d6b26",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "25 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/spring-ai-maven-fresh-benchmark.yml",
+          "blob_sha": "de595ad12aa86d8dd7dce8764fca9f9779f14ff2",
+          "name": "Spring AI Maven Fresh",
+          "schedule": [
+            {
+              "cron": "0 4 * * 4"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch",
+            "pull_request"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "34054e8aa5851c8b5eb594d5e469b5de25d5de2e",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "25,55 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-storybook",
+      "branch": "main",
+      "head_sha": "681058e746f602b8d0717536fa5ccfee6a2330f7",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "736511aa88aa5dd42c64215491c7e02b646705f8",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "27 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/storybook-fresh-benchmark.yml",
+          "blob_sha": "b3c7bc31db4c67ede4023204720a5474411751c6",
+          "name": "Storybook Nx Fresh",
+          "schedule": [
+            {
+              "cron": "0 4 * * 3"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch",
+            "pull_request"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "52555528e53ffcbc6542f2f48014455837d3aac4",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "26,56 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "boringcache/benchmark-zed",
+      "branch": "main",
+      "head_sha": "a492769ef83da59ab47aa6a703910d64fb4d9eba",
+      "scheduled_workflows": [
+        {
+          "path": ".github/workflows/canary.yml",
+          "blob_sha": "3a131e6f58d054993ab078a58a9a57c549169910",
+          "name": "CLI Canary",
+          "schedule": [
+            {
+              "cron": "29 2 * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        },
+        {
+          "path": ".github/workflows/sync.yml",
+          "blob_sha": "2c888b5a5cb32e6cdecf727bdb38be30bbc91851",
+          "name": "Sync Upstream",
+          "schedule": [
+            {
+              "cron": "28,58 * * * *"
+            }
+          ],
+          "other_events": [
+            "workflow_dispatch"
+          ]
+        }
+      ]
+    }
+  ]
+}

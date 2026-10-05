@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "case_id": "obs-studio",
+  "series_id": "cadence-rolling-seed-xcode",
+  "sample": 1,
+  "run_id": "37322621030",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37322621030",
+  "source_sha": "694acf2b29d055602938d869ef1815c42de6ee11",
+  "github_conclusion": "failure",
+  "status": "failed",
+  "errors": [
+    "Workflow concluded failure",
+    "BoringCache obs-studio xcode commit: failure",
+    "obs-studio rolling report: failure"
+  ],
+  "evidence_manifest_sha256": "167a4879396a537d636434a85dc880174b79075432c1f84b3bc26955594fbd02"
+}
