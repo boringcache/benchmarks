@@ -4,19 +4,26 @@ Question: Does the pinned workload produce verified output and reuse its declare
 
 Measured scope: The two BoringCache Cargo release operations, including restore, build, and any permitted publication. Fresh changed-source consumers use restore-only trust; rolling jobs permit publication to the declared cohort. Output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.
 
-Status: all declared observations collected; 0 failed. Publication requires review.
+Observations: 2/2 recorded; 0 failed; 0 missing.
 
-Execution: preserved job completion and post-step logs verified. Timings alone do not qualify the series.
+Completion checks: passed.
 
-Queue time, dependency setup outside the declared scope, and job duration are context. They are excluded from the comparison. No observations were excluded.
+Publication: unreviewed.
 
 | Phase | Provider | Successful observations | Storage median (bytes) | Storage observations |
 | --- | --- | ---: | ---: | ---: |
-| cold | boringcache | 1 | unmeasured | 0 |
-| commit | boringcache | 1 | unmeasured | 0 |
+| Cold build | BoringCache | 1 | unmeasured | 0 |
+| Changed-source build | BoringCache | 1 | unmeasured | 0 |
 
-Methodology prevents a comparative claim:
+Comparison checks:
 
 - This series does not declare a comparison of provider performance.
 
-Each run record retains its source, runner environment, verification, provider storage source, and evidence links. Missing storage is unmeasured; it is not zero. Original Actions URLs remain subject to retention; durable evidence publication must be verified before publication review.
+## Observations
+
+| Sample | Provider | Phase | Cache setup/restore (s) | Build (s) | Build and cache reuse (s) | Storage (bytes) | Storage source | Cache | Record |
+| ---: | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
+| 1 | BoringCache | Cold build | 0 | 2725 | 2725 | unmeasured | unmeasured | miss | [JSON](runs/1-boringcache-cold.json) |
+| 1 | BoringCache | Changed-source build | 0 | 1493 | 1493 | unmeasured | unmeasured | hit | [JSON](runs/1-boringcache-commit.json) |
+
+[Full records and checks](report.json)

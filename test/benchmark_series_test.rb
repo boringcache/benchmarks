@@ -82,6 +82,26 @@ class BenchmarkSeriesTest < Minitest::Test
     assert_equal "unreviewed", result["publication"]
   end
 
+  def test_report_shows_observations_and_missing_slots_without_generated_advice
+    add(record(seconds: 10.125, storage: 0))
+    BenchmarkSeries.report(@directory)
+    markdown = File.read(File.join(@directory, "report.md"))
+    assert_includes markdown, "| BoringCache | Changed-source build | unmeasured | unmeasured | 10.125 | 0 | provider-api |"
+    assert_includes markdown, "Sample 2, Actions Cache, Changed-source build"
+    assert_includes markdown, "Missing completion checks: 1"
+    assert_includes markdown, "runs/1-boringcache-commit.json"
+    refute_match(/claims|qualify|requires review|before publication review/, markdown)
+  end
+
+  def test_observation_table_escapes_backslashes_and_pipes_in_storage_sources
+    value = record(storage: 100)
+    value.fetch("cache")["storage_source"] = "provider\\|api\nsource"
+    add(value)
+    BenchmarkSeries.report(@directory)
+    row = File.readlines(File.join(@directory, "report.md")).find { |line| line.include?("[JSON](runs/1-boringcache-commit.json)") }
+    assert_includes row, "provider" + "\\" * 3 + "|api source"
+  end
+
   def phase_export(values, artifact_name: nil, filenames: nil, extra_files: {})
     directory = evidence
     manifest = JSON.parse(File.read(File.join(directory, "manifest.json")))
@@ -245,7 +265,7 @@ class BenchmarkSeriesTest < Minitest::Test
     add(record(sample: 2, storage: 300))
     result = BenchmarkSeries.report(@directory)
     assert_equal({"median" => 200.0, "min" => 100, "max" => 300}, result["summaries"].first["measurement"])
-    assert_includes File.read(File.join(@directory, "report.md")), "Median storage_bytes"
+    assert_includes File.read(File.join(@directory, "report.md")), "Median storage (bytes)"
   end
 
   def test_cannot_replace_a_slow_sample
@@ -360,9 +380,9 @@ class BenchmarkSeriesTest < Minitest::Test
     assert result["complete"]
     assert result["execution_verified"]
     refute result["valid_for_comparison"]
-    assert_includes result["methodology_issues"].first, "no verified seed and changed-source sequence"
+    assert_includes result["methodology_issues"].first, "Rolling seed and changed-source sequence are unverified."
     assert_equal 4, result["records"].length
-    assert_includes File.read(File.join(@directory, "report.md")), "retain them as diagnostic"
+    assert_includes File.read(File.join(@directory, "report.md")), "Rolling seed and changed-source sequence are unverified."
   end
 
   def test_green_jobs_with_post_step_warnings_cannot_qualify_a_series

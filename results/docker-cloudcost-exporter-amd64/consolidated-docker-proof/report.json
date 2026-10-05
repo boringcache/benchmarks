@@ -4,6 +4,9 @@
   "complete": true,
   "valid_for_comparison": false,
   "failures": [],
+  "methodology_issues": [
+    "This series does not declare a comparison of provider performance."
+  ],
   "execution_verified": false,
   "missing_completions": [],
   "failed_completions": [

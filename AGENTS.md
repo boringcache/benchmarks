@@ -38,8 +38,11 @@ commercial qualification notes outside this public repository.
 - Export evidence before retention removes it. Preserve original URLs and attempts.
   Checksums establish exported-file integrity; inventory checks establish scoped
   completeness. Ordinary cache retention is not permanent evidence storage.
-- Generate reports from structured records. Interpretations and website claims
-  require review, including parity or a negative result.
+- Generate reports from structured records. Show measurements, units, sources,
+  sample counts, missing data, and check results. Do not generate performance
+  verdicts, suspected causes, recommendations, or review commentary. Keep human
+  and AI analysis outside generated reports and the catalog. Preserve historical
+  records and raw product evidence, including any original diagnostic fields.
 
 ## Verification
 

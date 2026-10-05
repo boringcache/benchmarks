@@ -4,19 +4,25 @@ Question: Does the pinned workload produce verified output and reuse its declare
 
 Measured scope: The two BoringCache Cargo release operations, including restore, build, and any permitted publication. Fresh changed-source consumers use restore-only trust; rolling jobs permit publication to the declared cohort. Output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.
 
-Status: all declared observations collected; 0 failed. Publication requires review.
+Observations: 1/1 recorded; 0 failed; 0 missing.
 
-Execution: preserved job completion and post-step logs verified. Timings alone do not qualify the series.
+Completion checks: passed.
 
-Queue time, dependency setup outside the declared scope, and job duration are context. They are excluded from the comparison. No observations were excluded.
+Publication: unreviewed.
 
 | Phase | Provider | Successful observations | Storage median (bytes) | Storage observations |
 | --- | --- | ---: | ---: | ---: |
-| commit | boringcache | 1 | 2085530204 | 1 |
+| Changed-source build | BoringCache | 1 | 2085530204 | 1 |
 
-Methodology prevents a comparative claim:
+Comparison checks:
 
-- Rolling observations have no verified seed and changed-source sequence; retain them as diagnostic.
+- Rolling seed and changed-source sequence are unverified.
 - This series does not declare a comparison of provider performance.
 
-Each run record retains its source, runner environment, verification, provider storage source, and evidence links. Missing storage is unmeasured; it is not zero. Original Actions URLs remain subject to retention; durable evidence publication must be verified before publication review.
+## Observations
+
+| Sample | Provider | Phase | Cache setup/restore (s) | Build (s) | Build and cache reuse (s) | Storage (bytes) | Storage source | Cache | Record |
+| ---: | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
+| 1 | BoringCache | Changed-source build | 0 | 1715 | 1715 | 2085530204 | boringcache-check | hit | [JSON](runs/1-boringcache-commit.json) |
+
+[Full records and checks](report.json)

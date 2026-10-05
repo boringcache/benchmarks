@@ -137,7 +137,6 @@
       ],
       "report_state": "current",
       "report_path": "results/chroma/image-output-qualification-01/report.json",
-      "interpretation_path": "results/chroma/image-output-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -256,7 +255,6 @@
       ],
       "report_state": "current",
       "report_path": "results/chroma/migration-screening-01/report.json",
-      "interpretation_path": "results/chroma/migration-screening-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -349,9 +347,8 @@
         }
       ],
       "completions": [],
-      "report_state": "missing",
-      "report_path": null,
-      "interpretation_path": "results/deno/cli-canary-repeat-01/interpretation.md",
+      "report_state": "current",
+      "report_path": "results/deno/cli-canary-repeat-01/report.json",
       "evidence": [],
       "runs_without_archives": [
         "37285092516"
@@ -432,9 +429,8 @@
           "evidence_manifest_sha256": "4a434c5e625cbfd18eea31053a1af3328ff058dde6635e98ffa852491bfbae1f"
         }
       ],
-      "report_state": "stale",
-      "report_path": null,
-      "interpretation_path": null,
+      "report_state": "current",
+      "report_path": "results/deno/consolidated-cargo-proof/report.json",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -557,7 +553,6 @@
       ],
       "report_state": "current",
       "report_path": "results/deno/direct-cargo-product-qualification/report.json",
-      "interpretation_path": "results/deno/direct-cargo-product-qualification/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -680,7 +675,6 @@
       ],
       "report_state": "current",
       "report_path": "results/deno/direct-compiler-only-qualification/report.json",
-      "interpretation_path": "results/deno/direct-compiler-only-qualification/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -795,7 +789,6 @@
       ],
       "report_state": "current",
       "report_path": "results/deno/merged-main-qualification-03/report.json",
-      "interpretation_path": "results/deno/merged-main-qualification-03/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -853,7 +846,7 @@
       "valid_for_comparison": false,
       "execution_verified": false,
       "methodology_issues": [
-        "Rolling observations have no verified seed and changed-source sequence; retain them as diagnostic.",
+        "Rolling seed and changed-source sequence are unverified.",
         "This series does not declare a comparison of provider performance."
       ],
       "missing_observations": [
@@ -906,7 +899,6 @@
       ],
       "report_state": "current",
       "report_path": "results/deno/rolling-cargo-product-qualification/report.json",
-      "interpretation_path": "results/deno/rolling-cargo-product-qualification/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -968,7 +960,7 @@
       "valid_for_comparison": false,
       "execution_verified": true,
       "methodology_issues": [
-        "Rolling observations have no verified seed and changed-source sequence; retain them as diagnostic.",
+        "Rolling seed and changed-source sequence are unverified.",
         "This series does not declare a comparison of provider performance."
       ],
       "missing_observations": [],
@@ -1021,7 +1013,6 @@
       ],
       "report_state": "current",
       "report_path": "results/deno/rolling-cargo-product-seed-advance-01/report.json",
-      "interpretation_path": "results/deno/rolling-cargo-product-seed-advance-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -1079,7 +1070,7 @@
       "valid_for_comparison": false,
       "execution_verified": false,
       "methodology_issues": [
-        "Rolling observations have no verified seed and changed-source sequence; retain them as diagnostic.",
+        "Rolling seed and changed-source sequence are unverified.",
         "This series does not declare a comparison of provider performance."
       ],
       "missing_observations": [
@@ -1132,7 +1123,6 @@
       ],
       "report_state": "current",
       "report_path": "results/deno/rolling-compiler-only-qualification/report.json",
-      "interpretation_path": "results/deno/rolling-compiler-only-qualification/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -1194,7 +1184,7 @@
       "valid_for_comparison": false,
       "execution_verified": true,
       "methodology_issues": [
-        "Rolling observations have no verified seed and changed-source sequence; retain them as diagnostic.",
+        "Rolling seed and changed-source sequence are unverified.",
         "This series does not declare a comparison of provider performance."
       ],
       "missing_observations": [],
@@ -1251,7 +1241,6 @@
       ],
       "report_state": "current",
       "report_path": "results/deno/rolling-compiler-only-seed-advance-01/report.json",
-      "interpretation_path": "results/deno/rolling-compiler-only-seed-advance-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -1366,7 +1355,6 @@
       ],
       "report_state": "current",
       "report_path": "results/deno/rolling-seed-cargo-product-01/report.json",
-      "interpretation_path": "results/deno/rolling-seed-cargo-product-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -1489,7 +1477,6 @@
       ],
       "report_state": "current",
       "report_path": "results/deno/rolling-seed-compiler-only-01/report.json",
-      "interpretation_path": "results/deno/rolling-seed-compiler-only-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -1592,9 +1579,8 @@
           "evidence_manifest_sha256": "3a3079c1127bf97d2925824fa26752b15a975e59375bc0b116b97ccb4f7cef57"
         }
       ],
-      "report_state": "stale",
-      "report_path": null,
-      "interpretation_path": "results/deno/wrapper-qualification/interpretation.md",
+      "report_state": "current",
+      "report_path": "results/deno/wrapper-qualification/report.json",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -1714,9 +1700,8 @@
           "evidence_manifest_sha256": "fd1034ef57a145dd49b29642204aae75bed83797309d0ac35b5b2bb9623d9e68"
         }
       ],
-      "report_state": "stale",
-      "report_path": null,
-      "interpretation_path": null,
+      "report_state": "current",
+      "report_path": "results/docker-cloudcost-exporter-amd64/consolidated-docker-proof/report.json",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -1853,7 +1838,6 @@
       ],
       "report_state": "current",
       "report_path": "results/docker-cloudcost-exporter-amd64/direct-dispatch-qualification/report.json",
-      "interpretation_path": "results/docker-cloudcost-exporter-amd64/direct-dispatch-qualification/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -1998,7 +1982,6 @@
       ],
       "report_state": "current",
       "report_path": "results/docker-cloudcost-exporter-amd64/merged-main-qualification-03/report.json",
-      "interpretation_path": "results/docker-cloudcost-exporter-amd64/merged-main-qualification-03/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -2113,9 +2096,8 @@
           "evidence_manifest_sha256": "03ae77d8a227b3c0b2552d9bc4947e9bf76a0a68900d37047314bf7cc130fdf3"
         }
       ],
-      "report_state": "stale",
-      "report_path": null,
-      "interpretation_path": "results/docker-cloudcost-exporter-amd64/wrapper-qualification/interpretation.md",
+      "report_state": "current",
+      "report_path": "results/docker-cloudcost-exporter-amd64/wrapper-qualification/report.json",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -2267,7 +2249,6 @@
       ],
       "report_state": "current",
       "report_path": "results/duckgres/image-output-qualification-01/report.json",
-      "interpretation_path": "results/duckgres/image-output-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -2382,7 +2363,6 @@
       ],
       "report_state": "current",
       "report_path": "results/duckgres/migration-screening-01/report.json",
-      "interpretation_path": "results/duckgres/migration-screening-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -2399,6 +2379,102 @@
         }
       ],
       "runs_without_archives": []
+    },
+    {
+      "case_id": "grpc",
+      "series_id": "fresh-canary-repair-01",
+      "plan_path": "results/grpc/fresh-canary-repair-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache",
+          "buildbuddy"
+        ],
+        "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "grpc/grpc",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "3bad3fe86f24dd2597d4fe3052b82d5b5144b705d6265f219b67a9f2820f238e",
+      "definition_sha256": "c427f90c3baea4391aef672f3a11f126a4fa812a7a76f1a9928e74b5a375a39e",
+      "state": "requested",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "cold",
+          "buildbuddy"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "buildbuddy"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "grpc",
+          "repository": "boringcache/benchmarks",
+          "workflow": "grpc-grpc-bazel-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "cli_version": "vcli-canary-4c236cd7ee00",
+            "series_id": "fresh-canary-repair-01",
+            "sample": "1"
+          },
+          "ref": "independent-benchmark-samples",
+          "state": "requested",
+          "requested_at": "2026-10-05T09:10:05Z",
+          "run_id": 37288249894,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288249894"
+        }
+      ],
+      "completions": [],
+      "report_state": "current",
+      "report_path": "results/grpc/fresh-canary-repair-01/report.json",
+      "evidence": [],
+      "runs_without_archives": [
+        "37288249894"
+      ]
     },
     {
       "case_id": "hugo-go",
@@ -2565,7 +2641,6 @@
       ],
       "report_state": "current",
       "report_path": "results/hugo-go/direct-dispatch-qualification/report.json",
-      "interpretation_path": "results/hugo-go/direct-dispatch-qualification/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -2592,6 +2667,199 @@
           "bundle_bytes": 303616,
           "sha256": "66debe7af8c10f0f9ec657aa58d9048029180143dc02eaa0d0d279138bc6b674",
           "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "hugo-go",
+      "series_id": "independent-samples-01",
+      "plan_path": "results/hugo-go/independent-samples-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 2,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "fc20058701dd1bf0b6a94acf40bf1d76adda8e37695472b295ec9bcc4b4da562",
+      "definition_sha256": "21702e83473c3a7a99cae19b7b4aa108243f49e8064878e4632804d315988a52",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": true,
+      "execution_verified": true,
+      "methodology_issues": [],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 2,
+          "measurement": {
+            "median": 70.0,
+            "min": 61,
+            "max": 79
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 2,
+          "measurement": {
+            "median": 9.0,
+            "min": 9,
+            "max": 9
+          },
+          "storage": {
+            "median": 161808547.0,
+            "min": 161804322,
+            "max": 161812772
+          },
+          "storage_measured_count": 2
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 2,
+          "measurement": {
+            "median": 87.5,
+            "min": 85,
+            "max": 90
+          },
+          "storage": {
+            "median": 612837451.5,
+            "min": 610123303,
+            "max": 615551600
+          },
+          "storage_measured_count": 2
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 2,
+          "measurement": {
+            "median": 21.0,
+            "min": 18,
+            "max": 24
+          },
+          "storage": {
+            "median": 811503108.0,
+            "min": 811503108,
+            "max": 811503108
+          },
+          "storage_measured_count": 2
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "hugo-go",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "hugo-go",
+            "series_id": "independent-samples-01",
+            "sample": "1"
+          },
+          "ref": "independent-benchmark-samples",
+          "state": "requested",
+          "requested_at": "2026-10-05T09:10:00Z",
+          "run_id": 37288240708,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288240708"
+        },
+        {
+          "case_id": "hugo-go",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "hugo-go",
+            "series_id": "independent-samples-01",
+            "sample": "2"
+          },
+          "ref": "independent-benchmark-samples",
+          "state": "requested",
+          "requested_at": "2026-10-05T09:10:02Z",
+          "run_id": 37288246103,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288246103"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "hugo-go",
+          "series_id": "independent-samples-01",
+          "sample": 1,
+          "run_id": "37288240708",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288240708",
+          "source_sha": "874ab9890b328d8583f0b67e46a02f72393cf015",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "4fd9ad410330fc0e34949e2b298d079f188b543286ed7c662e52bcb969d5c925"
+        },
+        {
+          "schema_version": 1,
+          "case_id": "hugo-go",
+          "series_id": "independent-samples-01",
+          "sample": 2,
+          "run_id": "37288246103",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288246103",
+          "source_sha": "874ab9890b328d8583f0b67e46a02f72393cf015",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "67db601ec3dfd03345ef6540efe4716d76d8398fb6b1d4c1f6dfbfa8737c4909"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/hugo-go/independent-samples-01/report.json",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37288240708,
+          "inventory_state": "complete",
+          "verified_files": 17,
+          "gaps": [],
+          "scope": "One declared Hugo Go sample, including its attempts, jobs, logs, artifacts, commit and workflow",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-independent-samples-2026-10-05",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-independent-samples-2026-10-05/benchmarks-37288240708.tar.gz",
+          "bundle_bytes": 192719,
+          "sha256": "5d1eba3f14c045aebe3dd0a8926ca435d8ed5a994794f8050e121a2917621ef3",
+          "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory"
+        },
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37288246103,
+          "inventory_state": "complete",
+          "verified_files": 17,
+          "gaps": [],
+          "scope": "One declared Hugo Go sample, including its attempts, jobs, logs, artifacts, commit and workflow",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-independent-samples-2026-10-05",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-independent-samples-2026-10-05/benchmarks-37288246103.tar.gz",
+          "bundle_bytes": 192849,
+          "sha256": "9cbbc3f43c428fec36a3d6c642826156335170204c098af683034b5168d7d67a",
+          "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory"
         }
       ],
       "runs_without_archives": []
@@ -2731,7 +2999,6 @@
       ],
       "report_state": "current",
       "report_path": "results/hugo-go/merged-main-qualification-03/report.json",
-      "interpretation_path": "results/hugo-go/merged-main-qualification-03/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -2887,9 +3154,8 @@
           "evidence_manifest_sha256": "043a3a2adf6766392284d8cbdac77509b1b4c28be4f3ca735cb1b01d25019233"
         }
       ],
-      "report_state": "stale",
-      "report_path": null,
-      "interpretation_path": null,
+      "report_state": "current",
+      "report_path": "results/hugo-go/shared-hugo-go/report.json",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -3055,7 +3321,6 @@
       ],
       "report_state": "current",
       "report_path": "results/hugo-go/shared-lifecycle-qualification-01/report.json",
-      "interpretation_path": "results/hugo-go/shared-lifecycle-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -3201,9 +3466,8 @@
           "evidence_manifest_sha256": "13327e14d4d5d7b805104a5f3162dced479764626f9291c1a2fec490d4637bae"
         }
       ],
-      "report_state": "stale",
-      "report_path": null,
-      "interpretation_path": "results/hugo-go/wrapper-qualification/interpretation.md",
+      "report_state": "current",
+      "report_path": "results/hugo-go/wrapper-qualification/report.json",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -3333,7 +3597,6 @@
       ],
       "report_state": "current",
       "report_path": "results/hugo/image-output-qualification-01/report.json",
-      "interpretation_path": "results/hugo/image-output-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -3485,7 +3748,6 @@
       ],
       "report_state": "current",
       "report_path": "results/hugo/image-output-qualification-02/report.json",
-      "interpretation_path": "results/hugo/image-output-qualification-02/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -3634,7 +3896,6 @@
       ],
       "report_state": "current",
       "report_path": "results/hugo/merged-main-qualification-03/report.json",
-      "interpretation_path": "results/hugo/merged-main-qualification-03/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -3749,7 +4010,6 @@
       ],
       "report_state": "current",
       "report_path": "results/hugo/migration-screening-01/report.json",
-      "interpretation_path": "results/hugo/migration-screening-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -3866,7 +4126,6 @@
       ],
       "report_state": "current",
       "report_path": "results/hugo/shared-lifecycle-qualification-01/report.json",
-      "interpretation_path": "results/hugo/shared-lifecycle-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -4015,7 +4274,6 @@
       ],
       "report_state": "current",
       "report_path": "results/hugo/shared-lifecycle-qualification-02/report.json",
-      "interpretation_path": "results/hugo/shared-lifecycle-qualification-02/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -4167,7 +4425,6 @@
       ],
       "report_state": "current",
       "report_path": "results/immich/image-output-qualification-01/report.json",
-      "interpretation_path": "results/immich/image-output-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -4319,7 +4576,6 @@
       ],
       "report_state": "current",
       "report_path": "results/linkerd2/image-output-qualification-01/report.json",
-      "interpretation_path": "results/linkerd2/image-output-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -4434,7 +4690,6 @@
       ],
       "report_state": "current",
       "report_path": "results/linkerd2/migration-screening-01/report.json",
-      "interpretation_path": "results/linkerd2/migration-screening-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -4587,7 +4842,6 @@
       ],
       "report_state": "current",
       "report_path": "results/mastodon/image-output-qualification-01/report.json",
-      "interpretation_path": "results/mastodon/image-output-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -4740,7 +4994,6 @@
       ],
       "report_state": "current",
       "report_path": "results/mastodon/streaming-output-qualification-01/report.json",
-      "interpretation_path": "results/mastodon/streaming-output-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -4893,7 +5146,6 @@
       ],
       "report_state": "current",
       "report_path": "results/n8n/distroless-output-qualification-01/report.json",
-      "interpretation_path": "results/n8n/distroless-output-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -5046,7 +5298,6 @@
       ],
       "report_state": "current",
       "report_path": "results/n8n/image-output-qualification-01/report.json",
-      "interpretation_path": "results/n8n/image-output-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -5199,7 +5450,6 @@
       ],
       "report_state": "current",
       "report_path": "results/n8n/runners-output-qualification-01/report.json",
-      "interpretation_path": "results/n8n/runners-output-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -5353,7 +5603,6 @@
       ],
       "report_state": "current",
       "report_path": "results/n8n/shared-turbo-qualification-01/report.json",
-      "interpretation_path": "results/n8n/shared-turbo-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -5507,7 +5756,6 @@
       ],
       "report_state": "current",
       "report_path": "results/obs-studio/direct-ccache-qualification/report.json",
-      "interpretation_path": "results/obs-studio/direct-ccache-qualification/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -5704,7 +5952,6 @@
       ],
       "report_state": "current",
       "report_path": "results/obs-studio/direct-ccache-runtime-qualification/report.json",
-      "interpretation_path": "results/obs-studio/direct-ccache-runtime-qualification/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -5901,7 +6148,6 @@
       ],
       "report_state": "current",
       "report_path": "results/obs-studio/direct-xcode-qualification/report.json",
-      "interpretation_path": "results/obs-studio/direct-xcode-qualification/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -6067,7 +6313,6 @@
       ],
       "report_state": "current",
       "report_path": "results/opentelemetry-java/migration-screening-01/report.json",
-      "interpretation_path": "results/opentelemetry-java/migration-screening-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -6220,7 +6465,6 @@
       ],
       "report_state": "current",
       "report_path": "results/posthog/image-output-combined-qualification-01/report.json",
-      "interpretation_path": "results/posthog/image-output-combined-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -6362,7 +6606,6 @@
       ],
       "report_state": "current",
       "report_path": "results/posthog/image-output-qualification-01/report.json",
-      "interpretation_path": "results/posthog/image-output-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -6515,7 +6758,6 @@
       ],
       "report_state": "current",
       "report_path": "results/posthog/image-output-qualification-02/report.json",
-      "interpretation_path": "results/posthog/image-output-qualification-02/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -6633,7 +6875,6 @@
       ],
       "report_state": "current",
       "report_path": "results/posthog/shared-combined-lifecycle-01/report.json",
-      "interpretation_path": "results/posthog/shared-combined-lifecycle-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -6783,7 +7024,6 @@
       ],
       "report_state": "current",
       "report_path": "results/posthog/shared-combined-lifecycle-02/report.json",
-      "interpretation_path": "results/posthog/shared-combined-lifecycle-02/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -6901,7 +7141,6 @@
       ],
       "report_state": "current",
       "report_path": "results/posthog/shared-layers-lifecycle-01/report.json",
-      "interpretation_path": "results/posthog/shared-layers-lifecycle-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -7051,7 +7290,6 @@
       ],
       "report_state": "current",
       "report_path": "results/posthog/shared-layers-lifecycle-02/report.json",
-      "interpretation_path": "results/posthog/shared-layers-lifecycle-02/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -7203,7 +7441,6 @@
       ],
       "report_state": "current",
       "report_path": "results/qdrant/migration-screening-01/report.json",
-      "interpretation_path": "results/qdrant/migration-screening-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -7356,7 +7593,6 @@
       ],
       "report_state": "current",
       "report_path": "results/spring-ai/migration-screening-01/report.json",
-      "interpretation_path": "results/spring-ai/migration-screening-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -7505,7 +7741,6 @@
       ],
       "report_state": "current",
       "report_path": "results/storybook/build-reuse-qualification-01/report.json",
-      "interpretation_path": "results/storybook/build-reuse-qualification-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -7656,7 +7891,6 @@
       ],
       "report_state": "current",
       "report_path": "results/storybook/migration-screening-01/report.json",
-      "interpretation_path": "results/storybook/migration-screening-01/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",
@@ -7796,7 +8030,6 @@
       ],
       "report_state": "current",
       "report_path": "results/zed/direct-combined-qualification/report.json",
-      "interpretation_path": "results/zed/direct-combined-qualification/interpretation.md",
       "evidence": [
         {
           "repository": "boringcache/benchmarks",

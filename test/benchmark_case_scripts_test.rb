@@ -13,6 +13,61 @@ require "yaml"
 class BenchmarkCaseScriptsTest < Minitest::Test
   ROOT = File.expand_path("..", __dir__)
 
+  def test_grpc_uses_one_scope_for_each_sample_and_retains_only_rolling_seeds
+    with_case("grpc") do |directory|
+      steps = YAML.safe_load_file(File.join(directory, ".github/actions/grpc-bazel-benchmark/action.yml")).dig("runs", "steps")
+      script = steps.find { |step| step["id"] == "scope" }.fetch("run")
+      # Source provenance follows scope selection and is unrelated to cache identity.
+      script = script.split(/^source_url=/).first
+      output = File.join(directory, "scope-output")
+      env = {"PATH" => "#{File.dirname(RbConfig.ruby)}:#{ENV.fetch('PATH')}", "GITHUB_OUTPUT" => output,
+        "BENCHMARK_ID" => "grpc-bazel", "CACHE_LANE" => "fresh", "BENCHMARK_SERIES_ID" => "scope-01",
+        "BENCHMARK_SAMPLE" => "1", "GITHUB_RUN_ID" => "123", "GITHUB_RUN_ATTEMPT" => "1", "GITHUB_REF_NAME" => "main"}
+      plan = File.binread(File.join(directory, ".boringcache.toml"))
+      run = lambda do |changes|
+        File.binwrite(File.join(directory, ".boringcache.toml"), plan)
+        File.write(output, "")
+        stdout, stderr, status = Open3.capture3(env.merge(changes), "bash", "-c", script, chdir: directory)
+        assert status.success?, "#{stdout}\n#{stderr}"
+        File.readlines(output).to_h { |line| line.strip.split("=", 2) }
+      end
+      cold = run.call("PHASE" => "publish")
+      assert_equal cold, run.call("PHASE" => "warm")
+      assert_equal cold.fetch("cohort"), cold.fetch("buildbuddy_instance")
+      assert_equal "ac-#{cold.fetch('cohort')}-cold", cold.fetch("gha_key")
+      refute_equal cold.fetch("cohort"), run.call("BENCHMARK_SAMPLE" => "2").fetch("cohort")
+      refute_equal cold.fetch("cohort"), run.call("GITHUB_RUN_ATTEMPT" => "2").fetch("cohort")
+      first = run.call("CACHE_LANE" => "rolling")
+      second = run.call("CACHE_LANE" => "rolling", "BENCHMARK_SAMPLE" => "2", "GITHUB_RUN_ID" => "124")
+      assert_equal first.fetch("cohort"), second.fetch("cohort")
+      refute_equal first.fetch("gha_key"), second.fetch("gha_key")
+      refute_equal first.fetch("cohort"), run.call("CACHE_LANE" => "rolling", "BENCHMARK_SERIES_ID" => "scope-02").fetch("cohort")
+    end
+  end
+
+  def test_grpc_checks_both_binaries_after_timing_and_before_recording_verification
+    with_case("grpc") do |directory|
+      steps = YAML.safe_load_file(File.join(directory, ".github/actions/grpc-bazel-benchmark/action.yml")).dig("runs", "steps")
+      check = steps.find { |step| step["id"] == "output_verification" }
+      report = steps.find { |step| step["name"] == "Write the benchmark phase evidence" }
+      assert_operator steps.index { |step| step["id"] == "build_timing" }, :<, steps.index(check)
+      assert_operator steps.index(check), :<, steps.index(report)
+      assert_includes report.fetch("run"), "--verified-output"
+      target = File.join(directory, "upstream/bazel-bin/examples/cpp/csm")
+      FileUtils.mkdir_p(target)
+      %w[client server].each do |name|
+        path = File.join(target, "csm_greeter_#{name}")
+        File.write(path, "#!/bin/sh\nexit 0\n")
+        File.chmod(0o755, path)
+      end
+      _, errors, status = Open3.capture3("bash", "-c", check.fetch("run"), chdir: directory)
+      assert status.success?, errors
+      File.unlink(File.join(target, "csm_greeter_server"))
+      _, _, status = Open3.capture3("bash", "-c", check.fetch("run"), chdir: directory)
+      refute status.success?
+    end
+  end
+
   def test_grpc_declares_every_comparison_arm_and_limits_its_provider_credential
     item = JSON.parse(File.read(File.join(ROOT, "cases", "grpc", "case.json")))
     item.fetch("execution").fetch("workflows").each do |entry|
@@ -31,7 +86,7 @@ class BenchmarkCaseScriptsTest < Minitest::Test
     Dir.mktmpdir("benchmark-recipe-") do |directory|
       FileUtils.cp_r(Dir[File.join(ROOT, "cases", id, "payload", "{*,.[!.]*}")], directory)
       FileUtils.mkdir_p(File.join(directory, "scripts"))
-      %w[benchmark-plan activate-docker-plan verify-docker-output run-benchmark-plan verify-upstream-recipe scope-case-cache prepare-source].each do |name|
+      %w[benchmark-plan benchmark-phase activate-docker-plan verify-docker-output run-benchmark-plan verify-upstream-recipe scope-case-cache prepare-source].each do |name|
         FileUtils.cp(File.join(ROOT, "scripts", "#{name}.rb"), File.join(directory, "scripts", "#{name}.rb"))
       end
       item = JSON.parse(File.read(File.join(ROOT, "cases", id, "case.json")))

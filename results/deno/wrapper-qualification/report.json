@@ -2,9 +2,11 @@
   "schema_version": 1,
   "plan_sha256": "a804b2646026a4b2a7b2a74dde63685b894bc799a529ea51eb6407224aa13cb1",
   "complete": true,
-  "valid_for_comparison": true,
+  "valid_for_comparison": false,
   "failures": [],
-  "methodology_issues": [],
+  "methodology_issues": [
+    "This series does not declare a comparison of provider performance."
+  ],
   "execution_verified": true,
   "missing_completions": [],
   "failed_completions": [],
