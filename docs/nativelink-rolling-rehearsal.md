@@ -6,7 +6,7 @@ This isolated branch seeds all four gRPC providers at parent commit
 gRPC core version and associated build metadata. The reviewed CSM target
 contract is identical at both commits.
 
-Both observations use `BENCHMARK_ROLLING_SCOPE=nativelink-r2-20261005`.
+Both observations use `BENCHMARK_ROLLING_SCOPE=nativelink-r2-20261005-v2`.
 This explicit rehearsal scope preserves provider caches across two source-specific
 frozen series. It is not a production scope change. Do not merge the isolated
 source pin or workflow override. Preserve both successful and failed attempts.
@@ -14,3 +14,7 @@ source pin or workflow override. Preserve both successful and failed attempts.
 Require the NativeLink advancement evidence to identify the seed source/run,
 report remote hits, and verify both executable outputs. The seed alone does not
 qualify rolling reuse. Two fresh samples run separately with isolated prefixes.
+
+The initial 45-minute seed attempt was cancelled after identifying an insufficient
+bootstrap budget: a prior successful Actions Cache cold build took 54 minutes.
+The replacement uses 90 minutes and a new scope; it does not reuse partial objects.

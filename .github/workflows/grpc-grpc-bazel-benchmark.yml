@@ -9,7 +9,7 @@ concurrency:
   cancel-in-progress: false
   queue: max
 env:
-  BENCHMARK_ROLLING_SCOPE: nativelink-r2-20261005
+  BENCHMARK_ROLLING_SCOPE: nativelink-r2-20261005-v2
   BORINGCACHE_NO_GIT: 'true'
   BAZEL_OUTPUT_USER_ROOT: "/tmp/boringcache-grpc-bazel/output-root"
   BAZEL_OUTPUT_BASE: "/tmp/boringcache-grpc-bazel/output-base"
@@ -23,7 +23,7 @@ jobs:
     if: inputs.runner_label == '' || github.ref_name == 'main'
     runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
       && inputs.runner_label || 'ubuntu-latest' }}"
-    timeout-minutes: 45
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
