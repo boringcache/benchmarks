@@ -6,8 +6,8 @@ locally. The server exposes only cache services on `127.0.0.1:50051`; it has no
 scheduler, execution service, or remote workers.
 
 This topology differs from BuildBuddy's hosted cache. The timed setup includes
-starting the NativeLink server and checking its R2 seed. Downloading the pinned,
-checksum-verified release is outside setup timing. Build timing includes Bazel's
+downloading the pinned, checksum-verified release, starting the NativeLink server,
+and checking its R2 seed. Build timing includes Bazel's
 remote uploads and downloads. Output verification, seed metadata publication,
 and storage listing follow build timing.
 

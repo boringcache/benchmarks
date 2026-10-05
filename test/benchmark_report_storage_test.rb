@@ -12,6 +12,21 @@ require_relative "../scripts/canonical/benchmark-report"
 class BenchmarkReportStorageTest < Minitest::Test
   CANONICAL = File.expand_path("../scripts/canonical/benchmark-report.rb", __dir__)
 
+  def test_nativelink_uses_r2_object_bytes_and_the_provider_label
+    Dir.mktmpdir do |dir|
+      path = File.join(dir, "benchmark-results/nativelink")
+      FileUtils.mkdir_p(path)
+      storage = {"bytes" => 123, "source" => "cloudflare-r2-list-objects-v2",
+        "breakdown" => {"bucket" => "benchmarks", "prefix" => "nativelink/one/", "complete" => true, "total_bytes" => 123}}
+      File.write(File.join(path, "storage.json"), JSON.generate(storage))
+      payload = write_phase(dir, strategy: "nativelink", evidence: false)
+      assert_equal 123, payload.dig("cache", "storage_bytes")
+      assert_equal storage.fetch("source"), payload.dig("cache", "storage_source")
+      assert_equal storage.fetch("breakdown"), payload.dig("cache", "storage_breakdown")
+      assert_equal "NativeLink (R2)", BenchmarkReport::PROVIDERS.fetch("nativelink")
+    end
+  end
+
   def test_direct_registry_records_cli_version_without_inventing_action_identity
     Dir.mktmpdir do |dir|
       payload = write_phase(dir, evidence: false, extra_args: ["--mode", "reapi", "--cli-version", "1.34.0"])
