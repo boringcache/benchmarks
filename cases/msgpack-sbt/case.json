@@ -6,11 +6,11 @@
   "workspace": "boringcache/benchmarks",
   "source": {
     "repository": "msgpack/msgpack-java",
-    "revision": "ec75ffc01364adc6ea9b5f4d9129fd63602e6a45",
+    "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
     "pins": [
       {
         "path": "proposal.md",
-        "revision": "ec75ffc01364adc6ea9b5f4d9129fd63602e6a45",
+        "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
         "kind": "snapshot"
       }
     ],
