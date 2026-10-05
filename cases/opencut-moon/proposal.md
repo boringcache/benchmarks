@@ -2,8 +2,10 @@
 
 Status: native REAPI correctness screen implemented; hosted qualification pending.
 
-The shared Moon configuration enables `experiments.casOutputsCache`: the pinned
-Moon 2.3.3 uploads remote outputs through that cache path.
+The benchmark uses Moon 2.5.6 instead of upstream's 2.3.3. The older client rejects
+a registry that advertises disabled action-cache updates, including a read-only
+warm registry. Both providers use the same client version. The shared configuration
+enables `experiments.casOutputsCache`.
 
 Source: [OpenCut-app/OpenCut at `e668010778568641babef2cc40be4703ae6916d6`](https://github.com/OpenCut-app/OpenCut/tree/e668010778568641babef2cc40be4703ae6916d6).
 
