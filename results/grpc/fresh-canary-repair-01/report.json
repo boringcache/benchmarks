@@ -7,44 +7,907 @@
   "methodology_issues": [],
   "execution_verified": false,
   "missing_completions": [],
-  "failed_completions": [],
-  "completions": [],
+  "failed_completions": [
+    {
+      "schema_version": 1,
+      "case_id": "grpc",
+      "series_id": "fresh-canary-repair-01",
+      "sample": 1,
+      "run_id": "37288249894",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288249894",
+      "source_sha": "874ab9890b328d8583f0b67e46a02f72393cf015",
+      "github_conclusion": "failure",
+      "status": "failed",
+      "errors": [
+        "Workflow concluded failure",
+        "BoringCache gRPC Bazel warm: failure"
+      ],
+      "evidence_manifest_sha256": "2b0066c0d1a1fb732ab879c3b888b0d12b311252a6c17fdd222280e5b51e9cc5"
+    }
+  ],
+  "completions": [
+    {
+      "schema_version": 1,
+      "case_id": "grpc",
+      "series_id": "fresh-canary-repair-01",
+      "sample": 1,
+      "run_id": "37288249894",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288249894",
+      "source_sha": "874ab9890b328d8583f0b67e46a02f72393cf015",
+      "github_conclusion": "failure",
+      "status": "failed",
+      "errors": [
+        "Workflow concluded failure",
+        "BoringCache gRPC Bazel warm: failure"
+      ],
+      "evidence_manifest_sha256": "2b0066c0d1a1fb732ab879c3b888b0d12b311252a6c17fdd222280e5b51e9cc5"
+    }
+  ],
   "publication": "unreviewed",
   "evidence_preservation": "requires-review",
   "primary_metric": "build_and_reuse_seconds",
   "missing": [
     [
       1,
-      "cold",
-      "boringcache"
-    ],
-    [
-      1,
-      "cold",
-      "actions-cache"
-    ],
-    [
-      1,
-      "cold",
-      "buildbuddy"
-    ],
-    [
-      1,
       "warm",
       "boringcache"
-    ],
-    [
-      1,
-      "warm",
-      "actions-cache"
-    ],
-    [
-      1,
-      "warm",
-      "buildbuddy"
     ]
   ],
-  "summaries": [],
-  "records": [],
+  "summaries": [
+    {
+      "phase": "cold",
+      "provider": "actions-cache",
+      "count": 1,
+      "measurement": {
+        "median": 3281,
+        "min": 3281,
+        "max": 3281
+      },
+      "storage": {
+        "median": 163728649,
+        "min": 163728649,
+        "max": 163728649
+      },
+      "storage_measured_count": 1
+    },
+    {
+      "phase": "warm",
+      "provider": "actions-cache",
+      "count": 1,
+      "measurement": {
+        "median": 72,
+        "min": 72,
+        "max": 72
+      },
+      "storage": {
+        "median": 163728649,
+        "min": 163728649,
+        "max": 163728649
+      },
+      "storage_measured_count": 1
+    },
+    {
+      "phase": "cold",
+      "provider": "boringcache",
+      "count": 1,
+      "measurement": {
+        "median": 2144,
+        "min": 2144,
+        "max": 2144
+      },
+      "storage": {
+        "median": 632637546,
+        "min": 632637546,
+        "max": 632637546
+      },
+      "storage_measured_count": 1
+    },
+    {
+      "phase": "cold",
+      "provider": "buildbuddy",
+      "count": 1,
+      "measurement": {
+        "median": 2152,
+        "min": 2152,
+        "max": 2152
+      },
+      "storage": null,
+      "storage_measured_count": 0
+    },
+    {
+      "phase": "warm",
+      "provider": "buildbuddy",
+      "count": 1,
+      "measurement": {
+        "median": 135,
+        "min": 135,
+        "max": 135
+      },
+      "storage": null,
+      "storage_measured_count": 0
+    }
+  ],
+  "records": [
+    {
+      "schema_version": 1,
+      "benchmark": "grpc-bazel",
+      "strategy": "actions-cache",
+      "lane": "fresh",
+      "phase": "cold",
+      "variant": null,
+      "mode": "bazel",
+      "adapter": "bazel",
+      "case": {
+        "schema_version": 1,
+        "case_id": "grpc",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "c427f90c3baea4391aef672f3a11f126a4fa812a7a76f1a9928e74b5a375a39e",
+        "source": {
+          "repository": "grpc/grpc",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-grpc",
+          "branch": "main",
+          "revision": "00119b2080dd8c4d20cfb4647316a28417b4e1a6"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "Nonempty executable csm_greeter_client and csm_greeter_server outputs, checked outside build timing"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache",
+            "buildbuddy"
+          ],
+          "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/grpc-grpc-bazel-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/grpc-grpc-bazel-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {}
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 7,
+          "cache_tags": {
+            "grpc-bazel-local": "{scope}"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 3281,
+        "workflow_seconds": 3290,
+        "total_seconds": 3281,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+        "build_and_reuse_seconds": 3281
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": null,
+        "workspace": null,
+        "storage_bytes": 163728649,
+        "storage_source": "github-actions-cache-api",
+        "storage_breakdown": {
+          "key": "ac-grpc-bazel-series-fresh-canary-repair-01-s1-r37288249894-a1-cold",
+          "complete": true,
+          "measured_bytes": 163728649,
+          "total_bytes": 163728649,
+          "observations": [
+            {
+              "id": 8511524568,
+              "key": "ac-grpc-bazel-series-fresh-canary-repair-01-s1-r37288249894-a1-cold",
+              "ref": "refs/heads/independent-benchmark-samples",
+              "version": "9e07caa64acd418e65f8cff95beceac634c3dcfc744079438f7ff22588f9d7ea",
+              "created_at": "2026-10-05T10:05:20.443509Z",
+              "last_accessed_at": "2026-10-05T10:05:20.443509Z",
+              "size_in_bytes": 163728649
+            }
+          ]
+        }
+      },
+      "source": {
+        "repository": "grpc/grpc",
+        "sha": "e1245717f658d10fee8fa0ea7b6f301a872330f2"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37288249894",
+        "run_attempt": "1",
+        "job": "cold",
+        "workflow": "grpc: gRPC Bazel Fresh",
+        "ref_name": "independent-benchmark-samples",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000173488",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37288249894-1",
+      "series": {
+        "id": "fresh-canary-repair-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "Nonempty executable csm_greeter_client and csm_greeter_server outputs, checked outside build timing"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37288249894"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "grpc-bazel",
+      "strategy": "actions-cache",
+      "lane": "fresh",
+      "phase": "warm",
+      "variant": null,
+      "mode": "bazel",
+      "adapter": "bazel",
+      "case": {
+        "schema_version": 1,
+        "case_id": "grpc",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "c427f90c3baea4391aef672f3a11f126a4fa812a7a76f1a9928e74b5a375a39e",
+        "source": {
+          "repository": "grpc/grpc",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-grpc",
+          "branch": "main",
+          "revision": "00119b2080dd8c4d20cfb4647316a28417b4e1a6"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "Nonempty executable csm_greeter_client and csm_greeter_server outputs, checked outside build timing"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache",
+            "buildbuddy"
+          ],
+          "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/grpc-grpc-bazel-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/grpc-grpc-bazel-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {}
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 7,
+          "cache_tags": {
+            "grpc-bazel-local": "{scope}"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 4,
+        "build_seconds": 68,
+        "workflow_seconds": 80,
+        "total_seconds": 72,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+        "build_and_reuse_seconds": 72
+      },
+      "cache": {
+        "hit": true,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": null,
+        "workspace": null,
+        "storage_bytes": 163728649,
+        "storage_source": "github-actions-cache-api",
+        "storage_breakdown": {
+          "key": "ac-grpc-bazel-series-fresh-canary-repair-01-s1-r37288249894-a1-cold",
+          "complete": true,
+          "measured_bytes": 163728649,
+          "total_bytes": 163728649,
+          "observations": [
+            {
+              "id": 8511524568,
+              "key": "ac-grpc-bazel-series-fresh-canary-repair-01-s1-r37288249894-a1-cold",
+              "ref": "refs/heads/independent-benchmark-samples",
+              "version": "9e07caa64acd418e65f8cff95beceac634c3dcfc744079438f7ff22588f9d7ea",
+              "created_at": "2026-10-05T10:05:20.443509Z",
+              "last_accessed_at": "2026-10-05T10:05:51.924504Z",
+              "size_in_bytes": 163728649
+            }
+          ]
+        }
+      },
+      "source": {
+        "repository": "grpc/grpc",
+        "sha": "e1245717f658d10fee8fa0ea7b6f301a872330f2"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37288249894",
+        "run_attempt": "1",
+        "job": "warm",
+        "workflow": "grpc: gRPC Bazel Fresh",
+        "ref_name": "independent-benchmark-samples",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000173657",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37288249894-1",
+      "series": {
+        "id": "fresh-canary-repair-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "Nonempty executable csm_greeter_client and csm_greeter_server outputs, checked outside build timing"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37288249894"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "grpc-bazel",
+      "strategy": "boringcache",
+      "lane": "fresh",
+      "phase": "cold",
+      "variant": null,
+      "mode": "bazel",
+      "adapter": "bazel",
+      "case": {
+        "schema_version": 1,
+        "case_id": "grpc",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "c427f90c3baea4391aef672f3a11f126a4fa812a7a76f1a9928e74b5a375a39e",
+        "source": {
+          "repository": "grpc/grpc",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-grpc",
+          "branch": "main",
+          "revision": "00119b2080dd8c4d20cfb4647316a28417b4e1a6"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "Nonempty executable csm_greeter_client and csm_greeter_server outputs, checked outside build timing"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache",
+            "buildbuddy"
+          ],
+          "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/grpc-grpc-bazel-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/grpc-grpc-bazel-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {}
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 7,
+          "cache_tags": {
+            "grpc-bazel-local": "{scope}"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 1,
+        "build_seconds": 2143,
+        "workflow_seconds": 2150,
+        "total_seconds": 2144,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+        "build_and_reuse_seconds": 2144
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": "grpc-bazel-series-fresh-canary-repair-01-s1-r37288249894-a1",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": 632637546,
+        "storage_source": "boringcache-check",
+        "storage_breakdown": {
+          "workspace": "boringcache/benchmarks",
+          "tags": [
+            "grpc-bazel-series-fresh-canary-repair-01-s1-r37288249894-a1"
+          ],
+          "complete": true,
+          "measured_bytes": 632637546,
+          "unmeasured_tags": [],
+          "total_bytes": 632637546,
+          "observations": [
+            {
+              "requested_tag": "grpc-bazel-series-fresh-canary-repair-01-s1-r37288249894-a1",
+              "tag": "grpc-bazel-series-fresh-canary-repair-01-s1-r37288249894-a1",
+              "status": "hit",
+              "cache_type": "kv",
+              "kv_total_size": 632637546,
+              "compressed_size": 632637546,
+              "size": 632637546
+            }
+          ]
+        }
+      },
+      "source": {
+        "repository": "grpc/grpc",
+        "sha": "e1245717f658d10fee8fa0ea7b6f301a872330f2"
+      },
+      "product_refs": {
+        "schema_version": 1,
+        "cli_version": "1.34.0",
+        "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+        "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+      },
+      "action": {
+        "resolved_mode": "bazel",
+        "resolved_tags": [
+          "grpc-bazel-series-fresh-canary-repair-01-s1-r37288249894-a1"
+        ],
+        "trust_state": {
+          "status": "publish",
+          "event_name": "workflow_dispatch",
+          "requested_policy": "publish",
+          "resolved_policy": "publish",
+          "write_allowed": true,
+          "decision_source": "cli",
+          "reason": "explicit_request",
+          "provider": "github-actions",
+          "detail": "Publication updates the published cache tag.",
+          "next_step": "Let the run finish; the next matching run restores what it publishes.",
+          "token_capabilities": {
+            "restore": true,
+            "stage": true,
+            "save": true
+          }
+        },
+        "diagnostics_level": "off"
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37288249894",
+        "run_attempt": "1",
+        "job": "cold",
+        "workflow": "grpc: gRPC Bazel Fresh",
+        "ref_name": "independent-benchmark-samples",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000173489",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37288249894-1",
+      "series": {
+        "id": "fresh-canary-repair-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "Nonempty executable csm_greeter_client and csm_greeter_server outputs, checked outside build timing"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37288249894"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "grpc-bazel",
+      "strategy": "buildbuddy",
+      "lane": "fresh",
+      "phase": "cold",
+      "variant": null,
+      "mode": "bazel",
+      "adapter": "bazel",
+      "case": {
+        "schema_version": 1,
+        "case_id": "grpc",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "c427f90c3baea4391aef672f3a11f126a4fa812a7a76f1a9928e74b5a375a39e",
+        "source": {
+          "repository": "grpc/grpc",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-grpc",
+          "branch": "main",
+          "revision": "00119b2080dd8c4d20cfb4647316a28417b4e1a6"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "Nonempty executable csm_greeter_client and csm_greeter_server outputs, checked outside build timing"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache",
+            "buildbuddy"
+          ],
+          "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/grpc-grpc-bazel-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/grpc-grpc-bazel-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {}
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 7,
+          "cache_tags": {
+            "grpc-bazel-local": "{scope}"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 2152,
+        "workflow_seconds": 2158,
+        "total_seconds": 2152,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+        "build_and_reuse_seconds": 2152
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": null,
+        "workspace": null,
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": null
+      },
+      "source": {
+        "repository": "grpc/grpc",
+        "sha": "e1245717f658d10fee8fa0ea7b6f301a872330f2"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37288249894",
+        "run_attempt": "1",
+        "job": "cold",
+        "workflow": "grpc: gRPC Bazel Fresh",
+        "ref_name": "independent-benchmark-samples",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000173487",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37288249894-1",
+      "series": {
+        "id": "fresh-canary-repair-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "Nonempty executable csm_greeter_client and csm_greeter_server outputs, checked outside build timing"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37288249894"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "grpc-bazel",
+      "strategy": "buildbuddy",
+      "lane": "fresh",
+      "phase": "warm",
+      "variant": null,
+      "mode": "bazel",
+      "adapter": "bazel",
+      "case": {
+        "schema_version": 1,
+        "case_id": "grpc",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "c427f90c3baea4391aef672f3a11f126a4fa812a7a76f1a9928e74b5a375a39e",
+        "source": {
+          "repository": "grpc/grpc",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-grpc",
+          "branch": "main",
+          "revision": "00119b2080dd8c4d20cfb4647316a28417b4e1a6"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "Nonempty executable csm_greeter_client and csm_greeter_server outputs, checked outside build timing"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache",
+            "buildbuddy"
+          ],
+          "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/grpc-grpc-bazel-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/grpc-grpc-bazel-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {}
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 7,
+          "cache_tags": {
+            "grpc-bazel-local": "{scope}"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 135,
+        "workflow_seconds": 139,
+        "total_seconds": 135,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+        "build_and_reuse_seconds": 135
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": null,
+        "workspace": null,
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": null
+      },
+      "source": {
+        "repository": "grpc/grpc",
+        "sha": "e1245717f658d10fee8fa0ea7b6f301a872330f2"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37288249894",
+        "run_attempt": "1",
+        "job": "warm",
+        "workflow": "grpc: gRPC Bazel Fresh",
+        "ref_name": "independent-benchmark-samples",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000173656",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37288249894-1",
+      "series": {
+        "id": "fresh-canary-repair-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "Nonempty executable csm_greeter_client and csm_greeter_server outputs, checked outside build timing"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37288249894"
+      ]
+    }
+  ],
   "exclusions": []
 }
