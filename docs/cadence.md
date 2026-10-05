@@ -1,10 +1,12 @@
 # Benchmark schedules
 
-Central activation remains off. Historical repositories still own the active
+PR #42 is merged. Central activation remains off. Historical repositories still own the active
 weekly, canary and source schedules. Central scheduled jobs require
 `BENCHMARK_CADENCE_ACTIVE=true`; merging this branch does not activate them.
 Manual qualification remains available. Historical triggers must be retired
-before ownership changes, so the migration does not duplicate runs.
+before ownership changes, so the migration does not duplicate runs. The
+[cutover procedure](cadence-cutover.md) includes the observed inventory and
+prepared patches for 48 cron triggers in 17 repositories; none are applied yet.
 
 `suites/scheduled.json` selects the maintained suite plus Moon, Pants, Buck2,
 sbt and Nix: 24 source cases and 31 fresh targets. It excludes Docker corpus and
@@ -83,7 +85,9 @@ The October 5 preflight rejected stable `v1.33.0`: it does not expose
 31-target preflight. Weekly activation must wait for a compatible stable release;
 it must not substitute a canary or silently omit the REAPI cases.
 
-The first hosted source matrix completed the cases independently and identified
+The complete controller rehearsal passed all 24 cases and planned changed-source
+rolling requests with the canary without publishing or dispatching builds.
+The earlier source matrix completed the cases independently and identified
 recipe changes in Immich, Qdrant, msgpack and Zed. Their reviewed changes are
 recorded in [the recipe review](recipe-reviews-2026-10-05.md). New source pins and
 changed recipes still require live qualification.

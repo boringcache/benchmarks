@@ -1,0 +1,23 @@
+--- a/.github/workflows/canary.yml
++++ b/.github/workflows/canary.yml
+@@ -1,8 +1,6 @@
+ name: CLI Canary
+ 
+ on:
+-  schedule:
+-    - cron: "3 2 * * *"
+   workflow_dispatch:
+ 
+ permissions:
+--- a/.github/workflows/sync.yml
++++ b/.github/workflows/sync.yml
+@@ -2,9 +2,6 @@
+ 
+ on:
+   workflow_dispatch:
+-  schedule:
+-    - cron: "2,32 * * * *"
+-
+ permissions:
+   actions: write
+   contents: write
