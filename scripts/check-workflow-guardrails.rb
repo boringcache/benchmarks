@@ -216,6 +216,11 @@ repo_names.each do |repo_name|
       end
 
       jobs = document.is_a?(Hash) && document["jobs"].is_a?(Hash) ? document["jobs"] : {}
+      concurrency = document.is_a?(Hash) ? document["concurrency"] : nil
+      concurrency = concurrency["group"] if concurrency.is_a?(Hash)
+      if central_execution && concurrency == "benchmark-provider-comparisons"
+        errors << "#{repo_name}/#{relative}: unrelated benchmark cases must not share one workflow queue"
+      end
       if relative.start_with?(".github/workflows/") && basename.include?("fresh")
         display_names = jobs.values.map { |job| job.is_a?(Hash) ? job["name"].to_s.downcase : nil }.compact
         if central_execution

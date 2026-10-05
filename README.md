@@ -10,6 +10,7 @@ work is an **evaluation**. Promotion changes metadata and suite membership; it d
 not change the case's identity or copy its executor.
 
 Follow [`docs/process.md`](docs/process.md) to add or run a case.
+[`Tool coverage`](docs/tool-coverage.md) lists configured families and qualification gaps.
 [`AGENTS.md`](AGENTS.md) applies the same requirements to agents and humans.
 `bin/bench catalog` generates [`data/latest/series.json`](data/latest/series.json),
 the common index for planned, requested, incomplete, failed, and completed
@@ -24,6 +25,13 @@ Docker cases also share [provider setup, timing, and publication policy](.github
 `bin/bench collect` imports preserved phase artifacts and generates a report after
 checking the dispatch and completed jobs. Original product evidence is retained
 after product cleanup.
+
+Each fresh sample runs independently with its own cache scope. Providers start
+in parallel; the sample's warm builds follow its cold builds on fresh runners.
+Other samples and cases do not wait for it. Rolling runs keep a queue for the
+case and series whose cache they advance; the dedicated Cargo chains also keep
+their seed ordering. GitHub runner availability can still cause waiting, and
+the repository's Actions Cache quota is shared.
 
 ```mermaid
 flowchart LR

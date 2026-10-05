@@ -2401,6 +2401,84 @@
       "runs_without_archives": []
     },
     {
+      "case_id": "grpc",
+      "series_id": "fresh-canary-repair-01",
+      "plan_path": "results/grpc/fresh-canary-repair-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache",
+          "buildbuddy"
+        ],
+        "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "grpc/grpc",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "3bad3fe86f24dd2597d4fe3052b82d5b5144b705d6265f219b67a9f2820f238e",
+      "definition_sha256": "c427f90c3baea4391aef672f3a11f126a4fa812a7a76f1a9928e74b5a375a39e",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "cold",
+          "buildbuddy"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "buildbuddy"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "interpretation_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
       "case_id": "hugo-go",
       "series_id": "direct-dispatch-qualification",
       "plan_path": "results/hugo-go/direct-dispatch-qualification/series.json",
@@ -2594,6 +2672,93 @@
           "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
         }
       ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "hugo-go",
+      "series_id": "independent-samples-01",
+      "plan_path": "results/hugo-go/independent-samples-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 2,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "gohugoio/hugo",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "fc20058701dd1bf0b6a94acf40bf1d76adda8e37695472b295ec9bcc4b4da562",
+      "definition_sha256": "21702e83473c3a7a99cae19b7b4aa108243f49e8064878e4632804d315988a52",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "actions-cache"
+        ],
+        [
+          2,
+          "cold",
+          "boringcache"
+        ],
+        [
+          2,
+          "cold",
+          "actions-cache"
+        ],
+        [
+          2,
+          "warm",
+          "boringcache"
+        ],
+        [
+          2,
+          "warm",
+          "actions-cache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "interpretation_path": null,
+      "evidence": [],
       "runs_without_archives": []
     },
     {
