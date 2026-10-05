@@ -56,7 +56,7 @@ qualification, and the gRPC BuildBuddy proof, remain open.
 | Reporting and evidence | One canonical phase/series format, verified collection, generated catalog, preserved failures and methodology reviews | Reviewed central publication feed and complete required evidence for each retiring repository |
 | Product updates | One Action pin; pin-sync and product-interface checks inspect shared execution views | Complete companion integration and released-product qualification before caller activation |
 | Scheduling | Monitoring reads the existing active schedules | Qualify central source-sync/canary/release callers, then retire each replaced schedule |
-| Shared GitHub capacity | Serial comparisons; capacity snapshots retained | Choose retention/capacity policy and verify seed availability for rolling comparisons |
+| Shared GitHub capacity | Independent fresh samples; per-case rolling queues; capacity snapshots retained | Choose retention/capacity policy and verify seed availability for rolling comparisons |
 | Fork retirement | Deferred inventory and selected candidates retained | Audit unique work, evidence, external links, and active upstream contributions before each decision |
 
 The [October 4 capacity snapshot](../migration/cache-capacity-2026-10-04.json)
@@ -78,7 +78,7 @@ from signed harness `da6400b3`. Each series was committed before dispatch. These
 requests do not establish completion or approve publication. Repository-wide
 cache API snapshots record 2,181,622,414 bytes in 146 entries and a 10 GB limit.
 They are context, not per-phase occupancy or proof that no eviction occurred.
-Native comparisons share a serial queue; Deno's two fresh seeds use separate
+Those native comparisons shared a serial queue; Deno's two fresh seeds used separate
 BoringCache identities for the later rolling qualification.
 
 The branch imports pinned recipes and historical reports, uses one workspace,

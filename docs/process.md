@@ -83,7 +83,8 @@ suite membership for an explicit scheduling purpose. `suites/published.json` is
 the shared registry for published reporting.
 
 `.github/actions/boringcache` is the sole BoringCache One invocation and release
-pin. It forwards the public product inputs and evidence outputs. Tool setup uses
+pin. It forwards the product inputs used by the cases and retains raw evidence.
+Tool setup uses
 shared actions such as `prepare-case`, `setup-docker`, and `setup-node`; case
 actions retain their upstream commands, patches, and output verification. Native
 fresh and rolling workflows support both dispatch and `workflow_call`. Use them
@@ -177,17 +178,25 @@ cold seed; it does not establish an empty physical provider store. Keep existing
 workspace/repository storage context and do not claim zero prior stored content
 from namespace isolation alone.
 
-GitHub cache quota remains repository-wide. Control concurrency and record
-occupancy and eviction. Key prefixes do not create separate quotas. Keep fixture
-repositories when repository boundaries are part of the question.
-Provider-comparison workflows share a concurrency group so separate cases cannot
-write competing GitHub cache seeds simultaneously. Qualification must still check
-cache occupancy, quota, and the actual restored key; serialization does not give
-each case its own quota.
-The group uses `queue: max` so waiting observations are not replaced by newer
-dispatches. [GitHub documents the 100-run queue limit](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency).
+Fresh samples run independently, including samples in the same series. Dispatch
+the declared sample numbers without waiting for earlier samples to finish.
+Each sample has a separate run/attempt scope. Its warm jobs still depend on its
+own cold jobs; they need the completed seed. Do not add a repository-wide queue.
+
+Rolling runs that update one cache series remain ordered. Their queue is scoped
+to case and series, or the ref for legacy diagnostics. Deno and Zed retain their
+dedicated Cargo-chain locks because their seed identity is shared across runs.
+Rolling groups use `queue: max` so newer requests do not replace waiting
+observations. [GitHub documents the 100-run queue limit](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency).
 `scripts/lint-workflows.rb` checks that property and runs Actionlint 1.7.12 for
 the remaining workflow syntax; that linter version does not recognize `queue`.
+
+GitHub runner limits can still cause queueing. Actions Cache quota remains
+repository-wide: record occupancy, eviction, and the actual restored key.
+Separate keys and concurrent execution do not establish independent quotas or
+seed availability. Keep fixture repositories when repository boundaries are part
+of the question. Queue and job duration remain context, outside the declared
+build-and-reuse comparison.
 
 ## 5. Execute and record
 
@@ -365,6 +374,14 @@ because the workflow completed. The series reporter keeps rolling observations
 but marks them invalid for comparison while seed lineage is unsupported.
 
 ## 8. Review product updates
+
+[Tool coverage](tool-coverage.md) distinguishes configured cases from missing
+workload qualification. For a new adapter, declare its released `.boringcache.toml`
+settings and pass its mode through the shared provider wrapper. Reuse preparation,
+timing, scope, and reporting. Add a wrapper input only when the released Action
+requires it for the case; do not copy every product option into a second API.
+Verify the input against the Action metadata and product interface checks, then
+run cold and reuse phases with output checks before adding a schedule.
 
 The immutable `boringcache/one` pin in `.github/actions/boringcache/action.yml` is
 the only maintained product Action pin. Its released default owns the ordinary
