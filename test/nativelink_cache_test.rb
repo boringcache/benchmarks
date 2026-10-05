@@ -79,7 +79,7 @@ class NativeLinkCacheTest < Minitest::Test
       File.write(aws, "#!/bin/sh\nprintf '%s' '{\"Contents\":[{\"Key\":\"nativelink/test-one/cas/blob\",\"Size\":42}]}'\n")
       File.chmod(0o755, aws)
       env = {"PATH" => "#{tools}:#{ENV.fetch('PATH')}", "PHASE" => "warm", "NATIVELINK_INSTANCE" => "test-one",
-        "GITHUB_OUTPUT" => File.join(directory, "outputs")}
+        "NATIVELINK_ARTIFACT" => "nativelink-grpc-bazel-fresh-warm", "GITHUB_OUTPUT" => File.join(directory, "outputs")}
       File.write(File.join(evidence, "build.log"), "INFO: 3 processes: 3 internal.\n")
       _, stderr, status = Open3.capture3(env, RbConfig.ruby, script, "finish", chdir: directory)
       refute status.success?
@@ -90,6 +90,7 @@ class NativeLinkCacheTest < Minitest::Test
       storage = JSON.parse(File.read(File.join(evidence, "storage.json")))
       assert_equal 42, storage.fetch("bytes")
       assert_equal 1, storage.dig("breakdown", "object_count")
+      assert_equal env.fetch("NATIVELINK_ARTIFACT"), storage.dig("breakdown", "inventory_artifact")
       assert_equal Digest::SHA256.file(File.join(evidence, "objects.json")).hexdigest, storage.dig("breakdown", "inventory_sha256")
       refute storage.fetch("breakdown").key?("observations")
       assert_equal "cache_hit=true\n", File.read(env.fetch("GITHUB_OUTPUT"))

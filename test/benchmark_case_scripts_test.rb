@@ -85,6 +85,8 @@ class BenchmarkCaseScriptsTest < Minitest::Test
   def test_grpc_checks_both_binaries_after_timing_and_before_recording_verification
     with_case("grpc") do |directory|
       steps = YAML.safe_load_file(File.join(directory, ".github/actions/grpc-bazel-benchmark/action.yml")).dig("runs", "steps")
+      phase_artifact = steps.find { |step| step["name"] == "Retain the benchmark phase evidence" }
+      assert_equal "benchmark-results/*.json", phase_artifact.dig("with", "path")
       install = steps.index { |step| step["name"] == "Install pinned NativeLink" }
       assert_operator steps.index { |step| step["id"] == "setup_timer" }, :<, install
       assert_operator install, :<, steps.index { |step| step["id"] == "build_timer" }
