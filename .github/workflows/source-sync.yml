@@ -1,9 +1,11 @@
-name: Propose Upstream Source Updates
+name: Check upstream source updates
 on:
+  schedule:
+    - cron: '11 0 * * *'
   workflow_dispatch:
     inputs:
       case_id:
-        description: Optional case ID; empty inspects all maintained source schedules
+        description: Optional case ID; empty checks the scheduled suite.
         type: string
         default: ''
 permissions:

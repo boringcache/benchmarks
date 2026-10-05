@@ -1,11 +1,11 @@
-name: Dispatch CLI Canary Cases
+name: Weekly fresh benchmarks
 on:
   schedule:
-    - cron: '17 1 * * *'
+    - cron: '0 4 * * 1'
   workflow_dispatch:
     inputs:
       cli_version:
-        description: Optional exact published CLI canary; empty selects the latest
+        description: Optional exact stable CLI release; empty selects the latest.
         type: string
         default: ''
       dry_run:
@@ -15,13 +15,13 @@ on:
 permissions:
   contents: read
   actions: write
-concurrency:
-  group: benchmark-canary-dispatch
-  cancel-in-progress: false
 jobs:
   dispatch:
+    concurrency:
+      group: benchmark-weekly-dispatch
+      cancel-in-progress: false
     uses: ./.github/workflows/fresh-cadence.yml
     with:
-      channel: canary
+      channel: stable
       cli_version: ${{ inputs.cli_version || '' }}
       dry_run: ${{ inputs.dry_run || false }}

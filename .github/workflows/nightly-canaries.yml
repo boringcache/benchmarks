@@ -17,8 +17,9 @@ jobs:
       with:
         persist-credentials: false
     - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+    - run: bundle install --jobs 4 --retry 2
     - name: Check repository canaries
-      run: ruby scripts/nightly-canaries.rb --collect --summary "${GITHUB_STEP_SUMMARY}"
+      run: bundle exec ruby scripts/benchmark-cadence.rb --collect --summary "${GITHUB_STEP_SUMMARY}"
 'on':
   schedule:
   - cron: 47 * * * *

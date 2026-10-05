@@ -1,0 +1,47 @@
+name: Dispatch fresh benchmark runs
+on:
+  workflow_call:
+    inputs:
+      channel:
+        type: string
+        required: true
+      cli_version:
+        type: string
+        default: ''
+      dry_run:
+        type: boolean
+        default: false
+permissions:
+  contents: read
+  actions: write
+jobs:
+  dispatch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      - run: bundle install --jobs 4 --retry 2
+      - name: Dispatch the scheduled suite
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHANNEL: ${{ inputs.channel }}
+          CLI_VERSION: ${{ inputs.cli_version }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          args=()
+          [[ "$DRY_RUN" != true ]] || args+=(--dry-run)
+          bundle exec ruby scripts/benchmark-cadence.rb \
+            --channel "$CHANNEL" --version "$CLI_VERSION" --ref "$GITHUB_REF_NAME" \
+            --output "$RUNNER_TEMP/benchmark-dispatch.json" \
+            --summary "$GITHUB_STEP_SUMMARY" "${args[@]}"
+      - name: Retain dispatch receipt
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: benchmark-dispatch
+          path: ${{ runner.temp }}/benchmark-dispatch.json
+          if-no-files-found: error
+          retention-days: 90
