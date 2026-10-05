@@ -40,27 +40,19 @@ runs:
       CACHE_LANE: "${{ inputs.cache_lane }}"
     run: |
       set -euo pipefail
-      ref_slug="$(printf '%s' "$GITHUB_REF_NAME" | tr -c 'A-Za-z0-9._-' '-')"
-      ref_slug="${ref_slug#-}"
-      ref_slug="${ref_slug%-}"
-      ref_slug="${ref_slug:-main}"
+      cohort="$(ruby ./scripts/benchmark-phase.rb scope)"
+      gha_prefix="ac-${cohort}-"
       if [[ "$CACHE_LANE" == "rolling" ]]; then
-        cohort="${BENCHMARK_ID}-rolling-${ref_slug}"
-        gha_prefix="ac-${cohort}-"
         gha_key="${gha_prefix}r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
-        buildbuddy_instance="${BENCHMARK_ID}/rolling/${ref_slug}"
       else
-        cohort="${BENCHMARK_ID}-run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
-        gha_prefix="ac-${cohort}-"
         gha_key="${gha_prefix}cold"
-        buildbuddy_instance="${BENCHMARK_ID}/run-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
       fi
       ruby ./scripts/scope-case-cache.rb "$cohort"
       {
         echo "cohort=${cohort}"
         echo "gha_prefix=${gha_prefix}"
         echo "gha_key=${gha_key}"
-        echo "buildbuddy_instance=${buildbuddy_instance}"
+        echo "buildbuddy_instance=${cohort}"
       } >> "$GITHUB_OUTPUT"
       source_url="$(git config -f .gitmodules submodule.upstream.url)"
       echo "source_repository=$(printf '%s' "${source_url#https://github.com/}" | sed 's/\.git$//')" >> "$GITHUB_OUTPUT"
@@ -123,6 +115,16 @@ runs:
     env:
       BUILD_STARTED_AT: "${{ steps.build_timer.outputs.started_at }}"
     run: echo "build_seconds=$(( $(date +%s) - BUILD_STARTED_AT ))" >> "$GITHUB_OUTPUT"
+  - name: Verify the gRPC binaries
+    id: output_verification
+    shell: bash
+    run: |
+      set -euo pipefail
+      for binary in upstream/bazel-bin/examples/cpp/csm/csm_greeter_{client,server}; do
+        test -s "$binary"
+        test -x "$binary"
+        file "$binary"
+      done
   - name: Save the GitHub Actions cache
     if: inputs.strategy == 'actions-cache' && inputs.phase == 'publish'
     uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25
@@ -163,7 +165,8 @@ runs:
         --source-repository "$SOURCE_REPOSITORY" \
         --source-sha "$SOURCE_SHA" \
         --storage-key "$STORAGE_KEY" \
-        --evidence "$EVIDENCE_PATH"
+        --evidence "$EVIDENCE_PATH" \
+        --verified-output
   - name: Retain the benchmark phase evidence
     uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
     with:

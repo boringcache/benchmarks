@@ -8,10 +8,6 @@ run-name: "${{ github.event_name == 'pull_request' && format('OBS validation | P
 permissions:
   actions: read
   contents: read
-concurrency:
-  group: benchmark-provider-comparisons
-  cancel-in-progress: false
-  queue: max
 env:
   BENCHMARK_ID: obs-studio-compiler-cache
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"

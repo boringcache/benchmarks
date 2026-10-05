@@ -64,7 +64,6 @@ module BenchmarkCatalog
       "dispatches" => receipts,
       "completions" => report.fetch("completions"),
       "report_state" => report_state, "report_path" => report_state == "current" ? "#{path}/report.json" : nil,
-      "interpretation_path" => File.file?(File.join(directory, "interpretation.md")) ? "#{path}/interpretation.md" : nil,
       "evidence" => archives, "runs_without_archives" => run_ids - archives.map { |archive| archive.fetch("run_id").to_s })
   rescue BenchmarkSeries::Error, BenchmarkCases::Error, JSON::ParserError, KeyError => error
     base.merge("state" => "invalid", "publication" => "unreviewed", "valid_for_comparison" => false,

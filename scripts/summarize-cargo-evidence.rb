@@ -13,11 +13,11 @@ ARGV.each_slice(2) do |label, path|
   mode = evidence.dig("phases", "restore", "mode_evidence") || {}
   native = mode["native_tool"] || {}
   lines << "- `#{label}`:"
-  lines << "  - elapsed: #{mode['elapsed_seconds'].round}s" if mode["elapsed_seconds"]
+  lines << "  - elapsed: #{mode['elapsed_seconds']}s" if mode["elapsed_seconds"]
   lines << "  - target snapshot restored: `#{mode['target_cache_hit']}`" unless mode["target_cache_hit"].nil?
   lines << "  - compiler cache: disabled" if mode.dig("cargo_cache", "compiler_cache") == "none"
   lines << "  - Cargo units compiled: #{native['compile_requests_executed'] || native['compile_requests']} (#{native['compile_requests']} compile requests)" if native["compile_requests"]
-  lines << "  - sccache: #{native['cache_hits']} hits / #{native['cache_misses']} misses (#{format('%.1f', native.fetch('hit_rate', 0))}% hit rate)" if native["cache_hits"]
+  lines << "  - sccache: #{native['cache_hits']} hits / #{native['cache_misses']} misses (hit rate: #{native['hit_rate'].nil? ? 'unmeasured' : "#{native['hit_rate']}%"})" if native["cache_hits"]
   lines << "  - sccache write errors: #{native['cache_write_errors']}" if native["cache_write_errors"].to_i.positive?
 end
 report = lines.join("\n") + "\n"

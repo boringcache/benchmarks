@@ -42,36 +42,15 @@ rescue ArgumentError, TypeError
 end
 
 def seconds_to_text(value)
-  return "—" if value.nil?
-
-  total = value.round
-  minutes = total / 60
-  seconds = total % 60
-  "#{minutes}m #{seconds}s"
+  BenchmarkReport.seconds(value)
 end
 
 def seconds_to_detail_text(value)
-  return "—" if value.nil?
-
-  seconds = value.to_f
-  return format("%.1fs", seconds) if seconds < 10 && seconds != seconds.round
-
-  seconds_to_text(seconds)
+  BenchmarkReport.seconds(value)
 end
 
 def bytes_to_text(value)
-  return "—" if value.nil?
-
-  units = ["B", "KB", "MB", "GB", "TB"].freeze
-  size = value.to_f.abs
-  unit_index = 0
-
-  while size >= 1024 && unit_index < units.length - 1
-    size /= 1024.0
-    unit_index += 1
-  end
-
-  format("%<size>.2f %<unit>s", size: size, unit: units[unit_index])
+  value.nil? ? "unmeasured" : "#{value} bytes"
 end
 
 def markdown_escape(value)
@@ -94,42 +73,8 @@ def percent_delta(before_value, after_value)
   ((before_value.to_f - after_value.to_f) / before_value.to_f) * 100.0
 end
 
-def timing_result_bucket(before_value, after_value)
-  delta_pct = percent_delta(before_value, after_value)
-  return nil if delta_pct.nil?
-
-  delta_seconds = (before_value.to_f - after_value.to_f).abs
-  longest = [before_value.to_f, after_value.to_f].max
-  return :tie if delta_seconds <= 5 && longest <= 60
-  return :tie if delta_pct.abs < 3.0
-
-  delta_pct.positive? ? :faster : :slower
-end
-
-def timing_result_text(before_value, after_value)
-  delta_pct = percent_delta(before_value, after_value)
-  return "—" if delta_pct.nil?
-
-  case timing_result_bucket(before_value, after_value)
-  when :faster
-    "#{delta_pct.round}% faster"
-  when :slower
-    "#{delta_pct.abs.round}% slower"
-  else
-    "near tie"
-  end
-end
-
 def storage_summary_text(comparison)
-  saved_bytes = comparison["storage_saved_bytes"]
-  improvement_pct = comparison["storage_improvement_pct"]
-  return "—" if saved_bytes.nil?
-
-  if saved_bytes.to_f >= 0
-    "#{bytes_to_text(saved_bytes)} less (#{improvement_pct.to_f.abs}%)"
-  else
-    "#{bytes_to_text(saved_bytes.to_f.abs)} more (#{improvement_pct.to_f.abs}%)"
-  end
+  BenchmarkReporting.storage_difference(comparison["storage_saved_bytes"])
 end
 
 def normalize_storage_sample(bytes, source)
@@ -543,7 +488,7 @@ def build_entry(benchmark:, lane:, actions_data:, boringcache_data:)
   return nil unless headline
 
   headline_scenario, before_value, after_value = headline
-  faster_pct = [percent_delta(before_value, after_value).to_f, 0].max
+  faster_pct = percent_delta(before_value, after_value)
 
   {
     "lane" => lane,
@@ -561,7 +506,7 @@ def build_entry(benchmark:, lane:, actions_data:, boringcache_data:)
     "after" => seconds_to_text(after_value),
     "before_seconds" => before_value.round(2),
     "after_seconds" => after_value.round(2),
-    "faster" => reporting["comparative"] ? faster_pct.round.to_s : nil,
+    "faster" => reporting["comparative"] ? faster_pct&.round&.to_s : nil,
     "comparison" => {
       "paired_on_head_sha" => paired_head,
       "pairing_head_sha" => paired_head ? actions_head : nil,
@@ -623,10 +568,11 @@ def lane_report_row(entry, lane)
 
   {
     benchmark: entry.fetch("name"),
-    scenario: current["headline_label"] || reporting["headline_label"] || BenchmarkReporting.headline_label(lane: lane, scenario: current["headline_scenario"]),
-    actions: current["before"],
-    boringcache: current["after"],
-    result: reporting.fetch("comparative", true) ? timing_result_text(current["before_seconds"], current["after_seconds"]) : reporting["result_text"],
+    scenario: BenchmarkReporting.headline_label(lane: lane, scenario: reporting["headline_scenario"] || current["headline_scenario"]),
+    actions: BenchmarkReport.seconds(current["before_seconds"]),
+    boringcache: BenchmarkReport.seconds(current["after_seconds"]),
+    result: BenchmarkReporting.timing_difference(current["before_seconds"], current["after_seconds"]),
+    checks: reporting.fetch("comparative", true) ? "recorded" : reporting["result_text"],
     storage: storage_summary_text(comparison)
   }
 end
@@ -708,8 +654,8 @@ def build_markdown(entries, generated_at:, format:)
         "### #{lane_label(lane).split.map(&:capitalize).join(' ')}",
         "",
         markdown_table(
-          ["Benchmark", "Metric", "GitHub Actions Cache", "BoringCache", "Result", "Storage"],
-          rows.map { |row| [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage]] }
+          ["Benchmark", "Metric", "Actions Cache", "BoringCache", "Time difference (BoringCache − Actions Cache)", "Storage difference (BoringCache − Actions Cache)", "Sample status"],
+          rows.map { |row| [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage], row[:checks]] }
         ),
         ""
       ]

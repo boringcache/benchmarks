@@ -4,22 +4,31 @@ Question: How do build and cache reuse time and measured storage compare for the
 
 Measured scope: Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately
 
-Status: all declared observations collected; 0 failed. Publication requires review.
+Observations: 4/4 recorded; 0 failed; 0 missing.
 
-Execution: preserved job completion and post-step logs verified. Timings alone do not qualify the series.
+Completion checks: passed.
 
-Queue time, dependency setup outside the declared scope, and job duration are context. They are excluded from the comparison. No observations were excluded.
+Publication: unreviewed.
 
-| Phase | Provider | Successful observations | Median build_and_reuse_seconds | Range | Storage median (bytes) | Storage observations |
+| Phase | Provider | Successful observations | Median build and cache reuse (s) | Range | Storage median (bytes) | Storage observations |
 | --- | --- | ---: | ---: | --- | ---: | ---: |
-| cold | actions-cache | 1 | 4079 | 4079–4079 | unmeasured | 0 |
-| warm | actions-cache | 1 | 21 | 21–21 | unmeasured | 0 |
-| cold | boringcache | 1 | 5097 | 5097–5097 | 2365446028 | 1 |
-| warm | boringcache | 1 | 31 | 31–31 | 2365446028 | 1 |
+| Cold build | Actions Cache | 1 | 4079 | 4079–4079 | unmeasured | 0 |
+| Warm build | Actions Cache | 1 | 21 | 21–21 | unmeasured | 0 |
+| Cold build | BoringCache | 1 | 5097 | 5097–5097 | 2365446028 | 1 |
+| Warm build | BoringCache | 1 | 31 | 31–31 | 2365446028 | 1 |
 
-Methodology prevents a comparative claim:
+Comparison checks:
 
 - The execution definition exported Actions Cache state on warm replay while BoringCache used restore-only trust. These observations do not compare the same publication lifecycle.
 - The workflow retained derived phase records but did not retain the original final BoringCache Action evidence JSON after cleanup.
 
-Each run record retains its source, runner environment, verification, provider storage source, and evidence links. Missing storage is unmeasured; it is not zero. Original Actions URLs remain subject to retention; durable evidence publication must be verified before publication review.
+## Observations
+
+| Sample | Provider | Phase | Cache setup/restore (s) | Build (s) | Build and cache reuse (s) | Storage (bytes) | Storage source | Cache | Record |
+| ---: | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
+| 1 | Actions Cache | Cold build | 7 | 4072 | 4079 | unmeasured | unmeasured | not reported | [JSON](runs/1-actions-cache-cold.json) |
+| 1 | Actions Cache | Warm build | 8 | 13 | 21 | unmeasured | unmeasured | not reported | [JSON](runs/1-actions-cache-warm.json) |
+| 1 | BoringCache | Cold build | 0 | 5097 | 5097 | 2365446028 | boringcache-check | reuse not measured (2 refs planned) | [JSON](runs/1-boringcache-cold.json) |
+| 1 | BoringCache | Warm build | 0 | 31 | 31 | 2365446028 | boringcache-check | reuse not measured (2 refs planned) | [JSON](runs/1-boringcache-warm.json) |
+
+[Full records and checks](report.json)

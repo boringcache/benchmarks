@@ -4,6 +4,7 @@
   "complete": true,
   "valid_for_comparison": false,
   "failures": [],
+  "methodology_issues": [],
   "execution_verified": false,
   "missing_completions": [],
   "failed_completions": [

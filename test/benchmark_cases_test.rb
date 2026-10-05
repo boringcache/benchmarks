@@ -6,6 +6,18 @@ require "tmpdir"
 require_relative "../scripts/benchmark-cases"
 
 class BenchmarkCasesTest < Minitest::Test
+  def test_fresh_samples_do_not_share_a_workflow_queue
+    workflows = BenchmarkCases.documents.flat_map do |item|
+      item.fetch("execution").fetch("workflows").select { |workflow| workflow["lane"] == "fresh" }
+        .map { |workflow| workflow.fetch("path") }
+    end
+    workflows.concat(Dir[File.join(BenchmarkCases::ROOT, ".github/workflows/*fresh*.yml")])
+    workflows.map { |path| File.expand_path(path, BenchmarkCases::ROOT) }.uniq.each do |path|
+      workflow = YAML.safe_load_file(path, aliases: true)
+      assert_nil workflow["concurrency"], "#{path}: fresh samples must run independently"
+    end
+  end
+
   def with_root
     Dir.mktmpdir("benchmark-cases-") do |root|
       FileUtils.cp_r(File.join(BenchmarkCases::ROOT, "schemas"), root)
