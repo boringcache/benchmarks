@@ -1,0 +1,35 @@
+{
+  "case_id": "gogs-moon",
+  "repository": "boringcache/benchmarks",
+  "workflow": "reapi-fresh-benchmark.yml",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "gogs/gogs",
+    "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+      }
+    ]
+  },
+  "lane": "fresh",
+  "inputs": {
+    "case_id": "gogs-moon",
+    "cli_version": "vcli-canary-7a5b27146ebe",
+    "series_id": "registry-qualification-01",
+    "sample": "1"
+  },
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "variants": null,
+  "schema_version": 1,
+  "requested_at": "2026-10-05T11:24:18Z",
+  "ref": "qualify-native-registry",
+  "state": "requested",
+  "run_id": 37302711581,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37302711581"
+}

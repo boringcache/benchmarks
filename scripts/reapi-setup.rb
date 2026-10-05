@@ -47,8 +47,8 @@ module ReapiSetup
     end
     case ReapiClient.recipe.fetch("tool")
     when "buck2"
-      installed << download("facebook/buck2", "2025-05-06", "buck2-x86_64-unknown-linux-musl.zst", "buck2",
-        sha256: "affe6dc6c63bfe2d1f41a42c1f8d187408520ff6d7b6be5a1a502ec5a3acf238")
+      installed << download("facebook/buck2", "2025-06-01", "buck2-x86_64-unknown-linux-musl.zst", "buck2",
+        sha256: "7127a64ce1341b2df4d85fd656dd5200c06777512edc605005e362d5f485de76")
     when "pants"
       installed << download("pantsbuild/scie-pants", "v0.13.2", "scie-pants-linux-x86_64", "pants",
         sha256: "74a1e53bc50d6ef6ce1bc67bd9f7b48e549505e0a2453ad4d5ccbc72b0bea874")
@@ -70,7 +70,8 @@ module ReapiSetup
       "--workspace", "boringcache/benchmarks", "--cache-tag", BenchmarkPhase.scope(ENV),
       "--source-repository", context.dig("source", "repository"), "--source-sha", context.dig("source", "revision"),
       "--build-seconds", timings.fetch("build_seconds").to_s, "--restore-or-setup-seconds", timings.fetch("restore_or_setup_seconds").to_s,
-      "--save-seconds", timings.fetch("save_seconds").to_s, "--cache-hit", (ENV.fetch("PHASE") == "warm").to_s]
+      "--save-seconds", timings.fetch("save_seconds").to_s]
+    args += ["--cache-hit", "true"] if ReapiClient.remote_cache_hit?
     if ENV.fetch("PROVIDER") == "boringcache"
       version, status = Open3.capture2("boringcache", "--version")
       raise "Cannot read CLI version" unless status.success?

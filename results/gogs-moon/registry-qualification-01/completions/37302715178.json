@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "gogs-moon",
+  "series_id": "registry-qualification-01",
+  "sample": 2,
+  "run_id": "37302715178",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37302715178",
+  "source_sha": "09efe2188e21ac30bde55b760b6d3f0b23d24ac5",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "dfe4c6cef48e640a30e0e08613297ccb7201968816fbccad860d0c9f22e117c7"
+}

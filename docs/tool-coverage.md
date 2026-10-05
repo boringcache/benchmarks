@@ -18,11 +18,11 @@ limitations. This inventory describes the case definitions as of October 5, 2026
 | Nx remote cache | No active case | Storybook archives Nx directories; it does not exercise the native Nx remote-cache adapter |
 | Turbo | n8n; PostHog plan | Qualify each selected workload and timing boundary |
 | Bazel | gRPC C++ client and server | [One three-provider cold/warm sample passed](../results/grpc/local-outputs-01/report.md), including local output checks; BuildBuddy storage remains unmeasured; publication and rolling qualification remain open |
-| Moon | [OpenCut](../cases/opencut-moon/proposal.md), [Gogs](../cases/gogs-moon/proposal.md), ZITADEL drafts | Qualify the pinned clients, remote task restoration and output checks |
-| Pants | [StackStorm](../cases/stackstorm-pants/proposal.md), Pants JVM drafts | Qualify the pinned clients; review service-dependent test cacheability |
-| Buck2 | [ExecuTorch](../cases/executorch-buck2/proposal.md), Buck2 Prelude drafts | Verify public targets, native action-cache use and output checks |
-| sbt | [MessagePack Java](../cases/msgpack-sbt/proposal.md) draft | Qualify sbt 2 remote-cache configuration and compiled outputs |
-| Nix | [Zed](../cases/zed-nix/proposal.md), [Helix](../cases/helix-nix/proposal.md) | Shared Nix workflow implemented; cold/warm qualification pending |
+| Moon | [OpenCut](../cases/opencut-moon/proposal.md), [Gogs](../cases/gogs-moon/proposal.md), ZITADEL drafts | OpenCut and Gogs passed two native cold/warm samples each; ZITADEL remains a draft |
+| Pants | [StackStorm](../cases/stackstorm-pants/proposal.md), Pants JVM drafts | StackStorm plugin tests passed two cold/warm samples; service-dependent tests and Pants JVM remain outside this qualification |
+| Buck2 | [ExecuTorch](../cases/executorch-buck2/proposal.md), Buck2 Prelude drafts | ExecuTorch passed two cold/warm samples with Buck2 2025-06-01; Buck2 Prelude remains a draft |
+| sbt | [MessagePack Java](../cases/msgpack-sbt/proposal.md) | Two native cold/warm samples passed; managed product adapter remains separate |
+| Nix | [Zed](../cases/zed-nix/proposal.md), [Helix](../cases/helix-nix/proposal.md) | Helix passed two cold/warm samples; Zed qualification is running |
 | Archive | Storybook's Nx cache directories | Qualify rolling source and seed lineage |
 | Artifact, GHA compatibility service | No dedicated active comparison case | GitHub artifact uploads inside a benchmark do not qualify these BoringCache products |
 
@@ -31,9 +31,11 @@ benchmark adapter. Product support includes Bazel, ccache, Go, Gradle, Maven, Nx
 sccache, and Turbo; this repository does not yet qualify every injected family.
 Cargo target mounts use the product's managed freshness behavior and can compose
 sccache. Nix's daemon/store and macOS Xcode are not Linux Docker injection modes.
-The selected [REAPI cases](reapi-evaluations.md) use one shared native registry workflow. Hosted correctness qualification is pending; the remaining drafts stay blocked.
+The selected [REAPI cases](reapi-evaluations.md) use one shared native registry workflow.
+Moon, Pants, Buck2 and sbt have retained two-sample correctness results;
+the remaining drafts stay blocked.
 The Nix cases use one shared fresh workflow and the public Nix product mode;
-qualification remains pending. The Cachix cache name and token are repository
+Helix has retained two-sample correctness results. The Cachix cache name and token are repository
 configuration. No new schedules are enabled. Each family has a pinned OSS
 workload; definitions and workflows do not establish measured coverage.
 MessagePack keeps its existing case ID and pin.

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "case_id": "opencut-moon",
+  "series_id": "registry-screening-04",
+  "created_at": "2026-10-05T11:21:54Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "419fe1bc2d29badcc93444ce7d479b1e0e4b1a4022f11a0ad7f862715e776b3e",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "opencut-moon",
+    "cli_version": "vcli-canary-7a5b27146ebe"
+  },
+  "comparison": {
+    "question": "Does Moon restore the OpenCut web build on a clean worker?",
+    "providers": [
+      "boringcache",
+      "bazel-remote"
+    ],
+    "primary_metric": "correctness",
+    "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+    "storage": "unmeasured",
+    "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
+    "sample_count": 2
+  },
+  "source": {
+    "repository": "OpenCut-app/OpenCut",
+    "revision": "e668010778568641babef2cc40be4703ae6916d6",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "e668010778568641babef2cc40be4703ae6916d6"
+      }
+    ]
+  },
+  "verification": [
+    "Require the declared native command to succeed",
+    "Require declared outputs and successful output checks",
+    "Require native remote-hit evidence and the same output hashes on the warm worker",
+    "Require registry shutdown to complete successfully"
+  ],
+  "plan_sha256": "7016af095356764099bf0da79cec88f91affb18267ec18b5ebebdc310acdff72"
+}
