@@ -12,6 +12,12 @@ inputs:
   cli_version:
     required: false
     default: ''
+  r2_access_key_id:
+    required: false
+    default: ''
+  r2_secret_access_key:
+    required: false
+    default: ''
 runs:
   using: composite
   steps:
@@ -57,10 +63,25 @@ runs:
       source_url="$(git config -f .gitmodules submodule.upstream.url)"
       echo "source_repository=$(printf '%s' "${source_url#https://github.com/}" | sed 's/\.git$//')" >> "$GITHUB_OUTPUT"
       echo "source_sha=$(git -C upstream rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  - name: Install pinned NativeLink
+    if: inputs.strategy == 'nativelink'
+    shell: bash
+    run: ruby ./scripts/nativelink-cache.rb install
   - name: Start the provider setup timer
     id: setup_timer
     shell: bash
     run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+  - name: Start NativeLink with R2 storage
+    if: inputs.strategy == 'nativelink'
+    shell: bash
+    env:
+      AWS_ACCESS_KEY_ID: "${{ inputs.r2_access_key_id }}"
+      AWS_SECRET_ACCESS_KEY: "${{ inputs.r2_secret_access_key }}"
+      NATIVELINK_INSTANCE: "${{ steps.scope.outputs.cohort }}"
+      SOURCE_SHA: "${{ steps.scope.outputs.source_sha }}"
+      CACHE_LANE: "${{ inputs.cache_lane }}"
+      PHASE: "${{ inputs.phase }}"
+    run: ruby ./scripts/nativelink-cache.rb start
   - name: Restore the GitHub Actions cache
     if: inputs.strategy == 'actions-cache'
     uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25
@@ -103,12 +124,20 @@ runs:
   - name: Build the gRPC target
     shell: bash
     env:
+      NATIVELINK_INSTANCE: "${{ steps.scope.outputs.cohort }}"
+      NATIVELINK_PHASE: "${{ inputs.phase }}"
       BAZEL_CACHE_STRATEGY: "${{ inputs.strategy }}"
       BUILDBUDDY_REMOTE_INSTANCE_NAME: "${{ steps.scope.outputs.buildbuddy_instance
         }}"
       BUILDBUDDY_REMOTE_UPLOAD_LOCAL_RESULTS: "${{ inputs.phase == 'warm' && 'false'
         || 'true' }}"
-    run: ruby ./scripts/run-grpc-bazel-build.rb
+    run: |
+      set -euo pipefail
+      if [[ "$BAZEL_CACHE_STRATEGY" == "nativelink" ]]; then
+        ruby ./scripts/run-grpc-bazel-build.rb 2>&1 | tee benchmark-results/nativelink/build.log
+      else
+        ruby ./scripts/run-grpc-bazel-build.rb
+      fi
   - name: Capture the build timing
     id: build_timing
     shell: bash
@@ -125,6 +154,18 @@ runs:
         test -x "$binary"
         file "$binary"
       done
+  - name: Verify NativeLink reuse and measure R2 storage
+    id: nativelink
+    if: inputs.strategy == 'nativelink'
+    shell: bash
+    env:
+      AWS_ACCESS_KEY_ID: "${{ inputs.r2_access_key_id }}"
+      AWS_SECRET_ACCESS_KEY: "${{ inputs.r2_secret_access_key }}"
+      NATIVELINK_INSTANCE: "${{ steps.scope.outputs.cohort }}"
+      SOURCE_SHA: "${{ steps.scope.outputs.source_sha }}"
+      CACHE_LANE: "${{ inputs.cache_lane }}"
+      PHASE: "${{ inputs.phase }}"
+    run: ruby ./scripts/nativelink-cache.rb finish
   - name: Save the GitHub Actions cache
     if: inputs.strategy == 'actions-cache' && inputs.phase == 'publish'
     uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25
@@ -143,7 +184,7 @@ runs:
       SETUP_SECONDS: "${{ steps.build_timer.outputs.setup_seconds }}"
       BUILD_SECONDS: "${{ steps.build_timing.outputs.build_seconds }}"
       CACHE_HIT: "${{ steps.publish.outputs.cache-hit || steps.restore.outputs.cache-hit
-        || steps.actions_cache_0.outputs.cache-hit }}"
+        || steps.actions_cache_0.outputs.cache-hit || steps.nativelink.outputs.cache_hit }}"
       EVIDENCE_PATH: "${{ steps.publish.outputs.evidence-path || steps.restore.outputs.evidence-path
         }}"
       STORAGE_KEY: "${{ steps.scope.outputs.gha_key }}"
@@ -175,3 +216,14 @@ runs:
         && 'warm' || 'cold' }}
       path: benchmark-results/
       if-no-files-found: error
+  - name: Stop NativeLink
+    if: always() && inputs.strategy == 'nativelink'
+    shell: bash
+    run: ruby ./scripts/nativelink-cache.rb stop
+  - name: Retain NativeLink diagnostics
+    if: always() && inputs.strategy == 'nativelink'
+    uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+    with:
+      name: nativelink-${{ inputs.benchmark_id }}-${{ inputs.cache_lane }}-${{ inputs.phase }}
+      path: benchmark-results/nativelink/
+      if-no-files-found: warn

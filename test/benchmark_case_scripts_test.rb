@@ -26,15 +26,16 @@ class BenchmarkCaseScriptsTest < Minitest::Test
       environment = {"BAZEL_OUTPUT_USER_ROOT" => File.join(directory, "output-root"),
         "BAZEL_OUTPUT_BASE" => File.join(directory, "output-base"), "BAZEL_DISK_CACHE" => File.join(directory, "disk-cache"),
         "BAZEL_ARGUMENTS" => output, "BUILDBUDDY_API_KEY" => "test-key", "BUILDBUDDY_REMOTE_INSTANCE_NAME" => "test-series"}
-      %w[boringcache actions-cache buildbuddy].each do |provider|
+      %w[boringcache actions-cache buildbuddy nativelink].each do |provider|
         _, errors, status = Open3.capture3(environment.merge("BAZEL_CACHE_STRATEGY" => provider,
+          "NATIVELINK_INSTANCE" => "test-series", "NATIVELINK_PHASE" => "warm",
           "BUILDBUDDY_REMOTE_UPLOAD_LOCAL_RESULTS" => "false"), RbConfig.ruby,
           File.join(directory, "scripts/run-grpc-bazel-build.rb"), chdir: directory)
         assert status.success?, errors
         arguments = File.readlines(output, chomp: true)
         assert_equal command.drop(2), arguments.last(command.length - 2), provider
         assert_equal ["--remote_download_outputs=toplevel"], arguments.grep(/--remote_download/), provider
-        if provider == "buildbuddy"
+        if %w[buildbuddy nativelink].include?(provider)
           assert_includes arguments, "--remote_upload_local_results=false"
           assert_includes arguments, "--remote_instance_name=test-series"
         end

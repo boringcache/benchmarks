@@ -27,6 +27,8 @@ jobs:
           strategy: actions-cache
         - provider: BuildBuddy
           strategy: buildbuddy
+        - provider: NativeLink (R2)
+          strategy: nativelink
         - provider: BoringCache
           strategy: boringcache
     steps:
@@ -46,6 +48,8 @@ jobs:
         phase: publish
         benchmark_id: "${{ format('grpc-bazel{0}', inputs.benchmark_id_suffix) }}"
         cli_version: "${{ inputs.cli_version }}"
+        r2_access_key_id: "${{ matrix.strategy == 'nativelink' && secrets.NATIVELINK_R2_ACCESS_KEY_ID || '' }}"
+        r2_secret_access_key: "${{ matrix.strategy == 'nativelink' && secrets.NATIVELINK_R2_SECRET_ACCESS_KEY || '' }}"
     permissions:
       contents: read
       actions: read
@@ -78,6 +82,8 @@ jobs:
         phase: warm
         benchmark_id: "${{ format('grpc-bazel{0}', inputs.benchmark_id_suffix) }}"
         cli_version: "${{ inputs.cli_version }}"
+        r2_access_key_id: "${{ matrix.strategy == 'nativelink' && secrets.NATIVELINK_R2_ACCESS_KEY_ID || '' }}"
+        r2_secret_access_key: "${{ matrix.strategy == 'nativelink' && secrets.NATIVELINK_R2_SECRET_ACCESS_KEY || '' }}"
     permissions:
       contents: read
       actions: read
@@ -123,6 +129,12 @@ jobs:
       with:
         name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache-fresh
         path: benchmark-results/${{ env.BENCHMARK_ID }}-actions-cache-fresh.json
+        if-no-files-found: error
+    - name: Retain the NativeLink fresh result
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ env.BENCHMARK_ID }}-nativelink-fresh
+        path: benchmark-results/${{ env.BENCHMARK_ID }}-nativelink-fresh.json
         if-no-files-found: error
     - name: Retain the BuildBuddy fresh result
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
