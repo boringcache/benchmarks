@@ -15,7 +15,10 @@ Buck2 2025-06-01 instead of the upstream 2025-05-06 pin. The newer client includ
 the [permission-check digest fix](https://github.com/facebook/buck2/pull/946);
 the old client sends SHA-1 blobs to the SHA-256 cache during its upload check.
 The payload adds a local execution platform with remote caching enabled and
-remote execution disabled. Source submodules retain upstream pins. Verification
+remote execution disabled. The Prelude submodule uses
+`cb8b34f660977893418853c0001b319cc9314798`, the commit published in the
+Buck2 2025-06-01 release’s `prelude_hash` asset. Other submodules retain upstream
+pins. Verification
 checks executable ELF output and cold/warm hashes; it does not run an exported model.
 
 Declared command: `buck2 build //examples/portable/executor_runner:executor_runner --show-output`.

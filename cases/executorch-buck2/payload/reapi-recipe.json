@@ -15,6 +15,24 @@
       "--recursive"
     ],
     [
+      "git",
+      "-C",
+      "third-party/prelude",
+      "fetch",
+      "--depth",
+      "1",
+      "origin",
+      "cb8b34f660977893418853c0001b319cc9314798"
+    ],
+    [
+      "git",
+      "-C",
+      "third-party/prelude",
+      "checkout",
+      "--detach",
+      "cb8b34f660977893418853c0001b319cc9314798"
+    ],
+    [
       "python3",
       "-m",
       "pip",
