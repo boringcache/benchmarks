@@ -14,12 +14,13 @@ limitations. This inventory describes the case definitions as of October 5, 2026
 | Go | Hugo Go; Docker Go projection | Keep native and Docker results separate |
 | Gradle | OpenTelemetry Java | Qualify rolling source and seed lineage |
 | Maven | Spring AI | Qualify rolling source and seed lineage |
-| Nx | Storybook | Qualify rolling source and seed lineage |
+| Nx remote cache | No active case | Storybook archives Nx directories; it does not exercise the native Nx remote-cache adapter |
 | Turbo | n8n; PostHog plan | Qualify each selected workload and timing boundary |
 | Bazel | gRPC C++ client and server | Complete the repaired three-provider cold/warm proof with the repository BuildBuddy secret |
 | Native REAPI clients | Moon, Pants, Buck2, sbt evaluation drafts | Blocked pending released product/client compatibility and reviewed execution; see [evaluation plans](reapi-evaluations.md) |
 | Nix | No active case | Add a pinned workload and correctness check before claiming coverage |
-| Archive, Artifact, GHA compatibility service | No dedicated active comparison case | Define a separate workload when measuring these products; using archives or GitHub artifact uploads inside a build does not qualify all three |
+| Archive | Storybook's Nx cache directories | Qualify rolling source and seed lineage |
+| Artifact, GHA compatibility service | No dedicated active comparison case | GitHub artifact uploads inside a benchmark do not qualify these BoringCache products |
 
 Docker tool-cache injection is configured by the product plan. It is not another
 benchmark adapter. Product support includes Bazel, ccache, Go, Gradle, Maven, Nx,

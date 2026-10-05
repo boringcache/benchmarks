@@ -151,20 +151,6 @@ runs:
   - name: Verify the n8n build
     shell: bash
     run: test -s upstream/packages/cli/dist/index.js
-  - name: Retain publish evidence
-    if: inputs.strategy == 'boringcache' && inputs.phase == 'publish'
-    uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
-    with:
-      name: n8n-turbo-${{ inputs.cache_lane }}-publish
-      path: "${{ steps.boringcache-publish.outputs.evidence-path }}"
-      if-no-files-found: error
-  - name: Retain warm evidence
-    if: inputs.strategy == 'boringcache' && inputs.phase == 'warm'
-    uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
-    with:
-      name: n8n-turbo-fresh-restore
-      path: "${{ steps.boringcache-restore.outputs.evidence-path }}"
-      if-no-files-found: error
   - name: Write the benchmark phase evidence
     shell: bash
     env:

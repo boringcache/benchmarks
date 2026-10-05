@@ -6,6 +6,14 @@ require "tmpdir"
 require_relative "../scripts/benchmark-cases"
 
 class BenchmarkCasesTest < Minitest::Test
+  def test_shared_native_cases_have_one_fresh_entrypoint
+    BenchmarkCases.documents.select { |item| item.dig("execution", "native") }.each do |item|
+      fresh = item.dig("execution", "workflows").select { |workflow| workflow["path"].include?("fresh") }
+      assert_equal [".github/workflows/native-fresh-benchmark.yml"], fresh.map { |workflow| workflow["path"] }, item.fetch("id")
+      assert_equal "fresh", fresh.first.fetch("lane"), item.fetch("id")
+    end
+  end
+
   def test_fresh_samples_do_not_share_a_workflow_queue
     workflows = BenchmarkCases.documents.flat_map do |item|
       item.fetch("execution").fetch("workflows").select { |workflow| workflow["lane"] == "fresh" }
