@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T17:58:31Z",
+  "generated_at": "2026-10-05T22:31:06Z",
   "entries": [
     {
       "benchmark": "hugo",
@@ -105,9 +105,9 @@
         "rolling": {
           "lane": "rolling",
           "state": "missing_pair",
-          "actions_successful_run_count": 96,
-          "boringcache_successful_run_count": 96,
-          "paired_head_count": 95,
+          "actions_successful_run_count": 99,
+          "boringcache_successful_run_count": 99,
+          "paired_head_count": 99,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -140,7 +140,7 @@
           "state": "missing_pair",
           "actions_successful_run_count": 99,
           "boringcache_successful_run_count": 99,
-          "paired_head_count": 98,
+          "paired_head_count": 99,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -173,7 +173,7 @@
           "state": "missing_pair",
           "actions_successful_run_count": 99,
           "boringcache_successful_run_count": 99,
-          "paired_head_count": 98,
+          "paired_head_count": 99,
           "selected_pair_count": 0,
           "window_pair_target": 3
         }
@@ -302,18 +302,12 @@
         },
         "rolling": {
           "lane": "rolling",
-          "state": "healthy",
-          "actions_successful_run_count": 94,
-          "boringcache_successful_run_count": 94,
-          "paired_head_count": 91,
-          "selected_pair_count": 3,
-          "window_pair_target": 3,
-          "latest_head_sha": "2ad11066170da9d4969832ea9c11a9181cfe2542",
-          "latest_created_at": "2026-07-13T18:07:59Z",
-          "latest_actions_run_id": 29273237473,
-          "latest_boringcache_run_id": 29273237473,
-          "latest_reporting_mode": "comparative",
-          "latest_sample_valid": true
+          "state": "missing_pair",
+          "actions_successful_run_count": 99,
+          "boringcache_successful_run_count": 99,
+          "paired_head_count": 97,
+          "selected_pair_count": 0,
+          "window_pair_target": 3
         }
       }
     },
