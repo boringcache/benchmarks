@@ -11,7 +11,7 @@ Source: [OpenCut-app/OpenCut at `e668010778568641babef2cc40be4703ae6916d6`](http
 
 ## Workload
 
-The upstream web build is unchanged. The pinned revision has no lockfile; the payload adds a Bun 1.3.11 lockfile resolved on October 5, 2026. This is an explicit dependency-resolution change. Both providers use frozen installation against that file. The case retains upstream Moon 2.3.3.
+The upstream web build is unchanged. The pinned revision has no lockfile; the payload adds a Bun 1.3.11 lockfile resolved on October 5, 2026. This is an explicit dependency-resolution change. Both providers use frozen installation against that file.
 
 Declared command: `moon run web:build`.
 
