@@ -1,0 +1,136 @@
+name: Dispatch fresh benchmark runs
+on:
+  workflow_call:
+    inputs:
+      channel:
+        type: string
+        required: true
+      cli_version:
+        type: string
+        default: ''
+      dry_run:
+        type: boolean
+        default: false
+permissions:
+  contents: read
+  actions: read
+jobs:
+  plan:
+    name: Validate suite and CLI
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      - run: bundle install --jobs 4 --retry 2
+      - name: Validate every target before requesting builds
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHANNEL: ${{ inputs.channel }}
+          CLI_VERSION: ${{ inputs.cli_version }}
+        run: |
+          ruby scripts/benchmark-cadence.rb --dry-run \
+            --channel "$CHANNEL" --version "$CLI_VERSION" --ref "$GITHUB_REF_NAME" \
+            --output "$RUNNER_TEMP/benchmark-dispatch.json" \
+            --summary "$GITHUB_STEP_SUMMARY"
+      - id: matrix
+        run: |
+          echo "matrix=$(ruby scripts/cadence-dispatch.rb --plan "$RUNNER_TEMP/benchmark-dispatch.json" --matrix)" >> "$GITHUB_OUTPUT"
+      - name: Retain validated plan
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: benchmark-plan
+          path: ${{ runner.temp }}/benchmark-dispatch.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Retain failed preflight receipt
+        if: failure()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: benchmark-dispatch
+          path: ${{ runner.temp }}/benchmark-dispatch.json
+          if-no-files-found: error
+          retention-days: 90
+  dispatch:
+    name: '${{ matrix.label }} / ${{ inputs.channel }} fresh'
+    needs: plan
+    if: '!inputs.dry_run'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: write
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      - run: bundle install --jobs 4 --retry 2
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+        with:
+          name: benchmark-plan
+          path: ${{ runner.temp }}/plan
+      - name: Request this benchmark
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_INDEX: ${{ matrix.index }}
+        run: |
+          ruby scripts/cadence-dispatch.rb \
+            --plan "$RUNNER_TEMP/plan/benchmark-dispatch.json" --index "$TARGET_INDEX" \
+            --output "$RUNNER_TEMP/target-$TARGET_INDEX.json"
+      - name: Retain this request
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: benchmark-target-${{ matrix.index }}
+          path: ${{ runner.temp }}/target-${{ matrix.index }}.json
+          if-no-files-found: error
+          retention-days: 90
+  receipt:
+    name: Collect requested runs
+    needs: [plan, dispatch]
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      - run: bundle install --jobs 4 --retry 2
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+        with:
+          name: benchmark-plan
+          path: ${{ runner.temp }}/plan
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+        if: '!inputs.dry_run'
+        with:
+          pattern: benchmark-target-*
+          path: ${{ runner.temp }}/receipts
+      - name: Combine requests without losing failed or missing targets
+        if: always()
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          args=()
+          [[ "$DRY_RUN" != true ]] || args+=(--dry-run)
+          ruby scripts/cadence-dispatch.rb \
+            --plan "$RUNNER_TEMP/plan/benchmark-dispatch.json" \
+            --receipts "$RUNNER_TEMP/receipts" \
+            --output "$RUNNER_TEMP/benchmark-dispatch.json" \
+            --summary "$GITHUB_STEP_SUMMARY" "${args[@]}"
+      - name: Retain dispatch receipt
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: benchmark-dispatch
+          path: ${{ runner.temp }}/benchmark-dispatch.json
+          if-no-files-found: error
+          retention-days: 90

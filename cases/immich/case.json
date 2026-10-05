@@ -33,6 +33,13 @@
         "path": ".github/workflows/immich-immich-benchmark.yml",
         "lane": "diagnostic",
         "inputs": {}
+      },
+      {
+        "path": ".github/workflows/native-rolling-benchmark.yml",
+        "lane": "rolling",
+        "inputs": {
+          "case_id": "immich"
+        }
       }
     ],
     "sync": "upstream-head",
@@ -47,7 +54,9 @@
       "fresh_inputs": {
         "load_image": "true"
       },
-      "rolling_inputs": {}
+      "rolling_inputs": {
+        "load_image": "true"
+      }
     }
   },
   "reporting": {

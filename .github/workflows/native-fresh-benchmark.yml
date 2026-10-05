@@ -1,6 +1,6 @@
 ---
 name: Native comparison fresh
-run-name: "${{ inputs.case_id }} fresh ${{ inputs.series_id }} sample ${{ inputs.sample
+run-name: "${{ inputs.case_id }} ${{ inputs.variant }} fresh ${{ inputs.series_id }} sample ${{ inputs.sample
   }}"
 permissions:
   contents: read

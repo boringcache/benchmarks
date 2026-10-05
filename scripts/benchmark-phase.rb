@@ -8,6 +8,11 @@ module BenchmarkPhase
     lane = env.fetch("CACHE_LANE")
     raise "Use fresh or rolling" unless %w[fresh rolling].include?(lane)
     raise "Invalid benchmark ID" unless id.match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/)
+    rolling_scope = env.fetch("BENCHMARK_ROLLING_SCOPE", "")
+    if lane == "rolling" && !rolling_scope.empty?
+      raise "Invalid rolling cache scope" unless rolling_scope.match?(/\A[a-z0-9][a-z0-9._-]+\z/)
+      return "#{id}-rolling-#{rolling_scope}"
+    end
     series = env.fetch("BENCHMARK_SERIES_ID", "")
     if !series.empty?
       raise "Invalid series ID" unless series.match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/)

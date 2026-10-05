@@ -11,7 +11,8 @@ begin
   errors = []
   suites.each do |name, suite|
     next unless suite.is_a?(Hash)
-    Array(suite["cases"]).each do |id|
+    Array(suite["cases"]).each do |entry|
+      id = entry.is_a?(Hash) ? entry.fetch("case_id") : entry
       item = by_id[id]
       errors << "#{name}: unknown case #{id}" unless item
       errors << "#{name}: retained case #{id} cannot execute" if item && item["kind"] == "retained"

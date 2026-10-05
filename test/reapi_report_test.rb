@@ -13,6 +13,8 @@ class ReapiReportTest < Minitest::Test
     assert_nil reported_cache_hit("warm", "0 remote cache hits")
     assert_equal true, reported_cache_hit("cold", "2 remote cache hits")
     assert_equal true, reported_cache_hit("warm", "81 remote cache hits")
+    assert_nil reported_cache_hit("commit", "0 remote cache hits")
+    assert_equal true, reported_cache_hit("commit", "2 remote cache hits")
   end
 
   private
@@ -20,8 +22,8 @@ class ReapiReportTest < Minitest::Test
   def reported_cache_hit(phase, log)
     previous = ENV.to_h
     ENV.update("PHASE" => phase, "PROVIDER" => "bazel-remote", "BENCHMARK_ID" => "msgpack-sbt",
-      "CACHE_LANE" => "fresh", "BENCHMARK_SAMPLE" => "1",
-      "GITHUB_RUN_ID" => "1", "GITHUB_RUN_ATTEMPT" => "1")
+      "CACHE_LANE" => phase == "commit" ? "rolling" : "fresh", "BENCHMARK_SAMPLE" => "1",
+      "GITHUB_RUN_ID" => "1", "GITHUB_RUN_ATTEMPT" => "1", "GITHUB_REF_NAME" => "main")
     ENV.delete("BENCHMARK_SERIES_ID")
     Dir.mktmpdir do |directory|
       Dir.chdir(directory) do

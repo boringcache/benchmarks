@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "case_id": "hugo"
+    },
+    {
+      "case_id": "hugo-go"
+    },
+    {
+      "case_id": "immich"
+    },
+    {
+      "case_id": "mastodon",
+      "variant": "server"
+    },
+    {
+      "case_id": "mastodon",
+      "variant": "streaming"
+    },
+    {
+      "case_id": "posthog",
+      "variant": "layers"
+    },
+    {
+      "case_id": "storybook"
+    },
+    {
+      "case_id": "opentelemetry-java"
+    },
+    {
+      "case_id": "spring-ai"
+    },
+    {
+      "case_id": "grpc"
+    },
+    {
+      "case_id": "zed",
+      "variant": "combined"
+    },
+    {
+      "case_id": "deno",
+      "variant": "cargo-product"
+    },
+    {
+      "case_id": "duckgres"
+    },
+    {
+      "case_id": "chroma"
+    },
+    {
+      "case_id": "linkerd2"
+    },
+    {
+      "case_id": "qdrant"
+    },
+    {
+      "case_id": "n8n",
+      "variant": "turbo"
+    },
+    {
+      "case_id": "n8n",
+      "variant": "docker"
+    },
+    {
+      "case_id": "n8n",
+      "variant": "runners"
+    },
+    {
+      "case_id": "n8n",
+      "variant": "distroless"
+    },
+    {
+      "case_id": "gogs-moon"
+    },
+    {
+      "case_id": "opencut-moon"
+    },
+    {
+      "case_id": "stackstorm-pants"
+    },
+    {
+      "case_id": "executorch-buck2"
+    },
+    {
+      "case_id": "msgpack-sbt"
+    },
+    {
+      "case_id": "helix-nix"
+    },
+    {
+      "case_id": "zed-nix"
+    },
+    {
+      "case_id": "obs-studio",
+      "variant": "ccache"
+    },
+    {
+      "case_id": "obs-studio",
+      "variant": "xcode"
+    }
+  ]
+}

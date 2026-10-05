@@ -9,6 +9,8 @@ inputs:
     required: true
   cli-version:
     required: true
+  lane:
+    default: fresh
 runs:
   using: composite
   steps:
@@ -35,6 +37,22 @@ runs:
       with:
         name: reapi-store-${{ inputs.case-id }}
         path: reapi-store
+    - name: Restore the rolling comparator store
+      if: inputs.provider == 'bazel-remote' && inputs.lane == 'rolling'
+      id: rolling-cache
+      uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+      with:
+        path: reapi-store
+        key: reapi-${{ inputs.case-id }}-${{ env.BENCHMARK_ROLLING_SCOPE || env.BENCHMARK_SERIES_ID || github.ref_name }}-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}-${{ github.run_attempt }}
+        restore-keys: |
+          reapi-${{ inputs.case-id }}-${{ env.BENCHMARK_ROLLING_SCOPE || env.BENCHMARK_SERIES_ID || github.ref_name }}-${{ runner.os }}-${{ runner.arch }}-
+    - name: Record the restored comparator seed
+      if: inputs.provider == 'bazel-remote' && inputs.lane == 'rolling'
+      shell: bash
+      env:
+        BENCHMARK_ID: ${{ inputs.case-id }}
+        RESTORED_CACHE_KEY: ${{ steps.rolling-cache.outputs.cache-matched-key }}
+      run: ruby scripts/reapi-setup.rb rolling-seed
     - name: Download cold output checks
       if: inputs.phase == 'warm'
       uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
@@ -48,7 +66,7 @@ runs:
         PHASE: ${{ inputs.phase }}
         PROVIDER: ${{ inputs.provider }}
         BENCHMARK_ID: ${{ inputs.case-id }}
-        CACHE_LANE: fresh
+        CACHE_LANE: ${{ inputs.lane }}
         BORINGCACHE_WORKSPACE: boringcache/benchmarks
       run: boringcache ci run --oidc-provider github-actions -- ruby scripts/reapi-client.rb build
     - name: Run bazel-remote
@@ -58,7 +76,7 @@ runs:
         PHASE: ${{ inputs.phase }}
         PROVIDER: ${{ inputs.provider }}
         BENCHMARK_ID: ${{ inputs.case-id }}
-        CACHE_LANE: fresh
+        CACHE_LANE: ${{ inputs.lane }}
       run: ruby scripts/reapi-client.rb build
     - name: Verify outputs and record measurements
       shell: bash
@@ -66,10 +84,20 @@ runs:
         PHASE: ${{ inputs.phase }}
         PROVIDER: ${{ inputs.provider }}
         BENCHMARK_ID: ${{ inputs.case-id }}
-        CACHE_LANE: fresh
+        CACHE_LANE: ${{ inputs.lane }}
       run: |
         ruby scripts/reapi-client.rb verify
         ruby scripts/reapi-setup.rb report
+    - name: Record the verified comparator source
+      if: inputs.provider == 'bazel-remote' && inputs.lane == 'rolling'
+      shell: bash
+      run: ruby scripts/reapi-setup.rb publish-seed
+    - name: Publish the verified rolling comparator store
+      if: inputs.provider == 'bazel-remote' && inputs.lane == 'rolling'
+      uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+      with:
+        path: reapi-store
+        key: ${{ steps.rolling-cache.outputs.cache-primary-key }}
     - name: Retain the comparator store
       if: inputs.provider == 'bazel-remote' && inputs.phase == 'cold'
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
@@ -88,6 +116,6 @@ runs:
     - name: Retain phase measurements
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: phase-${{ inputs.case-id }}-${{ inputs.provider }}-fresh-${{ inputs.phase }}
+        name: phase-${{ inputs.case-id }}-${{ inputs.provider }}-${{ inputs.lane }}-${{ inputs.phase }}
         path: benchmark-results/
         if-no-files-found: error

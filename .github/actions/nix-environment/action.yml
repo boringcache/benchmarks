@@ -1,0 +1,19 @@
+name: Prepare Nix benchmark environment
+description: Verifies the declared recipe and installs the pinned Nix version.
+runs:
+  using: composite
+  steps:
+    - name: Verify the source recipe
+      shell: bash
+      run: ruby scripts/verify-upstream-recipe.rb .
+    - name: Install Nix
+      uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24
+      with:
+        install_url: https://releases.nixos.org/nix/nix-2.35.2/install
+        enable_kvm: false
+        extra_nix_config: |
+          accept-flake-config = false
+          experimental-features = nix-command flakes
+    - name: Verify the Nix version
+      shell: bash
+      run: test "$(nix --version)" = 'nix (Nix) 2.35.2'

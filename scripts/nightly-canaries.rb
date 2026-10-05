@@ -30,9 +30,24 @@ module NightlyCanaries
       unless release["prerelease"] && !release["draft"] && release.fetch("tag_name").match?(/\Avcli-canary-[0-9a-f]{9,40}\z/)
         raise Error, "Use a published CLI canary"
       end
+      published_assets(release)
+    end
+
+    def latest_stable
+      published_stable(api("repos/boringcache/cli/releases/latest"))
+    end
+
+    def published_stable(release)
+      unless !release["prerelease"] && !release["draft"] && release.fetch("tag_name").match?(/\Av\d+\.\d+\.\d+\z/)
+        raise Error, "Use a published stable CLI release"
+      end
+      published_assets(release)
+    end
+
+    def published_assets(release)
       names = release.fetch("assets").map { |asset| asset.fetch("name") }
       required = %w[SHA256SUMS boringcache-linux-amd64 boringcache-linux-arm64 boringcache-macos-universal boringcache-windows-amd64.exe]
-      raise Error, "The CLI canary is missing release assets" unless (required - names).empty?
+      raise Error, "The CLI release is missing release assets" unless (required - names).empty?
       release.fetch("tag_name")
     end
 
@@ -52,17 +67,20 @@ module NightlyCanaries
       end.uniq
     end
 
-    def dispatch(repository:, output:, summary: nil, version: nil, dry_run: false, benchmarks: BENCHMARKS)
+    def dispatch(repository:, output:, summary: nil, version: nil, dry_run: false, benchmarks: BENCHMARKS, channel: "canary", ref: "main", preflight: nil)
+      raise Error, "Use stable or canary" unless %w[stable canary].include?(channel)
       selected = targets(benchmarks).select { |repo, _| repo == repository }
       raise Error, "No active fresh workflows registered for #{repository}" if selected.empty?
       if version.nil? || version.empty?
-        version = latest_canary
+        version = channel == "canary" ? latest_canary : latest_stable
       else
-        raise Error, "Use an exact CLI canary tag" unless version.match?(/\Avcli-canary-[0-9a-f]{9,40}\z/)
-        published_canary(api("repos/boringcache/cli/releases/tags/#{version}"))
+        pattern = channel == "canary" ? /\Avcli-canary-[0-9a-f]{9,40}\z/ : /\Av\d+\.\d+\.\d+\z/
+        raise Error, "Use an exact CLI #{channel} tag" unless version.match?(pattern)
+        release = api("repos/boringcache/cli/releases/tags/#{version}")
+        channel == "canary" ? published_canary(release) : published_stable(release)
       end
       record = {"cli_version" => version, "created_at" => Time.now.utc.iso8601,
-                "state" => "dispatching", "runs" => []}
+                "channel" => channel, "ref" => ref, "state" => "dispatching", "runs" => []}
       selected.each do |repository, workflow, inputs|
         raise Error, "Benchmark lacks a fresh workflow" if repository.nil? || workflow.nil?
         record["runs"] << {"repository" => repository, "workflow" => workflow, "inputs" => inputs, "state" => "planned"}
@@ -73,10 +91,11 @@ module NightlyCanaries
         workflow = api("repos/#{run.fetch('repository')}/actions/workflows/#{run.fetch('workflow')}")
         raise Error, "#{run.fetch('repository')} workflow is not active" unless workflow["state"] == "active"
       end
+      preflight.call(version, record.fetch("runs")) if preflight
       record["runs"].each do |run|
         next if dry_run
         result = api("repos/#{run.fetch('repository')}/actions/workflows/#{run.fetch('workflow')}/dispatches",
-          body: {"ref" => "main", "inputs" => run.fetch("inputs").merge("cli_version" => version), "return_run_details" => true})
+          body: {"ref" => ref, "inputs" => run.fetch("inputs").merge("cli_version" => version), "return_run_details" => true})
         id = result["workflow_run_id"]
         raise Error, "Dispatch returned no run ID; inspect the workflow before retrying" unless id.is_a?(Integer) && id.positive?
         run.merge!("id" => id, "url" => "https://github.com/#{run.fetch('repository')}/actions/runs/#{id}", "state" => "requested")
@@ -111,10 +130,11 @@ module NightlyCanaries
 
     def receipt(repository, run_id)
       Dir.mktmpdir("canary-receipt-") do |directory|
+        artifact = repository == "boringcache/benchmarks" ? "benchmark-dispatch" : "nightly-canaries"
         _, error, status = Open3.capture3("gh", "run", "download", run_id.to_s,
-          "--repo", repository, "--name", "nightly-canaries", "--dir", directory)
+          "--repo", repository, "--name", artifact, "--dir", directory)
         raise Error, "Cannot read dispatch receipt: #{error.strip}" unless status.success?
-        JSON.parse(File.read(File.join(directory, "nightly-canaries.json")))
+        JSON.parse(File.read(File.join(directory, "#{artifact}.json")))
       end
     end
 
@@ -184,7 +204,7 @@ module NightlyCanaries
 
     def write_summary(path, record)
       return unless path
-      lines = ["## CLI canary benchmarks", "", "CLI: `#{record.fetch('cli_version')}`", "",
+      lines = ["## Fresh benchmark runs", "", "CLI: `#{record.fetch('cli_version')}`", "",
                "Dispatch: **#{record.fetch('state')}**. Benchmark outcomes are listed separately.", ""]
       record.fetch("runs").each do |run|
         name = "#{run.fetch('repository')} / #{workload_name(run)}"

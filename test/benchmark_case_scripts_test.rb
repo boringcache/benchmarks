@@ -338,6 +338,41 @@ class BenchmarkCaseScriptsTest < Minitest::Test
     end
   end
 
+  def test_parent_recipe_exception_is_limited_to_its_exact_revision_and_file_set
+    with_case("hugo-go") do |directory|
+      source = File.join(directory, "upstream")
+      FileUtils.mkdir_p(source)
+      git = ->(*args) { Open3.capture2e("git", "-C", source, "-c", "user.name=Benchmark test", "-c", "user.email=benchmark@localhost", "-c", "commit.gpgsign=false", *args) }
+      _, status = git.call("init")
+      assert status.success?
+      File.write(File.join(source, "recipe.txt"), "parent recipe\n")
+      git.call("add", ".")
+      _, status = git.call("commit", "-m", "Parent recipe")
+      assert status.success?
+      revision, = git.call("rev-parse", "HEAD")
+      parent = {"recipe.txt" => Digest::SHA256.hexdigest("parent recipe\n")}
+      contract = {"upstream_files" => {"recipe.txt" => Digest::SHA256.hexdigest("new recipe\n")},
+        "upstream_files_by_revision" => {revision.strip => parent}, "commands" => {}}
+      path = File.join(directory, "recipe-contract.json")
+      File.write(path, JSON.generate(contract))
+      _, error, status = run_script(directory, "verify-upstream-recipe")
+      assert status.success?, error
+      git.call("commit", "--allow-empty", "-m", "Another revision")
+      _, error, status = run_script(directory, "verify-upstream-recipe")
+      refute status.success?
+      assert_includes error, "Upstream recipe changed"
+      File.write(File.join(source, "recipe.txt"), "new recipe\n")
+      _, error, status = run_script(directory, "verify-upstream-recipe")
+      assert status.success?, error
+      current, = git.call("rev-parse", "HEAD")
+      contract["upstream_files_by_revision"] = {current.strip => {}}
+      File.write(path, JSON.generate(contract))
+      _, error, status = run_script(directory, "verify-upstream-recipe")
+      refute status.success?
+      assert_includes error, "changes the reviewed file set"
+    end
+  end
+
   def test_deno_profile_selects_exactly_one_declared_profile
     with_case("deno") do |directory|
       path = File.join(directory, ".boringcache.toml")

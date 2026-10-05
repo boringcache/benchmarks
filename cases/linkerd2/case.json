@@ -44,7 +44,7 @@
       "action": ".github/actions/linkerd2-docker-benchmark",
       "benchmark_id": "linkerd2-v2",
       "rolling_inputs": {
-        "push_image": "true"
+        "load_image": "true"
       },
       "environment": {},
       "fresh_inputs": {

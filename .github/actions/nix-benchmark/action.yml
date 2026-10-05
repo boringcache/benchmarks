@@ -7,44 +7,43 @@ inputs:
     required: true
   phase:
     required: true
+  lane:
+    default: fresh
   cli-version:
     default: ''
   cachix-cache:
     default: ''
   cachix-token:
     default: ''
+  dependency-seed:
+    default: ''
 runs:
   using: composite
   steps:
-    - name: Verify the source recipe
-      shell: bash
-      run: ruby scripts/verify-upstream-recipe.rb .
-    - name: Install Nix
-      uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24
-      with:
-        install_url: https://releases.nixos.org/nix/nix-2.35.2/install
-        enable_kvm: false
-        extra_nix_config: |
-          accept-flake-config = false
-          experimental-features = nix-command flakes
+    - uses: ./.github/actions/nix-environment
     - name: Prepare the dependency store
       shell: bash
+      env:
+        DEPENDENCY_SEED: ${{ inputs.dependency-seed }}
       run: |
-        test "$(nix --version)" = 'nix (Nix) 2.35.2'
-        ruby scripts/nix-benchmark.rb prepare
+        if [[ -n "$DEPENDENCY_SEED" ]]; then
+          ruby scripts/nix-benchmark.rb import-dependencies "$DEPENDENCY_SEED"
+        else
+          ruby scripts/nix-benchmark.rb prepare
+        fi
     - name: Scope the cache and start setup timing
       id: setup
       shell: bash
       env:
         BENCHMARK_ID: ${{ inputs.case-id }}
-        CACHE_LANE: fresh
+        CACHE_LANE: ${{ inputs.lane }}
       run: |
         scope="$(ruby scripts/benchmark-phase.rb scope)"
         ruby scripts/scope-case-cache.rb "$scope"
         echo "started_at=$(date +%s.%N)" >> "$GITHUB_OUTPUT"
     - name: Set up BoringCache
       id: publish
-      if: inputs.provider == 'boringcache' && inputs.phase == 'cold'
+      if: inputs.provider == 'boringcache' && inputs.phase != 'warm'
       uses: ./.github/actions/boringcache
       with:
         mode: nix
@@ -104,17 +103,20 @@ runs:
         BENCHMARK_ID: ${{ inputs.case-id }}
         PROVIDER: ${{ inputs.provider }}
         PHASE: ${{ inputs.phase }}
+        CACHE_LANE: ${{ inputs.lane }}
         SETUP_SECONDS: ${{ steps.timing.outputs.seconds }}
         EVIDENCE_PATH: ${{ steps.publish.outputs.evidence-path || steps.restore.outputs.evidence-path }}
       run: |
         source_repository="$(ruby -rjson -e 'puts JSON.parse(File.read("benchmark-context.json")).dig("source", "repository")')"
         source_sha="$(ruby -rjson -e 'puts JSON.parse(File.read("benchmark-context.json")).dig("source", "revision")')"
         build_seconds="$(ruby -rjson -e 'puts JSON.parse(File.read("nix-evidence/timing.json")).fetch("build_seconds")')"
+        args=()
+        [[ "$PHASE" != warm ]] || args+=(--cache-hit true)
+        [[ "$PHASE" != cold ]] || args+=(--cache-hit false)
         ruby scripts/benchmark-report.rb phase --verified-output \
-          --benchmark "$BENCHMARK_ID" --strategy "$PROVIDER" --lane fresh --phase "$PHASE" --mode nix \
+          --benchmark "$BENCHMARK_ID" --strategy "$PROVIDER" --lane "$CACHE_LANE" --phase "$PHASE" --mode nix \
           --restore-or-setup-seconds "$SETUP_SECONDS" --build-seconds "$build_seconds" \
-          --cache-hit "$([[ "$PHASE" == warm ]] && echo true || echo false)" \
-          --source-repository "$source_repository" --source-sha "$source_sha" --evidence "$EVIDENCE_PATH"
+          --source-repository "$source_repository" --source-sha "$source_sha" --evidence "$EVIDENCE_PATH" "${args[@]}"
     - name: Retain Nix checks and logs
       if: always()
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
@@ -125,6 +127,6 @@ runs:
     - name: Retain phase measurements
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: phase-${{ inputs.case-id }}-${{ inputs.provider }}-fresh-${{ inputs.phase }}
+        name: phase-${{ inputs.case-id }}-${{ inputs.provider }}-${{ inputs.lane }}-${{ inputs.phase }}
         path: benchmark-results/
         if-no-files-found: error
