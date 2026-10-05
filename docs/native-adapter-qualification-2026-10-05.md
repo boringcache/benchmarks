@@ -56,3 +56,20 @@ samples must use predeclared plans and fresh scopes.
 | deno | native-sccache-01 | [37376780672](https://github.com/boringcache/benchmarks/actions/runs/37376780672) |
 | deno | native-kache-01 | [37376784408](https://github.com/boringcache/benchmarks/actions/runs/37376784408) |
 | deno | native-mbx-01 | [37376787731](https://github.com/boringcache/benchmarks/actions/runs/37376787731) |
+
+## First completed observations
+
+OpenCut Moon, Gogs Moon, StackStorm Pants and MsgPack sbt completed one cold and
+read-only warm sample on both BoringCache and bazel-remote. Warm records report
+remote hits and verified matching outputs. Completion checks passed, and the
+original logs and artifacts were archived and downloaded again for verification.
+This is one correctness sample per case, not performance qualification.
+
+Zed `native-mbx-01` failed before compilation because mbx 1.22.0 rejects Cargo's
+`--config` before the subcommand. The failure and its logs remain archived.
+The new `native-mbx-02` series moves `build` before `--config` in the reviewed
+Cargo layer plans; both argument orders load the same explicit configuration
+in a local compile probe. The pinned mbx binary forwards the revised arguments
+to Cargo. Source revisions, configuration path, targets and packages are unchanged.
+Buck2 and the remaining compiler-cache observations were still running at this
+checkpoint. Cadence activation remains held.

@@ -19,3 +19,12 @@ the three release executables, excludes dependency and toolchain setup from its
 timer, and does not execute the bundle's packaging, signing, or release upload
 steps. It does not establish a complete published application bundle or a
 provider performance comparison. Full live qualification remains required.
+
+The native compiler-cache screen places `build` before `--config` in every
+Cargo layer plan. Cargo accepts both orders; mbx 1.22.0 requires its subcommand
+first. The bundle configuration path, target, packages, release mode and linker
+flags remain the same. The first mbx screen failed before compilation with the
+original order and remains in `native-mbx-01`; the revised order starts a new
+series. A local Cargo probe required a value from the explicit configuration
+file and compiled successfully with both orders. A probe of the pinned mbx
+binary confirmed that the revised order forwards the configuration to Cargo.

@@ -22,9 +22,9 @@ no-git = true
 metadata-hints = ["benchmark=zed-cargo-layers", "lane=target-only", "phase=remote-server"]
 command = [
   "cargo",
+  "build",
   "--config",
   ".cargo/bundle-config.toml",
-  "build",
   "--release",
   "--target",
   "x86_64-unknown-linux-musl",
