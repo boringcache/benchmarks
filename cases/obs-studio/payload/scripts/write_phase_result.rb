@@ -15,6 +15,7 @@ phase = args.fetch("phase")
 raise "Phase must be base or rolling" unless %w[base rolling].include?(phase)
 raise "Continuous observations require the rolling phase" if args["continuous"] && phase != "rolling"
 cache_hit = args["continuous"] ? args["cache_hit"] : (phase == "base" ? "false" : "true")
+cache_hit = nil if cache_hit == ""
 raise "Cache hit must be true or false" if cache_hit && !%w[true false].include?(cache_hit)
 build_seconds = Float(args.fetch("build_seconds"))
 raise "Build time must be finite and nonnegative" unless build_seconds.finite? && build_seconds >= 0
