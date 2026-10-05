@@ -151,6 +151,34 @@ class BenchmarkSeriesTest < Minitest::Test
     assert_empty Dir[File.join(@directory, "runs", "*.json")]
   end
 
+  def test_collects_into_a_fresh_checkout_without_an_empty_runs_directory
+    value = record
+    directory = phase_export([value])
+    FileUtils.remove_entry(File.join(@directory, "runs"))
+    assert_equal 1, CollectSeries.call(@directory, evidence_directory: directory, sample: 1)["records"]
+    assert_equal value, JSON.parse(File.read(File.join(@directory, "runs", "1-boringcache-commit.json")))
+  end
+
+  def test_canary_collection_requires_the_declared_release_in_the_dispatch
+    plan = BenchmarkSeries.load(@directory)
+    plan["workflow_inputs"]["cli_version"] = "vcli-canary-7a5b27146ebe"
+    plan["plan_sha256"] = BenchmarkSeries.digest(plan)
+    BenchmarkSeries.write_json(File.join(@directory, "series.json"), plan)
+    value = record
+    value["product_refs"]["cli_version"] = "1.34.0"
+    directory = phase_export([value])
+    path = File.join(@directory, "dispatches", "1-build.json")
+    receipt = JSON.parse(File.read(path))
+    receipt["inputs"]["cli_version"] = "vcli-canary-4c236cd7ee00"
+    BenchmarkSeries.write_json(path, receipt)
+    assert_raises(BenchmarkSeries::Error) { CollectSeries.call(@directory, evidence_directory: directory, sample: 1) }
+    assert_empty Dir[File.join(@directory, "runs", "*.json")]
+    receipt["inputs"]["cli_version"] = plan.dig("workflow_inputs", "cli_version")
+    BenchmarkSeries.write_json(path, receipt)
+    assert_equal 1, CollectSeries.call(@directory, evidence_directory: directory, sample: 1)["records"]
+    assert_equal "1.34.0", JSON.parse(File.read(File.join(@directory, "runs", "1-boringcache-commit.json"))).dig("product_refs", "cli_version")
+  end
+
   def test_collects_canonical_records_from_docker_proof_artifacts
     @directory = File.join(@root, "fresh-series")
     BenchmarkSeries.create(@case, directory: @directory, series: "screening", lane: "fresh", variant: "release")
@@ -355,6 +383,23 @@ class BenchmarkSeriesTest < Minitest::Test
     add(other)
     error = assert_raises(BenchmarkSeries::Error) { BenchmarkSeries.report(@directory) }
     assert_includes error.message, "different CLI or Action versions"
+  end
+
+  def test_canary_release_name_is_separate_from_the_reported_cli_version
+    plan = BenchmarkSeries.load(@directory)
+    plan["workflow_inputs"]["cli_version"] = "vcli-canary-7a5b27146ebe"
+    value = record
+    value["product_refs"]["cli_version"] = "1.34.0"
+    assert_equal value, BenchmarkSeries.validate_record(plan, value)
+    assert_equal "vcli-canary-7a5b27146ebe", plan.dig("workflow_inputs", "cli_version")
+    assert_equal "1.34.0", value.dig("product_refs", "cli_version")
+
+    plan["workflow_inputs"]["cli_version"] = "v1.33.0"
+    assert_raises(BenchmarkSeries::Error) { BenchmarkSeries.validate_record(plan, value) }
+    plan["workflow_inputs"]["cli_version"] = "vcli-canary-unknown"
+    assert_raises(BenchmarkSeries::Error) { BenchmarkSeries.validate_record(plan, value) }
+    plan["workflow_inputs"]["cli_version"] = "v1.34.0"
+    assert_equal value, BenchmarkSeries.validate_record(plan, value)
   end
 
   def test_phase_timings_require_verified_workflow_completion

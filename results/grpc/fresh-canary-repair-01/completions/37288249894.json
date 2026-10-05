@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "case_id": "grpc",
+  "series_id": "fresh-canary-repair-01",
+  "sample": 1,
+  "run_id": "37288249894",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288249894",
+  "source_sha": "874ab9890b328d8583f0b67e46a02f72393cf015",
+  "github_conclusion": "failure",
+  "status": "failed",
+  "errors": [
+    "Workflow concluded failure",
+    "BoringCache gRPC Bazel warm: failure"
+  ],
+  "evidence_manifest_sha256": "2b0066c0d1a1fb732ab879c3b888b0d12b311252a6c17fdd222280e5b51e9cc5"
+}

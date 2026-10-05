@@ -307,26 +307,32 @@
       },
       "plan_sha256": "e5379cf5682072b17fdb8c84817c5f3be017e8198cc3736fc293eab4ec128101",
       "definition_sha256": "52905a400cd73743dd63ecbc168b449305b22a880acc70f56034ee6d4b6fe318",
-      "state": "requested",
+      "state": "completed",
       "publication": "unreviewed",
       "valid_for_comparison": false,
-      "execution_verified": false,
+      "execution_verified": true,
       "methodology_issues": [
         "This series does not declare a comparison of provider performance."
       ],
-      "missing_observations": [
-        [
-          1,
-          "cold",
-          "boringcache"
-        ],
-        [
-          1,
-          "commit",
-          "boringcache"
-        ]
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "commit",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        }
       ],
-      "summaries": [],
       "dispatches": [
         {
           "case_id": "deno",
@@ -346,13 +352,39 @@
           "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37285092516"
         }
       ],
-      "completions": [],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "deno",
+          "series_id": "cli-canary-repeat-01",
+          "sample": 1,
+          "run_id": "37285092516",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37285092516",
+          "source_sha": "b07e0508ff0a3c9a43496a1fb1f256385c9504bc",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "5e2d1a7077e29f25f2606c068c2a46365a1f8ff1ef36895d948c586aa5c984be"
+        }
+      ],
       "report_state": "current",
       "report_path": "results/deno/cli-canary-repeat-01/report.json",
-      "evidence": [],
-      "runs_without_archives": [
-        "37285092516"
-      ]
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37285092516,
+          "inventory_state": "complete",
+          "verified_files": 13,
+          "gaps": [],
+          "scope": "This run, including available attempts, jobs, logs, artifacts, commit and workflow",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-independent-samples-2026-10-05",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-independent-samples-2026-10-05/benchmarks-37285092516.tar.gz",
+          "bundle_bytes": 495240,
+          "sha256": "e1ce01849b265442de7f9441c2eec2c4b4ed53d44e5d29faa749289891bc3ccd",
+          "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "deno",
@@ -2412,6 +2444,179 @@
       },
       "plan_sha256": "3bad3fe86f24dd2597d4fe3052b82d5b5144b705d6265f219b67a9f2820f238e",
       "definition_sha256": "c427f90c3baea4391aef672f3a11f126a4fa812a7a76f1a9928e74b5a375a39e",
+      "state": "failed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "warm",
+          "boringcache"
+        ]
+      ],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 3281,
+            "min": 3281,
+            "max": 3281
+          },
+          "storage": {
+            "median": 163728649,
+            "min": 163728649,
+            "max": 163728649
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "warm",
+          "provider": "actions-cache",
+          "count": 1,
+          "measurement": {
+            "median": 72,
+            "min": 72,
+            "max": 72
+          },
+          "storage": {
+            "median": 163728649,
+            "min": 163728649,
+            "max": 163728649
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": {
+            "median": 2144,
+            "min": 2144,
+            "max": 2144
+          },
+          "storage": {
+            "median": 632637546,
+            "min": 632637546,
+            "max": 632637546
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "cold",
+          "provider": "buildbuddy",
+          "count": 1,
+          "measurement": {
+            "median": 2152,
+            "min": 2152,
+            "max": 2152
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "buildbuddy",
+          "count": 1,
+          "measurement": {
+            "median": 135,
+            "min": 135,
+            "max": 135
+          },
+          "storage": null,
+          "storage_measured_count": 0
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "grpc",
+          "repository": "boringcache/benchmarks",
+          "workflow": "grpc-grpc-bazel-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "cli_version": "vcli-canary-4c236cd7ee00",
+            "series_id": "fresh-canary-repair-01",
+            "sample": "1"
+          },
+          "ref": "independent-benchmark-samples",
+          "state": "requested",
+          "requested_at": "2026-10-05T09:10:05Z",
+          "run_id": 37288249894,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288249894"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "grpc",
+          "series_id": "fresh-canary-repair-01",
+          "sample": 1,
+          "run_id": "37288249894",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288249894",
+          "source_sha": "874ab9890b328d8583f0b67e46a02f72393cf015",
+          "github_conclusion": "failure",
+          "status": "failed",
+          "errors": [
+            "Workflow concluded failure",
+            "BoringCache gRPC Bazel warm: failure"
+          ],
+          "evidence_manifest_sha256": "2b0066c0d1a1fb732ab879c3b888b0d12b311252a6c17fdd222280e5b51e9cc5"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/grpc/fresh-canary-repair-01/report.json",
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37288249894,
+          "inventory_state": "complete",
+          "verified_files": 14,
+          "gaps": [],
+          "scope": "This run, including available attempts, jobs, logs, artifacts, commit and workflow",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-independent-samples-2026-10-05",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-independent-samples-2026-10-05/benchmarks-37288249894.tar.gz",
+          "bundle_bytes": 2441898,
+          "sha256": "fc2efcfa0277f1c4bf88ea4d10d9a01e23141e714b77c54e7d2553cfb37f0365",
+          "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory"
+        }
+      ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "grpc",
+      "series_id": "local-outputs-01",
+      "plan_path": "results/grpc/local-outputs-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache",
+          "buildbuddy"
+        ],
+        "timed_scope": "Bazel build with local top-level outputs plus measured cache restore/setup; output checks and post-job cache save are outside build timing",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "grpc/grpc",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "plan_sha256": "eec4dd52b91d8f3cd6698c0c4be58b3c8b1643777cfd72ddebebb1f11d054b25",
+      "definition_sha256": "3ba398321d9ad7a08f2517505bc3762cb29463f172c824b254de38e59e02cc6d",
       "state": "requested",
       "publication": "unreviewed",
       "valid_for_comparison": false,
@@ -2457,24 +2662,158 @@
           "workflow": "grpc-grpc-bazel-fresh-benchmark.yml",
           "lane": "fresh",
           "inputs": {
-            "cli_version": "vcli-canary-4c236cd7ee00",
-            "series_id": "fresh-canary-repair-01",
+            "cli_version": "vcli-canary-7a5b27146ebe",
+            "series_id": "local-outputs-01",
             "sample": "1"
           },
-          "ref": "independent-benchmark-samples",
+          "ref": "grpc-local-outputs",
           "state": "requested",
-          "requested_at": "2026-10-05T09:10:05Z",
-          "run_id": 37288249894,
-          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37288249894"
+          "requested_at": "2026-10-05T10:19:05Z",
+          "run_id": 37295807809,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37295807809"
         }
       ],
       "completions": [],
-      "report_state": "current",
-      "report_path": "results/grpc/fresh-canary-repair-01/report.json",
+      "report_state": "missing",
+      "report_path": null,
       "evidence": [],
       "runs_without_archives": [
-        "37288249894"
+        "37295807809"
       ]
+    },
+    {
+      "case_id": "helix-nix",
+      "series_id": "canary-screening-01",
+      "plan_path": "results/helix-nix/canary-screening-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Nix restore the Helix package closure on a fresh store?",
+        "providers": [
+          "boringcache",
+          "cachix"
+        ],
+        "primary_metric": "build_and_reuse_seconds",
+        "timed_scope": "Nix package derivation build or substitution after its build dependencies are realized; dependency preparation, output verification and provider post-step publication are outside the build timer",
+        "storage": "provider-reported",
+        "cache_scope": "BoringCache case/series tag; Cachix content-addressed cache shared across series. Cold disables substitution after dependency preparation. Warm uses a fresh local output store and only the selected provider; compare exact output and dependency closure hashes.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "helix-editor/helix",
+        "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc"
+          }
+        ]
+      },
+      "plan_sha256": "13b528ec33fad1168b25a3aba84ad179e64e45d9e34c23cde1e56cf505c35829",
+      "definition_sha256": "f8f429de5d5cf14ae336f5691084bebbf5a7c68d93e76fcde5c3bcd702f370ef",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "cachix"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "cachix"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "helix-nix",
+      "series_id": "canary-screening-02",
+      "plan_path": "results/helix-nix/canary-screening-02/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Nix restore the Helix package closure on a fresh store?",
+        "providers": [
+          "boringcache",
+          "cachix"
+        ],
+        "primary_metric": "build_and_reuse_seconds",
+        "timed_scope": "Nix package derivation build or substitution after its build dependencies are realized; dependency preparation, output verification and provider post-step publication are outside the build timer",
+        "storage": "provider-reported",
+        "cache_scope": "BoringCache case/series tag; Cachix content-addressed cache shared across series. Cold disables substitution after dependency preparation. Warm uses a fresh local output store and only the selected provider; compare exact output and dependency closure hashes.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "helix-editor/helix",
+        "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc"
+          }
+        ]
+      },
+      "plan_sha256": "c091853f2c86baae18c7f93abe5e4dc93476624cd5833cab107488beaaacbcb0",
+      "definition_sha256": "f8f429de5d5cf14ae336f5691084bebbf5a7c68d93e76fcde5c3bcd702f370ef",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "cachix"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "cachix"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": []
     },
     {
       "case_id": "hugo-go",
@@ -3150,10 +3489,22 @@
       ],
       "report_state": "current",
       "report_path": "results/hugo-go/shared-evidence-01/report.json",
-      "evidence": [],
-      "runs_without_archives": [
-        "37294037661"
-      ]
+      "evidence": [
+        {
+          "repository": "boringcache/benchmarks",
+          "run_id": 37294037661,
+          "inventory_state": "complete",
+          "verified_files": 15,
+          "gaps": [],
+          "scope": "One Hugo Go cold/warm sample, including attempts, jobs, logs, artifacts, commit and workflow",
+          "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-shared-evidence-2026-10-05",
+          "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-shared-evidence-2026-10-05/benchmarks-37294037661.tar.gz",
+          "bundle_bytes": 184087,
+          "sha256": "8c73e249492a866a38764b6f155bdf9d31c32b41f7dd7a41d8210b29efd66441",
+          "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory"
+        }
+      ],
+      "runs_without_archives": []
     },
     {
       "case_id": "hugo-go",
@@ -8045,6 +8396,140 @@
           "publication_verification": "Downloaded uploaded assets, verified archive SHA-256, extracted bundle, and verified all listed run files and inventory"
         }
       ],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "zed-nix",
+      "series_id": "canary-screening-01",
+      "plan_path": "results/zed-nix/canary-screening-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Nix restore the Zed package closure on a fresh store?",
+        "providers": [
+          "boringcache",
+          "cachix"
+        ],
+        "primary_metric": "build_and_reuse_seconds",
+        "timed_scope": "Nix package derivation build or substitution after its build dependencies are realized; dependency preparation, output verification and provider post-step publication are outside the build timer",
+        "storage": "provider-reported",
+        "cache_scope": "BoringCache case/series tag; Cachix content-addressed cache shared across series. Cold disables substitution after dependency preparation. Warm uses a fresh local output store and only the selected provider; compare exact output and dependency closure hashes.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "zed-industries/zed",
+        "revision": "96837d78cb0f2128c1965716f8df56b8aea59742",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "96837d78cb0f2128c1965716f8df56b8aea59742"
+          }
+        ]
+      },
+      "plan_sha256": "78afa1f7f033f2ac0d7eb9673475085c1297161eb877f5925d392bbdf05fdbf5",
+      "definition_sha256": "1b3c69f6a80902c353f2f99374ee450af08f423e8f14642cfe60086f59ffa237",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "cachix"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "cachix"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "zed-nix",
+      "series_id": "canary-screening-02",
+      "plan_path": "results/zed-nix/canary-screening-02/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Nix restore the Zed package closure on a fresh store?",
+        "providers": [
+          "boringcache",
+          "cachix"
+        ],
+        "primary_metric": "build_and_reuse_seconds",
+        "timed_scope": "Nix package derivation build or substitution after its build dependencies are realized; dependency preparation, output verification and provider post-step publication are outside the build timer",
+        "storage": "provider-reported",
+        "cache_scope": "BoringCache case/series tag; Cachix content-addressed cache shared across series. Cold disables substitution after dependency preparation. Warm uses a fresh local output store and only the selected provider; compare exact output and dependency closure hashes.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "zed-industries/zed",
+        "revision": "96837d78cb0f2128c1965716f8df56b8aea59742",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "96837d78cb0f2128c1965716f8df56b8aea59742"
+          }
+        ]
+      },
+      "plan_sha256": "232baf4cadd9705cb853cd1410c1724fbb6b3869458cfa2bb489ea9148570a77",
+      "definition_sha256": "1b3c69f6a80902c353f2f99374ee450af08f423e8f14642cfe60086f59ffa237",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "cachix"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "cachix"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
       "runs_without_archives": []
     },
     {

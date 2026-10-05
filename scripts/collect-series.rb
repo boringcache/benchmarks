@@ -10,6 +10,9 @@ module CollectSeries
     raise BenchmarkSeries::Error, "Collection requires a complete verified evidence export" unless verified["state"] == "complete"
     run_id = verified.fetch("run_id").to_s
     receipts = Dir[File.join(directory, "dispatches", "*.json")].map { |path| JSON.parse(File.read(path)) }
+    receipts.select! do |receipt|
+      plan.fetch("workflow_inputs").all? { |key, value| receipt.dig("inputs", key) == value }
+    end
     unless receipts.any? { |receipt| receipt["run_id"].to_s == run_id && receipt["repository"] == verified["repository"] && receipt["case_id"] == plan["case_id"] && receipt.dig("inputs", "series_id") == plan["series_id"] && receipt.dig("inputs", "sample").to_s == sample.to_s }
       raise BenchmarkSeries::Error, "Evidence does not match a retained dispatch for this sample"
     end

@@ -1241,6 +1241,38 @@
       "scope": "One Hugo Go cold/warm sample, including attempts, jobs, logs, artifacts, commit and workflow",
       "execution_qualification": "Four verified phase records and two final product evidence artifacts, each with completed post phase; one sample, publication unreviewed",
       "repository_retirement": "This run does not approve retirement of any original repository"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37288249894,
+      "verified_files": 14,
+      "gaps": [],
+      "sha256": "fc2efcfa0277f1c4bf88ea4d10d9a01e23141e714b77c54e7d2553cfb37f0365",
+      "bundle_bytes": 2441898,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-independent-samples-2026-10-05",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-independent-samples-2026-10-05/benchmarks-37288249894.tar.gz",
+      "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory",
+      "verified_on": "2026-10-05",
+      "scope": "This run, including available attempts, jobs, logs, artifacts, commit and workflow",
+      "execution_qualification": "Failed BoringCache warm output check; five phase records retained, one missing; failed completion retained",
+      "repository_retirement": "This run does not approve retirement of any original repository"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37285092516,
+      "verified_files": 13,
+      "gaps": [],
+      "sha256": "e1ce01849b265442de7f9441c2eec2c4b4ed53d44e5d29faa749289891bc3ccd",
+      "bundle_bytes": 495240,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-independent-samples-2026-10-05",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-independent-samples-2026-10-05/benchmarks-37285092516.tar.gz",
+      "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory",
+      "verified_on": "2026-10-05",
+      "scope": "This run, including available attempts, jobs, logs, artifacts, commit and workflow",
+      "execution_qualification": "Cold and changed-source output checks passed; restore-only consumer, no rolling publication proof; storage unmeasured",
+      "repository_retirement": "This run does not approve retirement of any original repository"
     }
   ]
 }

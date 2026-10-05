@@ -13,24 +13,39 @@ require "yaml"
 class BenchmarkCaseScriptsTest < Minitest::Test
   ROOT = File.expand_path("..", __dir__)
 
-  def test_grpc_materializes_top_level_outputs_for_every_provider
+  def test_grpc_requests_the_same_reviewed_outputs_for_every_provider
     with_case("grpc") do |directory|
       tools = File.join(directory, "upstream/tools")
       FileUtils.mkdir_p(tools)
-      bazel = File.join(tools, "bazel")
-      File.write(bazel, "#!#{RbConfig.ruby}\nrequire 'json'\nputs JSON.generate(ARGV)\n")
-      File.chmod(0o755, bazel)
-      %w[actions-cache buildbuddy boringcache].each do |provider|
-        env = {"PATH" => "#{File.dirname(RbConfig.ruby)}:#{ENV.fetch('PATH')}",
-          "BAZEL_CACHE_STRATEGY" => provider, "BAZEL_OUTPUT_USER_ROOT" => File.join(directory, "root"),
-          "BAZEL_OUTPUT_BASE" => File.join(directory, "base"), "BAZEL_DISK_CACHE" => File.join(directory, "disk"),
-          "BUILDBUDDY_API_KEY" => "test-key", "BUILDBUDDY_REMOTE_INSTANCE_NAME" => "test-instance"}
-        output, error, status = Open3.capture3(env, "bash", "scripts/run-grpc-bazel-build.sh", chdir: directory)
-        assert status.success?, error
-        command = JSON.parse(output)
-        assert_includes command, "--remote_download_outputs=toplevel"
-        assert_equal %w[//examples/cpp/csm:csm_greeter_client //examples/cpp/csm:csm_greeter_server], command.last(2)
+      executable = File.join(tools, "bazel")
+      File.write(executable, "#!/bin/sh\nprintf '%s\\n' \"$@\" > \"$BAZEL_ARGUMENTS\"\n")
+      File.chmod(0o755, executable)
+      output = File.join(directory, "arguments")
+      command = JSON.parse(File.read(File.join(directory, "recipe-contract.json"))).dig("commands", "bazel")
+      assert_includes command, "--remote_download_outputs=toplevel"
+      environment = {"BAZEL_OUTPUT_USER_ROOT" => File.join(directory, "output-root"),
+        "BAZEL_OUTPUT_BASE" => File.join(directory, "output-base"), "BAZEL_DISK_CACHE" => File.join(directory, "disk-cache"),
+        "BAZEL_ARGUMENTS" => output, "BUILDBUDDY_API_KEY" => "test-key", "BUILDBUDDY_REMOTE_INSTANCE_NAME" => "test-series"}
+      %w[boringcache actions-cache buildbuddy].each do |provider|
+        _, errors, status = Open3.capture3(environment.merge("BAZEL_CACHE_STRATEGY" => provider,
+          "BUILDBUDDY_REMOTE_UPLOAD_LOCAL_RESULTS" => "false"), RbConfig.ruby,
+          File.join(directory, "scripts/run-grpc-bazel-build.rb"), chdir: directory)
+        assert status.success?, errors
+        arguments = File.readlines(output, chomp: true)
+        assert_equal command.drop(2), arguments.last(command.length - 2), provider
+        assert_equal ["--remote_download_outputs=toplevel"], arguments.grep(/--remote_download/), provider
+        if provider == "buildbuddy"
+          assert_includes arguments, "--remote_upload_local_results=false"
+          assert_includes arguments, "--remote_instance_name=test-series"
+        end
       end
+      File.unlink(output)
+      _, errors, status = Open3.capture3(environment.merge("BAZEL_CACHE_STRATEGY" => "buildbuddy",
+        "BUILDBUDDY_REMOTE_INSTANCE_NAME" => ""), RbConfig.ruby,
+        File.join(directory, "scripts/run-grpc-bazel-build.rb"), chdir: directory)
+      refute status.success?
+      assert_includes errors, "BUILDBUDDY_REMOTE_INSTANCE_NAME must not be empty"
+      refute File.exist?(output)
     end
   end
 
