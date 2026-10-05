@@ -10,8 +10,13 @@ Preparation installs the pinned PyTorch 2.14.0 CPU wheel, verified by its publis
 SHA-256, for the upstream `torchgen_files` generator. It does not install CUDA
 dependencies.
 
-
-The upstream portable executor runner target and Buck2 2025-05-06 pin are retained. The payload adds a local execution platform with remote caching enabled and remote execution disabled. Source submodules retain upstream pins. Verification checks executable ELF output and cold/warm hashes; it does not run an exported model.
+The upstream portable executor runner target is retained. Both providers use
+Buck2 2025-06-01 instead of the upstream 2025-05-06 pin. The newer client includes
+the [permission-check digest fix](https://github.com/facebook/buck2/pull/946);
+the old client sends SHA-1 blobs to the SHA-256 cache during its upload check.
+The payload adds a local execution platform with remote caching enabled and
+remote execution disabled. Source submodules retain upstream pins. Verification
+checks executable ELF output and cold/warm hashes; it does not run an exported model.
 
 Declared command: `buck2 build //examples/portable/executor_runner:executor_runner --show-output`.
 
