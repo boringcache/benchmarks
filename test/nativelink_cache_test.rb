@@ -43,6 +43,18 @@ class NativeLinkCacheTest < Minitest::Test
     end
   end
 
+  def test_seed_lookup_limits_the_prefix_query
+    with_env("NATIVELINK_INSTANCE" => "test-one") do
+      request = lambda do |*arguments|
+        assert_equal ["list-objects-v2", "--bucket", "benchmarks", "--prefix", "nativelink/test-one/seed.json", "--max-keys", "1", "--no-paginate"], arguments
+        {"Contents" => []}
+      end
+      NativeLinkCache.stub(:s3, request) do
+        assert_empty NativeLinkCache.objects(key_prefix: "nativelink/test-one/seed.json", limit: 1)
+      end
+    end
+  end
+
   def test_scope_cannot_escape_r2_prefix
     with_env("NATIVELINK_INSTANCE" => "../other") do
       capture_io { assert_raises(SystemExit) { NativeLinkCache.prefix } }
@@ -75,7 +87,11 @@ class NativeLinkCacheTest < Minitest::Test
       File.write(File.join(evidence, "build.log"), "INFO: 5 processes: 3 remote cache hit, 2 internal.\n")
       _, stderr, status = Open3.capture3(env, RbConfig.ruby, script, "finish", chdir: directory)
       assert status.success?, stderr
-      assert_equal 42, JSON.parse(File.read(File.join(evidence, "storage.json"))).fetch("bytes")
+      storage = JSON.parse(File.read(File.join(evidence, "storage.json")))
+      assert_equal 42, storage.fetch("bytes")
+      assert_equal 1, storage.dig("breakdown", "object_count")
+      assert_equal Digest::SHA256.file(File.join(evidence, "objects.json")).hexdigest, storage.dig("breakdown", "inventory_sha256")
+      refute storage.fetch("breakdown").key?("observations")
       assert_equal "cache_hit=true\n", File.read(env.fetch("GITHUB_OUTPUT"))
       File.write(File.join(outputs, "csm_greeter_client"), "changed output")
       _, stderr, status = Open3.capture3(env, RbConfig.ruby, script, "finish", chdir: directory)
