@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "grpc",
+  "series_id": "output-download-01",
+  "sample": 1,
+  "run_id": "37296157157",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37296157157",
+  "source_sha": "8f3c254c1e080a69d08446f224be655e6bbffb36",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "7192d33d863f1e7abb3f4ad9abe8eeb691310cd828a5f6ac2d107c0429bd110e"
+}

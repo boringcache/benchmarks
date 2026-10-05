@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "msgpack-sbt",
+  "series_id": "registry-qualification-01",
+  "sample": 2,
+  "run_id": "37302721578",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37302721578",
+  "source_sha": "09efe2188e21ac30bde55b760b6d3f0b23d24ac5",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "23057a79736019f974fe24bd5d9448b6e0a2539f778f5f2e0ed1818c5806d449"
+}

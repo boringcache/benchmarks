@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "plan_sha256": "9fd0981ad3a1f8c068ad8be0ca85a799d4eef6d67e94e2bbf5851e9cce9662e6",
+  "complete": false,
+  "valid_for_comparison": false,
+  "failures": [],
+  "methodology_issues": [
+    "This series does not declare a comparison of provider performance."
+  ],
+  "execution_verified": false,
+  "missing_completions": [],
+  "failed_completions": [
+    {
+      "schema_version": 1,
+      "case_id": "stackstorm-pants",
+      "series_id": "registry-screening-02",
+      "sample": 1,
+      "run_id": "37302004103",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37302004103",
+      "source_sha": "b32e311b56132e7527aceada2aaae9f957431c63",
+      "github_conclusion": "failure",
+      "status": "failed",
+      "errors": [
+        "Workflow concluded failure",
+        "boringcache stackstorm-pants cold: failure",
+        "bazel-remote stackstorm-pants cold: failure"
+      ],
+      "evidence_manifest_sha256": "ede5e77e9b757f31622697cec3fa93f8667cb0fd0d6d2cf1e5de44c94b3a8b35"
+    }
+  ],
+  "completions": [
+    {
+      "schema_version": 1,
+      "case_id": "stackstorm-pants",
+      "series_id": "registry-screening-02",
+      "sample": 1,
+      "run_id": "37302004103",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37302004103",
+      "source_sha": "b32e311b56132e7527aceada2aaae9f957431c63",
+      "github_conclusion": "failure",
+      "status": "failed",
+      "errors": [
+        "Workflow concluded failure",
+        "boringcache stackstorm-pants cold: failure",
+        "bazel-remote stackstorm-pants cold: failure"
+      ],
+      "evidence_manifest_sha256": "ede5e77e9b757f31622697cec3fa93f8667cb0fd0d6d2cf1e5de44c94b3a8b35"
+    }
+  ],
+  "publication": "unreviewed",
+  "evidence_preservation": "requires-review",
+  "primary_metric": "correctness",
+  "missing": [
+    [
+      1,
+      "cold",
+      "boringcache"
+    ],
+    [
+      1,
+      "cold",
+      "bazel-remote"
+    ],
+    [
+      1,
+      "warm",
+      "boringcache"
+    ],
+    [
+      1,
+      "warm",
+      "bazel-remote"
+    ]
+  ],
+  "summaries": [],
+  "records": [],
+  "exclusions": []
+}
