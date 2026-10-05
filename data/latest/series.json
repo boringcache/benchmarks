@@ -309,7 +309,7 @@
       },
       "plan_sha256": "e5379cf5682072b17fdb8c84817c5f3be017e8198cc3736fc293eab4ec128101",
       "definition_sha256": "52905a400cd73743dd63ecbc168b449305b22a880acc70f56034ee6d4b6fe318",
-      "state": "planned",
+      "state": "requested",
       "publication": "unreviewed",
       "valid_for_comparison": false,
       "execution_verified": false,
@@ -329,13 +329,33 @@
         ]
       ],
       "summaries": [],
-      "dispatches": [],
+      "dispatches": [
+        {
+          "case_id": "deno",
+          "repository": "boringcache/benchmarks",
+          "workflow": "deno-deno-cargo-product.yml",
+          "lane": "fresh",
+          "inputs": {
+            "cli_version": "vcli-canary-4c236cd7ee00",
+            "cache_profile": "cargo-product",
+            "series_id": "cli-canary-repeat-01",
+            "sample": "1"
+          },
+          "ref": "deno-canary-repeat-01",
+          "state": "requested",
+          "requested_at": "2026-10-05T08:40:26Z",
+          "run_id": 37285092516,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37285092516"
+        }
+      ],
       "completions": [],
       "report_state": "missing",
       "report_path": null,
-      "interpretation_path": null,
+      "interpretation_path": "results/deno/cli-canary-repeat-01/interpretation.md",
       "evidence": [],
-      "runs_without_archives": []
+      "runs_without_archives": [
+        "37285092516"
+      ]
     },
     {
       "case_id": "deno",
