@@ -38,6 +38,7 @@ jobs:
       - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
         with:
           ruby-version: '3.4'
+          bundler-cache: true
       - name: Preserve completed run and verify published archive
         env:
           GH_TOKEN: ${{ github.token }}
@@ -45,7 +46,7 @@ jobs:
           EVIDENCE_SERIES: ${{ matrix.series }}
           EVIDENCE_SAMPLE: ${{ matrix.sample }}
         run: |
-          ruby scripts/preserve-cadence-run.rb
+          bundle exec ruby scripts/preserve-cadence-run.rb
       - name: Retain collection and publication receipts
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
