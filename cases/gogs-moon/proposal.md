@@ -1,6 +1,7 @@
 # gogs-moon
 
-Status: native REAPI correctness screen implemented; hosted qualification pending.
+Status: two cold/warm samples passed for both providers.
+[Recorded results](../../results/gogs-moon/registry-qualification-01/report.md).
 
 Source: [gogs/gogs at `dbbd717e923694c36f41b0360515b4374bbe6ee0`](https://github.com/gogs/gogs/tree/dbbd717e923694c36f41b0360515b4374bbe6ee0).
 

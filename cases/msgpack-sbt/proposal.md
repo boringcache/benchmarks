@@ -1,6 +1,7 @@
 # msgpack-sbt
 
-Status: native REAPI correctness screen implemented; hosted qualification pending.
+Status: two cold/warm samples passed for both providers.
+[Recorded results](../../results/msgpack-sbt/registry-qualification-01/report.md).
 
 Source: [msgpack/msgpack-java at `5c28fbad6cd360d8ea822df109830ae2517a7ae4`](https://github.com/msgpack/msgpack-java/tree/5c28fbad6cd360d8ea822df109830ae2517a7ae4).
 

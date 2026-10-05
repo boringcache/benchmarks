@@ -64,8 +64,7 @@ module ReapiClient
       raise Error, "Output check failed: #{command.first}" unless system(*command)
     end
     if ENV.fetch("PHASE") == "warm"
-      log = File.read("reapi-evidence/build.log")
-      raise Error, "No native remote-cache hit was recorded" unless Regexp.new(recipe.fetch("warm_hit_pattern"), Regexp::IGNORECASE).match?(log)
+      raise Error, "No native remote-cache hit was recorded" unless remote_cache_hit?
     end
     output = files.to_h { |path| [path, Digest::SHA256.file(path).hexdigest] }
     File.write("reapi-evidence/outputs.json", JSON.pretty_generate(output) + "\n")
@@ -73,6 +72,10 @@ module ReapiClient
       seed = JSON.parse(File.read("cold-checks/outputs.json"))
       raise Error, "Outputs differ from the cold build" unless seed == output
     end
+  end
+
+  def self.remote_cache_hit?
+    Regexp.new(recipe.fetch("warm_hit_pattern"), Regexp::IGNORECASE).match?(File.read("reapi-evidence/build.log"))
   end
 end
 

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "case_id": "opencut-moon",
+  "series_id": "registry-screening-02",
+  "sample": 1,
+  "run_id": "37302001164",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37302001164",
+  "source_sha": "b32e311b56132e7527aceada2aaae9f957431c63",
+  "github_conclusion": "failure",
+  "status": "failed",
+  "errors": [
+    "Workflow concluded failure",
+    "boringcache opencut-moon warm: failure"
+  ],
+  "evidence_manifest_sha256": "09e17dc66880bf03926e144770b393e02d183ee23c1675b0d1a3854ebdb6d5d6"
+}

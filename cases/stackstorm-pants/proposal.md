@@ -1,6 +1,7 @@
 # stackstorm-pants
 
-Status: native REAPI correctness screen implemented; hosted qualification pending.
+Status: two cold/warm samples passed for both providers.
+[Recorded results](../../results/stackstorm-pants/registry-qualification-01/report.md).
 
 Source: [StackStorm/st2 at `9824de4dfd0c869869e310dee729308f398ad83a`](https://github.com/StackStorm/st2/tree/9824de4dfd0c869869e310dee729308f398ad83a).
 
@@ -8,7 +9,11 @@ Source: [StackStorm/st2 at `9824de4dfd0c869869e310dee729308f398ad83a`](https://g
 
 This screen selects `pants-plugins/pack_metadata/target_types_test.py`, a plugin test file that does not require MongoDB, RabbitMQ or Redis services. Pants 2.25.0 and Python 3.11.14 are pinned. Test reports must contain tests and no failures or errors. Full StackStorm service tests are outside this screen.
 
-Declared command: `pants --no-pantsd --stats-log test --report pants-plugins/pack_metadata/target_types_test.py`.
+The command selects pytest from the existing `pants-plugins` lockfile and disables
+root conftest inference for this isolated plugin test. The normal global pytest
+resolve selects the service lockfile, whose unpinned Orquesta Git dependency no
+longer matches its retained hash. This screen does not regenerate or relax that
+service lockfile. The full command is recorded in `payload/reapi-recipe.json`.
 
 The case uses the shared `reapi-fresh-benchmark.yml` workflow, registry runner,
 source verifier and canonical reporter. Tool installation and dependency
