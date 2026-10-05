@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "case_id": "mastodon",
+  "state": "dispatching",
+  "cli_version": "vcli-canary-7a5b27146ebe",
+  "ref": "cadence-rehearsal-publication",
+  "proposal": {
+    "case_id": "mastodon",
+    "updated": true,
+    "base_sha": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+    "head_sha": "842b86096dbe3067a02e3f16809e2368eaeddce9",
+    "state": "proposal",
+    "requires_case_qualification": true
+  },
+  "created_at": "2026-10-05T14:13:24Z",
+  "runs": [
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-rolling-benchmark.yml",
+      "inputs": {
+        "case_id": "mastodon",
+        "cli_version": "vcli-canary-7a5b27146ebe",
+        "variant": "server"
+      },
+      "state": "requesting"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-rolling-benchmark.yml",
+      "inputs": {
+        "case_id": "mastodon",
+        "cli_version": "vcli-canary-7a5b27146ebe",
+        "variant": "streaming"
+      },
+      "state": "requesting"
+    }
+  ]
+}
