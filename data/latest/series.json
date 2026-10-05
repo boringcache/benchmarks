@@ -276,6 +276,89 @@
     },
     {
       "case_id": "deno",
+      "series_id": "cli-canary-repeat-01",
+      "plan_path": "results/deno/cli-canary-repeat-01/series.json",
+      "lane": "fresh",
+      "variant": "cargo-product",
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+        "providers": [
+          "boringcache"
+        ],
+        "timed_scope": "The two BoringCache Cargo release operations, including restore, build, and any permitted publication. Fresh changed-source consumers use restore-only trust; rolling jobs permit publication to the declared cohort. Output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.",
+        "primary_metric": "correctness",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "denoland/deno",
+        "pins": [
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+            "kind": "env"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "b4f08f127652d8442b4d3dbabc277aca3840bc1d",
+            "kind": "env"
+          }
+        ]
+      },
+      "plan_sha256": "e5379cf5682072b17fdb8c84817c5f3be017e8198cc3736fc293eab4ec128101",
+      "definition_sha256": "52905a400cd73743dd63ecbc168b449305b22a880acc70f56034ee6d4b6fe318",
+      "state": "requested",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "commit",
+          "boringcache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "deno",
+          "repository": "boringcache/benchmarks",
+          "workflow": "deno-deno-cargo-product.yml",
+          "lane": "fresh",
+          "inputs": {
+            "cli_version": "vcli-canary-4c236cd7ee00",
+            "cache_profile": "cargo-product",
+            "series_id": "cli-canary-repeat-01",
+            "sample": "1"
+          },
+          "ref": "deno-canary-repeat-01",
+          "state": "requested",
+          "requested_at": "2026-10-05T08:40:26Z",
+          "run_id": 37285092516,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37285092516"
+        }
+      ],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "interpretation_path": "results/deno/cli-canary-repeat-01/interpretation.md",
+      "evidence": [],
+      "runs_without_archives": [
+        "37285092516"
+      ]
+    },
+    {
+      "case_id": "deno",
       "series_id": "consolidated-cargo-proof",
       "plan_path": "results/deno/consolidated-cargo-proof/series.json",
       "lane": "fresh",
