@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "case_id": "grpc",
+  "series_id": "nativelink-r2-rolling-seed-01",
+  "sample": 1,
+  "run_id": "37357537232",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37357537232",
+  "source_sha": "e4ba76c30f6b90b8e19c1420a38a9f1c11827abc",
+  "github_conclusion": "cancelled",
+  "status": "failed",
+  "errors": [
+    "Workflow concluded cancelled",
+    "NativeLink (R2) gRPC Bazel commit: cancelled",
+    "BuildBuddy gRPC Bazel commit: cancelled",
+    "GitHub Actions gRPC Bazel commit: cancelled",
+    "BoringCache gRPC Bazel commit: cancelled",
+    "gRPC Bazel rolling report: cancelled"
+  ],
+  "evidence_manifest_sha256": "8673dd13f3c66c3a19eb1e06bc17ec3972e02f98f549b6aa8ae7e24e83dcd952"
+}

@@ -18,3 +18,10 @@ qualify rolling reuse. Two fresh samples run separately with isolated prefixes.
 The initial 45-minute seed attempt was cancelled after identifying an insufficient
 bootstrap budget: a prior successful Actions Cache cold build took 54 minutes.
 The replacement uses 90 minutes and a new scope; it does not reuse partial objects.
+
+The unexecuted advancement plan `nativelink-r2-rolling-advance-02` is superseded
+by `nativelink-r2-rolling-advance-03`. The latter tests installation inside setup
+timing, bounded seed lookup, and separate raw R2 inventory retention. NativeLink
+version, cache configuration, build commands, and the shared R2 prefix are unchanged.
+The seed used the earlier setup boundary; these seed/advance observations qualify
+cache continuity and outputs, not a timing comparison between those definitions.
