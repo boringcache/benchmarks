@@ -2,6 +2,9 @@
 
 Status: native REAPI correctness screen implemented; hosted qualification pending.
 
+The shared Moon configuration enables `experiments.casOutputsCache`: the pinned
+Moon 2.3.3 uploads remote outputs through that cache path.
+
 Source: [OpenCut-app/OpenCut at `e668010778568641babef2cc40be4703ae6916d6`](https://github.com/OpenCut-app/OpenCut/tree/e668010778568641babef2cc40be4703ae6916d6).
 
 ## Workload

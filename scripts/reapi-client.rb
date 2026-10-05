@@ -21,6 +21,7 @@ module ReapiClient
     when "moon"
       path = ".moon/workspace.yml"
       config = YAML.safe_load(File.read(path))
+      config["experiments"] = config.fetch("experiments", {}).merge("casOutputsCache" => true)
       config["remote"] = {"host" => ENDPOINT, "api" => "grpc", "cache" => {"instanceName" => "", "compression" => "none", "verifyIntegrity" => true}}
       File.write(path, YAML.dump(config))
       ENV["MOON_CACHE"] = warm ? "read" : "read-write"

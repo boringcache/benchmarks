@@ -12,8 +12,8 @@
     ]
   ],
   "outputs": [
-    "msgpack-core/target/**/*.class",
-    "msgpack-jackson/target/**/*.class"
+    "target/out/jvm/u/msgpack-core/**/*.class",
+    "target/out/jvm/u/jackson-dataformat-msgpack/**/*.class"
   ],
   "warm_hit_pattern": "remote.*cache.*hit|cache.*hit.*remote"
 }
