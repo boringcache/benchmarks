@@ -2613,6 +2613,48 @@
       "publication_verification": "Downloaded the published archive, checked its SHA-256, extracted it, and verified every listed file and the run inventory",
       "verified_on": "2026-10-05",
       "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37357215892,
+      "verified_files": 17,
+      "gaps": [],
+      "inventory_state": "complete",
+      "sha256": "0a05d20685928d0fcdcaa33d5fbe74e57caafefe479f4ac2a04eb9c2bb3cc17a",
+      "bundle_bytes": 7116184,
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-nativelink-2026-10-05",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-nativelink-2026-10-05/benchmarks-37357215892.tar.gz",
+      "publication_verification": "Downloaded the published archive, checked its SHA-256, extracted it, and verified every listed file and the run inventory",
+      "verified_on": "2026-10-05",
+      "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37357216555,
+      "verified_files": 15,
+      "gaps": [],
+      "inventory_state": "complete",
+      "sha256": "ad16b0749d35c38674a78c884b8c5e31aad4c4879d54690d6835bbbc266817fb",
+      "bundle_bytes": 6548888,
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-nativelink-2026-10-05",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-nativelink-2026-10-05/benchmarks-37357216555.tar.gz",
+      "publication_verification": "Downloaded the published archive, checked its SHA-256, extracted it, and verified every listed file and the run inventory",
+      "verified_on": "2026-10-05",
+      "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37357892389,
+      "verified_files": 17,
+      "gaps": [],
+      "inventory_state": "complete",
+      "sha256": "721c04d359b7ab70fdbeb82aeef27ce5788a24adad25a561898a7e7ac13fa1c6",
+      "bundle_bytes": 7459668,
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-nativelink-2026-10-05",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-nativelink-2026-10-05/benchmarks-37357892389.tar.gz",
+      "publication_verification": "Downloaded the published archive, checked its SHA-256, extracted it, and verified every listed file and the run inventory",
+      "verified_on": "2026-10-05",
+      "scope": "This run's available attempts, jobs, logs, artifacts, commit metadata, and workflow"
     }
   ]
 }
