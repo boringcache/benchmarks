@@ -1,0 +1,93 @@
+name: Native REAPI benchmark
+description: Runs a native client against the shared cache registry path.
+inputs:
+  case-id:
+    required: true
+  provider:
+    required: true
+  phase:
+    required: true
+  cli-version:
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Verify the source recipe
+      shell: bash
+      run: ruby scripts/verify-upstream-recipe.rb .
+    - name: Install workload tools
+      uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db
+      with:
+        cache: false
+    - name: Install registry binaries
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        CLI_RELEASE: ${{ inputs.cli-version }}
+        PROVIDER: ${{ inputs.provider }}
+      run: ruby scripts/reapi-setup.rb install
+    - name: Prepare workload dependencies
+      shell: bash
+      run: ruby scripts/reapi-setup.rb prepare
+    - name: Restore the comparator store
+      if: inputs.provider == 'bazel-remote' && inputs.phase == 'warm'
+      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        name: reapi-store-${{ inputs.case-id }}
+        path: reapi-store
+    - name: Download cold output checks
+      if: inputs.phase == 'warm'
+      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        name: reapi-${{ inputs.case-id }}-${{ inputs.provider }}-cold
+        path: cold-checks
+    - name: Run BoringCache with workload identity
+      if: inputs.provider == 'boringcache'
+      shell: bash
+      env:
+        PHASE: ${{ inputs.phase }}
+        PROVIDER: ${{ inputs.provider }}
+        BENCHMARK_ID: ${{ inputs.case-id }}
+        CACHE_LANE: fresh
+        BORINGCACHE_WORKSPACE: boringcache/benchmarks
+      run: boringcache ci run --oidc-provider github-actions -- ruby scripts/reapi-client.rb build
+    - name: Run bazel-remote
+      if: inputs.provider == 'bazel-remote'
+      shell: bash
+      env:
+        PHASE: ${{ inputs.phase }}
+        PROVIDER: ${{ inputs.provider }}
+        BENCHMARK_ID: ${{ inputs.case-id }}
+        CACHE_LANE: fresh
+      run: ruby scripts/reapi-client.rb build
+    - name: Verify outputs and record measurements
+      shell: bash
+      env:
+        PHASE: ${{ inputs.phase }}
+        PROVIDER: ${{ inputs.provider }}
+        BENCHMARK_ID: ${{ inputs.case-id }}
+        CACHE_LANE: fresh
+      run: |
+        ruby scripts/reapi-client.rb verify
+        ruby scripts/reapi-setup.rb report
+    - name: Retain the comparator store
+      if: inputs.provider == 'bazel-remote' && inputs.phase == 'cold'
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: reapi-store-${{ inputs.case-id }}
+        path: reapi-store/
+        compression-level: 0
+        if-no-files-found: error
+    - name: Retain native checks and logs
+      if: always()
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: reapi-${{ inputs.case-id }}-${{ inputs.provider }}-${{ inputs.phase }}
+        path: reapi-evidence/
+        if-no-files-found: error
+    - name: Retain phase measurements
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: phase-${{ inputs.case-id }}-${{ inputs.provider }}-fresh-${{ inputs.phase }}
+        path: benchmark-results/
+        if-no-files-found: error

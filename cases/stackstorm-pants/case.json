@@ -22,34 +22,37 @@
   },
   "execution": {
     "sync": "fixed",
-    "workflows": [],
-    "blockers": [
-      "Qualify a released CLI/Action with the required native REAPI client support",
-      "Add and verify a workflow through the shared provider wrapper and canonical reporter",
-      "Qualify upstream Pants 2.25.0 with the released product",
-      "Pin service images and review selected tests for external state and Pants cacheability",
-      "Record cache-only remote settings and the exact selected test inventory"
-    ]
+    "workflows": [
+      {
+        "path": ".github/workflows/reapi-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "stackstorm-pants"
+        }
+      }
+    ],
+    "blockers": []
   },
   "reporting": {
     "entries": [],
     "publication": "evaluation-only"
   },
   "verification": [
-    "Require the selected Pants tests to pass and preserve test counts and results",
-    "Verify both providers select the same tests and service configuration",
-    "Use fresh local Pants process/result state before warm replay; require native remote-hit evidence"
+    "Require the declared native command to succeed",
+    "Require declared outputs and successful output checks",
+    "Require native remote-hit evidence and the same output hashes on the warm worker",
+    "Require registry shutdown to complete successfully"
   ],
   "comparison": {
-    "question": "Does Pants reuse StackStorm test results on a clean worker?",
+    "question": "Does Pants restore StackStorm pack metadata test results on a clean worker?",
     "providers": [
       "boringcache",
       "bazel-remote"
     ],
-    "primary_metric": "build_and_reuse_seconds",
-    "timed_scope": "Declared native command after toolchain, dependency and service preparation; measure cache setup/restore and upload completion separately",
-    "storage": "provider-reported",
-    "cache_scope": "Isolated case, series and provider identity; fresh local result state for cold and identical-source warm workers; warm retains its remote seed",
+    "primary_metric": "correctness",
+    "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+    "storage": "unmeasured",
+    "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
     "sample_count": 2
   }
 }

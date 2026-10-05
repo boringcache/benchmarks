@@ -26,7 +26,7 @@ module BenchmarkReport
     "warm" => %w[warm1_seconds warm1_build_seconds warm1_restore_or_setup_seconds],
     "commit" => ["rolling_first_build_seconds", nil, nil]}.freeze
   ADAPTERS = {"docker" => "oci", "buildkit" => "oci", "go" => "gocache", "cargo" => "sccache",
-    "node" => "runtime", "turbo" => "turborepo", "command" => "archive"}.freeze
+    "node" => "runtime", "reapi" => "runtime", "turbo" => "turborepo", "command" => "archive"}.freeze
   class Error < StandardError; end
 
   def self.options(argv)
@@ -38,7 +38,7 @@ module BenchmarkReport
       "verification_passed" => false, "evidence_links" => []}
     parser = OptionParser.new
     %w[benchmark strategy lane phase mode variant cache_hit cache_import_ready cache_import_refs cache_tag
-      workspace storage_key source_repository source_sha evidence output_dir title input_dir baseline_strategy sccache_proof series].each do |name|
+      workspace storage_key source_repository source_sha evidence output_dir title input_dir baseline_strategy sccache_proof series cli_version].each do |name|
       parser.on("--#{name.tr('_', '-')} VALUE") { |value| args[name] = value }
     end
     parser.on("--sample NUMBER", Integer) { |value| args["sample"] = value }
@@ -193,6 +193,11 @@ module BenchmarkReport
       {"import_tags" => strings(plan["cache_from_tags"]), "planned_import_refs" => strings(plan["cache_from_refs"]).length, "export_tag" => plan["cache_to_tag"]}
     end
     refs = evidence.fetch("product_refs", {}).select { |key, value| PRODUCT_REF_FIELDS.include?(key) && ![nil, ""].include?(value) }
+    if args["cli_version"]
+      raise Error, "Direct CLI version requires REAPI mode without Action evidence" unless args["mode"] == "reapi" && evidence.empty?
+      raise Error, "Invalid CLI version" unless args["cli_version"].match?(/\A\d+\.\d+\.\d+(?:-[A-Za-z0-9.-]+)?\z/)
+      refs = {"cli_version" => args["cli_version"]}
+    end
     context = File.file?("benchmark-context.json") ? read_json("benchmark-context.json") : nil
     payload = {"schema_version" => SCHEMA_VERSION, "benchmark" => args["benchmark"], "strategy" => args["strategy"],
       "lane" => args["lane"], "phase" => args["phase"], "variant" => args["variant"].empty? ? nil : args["variant"],

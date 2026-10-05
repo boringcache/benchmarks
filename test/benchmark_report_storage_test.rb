@@ -12,6 +12,20 @@ require_relative "../scripts/canonical/benchmark-report"
 class BenchmarkReportStorageTest < Minitest::Test
   CANONICAL = File.expand_path("../scripts/canonical/benchmark-report.rb", __dir__)
 
+  def test_direct_registry_records_cli_version_without_inventing_action_identity
+    Dir.mktmpdir do |dir|
+      payload = write_phase(dir, evidence: false, extra_args: ["--mode", "reapi", "--cli-version", "1.34.0"])
+      assert_equal({"cli_version" => "1.34.0"}, payload.fetch("product_refs"))
+      assert_equal "runtime", payload.fetch("adapter")
+      assert_nil payload.dig("action", "resolved_mode")
+    end
+  end
+
+  def test_direct_cli_version_cannot_override_action_evidence
+    args = {"strategy" => "actions-cache", "mode" => "gradle", "cli_version" => "1.34.0"}
+    assert_raises(BenchmarkReport::Error) { BenchmarkReport.phase(args) }
+  end
+
   def test_phase_verification_does_not_claim_every_case_check_has_run
     Dir.mktmpdir do |dir|
       File.write(File.join(dir, "benchmark-context.json"), JSON.generate(

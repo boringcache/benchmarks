@@ -419,3 +419,26 @@ uses them. Update the shared reporter when measurement semantics change, and
 retain explicit unknown or unmeasured values. Fix missing product capabilities
 in the product; do not reproduce its installers, cache identity, proxy lifecycle,
 or internal evidence normalization in individual benchmark cases.
+
+### Native REAPI screens
+
+Until managed native adapters are available, Moon, Pants, Buck2 and sbt use the
+shared `reapi-fresh-benchmark.yml` workflow and `reapi-benchmark` action. This is
+an explicitly selected direct CLI path. `ci run` owns renewable OIDC identity;
+`cache-registry --reapi-port` owns cache serving, publication and shutdown flush.
+The shared runner supervises that command and retains its exit status and logs.
+Client settings live in one shared helper; cases contain workload recipes and
+reviewed configuration patches. Do not add per-case proxy wrappers.
+
+This path downloads the selected release asset and verifies its published
+SHA-256 through one shared helper. It retains the requested release, asset and
+checksum. It records the actual CLI version without inventing One Action refs
+or an Action evidence envelope. A managed product adapter should replace this
+shared entrypoint when available.
+
+The bazel-remote comparison arm transfers its store through a GitHub artifact
+outside timing. These series declare correctness as the primary metric and must
+not support an end-to-end provider speed comparison. Native hit evidence and
+matching outputs on a separate warm worker are required. Missing storage stays
+unmeasured. New performance comparisons require a separately reviewed service
+and transfer measurement boundary.

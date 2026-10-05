@@ -13,7 +13,8 @@
         "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
         "kind": "snapshot"
       }
-    ]
+    ],
+    "patch": "cache.patch"
   },
   "origin": {
     "repository": "msgpack/msgpack-java",
@@ -21,34 +22,38 @@
     "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4"
   },
   "execution": {
-    "workflows": [],
+    "workflows": [
+      {
+        "path": ".github/workflows/reapi-fresh-benchmark.yml",
+        "lane": "fresh",
+        "inputs": {
+          "case_id": "msgpack-sbt"
+        }
+      }
+    ],
     "sync": "fixed",
-    "blockers": [
-      "Qualify a released CLI/Action with the required native REAPI client support",
-      "Add and verify a reviewed workflow and its provider configuration",
-      "Record addRemoteCachePlugin and remoteCache settings as an explicit patch",
-      "Select the upstream Java 21 matrix member and preserve its normal test command"
-    ]
+    "blockers": []
   },
   "reporting": {
     "entries": [],
     "publication": "evaluation-only"
   },
   "verification": [
-    "Require upstream unit tests to pass",
-    "Verify expected class and JAR outputs",
-    "Clear target and local result state before proving remote reuse"
+    "Require the declared native command to succeed",
+    "Require declared outputs and successful output checks",
+    "Require native remote-hit evidence and the same output hashes on the warm worker",
+    "Require registry shutdown to complete successfully"
   ],
   "comparison": {
-    "question": "Does sbt 2.0.9 reuse MessagePack compilation through its native gRPC client?",
+    "question": "Does sbt reuse MessagePack compilation and test results on a clean worker?",
     "providers": [
       "boringcache",
       "bazel-remote"
     ],
-    "timed_scope": "Native build and cache reuse after toolchain and dependency preparation; record cache upload completion separately",
-    "primary_metric": "build_and_reuse_seconds",
-    "storage": "provider-reported",
-    "cache_scope": "Isolated case, series, and provider identity; warm workers retain remote state and remove local action results",
+    "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance.",
+    "primary_metric": "correctness",
+    "storage": "unmeasured",
+    "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker.",
     "sample_count": 2
   }
 }

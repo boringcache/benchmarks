@@ -1,34 +1,37 @@
-# Gogs / Moon
+# gogs-moon
 
-Status: source-pinned evaluation; execution is blocked by `case.json`.
-No benchmark measurements have been collected.
+Status: native REAPI correctness screen implemented; hosted qualification pending.
 
 Source: [gogs/gogs at `dbbd717e923694c36f41b0360515b4374bbe6ee0`](https://github.com/gogs/gogs/tree/dbbd717e923694c36f41b0360515b4374bbe6ee0).
 
-Reviewed upstream files:
-
-- [.moon/workspace.yml](https://github.com/gogs/gogs/blob/dbbd717e923694c36f41b0360515b4374bbe6ee0/.moon/workspace.yml)
-- [moon.yml](https://github.com/gogs/gogs/blob/dbbd717e923694c36f41b0360515b4374bbe6ee0/moon.yml)
-- [web/moon.yml](https://github.com/gogs/gogs/blob/dbbd717e923694c36f41b0360515b4374bbe6ee0/web/moon.yml)
-
 ## Workload
 
-Pin Moon, Go and pnpm from the reviewed upstream environment. Prepare locked dependencies and generated sources before timing on Linux x86_64.
+This screen selects the upstream `web:build` task, not the Go server production task. The normal pnpm install dependency task remains inside the Moon graph. Node 24.13.0, pnpm 11.1.3 and Moon 2.5.6 are pinned. The upstream pnpm lockfile is unchanged.
 
-Proposed timed command: `moon run gogs:build-prod`.
+Declared command: `moon run web:build`.
 
-The production task builds `.bin/gogs` and depends on `web:build`, which produces `public/dist`. The upstream command embeds the current time using `date`; record a patch that uses a fixed source timestamp in both provider arms. Dependency tasks remain in the graph: verify whether they execute inside the measured command and label that work explicitly.
+The case uses the shared `reapi-fresh-benchmark.yml` workflow, registry runner,
+source verifier and canonical reporter. Tool installation and dependency
+preparation run before timing. Required dependency tasks that the native client
+runs again remain inside the command measurement.
 
-## Comparison
+## Cache and verification
 
-Start with two cold builds and their identical-source warm replays per provider.
-Compare BoringCache with `bazel-remote` using the same source, client, runner,
-outputs and local execution. Declare endpoint settings and configuration patches
-before execution. Keep remote execution disabled.
+BoringCache runs through `boringcache ci run` and `cache-registry --reapi-port`.
+The CLI owns OIDC renewal, storage, cache publication and shutdown flushing.
+Cold uses a fresh case/series/sample/run tag. Warm uses a separate worker and a
+read-only registry. Native client result state is not transferred between workers.
 
-Record cache setup/restore, the declared command, upload completion, native
-hit/miss evidence, output checks and provider storage sources. Missing storage
-remains unmeasured. Failed observations remain in the series.
+The protocol comparator is bazel-remote 2.6.2. Its local store is transferred as a
+GitHub artifact before the warm registry starts. That transfer is outside timing,
+so this is a correctness screen, not an end-to-end provider performance comparison.
+Registry startup, native command and shutdown durations are recorded separately.
+Storage is unmeasured. No schedule or performance publication is enabled.
 
-Follow [the shared case process](../../docs/process.md). The case has no schedule
-or published results. `case.json` lists the remaining activation checks.
+Warm qualification requires native remote-hit evidence, verified outputs matching
+the cold hashes and successful registry shutdown. Failed runs and their logs are
+retained. The initial screen uses one sample; repeat qualification uses the case's
+two-sample declaration. Neither establishes a general performance advantage.
+
+This temporary shared registry entrypoint can be replaced by the product adapter
+without changing the source recipes or output checks.
