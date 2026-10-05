@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "msgpack-sbt",
+  "series_id": "cadence-rolling-advance-02",
+  "sample": 1,
+  "run_id": "37324214890",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37324214890",
+  "source_sha": "727afc60de757e1e7d7690ff5c9433f06fde54a6",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "a49c2ba2066ca33e2fef110f6cf68bbff938c9ba3212571c8dc6aaf97a99799d"
+}

@@ -10,7 +10,7 @@ permissions:
   actions: read
 jobs:
   previous:
-    name: '${{ inputs.case_id }} previous rolling run'
+    name: Reconcile previous runs
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -48,7 +48,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 90
   inspect:
-    name: '${{ inputs.case_id }} source check'
+    name: Check source
     needs: previous
     if: needs.previous.outputs.proceed == 'true'
     runs-on: ubuntu-24.04
@@ -87,7 +87,7 @@ jobs:
           if-no-files-found: error
           retention-days: 90
   publish:
-    name: '${{ inputs.case_id }} queue rolling runs'
+    name: Prepare rolling runs
     needs: [previous, inspect]
     if: needs.inspect.outputs.changed == 'true'
     runs-on: ubuntu-24.04

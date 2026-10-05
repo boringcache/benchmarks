@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "n8n",
+  "series_id": "cadence-rolling-advance-runners",
+  "sample": 1,
+  "run_id": "37323150431",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323150431",
+  "source_sha": "915ea2921d4b4d23f0238a4b7e28ecce1bbcc880",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "9b87465fe9de14a641423ad22393b66514278972c78f5aab173864f341c67a5f"
+}

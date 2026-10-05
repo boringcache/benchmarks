@@ -72,6 +72,10 @@ module ReapiSetup
       "current" => {"case_id" => ENV.fetch("BENCHMARK_ID"), "source" => context.fetch("source"),
         "run_id" => ENV.fetch("GITHUB_RUN_ID"), "run_attempt" => ENV.fetch("GITHUB_RUN_ATTEMPT")}}
     File.write("reapi-evidence/rolling-seed.json", JSON.pretty_generate(seed) + "\n")
+    # bazel-remote rejects extra files in its store. Retain the source receipt
+    # in evidence before starting it; publish_seed writes the next receipt only
+    # after the server has stopped and output verification has passed.
+    File.delete(path) if File.file?(path)
   end
 
   def self.publish_seed

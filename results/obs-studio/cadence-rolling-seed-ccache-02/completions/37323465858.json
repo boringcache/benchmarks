@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "obs-studio",
+  "series_id": "cadence-rolling-seed-ccache-02",
+  "sample": 1,
+  "run_id": "37323465858",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323465858",
+  "source_sha": "c19b136d6863c141212af5aa5620750e485f3009",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "aa2fa4b21b48ff7c23352fecee8574cde35af7f040add1063089e2906d2fe45e"
+}

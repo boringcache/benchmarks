@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "stackstorm-pants",
+  "series_id": "cadence-rolling-advance-02",
+  "sample": 1,
+  "run_id": "37324228460",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37324228460",
+  "source_sha": "727afc60de757e1e7d7690ff5c9433f06fde54a6",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "1c93fe2621f6909406e9f055215f2c55d6346b2927045b0d52c076c4f404ca55"
+}

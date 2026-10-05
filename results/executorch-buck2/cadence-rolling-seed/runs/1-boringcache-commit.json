@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "benchmark": "executorch-buck2",
+  "strategy": "boringcache",
+  "lane": "rolling",
+  "phase": "commit",
+  "variant": null,
+  "mode": "reapi",
+  "adapter": "runtime",
+  "case": {
+    "schema_version": 1,
+    "case_id": "executorch-buck2",
+    "workspace": "boringcache/benchmarks",
+    "definition_sha256": "753ba0c6b6c4e806bb24b21efb5f1c098da6c931155b4b45f84bb392ba43a8c3",
+    "source": {
+      "repository": "pytorch/executorch",
+      "revision": "91d26b3140533172f2557eabb1476e22f0b98bc3",
+      "pins": [
+        {
+          "path": "proposal.md",
+          "kind": "snapshot",
+          "revision": "91d26b3140533172f2557eabb1476e22f0b98bc3"
+        }
+      ],
+      "patch": "cache.patch"
+    },
+    "origin": {
+      "repository": "pytorch/executorch",
+      "branch": "main",
+      "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+    },
+    "verification": [
+      "Require the declared native command to succeed",
+      "Require declared outputs and successful output checks",
+      "Require native remote-hit evidence and the same output hashes on the warm worker",
+      "Require registry shutdown to complete successfully"
+    ],
+    "comparison": {
+      "question": "Does Buck2 restore the ExecuTorch portable runner on a clean worker?",
+      "providers": [
+        "boringcache",
+        "bazel-remote"
+      ],
+      "primary_metric": "correctness",
+      "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
+      "storage": "unmeasured",
+      "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+      "sample_count": 2
+    },
+    "execution": {
+      "sync": "upstream-head",
+      "workflows": [
+        {
+          "path": ".github/workflows/reapi-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "executorch-buck2"
+          }
+        },
+        {
+          "path": ".github/workflows/reapi-rolling-benchmark.yml",
+          "lane": "rolling",
+          "inputs": {
+            "case_id": "executorch-buck2"
+          }
+        }
+      ],
+      "blockers": []
+    }
+  },
+  "timing": {
+    "restore_or_setup_seconds": 0.20142720100000133,
+    "build_seconds": 127.76391611900004,
+    "workflow_seconds": null,
+    "total_seconds": 127.96534332000004,
+    "dependency_setup_seconds": null,
+    "compile_seconds": null,
+    "verification_seconds": null,
+    "save_seconds": 3.117719557999976,
+    "comparison_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
+    "build_and_reuse_seconds": 127.96534332000004
+  },
+  "cache": {
+    "hit": null,
+    "sccache_proof": null,
+    "import_ready": null,
+    "import_refs": 0,
+    "docker_plan": null,
+    "tag": "executorch-buck2-rolling-cadence-20261005-executorch-buck2",
+    "workspace": "boringcache/benchmarks",
+    "storage_bytes": null,
+    "storage_source": null,
+    "storage_breakdown": null
+  },
+  "source": {
+    "repository": "pytorch/executorch",
+    "sha": "91d26b3140533172f2557eabb1476e22f0b98bc3"
+  },
+  "product_refs": {
+    "cli_version": "1.34.0"
+  },
+  "action": {
+    "resolved_mode": null,
+    "resolved_tags": null,
+    "trust_state": null,
+    "diagnostics_level": null
+  },
+  "github": {
+    "repository": "boringcache/benchmarks",
+    "run_id": "37322592957",
+    "run_attempt": "1",
+    "job": "commit",
+    "workflow": "REAPI comparison rolling",
+    "ref_name": "cadence-rehearsal-rolling",
+    "runner_os": "Linux",
+    "runner_arch": "X64",
+    "runner_name": "GitHub Actions 1000174430",
+    "runner_environment": "github-hosted",
+    "runner_image": "ubuntu24",
+    "runner_image_version": "20260927.320.1"
+  },
+  "run_uid": "gh-37322592957-1",
+  "series": {
+    "id": "cadence-rolling-seed",
+    "sample": 1
+  },
+  "environment": {
+    "os": "Linux",
+    "arch": "X64",
+    "image": "ubuntu24",
+    "image_version": "20260927.320.1",
+    "machine": "ubuntu-24.04"
+  },
+  "verification": {
+    "passed": true,
+    "checks": [
+      "Output verification completed before recording this phase"
+    ],
+    "declared_checks": [
+      "Require the declared native command to succeed",
+      "Require declared outputs and successful output checks",
+      "Require native remote-hit evidence and the same output hashes on the warm worker",
+      "Require registry shutdown to complete successfully"
+    ]
+  },
+  "evidence_links": [
+    "https://github.com/boringcache/benchmarks/actions/runs/37322592957"
+  ]
+}

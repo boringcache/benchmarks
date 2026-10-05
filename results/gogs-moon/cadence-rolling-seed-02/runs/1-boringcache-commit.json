@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "benchmark": "gogs-moon",
+  "strategy": "boringcache",
+  "lane": "rolling",
+  "phase": "commit",
+  "variant": null,
+  "mode": "reapi",
+  "adapter": "runtime",
+  "case": {
+    "schema_version": 1,
+    "case_id": "gogs-moon",
+    "workspace": "boringcache/benchmarks",
+    "definition_sha256": "0da0b8791beff9333b016060e6279157d93d1924fbab77071da92848ab541e13",
+    "source": {
+      "repository": "gogs/gogs",
+      "revision": "103893ed5f78d2f138f5286a2dd3b4e94d18fb0b",
+      "pins": [
+        {
+          "path": "proposal.md",
+          "kind": "snapshot",
+          "revision": "103893ed5f78d2f138f5286a2dd3b4e94d18fb0b"
+        }
+      ]
+    },
+    "origin": {
+      "repository": "gogs/gogs",
+      "branch": "main",
+      "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+    },
+    "verification": [
+      "Require the declared native command to succeed",
+      "Require declared outputs and successful output checks",
+      "Require native remote-hit evidence and the same output hashes on the warm worker",
+      "Require registry shutdown to complete successfully"
+    ],
+    "comparison": {
+      "question": "Does Moon restore the Gogs web build on a clean worker?",
+      "providers": [
+        "boringcache",
+        "bazel-remote"
+      ],
+      "primary_metric": "correctness",
+      "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
+      "storage": "unmeasured",
+      "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+      "sample_count": 2
+    },
+    "execution": {
+      "sync": "upstream-head",
+      "workflows": [
+        {
+          "path": ".github/workflows/reapi-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "gogs-moon"
+          }
+        },
+        {
+          "path": ".github/workflows/reapi-rolling-benchmark.yml",
+          "lane": "rolling",
+          "inputs": {
+            "case_id": "gogs-moon"
+          }
+        }
+      ],
+      "blockers": []
+    }
+  },
+  "timing": {
+    "restore_or_setup_seconds": 0.30168808900000954,
+    "build_seconds": 8.787957718000001,
+    "workflow_seconds": null,
+    "total_seconds": 9.08964580700001,
+    "dependency_setup_seconds": null,
+    "compile_seconds": null,
+    "verification_seconds": null,
+    "save_seconds": 1.628428673000002,
+    "comparison_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
+    "build_and_reuse_seconds": 9.08964580700001
+  },
+  "cache": {
+    "hit": null,
+    "sccache_proof": null,
+    "import_ready": null,
+    "import_refs": 0,
+    "docker_plan": null,
+    "tag": "gogs-moon-rolling-cadence-20261005-gogs-moon-v2",
+    "workspace": "boringcache/benchmarks",
+    "storage_bytes": null,
+    "storage_source": null,
+    "storage_breakdown": null
+  },
+  "source": {
+    "repository": "gogs/gogs",
+    "sha": "103893ed5f78d2f138f5286a2dd3b4e94d18fb0b"
+  },
+  "product_refs": {
+    "cli_version": "1.34.0"
+  },
+  "action": {
+    "resolved_mode": null,
+    "resolved_tags": null,
+    "trust_state": null,
+    "diagnostics_level": null
+  },
+  "github": {
+    "repository": "boringcache/benchmarks",
+    "run_id": "37324016178",
+    "run_attempt": "1",
+    "job": "commit",
+    "workflow": "REAPI comparison rolling",
+    "ref_name": "cadence-rehearsal-rolling",
+    "runner_os": "Linux",
+    "runner_arch": "X64",
+    "runner_name": "GitHub Actions 1000174540",
+    "runner_environment": "github-hosted",
+    "runner_image": "ubuntu24",
+    "runner_image_version": "20260927.320.1"
+  },
+  "run_uid": "gh-37324016178-1",
+  "series": {
+    "id": "cadence-rolling-seed-02",
+    "sample": 1
+  },
+  "environment": {
+    "os": "Linux",
+    "arch": "X64",
+    "image": "ubuntu24",
+    "image_version": "20260927.320.1",
+    "machine": "ubuntu-24.04"
+  },
+  "verification": {
+    "passed": true,
+    "checks": [
+      "Output verification completed before recording this phase"
+    ],
+    "declared_checks": [
+      "Require the declared native command to succeed",
+      "Require declared outputs and successful output checks",
+      "Require native remote-hit evidence and the same output hashes on the warm worker",
+      "Require registry shutdown to complete successfully"
+    ]
+  },
+  "evidence_links": [
+    "https://github.com/boringcache/benchmarks/actions/runs/37324016178"
+  ]
+}

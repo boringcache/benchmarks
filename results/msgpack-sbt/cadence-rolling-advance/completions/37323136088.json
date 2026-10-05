@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "case_id": "msgpack-sbt",
+  "series_id": "cadence-rolling-advance",
+  "sample": 1,
+  "run_id": "37323136088",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37323136088",
+  "source_sha": "915ea2921d4b4d23f0238a4b7e28ecce1bbcc880",
+  "github_conclusion": "failure",
+  "status": "failed",
+  "errors": [
+    "Workflow concluded failure",
+    "bazel-remote msgpack-sbt commit: failure",
+    "msgpack-sbt rolling report: failure"
+  ],
+  "evidence_manifest_sha256": "9efdf7335b4808dd3a3bb626666cc167473699164c141d035c288bda6127701f"
+}

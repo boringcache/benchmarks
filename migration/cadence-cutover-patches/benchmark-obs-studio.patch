@@ -1,0 +1,12 @@
+--- a/.github/workflows/sync.yml
++++ b/.github/workflows/sync.yml
+@@ -2,9 +2,6 @@
+ 
+ on:
+   workflow_dispatch:
+-  schedule:
+-    - cron: "18,48 * * * *"
+-
+ permissions:
+   actions: write
+   contents: write

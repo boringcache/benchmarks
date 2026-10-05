@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "case_id": "posthog",
+  "series_id": "cadence-rolling-advance-layers",
+  "created_at": "2026-10-05T14:13:46Z",
+  "lane": "rolling",
+  "phases": [
+    "commit"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "3dee2688af690830f15f0516a98dfe05bdcf0f4127db435d8e7b17c9d8684f3e",
+  "variant": "layers",
+  "workflow_inputs": {
+    "case_id": "posthog",
+    "cli_version": "vcli-canary-7a5b27146ebe",
+    "cache_scope": "cadence-20261005-posthog-layers",
+    "variant": "layers"
+  },
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "PostHog/posthog",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "a6f293b70c41b00c8af78275619bab0ada2d0a4a",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream recipe and build success",
+    "The freshly loaded output image exists in the local Docker image store"
+  ],
+  "plan_sha256": "9c9f99841fba0c7a6826bcd1d39d5d5268e5aa213c5e838ed0bf08b4e7d23ecb"
+}

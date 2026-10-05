@@ -1,7 +1,6 @@
 ---
 name: 'zed: Zed Cargo rolling run'
-run-name: "${{ format('Zed Cargo rolling {0} to {1}', inputs.base_sha, inputs.head_sha)
-  }}"
+run-name: "Zed Cargo | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} rolling | ${{ inputs.base_sha }} to ${{ inputs.head_sha }}"
 permissions:
   actions: read
   checks: read
