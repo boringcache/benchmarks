@@ -1,0 +1,36 @@
+{
+  "case_id": "executorch-buck2",
+  "repository": "boringcache/benchmarks",
+  "workflow": "reapi-fresh-benchmark.yml",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "pytorch/executorch",
+    "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+      }
+    ],
+    "patch": "cache.patch"
+  },
+  "lane": "fresh",
+  "inputs": {
+    "case_id": "executorch-buck2",
+    "cli_version": "vcli-canary-7a5b27146ebe",
+    "series_id": "registry-screening-04",
+    "sample": "1"
+  },
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "variants": null,
+  "schema_version": 1,
+  "requested_at": "2026-10-05T11:33:09Z",
+  "ref": "qualify-native-registry",
+  "state": "requested",
+  "run_id": 37303662752,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37303662752"
+}
