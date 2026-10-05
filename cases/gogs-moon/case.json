@@ -6,12 +6,12 @@
   "workspace": "boringcache/benchmarks",
   "source": {
     "repository": "gogs/gogs",
-    "revision": "103893ed5f78d2f138f5286a2dd3b4e94d18fb0b",
+    "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0",
     "pins": [
       {
         "path": "proposal.md",
         "kind": "snapshot",
-        "revision": "103893ed5f78d2f138f5286a2dd3b4e94d18fb0b"
+        "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
       }
     ]
   },

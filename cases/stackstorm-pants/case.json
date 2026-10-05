@@ -6,12 +6,12 @@
   "workspace": "boringcache/benchmarks",
   "source": {
     "repository": "StackStorm/st2",
-    "revision": "8c57959f3a23cafc55312e28c5beb7b2dab045a3",
+    "revision": "9824de4dfd0c869869e310dee729308f398ad83a",
     "pins": [
       {
         "path": "proposal.md",
         "kind": "snapshot",
-        "revision": "8c57959f3a23cafc55312e28c5beb7b2dab045a3"
+        "revision": "9824de4dfd0c869869e310dee729308f398ad83a"
       }
     ]
   },
