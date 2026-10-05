@@ -1,22 +1,22 @@
 {
-  "case_id": "helix-nix",
+  "case_id": "zed-nix",
   "repository": "boringcache/benchmarks",
   "workflow": "nix-fresh-benchmark.yml",
   "workspace": "boringcache/benchmarks",
   "source": {
-    "repository": "helix-editor/helix",
-    "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc",
+    "repository": "zed-industries/zed",
+    "revision": "96837d78cb0f2128c1965716f8df56b8aea59742",
     "pins": [
       {
         "path": "proposal.md",
         "kind": "snapshot",
-        "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc"
+        "revision": "96837d78cb0f2128c1965716f8df56b8aea59742"
       }
     ]
   },
   "lane": "fresh",
   "inputs": {
-    "case_id": "helix-nix",
+    "case_id": "zed-nix",
     "provider": "all",
     "cli_version": "vcli-canary-7a5b27146ebe",
     "cachix_cache": "benchmark-zed",
@@ -29,9 +29,7 @@
   ],
   "variants": null,
   "schema_version": 1,
-  "requested_at": "2026-10-05T10:22:52Z",
+  "requested_at": "2026-10-05T10:22:03Z",
   "ref": "run-tool-family-cases",
-  "state": "requested",
-  "run_id": 37296210599,
-  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37296210599"
+  "state": "planned"
 }
