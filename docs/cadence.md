@@ -102,7 +102,10 @@ Remaining activation requirements:
 - Qualify the new and changed rolling paths with actual source advancement,
   retained seeds, verified outputs and canary CLI execution.
 - Pass the corrected Zed Nix cold/warm screen using the common dependency seed.
-- Verify publication and receipt reconciliation in a bounded rehearsal.
+- Verify main-branch workflow-token publication at cutover. The
+  [isolated publication rehearsal](../migration/rehearsals/mastodon-publication/review.md)
+  passed conditional commits, dispatch and reconciliation with the operator's
+  GitHub CLI; the hosted rehearsal passed inspection and dry-run publication.
 - Retire replaced historical cron triggers while preserving manual and release
   entrypoints; verify no outstanding duplicate dispatches.
 - After a compatible stable release, change monitoring and publication ownership

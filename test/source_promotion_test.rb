@@ -160,13 +160,42 @@ class SourcePromotionTest < Minitest::Test
   end
 
   def test_unrelated_branch_advancement_retries_with_a_new_expected_head
+    [
+      {"type" => "STALE_DATA", "message" => "Branch advanced"},
+      {"type" => "FORBIDDEN", "path" => ["createCommitOnBranch"], "message" => "is at #{'c' * 40} but expected #{'b' * 40}"}
+    ].each { |conflict| assert_concurrent_commit_retries(conflict) }
+  end
+
+  def test_permission_failures_and_unrelated_ref_errors_are_not_retried
+    ["Resource not accessible by integration", "is at #{'c' * 40} but expected #{'a' * 40}"].each do |message|
+      publisher = SourcePromotion::Publisher.new
+      requests = 0
+      api = lambda do |path, body: nil|
+        if path == "graphql"
+          requests += 1
+          {"errors" => [{"type" => "FORBIDDEN", "path" => ["createCommitOnBranch"], "message" => message}]}
+        else
+          {"object" => {"sha" => "b" * 40}}
+        end
+      end
+      publisher.stub(:api, api) do
+        error = assert_raises(SourcePromotion::Error) { publisher.commit({"receipt.json" => "{}"}, expected: {}, message: "Record receipt") }
+        assert_includes error.message, message
+      end
+      assert_equal 1, requests
+    end
+  end
+
+  private
+
+  def assert_concurrent_commit_retries(conflict)
     publisher = SourcePromotion::Publisher.new
     heads = ["b" * 40, "c" * 40]
     commits = []
     api = lambda do |path, body: nil|
       if path == "graphql"
         commits << body.fetch("variables").fetch("input")
-        commits.length == 1 ? {"errors" => [{"type" => "STALE_DATA", "message" => "Branch advanced"}]} : {"data" => {"createCommitOnBranch" => {"commit" => {"oid" => "d" * 40}}}}
+        commits.length == 1 ? {"errors" => [conflict]} : {"data" => {"createCommitOnBranch" => {"commit" => {"oid" => "d" * 40}}}}
       elsif path.include?("git/ref")
         {"object" => {"sha" => heads.shift}}
       else
