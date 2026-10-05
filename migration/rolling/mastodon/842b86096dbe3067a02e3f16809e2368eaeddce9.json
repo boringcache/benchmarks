@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "case_id": "mastodon",
-  "state": "dispatching",
+  "state": "requested",
   "cli_version": "vcli-canary-7a5b27146ebe",
   "ref": "cadence-rehearsal-publication",
   "proposal": {
@@ -22,7 +22,9 @@
         "cli_version": "vcli-canary-7a5b27146ebe",
         "variant": "server"
       },
-      "state": "requesting"
+      "state": "requested",
+      "id": 37322979117,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37322979117"
     },
     {
       "repository": "boringcache/benchmarks",
@@ -32,7 +34,9 @@
         "cli_version": "vcli-canary-7a5b27146ebe",
         "variant": "streaming"
       },
-      "state": "requesting"
+      "state": "requested",
+      "id": 37322983836,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37322983836"
     }
   ]
 }
