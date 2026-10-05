@@ -1,7 +1,7 @@
 name: Check upstream source updates
 on:
   schedule:
-    - cron: '11 0 * * *'
+    - cron: '11 * * * *'
   workflow_dispatch:
     inputs:
       case_id:
@@ -11,14 +11,39 @@ on:
 permissions:
   contents: read
   actions: read
-concurrency:
-  group: benchmark-source-proposals
-  cancel-in-progress: false
 jobs:
-  propose:
+  select:
     if: github.event_name == 'workflow_dispatch' || vars.BENCHMARK_CADENCE_ACTIVE == 'true'
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.cases.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      - run: bundle install --jobs 4 --retry 2
+      - id: cases
+        env:
+          CASE_ID: ${{ inputs.case_id }}
+        run: |
+          args=()
+          [[ -z "$CASE_ID" ]] || args+=(--case "$CASE_ID")
+          echo "matrix=$(ruby scripts/sync-sources.rb --matrix "${args[@]}")" >> "$GITHUB_OUTPUT"
+  propose:
+    name: '${{ matrix.case_id }} source check'
+    needs: select
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
+    concurrency:
+      group: benchmark-source-${{ matrix.case_id }}
+      cancel-in-progress: false
+      queue: max
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix: ${{ fromJSON(needs.select.outputs.matrix) }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
@@ -28,7 +53,7 @@ jobs:
       - name: Prepare reviewed source proposals
         env:
           GH_TOKEN: ${{ github.token }}
-          CASE_ID: ${{ inputs.case_id }}
+          CASE_ID: ${{ matrix.case_id }}
         run: |
           args=()
           [[ -z "$CASE_ID" ]] || args+=(--case "$CASE_ID")
@@ -37,10 +62,13 @@ jobs:
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
-          name: source-proposals
+          name: source-proposals-${{ matrix.case_id }}
           path: |
             ${{ runner.temp }}/source-proposals.json
-            cases/*/case.json
-            cases/*/payload/benchmark-source.env
+            cases/${{ matrix.case_id }}/case.json
+            cases/${{ matrix.case_id }}/payload/benchmark-source.env
+            cases/${{ matrix.case_id }}/payload/recipe-contract.json
+            cases/${{ matrix.case_id }}/payload/.boringcache.toml
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 90

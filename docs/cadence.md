@@ -19,10 +19,13 @@ The proposed central cadence is:
 | --- | --- | --- | --- |
 | Weekly fresh | Monday 04:00 | Latest published stable release, with all required assets | Declared pins |
 | Nightly fresh | Daily 01:17 | Latest published canary, with all required assets | Declared pins |
-| Source check | Daily 00:11 | No build | Check upstream against declared pins |
+| Source check | Hourly, at :11 | No build | Check upstream against declared pins |
 
 Fresh dispatch resolves one exact release tag for every selected workflow. It
 validates all targets before dispatch and retains each requested run ID. A
+matrix requests each target independently; a failed request does not prevent
+other targets from being requested. Each target retains its own receipt, and
+the combined receipt keeps failed, uncertain and missing requests visible. A
 dispatch succeeding does not establish that its builds passed. A dry run starts
 no builds. Inspect the retained receipt before retrying an interrupted dispatch.
 When the selection includes REAPI cases, preflight downloads the exact CLI,
@@ -43,6 +46,9 @@ An unchanged source is recorded as unchanged; a recipe mismatch or fixed source
 is recorded as blocked. A later
 failure does not remove earlier case checks. The workflow does not commit source
 changes, promote candidates or start rolling builds.
+Each case has an independent job and artifact. A failed or slow source check
+does not prevent the other cases from being checked. Checks for the same case
+are serialized.
 
 Immich, Mastodon, PostHog and n8n now register the shared native rolling workflow.
 Their Docker variants load and inspect output in both providers. The same output

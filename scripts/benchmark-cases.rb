@@ -284,8 +284,13 @@ module BenchmarkCases
     Dir.mktmpdir("benchmark-source-") do |directory|
       workload = prepare(item, directory: File.join(directory, "workload"), root: root)
       if kind == "upstream-head"
-        command("git", "submodule", "update", "--init", "--checkout", "upstream", chdir: workload)
         source = File.join(workload, "upstream")
+        # Inspect only the candidate tree. Ancestry is checked against the exact
+        # declared pin through the compare endpoint below.
+        unless File.exist?(File.join(source, ".git"))
+          command("git", "init", source)
+          command("git", "remote", "add", "origin", "https://github.com/#{item.dig('source', 'repository')}.git", chdir: source)
+        end
         command("git", "fetch", "--depth", "1", "origin", "refs/heads/#{branch}", chdir: source)
         next_sha = command("git", "rev-parse", "FETCH_HEAD", chdir: source).strip
         current_sha = item.fetch("source").fetch("pins").find { |pin| pin["kind"] == "gitlink" }.fetch("revision")

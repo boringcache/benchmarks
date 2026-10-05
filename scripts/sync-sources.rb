@@ -34,9 +34,14 @@ if $PROGRAM_NAME == __FILE__
   OptionParser.new do |parser|
     parser.on("--case ID") { |value| options[:case] = value }
     parser.on("--output PATH") { |value| options[:output] = value }
+    parser.on("--matrix") { options[:matrix] = true }
   end.parse!
-  abort "Use --output for the proposal inventory" unless options[:output]
   items = BenchmarkCadence.source_cases(case_id: options[:case])
+  if options[:matrix]
+    puts JSON.generate({"case_id" => items.map { |item| item.fetch("id") }})
+    exit
+  end
+  abort "Use --output for the proposal inventory" unless options[:output]
   inventory = SourceSync.propose(items, output: options.fetch(:output))
   BenchmarkCases.validate
   exit(inventory.fetch("records").any? { |record| record["state"] == "blocked" } ? 1 : 0)

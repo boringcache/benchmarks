@@ -1,6 +1,6 @@
 ---
 name: Native comparison rolling
-run-name: "${{ inputs.case_id }} rolling ${{ inputs.series_id }} sample ${{ inputs.sample
+run-name: "${{ inputs.case_id }} ${{ inputs.variant }} rolling ${{ inputs.series_id }} sample ${{ inputs.sample
   }}"
 permissions:
   contents: read

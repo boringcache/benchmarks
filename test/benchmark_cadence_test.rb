@@ -74,6 +74,21 @@ class BenchmarkCadenceTest < Minitest::Test
     assert_raises(BenchmarkCadence::Error) { BenchmarkCadence.source_cases(case_id: "pants-jvm") }
   end
 
+  def test_source_matrix_selects_each_case_once_and_rejects_unknown_cases
+    script = File.join(BenchmarkCases::ROOT, "scripts/sync-sources.rb")
+    output, status = Open3.capture2e(RbConfig.ruby, script, "--matrix")
+    assert status.success?, output
+    ids = JSON.parse(output).fetch("case_id")
+    assert_equal BenchmarkCadence.source_cases.map { |item| item.fetch("id") }, ids
+    assert_equal ids.uniq, ids
+    output, status = Open3.capture2e(RbConfig.ruby, script, "--matrix", "--case", "helix-nix")
+    assert status.success?, output
+    assert_equal({"case_id" => ["helix-nix"]}, JSON.parse(output))
+    output, status = Open3.capture2e(RbConfig.ruby, script, "--matrix", "--case", "unknown")
+    refute status.success?
+    assert_includes output, "not in the scheduled suite"
+  end
+
   def test_source_inventory_retains_unchanged_changed_and_blocked_cases
     items = %w[hugo-go gogs-moon helix-nix].map { |id| BenchmarkCases.load_case(id) }
     sync = lambda do |item|
