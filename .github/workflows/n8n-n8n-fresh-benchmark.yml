@@ -154,7 +154,3 @@ jobs:
         type: string
         required: false
         default: '1'
-concurrency:
-  group: benchmark-provider-comparisons
-  cancel-in-progress: false
-  queue: max

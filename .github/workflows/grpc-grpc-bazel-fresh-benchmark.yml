@@ -8,10 +8,6 @@ run-name: "${{ format('Benchmark {0} | {1}', github.event_name == 'pull_request'
 permissions:
   contents: read
   actions: read
-concurrency:
-  group: benchmark-provider-comparisons
-  cancel-in-progress: false
-  queue: max
 env:
   BORINGCACHE_NO_GIT: 'true'
   BAZEL_OUTPUT_USER_ROOT: "/tmp/boringcache-grpc-bazel/output-root"

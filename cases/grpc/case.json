@@ -45,7 +45,8 @@
     "publication": "reviewed"
   },
   "verification": [
-    "Pinned upstream recipe and build success"
+    "Pinned upstream recipe and build success",
+    "Nonempty executable csm_greeter_client and csm_greeter_server outputs, checked outside build timing"
   ],
   "comparison": {
     "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
