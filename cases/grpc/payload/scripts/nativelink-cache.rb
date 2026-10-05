@@ -144,7 +144,8 @@ module NativeLinkCache
     write("#{DIRECTORY}/storage.json", {"bytes" => bytes, "source" => "cloudflare-r2-list-objects-v2",
       "breakdown" => {"bucket" => BUCKET, "prefix" => prefix, "complete" => true,
         "total_bytes" => bytes, "object_count" => entries.length,
-        "inventory_path" => "nativelink/objects.json", "inventory_sha256" => Digest::SHA256.file(inventory).hexdigest}})
+        "inventory_artifact" => ENV.fetch("NATIVELINK_ARTIFACT"),
+        "inventory_path" => "objects.json", "inventory_sha256" => Digest::SHA256.file(inventory).hexdigest}})
     write("#{DIRECTORY}/verification.json", {"remote_cache_hits" => hits, "outputs" => outputs, "version" => VERSION})
     File.open(ENV.fetch("GITHUB_OUTPUT"), "a") { |file| file.puts "cache_hit=#{hits.positive?}" }
   end

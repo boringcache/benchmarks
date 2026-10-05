@@ -25,3 +25,8 @@ timing, bounded seed lookup, and separate raw R2 inventory retention. NativeLink
 version, cache configuration, build commands, and the shared R2 prefix are unchanged.
 The seed used the earlier setup boundary; these seed/advance observations qualify
 cache continuity and outputs, not a timing comparison between those definitions.
+
+The unexecuted advancement plan `nativelink-r2-rolling-advance-03` is superseded
+by `nativelink-r2-rolling-advance-04`, which also isolates the complete raw R2
+inventory in its own artifact so it cannot exceed the phase collector size limit.
+Only `nativelink-r2-rolling-advance-04` will be dispatched after the seed succeeds.
