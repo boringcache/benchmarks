@@ -1,6 +1,6 @@
 # Latest Benchmark Report
 
-Generated: 2026-10-04 19:57 UTC
+Generated: 2026-10-05 02:29 UTC
 
 Coverage: 20 benchmarks; fresh 20/20, rolling 6/20.
 
@@ -20,7 +20,7 @@ Rows are latest complete same-commit pairs.
 | PostHog | Cold Build | 27m 37s | 14m 19s | 48% faster | n/a |
 | Storybook | Cold Build | 4m 28s | 4m 30s | near tie | n/a |
 | OpenTelemetry Java | Warm Build | 2m 42s | 2m 26s | 10% faster | n/a |
-| Spring AI | Cold Build | 7m 39s | 7m 12s | 6% faster | n/a |
+| Spring AI | Cold Build | 13m 16s | 8m 28s | 36% faster | n/a |
 | gRPC | Cold Build | 53m 53s | 32m 35s | 40% faster | n/a |
 | Duckgres | Cold Build | 6m 47s | 3m 39s | 46% faster | n/a |
 | Chroma | Warm Build | 57m 10s | 2m 24s | 96% faster | n/a |
