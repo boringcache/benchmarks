@@ -6,12 +6,12 @@
   "workspace": "boringcache/benchmarks",
   "source": {
     "repository": "OpenCut-app/OpenCut",
-    "revision": "e668010778568641babef2cc40be4703ae6916d6",
+    "revision": "400f097becba5db0fbc305d5a65348cb81c20356",
     "pins": [
       {
         "path": "proposal.md",
         "kind": "snapshot",
-        "revision": "e668010778568641babef2cc40be4703ae6916d6"
+        "revision": "400f097becba5db0fbc305d5a65348cb81c20356"
       }
     ]
   },
