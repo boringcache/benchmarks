@@ -9,7 +9,7 @@
     "pins": [
       {
         "path": "upstream",
-        "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+        "revision": "842b86096dbe3067a02e3f16809e2368eaeddce9",
         "kind": "gitlink"
       }
     ]

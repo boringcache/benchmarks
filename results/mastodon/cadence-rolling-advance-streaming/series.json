@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "case_id": "mastodon",
+  "series_id": "cadence-rolling-advance-streaming",
+  "created_at": "2026-10-05T14:13:46Z",
+  "lane": "rolling",
+  "phases": [
+    "commit"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "24b1333197dc2d40e54cb227b05b2cc05482fe3722059147ae4f403d3f513277",
+  "variant": "streaming",
+  "workflow_inputs": {
+    "case_id": "mastodon",
+    "cli_version": "vcli-canary-7a5b27146ebe",
+    "cache_scope": "cadence-20261005-mastodon-streaming",
+    "variant": "streaming"
+  },
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "mastodon/mastodon",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "842b86096dbe3067a02e3f16809e2368eaeddce9",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream recipe and build success",
+    "The freshly loaded output image exists in the local Docker image store"
+  ],
+  "plan_sha256": "a5828cd7050d1f29ba9eecff83d2661ac333582448b631d428141d83d99b16f0"
+}
