@@ -1583,6 +1583,76 @@
       "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory",
       "verified_on": "2026-10-05",
       "scope": "This run, including available attempts, jobs, logs, artifacts, commit and workflow"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37304834734,
+      "verified_files": 16,
+      "gaps": [],
+      "sha256": "fce1489f5705846e42377adcde5442794498fc26a4319e172ed76f434d6055e8",
+      "bundle_bytes": 15821832,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-native-registry-2026-10-05",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-native-registry-2026-10-05/benchmarks-37304834734.tar.gz",
+      "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory",
+      "verified_on": "2026-10-05",
+      "scope": "This run, including available attempts, jobs, logs, artifacts, commit and workflow"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37303782303,
+      "verified_files": 17,
+      "gaps": [],
+      "sha256": "c1e5234bf49c6f25c9f71b4bbe5e04d05df3e0412fd31b7803c534f579917e77",
+      "bundle_bytes": 1798989,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-native-registry-2026-10-05",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-native-registry-2026-10-05/benchmarks-37303782303.tar.gz",
+      "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory",
+      "verified_on": "2026-10-05",
+      "scope": "This run, including available attempts, jobs, logs, artifacts, commit and workflow"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37303778364,
+      "verified_files": 17,
+      "gaps": [],
+      "sha256": "6b434d9c02eb13b2ecd080f2b9fef85332498860b48b7a91bf017b737e295061",
+      "bundle_bytes": 1787128,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-native-registry-2026-10-05",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-native-registry-2026-10-05/benchmarks-37303778364.tar.gz",
+      "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory",
+      "verified_on": "2026-10-05",
+      "scope": "This run, including available attempts, jobs, logs, artifacts, commit and workflow"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37305928053,
+      "verified_files": 16,
+      "gaps": [],
+      "sha256": "5419d8d1d4902525675999c18c9a2c1a07acc402a76a902255f9d3a26799be2e",
+      "bundle_bytes": 15825799,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-native-registry-2026-10-05",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-native-registry-2026-10-05/benchmarks-37305928053.tar.gz",
+      "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory",
+      "verified_on": "2026-10-05",
+      "scope": "This run, including available attempts, jobs, logs, artifacts, commit and workflow"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "run_id": 37305931541,
+      "verified_files": 16,
+      "gaps": [],
+      "sha256": "422fc735aef24c0483203fe1626293f729442fcd8160f3a1643e292f13fcbf2f",
+      "bundle_bytes": 15819622,
+      "inventory_state": "complete",
+      "release_url": "https://github.com/boringcache/benchmarks/releases/tag/evidence-native-registry-2026-10-05",
+      "bundle_url": "https://github.com/boringcache/benchmarks/releases/download/evidence-native-registry-2026-10-05/benchmarks-37305931541.tar.gz",
+      "publication_verification": "Downloaded the published archive again, matched its SHA-256, and verified all listed files and the run inventory",
+      "verified_on": "2026-10-05",
+      "scope": "This run, including available attempts, jobs, logs, artifacts, commit and workflow"
     }
   ]
 }

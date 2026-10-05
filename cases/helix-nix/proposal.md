@@ -1,8 +1,7 @@
 # Helix / Nix
 
-Status: the cold/warm screen passed for both providers, including matching NAR
-hashes. [Recorded results](../../results/helix-nix/canary-screening-02/report.md).
-The two-sample repeat is running.
+Status: two cold/warm samples passed for both providers, including matching NAR
+hashes. [Recorded results](../../results/helix-nix/canary-qualification-01/report.md).
 
 Source: [helix-editor/helix at `ba40e547426b0f9896c8bdc699a4ab11f2b37dbc`](https://github.com/helix-editor/helix/tree/ba40e547426b0f9896c8bdc699a4ab11f2b37dbc).
 

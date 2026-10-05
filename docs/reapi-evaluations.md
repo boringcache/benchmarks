@@ -1,8 +1,8 @@
 # Native gRPC cache evaluations
 
 These eight source-pinned evaluations use the existing case contract. Five use
-the shared native registry workflow. Moon, Pants and sbt have completed two
-cold/warm samples per selected workload; Buck2 qualification is running. ZITADEL, Pants
+the shared native registry workflow. Moon, Pants, Buck2 and sbt have completed
+two cold/warm samples per selected workload. ZITADEL, Pants
 JVM and Buck2 Prelude remain blocked drafts. None has an active schedule.
 
 | Case | Workload | Reason to evaluate | Limitation |
@@ -52,9 +52,10 @@ native registry correctness workflow. Their proposals record selected targets,
 recipe changes and verification requirements. The two-sample reports for
 [Gogs](../results/gogs-moon/registry-qualification-01/report.md),
 [OpenCut](../results/opencut-moon/registry-qualification-01/report.md),
-[StackStorm](../results/stackstorm-pants/registry-qualification-01/report.md) and
-[MessagePack](../results/msgpack-sbt/registry-qualification-01/report.md) retain
-each provider and phase. Buck2 qualification remains pending.
+[StackStorm](../results/stackstorm-pants/registry-qualification-01/report.md),
+[MessagePack](../results/msgpack-sbt/registry-qualification-01/report.md) and
+[ExecuTorch](../results/executorch-buck2/registry-qualification-01/report.md) retain
+each provider and phase.
 BoringCache uses a fresh remote tag and a read-only warm process;
 bazel-remote transfers its store as an artifact outside timing. No performance
 comparison or completed family qualification follows from implementation alone.
