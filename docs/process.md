@@ -81,6 +81,9 @@ only when the experiment requires a different shape, and register it in the case
 Use the canonical Ruby reporter for every execution path. Add
 suite membership for an explicit scheduling purpose. `suites/published.json` is
 the shared registry for published reporting.
+`suites/scheduled.json` selects the maintained suite and new native families for
+the proposed shared cadence. See [benchmark schedules](cadence.md) for current
+ownership and the remaining source and rolling work.
 
 `.github/actions/boringcache` is the sole BoringCache One invocation and release
 pin. It forwards the product inputs used by the cases and retains raw evidence.

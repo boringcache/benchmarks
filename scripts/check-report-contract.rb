@@ -209,7 +209,13 @@ def producers_for(workflow:, repo_dir:, job_id:, job:)
       next unless step.is_a?(Hash)
 
       uses = step["uses"].to_s
-      if uses.start_with?("./.github/actions/")
+      if %w[./.github/actions/reapi-benchmark ./.github/actions/nix-benchmark].include?(uses)
+        with = step.fetch("with")
+        fields = {"benchmark" => workflow.resolve(with.fetch("case-id"), matrix),
+          "strategy" => workflow.resolve(with.fetch("provider"), matrix),
+          "lane" => workflow.resolve(with.fetch("lane", "fresh"), matrix),
+          "phase" => workflow.resolve(with.fetch("phase"), matrix), "variant" => ""}
+      elsif uses.start_with?("./.github/actions/")
         with = step["with"].is_a?(Hash) ? step["with"] : {}
         variant_input = action_variant_input(repo_dir, uses, with)
         variant = workflow.resolve(with[variant_input].to_s, matrix).to_s if variant_input
@@ -220,6 +226,12 @@ def producers_for(workflow:, repo_dir:, job_id:, job:)
           "phase" => workflow.resolve(with["phase"].to_s, matrix),
           "variant" => variant_input && variant != DEFAULT_PLATFORM ? variant : ""
         }
+      elsif step["run"].to_s.include?("write_phase_result.rb")
+        flags = step.fetch("run").scan(/--(surface|strategy|phase)\s+([^\s\\]+)/).to_h
+        surface = flags.fetch("surface")
+        base = flags.fetch("phase") == "base"
+        fields = {"benchmark" => step.fetch("run").include?("--continuous") ? "obs-studio" : "obs-studio-#{surface}",
+          "strategy" => flags.fetch("strategy"), "lane" => base ? "fresh" : "rolling", "phase" => base ? "cold" : "commit", "variant" => surface}
       elsif step["run"].to_s.match?(/benchmark-report\.rb\s+phase\b/)
         shell_env = workflow.shell_env_for(job, step, matrix)
         fields = phase_flags(step["run"].to_s).transform_values { |value| workflow.resolve(value, matrix, shell_env) }

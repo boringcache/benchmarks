@@ -60,7 +60,8 @@
               "variants": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"}}}
           }
         },
-        "sync": {"enum": ["upstream-head", "adjacent-pair", "verified-pair", "fixed"]},
+        "sync": {"enum": ["upstream-head", "adjacent-pair", "build-relevant-pair", "verified-pair", "fixed"]},
+        "rolling_workflow": {"type": "string", "pattern": "^\\.github/workflows/[A-Za-z0-9._-]+\\.ya?ml$"},
         "sync_minute": {"type": "integer", "minimum": 1, "maximum": 29},
         "source_prefix": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
         "cache_tags": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "string", "pattern": "^[a-z0-9._-]*\\{scope\\}[a-z0-9._-]*$"}},

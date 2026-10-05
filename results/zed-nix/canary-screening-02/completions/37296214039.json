@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "case_id": "zed-nix",
+  "series_id": "canary-screening-02",
+  "sample": 1,
+  "run_id": "37296214039",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37296214039",
+  "source_sha": "8f3c254c1e080a69d08446f224be655e6bbffb36",
+  "github_conclusion": "failure",
+  "status": "failed",
+  "errors": [
+    "Workflow concluded failure",
+    "cachix zed-nix warm: failure",
+    "boringcache zed-nix warm: failure"
+  ],
+  "evidence_manifest_sha256": "3a2c88abb871648fc13d495f49cd9476f0b6c20045d2f4828c2bf6203d60d1fd"
+}

@@ -13,13 +13,14 @@ class NativeCaseTest < Minitest::Test
     end
   end
 
-  def test_fresh_and_rolling_share_the_recipe_but_preserve_publication_behavior
+  def test_fresh_and_rolling_share_the_recipe_and_loaded_output
     with_payload("hugo") do |item, directory|
       fresh = NativeCase.write_action(item, directory: directory, lane: "fresh")
       rolling = NativeCase.write_action(item, directory: directory, lane: "rolling")
       assert_equal fresh.dig("runs", "steps", 0, "uses"), rolling.dig("runs", "steps", 0, "uses")
       assert_equal "true", fresh.dig("runs", "steps", 0, "with", "load_image")
-      assert_equal "true", rolling.dig("runs", "steps", 0, "with", "push_image")
+      assert_equal "true", rolling.dig("runs", "steps", 0, "with", "load_image")
+      refute rolling.dig("runs", "steps", 0, "with").key?("push_image")
       assert_equal "${{ inputs.cli_version }}", fresh.dig("runs", "steps", 0, "with", "cli_version")
     end
   end
@@ -129,6 +130,8 @@ class NativeCaseTest < Minitest::Test
     %w[chroma duckgres hugo linkerd2].each do |id|
       item = BenchmarkCases.load_case(id)
       assert_equal "native-fresh-benchmark.yml", BenchmarkCases.plan(item).fetch("workflow")
+      assert_equal "native-rolling-benchmark.yml", BenchmarkCases.plan(item, lane: "rolling").fetch("workflow")
+      item.fetch("execution").fetch("native").fetch("rolling_inputs").delete("load_image")
       error = assert_raises(NativeCase::Error) { BenchmarkCases.plan(item, lane: "rolling") }
       assert_includes error.message, "requires load_image=true"
     end

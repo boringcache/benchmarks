@@ -39,6 +39,19 @@
         "path": ".github/workflows/mastodon-mastodon-docker-benchmark.yml",
         "lane": "diagnostic",
         "inputs": {}
+      },
+      {
+        "path": ".github/workflows/native-rolling-benchmark.yml",
+        "lane": "rolling",
+        "inputs": {
+          "case_id": "mastodon"
+        },
+        "variants": [
+          "server",
+          "server-sccache",
+          "streaming"
+        ],
+        "variant_input": "variant"
       }
     ],
     "sync": "upstream-head",
@@ -55,7 +68,8 @@
         "load_image": "true"
       },
       "rolling_inputs": {
-        "workload": "server"
+        "workload": "server",
+        "load_image": "true"
       },
       "variants": {
         "server": {},

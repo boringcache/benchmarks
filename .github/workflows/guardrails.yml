@@ -16,6 +16,8 @@ jobs:
       run: bundle exec ruby bin/bench check
     - name: Check publication registry
       run: bundle exec ruby scripts/check-registry-alignment.rb
+    - name: Check scheduled cases
+      run: bundle exec ruby scripts/benchmark-cadence.rb --check
     - name: Check execution contracts
       run: bundle exec ruby scripts/check-workflow-guardrails.rb
     - name: Check report contracts

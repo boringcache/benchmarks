@@ -3,11 +3,21 @@
 
 require_relative "benchmark-plan"
 require "digest"
+require "open3"
 
 root = BenchmarkPlan::ROOT
 source = ARGV.first || File.join(root, "upstream")
 contract = JSON.parse(File.read(File.join(root, ARGV[1] || "recipe-contract.json")))
-contract.fetch("upstream_files").each do |path, digest|
+files = contract.fetch("upstream_files")
+if contract.key?("upstream_files_by_revision")
+  revision, status = Open3.capture2("git", "-C", source, "rev-parse", "HEAD")
+  raise "Cannot determine the source revision for recipe verification" unless status.success?
+  overrides = contract.fetch("upstream_files_by_revision")
+  raise "Recipe exceptions require exact source revisions" unless overrides.keys.all? { |sha| sha.match?(/\A[0-9a-f]{40}\z/) }
+  files = overrides.fetch(revision.strip, files)
+  raise "Recipe exception changes the reviewed file set" unless files.keys.sort == contract.fetch("upstream_files").keys.sort
+end
+files.each do |path, digest|
   actual = File.join(source, path)
   raise "Upstream recipe file is missing: #{path}" unless File.file?(actual)
   raise "Upstream recipe changed: #{path}; review the workload before updating its recipe digest" unless Digest::SHA256.file(actual).hexdigest == digest

@@ -76,6 +76,7 @@
       }
     ],
     "sync": "verified-pair",
+    "rolling_workflow": ".github/workflows/zed-zed-cargo-rolling-auto.yml",
     "sync_minute": 28,
     "source_prefix": "ZED",
     "cache_tags": {

@@ -6,12 +6,16 @@ require_relative "benchmark-report"
 
 args = {"output_dir" => "benchmark-results", "cache_key" => ""}
 OptionParser.new do |parser|
-  %w[surface strategy phase source_sha restore_seconds build_seconds cache_key action_evidence native_evidence output_dir].each do |name|
+  %w[surface strategy phase source_sha restore_seconds build_seconds cache_key cache_hit action_evidence native_evidence output_dir].each do |name|
     parser.on("--#{name.tr('_','-')} VALUE") { |value| args[name] = value }
   end
+  parser.on("--continuous") { args["continuous"] = true }
 end.parse!
 phase = args.fetch("phase")
 raise "Phase must be base or rolling" unless %w[base rolling].include?(phase)
+raise "Continuous observations require the rolling phase" if args["continuous"] && phase != "rolling"
+cache_hit = args["continuous"] ? args["cache_hit"] : (phase == "base" ? "false" : "true")
+raise "Cache hit must be true or false" if cache_hit && !%w[true false].include?(cache_hit)
 build_seconds = Float(args.fetch("build_seconds"))
 raise "Build time must be finite and nonnegative" unless build_seconds.finite? && build_seconds >= 0
 native = args["native_evidence"] && JSON.parse(File.read(args["native_evidence"]))
@@ -31,10 +35,14 @@ result = {"schema_version" => 2, "benchmark" => "obs-studio-compiler-cache", "su
     "remote_storage_hits" => native.fetch("remote_storage_hit", 0), "remote_storage_writes" => native.fetch("remote_storage_write", 0),
     "remote_storage_errors" => native.fetch("remote_storage_error", 0), "remote_storage_timeouts" => native.fetch("remote_storage_timeout", 0)},
   "github" => BenchmarkReport.github_identity}
+if args["continuous"]
+  result["classification"]["reporting_reason"] = "Source build using the persistent compiler-cache cohort"
+  result["classification"]["cache_import_status"] = {"true" => "hit", "false" => "miss"}.fetch(cache_hit, "unmeasured")
+end
 BenchmarkReport.write_json(File.join(args["output_dir"], "#{args['surface']}-#{args['strategy']}-#{phase}.json"), result)
-BenchmarkReport.phase({"benchmark" => "obs-studio-#{args['surface']}", "strategy" => args["strategy"], "variant" => args.fetch("surface"),
+BenchmarkReport.phase({"benchmark" => args["continuous"] ? "obs-studio" : "obs-studio-#{args['surface']}", "strategy" => args["strategy"], "variant" => args.fetch("surface"),
   "lane" => phase == "base" ? "fresh" : "rolling", "phase" => phase == "base" ? "cold" : "commit", "mode" => args["surface"],
   "source_repository" => "obsproject/obs-studio", "source_sha" => args["source_sha"], "build_seconds" => build_seconds,
-  "restore_or_setup_seconds" => Integer(args["restore_seconds"]), "cache_hit" => phase == "base" ? "false" : "true",
+  "restore_or_setup_seconds" => Integer(args["restore_seconds"]), "cache_hit" => cache_hit,
   "evidence" => args["action_evidence"], "storage_key" => args["cache_key"], "output_dir" => args["output_dir"],
   "verification_passed" => true, "comparison_seconds" => Integer(args["restore_seconds"]) + build_seconds})

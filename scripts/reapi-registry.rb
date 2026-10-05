@@ -60,7 +60,7 @@ module ReapiRegistry
   end
 
   def self.command(provider:, phase:, workspace:, tag:, port: 5060)
-    raise Error, "Use cold or warm" unless %w[cold warm].include?(phase)
+    raise Error, "Use cold, warm or commit" unless %w[cold warm commit].include?(phase)
     case provider
     when "boringcache"
       args = ["boringcache", "cache-registry", workspace, tag, "--port", "5061", "--reapi-port", port.to_s,
