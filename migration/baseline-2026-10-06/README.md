@@ -22,6 +22,8 @@ retained recipe-review blocks for Zed (`script/bundle-linux`), Qdrant
 (`Dockerfile`), and Zed Nix (`flake.lock`), preserving their reviewed pins.
 
 Recurring central ownership is not yet enabled. All 48 historical schedule-only
-patches were rechecked against current workflow blobs. Old-run deletion scope
-and activation before a compatible stable release remain pending user choices.
-No old runs or caches were deleted while requesting this baseline.
+patches were rechecked against current workflow blobs. Activation before a compatible stable release remains pending a user choice.
+The user subsequently limited cleanup to October 5 migration experiments and
+checks in the central GitHub Actions history. The deletion audit is retained in
+`deleted-migration-runs.json`; scheduled runs, automated main-branch runs, other
+repositories, and today's baseline are outside that cleanup. No caches were deleted.
