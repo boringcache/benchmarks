@@ -3,7 +3,7 @@
   "baseline_id": "baseline-20261006",
   "observation": "seed",
   "case_id": "deno",
-  "state": "dispatching",
+  "state": "requested",
   "cli_version": "vcli-canary-252077d7b8fb",
   "created_at": "2026-10-06T13:32:13Z",
   "proposal": {
@@ -49,7 +49,9 @@
         "compiler-only"
       ],
       "source_sha": "7a96f1b3620fd3b6b4cff44093ca1393f341fded",
-      "state": "planned"
+      "state": "requested",
+      "id": 37471681230,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37471681230"
     }
   ]
 }
