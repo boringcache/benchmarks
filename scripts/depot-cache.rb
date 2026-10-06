@@ -39,6 +39,13 @@ module DepotCache
     settings.merge("DEPOT_TOKEN" => token)
   end
 
+  def self.runner_maven_settings(env: ENV)
+    return if env.fetch("DEPOT_CACHE_TOKEN", "").empty? || env.fetch("HOME", "").empty?
+    path = File.join(env.fetch("HOME"), ".m2/settings.xml")
+    return unless File.file?(path)
+    path if File.read(path).match?(/<server\b[^>]*>(?:(?!<\/server>).)*<id>\s*depot-cache\s*<\/id>/m)
+  end
+
   def self.configure(mode, phase:, env: ENV, root: Dir.pwd)
     settings = environment(mode, env: env)
     raise Error, "Use publish, warm, cold or commit" unless %w[publish warm cold commit].include?(phase)
@@ -84,12 +91,15 @@ module DepotCache
         contents = contents.sub(/<cache\b[^>]*>/) { |opening| opening + "<configuration><enabled>true</enabled><hashAlgorithm>SHA-256</hashAlgorithm>#{remote}</configuration>" }
       end
       File.write(config, contents)
-      settings_path = File.join(root, ".depot-cache/maven-settings.xml")
-      FileUtils.mkdir_p(File.dirname(settings_path))
-      File.write(settings_path, <<~XML)
-        <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"><servers><server><id>depot-cache</id><configuration><httpHeaders><property><name>Authorization</name><value>Bearer ${env.DEPOT_TOKEN}</value></property></httpHeaders></configuration></server></servers></settings>
-      XML
-      settings["MAVEN_ARGS"] = "--settings #{settings_path}"
+      settings_path = runner_maven_settings(env: env)
+      unless settings_path
+        settings_path = File.join(root, ".depot-cache/maven-settings.xml")
+        FileUtils.mkdir_p(File.dirname(settings_path))
+        File.write(settings_path, <<~XML)
+          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"><servers><server><id>depot-cache</id><configuration><httpHeaders><property><name>Authorization</name><value>Bearer ${env.DEPOT_TOKEN}</value></property></httpHeaders></configuration></server></servers></settings>
+        XML
+      end
+      settings["MAVEN_ARGS"] = [env.fetch("MAVEN_ARGS", ""), "--settings #{Shellwords.escape(settings_path)}"].reject(&:empty?).join(" ")
       settings["MAVEN_OPTS"] = "-Dmaven.build.cache.enabled=true -Dmaven.build.cache.remote.enabled=true -Dmaven.build.cache.remote.save.enabled=#{publish}"
     when "go"
       raise Error, "Depot runner did not provide the Go cache helper" unless system("depot", "gocache", "--help", out: File::NULL, err: File::NULL)
@@ -132,11 +142,20 @@ module DepotCache
         raise Error, "Runner did not expose a Depot Actions cache endpoint; observed hosts: #{urls.join(', ')}" unless urls.any? { |host| depot_endpoint?(host, env: env) }
       end
     end
+    authentication = if provider != "depot-cache"
+      "actions-runtime"
+    elsif mode == "maven" && runner_maven_settings(env: env)
+      "runner-settings"
+    elsif env.fetch("DEPOT_CACHE_TOKEN", "").empty?
+      "configured-token"
+    else
+      "job-token"
+    end
     FileUtils.mkdir_p(".depot-cache")
     File.write(".depot-cache/configuration.json", JSON.pretty_generate({"provider" => provider,
       "mode" => mode, "protocol" => provider == "depot-cache" ? "native" : "github-actions-cache-api",
       "endpoint_host" => provider == "depot-cache" ? "cache.depot.dev" : urls.find { |host| depot_endpoint?(host, env: env) }, "isolation" => provider == "depot-cache" ? "unmeasured" : "declared-cache-key",
-      "authentication" => provider == "depot-cache" ? (env.fetch("DEPOT_CACHE_TOKEN", "").empty? ? "configured-token" : "job-token") : "actions-runtime",
+      "authentication" => authentication,
       "runner_class" => env.fetch("BENCHMARK_RUNNER_CLASS")}) + "\n") if provider.start_with?("depot-")
     puts "::add-mask::#{settings.fetch('DEPOT_TOKEN')}" if env["GITHUB_ACTIONS"] == "true" && settings["DEPOT_TOKEN"]
     write_environment(settings, env: env)
