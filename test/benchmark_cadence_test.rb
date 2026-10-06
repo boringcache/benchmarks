@@ -143,11 +143,13 @@ class BenchmarkCadenceTest < Minitest::Test
     workflow = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/nightly-canaries.yml")))
     refute workflow.dig("jobs", "results").key?("if"), "Monitoring must continue while automatic dispatch is paused"
     assert_equal({"contents" => "read", "actions" => "read"}, workflow.fetch("permissions"))
+    assert_equal "${{ vars.BENCHMARK_ACTIVE_CASES }}", workflow.dig("jobs", "results", "env", "BENCHMARK_ACTIVE_CASES")
     step = workflow.dig("jobs", "results", "steps").find { |item| item["name"] == "Check repository canaries" }
     refute_includes step.fetch("run"), 'scripts/nightly-canaries.rb --collect'
     assert_includes step.fetch("run"), 'scripts/rolling-monitor.rb'
     assert_includes step.fetch("run"), 'daily weekly'
     assert_includes step.fetch("run"), 'scripts/benchmark-cadence.rb --collect'
+    assert_includes step.fetch("run"), 'args+=(--active-only)'
   end
 
   def test_incompatible_cli_stops_the_entire_dispatch_and_retains_a_failed_receipt
