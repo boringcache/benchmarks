@@ -4,7 +4,7 @@ Question: Does the pinned workload produce verified output and reuse its declare
 
 Measured scope: The BoringCache Cargo operations, including their restore, build, and publication; output verification and unrelated setup are excluded. The layer proof uses a combined cold seed for each restore-only variant and makes no provider timing comparison.
 
-Observations: 1/2 recorded; 0 failed; 1 missing.
+Observations: 2/2 recorded; 0 failed; 0 missing.
 
 Completion checks: missing or failed.
 
@@ -13,14 +13,11 @@ Publication: unreviewed.
 | Phase | Provider | Successful observations | Storage median (bytes) | Storage observations |
 | --- | --- | ---: | ---: | ---: |
 | Cold build | BoringCache | 1 | 8997988095 | 1 |
+| Changed-source build | BoringCache | 1 | 8997988095 | 1 |
 
 Comparison checks:
 
 - This series does not declare a comparison of provider performance.
-
-Missing observations:
-
-- Sample 1, BoringCache, Changed-source build
 
 Missing completion checks: 37429887430
 
@@ -30,5 +27,6 @@ Missing completion checks: 37429887430
 | Sample | Provider | Phase | Cache setup/restore (s) | Build (s) | Build and cache reuse (s) | Storage (bytes) | Storage source | Cache | Record |
 | ---: | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- |
 | 1 | BoringCache | Cold build | 0 | 4846 | 4846 | 8997988095 | boringcache-check | miss | [JSON](runs/1-boringcache-cold.json) |
+| 1 | BoringCache | Changed-source build | 0 | 3652 | 3652 | 8997988095 | boringcache-check | hit | [JSON](runs/1-boringcache-commit.json) |
 
 [Full records and checks](report.json)

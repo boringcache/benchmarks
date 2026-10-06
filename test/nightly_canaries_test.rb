@@ -144,6 +144,21 @@ class NightlyCanariesTest < Minitest::Test
     refute_includes File.read(@summary), "**success**"
   end
 
+  def test_collects_zed_layer_artifacts_for_the_requested_attempt
+    record = {"benchmark" => "zed-cargo-layers", "phase" => "commit",
+      "github" => {"run_id" => "42", "run_attempt" => "2"}}
+    download = lambda do |*arguments|
+      assert_includes arguments, "zed-cargo-layers-*"
+      directory = arguments.fetch(arguments.index("--dir") + 1)
+      File.write(File.join(directory, "phase.json"), JSON.generate(record))
+      File.write(File.join(directory, "old-attempt.json"), JSON.generate(record.merge("github" => {"run_id" => "42", "run_attempt" => "1"})))
+      ["", "", Struct.new(:success?).new(true)]
+    end
+    Open3.stub(:capture3, download) do
+      assert_equal [record], NightlyCanaries::Runner.new.phase_evidence({"repository" => "boringcache/benchmarks", "id" => 42}, attempt: 2)
+    end
+  end
+
   def test_dispatch_is_limited_to_the_selected_repository
     other = BENCHMARK.merge("source_repo" => "boringcache/benchmark-other")
     @runner.dispatch(repository: BENCHMARK.fetch("source_repo"), output: @output, summary: @summary,
