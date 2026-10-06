@@ -1,0 +1,1934 @@
+{
+  "cli_version": "vcli-canary-8a5868ac875b",
+  "created_at": "2026-10-06T07:27:56Z",
+  "channel": "canary",
+  "ref": "main",
+  "state": "requested",
+  "runs": [
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "hugo",
+        "series_id": "cadence-37429783479-1",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"hugo\",\"definition_sha256\":\"760ac5326ba719d80392bfb11103ae8c87fa4df582d4296c86b4ac373d296967\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "hugo",
+        "series_id": "cadence-37429783479-1",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "760ac5326ba719d80392bfb11103ae8c87fa4df582d4296c86b4ac373d296967",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "hugo",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "gohugoio/hugo",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "plan_sha256": "fe6ca0c24d77fdc7832fac98c31c28a7eacefba98204df6e7fb0390dc04c5b88"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429882929,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429882929"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "hugo-go",
+        "series_id": "cadence-37429783479-2",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"hugo-go\",\"definition_sha256\":\"df239ea7329f1ae3313af9c151abcebe8f5e3eaf6b015c031546dc02a22858d2\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "hugo-go",
+        "series_id": "cadence-37429783479-2",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "df239ea7329f1ae3313af9c151abcebe8f5e3eaf6b015c031546dc02a22858d2",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "hugo-go",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "gohugoio/hugo",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success"
+        ],
+        "plan_sha256": "cd7624967311a7dfc5d97dccca835f9f59dbcc5246d189d25078f89691c41d66"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429885841,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429885841"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "immich",
+        "series_id": "cadence-37429783479-3",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"immich\",\"definition_sha256\":\"b282ddaf1e2451649fcd7a858e75e36079ed1197fef2ad3b85e1de5c9c445351\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "immich",
+        "series_id": "cadence-37429783479-3",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "b282ddaf1e2451649fcd7a858e75e36079ed1197fef2ad3b85e1de5c9c445351",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "immich",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "immich-app/immich",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "007c18aec6cc9552fb7d8b7c791c41d7424876b0",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "plan_sha256": "8715d77ec129e151c86fc309e4fcd89c980224b7919f7be1d6447c6ab92113cc"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429878473,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429878473"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "mastodon",
+        "variant": "server",
+        "series_id": "cadence-37429783479-4",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"mastodon\",\"definition_sha256\":\"d2427ff5ba726239c5bb24f34ff0e6b65d137b5d5ca8107cd28b1f41f3bda06b\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "mastodon",
+        "series_id": "cadence-37429783479-4",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "d2427ff5ba726239c5bb24f34ff0e6b65d137b5d5ca8107cd28b1f41f3bda06b",
+        "variant": "server",
+        "workflow_inputs": {
+          "case_id": "mastodon",
+          "variant": "server",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "mastodon/mastodon",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "plan_sha256": "d5bf417c20979dc8e03980ec341765ad0a0647be8771334bb681134609828b66"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429890708,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429890708"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "mastodon",
+        "variant": "streaming",
+        "series_id": "cadence-37429783479-5",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"mastodon\",\"definition_sha256\":\"d2427ff5ba726239c5bb24f34ff0e6b65d137b5d5ca8107cd28b1f41f3bda06b\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "mastodon",
+        "series_id": "cadence-37429783479-5",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "d2427ff5ba726239c5bb24f34ff0e6b65d137b5d5ca8107cd28b1f41f3bda06b",
+        "variant": "streaming",
+        "workflow_inputs": {
+          "case_id": "mastodon",
+          "variant": "streaming",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "mastodon/mastodon",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "plan_sha256": "5e17b88ed80945ed7c217ccf172c0d09671d7c533268fc6ca8f7f0212b3a82c0"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429886472,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429886472"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "posthog",
+        "variant": "layers",
+        "series_id": "cadence-37429783479-6",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"posthog\",\"definition_sha256\":\"1ab1714e8281dd1fc3c01d01e29337eb7842a4cfbc99f925368aa993e6a70709\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "posthog",
+        "series_id": "cadence-37429783479-6",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "1ab1714e8281dd1fc3c01d01e29337eb7842a4cfbc99f925368aa993e6a70709",
+        "variant": "layers",
+        "workflow_inputs": {
+          "case_id": "posthog",
+          "variant": "layers",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "PostHog/posthog",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "plan_sha256": "c580363d986e36b82bd94db1586ddbc74b7bc96cc34a366ab82cb9b7cb472e16"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429891243,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429891243"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "storybook",
+        "series_id": "cadence-37429783479-7",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"storybook\",\"definition_sha256\":\"cacbffda773108a65b76a7ac67c8eac31e1223131d7f72df1e6b4c4734b39ec9\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "storybook",
+        "series_id": "cadence-37429783479-7",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "cacbffda773108a65b76a7ac67c8eac31e1223131d7f72df1e6b4c4734b39ec9",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "storybook",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Storybook sandbox build plus measured cache restore/setup; dependency installation and sandbox creation are excluded; output checks and unmeasured cache publication are reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "storybookjs/storybook",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "474a5399b5b2728b562d61ddc952ce4caa750fa0",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success"
+        ],
+        "plan_sha256": "6cb401cee552bca490069c15eb4bd963ecf6c80ad7716c2e30279caaf49c3f9e"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429887478,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429887478"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "opentelemetry-java",
+        "series_id": "cadence-37429783479-8",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"opentelemetry-java\",\"definition_sha256\":\"988ab9858c8a76e1ee5d718c48bff533a87660c7fb5309406b5b5ba76ffd717d\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "opentelemetry-java",
+        "series_id": "cadence-37429783479-8",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "988ab9858c8a76e1ee5d718c48bff533a87660c7fb5309406b5b5ba76ffd717d",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "opentelemetry-java",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "open-telemetry/opentelemetry-java",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "a674ff1acea16754a2ed413fb8966084220fbd8b",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success"
+        ],
+        "plan_sha256": "b7c5ffb6d51e72ad142dbe5d3424dce446160bf0b17d9cb56eb4ef7b8d6889c6"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429893281,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429893281"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "spring-ai",
+        "series_id": "cadence-37429783479-9",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"spring-ai\",\"definition_sha256\":\"f7f8559454eacb7833c63f09aa9f22f433fcf0b368879d322b2ccb1dfca749ff\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "spring-ai",
+        "series_id": "cadence-37429783479-9",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "f7f8559454eacb7833c63f09aa9f22f433fcf0b368879d322b2ccb1dfca749ff",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "spring-ai",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "spring-projects/spring-ai",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "46d05c2fdbab52f6ef04207abe19b12687a47453",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success"
+        ],
+        "plan_sha256": "97cb289b1f69ec36784fb4c14ff6d50168717b4748e81cb65748c4068183a437"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429881694,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429881694"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "grpc-grpc-bazel-fresh-benchmark.yml",
+      "inputs": {
+        "series_id": "cadence-37429783479-10",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"grpc\",\"definition_sha256\":\"45e7ad8adde59ee18a9c779db4b14adde68dd8fb357f2edd757d7fbecee0f3a4\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "grpc",
+        "series_id": "cadence-37429783479-10",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "45e7ad8adde59ee18a9c779db4b14adde68dd8fb357f2edd757d7fbecee0f3a4",
+        "variant": null,
+        "workflow_inputs": {
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache",
+            "buildbuddy"
+          ],
+          "timed_scope": "Bazel build with local top-level outputs plus measured cache restore/setup; output checks and post-job cache save are outside build timing",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "grpc/grpc",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "Nonempty executable csm_greeter_client and csm_greeter_server outputs, checked outside build timing"
+        ],
+        "plan_sha256": "9b92b3587827c164958db912f876ca749f4b9d664e961b2dd5e656691fcb731e"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429879437,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429879437"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "zed-zed-cargo-product.yml",
+      "inputs": {
+        "base_sha": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+        "head_sha": "ee3b5558c581429633937e458fad8d109f29e9ee",
+        "cache_layer": "combined",
+        "series_id": "cadence-37429783479-11",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"zed\",\"definition_sha256\":\"11ee8f393e887078996c7720555b0a18522f25c4155982fd6bfecc14a77f2bba\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "zed",
+        "series_id": "cadence-37429783479-11",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "commit"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "11ee8f393e887078996c7720555b0a18522f25c4155982fd6bfecc14a77f2bba",
+        "variant": "combined",
+        "workflow_inputs": {
+          "base_sha": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+          "head_sha": "ee3b5558c581429633937e458fad8d109f29e9ee",
+          "cache_layer": "combined",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+          "providers": [
+            "boringcache"
+          ],
+          "timed_scope": "The BoringCache Cargo operations, including their restore, build, and publication; output verification and unrelated setup are excluded. The layer proof uses a combined cold seed for each restore-only variant and makes no provider timing comparison.",
+          "primary_metric": "correctness",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "zed-industries/zed",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+              "kind": "gitlink"
+            },
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "35bba8eef7f68b8cc61a6e883e7e041cf24a96cd",
+              "kind": "env"
+            },
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+              "kind": "env"
+            },
+            {
+              "path": "payload/cargo-layer-source.env",
+              "revision": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+              "kind": "env"
+            },
+            {
+              "path": "payload/cargo-layer-source.env",
+              "revision": "ee3b5558c581429633937e458fad8d109f29e9ee",
+              "kind": "env"
+            }
+          ]
+        },
+        "verification": [
+          "Require an empty target",
+          "Checkout the selected Zed source",
+          "Require an empty destination",
+          "Verify the Zed build"
+        ],
+        "plan_sha256": "b62f2e4041cdd558ef303733347c5559a21bdab388229188f3c0fa0f915060b9"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429887430,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429887430"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "deno-deno-cargo-product.yml",
+      "inputs": {
+        "cache_profile": "cargo-product",
+        "series_id": "cadence-37429783479-12",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"deno\",\"definition_sha256\":\"62ed46770bef673984a22ca6f5cfb33d475f1d7a6689007b58488830dead087c\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "deno",
+        "series_id": "cadence-37429783479-12",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "commit"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "62ed46770bef673984a22ca6f5cfb33d475f1d7a6689007b58488830dead087c",
+        "variant": "cargo-product",
+        "workflow_inputs": {
+          "cache_profile": "cargo-product",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+          "providers": [
+            "boringcache"
+          ],
+          "timed_scope": "The two BoringCache Cargo release operations, including restore, build, and any permitted publication. Fresh changed-source consumers use restore-only trust; rolling jobs permit publication to the declared cohort. Output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.",
+          "primary_metric": "correctness",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "denoland/deno",
+          "pins": [
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+              "kind": "env"
+            },
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "b4f08f127652d8442b4d3dbabc277aca3840bc1d",
+              "kind": "env"
+            }
+          ]
+        },
+        "verification": [
+          "Verify Deno Linux release recipe",
+          "Require a clean product starting point",
+          "Verify the Deno base build",
+          "Require an empty destination",
+          "Verify the Deno head build",
+          "Require one-commit source cadence",
+          "Verify the Deno build"
+        ],
+        "plan_sha256": "906282adbc783ece5a3b5fb16edfe89d9faa762efe45eb7d937126f615b3aef1"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429948888,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429948888"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "duckgres",
+        "series_id": "cadence-37429783479-13",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"duckgres\",\"definition_sha256\":\"d9c3006725f0f0687f3ab346977ef12a3ffd2993c02152213f49afc52d53bda9\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "duckgres",
+        "series_id": "cadence-37429783479-13",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "d9c3006725f0f0687f3ab346977ef12a3ffd2993c02152213f49afc52d53bda9",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "duckgres",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "PostHog/duckgres",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "12e26cf3a900823cf415d826ab2a9b8f0d57b2a3",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "plan_sha256": "63eb9c0f35d0d7e0c14e90f6ef410818271e6112c8ae96dbc25947d345a6c559"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429897120,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429897120"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "chroma",
+        "series_id": "cadence-37429783479-14",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"chroma\",\"definition_sha256\":\"4911e3d71c206938a5644329251c225f4e1fc3ee0123e96fee716ea0f2e1b53f\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "chroma",
+        "series_id": "cadence-37429783479-14",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "4911e3d71c206938a5644329251c225f4e1fc3ee0123e96fee716ea0f2e1b53f",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "chroma",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "chroma-core/chroma",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "848cf58dd6dd952f8d0ff672af7b30cbf4d67f81",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "Fresh cold and warm builds use the unchanged pinned source; diagnostic source-layer invalidation is excluded",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "plan_sha256": "d61156379f2b1716cfbef2f6ff3a0d62d74d27e1b5a835bbcc32d479b5c53d9b"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429881454,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429881454"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "linkerd2",
+        "series_id": "cadence-37429783479-15",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"linkerd2\",\"definition_sha256\":\"88c51f753504e94b78ed703c0d54c19d51c5dcfffb9a8c21782b98d5450fc108\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "linkerd2",
+        "series_id": "cadence-37429783479-15",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "88c51f753504e94b78ed703c0d54c19d51c5dcfffb9a8c21782b98d5450fc108",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "linkerd2",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "linkerd/linkerd2",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "e7c15f3a6c933d4d92a4959575d5f9d093fdffc5",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "plan_sha256": "ab004c9baa7b6492bf0137c58e3fcc52a106627678b526781274d011e5ffca52"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429890329,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429890329"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "qdrant",
+        "series_id": "cadence-37429783479-16",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"qdrant\",\"definition_sha256\":\"12b258d9b3fdd2646a07bfbd0feb5cba14f8c84b4b93bb9846fc40ef73046b83\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "qdrant",
+        "series_id": "cadence-37429783479-16",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "12b258d9b3fdd2646a07bfbd0feb5cba14f8c84b4b93bb9846fc40ef73046b83",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "qdrant",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "qdrant/qdrant",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "9ae05efdc1ef96352889b2a6b6b574c35232b974",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success"
+        ],
+        "plan_sha256": "c9a064a14c6e9f79b04789d82aa1d460f8782fe6924c1f0c9f741598e65d24a5"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429890210,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429890210"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "n8n",
+        "variant": "turbo",
+        "series_id": "cadence-37429783479-17",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"n8n\",\"definition_sha256\":\"339ca65cf6fcb58df76378ed10de153058447619b942c52f94e365a9fb28eacb\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "n8n",
+        "series_id": "cadence-37429783479-17",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "339ca65cf6fcb58df76378ed10de153058447619b942c52f94e365a9fb28eacb",
+        "variant": "turbo",
+        "workflow_inputs": {
+          "case_id": "n8n",
+          "variant": "turbo",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "n8n-io/n8n",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "Turbo variant: built CLI entrypoint exists; Docker variants: freshly loaded output image exists"
+        ],
+        "plan_sha256": "4d4396667442efd092c5b83eda15bc66ba22c528ad408e3ac85de70c26186385"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429880190,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429880190"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "n8n",
+        "variant": "docker",
+        "series_id": "cadence-37429783479-18",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"n8n\",\"definition_sha256\":\"339ca65cf6fcb58df76378ed10de153058447619b942c52f94e365a9fb28eacb\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "n8n",
+        "series_id": "cadence-37429783479-18",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "339ca65cf6fcb58df76378ed10de153058447619b942c52f94e365a9fb28eacb",
+        "variant": "docker",
+        "workflow_inputs": {
+          "case_id": "n8n",
+          "variant": "docker",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "n8n-io/n8n",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "Turbo variant: built CLI entrypoint exists; Docker variants: freshly loaded output image exists"
+        ],
+        "plan_sha256": "9c807bc374c73056c211ea44e007c47bdb19bb257debd9755edd29e4b3fa385a"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429901300,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429901300"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "n8n",
+        "variant": "runners",
+        "series_id": "cadence-37429783479-19",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"n8n\",\"definition_sha256\":\"339ca65cf6fcb58df76378ed10de153058447619b942c52f94e365a9fb28eacb\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "n8n",
+        "series_id": "cadence-37429783479-19",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "339ca65cf6fcb58df76378ed10de153058447619b942c52f94e365a9fb28eacb",
+        "variant": "runners",
+        "workflow_inputs": {
+          "case_id": "n8n",
+          "variant": "runners",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "n8n-io/n8n",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "Turbo variant: built CLI entrypoint exists; Docker variants: freshly loaded output image exists"
+        ],
+        "plan_sha256": "4b7d576777447953a8cfaac6bd09c8aac06155a8d0ae2a34270d4f0511d70296"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429885977,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429885977"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "n8n",
+        "variant": "distroless",
+        "series_id": "cadence-37429783479-20",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"n8n\",\"definition_sha256\":\"339ca65cf6fcb58df76378ed10de153058447619b942c52f94e365a9fb28eacb\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "n8n",
+        "series_id": "cadence-37429783479-20",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "339ca65cf6fcb58df76378ed10de153058447619b942c52f94e365a9fb28eacb",
+        "variant": "distroless",
+        "workflow_inputs": {
+          "case_id": "n8n",
+          "variant": "distroless",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "n8n-io/n8n",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "Turbo variant: built CLI entrypoint exists; Docker variants: freshly loaded output image exists"
+        ],
+        "plan_sha256": "a71e788a605af8baebe725c114e24addfb59a175cbe044e366bc69492a9e2f07"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429886645,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429886645"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "reapi-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "gogs-moon",
+        "series_id": "cadence-37429783479-21",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"gogs-moon\",\"definition_sha256\":\"ced780d898f46774c6dfb43bdb885b8ca9c27c8a4463baee2a1988a253625fa7\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "gogs-moon",
+        "series_id": "cadence-37429783479-21",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "ced780d898f46774c6dfb43bdb885b8ca9c27c8a4463baee2a1988a253625fa7",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "gogs-moon",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "Does Moon restore the Gogs web build on a clean worker?",
+          "providers": [
+            "boringcache",
+            "bazel-remote"
+          ],
+          "primary_metric": "correctness",
+          "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
+          "storage": "unmeasured",
+          "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+          "sample_count": 2
+        },
+        "source": {
+          "repository": "gogs/gogs",
+          "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+            }
+          ]
+        },
+        "verification": [
+          "Require the declared native command to succeed",
+          "Require declared outputs and successful output checks",
+          "Require native remote-hit evidence and the same output hashes on the warm worker",
+          "Require registry shutdown to complete successfully"
+        ],
+        "plan_sha256": "4239eb183802d835691ef12fdd6b92af0b21e9d8f68d3cd7cdcd56dadc544348"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429883203,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429883203"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "reapi-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "opencut-moon",
+        "series_id": "cadence-37429783479-22",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"opencut-moon\",\"definition_sha256\":\"5b85319ae159e9b86c4da2ff0a541cb3100b68947f6ee120f6a93d5f50c61ba9\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "opencut-moon",
+        "series_id": "cadence-37429783479-22",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "5b85319ae159e9b86c4da2ff0a541cb3100b68947f6ee120f6a93d5f50c61ba9",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "opencut-moon",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "Does Moon restore the OpenCut web build on a clean worker?",
+          "providers": [
+            "boringcache",
+            "bazel-remote"
+          ],
+          "primary_metric": "correctness",
+          "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
+          "storage": "unmeasured",
+          "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+          "sample_count": 2
+        },
+        "source": {
+          "repository": "OpenCut-app/OpenCut",
+          "revision": "e668010778568641babef2cc40be4703ae6916d6",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "e668010778568641babef2cc40be4703ae6916d6"
+            }
+          ]
+        },
+        "verification": [
+          "Require the declared native command to succeed",
+          "Require declared outputs and successful output checks",
+          "Require native remote-hit evidence and the same output hashes on the warm worker",
+          "Require registry shutdown to complete successfully"
+        ],
+        "plan_sha256": "f6f38bc2a078b8c3776dabf080bd6a67f13244e3e045f6d6cfc90be9f873fe55"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429890346,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429890346"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "reapi-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "stackstorm-pants",
+        "series_id": "cadence-37429783479-23",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"stackstorm-pants\",\"definition_sha256\":\"a99e0a8fa132879fbcb6d138371011254e676141f992ab85685d0ee9774d0922\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "stackstorm-pants",
+        "series_id": "cadence-37429783479-23",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "a99e0a8fa132879fbcb6d138371011254e676141f992ab85685d0ee9774d0922",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "stackstorm-pants",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "Does Pants restore StackStorm pack metadata test results on a clean worker?",
+          "providers": [
+            "boringcache",
+            "bazel-remote"
+          ],
+          "primary_metric": "correctness",
+          "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
+          "storage": "unmeasured",
+          "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+          "sample_count": 2
+        },
+        "source": {
+          "repository": "StackStorm/st2",
+          "revision": "9824de4dfd0c869869e310dee729308f398ad83a",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "9824de4dfd0c869869e310dee729308f398ad83a"
+            }
+          ]
+        },
+        "verification": [
+          "Require the declared native command to succeed",
+          "Require declared outputs and successful output checks",
+          "Require native remote-hit evidence and the same output hashes on the warm worker",
+          "Require registry shutdown to complete successfully"
+        ],
+        "plan_sha256": "59ec682b592c05ebb46f553f7ab8afa24af3043ce2155d60b95c2c7429d2aad7"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429885967,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429885967"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "reapi-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "executorch-buck2",
+        "series_id": "cadence-37429783479-24",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"executorch-buck2\",\"definition_sha256\":\"c80d751fc02c7f6edd7c52b655056f5d0c410ce957f33797149b75a964865bdc\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "executorch-buck2",
+        "series_id": "cadence-37429783479-24",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "c80d751fc02c7f6edd7c52b655056f5d0c410ce957f33797149b75a964865bdc",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "executorch-buck2",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "Does Buck2 restore the ExecuTorch portable runner on a clean worker?",
+          "providers": [
+            "boringcache",
+            "bazel-remote"
+          ],
+          "primary_metric": "correctness",
+          "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
+          "storage": "unmeasured",
+          "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+          "sample_count": 2
+        },
+        "source": {
+          "repository": "pytorch/executorch",
+          "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+            }
+          ],
+          "patch": "cache.patch"
+        },
+        "verification": [
+          "Require the declared native command to succeed",
+          "Require declared outputs and successful output checks",
+          "Require native remote-hit evidence and the same output hashes on the warm worker",
+          "Require registry shutdown to complete successfully"
+        ],
+        "plan_sha256": "eb1811ddbe3ff8509788c68d04305776455b86253418cc25e347b3cf3a377441"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429892756,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429892756"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "reapi-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "msgpack-sbt",
+        "series_id": "cadence-37429783479-25",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"msgpack-sbt\",\"definition_sha256\":\"51b345fde11a7fba1e49420f8de32cf8e0ff5ebf5db815ec6c21b17ce0c03e8e\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "msgpack-sbt",
+        "series_id": "cadence-37429783479-25",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "51b345fde11a7fba1e49420f8de32cf8e0ff5ebf5db815ec6c21b17ce0c03e8e",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "msgpack-sbt",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "Does sbt reuse MessagePack compilation and test results on a clean worker?",
+          "providers": [
+            "boringcache",
+            "bazel-remote"
+          ],
+          "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
+          "primary_metric": "correctness",
+          "storage": "unmeasured",
+          "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+          "sample_count": 2
+        },
+        "source": {
+          "repository": "msgpack/msgpack-java",
+          "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+              "kind": "snapshot"
+            }
+          ],
+          "patch": "cache.patch"
+        },
+        "verification": [
+          "Require the declared native command to succeed",
+          "Require declared outputs and successful output checks",
+          "Require native remote-hit evidence and the same output hashes on the warm worker",
+          "Require registry shutdown to complete successfully"
+        ],
+        "plan_sha256": "1b8fc6a0ce1820ab9a787753e05df894513eec408ca0b38904d59988bc6d717b"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429883799,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429883799"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "nix-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "helix-nix",
+        "provider": "all",
+        "series_id": "cadence-37429783479-26",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"helix-nix\",\"definition_sha256\":\"19eaaa29cdfabecbf164b39427826f04be13aefad30327be40090e0162ec8e24\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "helix-nix",
+        "series_id": "cadence-37429783479-26",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "19eaaa29cdfabecbf164b39427826f04be13aefad30327be40090e0162ec8e24",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "helix-nix",
+          "provider": "all",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "Does Nix restore the Helix package closure on a fresh store?",
+          "providers": [
+            "boringcache",
+            "cachix"
+          ],
+          "primary_metric": "build_and_reuse_seconds",
+          "timed_scope": "Nix package derivation build or substitution after its build dependencies are realized; dependency preparation, output verification and provider post-step publication are outside the build timer. All workers import the same checksummed dependency-store export before timing; its derivation and NAR hashes must match, and the measured package is excluded from the seed.",
+          "storage": "provider-reported",
+          "cache_scope": "BoringCache case/series tag; Cachix content-addressed cache shared across series. Cold disables substitution after dependency preparation. Warm uses a fresh local output store and only the selected provider; compare exact output and dependency closure hashes. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+          "sample_count": 2
+        },
+        "source": {
+          "repository": "helix-editor/helix",
+          "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc"
+            }
+          ]
+        },
+        "verification": [
+          "Verify result/bin/hx exists and its version command succeeds",
+          "Record the output store path and recursive closure NAR hashes in both provider arms",
+          "Require identical output store paths and closure hashes for the same source and flake.lock",
+          "On a fresh warm store, forbid local builds and require substitution from the selected provider",
+          "Require completed closure publication before starting the warm consumer"
+        ],
+        "plan_sha256": "0a9ec097f94f4f7ebd17fa18590d8d3589f588e2284c669f01cde1252d1135e7"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429886833,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429886833"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "nix-fresh-benchmark.yml",
+      "inputs": {
+        "case_id": "zed-nix",
+        "provider": "all",
+        "series_id": "cadence-37429783479-27",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"zed-nix\",\"definition_sha256\":\"192b4068b392c69ef3f0b21a5327029f97fa3d8fa9bef21498f4580bcbbac346\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "zed-nix",
+        "series_id": "cadence-37429783479-27",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "warm"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "192b4068b392c69ef3f0b21a5327029f97fa3d8fa9bef21498f4580bcbbac346",
+        "variant": null,
+        "workflow_inputs": {
+          "case_id": "zed-nix",
+          "provider": "all",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "Does Nix restore the Zed package closure on a fresh store?",
+          "providers": [
+            "boringcache",
+            "cachix"
+          ],
+          "primary_metric": "build_and_reuse_seconds",
+          "timed_scope": "Nix package derivation build or substitution after its build dependencies are realized; dependency preparation, output verification and provider post-step publication are outside the build timer. All workers import the same checksummed dependency-store export before timing; its derivation and NAR hashes must match, and the measured package is excluded from the seed.",
+          "storage": "provider-reported",
+          "cache_scope": "BoringCache case/series tag; Cachix content-addressed cache shared across series. Cold disables substitution after dependency preparation. Warm uses a fresh local output store and only the selected provider; compare exact output and dependency closure hashes. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+          "sample_count": 2
+        },
+        "source": {
+          "repository": "zed-industries/zed",
+          "revision": "96837d78cb0f2128c1965716f8df56b8aea59742",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "96837d78cb0f2128c1965716f8df56b8aea59742"
+            }
+          ]
+        },
+        "verification": [
+          "Verify result/bin/zed exists and its version command succeeds",
+          "Record the output store path and recursive closure NAR hashes in both provider arms",
+          "Require identical output store paths and closure hashes for the same source and flake.lock",
+          "On a fresh warm store, forbid local builds and require substitution from the selected provider",
+          "Require completed closure publication before starting the warm consumer"
+        ],
+        "plan_sha256": "0bb3e209278908f9e2b6cbb242addbcd6ace335f37a7449437c58f8c7be71991"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429896983,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429896983"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "obs-studio-obs-actions-cache.yml",
+      "inputs": {
+        "cache_tool": "ccache",
+        "series_id": "cadence-37429783479-28",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"obs-studio\",\"definition_sha256\":\"769105c85b1023d3aaf6092e9038ddf2dc21c214f817b3ffe16e0bc913c5d354\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "obs-studio",
+        "series_id": "cadence-37429783479-28",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "commit"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "769105c85b1023d3aaf6092e9038ddf2dc21c214f817b3ffe16e0bc913c5d354",
+        "variant": "ccache",
+        "workflow_inputs": {
+          "cache_tool": "ccache",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Cache restore/setup plus the upstream Building obs-studio log group; dependency installation, CMake configuration, queueing, and post-job cache save are excluded",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "obsproject/obs-studio",
+          "pins": [
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "e7136951c052db9a74de853f2f0ec5d1bc8f6f4a",
+              "kind": "env"
+            },
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "ef5814431c6af9061874470201d0b799bc84602b",
+              "kind": "env"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and commands",
+          "Successful upstream build",
+          "Native ccache or Xcode output verification for reuse observations"
+        ],
+        "plan_sha256": "cc5da139cb422ef9c3f948b2a1498e8c24b6f5c2a72e8293e5166025d25bce2d"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429883504,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429883504"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "obs-studio-obs-boringcache.yml",
+      "inputs": {
+        "cache_tool": "ccache",
+        "series_id": "cadence-37429783479-28",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"obs-studio\",\"definition_sha256\":\"769105c85b1023d3aaf6092e9038ddf2dc21c214f817b3ffe16e0bc913c5d354\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "obs-studio",
+        "series_id": "cadence-37429783479-28",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "commit"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "769105c85b1023d3aaf6092e9038ddf2dc21c214f817b3ffe16e0bc913c5d354",
+        "variant": "ccache",
+        "workflow_inputs": {
+          "cache_tool": "ccache",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Cache restore/setup plus the upstream Building obs-studio log group; dependency installation, CMake configuration, queueing, and post-job cache save are excluded",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "obsproject/obs-studio",
+          "pins": [
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "e7136951c052db9a74de853f2f0ec5d1bc8f6f4a",
+              "kind": "env"
+            },
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "ef5814431c6af9061874470201d0b799bc84602b",
+              "kind": "env"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and commands",
+          "Successful upstream build",
+          "Native ccache or Xcode output verification for reuse observations"
+        ],
+        "plan_sha256": "cc5da139cb422ef9c3f948b2a1498e8c24b6f5c2a72e8293e5166025d25bce2d"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429884368,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429884368"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "obs-studio-obs-actions-cache.yml",
+      "inputs": {
+        "cache_tool": "xcode",
+        "series_id": "cadence-37429783479-30",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"obs-studio\",\"definition_sha256\":\"769105c85b1023d3aaf6092e9038ddf2dc21c214f817b3ffe16e0bc913c5d354\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "obs-studio",
+        "series_id": "cadence-37429783479-30",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "commit"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "769105c85b1023d3aaf6092e9038ddf2dc21c214f817b3ffe16e0bc913c5d354",
+        "variant": "xcode",
+        "workflow_inputs": {
+          "cache_tool": "xcode",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Cache restore/setup plus the upstream Building obs-studio log group; dependency installation, CMake configuration, queueing, and post-job cache save are excluded",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "obsproject/obs-studio",
+          "pins": [
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "e7136951c052db9a74de853f2f0ec5d1bc8f6f4a",
+              "kind": "env"
+            },
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "ef5814431c6af9061874470201d0b799bc84602b",
+              "kind": "env"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and commands",
+          "Successful upstream build",
+          "Native ccache or Xcode output verification for reuse observations"
+        ],
+        "plan_sha256": "1d3043ab1fe6658915bf5f4daecd8cd387635e825ecaa3f8e7203626ec2ce49c"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429892741,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429892741"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "obs-studio-obs-boringcache.yml",
+      "inputs": {
+        "cache_tool": "xcode",
+        "series_id": "cadence-37429783479-30",
+        "sample": "1",
+        "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"obs-studio\",\"definition_sha256\":\"769105c85b1023d3aaf6092e9038ddf2dc21c214f817b3ffe16e0bc913c5d354\"}"
+      },
+      "state": "requested",
+      "series": {
+        "schema_version": 1,
+        "case_id": "obs-studio",
+        "series_id": "cadence-37429783479-30",
+        "created_at": "2026-10-06T07:28:09Z",
+        "lane": "fresh",
+        "phases": [
+          "cold",
+          "commit"
+        ],
+        "sample_count": 1,
+        "definition_sha256": "769105c85b1023d3aaf6092e9038ddf2dc21c214f817b3ffe16e0bc913c5d354",
+        "variant": "xcode",
+        "workflow_inputs": {
+          "cache_tool": "xcode",
+          "cli_version": "vcli-canary-8a5868ac875b"
+        },
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Cache restore/setup plus the upstream Building obs-studio log group; dependency installation, CMake configuration, queueing, and post-job cache save are excluded",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "source": {
+          "repository": "obsproject/obs-studio",
+          "pins": [
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "e7136951c052db9a74de853f2f0ec5d1bc8f6f4a",
+              "kind": "env"
+            },
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "ef5814431c6af9061874470201d0b799bc84602b",
+              "kind": "env"
+            }
+          ]
+        },
+        "verification": [
+          "Pinned upstream recipe and commands",
+          "Successful upstream build",
+          "Native ccache or Xcode output verification for reuse observations"
+        ],
+        "plan_sha256": "1d3043ab1fe6658915bf5f4daecd8cd387635e825ecaa3f8e7203626ec2ce49c"
+      },
+      "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "id": 37429944787,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37429944787"
+    }
+  ]
+}

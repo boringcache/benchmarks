@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "case_id": "obs-studio",
+  "repository": "boringcache/benchmarks",
+  "workflow": "obs-studio-obs-boringcache.yml",
+  "lane": "fresh",
+  "ref": "main",
+  "state": "requested",
+  "requested_at": "2026-10-06T07:27:56Z",
+  "inputs": {
+    "cache_tool": "ccache",
+    "series_id": "cadence-37429783479-28",
+    "sample": "1",
+    "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"obs-studio\",\"definition_sha256\":\"769105c85b1023d3aaf6092e9038ddf2dc21c214f817b3ffe16e0bc913c5d354\"}",
+    "cli_version": "vcli-canary-8a5868ac875b"
+  },
+  "run_id": 37429884368,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429884368",
+  "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+  "error": null
+}

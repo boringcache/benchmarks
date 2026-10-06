@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "case_id": "linkerd2",
+  "series_id": "cadence-37429783479-15",
+  "created_at": "2026-10-06T07:28:09Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "88c51f753504e94b78ed703c0d54c19d51c5dcfffb9a8c21782b98d5450fc108",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "linkerd2",
+    "cli_version": "vcli-canary-8a5868ac875b"
+  },
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "linkerd/linkerd2",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "e7c15f3a6c933d4d92a4959575d5f9d093fdffc5",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream recipe and build success",
+    "The freshly loaded output image exists in the local Docker image store"
+  ],
+  "plan_sha256": "ab004c9baa7b6492bf0137c58e3fcc52a106627678b526781274d011e5ffca52"
+}

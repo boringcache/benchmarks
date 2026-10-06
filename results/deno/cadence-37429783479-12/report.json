@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "plan_sha256": "906282adbc783ece5a3b5fb16edfe89d9faa762efe45eb7d937126f615b3aef1",
+  "complete": false,
+  "valid_for_comparison": false,
+  "failures": [],
+  "methodology_issues": [
+    "This series does not declare a comparison of provider performance."
+  ],
+  "execution_verified": false,
+  "missing_completions": [],
+  "failed_completions": [],
+  "completions": [],
+  "publication": "unreviewed",
+  "evidence_preservation": "requires-review",
+  "primary_metric": "correctness",
+  "missing": [
+    [
+      1,
+      "cold",
+      "boringcache"
+    ],
+    [
+      1,
+      "commit",
+      "boringcache"
+    ]
+  ],
+  "summaries": [],
+  "records": [],
+  "exclusions": []
+}

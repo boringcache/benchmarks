@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "case_id": "executorch-buck2",
+  "series_id": "cadence-37429783479-24",
+  "created_at": "2026-10-06T07:28:09Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "c80d751fc02c7f6edd7c52b655056f5d0c410ce957f33797149b75a964865bdc",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "executorch-buck2",
+    "cli_version": "vcli-canary-8a5868ac875b"
+  },
+  "comparison": {
+    "question": "Does Buck2 restore the ExecuTorch portable runner on a clean worker?",
+    "providers": [
+      "boringcache",
+      "bazel-remote"
+    ],
+    "primary_metric": "correctness",
+    "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
+    "storage": "unmeasured",
+    "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+    "sample_count": 2
+  },
+  "source": {
+    "repository": "pytorch/executorch",
+    "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+      }
+    ],
+    "patch": "cache.patch"
+  },
+  "verification": [
+    "Require the declared native command to succeed",
+    "Require declared outputs and successful output checks",
+    "Require native remote-hit evidence and the same output hashes on the warm worker",
+    "Require registry shutdown to complete successfully"
+  ],
+  "plan_sha256": "eb1811ddbe3ff8509788c68d04305776455b86253418cc25e347b3cf3a377441"
+}

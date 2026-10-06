@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "plan_sha256": "fe6ca0c24d77fdc7832fac98c31c28a7eacefba98204df6e7fb0390dc04c5b88",
+  "complete": false,
+  "valid_for_comparison": false,
+  "failures": [],
+  "methodology_issues": [],
+  "execution_verified": false,
+  "missing_completions": [],
+  "failed_completions": [],
+  "completions": [],
+  "publication": "unreviewed",
+  "evidence_preservation": "requires-review",
+  "primary_metric": "build_and_reuse_seconds",
+  "missing": [
+    [
+      1,
+      "cold",
+      "boringcache"
+    ],
+    [
+      1,
+      "cold",
+      "actions-cache"
+    ],
+    [
+      1,
+      "warm",
+      "boringcache"
+    ],
+    [
+      1,
+      "warm",
+      "actions-cache"
+    ]
+  ],
+  "summaries": [],
+  "records": [],
+  "exclusions": []
+}
