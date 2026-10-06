@@ -8,11 +8,11 @@
     "base_sha": "54edefa0832e4728bcf077e4a48b25912eea5433",
     "head_sha": "54edefa0832e4728bcf077e4a48b25912eea5433"
   },
-  "state": "dispatching",
+  "state": "cancelled",
   "observation": "replay",
-  "created_at": "2026-10-06T18:56:33Z",
-  "previous_receipt": "migration/rolling/zed/pending-37513809627.json",
-  "reason": "Repeat the unstarted health observation in the corrected independent provider queue",
+  "created_at": "2026-10-06T18:45:46Z",
+  "previous_receipt": "migration/rolling/zed/initial-37471677223.json",
+  "reason": "Verify existing source and cache in a separate replay with original phase evidence retained",
   "runs": [
     {
       "case_id": "zed",
@@ -62,7 +62,10 @@
         "commit"
       ],
       "variants": null,
-      "state": "planned"
+      "state": "cancelled",
+      "id": 37513809627,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37513809627"
     }
-  ]
+  ],
+  "cancellation_verified_at": "2026-10-06T18:56:33Z"
 }
