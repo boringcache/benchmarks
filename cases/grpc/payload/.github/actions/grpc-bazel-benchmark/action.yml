@@ -134,10 +134,11 @@ runs:
         || 'true' }}"
     run: |
       set -euo pipefail
+      mkdir -p benchmark-results/bazel
       if [[ "$BAZEL_CACHE_STRATEGY" == "nativelink" ]]; then
-        ruby ./scripts/run-grpc-bazel-build.rb 2>&1 | tee benchmark-results/nativelink/build.log
+        ruby ./scripts/run-grpc-bazel-build.rb 2>&1 | tee benchmark-results/nativelink/build.log benchmark-results/bazel/build.log
       else
-        ruby ./scripts/run-grpc-bazel-build.rb
+        ruby ./scripts/run-grpc-bazel-build.rb 2>&1 | tee benchmark-results/bazel/build.log
       fi
   - name: Capture the build timing
     id: build_timing
@@ -145,6 +146,20 @@ runs:
     env:
       BUILD_STARTED_AT: "${{ steps.build_timer.outputs.started_at }}"
     run: echo "build_seconds=$(( $(date +%s) - BUILD_STARTED_AT ))" >> "$GITHUB_OUTPUT"
+  - name: Record native Bazel cache reuse
+    id: native_cache
+    shell: bash
+    env:
+      PHASE: "${{ inputs.phase }}"
+    run: ruby ./scripts/grpc-bazel-evidence.rb benchmark-results/bazel/build.log
+  - name: Retain native Bazel cache evidence
+    if: always()
+    uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+    with:
+      name: bazel-cache-${{ inputs.strategy }}-${{ inputs.phase }}
+      path: benchmark-results/bazel/cache-evidence.json
+      if-no-files-found: warn
+      retention-days: 90
   - name: Verify the gRPC binaries
     id: output_verification
     shell: bash
@@ -185,8 +200,7 @@ runs:
       WORKFLOW_STARTED_AT: "${{ steps.workflow_timer.outputs.started_at }}"
       SETUP_SECONDS: "${{ steps.build_timer.outputs.setup_seconds }}"
       BUILD_SECONDS: "${{ steps.build_timing.outputs.build_seconds }}"
-      CACHE_HIT: "${{ steps.publish.outputs.cache-hit || steps.restore.outputs.cache-hit
-        || steps.actions_cache_0.outputs.cache-hit || steps.nativelink.outputs.cache_hit }}"
+      CACHE_HIT: "${{ steps.native_cache.outputs.cache_hit }}"
       EVIDENCE_PATH: "${{ steps.publish.outputs.evidence-path || steps.restore.outputs.evidence-path
         }}"
       STORAGE_KEY: "${{ steps.scope.outputs.gha_key }}"
