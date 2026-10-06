@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "case_id": "mastodon",
-  "state": "dispatching",
+  "state": "requested",
   "cli_version": "vcli-canary-252077d7b8fb",
   "ref": "main",
   "proposal": {
@@ -21,7 +21,7 @@
         "case_id": "mastodon",
         "selections": "[{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"mastodon\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"server\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"mastodon\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"server-ccache\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"mastodon\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"streaming\"}}]"
       },
-      "state": "requesting",
+      "state": "requested",
       "selections": [
         {
           "repository": "boringcache/benchmarks",
@@ -53,7 +53,9 @@
           },
           "state": "requesting"
         }
-      ]
+      ],
+      "id": 37464730278,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37464730278"
     }
   ]
 }
