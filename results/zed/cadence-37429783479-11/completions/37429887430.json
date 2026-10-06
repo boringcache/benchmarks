@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "case_id": "zed",
+  "series_id": "cadence-37429783479-11",
+  "sample": 1,
+  "run_id": "37429887430",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429887430",
+  "source_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+  "github_conclusion": "success",
+  "status": "success",
+  "errors": [],
+  "evidence_manifest_sha256": "6b5f4512df7bd0e6a2a288a2402837be2282c775dcda32ac07942278c9f0580a"
+}

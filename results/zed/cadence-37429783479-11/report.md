@@ -6,7 +6,7 @@ Measured scope: The BoringCache Cargo operations, including their restore, build
 
 Observations: 2/2 recorded; 0 failed; 0 missing.
 
-Completion checks: missing or failed.
+Completion checks: passed.
 
 Publication: unreviewed.
 
@@ -18,9 +18,6 @@ Publication: unreviewed.
 Comparison checks:
 
 - This series does not declare a comparison of provider performance.
-
-Missing completion checks: 37429887430
-
 
 ## Observations
 
