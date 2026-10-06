@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "baseline_id": "baseline-20261006",
+  "observation": "seed",
+  "case_id": "helix-nix",
+  "state": "dispatching",
+  "cli_version": "vcli-canary-252077d7b8fb",
+  "created_at": "2026-10-06T13:32:13Z",
+  "proposal": {
+    "case_id": "helix-nix",
+    "base_sha": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc",
+    "head_sha": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc"
+  },
+  "runs": [
+    {
+      "case_id": "helix-nix",
+      "repository": "boringcache/benchmarks",
+      "workflow": "nix-rolling-benchmark.yml",
+      "workspace": "boringcache/benchmarks",
+      "source": {
+        "repository": "helix-editor/helix",
+        "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc"
+          }
+        ]
+      },
+      "lane": "rolling",
+      "inputs": {
+        "case_id": "helix-nix",
+        "cache_scope": "baseline-20261006",
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "observation": "seed"
+      },
+      "phases": [
+        "commit"
+      ],
+      "variants": null,
+      "source_sha": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc",
+      "state": "planned"
+    }
+  ]
+}

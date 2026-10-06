@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "baseline_id": "baseline-20261006",
+  "observation": "seed",
+  "case_id": "grpc",
+  "state": "dispatching",
+  "cli_version": "vcli-canary-252077d7b8fb",
+  "created_at": "2026-10-06T13:32:13Z",
+  "proposal": {
+    "case_id": "grpc",
+    "base_sha": "369d4079b30cecff44975ec88fa225ddba4720d8",
+    "head_sha": "369d4079b30cecff44975ec88fa225ddba4720d8"
+  },
+  "runs": [
+    {
+      "case_id": "grpc",
+      "repository": "boringcache/benchmarks",
+      "workflow": "grpc-grpc-bazel-benchmark.yml",
+      "workspace": "boringcache/benchmarks",
+      "source": {
+        "repository": "grpc/grpc",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "369d4079b30cecff44975ec88fa225ddba4720d8",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "lane": "rolling",
+      "inputs": {
+        "cache_scope": "baseline-20261006",
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "observation": "seed"
+      },
+      "phases": [
+        "commit"
+      ],
+      "variants": null,
+      "source_sha": "369d4079b30cecff44975ec88fa225ddba4720d8",
+      "state": "planned"
+    }
+  ]
+}

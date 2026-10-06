@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "baseline_id": "baseline-20261006",
+  "observation": "seed",
+  "case_id": "spring-ai",
+  "state": "dispatching",
+  "cli_version": "vcli-canary-252077d7b8fb",
+  "created_at": "2026-10-06T13:32:13Z",
+  "proposal": {
+    "case_id": "spring-ai",
+    "base_sha": "3611ad078dd883e297f6fb40d540e856d66978f9",
+    "head_sha": "3611ad078dd883e297f6fb40d540e856d66978f9"
+  },
+  "runs": [
+    {
+      "case_id": "spring-ai",
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-rolling-benchmark.yml",
+      "workspace": "boringcache/benchmarks",
+      "source": {
+        "repository": "spring-projects/spring-ai",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "3611ad078dd883e297f6fb40d540e856d66978f9",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "lane": "rolling",
+      "inputs": {
+        "case_id": "spring-ai",
+        "cache_scope": "baseline-20261006",
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "observation": "seed"
+      },
+      "phases": [
+        "commit"
+      ],
+      "variants": null,
+      "source_sha": "3611ad078dd883e297f6fb40d540e856d66978f9",
+      "state": "planned"
+    }
+  ]
+}
