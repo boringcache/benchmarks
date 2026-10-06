@@ -190,6 +190,13 @@ repo_names.each do |repo_name|
       errors << "#{repo_name}/#{relative}: runner_label overrides must be restricted to manual main-branch dispatches"
     end
 
+    if text.include?("refs/tags/benchmark-") && text.include?("inputs.runner_label")
+      unless text.include?("inputs.expected_identity != ''") && text.include?("fromJSON(inputs.expected_identity).harness_sha == github.sha") &&
+          text.include?("BENCHMARK_EXPECTED_IDENTITY:") && text.include?("inputs.expected_identity")
+        errors << "#{repo_name}/#{relative}: frozen runner dispatches require a matching harness identity"
+      end
+    end
+
     next unless file_path.match?(%r{/\.github/(?:workflows|actions)/})
 
     duplicate_yaml_keys(text).each do |key, line|

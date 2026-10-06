@@ -17,7 +17,7 @@ remote Docker builder.
 | Runner selection | Label | CPU | Memory | Provider Docker caching |
 | --- | --- | ---: | ---: | --- |
 | Depot, four cores | `depot-ubuntu-24.04-4` | 4 | 16 GB | No Depot remote builder or Actions Cache arm |
-| Depot, eight cores | `depot-ubuntu-24.04-8` | 8 | 32 GB | No Depot remote builder or Actions Cache arm |
+| Depot, eight cores | `depot-ubuntu-24.04-8` | 8 | Recorded per worker | No Depot remote builder or Actions Cache arm |
 | Namespace, four cores | `namespace-profile-buildkit-4c` | 4 | 16 GB | Docker “No caching”; cache volumes disabled |
 | Namespace, eight cores | `namespace-profile-buildkit-8c` | 8 | 16 GB | Docker “No caching”; cache volumes disabled |
 
@@ -55,6 +55,24 @@ Native remote-cache comparator work is separate. See the
 
 PostHog skips disk cleanup when at least 40 GiB is free. The CLI's
 `BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER=1` opt-in applies only to manual
-main-branch dispatches on these four reviewed disposable runner labels. Other
+main-branch dispatches or identity-verified frozen cadence tags on these four reviewed disposable runner labels. Other
 self-hosted runner labels retain the CLI's default refusal to start managed
 BuildKit. [Depot documents its single-tenant, disposable runner lifecycle](https://depot.dev/docs/github-actions/overview).
+
+## Scheduled and rolling runs
+
+The scheduled suite includes these four selections alongside PostHog's existing
+`layers` and `combined` comparisons. Nightly, weekly and upstream rolling
+requests keep them in one PostHog project group. Rolling selections retain the
+same runner suffix and declared cache scope across source commits; each new
+runner scope needs its own seed before a changed-source observation.
+
+Set the repository variable `BENCHMARK_ACTIVE_CASES` to `["posthog"]` to activate
+PostHog while the rest of the suite remains paused. `BENCHMARK_CADENCE_ACTIVE=true`
+continues to activate the entire suite. Upstream inspection continues for every
+scheduled project regardless of either activation setting. Manual nightly and
+weekly dispatches accept `case_id=posthog` to select this project.
+
+Frozen fresh batches also accept the reviewed runner labels from immutable
+`benchmark-<run-id>` tags. The declared harness SHA must match the tag's commit,
+and preparation checks the exact case definition before running upstream code.

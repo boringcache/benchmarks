@@ -134,12 +134,12 @@ class BenchmarkCadenceTest < Minitest::Test
     %w[weekly-fresh canary].each do |name|
       workflow = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/#{name}.yml")))
       job = workflow.fetch("jobs").values.first
-      assert_equal "github.event_name == 'workflow_dispatch' || vars.BENCHMARK_CADENCE_ACTIVE == 'true'", job.fetch("if")
+      assert_equal "github.event_name == 'workflow_dispatch' || vars.BENCHMARK_CADENCE_ACTIVE == 'true' || vars.BENCHMARK_ACTIVE_CASES != '' && vars.BENCHMARK_ACTIVE_CASES != '[]'", job.fetch("if")
     end
     source = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/source-sync.yml")))
     refute source.dig("jobs", "select").key?("if"), "Upstream inspection must continue while automatic dispatch is paused"
     controller = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/source-case.yml")))
-    assert_equal "needs.inspect.outputs.changed == 'true' && vars.BENCHMARK_CADENCE_ACTIVE == 'true' && github.ref_name == 'main'", controller.dig("jobs", "publish", "if")
+    assert_equal "needs.inspect.outputs.changed == 'true' && (vars.BENCHMARK_CADENCE_ACTIVE == 'true' || contains(fromJSON(vars.BENCHMARK_ACTIVE_CASES || '[]'), inputs.case_id)) && github.ref_name == 'main'", controller.dig("jobs", "publish", "if")
     workflow = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/nightly-canaries.yml")))
     refute workflow.dig("jobs", "results").key?("if"), "Monitoring must continue while automatic dispatch is paused"
     assert_equal({"contents" => "read", "actions" => "read"}, workflow.fetch("permissions"))
@@ -163,8 +163,25 @@ class BenchmarkCadenceTest < Minitest::Test
       assert_empty runner.dispatches
       receipt = JSON.parse(File.read(path))
       assert_equal "dispatch-failed", receipt.fetch("state")
-      assert_equal 34, receipt.fetch("runs").length
+      assert_equal BenchmarkCadence.fresh_targets.length, receipt.fetch("runs").length
       assert receipt.fetch("runs").all? { |run| run.fetch("state") == "planned" }
+    end
+  end
+
+  def test_posthog_runner_selections_are_shared_by_fresh_and_rolling_cadence
+    screened = JSON.parse(File.read(File.join(BenchmarkCases::ROOT, "cases/posthog/runner-screen-selections.json"))).map { |row| row.fetch("inputs") }
+    fresh = BenchmarkCadence.fresh_targets(case_id: "posthog").map { |row| row.fetch("fresh_inputs") }.select { |inputs| inputs.key?("runner_label") }
+    rolling = BenchmarkCadence.rolling_targets(case_id: "posthog").map { |row| row.fetch("inputs") }.select { |inputs| inputs.key?("runner_label") }
+    assert_equal screened, fresh
+    assert_equal screened, rolling.map { |inputs| inputs.except("cache_scope") }
+    assert_equal 4, fresh.map { |inputs| inputs.fetch("benchmark_id_suffix") }.uniq.length
+  end
+
+  def test_active_cases_reject_unknown_and_duplicate_cases
+    assert_equal ["posthog"], BenchmarkCadence.active_cases('["posthog"]')
+    assert_empty BenchmarkCadence.active_cases("")
+    ['{"posthog":true}', '["unknown"]', '["posthog","posthog"]', 'not-json'].each do |value|
+      assert_raises(BenchmarkCadence::Error) { BenchmarkCadence.active_cases(value) }
     end
   end
 

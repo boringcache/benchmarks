@@ -2,6 +2,12 @@ name: Dispatch fresh benchmark runs
 on:
   workflow_call:
     inputs:
+      case_id:
+        type: string
+        default: ''
+      active_only:
+        type: boolean
+        default: false
       channel:
         type: string
         required: true
@@ -39,8 +45,15 @@ jobs:
           CHANNEL: ${{ inputs.channel }}
           CADENCE: ${{ inputs.cadence }}
           CLI_VERSION: ${{ inputs.cli_version }}
+          CASE_ID: ${{ inputs.case_id }}
+          ACTIVE_ONLY: ${{ inputs.active_only }}
+          BENCHMARK_CADENCE_ACTIVE: ${{ vars.BENCHMARK_CADENCE_ACTIVE }}
+          BENCHMARK_ACTIVE_CASES: ${{ vars.BENCHMARK_ACTIVE_CASES }}
         run: |
-          ruby scripts/benchmark-cadence.rb --dry-run \
+          args=()
+          [[ -z "$CASE_ID" ]] || args+=(--case "$CASE_ID")
+          [[ "$ACTIVE_ONLY" != true ]] || args+=(--active-only)
+          ruby scripts/benchmark-cadence.rb --dry-run "${args[@]}" \
             --cadence "$CADENCE" --channel "$CHANNEL" --version "$CLI_VERSION" --ref "$GITHUB_REF_NAME" \
             --output "$RUNNER_TEMP/benchmark-dispatch.json" \
             --summary "$GITHUB_STEP_SUMMARY"
