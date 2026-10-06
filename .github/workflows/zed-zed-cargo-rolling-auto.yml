@@ -6,7 +6,7 @@ permissions:
   checks: read
   contents: read
 concurrency:
-  group: benchmark-zed-cargo-rolling-chain
+  group: benchmark-zed-cargo-rolling-chain-${{ inputs.provider || 'boringcache' }}
   cancel-in-progress: false
   queue: max
 jobs:

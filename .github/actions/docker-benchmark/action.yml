@@ -69,12 +69,11 @@ runs:
       shell: bash
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
     - name: Select the runner cache provider
-      shell: bash
-      env:
-        CACHE_PROVIDER: ${{ inputs.strategy }}
-        CACHE_MODE: ${{ inputs.strategy == 'depot-cache' && 'turbo' || 'docker' }}
-        CACHE_PHASE: ${{ inputs.phase }}
-      run: ruby ./scripts/depot-cache.rb
+      uses: ./.github/actions/select-cache-provider
+      with:
+        provider: ${{ inputs.strategy }}
+        mode: ${{ inputs.strategy == 'depot-cache' && 'turbo' || 'docker' }}
+        phase: ${{ inputs.phase }}
     - name: Set up the Actions Cache builder
       if: (inputs.strategy == 'actions-cache' || inputs.strategy == 'depot-actions-cache' || inputs.strategy == 'depot-cache')
       uses: ./.github/actions/setup-docker

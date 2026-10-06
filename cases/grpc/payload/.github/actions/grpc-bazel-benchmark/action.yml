@@ -68,12 +68,11 @@ runs:
     shell: bash
     run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
   - name: Select the runner cache provider
-    shell: bash
-    env:
-      CACHE_PROVIDER: ${{ inputs.strategy }}
-      CACHE_MODE: bazel
-      CACHE_PHASE: ${{ inputs.phase }}
-    run: ruby ./scripts/depot-cache.rb
+    uses: ./.github/actions/select-cache-provider
+    with:
+      provider: ${{ inputs.strategy }}
+      mode: bazel
+      phase: ${{ inputs.phase }}
   - name: Install pinned NativeLink
     if: inputs.strategy == 'nativelink'
     shell: bash
