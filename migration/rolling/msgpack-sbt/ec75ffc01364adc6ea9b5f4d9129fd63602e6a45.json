@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "case_id": "msgpack-sbt",
-  "state": "requested",
+  "state": "completed",
   "cli_version": "vcli-canary-252077d7b8fb",
   "ref": "main",
   "proposal": {
@@ -21,9 +21,762 @@
         "case_id": "msgpack-sbt",
         "cli_version": "vcli-canary-252077d7b8fb"
       },
-      "state": "requested",
+      "state": "success",
       "id": 37456463268,
-      "url": "https://github.com/boringcache/benchmarks/actions/runs/37456463268"
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37456463268",
+      "outcome": "success",
+      "canonical_records": [
+        {
+          "schema_version": 1,
+          "benchmark": "msgpack-sbt",
+          "strategy": "bazel-remote",
+          "lane": "rolling",
+          "phase": "commit",
+          "variant": null,
+          "mode": "reapi",
+          "adapter": "runtime",
+          "case": {
+            "schema_version": 1,
+            "case_id": "msgpack-sbt",
+            "workspace": "boringcache/benchmarks",
+            "definition_sha256": "f0aa75fadc77c5f21d69b06924feb812dd04fc5c761822df0994b7614ee216aa",
+            "source": {
+              "repository": "msgpack/msgpack-java",
+              "revision": "ec75ffc01364adc6ea9b5f4d9129fd63602e6a45",
+              "pins": [
+                {
+                  "path": "proposal.md",
+                  "revision": "ec75ffc01364adc6ea9b5f4d9129fd63602e6a45",
+                  "kind": "snapshot"
+                }
+              ],
+              "patch": "cache.patch"
+            },
+            "origin": {
+              "repository": "msgpack/msgpack-java",
+              "branch": "main",
+              "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4"
+            },
+            "verification": [
+              "Require the declared native command to succeed",
+              "Require declared outputs and successful output checks",
+              "Require native remote-hit evidence and the same output hashes on the warm worker",
+              "Require registry shutdown to complete successfully"
+            ],
+            "comparison": {
+              "question": "Does sbt reuse MessagePack compilation and test results on a clean worker?",
+              "providers": [
+                "boringcache",
+                "bazel-remote"
+              ],
+              "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+              "primary_metric": "correctness",
+              "storage": "unmeasured",
+              "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+              "sample_count": 2
+            },
+            "execution": {
+              "workflows": [
+                {
+                  "path": ".github/workflows/reapi-fresh-benchmark.yml",
+                  "lane": "fresh",
+                  "inputs": {
+                    "case_id": "msgpack-sbt"
+                  }
+                },
+                {
+                  "path": ".github/workflows/reapi-rolling-benchmark.yml",
+                  "lane": "rolling",
+                  "inputs": {
+                    "case_id": "msgpack-sbt"
+                  }
+                }
+              ],
+              "sync": "upstream-head",
+              "blockers": []
+            }
+          },
+          "timing": {
+            "restore_or_setup_seconds": 0.10107218999999645,
+            "build_seconds": 39.29260081599999,
+            "workflow_seconds": null,
+            "total_seconds": 39.393673005999986,
+            "dependency_setup_seconds": null,
+            "compile_seconds": null,
+            "verification_seconds": null,
+            "save_seconds": 0.0017829460000058361
+          },
+          "cache": {
+            "hit": null,
+            "sccache_proof": null,
+            "import_ready": null,
+            "import_refs": 0,
+            "docker_plan": null,
+            "tag": "msgpack-sbt-rolling-main",
+            "workspace": "boringcache/benchmarks",
+            "storage_bytes": 1315150,
+            "storage_source": "bazel-remote-local-store-files",
+            "storage_breakdown": {
+              "complete": true,
+              "scope": "Uncompressed local comparator AC/CAS store after shutdown; remote archive size unmeasured",
+              "observations": [
+                {
+                  "path": "reapi-store/ac.v2/00/00c9955b3d3e59bd962e76da86b245d167184d1c7c1b1c3085538b3a3a705b78-289556134",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/03/030a4872e2d4d7f5a30c40a4406ad37189f1cdc1ed3347d8cad9ff32ee5a1b4e-803014027",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/04/0404f7d086919db238a3e2af4891318f72abeaa279acd0e3c8012620e9ee5ce9-528946932",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/04/04aeec8b70eb6b1a9f8c671e6751ba248665bb8073af7ff8e361c5ff6eaa704d-309595718",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/05/05e5877b5eb1ed1b16a6a91a360114c561ba4fc8db1d66c13c959f634f470940-534998038",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/08/08b65443ad8fcd38cbf96f69a7b65b3c51203871f16f75951ff12fe09f476f16-942500059",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/12/1268348a6516f3af933cdc40c635079998b05e7246fd76d6b39ab6a29f940655-737621572",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/16/1677b0d802e36128364df75d1afdffa2a91f82235123dfa74cd3c2ccb05c666a-531217335",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/23/237afbac16b528502e906c172802751d606ee4eaea5214929f7239f24403868d-354999201",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/2c/2cbbd7e64fd9047268397ac4f018ab86a6dbae3fc3c9cb5be9259295a91a47a5-256444364",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/2f/2f985dc903e562ddc7eba184aac222f6e0eccb832ae5eb21883d250faff3749f-956418176",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/32/324e92eed2ad0d5aa4d260a5ae16666cbf08c866dd0e6fb7d8e327046c3ea41d-072435249",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/3c/3c054d6d7cbeecf6391c0be883667ab95987e2a3f21aae476ece36ece9c86ea8-682356264",
+                  "bytes": 421
+                },
+                {
+                  "path": "reapi-store/ac.v2/44/441bab64900275ca47f58844cb524bd874c3bf1151c2071f84a2285a678cf3d9-806790068",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/4b/4be807561d8a9acd57face77ccad0d423b5a6767a368b0af69cb8f687b3e0c11-714717679",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/4c/4c6db53ee9a379ea07d7e7110e7e7eaae4457b9f430db92bb782f0051722082a-575822251",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/4c/4ce834b75deda8cde0d03c22a1c2034659ed9b88a98effc4564e6c2b0bac8d41-184474591",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/51/51e7ebd70eb2e5ea1999b5f80c8d4d04eb9a4c3f144b6ec5f31d1affef885f79-375834053",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/55/55d5798b1cf866856df8671a26b3619b86a6593808d6f2c3ef028e214d78172d-997332228",
+                  "bytes": 431
+                },
+                {
+                  "path": "reapi-store/ac.v2/56/5624d00df59ce4312ed27b8b922608a863cbb321fc5385bfa529ccfa6eee6eee-018870398",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/56/565c3f5e5cdc55b3aa2113890bb25b35cf441377522a961614c9ce404a5f336a-331991852",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/56/56e3c936c22ca39b3abce871b7221858eaacf34c54aa03ebbc2d1fc237bb763c-803818177",
+                  "bytes": 334
+                },
+                {
+                  "path": "reapi-store/ac.v2/58/586b6906a48c2e2b16d2dee819ed1dec641425552fc40d97d735fab42d09babc-814220137",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/59/598c40ae84f5753835adad1cac0218b691e575e43e5519e8c177b46cfa159fd8-817351184",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/5c/5c22153e5dc29482e30dd7676e4dbc8d5be6f44a5c98df85f116b4d6f22d41b1-920967096",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/61/61b01fe81247f5effee5f85d4d11077c08ff1fdfbd9916b7c58da7d217d91038-407437554",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/68/6897336575690f345ab9493bdf976446764df2a2fc40b47c365707dadb55bfb3-216401526",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/6b/6bd3ff97d20ca161f060d9bc52ddb8e590fb2a18deef679204805268c210f547-255635580",
+                  "bytes": 453
+                },
+                {
+                  "path": "reapi-store/ac.v2/6c/6cf2739ff73850cf937211332aa45c79f2bc0df46836606f62240c30558792fd-212912446",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/79/790af2ca7600d23e57d9c636b10b02ab28702a6357e2a59b9d7b93843465506e-234637855",
+                  "bytes": 433
+                },
+                {
+                  "path": "reapi-store/ac.v2/79/79396908192e38bd24394cbc09308b43dc65671389499e6f8c99003d8f4cfebd-940492863",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/7a/7a1476902c3d7094821070dd1f9a0ec7b301d204dd8beed94917ce664cbb80c8-933577985",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/7c/7cbb8dbc9227d00e34c8fd994232980c980796be48d073e86b7044541eb21751-078407376",
+                  "bytes": 328
+                },
+                {
+                  "path": "reapi-store/ac.v2/7e/7e5de197497d8df1c280da065816b17ca97101046734d1743b8c3defb7a5e700-195840200",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/7e/7e780bc6a951dc885726ccbc9d7bcd0aebd6cd4900fe3ce305817140e9a6b542-504218072",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/81/81ad8375029a77f43fb6089ea04618ed88a3a6ca7efde42151e910d47fd6e154-879071513",
+                  "bytes": 463
+                },
+                {
+                  "path": "reapi-store/ac.v2/82/829cf032143f671cbfb2e91693c23f4413f87c57ac7ec221fa34c8056117e156-476313447",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/89/8961cd0f5e7ca156901ad033956d961358ad14cbb7ed55c9cc57793b06c83f8c-104437875",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/8a/8a3d365d029070a66db20b810db88c6ca2c3ffb4cb3fa6b332953f0de6d7fd13-993926429",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/8d/8de93d2cb7d94481675640bd711a974738e33eeb2e49e008aecb309fc6dba5b2-645434515",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/90/9055b5b09c9961b2d9ecf6e48cdbf021f9608450ea7d9224c0b59570627a368a-458012809",
+                  "bytes": 423
+                },
+                {
+                  "path": "reapi-store/ac.v2/97/97a43939854d92d019e08b254d7c90f128197b07229875ca268d25cd5da989f2-860084087",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/9e/9ee75baf478c9152a75467469ea488920b7ef6bcca6fe1cefe1192840cc706ab-090955877",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/9f/9f66e150312088d8aa9b5a0daec46ddc82acad45317dbd2eb818a9ed03fb0a5d-847361505",
+                  "bytes": 363
+                },
+                {
+                  "path": "reapi-store/ac.v2/a2/a2ca6a2fab382661557e1b54461a41a885b6b4c8bde87ac1c1faacc3d9660d1c-613973552",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/b0/b0f30a85602ad8f2fc6c7b663fa7af0ba9bca40ade060f0752f8fe92dfff6739-965900239",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/b1/b1bf8977afb5d5f22bd78fadee6c1f88dc3aacfd7580d5ba76bfb7a6b12bba71-126122549",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/b3/b35cc70c2db0a8931ffffda1cefc53db39ae5d800000f327ee204a8ccd1ab718-210089021",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/b7/b7249118f9ef65125a5c09b6df3897a53b6b092b7926ea341b6062cf1f8601ec-549604802",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/b8/b8d0624c74fa094a3918c7835f92e280e20cdfbd17334d05344814d596cc9632-592745931",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/b9/b926a0db6cec6256ec0b48c1d6fd45a5d8c5a98f8db666fab41b02165cb62808-025128882",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/b9/b99d4d53e2e6d2ca41b535011e8891d159543fc5850de6d05de9b26224750fa8-912905273",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/c4/c4f67b385648355c339e9dd70fe0590de08ac14be9085e8b7659bed0896829b0-212636378",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/c7/c73bc977ac65966b69fdc2612189d62d649e73e212bb3060bf9703f93c764768-145031891",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/c8/c810de1ecd8f12c760ee88cca49d963f875d1676c31d9e9d115e2f06b7ed7d35-938009696",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/ca/ca3d929988432ee28deac72d05fbc4955ec396c4c777810e83ab5b36c5fb3620-118212283",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/ce/ce5a86737d5f0fdef671f9501920f3718eba8c1c958bc5f2214cd17cf95268af-451348394",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/d3/d3d7021632c2bd038735a30a0ee388d0afceb884a21fea39c1e55df603a3b3ef-103953533",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/d8/d85d481853a7b739df42ac39df97f20569abd8bf8f6e9c1554f8c71ca42da885-118430292",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/d8/d8ca530c5938aa28d8292572d3e131d562be66a09978f5f99376531cbbe3745f-085187461",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/df/df2188ce4b8f0b783a4b30648b0d164ef8a7e8a00d1b25d0fbb36ff508964311-064881063",
+                  "bytes": 335
+                },
+                {
+                  "path": "reapi-store/ac.v2/e0/e001d8c475cb29035a286f269b6e7e99896317c5169c70c285981f07363cddd7-166054508",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/e1/e165a6a7dca381a89ed6a16150ef539f464c3f7e2f52af86551aa8b9ec18248c-827236569",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/e1/e1af6c2d9e3f512684fba65e30bb70d43d7a8fb273db70180ff6aef130ec3db3-186202901",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/ef/ef8bb37bc60d8cbf654df9059fb36aca372bee6bc08103267d0cba4ae0eca717-605595932",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/ac.v2/f7/f76c13b6e57e21c29e8b645cfe5f2db13c3beff22dedb2768b43b1aabb71fb5e-137870104",
+                  "bytes": 182
+                },
+                {
+                  "path": "reapi-store/ac.v2/fa/fa0a0ecc39b1e50bd21ffa3d830616c62883626c7db409b20d17d4a4fe9418ee-882967087",
+                  "bytes": 180
+                },
+                {
+                  "path": "reapi-store/ac.v2/fe/fed1c02fed41e94ae1285220e0e24b9ea3f4921d3ab4a99110a1a8c35438435f-295875492",
+                  "bytes": 181
+                },
+                {
+                  "path": "reapi-store/cas.v2/01/01fe351ee6d2a38ad30987e36be61a37654adf7aad82013fcaaf546c7987dab9-008331274.v1",
+                  "bytes": 106681
+                },
+                {
+                  "path": "reapi-store/cas.v2/04/04891b1c1d7585b591e284e381bb2a0b7ad38d8a22aeac8200ba1bc63fc78ce4-607299066.v1",
+                  "bytes": 128
+                },
+                {
+                  "path": "reapi-store/cas.v2/0f/0f6f2c1051ebf0ef98f2dda67bc43321ed4eade8eab782963ef8986742479bf0-861854719.v1",
+                  "bytes": 138883
+                },
+                {
+                  "path": "reapi-store/cas.v2/17/172b9154804eeb9cee2e0ef25e6fc4bf7cde33552a53feb4c444fdcb146b67a6-211033201.v1",
+                  "bytes": 2258
+                },
+                {
+                  "path": "reapi-store/cas.v2/1b/1b1a1ca7a00c65351d7fd0b93d4c8d52d760e7dd77732c1b49b41b2c499a8a94-129282897.v1",
+                  "bytes": 16445
+                },
+                {
+                  "path": "reapi-store/cas.v2/1c/1c66c8dc7c2ed32d12ae5da388751b6a871356d3b98d7a6b5ec1e2d0781942d0-869011335.v1",
+                  "bytes": 195
+                },
+                {
+                  "path": "reapi-store/cas.v2/1c/1cd87dfce178ded769c679a0986d8da242caf3f248be739e65569691c5b74cec-870336448.v1",
+                  "bytes": 39403
+                },
+                {
+                  "path": "reapi-store/cas.v2/1d/1d9ba39093f6380072e6575609be0a3ec830f87a1a855a87a6e7f3ef7ddbada3-675268963.v1",
+                  "bytes": 55
+                },
+                {
+                  "path": "reapi-store/cas.v2/22/220ddc74265bcf91bb90cdb7a1988b2aca1ed3c152d08c134bfbe6879e8cb946-161569705.v1",
+                  "bytes": 1001
+                },
+                {
+                  "path": "reapi-store/cas.v2/25/252a4f2a48255521903845e633d3291c0d64b4a8c6899433e543868a22512744-430598829.v1",
+                  "bytes": 268
+                },
+                {
+                  "path": "reapi-store/cas.v2/2e/2e19906794cdbc1b2c313e397d22eb5253ee05839dadb53aad302c30ec5a21f8-879362462.v1",
+                  "bytes": 61
+                },
+                {
+                  "path": "reapi-store/cas.v2/31/31e29d218ba2637925e7bccd7ebc381271206f0643b842eba21861d6bc73c7c1-742176082.v1",
+                  "bytes": 30244
+                },
+                {
+                  "path": "reapi-store/cas.v2/37/37559c6c38affb5639999023a1fb3b3f55eaf7a8b43a8e6d8e2ae90296086d22-489236840.v1",
+                  "bytes": 355359
+                },
+                {
+                  "path": "reapi-store/cas.v2/37/37f91fbf7e8be35a92306bc3f23e8ad7ac11e167e0537dec676ad9fc83228c61-186067678.v1",
+                  "bytes": 178
+                },
+                {
+                  "path": "reapi-store/cas.v2/38/38d919b33b8e2d63cf6963ca064b1f39f687f5ca1760d5cd516184c026819a2f-478809103.v1",
+                  "bytes": 122025
+                },
+                {
+                  "path": "reapi-store/cas.v2/43/4383b51dbe95e367be36ac969d296268385f5f0aa0c5a46a24ba7f9b065ef672-999508846.v1",
+                  "bytes": 149
+                },
+                {
+                  "path": "reapi-store/cas.v2/44/44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a-287716507.v1",
+                  "bytes": 2
+                },
+                {
+                  "path": "reapi-store/cas.v2/4e/4ea7daf558ce152504e95e38199b8accf023bb30efa882280a1305dc12f42d0e-410832794.v1",
+                  "bytes": 501
+                },
+                {
+                  "path": "reapi-store/cas.v2/51/5159560675d10abccd1e9813c20fcdd27cc57bb052c39ae8668037abf3e513b0-161648416.v1",
+                  "bytes": 168
+                },
+                {
+                  "path": "reapi-store/cas.v2/55/556a31d6250482ed30b3826e543008c4ba9c6056727e7ced0537b41f00eded61-470364909.v1",
+                  "bytes": 158
+                },
+                {
+                  "path": "reapi-store/cas.v2/5f/5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9-755999406.v1",
+                  "bytes": 1
+                },
+                {
+                  "path": "reapi-store/cas.v2/61/611262ba50aeaef3aefd9dc42f7bccd98edd4f32b3c05d599f0e2a4d038c23f7-013634310.v1",
+                  "bytes": 192
+                },
+                {
+                  "path": "reapi-store/cas.v2/64/64023ffa7888f051c5fca2b3a76723c1334251366a943a757a99f9f2068f922a-316533635.v1",
+                  "bytes": 166
+                },
+                {
+                  "path": "reapi-store/cas.v2/67/679781ac76d9a2115220bbf486a3ead7ce306df7c239e6cbf5e773911190789e-728113141.v1",
+                  "bytes": 320
+                },
+                {
+                  "path": "reapi-store/cas.v2/69/69a39aea9c4b49fdf909b20c1dcae54012e91919fb5018b54f24c1fbec7f1f12-449564374.v1",
+                  "bytes": 1001
+                },
+                {
+                  "path": "reapi-store/cas.v2/6b/6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b-963126599.v1",
+                  "bytes": 1
+                },
+                {
+                  "path": "reapi-store/cas.v2/84/8499e4e77ff060e0668cec6f36bf72089e5edce2777d8ff89e543ea30c15295b-743877240.v1",
+                  "bytes": 1150
+                },
+                {
+                  "path": "reapi-store/cas.v2/87/87a1932695d60da70189d011d0a5abeffda452d26ccacd8ec3b1107db432a78e-545895885.v1",
+                  "bytes": 1522
+                },
+                {
+                  "path": "reapi-store/cas.v2/8b/8b69119f959d62c38931b9b4643790e345c51021a37cf45f6533acee13a4cbf4-841256578.v1",
+                  "bytes": 176
+                },
+                {
+                  "path": "reapi-store/cas.v2/8f/8f476c92b761a816b75564a81f5e8f54f3ba1d13537254759ceb2a8b5615e7f5-526329011.v1",
+                  "bytes": 1057
+                },
+                {
+                  "path": "reapi-store/cas.v2/98/982281cad03cc4cecf8ddac9a0e1f1eca5b73f8247f7d4d327cffb300f497ed5-950290269.v1",
+                  "bytes": 30115
+                },
+                {
+                  "path": "reapi-store/cas.v2/a8/a8b685e8353c22fde0e74a0ebd63148391ca0d9e67837dca0d294ee0f4fe08e5-971980453.v1",
+                  "bytes": 364127
+                },
+                {
+                  "path": "reapi-store/cas.v2/a8/a8cb7a22d41d9c193974548827d92f85f83940a1ecf50cf47f0c04b480660f88-599240087.v1",
+                  "bytes": 186
+                },
+                {
+                  "path": "reapi-store/cas.v2/b3/b31815ee5709a57c377be75700f5314fe3fad434b0c43badc387b3ca9457b28a-288978026.v1",
+                  "bytes": 155
+                },
+                {
+                  "path": "reapi-store/cas.v2/b3/b3d177b83a6ba1c52cab9dbda83f0d537aff2ff96ca67a95e60f6ce9376442d0-793582531.v1",
+                  "bytes": 16324
+                },
+                {
+                  "path": "reapi-store/cas.v2/b5/b5651c30c57cfd9a7114938c9e9ebae386b87b3b4d6bb659d247d4bfb108205d-510951417.v1",
+                  "bytes": 305
+                },
+                {
+                  "path": "reapi-store/cas.v2/b5/b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b-607497608.v1",
+                  "bytes": 4
+                },
+                {
+                  "path": "reapi-store/cas.v2/b8/b863c71bd97542620266acd21a191abc86b1dea135db20418d30343ee57817c3-633294882.v1",
+                  "bytes": 25174
+                },
+                {
+                  "path": "reapi-store/cas.v2/bd/bdc2aac8592b9904eef60d455d558c98a1139985d5f6433dcc28d909b40f9d93-160777635.v1",
+                  "bytes": 501
+                },
+                {
+                  "path": "reapi-store/cas.v2/c0/c036672c5b96ad0d58c7e12db087fc34abfe9fbd654d15006c2334bcf8447b49-348846556.v1",
+                  "bytes": 644
+                },
+                {
+                  "path": "reapi-store/cas.v2/cc/cc576d190de728379ee1df1330d060576c6e29ceb403d2cc2c788727a8e227b6-046743920.v1",
+                  "bytes": 206
+                },
+                {
+                  "path": "reapi-store/cas.v2/d4/d4361b21d9ff04c34634705b51a441501f043e80c56ffa1822e6f9b7c7dff757-349507342.v1",
+                  "bytes": 529
+                },
+                {
+                  "path": "reapi-store/cas.v2/d7/d7d7762c2e05c5f41a23b1c6ac0e5cb135b9ff09a9d2da0fd7e092b23752036b-988951313.v1",
+                  "bytes": 78
+                },
+                {
+                  "path": "reapi-store/cas.v2/d9/d9e76416200f00f70f72fd809d04668dea5e8de0a524e9aa7ef8bc6ff47bb241-495110458.v1",
+                  "bytes": 42490
+                },
+                {
+                  "path": "reapi-store/cas.v2/e5/e590456b158fff4616912fc8cd9da2324dc6b35fb42a69295f40e04a361c854d-371932300.v1",
+                  "bytes": 75
+                },
+                {
+                  "path": "reapi-store/cas.v2/ed/edd7ef083c61a492ea10c0ef6e33313026722c99afeae0918fe6c340c88ea89f-553244006.v1",
+                  "bytes": 7
+                },
+                {
+                  "path": "reapi-store/cas.v2/fd/fdbc2fce4daf84ee92c1f9c48ac6b51dc35a67082ecef5201f2a37a0e93481c2-989115003.v1",
+                  "bytes": 33
+                }
+              ]
+            }
+          },
+          "source": {
+            "repository": "msgpack/msgpack-java",
+            "sha": "ec75ffc01364adc6ea9b5f4d9129fd63602e6a45"
+          },
+          "product_refs": {},
+          "action": {
+            "resolved_mode": null,
+            "resolved_tags": null,
+            "trust_state": null,
+            "diagnostics_level": null
+          },
+          "github": {
+            "repository": "boringcache/benchmarks",
+            "run_id": "37456463268",
+            "run_attempt": "1",
+            "job": "commit",
+            "workflow": "REAPI comparison rolling",
+            "ref_name": "main",
+            "runner_os": "Linux",
+            "runner_arch": "X64",
+            "runner_name": "GitHub Actions 1000176148",
+            "runner_environment": "github-hosted",
+            "runner_image": "ubuntu24",
+            "runner_image_version": "20260927.320.1"
+          },
+          "run_uid": "gh-37456463268-1",
+          "verification": {
+            "passed": true,
+            "checks": [
+              "Output verification completed before recording this phase"
+            ],
+            "declared_checks": [
+              "Require the declared native command to succeed",
+              "Require declared outputs and successful output checks",
+              "Require native remote-hit evidence and the same output hashes on the warm worker",
+              "Require registry shutdown to complete successfully"
+            ]
+          }
+        },
+        {
+          "schema_version": 1,
+          "benchmark": "msgpack-sbt",
+          "strategy": "boringcache",
+          "lane": "rolling",
+          "phase": "commit",
+          "variant": null,
+          "mode": "reapi",
+          "adapter": "runtime",
+          "case": {
+            "schema_version": 1,
+            "case_id": "msgpack-sbt",
+            "workspace": "boringcache/benchmarks",
+            "definition_sha256": "f0aa75fadc77c5f21d69b06924feb812dd04fc5c761822df0994b7614ee216aa",
+            "source": {
+              "repository": "msgpack/msgpack-java",
+              "revision": "ec75ffc01364adc6ea9b5f4d9129fd63602e6a45",
+              "pins": [
+                {
+                  "path": "proposal.md",
+                  "revision": "ec75ffc01364adc6ea9b5f4d9129fd63602e6a45",
+                  "kind": "snapshot"
+                }
+              ],
+              "patch": "cache.patch"
+            },
+            "origin": {
+              "repository": "msgpack/msgpack-java",
+              "branch": "main",
+              "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4"
+            },
+            "verification": [
+              "Require the declared native command to succeed",
+              "Require declared outputs and successful output checks",
+              "Require native remote-hit evidence and the same output hashes on the warm worker",
+              "Require registry shutdown to complete successfully"
+            ],
+            "comparison": {
+              "question": "Does sbt reuse MessagePack compilation and test results on a clean worker?",
+              "providers": [
+                "boringcache",
+                "bazel-remote"
+              ],
+              "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+              "primary_metric": "correctness",
+              "storage": "unmeasured",
+              "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+              "sample_count": 2
+            },
+            "execution": {
+              "workflows": [
+                {
+                  "path": ".github/workflows/reapi-fresh-benchmark.yml",
+                  "lane": "fresh",
+                  "inputs": {
+                    "case_id": "msgpack-sbt"
+                  }
+                },
+                {
+                  "path": ".github/workflows/reapi-rolling-benchmark.yml",
+                  "lane": "rolling",
+                  "inputs": {
+                    "case_id": "msgpack-sbt"
+                  }
+                }
+              ],
+              "sync": "upstream-head",
+              "blockers": []
+            }
+          },
+          "timing": {
+            "restore_or_setup_seconds": 0,
+            "build_seconds": 64.05358306999999,
+            "workflow_seconds": null,
+            "total_seconds": 64.05358306999999,
+            "dependency_setup_seconds": null,
+            "compile_seconds": null,
+            "verification_seconds": null,
+            "save_seconds": null
+          },
+          "cache": {
+            "hit": null,
+            "sccache_proof": null,
+            "import_ready": null,
+            "import_refs": 0,
+            "docker_plan": null,
+            "tag": "msgpack-sbt-rolling-main",
+            "workspace": "boringcache/benchmarks",
+            "storage_bytes": 1314619,
+            "storage_source": "boringcache-check",
+            "storage_breakdown": {
+              "workspace": "boringcache/benchmarks",
+              "tags": [
+                "msgpack-sbt-rolling-main"
+              ],
+              "complete": true,
+              "measured_bytes": 1314619,
+              "unmeasured_tags": [],
+              "total_bytes": 1314619,
+              "observations": [
+                {
+                  "requested_tag": "msgpack-sbt-rolling-main",
+                  "tag": "msgpack-sbt-rolling-main",
+                  "status": "hit",
+                  "cache_type": "kv",
+                  "kv_total_size": 1314619,
+                  "compressed_size": 1314619,
+                  "size": 1314619
+                }
+              ]
+            }
+          },
+          "source": {
+            "repository": "msgpack/msgpack-java",
+            "sha": "ec75ffc01364adc6ea9b5f4d9129fd63602e6a45"
+          },
+          "product_refs": {
+            "cli_version": "1.40.0"
+          },
+          "action": {
+            "resolved_mode": null,
+            "resolved_tags": null,
+            "trust_state": null,
+            "diagnostics_level": null
+          },
+          "github": {
+            "repository": "boringcache/benchmarks",
+            "run_id": "37456463268",
+            "run_attempt": "1",
+            "job": "commit",
+            "workflow": "REAPI comparison rolling",
+            "ref_name": "main",
+            "runner_os": "Linux",
+            "runner_arch": "X64",
+            "runner_name": "GitHub Actions 1000176149",
+            "runner_environment": "github-hosted",
+            "runner_image": "ubuntu24",
+            "runner_image_version": "20260927.320.1"
+          },
+          "run_uid": "gh-37456463268-1",
+          "verification": {
+            "passed": true,
+            "checks": [
+              "Output verification completed before recording this phase"
+            ],
+            "declared_checks": [
+              "Require the declared native command to succeed",
+              "Require declared outputs and successful output checks",
+              "Require native remote-hit evidence and the same output hashes on the warm worker",
+              "Require registry shutdown to complete successfully"
+            ]
+          }
+        }
+      ],
+      "comparison_plan": "diagnostic"
     }
   ]
 }
