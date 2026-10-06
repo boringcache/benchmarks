@@ -6,41 +6,41 @@
     "repository": "boringcache/benchmarks",
     "workflow": "native-rolling-benchmark.yml",
     "inputs": {
-      "case_id": "opentelemetry-java",
+      "case_id": "qdrant",
       "cli_version": "vcli-canary-252077d7b8fb"
     },
     "state": "success",
-    "id": 37456011317,
-    "url": "https://github.com/boringcache/benchmarks/actions/runs/37456011317",
+    "id": 37456321918,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37456321918",
     "canonical_records": [
       {
         "schema_version": 1,
-        "benchmark": "otel-gradle",
+        "benchmark": "qdrant",
         "strategy": "actions-cache",
         "lane": "rolling",
         "phase": "commit",
         "variant": null,
-        "mode": "gradle",
-        "adapter": "gradle",
+        "mode": "docker",
+        "adapter": "oci",
         "case": {
           "schema_version": 1,
-          "case_id": "opentelemetry-java",
+          "case_id": "qdrant",
           "workspace": "boringcache/benchmarks",
-          "definition_sha256": "0e2dd86d35779a2009b18a664b078f31536dd866711abb1c43f3f8255318b5e6",
+          "definition_sha256": "a4f0e2f387eee67c4cf233593eb28f30f299cb3d362baf3665c24c7b37112624",
           "source": {
-            "repository": "open-telemetry/opentelemetry-java",
+            "repository": "qdrant/qdrant",
             "pins": [
               {
                 "path": "upstream",
-                "revision": "59581d4103edf5d5b82bf1269ab86a2377f94dbb",
+                "revision": "191e255362fe3f985979e094095104f49ddf15a4",
                 "kind": "gitlink"
               }
             ]
           },
           "origin": {
-            "repository": "boringcache/benchmark-opentelemetry-java",
+            "repository": "boringcache/benchmark-qdrant",
             "branch": "main",
-            "revision": "b4694de47a6595986d88a56c45910e832b7053bf"
+            "revision": "22f17e82abcbe9227a6f60a385fba47eadb9aade"
           },
           "verification": [
             "Pinned upstream recipe and build success"
@@ -51,7 +51,7 @@
               "boringcache",
               "actions-cache"
             ],
-            "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+            "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
             "primary_metric": "build_and_reuse_seconds",
             "storage": "provider-reported",
             "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
@@ -63,44 +63,40 @@
                 "path": ".github/workflows/native-rolling-benchmark.yml",
                 "lane": "rolling",
                 "inputs": {
-                  "case_id": "opentelemetry-java"
+                  "case_id": "qdrant"
                 },
-                "historical_workflow": "opentelemetry-java-gradle-benchmark.yml"
+                "historical_workflow": "qdrant-benchmark.yml"
               },
               {
                 "path": ".github/workflows/native-fresh-benchmark.yml",
                 "lane": "fresh",
                 "inputs": {
-                  "case_id": "opentelemetry-java"
+                  "case_id": "qdrant"
                 },
-                "historical_workflow": "opentelemetry-java-gradle-fresh-benchmark.yml"
+                "historical_workflow": "qdrant-fresh-benchmark.yml"
               }
             ],
             "sync": "upstream-head",
-            "sync_minute": 20,
+            "sync_minute": 23,
             "native": {
-              "action": ".github/actions/opentelemetry-gradle-benchmark",
-              "benchmark_id": "otel-gradle",
+              "action": ".github/actions/qdrant-docker-benchmark",
+              "benchmark_id": "qdrant",
               "rolling_inputs": {
-                "java_version": "21"
+                "push_image": "true"
               },
-              "environment": {
-                "GRADLE_USER_HOME": "${{ github.workspace }}/.gradle-user-home"
-              },
-              "fresh_inputs": {
-                "java_version": "21"
-              }
+              "environment": {},
+              "fresh_inputs": {}
             },
             "cache_tags": {
-              "otel-gradle-local": "{scope}-gradle-remote"
+              "qdrant-docker-local": "{scope}-docker"
             }
           }
         },
         "timing": {
-          "restore_or_setup_seconds": 1,
-          "build_seconds": 770,
-          "workflow_seconds": 781,
-          "total_seconds": 771,
+          "restore_or_setup_seconds": 11,
+          "build_seconds": 803,
+          "workflow_seconds": 820,
+          "total_seconds": 814,
           "dependency_setup_seconds": null,
           "compile_seconds": null,
           "verification_seconds": null,
@@ -114,29 +110,19 @@
           "docker_plan": null,
           "tag": null,
           "workspace": null,
-          "storage_bytes": 50696232,
-          "storage_source": "github-actions-cache-api",
+          "storage_bytes": null,
+          "storage_source": null,
           "storage_breakdown": {
-            "key": "gradle-otel-gradle-rolling-main-59581d4103edf5d5b82bf1269ab86a2377f94dbb",
-            "complete": true,
-            "measured_bytes": 50696232,
-            "total_bytes": 50696232,
-            "observations": [
-              {
-                "id": 8566534084,
-                "key": "gradle-otel-gradle-rolling-main-59581d4103edf5d5b82bf1269ab86a2377f94dbb",
-                "ref": "refs/heads/main",
-                "version": "ca4b9f92e8196ffb8b11714a7714c34e7c28d966642a14b0de5ffe99b949fe3c",
-                "created_at": "2026-10-06T11:36:20.446930Z",
-                "last_accessed_at": "2026-10-06T11:36:20.446930Z",
-                "size_in_bytes": 50696232
-              }
-            ]
+            "key": "qdrant-rolling-main",
+            "complete": false,
+            "measured_bytes": 0,
+            "total_bytes": null,
+            "observations": []
           }
         },
         "source": {
-          "repository": "open-telemetry/opentelemetry-java",
-          "sha": "59581d4103edf5d5b82bf1269ab86a2377f94dbb"
+          "repository": "qdrant/qdrant",
+          "sha": "191e255362fe3f985979e094095104f49ddf15a4"
         },
         "product_refs": {},
         "action": {
@@ -147,19 +133,19 @@
         },
         "github": {
           "repository": "boringcache/benchmarks",
-          "run_id": "37456011317",
+          "run_id": "37456321918",
           "run_attempt": "1",
           "job": "publish",
           "workflow": "Native comparison rolling",
           "ref_name": "main",
           "runner_os": "Linux",
           "runner_arch": "X64",
-          "runner_name": "GitHub Actions 1000175945",
+          "runner_name": "GitHub Actions 1000176078",
           "runner_environment": "github-hosted",
           "runner_image": "ubuntu24",
           "runner_image_version": "20260927.320.1"
         },
-        "run_uid": "gh-37456011317-1",
+        "run_uid": "gh-37456321918-1",
         "verification": {
           "passed": true,
           "checks": [
@@ -172,32 +158,32 @@
       },
       {
         "schema_version": 1,
-        "benchmark": "otel-gradle",
+        "benchmark": "qdrant",
         "strategy": "boringcache",
         "lane": "rolling",
         "phase": "commit",
         "variant": null,
-        "mode": "gradle",
-        "adapter": "gradle",
+        "mode": "docker",
+        "adapter": "oci",
         "case": {
           "schema_version": 1,
-          "case_id": "opentelemetry-java",
+          "case_id": "qdrant",
           "workspace": "boringcache/benchmarks",
-          "definition_sha256": "0e2dd86d35779a2009b18a664b078f31536dd866711abb1c43f3f8255318b5e6",
+          "definition_sha256": "a4f0e2f387eee67c4cf233593eb28f30f299cb3d362baf3665c24c7b37112624",
           "source": {
-            "repository": "open-telemetry/opentelemetry-java",
+            "repository": "qdrant/qdrant",
             "pins": [
               {
                 "path": "upstream",
-                "revision": "59581d4103edf5d5b82bf1269ab86a2377f94dbb",
+                "revision": "191e255362fe3f985979e094095104f49ddf15a4",
                 "kind": "gitlink"
               }
             ]
           },
           "origin": {
-            "repository": "boringcache/benchmark-opentelemetry-java",
+            "repository": "boringcache/benchmark-qdrant",
             "branch": "main",
-            "revision": "b4694de47a6595986d88a56c45910e832b7053bf"
+            "revision": "22f17e82abcbe9227a6f60a385fba47eadb9aade"
           },
           "verification": [
             "Pinned upstream recipe and build success"
@@ -208,7 +194,7 @@
               "boringcache",
               "actions-cache"
             ],
-            "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+            "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
             "primary_metric": "build_and_reuse_seconds",
             "storage": "provider-reported",
             "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
@@ -220,86 +206,90 @@
                 "path": ".github/workflows/native-rolling-benchmark.yml",
                 "lane": "rolling",
                 "inputs": {
-                  "case_id": "opentelemetry-java"
+                  "case_id": "qdrant"
                 },
-                "historical_workflow": "opentelemetry-java-gradle-benchmark.yml"
+                "historical_workflow": "qdrant-benchmark.yml"
               },
               {
                 "path": ".github/workflows/native-fresh-benchmark.yml",
                 "lane": "fresh",
                 "inputs": {
-                  "case_id": "opentelemetry-java"
+                  "case_id": "qdrant"
                 },
-                "historical_workflow": "opentelemetry-java-gradle-fresh-benchmark.yml"
+                "historical_workflow": "qdrant-fresh-benchmark.yml"
               }
             ],
             "sync": "upstream-head",
-            "sync_minute": 20,
+            "sync_minute": 23,
             "native": {
-              "action": ".github/actions/opentelemetry-gradle-benchmark",
-              "benchmark_id": "otel-gradle",
+              "action": ".github/actions/qdrant-docker-benchmark",
+              "benchmark_id": "qdrant",
               "rolling_inputs": {
-                "java_version": "21"
+                "push_image": "true"
               },
-              "environment": {
-                "GRADLE_USER_HOME": "${{ github.workspace }}/.gradle-user-home"
-              },
-              "fresh_inputs": {
-                "java_version": "21"
-              }
+              "environment": {},
+              "fresh_inputs": {}
             },
             "cache_tags": {
-              "otel-gradle-local": "{scope}-gradle-remote"
+              "qdrant-docker-local": "{scope}-docker"
             }
           }
         },
         "timing": {
-          "restore_or_setup_seconds": 3,
-          "build_seconds": 930,
-          "workflow_seconds": 941,
-          "total_seconds": 933,
+          "restore_or_setup_seconds": 0,
+          "build_seconds": 414,
+          "workflow_seconds": 421,
+          "total_seconds": 414,
           "dependency_setup_seconds": null,
           "compile_seconds": null,
           "verification_seconds": null,
           "save_seconds": null
         },
         "cache": {
-          "hit": false,
+          "hit": null,
           "sccache_proof": null,
           "import_ready": null,
           "import_refs": 0,
-          "docker_plan": null,
-          "tag": "otel-gradle-rolling-main-gradle-remote",
+          "docker_plan": {
+            "import_tags": [
+              "qdrant-rolling-main-docker-ubuntu-24-x86_64"
+            ],
+            "planned_import_refs": 1,
+            "export_tag": "qdrant-rolling-main-docker-ubuntu-24-x86_64"
+          },
+          "tag": "qdrant-rolling-main-docker",
           "workspace": "boringcache/benchmarks",
-          "storage_bytes": 51262727,
+          "storage_bytes": 2104624479,
           "storage_source": "boringcache-check",
           "storage_breakdown": {
             "workspace": "boringcache/benchmarks",
             "tags": [
-              "otel-gradle-rolling-main-gradle-remote"
+              "qdrant-rolling-main-docker-ubuntu-24-x86_64"
             ],
             "complete": true,
-            "measured_bytes": 51262727,
+            "measured_bytes": 2104624479,
             "unmeasured_tags": [],
-            "total_bytes": 51262727,
+            "total_bytes": 2104624479,
             "observations": [
               {
-                "requested_tag": "otel-gradle-rolling-main-gradle-remote",
-                "tag": "otel-gradle-rolling-main-gradle-remote",
+                "requested_tag": "qdrant-rolling-main-docker-ubuntu-24-x86_64",
+                "tag": "qdrant-rolling-main-docker-ubuntu-24-x86_64",
                 "status": "hit",
-                "cache_type": "kv",
-                "kv_total_size": 51262727,
-                "compressed_size": 51262727,
-                "size": 51262727
+                "cache_type": "cache_entry",
+                "cache_entry_id": "7eda015c-420a-49b2-90a6-c096c7a88a0e",
+                "manifest_root_digest": "sha256:2483a933ed25f2a071b64314bd1432488b3284eeb93572380a1017fe784d6760",
+                "kv_total_size": 0,
+                "compressed_size": 2104624479,
+                "size": 2104624479
               }
             ]
           },
-          "storage_observed_at": "2026-10-06T11:39:06Z",
-          "storage_evidence_file": "boringcache-one-evidence-dedaadd925d89646f01dbc9bd08fd8712a00206fa378be05a7551d41dafc5389.json"
+          "storage_observed_at": "2026-10-06T11:33:10Z",
+          "storage_evidence_file": "boringcache-one-evidence-81cea08aa9c9e1e488f3b8e3b35430df2c3be8eaa7f12209056c90d97d490f78.json"
         },
         "source": {
-          "repository": "open-telemetry/opentelemetry-java",
-          "sha": "59581d4103edf5d5b82bf1269ab86a2377f94dbb"
+          "repository": "qdrant/qdrant",
+          "sha": "191e255362fe3f985979e094095104f49ddf15a4"
         },
         "product_refs": {
           "schema_version": 1,
@@ -308,9 +298,9 @@
           "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
         },
         "action": {
-          "resolved_mode": "gradle",
+          "resolved_mode": "docker",
           "resolved_tags": [
-            "otel-gradle-rolling-main-gradle-remote"
+            "qdrant-rolling-main-docker-ubuntu-24-x86_64"
           ],
           "trust_state": {
             "status": "publish",
@@ -333,19 +323,19 @@
         },
         "github": {
           "repository": "boringcache/benchmarks",
-          "run_id": "37456011317",
+          "run_id": "37456321918",
           "run_attempt": "1",
           "job": "publish",
           "workflow": "Native comparison rolling",
           "ref_name": "main",
           "runner_os": "Linux",
           "runner_arch": "X64",
-          "runner_name": "GitHub Actions 1000175946",
+          "runner_name": "GitHub Actions 1000176077",
           "runner_environment": "github-hosted",
           "runner_image": "ubuntu24",
           "runner_image_version": "20260927.320.1"
         },
-        "run_uid": "gh-37456011317-1",
+        "run_uid": "gh-37456321918-1",
         "verification": {
           "passed": true,
           "checks": [
@@ -356,26 +346,28 @@
           ]
         },
         "original_cache_measurement": {
-          "storage_bytes": 51209293,
+          "storage_bytes": 2104624479,
           "storage_source": "boringcache-check",
           "storage_breakdown": {
             "workspace": "boringcache/benchmarks",
             "tags": [
-              "otel-gradle-rolling-main-gradle-remote"
+              "qdrant-rolling-main-docker-ubuntu-24-x86_64"
             ],
             "complete": true,
-            "measured_bytes": 51209293,
+            "measured_bytes": 2104624479,
             "unmeasured_tags": [],
-            "total_bytes": 51209293,
+            "total_bytes": 2104624479,
             "observations": [
               {
-                "requested_tag": "otel-gradle-rolling-main-gradle-remote",
-                "tag": "otel-gradle-rolling-main-gradle-remote",
+                "requested_tag": "qdrant-rolling-main-docker-ubuntu-24-x86_64",
+                "tag": "qdrant-rolling-main-docker-ubuntu-24-x86_64",
                 "status": "hit",
-                "cache_type": "kv",
-                "kv_total_size": 51209293,
-                "compressed_size": 51209293,
-                "size": 51209293
+                "cache_type": "cache_entry",
+                "cache_entry_id": "7eda015c-420a-49b2-90a6-c096c7a88a0e",
+                "manifest_root_digest": "sha256:2483a933ed25f2a071b64314bd1432488b3284eeb93572380a1017fe784d6760",
+                "kv_total_size": 0,
+                "compressed_size": 2104624479,
+                "size": 2104624479
               }
             ]
           }

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "cadence": "rolling",
-  "collected_at": "2026-10-06T11:25:30Z",
+  "collected_at": "2026-10-06T12:14:36Z",
   "run": {
     "repository": "boringcache/benchmarks",
     "workflow": "native-rolling-benchmark.yml",

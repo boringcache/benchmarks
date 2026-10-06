@@ -6,44 +6,45 @@
     "repository": "boringcache/benchmarks",
     "workflow": "native-rolling-benchmark.yml",
     "inputs": {
-      "case_id": "opentelemetry-java",
+      "case_id": "linkerd2",
       "cli_version": "vcli-canary-252077d7b8fb"
     },
     "state": "success",
-    "id": 37456011317,
-    "url": "https://github.com/boringcache/benchmarks/actions/runs/37456011317",
+    "id": 37456385192,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37456385192",
     "canonical_records": [
       {
         "schema_version": 1,
-        "benchmark": "otel-gradle",
+        "benchmark": "linkerd2-v2",
         "strategy": "actions-cache",
         "lane": "rolling",
         "phase": "commit",
         "variant": null,
-        "mode": "gradle",
-        "adapter": "gradle",
+        "mode": "docker",
+        "adapter": "oci",
         "case": {
           "schema_version": 1,
-          "case_id": "opentelemetry-java",
+          "case_id": "linkerd2",
           "workspace": "boringcache/benchmarks",
-          "definition_sha256": "0e2dd86d35779a2009b18a664b078f31536dd866711abb1c43f3f8255318b5e6",
+          "definition_sha256": "4e7699e6486fbae210e8f8a8e9316c840b89d74298756153994d4be4e04b0818",
           "source": {
-            "repository": "open-telemetry/opentelemetry-java",
+            "repository": "linkerd/linkerd2",
             "pins": [
               {
                 "path": "upstream",
-                "revision": "59581d4103edf5d5b82bf1269ab86a2377f94dbb",
+                "revision": "f6415cf0f2a6e9e04aab969083907bde4be0ea20",
                 "kind": "gitlink"
               }
             ]
           },
           "origin": {
-            "repository": "boringcache/benchmark-opentelemetry-java",
+            "repository": "boringcache/benchmark-linkerd2",
             "branch": "main",
-            "revision": "b4694de47a6595986d88a56c45910e832b7053bf"
+            "revision": "2afa5040b567d1cdb6ac35e3a84ec764befe8711"
           },
           "verification": [
-            "Pinned upstream recipe and build success"
+            "Pinned upstream recipe and build success",
+            "The freshly loaded output image exists in the local Docker image store"
           ],
           "comparison": {
             "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
@@ -51,7 +52,7 @@
               "boringcache",
               "actions-cache"
             ],
-            "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+            "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
             "primary_metric": "build_and_reuse_seconds",
             "storage": "provider-reported",
             "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
@@ -63,44 +64,42 @@
                 "path": ".github/workflows/native-rolling-benchmark.yml",
                 "lane": "rolling",
                 "inputs": {
-                  "case_id": "opentelemetry-java"
+                  "case_id": "linkerd2"
                 },
-                "historical_workflow": "opentelemetry-java-gradle-benchmark.yml"
+                "historical_workflow": "linkerd2-benchmark.yml"
               },
               {
                 "path": ".github/workflows/native-fresh-benchmark.yml",
                 "lane": "fresh",
                 "inputs": {
-                  "case_id": "opentelemetry-java"
+                  "case_id": "linkerd2"
                 },
-                "historical_workflow": "opentelemetry-java-gradle-fresh-benchmark.yml"
+                "historical_workflow": "linkerd2-fresh-benchmark.yml"
               }
             ],
             "sync": "upstream-head",
-            "sync_minute": 20,
+            "sync_minute": 13,
             "native": {
-              "action": ".github/actions/opentelemetry-gradle-benchmark",
-              "benchmark_id": "otel-gradle",
+              "action": ".github/actions/linkerd2-docker-benchmark",
+              "benchmark_id": "linkerd2-v2",
               "rolling_inputs": {
-                "java_version": "21"
+                "load_image": "true"
               },
-              "environment": {
-                "GRADLE_USER_HOME": "${{ github.workspace }}/.gradle-user-home"
-              },
+              "environment": {},
               "fresh_inputs": {
-                "java_version": "21"
+                "load_image": "true"
               }
             },
             "cache_tags": {
-              "otel-gradle-local": "{scope}-gradle-remote"
+              "linkerd2-docker-local": "{scope}-docker"
             }
           }
         },
         "timing": {
-          "restore_or_setup_seconds": 1,
-          "build_seconds": 770,
-          "workflow_seconds": 781,
-          "total_seconds": 771,
+          "restore_or_setup_seconds": 9,
+          "build_seconds": 330,
+          "workflow_seconds": 342,
+          "total_seconds": 339,
           "dependency_setup_seconds": null,
           "compile_seconds": null,
           "verification_seconds": null,
@@ -114,29 +113,19 @@
           "docker_plan": null,
           "tag": null,
           "workspace": null,
-          "storage_bytes": 50696232,
-          "storage_source": "github-actions-cache-api",
+          "storage_bytes": null,
+          "storage_source": null,
           "storage_breakdown": {
-            "key": "gradle-otel-gradle-rolling-main-59581d4103edf5d5b82bf1269ab86a2377f94dbb",
-            "complete": true,
-            "measured_bytes": 50696232,
-            "total_bytes": 50696232,
-            "observations": [
-              {
-                "id": 8566534084,
-                "key": "gradle-otel-gradle-rolling-main-59581d4103edf5d5b82bf1269ab86a2377f94dbb",
-                "ref": "refs/heads/main",
-                "version": "ca4b9f92e8196ffb8b11714a7714c34e7c28d966642a14b0de5ffe99b949fe3c",
-                "created_at": "2026-10-06T11:36:20.446930Z",
-                "last_accessed_at": "2026-10-06T11:36:20.446930Z",
-                "size_in_bytes": 50696232
-              }
-            ]
+            "key": "linkerd2-v2-rolling-main",
+            "complete": false,
+            "measured_bytes": 0,
+            "total_bytes": null,
+            "observations": []
           }
         },
         "source": {
-          "repository": "open-telemetry/opentelemetry-java",
-          "sha": "59581d4103edf5d5b82bf1269ab86a2377f94dbb"
+          "repository": "linkerd/linkerd2",
+          "sha": "f6415cf0f2a6e9e04aab969083907bde4be0ea20"
         },
         "product_refs": {},
         "action": {
@@ -147,60 +136,62 @@
         },
         "github": {
           "repository": "boringcache/benchmarks",
-          "run_id": "37456011317",
+          "run_id": "37456385192",
           "run_attempt": "1",
           "job": "publish",
           "workflow": "Native comparison rolling",
           "ref_name": "main",
           "runner_os": "Linux",
           "runner_arch": "X64",
-          "runner_name": "GitHub Actions 1000175945",
+          "runner_name": "GitHub Actions 1000176108",
           "runner_environment": "github-hosted",
           "runner_image": "ubuntu24",
           "runner_image_version": "20260927.320.1"
         },
-        "run_uid": "gh-37456011317-1",
+        "run_uid": "gh-37456385192-1",
         "verification": {
           "passed": true,
           "checks": [
             "Output verification completed before recording this phase"
           ],
           "declared_checks": [
-            "Pinned upstream recipe and build success"
+            "Pinned upstream recipe and build success",
+            "The freshly loaded output image exists in the local Docker image store"
           ]
         }
       },
       {
         "schema_version": 1,
-        "benchmark": "otel-gradle",
+        "benchmark": "linkerd2-v2",
         "strategy": "boringcache",
         "lane": "rolling",
         "phase": "commit",
         "variant": null,
-        "mode": "gradle",
-        "adapter": "gradle",
+        "mode": "docker",
+        "adapter": "oci",
         "case": {
           "schema_version": 1,
-          "case_id": "opentelemetry-java",
+          "case_id": "linkerd2",
           "workspace": "boringcache/benchmarks",
-          "definition_sha256": "0e2dd86d35779a2009b18a664b078f31536dd866711abb1c43f3f8255318b5e6",
+          "definition_sha256": "4e7699e6486fbae210e8f8a8e9316c840b89d74298756153994d4be4e04b0818",
           "source": {
-            "repository": "open-telemetry/opentelemetry-java",
+            "repository": "linkerd/linkerd2",
             "pins": [
               {
                 "path": "upstream",
-                "revision": "59581d4103edf5d5b82bf1269ab86a2377f94dbb",
+                "revision": "f6415cf0f2a6e9e04aab969083907bde4be0ea20",
                 "kind": "gitlink"
               }
             ]
           },
           "origin": {
-            "repository": "boringcache/benchmark-opentelemetry-java",
+            "repository": "boringcache/benchmark-linkerd2",
             "branch": "main",
-            "revision": "b4694de47a6595986d88a56c45910e832b7053bf"
+            "revision": "2afa5040b567d1cdb6ac35e3a84ec764befe8711"
           },
           "verification": [
-            "Pinned upstream recipe and build success"
+            "Pinned upstream recipe and build success",
+            "The freshly loaded output image exists in the local Docker image store"
           ],
           "comparison": {
             "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
@@ -208,7 +199,7 @@
               "boringcache",
               "actions-cache"
             ],
-            "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+            "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
             "primary_metric": "build_and_reuse_seconds",
             "storage": "provider-reported",
             "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
@@ -220,86 +211,92 @@
                 "path": ".github/workflows/native-rolling-benchmark.yml",
                 "lane": "rolling",
                 "inputs": {
-                  "case_id": "opentelemetry-java"
+                  "case_id": "linkerd2"
                 },
-                "historical_workflow": "opentelemetry-java-gradle-benchmark.yml"
+                "historical_workflow": "linkerd2-benchmark.yml"
               },
               {
                 "path": ".github/workflows/native-fresh-benchmark.yml",
                 "lane": "fresh",
                 "inputs": {
-                  "case_id": "opentelemetry-java"
+                  "case_id": "linkerd2"
                 },
-                "historical_workflow": "opentelemetry-java-gradle-fresh-benchmark.yml"
+                "historical_workflow": "linkerd2-fresh-benchmark.yml"
               }
             ],
             "sync": "upstream-head",
-            "sync_minute": 20,
+            "sync_minute": 13,
             "native": {
-              "action": ".github/actions/opentelemetry-gradle-benchmark",
-              "benchmark_id": "otel-gradle",
+              "action": ".github/actions/linkerd2-docker-benchmark",
+              "benchmark_id": "linkerd2-v2",
               "rolling_inputs": {
-                "java_version": "21"
+                "load_image": "true"
               },
-              "environment": {
-                "GRADLE_USER_HOME": "${{ github.workspace }}/.gradle-user-home"
-              },
+              "environment": {},
               "fresh_inputs": {
-                "java_version": "21"
+                "load_image": "true"
               }
             },
             "cache_tags": {
-              "otel-gradle-local": "{scope}-gradle-remote"
+              "linkerd2-docker-local": "{scope}-docker"
             }
           }
         },
         "timing": {
-          "restore_or_setup_seconds": 3,
-          "build_seconds": 930,
-          "workflow_seconds": 941,
-          "total_seconds": 933,
+          "restore_or_setup_seconds": 0,
+          "build_seconds": 166,
+          "workflow_seconds": 169,
+          "total_seconds": 166,
           "dependency_setup_seconds": null,
           "compile_seconds": null,
           "verification_seconds": null,
           "save_seconds": null
         },
         "cache": {
-          "hit": false,
+          "hit": null,
           "sccache_proof": null,
           "import_ready": null,
           "import_refs": 0,
-          "docker_plan": null,
-          "tag": "otel-gradle-rolling-main-gradle-remote",
+          "docker_plan": {
+            "import_tags": [
+              "linkerd2-v2-rolling-main-docker-ubuntu-24-x86_64"
+            ],
+            "planned_import_refs": 1,
+            "export_tag": "linkerd2-v2-rolling-main-docker-ubuntu-24-x86_64"
+          },
+          "tag": "linkerd2-v2-rolling-main-docker",
           "workspace": "boringcache/benchmarks",
-          "storage_bytes": 51262727,
+          "storage_bytes": 1230018493,
           "storage_source": "boringcache-check",
           "storage_breakdown": {
             "workspace": "boringcache/benchmarks",
             "tags": [
-              "otel-gradle-rolling-main-gradle-remote"
+              "linkerd2-v2-rolling-main-docker-ubuntu-24-x86_64"
             ],
             "complete": true,
-            "measured_bytes": 51262727,
+            "measured_bytes": 1230018493,
             "unmeasured_tags": [],
-            "total_bytes": 51262727,
+            "total_bytes": 1230018493,
             "observations": [
               {
-                "requested_tag": "otel-gradle-rolling-main-gradle-remote",
-                "tag": "otel-gradle-rolling-main-gradle-remote",
+                "requested_tag": "linkerd2-v2-rolling-main-docker-ubuntu-24-x86_64",
+                "tag": "linkerd2-v2-rolling-main-docker-ubuntu-24-x86_64",
                 "status": "hit",
-                "cache_type": "kv",
-                "kv_total_size": 51262727,
-                "compressed_size": 51262727,
-                "size": 51262727
+                "cache_type": "cache_entry",
+                "cache_entry_id": "f3381f75-09b4-4d67-af1e-34ae140d908c",
+                "manifest_root_digest": "sha256:3c7fdcaad8d76c462a1f3757660ce98a407ac6c691ff7b495f09b4ddb0fd7af5",
+                "kv_total_size": 0,
+                "compressed_size": 1230018493,
+                "size": 1230018493
               }
             ]
           },
-          "storage_observed_at": "2026-10-06T11:39:06Z",
-          "storage_evidence_file": "boringcache-one-evidence-dedaadd925d89646f01dbc9bd08fd8712a00206fa378be05a7551d41dafc5389.json"
+          "storage_observed_at": "2026-10-06T11:29:31Z",
+          "storage_evidence_file": "boringcache-one-evidence-9f4073c98b599cca5c65ae2d2a393c9c149bacab0acb47d91d9f4febcad26fe7.json"
         },
         "source": {
-          "repository": "open-telemetry/opentelemetry-java",
-          "sha": "59581d4103edf5d5b82bf1269ab86a2377f94dbb"
+          "repository": "linkerd/linkerd2",
+          "sha": "f6415cf0f2a6e9e04aab969083907bde4be0ea20"
         },
         "product_refs": {
           "schema_version": 1,
@@ -308,9 +305,9 @@
           "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
         },
         "action": {
-          "resolved_mode": "gradle",
+          "resolved_mode": "docker",
           "resolved_tags": [
-            "otel-gradle-rolling-main-gradle-remote"
+            "linkerd2-v2-rolling-main-docker-ubuntu-24-x86_64"
           ],
           "trust_state": {
             "status": "publish",
@@ -333,49 +330,52 @@
         },
         "github": {
           "repository": "boringcache/benchmarks",
-          "run_id": "37456011317",
+          "run_id": "37456385192",
           "run_attempt": "1",
           "job": "publish",
           "workflow": "Native comparison rolling",
           "ref_name": "main",
           "runner_os": "Linux",
           "runner_arch": "X64",
-          "runner_name": "GitHub Actions 1000175946",
+          "runner_name": "GitHub Actions 1000176109",
           "runner_environment": "github-hosted",
           "runner_image": "ubuntu24",
           "runner_image_version": "20260927.320.1"
         },
-        "run_uid": "gh-37456011317-1",
+        "run_uid": "gh-37456385192-1",
         "verification": {
           "passed": true,
           "checks": [
             "Output verification completed before recording this phase"
           ],
           "declared_checks": [
-            "Pinned upstream recipe and build success"
+            "Pinned upstream recipe and build success",
+            "The freshly loaded output image exists in the local Docker image store"
           ]
         },
         "original_cache_measurement": {
-          "storage_bytes": 51209293,
+          "storage_bytes": 1230018493,
           "storage_source": "boringcache-check",
           "storage_breakdown": {
             "workspace": "boringcache/benchmarks",
             "tags": [
-              "otel-gradle-rolling-main-gradle-remote"
+              "linkerd2-v2-rolling-main-docker-ubuntu-24-x86_64"
             ],
             "complete": true,
-            "measured_bytes": 51209293,
+            "measured_bytes": 1230018493,
             "unmeasured_tags": [],
-            "total_bytes": 51209293,
+            "total_bytes": 1230018493,
             "observations": [
               {
-                "requested_tag": "otel-gradle-rolling-main-gradle-remote",
-                "tag": "otel-gradle-rolling-main-gradle-remote",
+                "requested_tag": "linkerd2-v2-rolling-main-docker-ubuntu-24-x86_64",
+                "tag": "linkerd2-v2-rolling-main-docker-ubuntu-24-x86_64",
                 "status": "hit",
-                "cache_type": "kv",
-                "kv_total_size": 51209293,
-                "compressed_size": 51209293,
-                "size": 51209293
+                "cache_type": "cache_entry",
+                "cache_entry_id": "f3381f75-09b4-4d67-af1e-34ae140d908c",
+                "manifest_root_digest": "sha256:3c7fdcaad8d76c462a1f3757660ce98a407ac6c691ff7b495f09b4ddb0fd7af5",
+                "kv_total_size": 0,
+                "compressed_size": 1230018493,
+                "size": 1230018493
               }
             ]
           }
