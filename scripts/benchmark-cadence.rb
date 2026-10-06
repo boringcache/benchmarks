@@ -47,7 +47,9 @@ module BenchmarkCadence
     entries = suite.fetch("cases")
     raise Error, "Scheduled cases must be unique" unless entries.uniq == entries
     entries.each do |entry|
-      raise Error, "Use case_id and an optional variant" unless (entry.keys - %w[case_id variant]).empty?
+      raise Error, "Use case_id, an optional variant and workflow inputs" unless (entry.keys - %w[case_id variant inputs]).empty?
+      settings = entry.fetch("inputs", {})
+      raise Error, "Scheduled workflow inputs must be strings" unless settings.is_a?(Hash) && settings.all? { |key, value| key.is_a?(String) && value.is_a?(String) }
       BenchmarkCases.load_case(entry.fetch("case_id"), root)
     end
     entries
@@ -59,11 +61,20 @@ module BenchmarkCadence
       workflows = item.fetch("execution").fetch("workflows").select { |workflow| workflow.fetch("lane") == "fresh" }
       raise Error, "#{item.fetch('id')} has no fresh workflow" if workflows.empty?
       workflows.map do |workflow|
-        plan = BenchmarkCases.plan(item, lane: "fresh", workflow: File.basename(workflow.fetch("path")), variant: entry["variant"], root: root)
+        plan = BenchmarkCases.plan(item, lane: "fresh", workflow: File.basename(workflow.fetch("path")), variant: entry["variant"], inputs: entry.fetch("inputs", {}), root: root)
         {"source_repo" => BenchmarkCases::REPOSITORY, "case_id" => item.fetch("id"),
          "fresh_workflow" => plan.fetch("workflow"), "fresh_inputs" => plan.fetch("inputs")}
       end
     end
+  end
+
+  def self.active_cases(value = ENV.fetch("BENCHMARK_ACTIVE_CASES", "[]"), root: BenchmarkCases::ROOT)
+    ids = JSON.parse(value.empty? ? "[]" : value)
+    known = cases(root: root).map { |entry| entry.fetch("case_id") }.uniq
+    raise Error, "BENCHMARK_ACTIVE_CASES must list scheduled case IDs" unless ids.is_a?(Array) && ids.all? { |id| known.include?(id) } && ids.uniq == ids
+    ids
+  rescue JSON::ParserError
+    raise Error, "BENCHMARK_ACTIVE_CASES must be a JSON array"
   end
 
   def self.source_cases(root: BenchmarkCases::ROOT, case_id: nil)
@@ -88,7 +99,7 @@ module BenchmarkCadence
     cases(root: root).select { |entry| entry.fetch("case_id") == case_id }.flat_map do |entry|
       workflows.map do |workflow|
         BenchmarkCases.plan(item, lane: "rolling", workflow: File.basename(workflow.fetch("path")),
-          variant: entry["variant"], inputs: inputs, root: root)
+          variant: entry["variant"], inputs: entry.fetch("inputs", {}).merge(inputs), root: root)
       end
     end.uniq
   end
@@ -126,6 +137,7 @@ if $PROGRAM_NAME == __FILE__
   selection = BenchmarkCLI.selection
   options = {ref: "main", channel: selection.fetch("channel"), version: selection.fetch("version")}
   OptionParser.new do |parser|
+    parser.on("--active-only") { options[:active_only] = true }
     parser.on("--check") { options[:check] = true }
     parser.on("--collect") { options[:collect] = true }
     parser.on("--case ID") { |value| options[:case_id] = value }
@@ -139,6 +151,9 @@ if $PROGRAM_NAME == __FILE__
   end.parse!
   begin
     targets = BenchmarkCadence.fresh_targets(case_id: options.delete(:case_id))
+    if options.delete(:active_only) && ENV["BENCHMARK_CADENCE_ACTIVE"] != "true"
+      targets.select! { |target| BenchmarkCadence.active_cases.include?(target.fetch("case_id")) }
+    end
     raise BenchmarkCadence::Error, "No scheduled cases selected" if targets.empty?
     if options.delete(:collect)
       exit(NightlyCanaries::Runner.new.collect(summary: options.fetch(:summary), output: options[:output],

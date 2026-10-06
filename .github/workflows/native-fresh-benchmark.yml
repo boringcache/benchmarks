@@ -6,7 +6,7 @@ permissions:
   actions: read
   packages: read
 env:
-  BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER: ${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main' && contains(fromJSON('["depot-ubuntu-24.04-4","depot-ubuntu-24.04-8","namespace-profile-buildkit-4c","namespace-profile-buildkit-8c"]'), inputs.runner_label) && '1' || '' }}
+  BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER: ${{ github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || (startsWith(github.ref, 'refs/tags/benchmark-') && inputs.expected_identity != '' && fromJSON(inputs.expected_identity).harness_sha == github.sha)) && contains(fromJSON('["depot-ubuntu-24.04-4","depot-ubuntu-24.04-8","namespace-profile-buildkit-4c","namespace-profile-buildkit-8c"]'), inputs.runner_label) && '1' || '' }}
   BENCHMARK_EXPECTED_IDENTITY: "${{ inputs.expected_identity }}"
   BORINGCACHE_NO_GIT: 'true'
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
@@ -14,8 +14,8 @@ env:
 jobs:
   cold:
     name: "${{ matrix.provider }} ${{ inputs.case_id }} cold"
-    if: inputs.runner_label == '' || github.ref_name == 'main'
-    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
+    if: inputs.runner_label == '' || (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || (startsWith(github.ref, 'refs/tags/benchmark-') && inputs.expected_identity != '' && fromJSON(inputs.expected_identity).harness_sha == github.sha)))
+    runs-on: "${{ github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || (startsWith(github.ref, 'refs/tags/benchmark-') && inputs.expected_identity != '' && fromJSON(inputs.expected_identity).harness_sha == github.sha))
       && inputs.runner_label || 'ubuntu-latest' }}"
     timeout-minutes: 120
     outputs:
@@ -61,12 +61,11 @@ jobs:
       id-token: write
       packages: read
     env:
-      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
-        == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
+      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || (startsWith(github.ref, 'refs/tags/benchmark-') && inputs.expected_identity != '' && fromJSON(inputs.expected_identity).harness_sha == github.sha)) && inputs.runner_label || 'ubuntu-latest' }}"
   warm:
     name: "${{ matrix.provider }} ${{ inputs.case_id }} warm"
     needs: cold
-    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
+    runs-on: "${{ github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || (startsWith(github.ref, 'refs/tags/benchmark-') && inputs.expected_identity != '' && fromJSON(inputs.expected_identity).harness_sha == github.sha))
       && inputs.runner_label || 'ubuntu-latest' }}"
     timeout-minutes: 120
     strategy:
@@ -110,8 +109,7 @@ jobs:
       id-token: write
       packages: read
     env:
-      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
-        == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
+      BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || (startsWith(github.ref, 'refs/tags/benchmark-') && inputs.expected_identity != '' && fromJSON(inputs.expected_identity).harness_sha == github.sha)) && inputs.runner_label || 'ubuntu-latest' }}"
   report:
     name: "${{ inputs.case_id }} fresh report"
     needs:
