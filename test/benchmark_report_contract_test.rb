@@ -32,6 +32,53 @@ class BenchmarkReportContractTest < Minitest::Test
     assert status.success?, stderr
   end
 
+  def test_provider_selection_resolves_the_retained_matrix_results
+    %w[both boringcache actions-cache].each do |provider|
+      Dir.mktmpdir do |root|
+        repo = File.join(root, "benchmark-acme")
+        FileUtils.mkdir_p(File.join(repo, ".github/workflows"))
+        selected = provider == "both" ? %w[boringcache actions-cache] : [provider]
+        uploads = selected.map do |strategy|
+          <<~YAML.lines.map { |line| "        #{line}" }.join
+            - uses: actions/upload-artifact@v6
+              with:
+                name: benchmark-acme-#{strategy}-rolling
+                path: benchmark-results/acme-#{strategy}-rolling.json
+                if-no-files-found: error
+          YAML
+        end.join
+        File.write(File.join(repo, ".github/workflows/providers.yml"), <<~YAML)
+          on:
+            workflow_dispatch:
+              inputs:
+                provider: {type: choice, default: #{provider}, options: [both, boringcache, actions-cache]}
+          jobs:
+            commit:
+              runs-on: ubuntu-latest
+              env:
+                STRATEGY: ${{ matrix.strategy }}
+              strategy:
+                matrix:
+                  include: ${{ fromJSON(inputs.provider == 'boringcache' && '[{"strategy":"boringcache"}]' || inputs.provider == 'actions-cache' && '[{"strategy":"actions-cache"}]' || '[{"strategy":"boringcache"},{"strategy":"actions-cache"}]') }}
+              steps:
+                - run: ruby ./scripts/benchmark-report.rb phase --benchmark acme --strategy "$STRATEGY" --lane rolling --phase commit
+            report:
+              needs: commit
+              runs-on: ubuntu-latest
+              steps:
+                - uses: actions/download-artifact@v6
+                  with:
+                    pattern: phase-*
+                    path: benchmark-results
+                - run: ruby ./scripts/benchmark-report.rb summarize --title Acme --input-dir benchmark-results --output-dir benchmark-results
+        #{uploads}
+        YAML
+        _, stderr, status = Open3.capture3(SCRIPT, root)
+        assert status.success?, "#{provider}: #{stderr}"
+      end
+    end
+  end
+
   def test_a_lane_the_report_never_retains_fails
     _, stderr, status = run_against(uploaded: nil)
 

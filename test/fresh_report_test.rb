@@ -6,6 +6,19 @@ require_relative "../scripts/nightly-canaries"
 require "minitest/mock"
 
 class FreshReportTest < Minitest::Test
+  def test_single_provider_diagnostic_expects_only_its_cold_and_warm_observations
+    slots = FreshReport.expected("posthog", provider: "boringcache")
+    assert_equal [%w[boringcache cold], %w[boringcache warm]], slots.map { |slot| slot.values_at("strategy", "phase") }
+    assert_raises(BenchmarkCases::Error) { FreshReport.expected("posthog", provider: "unknown") }
+    Dir.mktmpdir do |directory|
+      observed = slots.map { |slot| {"name" => slot.fetch("job_name"), "status" => "completed", "conclusion" => "failure"} }
+      manifest = FreshReport.report(BenchmarkCases.load_case("posthog"), input_dir: File.join(directory, "missing"),
+        output_dir: directory, jobs: observed, run_url: "https://example.com/run", variant: "layers", provider: "boringcache")
+      assert_equal 2, manifest.fetch("observations").length
+      assert_equal ["failed", "failed"], manifest.fetch("observations").map { |value| value.fetch("state") }
+    end
+  end
+
   def jobs(conclusions)
     FreshReport.expected("hugo-go").zip(conclusions).map do |slot, conclusion|
       {"name" => slot.fetch("job_name"), "status" => "completed", "conclusion" => conclusion,
