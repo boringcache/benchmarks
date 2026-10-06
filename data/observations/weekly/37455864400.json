@@ -1,0 +1,437 @@
+{
+  "schema_version": 1,
+  "cadence": "weekly",
+  "collected_at": "2026-10-06T11:25:11Z",
+  "run": {
+    "repository": "boringcache/benchmarks",
+    "workflow": "project-fresh.yml",
+    "inputs": {
+      "case_id": "storybook",
+      "cadence": "fresh",
+      "selections": "[{\"workflow\":\"native-fresh-benchmark.yml\",\"inputs\":{\"case_id\":\"storybook\",\"variant\":\"archive-sandbox\",\"cadence\":\"fresh\",\"series_id\":\"cadence-37455664953-9\",\"sample\":\"1\",\"expected_identity\":\"{\\\"harness_sha\\\":\\\"b378dfe72d9af36c731c25fedffc36776c34ae6c\\\",\\\"case_id\\\":\\\"storybook\\\",\\\"definition_sha256\\\":\\\"ffcc374544ad17b00c6dbd18d8f3474b287cc675e39e3d0e4b88e61e54100331\\\"}\"}},{\"workflow\":\"native-fresh-benchmark.yml\",\"inputs\":{\"case_id\":\"storybook\",\"variant\":\"nx\",\"cadence\":\"fresh\",\"series_id\":\"cadence-37455664953-10\",\"sample\":\"1\",\"expected_identity\":\"{\\\"harness_sha\\\":\\\"b378dfe72d9af36c731c25fedffc36776c34ae6c\\\",\\\"case_id\\\":\\\"storybook\\\",\\\"definition_sha256\\\":\\\"ffcc374544ad17b00c6dbd18d8f3474b287cc675e39e3d0e4b88e61e54100331\\\"}\"}}]"
+    },
+    "state": "in_progress",
+    "selections": [
+      {
+        "repository": "boringcache/benchmarks",
+        "workflow": "native-fresh-benchmark.yml",
+        "inputs": {
+          "case_id": "storybook",
+          "variant": "archive-sandbox",
+          "cadence": "fresh",
+          "series_id": "cadence-37455664953-9",
+          "sample": "1",
+          "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"storybook\",\"definition_sha256\":\"ffcc374544ad17b00c6dbd18d8f3474b287cc675e39e3d0e4b88e61e54100331\"}"
+        },
+        "state": "in_progress",
+        "series": {
+          "schema_version": 1,
+          "case_id": "storybook",
+          "series_id": "cadence-37455664953-9",
+          "created_at": "2026-10-06T11:21:03Z",
+          "lane": "fresh",
+          "phases": [
+            "cold",
+            "warm"
+          ],
+          "sample_count": 1,
+          "definition_sha256": "ffcc374544ad17b00c6dbd18d8f3474b287cc675e39e3d0e4b88e61e54100331",
+          "variant": "archive-sandbox",
+          "workflow_inputs": {
+            "case_id": "storybook",
+            "variant": "archive-sandbox",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "cadence": "fresh"
+          },
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Timed upstream Storybook sandbox build or production Nx compilation, selected by variant, plus measured cache restore/setup; dependency preparation, output checks and post-job publication are reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "source": {
+            "repository": "storybookjs/storybook",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "3c97d29c70d3215aab512e678d9c8567356cabd3",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "verification": [
+            "Pinned upstream recipe and build success"
+          ],
+          "plan_sha256": "92708610287498405997e9d8e905bcba05525eeeb75a4e476e9eec142aab4468"
+        },
+        "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "id": 37455864400,
+        "url": "https://github.com/boringcache/benchmarks/actions/runs/37455864400",
+        "project_grouped": true,
+        "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "observations": [
+          {
+            "case_id": "storybook",
+            "strategy": "actions-cache",
+            "phase": "cold",
+            "job_name": "GitHub Actions storybook cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864400/job/112243257395",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+            ]
+          },
+          {
+            "case_id": "storybook",
+            "strategy": "actions-cache",
+            "phase": "warm",
+            "job_name": "GitHub Actions storybook warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+            ]
+          },
+          {
+            "case_id": "storybook",
+            "strategy": "boringcache",
+            "phase": "cold",
+            "job_name": "BoringCache storybook cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864400/job/112243257357",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+            ]
+          },
+          {
+            "case_id": "storybook",
+            "strategy": "boringcache",
+            "phase": "warm",
+            "job_name": "BoringCache storybook warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+            ]
+          }
+        ]
+      },
+      {
+        "repository": "boringcache/benchmarks",
+        "workflow": "native-fresh-benchmark.yml",
+        "inputs": {
+          "case_id": "storybook",
+          "variant": "nx",
+          "cadence": "fresh",
+          "series_id": "cadence-37455664953-10",
+          "sample": "1",
+          "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"storybook\",\"definition_sha256\":\"ffcc374544ad17b00c6dbd18d8f3474b287cc675e39e3d0e4b88e61e54100331\"}"
+        },
+        "state": "in_progress",
+        "series": {
+          "schema_version": 1,
+          "case_id": "storybook",
+          "series_id": "cadence-37455664953-10",
+          "created_at": "2026-10-06T11:21:03Z",
+          "lane": "fresh",
+          "phases": [
+            "cold",
+            "warm"
+          ],
+          "sample_count": 1,
+          "definition_sha256": "ffcc374544ad17b00c6dbd18d8f3474b287cc675e39e3d0e4b88e61e54100331",
+          "variant": "nx",
+          "workflow_inputs": {
+            "case_id": "storybook",
+            "variant": "nx",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "cadence": "fresh"
+          },
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Timed upstream Storybook sandbox build or production Nx compilation, selected by variant, plus measured cache restore/setup; dependency preparation, output checks and post-job publication are reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "source": {
+            "repository": "storybookjs/storybook",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "3c97d29c70d3215aab512e678d9c8567356cabd3",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "verification": [
+            "Pinned upstream recipe and build success"
+          ],
+          "plan_sha256": "000b6fe19052a018e3a96f78e0f76c7558fe94a05750b1f0a141a823f84ea575"
+        },
+        "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "id": 37455864400,
+        "url": "https://github.com/boringcache/benchmarks/actions/runs/37455864400",
+        "project_grouped": true,
+        "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "observations": [
+          {
+            "case_id": "storybook",
+            "strategy": "actions-cache",
+            "phase": "cold",
+            "job_name": "GitHub Actions storybook cold",
+            "state": "missing",
+            "job_conclusion": "success",
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864400/job/112243257321",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+            ]
+          },
+          {
+            "case_id": "storybook",
+            "strategy": "actions-cache",
+            "phase": "warm",
+            "job_name": "GitHub Actions storybook warm",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864400/job/112244235752",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+            ]
+          },
+          {
+            "case_id": "storybook",
+            "strategy": "boringcache",
+            "phase": "cold",
+            "job_name": "BoringCache storybook cold",
+            "state": "missing",
+            "job_conclusion": "success",
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864400/job/112243257265",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+            ]
+          },
+          {
+            "case_id": "storybook",
+            "strategy": "boringcache",
+            "phase": "warm",
+            "job_name": "BoringCache storybook warm",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864400/job/112244235746",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+            ]
+          }
+        ]
+      }
+    ],
+    "id": 37455864400,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37455864400",
+    "observations": [
+      {
+        "case_id": "storybook",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions storybook cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864400/job/112243257395",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+        ]
+      },
+      {
+        "case_id": "storybook",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions storybook warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+        ]
+      },
+      {
+        "case_id": "storybook",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache storybook cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864400/job/112243257357",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+        ]
+      },
+      {
+        "case_id": "storybook",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache storybook warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+        ]
+      },
+      {
+        "case_id": "storybook",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions storybook cold",
+        "state": "missing",
+        "job_conclusion": "success",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864400/job/112243257321",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+        ]
+      },
+      {
+        "case_id": "storybook",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions storybook warm",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864400/job/112244235752",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+        ]
+      },
+      {
+        "case_id": "storybook",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache storybook cold",
+        "state": "missing",
+        "job_conclusion": "success",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864400/job/112243257265",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+        ]
+      },
+      {
+        "case_id": "storybook",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache storybook warm",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864400/job/112244235746",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864400"
+        ]
+      }
+    ]
+  }
+}

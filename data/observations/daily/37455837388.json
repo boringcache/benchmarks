@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "cadence": "daily",
+  "collected_at": "2026-10-06T11:24:52Z",
+  "run": {
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-fresh-benchmark.yml",
+    "inputs": {
+      "case_id": "spring-ai",
+      "cadence": "nightly",
+      "series_id": "cadence-37455668133-12",
+      "sample": "1",
+      "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"spring-ai\",\"definition_sha256\":\"cc63a0f57770e7b05480d4117facfd5f43cffefa5bf77c6caf150b5e0e332d95\"}"
+    },
+    "state": "in_progress",
+    "series": {
+      "schema_version": 1,
+      "case_id": "spring-ai",
+      "series_id": "cadence-37455668133-12",
+      "created_at": "2026-10-06T11:20:53Z",
+      "lane": "fresh",
+      "phases": [
+        "cold",
+        "warm"
+      ],
+      "sample_count": 1,
+      "definition_sha256": "cc63a0f57770e7b05480d4117facfd5f43cffefa5bf77c6caf150b5e0e332d95",
+      "variant": null,
+      "workflow_inputs": {
+        "case_id": "spring-ai",
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "cadence": "nightly"
+      },
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "spring-projects/spring-ai",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "46d05c2fdbab52f6ef04207abe19b12687a47453",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "verification": [
+        "Pinned upstream recipe and build success"
+      ],
+      "plan_sha256": "65aba5c1a5fed8c4b7fff301aef56b5b64b7d0a86b3a0d6856ff84a707d6a2c7"
+    },
+    "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+    "id": 37455837388,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37455837388",
+    "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+    "observations": [
+      {
+        "case_id": "spring-ai",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions spring-ai cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455837388/job/112243127272",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455837388"
+        ]
+      },
+      {
+        "case_id": "spring-ai",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions spring-ai warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455837388"
+        ]
+      },
+      {
+        "case_id": "spring-ai",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache spring-ai cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455837388/job/112243126976",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455837388"
+        ]
+      },
+      {
+        "case_id": "spring-ai",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache spring-ai warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455837388"
+        ]
+      }
+    ]
+  }
+}

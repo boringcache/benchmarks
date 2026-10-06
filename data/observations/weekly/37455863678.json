@@ -1,0 +1,1026 @@
+{
+  "schema_version": 1,
+  "cadence": "weekly",
+  "collected_at": "2026-10-06T11:25:11Z",
+  "run": {
+    "repository": "boringcache/benchmarks",
+    "workflow": "reapi-fresh-benchmark.yml",
+    "inputs": {
+      "case_id": "opencut-moon",
+      "cadence": "fresh",
+      "series_id": "cadence-37455664953-25",
+      "sample": "1",
+      "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"opencut-moon\",\"definition_sha256\":\"0ffc16046532dfca364a4347b4eef381c25aae663816d689b572b655def5798e\"}"
+    },
+    "state": "success",
+    "series": {
+      "schema_version": 1,
+      "case_id": "opencut-moon",
+      "series_id": "cadence-37455664953-25",
+      "created_at": "2026-10-06T11:21:03Z",
+      "lane": "fresh",
+      "phases": [
+        "cold",
+        "warm"
+      ],
+      "sample_count": 1,
+      "definition_sha256": "0ffc16046532dfca364a4347b4eef381c25aae663816d689b572b655def5798e",
+      "variant": null,
+      "workflow_inputs": {
+        "case_id": "opencut-moon",
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "cadence": "fresh"
+      },
+      "comparison": {
+        "question": "Does Moon restore the OpenCut web build on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "primary_metric": "correctness",
+        "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "OpenCut-app/OpenCut",
+        "revision": "e668010778568641babef2cc40be4703ae6916d6",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "e668010778568641babef2cc40be4703ae6916d6"
+          }
+        ]
+      },
+      "verification": [
+        "Require the declared native command to succeed",
+        "Require declared outputs and successful output checks",
+        "Require native remote-hit evidence and the same output hashes on the warm worker",
+        "Require registry shutdown to complete successfully"
+      ],
+      "plan_sha256": "23b9cb5213fd9df3147a79dfda7c4454b4ecdd9661137982cd753b35b336ca52"
+    },
+    "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+    "id": 37455863678,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37455863678",
+    "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+    "observations": [
+      {
+        "strategy": "boringcache",
+        "phase": "cold",
+        "state": "succeeded",
+        "timing": {
+          "restore_or_setup_seconds": 0,
+          "build_seconds": 16.387149959,
+          "workflow_seconds": null,
+          "total_seconds": 16.387149959,
+          "dependency_setup_seconds": null,
+          "compile_seconds": null,
+          "verification_seconds": null,
+          "save_seconds": null,
+          "comparison_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+          "build_and_reuse_seconds": 16.387149959
+        },
+        "verification": true,
+        "storage_bytes": 1878301,
+        "phase_record": {
+          "schema_version": 1,
+          "benchmark": "opencut-moon",
+          "strategy": "boringcache",
+          "lane": "fresh",
+          "phase": "cold",
+          "variant": null,
+          "mode": "reapi",
+          "adapter": "runtime",
+          "case": {
+            "schema_version": 1,
+            "case_id": "opencut-moon",
+            "workspace": "boringcache/benchmarks",
+            "definition_sha256": "0ffc16046532dfca364a4347b4eef381c25aae663816d689b572b655def5798e",
+            "source": {
+              "repository": "OpenCut-app/OpenCut",
+              "revision": "e668010778568641babef2cc40be4703ae6916d6",
+              "pins": [
+                {
+                  "path": "proposal.md",
+                  "kind": "snapshot",
+                  "revision": "e668010778568641babef2cc40be4703ae6916d6"
+                }
+              ]
+            },
+            "origin": {
+              "repository": "OpenCut-app/OpenCut",
+              "branch": "main",
+              "revision": "e668010778568641babef2cc40be4703ae6916d6"
+            },
+            "verification": [
+              "Require the declared native command to succeed",
+              "Require declared outputs and successful output checks",
+              "Require native remote-hit evidence and the same output hashes on the warm worker",
+              "Require registry shutdown to complete successfully"
+            ],
+            "comparison": {
+              "question": "Does Moon restore the OpenCut web build on a clean worker?",
+              "providers": [
+                "boringcache",
+                "bazel-remote"
+              ],
+              "primary_metric": "correctness",
+              "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+              "storage": "unmeasured",
+              "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+              "sample_count": 2
+            },
+            "execution": {
+              "sync": "upstream-head",
+              "workflows": [
+                {
+                  "path": ".github/workflows/reapi-fresh-benchmark.yml",
+                  "lane": "fresh",
+                  "inputs": {
+                    "case_id": "opencut-moon"
+                  }
+                },
+                {
+                  "path": ".github/workflows/reapi-rolling-benchmark.yml",
+                  "lane": "rolling",
+                  "inputs": {
+                    "case_id": "opencut-moon"
+                  }
+                }
+              ],
+              "blockers": []
+            }
+          },
+          "timing": {
+            "restore_or_setup_seconds": 0,
+            "build_seconds": 16.387149959,
+            "workflow_seconds": null,
+            "total_seconds": 16.387149959,
+            "dependency_setup_seconds": null,
+            "compile_seconds": null,
+            "verification_seconds": null,
+            "save_seconds": null,
+            "comparison_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+            "build_and_reuse_seconds": 16.387149959
+          },
+          "cache": {
+            "hit": null,
+            "sccache_proof": null,
+            "import_ready": null,
+            "import_refs": 0,
+            "docker_plan": null,
+            "tag": "opencut-moon-series-cadence-37455664953-25-s1-r37455863678-a1",
+            "workspace": "boringcache/benchmarks",
+            "storage_bytes": 1878301,
+            "storage_source": "boringcache-check",
+            "storage_breakdown": {
+              "workspace": "boringcache/benchmarks",
+              "tags": [
+                "opencut-moon-series-cadence-37455664953-25-s1-r37455863678-a1"
+              ],
+              "complete": true,
+              "measured_bytes": 1878301,
+              "unmeasured_tags": [],
+              "total_bytes": 1878301,
+              "observations": [
+                {
+                  "requested_tag": "opencut-moon-series-cadence-37455664953-25-s1-r37455863678-a1",
+                  "tag": "opencut-moon-series-cadence-37455664953-25-s1-r37455863678-a1",
+                  "status": "hit",
+                  "cache_type": "kv",
+                  "kv_total_size": 1878301,
+                  "compressed_size": 1878301,
+                  "size": 1878301
+                }
+              ]
+            }
+          },
+          "source": {
+            "repository": "OpenCut-app/OpenCut",
+            "sha": "e668010778568641babef2cc40be4703ae6916d6"
+          },
+          "product_refs": {
+            "cli_version": "1.40.0"
+          },
+          "action": {
+            "resolved_mode": null,
+            "resolved_tags": null,
+            "trust_state": null,
+            "diagnostics_level": null
+          },
+          "github": {
+            "repository": "boringcache/benchmarks",
+            "run_id": "37455863678",
+            "run_attempt": "1",
+            "job": "cold",
+            "workflow": "REAPI comparison fresh",
+            "ref_name": "benchmark-37455664953",
+            "runner_os": "Linux",
+            "runner_arch": "X64",
+            "runner_name": "GitHub Actions 1000175834",
+            "runner_environment": "github-hosted",
+            "runner_image": "ubuntu24",
+            "runner_image_version": "20260927.320.1"
+          },
+          "run_uid": "gh-37455863678-1",
+          "verification": {
+            "passed": true,
+            "checks": [
+              "Output verification completed before recording this phase"
+            ],
+            "declared_checks": [
+              "Require the declared native command to succeed",
+              "Require declared outputs and successful output checks",
+              "Require native remote-hit evidence and the same output hashes on the warm worker",
+              "Require registry shutdown to complete successfully"
+            ]
+          },
+          "series": {
+            "id": "cadence-37455664953-25",
+            "sample": 1
+          },
+          "environment": {
+            "os": "Linux",
+            "arch": "X64",
+            "image": "ubuntu24",
+            "image_version": "20260927.320.1",
+            "machine": "ubuntu-24.04"
+          },
+          "evidence_links": [
+            "https://github.com/boringcache/benchmarks/actions/runs/37455863678"
+          ]
+        }
+      },
+      {
+        "strategy": "boringcache",
+        "phase": "warm",
+        "state": "succeeded",
+        "timing": {
+          "restore_or_setup_seconds": 0,
+          "build_seconds": 14.550159467,
+          "workflow_seconds": null,
+          "total_seconds": 14.550159467,
+          "dependency_setup_seconds": null,
+          "compile_seconds": null,
+          "verification_seconds": null,
+          "save_seconds": null,
+          "comparison_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+          "build_and_reuse_seconds": 14.550159467
+        },
+        "verification": true,
+        "storage_bytes": 1878301,
+        "phase_record": {
+          "schema_version": 1,
+          "benchmark": "opencut-moon",
+          "strategy": "boringcache",
+          "lane": "fresh",
+          "phase": "warm",
+          "variant": null,
+          "mode": "reapi",
+          "adapter": "runtime",
+          "case": {
+            "schema_version": 1,
+            "case_id": "opencut-moon",
+            "workspace": "boringcache/benchmarks",
+            "definition_sha256": "0ffc16046532dfca364a4347b4eef381c25aae663816d689b572b655def5798e",
+            "source": {
+              "repository": "OpenCut-app/OpenCut",
+              "revision": "e668010778568641babef2cc40be4703ae6916d6",
+              "pins": [
+                {
+                  "path": "proposal.md",
+                  "kind": "snapshot",
+                  "revision": "e668010778568641babef2cc40be4703ae6916d6"
+                }
+              ]
+            },
+            "origin": {
+              "repository": "OpenCut-app/OpenCut",
+              "branch": "main",
+              "revision": "e668010778568641babef2cc40be4703ae6916d6"
+            },
+            "verification": [
+              "Require the declared native command to succeed",
+              "Require declared outputs and successful output checks",
+              "Require native remote-hit evidence and the same output hashes on the warm worker",
+              "Require registry shutdown to complete successfully"
+            ],
+            "comparison": {
+              "question": "Does Moon restore the OpenCut web build on a clean worker?",
+              "providers": [
+                "boringcache",
+                "bazel-remote"
+              ],
+              "primary_metric": "correctness",
+              "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+              "storage": "unmeasured",
+              "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+              "sample_count": 2
+            },
+            "execution": {
+              "sync": "upstream-head",
+              "workflows": [
+                {
+                  "path": ".github/workflows/reapi-fresh-benchmark.yml",
+                  "lane": "fresh",
+                  "inputs": {
+                    "case_id": "opencut-moon"
+                  }
+                },
+                {
+                  "path": ".github/workflows/reapi-rolling-benchmark.yml",
+                  "lane": "rolling",
+                  "inputs": {
+                    "case_id": "opencut-moon"
+                  }
+                }
+              ],
+              "blockers": []
+            }
+          },
+          "timing": {
+            "restore_or_setup_seconds": 0,
+            "build_seconds": 14.550159467,
+            "workflow_seconds": null,
+            "total_seconds": 14.550159467,
+            "dependency_setup_seconds": null,
+            "compile_seconds": null,
+            "verification_seconds": null,
+            "save_seconds": null,
+            "comparison_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+            "build_and_reuse_seconds": 14.550159467
+          },
+          "cache": {
+            "hit": true,
+            "sccache_proof": null,
+            "import_ready": null,
+            "import_refs": 0,
+            "docker_plan": null,
+            "tag": "opencut-moon-series-cadence-37455664953-25-s1-r37455863678-a1",
+            "workspace": "boringcache/benchmarks",
+            "storage_bytes": 1878301,
+            "storage_source": "boringcache-check",
+            "storage_breakdown": {
+              "workspace": "boringcache/benchmarks",
+              "tags": [
+                "opencut-moon-series-cadence-37455664953-25-s1-r37455863678-a1"
+              ],
+              "complete": true,
+              "measured_bytes": 1878301,
+              "unmeasured_tags": [],
+              "total_bytes": 1878301,
+              "observations": [
+                {
+                  "requested_tag": "opencut-moon-series-cadence-37455664953-25-s1-r37455863678-a1",
+                  "tag": "opencut-moon-series-cadence-37455664953-25-s1-r37455863678-a1",
+                  "status": "hit",
+                  "cache_type": "kv",
+                  "kv_total_size": 1878301,
+                  "compressed_size": 1878301,
+                  "size": 1878301
+                }
+              ]
+            }
+          },
+          "source": {
+            "repository": "OpenCut-app/OpenCut",
+            "sha": "e668010778568641babef2cc40be4703ae6916d6"
+          },
+          "product_refs": {
+            "cli_version": "1.40.0"
+          },
+          "action": {
+            "resolved_mode": null,
+            "resolved_tags": null,
+            "trust_state": null,
+            "diagnostics_level": null
+          },
+          "github": {
+            "repository": "boringcache/benchmarks",
+            "run_id": "37455863678",
+            "run_attempt": "1",
+            "job": "warm",
+            "workflow": "REAPI comparison fresh",
+            "ref_name": "benchmark-37455664953",
+            "runner_os": "Linux",
+            "runner_arch": "X64",
+            "runner_name": "GitHub Actions 1000175934",
+            "runner_environment": "github-hosted",
+            "runner_image": "ubuntu24",
+            "runner_image_version": "20260927.320.1"
+          },
+          "run_uid": "gh-37455863678-1",
+          "verification": {
+            "passed": true,
+            "checks": [
+              "Output verification completed before recording this phase"
+            ],
+            "declared_checks": [
+              "Require the declared native command to succeed",
+              "Require declared outputs and successful output checks",
+              "Require native remote-hit evidence and the same output hashes on the warm worker",
+              "Require registry shutdown to complete successfully"
+            ]
+          },
+          "series": {
+            "id": "cadence-37455664953-25",
+            "sample": 1
+          },
+          "environment": {
+            "os": "Linux",
+            "arch": "X64",
+            "image": "ubuntu24",
+            "image_version": "20260927.320.1",
+            "machine": "ubuntu-24.04"
+          },
+          "evidence_links": [
+            "https://github.com/boringcache/benchmarks/actions/runs/37455863678"
+          ]
+        }
+      },
+      {
+        "strategy": "bazel-remote",
+        "phase": "cold",
+        "state": "succeeded",
+        "timing": {
+          "restore_or_setup_seconds": 0.10121323900000334,
+          "build_seconds": 13.177397092,
+          "workflow_seconds": null,
+          "total_seconds": 13.278610331000003,
+          "dependency_setup_seconds": null,
+          "compile_seconds": null,
+          "verification_seconds": null,
+          "save_seconds": 0.0013148959999966792,
+          "comparison_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+          "build_and_reuse_seconds": 13.278610331000003
+        },
+        "verification": true,
+        "storage_bytes": 1878300,
+        "phase_record": {
+          "schema_version": 1,
+          "benchmark": "opencut-moon",
+          "strategy": "bazel-remote",
+          "lane": "fresh",
+          "phase": "cold",
+          "variant": null,
+          "mode": "reapi",
+          "adapter": "runtime",
+          "case": {
+            "schema_version": 1,
+            "case_id": "opencut-moon",
+            "workspace": "boringcache/benchmarks",
+            "definition_sha256": "0ffc16046532dfca364a4347b4eef381c25aae663816d689b572b655def5798e",
+            "source": {
+              "repository": "OpenCut-app/OpenCut",
+              "revision": "e668010778568641babef2cc40be4703ae6916d6",
+              "pins": [
+                {
+                  "path": "proposal.md",
+                  "kind": "snapshot",
+                  "revision": "e668010778568641babef2cc40be4703ae6916d6"
+                }
+              ]
+            },
+            "origin": {
+              "repository": "OpenCut-app/OpenCut",
+              "branch": "main",
+              "revision": "e668010778568641babef2cc40be4703ae6916d6"
+            },
+            "verification": [
+              "Require the declared native command to succeed",
+              "Require declared outputs and successful output checks",
+              "Require native remote-hit evidence and the same output hashes on the warm worker",
+              "Require registry shutdown to complete successfully"
+            ],
+            "comparison": {
+              "question": "Does Moon restore the OpenCut web build on a clean worker?",
+              "providers": [
+                "boringcache",
+                "bazel-remote"
+              ],
+              "primary_metric": "correctness",
+              "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+              "storage": "unmeasured",
+              "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+              "sample_count": 2
+            },
+            "execution": {
+              "sync": "upstream-head",
+              "workflows": [
+                {
+                  "path": ".github/workflows/reapi-fresh-benchmark.yml",
+                  "lane": "fresh",
+                  "inputs": {
+                    "case_id": "opencut-moon"
+                  }
+                },
+                {
+                  "path": ".github/workflows/reapi-rolling-benchmark.yml",
+                  "lane": "rolling",
+                  "inputs": {
+                    "case_id": "opencut-moon"
+                  }
+                }
+              ],
+              "blockers": []
+            }
+          },
+          "timing": {
+            "restore_or_setup_seconds": 0.10121323900000334,
+            "build_seconds": 13.177397092,
+            "workflow_seconds": null,
+            "total_seconds": 13.278610331000003,
+            "dependency_setup_seconds": null,
+            "compile_seconds": null,
+            "verification_seconds": null,
+            "save_seconds": 0.0013148959999966792,
+            "comparison_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+            "build_and_reuse_seconds": 13.278610331000003
+          },
+          "cache": {
+            "hit": null,
+            "sccache_proof": null,
+            "import_ready": null,
+            "import_refs": 0,
+            "docker_plan": null,
+            "tag": "opencut-moon-series-cadence-37455664953-25-s1-r37455863678-a1",
+            "workspace": "boringcache/benchmarks",
+            "storage_bytes": 1878300,
+            "storage_source": "bazel-remote-local-store-files",
+            "storage_breakdown": {
+              "complete": true,
+              "scope": "Uncompressed local comparator AC/CAS store after shutdown; remote archive size unmeasured",
+              "observations": [
+                {
+                  "path": "reapi-store/ac.v2/03/03958ffd5d934eb41a3ca347395f7747bb435850691d0066cf896ba1712cd5ad-125228124",
+                  "bytes": 5349
+                },
+                {
+                  "path": "reapi-store/cas.v2/03/03958ffd5d934eb41a3ca347395f7747bb435850691d0066cf896ba1712cd5ad-260503882.v1",
+                  "bytes": 12955
+                },
+                {
+                  "path": "reapi-store/cas.v2/0d/0d511903fdae321b8fd3ab907001456190024b9844927c6e0f1678a7a1d2b76b-861611523.v1",
+                  "bytes": 226
+                },
+                {
+                  "path": "reapi-store/cas.v2/13/13b73a709f53bfa200f8d373ff93cb7bf99dbc945662ceb8ca8372629ba164ba-043513906.v1",
+                  "bytes": 498
+                },
+                {
+                  "path": "reapi-store/cas.v2/1b/1be3448e292fbf05ffe176fe1e43f135013d50b1e7d324ad1a558f623d3bb6f6-675004504.v1",
+                  "bytes": 18996
+                },
+                {
+                  "path": "reapi-store/cas.v2/2f/2f00b1718eef3dbbedebd3b8261abb299d8218a897061d7e7c08656a8fa52d66-607028475.v1",
+                  "bytes": 4809
+                },
+                {
+                  "path": "reapi-store/cas.v2/31/3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62-787198707.v1",
+                  "bytes": 48256
+                },
+                {
+                  "path": "reapi-store/cas.v2/31/3130e6a36214d9d6c7e6a2c37157630198f5c72d6d8eb984cb195cd9d9ec2731-562213209.v1",
+                  "bytes": 144253
+                },
+                {
+                  "path": "reapi-store/cas.v2/34/34b9c504cab7a73e37b746343a449132e56cf7b5481af2cb81dc74dcff25c956-624925924.v1",
+                  "bytes": 85068
+                },
+                {
+                  "path": "reapi-store/cas.v2/3b/3b17cdd368c9bc5c97d7600064dde797e46ae521a2b81b337d5d7c07e955b75b-774105768.v1",
+                  "bytes": 147
+                },
+                {
+                  "path": "reapi-store/cas.v2/4c/4cc40fc40abb9714c082002e4208c90c055f89296554c221a586e27619748573-043843049.v1",
+                  "bytes": 470
+                },
+                {
+                  "path": "reapi-store/cas.v2/4c/4cc8159fcd41483c2c8e3f5529188df2d2df78b7f3ba3b83083a7a00c4e23b7c-243438309.v1",
+                  "bytes": 2516
+                },
+                {
+                  "path": "reapi-store/cas.v2/4e/4e887d6d546d729694c6944a77464bcc0090f715aa760dfeaae6943aec1fd864-663280006.v1",
+                  "bytes": 201
+                },
+                {
+                  "path": "reapi-store/cas.v2/4f/4f83140d5f4293ab55bd1207327e995c83258f1e7d3145b1b5d7a3d17fdfe0a7-303723034.v1",
+                  "bytes": 24
+                },
+                {
+                  "path": "reapi-store/cas.v2/5c/5c66f9e07e90c6d4ac4922cc68d60de26c17b1858e677fb5e603fce3952b3ff2-626909964.v1",
+                  "bytes": 10252
+                },
+                {
+                  "path": "reapi-store/cas.v2/6e/6e9e020a25f9b56d418f2c085b1d3c09725a4da23fe693a5b463064606732190-469354017.v1",
+                  "bytes": 11232
+                },
+                {
+                  "path": "reapi-store/cas.v2/71/71d5ee93cc1e9f1d520a3a8b66456de18c7879d8df09d57fcd2eaff75fef0075-736258519.v1",
+                  "bytes": 18748
+                },
+                {
+                  "path": "reapi-store/cas.v2/72/72be555ea34323ca7936bb2b92f1d20f5f8ddad77678aa602b8547de262997d8-586595505.v1",
+                  "bytes": 13
+                },
+                {
+                  "path": "reapi-store/cas.v2/90/901cea78adc0dc591c643f6debc2accd980b751397a37ca17c1f1cd5c097284c-505660511.v1",
+                  "bytes": 729
+                },
+                {
+                  "path": "reapi-store/cas.v2/90/90d24bc3bf698ac1e173739502298ccca72adf1f564fab05f484b8c48d1cadd2-458780647.v1",
+                  "bytes": 67
+                },
+                {
+                  "path": "reapi-store/cas.v2/af/af88f0c0048e1cf8604075fd7c4508fca7c4803563dd65a45b374acbe4bcba05-538384738.v1",
+                  "bytes": 148375
+                },
+                {
+                  "path": "reapi-store/cas.v2/bd/bd5915a0f57cf7b495aea51c458088a36fa4d6c95e1004875023c1333ed08267-853243568.v1",
+                  "bytes": 342609
+                },
+                {
+                  "path": "reapi-store/cas.v2/ca/ca157063339ac4ad418f214f3abfed119b0798ab4d377386ce5c9e5a7a435ebd-122980765.v1",
+                  "bytes": 25960
+                },
+                {
+                  "path": "reapi-store/cas.v2/cd/cdd375a4f5b2bcb934a084efb604356caf8138e843abb7dc96b56ed06454bddc-667904853.v1",
+                  "bytes": 749562
+                },
+                {
+                  "path": "reapi-store/cas.v2/da/dacc59a2793f19bd92c79e1a812052c09f6c445450bb721b11e26f0b12b1cc7c-693043638.v1",
+                  "bytes": 42545
+                },
+                {
+                  "path": "reapi-store/cas.v2/de/dea2a6730ad8b13e43f458f8fc75607474d290242ad56b5a8357cb9f44e951d9-052650797.v1",
+                  "bytes": 161
+                },
+                {
+                  "path": "reapi-store/cas.v2/ec/ec3400f57e441cee3161a41e78adbff0fcf1a2876757970c9be951c70b2fc4c7-032391247.v1",
+                  "bytes": 199364
+                },
+                {
+                  "path": "reapi-store/cas.v2/fa/fa11cd2dfaa195f3b27172ee48a7da7f7006e2262dbb2f0707192a99deffb761-075714612.v1",
+                  "bytes": 386
+                },
+                {
+                  "path": "reapi-store/cas.v2/fe/fee2fc55cb28d41584c94627daa7ae4fe1a6909f771706f01eed0960156889f4-849685248.v1",
+                  "bytes": 1366
+                },
+                {
+                  "path": "reapi-store/cas.v2/ff/ff4cbe759e84910b9f96f97a1cf2ea759c9259f49fd39e862044f3cae50e1596-555033118.v1",
+                  "bytes": 3163
+                }
+              ]
+            }
+          },
+          "source": {
+            "repository": "OpenCut-app/OpenCut",
+            "sha": "e668010778568641babef2cc40be4703ae6916d6"
+          },
+          "product_refs": {},
+          "action": {
+            "resolved_mode": null,
+            "resolved_tags": null,
+            "trust_state": null,
+            "diagnostics_level": null
+          },
+          "github": {
+            "repository": "boringcache/benchmarks",
+            "run_id": "37455863678",
+            "run_attempt": "1",
+            "job": "cold",
+            "workflow": "REAPI comparison fresh",
+            "ref_name": "benchmark-37455664953",
+            "runner_os": "Linux",
+            "runner_arch": "X64",
+            "runner_name": "GitHub Actions 1000175833",
+            "runner_environment": "github-hosted",
+            "runner_image": "ubuntu24",
+            "runner_image_version": "20260927.320.1"
+          },
+          "run_uid": "gh-37455863678-1",
+          "verification": {
+            "passed": true,
+            "checks": [
+              "Output verification completed before recording this phase"
+            ],
+            "declared_checks": [
+              "Require the declared native command to succeed",
+              "Require declared outputs and successful output checks",
+              "Require native remote-hit evidence and the same output hashes on the warm worker",
+              "Require registry shutdown to complete successfully"
+            ]
+          },
+          "series": {
+            "id": "cadence-37455664953-25",
+            "sample": 1
+          },
+          "environment": {
+            "os": "Linux",
+            "arch": "X64",
+            "image": "ubuntu24",
+            "image_version": "20260927.320.1",
+            "machine": "ubuntu-24.04"
+          },
+          "evidence_links": [
+            "https://github.com/boringcache/benchmarks/actions/runs/37455863678"
+          ]
+        }
+      },
+      {
+        "strategy": "bazel-remote",
+        "phase": "warm",
+        "state": "succeeded",
+        "timing": {
+          "restore_or_setup_seconds": 0.2011704180000038,
+          "build_seconds": 11.222398773000009,
+          "workflow_seconds": null,
+          "total_seconds": 11.423569191000013,
+          "dependency_setup_seconds": null,
+          "compile_seconds": null,
+          "verification_seconds": null,
+          "save_seconds": 0.0017399449999970784,
+          "comparison_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+          "build_and_reuse_seconds": 11.423569191000013
+        },
+        "verification": true,
+        "storage_bytes": 1878300,
+        "phase_record": {
+          "schema_version": 1,
+          "benchmark": "opencut-moon",
+          "strategy": "bazel-remote",
+          "lane": "fresh",
+          "phase": "warm",
+          "variant": null,
+          "mode": "reapi",
+          "adapter": "runtime",
+          "case": {
+            "schema_version": 1,
+            "case_id": "opencut-moon",
+            "workspace": "boringcache/benchmarks",
+            "definition_sha256": "0ffc16046532dfca364a4347b4eef381c25aae663816d689b572b655def5798e",
+            "source": {
+              "repository": "OpenCut-app/OpenCut",
+              "revision": "e668010778568641babef2cc40be4703ae6916d6",
+              "pins": [
+                {
+                  "path": "proposal.md",
+                  "kind": "snapshot",
+                  "revision": "e668010778568641babef2cc40be4703ae6916d6"
+                }
+              ]
+            },
+            "origin": {
+              "repository": "OpenCut-app/OpenCut",
+              "branch": "main",
+              "revision": "e668010778568641babef2cc40be4703ae6916d6"
+            },
+            "verification": [
+              "Require the declared native command to succeed",
+              "Require declared outputs and successful output checks",
+              "Require native remote-hit evidence and the same output hashes on the warm worker",
+              "Require registry shutdown to complete successfully"
+            ],
+            "comparison": {
+              "question": "Does Moon restore the OpenCut web build on a clean worker?",
+              "providers": [
+                "boringcache",
+                "bazel-remote"
+              ],
+              "primary_metric": "correctness",
+              "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+              "storage": "unmeasured",
+              "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+              "sample_count": 2
+            },
+            "execution": {
+              "sync": "upstream-head",
+              "workflows": [
+                {
+                  "path": ".github/workflows/reapi-fresh-benchmark.yml",
+                  "lane": "fresh",
+                  "inputs": {
+                    "case_id": "opencut-moon"
+                  }
+                },
+                {
+                  "path": ".github/workflows/reapi-rolling-benchmark.yml",
+                  "lane": "rolling",
+                  "inputs": {
+                    "case_id": "opencut-moon"
+                  }
+                }
+              ],
+              "blockers": []
+            }
+          },
+          "timing": {
+            "restore_or_setup_seconds": 0.2011704180000038,
+            "build_seconds": 11.222398773000009,
+            "workflow_seconds": null,
+            "total_seconds": 11.423569191000013,
+            "dependency_setup_seconds": null,
+            "compile_seconds": null,
+            "verification_seconds": null,
+            "save_seconds": 0.0017399449999970784,
+            "comparison_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+            "build_and_reuse_seconds": 11.423569191000013
+          },
+          "cache": {
+            "hit": true,
+            "sccache_proof": null,
+            "import_ready": null,
+            "import_refs": 0,
+            "docker_plan": null,
+            "tag": "opencut-moon-series-cadence-37455664953-25-s1-r37455863678-a1",
+            "workspace": "boringcache/benchmarks",
+            "storage_bytes": 1878300,
+            "storage_source": "bazel-remote-local-store-files",
+            "storage_breakdown": {
+              "complete": true,
+              "scope": "Uncompressed local comparator AC/CAS store after shutdown; remote archive size unmeasured",
+              "observations": [
+                {
+                  "path": "reapi-store/ac.v2/03/03958ffd5d934eb41a3ca347395f7747bb435850691d0066cf896ba1712cd5ad-125228124",
+                  "bytes": 5349
+                },
+                {
+                  "path": "reapi-store/cas.v2/03/03958ffd5d934eb41a3ca347395f7747bb435850691d0066cf896ba1712cd5ad-260503882.v1",
+                  "bytes": 12955
+                },
+                {
+                  "path": "reapi-store/cas.v2/0d/0d511903fdae321b8fd3ab907001456190024b9844927c6e0f1678a7a1d2b76b-861611523.v1",
+                  "bytes": 226
+                },
+                {
+                  "path": "reapi-store/cas.v2/13/13b73a709f53bfa200f8d373ff93cb7bf99dbc945662ceb8ca8372629ba164ba-043513906.v1",
+                  "bytes": 498
+                },
+                {
+                  "path": "reapi-store/cas.v2/1b/1be3448e292fbf05ffe176fe1e43f135013d50b1e7d324ad1a558f623d3bb6f6-675004504.v1",
+                  "bytes": 18996
+                },
+                {
+                  "path": "reapi-store/cas.v2/2f/2f00b1718eef3dbbedebd3b8261abb299d8218a897061d7e7c08656a8fa52d66-607028475.v1",
+                  "bytes": 4809
+                },
+                {
+                  "path": "reapi-store/cas.v2/31/3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62-787198707.v1",
+                  "bytes": 48256
+                },
+                {
+                  "path": "reapi-store/cas.v2/31/3130e6a36214d9d6c7e6a2c37157630198f5c72d6d8eb984cb195cd9d9ec2731-562213209.v1",
+                  "bytes": 144253
+                },
+                {
+                  "path": "reapi-store/cas.v2/34/34b9c504cab7a73e37b746343a449132e56cf7b5481af2cb81dc74dcff25c956-624925924.v1",
+                  "bytes": 85068
+                },
+                {
+                  "path": "reapi-store/cas.v2/3b/3b17cdd368c9bc5c97d7600064dde797e46ae521a2b81b337d5d7c07e955b75b-774105768.v1",
+                  "bytes": 147
+                },
+                {
+                  "path": "reapi-store/cas.v2/4c/4cc40fc40abb9714c082002e4208c90c055f89296554c221a586e27619748573-043843049.v1",
+                  "bytes": 470
+                },
+                {
+                  "path": "reapi-store/cas.v2/4c/4cc8159fcd41483c2c8e3f5529188df2d2df78b7f3ba3b83083a7a00c4e23b7c-243438309.v1",
+                  "bytes": 2516
+                },
+                {
+                  "path": "reapi-store/cas.v2/4e/4e887d6d546d729694c6944a77464bcc0090f715aa760dfeaae6943aec1fd864-663280006.v1",
+                  "bytes": 201
+                },
+                {
+                  "path": "reapi-store/cas.v2/4f/4f83140d5f4293ab55bd1207327e995c83258f1e7d3145b1b5d7a3d17fdfe0a7-303723034.v1",
+                  "bytes": 24
+                },
+                {
+                  "path": "reapi-store/cas.v2/5c/5c66f9e07e90c6d4ac4922cc68d60de26c17b1858e677fb5e603fce3952b3ff2-626909964.v1",
+                  "bytes": 10252
+                },
+                {
+                  "path": "reapi-store/cas.v2/6e/6e9e020a25f9b56d418f2c085b1d3c09725a4da23fe693a5b463064606732190-469354017.v1",
+                  "bytes": 11232
+                },
+                {
+                  "path": "reapi-store/cas.v2/71/71d5ee93cc1e9f1d520a3a8b66456de18c7879d8df09d57fcd2eaff75fef0075-736258519.v1",
+                  "bytes": 18748
+                },
+                {
+                  "path": "reapi-store/cas.v2/72/72be555ea34323ca7936bb2b92f1d20f5f8ddad77678aa602b8547de262997d8-586595505.v1",
+                  "bytes": 13
+                },
+                {
+                  "path": "reapi-store/cas.v2/90/901cea78adc0dc591c643f6debc2accd980b751397a37ca17c1f1cd5c097284c-505660511.v1",
+                  "bytes": 729
+                },
+                {
+                  "path": "reapi-store/cas.v2/90/90d24bc3bf698ac1e173739502298ccca72adf1f564fab05f484b8c48d1cadd2-458780647.v1",
+                  "bytes": 67
+                },
+                {
+                  "path": "reapi-store/cas.v2/af/af88f0c0048e1cf8604075fd7c4508fca7c4803563dd65a45b374acbe4bcba05-538384738.v1",
+                  "bytes": 148375
+                },
+                {
+                  "path": "reapi-store/cas.v2/bd/bd5915a0f57cf7b495aea51c458088a36fa4d6c95e1004875023c1333ed08267-853243568.v1",
+                  "bytes": 342609
+                },
+                {
+                  "path": "reapi-store/cas.v2/ca/ca157063339ac4ad418f214f3abfed119b0798ab4d377386ce5c9e5a7a435ebd-122980765.v1",
+                  "bytes": 25960
+                },
+                {
+                  "path": "reapi-store/cas.v2/cd/cdd375a4f5b2bcb934a084efb604356caf8138e843abb7dc96b56ed06454bddc-667904853.v1",
+                  "bytes": 749562
+                },
+                {
+                  "path": "reapi-store/cas.v2/da/dacc59a2793f19bd92c79e1a812052c09f6c445450bb721b11e26f0b12b1cc7c-693043638.v1",
+                  "bytes": 42545
+                },
+                {
+                  "path": "reapi-store/cas.v2/de/dea2a6730ad8b13e43f458f8fc75607474d290242ad56b5a8357cb9f44e951d9-052650797.v1",
+                  "bytes": 161
+                },
+                {
+                  "path": "reapi-store/cas.v2/ec/ec3400f57e441cee3161a41e78adbff0fcf1a2876757970c9be951c70b2fc4c7-032391247.v1",
+                  "bytes": 199364
+                },
+                {
+                  "path": "reapi-store/cas.v2/fa/fa11cd2dfaa195f3b27172ee48a7da7f7006e2262dbb2f0707192a99deffb761-075714612.v1",
+                  "bytes": 386
+                },
+                {
+                  "path": "reapi-store/cas.v2/fe/fee2fc55cb28d41584c94627daa7ae4fe1a6909f771706f01eed0960156889f4-849685248.v1",
+                  "bytes": 1366
+                },
+                {
+                  "path": "reapi-store/cas.v2/ff/ff4cbe759e84910b9f96f97a1cf2ea759c9259f49fd39e862044f3cae50e1596-555033118.v1",
+                  "bytes": 3163
+                }
+              ]
+            }
+          },
+          "source": {
+            "repository": "OpenCut-app/OpenCut",
+            "sha": "e668010778568641babef2cc40be4703ae6916d6"
+          },
+          "product_refs": {},
+          "action": {
+            "resolved_mode": null,
+            "resolved_tags": null,
+            "trust_state": null,
+            "diagnostics_level": null
+          },
+          "github": {
+            "repository": "boringcache/benchmarks",
+            "run_id": "37455863678",
+            "run_attempt": "1",
+            "job": "warm",
+            "workflow": "REAPI comparison fresh",
+            "ref_name": "benchmark-37455664953",
+            "runner_os": "Linux",
+            "runner_arch": "X64",
+            "runner_name": "GitHub Actions 1000175935",
+            "runner_environment": "github-hosted",
+            "runner_image": "ubuntu24",
+            "runner_image_version": "20260927.320.1"
+          },
+          "run_uid": "gh-37455863678-1",
+          "verification": {
+            "passed": true,
+            "checks": [
+              "Output verification completed before recording this phase"
+            ],
+            "declared_checks": [
+              "Require the declared native command to succeed",
+              "Require declared outputs and successful output checks",
+              "Require native remote-hit evidence and the same output hashes on the warm worker",
+              "Require registry shutdown to complete successfully"
+            ]
+          },
+          "series": {
+            "id": "cadence-37455664953-25",
+            "sample": 1
+          },
+          "environment": {
+            "os": "Linux",
+            "arch": "X64",
+            "image": "ubuntu24",
+            "image_version": "20260927.320.1",
+            "machine": "ubuntu-24.04"
+          },
+          "evidence_links": [
+            "https://github.com/boringcache/benchmarks/actions/runs/37455863678"
+          ]
+        }
+      }
+    ]
+  }
+}

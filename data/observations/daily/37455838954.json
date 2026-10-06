@@ -1,0 +1,434 @@
+{
+  "schema_version": 1,
+  "cadence": "daily",
+  "collected_at": "2026-10-06T11:24:52Z",
+  "run": {
+    "repository": "boringcache/benchmarks",
+    "workflow": "project-fresh.yml",
+    "inputs": {
+      "case_id": "hugo",
+      "cadence": "nightly",
+      "selections": "[{\"workflow\":\"native-fresh-benchmark.yml\",\"inputs\":{\"case_id\":\"hugo\",\"cadence\":\"nightly\",\"series_id\":\"cadence-37455668133-1\",\"sample\":\"1\",\"expected_identity\":\"{\\\"harness_sha\\\":\\\"b378dfe72d9af36c731c25fedffc36776c34ae6c\\\",\\\"case_id\\\":\\\"hugo\\\",\\\"definition_sha256\\\":\\\"49b7062dc90336f2c01086b59036a9c6d7bf82b3c0cdf08f62bb7e721b5e1af8\\\"}\"}},{\"workflow\":\"native-fresh-benchmark.yml\",\"inputs\":{\"case_id\":\"hugo-go\",\"cadence\":\"nightly\",\"series_id\":\"cadence-37455668133-2\",\"sample\":\"1\",\"expected_identity\":\"{\\\"harness_sha\\\":\\\"b378dfe72d9af36c731c25fedffc36776c34ae6c\\\",\\\"case_id\\\":\\\"hugo-go\\\",\\\"definition_sha256\\\":\\\"47d63611de2570737d622ed5bea2c4b26c364d02c99112350cb3420993429e80\\\"}\"}}]"
+    },
+    "state": "in_progress",
+    "selections": [
+      {
+        "repository": "boringcache/benchmarks",
+        "workflow": "native-fresh-benchmark.yml",
+        "inputs": {
+          "case_id": "hugo",
+          "cadence": "nightly",
+          "series_id": "cadence-37455668133-1",
+          "sample": "1",
+          "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"hugo\",\"definition_sha256\":\"49b7062dc90336f2c01086b59036a9c6d7bf82b3c0cdf08f62bb7e721b5e1af8\"}"
+        },
+        "state": "in_progress",
+        "series": {
+          "schema_version": 1,
+          "case_id": "hugo",
+          "series_id": "cadence-37455668133-1",
+          "created_at": "2026-10-06T11:20:53Z",
+          "lane": "fresh",
+          "phases": [
+            "cold",
+            "warm"
+          ],
+          "sample_count": 1,
+          "definition_sha256": "49b7062dc90336f2c01086b59036a9c6d7bf82b3c0cdf08f62bb7e721b5e1af8",
+          "variant": null,
+          "workflow_inputs": {
+            "case_id": "hugo",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "cadence": "nightly"
+          },
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "source": {
+            "repository": "gohugoio/hugo",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "verification": [
+            "Pinned upstream recipe and build success",
+            "The freshly loaded output image exists in the local Docker image store"
+          ],
+          "plan_sha256": "5b068acef539cbdeb720d1bd6c24e840f23c85a5f196fb4348e3b002ea41a3bb"
+        },
+        "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "id": 37455838954,
+        "url": "https://github.com/boringcache/benchmarks/actions/runs/37455838954",
+        "project_grouped": true,
+        "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "observations": [
+          {
+            "case_id": "hugo",
+            "strategy": "actions-cache",
+            "phase": "cold",
+            "job_name": "GitHub Actions hugo cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455838954/job/112243177681",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+            ]
+          },
+          {
+            "case_id": "hugo",
+            "strategy": "actions-cache",
+            "phase": "warm",
+            "job_name": "GitHub Actions hugo warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+            ]
+          },
+          {
+            "case_id": "hugo",
+            "strategy": "boringcache",
+            "phase": "cold",
+            "job_name": "BoringCache hugo cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455838954/job/112243177612",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+            ]
+          },
+          {
+            "case_id": "hugo",
+            "strategy": "boringcache",
+            "phase": "warm",
+            "job_name": "BoringCache hugo warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+            ]
+          }
+        ]
+      },
+      {
+        "repository": "boringcache/benchmarks",
+        "workflow": "native-fresh-benchmark.yml",
+        "inputs": {
+          "case_id": "hugo-go",
+          "cadence": "nightly",
+          "series_id": "cadence-37455668133-2",
+          "sample": "1",
+          "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"hugo-go\",\"definition_sha256\":\"47d63611de2570737d622ed5bea2c4b26c364d02c99112350cb3420993429e80\"}"
+        },
+        "state": "in_progress",
+        "series": {
+          "schema_version": 1,
+          "case_id": "hugo-go",
+          "series_id": "cadence-37455668133-2",
+          "created_at": "2026-10-06T11:20:53Z",
+          "lane": "fresh",
+          "phases": [
+            "cold",
+            "warm"
+          ],
+          "sample_count": 1,
+          "definition_sha256": "47d63611de2570737d622ed5bea2c4b26c364d02c99112350cb3420993429e80",
+          "variant": null,
+          "workflow_inputs": {
+            "case_id": "hugo-go",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "cadence": "nightly"
+          },
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "source": {
+            "repository": "gohugoio/hugo",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "verification": [
+            "Pinned upstream recipe and build success"
+          ],
+          "plan_sha256": "3e65eb3c4c4becf6a5c892bfb8029062229110da0260438a385f937463954c41"
+        },
+        "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "id": 37455838954,
+        "url": "https://github.com/boringcache/benchmarks/actions/runs/37455838954",
+        "project_grouped": true,
+        "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "observations": [
+          {
+            "case_id": "hugo-go",
+            "strategy": "actions-cache",
+            "phase": "cold",
+            "job_name": "GitHub Actions hugo-go cold",
+            "state": "missing",
+            "job_conclusion": "success",
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455838954/job/112243177601",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+            ]
+          },
+          {
+            "case_id": "hugo-go",
+            "strategy": "actions-cache",
+            "phase": "warm",
+            "job_name": "GitHub Actions hugo-go warm",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455838954/job/112244178856",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+            ]
+          },
+          {
+            "case_id": "hugo-go",
+            "strategy": "boringcache",
+            "phase": "cold",
+            "job_name": "BoringCache hugo-go cold",
+            "state": "missing",
+            "job_conclusion": "success",
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455838954/job/112243177578",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+            ]
+          },
+          {
+            "case_id": "hugo-go",
+            "strategy": "boringcache",
+            "phase": "warm",
+            "job_name": "BoringCache hugo-go warm",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455838954/job/112244178736",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+            ]
+          }
+        ]
+      }
+    ],
+    "id": 37455838954,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37455838954",
+    "observations": [
+      {
+        "case_id": "hugo",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions hugo cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455838954/job/112243177681",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+        ]
+      },
+      {
+        "case_id": "hugo",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions hugo warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+        ]
+      },
+      {
+        "case_id": "hugo",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache hugo cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455838954/job/112243177612",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+        ]
+      },
+      {
+        "case_id": "hugo",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache hugo warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+        ]
+      },
+      {
+        "case_id": "hugo-go",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions hugo-go cold",
+        "state": "missing",
+        "job_conclusion": "success",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455838954/job/112243177601",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+        ]
+      },
+      {
+        "case_id": "hugo-go",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions hugo-go warm",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455838954/job/112244178856",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+        ]
+      },
+      {
+        "case_id": "hugo-go",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache hugo-go cold",
+        "state": "missing",
+        "job_conclusion": "success",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455838954/job/112243177578",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+        ]
+      },
+      {
+        "case_id": "hugo-go",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache hugo-go warm",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455838954/job/112244178736",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455838954"
+        ]
+      }
+    ]
+  }
+}

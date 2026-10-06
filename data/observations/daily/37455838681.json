@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "cadence": "daily",
+  "collected_at": "2026-10-06T11:24:52Z",
+  "run": {
+    "repository": "boringcache/benchmarks",
+    "workflow": "grpc-grpc-bazel-fresh-benchmark.yml",
+    "inputs": {
+      "cadence": "nightly",
+      "series_id": "cadence-37455668133-13",
+      "sample": "1",
+      "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"grpc\",\"definition_sha256\":\"15a4fdae82ad53d97dbe94ec5fe67d5e1c8609e9b22f1594e98426bf1267a974\"}"
+    },
+    "state": "in_progress",
+    "series": {
+      "schema_version": 1,
+      "case_id": "grpc",
+      "series_id": "cadence-37455668133-13",
+      "created_at": "2026-10-06T11:20:53Z",
+      "lane": "fresh",
+      "phases": [
+        "cold",
+        "warm"
+      ],
+      "sample_count": 1,
+      "definition_sha256": "15a4fdae82ad53d97dbe94ec5fe67d5e1c8609e9b22f1594e98426bf1267a974",
+      "variant": null,
+      "workflow_inputs": {
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "cadence": "nightly"
+      },
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache",
+          "buildbuddy",
+          "nativelink"
+        ],
+        "timed_scope": "Bazel build with local top-level outputs plus measured cache restore/setup; output checks and post-job cache save are outside build timing",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "grpc/grpc",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "verification": [
+        "Pinned upstream recipe and build success",
+        "Nonempty executable csm_greeter_client and csm_greeter_server outputs, checked outside build timing"
+      ],
+      "plan_sha256": "bed4d137cd04ee77e0d844d55295f816c2f6f8b8af6182a3c76dfadabcc7e55d"
+    },
+    "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+    "id": 37455838681,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37455838681",
+    "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+    "observations": [
+      {
+        "strategy": "boringcache",
+        "phase": "cold",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      },
+      {
+        "strategy": "boringcache",
+        "phase": "warm",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      },
+      {
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      },
+      {
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      },
+      {
+        "strategy": "buildbuddy",
+        "phase": "cold",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      },
+      {
+        "strategy": "buildbuddy",
+        "phase": "warm",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      },
+      {
+        "strategy": "nativelink",
+        "phase": "cold",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      },
+      {
+        "strategy": "nativelink",
+        "phase": "warm",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      }
+    ]
+  }
+}
