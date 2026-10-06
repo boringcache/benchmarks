@@ -1,0 +1,34 @@
+{
+  "case_id": "stackstorm-pants",
+  "repository": "boringcache/benchmarks",
+  "workflow": "reapi-rolling-benchmark.yml",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "StackStorm/st2",
+    "revision": "9824de4dfd0c869869e310dee729308f398ad83a",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "9824de4dfd0c869869e310dee729308f398ad83a"
+      }
+    ]
+  },
+  "lane": "rolling",
+  "inputs": {
+    "case_id": "stackstorm-pants",
+    "cli_version": "vcli-canary-8a5868ac875b",
+    "series_id": "baseline-20261006-rolling-21",
+    "sample": "1"
+  },
+  "phases": [
+    "commit"
+  ],
+  "variants": null,
+  "schema_version": 1,
+  "requested_at": "2026-10-06T07:29:08Z",
+  "ref": "main",
+  "state": "requested",
+  "run_id": 37429945809,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429945809"
+}

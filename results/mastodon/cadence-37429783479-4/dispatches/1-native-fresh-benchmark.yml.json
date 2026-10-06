@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "mastodon",
+  "repository": "boringcache/benchmarks",
+  "workflow": "native-fresh-benchmark.yml",
+  "lane": "fresh",
+  "ref": "main",
+  "state": "requested",
+  "requested_at": "2026-10-06T07:27:56Z",
+  "inputs": {
+    "case_id": "mastodon",
+    "variant": "server",
+    "series_id": "cadence-37429783479-4",
+    "sample": "1",
+    "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"mastodon\",\"definition_sha256\":\"d2427ff5ba726239c5bb24f34ff0e6b65d137b5d5ca8107cd28b1f41f3bda06b\"}",
+    "cli_version": "vcli-canary-8a5868ac875b"
+  },
+  "run_id": 37429890708,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429890708",
+  "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+  "error": null
+}

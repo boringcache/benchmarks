@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "case_id": "zed",
+  "repository": "boringcache/benchmarks",
+  "workflow": "zed-zed-cargo-product.yml",
+  "lane": "fresh",
+  "ref": "main",
+  "state": "requested",
+  "requested_at": "2026-10-06T07:27:56Z",
+  "inputs": {
+    "base_sha": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+    "head_sha": "ee3b5558c581429633937e458fad8d109f29e9ee",
+    "cache_layer": "combined",
+    "series_id": "cadence-37429783479-11",
+    "sample": "1",
+    "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"zed\",\"definition_sha256\":\"11ee8f393e887078996c7720555b0a18522f25c4155982fd6bfecc14a77f2bba\"}",
+    "cli_version": "vcli-canary-8a5868ac875b"
+  },
+  "run_id": 37429887430,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429887430",
+  "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+  "error": null
+}
