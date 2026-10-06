@@ -6,6 +6,7 @@ require "json"
 require_relative "../scripts/depot-cache"
 require_relative "../scripts/benchmark-cases"
 require_relative "../scripts/benchmark-series"
+require_relative "../scripts/rolling-monitor"
 
 class DepotCacheTest < Minitest::Test
   def test_other_providers_do_not_inherit_depot_native_cache_credentials
@@ -115,5 +116,20 @@ class DepotCacheTest < Minitest::Test
       assert_equal ["boringcache"], plan.dig("comparison", "providers")
       assert_equal %w[boringcache actions-cache], item.dig("comparison", "providers")
     end
+  end
+
+  def test_rolling_monitor_validates_the_selected_native_provider_with_unmeasured_isolation
+    item = BenchmarkCases.load_case("gogs-moon")
+    record = {"benchmark" => "gogs-moon", "strategy" => "depot-cache", "phase" => "commit", "observation" => "seed",
+      "case" => {"case_id" => "gogs-moon", "comparison" => item.fetch("comparison")}, "source" => {"sha" => "a" * 40},
+      "github" => {}, "verification" => {"passed" => true}, "cache" => {"hit" => true}, "cache_provider" => {"isolation" => "unmeasured"}}
+    runner = Object.new
+    runner.define_singleton_method(:api) { |*| {"status" => "completed", "conclusion" => "success", "run_attempt" => 1} }
+    runner.define_singleton_method(:phase_evidence) { |*, **| [record] }
+    run = {"id" => 42, "repository" => "boringcache/benchmarks", "workflow" => "reapi-rolling-benchmark.yml",
+      "inputs" => {"provider" => "depot-cache", "observation" => "seed"}}
+    assert_equal "success", RollingMonitor.check_run(item, run, proposal: {"head_sha" => "a" * 40}, runner: runner).fetch("state")
+    record["cache_provider"]["isolation"] = "declared-cache-key"
+    assert_equal "evidence-missing-or-invalid", RollingMonitor.check_run(item, run, proposal: {"head_sha" => "a" * 40}, runner: runner).fetch("state")
   end
 end
