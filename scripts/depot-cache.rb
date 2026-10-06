@@ -5,6 +5,7 @@ require "fileutils"
 require "uri"
 require "shellwords"
 require "open3"
+require "ipaddr"
 
 # Third-party cache configuration. BoringCache configuration stays in the CLI.
 module DepotCache
@@ -71,8 +72,17 @@ module DepotCache
         File.write(extension, '<extensions><extension><groupId>org.apache.maven.extensions</groupId><artifactId>maven-build-cache-extension</artifactId><version>1.3.0</version></extension></extensions>')
       end
       contents = File.file?(config) ? File.read(config) : '<cache xmlns="http://maven.apache.org/BUILD-CACHE-CONFIG/1.0.0"><configuration><enabled>true</enabled><hashAlgorithm>SHA-256</hashAlgorithm><remote enabled="true"><url>https://cache.depot.dev</url></remote></configuration></cache>'
-      raise Error, "Maven configuration must declare one remote cache" unless contents.scan(/<remote\b/).length == 1
-      contents = contents.sub(/<remote\b[^>]*>.*?<\/remote>/m, %(<remote enabled="true" saveToRemote="#{publish}" id="depot-cache"><url>#{ENDPOINT}</url></remote>))
+      remote = %(<remote enabled="true" saveToRemote="#{publish}" id="depot-cache"><url>#{ENDPOINT}</url></remote>)
+      count = contents.scan(/<remote\b/).length
+      raise Error, "Maven configuration must not declare multiple remote caches" if count > 1
+      if count == 1
+        contents = contents.sub(/<remote\b[^>]*(?:\/>|>.*?<\/remote>)/m) { remote }
+      elsif contents.match?(/<configuration\b[^>]*>/)
+        contents = contents.sub(/<configuration\b[^>]*>/) { |opening| opening + remote }
+      else
+        raise Error, "Maven configuration must have a cache root" unless contents.match?(/<cache\b[^>]*>/)
+        contents = contents.sub(/<cache\b[^>]*>/) { |opening| opening + "<configuration><enabled>true</enabled><hashAlgorithm>SHA-256</hashAlgorithm>#{remote}</configuration>" }
+      end
       File.write(config, contents)
       settings_path = File.join(root, ".depot-cache/maven-settings.xml")
       FileUtils.mkdir_p(File.dirname(settings_path))
@@ -101,6 +111,13 @@ module DepotCache
     File.open(env.fetch("GITHUB_ENV"), "a") { |file| settings.each { |key, value| file.puts("#{key}=#{value}") } }
   end
 
+  def self.depot_endpoint?(host, env: ENV)
+    return true if host == "depot.dev" || host.end_with?(".depot.dev")
+    !env.fetch("ACTIONS_RUNTIME_TOKEN", "").empty? && IPAddr.new(host).private?
+  rescue IPAddr::InvalidAddressError
+    false
+  end
+
   def self.prepare(provider:, mode:, phase:, env: ENV)
     return unless RUNNERS.include?(env.fetch("BENCHMARK_RUNNER_CLASS", "")) || provider.start_with?("depot-")
     raise Error, "Depot cache lanes require a reviewed Depot runner" unless RUNNERS.include?(env.fetch("BENCHMARK_RUNNER_CLASS", ""))
@@ -112,13 +129,13 @@ module DepotCache
       raise Error, "Depot runners use Depot Cache for the Actions API; select depot-actions-cache explicitly" if provider == "actions-cache"
       if provider == "depot-actions-cache"
         urls = %w[ACTIONS_CACHE_URL ACTIONS_RESULTS_URL].filter_map { |name| URI.parse(env.fetch(name, "")).host }
-        raise Error, "Runner did not expose a Depot Actions cache endpoint; observed hosts: #{urls.join(', ')}" unless urls.any? { |host| host == "depot.dev" || host.end_with?(".depot.dev") }
+        raise Error, "Runner did not expose a Depot Actions cache endpoint; observed hosts: #{urls.join(', ')}" unless urls.any? { |host| depot_endpoint?(host, env: env) }
       end
     end
     FileUtils.mkdir_p(".depot-cache")
     File.write(".depot-cache/configuration.json", JSON.pretty_generate({"provider" => provider,
       "mode" => mode, "protocol" => provider == "depot-cache" ? "native" : "github-actions-cache-api",
-      "endpoint_host" => provider == "depot-cache" ? "cache.depot.dev" : urls.find { |host| host == "depot.dev" || host.end_with?(".depot.dev") }, "isolation" => provider == "depot-cache" ? "unmeasured" : "declared-cache-key",
+      "endpoint_host" => provider == "depot-cache" ? "cache.depot.dev" : urls.find { |host| depot_endpoint?(host, env: env) }, "isolation" => provider == "depot-cache" ? "unmeasured" : "declared-cache-key",
       "authentication" => provider == "depot-cache" ? (env.fetch("DEPOT_CACHE_TOKEN", "").empty? ? "configured-token" : "job-token") : "actions-runtime",
       "runner_class" => env.fetch("BENCHMARK_RUNNER_CLASS")}) + "\n") if provider.start_with?("depot-")
     puts "::add-mask::#{settings.fetch('DEPOT_TOKEN')}" if env["GITHUB_ACTIONS"] == "true" && settings["DEPOT_TOKEN"]
