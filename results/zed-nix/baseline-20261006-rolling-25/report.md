@@ -17,6 +17,7 @@ Publication: unreviewed.
 
 Comparison checks:
 
+- Measured package cache states differ: BoringCache built the package (0 hits, 711 misses); Cachix substituted the exact package output.
 - Rolling seed and changed-source sequence are unverified.
 
 Missing completion checks: 37429957363

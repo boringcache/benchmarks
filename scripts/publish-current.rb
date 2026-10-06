@@ -1,11 +1,24 @@
 # frozen_string_literal: true
 
 require_relative "benchmark-cadence"
+require_relative "source-promotion"
 require "digest"
 
 # Retain the monitor's receipts and canonical observations, including missing,
 # pending and failed work. Website publication remains a separate review.
 module PublishCurrent
+  class Publisher < SourcePromotion::Publisher
+    def verify_expected(head, expected)
+      tree = api("repos/#{repository}/git/trees/#{head}?recursive=1")
+      raise BenchmarkCases::Error, "Cannot verify a truncated observation tree" if tree["truncated"]
+      blobs = tree.fetch("tree").select { |entry| entry["type"] == "blob" }.to_h { |entry| [entry.fetch("path"), entry.fetch("sha")] }
+      expected.each do |path, content|
+        sha = content && Digest::SHA1.hexdigest("blob #{content.bytesize}\0#{content}")
+        raise BenchmarkCases::Error, "#{path} changed during observation publication" unless blobs[path] == sha
+      end
+    end
+  end
+
   def self.build(directory, root: BenchmarkCases::ROOT)
     files = Dir[File.join(directory, "benchmark-outcomes-*.json")].sort
     raise BenchmarkCases::Error, "No central monitor outcomes were retained" if files.empty?
@@ -37,15 +50,38 @@ module PublishCurrent
       end
     end
   end
+
+  def self.commit(root: BenchmarkCases::ROOT, publisher: nil)
+    publisher ||= Publisher.new(root: root)
+    tracked = BenchmarkCases.command("git", "ls-tree", "-r", "--name-only", "HEAD", "--",
+      "data/latest", "data/observations", chdir: root).lines.map(&:strip)
+    changes, expected = {}, {}
+    Dir[File.join(root, "data/latest/*.json"), File.join(root, "data/observations/**/*.json")].sort.each do |path|
+      raise BenchmarkCases::Error, "Observation publication requires regular files" if File.symlink?(path) || !File.file?(path)
+      relative = path.delete_prefix("#{root}/")
+      original = tracked.include?(relative) ? BenchmarkCases.command("git", "show", "HEAD:#{relative}", chdir: root) : nil
+      content = File.read(path)
+      next if content == original
+      changes[relative] = content
+      expected[relative] = original
+    end
+    return nil if changes.empty?
+    publisher.commit(changes, expected: expected, message: "data: refresh benchmark index")
+  end
 end
 
 if $PROGRAM_NAME == __FILE__
   options = {}
   OptionParser.new do |parser|
+    parser.on("--commit") { options[:commit] = true }
     parser.on("--input DIRECTORY") { |value| options[:input] = value }
     parser.on("--history DIRECTORY") { |value| options[:history] = value }
     parser.on("--output PATH") { |value| options[:output] = value }
   end.parse!
+  if options[:commit]
+    puts(PublishCurrent.commit || "No index changes detected")
+    exit
+  end
   current = PublishCurrent.build(options.fetch(:input))
   BenchmarkCases.write_json(options.fetch(:output), current)
   PublishCurrent.retain(current, directory: options.fetch(:history)) if options[:history]
