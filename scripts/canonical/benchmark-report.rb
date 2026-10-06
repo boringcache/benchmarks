@@ -17,7 +17,7 @@ module BenchmarkReport
     "boringcache-toolcache" => "BoringCache tool cache", "boringcache-turbo" => "BoringCache Turbo",
     "buildbuddy" => "BuildBuddy", "buildbuddy-cache" => "BuildBuddy", "ecr-cache" => "Amazon ECR (retired)",
     "nativelink" => "NativeLink (R2)", "cachix" => "Cachix", "bazel-remote" => "bazel-remote",
-    "registry-cache" => "Registry cache", "depot-cache" => "Depot Cache"}.freeze
+    "registry-cache" => "Registry cache", "depot-cache" => "Depot Cache", "depot-actions-cache" => "Depot Cache (Actions API)"}.freeze
   PHASES = {"cold" => "Cold build", "warm" => "Warm build", "commit" => "Changed-source build"}.freeze
   OBSERVATIONS = {"seed" => "Seed build", "replay" => "Identical-source replay", "changed-source" => "Changed-source build"}.freeze
   METRICS = {"build_and_reuse_seconds" => "build and cache reuse (s)", "build_seconds" => "build (s)",
@@ -225,6 +225,7 @@ module BenchmarkReport
       "action" => {"resolved_mode" => restore["mode"], "resolved_tags" => restore["resolved_tags"],
         "trust_state" => restore["trust_state"], "diagnostics_level" => restore["diagnostics_level"]},
       "github" => github_identity, "run_uid" => ENV["GITHUB_RUN_ID"] && "gh-#{ENV['GITHUB_RUN_ID']}-#{ENV.fetch('GITHUB_RUN_ATTEMPT', '1')}"}
+    payload["cache_provider"] = read_json(".depot-cache/configuration.json") if File.file?(".depot-cache/configuration.json")
     if context
       verified = args["verification_passed"] == true
       payload["verification"] = {"passed" => verified,

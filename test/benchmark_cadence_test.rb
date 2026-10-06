@@ -170,11 +170,22 @@ class BenchmarkCadenceTest < Minitest::Test
 
   def test_posthog_runner_selections_are_shared_by_fresh_and_rolling_cadence
     screened = JSON.parse(File.read(File.join(BenchmarkCases::ROOT, "cases/posthog/runner-screen-selections.json"))).map { |row| row.fetch("inputs") }
-    fresh = BenchmarkCadence.fresh_targets(case_id: "posthog").map { |row| row.fetch("fresh_inputs") }.select { |inputs| inputs.key?("runner_label") }
-    rolling = BenchmarkCadence.rolling_targets(case_id: "posthog").map { |row| row.fetch("inputs") }.select { |inputs| inputs.key?("runner_label") }
+    fresh = BenchmarkCadence.fresh_targets(case_id: "posthog").map { |row| row.fetch("fresh_inputs") }.select { |inputs| inputs["provider"] == "boringcache" }
+    rolling = BenchmarkCadence.rolling_targets(case_id: "posthog").map { |row| row.fetch("inputs") }.select { |inputs| inputs["provider"] == "boringcache" }
     assert_equal screened, fresh
     assert_equal screened, rolling.map { |inputs| inputs.except("cache_scope") }
     assert_equal 4, fresh.map { |inputs| inputs.fetch("benchmark_id_suffix") }.uniq.length
+  end
+
+  def test_native_depot_cache_stays_in_rolling_without_claiming_cold_isolation
+    fresh = BenchmarkCadence.fresh_targets(case_id: "posthog")
+    refute fresh.any? { |row| row.dig("fresh_inputs", "provider") == "depot-cache" }
+    assert_equal 4, fresh.count { |row| row.dig("fresh_inputs", "provider") == "depot-actions-cache" }
+    rolling = BenchmarkCadence.rolling_targets(case_id: "posthog")
+    native = rolling.select { |row| row.dig("inputs", "provider") == "depot-cache" }
+    assert_equal 2, native.length
+    assert_equal ["combined"], native.map { |row| row.dig("inputs", "variant") }.uniq
+    assert_equal 12, ProjectRuns.matrix(rolling, case_id: "posthog", lane: "rolling").fetch("native-rolling-benchmark.yml").fetch("include").length
   end
 
   def test_active_cases_reject_unknown_and_duplicate_cases

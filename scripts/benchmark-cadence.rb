@@ -47,7 +47,9 @@ module BenchmarkCadence
     entries = suite.fetch("cases")
     raise Error, "Scheduled cases must be unique" unless entries.uniq == entries
     entries.each do |entry|
-      raise Error, "Use case_id, an optional variant and workflow inputs" unless (entry.keys - %w[case_id variant inputs]).empty?
+      raise Error, "Use case_id, an optional variant, lanes and workflow inputs" unless (entry.keys - %w[case_id variant lanes inputs]).empty?
+      lanes = entry.fetch("lanes", %w[fresh rolling])
+      raise Error, "Scheduled lanes must select fresh or rolling" unless lanes.is_a?(Array) && !lanes.empty? && (lanes - %w[fresh rolling]).empty? && lanes.uniq == lanes
       settings = entry.fetch("inputs", {})
       raise Error, "Scheduled workflow inputs must be strings" unless settings.is_a?(Hash) && settings.all? { |key, value| key.is_a?(String) && value.is_a?(String) }
       BenchmarkCases.load_case(entry.fetch("case_id"), root)
@@ -56,7 +58,7 @@ module BenchmarkCadence
   end
 
   def self.fresh_targets(root: BenchmarkCases::ROOT, case_id: nil)
-    cases(root: root).select { |entry| !case_id || entry.fetch("case_id") == case_id }.flat_map do |entry|
+    cases(root: root).select { |entry| entry.fetch("lanes", %w[fresh rolling]).include?("fresh") && (!case_id || entry.fetch("case_id") == case_id) }.flat_map do |entry|
       item = BenchmarkCases.load_case(entry.fetch("case_id"), root)
       workflows = item.fetch("execution").fetch("workflows").select { |workflow| workflow.fetch("lane") == "fresh" }
       raise Error, "#{item.fetch('id')} has no fresh workflow" if workflows.empty?
@@ -96,7 +98,7 @@ module BenchmarkCadence
       workflows.select! { |workflow| workflow.fetch("path") == selected }
     end
     raise Error, "#{case_id} has no rolling workflow" if workflows.empty?
-    cases(root: root).select { |entry| entry.fetch("case_id") == case_id }.flat_map do |entry|
+    cases(root: root).select { |entry| entry.fetch("case_id") == case_id && entry.fetch("lanes", %w[fresh rolling]).include?("rolling") }.flat_map do |entry|
       workflows.map do |workflow|
         BenchmarkCases.plan(item, lane: "rolling", workflow: File.basename(workflow.fetch("path")),
           variant: entry["variant"], inputs: entry.fetch("inputs", {}).merge(inputs), root: root)

@@ -22,7 +22,7 @@ module BenchmarkCases
   ROOT = File.expand_path("..", __dir__)
   WORKSPACE = "boringcache/benchmarks"
   REPOSITORY = "boringcache/benchmarks"
-  HELPERS = %w[benchmark-plan benchmark-phase run-benchmark-plan activate-docker-plan verify-docker-output summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache benchmark-cli benchmark-storage benchmark-candidate compiler-cache-setup nix-benchmark reapi-registry reapi-client reapi-setup].freeze
+  HELPERS = %w[benchmark-plan benchmark-phase run-benchmark-plan activate-docker-plan verify-docker-output summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache benchmark-cli benchmark-storage benchmark-candidate compiler-cache-setup depot-cache nix-benchmark reapi-registry reapi-client reapi-setup].freeze
   class Error < StandardError; end
 
   def self.command(*args, chdir: nil, stdin: "", env: {})
@@ -213,6 +213,10 @@ module BenchmarkCases
     entry = workflow ? entries.find { |value| File.basename(value.fetch("path")) == workflow } : entries.find { |value| value.fetch("lane") == lane }
     raise Error, "#{item.fetch('id')} has no #{workflow || lane} workflow" unless entry
     combined = entry.fetch("inputs").merge(inputs)
+    if combined.fetch("provider", "").start_with?("depot-")
+      NativeCase.validate_provider(item, combined.fetch("provider"), runner: combined.fetch("runner_label", ""),
+        lane: entry.fetch("lane"), variant: variant || combined[entry.fetch("variant_input", "variant")])
+    end
     if variant && entry["variant_input"]
       raise Error, "Variant is not supported by this workflow" unless entry.fetch("variants").include?(variant)
       name = entry.fetch("variant_input")
@@ -222,6 +226,7 @@ module BenchmarkCases
     if item.dig("execution", "native") && File.basename(entry.fetch("path")).start_with?("native-")
       raise Error, "case_id must match the selected case" unless combined["case_id"] == item.fetch("id")
       recipe = NativeCase.resolve(item.dig("execution", "native"), variant || combined["variant"])
+      NativeCase.validate_provider(item, combined.fetch("provider", "both"), runner: combined.fetch("runner_label", ""), lane: entry.fetch("lane"), variant: variant || combined["variant"])
       NativeCase.benchmark_id(recipe, suffix: combined.fetch("benchmark_id_suffix", ""))
       NativeCase.verify_report(recipe, payload: File.join(root, "cases", item.fetch("id"), "payload"), lane: entry.fetch("lane"), shared_root: root)
     end
@@ -604,8 +609,9 @@ module BenchmarkCases
             (document["on"] || document[true]).each_value do |trigger|
               trigger.fetch("inputs").fetch("case_id")["default"] = item.fetch("id") if trigger.is_a?(Hash) && trigger.dig("inputs", "case_id")
             end
-            providers = inputs.fetch("provider").fetch("options") - ["all"]
-            raise Error, "Provider selector differs from the declared comparison" unless providers.sort == item.dig("comparison", "providers").sort
+            available = inputs.fetch("provider").fetch("options") - ["all"]
+            providers = item.dig("comparison", "providers")
+            raise Error, "Provider selector omits a declared comparison" unless (providers - available).empty?
             document.fetch("jobs").each_value do |job|
               matrix = job.dig("strategy", "matrix")
               matrix["provider"] = providers if matrix && matrix["provider"].is_a?(String)

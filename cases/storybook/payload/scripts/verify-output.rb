@@ -11,7 +11,7 @@ if ENV["STORYBOOK_WORKLOAD"] == "nx"
   abort "Nx did not retain successful compile task results" unless !tasks.empty? && tasks.all? { |task| task["target"] == "compile" && task["status"] == 0 }
   states = tasks.map { |task| task.fetch("cacheStatus") }
   if ENV["BENCHMARK_NX_PHASE"] == "warm"
-    expected = ENV.fetch("BENCHMARK_NX_PROVIDER") == "boringcache" ? "remote-cache-hit" : "local-cache-hit"
+    expected = %w[boringcache depot-cache].include?(ENV.fetch("BENCHMARK_NX_PROVIDER")) ? "remote-cache-hit" : "local-cache-hit"
     abort "Nx warm tasks did not all use the selected provider cache" unless states.all? { |state| state == expected }
   elsif ENV["BENCHMARK_NX_LANE"] == "fresh"
     abort "Nx cold tasks unexpectedly reused cached output" unless states.all? { |state| state == "cache-miss" }

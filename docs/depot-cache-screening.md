@@ -3,8 +3,9 @@
 The first route is the [PostHog runner screen](../cases/posthog/runner-screen.md)
 through BoringCache's managed BuildKit backend on ordinary Depot and Namespace
 four- and eight-core runners.
-Native Depot remote-cache comparisons need separate definitions and bounded
-qualification before joining the scheduled suite.
+Native Depot remote-cache comparisons use optional provider selections in the
+same case definitions and workflows. They require bounded live qualification
+before their measurements support a comparison.
 
 ## Existing workload coverage
 
@@ -13,13 +14,13 @@ overlap these existing cases:
 
 | Native cache protocol | Existing case or variant | Comparator work |
 | --- | --- | --- |
-| Bazel remote cache | `grpc` | Add Depot alongside the existing provider arms |
+| Bazel remote cache | `grpc` | Select Depot alongside the existing provider arms |
 | Go build cache | `hugo-go` | Select Depot's native cache instead of an archived local cache |
 | Gradle HTTP build cache | `opentelemetry-java` | Use Depot's endpoint for the same task outputs |
 | Maven build cache | `spring-ai` | Verify the upstream extension and Depot configuration together |
 | Turborepo remote cache | `n8n` / `turbo`, PostHog tool-cache projection | Retain native task hits and outputs; container builds need secret mounts |
 | Nx remote cache | `storybook` / `nx` | Select Depot's native endpoint for the existing Nx tasks |
-| sccache | `deno`, `zed`, selected Docker compiler-cache evaluations | Retain compiler statistics; distinguish Cargo target-directory reuse from sccache reuse |
+| sccache | `deno`, `zed` | Retain compiler statistics; distinguish Cargo target-directory reuse from sccache reuse |
 | Moon remote cache | `gogs-moon`, `opencut-moon` | Use the reviewed remote execution cache configuration |
 | Pants remote cache | `stackstorm-pants` | Use the reviewed remote execution cache configuration |
 | Xcode compilation cache | `obs-studio` / `xcode` | Verify supported macOS runner, compiler and native cache configuration first |
@@ -61,5 +62,29 @@ CPU, memory and architecture rather than assigning the runner's core count to it
 Timing includes the declared provider setup, build and cache work. Queueing,
 unrelated setup, image verification and complete job duration remain context.
 
-This document records the next qualification work. It does not enable schedules,
-declare native clients qualified, or assert that the smaller runner is faster.
+## Shared provider selections
+
+Use `provider=depot-cache` for the native integrations in
+[`suites/depot-cache.json`](../suites/depot-cache.json). The suite declares one
+seed per eligible Linux tool lane on `depot-ubuntu-24.04-4`. It records cache
+isolation as unmeasured. Each case supplies its timed operation, pinned source,
+toolchain and required output checks. A changed-source observation must retain
+the seed's exact provider, runner, variant and scope. Cargo screens use sccache
+statistics without restoring a Cargo target directory.
+
+Use `provider=depot-actions-cache` for the existing Actions cache API lanes on
+the reviewed four- or eight-core Depot runner. The harness checks that the worker
+exposes a Depot cache endpoint and records its hostname without credentials.
+This selection shares the archive or Docker layer lifecycle with Actions Cache.
+It does not use a Depot remote Docker builder.
+
+[`suites/scheduled.json`](../suites/scheduled.json) includes PostHog's four- and
+eight-core Depot API routes in fresh and rolling cadence. Its native Turborepo
+routes are rolling only. BoringCache's managed BuildKit routes remain on both
+Depot and Namespace runner sizes. All PostHog selections run under the project
+workflow group. Repository activation controls whether schedules dispatch them;
+suite membership alone does not establish successful live qualification.
+
+Native Buck2, sbt and Xcode comparisons remain outside this Linux screening suite
+until their exact client and runner configurations are qualified. Provider
+storage that the API does not expose remains unmeasured.

@@ -159,7 +159,11 @@ class BenchmarkCaseScriptsTest < Minitest::Test
       refute workflow.fetch("env").key?("BUILDBUDDY_API_KEY")
       workflow.fetch("jobs").each_value do |job|
         next unless job.dig("strategy", "matrix", "include")
-        providers = job.dig("strategy", "matrix", "include").map { |row| row.fetch("strategy") }
+        rows = job.dig("strategy", "matrix", "include")
+        if rows.is_a?(String)
+          rows = JSON.parse(rows.scan(/'(\[.*?\])'/).last.fetch(0))
+        end
+        providers = rows.map { |row| row.fetch("strategy") }
         assert_equal item.dig("comparison", "providers").sort, providers.sort
         assert_equal "${{ matrix.strategy == 'buildbuddy' && secrets.BUILDBUDDY_API_KEY || '' }}", job.dig("env", "BUILDBUDDY_API_KEY")
       end

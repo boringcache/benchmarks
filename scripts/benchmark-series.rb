@@ -26,6 +26,12 @@ module BenchmarkSeries
     raise Error, "Invalid series ID" unless series.match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/)
     phases = phases_for(lane, phases)
     comparison = item.fetch("comparison")
+    selected = workflow_inputs["provider"]
+    if selected && !%w[both all].include?(selected)
+      declared = comparison.fetch("providers") + comparison.fetch("optional_providers", [])
+      raise Error, "Provider is not in the declared case" unless declared.include?(selected)
+      comparison = comparison.merge("providers" => [selected])
+    end
     count = samples || comparison.fetch("sample_count")
     raise Error, "Sample count must be between 1 and 100" unless count.is_a?(Integer) && (1..100).cover?(count)
     plan = {"schema_version" => 1, "case_id" => item.fetch("id"), "series_id" => series,

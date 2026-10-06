@@ -6,7 +6,7 @@ gradle_home="${GRADLE_USER_HOME:?GRADLE_USER_HOME must be set}"
 mkdir -p "${gradle_home}/init.d"
 
 case "$strategy" in
-  actions-cache)
+  actions-cache|depot-actions-cache)
     cat > "${gradle_home}/init.d/benchmark-cache-policy.gradle" <<'GRADLE'
 import org.gradle.caching.http.HttpBuildCache
 

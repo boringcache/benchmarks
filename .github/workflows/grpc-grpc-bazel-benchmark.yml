@@ -28,15 +28,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-        - provider: GitHub Actions
-          strategy: actions-cache
-        - provider: BuildBuddy
-          strategy: buildbuddy
-        - provider: NativeLink (R2)
-          strategy: nativelink
-        - provider: BoringCache
-          strategy: boringcache
+        include: ${{ fromJSON(inputs.provider == 'actions-cache' && '[{"provider":"GitHub Actions","strategy":"actions-cache"}]' || inputs.provider == 'buildbuddy' && '[{"provider":"BuildBuddy","strategy":"buildbuddy"}]' || inputs.provider == 'nativelink' && '[{"provider":"NativeLink (R2)","strategy":"nativelink"}]' || inputs.provider == 'boringcache' && '[{"provider":"BoringCache","strategy":"boringcache"}]' || inputs.provider == 'depot-cache' && '[{"provider":"Depot Cache","strategy":"depot-cache"}]' || inputs.provider == 'depot-actions-cache' && '[{"provider":"Depot Actions Cache","strategy":"depot-actions-cache"}]' || '[{"provider":"GitHub Actions","strategy":"actions-cache"},{"provider":"BuildBuddy","strategy":"buildbuddy"},{"provider":"NativeLink (R2)","strategy":"nativelink"},{"provider":"BoringCache","strategy":"boringcache"}]') }}
     steps:
     - name: Checkout benchmark definitions
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -61,6 +53,7 @@ jobs:
       actions: read
       id-token: write
     env:
+      DEPOT_TOKEN: ${{ matrix.strategy == 'depot-cache' && secrets.DEPOT_TOKEN || '' }}
       BUILDBUDDY_API_KEY: "${{ matrix.strategy == 'buildbuddy' && secrets.BUILDBUDDY_API_KEY || '' }}"
       BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
         == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
@@ -91,34 +84,50 @@ jobs:
           --input-dir phase-evidence \
           --output-dir benchmark-results
     - name: Retain the BoringCache rolling result
+      if: inputs.provider == 'all' || inputs.provider == 'boringcache'
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: benchmark-${{ env.BENCHMARK_ID }}-boringcache-rolling
         path: benchmark-results/${{ env.BENCHMARK_ID }}-boringcache-rolling.json
         if-no-files-found: error
     - name: Retain the GitHub Actions rolling result
+      if: inputs.provider == 'all' || inputs.provider == 'actions-cache'
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache-rolling
         path: benchmark-results/${{ env.BENCHMARK_ID }}-actions-cache-rolling.json
         if-no-files-found: error
     - name: Retain the NativeLink rolling result
+      if: inputs.provider == 'all' || inputs.provider == 'nativelink'
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: benchmark-${{ env.BENCHMARK_ID }}-nativelink-rolling
         path: benchmark-results/${{ env.BENCHMARK_ID }}-nativelink-rolling.json
         if-no-files-found: error
     - name: Retain the BuildBuddy rolling result
+      if: inputs.provider == 'all' || inputs.provider == 'buildbuddy'
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: benchmark-${{ env.BENCHMARK_ID }}-buildbuddy-rolling
         path: benchmark-results/${{ env.BENCHMARK_ID }}-buildbuddy-rolling.json
+        if-no-files-found: error
+    - name: Retain the Depot rolling result
+      if: startsWith(inputs.provider, 'depot-')
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ env.BENCHMARK_ID }}-${{ inputs.provider }}-rolling
+        path: benchmark-results/
         if-no-files-found: error
     env:
       BENCHMARK_RUNNER_CLASS: ubuntu-latest
 'on':
   workflow_dispatch:
     inputs:
+      provider:
+        description: Selected provider; all retains the existing comparison.
+        type: choice
+        options: [all, boringcache, actions-cache, buildbuddy, nativelink, depot-cache, depot-actions-cache]
+        default: all
       observation:
         description: Seed, identical-source replay, or changed-source build.
         type: string
