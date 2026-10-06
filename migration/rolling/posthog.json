@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "case_id": "posthog",
-  "state": "dispatching",
+  "state": "requested",
   "cli_version": "vcli-canary-252077d7b8fb",
   "ref": "main",
   "proposal": {
@@ -21,7 +21,7 @@
         "case_id": "posthog",
         "selections": "[{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"cache_scope\":\"baseline-20261006\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"layers\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"cache_scope\":\"baseline-20261006\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"combined\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"cache_scope\":\"baseline-20261006\",\"provider\":\"boringcache\",\"runner_label\":\"depot-ubuntu-24.04-4\",\"benchmark_id_suffix\":\"-depot-ubuntu-24-04-4\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"layers\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"cache_scope\":\"baseline-20261006\",\"provider\":\"boringcache\",\"runner_label\":\"depot-ubuntu-24.04-8\",\"benchmark_id_suffix\":\"-depot-ubuntu-24-04-8\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"layers\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"cache_scope\":\"baseline-20261006\",\"provider\":\"boringcache\",\"runner_label\":\"namespace-profile-buildkit-4c\",\"benchmark_id_suffix\":\"-namespace-profile-buildkit-4c\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"layers\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"cache_scope\":\"baseline-20261006\",\"provider\":\"boringcache\",\"runner_label\":\"namespace-profile-buildkit-8c\",\"benchmark_id_suffix\":\"-namespace-profile-buildkit-8c\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"layers\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"cache_scope\":\"baseline-20261006\",\"provider\":\"depot-actions-cache\",\"runner_label\":\"depot-ubuntu-24.04-4\",\"benchmark_id_suffix\":\"-depot-api-4c\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"layers\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"cache_scope\":\"baseline-20261006\",\"provider\":\"depot-actions-cache\",\"runner_label\":\"depot-ubuntu-24.04-4\",\"benchmark_id_suffix\":\"-depot-api-4c\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"combined\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"cache_scope\":\"baseline-20261006\",\"provider\":\"depot-cache\",\"runner_label\":\"depot-ubuntu-24.04-4\",\"benchmark_id_suffix\":\"-depot-native-4c\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"combined\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"cache_scope\":\"baseline-20261006\",\"provider\":\"depot-actions-cache\",\"runner_label\":\"depot-ubuntu-24.04-8\",\"benchmark_id_suffix\":\"-depot-api-8c\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"layers\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"cache_scope\":\"baseline-20261006\",\"provider\":\"depot-actions-cache\",\"runner_label\":\"depot-ubuntu-24.04-8\",\"benchmark_id_suffix\":\"-depot-api-8c\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"combined\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"cache_scope\":\"baseline-20261006\",\"provider\":\"depot-cache\",\"runner_label\":\"depot-ubuntu-24.04-8\",\"benchmark_id_suffix\":\"-depot-native-8c\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"combined\"}}]"
       },
-      "state": "requesting",
+      "state": "requested",
       "selections": [
         {
           "repository": "boringcache/benchmarks",
@@ -185,7 +185,9 @@
           },
           "state": "requesting"
         }
-      ]
+      ],
+      "id": 37516641464,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37516641464"
     }
   ]
 }
