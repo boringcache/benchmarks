@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "case_id": "qdrant",
-  "state": "requested",
+  "state": "completed",
   "cli_version": "vcli-canary-252077d7b8fb",
   "ref": "main",
   "proposal": {
@@ -21,9 +21,373 @@
         "case_id": "qdrant",
         "cli_version": "vcli-canary-252077d7b8fb"
       },
-      "state": "requested",
+      "state": "success",
       "id": 37456321918,
-      "url": "https://github.com/boringcache/benchmarks/actions/runs/37456321918"
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37456321918",
+      "outcome": "success",
+      "canonical_records": [
+        {
+          "schema_version": 1,
+          "benchmark": "qdrant",
+          "strategy": "actions-cache",
+          "lane": "rolling",
+          "phase": "commit",
+          "variant": null,
+          "mode": "docker",
+          "adapter": "oci",
+          "case": {
+            "schema_version": 1,
+            "case_id": "qdrant",
+            "workspace": "boringcache/benchmarks",
+            "definition_sha256": "a4f0e2f387eee67c4cf233593eb28f30f299cb3d362baf3665c24c7b37112624",
+            "source": {
+              "repository": "qdrant/qdrant",
+              "pins": [
+                {
+                  "path": "upstream",
+                  "revision": "191e255362fe3f985979e094095104f49ddf15a4",
+                  "kind": "gitlink"
+                }
+              ]
+            },
+            "origin": {
+              "repository": "boringcache/benchmark-qdrant",
+              "branch": "main",
+              "revision": "22f17e82abcbe9227a6f60a385fba47eadb9aade"
+            },
+            "verification": [
+              "Pinned upstream recipe and build success"
+            ],
+            "comparison": {
+              "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+              "providers": [
+                "boringcache",
+                "actions-cache"
+              ],
+              "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+              "primary_metric": "build_and_reuse_seconds",
+              "storage": "provider-reported",
+              "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+              "sample_count": 10
+            },
+            "execution": {
+              "workflows": [
+                {
+                  "path": ".github/workflows/native-rolling-benchmark.yml",
+                  "lane": "rolling",
+                  "inputs": {
+                    "case_id": "qdrant"
+                  },
+                  "historical_workflow": "qdrant-benchmark.yml"
+                },
+                {
+                  "path": ".github/workflows/native-fresh-benchmark.yml",
+                  "lane": "fresh",
+                  "inputs": {
+                    "case_id": "qdrant"
+                  },
+                  "historical_workflow": "qdrant-fresh-benchmark.yml"
+                }
+              ],
+              "sync": "upstream-head",
+              "sync_minute": 23,
+              "native": {
+                "action": ".github/actions/qdrant-docker-benchmark",
+                "benchmark_id": "qdrant",
+                "rolling_inputs": {
+                  "push_image": "true"
+                },
+                "environment": {},
+                "fresh_inputs": {}
+              },
+              "cache_tags": {
+                "qdrant-docker-local": "{scope}-docker"
+              }
+            }
+          },
+          "timing": {
+            "restore_or_setup_seconds": 11,
+            "build_seconds": 803,
+            "workflow_seconds": 820,
+            "total_seconds": 814,
+            "dependency_setup_seconds": null,
+            "compile_seconds": null,
+            "verification_seconds": null,
+            "save_seconds": null
+          },
+          "cache": {
+            "hit": null,
+            "sccache_proof": null,
+            "import_ready": null,
+            "import_refs": 0,
+            "docker_plan": null,
+            "tag": null,
+            "workspace": null,
+            "storage_bytes": null,
+            "storage_source": null,
+            "storage_breakdown": {
+              "key": "qdrant-rolling-main",
+              "complete": false,
+              "measured_bytes": 0,
+              "total_bytes": null,
+              "observations": []
+            }
+          },
+          "source": {
+            "repository": "qdrant/qdrant",
+            "sha": "191e255362fe3f985979e094095104f49ddf15a4"
+          },
+          "product_refs": {},
+          "action": {
+            "resolved_mode": null,
+            "resolved_tags": null,
+            "trust_state": null,
+            "diagnostics_level": null
+          },
+          "github": {
+            "repository": "boringcache/benchmarks",
+            "run_id": "37456321918",
+            "run_attempt": "1",
+            "job": "publish",
+            "workflow": "Native comparison rolling",
+            "ref_name": "main",
+            "runner_os": "Linux",
+            "runner_arch": "X64",
+            "runner_name": "GitHub Actions 1000176078",
+            "runner_environment": "github-hosted",
+            "runner_image": "ubuntu24",
+            "runner_image_version": "20260927.320.1"
+          },
+          "run_uid": "gh-37456321918-1",
+          "verification": {
+            "passed": true,
+            "checks": [
+              "Output verification completed before recording this phase"
+            ],
+            "declared_checks": [
+              "Pinned upstream recipe and build success"
+            ]
+          }
+        },
+        {
+          "schema_version": 1,
+          "benchmark": "qdrant",
+          "strategy": "boringcache",
+          "lane": "rolling",
+          "phase": "commit",
+          "variant": null,
+          "mode": "docker",
+          "adapter": "oci",
+          "case": {
+            "schema_version": 1,
+            "case_id": "qdrant",
+            "workspace": "boringcache/benchmarks",
+            "definition_sha256": "a4f0e2f387eee67c4cf233593eb28f30f299cb3d362baf3665c24c7b37112624",
+            "source": {
+              "repository": "qdrant/qdrant",
+              "pins": [
+                {
+                  "path": "upstream",
+                  "revision": "191e255362fe3f985979e094095104f49ddf15a4",
+                  "kind": "gitlink"
+                }
+              ]
+            },
+            "origin": {
+              "repository": "boringcache/benchmark-qdrant",
+              "branch": "main",
+              "revision": "22f17e82abcbe9227a6f60a385fba47eadb9aade"
+            },
+            "verification": [
+              "Pinned upstream recipe and build success"
+            ],
+            "comparison": {
+              "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+              "providers": [
+                "boringcache",
+                "actions-cache"
+              ],
+              "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+              "primary_metric": "build_and_reuse_seconds",
+              "storage": "provider-reported",
+              "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+              "sample_count": 10
+            },
+            "execution": {
+              "workflows": [
+                {
+                  "path": ".github/workflows/native-rolling-benchmark.yml",
+                  "lane": "rolling",
+                  "inputs": {
+                    "case_id": "qdrant"
+                  },
+                  "historical_workflow": "qdrant-benchmark.yml"
+                },
+                {
+                  "path": ".github/workflows/native-fresh-benchmark.yml",
+                  "lane": "fresh",
+                  "inputs": {
+                    "case_id": "qdrant"
+                  },
+                  "historical_workflow": "qdrant-fresh-benchmark.yml"
+                }
+              ],
+              "sync": "upstream-head",
+              "sync_minute": 23,
+              "native": {
+                "action": ".github/actions/qdrant-docker-benchmark",
+                "benchmark_id": "qdrant",
+                "rolling_inputs": {
+                  "push_image": "true"
+                },
+                "environment": {},
+                "fresh_inputs": {}
+              },
+              "cache_tags": {
+                "qdrant-docker-local": "{scope}-docker"
+              }
+            }
+          },
+          "timing": {
+            "restore_or_setup_seconds": 0,
+            "build_seconds": 414,
+            "workflow_seconds": 421,
+            "total_seconds": 414,
+            "dependency_setup_seconds": null,
+            "compile_seconds": null,
+            "verification_seconds": null,
+            "save_seconds": null
+          },
+          "cache": {
+            "hit": null,
+            "sccache_proof": null,
+            "import_ready": null,
+            "import_refs": 0,
+            "docker_plan": {
+              "import_tags": [
+                "qdrant-rolling-main-docker-ubuntu-24-x86_64"
+              ],
+              "planned_import_refs": 1,
+              "export_tag": "qdrant-rolling-main-docker-ubuntu-24-x86_64"
+            },
+            "tag": "qdrant-rolling-main-docker",
+            "workspace": "boringcache/benchmarks",
+            "storage_bytes": 2104624479,
+            "storage_source": "boringcache-check",
+            "storage_breakdown": {
+              "workspace": "boringcache/benchmarks",
+              "tags": [
+                "qdrant-rolling-main-docker-ubuntu-24-x86_64"
+              ],
+              "complete": true,
+              "measured_bytes": 2104624479,
+              "unmeasured_tags": [],
+              "total_bytes": 2104624479,
+              "observations": [
+                {
+                  "requested_tag": "qdrant-rolling-main-docker-ubuntu-24-x86_64",
+                  "tag": "qdrant-rolling-main-docker-ubuntu-24-x86_64",
+                  "status": "hit",
+                  "cache_type": "cache_entry",
+                  "cache_entry_id": "7eda015c-420a-49b2-90a6-c096c7a88a0e",
+                  "manifest_root_digest": "sha256:2483a933ed25f2a071b64314bd1432488b3284eeb93572380a1017fe784d6760",
+                  "kv_total_size": 0,
+                  "compressed_size": 2104624479,
+                  "size": 2104624479
+                }
+              ]
+            },
+            "storage_observed_at": "2026-10-06T11:33:10Z",
+            "storage_evidence_file": "boringcache-one-evidence-81cea08aa9c9e1e488f3b8e3b35430df2c3be8eaa7f12209056c90d97d490f78.json"
+          },
+          "source": {
+            "repository": "qdrant/qdrant",
+            "sha": "191e255362fe3f985979e094095104f49ddf15a4"
+          },
+          "product_refs": {
+            "schema_version": 1,
+            "cli_version": "1.40.0",
+            "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+            "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+          },
+          "action": {
+            "resolved_mode": "docker",
+            "resolved_tags": [
+              "qdrant-rolling-main-docker-ubuntu-24-x86_64"
+            ],
+            "trust_state": {
+              "status": "publish",
+              "event_name": "workflow_dispatch",
+              "requested_policy": "publish",
+              "resolved_policy": "publish",
+              "write_allowed": true,
+              "decision_source": "cli",
+              "reason": "explicit_request",
+              "provider": "github-actions",
+              "detail": "Publication updates the published cache tag.",
+              "next_step": "Let the run finish; the next matching run restores what it publishes.",
+              "token_capabilities": {
+                "restore": true,
+                "stage": true,
+                "save": true
+              }
+            },
+            "diagnostics_level": "off"
+          },
+          "github": {
+            "repository": "boringcache/benchmarks",
+            "run_id": "37456321918",
+            "run_attempt": "1",
+            "job": "publish",
+            "workflow": "Native comparison rolling",
+            "ref_name": "main",
+            "runner_os": "Linux",
+            "runner_arch": "X64",
+            "runner_name": "GitHub Actions 1000176077",
+            "runner_environment": "github-hosted",
+            "runner_image": "ubuntu24",
+            "runner_image_version": "20260927.320.1"
+          },
+          "run_uid": "gh-37456321918-1",
+          "verification": {
+            "passed": true,
+            "checks": [
+              "Output verification completed before recording this phase"
+            ],
+            "declared_checks": [
+              "Pinned upstream recipe and build success"
+            ]
+          },
+          "original_cache_measurement": {
+            "storage_bytes": 2104624479,
+            "storage_source": "boringcache-check",
+            "storage_breakdown": {
+              "workspace": "boringcache/benchmarks",
+              "tags": [
+                "qdrant-rolling-main-docker-ubuntu-24-x86_64"
+              ],
+              "complete": true,
+              "measured_bytes": 2104624479,
+              "unmeasured_tags": [],
+              "total_bytes": 2104624479,
+              "observations": [
+                {
+                  "requested_tag": "qdrant-rolling-main-docker-ubuntu-24-x86_64",
+                  "tag": "qdrant-rolling-main-docker-ubuntu-24-x86_64",
+                  "status": "hit",
+                  "cache_type": "cache_entry",
+                  "cache_entry_id": "7eda015c-420a-49b2-90a6-c096c7a88a0e",
+                  "manifest_root_digest": "sha256:2483a933ed25f2a071b64314bd1432488b3284eeb93572380a1017fe784d6760",
+                  "kv_total_size": 0,
+                  "compressed_size": 2104624479,
+                  "size": 2104624479
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "comparison_plan": "diagnostic"
     }
   ]
 }
