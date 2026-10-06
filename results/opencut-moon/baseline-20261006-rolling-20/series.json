@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "case_id": "opencut-moon",
+  "series_id": "baseline-20261006-rolling-20",
+  "created_at": "2026-10-06T07:29:06Z",
+  "lane": "rolling",
+  "phases": [
+    "commit"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "5b85319ae159e9b86c4da2ff0a541cb3100b68947f6ee120f6a93d5f50c61ba9",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "opencut-moon",
+    "cli_version": "vcli-canary-8a5868ac875b"
+  },
+  "comparison": {
+    "question": "Does Moon restore the OpenCut web build on a clean worker?",
+    "providers": [
+      "boringcache",
+      "bazel-remote"
+    ],
+    "primary_metric": "correctness",
+    "timed_scope": "Native command and registry startup after dependency preparation; registry shutdown is recorded separately. The bazel-remote store is transferred as a GitHub artifact outside timing. This screen does not compare end-to-end provider performance. Rolling runs use the same measurement boundary. Comparator cache transfer is outside build timing; rolling reuse requires retained seed and native hit evidence.",
+    "storage": "unmeasured",
+    "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+    "sample_count": 2
+  },
+  "source": {
+    "repository": "OpenCut-app/OpenCut",
+    "revision": "e668010778568641babef2cc40be4703ae6916d6",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "e668010778568641babef2cc40be4703ae6916d6"
+      }
+    ]
+  },
+  "verification": [
+    "Require the declared native command to succeed",
+    "Require declared outputs and successful output checks",
+    "Require native remote-hit evidence and the same output hashes on the warm worker",
+    "Require registry shutdown to complete successfully"
+  ],
+  "plan_sha256": "86970c01e37fa77c30e9349fcd602495fec3cd186acba955c64da9af1f0b502e"
+}

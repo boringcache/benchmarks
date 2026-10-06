@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "case_id": "storybook",
+  "series_id": "cadence-37429783479-7",
+  "created_at": "2026-10-06T07:28:09Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "cacbffda773108a65b76a7ac67c8eac31e1223131d7f72df1e6b4c4734b39ec9",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "storybook",
+    "cli_version": "vcli-canary-8a5868ac875b"
+  },
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed Storybook sandbox build plus measured cache restore/setup; dependency installation and sandbox creation are excluded; output checks and unmeasured cache publication are reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "storybookjs/storybook",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "474a5399b5b2728b562d61ddc952ce4caa750fa0",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream recipe and build success"
+  ],
+  "plan_sha256": "6cb401cee552bca490069c15eb4bd963ecf6c80ad7716c2e30279caaf49c3f9e"
+}
