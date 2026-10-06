@@ -101,14 +101,18 @@ module NativeCase
     end
   end
 
+  def self.benchmark_id(recipe, suffix: "")
+    raise Error, "Use an empty suffix or a lowercase suffix beginning with a hyphen" unless suffix.match?(/\A(?:-[a-z0-9]+(?:-[a-z0-9]+)*)?\z/)
+    recipe.fetch("benchmark_id") + suffix
+  end
+
   def self.write_action(item, directory:, lane:, suffix: "", variant: nil)
     variant = nil if variant.to_s.empty?
     base = validate(item, payload: directory)
     raise Error, "This case does not use the shared native comparison" unless base
     recipe = resolve(base, variant)
     raise Error, "Use fresh or rolling for the native lane" unless %w[fresh rolling].include?(lane)
-    raise Error, "Use an empty suffix or a lowercase suffix beginning with a hyphen" unless suffix.match?(/\A(?:-[a-z0-9]+(?:-[a-z0-9]+)*)?\z/)
-    benchmark_id = recipe.fetch("benchmark_id") + suffix
+    benchmark_id = self.benchmark_id(recipe, suffix: suffix)
     action = YAML.safe_load_file(action_path(recipe, payload: directory), aliases: true)
     declared = action.fetch("inputs")
     settings = recipe.fetch("#{lane}_inputs").merge(INPUTS.to_h { |name| [name, "${{ inputs.#{name} }}"] }.select { |name, _| declared.key?(name) })
