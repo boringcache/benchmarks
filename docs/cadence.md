@@ -21,8 +21,9 @@ The provider wrapper and direct CLI workers use that same default. Changing the
 reviewed pin changes the execution definition; earlier series retain their
 original selector. A compatible stable release can replace this pin later.
 `BENCHMARK_CADENCE_ACTIVE=true` enables automatic dispatch and source publication.
-Manual dispatch and dry runs remain available. Scheduling, monitoring and publication
-are currently paused for the reset. Rolling cache scopes are explicit and remain
+Manual dispatch and dry runs remain available. The hourly monitor runs independently
+of this dispatch control, including during baseline qualification. Automatic builds,
+source advancement and publication remain paused for the reset. Rolling cache scopes are explicit and remain
 stable across harness refs. Each rolling series begins with a seed build, then an
 identical-source replay, before advancing to changed-source builds.
 
@@ -36,7 +37,7 @@ workloads share one run; Zed's Cargo and Nix workloads share one run. Rolling
 source inspection batches changed tool cases from the same upstream project
 into one dispatch while preserving each case's source and promotion contract.
 Fresh and Nightly are distinct cadences; their measured phases retain the fresh
-lane. Rolling remains a changed-source observation.
+lane. Rolling records seed, identical-source replay and changed-source observations separately.
 
 Preflight validates the whole suite, resolves one exact CLI and freezes a
 one-sample series for each case and variant. Grouping preserves those plans,
