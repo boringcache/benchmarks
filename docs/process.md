@@ -143,6 +143,8 @@ Storage measurements pass the resolved tags to `boringcache check --no-git
 --no-platform --json`. The CLI checks those exact tags; the former `--exact`
 option is unnecessary and is rejected by CLI 1.34.0. A failed probe leaves storage
 unmeasured.
+The post-publication probe reuses a configured CI workload broker. It starts
+`ci run` only when no broker is configured; nested `ci run` is rejected by the CLI.
 The harness Ruby version is pinned once in `.tool-versions`. Ruby setup reads
 that file from the harness checkout, including when a shared action is called
 from an older benchmark repository. Guardrails verify preparation on Ubuntu

@@ -16,8 +16,11 @@ function measureStorage(evidence, source, directory) {
   if (!workspace) return null;
   const target = path.join(directory, 'storage.json');
   const script = path.resolve(__dirname, '../../../scripts/benchmark-storage.rb');
-  execFileSync('boringcache', ['ci', 'run', '--oidc-provider', 'github-actions', '--',
-    'ruby', script, source, target], {
+  const command = process.env.BORINGCACHE_CI_BROKER_FILE?.trim()
+    ? ['ruby', script, source, target]
+    : ['boringcache', 'ci', 'run', '--oidc-provider', 'github-actions', '--',
+      'ruby', script, source, target];
+  execFileSync(command[0], command.slice(1), {
     env: { ...process.env, BORINGCACHE_WORKSPACE: workspace },
     timeout: 90000, stdio: ['ignore', 'pipe', 'pipe']
   });
@@ -57,7 +60,7 @@ async function retain(core, artifact, measure = measureStorage) {
   }
 }
 
-module.exports = { register, retain };
+module.exports = { register, retain, measureStorage };
 
 if (require.main === module) {
   import('@actions/core').then(async core => {
@@ -69,7 +72,7 @@ if (require.main === module) {
         register(core);
       }
     } catch (error) {
-      core.setFailed(`Product evidence was not retained: ${error.message}`);
+      core.setFailed(`Benchmark evidence collection failed: ${error.message}`);
     }
   }).catch(error => {
     console.error(`Evidence dependencies could not be loaded: ${error.message}`);
