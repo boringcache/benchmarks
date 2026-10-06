@@ -22,11 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-        - provider: GitHub Actions
-          strategy: actions-cache
-        - provider: BoringCache
-          strategy: boringcache
+        include: ${{ fromJSON(inputs.provider == 'boringcache' && '[{"provider":"BoringCache","strategy":"boringcache"}]' || inputs.provider == 'actions-cache' && '[{"provider":"GitHub Actions","strategy":"actions-cache"}]' || '[{"provider":"GitHub Actions","strategy":"actions-cache"},{"provider":"BoringCache","strategy":"boringcache"}]') }}
     steps:
     - name: Checkout benchmark definitions
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -51,6 +47,12 @@ jobs:
         buildkit_image: "${{ inputs.buildkit_image }}"
         cli_platform: "${{ inputs.cli_platform }}"
         report_variant: "${{ inputs.variant }}"
+    - name: Retain the runner and builder environment
+      if: always() && inputs.runner_label != ''
+      uses: ./.harness/.github/actions/runner-evidence
+      with:
+        phase: cold
+        provider: ${{ matrix.strategy }}
     permissions:
       contents: read
       actions: read
@@ -68,11 +70,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-        - provider: GitHub Actions
-          strategy: actions-cache
-        - provider: BoringCache
-          strategy: boringcache
+        include: ${{ fromJSON(inputs.provider == 'boringcache' && '[{"provider":"BoringCache","strategy":"boringcache"}]' || inputs.provider == 'actions-cache' && '[{"provider":"GitHub Actions","strategy":"actions-cache"}]' || '[{"provider":"GitHub Actions","strategy":"actions-cache"},{"provider":"BoringCache","strategy":"boringcache"}]') }}
     steps:
     - name: Checkout benchmark definitions
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -97,6 +95,12 @@ jobs:
         buildkit_image: "${{ inputs.buildkit_image }}"
         cli_platform: "${{ inputs.cli_platform }}"
         report_variant: "${{ inputs.variant }}"
+    - name: Retain the runner and builder environment
+      if: always() && inputs.runner_label != ''
+      uses: ./.harness/.github/actions/runner-evidence
+      with:
+        phase: warm
+        provider: ${{ matrix.strategy }}
     permissions:
       contents: read
       actions: read
@@ -146,6 +150,7 @@ jobs:
       env:
         GH_TOKEN: "${{ github.token }}"
         CASE_ID: "${{ inputs.case_id }}"
+        PROVIDER: "${{ inputs.provider }}"
         VARIANT: "${{ inputs.variant }}"
         BENCHMARK_SUFFIX: "${{ inputs.benchmark_id_suffix }}"
         BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
@@ -183,6 +188,11 @@ jobs:
 'on':
   workflow_dispatch:
     inputs:
+      provider:
+        description: Run both providers or one diagnostic arm.
+        type: choice
+        options: [both, boringcache, actions-cache]
+        default: both
       expected_identity:
         description: Frozen scheduled harness and case identity; checked before preparation.
         type: string
@@ -240,6 +250,10 @@ jobs:
           lane.
   workflow_call:
     inputs:
+      provider:
+        description: both, boringcache, or actions-cache.
+        type: string
+        default: both
       expected_identity:
         description: Frozen scheduled harness and case identity; checked before preparation.
         type: string
