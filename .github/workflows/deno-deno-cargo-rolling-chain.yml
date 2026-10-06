@@ -1,6 +1,6 @@
 ---
 name: 'deno: Deno Cargo rolling run'
-run-name: "Deno Cargo / ${{ inputs.cache_profile || 'cargo-product' }} | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} rolling | ${{ inputs.base_sha }} to ${{ inputs.head_sha }}"
+run-name: "Deno Cargo / ${{ inputs.cache_profile || 'cargo-product' }} | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} Rolling | ${{ inputs.base_sha }} to ${{ inputs.head_sha }}"
 permissions:
   actions: read
   contents: read

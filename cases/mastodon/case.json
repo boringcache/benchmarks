@@ -31,7 +31,8 @@
         "variants": [
           "server",
           "server-sccache",
-          "streaming"
+          "streaming",
+          "server-ccache"
         ],
         "variant_input": "variant"
       },
@@ -49,7 +50,8 @@
         "variants": [
           "server",
           "server-sccache",
-          "streaming"
+          "streaming",
+          "server-ccache"
         ],
         "variant_input": "variant"
       }
@@ -58,7 +60,8 @@
     "sync_minute": 15,
     "cache_tags": {
       "mastodon-docker-local": "{scope}-docker",
-      "mastodon-sccache-local": "{scope}-sccache"
+      "mastodon-sccache-local": "{scope}-sccache",
+      "mastodon-ccache-local": "{scope}-ccache"
     },
     "native": {
       "action": ".github/actions/mastodon-docker-benchmark",
@@ -94,6 +97,24 @@
           },
           "rolling_inputs": {
             "workload": "streaming"
+          }
+        },
+        "server-ccache": {
+          "benchmark_id": "mastodon-ccache",
+          "fresh_inputs": {
+            "compiler_cache": "ccache",
+            "docker_tool_cache": "true",
+            "no_cache": "true"
+          },
+          "rolling_inputs": {
+            "compiler_cache": "ccache",
+            "docker_tool_cache": "true",
+            "no_cache": "true"
+          },
+          "provider_flags": {
+            "actions-cache": {
+              "docker_tool_cache": "false"
+            }
           }
         }
       }

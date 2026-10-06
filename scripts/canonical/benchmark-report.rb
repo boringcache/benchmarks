@@ -16,7 +16,7 @@ module BenchmarkReport
     "boringcache-mountcache" => "BoringCache mount cache", "boringcache-native" => "BoringCache native",
     "boringcache-toolcache" => "BoringCache tool cache", "boringcache-turbo" => "BoringCache Turbo",
     "buildbuddy" => "BuildBuddy", "buildbuddy-cache" => "BuildBuddy", "ecr-cache" => "Amazon ECR (retired)",
-    "cachix" => "Cachix", "bazel-remote" => "bazel-remote",
+    "nativelink" => "NativeLink (R2)", "cachix" => "Cachix", "bazel-remote" => "bazel-remote",
     "registry-cache" => "Registry cache", "depot-cache" => "Depot Cache"}.freeze
   PHASES = {"cold" => "Cold build", "warm" => "Warm build", "commit" => "Changed-source build"}.freeze
   METRICS = {"build_and_reuse_seconds" => "build and cache reuse (s)", "build_seconds" => "build (s)",
@@ -38,7 +38,7 @@ module BenchmarkReport
       "verification_passed" => false, "evidence_links" => []}
     parser = OptionParser.new
     %w[benchmark strategy lane phase mode variant cache_hit cache_import_ready cache_import_refs cache_tag
-      workspace storage_key source_repository source_sha evidence output_dir title input_dir baseline_strategy sccache_proof series cli_version].each do |name|
+      workspace storage_key source_repository source_sha evidence output_dir title input_dir baseline_strategy sccache_proof series cli_version storage_evidence].each do |name|
       parser.on("--#{name.tr('_', '-')} VALUE") { |value| args[name] = value }
     end
     parser.on("--sample NUMBER", Integer) { |value| args["sample"] = value }
@@ -187,6 +187,15 @@ module BenchmarkReport
     storage = case args["strategy"]
     when "boringcache" then boringcache_storage(cache_identity)
     when "actions-cache" then actions_storage(args["storage_key"])
+    when "nativelink" then read_json("benchmark-results/nativelink/storage.json")
+    end
+    if args["storage_evidence"]
+      raise Error, "External storage measurements cannot replace BoringCache product evidence" if args["strategy"] == "boringcache"
+      measured = read_json(args.fetch("storage_evidence"))
+      sources = {"cachix" => "cachix-narinfo-file-size", "bazel-remote" => "bazel-remote-local-store-files"}
+      raise Error, "Unexpected provider storage source" unless measured["source"] == sources[args["strategy"]]
+      raise Error, "Invalid provider storage bytes" unless measured["bytes"].nil? || (measured["bytes"].is_a?(Integer) && measured["bytes"] >= 0)
+      storage = measured
     end
     plan = restore.dig("mode_evidence", "buildkit_cache")
     docker_plan = if plan.is_a?(Hash) && !plan.empty?

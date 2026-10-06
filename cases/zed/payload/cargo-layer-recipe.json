@@ -14,7 +14,7 @@
         "plans/sccache-only/primary/.boringcache.toml",
         "plans/combined/primary/.boringcache.toml"
       ],
-      "command": ["cargo", "--config", ".cargo/bundle-config.toml", "build", "--release", "--target", "x86_64-unknown-linux-gnu", "--package", "zed", "--package", "cli"]
+      "command": ["cargo", "build", "--config", ".cargo/bundle-config.toml", "--release", "--target", "x86_64-unknown-linux-gnu", "--package", "zed", "--package", "cli"]
     },
     {
       "adapter": "cargo",
@@ -24,7 +24,7 @@
         "plans/sccache-only/remote-server/.boringcache.toml",
         "plans/combined/remote-server/.boringcache.toml"
       ],
-      "command": ["cargo", "--config", ".cargo/bundle-config.toml", "build", "--release", "--target", "x86_64-unknown-linux-musl", "--package", "remote_server"]
+      "command": ["cargo", "build", "--config", ".cargo/bundle-config.toml", "--release", "--target", "x86_64-unknown-linux-musl", "--package", "remote_server"]
     }
   ]
 }

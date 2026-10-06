@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "plan_sha256": "295bfd3be6d1c7ab048d117b9166e6eed05caa7d0da0561503d3ca8bbe780074",
+  "issues": [
+    "NativeLink release installation was outside provider setup timing while BoringCache CLI installation was included. Retain these observations for cache correctness qualification; do not use them for a provider timing comparison. Subsequent execution definitions include NativeLink installation in setup timing."
+  ],
+  "evidence_links": [
+    "https://github.com/boringcache/benchmarks/actions/runs/37357216555",
+    "https://github.com/boringcache/benchmarks/actions/runs/37357215892"
+  ]
+}

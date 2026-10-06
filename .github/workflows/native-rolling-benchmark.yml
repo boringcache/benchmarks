@@ -1,6 +1,6 @@
 ---
 name: Native comparison rolling
-run-name: "${{ inputs.case_id }}${{ inputs.variant != '' && format(' / {0}', inputs.variant) || '' }} | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} rolling | ${{ inputs.series_id || github.ref_name }} / sample ${{ inputs.sample || '1' }}"
+run-name: "${{ inputs.case_id }} Rolling | ${{ inputs.cli_version }}"
 permissions:
   contents: read
   actions: read
@@ -195,7 +195,7 @@ jobs:
         type: string
         default: ''
 concurrency:
-  group: benchmark-rolling-${{ inputs.case_id }}-${{ inputs.cache_scope || inputs.series_id
+  group: benchmark-rolling-${{ inputs.case_id }}-${{ inputs.variant }}-${{ inputs.cache_scope || inputs.series_id
     || github.ref_name }}
   cancel-in-progress: false
   queue: max

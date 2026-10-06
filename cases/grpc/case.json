@@ -53,7 +53,8 @@
     "providers": [
       "boringcache",
       "actions-cache",
-      "buildbuddy"
+      "buildbuddy",
+      "nativelink"
     ],
     "timed_scope": "Bazel build with local top-level outputs plus measured cache restore/setup; output checks and post-job cache save are outside build timing",
     "primary_metric": "build_and_reuse_seconds",

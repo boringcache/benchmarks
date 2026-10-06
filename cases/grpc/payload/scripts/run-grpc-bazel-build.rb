@@ -29,6 +29,10 @@ when "buildbuddy"
     "--remote_header=x-buildbuddy-api-key=#{key}"
   ])
   provider << "--remote_upload_local_results=false" if ENV["BUILDBUDDY_REMOTE_UPLOAD_LOCAL_RESULTS"] == "false"
+when "nativelink"
+  provider.concat(["--remote_cache=grpc://127.0.0.1:50051", "--remote_timeout=10m",
+    "--remote_instance_name=#{required.call('NATIVELINK_INSTANCE')}"])
+  provider << "--remote_upload_local_results=false" if ENV["NATIVELINK_PHASE"] == "warm"
 when "boringcache"
   # The shared Action configures the product's Bazel cache.
 else

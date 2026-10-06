@@ -4,6 +4,7 @@
 require "optparse"
 require "set"
 require_relative "publish-index"
+require_relative "project-runs"
 
 module NightlyCanaries
   class Error < StandardError; end
@@ -122,6 +123,14 @@ module NightlyCanaries
     def check(record, summary:)
       raise Error, "The dispatch receipt has no runs" if record.fetch("runs").empty?
       record.fetch("runs").each do |run|
+        if run["selections"]
+          nested = record.merge("runs" => ProjectRuns.expand(run))
+          check(nested, summary: nil)
+          run["observations"] = nested.fetch("runs").flat_map { |child| Array(child["observations"]) }
+          run["state"] = nested.fetch("runs").map { |child| child.fetch("state") }.find { |state| state != "success" } || "success"
+          run["selections"] = nested.fetch("runs")
+          next
+        end
         next unless run["id"]
         raise Error, "Dispatch receipt has an invalid run ID" unless run["id"].is_a?(Integer) && run["id"].positive?
         current = api("repos/#{run.fetch('repository')}/actions/runs/#{run.fetch('id')}")
@@ -131,10 +140,11 @@ module NightlyCanaries
           run["state"] = "identity-mismatch"
           run["error"] = "Executed harness differs from the scheduled plan"
         end
-        if run["series"] && run["workflow"] == "native-fresh-benchmark.yml"
-          require_relative "fresh-report"
+        if run["series"]
           evidence = current["status"] == "completed" ? phase_evidence(run, attempt: current.fetch("run_attempt")) : []
-          records = evidence.select { |value| value["benchmark"] && value["phase"] }
+          records = evidence.select do |value|
+            value["benchmark"] && value["phase"] && value.dig("series", "id") == run.dig("series", "series_id")
+          end
           records.select! do |value|
             BenchmarkSeries.validate_record(run.fetch("series"), value)
             true
@@ -142,10 +152,38 @@ module NightlyCanaries
             run["evidence_error"] = error.message
             false
           end
-          run["observations"] = FreshReport.reconcile(FreshReport.expected(run.dig("series", "case_id")),
-            jobs: jobs(run.fetch("repository"), run.fetch("id"), current.fetch("run_attempt")),
-            records: records, outcomes: evidence.select { |value| value.key?("step_outcome") && value["case_id"] == run.dig("series", "case_id") && value["variant"].to_s == run.dig("series", "variant").to_s },
-            run_url: run.fetch("url"))
+          providers = run.dig("series", "comparison", "providers") || BenchmarkCases.load_case(run.dig("series", "case_id")).dig("comparison", "providers")
+          # Separate provider workflows (OBS) share a single frozen series.
+          if run.fetch("workflow").start_with?("obs-studio-obs-")
+            providers = [run.fetch("workflow").include?("actions-cache") ? "actions-cache" : "boringcache"]
+          end
+          if run.fetch("workflow") == "native-fresh-benchmark.yml"
+            require_relative "fresh-report"
+            observed_jobs = jobs(run.fetch("repository"), run.fetch("id"), current.fetch("run_attempt"))
+            if run["project_grouped"] && (variant = run.dig("inputs", "variant"))
+              observed_jobs.select! { |job| job.fetch("name").start_with?("#{variant} /") || job.fetch("name").include?(" / #{variant} /") }
+            end
+            run["observations"] = FreshReport.reconcile(FreshReport.expected(run.dig("series", "case_id")),
+              jobs: observed_jobs, records: records, outcomes: evidence.select { |value| value["step_outcome"] && value["variant"].to_s == run.dig("series", "variant").to_s }, run_url: run.fetch("url"))
+            next
+          end
+          run["observations"] = providers.product(run.dig("series", "phases")).map do |provider, phase|
+            matches = records.select { |value| value.values_at("strategy", "phase") == [provider, phase] }
+            raise Error, "Duplicate canonical phase evidence" if matches.length > 1
+            value = matches.first
+            state = if current["status"] != "completed"
+              current.fetch("status")
+            elsif run["state"] != "success"
+              run["state"]
+            elsif value && value.dig("verification", "passed") == true
+              "succeeded"
+            else
+              "missing"
+            end
+            {"strategy" => provider, "phase" => phase, "state" => state,
+              "timing" => value ? value.fetch("timing") : {}, "verification" => value&.dig("verification", "passed") || "unrecorded",
+              "storage_bytes" => value&.dig("cache", "storage_bytes"), "phase_record" => value}
+          end
         end
       end
       write_summary(summary, record)
@@ -156,22 +194,30 @@ module NightlyCanaries
     end
 
     def phase_evidence(run, attempt:)
-      Dir.mktmpdir("cadence-phases-") do |directory|
+      @phase_evidence ||= {}
+      key = [run.fetch("repository"), run.fetch("id"), attempt]
+      return @phase_evidence[key] if @phase_evidence.key?(key)
+      @phase_evidence[key] = Dir.mktmpdir("cadence-phases-") do |directory|
         _, error, status = Open3.capture3("gh", "run", "download", run.fetch("id").to_s,
-          "--repo", run.fetch("repository"), "--pattern", "phase-*", "--pattern", "outcome-*", "--dir", directory)
+          "--repo", run.fetch("repository"), "--pattern", "phase-*", "--pattern", "outcome-*", "--pattern", "storage-*", "--pattern", "deno-cargo-product-*", "--pattern", "zed-cargo-product-*", "--pattern", "benchmark-zed-cargo-*", "--dir", directory)
         run["evidence_error"] = "Phase artifacts unavailable: #{error.strip}" unless status.success?
-        Dir[File.join(directory, "**", "*.json")].filter_map do |path|
-          value = JSON.parse(File.read(path))
+        payloads = Dir[File.join(directory, "**", "*.json")].map { |path| JSON.parse(File.read(path)) }
+        values = payloads.flat_map { |value| value.is_a?(Hash) && value["runs"].is_a?(Array) ? value.fetch("runs") : [value] }.filter_map do |value|
           next unless value.is_a?(Hash)
           if value["benchmark"] && value["phase"]
             next unless value.dig("github", "run_id").to_s == run.fetch("id").to_s && value.dig("github", "run_attempt").to_s == attempt.to_s
           elsif value["step_outcome"]
             next unless value["run_id"].to_s == run.fetch("id").to_s && value["run_attempt"].to_s == attempt.to_s
+          elsif value["kind"] == "post-publication-storage"
+            next unless value.dig("github", "run_id").to_s == run.fetch("id").to_s && value.dig("github", "run_attempt").to_s == attempt.to_s
           else
             next
           end
           value
         end
+        require_relative "benchmark-storage"
+        measurements = values.select { |value| value["kind"] == "post-publication-storage" }
+        values.map { |value| value["benchmark"] && value["phase"] ? BenchmarkStorage.apply(value, measurements) : value }
       end
     end
 
@@ -197,8 +243,10 @@ module NightlyCanaries
       end
     end
 
-    def collect(summary:, benchmarks: BENCHMARKS, now: Time.now.utc, output: nil, channel: "canary")
+    def collect(summary:, benchmarks: BENCHMARKS, now: Time.now.utc, output: nil, channel: "canary", expected_version: nil, cadence: nil)
       raise Error, "Use stable or canary" unless %w[stable canary].include?(channel)
+      cadence ||= channel == "stable" ? "weekly" : "daily"
+      raise Error, "Use daily or weekly cadence" unless %w[daily weekly].include?(cadence)
       lines = ["## CLI #{channel} benchmark results", "", "Dispatch and workload states are reported separately.", ""]
       passed = true
       collected = []
@@ -217,7 +265,7 @@ module NightlyCanaries
         retained = {"repository" => repository}
         collected << retained
         begin
-          workflow = channel == "stable" ? "weekly-fresh.yml" : "canary.yml"
+          workflow = cadence == "weekly" ? "weekly-fresh.yml" : "canary.yml"
           parents = api("repos/#{repository}/actions/workflows/#{workflow}/runs?branch=main&per_page=100").fetch("workflow_runs")
           parent = parents.max_by { |run| run.fetch("created_at") }
           unless parent
@@ -230,7 +278,7 @@ module NightlyCanaries
           state = parent["status"] == "completed" ? parent.fetch("conclusion") : parent.fetch("status")
           retained.merge!("parent_run_id" => parent_id, "state" => state)
           lines << "Dispatch: [run #{parent_id}](https://github.com/#{repository}/actions/runs/#{parent_id}) — #{state}."
-          max_hours = channel == "stable" ? 8 * 24 : 36
+          max_hours = cadence == "weekly" ? 8 * 24 : 36
           if now - Time.iso8601(parent.fetch("created_at")) > max_hours * 60 * 60
             passed = false
             lines << "The latest dispatch is more than #{max_hours} hours old."
@@ -240,14 +288,15 @@ module NightlyCanaries
           passed = false unless parent["conclusion"] == "success"
           record = receipt(repository, parent_id)
           retained["dispatch"] = record
-          recorded = record.fetch("runs").map do |run|
-            inputs = run["series"] ? run.fetch("inputs").except("series_id", "sample", "expected_identity") : run.fetch("inputs", {})
+          recorded = record.fetch("runs").flat_map { |run| ProjectRuns.expand(run) }.map do |run|
+            inputs = run["series"] ? run.fetch("inputs").except("series_id", "sample", "expected_identity", "cadence") : run.fetch("inputs", {})
             [run.fetch("repository"), run.fetch("workflow"), inputs]
           end
           version_pattern = channel == "stable" ? /\Av\d+\.\d+\.\d+\z/ : /\Avcli-canary-[0-9a-f]{9,40}\z/
           unless recorded.to_set == expected.to_set && recorded.length == expected.length && record.fetch("cli_version").match?(version_pattern)
             raise Error, "Dispatch receipt does not match this repository's registered workflows"
           end
+          raise Error, "Dispatch CLI differs from the reviewed benchmark pin #{expected_version}" if expected_version && record.fetch("cli_version") != expected_version
           healthy = check(record, summary: nil)
           passed = false unless healthy
           lines << "CLI: `#{record.fetch('cli_version')}`. Dispatch: **#{record.fetch('state')}**."

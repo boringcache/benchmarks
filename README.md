@@ -13,6 +13,11 @@ not change the case's identity or copy its executor.
 Follow [`docs/process.md`](docs/process.md) to add or run a case.
 [`Tool coverage`](docs/tool-coverage.md) lists configured families and qualification gaps.
 [`AGENTS.md`](AGENTS.md) applies the same requirements to agents and humans.
+The [cadence monitor](docs/cadence.md) records current central runs in
+[`data/latest/current.json`](data/latest/current.json) and retains observations
+under [`data/observations/`](data/observations/). All active workers default to the
+exact published canary in [`config/cli.json`](config/cli.json).
+
 `bin/bench catalog` generates [`data/latest/series.json`](data/latest/series.json),
 the common index for planned, requested, incomplete, failed, and completed
 evaluations. It uses the canonical report validator and calculations, retains
@@ -63,7 +68,7 @@ identical-source warm, and changed-source results separate. Collect the declared
 samples and report medians and ranges without discarding slow observations.
 
 The [product benchmark page](https://boringcache.com/benchmarks) uses separately reviewed results.
-Published interfaces remain available:
+Historical published interfaces remain available:
 
 - [`data/latest/report.md`](data/latest/report.md): latest published cohort report
 - [`data/latest/index.json`](data/latest/index.json): machine-readable workload index

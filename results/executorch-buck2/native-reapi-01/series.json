@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "case_id": "executorch-buck2",
+  "series_id": "native-reapi-01",
+  "created_at": "2026-10-05T21:33:58Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "555a674e4a07aeea3e2af6a913c949003e0d5aaa6026c3b52f10b738775ceb96",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "executorch-buck2",
+    "cli_version": "vcli-canary-b26bccd2becb"
+  },
+  "comparison": {
+    "question": "Does Buck2 restore the ExecuTorch portable runner on a clean worker?",
+    "providers": [
+      "boringcache",
+      "bazel-remote"
+    ],
+    "primary_metric": "correctness",
+    "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+    "storage": "unmeasured",
+    "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+    "sample_count": 2
+  },
+  "source": {
+    "repository": "pytorch/executorch",
+    "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+      }
+    ],
+    "patch": "cache.patch"
+  },
+  "verification": [
+    "Require the declared native command to succeed",
+    "Require declared outputs and successful output checks",
+    "Require native remote-hit evidence and the same output hashes on the warm worker",
+    "Require registry shutdown to complete successfully"
+  ],
+  "plan_sha256": "a0f8cded0cfdbd715bd02b00f494f01d6c8b37bdb390978ff8ef8c21c829ffb9"
+}

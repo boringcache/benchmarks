@@ -1,6 +1,8 @@
 ---
 name: 'obs-studio: OBS Studio Actions Cache benchmark'
-run-name: "obs-studio / ${{ inputs.cache_tool || 'all' }} / Actions Cache | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} fresh | ${{ inputs.series_id || github.ref_name }} / sample ${{ inputs.sample || '1' }}"
+run-name: obs-studio / ${{ inputs.cache_tool || 'all' }} / Actions Cache | ${{ startsWith(inputs.cli_version,
+  'vcli-canary-') && 'Canary' || 'Stable' }} ${{ inputs.cadence }} | ${{ inputs.series_id
+  || github.ref_name }} / sample ${{ inputs.sample || '1' }}
 permissions:
   actions: read
   contents: read
@@ -12,7 +14,8 @@ env:
 jobs:
   ccache-base:
     name: GitHub Actions OBS ccache cold
-    if: inputs.cache_tool != 'xcode' && (inputs.runner_label == '' || github.ref_name == 'main')
+    if: inputs.cache_tool != 'xcode' && (inputs.runner_label == '' || github.ref_name
+      == 'main')
     runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
       && inputs.runner_label || 'ubuntu-26.04' }}"
     timeout-minutes: 120
@@ -367,3 +370,39 @@ jobs:
         type: string
         required: false
         default: '1'
+      cadence:
+        type: string
+        default: fresh
+        description: Fresh or nightly scheduling; measured phases retain the fresh
+          lane.
+  workflow_call:
+    inputs:
+      expected_identity:
+        type: string
+        required: false
+        default: ''
+      cache_tool:
+        required: false
+        type: string
+        default: all
+      runner_label:
+        required: false
+        default: ''
+        type: string
+      cli_version:
+        required: false
+        type: string
+        default: ''
+      series_id:
+        type: string
+        required: false
+        default: ''
+      sample:
+        type: string
+        required: false
+        default: '1'
+      cadence:
+        type: string
+        default: fresh
+        description: Fresh or nightly scheduling; measured phases retain the fresh
+          lane.

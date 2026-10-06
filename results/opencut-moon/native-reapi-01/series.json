@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "case_id": "opencut-moon",
+  "series_id": "native-reapi-01",
+  "created_at": "2026-10-05T21:33:58Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "550c9584072bedcc6068490dbaa20fd1760c26cd4d18364a876201d8a7653807",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "opencut-moon",
+    "cli_version": "vcli-canary-b26bccd2becb"
+  },
+  "comparison": {
+    "question": "Does Moon restore the OpenCut web build on a clean worker?",
+    "providers": [
+      "boringcache",
+      "bazel-remote"
+    ],
+    "primary_metric": "correctness",
+    "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+    "storage": "unmeasured",
+    "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+    "sample_count": 2
+  },
+  "source": {
+    "repository": "OpenCut-app/OpenCut",
+    "revision": "e668010778568641babef2cc40be4703ae6916d6",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "e668010778568641babef2cc40be4703ae6916d6"
+      }
+    ]
+  },
+  "verification": [
+    "Require the declared native command to succeed",
+    "Require declared outputs and successful output checks",
+    "Require native remote-hit evidence and the same output hashes on the warm worker",
+    "Require registry shutdown to complete successfully"
+  ],
+  "plan_sha256": "fee3d08d81bffe8eb44d73f7060f28c5b560a47cd97bc6c56b4fe525311c7fbc"
+}

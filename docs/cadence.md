@@ -1,150 +1,78 @@
 # Benchmark schedules
 
-PR #42 is merged. Central activation remains off. Historical repositories still own the active
-weekly, canary and source schedules. Central scheduled jobs require
-`BENCHMARK_CADENCE_ACTIVE=true`; merging this branch does not activate them.
-Manual qualification remains available. Historical triggers must be retired
-before ownership changes, so the migration does not duplicate runs. The
-[cutover procedure](cadence-cutover.md) includes the observed inventory and
-prepared patches for 48 cron triggers in 17 repositories; none are applied yet.
+`boringcache/benchmarks` owns execution and monitoring. The retired execution
+repositories are archived. Historical run URLs and exported evidence retain
+their original repository identity.
 
-`suites/scheduled.json` selects the maintained suite plus Moon, Pants, Buck2,
-sbt and Nix: 24 source cases and 31 fresh targets. It excludes Docker corpus and
-prospect drafts. Case definitions own workflow paths and variant inputs.
+`suites/scheduled.json` selects 24 source cases, 32 case/variant selections and
+34 underlying fresh workers. Project dispatch groups variants and provider
+workflows into 22 project runs. The 47-workload Docker corpus and prospect drafts
+are excluded from scheduling.
 
-| Run | UTC schedule | CLI | Source |
-| --- | --- | --- | --- |
-| Weekly fresh | Monday 04:00 | Latest compatible published stable release | Declared pins |
-| Nightly fresh | Daily 01:17 | Latest published canary | Declared pins |
-| Rolling source check | Hourly, at :11 | Stable after activation; canary for pre-activation planning | Reviewed upstream candidates |
+| Cadence | UTC schedule | Source |
+| --- | --- | --- |
+| Fresh | Monday 04:00 | Declared pins |
+| Nightly | Daily 01:17 | Declared pins; cold and identical-source replay, or declared changed-source phases |
+| Rolling | Hourly source check at :11 | New upstream commits that pass recipe inspection |
+| Monitor | Hourly at :47 | Both scheduled cadences and rolling receipts |
 
-## Independent dispatch and ordered rolling caches
+All cadences use the exact published canary in [`config/cli.json`](../config/cli.json).
+The provider wrapper and direct CLI workers use that same default. Changing the
+reviewed pin changes the execution definition; earlier series retain their
+original selector. A compatible stable release can replace this pin later.
+`BENCHMARK_CADENCE_ACTIVE=true` enables automatic dispatch and source publication.
+Manual dispatch and dry runs remain available.
 
-Fresh dispatch validates the whole suite and resolves one exact CLI tag before
-starting a matrix of independent requests. Each target retains its own receipt.
-The combined receipt preserves requested run IDs, failed or uncertain requests,
-and missing targets. A dispatch succeeding does not establish that the builds
-passed. Dry runs request no builds. Interrupted requests require receipt review
-before retrying; an absent HTTP response does not prove GitHub rejected a run.
+## Runs and evidence
 
-Preflight freezes a one-sample series for each case and variant using the same
-series contract as manual experiments. The plan retains source pins, phase
-sequence, provider set, CLI release, definition digest and harness commit.
-Separate OBS provider workflows share their variant's series. Every scheduled
-workflow checks the expected commit and definition before preparing the workload.
-If the dispatch branch advances after preflight, preparation fails; it does not
-execute the new snapshot as the old plan. Commit local harness changes before
-creating a schedule plan.
+Run names show the project, cadence and CLI selector. Providers, native tools and
+variants appear inside the project run. n8n's four workloads, Mastodon's selected
+Docker/compiler/streaming workloads, PostHog's profiles, Storybook's archive and
+Nx workloads, and OBS's provider/tool arms each share their project's run. Hugo's Go and Docker
+workloads share one run; Zed's Cargo and Nix workloads share one fresh run.
+Fresh and Nightly are distinct cadences; their measured phases retain the fresh
+lane. Rolling remains a changed-source observation.
 
-The retained dispatch receipt can be imported into the existing series layout:
+Preflight validates the whole suite, resolves one exact CLI and freezes a
+one-sample series for each case and variant. Grouping preserves those plans,
+provider sets, tags and series identities. Each fresh sample is independent;
+its warm jobs depend on its own seed. Rolling publication is ordered by cache
+identity, with `queue: max` and no cancellation of an existing observation.
+gRPC provider jobs have a 120-minute budget in both lanes.
 
-```sh
-ruby scripts/cadence-dispatch.rb --plan /tmp/benchmark-dispatch.json --materialize results
-```
+The monitor checks the configured CLI selector, receipt freshness, executed
+harness identity, expected provider/phase slots and canonical record validation.
+GitHub success without required phase evidence fails monitoring. Native fresh
+reports also retain failed, cancelled and skipped jobs, including post-step
+failures. A verified output does not override a failed job. Rolling diagnostic
+records without a frozen series remain labelled diagnostic; they do not acquire
+a new comparative plan during collection.
 
-This writes frozen series and dispatch records without requesting builds. Then
-use `bin/bench preserve`, `collect` and `catalog` with the recorded series and run
-IDs. A conflicting retained record is rejected. Uncertain and missing requests
-remain in the imported series.
+[`data/latest/current.json`](../data/latest/current.json) contains current central
+receipts and measurements. [`data/observations/`](../data/observations/) retains
+observations by cadence and run ID, including pending and failed work. The
+existing [`series catalog`](../data/latest/series.json) retains declared manual
+and imported series. Publication on the product website remains a separate
+review. Earlier published feeds retain their historical scope.
 
-The native fresh report runs after failed or skipped build jobs and retains
-`run-manifest.json` and `run-report.md` alongside available canonical lane files.
-It combines original phase records, shared phase outcomes and final job
-conclusions. A successful output check does not override a later post-step
-failure. Missing durations and storage remain unmeasured. The current cold
-matrix dependency still skips both warm jobs when either cold provider fails;
-the report records those skipped phases explicitly.
-The parent canary collector reconciles the same expected observations from the
-attempt's jobs and available phase artifacts if cancellation or runner loss
-prevents the child report from running. A successful job without a phase record
-has missing evidence. This does not replace durable evidence preservation.
+Storage probes run after publication. Original product and phase JSON remain
+retained; a separate measurement joins by run, attempt, workspace and exact
+resolved tags. Actions archive sizes are read after explicit cache save.
+Cachix records provider-reported compressed NAR sizes for the selected runtime
+closure. bazel-remote records its uncompressed local AC/CAS store after shutdown;
+that does not measure the compressed remote archive. NativeLink records scoped
+R2 object sizes. Missing measurements remain unmeasured. BuildBuddy and GitHub
+Docker blob attribution still lack complete storage measurements.
 
-Source checks fan out by case, with six checks running at a time. Each case owns
-its source-controller lock; one failed or slow case does not stop the others.
-Rolling workflows serialize publication to the same cache with `queue: max`.
-The next source cycle inspects the previous requested runs before advancing that
-case again. An unchanged source does not request another build.
+## Upstream changes
 
-Source inspection runs with read-only repository permissions. A separate job
-reconstructs only permitted source-pin changes, verifies the expected case and
-shared harness, then conditionally publishes against the current branch head.
-It records dispatch intent before making requests and retains receipts under
-`migration/rolling/`, including an observation per candidate source. A concurrent
-edit to the same case or shared harness blocks publication; an unrelated case's
-commit can be retried against its new branch head. Publication uses GitHub's
-[conditional commit API](https://docs.github.com/en/graphql/reference/commits#createcommitonbranch).
+Each case has an independent source-controller lock. Recipe inspection runs
+with read-only permissions; a separate publisher applies only reviewed source
+pin changes using a conditional commit. It preserves dispatch intent before
+requesting builds and retains candidate history under `migration/rolling/`.
 
-Deno retains adjacent-commit order. OBS retains its existing selection of the
-next build-relevant change and its immediate parent, recording the previous
-source separately. Zed selects dependency-verified candidates and promotes a
-source only after its rolling build succeeds. Other cases retain their existing
-promote-then-build order. Failed builds remain observations. Uncertain requests
-block that case from automatic redispatch until their receipts are reviewed.
-
-Before activation, the publication job only plans with a canary. It does not
-change `main` or request rolling builds. Both the workflow and publisher require
-active central ownership on `main` before publication.
-
-## Workloads and reports
-
-Every scheduled case now registers a rolling path, including the four native
-cases, OBS, five REAPI cases and two Nix cases previously missing one. Definitions
-and passing local checks do not establish live rolling qualification.
-
-Native Docker runs load and inspect their output for both providers. REAPI
-rolling runs retain the case/series cache; bazel-remote restores and publishes a
-GitHub Actions cache and records the previous source and restored key. Nix and
-OBS rolling runs permit both restore and publication. Missing seeds remain
-bootstrap observations; they must not be described as proven cache reuse.
-
-Nix workers import one common dependency store prepared outside the measured
-build. The export excludes the measured package, checksums the archive and
-checks the imported dependency hashes against the declared derivation. This
-avoids independently rebuilding a nondeterministic dependency for each arm while
-keeping strict package and dependency comparisons. The earlier Zed Nix screen
-restored both providers' package outputs correctly but failed the dependency
-baseline comparison; that failed run remains retained.
-
-Run names use the case, optional variant, CLI channel and lane, followed by the
-series or branch and sample. For example, `n8n / turbo | Canary fresh | main /
-sample 1` and `n8n / turbo | Stable rolling | main / sample 1`. Stable tags are
-not labelled as canaries merely because an exact CLI version was supplied.
-Provider and phase remain visible in job labels. REAPI, Nix and OBS rolling
-results use the canonical benchmark report and retain both
-structured evidence and the comparison summary. Reports contain measurements
-and verification results, without performance verdicts.
-
-## Qualification and activation
-
-The October 5 preflight rejected stable `v1.33.0`: it does not expose
-`cache-registry --reapi-port`. Canary `vcli-canary-7a5b27146ebe` passed the full
-31-target preflight. Weekly activation must wait for a compatible stable release;
-it must not substitute a canary or silently omit the REAPI cases.
-
-The complete controller rehearsal passed all 24 cases and planned changed-source
-rolling requests with the canary without publishing or dispatching builds.
-The earlier source matrix completed the cases independently and identified
-recipe changes in Immich, Qdrant, msgpack and Zed. Their reviewed changes are
-recorded in [the recipe review](recipe-reviews-2026-10-05.md). New source pins and
-changed recipes are covered by the
-[live qualification review](cadence-qualification-2026-10-05.md), which retains
-successful, failed and pending observations separately.
-
-The repository's Actions cache limit is 200 GB, with seven-day retention.
-Capacity alone does not establish that a particular rolling seed was retained
-or restored.
-
-All seventeen rolling targets passed seed and changed-source runs. Helix and
-Zed Nix each passed two fresh cold/warm samples with the common dependency seed.
-Sixty qualification and rehearsal archives have been published and verified;
-hosted checks and 252 local tests pass.
-
-Remaining activation requirements:
-- Verify main-branch workflow-token publication at cutover. The
-  [isolated publication rehearsal](../migration/rehearsals/mastodon-publication/review.md)
-  passed conditional commits, dispatch and reconciliation with the operator's
-  GitHub CLI; the hosted rehearsal passed inspection and dry-run publication.
-- Retire replaced historical cron triggers while preserving manual and release
-  entrypoints; verify no outstanding duplicate dispatches.
-- After a compatible stable release, change monitoring and publication ownership
-  and set `BENCHMARK_CADENCE_ACTIVE=true`.
+The next cycle reconciles requested runs and their output evidence before
+advancing again. Uncertain dispatches block automatic retries. Unchanged sources
+request no build. Recipe changes remain blocked until reviewed; the controller
+does not update their digests automatically. Zed additionally requires a verified
+build before promoting its source. Failed observations remain retained.

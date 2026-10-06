@@ -1,0 +1,657 @@
+{
+  "schema_version": 1,
+  "plan_sha256": "6a3d6bd82506b427a27ac1eb27092314a3a9ec6314a90595b17397ba7ff5f924",
+  "complete": true,
+  "valid_for_comparison": false,
+  "failures": [],
+  "methodology_issues": [
+    "This series does not declare a comparison of provider performance."
+  ],
+  "execution_verified": true,
+  "missing_completions": [],
+  "failed_completions": [],
+  "completions": [
+    {
+      "schema_version": 1,
+      "case_id": "gogs-moon",
+      "series_id": "native-reapi-01",
+      "sample": 1,
+      "run_id": "37376755061",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376755061",
+      "source_sha": "82339ba8890435501faceabe8c94fbd6fc29bf79",
+      "github_conclusion": "success",
+      "status": "success",
+      "errors": [],
+      "evidence_manifest_sha256": "62333af7fc90467f43975423021b8de0ebb4aa29a9069cee5cc475945340c8e6"
+    }
+  ],
+  "publication": "unreviewed",
+  "evidence_preservation": "requires-review",
+  "primary_metric": "correctness",
+  "missing": [],
+  "summaries": [
+    {
+      "phase": "cold",
+      "provider": "bazel-remote",
+      "count": 1,
+      "measurement": null,
+      "storage": null,
+      "storage_measured_count": 0
+    },
+    {
+      "phase": "warm",
+      "provider": "bazel-remote",
+      "count": 1,
+      "measurement": null,
+      "storage": null,
+      "storage_measured_count": 0
+    },
+    {
+      "phase": "cold",
+      "provider": "boringcache",
+      "count": 1,
+      "measurement": null,
+      "storage": null,
+      "storage_measured_count": 0
+    },
+    {
+      "phase": "warm",
+      "provider": "boringcache",
+      "count": 1,
+      "measurement": null,
+      "storage": null,
+      "storage_measured_count": 0
+    }
+  ],
+  "records": [
+    {
+      "schema_version": 1,
+      "benchmark": "gogs-moon",
+      "strategy": "bazel-remote",
+      "lane": "fresh",
+      "phase": "cold",
+      "variant": null,
+      "mode": "reapi",
+      "adapter": "runtime",
+      "case": {
+        "schema_version": 1,
+        "case_id": "gogs-moon",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "2c8187ec098c8da8d0258b3b07483345c640f40103708b239dbdcfe30515c41f",
+        "source": {
+          "repository": "gogs/gogs",
+          "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "gogs/gogs",
+          "branch": "main",
+          "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+        },
+        "verification": [
+          "Require the declared native command to succeed",
+          "Require declared outputs and successful output checks",
+          "Require native remote-hit evidence and the same output hashes on the warm worker",
+          "Require registry shutdown to complete successfully"
+        ],
+        "comparison": {
+          "question": "Does Moon restore the Gogs web build on a clean worker?",
+          "providers": [
+            "boringcache",
+            "bazel-remote"
+          ],
+          "primary_metric": "correctness",
+          "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+          "storage": "unmeasured",
+          "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+          "sample_count": 2
+        },
+        "execution": {
+          "sync": "upstream-head",
+          "workflows": [
+            {
+              "path": ".github/workflows/reapi-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "gogs-moon"
+              }
+            },
+            {
+              "path": ".github/workflows/reapi-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "gogs-moon"
+              }
+            }
+          ],
+          "blockers": []
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0.1009854150000109,
+        "build_seconds": 7.469111156000011,
+        "workflow_seconds": null,
+        "total_seconds": 7.570096571000022,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": 0.003340041999990717,
+        "comparison_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+        "build_and_reuse_seconds": 7.570096571000022
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": "gogs-moon-series-native-reapi-01-s1-r37376755061-a1",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": null
+      },
+      "source": {
+        "repository": "gogs/gogs",
+        "sha": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37376755061",
+        "run_attempt": "1",
+        "job": "cold",
+        "workflow": "REAPI comparison fresh",
+        "ref_name": "native-adapter-qualification",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000174944",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37376755061-1",
+      "series": {
+        "id": "native-reapi-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-24.04"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Require the declared native command to succeed",
+          "Require declared outputs and successful output checks",
+          "Require native remote-hit evidence and the same output hashes on the warm worker",
+          "Require registry shutdown to complete successfully"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37376755061"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "gogs-moon",
+      "strategy": "bazel-remote",
+      "lane": "fresh",
+      "phase": "warm",
+      "variant": null,
+      "mode": "reapi",
+      "adapter": "runtime",
+      "case": {
+        "schema_version": 1,
+        "case_id": "gogs-moon",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "2c8187ec098c8da8d0258b3b07483345c640f40103708b239dbdcfe30515c41f",
+        "source": {
+          "repository": "gogs/gogs",
+          "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "gogs/gogs",
+          "branch": "main",
+          "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+        },
+        "verification": [
+          "Require the declared native command to succeed",
+          "Require declared outputs and successful output checks",
+          "Require native remote-hit evidence and the same output hashes on the warm worker",
+          "Require registry shutdown to complete successfully"
+        ],
+        "comparison": {
+          "question": "Does Moon restore the Gogs web build on a clean worker?",
+          "providers": [
+            "boringcache",
+            "bazel-remote"
+          ],
+          "primary_metric": "correctness",
+          "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+          "storage": "unmeasured",
+          "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+          "sample_count": 2
+        },
+        "execution": {
+          "sync": "upstream-head",
+          "workflows": [
+            {
+              "path": ".github/workflows/reapi-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "gogs-moon"
+              }
+            },
+            {
+              "path": ".github/workflows/reapi-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "gogs-moon"
+              }
+            }
+          ],
+          "blockers": []
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0.10081523600001674,
+        "build_seconds": 1.5716351439999983,
+        "workflow_seconds": null,
+        "total_seconds": 1.672450380000015,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": 0.002940976000019191,
+        "comparison_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+        "build_and_reuse_seconds": 1.672450380000015
+      },
+      "cache": {
+        "hit": true,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": "gogs-moon-series-native-reapi-01-s1-r37376755061-a1",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": null
+      },
+      "source": {
+        "repository": "gogs/gogs",
+        "sha": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37376755061",
+        "run_attempt": "1",
+        "job": "warm",
+        "workflow": "REAPI comparison fresh",
+        "ref_name": "native-adapter-qualification",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000174964",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37376755061-1",
+      "series": {
+        "id": "native-reapi-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-24.04"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Require the declared native command to succeed",
+          "Require declared outputs and successful output checks",
+          "Require native remote-hit evidence and the same output hashes on the warm worker",
+          "Require registry shutdown to complete successfully"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37376755061"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "gogs-moon",
+      "strategy": "boringcache",
+      "lane": "fresh",
+      "phase": "cold",
+      "variant": null,
+      "mode": "reapi",
+      "adapter": "runtime",
+      "case": {
+        "schema_version": 1,
+        "case_id": "gogs-moon",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "2c8187ec098c8da8d0258b3b07483345c640f40103708b239dbdcfe30515c41f",
+        "source": {
+          "repository": "gogs/gogs",
+          "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "gogs/gogs",
+          "branch": "main",
+          "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+        },
+        "verification": [
+          "Require the declared native command to succeed",
+          "Require declared outputs and successful output checks",
+          "Require native remote-hit evidence and the same output hashes on the warm worker",
+          "Require registry shutdown to complete successfully"
+        ],
+        "comparison": {
+          "question": "Does Moon restore the Gogs web build on a clean worker?",
+          "providers": [
+            "boringcache",
+            "bazel-remote"
+          ],
+          "primary_metric": "correctness",
+          "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+          "storage": "unmeasured",
+          "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+          "sample_count": 2
+        },
+        "execution": {
+          "sync": "upstream-head",
+          "workflows": [
+            {
+              "path": ".github/workflows/reapi-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "gogs-moon"
+              }
+            },
+            {
+              "path": ".github/workflows/reapi-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "gogs-moon"
+              }
+            }
+          ],
+          "blockers": []
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 11.806481616,
+        "workflow_seconds": null,
+        "total_seconds": 11.806481616,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+        "build_and_reuse_seconds": 11.806481616
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": "gogs-moon-series-native-reapi-01-s1-r37376755061-a1",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": null
+      },
+      "source": {
+        "repository": "gogs/gogs",
+        "sha": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+      },
+      "product_refs": {
+        "cli_version": "1.40.0"
+      },
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37376755061",
+        "run_attempt": "1",
+        "job": "cold",
+        "workflow": "REAPI comparison fresh",
+        "ref_name": "native-adapter-qualification",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000174945",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37376755061-1",
+      "series": {
+        "id": "native-reapi-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-24.04"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Require the declared native command to succeed",
+          "Require declared outputs and successful output checks",
+          "Require native remote-hit evidence and the same output hashes on the warm worker",
+          "Require registry shutdown to complete successfully"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37376755061"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "gogs-moon",
+      "strategy": "boringcache",
+      "lane": "fresh",
+      "phase": "warm",
+      "variant": null,
+      "mode": "reapi",
+      "adapter": "runtime",
+      "case": {
+        "schema_version": 1,
+        "case_id": "gogs-moon",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "2c8187ec098c8da8d0258b3b07483345c640f40103708b239dbdcfe30515c41f",
+        "source": {
+          "repository": "gogs/gogs",
+          "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0",
+          "pins": [
+            {
+              "path": "proposal.md",
+              "kind": "snapshot",
+              "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "gogs/gogs",
+          "branch": "main",
+          "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+        },
+        "verification": [
+          "Require the declared native command to succeed",
+          "Require declared outputs and successful output checks",
+          "Require native remote-hit evidence and the same output hashes on the warm worker",
+          "Require registry shutdown to complete successfully"
+        ],
+        "comparison": {
+          "question": "Does Moon restore the Gogs web build on a clean worker?",
+          "providers": [
+            "boringcache",
+            "bazel-remote"
+          ],
+          "primary_metric": "correctness",
+          "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+          "storage": "unmeasured",
+          "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+          "sample_count": 2
+        },
+        "execution": {
+          "sync": "upstream-head",
+          "workflows": [
+            {
+              "path": ".github/workflows/reapi-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "gogs-moon"
+              }
+            },
+            {
+              "path": ".github/workflows/reapi-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "gogs-moon"
+              }
+            }
+          ],
+          "blockers": []
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 5.78419074,
+        "workflow_seconds": null,
+        "total_seconds": 5.78419074,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+        "build_and_reuse_seconds": 5.78419074
+      },
+      "cache": {
+        "hit": true,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": "gogs-moon-series-native-reapi-01-s1-r37376755061-a1",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": null
+      },
+      "source": {
+        "repository": "gogs/gogs",
+        "sha": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+      },
+      "product_refs": {
+        "cli_version": "1.40.0"
+      },
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37376755061",
+        "run_attempt": "1",
+        "job": "warm",
+        "workflow": "REAPI comparison fresh",
+        "ref_name": "native-adapter-qualification",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000174963",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37376755061-1",
+      "series": {
+        "id": "native-reapi-01",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-24.04"
+      },
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Require the declared native command to succeed",
+          "Require declared outputs and successful output checks",
+          "Require native remote-hit evidence and the same output hashes on the warm worker",
+          "Require registry shutdown to complete successfully"
+        ]
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37376755061"
+      ]
+    }
+  ],
+  "exclusions": []
+}

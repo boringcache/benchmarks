@@ -9,6 +9,9 @@ text = File.read(path)
 needle = 'profiles = ["cargo-product"]'
 raise "Expected one default Cargo profile selection" unless text.scan(Regexp.new(Regexp.escape(needle))).length == 1
 text = text.sub(needle, "profiles = [#{JSON.generate(profile)}]").gsub('"lane=cargo-product"', JSON.generate("lane=#{profile}"))
+engine = ENV.fetch("COMPILER_CACHE", "sccache")
+raise "Unknown compiler cache: #{engine}" unless %w[sccache kache mbx].include?(engine)
+text = text.sub("[adapters.cargo]", "[adapters.cargo]\ncompiler-cache = #{JSON.generate(engine)}")
 TomlRB.parse(text)
 File.write(path, text)
 puts "Selected Deno Cargo cache profile: #{profile}"

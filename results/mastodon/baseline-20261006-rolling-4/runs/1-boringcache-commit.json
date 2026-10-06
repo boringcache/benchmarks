@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "benchmark": "mastodon",
+  "strategy": "boringcache",
+  "lane": "rolling",
+  "phase": "commit",
+  "variant": "server",
+  "mode": "docker",
+  "adapter": "oci",
+  "case": {
+    "schema_version": 1,
+    "case_id": "mastodon",
+    "workspace": "boringcache/benchmarks",
+    "definition_sha256": "d2427ff5ba726239c5bb24f34ff0e6b65d137b5d5ca8107cd28b1f41f3bda06b",
+    "source": {
+      "repository": "mastodon/mastodon",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "origin": {
+      "repository": "boringcache/benchmark-mastodon",
+      "branch": "main",
+      "revision": "af806ebb3a531c4196b47bfc655da5448db5ba54"
+    },
+    "verification": [
+      "Pinned upstream recipe and build success",
+      "The freshly loaded output image exists in the local Docker image store"
+    ],
+    "comparison": {
+      "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+      "providers": [
+        "boringcache",
+        "actions-cache"
+      ],
+      "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+      "primary_metric": "build_and_reuse_seconds",
+      "storage": "provider-reported",
+      "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+      "sample_count": 10
+    },
+    "execution": {
+      "workflows": [
+        {
+          "path": ".github/workflows/native-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "mastodon"
+          },
+          "historical_workflow": "mastodon-mastodon-fresh-benchmark.yml",
+          "variants": [
+            "server",
+            "server-sccache",
+            "streaming"
+          ],
+          "variant_input": "variant"
+        },
+        {
+          "path": ".github/workflows/mastodon-mastodon-docker-benchmark.yml",
+          "lane": "diagnostic",
+          "inputs": {}
+        },
+        {
+          "path": ".github/workflows/native-rolling-benchmark.yml",
+          "lane": "rolling",
+          "inputs": {
+            "case_id": "mastodon"
+          },
+          "variants": [
+            "server",
+            "server-sccache",
+            "streaming"
+          ],
+          "variant_input": "variant"
+        }
+      ],
+      "sync": "upstream-head",
+      "sync_minute": 15,
+      "cache_tags": {
+        "mastodon-docker-local": "{scope}-docker",
+        "mastodon-sccache-local": "{scope}-sccache"
+      },
+      "native": {
+        "action": ".github/actions/mastodon-docker-benchmark",
+        "benchmark_id": "mastodon",
+        "fresh_inputs": {
+          "workload": "server",
+          "load_image": "true"
+        },
+        "rolling_inputs": {
+          "workload": "server",
+          "load_image": "true"
+        },
+        "variants": {
+          "server": {},
+          "server-sccache": {
+            "benchmark_id": "mastodon-sccache",
+            "fresh_inputs": {
+              "docker_tool_cache": "true"
+            },
+            "rolling_inputs": {
+              "docker_tool_cache": "true"
+            },
+            "provider_flags": {
+              "actions-cache": {
+                "docker_tool_cache": "false"
+              }
+            }
+          },
+          "streaming": {
+            "benchmark_id": "mastodon-streaming",
+            "fresh_inputs": {
+              "workload": "streaming"
+            },
+            "rolling_inputs": {
+              "workload": "streaming"
+            }
+          }
+        }
+      }
+    }
+  },
+  "timing": {
+    "restore_or_setup_seconds": 0,
+    "build_seconds": 346,
+    "workflow_seconds": 354,
+    "total_seconds": 346,
+    "dependency_setup_seconds": null,
+    "compile_seconds": null,
+    "verification_seconds": null,
+    "save_seconds": null,
+    "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+    "build_and_reuse_seconds": 346
+  },
+  "cache": {
+    "hit": null,
+    "sccache_proof": null,
+    "import_ready": null,
+    "import_refs": 0,
+    "docker_plan": {
+      "import_tags": [
+        "mastodon-series-baseline-20261006-rolling-4-docker-linux-amd64",
+        "mastodon-series-baseline-20261006-rolling-4-docker-ubuntu-24-x86_64"
+      ],
+      "planned_import_refs": 2,
+      "export_tag": "mastodon-series-baseline-20261006-rolling-4-docker-linux-amd64"
+    },
+    "tag": "mastodon-series-baseline-20261006-rolling-4-docker",
+    "workspace": "boringcache/benchmarks",
+    "storage_bytes": 1126625032,
+    "storage_source": "boringcache-check",
+    "storage_breakdown": {
+      "workspace": "boringcache/benchmarks",
+      "tags": [
+        "mastodon-series-baseline-20261006-rolling-4-docker-linux-amd64"
+      ],
+      "complete": true,
+      "measured_bytes": 1126625032,
+      "unmeasured_tags": [],
+      "total_bytes": 1126625032,
+      "observations": [
+        {
+          "requested_tag": "mastodon-series-baseline-20261006-rolling-4-docker-linux-amd64",
+          "tag": "mastodon-series-baseline-20261006-rolling-4-docker-linux-amd64",
+          "status": "hit",
+          "cache_type": "cache_entry",
+          "cache_entry_id": "7b0774a2-08d6-4077-8660-06a47aa04652",
+          "manifest_root_digest": "sha256:f09c3b5df5eac888679a58e546d2027347798a75111f5a5bbeb691e64745f4cf",
+          "kv_total_size": 0,
+          "compressed_size": 1126625032,
+          "size": 1126625032
+        }
+      ]
+    }
+  },
+  "source": {
+    "repository": "mastodon/mastodon",
+    "sha": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c"
+  },
+  "product_refs": {
+    "schema_version": 1,
+    "cli_version": "1.40.0",
+    "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+    "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+  },
+  "action": {
+    "resolved_mode": "docker",
+    "resolved_tags": [
+      "mastodon-series-baseline-20261006-rolling-4-docker-linux-amd64"
+    ],
+    "trust_state": {
+      "status": "publish",
+      "event_name": "workflow_dispatch",
+      "requested_policy": "publish",
+      "resolved_policy": "publish",
+      "write_allowed": true,
+      "decision_source": "cli",
+      "reason": "explicit_request",
+      "provider": "github-actions",
+      "detail": "Publication updates the published cache tag.",
+      "next_step": "Let the run finish; the next matching run restores what it publishes.",
+      "token_capabilities": {
+        "restore": true,
+        "stage": true,
+        "save": true
+      }
+    },
+    "diagnostics_level": "off"
+  },
+  "github": {
+    "repository": "boringcache/benchmarks",
+    "run_id": "37429897730",
+    "run_attempt": "1",
+    "job": "publish",
+    "workflow": "Native comparison rolling",
+    "ref_name": "main",
+    "runner_os": "Linux",
+    "runner_arch": "X64",
+    "runner_name": "GitHub Actions 1000175317",
+    "runner_environment": "github-hosted",
+    "runner_image": "ubuntu24",
+    "runner_image_version": "20260927.320.1"
+  },
+  "run_uid": "gh-37429897730-1",
+  "verification": {
+    "passed": true,
+    "checks": [
+      "Output verification completed before recording this phase"
+    ],
+    "declared_checks": [
+      "Pinned upstream recipe and build success",
+      "The freshly loaded output image exists in the local Docker image store"
+    ]
+  },
+  "series": {
+    "id": "baseline-20261006-rolling-4",
+    "sample": 1
+  },
+  "environment": {
+    "os": "Linux",
+    "arch": "X64",
+    "image": "ubuntu24",
+    "image_version": "20260927.320.1",
+    "machine": "ubuntu-latest"
+  },
+  "evidence_links": [
+    "https://github.com/boringcache/benchmarks/actions/runs/37429897730"
+  ]
+}

@@ -4,6 +4,8 @@ require "json"
 require "digest"
 require "fileutils"
 require "yaml"
+require "toml-rb"
+require "open3"
 require_relative "reapi-registry"
 require_relative "benchmark-phase"
 
@@ -50,10 +52,50 @@ module ReapiClient
 
   def self.build
     phase, provider = ENV.fetch("PHASE"), ENV.fetch("PROVIDER")
+    return managed_build(phase) if provider == "boringcache"
     configure(phase)
     scope = BenchmarkPhase.scope(ENV)
     ReapiRegistry.run(command: recipe.fetch("command"), provider: provider, phase: phase,
       workspace: "boringcache/benchmarks", tag: scope)
+  end
+
+  def self.managed_command(phase, scope)
+    tool = recipe.fetch("tool")
+    raise Error, "Unknown native client" unless %w[moon pants buck2 sbt].include?(tool)
+    raise Error, "Unknown phase" unless %w[cold warm commit].include?(phase)
+    config = {"workspace" => "boringcache/benchmarks", "adapters" => {
+      tool => {"tag" => scope, "no-git" => true, "no-platform" => true,
+        "command" => recipe.fetch("command")}}}
+    File.write(".boringcache.toml", TomlRB.dump(config))
+    if tool == "buck2"
+      File.write(".buckconfig.local", "[build]\n  execution_platforms = root//benchmark-platform:local\n[benchmark]\n  cache_uploads = #{phase == 'warm' ? 'false' : 'true'}\n")
+    elsif tool == "sbt"
+      path = "benchmark-cache.sbt"
+      File.write(path, File.readlines(path).reject { |line| line.start_with?("Global / remoteCache :=") }.join)
+    end
+    args = ["boringcache", tool, "--fail-on-cache-error"]
+    args << "--read-only" if phase == "warm"
+    args
+  end
+
+  def self.managed_build(phase)
+    FileUtils.mkdir_p("reapi-evidence")
+    command = managed_command(phase, BenchmarkPhase.scope(ENV))
+    measurements = {"provider" => "boringcache", "phase" => phase, "command" => command,
+      "scope" => "Managed CLI operation including cache setup, build and publication",
+      "restore_or_setup_seconds" => nil, "save_seconds" => nil, "success" => false}
+    started = ReapiRegistry.elapsed
+    File.open("reapi-evidence/build.log", "w") do |log|
+      Open3.popen2e(*command) do |input, output, process|
+        input.close
+        output.each_line { |line| log.write(line); $stdout.write(line) }
+        measurements["success"] = process.value.success?
+      end
+    end
+    measurements["build_seconds"] = ReapiRegistry.elapsed - started
+    raise Error, "Managed native build failed; see reapi-evidence/build.log" unless measurements["success"]
+  ensure
+    File.write("reapi-evidence/timing.json", JSON.pretty_generate(measurements) + "\n") if measurements
   end
 
   def self.verify
