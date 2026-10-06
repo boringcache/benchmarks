@@ -25703,6 +25703,73 @@
     },
     {
       "case_id": "zed-nix",
+      "series_id": "cache-reset-20261006",
+      "plan_path": "results/zed-nix/cache-reset-20261006/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Nix restore the Zed package closure on a fresh store?",
+        "providers": [
+          "boringcache",
+          "cachix"
+        ],
+        "primary_metric": "build_and_reuse_seconds",
+        "timed_scope": "Nix package derivation build or substitution after its build dependencies are realized; dependency preparation, output verification and provider post-step publication are outside the build timer. All workers import the same checksummed dependency-store export before timing; its derivation and NAR hashes must match, and the measured package is excluded from the seed.",
+        "storage": "provider-reported",
+        "cache_scope": "BoringCache case/series tag; Cachix content-addressed cache shared across series. Cold disables substitution after dependency preparation. Warm uses a fresh local output store and only the selected provider; compare exact output and dependency closure hashes. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "zed-industries/zed",
+        "revision": "ba8159b4d324d137e08993d85fb023b484388ede",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "ba8159b4d324d137e08993d85fb023b484388ede"
+          }
+        ]
+      },
+      "plan_sha256": "1d6d48d12282284f5647b9412851d04c3ac4c53ffb7eb4a9f1798dfc8707d8d2",
+      "definition_sha256": "9ef2ed5bbc8409628d9a33c98aab15e580378e42fa8adeed517dd0e06566e6fe",
+      "state": "planned",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "cold",
+          "cachix"
+        ],
+        [
+          1,
+          "warm",
+          "boringcache"
+        ],
+        [
+          1,
+          "warm",
+          "cachix"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": []
+    },
+    {
+      "case_id": "zed-nix",
       "series_id": "cadence-37429783479-27",
       "plan_path": "results/zed-nix/cadence-37429783479-27/series.json",
       "lane": "fresh",
