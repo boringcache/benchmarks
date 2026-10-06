@@ -109,6 +109,37 @@ class DepotCacheTest < Minitest::Test
     assert_equal "await exec.exec('ruby', ['./scripts/depot-cache.rb']);", api.dig("with", "script")
   end
 
+  def test_depot_private_proxy_requires_a_runtime_token_and_reviewed_runner
+    Dir.mktmpdir do |directory|
+      Dir.chdir(directory) do
+        env = {"BENCHMARK_RUNNER_CLASS" => "depot-ubuntu-24.04-4", "GITHUB_ENV" => "env",
+          "ACTIONS_RESULTS_URL" => "http://10.20.1.2/cache"}
+        assert_raises(DepotCache::Error) { DepotCache.prepare(provider: "depot-actions-cache", mode: "docker", phase: "publish", env: env) }
+        env["ACTIONS_RUNTIME_TOKEN"] = "private-runtime-token"
+        DepotCache.prepare(provider: "depot-actions-cache", mode: "docker", phase: "publish", env: env)
+        config = File.read(".depot-cache/configuration.json")
+        assert_equal "10.20.1.2", JSON.parse(config).fetch("endpoint_host")
+        refute_includes config, "private-runtime-token"
+        env["BENCHMARK_RUNNER_CLASS"] = "ubuntu-24.04"
+        assert_raises(DepotCache::Error) { DepotCache.prepare(provider: "depot-actions-cache", mode: "docker", phase: "publish", env: env) }
+      end
+    end
+  end
+
+  def test_maven_adds_the_remote_configuration_without_changing_inputs_or_execution_control
+    Dir.mktmpdir do |directory|
+      path = File.join(directory, "upstream/.mvn/maven-build-cache-config.xml")
+      FileUtils.mkdir_p(File.dirname(path))
+      contents = '<input><global><includes><include>src/</include></includes></global></input><executionControl><runAlways><goalsLists/></runAlways></executionControl>'
+      File.write(path, '<cache xmlns="http://maven.apache.org/BUILD-CACHE-CONFIG/1.2.0">' + contents + '</cache>')
+      DepotCache.configure("maven", phase: "publish", root: directory, env: {"DEPOT_TOKEN" => "private-token"})
+      config = File.read(path)
+      assert_includes config, contents
+      assert_includes config, '<remote enabled="true" saveToRemote="true" id="depot-cache">'
+      assert_includes config, 'xmlns="http://maven.apache.org/BUILD-CACHE-CONFIG/1.2.0"'
+    end
+  end
+
   def test_native_depot_plans_do_not_claim_an_isolated_cold_cache_or_change_variants
     item = BenchmarkCases.load_case("n8n")
     inputs = {"provider" => "depot-cache", "runner_label" => "depot-ubuntu-24.04-4"}
