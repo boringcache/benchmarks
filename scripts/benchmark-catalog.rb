@@ -26,7 +26,7 @@ module BenchmarkCatalog
     receipts = Dir[File.join(directory, "dispatches", "*.json")].sort.map do |file|
       receipt = JSON.parse(File.read(file))
       raise BenchmarkSeries::Error, "Dispatch receipt belongs to another case or repository" unless receipt.values_at("case_id", "repository") == [case_id, BenchmarkCases::REPOSITORY]
-      receipt.slice("case_id", "repository", "workflow", "lane", "inputs", "ref", "state", "requested_at", "run_id", "run_url")
+      receipt.slice("case_id", "repository", "workflow", "lane", "inputs", "ref", "state", "requested_at", "run_id", "run_url", "harness_sha", "error")
     end
     run_ids = (report.fetch("records").map { |record| record.dig("github", "run_id").to_s } +
       report.fetch("completions").map { |completion| completion.fetch("run_id") } +
@@ -38,7 +38,7 @@ module BenchmarkCatalog
       "completed"
     elsif !report.fetch("records").empty? || !report.fetch("completions").empty?
       "incomplete"
-    elsif !receipts.empty?
+    elsif receipts.any? { |receipt| receipt["state"] != "planned" || receipt["run_id"] }
       "requested"
     else
       "planned"

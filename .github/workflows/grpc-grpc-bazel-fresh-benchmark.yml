@@ -5,6 +5,7 @@ permissions:
   contents: read
   actions: read
 env:
+  BENCHMARK_EXPECTED_IDENTITY: "${{ inputs.expected_identity }}"
   BORINGCACHE_NO_GIT: 'true'
   BAZEL_OUTPUT_USER_ROOT: "/tmp/boringcache-grpc-bazel/output-root"
   BAZEL_OUTPUT_BASE: "/tmp/boringcache-grpc-bazel/output-base"
@@ -135,6 +136,11 @@ jobs:
 'on':
   workflow_dispatch:
     inputs:
+      expected_identity:
+        description: Frozen scheduled harness and case identity; checked before preparation.
+        type: string
+        required: false
+        default: ''
       cli_version:
         description: Optional exact BoringCache CLI release tag.
         required: false

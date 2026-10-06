@@ -281,7 +281,7 @@ def download_patterns(workflow:, job:)
 end
 
 def summarizing?(job)
-  Array(job["steps"]).any? { |step| step.is_a?(Hash) && step["run"].to_s.include?("benchmark-report.rb summarize") }
+  Array(job["steps"]).any? { |step| step.is_a?(Hash) && step["run"].to_s.match?(/(?:benchmark-report\.rb summarize|fresh-report\.rb report)/) }
 end
 
 SUMMARIZE_FLAGS = %w[title input-dir output-dir baseline-strategy].freeze

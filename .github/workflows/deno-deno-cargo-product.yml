@@ -5,6 +5,7 @@ permissions:
   actions: read
   contents: read
 env:
+  BENCHMARK_EXPECTED_IDENTITY: "${{ inputs.expected_identity }}"
   CACHE_SCOPE: r${{ github.run_id }}-a${{ github.run_attempt }}
   CACHE_PROFILE: "${{ inputs.cache_profile || 'cargo-product' }}"
   CARGO_TERM_COLOR: always
@@ -337,6 +338,11 @@ jobs:
 'on':
   workflow_dispatch:
     inputs:
+      expected_identity:
+        description: Frozen scheduled harness and case identity; checked before preparation.
+        type: string
+        required: false
+        default: ''
       cli_version:
         description: Exact immutable BoringCache CLI release tag.
         required: false
@@ -367,6 +373,11 @@ jobs:
         default: '1'
   workflow_call:
     inputs:
+      expected_identity:
+        description: Frozen scheduled harness and case identity; checked before preparation.
+        type: string
+        required: false
+        default: ''
       cli_version:
         description: Exact immutable BoringCache CLI release tag.
         required: false

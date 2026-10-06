@@ -9,8 +9,43 @@ require_relative "benchmark-cadence"
 module CadenceDispatch
   class Error < StandardError; end
 
+  def self.materialize(record, directory:)
+    record.fetch("runs").each do |run|
+      series = run.fetch("series")
+      raise Error, "Scheduled series digest differs from its plan" unless series.fetch("plan_sha256") == BenchmarkSeries.digest(series)
+      %w[case_id series_id].each do |key|
+        raise Error, "Invalid scheduled #{key}" unless series.fetch(key).match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/)
+      end
+      workflow = run.fetch("workflow")
+      raise Error, "Invalid scheduled workflow" unless workflow.match?(/\A[a-z0-9-]+\.yml\z/)
+      target = File.join(directory, series.fetch("case_id"), series.fetch("series_id"))
+      receipt = {"schema_version" => 1, "case_id" => series.fetch("case_id"), "repository" => run.fetch("repository"),
+        "workflow" => workflow, "lane" => series.fetch("lane"), "ref" => record.fetch("ref"), "state" => run.fetch("state"),
+        "requested_at" => record["created_at"],
+        "inputs" => run.fetch("inputs").merge("cli_version" => record.fetch("cli_version")),
+        "run_id" => run["id"], "run_url" => run["url"], "harness_sha" => run.fetch("harness_sha"), "error" => run["error"]}
+      {"series.json" => series, "dispatches/1-#{workflow}.json" => receipt}.each do |name, value|
+        path = File.join(target, name)
+        raise Error, "Retained scheduled record differs: #{path}" if File.file?(path) && JSON.parse(File.read(path)) != value
+        BenchmarkCases.write_json(path, value)
+      end
+      BenchmarkSeries.report(target)
+    end
+  end
+
   def self.matrix(plan)
     raise Error, "Expected a validated dispatch plan" unless plan.fetch("state") == "planned"
+    plan.fetch("runs").each do |run|
+      next unless run["series"]
+      series = run.fetch("series")
+      identity = JSON.parse(run.fetch("inputs").fetch("expected_identity"))
+      unless series.fetch("plan_sha256") == BenchmarkSeries.digest(series) &&
+          identity == {"harness_sha" => run.fetch("harness_sha"), "case_id" => series.fetch("case_id"), "definition_sha256" => series.fetch("definition_sha256")} &&
+          run.dig("inputs", "series_id") == series.fetch("series_id") && run.dig("inputs", "sample") == "1" &&
+          series.fetch("workflow_inputs") == run.fetch("inputs").except("series_id", "sample", "expected_identity").merge("cli_version" => plan.fetch("cli_version"))
+        raise Error, "Scheduled request differs from its frozen series"
+      end
+    end
     {"include" => plan.fetch("runs").each_with_index.map do |run, index|
       {"index" => index, "label" => NightlyCanaries::Runner.new.workload_name(run)}
     end}
@@ -60,6 +95,9 @@ module CadenceDispatch
       %w[repository workflow inputs].each do |key|
         raise Error, "Dispatch receipt target differs from the plan" unless run.fetch(key) == expected.fetch(key)
       end
+      %w[harness_sha series].each do |key|
+        raise Error, "Dispatch receipt #{key} differs from the plan" unless run[key] == expected[key]
+      end
       if run["state"] == "requested"
         raise Error, "Requested run lacks its GitHub ID" unless run["id"].is_a?(Integer) && run["id"].positive?
       end
@@ -86,10 +124,13 @@ if $PROGRAM_NAME == __FILE__
     parser.on("--output PATH") { |value| options[:output] = value }
     parser.on("--summary PATH") { |value| options[:summary] = value }
     parser.on("--dry-run") { options[:dry_run] = true }
+    parser.on("--materialize DIRECTORY") { |value| options[:materialize] = value }
   end.parse!
   begin
     plan = JSON.parse(File.read(options.fetch(:plan)))
-    if options[:matrix]
+    if options[:materialize]
+      CadenceDispatch.materialize(plan, directory: options.fetch(:materialize))
+    elsif options[:matrix]
       puts JSON.generate(CadenceDispatch.matrix(plan))
     elsif options.key?(:index)
       CadenceDispatch.dispatch(plan, index: options.fetch(:index), output: options.fetch(:output))
@@ -101,7 +142,7 @@ if $PROGRAM_NAME == __FILE__
       runner.write_summary(options[:summary], record)
       exit(record.fetch("state") == "dispatch-failed" ? 1 : 0)
     end
-  rescue CadenceDispatch::Error, NightlyCanaries::Error, KeyError, JSON::ParserError => error
+  rescue CadenceDispatch::Error, NightlyCanaries::Error, BenchmarkCases::Error, BenchmarkSeries::Error, KeyError, JSON::ParserError => error
     abort error.message
   end
 end

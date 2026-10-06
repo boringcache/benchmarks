@@ -5,6 +5,7 @@ permissions:
   contents: read
   actions: read
 env:
+  BENCHMARK_EXPECTED_IDENTITY: "${{ inputs.expected_identity }}"
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
   BENCHMARK_SAMPLE: "${{ inputs.sample }}"
   BENCHMARK_RUNNER_CLASS: ubuntu-24.04
@@ -215,6 +216,11 @@ jobs:
 'on':
   workflow_dispatch:
     inputs:
+      expected_identity:
+        description: Frozen scheduled harness and case identity; checked before preparation.
+        type: string
+        required: false
+        default: ''
       case_id:
         type: choice
         options:

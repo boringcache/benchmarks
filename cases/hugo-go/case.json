@@ -41,7 +41,7 @@
     "sync": "upstream-head",
     "sync_minute": 10,
     "native": {
-      "action": ".github/actions/hugo-go-benchmark",
+      "action": ".github/actions/go-benchmark",
       "benchmark_id": "hugo-go",
       "rolling_inputs": {
         "go_version": "1.27.0"

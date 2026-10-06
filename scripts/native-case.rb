@@ -8,13 +8,19 @@ module NativeCase
   class Error < StandardError; end
   INPUTS = %w[strategy phase cache_lane cache_scope benchmark_id cli_version buildkit_image cli_platform report_variant].freeze
 
-  def self.validate(item, payload:)
+  def self.action_path(recipe, payload:, shared_root: File.expand_path("..", __dir__))
+    local = File.join(payload, recipe.fetch("action"), "action.yml")
+    return local if File.file?(local)
+    File.join(shared_root, recipe.fetch("action"), "action.yml")
+  end
+
+  def self.validate(item, payload:, shared_root: File.expand_path("..", __dir__))
     recipe = item.dig("execution", "native")
     return unless recipe
 
     selected = recipe.fetch("variants", {}).keys
     selected = [nil] if selected.empty?
-    selected.each { |variant| validate_recipe(resolve(recipe, variant), payload: payload, variant: variant) }
+    selected.each { |variant| validate_recipe(resolve(recipe, variant), payload: payload, variant: variant, shared_root: shared_root) }
     raise Error, "Native comparison requires BoringCache and Actions Cache arms" unless item.dig("comparison", "providers").sort == %w[actions-cache boringcache]
     recipe
   end
@@ -37,8 +43,8 @@ module NativeCase
     resolved
   end
 
-  def self.validate_recipe(recipe, payload:, variant:)
-    path = File.join(payload, recipe.fetch("action"), "action.yml")
+  def self.validate_recipe(recipe, payload:, variant:, shared_root: File.expand_path("..", __dir__))
+    path = action_path(recipe, payload: payload, shared_root: shared_root)
     raise Error, "Missing native case action #{recipe.fetch('action')}" unless File.file?(path)
     action = YAML.safe_load(File.read(path), aliases: true)
     raise Error, "Native case action must be composite" unless action.dig("runs", "using") == "composite"
@@ -67,9 +73,23 @@ module NativeCase
     recipe
   end
 
-  def self.verify_report(recipe, payload:, lane:)
-    action = YAML.safe_load(File.read(File.join(payload, recipe.fetch("action"), "action.yml")), aliases: true)
-    reports = action.dig("runs", "steps").filter_map do |step|
+  def self.action_steps(recipe, payload:, shared_root:, seen: [])
+    path = action_path(recipe, payload: payload, shared_root: shared_root)
+    raise Error, "Recursive native action: #{path}" if seen.include?(path)
+    action = YAML.safe_load_file(path, aliases: true)
+    Array(action.dig("runs", "steps")).flat_map do |step|
+      nested = step["uses"].to_s
+      if nested.start_with?("./.github/actions/")
+        [step, *action_steps({"action" => nested.delete_prefix("./")}, payload: payload, shared_root: shared_root, seen: seen + [path])]
+      else
+        [step]
+      end
+    end
+  end
+
+  def self.verify_report(recipe, payload:, lane:, shared_root: File.expand_path("..", __dir__))
+    action = YAML.safe_load_file(action_path(recipe, payload: payload, shared_root: shared_root), aliases: true)
+    reports = action_steps(recipe, payload: payload, shared_root: shared_root).filter_map do |step|
       command = step["run"].to_s
       command if command.match?(/benchmark-report\.rb\s+phase\b/)
     end
@@ -89,7 +109,7 @@ module NativeCase
     raise Error, "Use fresh or rolling for the native lane" unless %w[fresh rolling].include?(lane)
     raise Error, "Use an empty suffix or a lowercase suffix beginning with a hyphen" unless suffix.match?(/\A(?:-[a-z0-9]+(?:-[a-z0-9]+)*)?\z/)
     benchmark_id = recipe.fetch("benchmark_id") + suffix
-    action = YAML.safe_load(File.read(File.join(directory, recipe.fetch("action"), "action.yml")), aliases: true)
+    action = YAML.safe_load_file(action_path(recipe, payload: directory), aliases: true)
     declared = action.fetch("inputs")
     settings = recipe.fetch("#{lane}_inputs").merge(INPUTS.to_h { |name| [name, "${{ inputs.#{name} }}"] }.select { |name, _| declared.key?(name) })
     settings["cache_lane"] = lane
@@ -104,6 +124,17 @@ module NativeCase
     document = {"name" => "Declared benchmark phase", "description" => "Executes the reviewed native case recipe.",
       "inputs" => INPUTS.to_h { |name| [name, {"required" => %w[strategy phase benchmark_id].include?(name), "default" => ""}] },
       "runs" => {"using" => "composite", "steps" => [{"id" => "phase", "uses" => "./#{recipe.fetch('action')}", "with" => settings, "env" => recipe.fetch("environment", {})}]}}
+    document.fetch("runs").fetch("steps").concat([
+      {"name" => "Record phase outcome", "if" => "always()", "shell" => "bash",
+       "env" => {"BENCHMARK_PHASE" => "${{ inputs.phase }}", "BENCHMARK_LANE" => lane,
+         "BENCHMARK_PROVIDER" => "${{ inputs.strategy }}", "BENCHMARK_OUTCOME" => "${{ steps.phase.outcome }}",
+         "BENCHMARK_CASE_ID" => item.fetch("id"), "BENCHMARK_ID" => benchmark_id, "BENCHMARK_VARIANT" => variant.to_s},
+       "run" => "ruby .harness/scripts/fresh-report.rb outcome"},
+      {"name" => "Retain phase outcome", "if" => "always()",
+       "uses" => "actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+       "with" => {"name" => "outcome-#{benchmark_id}#{variant ? "-#{variant}" : ""}-${{ inputs.strategy }}-#{lane}-${{ inputs.phase }}",
+         "path" => "benchmark-outcome/", "if-no-files-found" => "error"}}
+    ])
     if action.fetch("outputs", {}).key?("cache_scope")
       document["outputs"] = {"cache_scope" => {"description" => "Published cache cohort", "value" => "${{ steps.phase.outputs.cache_scope }}"}}
     end

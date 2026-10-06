@@ -9,6 +9,7 @@ class NativeCaseTest < Minitest::Test
     item = BenchmarkCases.load_case(id)
     Dir.mktmpdir("native-case-") do |directory|
       FileUtils.cp_r(Dir[File.join(BenchmarkCases::ROOT, "cases", id, "payload", "{*,.[!.]*}")], directory)
+      BenchmarkCases.copy_shared_actions(directory)
       yield item, directory
     end
   end
@@ -73,23 +74,24 @@ class NativeCaseTest < Minitest::Test
   end
 
   def test_n8n_dependency_installation_does_not_increase_build_and_reuse_time
-    assert_dependency_setup_excluded("n8n", "n8n-turbo-benchmark", ["Install n8n dependencies"], "Build n8n")
+    assert_dependency_setup_excluded("n8n", "n8n-turbo-benchmark", ["pnpm", "--frozen-lockfile"])
   end
 
   def test_storybook_installation_and_sandbox_creation_do_not_increase_build_and_reuse_time
-    assert_dependency_setup_excluded("storybook", "storybook-nx-benchmark", ["Install Storybook dependencies", "Create the upstream Storybook sandbox"], "Build the Storybook benchmark sandbox")
+    assert_dependency_setup_excluded("storybook", "storybook-nx-benchmark", ["--immutable", "sandbox", "react-vite/default-ts"])
   end
 
-  def assert_dependency_setup_excluded(case_id, action, setup_names, build_name)
+  def assert_dependency_setup_excluded(case_id, action, commands)
     path = File.join(BenchmarkCases::ROOT, "cases", case_id, "payload/.github/actions", action, "action.yml")
-    steps = YAML.safe_load(File.read(path)).dig("runs", "steps")
+    invocation = YAML.safe_load_file(path).dig("runs", "steps").find { |step| step["uses"] == "./.github/actions/native-cache-benchmark" }
+    preparation = File.join(BenchmarkCases::ROOT, "cases", case_id, "payload", invocation.dig("with", "prepare_script"))
+    commands.each { |command| assert_includes File.read(preparation), command }
+    steps = YAML.safe_load_file(File.join(BenchmarkCases::ROOT, ".github/actions/native-cache-benchmark/action.yml")).dig("runs", "steps")
     timer = steps.index { |step| step["id"] == "build_timer" }
-    setup_names.each do |name|
-      setup = steps.index { |step| step["name"] == name }
-      assert_operator steps.index { |step| step["id"] == "setup_timing" }, :<, setup
-      assert_operator setup, :<, timer
-    end
-    assert_operator timer, :<, steps.index { |step| step["name"] == build_name }
+    setup = steps.index { |step| step["name"] == "Prepare workload dependencies outside measurement" }
+    assert_operator steps.index { |step| step["id"] == "setup_timing" }, :<, setup
+    assert_operator setup, :<, timer
+    assert_operator timer, :<, steps.index { |step| step["id"] == "build" }
     reporter = steps.find { |step| step["name"] == "Write the benchmark phase evidence" }
     assert_equal "${{ steps.setup_timing.outputs.setup_seconds }}", reporter.dig("env", "SETUP_SECONDS")
     Dir.mktmpdir("benchmark-timing-") do |directory|
@@ -136,7 +138,7 @@ class NativeCaseTest < Minitest::Test
       assert_includes error.message, "requires load_image=true"
     end
     with_payload("hugo-go") do |item, directory|
-      path = File.join(directory, item.dig("execution", "native", "action"), "action.yml")
+      path = File.join(directory, ".github/actions/native-cache-benchmark/action.yml")
       File.write(path, File.read(path).gsub("--verified-output", ""))
       error = assert_raises(NativeCase::Error) { NativeCase.verify_report(item.dig("execution", "native"), payload: directory, lane: "fresh") }
       assert_includes error.message, "does not report verified output"
@@ -298,10 +300,15 @@ class NativeCaseTest < Minitest::Test
   def test_storybook_reports_the_archive_mode_it_runs
     path = File.join(BenchmarkCases::ROOT, "cases/storybook/payload/.github/actions/storybook-nx-benchmark/action.yml")
     steps = YAML.safe_load_file(path).dig("runs", "steps")
-    calls = steps.select { |step| step["uses"] == "./.github/actions/boringcache" }
-    assert_equal ["archive"], calls.map { |step| step.dig("with", "mode") }.uniq
-    report = steps.find { |step| step["run"].to_s.include?("benchmark-report.rb phase") }
-    assert_includes report.fetch("run"), "--mode archive"
+    invocation = steps.find { |step| step["uses"] == "./.github/actions/native-cache-benchmark" }
+    assert_equal "archive", invocation.dig("with", "mode")
+    assert_equal "nx", invocation.dig("with", "command_mode")
+    shared = YAML.safe_load_file(File.join(BenchmarkCases::ROOT, ".github/actions/native-cache-benchmark/action.yml")).dig("runs", "steps")
+    calls = shared.select { |step| step["uses"] == "./.github/actions/boringcache" }
+    assert_equal ["${{ inputs.mode }}"], calls.map { |step| step.dig("with", "mode") }.uniq
+    report = shared.find { |step| step["run"].to_s.include?("benchmark-report.rb phase") }
+    assert_equal "${{ inputs.mode }}", report.dig("env", "BENCHMARK_MODE")
+    assert_includes report.fetch("run"), '--mode "$BENCHMARK_MODE"'
   end
 
   def test_product_contract_view_resolves_the_wrapper_without_losing_adapter_or_failure_policy
