@@ -3,6 +3,7 @@
 
 require "bundler/setup"
 require_relative "benchmark-cadence"
+require_relative "cadence-window"
 
 # The parent validates the entire suite and resolves one release before the
 # matrix starts. Each child records its request independently, including errors.
@@ -81,6 +82,11 @@ module CadenceDispatch
     raise Error, "Invalid dispatch target index" unless index.is_a?(Integer) && index >= 0 && index < plan.fetch("runs").length
     run = plan.fetch("runs").fetch(index).dup
     record = plan.except("runs").merge("runs" => [run], "target_index" => index, "state" => "dispatching")
+    unless CadenceWindow.open?
+      run["state"] = record["state"] = "window-closed"
+      runner.write(output, record)
+      return record
+    end
     # A lost HTTP response cannot establish whether GitHub accepted the request.
     run["state"] = "requesting"
     runner.write(output, record)
@@ -131,6 +137,8 @@ module CadenceDispatch
       "planned"
     elsif result.fetch("runs").all? { |run| run["state"] == "requested" }
       "requested"
+    elsif result.fetch("runs").all? { |run| %w[requested window-closed].include?(run["state"]) }
+      "window-closed"
     else
       "dispatch-failed"
     end
@@ -169,7 +177,7 @@ if $PROGRAM_NAME == __FILE__
       runner.write_summary(options[:summary], record)
       exit(record.fetch("state") == "dispatch-failed" ? 1 : 0)
     end
-  rescue CadenceDispatch::Error, NightlyCanaries::Error, BenchmarkCases::Error, BenchmarkSeries::Error, KeyError, JSON::ParserError => error
+  rescue CadenceWindow::Error, CadenceDispatch::Error, NightlyCanaries::Error, BenchmarkCases::Error, BenchmarkSeries::Error, KeyError, JSON::ParserError => error
     abort error.message
   end
 end

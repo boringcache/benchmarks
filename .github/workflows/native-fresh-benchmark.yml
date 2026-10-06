@@ -184,14 +184,20 @@ jobs:
           }}-fresh.json
         if-no-files-found: error
     - name: Retain the GitHub Actions fresh result
-      if: always() && hashFiles('benchmark-results/*-actions-cache*-fresh.json') !=
-        ''
+      if: always() && (inputs.provider == 'both' || inputs.provider == 'actions-cache') && hashFiles('benchmark-results/*-actions-cache*-fresh.json') != ''
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache${{ env.BENCHMARK_VARIANT_SUFFIX
           }}-fresh
         path: benchmark-results/${{ env.BENCHMARK_ID }}-actions-cache${{ env.BENCHMARK_VARIANT_SUFFIX
           }}-fresh.json
+        if-no-files-found: error
+    - name: Retain the selected Depot fresh result
+      if: always() && startsWith(inputs.provider, 'depot-')
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ env.BENCHMARK_ID }}-${{ inputs.provider }}${{ env.BENCHMARK_VARIANT_SUFFIX }}-fresh
+        path: benchmark-results/
         if-no-files-found: error
     env:
       BENCHMARK_RUNNER_CLASS: ubuntu-latest

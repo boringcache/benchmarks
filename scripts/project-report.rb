@@ -23,10 +23,11 @@ module ProjectReport
       inputs = selection.fetch("inputs")
       plan = BenchmarkCases.plan(item, workflow: selection.fetch("workflow"), inputs: inputs)
       providers = item.dig("comparison", "providers")
+      providers = [inputs.fetch("provider")] if inputs["provider"] && !%w[all both].include?(inputs["provider"])
       if selection.fetch("workflow").start_with?("obs-studio-obs-")
         providers = [selection.fetch("workflow").include?("actions-cache") ? "actions-cache" : "boringcache"]
       end
-      variant = inputs["variant"] || inputs["cache_tool"]
+      variant = inputs["variant"] || inputs["cache_tool"] || inputs["cache_profile"]
       phases = records.select { |record| record.dig("case", "case_id") == item.fetch("id") && (!variant || record["variant"].to_s == variant.to_s) }
       if %w[native-fresh-benchmark.yml native-rolling-benchmark.yml].include?(selection.fetch("workflow"))
         recipe = NativeCase.resolve(item.dig("execution", "native"), variant)
@@ -42,7 +43,8 @@ module ProjectReport
           value = matches.first
           {"variant" => variant || item.fetch("id"), "strategy" => provider, "phase" => phase,
             "state" => value ? "recorded" : "missing", "verification" => value&.dig("verification", "passed") || "unrecorded",
-            "timing" => value&.fetch("timing") || {}, "storage_bytes" => value&.dig("cache", "storage_bytes"), "phase_record" => value}
+            "timing" => value&.fetch("timing") || {}, "storage_bytes" => value&.dig("cache", "storage_bytes"), "phase_record" => value,
+            "runner_class" => inputs.fetch("runner_label", "").empty? ? value&.dig("environment", "runner_class") || "unrecorded" : inputs.fetch("runner_label")}
         end
       end
     end

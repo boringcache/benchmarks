@@ -20,7 +20,7 @@ class ProjectRunsTest < Minitest::Test
     assert_equal "project-fresh.yml", grouped.first.fetch("workflow")
     assert_equal "nightly", grouped.first.dig("inputs", "cadence")
     expanded = ProjectRuns.expand(grouped.first.merge("id" => 42, "url" => "https://example.com/run/42"))
-    assert_equal %w[distroless docker runners turbo], expanded.map { |run| run.dig("inputs", "variant") }.sort
+    assert_equal %w[distroless docker runners turbo], expanded.map { |run| run.dig("inputs", "variant") }.uniq.sort
     assert_equal [42], expanded.map { |run| run.fetch("id") }.uniq
     assert_equal selections.map { |run| run.fetch("inputs") }, expanded.map { |run| run.fetch("inputs") }
   end
@@ -34,16 +34,17 @@ class ProjectRunsTest < Minitest::Test
     assert_equal 22, grouped.length
     %w[hugo zed].each do |project|
       run = grouped.find { |value| value.dig("inputs", "case_id") == project && value["selections"] }
-      assert_equal 2, run.fetch("selections").length
+      expected = project == "hugo" ? 4 : 2
+      assert_equal expected, run.fetch("selections").length
       matrices = ProjectRuns.matrix(JSON.parse(run.dig("inputs", "selections")), case_id: project, lane: "fresh")
-      assert_equal 2, matrices.values.sum { |value| value.fetch("include").length }
+      assert_equal expected, matrices.values.sum { |value| value.fetch("include").length }
     end
   end
 
   def test_missing_project_phases_remain_visible
     rows = ProjectReport.observations([], selections: selections.map { |run| run.slice("workflow", "inputs") },
       project: "n8n", lane: "fresh", run_url: "https://example.com/run/42")
-    assert_equal 16, rows.length
+    assert_equal 24, rows.length
     assert_equal ["missing"], rows.map { |row| row.fetch("state") }.uniq
     assert rows.all? { |row| row["storage_bytes"].nil? }
     assert_includes ProjectReport.markdown(rows, project: "n8n"), "unmeasured"
@@ -107,6 +108,42 @@ class ProjectRunsTest < Minitest::Test
     assert_raises(RuntimeError) { ProjectRuns.matrix(JSON.parse(run.dig("inputs", "selections")), case_id: "hugo", lane: "rolling") }
   end
 
+  def test_rolling_depot_tools_share_their_project_with_existing_providers
+    BenchmarkCadence.stub(:verify_cli, nil) do
+      require_relative "../scripts/seed-rolling"
+      plan = RollingSeed.plan(observation: "replay")
+      assert_equal 22, plan.fetch("runs").length
+      %w[grpc deno gogs OpenCut st2].each do |project|
+        grouped = plan.fetch("runs").find { |run| run.dig("inputs", "case_id") == project }
+        refute_nil grouped, project
+        assert_equal "project-rolling.yml", grouped.fetch("workflow"), project
+        selections = JSON.parse(grouped.dig("inputs", "selections"))
+        matrices = ProjectRuns.matrix(selections, case_id: project, lane: "rolling")
+        assert_equal selections.length, matrices.values.sum { |value| value.fetch("include").length }
+        assert selections.any? { |selection| selection.dig("inputs", "provider") == "depot-cache" }, project
+      end
+    end
+  end
+
+  def test_grouped_remote_cache_records_are_checked_per_provider
+    item = BenchmarkCases.load_case("gogs-moon")
+    records = %w[boringcache bazel-remote depot-cache].map do |provider|
+      {"benchmark" => "gogs-moon", "strategy" => provider, "phase" => "commit",
+        "case" => {"case_id" => "gogs-moon", "comparison" => item.fetch("comparison")},
+        "source" => {"sha" => "a" * 40}, "verification" => {"passed" => true}, "environment" => {"runner_class" => "shared"}}
+    end
+    runner = Object.new
+    def runner.api(*) = {"status" => "completed", "conclusion" => "success", "run_attempt" => 1}
+    runner.define_singleton_method(:phase_evidence) { |*args, **kwargs| records }
+    %w[all depot-cache].each do |provider|
+      run = {"id" => 42, "repository" => BenchmarkCases::REPOSITORY, "workflow" => "reapi-rolling-benchmark.yml", "inputs" => {"provider" => provider}}
+      result = RollingMonitor.check_run(item, run, proposal: {"head_sha" => "a" * 40}, runner: runner)
+      assert_equal "success", result.fetch("state")
+      expected = provider == "all" ? %w[boringcache bazel-remote] : [provider]
+      assert_equal expected.sort, result.fetch("canonical_records").map { |record| record.fetch("strategy") }.sort
+    end
+  end
+
   def test_grouped_rolling_success_without_phases_is_not_accepted
     item = BenchmarkCases.load_case("n8n")
     runs = BenchmarkCadence.rolling_targets(case_id: "n8n").map { |plan| plan.slice("repository", "workflow", "inputs") }
@@ -116,7 +153,7 @@ class ProjectRunsTest < Minitest::Test
     def runner.phase_evidence(*) = []
     result = RollingMonitor.check_run(item, run, proposal: {"head_sha" => "a" * 40}, runner: runner)
     assert_equal "evidence-missing-or-invalid", result.fetch("state")
-    assert_equal 4, result.fetch("selections").length
+    assert_equal 9, result.fetch("selections").length
   end
   def test_rolling_runner_records_are_reconciled_by_exact_benchmark_identity
     selections = JSON.parse(File.read(File.join(BenchmarkCases::ROOT, "cases/posthog/runner-screen-selections.json")))

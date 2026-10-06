@@ -342,3 +342,50 @@ jobs:
         type: string
         required: false
         default: '1'
+  workflow_call:
+    inputs:
+      provider:
+        type: string
+        default: boringcache
+      observation:
+        description: Seed, identical-source replay, or changed-source build.
+        type: string
+        default: changed-source
+      cli_version:
+        description: Exact immutable BoringCache CLI release tag.
+        required: false
+        type: string
+        default: ''
+      cache_scope:
+        description: Base cache scope published from base_sha; the compiler-only suffix
+          is added automatically.
+        required: true
+        type: string
+      base_sha:
+        description: Source commit currently represented by the published target.
+        required: true
+        type: string
+      head_sha:
+        description: Immediate child commit to build and publish as the next seed.
+        required: true
+        type: string
+      cache_profile:
+        description: Cargo product caches or native compiler cache only.
+        required: false
+        type: string
+        default: cargo-product
+      runner_label:
+        description: Optional runner label for a manual main-branch experiment.
+        required: false
+        type: string
+        default: ''
+      series_id:
+        description: Predeclared series ID; empty for legacy diagnostics
+        type: string
+        required: false
+        default: ''
+      sample:
+        description: Observation number in the predeclared series
+        type: string
+        required: false
+        default: '1'

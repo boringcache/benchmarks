@@ -9,7 +9,7 @@ on:
         type: string
         default: ''
       cli_version:
-        description: Optional exact published CLI canary; empty uses the reviewed benchmark pin
+        description: Optional exact CLI tag; empty uses the reviewed benchmark pin.
         type: string
         default: ''
       dry_run:
@@ -29,7 +29,7 @@ jobs:
     with:
       case_id: ${{ inputs.case_id || '' }}
       active_only: ${{ github.event_name != 'workflow_dispatch' }}
-      channel: canary
+      channel: configured
       cadence: nightly
       cli_version: ${{ inputs.cli_version || '' }}
       dry_run: ${{ inputs.dry_run || false }}

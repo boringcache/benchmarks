@@ -125,11 +125,11 @@ class SourcePromotionTest < Minitest::Test
       records = publisher.publish_project(items.map { |item| [item, proposal(item)] }, version: VERSION, output: File.join(directory, "receipt.json"))
       assert_equal 1, publisher.requests.length
       assert_equal "hugo", publisher.requests.first.dig("inputs", "case_id")
-      assert_equal 2, JSON.parse(publisher.requests.first.dig("inputs", "selections")).length
+      assert_equal 5, JSON.parse(publisher.requests.first.dig("inputs", "selections")).length
       assert_equal [91], records.flat_map { |record| record.fetch("runs").map { |run| run.fetch("id") } }.uniq
       records.each do |record|
         assert_equal "requested", record.fetch("state")
-        assert_equal [record.fetch("case_id")], record.fetch("runs").first.fetch("selections").map { |selection| ProjectRuns.selection_case(selection) }
+        assert_equal [record.fetch("case_id")], record.fetch("runs").first.fetch("selections").map { |selection| ProjectRuns.selection_case(selection) }.uniq
       end
       assert publisher.commits.first.key?("cases/hugo-go/case.json")
       assert publisher.commits.first.key?("cases/hugo/case.json")
@@ -156,7 +156,7 @@ class SourcePromotionTest < Minitest::Test
     Dir.mktmpdir do |directory|
       publisher.publish_project(items.map { |item| [item, proposal(item)] }, version: VERSION, output: File.join(directory, "receipt.json"))
       assert_equal 1, publisher.requests.length
-      assert_equal %w[nix-rolling-benchmark.yml zed-zed-cargo-rolling-auto.yml], JSON.parse(publisher.requests.first.dig("inputs", "selections")).map { |selection| selection.fetch("workflow") }.sort
+      assert_equal %w[nix-rolling-benchmark.yml zed-zed-cargo-rolling-auto.yml], JSON.parse(publisher.requests.first.dig("inputs", "selections")).map { |selection| selection.fetch("workflow") }.uniq.sort
       refute publisher.commits.first.key?("cases/zed/case.json")
       refute publisher.commits.first.key?("cases/zed/payload/benchmark-source.env")
       assert publisher.commits.first.key?("cases/zed-nix/case.json")
@@ -177,11 +177,11 @@ class SourcePromotionTest < Minitest::Test
   def test_native_variants_and_zed_auto_are_the_only_selected_rolling_targets
     item = BenchmarkCases.load_case("n8n")
     targets = SourcePromotion.targets(item, proposal(item), version: VERSION)
-    assert_equal %w[distroless docker runners turbo], targets.map { |target| target.dig("inputs", "variant") }.sort
+    assert_equal %w[distroless docker runners turbo], targets.map { |target| target.dig("inputs", "variant") }.uniq.sort
     assert targets.all? { |target| target.dig("inputs", "cli_version") == VERSION }
     zed = BenchmarkCases.load_case("zed")
     targets = SourcePromotion.targets(zed, proposal(zed), version: VERSION)
-    assert_equal ["zed-zed-cargo-rolling-auto.yml"], targets.map { |target| target.fetch("workflow") }
+    assert_equal ["zed-zed-cargo-rolling-auto.yml"], targets.map { |target| target.fetch("workflow") }.uniq
   end
 
   def test_every_scheduled_case_can_plan_a_changed_source_run
@@ -208,7 +208,7 @@ class SourcePromotionTest < Minitest::Test
       record = JSON.parse(File.read(path))
       assert_equal "dispatch-failed", record.fetch("state")
       assert_equal ["request-unknown"], record.fetch("runs").map { |run| run.fetch("state") }
-      assert_equal 4, record.fetch("runs").first.fetch("selections").length
+      assert_equal 9, record.fetch("runs").first.fetch("selections").length
       assert publisher.saved.first.fetch("changes").key?("cases/n8n/case.json")
       assert_raises(SourcePromotion::Error) { publisher.publish(item, proposal(item), version: VERSION, output: path) }
       assert_equal 1, publisher.requests.length

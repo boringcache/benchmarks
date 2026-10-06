@@ -46,7 +46,7 @@ runs:
     - id: retention
       uses: ./.github/actions/retain-product-evidence
     - id: provider
-      uses: boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79 # v1.33.0
+      uses: boringcache/one@696d081c557c070471a175d72aa67d27709a3f31 # v1.40.0
       with:
         mode: ${{ inputs.mode }}
         working-directory: ${{ inputs.working-directory }}

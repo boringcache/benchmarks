@@ -5,6 +5,9 @@ on:
       case_id:
         type: string
         required: true
+      cadence_window_open:
+        type: boolean
+        default: true
 permissions:
   contents: read
   actions: read
@@ -89,7 +92,7 @@ jobs:
   publish:
     name: Prepare rolling runs
     needs: [previous, inspect]
-    if: needs.inspect.outputs.changed == 'true' && (vars.BENCHMARK_CADENCE_ACTIVE == 'true' || contains(fromJSON(vars.BENCHMARK_ACTIVE_CASES || '[]'), inputs.case_id)) && github.ref_name == 'main'
+    if: inputs.cadence_window_open && needs.inspect.outputs.changed == 'true' && (vars.BENCHMARK_CADENCE_ACTIVE == 'true' || contains(fromJSON(vars.BENCHMARK_ACTIVE_CASES || '[]'), inputs.case_id)) && github.ref_name == 'main'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
@@ -116,6 +119,7 @@ jobs:
           path: ${{ runner.temp }}/proposal
       - name: Publish source and request the declared rolling variants
         env:
+          BENCHMARK_CADENCE_UNTIL: ${{ vars.BENCHMARK_CADENCE_UNTIL }}
           GH_TOKEN: ${{ github.token }}
           CASE_ID: ${{ inputs.case_id }}
           BENCHMARK_CADENCE_ACTIVE: ${{ (vars.BENCHMARK_CADENCE_ACTIVE == 'true' || contains(fromJSON(vars.BENCHMARK_ACTIVE_CASES || '[]'), inputs.case_id)) }}
