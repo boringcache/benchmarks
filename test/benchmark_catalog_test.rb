@@ -57,6 +57,8 @@ class BenchmarkCatalogTest < Minitest::Test
     assert_equal 4, entry.fetch("missing_observations").length
     receipt = {"case_id" => "example", "repository" => BenchmarkCases::REPOSITORY,
       "state" => "requested", "run_id" => 12, "run_url" => "https://github.com/boringcache/benchmarks/actions/runs/12"}
+    BenchmarkCases.write_json(File.join(@directory, "dispatches/1.json"), receipt.except("run_id", "run_url").merge("state" => "planned"))
+    assert_equal "planned", entry.fetch("state")
     BenchmarkCases.write_json(File.join(@directory, "dispatches/1.json"), receipt)
     requested = entry
     assert_equal "requested", requested.fetch("state")

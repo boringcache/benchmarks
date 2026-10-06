@@ -23,10 +23,24 @@ jobs:
         CADENCE_ACTIVE: ${{ vars.BENCHMARK_CADENCE_ACTIVE }}
       run: |
         if [[ "$CADENCE_ACTIVE" == true ]]; then
-          bundle exec ruby scripts/benchmark-cadence.rb --collect --summary "$GITHUB_STEP_SUMMARY"
+          failed=0
+          for channel in canary stable; do
+            bundle exec ruby scripts/benchmark-cadence.rb --collect --channel "$channel" \
+              --summary "$RUNNER_TEMP/$channel-summary.md" \
+              --output "$RUNNER_TEMP/benchmark-outcomes-$channel.json" || failed=1
+            cat "$RUNNER_TEMP/$channel-summary.md" >> "$GITHUB_STEP_SUMMARY"
+          done
+          exit "$failed"
         else
-          bundle exec ruby scripts/nightly-canaries.rb --collect --summary "$GITHUB_STEP_SUMMARY"
+          bundle exec ruby scripts/nightly-canaries.rb --collect --summary "$GITHUB_STEP_SUMMARY" --output "$RUNNER_TEMP/benchmark-outcomes.json"
         fi
+    - name: Retain collected outcomes
+      if: always()
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-outcomes
+        path: ${{ runner.temp }}/benchmark-outcomes*.json
+        if-no-files-found: error
 'on':
   schedule:
   - cron: 47 * * * *

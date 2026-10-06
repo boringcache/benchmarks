@@ -33,6 +33,7 @@ runs:
         BENCHMARK_VARIANT: ${{ inputs.variant }}
         BUNDLE_GEMFILE: ${{ github.workspace }}/.harness/Gemfile
       run: |
+        ruby .harness/scripts/benchmark-identity.rb
         args=()
         if [[ -n "$NATIVE_LANE" ]]; then
           args+=(--native-lane "$NATIVE_LANE" --suffix "$BENCHMARK_ID_SUFFIX")

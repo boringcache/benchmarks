@@ -43,7 +43,7 @@ module BenchmarkCases
     files = Dir.glob(File.join(directory, "**", "*"), File::FNM_DOTMATCH).select { |path| File.file?(path) }
     files += item.dig("execution", "workflows").map { |entry| File.join(root, entry.fetch("path")) }
     files += HELPERS.map { |name| File.join(root, "scripts", "#{name}.rb") }
-    files += %w[scripts/canonical/benchmark-report.rb scripts/verify-upstream-recipe.rb scripts/benchmark-cases.rb scripts/benchmark-series.rb bin/bench Gemfile.lock .tool-versions].map { |path| File.join(root, path) }
+    files += %w[scripts/canonical/benchmark-report.rb scripts/verify-upstream-recipe.rb scripts/benchmark-cases.rb scripts/benchmark-series.rb scripts/benchmark-identity.rb scripts/fresh-report.rb scripts/nightly-canaries.rb bin/bench Gemfile.lock .tool-versions].map { |path| File.join(root, path) }
     files += shared_action_files(root: root)
     files += Dir.glob(File.join(root, "adapters", "docker", "**", "*"), File::FNM_DOTMATCH).select { |path| File.file?(path) } if item["adapter"] == "docker"
     manifest = files.uniq.sort.to_h { |path| [path.delete_prefix(root + "/"), Digest::SHA256.file(path).hexdigest] }
@@ -61,11 +61,13 @@ module BenchmarkCases
     JSON.parse(File.read(path))
   end
 
-  def self.create(id, repository:, revision:, question:, root: ROOT)
+  def self.create(id, repository:, revision:, question:, root: ROOT, shape: nil, tool_version: nil)
     raise Error, "Invalid case ID" unless id.match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/)
     raise Error, "Use OWNER/REPOSITORY" unless repository.match?(%r{\A[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+\z})
     raise Error, "Use a full lowercase source SHA" unless revision.match?(/\A[0-9a-f]{40}\z/)
     raise Error, "Declare the evaluation question" if question.strip.empty?
+    raise Error, "Supported execution shape: go" if shape && shape != "go"
+    raise Error, "Use --shape go with an exact --tool-version X.Y.Z" if (shape || tool_version) && (!shape || !tool_version.to_s.match?(/\A\d+\.\d+\.\d+\z/))
     directory = File.join(root, "cases", id)
     raise Error, "Case already exists: #{id}" if File.exist?(directory)
     item = {"schema_version" => 1, "id" => id, "kind" => "evaluation", "adapter" => "workflow", "workspace" => WORKSPACE,
@@ -76,6 +78,10 @@ module BenchmarkCases
       "comparison" => {"question" => question, "providers" => ["boringcache"], "primary_metric" => "correctness",
         "timed_scope" => "Define the build and reuse operation before collecting timings", "storage" => "unmeasured",
         "cache_scope" => "Isolated case and series identity; declare warm continuity before execution", "sample_count" => 2}}
+    if shape == "go"
+      require_relative "benchmark-scaffold"
+      BenchmarkScaffold.go(item, directory: directory, tool_version: tool_version)
+    end
     write_json(File.join(directory, "case.json"), item)
     File.write(File.join(directory, "proposal.md"), "# #{id}\n\nQuestion: #{question}\n\nSource: https://github.com/#{repository}/tree/#{revision}\n\nFollow [the case process](../../docs/process.md). Execution is blocked until the recipe, comparison, workflow, and outputs are reviewed and verified.\n")
     item
@@ -144,7 +150,7 @@ module BenchmarkCases
       end
       payload = File.join(directory, "payload")
       begin
-        NativeCase.validate(item, payload: payload)
+        NativeCase.validate(item, payload: payload, shared_root: root)
       rescue NativeCase::Error => error
         errors << "#{id}: #{error.message}"
       end
@@ -215,7 +221,7 @@ module BenchmarkCases
     if item.dig("execution", "native") && File.basename(entry.fetch("path")).start_with?("native-")
       raise Error, "case_id must match the selected case" unless combined["case_id"] == item.fetch("id")
       recipe = NativeCase.resolve(item.dig("execution", "native"), variant || combined["variant"])
-      NativeCase.verify_report(recipe, payload: File.join(root, "cases", item.fetch("id"), "payload"), lane: entry.fetch("lane"))
+      NativeCase.verify_report(recipe, payload: File.join(root, "cases", item.fetch("id"), "payload"), lane: entry.fetch("lane"), shared_root: root)
     end
     revisions = item.fetch("source").fetch("pins").map { |pin| pin.fetch("revision") }
     combined.each do |name, value|
@@ -396,7 +402,7 @@ module BenchmarkCases
     if native_lane
       native = item.dig("execution", "native") or raise Error, "This case does not use the shared native comparison"
       recipe = NativeCase.resolve(native, variant)
-      NativeCase.verify_report(recipe, payload: File.join(root, "cases", item.fetch("id"), "payload"), lane: native_lane)
+      NativeCase.verify_report(recipe, payload: File.join(root, "cases", item.fetch("id"), "payload"), lane: native_lane, shared_root: root)
     end
     target = File.expand_path(directory)
     entries = Dir.exist?(target) ? Dir.children(target) : []

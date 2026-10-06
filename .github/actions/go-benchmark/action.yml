@@ -1,6 +1,6 @@
 ---
-name: Run Spring AI Maven benchmark phase
-description: Runs one Spring AI Maven cache provider and phase.
+name: Run a Go benchmark phase
+description: Prepares a pinned Go workload and invokes the shared native cache phase.
 inputs:
   strategy:
     required: true
@@ -13,8 +13,12 @@ inputs:
   cli_version:
     required: false
     default: ''
-  java_version:
+  go_version:
     required: true
+outputs:
+  cache_scope:
+    description: Published cache cohort
+    value: "${{ steps.cache.outputs.cache_scope }}"
 runs:
   using: composite
   steps:
@@ -22,11 +26,11 @@ runs:
     uses: "./.github/actions/prepare-native"
     with:
       phase: "${{ inputs.phase }}"
-  - name: Set up Java
-    uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+  - name: Set up Go
+    uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
     with:
-      distribution: liberica
-      java-version: "${{ inputs.java_version }}"
+      go-version: "${{ inputs.go_version }}"
+      cache: false
   - id: cache
     uses: "./.github/actions/native-cache-benchmark"
     with:
@@ -35,12 +39,8 @@ runs:
       phase: "${{ inputs.phase }}"
       benchmark_id: "${{ inputs.benchmark_id }}"
       cli_version: "${{ inputs.cli_version }}"
-      mode: maven
-      cache_path: ".maven-build-cache"
+      mode: go
+      cache_path: ".go/build-cache"
       workflow_started_at: "${{ steps.source.outputs.workflow_started_at }}"
-      configure_script: "./scripts/configure-native-cache.sh"
-    env: {}
-outputs:
-  cache_scope:
-    description: Published cache cohort
-    value: "${{ steps.cache.outputs.cache_scope }}"
+    env:
+      GOCACHE: "${{ github.workspace }}/.go/build-cache"

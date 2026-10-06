@@ -6,6 +6,7 @@ permissions:
   actions: read
   packages: read
 env:
+  BENCHMARK_EXPECTED_IDENTITY: "${{ inputs.expected_identity }}"
   BORINGCACHE_NO_GIT: 'true'
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
   BENCHMARK_SAMPLE: "${{ inputs.sample }}"
@@ -106,7 +107,8 @@ jobs:
         == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
   report:
     name: "${{ inputs.case_id }} fresh report"
-    needs: warm
+    needs: [cold, warm]
+    if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -115,45 +117,62 @@ jobs:
       with:
         path: ".harness"
         persist-credentials: false
-    - name: Prepare declared case
-      uses: "./.harness/.github/actions/prepare-case"
+    - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
       with:
-        case-id: "${{ inputs.case_id }}"
-        native-lane: fresh
-        suffix: "${{ inputs.benchmark_id_suffix }}"
-        variant: "${{ inputs.variant }}"
+        working-directory: .harness
+    - run: bundle install --jobs 4 --retry 2
+      working-directory: .harness
     - name: Download the benchmark phase evidence
       uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
       with:
-        pattern: phase-${{ env.BENCHMARK_ID }}-*
+        pattern: phase-*
+        path: phase-evidence
+    - name: Download phase outcomes
+      if: always()
+      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        pattern: outcome-*
         path: phase-evidence
     - name: Generate the benchmark report
-      run: |
-        ruby ./scripts/benchmark-report.rb summarize \
-          --title "${{ inputs.case_id }} fresh benchmark" \
-          --input-dir phase-evidence \
-          --output-dir benchmark-results
-    - name: Retain the BoringCache fresh result
+      if: always()
+      env:
+        GH_TOKEN: ${{ github.token }}
+        CASE_ID: ${{ inputs.case_id }}
+        VARIANT: ${{ inputs.variant }}
+        BENCHMARK_SUFFIX: ${{ inputs.benchmark_id_suffix }}
+        BUNDLE_GEMFILE: ${{ github.workspace }}/.harness/Gemfile
+      run: ruby .harness/scripts/fresh-report.rb report
+    - name: Retain run manifest and report
+      if: always()
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: benchmark-${{ env.BENCHMARK_ID }}-boringcache${{ env.BENCHMARK_VARIANT_SUFFIX
-          }}-fresh
-        path: benchmark-results/${{ env.BENCHMARK_ID }}-boringcache${{ env.BENCHMARK_VARIANT_SUFFIX
-          }}-fresh.json
+        name: fresh-run-report
+        path: benchmark-results/
+        if-no-files-found: error
+    - name: Retain the BoringCache fresh result
+      if: always() && hashFiles('benchmark-results/*-boringcache*-fresh.json') != ''
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ env.BENCHMARK_ID }}-boringcache${{ env.BENCHMARK_VARIANT_SUFFIX }}-fresh
+        path: benchmark-results/${{ env.BENCHMARK_ID }}-boringcache${{ env.BENCHMARK_VARIANT_SUFFIX }}-fresh.json
         if-no-files-found: error
     - name: Retain the GitHub Actions fresh result
+      if: always() && hashFiles('benchmark-results/*-actions-cache*-fresh.json') != ''
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache${{ env.BENCHMARK_VARIANT_SUFFIX
-          }}-fresh
-        path: benchmark-results/${{ env.BENCHMARK_ID }}-actions-cache${{ env.BENCHMARK_VARIANT_SUFFIX
-          }}-fresh.json
+        name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache${{ env.BENCHMARK_VARIANT_SUFFIX }}-fresh
+        path: benchmark-results/${{ env.BENCHMARK_ID }}-actions-cache${{ env.BENCHMARK_VARIANT_SUFFIX }}-fresh.json
         if-no-files-found: error
     env:
       BENCHMARK_RUNNER_CLASS: ubuntu-latest
 'on':
   workflow_dispatch:
     inputs:
+      expected_identity:
+        description: Frozen scheduled harness and case identity; checked before preparation.
+        type: string
+        required: false
+        default: ''
       cli_version:
         description: Optional exact BoringCache CLI release tag.
         required: false
@@ -201,6 +220,11 @@ jobs:
           variants.
   workflow_call:
     inputs:
+      expected_identity:
+        description: Frozen scheduled harness and case identity; checked before preparation.
+        type: string
+        required: false
+        default: ''
       cli_version:
         required: false
         type: string

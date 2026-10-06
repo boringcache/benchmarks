@@ -19,6 +19,30 @@ Edit `cases/<case-id>/case.json` using `schemas/case.schema.json`. Start with
 `kind: evaluation` and `reporting.publication: evaluation-only`. Use JSON, exact
 source SHAs, and the workspace `boringcache/benchmarks`.
 
+For a Go workload using the existing pinned-source fresh/rolling shape:
+
+```sh
+bin/bench new <case-id> --repository <owner/repository> --revision <full-sha> \
+  --question 'What are we evaluating?' --shape go --tool-version <exact-go-version>
+```
+
+This creates the case definition, `.gitmodules`, product plan, recipe contract
+and `scripts/verify-output.rb` stub. It selects the shared Go action and native
+fresh/rolling workflows. Review the command in both the product plan and recipe
+contract, replace the placeholder upstream digest with the reviewed file digest,
+and implement the output check. The stub fails until implemented. Remove the
+case's blocker after that review, prepare the case and verify its output check,
+then add it to the appropriate suite after qualification. Do not copy timers, provider setup,
+phase reporting or workflows into the new case.
+
+The shared `prepare-native` action checks pinned source and recipe files.
+`native-cache-benchmark` owns provider selection, publication policy, timing,
+output-check invocation, phase records and artifact upload for Go, Maven,
+Gradle, n8n Turbo and Storybook. Dependency preparation scripts run between
+the cache-setup timer and build timer. Java cases retain their toolchain setup and comparator configuration;
+their output checks live in case-owned Ruby scripts. The Go action combines Go
+setup with these shared steps, so another Go case needs no case action.
+
 Declare the question, providers, primary metric, timed scope, storage measurement,
 cache scope, sample count, workflows, and output verification. Workflow payloads
 live in `cases/<case-id>/payload/`. Docker workloads use `recipe.json` and `plans/`
@@ -35,9 +59,9 @@ source, command, and environment changes before updating the contract. Zed's
 proof from its newer rolling recipe.
 
 For the standard BoringCache/Actions Cache comparison, use
-`native-fresh-benchmark.yml` and `native-rolling-benchmark.yml`. Declare the local
-composite action, benchmark ID, toolchain inputs, and lane-specific publication
-settings in `execution.native`. Register `case_id` in the workflow inputs. The
+`native-fresh-benchmark.yml` and `native-rolling-benchmark.yml`. Declare the shared
+or case composite action, benchmark ID, toolchain inputs, and lane-specific publication
+settings in `execution.native`. Set `case_id` in the case's workflow selectors. The
 shared executor prepares that reviewed action on the disposable runner; agents
 do not copy workflow setup or reporting into each new case. Declare tag mappings
 in `execution.cache_tags` and use `scope-case-cache.rb`. Use `prepare-source.rb`
