@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "case_id": "hugo-go",
-  "state": "requested",
+  "state": "completed",
   "cli_version": "vcli-canary-252077d7b8fb",
   "ref": "main",
   "proposal": {
@@ -21,9 +21,377 @@
         "case_id": "hugo-go",
         "cli_version": "vcli-canary-252077d7b8fb"
       },
-      "state": "requested",
+      "state": "success",
       "id": 37455921193,
-      "url": "https://github.com/boringcache/benchmarks/actions/runs/37455921193"
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37455921193",
+      "outcome": "success",
+      "canonical_records": [
+        {
+          "schema_version": 1,
+          "benchmark": "hugo-go",
+          "strategy": "actions-cache",
+          "lane": "rolling",
+          "phase": "commit",
+          "variant": null,
+          "mode": "go",
+          "adapter": "gocache",
+          "case": {
+            "schema_version": 1,
+            "case_id": "hugo-go",
+            "workspace": "boringcache/benchmarks",
+            "definition_sha256": "fd9f01ef535f59806d4ef866503879db34949dc2af6d3f827b3721ccea2f13ec",
+            "source": {
+              "repository": "gohugoio/hugo",
+              "pins": [
+                {
+                  "path": "upstream",
+                  "revision": "31f5395d40941f8527ccfedaf6aea5a33d9e9f58",
+                  "kind": "gitlink"
+                }
+              ]
+            },
+            "origin": {
+              "repository": "boringcache/benchmark-hugo-go",
+              "branch": "main",
+              "revision": "d6186956df7f400627bb2566bd907431801b191c"
+            },
+            "verification": [
+              "Pinned upstream recipe and build success"
+            ],
+            "comparison": {
+              "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+              "providers": [
+                "boringcache",
+                "actions-cache"
+              ],
+              "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+              "primary_metric": "build_and_reuse_seconds",
+              "storage": "provider-reported",
+              "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+              "sample_count": 10
+            },
+            "execution": {
+              "workflows": [
+                {
+                  "path": ".github/workflows/native-rolling-benchmark.yml",
+                  "lane": "rolling",
+                  "inputs": {
+                    "case_id": "hugo-go"
+                  },
+                  "historical_workflow": "hugo-go-benchmark.yml"
+                },
+                {
+                  "path": ".github/workflows/native-fresh-benchmark.yml",
+                  "lane": "fresh",
+                  "inputs": {
+                    "case_id": "hugo-go"
+                  },
+                  "historical_workflow": "hugo-go-fresh-benchmark.yml"
+                }
+              ],
+              "sync": "upstream-head",
+              "sync_minute": 10,
+              "native": {
+                "action": ".github/actions/go-benchmark",
+                "benchmark_id": "hugo-go",
+                "rolling_inputs": {
+                  "go_version": "1.27.0"
+                },
+                "environment": {},
+                "fresh_inputs": {
+                  "go_version": "1.27.0"
+                }
+              },
+              "cache_tags": {
+                "hugo-go-local": "{scope}"
+              }
+            }
+          },
+          "timing": {
+            "restore_or_setup_seconds": 1,
+            "build_seconds": 61,
+            "workflow_seconds": 80,
+            "total_seconds": 62,
+            "dependency_setup_seconds": null,
+            "compile_seconds": null,
+            "verification_seconds": null,
+            "save_seconds": null
+          },
+          "cache": {
+            "hit": null,
+            "sccache_proof": null,
+            "import_ready": null,
+            "import_refs": 0,
+            "docker_plan": null,
+            "tag": null,
+            "workspace": null,
+            "storage_bytes": 161806785,
+            "storage_source": "github-actions-cache-api",
+            "storage_breakdown": {
+              "key": "go-hugo-go-rolling-main-31f5395d40941f8527ccfedaf6aea5a33d9e9f58",
+              "complete": true,
+              "measured_bytes": 161806785,
+              "total_bytes": 161806785,
+              "observations": [
+                {
+                  "id": 8566022747,
+                  "key": "go-hugo-go-rolling-main-31f5395d40941f8527ccfedaf6aea5a33d9e9f58",
+                  "ref": "refs/heads/main",
+                  "version": "eaf4cd007b35ed4ccef6b2b84e4d4aa6ae207c4aebeb7916898ac5f9bc54c108",
+                  "created_at": "2026-10-06T11:23:54.522723Z",
+                  "last_accessed_at": "2026-10-06T11:23:54.522723Z",
+                  "size_in_bytes": 161806785
+                }
+              ]
+            }
+          },
+          "source": {
+            "repository": "gohugoio/hugo",
+            "sha": "31f5395d40941f8527ccfedaf6aea5a33d9e9f58"
+          },
+          "product_refs": {},
+          "action": {
+            "resolved_mode": null,
+            "resolved_tags": null,
+            "trust_state": null,
+            "diagnostics_level": null
+          },
+          "github": {
+            "repository": "boringcache/benchmarks",
+            "run_id": "37455921193",
+            "run_attempt": "1",
+            "job": "publish",
+            "workflow": "Native comparison rolling",
+            "ref_name": "main",
+            "runner_os": "Linux",
+            "runner_arch": "X64",
+            "runner_name": "GitHub Actions 1000175899",
+            "runner_environment": "github-hosted",
+            "runner_image": "ubuntu24",
+            "runner_image_version": "20260927.320.1"
+          },
+          "run_uid": "gh-37455921193-1",
+          "verification": {
+            "passed": true,
+            "checks": [
+              "Output verification completed before recording this phase"
+            ],
+            "declared_checks": [
+              "Pinned upstream recipe and build success"
+            ]
+          }
+        },
+        {
+          "schema_version": 1,
+          "benchmark": "hugo-go",
+          "strategy": "boringcache",
+          "lane": "rolling",
+          "phase": "commit",
+          "variant": null,
+          "mode": "go",
+          "adapter": "gocache",
+          "case": {
+            "schema_version": 1,
+            "case_id": "hugo-go",
+            "workspace": "boringcache/benchmarks",
+            "definition_sha256": "fd9f01ef535f59806d4ef866503879db34949dc2af6d3f827b3721ccea2f13ec",
+            "source": {
+              "repository": "gohugoio/hugo",
+              "pins": [
+                {
+                  "path": "upstream",
+                  "revision": "31f5395d40941f8527ccfedaf6aea5a33d9e9f58",
+                  "kind": "gitlink"
+                }
+              ]
+            },
+            "origin": {
+              "repository": "boringcache/benchmark-hugo-go",
+              "branch": "main",
+              "revision": "d6186956df7f400627bb2566bd907431801b191c"
+            },
+            "verification": [
+              "Pinned upstream recipe and build success"
+            ],
+            "comparison": {
+              "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+              "providers": [
+                "boringcache",
+                "actions-cache"
+              ],
+              "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+              "primary_metric": "build_and_reuse_seconds",
+              "storage": "provider-reported",
+              "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+              "sample_count": 10
+            },
+            "execution": {
+              "workflows": [
+                {
+                  "path": ".github/workflows/native-rolling-benchmark.yml",
+                  "lane": "rolling",
+                  "inputs": {
+                    "case_id": "hugo-go"
+                  },
+                  "historical_workflow": "hugo-go-benchmark.yml"
+                },
+                {
+                  "path": ".github/workflows/native-fresh-benchmark.yml",
+                  "lane": "fresh",
+                  "inputs": {
+                    "case_id": "hugo-go"
+                  },
+                  "historical_workflow": "hugo-go-fresh-benchmark.yml"
+                }
+              ],
+              "sync": "upstream-head",
+              "sync_minute": 10,
+              "native": {
+                "action": ".github/actions/go-benchmark",
+                "benchmark_id": "hugo-go",
+                "rolling_inputs": {
+                  "go_version": "1.27.0"
+                },
+                "environment": {},
+                "fresh_inputs": {
+                  "go_version": "1.27.0"
+                }
+              },
+              "cache_tags": {
+                "hugo-go-local": "{scope}"
+              }
+            }
+          },
+          "timing": {
+            "restore_or_setup_seconds": 3,
+            "build_seconds": 84,
+            "workflow_seconds": 99,
+            "total_seconds": 87,
+            "dependency_setup_seconds": null,
+            "compile_seconds": null,
+            "verification_seconds": null,
+            "save_seconds": null
+          },
+          "cache": {
+            "hit": false,
+            "sccache_proof": null,
+            "import_ready": null,
+            "import_refs": 0,
+            "docker_plan": null,
+            "tag": "hugo-go-rolling-main",
+            "workspace": "boringcache/benchmarks",
+            "storage_bytes": 811503082,
+            "storage_source": "boringcache-check",
+            "storage_breakdown": {
+              "workspace": "boringcache/benchmarks",
+              "tags": [
+                "hugo-go-rolling-main"
+              ],
+              "complete": true,
+              "measured_bytes": 811503082,
+              "unmeasured_tags": [],
+              "total_bytes": 811503082,
+              "observations": [
+                {
+                  "requested_tag": "hugo-go-rolling-main",
+                  "tag": "hugo-go-rolling-main",
+                  "status": "hit",
+                  "cache_type": "kv",
+                  "kv_total_size": 811503082,
+                  "compressed_size": 811503082,
+                  "size": 811503082
+                }
+              ]
+            },
+            "storage_observed_at": "2026-10-06T11:24:15Z",
+            "storage_evidence_file": "boringcache-one-evidence-4e025e87d83324ea36f538decb303987216ea14dc21f35d2864bb05b16824b5f.json"
+          },
+          "source": {
+            "repository": "gohugoio/hugo",
+            "sha": "31f5395d40941f8527ccfedaf6aea5a33d9e9f58"
+          },
+          "product_refs": {
+            "schema_version": 1,
+            "cli_version": "1.40.0",
+            "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+            "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+          },
+          "action": {
+            "resolved_mode": "go",
+            "resolved_tags": [
+              "hugo-go-rolling-main"
+            ],
+            "trust_state": {
+              "status": "publish",
+              "event_name": "workflow_dispatch",
+              "requested_policy": "publish",
+              "resolved_policy": "publish",
+              "write_allowed": true,
+              "decision_source": "cli",
+              "reason": "explicit_request",
+              "provider": "github-actions",
+              "detail": "Publication updates the published cache tag.",
+              "next_step": "Let the run finish; the next matching run restores what it publishes.",
+              "token_capabilities": {
+                "restore": true,
+                "stage": true,
+                "save": true
+              }
+            },
+            "diagnostics_level": "off"
+          },
+          "github": {
+            "repository": "boringcache/benchmarks",
+            "run_id": "37455921193",
+            "run_attempt": "1",
+            "job": "publish",
+            "workflow": "Native comparison rolling",
+            "ref_name": "main",
+            "runner_os": "Linux",
+            "runner_arch": "X64",
+            "runner_name": "GitHub Actions 1000175900",
+            "runner_environment": "github-hosted",
+            "runner_image": "ubuntu24",
+            "runner_image_version": "20260927.320.1"
+          },
+          "run_uid": "gh-37455921193-1",
+          "verification": {
+            "passed": true,
+            "checks": [
+              "Output verification completed before recording this phase"
+            ],
+            "declared_checks": [
+              "Pinned upstream recipe and build success"
+            ]
+          },
+          "original_cache_measurement": {
+            "storage_bytes": 588257576,
+            "storage_source": "boringcache-check",
+            "storage_breakdown": {
+              "workspace": "boringcache/benchmarks",
+              "tags": [
+                "hugo-go-rolling-main"
+              ],
+              "complete": true,
+              "measured_bytes": 588257576,
+              "unmeasured_tags": [],
+              "total_bytes": 588257576,
+              "observations": [
+                {
+                  "requested_tag": "hugo-go-rolling-main",
+                  "tag": "hugo-go-rolling-main",
+                  "status": "hit",
+                  "cache_type": "kv",
+                  "kv_total_size": 588257576,
+                  "compressed_size": 588257576,
+                  "size": 588257576
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "comparison_plan": "diagnostic"
     }
   ]
 }
