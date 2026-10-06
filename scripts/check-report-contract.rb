@@ -4,6 +4,7 @@
 require "rbconfig"
 
 require "yaml"
+require "json"
 
 if ARGV.empty? && !ENV["BENCHMARK_REPOS_DIR"]
   require "bundler/setup"
@@ -107,6 +108,14 @@ class Workflow
   def evaluate(expression, matrix)
     return Regexp.last_match(1) if expression.match(/\A'([^']*)'\z/)
 
+    if (json = expression.match(/\AfromJSON\((.*)\)\z/m))
+      return evaluate(json[1].strip, matrix)
+    end
+
+    if (choice = expression.match(/\Ainputs\.([a-z_]+)\s*==\s*'([^']*)'\s*&&\s*'([^']*)'\s*\|\|\s*(.*)\z/m))
+      return @inputs[choice[1]] == choice[2] ? choice[3] : evaluate(choice[4].strip, matrix)
+    end
+
     if (fallback = expression.match(/\A(inputs\.[a-z_]+)\s*\|\|\s*'([^']*)'\z/))
       selected = lookup(fallback[1], matrix)
       return selected.to_s.empty? ? fallback[2] : selected
@@ -159,11 +168,13 @@ class Workflow
   end
 end
 
-def matrix_combinations(matrix)
+def matrix_combinations(matrix, workflow)
   return [{}] unless matrix.is_a?(Hash)
 
   axes = matrix.reject { |key, _| %w[include exclude].include?(key) }
-  includes = matrix["include"].is_a?(Array) ? matrix["include"].select { |entry| entry.is_a?(Hash) } : []
+  includes = matrix["include"]
+  includes = JSON.parse(workflow.resolve(includes, {})) if includes.is_a?(String)
+  includes = includes.is_a?(Array) ? includes.select { |entry| entry.is_a?(Hash) } : []
   return includes.map(&:dup) if axes.empty? && includes.any?
 
   combinations = axes.reduce([{}]) do |carried, (key, values)|
@@ -204,7 +215,7 @@ def phase_flags(run)
 end
 
 def producers_for(workflow:, repo_dir:, job_id:, job:)
-  matrix_combinations(job.dig("strategy", "matrix")).flat_map do |matrix|
+  matrix_combinations(job.dig("strategy", "matrix"), workflow).flat_map do |matrix|
     Array(job["steps"]).filter_map do |step|
       next unless step.is_a?(Hash)
 

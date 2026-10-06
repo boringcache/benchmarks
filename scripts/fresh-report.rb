@@ -7,8 +7,10 @@ module FreshReport
   PROVIDERS = {"actions-cache" => "GitHub Actions", "boringcache" => "BoringCache"}.freeze
   STATES = {"success" => "succeeded", "failure" => "failed", "cancelled" => "cancelled", "skipped" => "skipped", "timed_out" => "failed"}.freeze
 
-  def self.expected(case_id)
-    PROVIDERS.flat_map do |provider, label|
+  def self.expected(case_id, provider: "both")
+    raise BenchmarkCases::Error, "Unknown native provider #{provider}" unless provider == "both" || PROVIDERS.key?(provider)
+    selected = provider == "both" ? PROVIDERS : PROVIDERS.slice(provider)
+    selected.flat_map do |provider, label|
       %w[cold warm].map { |phase| {"case_id" => case_id, "strategy" => provider, "phase" => phase, "job_name" => "#{label} #{case_id} #{phase}"} }
     end
   end
@@ -56,7 +58,7 @@ module FreshReport
     BenchmarkCases.write_json("benchmark-outcome/outcome.json", value)
   end
 
-  def self.report(item, input_dir:, output_dir:, jobs:, run_url:, variant: nil, suffix: "")
+  def self.report(item, input_dir:, output_dir:, jobs:, run_url:, variant: nil, suffix: "", provider: "both")
     recipe = NativeCase.resolve(item.dig("execution", "native"), variant)
     benchmark = recipe.fetch("benchmark_id") + suffix
     if ENV["GITHUB_ENV"]
@@ -82,7 +84,7 @@ module FreshReport
       outcomes.select! { |value| value["run_id"].to_s == ENV["GITHUB_RUN_ID"] && value["run_attempt"].to_s == ENV.fetch("GITHUB_RUN_ATTEMPT") }
     end
     records = records.map { |record| BenchmarkStorage.apply(record, payloads.select { |value| value.is_a?(Hash) && value["kind"] == "post-publication-storage" }) }
-    observations = reconcile(expected(item.fetch("id")), jobs: jobs, records: records, outcomes: outcomes, run_url: run_url)
+    observations = reconcile(expected(item.fetch("id"), provider: provider), jobs: jobs, records: records, outcomes: outcomes, run_url: run_url)
     manifest = {"schema_version" => 1, "case_id" => item.fetch("id"), "variant" => variant,
       "run_url" => run_url, "observations" => observations}
     BenchmarkCases.write_json(File.join(output_dir, "run-manifest.json"), manifest)
@@ -91,7 +93,7 @@ module FreshReport
       Dir.mktmpdir("fresh-phases-") do |directory|
         records.each_with_index { |record, index| BenchmarkCases.write_json(File.join(directory, "#{index}.json"), record) }
         BenchmarkReport.summarize("input_dir" => directory, "output_dir" => output_dir,
-          "title" => "#{item.fetch('id')} fresh measurements", "baseline_strategy" => "actions-cache")
+          "title" => "#{item.fetch('id')} fresh measurements", "baseline_strategy" => provider == "both" ? "actions-cache" : provider)
       end
     end
     lines = ["## #{item.fetch('id')} fresh run", "", "[Original run](#{run_url})", "",
@@ -118,6 +120,7 @@ if $PROGRAM_NAME == __FILE__
     jobs = runner.jobs(repository, run_id, attempt)
     FreshReport.report(BenchmarkCases.load_case(ENV.fetch("CASE_ID")), input_dir: "phase-evidence", output_dir: "benchmark-results",
       jobs: jobs, run_url: "https://github.com/#{repository}/actions/runs/#{run_id}",
-      variant: ENV.fetch("VARIANT", "").then { |value| value.empty? ? nil : value }, suffix: ENV.fetch("BENCHMARK_SUFFIX", ""))
+      variant: ENV.fetch("VARIANT", "").then { |value| value.empty? ? nil : value }, suffix: ENV.fetch("BENCHMARK_SUFFIX", ""),
+      provider: ENV.fetch("PROVIDER", "both"))
   end
 end
