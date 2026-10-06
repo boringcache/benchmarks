@@ -21,8 +21,9 @@ The provider wrapper and direct CLI workers use that same default. Changing the
 reviewed pin changes the execution definition; earlier series retain their
 original selector. A compatible stable release can replace this pin later.
 `BENCHMARK_CADENCE_ACTIVE=true` enables automatic dispatch and source publication.
-Manual dispatch and dry runs remain available. The hourly monitor runs independently
-of this dispatch control, including during baseline qualification. Automatic builds,
+Manual dispatch and dry runs remain available. Hourly source inspection and monitoring run independently
+of this dispatch control, including during baseline qualification. Paused source checks
+retain candidate observations and skip rolling preparation. Automatic builds,
 source advancement and publication remain paused for the reset. Rolling cache scopes are explicit and remain
 stable across harness refs. Each rolling series begins with a seed build, then an
 identical-source replay, before advancing to changed-source builds.
