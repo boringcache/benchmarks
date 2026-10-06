@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "case_id": "deno",
-  "state": "dispatching",
+  "state": "requested",
   "cli_version": "vcli-canary-252077d7b8fb",
   "ref": "main",
   "proposal": {
@@ -30,7 +30,9 @@
         "cache_scope": "rolling-main",
         "cache_profile": "cargo-product"
       },
-      "state": "requesting"
+      "state": "requested",
+      "id": 37456160200,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37456160200"
     }
   ]
 }
