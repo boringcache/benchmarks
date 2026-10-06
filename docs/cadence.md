@@ -35,7 +35,9 @@ lane. Rolling remains a changed-source observation.
 
 Preflight validates the whole suite, resolves one exact CLI and freezes a
 one-sample series for each case and variant. Grouping preserves those plans,
-provider sets, tags and series identities. Each fresh sample is independent;
+provider sets, tags and series identities. Actual batches dispatch against an
+immutable `benchmark-<parent-run-id>` ref pointing to the frozen harness commit;
+source and data commits on `main` cannot change that batch. Dry runs create no ref. Each fresh sample is independent;
 its warm jobs depend on its own seed. Rolling publication is ordered by cache
 identity, with `queue: max` and no cancellation of an existing observation.
 gRPC provider jobs have a 120-minute budget in both lanes.

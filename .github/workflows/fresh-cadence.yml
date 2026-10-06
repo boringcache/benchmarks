@@ -15,13 +15,16 @@ on:
         type: boolean
         default: false
 permissions:
-  contents: read
+  contents: write
   actions: read
 jobs:
   plan:
     name: Validate suite and CLI
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    permissions:
+      contents: write
+      actions: read
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
@@ -41,6 +44,11 @@ jobs:
             --cadence "$CADENCE" --channel "$CHANNEL" --version "$CLI_VERSION" --ref "$GITHUB_REF_NAME" \
             --output "$RUNNER_TEMP/benchmark-dispatch.json" \
             --summary "$GITHUB_STEP_SUMMARY"
+      - name: Pin the frozen batch to an immutable harness ref
+        if: '!inputs.dry_run'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ruby scripts/cadence-dispatch.rb --plan "$RUNNER_TEMP/benchmark-dispatch.json" --pin "$GITHUB_RUN_ID"
       - id: matrix
         run: |
           echo "matrix=$(ruby scripts/cadence-dispatch.rb --plan "$RUNNER_TEMP/benchmark-dispatch.json" --matrix)" >> "$GITHUB_OUTPUT"

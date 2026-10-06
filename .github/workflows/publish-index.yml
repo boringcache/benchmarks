@@ -26,6 +26,10 @@ jobs:
         run_id="$(gh api 'repos/boringcache/benchmarks/actions/workflows/nightly-canaries.yml/runs?branch=main&status=completed&per_page=20' --jq '.workflow_runs | max_by(.created_at) | .id')"
         [[ "$run_id" =~ ^[0-9]+$ ]] || { echo "No completed central monitor run" >&2; exit 1; }
         gh run download "$run_id" --repo boringcache/benchmarks --name benchmark-outcomes --dir "$RUNNER_TEMP/outcomes"
+        if [[ ! -f "$RUNNER_TEMP/outcomes/benchmark-outcomes-daily.json" || ! -f "$RUNNER_TEMP/outcomes/benchmark-outcomes-weekly.json" || ! -f "$RUNNER_TEMP/outcomes/benchmark-outcomes-rolling.json" ]]; then
+          echo "Central cadence observations are not available yet."
+          exit 0
+        fi
         ruby scripts/publish-current.rb --input "$RUNNER_TEMP/outcomes" --output data/latest/current.json --history data/observations
         cp "$RUNNER_TEMP/outcomes/"*.json data/latest/
     - name: Commit and push index
