@@ -26,13 +26,18 @@ jobs:
           all) echo 'matrix=["boringcache","bazel-remote"]' >> "$GITHUB_OUTPUT" ;;
           boringcache) echo 'matrix=["boringcache"]' >> "$GITHUB_OUTPUT" ;;
           bazel-remote) echo 'matrix=["bazel-remote"]' >> "$GITHUB_OUTPUT" ;;
+          depot-cache) echo 'matrix=["depot-cache"]' >> "$GITHUB_OUTPUT" ;;
           *) exit 1 ;;
         esac
   commit:
     name: "${{ matrix.provider == 'boringcache' && 'BoringCache' || matrix.provider
       == 'cachix' && 'Cachix' || matrix.provider }} ${{ inputs.case_id }} commit"
     needs: providers
-    runs-on: ubuntu-24.04
+    if: inputs.runner_label == '' || github.ref_name == 'main'
+    runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main' && inputs.runner_label || 'ubuntu-24.04' }}"
+    env:
+      DEPOT_TOKEN: ${{ matrix.provider == 'depot-cache' && secrets.DEPOT_TOKEN || '' }}
+      BENCHMARK_RUNNER_CLASS: ${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main' && inputs.runner_label || 'ubuntu-24.04' }}
     timeout-minutes: 180
     permissions:
       contents: read
@@ -95,6 +100,14 @@ jobs:
         path: benchmark-results/${{ inputs.case_id }}-bazel-remote-rolling.json
         if-no-files-found: error
         retention-days: 90
+    - name: Retain Depot result
+      if: inputs.provider == 'depot-cache'
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ inputs.case_id }}-depot-cache-rolling
+        path: benchmark-results/
+        if-no-files-found: error
+        retention-days: 90
     - name: Retain comparison summary
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
@@ -130,7 +143,12 @@ concurrency:
         - all
         - boringcache
         - bazel-remote
+        - depot-cache
         default: all
+      runner_label:
+        description: Optional runner label for a manual main-branch experiment.
+        type: string
+        default: ''
       cli_version:
         description: Exact CLI release or canary; required for BoringCache execution.
         type: string

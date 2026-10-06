@@ -23,8 +23,13 @@ end
 
 if $PROGRAM_NAME == __FILE__
   begin
-    BenchmarkIdentity.verify(BenchmarkCases.load_case(ENV.fetch("BENCHMARK_CASE_ID")), ENV.fetch("BENCHMARK_EXPECTED_IDENTITY", ""))
-  rescue BenchmarkCases::Error, KeyError, JSON::ParserError => error
+    item = BenchmarkCases.load_case(ENV.fetch("BENCHMARK_CASE_ID"))
+    BenchmarkIdentity.verify(item, ENV.fetch("BENCHMARK_EXPECTED_IDENTITY", ""))
+    if !ENV.fetch("NATIVE_LANE", "").empty?
+      NativeCase.validate_provider(item, ENV.fetch("BENCHMARK_PROVIDER", "both"), runner: ENV.fetch("BENCHMARK_PROVIDER_RUNNER", ENV.fetch("BENCHMARK_RUNNER_CLASS", "")),
+        lane: ENV.fetch("NATIVE_LANE"), variant: ENV.fetch("BENCHMARK_VARIANT", ""))
+    end
+  rescue NativeCase::Error, BenchmarkCases::Error, KeyError, JSON::ParserError => error
     abort error.message
   end
 end

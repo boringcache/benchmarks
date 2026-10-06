@@ -15,7 +15,7 @@ raise "Unexpected arguments" unless ARGV.empty?
 end
 raise "Choose either push or load" if options["load"] == "true" && options["push"] == "true"
 strategy = options.fetch("strategy")
-raise "Unknown Docker provider" unless %w[boringcache actions-cache].include?(strategy)
+raise "Unknown Docker provider" unless %w[boringcache actions-cache depot-actions-cache depot-cache].include?(strategy)
 
 verified = options["load"] == "true" || options["push"] == "true"
 if verified

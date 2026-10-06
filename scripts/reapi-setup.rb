@@ -48,7 +48,7 @@ module ReapiSetup
       else
         download("boringcache/cli", release, "boringcache-linux-amd64", "boringcache")
       end
-    else
+    elsif ENV.fetch("PROVIDER") == "bazel-remote"
       installed << download("buchgr/bazel-remote", "v2.6.2", "bazel-remote-2.6.2-linux-amd64", "bazel-remote",
         sha256: "62e236bf8396e69396928e0d0c32062fbd5575f20fe55dc10a82eb791297e1a0")
     end

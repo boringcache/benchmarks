@@ -59,6 +59,13 @@ runs:
       with:
         name: reapi-${{ inputs.case-id }}-${{ inputs.provider }}-cold
         path: cold-checks
+    - name: Select the runner cache provider
+      shell: bash
+      env:
+        CACHE_PROVIDER: ${{ inputs.provider }}
+        CACHE_MODE: ${{ inputs.case-id == 'stackstorm-pants' && 'pants' || 'moon' }}
+        CACHE_PHASE: ${{ inputs.phase }}
+      run: ruby ./scripts/depot-cache.rb
     - name: Run BoringCache with workload identity
       if: inputs.provider == 'boringcache'
       shell: bash
@@ -69,8 +76,8 @@ runs:
         CACHE_LANE: ${{ inputs.lane }}
         BORINGCACHE_WORKSPACE: boringcache/benchmarks
       run: boringcache ci run --oidc-provider github-actions -- ruby scripts/reapi-client.rb build
-    - name: Run bazel-remote
-      if: inputs.provider == 'bazel-remote'
+    - name: Run the declared remote-cache comparator
+      if: inputs.provider == 'bazel-remote' || inputs.provider == 'depot-cache'
       shell: bash
       env:
         PHASE: ${{ inputs.phase }}

@@ -4,6 +4,12 @@ inputs:
   case-id:
     description: Reviewed case ID from the registry.
     required: true
+  provider-runner:
+    description: Runner class declared for the native provider.
+    default: ''
+  provider:
+    description: Reviewed native provider selection.
+    default: both
   native-lane:
     description: Optional fresh or rolling native comparison lane.
     default: ''
@@ -28,6 +34,9 @@ runs:
       shell: bash
       env:
         BENCHMARK_CASE_ID: ${{ inputs.case-id }}
+        BENCHMARK_PROVIDER_RUNNER: ${{ inputs.provider-runner }}
+        BENCHMARK_PROVIDER: ${{ inputs.provider }}
+        BENCHMARK_RUNNER_CLASS: ${{ env.BENCHMARK_RUNNER_CLASS }}
         NATIVE_LANE: ${{ inputs.native-lane }}
         BENCHMARK_ID_SUFFIX: ${{ inputs.suffix }}
         BENCHMARK_VARIANT: ${{ inputs.variant }}

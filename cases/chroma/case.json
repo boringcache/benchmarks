@@ -78,6 +78,9 @@
     "primary_metric": "build_and_reuse_seconds",
     "storage": "provider-reported",
     "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
-    "sample_count": 10
+    "sample_count": 10,
+    "optional_providers": [
+      "depot-actions-cache"
+    ]
   }
 }

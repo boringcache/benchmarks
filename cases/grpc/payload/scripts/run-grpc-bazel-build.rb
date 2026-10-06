@@ -9,15 +9,19 @@ required = lambda do |name|
 end
 
 tool, operation, *arguments = BenchmarkPlan.command("bazel")
-startup = ["--output_user_root=#{required.call('BAZEL_OUTPUT_USER_ROOT')}",
+startup = ["--nosystem_rc", "--nohome_rc", "--output_user_root=#{required.call('BAZEL_OUTPUT_USER_ROOT')}",
            "--output_base=#{required.call('BAZEL_OUTPUT_BASE')}"]
 provider = []
 
 case required.call("BAZEL_CACHE_STRATEGY")
-when "actions-cache"
+when "actions-cache", "depot-actions-cache"
   directory = required.call("BAZEL_DISK_CACHE")
   FileUtils.mkdir_p(directory)
   provider << "--disk_cache=#{directory}"
+when "depot-cache"
+  provider.concat(["--remote_cache=https://cache.depot.dev", "--remote_timeout=10m",
+    "--remote_header=authorization=#{required.call('DEPOT_TOKEN')}"])
+  provider << "--remote_upload_local_results=false" if ENV["BUILDBUDDY_REMOTE_UPLOAD_LOCAL_RESULTS"] == "false"
 when "buildbuddy"
   key = required.call("BUILDBUDDY_API_KEY")
   provider.concat([

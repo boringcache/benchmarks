@@ -50,13 +50,14 @@ jobs:
     env:
       BENCHMARK_RUNNER_CLASS: ubuntu-24.04
   advance:
-    name: BoringCache Deno Cargo commit
+    name: "${{ inputs.provider }} Deno Cargo commit"
     needs: source
     if: inputs.runner_label == '' || github.ref_name == 'main'
     runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
       && inputs.runner_label || 'ubuntu-24.04' }}"
     timeout-minutes: 240
     env:
+      DEPOT_TOKEN: ${{ inputs.provider == 'depot-cache' && secrets.DEPOT_TOKEN || '' }}
       RESOLVED_BASE_SHA: "${{ github.event_name == 'push' && needs.source.outputs.base_sha
         || inputs.base_sha }}"
       RESOLVED_HEAD_SHA: "${{ github.event_name == 'push' && needs.source.outputs.head_sha
@@ -155,6 +156,7 @@ jobs:
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
     - name: Build Deno release binaries through the Cargo product
       id: build_primary
+      if: inputs.provider != 'depot-cache'
       uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
@@ -163,10 +165,20 @@ jobs:
         working-directory: upstream
       env:
         DENO_SNAPSHOT_MINIFY_SOURCES: '1'
+    - name: Build with the native Depot compiler cache
+      id: depot_primary
+      if: inputs.provider == 'depot-cache'
+      uses: ./.github/actions/remote-compiler-cache
+      with:
+        operation: primary
+      env:
+        DENO_SNAPSHOT_MINIFY_SOURCES: '1'
+
     - name: Select Deno's denort_desktop release command
       run: "./scripts/select-deno-cargo-phase.rb desktop"
     - name: Build denort_desktop through the Cargo product
       id: build_desktop
+      if: inputs.provider != 'depot-cache'
       uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
@@ -175,6 +187,15 @@ jobs:
         working-directory: upstream
       env:
         DENO_SNAPSHOT_MINIFY_SOURCES: '1'
+    - name: Build with the native Depot compiler cache
+      id: depot_desktop
+      if: inputs.provider == 'depot-cache'
+      uses: ./.github/actions/remote-compiler-cache
+      with:
+        operation: desktop
+      env:
+        DENO_SNAPSHOT_MINIFY_SOURCES: '1'
+
     - name: Capture the build timing
       id: build_timing
       env:
@@ -192,9 +213,10 @@ jobs:
         test -z "$(git -C upstream status --porcelain=v1 --untracked-files=all)"
     - name: Write the benchmark phase evidence
       env:
+        CACHE_PROVIDER: ${{ inputs.provider }}
         WORKFLOW_STARTED_AT: "${{ steps.workflow_timer.outputs.started_at }}"
         BUILD_SECONDS: "${{ steps.build_timing.outputs.build_seconds }}"
-        CACHE_HIT: "${{ steps.build_primary.outputs.cache-hit }}"
+        CACHE_HIT: "${{ steps.build_primary.outputs.cache-hit || steps.depot_primary.outputs.cache-hit }}"
         EVIDENCE_PATH: "${{ steps.build_primary.outputs.evidence-path }}"
         GITHUB_TOKEN: "${{ github.token }}"
         SOURCE_REPOSITORY: "${{ needs.source.outputs.source_repository }}"
@@ -203,7 +225,7 @@ jobs:
         set -euo pipefail
         ruby ./scripts/benchmark-report.rb phase \
           --benchmark deno-cargo \
-          --strategy boringcache \
+          --strategy "$CACHE_PROVIDER" \
           --lane rolling \
           --phase commit \
           --mode cargo --variant "$CACHE_PROFILE" \
@@ -213,6 +235,12 @@ jobs:
           --source-repository "$SOURCE_REPOSITORY" \
           --source-sha "$SOURCE_SHA" \
           --evidence "$EVIDENCE_PATH"
+    - name: Retain the original Cargo rolling phase
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: phase-deno-cargo-${{ inputs.provider }}-${{ env.CACHE_PROFILE }}-rolling-commit
+        path: benchmark-results/
+        if-no-files-found: error
     - name: Publish the Deno Cargo rolling benchmark report
       run: |
         ruby ./scripts/benchmark-report.rb summarize \
@@ -222,8 +250,8 @@ jobs:
     - name: Retain the Deno Cargo rolling result
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: benchmark-deno-cargo-boringcache-${{ env.CACHE_PROFILE }}-rolling
-        path: benchmark-results/deno-cargo-boringcache-${{ env.CACHE_PROFILE }}-rolling.json
+        name: benchmark-deno-cargo-${{ inputs.provider }}-${{ env.CACHE_PROFILE }}-rolling
+        path: benchmark-results/deno-cargo-${{ inputs.provider }}-${{ env.CACHE_PROFILE }}-rolling.json
         if-no-files-found: error
     - name: Publish rolling run summary
       run: |
@@ -231,13 +259,16 @@ jobs:
           echo "## Deno Cargo rolling run"
           echo "- Cache profile: ${CACHE_PROFILE}"
           echo
+          echo "- Cache provider: ${{ inputs.provider }}"
           echo "- CLI: \`${{ inputs.cli_version }}\`"
           echo "- Source: \`${RESOLVED_BASE_SHA}\` → \`${RESOLVED_HEAD_SHA}\`"
           echo "- Primary target available before the adjacent build: \`${{ steps.build_primary.outputs.cache-hit }}\`"
           echo "- Desktop target available before the adjacent build: \`${{ steps.build_desktop.outputs.cache-hit }}\`"
+          echo "- Primary native compiler hit observed: \`${{ steps.depot_primary.outputs.cache-hit }}\`"
+          echo "- Desktop native compiler hit observed: \`${{ steps.depot_desktop.outputs.cache-hit }}\`"
         } >> "$GITHUB_STEP_SUMMARY"
     - name: Retain product evidence
-      if: always()
+      if: always() && inputs.provider != 'depot-cache'
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: deno-cargo-${{ env.CACHE_PROFILE }}-rolling-${{ env.RESOLVED_HEAD_SHA }}
@@ -246,6 +277,15 @@ jobs:
           ${{ steps.build_desktop.outputs.evidence-path }}
           benchmark-results/*.json
         if-no-files-found: warn
+    - name: Retain Depot compiler evidence
+      if: always() && inputs.provider == 'depot-cache'
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: compiler-deno-depot-cache-rolling
+        path: |
+          benchmark-results/sccache/
+          .depot-cache/configuration.json
+        if-no-files-found: warn
     permissions:
       actions: read
       contents: read
@@ -253,6 +293,10 @@ jobs:
 'on':
   workflow_dispatch:
     inputs:
+      provider:
+        type: choice
+        options: [boringcache, depot-cache]
+        default: boringcache
       observation:
         description: Seed, identical-source replay, or changed-source build.
         type: string

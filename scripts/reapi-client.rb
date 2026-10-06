@@ -17,20 +17,22 @@ module ReapiClient
     JSON.parse(File.read("reapi-recipe.json"))
   end
 
-  def self.configure(phase)
+  def self.configure(phase, endpoint: ENDPOINT, provider: "bazel-remote")
     warm = phase == "warm"
     case recipe.fetch("tool")
     when "moon"
       path = ".moon/workspace.yml"
       config = YAML.safe_load(File.read(path))
       config["experiments"] = config.fetch("experiments", {}).merge("casOutputsCache" => true)
-      config["remote"] = {"host" => ENDPOINT, "api" => "grpc", "cache" => {"instanceName" => "", "compression" => "none", "verifyIntegrity" => true}}
+      config["remote"] = {"host" => endpoint, "api" => "grpc", "cache" => {"instanceName" => "", "compression" => "none", "verifyIntegrity" => true}}
+      config["remote"]["auth"] = {"token" => "DEPOT_TOKEN"} if provider == "depot-cache"
       File.write(path, YAML.dump(config))
       ENV["MOON_CACHE"] = warm ? "read" : "read-write"
     when "pants"
-      ENV.update("PANTS_REMOTE_STORE_ADDRESS" => ENDPOINT, "PANTS_REMOTE_CACHE_READ" => "true",
+      ENV.update("PANTS_REMOTE_STORE_ADDRESS" => endpoint, "PANTS_REMOTE_CACHE_READ" => "true",
         "PANTS_REMOTE_CACHE_WRITE" => warm ? "false" : "true", "PANTS_REMOTE_EXECUTION" => "false",
         "PANTS_REMOTE_INSTANCE_NAME" => "", "PANTS_STATS_LOG" => "true", "PANTS_PANTSD" => "false")
+      ENV["PANTS_REMOTE_STORE_HEADERS"] = JSON.generate({"Authorization" => ENV.fetch("DEPOT_TOKEN")}) if provider == "depot-cache"
     when "buck2"
       File.write(".buckconfig.local", <<~CONFIG)
         [buck2_re_client]
@@ -53,6 +55,13 @@ module ReapiClient
   def self.build
     phase, provider = ENV.fetch("PHASE"), ENV.fetch("PROVIDER")
     return managed_build(phase) if provider == "boringcache"
+    if provider == "depot-cache"
+      raise Error, "Depot REAPI screening supports Moon and Pants" unless %w[moon pants].include?(recipe.fetch("tool"))
+      require_relative "depot-cache"
+      DepotCache.environment(recipe.fetch("tool"))
+      configure(phase, endpoint: "grpcs://cache.depot.dev", provider: provider)
+      return remote_build(phase, provider: provider, command: recipe.fetch("command"))
+    end
     configure(phase)
     scope = BenchmarkPhase.scope(ENV)
     ReapiRegistry.run(command: recipe.fetch("command"), provider: provider, phase: phase,
@@ -79,10 +88,13 @@ module ReapiClient
   end
 
   def self.managed_build(phase)
+    remote_build(phase, provider: "boringcache", command: managed_command(phase, BenchmarkPhase.scope(ENV)))
+  end
+
+  def self.remote_build(phase, provider:, command:)
     FileUtils.mkdir_p("reapi-evidence")
-    command = managed_command(phase, BenchmarkPhase.scope(ENV))
-    measurements = {"provider" => "boringcache", "phase" => phase, "command" => command,
-      "scope" => "Managed CLI operation including cache setup, build and publication",
+    measurements = {"provider" => provider, "phase" => phase, "command" => command,
+      "scope" => "Declared client operation including cache setup, build and publication",
       "restore_or_setup_seconds" => nil, "save_seconds" => nil, "success" => false}
     started = ReapiRegistry.elapsed
     File.open("reapi-evidence/build.log", "w") do |log|
@@ -93,7 +105,7 @@ module ReapiClient
       end
     end
     measurements["build_seconds"] = ReapiRegistry.elapsed - started
-    raise Error, "Managed native build failed; see reapi-evidence/build.log" unless measurements["success"]
+    raise Error, "Native build failed; see reapi-evidence/build.log" unless measurements["success"]
   ensure
     File.write("reapi-evidence/timing.json", JSON.pretty_generate(measurements) + "\n") if measurements
   end

@@ -71,7 +71,7 @@ module RollingMonitor
       next true if observation == "changed-source"
       next false unless record["observation"] == observation
       if observation == "seed"
-        record.dig("cache", "hit") != true
+        record["strategy"] == "depot-cache" && record.dig("cache_provider", "isolation") == "unmeasured" || record.dig("cache", "hit") != true
       elsif %w[docker buildkit].include?(record["mode"])
         record.dig("cache", "import_ready") == true && record.dig("cache", "import_refs").to_i.positive?
       else
@@ -83,7 +83,7 @@ module RollingMonitor
     phases = BenchmarkSeries.phases_for(workflow.fetch("lane"), workflow["phases"])
     providers = item.dig("comparison", "providers")
     selected = run.dig("inputs", "provider") || "both"
-    providers = [selected] if run.fetch("workflow") == "native-rolling-benchmark.yml" && selected != "both"
+    providers = [selected] unless %w[both all].include?(selected)
     expected = providers.product(phases)
     observed = records.map { |record| record.values_at("strategy", "phase") }
     verified = records.all? do |record|

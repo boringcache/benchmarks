@@ -101,6 +101,17 @@ module NativeCase
     end
   end
 
+  def self.validate_provider(item, provider, runner:, lane:, variant: nil)
+    return if %w[both all].include?(provider) || item.dig("comparison", "providers").include?(provider)
+    raise Error, "Provider is not declared for this case" unless item.dig("comparison", "optional_providers").to_a.include?(provider)
+    raise Error, "Depot cache requires a reviewed Depot runner" unless %w[depot-ubuntu-24.04-4 depot-ubuntu-24.04-8].include?(runner)
+    if provider == "depot-cache"
+      raise Error, "Native Depot cache requires a rolling seed or changed-source observation; cold isolation is unmeasured" unless lane == "rolling"
+      variants = item.dig("comparison", "provider_variants", provider)
+      raise Error, "This variant has no native Depot cache integration" if variants && !variants.include?(variant)
+    end
+  end
+
   def self.benchmark_id(recipe, suffix: "")
     raise Error, "Use an empty suffix or a lowercase suffix beginning with a hyphen" unless suffix.match?(/\A(?:-[a-z0-9]+(?:-[a-z0-9]+)*)?\z/)
     recipe.fetch("benchmark_id") + suffix
@@ -123,7 +134,7 @@ module NativeCase
       fallback = settings.fetch(name) { declared.fetch(name).fetch("default") }
       actions = overrides.fetch("actions-cache", {}).fetch(name, fallback)
       boringcache = overrides.fetch("boringcache", {}).fetch(name, fallback)
-      settings[name] = "${{ inputs.strategy == 'actions-cache' && '#{actions}' || '#{boringcache}' }}"
+      settings[name] = "${{ (inputs.strategy == 'actions-cache' || inputs.strategy == 'depot-actions-cache') && '#{actions}' || '#{boringcache}' }}"
     end
     document = {"name" => "Declared benchmark phase", "description" => "Executes the reviewed native case recipe.",
       "inputs" => INPUTS.to_h { |name| [name, {"required" => %w[strategy phase benchmark_id].include?(name), "default" => ""}] },

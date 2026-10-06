@@ -39,12 +39,13 @@ jobs:
     env:
       BENCHMARK_RUNNER_CLASS: ubuntu-24.04
   advance:
-    name: BoringCache Zed Cargo commit
+    name: "${{ inputs.provider }} Zed Cargo commit"
     needs: source
     runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
       && inputs.runner_label || 'ubuntu-24.04' }}"
     timeout-minutes: 240
     env:
+      DEPOT_TOKEN: ${{ inputs.provider == 'depot-cache' && secrets.DEPOT_TOKEN || '' }}
       RESOLVED_BASE_SHA: "${{ inputs.base_sha }}"
       RESOLVED_HEAD_SHA: "${{ inputs.head_sha }}"
       RESOLVED_SOURCE_DISTANCE: "${{ inputs.source_distance }}"
@@ -95,12 +96,20 @@ jobs:
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
     - name: Run the released Cargo product
       id: cache
+      if: inputs.provider != 'depot-cache'
       uses: "./.github/actions/boringcache"
       with:
         cli-version: "${{ inputs.cli_version }}"
         mode: cargo
         trust-policy: publish
         working-directory: upstream
+    - name: Build with the native Depot compiler cache
+      id: depot_cargo
+      if: inputs.provider == 'depot-cache'
+      uses: ./.github/actions/remote-compiler-cache
+      env:
+        DENO_SNAPSHOT_MINIFY_SOURCES: '1'
+
     - name: Capture the build timing
       id: build_timing
       env:
@@ -113,9 +122,10 @@ jobs:
         test -z "$(git -C upstream status --porcelain=v1 --untracked-files=all)"
     - name: Write the benchmark phase evidence
       env:
+        CACHE_PROVIDER: ${{ inputs.provider }}
         WORKFLOW_STARTED_AT: "${{ steps.workflow_timer.outputs.started_at }}"
         BUILD_SECONDS: "${{ steps.build_timing.outputs.build_seconds }}"
-        CACHE_HIT: "${{ steps.cache.outputs.cache-hit }}"
+        CACHE_HIT: "${{ steps.cache.outputs.cache-hit || steps.depot_cargo.outputs.cache-hit }}"
         EVIDENCE_PATH: "${{ steps.cache.outputs.evidence-path }}"
         GITHUB_TOKEN: "${{ github.token }}"
         SOURCE_REPOSITORY: "${{ needs.source.outputs.source_repository }}"
@@ -124,7 +134,7 @@ jobs:
         set -euo pipefail
         ruby ./scripts/benchmark-report.rb phase \
           --benchmark zed-cargo \
-          --strategy boringcache \
+          --strategy "$CACHE_PROVIDER" \
           --lane rolling \
           --phase commit \
           --mode cargo \
@@ -134,6 +144,12 @@ jobs:
           --source-repository "$SOURCE_REPOSITORY" \
           --source-sha "$SOURCE_SHA" \
           --evidence "$EVIDENCE_PATH"
+    - name: Retain the original Cargo rolling phase
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: phase-zed-cargo-${{ inputs.provider }}-rolling-commit
+        path: benchmark-results/
+        if-no-files-found: error
     - name: Publish the Zed Cargo rolling benchmark report
       run: |
         ruby ./scripts/benchmark-report.rb summarize \
@@ -143,25 +159,37 @@ jobs:
     - name: Retain the Zed Cargo rolling result
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: benchmark-zed-cargo-boringcache-rolling
-        path: benchmark-results/zed-cargo-boringcache-rolling.json
+        name: benchmark-zed-cargo-${{ inputs.provider }}-rolling
+        path: benchmark-results/zed-cargo-${{ inputs.provider }}-rolling.json
         if-no-files-found: error
     - name: Publish rolling run summary
       run: |
         {
           echo "## Zed Cargo rolling run"
           echo
+          echo "- Cache provider: ${{ inputs.provider }}"
           echo "- CLI: \`${{ inputs.cli_version }}\`"
           echo "- Source: \`${RESOLVED_BASE_SHA}\` → \`${RESOLVED_HEAD_SHA}\`"
           echo "- Commit distance: \`${RESOLVED_SOURCE_DISTANCE}\`"
-          echo "- Signed target available before the source build: \`${{ steps.cache.outputs.cache-hit }}\`"
+          echo "- Product target available before the source build: \`${{ steps.cache.outputs.cache-hit }}\`"
+          echo "- Native compiler hit observed: \`${{ steps.depot_cargo.outputs.cache-hit }}\`"
         } >> "$GITHUB_STEP_SUMMARY"
     - name: Retain product evidence
+      if: inputs.provider != 'depot-cache'
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: zed-cargo-rolling-${{ env.RESOLVED_HEAD_SHA }}
         path: "${{ steps.cache.outputs.evidence-path }}"
         if-no-files-found: error
+    - name: Retain Depot compiler evidence
+      if: always() && inputs.provider == 'depot-cache'
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: compiler-zed-depot-cache-rolling
+        path: |
+          benchmark-results/sccache/
+          .depot-cache/configuration.json
+        if-no-files-found: warn
     permissions:
       actions: read
       checks: read
@@ -172,7 +200,7 @@ jobs:
     needs:
     - source
     - advance
-    if: needs.advance.result == 'success' && inputs.observation != 'seed' && inputs.observation != 'replay'
+    if: inputs.provider != 'depot-cache' && needs.advance.result == 'success' && inputs.observation != 'seed' && inputs.observation != 'replay'
     runs-on: ubuntu-24.04
     env:
       EXPECTED_BASE_SHA: "${{ inputs.base_sha }}"
@@ -211,6 +239,10 @@ jobs:
 'on':
   workflow_dispatch:
     inputs:
+      provider:
+        type: choice
+        options: [boringcache, depot-cache]
+        default: boringcache
       observation:
         description: Seed, identical-source replay, or changed-source build.
         type: string
@@ -251,6 +283,9 @@ jobs:
         default: '1'
   workflow_call:
     inputs:
+      provider:
+        type: string
+        default: boringcache
       observation:
         description: Seed, identical-source replay, or changed-source build.
         type: string
