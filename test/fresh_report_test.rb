@@ -83,6 +83,7 @@ class FreshReportTest < Minitest::Test
   def test_partial_report_keeps_canonical_measurements_and_names
     item = BenchmarkCases.load_case("hugo-go")
     record = {"schema_version" => 1, "benchmark" => "hugo-go", "strategy" => "actions-cache", "phase" => "cold", "lane" => "fresh",
+      "github" => {"run_id" => ENV.fetch("GITHUB_RUN_ID", "42"), "run_attempt" => ENV.fetch("GITHUB_RUN_ATTEMPT", "1")},
       "case" => {"case_id" => "hugo-go"}, "source" => {"repository" => "gohugoio/hugo", "sha" => "a" * 40},
       "cache" => {"storage_bytes" => nil}, "verification" => {"passed" => true},
       "timing" => {"total_seconds" => 15, "build_seconds" => 12, "restore_or_setup_seconds" => 3}}
