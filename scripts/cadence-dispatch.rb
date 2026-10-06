@@ -10,7 +10,7 @@ module CadenceDispatch
   class Error < StandardError; end
 
   def self.materialize(record, directory:)
-    record.fetch("runs").each do |run|
+    record.fetch("runs").flat_map { |run| ProjectRuns.expand(run) }.each do |run|
       series = run.fetch("series")
       raise Error, "Scheduled series digest differs from its plan" unless series.fetch("plan_sha256") == BenchmarkSeries.digest(series)
       %w[case_id series_id].each do |key|
@@ -35,7 +35,7 @@ module CadenceDispatch
 
   def self.matrix(plan)
     raise Error, "Expected a validated dispatch plan" unless plan.fetch("state") == "planned"
-    plan.fetch("runs").each do |run|
+    plan.fetch("runs").flat_map { |run| ProjectRuns.expand(run) }.each do |run|
       next unless run["series"]
       series = run.fetch("series")
       identity = JSON.parse(run.fetch("inputs").fetch("expected_identity"))
@@ -95,7 +95,7 @@ module CadenceDispatch
       %w[repository workflow inputs].each do |key|
         raise Error, "Dispatch receipt target differs from the plan" unless run.fetch(key) == expected.fetch(key)
       end
-      %w[harness_sha series].each do |key|
+      %w[harness_sha series selections].each do |key|
         raise Error, "Dispatch receipt #{key} differs from the plan" unless run[key] == expected[key]
       end
       if run["state"] == "requested"

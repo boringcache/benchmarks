@@ -143,7 +143,7 @@ class BenchmarkCaseScriptsTest < Minitest::Test
         environment = {"PATH" => "#{File.dirname(RbConfig.ruby)}:#{ENV.fetch('PATH')}",
           "LOAD_IMAGE" => "true", "PUSH_IMAGE" => "false", "IMAGE" => "example/image:local", "SOURCE_SHA" => "a" * 40, "SOURCE_TAG" => "test",
           "DOCKERFILE" => id == "n8n" ? "upstream/docker/images/n8n/Dockerfile" : "upstream/Dockerfile", "NODE_VERSION" => "26.7.0",
-          "WORKLOAD" => "server", "TOOL_CACHE" => "false", "PRERELEASE" => "nightly.2026-10-03", "PLATFORM" => "linux/amd64",
+          "COMPILER_CACHE" => "sccache", "WORKLOAD" => "server", "TOOL_CACHE" => "false", "PRERELEASE" => "nightly.2026-10-03", "PLATFORM" => "linux/amd64",
           "MOUNT_CACHE" => "false", "NO_CACHE" => "false", "SOURCEMAP_SECRET" => "false", "BUILD_ID" => "123", "SOURCE_REF" => "main"}
         _, errors, status = Open3.capture3(environment, "bash", "-c", activate.fetch("run"), chdir: directory)
         assert status.success?, errors

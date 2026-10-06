@@ -6,7 +6,7 @@ require_relative "../scripts/benchmark-cases"
 class BenchmarkScaffoldTest < Minitest::Test
   def test_second_go_workload_uses_existing_workflows_and_shared_actions
     Dir.mktmpdir do |root|
-      %w[schemas scripts .github bin Gemfile.lock .tool-versions].each { |path| FileUtils.cp_r(File.join(BenchmarkCases::ROOT, path), root) }
+      %w[schemas scripts .github bin config Gemfile.lock .tool-versions].each { |path| FileUtils.cp_r(File.join(BenchmarkCases::ROOT, path), root) }
       workflows = Dir[File.join(root, ".github/workflows/*")]
       item = BenchmarkCases.create("another-go", repository: "example/another-go", revision: "a" * 40,
         question: "How does this workload reuse Go build outputs?", shape: "go", tool_version: "1.27.0", root: root)

@@ -1,0 +1,90 @@
+---
+name: Project rolling
+run-name: "${{ inputs.case_id }} rolling | ${{ inputs.cli_version }}"
+'on':
+  workflow_dispatch:
+    inputs:
+      case_id:
+        type: string
+        required: true
+      cli_version:
+        type: string
+        required: true
+      selections:
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+  packages: read
+  id-token: write
+jobs:
+  select:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      native_rolling_benchmark: "${{ steps.matrix.outputs.native_rolling_benchmark
+        }}"
+    steps:
+    - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      with:
+        persist-credentials: false
+    - id: matrix
+      env:
+        SELECTIONS: "${{ inputs.selections }}"
+        CASE_ID: "${{ inputs.case_id }}"
+        LANE: rolling
+      run: 'ruby -rjson -e ''require_relative "scripts/project-runs"; matrices = ProjectRuns.matrix(JSON.parse(ENV.fetch("SELECTIONS")),
+        case_id: ENV.fetch("CASE_ID"), lane: ENV.fetch("LANE")); File.open(ENV.fetch("GITHUB_OUTPUT"),
+        "a") { |file| matrices.each { |name, value| file.puts("#{name.delete_suffix(".yml").tr("-",
+        "_")}=#{JSON.generate(value)}") } }'''
+  native_rolling_benchmark:
+    name: "${{ matrix.label }}"
+    needs: select
+    if: needs.select.outputs.native_rolling_benchmark != ''
+    strategy:
+      fail-fast: false
+      matrix: "${{ fromJSON(needs.select.outputs.native_rolling_benchmark) }}"
+    uses: "./.github/workflows/native-rolling-benchmark.yml"
+    with:
+      cli_version: "${{ inputs.cli_version }}"
+      series_id: "${{ matrix.inputs.series_id || '' }}"
+      sample: "${{ matrix.inputs.sample || '1' }}"
+      case_id: "${{ matrix.inputs.case_id || '' }}"
+      variant: "${{ matrix.inputs.variant || '' }}"
+      cache_scope: "${{ matrix.inputs.cache_scope || '' }}"
+  report:
+    name: Project measurements
+    if: always()
+    needs:
+    - native_rolling_benchmark
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      with:
+        persist-credentials: false
+    - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+    - run: bundle install --jobs 4 --retry 2
+    - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        pattern: phase-*
+        path: project-evidence
+    - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        pattern: storage-*
+        path: project-evidence
+    - name: Report all project measurements
+      env:
+        CASE_ID: "${{ inputs.case_id }}"
+        SELECTIONS: "${{ inputs.selections }}"
+        LANE: rolling
+        GH_TOKEN: "${{ github.token }}"
+      run: ruby scripts/project-report.rb
+    - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      if: always()
+      with:
+        name: project-measurements
+        path: project-results/
+        if-no-files-found: error
+        retention-days: 90

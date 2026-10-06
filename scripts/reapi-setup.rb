@@ -38,7 +38,9 @@ module ReapiSetup
     FileUtils.mkdir_p("reapi-evidence")
     installed = []
     if ENV.fetch("PROVIDER") == "boringcache"
-      release = ENV.fetch("CLI_RELEASE")
+      require_relative "benchmark-cli"
+      release = ENV.fetch("CLI_RELEASE", "")
+      release = BenchmarkCLI.selection.fetch("version") if release.empty?
       raise "Select an exact CLI release" unless release.match?(/\Av(?:cli-canary-[0-9a-f]{9,40}|\d+\.\d+\.\d+)\z/)
       installed << download("boringcache/cli", release, "boringcache-linux-amd64", "boringcache")
     else

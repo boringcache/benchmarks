@@ -1,6 +1,6 @@
 ---
 name: 'deno: Deno Cargo product run'
-run-name: "Deno Cargo / ${{ inputs.cache_profile || 'cargo-product' }} | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} fresh | ${{ inputs.series_id || github.ref_name }} / sample ${{ inputs.sample || '1' }}"
+run-name: Deno ${{ inputs.cadence }} | ${{ inputs.cli_version }}
 permissions:
   actions: read
   contents: read
@@ -371,6 +371,11 @@ jobs:
         type: string
         required: false
         default: '1'
+      cadence:
+        type: string
+        default: fresh
+        description: Fresh or nightly scheduling; measured phases retain the fresh
+          lane.
   workflow_call:
     inputs:
       expected_identity:
@@ -403,3 +408,8 @@ jobs:
         type: string
         required: false
         default: '1'
+      cadence:
+        type: string
+        default: fresh
+        description: Fresh or nightly scheduling; measured phases retain the fresh
+          lane.

@@ -1,6 +1,6 @@
 ---
 name: 'grpc: gRPC Bazel Fresh'
-run-name: "gRPC Bazel | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} fresh | ${{ inputs.series_id || github.ref_name }} / sample ${{ inputs.sample || '1' }}"
+run-name: gRPC ${{ inputs.cadence }} | ${{ inputs.cli_version }}
 permissions:
   contents: read
   actions: read
@@ -19,7 +19,7 @@ jobs:
     if: inputs.runner_label == '' || github.ref_name == 'main'
     runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
       && inputs.runner_label || 'ubuntu-latest' }}"
-    timeout-minutes: 90
+    timeout-minutes: 120
     strategy: &1
       fail-fast: false
       matrix:
@@ -52,7 +52,8 @@ jobs:
       actions: read
       id-token: write
     env:
-      BUILDBUDDY_API_KEY: "${{ matrix.strategy == 'buildbuddy' && secrets.BUILDBUDDY_API_KEY || '' }}"
+      BUILDBUDDY_API_KEY: "${{ matrix.strategy == 'buildbuddy' && secrets.BUILDBUDDY_API_KEY
+        || '' }}"
       BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
         == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
   warm:
@@ -60,7 +61,7 @@ jobs:
     needs: cold
     runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
       && inputs.runner_label || 'ubuntu-latest' }}"
-    timeout-minutes: 90
+    timeout-minutes: 120
     strategy: *1
     steps:
     - name: Checkout benchmark definitions
@@ -84,7 +85,8 @@ jobs:
       actions: read
       id-token: write
     env:
-      BUILDBUDDY_API_KEY: "${{ matrix.strategy == 'buildbuddy' && secrets.BUILDBUDDY_API_KEY || '' }}"
+      BUILDBUDDY_API_KEY: "${{ matrix.strategy == 'buildbuddy' && secrets.BUILDBUDDY_API_KEY
+        || '' }}"
       BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
         == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
   report:
@@ -166,3 +168,8 @@ jobs:
         type: string
         required: false
         default: '1'
+      cadence:
+        type: string
+        default: fresh
+        description: Fresh or nightly scheduling; measured phases retain the fresh
+          lane.

@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       cli_version:
-        description: Optional exact published CLI canary; empty selects the latest
+        description: Optional exact published CLI canary; empty uses the reviewed benchmark pin
         type: string
         default: ''
       dry_run:
@@ -24,5 +24,6 @@ jobs:
     uses: ./.github/workflows/fresh-cadence.yml
     with:
       channel: canary
+      cadence: nightly
       cli_version: ${{ inputs.cli_version || '' }}
       dry_run: ${{ inputs.dry_run || false }}

@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       cli_version:
-        description: Optional exact stable CLI release; empty selects the latest.
+        description: Optional exact CLI tag; empty uses the reviewed benchmark pin.
         type: string
         default: ''
       dry_run:
@@ -23,6 +23,7 @@ jobs:
       cancel-in-progress: false
     uses: ./.github/workflows/fresh-cadence.yml
     with:
-      channel: stable
+      channel: configured
+      cadence: fresh
       cli_version: ${{ inputs.cli_version || '' }}
       dry_run: ${{ inputs.dry_run || false }}

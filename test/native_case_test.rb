@@ -144,7 +144,7 @@ class NativeCaseTest < Minitest::Test
       assert_includes error.message, "does not report verified output"
     end
     %w[hugo-go qdrant spring-ai storybook opentelemetry-java].each do |id|
-      assert_equal "native-fresh-benchmark.yml", BenchmarkCases.plan(BenchmarkCases.load_case(id)).fetch("workflow")
+      assert_equal "native-fresh-benchmark.yml", BenchmarkCases.plan(BenchmarkCases.load_case(id), variant: id == "storybook" ? "archive-sandbox" : nil).fetch("workflow")
     end
   end
 
@@ -297,11 +297,11 @@ class NativeCaseTest < Minitest::Test
     end
   end
 
-  def test_storybook_reports_the_archive_mode_it_runs
+  def test_storybook_reports_the_selected_product_mode
     path = File.join(BenchmarkCases::ROOT, "cases/storybook/payload/.github/actions/storybook-nx-benchmark/action.yml")
     steps = YAML.safe_load_file(path).dig("runs", "steps")
     invocation = steps.find { |step| step["uses"] == "./.github/actions/native-cache-benchmark" }
-    assert_equal "archive", invocation.dig("with", "mode")
+    assert_equal "${{ inputs.workload == 'nx' && 'nx' || 'archive' }}", invocation.dig("with", "mode")
     assert_equal "nx", invocation.dig("with", "command_mode")
     shared = YAML.safe_load_file(File.join(BenchmarkCases::ROOT, ".github/actions/native-cache-benchmark/action.yml")).dig("runs", "steps")
     calls = shared.select { |step| step["uses"] == "./.github/actions/boringcache" }
@@ -314,13 +314,13 @@ class NativeCaseTest < Minitest::Test
   def test_product_contract_view_resolves_the_wrapper_without_losing_adapter_or_failure_policy
     provider = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/actions/boringcache/action.yml")))
     steps = provider.dig("runs", "steps")
-    assert_equal "./.github/actions/retain-product-evidence", steps.first.fetch("uses")
-    assert_equal "provider", steps[1].fetch("id")
+    assert_equal "./.github/actions/retain-product-evidence", steps.find { |step| step["id"] == "retention" }.fetch("uses")
+    assert_equal "provider", steps.find { |step| step["id"] == "provider" }.fetch("id")
     assert_equal "always()", steps.last.fetch("if")
     assert_equal "${{ steps.provider.outputs.evidence-path }}", steps.last.dig("env", "EVIDENCE_PATH")
     step = {"uses" => "./.github/actions/boringcache", "id" => "cache", "with" => {"mode" => "cargo", "trust-policy" => "restore", "fail-on-cache-miss" => "true"}}
     resolved = BenchmarkCases.resolve_provider_steps(step, provider)
-    assert_equal provider.dig("runs", "steps", 1, "uses"), resolved["uses"]
+    assert_equal steps.find { |step| step["id"] == "provider" }.fetch("uses"), resolved["uses"]
     assert_equal "cache", resolved["id"]
     assert_equal "cargo", resolved.dig("with", "mode")
     assert_equal "restore", resolved.dig("with", "trust-policy")
@@ -331,8 +331,8 @@ class NativeCaseTest < Minitest::Test
     assert_equal true, cold.dig("with", "fail-on-cache-error")
     conditional = BenchmarkCases.resolve_provider_steps({"uses" => "./.github/actions/boringcache", "with" => {"mode" => "docker", "fail-on-cache-miss" => "${{ inputs.phase == 'warm' }}"}}, provider)
     assert_equal "${{ inputs.phase == 'warm' }}", conditional.dig("with", "fail-on-cache-miss")
-    assert_equal true, provider.dig("runs", "steps", 1, "with", "fail-on-cache-error")
-    assert_equal "${{ inputs.fail-on-cache-miss == 'true' }}", provider.dig("runs", "steps", 1, "with", "fail-on-cache-miss")
+    assert_equal true, steps.find { |step| step["id"] == "provider" }.dig("with", "fail-on-cache-error")
+    assert_equal "${{ inputs.fail-on-cache-miss == 'true' }}", steps.find { |step| step["id"] == "provider" }.dig("with", "fail-on-cache-miss")
     assert_raises(BenchmarkCases::Error) { BenchmarkCases.resolve_provider_steps({"uses" => "./.github/actions/boringcache", "with" => {"obsolete" => "true"}}, provider) }
   end
 end

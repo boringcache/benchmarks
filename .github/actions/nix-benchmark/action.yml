@@ -64,7 +64,7 @@ runs:
       with:
         name: ${{ inputs.cachix-cache }}
         authToken: ${{ inputs.cachix-token }}
-        skipPush: ${{ inputs.phase == 'warm' }}
+        skipPush: true
         useDaemon: false
         pathsToPush: result
     - name: Record provider setup timing
@@ -97,6 +97,14 @@ runs:
       if: inputs.phase == 'warm'
       shell: bash
       run: ruby scripts/nix-benchmark.rb compare cold-checks
+    - name: Publish Cachix outputs and measure provider storage
+      if: inputs.provider == 'cachix'
+      shell: bash
+      env:
+        NIX_PHASE: ${{ inputs.phase }}
+        CACHIX_CACHE: ${{ inputs.cachix-cache }}
+        CACHIX_AUTH_TOKEN: ${{ inputs.cachix-token }}
+      run: ruby scripts/nix-benchmark.rb publish-and-measure
     - name: Record the phase
       shell: bash
       env:
@@ -111,6 +119,7 @@ runs:
         source_sha="$(ruby -rjson -e 'puts JSON.parse(File.read("benchmark-context.json")).dig("source", "revision")')"
         build_seconds="$(ruby -rjson -e 'puts JSON.parse(File.read("nix-evidence/timing.json")).fetch("build_seconds")')"
         args=()
+        [[ "$PROVIDER" != cachix ]] || args+=(--storage-evidence nix-evidence/storage.json)
         [[ "$PHASE" != warm ]] || args+=(--cache-hit true)
         [[ "$PHASE" != cold ]] || args+=(--cache-hit false)
         ruby scripts/benchmark-report.rb phase --verified-output \

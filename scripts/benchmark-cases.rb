@@ -22,7 +22,7 @@ module BenchmarkCases
   ROOT = File.expand_path("..", __dir__)
   WORKSPACE = "boringcache/benchmarks"
   REPOSITORY = "boringcache/benchmarks"
-  HELPERS = %w[benchmark-plan benchmark-phase run-benchmark-plan activate-docker-plan verify-docker-output summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache nix-benchmark reapi-registry reapi-client reapi-setup].freeze
+  HELPERS = %w[benchmark-plan benchmark-phase run-benchmark-plan activate-docker-plan verify-docker-output summarize-cargo-evidence summarize-sccache-errors docker-case-contract measure-build native-case prepare-source scope-case-cache benchmark-cli benchmark-storage nix-benchmark reapi-registry reapi-client reapi-setup].freeze
   class Error < StandardError; end
 
   def self.command(*args, chdir: nil, stdin: "", env: {})
@@ -44,6 +44,7 @@ module BenchmarkCases
     files += item.dig("execution", "workflows").map { |entry| File.join(root, entry.fetch("path")) }
     files += HELPERS.map { |name| File.join(root, "scripts", "#{name}.rb") }
     files += %w[scripts/canonical/benchmark-report.rb scripts/verify-upstream-recipe.rb scripts/benchmark-cases.rb scripts/benchmark-series.rb scripts/benchmark-identity.rb scripts/fresh-report.rb scripts/nightly-canaries.rb bin/bench Gemfile.lock .tool-versions].map { |path| File.join(root, path) }
+    files << File.join(root, "config/cli.json")
     files += shared_action_files(root: root)
     files += Dir.glob(File.join(root, "adapters", "docker", "**", "*"), File::FNM_DOTMATCH).select { |path| File.file?(path) } if item["adapter"] == "docker"
     manifest = files.uniq.sort.to_h { |path| [path.delete_prefix(root + "/"), Digest::SHA256.file(path).hexdigest] }
@@ -456,6 +457,8 @@ module BenchmarkCases
     unless File.file?(File.join(target, "reapi-recipe.json"))
       %w[reapi-registry reapi-client reapi-setup].each { |name| FileUtils.rm_f(File.join(target, "scripts", "#{name}.rb")) }
     end
+    FileUtils.mkdir_p(File.join(target, "config"))
+    FileUtils.cp(File.join(root, "config/cli.json"), File.join(target, "config/cli.json"))
     # The workload's submodule commands need an index and a local source tree.
     # This commit stays on the disposable worker and has no publication remote.
     command("git", "add", "--all", "--", ".", ":(exclude).harness", chdir: target)
@@ -510,6 +513,11 @@ module BenchmarkCases
         unknown = supplied.keys - declared.keys
         raise Error, "Unsupported BoringCache wrapper inputs: #{unknown.join(', ')}" unless unknown.empty?
         resolved = invocation.fetch("with").transform_values do |value|
+          if value == "${{ steps.cli.outputs.version }}"
+            require_relative "benchmark-cli"
+            selected = supplied.fetch("cli-version", "")
+            next selected.empty? ? BenchmarkCLI.selection.fetch("version") : selected
+          end
           next value if [true, false].include?(value)
           if (match = value.match(/\A\$\{\{ inputs\.([a-z-]+) == 'true' \}\}\z/))
             flag = supplied.fetch(match[1], declared.fetch(match[1]).fetch("default", "")).to_s
@@ -564,6 +572,8 @@ module BenchmarkCases
         HELPERS.each do |name|
           FileUtils.cp(File.join(root, "scripts", "#{name}.rb"), File.join(target, "scripts", "#{name}.rb"))
         end
+        FileUtils.mkdir_p(File.join(target, "config"))
+        FileUtils.cp(File.join(root, "config/cli.json"), File.join(target, "config/cli.json"))
         copy_shared_actions(target, root: root)
         unless File.file?(File.join(target, "reapi-recipe.json"))
           %w[reapi-registry reapi-client reapi-setup].each { |name| FileUtils.rm_f(File.join(target, "scripts", "#{name}.rb")) }

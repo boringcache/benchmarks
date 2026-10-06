@@ -17,3 +17,6 @@ command = [
 [adapters.sccache]
 tag = "mastodon-sccache-local"
 metadata-hints = ["benchmark=mastodon-sccache", "upstream-job=build-image-amd64"]
+
+[adapters.ccache]
+tag = "mastodon-ccache-local"

@@ -87,7 +87,11 @@ runs:
         CACHE_LANE: ${{ inputs.lane }}
       run: |
         ruby scripts/reapi-client.rb verify
-        ruby scripts/reapi-setup.rb report
+        if [[ "$PROVIDER" == boringcache ]]; then
+          BORINGCACHE_WORKSPACE=boringcache/benchmarks boringcache ci run --oidc-provider github-actions -- ruby scripts/reapi-setup.rb report
+        else
+          ruby scripts/reapi-setup.rb report
+        fi
     - name: Record the verified comparator source
       if: inputs.provider == 'bazel-remote' && inputs.lane == 'rolling'
       shell: bash

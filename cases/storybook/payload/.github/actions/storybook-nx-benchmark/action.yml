@@ -13,6 +13,10 @@ inputs:
   cli_version:
     required: false
     default: ''
+  workload:
+    default: sandbox
+  report_variant:
+    default: ''
   node_version:
     required: true
 runs:
@@ -32,6 +36,17 @@ runs:
     run: |
       corepack enable
       corepack install
+  - name: Select the reviewed upstream workload
+    shell: bash
+    env:
+      STORYBOOK_WORKLOAD: ${{ inputs.workload }}
+    run: |
+      if [[ "$STORYBOOK_WORKLOAD" == nx ]]; then
+        cp plans/nx.toml .boringcache.toml
+      elif [[ "$STORYBOOK_WORKLOAD" != sandbox ]]; then
+        echo "Select sandbox or nx" >&2
+        exit 1
+      fi
   - id: cache
     uses: "./.github/actions/native-cache-benchmark"
     with:
@@ -40,7 +55,8 @@ runs:
       phase: "${{ inputs.phase }}"
       benchmark_id: "${{ inputs.benchmark_id }}"
       cli_version: "${{ inputs.cli_version }}"
-      mode: archive
+      mode: ${{ inputs.workload == 'nx' && 'nx' || 'archive' }}
+      report_variant: ${{ inputs.report_variant }}
       cache_path: |
         upstream/.nx/cache
         upstream/.nx/workspace-data
@@ -48,8 +64,9 @@ runs:
       prepare_script: "./scripts/prepare-native-build.rb"
       command_mode: nx
       working_directory: "."
-      cache_profiles: storybook-nx
-    env: {}
+      cache_profiles: ${{ inputs.workload == 'sandbox' && 'storybook-nx' || '' }}
+    env:
+      STORYBOOK_WORKLOAD: ${{ inputs.workload }}
 outputs:
   cache_scope:
     description: Published cache cohort
