@@ -7,11 +7,11 @@ module FreshReport
   PROVIDERS = {"actions-cache" => "GitHub Actions", "boringcache" => "BoringCache"}.freeze
   STATES = {"success" => "succeeded", "failure" => "failed", "cancelled" => "cancelled", "skipped" => "skipped", "timed_out" => "failed"}.freeze
 
-  def self.expected(case_id, provider: "both")
+  def self.expected(case_id, provider: "both", phases: %w[cold warm])
     raise BenchmarkCases::Error, "Unknown native provider #{provider}" unless provider == "both" || PROVIDERS.key?(provider)
     selected = provider == "both" ? PROVIDERS : PROVIDERS.slice(provider)
     selected.flat_map do |provider, label|
-      %w[cold warm].map { |phase| {"case_id" => case_id, "strategy" => provider, "phase" => phase, "job_name" => "#{label} #{case_id} #{phase}"} }
+      phases.map { |phase| {"case_id" => case_id, "strategy" => provider, "phase" => phase, "job_name" => "#{label} #{case_id} #{phase}"} }
     end
   end
 

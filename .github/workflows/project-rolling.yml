@@ -61,6 +61,12 @@ jobs:
       case_id: "${{ matrix.inputs.case_id || '' }}"
       variant: "${{ matrix.inputs.variant || '' }}"
       cache_scope: "${{ matrix.inputs.cache_scope || '' }}"
+      provider: "${{ matrix.inputs.provider || 'both' }}"
+      runner_label: "${{ matrix.inputs.runner_label || '' }}"
+      benchmark_id_suffix: "${{ matrix.inputs.benchmark_id_suffix || '' }}"
+      buildkit_image: "${{ matrix.inputs.buildkit_image || '' }}"
+      cli_platform: "${{ matrix.inputs.cli_platform || '' }}"
+      expected_identity: "${{ matrix.inputs.expected_identity || '' }}"
   nix_rolling_benchmark:
     name: "${{ matrix.label }}"
     needs: select

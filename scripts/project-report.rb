@@ -28,12 +28,12 @@ module ProjectReport
       end
       variant = inputs["variant"] || inputs["cache_tool"]
       phases = records.select { |record| record.dig("case", "case_id") == item.fetch("id") && (!variant || record["variant"].to_s == variant.to_s) }
-      if selection.fetch("workflow") == "native-fresh-benchmark.yml"
+      if %w[native-fresh-benchmark.yml native-rolling-benchmark.yml].include?(selection.fetch("workflow"))
         recipe = NativeCase.resolve(item.dig("execution", "native"), variant)
         benchmark = NativeCase.benchmark_id(recipe, suffix: inputs.fetch("benchmark_id_suffix", ""))
         phases = phases.select { |record| record["benchmark"] == benchmark }
         selected_jobs = jobs.select { |job| job.fetch("name").start_with?("#{selection.fetch('label')} /") }
-        FreshReport.reconcile(FreshReport.expected(item.fetch("id"), provider: inputs.fetch("provider", "both")), jobs: selected_jobs, records: phases, run_url: run_url)
+        FreshReport.reconcile(FreshReport.expected(item.fetch("id"), provider: inputs.fetch("provider", "both"), phases: plan.fetch("phases")), jobs: selected_jobs, records: phases, run_url: run_url)
           .map { |value| value.merge("variant" => variant || item.fetch("id"), "runner_class" => inputs.fetch("runner_label", "ubuntu-latest")) }
       else
         providers.product(plan.fetch("phases")).map do |provider, phase|

@@ -60,6 +60,11 @@ module RollingMonitor
       record["benchmark"] && record["phase"] && record.dig("case", "case_id") == item.fetch("id") &&
         (!variant || record["variant"] == variant)
     end
+    if run.fetch("workflow") == "native-rolling-benchmark.yml"
+      recipe = NativeCase.resolve(item.dig("execution", "native"), variant)
+      benchmark = NativeCase.benchmark_id(recipe, suffix: run.fetch("inputs").fetch("benchmark_id_suffix", ""))
+      records.select! { |record| record["benchmark"] == benchmark }
+    end
     run["canonical_records"] = records
     observation = run.dig("inputs", "observation") || "changed-source"
     observation_verified = records.all? do |record|
@@ -77,6 +82,8 @@ module RollingMonitor
     raise BenchmarkCadence::Error, "Unregistered rolling workflow" unless workflow
     phases = BenchmarkSeries.phases_for(workflow.fetch("lane"), workflow["phases"])
     providers = item.dig("comparison", "providers")
+    selected = run.dig("inputs", "provider") || "both"
+    providers = [selected] if run.fetch("workflow") == "native-rolling-benchmark.yml" && selected != "both"
     expected = providers.product(phases)
     observed = records.map { |record| record.values_at("strategy", "phase") }
     verified = records.all? do |record|

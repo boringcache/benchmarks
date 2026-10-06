@@ -4,6 +4,10 @@ on:
     - cron: '17 1 * * *'
   workflow_dispatch:
     inputs:
+      case_id:
+        description: Optional scheduled case ID; empty selects the suite.
+        type: string
+        default: ''
       cli_version:
         description: Optional exact published CLI canary; empty uses the reviewed benchmark pin
         type: string
@@ -20,9 +24,11 @@ concurrency:
   cancel-in-progress: false
 jobs:
   dispatch:
-    if: github.event_name == 'workflow_dispatch' || vars.BENCHMARK_CADENCE_ACTIVE == 'true'
+    if: github.event_name == 'workflow_dispatch' || vars.BENCHMARK_CADENCE_ACTIVE == 'true' || vars.BENCHMARK_ACTIVE_CASES != '' && vars.BENCHMARK_ACTIVE_CASES != '[]'
     uses: ./.github/workflows/fresh-cadence.yml
     with:
+      case_id: ${{ inputs.case_id || '' }}
+      active_only: ${{ github.event_name != 'workflow_dispatch' }}
       channel: canary
       cadence: nightly
       cli_version: ${{ inputs.cli_version || '' }}
