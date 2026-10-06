@@ -5,6 +5,7 @@ require "optparse"
 require "set"
 require_relative "publish-index"
 require_relative "project-runs"
+require_relative "benchmark-baseline"
 
 module NightlyCanaries
   class Error < StandardError; end
@@ -243,7 +244,7 @@ module NightlyCanaries
       end
     end
 
-    def collect(summary:, benchmarks: BENCHMARKS, now: Time.now.utc, output: nil, channel: "canary", expected_version: nil, cadence: nil)
+    def collect(summary:, benchmarks: BENCHMARKS, now: Time.now.utc, output: nil, channel: "canary", expected_version: nil, cadence: nil, baseline: nil)
       raise Error, "Use stable or canary" unless %w[stable canary].include?(channel)
       cadence ||= channel == "stable" ? "weekly" : "daily"
       raise Error, "Use daily or weekly cadence" unless %w[daily weekly].include?(cadence)
@@ -267,7 +268,7 @@ module NightlyCanaries
         begin
           workflow = cadence == "weekly" ? "weekly-fresh.yml" : "canary.yml"
           parents = api("repos/#{repository}/actions/workflows/#{workflow}/runs?branch=main&per_page=100").fetch("workflow_runs")
-          parent = parents.max_by { |run| run.fetch("created_at") }
+          parent = parents.select { |run| BenchmarkBaseline.current?(run.fetch("created_at"), baseline) }.max_by { |run| run.fetch("created_at") }
           unless parent
             retained["state"] = "missing"
             passed = false
@@ -320,7 +321,7 @@ module NightlyCanaries
       end
       report = lines.join("\n") + "\n"
       File.write(summary, report)
-      write(output, {"collected_at" => now.iso8601, "passed" => passed, "repositories" => collected}) if output
+      write(output, {"collected_at" => now.iso8601, "baseline_id" => baseline&.fetch("id"), "passed" => passed, "repositories" => collected}) if output
       puts report
       passed
     end

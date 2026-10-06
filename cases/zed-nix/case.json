@@ -35,7 +35,8 @@
         "path": ".github/workflows/nix-rolling-benchmark.yml",
         "lane": "rolling",
         "inputs": {
-          "case_id": "zed-nix"
+          "case_id": "zed-nix",
+          "cache_scope": "baseline-20261006"
         }
       }
     ],

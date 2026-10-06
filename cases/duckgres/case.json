@@ -25,7 +25,8 @@
         "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
         "inputs": {
-          "case_id": "duckgres"
+          "case_id": "duckgres",
+          "cache_scope": "baseline-20261006"
         },
         "historical_workflow": "duckgres-benchmark.yml"
       },

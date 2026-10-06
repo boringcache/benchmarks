@@ -4,6 +4,10 @@ run-name: "OBS Studio Rolling | ${{ inputs.cli_version }}"
 'on':
   workflow_dispatch:
     inputs:
+      observation:
+        description: Seed, identical-source replay, or changed-source build.
+        type: string
+        default: changed-source
       cache_tool:
         type: choice
         options:
@@ -36,6 +40,7 @@ permissions:
   actions: read
   contents: read
 env:
+  BENCHMARK_OBSERVATION: "${{ inputs.observation || 'changed-source' }}"
   BENCHMARK_ID: obs-studio-compiler-cache
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
   BENCHMARK_SAMPLE: "${{ inputs.sample }}"

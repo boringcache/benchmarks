@@ -25,7 +25,8 @@
         "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
         "inputs": {
-          "case_id": "linkerd2"
+          "case_id": "linkerd2",
+          "cache_scope": "baseline-20261006"
         },
         "historical_workflow": "linkerd2-benchmark.yml"
       },

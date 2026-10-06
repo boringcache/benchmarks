@@ -5,6 +5,11 @@ require "json"
 module ProjectRuns
   def self.group(runs, lane:, case_id: nil)
     runs.group_by { |run| case_id || project(selection_case(run)) }.flat_map do |id, selections|
+      if lane == "rolling" && selections.length > 1 && selections.all? { |run| run.fetch("workflow") == "obs-rolling-benchmark.yml" }
+        inputs = selections.map { |run| run.fetch("inputs").except("cache_tool") }.uniq
+        raise "OBS rolling selections must share their source and cache scope" unless inputs.length == 1
+        next [selections.first.merge("inputs" => inputs.first.merge("cache_tool" => "all"), "selections" => selections)]
+      end
       supported = selections.all? do |run|
         run.fetch("workflow") == "native-#{lane}-benchmark.yml" ||
           (lane == "fresh" && %w[nix-fresh-benchmark.yml zed-zed-cargo-product.yml].include?(run.fetch("workflow"))) ||
@@ -26,7 +31,7 @@ module ProjectRuns
 
   def self.selection_case(selection)
     selection.dig("series", "case_id") || selection.dig("inputs", "case_id") ||
-      {"zed-zed-cargo-product.yml" => "zed", "zed-zed-cargo-rolling-auto.yml" => "zed", "obs-studio-obs-actions-cache.yml" => "obs-studio", "obs-studio-obs-boringcache.yml" => "obs-studio"}.fetch(selection.fetch("workflow"))
+      {"zed-zed-cargo-product.yml" => "zed", "zed-zed-cargo-rolling-auto.yml" => "zed", "obs-studio-obs-actions-cache.yml" => "obs-studio", "obs-studio-obs-boringcache.yml" => "obs-studio", "obs-rolling-benchmark.yml" => "obs-studio"}.fetch(selection.fetch("workflow"))
   end
 
   def self.project(id)

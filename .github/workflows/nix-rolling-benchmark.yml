@@ -5,6 +5,7 @@ permissions:
   contents: read
   actions: read
 env:
+  BENCHMARK_OBSERVATION: "${{ inputs.observation || 'changed-source' }}"
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
   BENCHMARK_SAMPLE: "${{ inputs.sample }}"
   BENCHMARK_RUNNER_CLASS: ubuntu-24.04
@@ -181,6 +182,10 @@ concurrency:
 'on':
   workflow_dispatch:
     inputs:
+      observation:
+        description: Seed, identical-source replay, or changed-source build.
+        type: string
+        default: changed-source
       case_id:
         type: choice
         options:
@@ -214,6 +219,10 @@ concurrency:
         default: ''
   workflow_call:
     inputs:
+      observation:
+        description: Seed, identical-source replay, or changed-source build.
+        type: string
+        default: changed-source
       case_id:
         type: string
         required: true

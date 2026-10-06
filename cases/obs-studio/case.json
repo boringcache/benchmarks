@@ -63,7 +63,9 @@
         "path": ".github/workflows/obs-rolling-benchmark.yml",
         "variant_input": "cache_tool",
         "lane": "rolling",
-        "inputs": {},
+        "inputs": {
+          "cache_scope": "baseline-20261006"
+        },
         "variants": [
           "ccache",
           "xcode"

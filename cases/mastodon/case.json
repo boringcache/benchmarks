@@ -45,7 +45,8 @@
         "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
         "inputs": {
-          "case_id": "mastodon"
+          "case_id": "mastodon",
+          "cache_scope": "baseline-20261006"
         },
         "variants": [
           "server",

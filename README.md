@@ -68,17 +68,11 @@ identical-source warm, and changed-source results separate. Collect the declared
 samples and report medians and ranges without discarding slow observations.
 
 The [product benchmark page](https://boringcache.com/benchmarks) uses separately reviewed results.
-Historical published interfaces remain available:
-
-- [`data/latest/report.md`](data/latest/report.md): latest published cohort report
-- [`data/latest/index.json`](data/latest/index.json): machine-readable workload index
-- [`data/latest/providers.json`](data/latest/providers.json): provider comparisons
-- [`suites/published.json`](suites/published.json): shared publication registry
-- [`results/historical-website/report.md`](results/historical-website/report.md): reviewed historical website observations and preserved evidence
-
-Historical run URLs retain their original execution repository. A moved case does
-not move an Actions run. Evidence preservation exports each attempt, jobs, logs,
-artifacts, commit, and workflow, records checksums, and reports missing material.
+The current measurement feed is [`data/latest/current.json`](data/latest/current.json).
+The discarded experimental batch has been removed. The new baseline is defined in
+[`config/baseline.json`](config/baseline.json); scheduling stays paused while caches
+are reset and the rolling seeds are verified. Earlier run receipts cannot enter
+this baseline.
 
 Consolidation is in progress. [`docs/migration.md`](docs/migration.md) lists its
 acceptance conditions. Old repositories remain until their execution, callers,

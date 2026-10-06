@@ -217,6 +217,14 @@ class NightlyCanariesTest < Minitest::Test
     assert_includes File.read(@summary), "Receipt missing"
   end
 
+  def test_reset_cutoff_never_imports_a_discarded_dispatch
+    prepare_collection
+    refute @runner.collect(summary: @summary, output: @output, benchmarks: [BENCHMARK], now: Time.utc(2026, 10, 6),
+      baseline: {"id" => "new-baseline", "started_at" => "2026-10-06T00:00:00Z"})
+    assert_empty @runner.receipt_requests
+    assert_equal "new-baseline", JSON.parse(File.read(@output)).fetch("baseline_id")
+  end
+
   def test_receipt_cannot_report_another_repository
     prepare_collection
     @runner.record["runs"].first["repository"] = "boringcache/benchmark-other"
