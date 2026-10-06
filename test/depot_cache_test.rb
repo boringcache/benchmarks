@@ -116,6 +116,12 @@ class DepotCacheTest < Minitest::Test
     end
   end
 
+  def test_maven_java_setup_preserves_depot_runner_settings
+    path = File.join(BenchmarkCases::ROOT, "cases/spring-ai/payload/.github/actions/spring-maven-benchmark/action.yml")
+    step = YAML.safe_load_file(path).fetch("runs").fetch("steps").find { |entry| entry["uses"].to_s.start_with?("actions/setup-java@") }
+    assert_equal "${{ inputs.strategy != 'depot-cache' }}", step.dig("with", "overwrite-settings")
+  end
+
   def test_maven_settings_for_another_server_do_not_replace_depot_authentication
     Dir.mktmpdir do |directory|
       path = File.join(directory, ".m2/settings.xml")

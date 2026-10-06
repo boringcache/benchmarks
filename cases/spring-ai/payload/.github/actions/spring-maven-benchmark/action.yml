@@ -27,6 +27,7 @@ runs:
     with:
       distribution: liberica
       java-version: "${{ inputs.java_version }}"
+      overwrite-settings: "${{ inputs.strategy != 'depot-cache' }}"
   - id: cache
     uses: "./.github/actions/native-cache-benchmark"
     with:
