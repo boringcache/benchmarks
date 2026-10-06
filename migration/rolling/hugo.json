@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "case_id": "hugo",
+  "state": "dispatching",
+  "cli_version": "vcli-canary-252077d7b8fb",
+  "ref": "main",
+  "proposal": {
+    "case_id": "hugo",
+    "updated": true,
+    "base_sha": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+    "head_sha": "31f5395d40941f8527ccfedaf6aea5a33d9e9f58",
+    "state": "proposal",
+    "requires_case_qualification": true
+  },
+  "created_at": "2026-10-06T11:21:58Z",
+  "runs": [
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-rolling-benchmark.yml",
+      "inputs": {
+        "case_id": "hugo",
+        "cli_version": "vcli-canary-252077d7b8fb"
+      },
+      "state": "requesting"
+    }
+  ]
+}
