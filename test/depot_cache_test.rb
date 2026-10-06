@@ -101,6 +101,32 @@ class DepotCacheTest < Minitest::Test
     end
   end
 
+  def test_maven_preserves_the_runners_preconfigured_authentication
+    Dir.mktmpdir do |directory|
+      path = File.join(directory, ".m2/settings.xml")
+      FileUtils.mkdir_p(File.dirname(path))
+      original = '<settings><servers><server><id>depot-cache</id><configuration><httpHeaders><property><name>Authorization</name><value>private-runner-credential</value></property></httpHeaders></configuration></server></servers></settings>'
+      File.write(path, original)
+      env = {"HOME" => directory, "DEPOT_CACHE_TOKEN" => "job-token", "MAVEN_ARGS" => "-ntp"}
+      settings = DepotCache.configure("maven", phase: "publish", root: directory, env: env)
+      assert_equal original, File.read(path)
+      assert_equal ["-ntp", "--settings", path], Shellwords.split(settings.fetch("MAVEN_ARGS"))
+      refute File.exist?(File.join(directory, ".depot-cache/maven-settings.xml"))
+      refute_includes settings.values.join, "private-runner-credential"
+    end
+  end
+
+  def test_maven_settings_for_another_server_do_not_replace_depot_authentication
+    Dir.mktmpdir do |directory|
+      path = File.join(directory, ".m2/settings.xml")
+      FileUtils.mkdir_p(File.dirname(path))
+      File.write(path, '<settings><servers><server><id>other-cache</id></server></servers></settings>')
+      env = {"HOME" => directory, "DEPOT_CACHE_TOKEN" => "job-token"}
+      settings = DepotCache.configure("maven", phase: "publish", root: directory, env: env)
+      assert_equal ["--settings", File.join(directory, ".depot-cache/maven-settings.xml")], Shellwords.split(settings.fetch("MAVEN_ARGS"))
+    end
+  end
+
   def test_actions_api_validation_runs_with_the_javascript_runtime_environment
     path = File.join(BenchmarkCases::ROOT, ".github/actions/select-cache-provider/action.yml")
     steps = YAML.safe_load_file(path).fetch("runs").fetch("steps")
