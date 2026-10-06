@@ -16,7 +16,7 @@ module BenchmarkReport
     "boringcache-mountcache" => "BoringCache mount cache", "boringcache-native" => "BoringCache native",
     "boringcache-toolcache" => "BoringCache tool cache", "boringcache-turbo" => "BoringCache Turbo",
     "buildbuddy" => "BuildBuddy", "buildbuddy-cache" => "BuildBuddy", "ecr-cache" => "Amazon ECR (retired)",
-    "cachix" => "Cachix", "bazel-remote" => "bazel-remote",
+    "nativelink" => "NativeLink (R2)", "cachix" => "Cachix", "bazel-remote" => "bazel-remote",
     "registry-cache" => "Registry cache", "depot-cache" => "Depot Cache"}.freeze
   PHASES = {"cold" => "Cold build", "warm" => "Warm build", "commit" => "Changed-source build"}.freeze
   METRICS = {"build_and_reuse_seconds" => "build and cache reuse (s)", "build_seconds" => "build (s)",
@@ -187,6 +187,7 @@ module BenchmarkReport
     storage = case args["strategy"]
     when "boringcache" then boringcache_storage(cache_identity)
     when "actions-cache" then actions_storage(args["storage_key"])
+    when "nativelink" then read_json("benchmark-results/nativelink/storage.json")
     end
     if args["storage_evidence"]
       raise Error, "External storage measurements cannot replace BoringCache product evidence" if args["strategy"] == "boringcache"
