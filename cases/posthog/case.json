@@ -75,11 +75,13 @@
           "benchmark_id": "posthog-toolcache-mountcache",
           "fresh_inputs": {
             "docker_tool_cache": "true",
-            "docker_mount_cache": "true"
+            "docker_mount_cache": "true",
+            "no_cache": "true"
           },
           "rolling_inputs": {
             "docker_tool_cache": "true",
-            "docker_mount_cache": "true"
+            "docker_mount_cache": "true",
+            "no_cache": "true"
           },
           "provider_flags": {
             "actions-cache": {

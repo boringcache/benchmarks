@@ -5,7 +5,7 @@ require_relative "benchmark-plan"
 
 args = {"plan" => File.join(BenchmarkPlan::ROOT, ".boringcache.toml"), "load" => "false", "tool_cache" => "false"}
 OptionParser.new do |parser|
-  %w[push image plan source_tag source_sha workload tool_cache prerelease dockerfile node_version scenario build_id source_ref platform mount_cache sourcemap_secret load].each do |name|
+  %w[push image plan source_tag source_sha workload compiler_cache tool_cache prerelease dockerfile node_version scenario build_id source_ref platform mount_cache sourcemap_secret load].each do |name|
     parser.on("--#{name.tr('_', '-')} VALUE") { |value| args[name] = value }
   end
   # The non-negated name makes OptionParser consume the value for --no-cache.
@@ -61,20 +61,23 @@ when "mastodon"
   workload = args.fetch("workload")
   raise "Workload must be server or streaming" unless %w[server streaming].include?(workload)
   tool_cache = boolean.call("tool_cache")
-  raise "sccache is available only for server" if tool_cache && workload != "server"
+  compiler_cache = args.fetch("compiler_cache", "sccache")
+  raise "Compiler cache must be ccache or sccache" unless %w[ccache sccache].include?(compiler_cache)
+  raise "Compiler caching is available only for server" if tool_cache && workload != "server"
   prerelease = args.fetch("prerelease")
   raise "Prerelease must use nightly.YYYY-MM-DD" unless prerelease.match?(/\Anightly\.\d{4}-\d{2}-\d{2}\z/)
-  dockerfile = tool_cache ? "scenarios/mastodon-sccache/Dockerfile" : workload == "server" ? "upstream/Dockerfile" : "upstream/streaming/Dockerfile"
+  dockerfile = tool_cache ? "scenarios/mastodon-#{compiler_cache}/Dockerfile" : workload == "server" ? "upstream/Dockerfile" : "upstream/streaming/Dockerfile"
   replace.call('"__DOCKERFILE__"', JSON.generate(dockerfile))
   replace.call("MASTODON_VERSION_PRERELEASE=__PRERELEASE__", "MASTODON_VERSION_PRERELEASE=#{prerelease}")
   replace.call("SOURCE_COMMIT=__SOURCE_SHA__", "SOURCE_COMMIT=#{args.fetch('source_sha')}")
   replace.call('"__IMAGE__"', JSON.generate(push ? args.fetch("image") : "mastodon-#{workload}-benchmark:local"))
   if tool_cache
     needle = 'metadata-hints = ["benchmark=mastodon", "upstream-job=build-image-amd64"]'
-    replace.call(needle, needle + "\ntool-cache = [\"sccache\"]")
+    replace.call(needle, needle + "\ntool-cache = [#{JSON.generate(compiler_cache)}]")
   end
   replace.call("  \"upstream\",\n]", "  \"--push\",\n  \"upstream\",\n]") if push
   replace.call("  \"upstream\",\n]", "  \"--load\",\n  \"upstream\",\n]") if load
+  replace.call("  \"upstream\",", "  \"--no-cache\",\n  \"upstream\",") if boolean.call("no_cache")
 when "posthog", "immich"
   docker = plan.fetch("adapters").fetch("docker")
   if case_id == "posthog"

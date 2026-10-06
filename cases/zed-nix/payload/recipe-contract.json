@@ -17,5 +17,14 @@
       "accept-flake-config",
       "false"
     ]
+  },
+  "upstream_files_by_revision": {
+    "2239fa76b1f32b4f1ea46687bcd2cf6961b7082a": {
+      "flake.nix": "ea381afd3454aaac17c8c2e09e910d4e4930436ae79fdd635cc1d2f15d352e5f",
+      "flake.lock": "01503a904e666579712b27422c74179154a1f9bf836d3fd2ea1bb7b846dc9832",
+      "nix/toolchain.nix": "2ffc73b12e732fbfa81d4f099af29f6e9399873651c39471c1f2b432959aaa8a",
+      "nix/modules/packages.nix": "837893cc8ceda91199bb873c41d0962c122b63aeaa929abef400fc4ae8dd4f23",
+      "nix/build.nix": "0e5a9390cda8dbdeb270fbbd648377bc28b2891c1e5bcae11fb4ac5c2941c813"
+    }
   }
 }

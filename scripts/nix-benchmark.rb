@@ -5,6 +5,8 @@ require "open3"
 require "fileutils"
 require "uri"
 require "digest"
+require "net/http"
+require "timeout"
 require_relative "benchmark-plan"
 
 module NixBenchmark
@@ -146,6 +148,48 @@ module NixBenchmark
     write("nix-evidence/output.json", {"output" => output, "closure" => closure([output]), "version" => version})
   end
 
+  def self.cachix_storage(cache_name, paths:, fetch: method(:narinfo))
+    raise Error, "Invalid Cachix cache name" unless cache_name.match?(/\A[a-z0-9][a-z0-9-]*\z/)
+    observations = paths.sort.map do |path|
+      match = File.basename(path).match(/\A([a-z0-9]{32})-/)
+      raise Error, "Invalid Nix store path" unless path.start_with?("/nix/store/") && match
+      fields = fetch.call("https://#{cache_name}.cachix.org/#{match[1]}.narinfo")
+      size = fields["FileSize"]
+      {"store_path" => path, "url" => fields["URL"], "file_size" => size&.match?(/\A\d+\z/) ? Integer(size) : nil,
+        "nar_size" => fields["NarSize"], "nar_hash" => fields["NarHash"]}
+    end
+    complete = !observations.empty? && observations.all? { |value| value["file_size"] && value["url"] }
+    sizes = observations.uniq { |value| value["url"] }.filter_map { |value| value["file_size"] }
+    {"bytes" => complete ? sizes.sum : nil, "source" => "cachix-narinfo-file-size",
+      "breakdown" => {"scope" => "Selected package runtime closure; provider compressed NAR files, not account billing",
+        "complete" => complete, "measured_bytes" => sizes.sum, "observations" => observations}}
+  end
+
+  def self.narinfo(url)
+    uri = URI(url)
+    response = Net::HTTP.start(uri.host, uri.port, use_ssl: true, open_timeout: 5, read_timeout: 10) { |http| http.get(uri.request_uri) }
+    return {} unless response.is_a?(Net::HTTPSuccess)
+    response.body.lines.to_h { |line| key, value = line.strip.split(": ", 2); [key, value] }
+  rescue IOError, SystemCallError, Timeout::Error
+    {}
+  end
+
+  def self.publish_and_measure(phase:, cache_name:)
+    output = JSON.parse(File.read("nix-evidence/output.json"))
+    unless phase == "warm"
+      started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      run("cachix", "push", cache_name, output.fetch("output"))
+      timing = JSON.parse(File.read("nix-evidence/timing.json"))
+      timing["save_seconds"] = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+      write("nix-evidence/timing.json", timing)
+    end
+    value = Timeout.timeout(120) { cachix_storage(cache_name, paths: output.fetch("closure").keys) }
+    write("nix-evidence/storage.json", value)
+  rescue Timeout::Error
+    write("nix-evidence/storage.json", {"bytes" => nil, "source" => "cachix-narinfo-file-size",
+      "breakdown" => {"complete" => false, "reason" => "Narinfo measurement exceeded 120 seconds"}})
+  end
+
   def self.compare(seed:, current: "nix-evidence")
     %w[baseline output].each do |name|
       expected = JSON.parse(File.read(File.join(seed, "#{name}.json")))
@@ -163,8 +207,9 @@ if $PROGRAM_NAME == __FILE__
     when "import-dependencies" then NixBenchmark.import_dependencies(directory: ARGV.fetch(0))
     when "build" then NixBenchmark.build(phase: ENV.fetch("NIX_PHASE"), provider: ENV.fetch("NIX_PROVIDER"), cache_name: ENV.fetch("CACHIX_CACHE", ""))
     when "verify" then NixBenchmark.verify(phase: ENV.fetch("NIX_PHASE"), provider: ENV.fetch("NIX_PROVIDER"), cache_name: ENV.fetch("CACHIX_CACHE", ""))
+    when "publish-and-measure" then NixBenchmark.publish_and_measure(phase: ENV.fetch("NIX_PHASE"), cache_name: ENV.fetch("CACHIX_CACHE"))
     when "compare" then NixBenchmark.compare(seed: ARGV.fetch(0))
-    else raise NixBenchmark::Error, "Use prepare, build, verify or compare"
+    else raise NixBenchmark::Error, "Use prepare, export-dependencies, import-dependencies, build, verify, publish-and-measure or compare"
     end
   rescue NixBenchmark::Error, KeyError, ArgumentError => error
     abort error.message

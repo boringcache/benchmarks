@@ -143,7 +143,7 @@ module SourcePromotion
         tree.fetch("tree").select do |entry|
           path = entry.fetch("path")
           entry["type"] == "blob" && !except.include?(path) &&
-            (path.start_with?(".github/", "scripts/", "bin/", "cases/#{@case_id}/") || %w[Gemfile Gemfile.lock .tool-versions suites/scheduled.json].include?(path))
+            (path.start_with?(".github/", "scripts/", "bin/", "cases/#{@case_id}/") || %w[Gemfile Gemfile.lock .tool-versions suites/scheduled.json config/cli.json].include?(path))
         end.to_h { |entry| [entry.fetch("path"), entry.fetch("sha")] }
       end
       raise Error, "The case or shared harness changed during source inspection" unless snapshots.first == snapshots.last
@@ -185,7 +185,11 @@ module SourcePromotion
         BenchmarkCases.write_json(output, record)
         return record
       end
-      success = record.fetch("runs").all? { |run| run["outcome"] == "success" }
+      require_relative "rolling-monitor"
+      record["runs"] = record.fetch("runs").map do |run|
+        RollingMonitor.check_run(item, run, proposal: record.fetch("proposal"), runner: @runner)
+      end
+      success = record.fetch("runs").all? { |run| run["state"] == "success" }
       record["state"] = success ? "completed" : "failed"
       changes = {}
       expected = {path => previous}
@@ -212,6 +216,7 @@ module SourcePromotion
         raise Error, "This source already has a retained rolling observation" if prior.dig("proposal", "head_sha") == proposal.fetch("head_sha")
       end
       runs = plans.map { |plan| plan.slice("repository", "workflow", "inputs").merge("state" => "requesting") }
+      runs = ProjectRuns.group(runs, lane: "rolling", case_id: item.fetch("id"))
       record = {"schema_version" => 1, "case_id" => item.fetch("id"), "state" => "dispatching", "cli_version" => version, "ref" => branch,
         "proposal" => proposal, "created_at" => Time.now.utc.iso8601, "runs" => runs}
       if dry_run
@@ -230,7 +235,7 @@ module SourcePromotion
       runs.each do |run|
         begin
           result = api("repos/#{repository}/actions/workflows/#{run.fetch('workflow')}/dispatches",
-            body: {"ref" => branch, "inputs" => run.fetch("inputs"), "return_run_details" => true})
+            body: {"ref" => branch, "inputs" => run.fetch("inputs").merge("cli_version" => version), "return_run_details" => true})
           id = result["workflow_run_id"]
           raise Error, "Dispatch returned no run ID" unless id.is_a?(Integer) && id.positive?
           run.merge!("id" => id, "url" => "https://github.com/#{repository}/actions/runs/#{id}", "state" => "requested")
@@ -250,7 +255,8 @@ module SourcePromotion
 end
 
 if $PROGRAM_NAME == __FILE__
-  options = {channel: "stable"}
+  selection = BenchmarkCLI.selection
+  options = {channel: selection.fetch("channel"), version: selection.fetch("version")}
   OptionParser.new do |parser|
     parser.on("--case ID") { |value| options[:case_id] = value }
     parser.on("--proposal PATH") { |value| options[:proposal] = value }

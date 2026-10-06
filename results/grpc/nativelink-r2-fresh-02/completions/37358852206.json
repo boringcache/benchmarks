@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "case_id": "grpc",
+  "series_id": "nativelink-r2-fresh-02",
+  "sample": 2,
+  "run_id": "37358852206",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37358852206",
+  "source_sha": "ed4626fc7f627c729022538e043d983accd5f1d8",
+  "github_conclusion": "failure",
+  "status": "failed",
+  "errors": [
+    "Workflow concluded failure",
+    "BoringCache gRPC Bazel warm: cancelled",
+    "GitHub Actions gRPC Bazel warm: cancelled"
+  ],
+  "evidence_manifest_sha256": "34d9c9db30528b9b9db06e77f10d839a7cf4fcce62e0f2f76165a2c66842ab8f"
+}

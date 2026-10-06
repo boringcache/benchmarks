@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "case_id": "zed",
+  "series_id": "native-kache-01",
+  "created_at": "2026-10-05T21:33:59Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "commit"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "88257efcd2b68be826845f522c1549a9969ed051da41f3be6d81acf407fb26bf",
+  "variant": "sccache-only",
+  "workflow_inputs": {
+    "base_sha": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+    "head_sha": "ee3b5558c581429633937e458fad8d109f29e9ee",
+    "cli_version": "vcli-canary-b26bccd2becb",
+    "compiler_cache": "kache",
+    "cache_layer": "sccache-only"
+  },
+  "comparison": {
+    "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+    "providers": [
+      "boringcache"
+    ],
+    "timed_scope": "The BoringCache Cargo operations, including their restore, build, and publication; output verification and unrelated setup are excluded. The layer proof uses a combined cold seed for each restore-only variant and makes no provider timing comparison.",
+    "primary_metric": "correctness",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "zed-industries/zed",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+        "kind": "gitlink"
+      },
+      {
+        "path": "payload/benchmark-source.env",
+        "revision": "35bba8eef7f68b8cc61a6e883e7e041cf24a96cd",
+        "kind": "env"
+      },
+      {
+        "path": "payload/benchmark-source.env",
+        "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+        "kind": "env"
+      },
+      {
+        "path": "payload/cargo-layer-source.env",
+        "revision": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+        "kind": "env"
+      },
+      {
+        "path": "payload/cargo-layer-source.env",
+        "revision": "ee3b5558c581429633937e458fad8d109f29e9ee",
+        "kind": "env"
+      }
+    ]
+  },
+  "verification": [
+    "Require an empty target",
+    "Checkout the selected Zed source",
+    "Require an empty destination",
+    "Verify the Zed build"
+  ],
+  "plan_sha256": "8ee7d4283ab2f80a1d1bdad04d766fbecd58f3b6339ee8ce1cbaa7131db827f5"
+}

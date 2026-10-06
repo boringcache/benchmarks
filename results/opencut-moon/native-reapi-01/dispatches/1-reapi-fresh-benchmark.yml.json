@@ -1,0 +1,35 @@
+{
+  "case_id": "opencut-moon",
+  "repository": "boringcache/benchmarks",
+  "workflow": "reapi-fresh-benchmark.yml",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "OpenCut-app/OpenCut",
+    "revision": "e668010778568641babef2cc40be4703ae6916d6",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "e668010778568641babef2cc40be4703ae6916d6"
+      }
+    ]
+  },
+  "lane": "fresh",
+  "inputs": {
+    "case_id": "opencut-moon",
+    "cli_version": "vcli-canary-b26bccd2becb",
+    "series_id": "native-reapi-01",
+    "sample": "1"
+  },
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "variants": null,
+  "schema_version": 1,
+  "requested_at": "2026-10-05T21:34:36Z",
+  "ref": "native-adapter-qualification",
+  "state": "requested",
+  "run_id": 37376751453,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376751453"
+}

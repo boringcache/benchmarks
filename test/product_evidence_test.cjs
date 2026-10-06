@@ -75,3 +75,32 @@ test('retention uploads the unchanged final evidence after the product updates i
     fs.rmSync(directory, { recursive: true });
   }
 });
+
+test('post-publication storage is uploaded separately after original evidence', async () => {
+  const state = {}, outputs = {};
+  const core = { saveState: (key, value) => state[key] = value, setOutput: (key, value) => outputs[key] = value,
+    getState: key => state[key] };
+  register(core);
+  const directory = state['evidence-directory'];
+  const source = path.join(os.tmpdir(), `boringcache-one-evidence-${randomBytes(32).toString('hex')}.json`);
+  const uploaded = [];
+  try {
+    const final = JSON.stringify({ schema_version: 'boringcache_one_evidence.v1', phases: { restore: { workspace: 'boringcache/benchmarks' }, post: { save_status: 'saved' } } });
+    fs.writeFileSync(source, final);
+    fs.writeFileSync(outputs['registry-path'], source);
+    const measurement = (_evidence, retained, destination) => {
+      assert.equal(uploaded.length, 1);
+      assert.equal(fs.readFileSync(retained, 'utf8'), final);
+      const target = path.join(destination, 'storage.json');
+      fs.writeFileSync(target, JSON.stringify({ kind: 'post-publication-storage' }));
+      return target;
+    };
+    await retain(core, { uploadArtifact: async (name, files) => uploaded.push({ name, files }) }, measurement);
+    assert.match(uploaded[0].name, /^product-/);
+    assert.match(uploaded[1].name, /^storage-/);
+    assert.equal(fs.readFileSync(uploaded[0].files[0], 'utf8'), final);
+  } finally {
+    fs.rmSync(source, { force: true });
+    fs.rmSync(directory, { recursive: true });
+  }
+});

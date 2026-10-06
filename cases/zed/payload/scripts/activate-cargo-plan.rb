@@ -15,6 +15,15 @@ unless series.to_s.empty?
   scope = "zed-cargo-layers-series-#{series}-s#{sample}-r#{run}-a#{attempt}"
 end
 plan = BenchmarkPlan.load(File.join(BenchmarkPlan::ROOT, "plans", lane, phase, ".boringcache.toml"))
+engine = ENV.fetch("COMPILER_CACHE", "sccache")
+raise "Unknown compiler cache: #{engine}" unless %w[sccache kache mbx].include?(engine)
+scope += "-#{engine}"
+cargo = plan.fetch("adapters").fetch("cargo")
+cargo["compiler-cache"] = engine unless cargo["compiler-cache"] == "none"
+if engine != "sccache"
+  settings = plan.fetch("adapters").delete("sccache")
+  plan.fetch("adapters")[engine] = settings if settings
+end
 [plan.fetch("entries"), plan.fetch("adapters")].each do |group|
   group.each_value do |entry|
     next unless entry["tag"]

@@ -11,7 +11,7 @@ inputs:
     description: Declared restore or publication behavior for this observation.
     default: auto
   cli-version:
-    description: Optional exact CLI release or canary; empty uses the product default.
+    description: Optional exact CLI release or canary; empty uses config/cli.json.
     default: ''
   cli-platform:
     description: Optional canonical CLI package platform.
@@ -35,6 +35,13 @@ outputs:
 runs:
   using: composite
   steps:
+    - id: cli
+      shell: bash
+      env:
+        CLI_VERSION: ${{ inputs.cli-version }}
+      run: |
+        [[ -n "$CLI_VERSION" ]] || CLI_VERSION="$(ruby scripts/benchmark-cli.rb version)"
+        echo "version=$CLI_VERSION" >> "$GITHUB_OUTPUT"
     # Register first so retention runs after the product's post step.
     - id: retention
       uses: ./.github/actions/retain-product-evidence
@@ -44,7 +51,7 @@ runs:
         mode: ${{ inputs.mode }}
         working-directory: ${{ inputs.working-directory }}
         trust-policy: ${{ inputs.trust-policy }}
-        cli-version: ${{ inputs.cli-version }}
+        cli-version: ${{ steps.cli.outputs.version }}
         cli-platform: ${{ inputs.cli-platform }}
         cache-profiles: ${{ inputs.cache-profiles }}
         diagnostics: ${{ inputs.diagnostics }}

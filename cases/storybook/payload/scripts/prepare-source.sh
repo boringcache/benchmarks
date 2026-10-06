@@ -16,7 +16,7 @@ const nxJsonPath = process.argv[2];
 const nxJson = JSON.parse(fs.readFileSync(nxJsonPath, 'utf8'));
 let changed = false;
 
-for (const key of ['nxCloudId', 'nxCloudAccessToken', 'nxCloudUrl']) {
+for (const key of ['nxCloudId', 'nxCloudAccessToken', 'nxCloudUrl', 'codexCacheBust']) {
   if (Object.prototype.hasOwnProperty.call(nxJson, key)) {
     delete nxJson[key];
     changed = true;
@@ -25,7 +25,7 @@ for (const key of ['nxCloudId', 'nxCloudAccessToken', 'nxCloudUrl']) {
 
 if (changed) {
   fs.writeFileSync(nxJsonPath, `${JSON.stringify(nxJson, null, 2)}\n`);
-  console.log('Removed Storybook Nx Cloud workspace binding for benchmark run');
+  console.log('Removed Nx Cloud binding and legacy cache-bust marker from the benchmark checkout');
 }
 JS
 fi

@@ -120,9 +120,9 @@ jobs:
           CASE_ID: ${{ inputs.case_id }}
           BENCHMARK_CADENCE_ACTIVE: ${{ vars.BENCHMARK_CADENCE_ACTIVE }}
         run: |
-          args=(--channel canary)
+          args=()
           if [[ "$BENCHMARK_CADENCE_ACTIVE" == true && "$GITHUB_REF_NAME" == main ]]; then
-            args=(--channel stable --publish)
+            args+=(--publish)
           fi
           ruby scripts/source-promotion.rb --case "$CASE_ID" "${args[@]}" \
             --proposal "$RUNNER_TEMP/proposal/source-proposals.json" \
