@@ -106,7 +106,7 @@ module SourcePromotion
     def commit(changes, expected:, message:)
       20.times do
         head = api("repos/#{repository}/git/ref/heads/#{branch}").dig("object", "sha")
-        protect_harness(head, except: expected.keys) if @case_id
+        protect_harness(head, except: expected.keys) if @case_id || @case_ids
         verify_expected(head, expected)
         input = {"branch" => {"repositoryNameWithOwner" => repository, "branchName" => branch},
           "expectedHeadOid" => head, "message" => {"headline" => message},
@@ -147,7 +147,7 @@ module SourcePromotion
         tree.fetch("tree").select do |entry|
           path = entry.fetch("path")
           entry["type"] == "blob" && !except.include?(path) &&
-            (path.start_with?(".github/", "scripts/", "bin/", "cases/#{@case_id}/") || %w[Gemfile Gemfile.lock .tool-versions suites/scheduled.json config/cli.json].include?(path))
+            (path.start_with?(".github/", "scripts/", "bin/", *Array(@case_ids || @case_id).map { |id| "cases/#{id}/" }) || %w[Gemfile Gemfile.lock .tool-versions suites/scheduled.json config/cli.json].include?(path))
         end.to_h { |entry| [entry.fetch("path"), entry.fetch("sha")] }
       end
       raise Error, "The case or shared harness changed during source inspection" unless snapshots.first == snapshots.last
@@ -167,6 +167,7 @@ module SourcePromotion
     end
 
     def reconcile(item, output:)
+      @case_ids = nil
       @case_id = item.fetch("id")
       path = state_path(item.fetch("id"))
       previous = optional_file(path)
@@ -208,6 +209,7 @@ module SourcePromotion
     end
 
     def publish(item, proposal, version:, output:, dry_run: false)
+      @case_ids = nil
       @case_id = item.fetch("id")
       candidate, changes = SourcePromotion.changes(item, proposal, root: root)
       plans = SourcePromotion.targets(item, proposal, version: version, root: root)
@@ -255,6 +257,78 @@ module SourcePromotion
       raise Error, "At least one rolling request has an uncertain outcome; inspect its receipt before retrying" unless record["state"] == "requested"
       record
     end
+
+    def publish_project(pairs, version:, output:, dry_run: false)
+      raise Error, "No changed project source" if pairs.empty?
+      return publish(*pairs.first, version: version, output: output, dry_run: dry_run) if pairs.length == 1
+      projects = pairs.map { |item, _| item.dig("source", "repository") }.uniq
+      raise Error, "Rolling requests must belong to one upstream project" unless projects.length == 1
+      @case_ids = pairs.map { |item, _| item.fetch("id") }
+      raise Error, "Duplicate rolling case" unless @case_ids.uniq == @case_ids
+      changes, expected = {}, {}
+      plans = pairs.flat_map do |item, proposal|
+        _, updates = SourcePromotion.changes(item, proposal, root: root)
+        path = state_path(item.fetch("id"))
+        previous = optional_file(path)
+        if previous
+          prior = JSON.parse(previous)
+          raise Error, "This project has an unfinished or uncertain rolling request" if %w[dispatching dispatch-failed requested].include?(prior.fetch("state"))
+          raise Error, "This source already has a retained rolling observation" if prior.dig("proposal", "head_sha") == proposal.fetch("head_sha")
+        end
+        expected[path] = previous
+        expected["cases/#{item.fetch('id')}/case.json"] = File.read(File.join(root, "cases", item.fetch("id"), "case.json"))
+        unless proposal["requires_verified_build"]
+          updates.each { |name, contents| changes[name] = contents; expected[name] = File.read(File.join(root, name)) }
+        end
+        SourcePromotion.targets(item, proposal, version: version, root: root)
+      end
+      BenchmarkCadence.verify_cli(version, plans)
+      runs = ProjectRuns.group(plans.map { |plan| plan.slice("repository", "workflow", "inputs").merge("state" => "requesting") }, lane: "rolling")
+      raise Error, "Project rolling workflows cannot form one request" unless runs.length == 1 && runs.first["selections"]
+      records = pairs.map do |item, proposal|
+        selected = Marshal.load(Marshal.dump(runs))
+        selected.first["selections"].select! { |selection| ProjectRuns.selection_case(selection) == item.fetch("id") }
+        {"schema_version" => 1, "case_id" => item.fetch("id"), "state" => "dispatching", "cli_version" => version,
+          "ref" => branch, "proposal" => proposal, "created_at" => Time.now.utc.iso8601, "runs" => selected}
+      end
+      write = -> { BenchmarkCases.write_json(output, {"schema_version" => 1, "records" => records}) }
+      if dry_run
+        records.each { |record| record["state"] = "planned"; record.fetch("runs").each { |run| run["state"] = "planned" } }
+        write.call
+        return records
+      end
+      write.call
+      pending = save_project(records, expected: expected, changes: changes)
+      run = runs.first
+      begin
+        result = api("repos/#{repository}/actions/workflows/#{run.fetch('workflow')}/dispatches",
+          body: {"ref" => branch, "inputs" => run.fetch("inputs").merge("cli_version" => version), "return_run_details" => true})
+        id = result["workflow_run_id"]
+        raise Error, "Dispatch returned no run ID" unless id.is_a?(Integer) && id.positive?
+        receipt = {"id" => id, "url" => "https://github.com/#{repository}/actions/runs/#{id}", "state" => "requested"}
+        records.each { |record| record["state"] = "requested"; record.fetch("runs").first.merge!(receipt) }
+      rescue StandardError => error
+        records.each { |record| record["state"] = "dispatch-failed"; record.fetch("runs").first.merge!("state" => "request-unknown", "error" => error.message) }
+      ensure
+        write.call
+      end
+      save_project(records, expected: pending)
+      raise Error, "Project dispatch has an uncertain outcome; inspect its receipt before retrying" unless records.all? { |record| record["state"] == "requested" }
+      records
+    end
+
+    def save_project(records, expected:, changes: {})
+      current = {}
+      records.each do |record|
+        contents = JSON.pretty_generate(record) + "\n"
+        path = state_path(record.fetch("case_id"))
+        current[path] = contents
+        changes[path] = contents
+        changes["migration/rolling/#{record.fetch('case_id')}/#{record.fetch('proposal').fetch('head_sha')}.json"] = contents
+      end
+      commit(changes, expected: expected, message: "Record project rolling #{records.first.fetch('state')}")
+      current
+    end
   end
 end
 
@@ -269,9 +343,10 @@ if $PROGRAM_NAME == __FILE__
     parser.on("--version TAG") { |value| options[:version] = value }
     parser.on("--publish") { options[:publish] = true }
     parser.on("--reconcile") { options[:reconcile] = true }
+    parser.on("--project") { options[:project] = true }
   end.parse!
   begin
-    item = BenchmarkCadence.source_cases(case_id: options.fetch(:case_id)).fetch(0)
+    items = options[:project] ? BenchmarkCadence.source_project(options.fetch(:case_id)) : BenchmarkCadence.source_cases(case_id: options.fetch(:case_id))
     if options[:publish] || options[:reconcile]
       unless ENV["BENCHMARK_CADENCE_ACTIVE"] == "true" && ENV["GITHUB_REF_NAME"] == "main" && ENV["GITHUB_REPOSITORY"] == BenchmarkCases::REPOSITORY
         raise SourcePromotion::Error, "Source publication requires active central ownership on main"
@@ -280,16 +355,22 @@ if $PROGRAM_NAME == __FILE__
     publisher = SourcePromotion::Publisher.new
     output = options.fetch(:output)
     if options[:reconcile]
-      record = publisher.reconcile(item, output: output)
-      proceed = !record || !%w[requested dispatching dispatch-failed].include?(record.fetch("state"))
+      records = items.map { |selection| publisher.reconcile(selection, output: output) }
+      BenchmarkCases.write_json(output, {"schema_version" => 1, "records" => records.compact}) if options[:project]
+      proceed = records.all? { |record| !record || !%w[requested dispatching dispatch-failed].include?(record.fetch("state")) }
       if ENV["GITHUB_OUTPUT"]
         head = publisher.api("repos/#{BenchmarkCases::REPOSITORY}/git/ref/heads/main").dig("object", "sha")
         File.open(ENV.fetch("GITHUB_OUTPUT"), "a") { |file| file.puts("proceed=#{proceed}\nref=#{head}") }
       end
     else
       inventory = JSON.parse(File.read(options.fetch(:proposal)))
-      proposal = inventory.fetch("records").find { |record| record.fetch("case_id") == item.fetch("id") }
-      raise SourcePromotion::Error, "No changed source proposal" unless proposal && proposal["state"] == "proposal"
+      pairs = items.filter_map do |selection|
+        proposal = inventory.fetch("records").find { |record| record.fetch("case_id") == selection.fetch("id") }
+        raise SourcePromotion::Error, "Missing project source observation" unless proposal
+        raise SourcePromotion::Error, "Project source inspection is blocked" if proposal["state"] == "blocked"
+        [selection, proposal] if proposal["state"] == "proposal"
+      end
+      raise SourcePromotion::Error, "No changed source proposal" if pairs.empty?
       runner = NightlyCanaries::Runner.new
       raise SourcePromotion::Error, "Use stable or canary" unless %w[stable canary].include?(options[:channel])
       version = if options[:version]
@@ -298,7 +379,7 @@ if $PROGRAM_NAME == __FILE__
       else
         options[:channel] == "stable" ? runner.latest_stable : runner.latest_canary
       end
-      publisher.publish(item, proposal, version: version, output: output, dry_run: !options[:publish])
+      publisher.publish_project(pairs, version: version, output: output, dry_run: !options[:publish])
     end
   rescue SourcePromotion::Error, BenchmarkCases::Error, BenchmarkCadence::Error, NightlyCanaries::Error, KeyError, JSON::ParserError => error
     if options[:output] && !File.exist?(options[:output])

@@ -2,6 +2,19 @@
 
 Recipe exceptions apply to exact commits. The source controller still rejects
 unreviewed recipe changes. Existing pins and historical observations are retained.
+The current Zed Cargo recipe defaults to the reviewed file digests shared by
+`2239fa76b1f32b4f1ea46687bcd2cf6961b7082a`,
+`78a0da201cec91efdb9c434e2c5a6d20e1b80d8f` and
+`53421b7f3f94ac1e741f42035e09c1d5428eb1a3`. New source commits with those same
+files may proceed. Older pinned recipes retain their exact-revision overrides;
+different file contents still require review.
+Qdrant likewise defaults to the reviewed `191e255362fe3f985979e094095104f49ddf15a4`
+recipe, with its older pinned source retained as an exact-revision override.
+Zed Nix's five recipe files at `ba8159b4d324d137e08993d85fb023b484388ede`
+match the reviewed `2239fa76b1f32b4f1ea46687bcd2cf6961b7082a` digests. Those
+digests become its defaults; the original `96837d78cb0f2128c1965716f8df56b8aea59742`
+recipe remains an exact-revision override. Nix still uses one common dependency
+seed for both providers and verifies the exact output and closure.
 
 | Case | Reviewed candidate | Change | Measured workload |
 | --- | --- | --- | --- |

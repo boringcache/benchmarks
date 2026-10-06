@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream_files": {
     ".github/workflows/integration-tests.yml": "ca7026d1a1e15e45bd40cf92dbc4a44828b374e3fae71cbf64fc70d830c871cf",
-    "Dockerfile": "e5796337f4c1fa080ddad9dd4260e5b8eec9dc6920ded0b4a3332e73bfb1db7f"
+    "Dockerfile": "8584212912557b2923617758776deb15ff6e57002668bbb651c85e403d5c25a8"
   },
   "commands": {
     "docker": [

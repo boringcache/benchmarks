@@ -16,6 +16,7 @@ run-name: "${{ inputs.case_id }} Rolling | ${{ inputs.cli_version }}"
 permissions:
   contents: read
   actions: read
+  checks: read
   packages: read
   id-token: write
 jobs:
@@ -25,6 +26,8 @@ jobs:
     outputs:
       native_rolling_benchmark: "${{ steps.matrix.outputs.native_rolling_benchmark
         }}"
+      nix_rolling_benchmark: "${{ steps.matrix.outputs.nix_rolling_benchmark }}"
+      zed_zed_cargo_rolling_auto: "${{ steps.matrix.outputs.zed_zed_cargo_rolling_auto }}"
     steps:
     - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
       with:
@@ -53,11 +56,44 @@ jobs:
       case_id: "${{ matrix.inputs.case_id || '' }}"
       variant: "${{ matrix.inputs.variant || '' }}"
       cache_scope: "${{ matrix.inputs.cache_scope || '' }}"
+  nix_rolling_benchmark:
+    name: "${{ matrix.label }}"
+    needs: select
+    if: needs.select.outputs.nix_rolling_benchmark != ''
+    strategy:
+      fail-fast: false
+      matrix: "${{ fromJSON(needs.select.outputs.nix_rolling_benchmark) }}"
+    uses: "./.github/workflows/nix-rolling-benchmark.yml"
+    secrets: inherit
+    with:
+      cli_version: "${{ inputs.cli_version }}"
+      case_id: "${{ matrix.inputs.case_id }}"
+      provider: "${{ matrix.inputs.provider || 'all' }}"
+      cache_scope: "${{ matrix.inputs.cache_scope || '' }}"
+      series_id: "${{ matrix.inputs.series_id || '' }}"
+      sample: "${{ matrix.inputs.sample || '1' }}"
+  zed_zed_cargo_rolling_auto:
+    name: Cargo
+    needs: select
+    if: needs.select.outputs.zed_zed_cargo_rolling_auto != ''
+    strategy:
+      fail-fast: false
+      matrix: "${{ fromJSON(needs.select.outputs.zed_zed_cargo_rolling_auto) }}"
+    uses: "./.github/workflows/zed-zed-cargo-rolling-auto.yml"
+    with:
+      cli_version: "${{ inputs.cli_version }}"
+      base_sha: "${{ matrix.inputs.base_sha }}"
+      head_sha: "${{ matrix.inputs.head_sha }}"
+      source_distance: "${{ matrix.inputs.source_distance }}"
+      series_id: "${{ matrix.inputs.series_id || '' }}"
+      sample: "${{ matrix.inputs.sample || '1' }}"
   report:
     name: Project measurements
     if: always()
     needs:
     - native_rolling_benchmark
+    - nix_rolling_benchmark
+    - zed_zed_cargo_rolling_auto
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -69,6 +105,10 @@ jobs:
     - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
       with:
         pattern: phase-*
+        path: project-evidence
+    - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        pattern: benchmark-zed-cargo-*
         path: project-evidence
     - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
       with:

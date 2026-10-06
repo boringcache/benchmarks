@@ -4,6 +4,17 @@ require "minitest/autorun"
 require_relative "../scripts/publish-current"
 
 class PublishCurrentTest < Minitest::Test
+  def test_shared_project_run_retains_every_case_receipt
+    Dir.mktmpdir do |directory|
+      one = {"id" => 42, "workflow" => "project-rolling.yml", "canonical_records" => [{"case" => {"case_id" => "hugo"}}]}
+      two = one.merge("canonical_records" => [{"case" => {"case_id" => "hugo-go"}}])
+      current = {"outcomes" => {"rolling" => {"collected_at" => "2026-10-06T11:00:00Z", "cases" => [{"runs" => [one]}, {"runs" => [two]}]}}}
+      PublishCurrent.retain(current, directory: directory)
+      retained = JSON.parse(File.read(File.join(directory, "rolling/42.json")))
+      assert_equal [one, two], retained.fetch("case_records")
+    end
+  end
+
   def test_publication_retries_unrelated_source_commits_but_rejects_changed_data
     publisher = PublishCurrent::Publisher.new
     original = "old data\n"
