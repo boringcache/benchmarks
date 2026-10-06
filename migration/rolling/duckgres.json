@@ -3,7 +3,7 @@
   "baseline_id": "baseline-20261006",
   "observation": "seed",
   "case_id": "duckgres",
-  "state": "dispatching",
+  "state": "requested",
   "cli_version": "vcli-canary-252077d7b8fb",
   "created_at": "2026-10-06T13:32:13Z",
   "proposal": {
@@ -39,7 +39,9 @@
       ],
       "variants": null,
       "source_sha": "7a5aca65d6c426f8ea4184141a8a55c871f85888",
-      "state": "planned"
+      "state": "requested",
+      "id": 37471685672,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37471685672"
     }
   ]
 }
