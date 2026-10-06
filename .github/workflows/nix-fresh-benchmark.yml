@@ -1,6 +1,6 @@
 ---
 name: Nix comparison fresh
-run-name: "${{ inputs.case_id }} ${{ inputs.cadence == 'nightly' && 'Nightly' || 'Fresh' }} | ${{ inputs.cli_version }}"
+run-name: "${{ inputs.case_id == 'zed-nix' && 'zed' || 'helix' }} ${{ inputs.cadence == 'nightly' && 'Nightly' || 'Fresh' }} | ${{ inputs.cli_version }}"
 permissions:
   contents: read
   actions: read

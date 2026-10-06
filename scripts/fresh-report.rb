@@ -30,6 +30,9 @@ module FreshReport
       state = STATES[conclusion] || (job && job["status"] != "completed" ? job["status"] : "missing")
       # A successful job without its original phase record has missing evidence.
       state = "missing" if state == "succeeded" && !record
+      if state == "succeeded" && slot["phase"] == "warm" && record["mode"] == "nx" && record.dig("cache", "hit") != true
+        state = "cache-reuse-unverified"
+      end
       timing = record&.fetch("timing", nil) || outcome&.fetch("timing", nil) || {}
       verified = record ? record.dig("verification", "passed") : outcome&.fetch("verification", nil)
       errors = Array(job && job["steps"]).select { |step| %w[failure cancelled].include?(step["conclusion"]) }

@@ -35,12 +35,19 @@ if $PROGRAM_NAME == __FILE__
     parser.on("--case ID") { |value| options[:case] = value }
     parser.on("--output PATH") { |value| options[:output] = value }
     parser.on("--matrix") { options[:matrix] = true }
+    parser.on("--project") { options[:project] = true }
   end.parse!
   items = BenchmarkCadence.source_cases(case_id: options[:case])
   if options[:matrix]
+    items = BenchmarkCadence.source_project(options[:case]) if options[:case]
+    items = items.group_by { |item| item.dig("source", "repository") }.values.map do |group|
+      project = group.first.dig("source", "repository").split("/").last
+      group.find { |item| item.fetch("id") == project } || group.first
+    end
     puts JSON.generate({"case_id" => items.map { |item| item.fetch("id") }})
     exit
   end
+  items = BenchmarkCadence.source_project(options.fetch(:case)) if options[:project]
   abort "Use --output for the proposal inventory" unless options[:output]
   inventory = SourceSync.propose(items, output: options.fetch(:output))
   BenchmarkCases.validate

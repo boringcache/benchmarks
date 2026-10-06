@@ -15,7 +15,7 @@ limitations. This inventory describes the case definitions as of October 6, 2026
 | Go | Hugo Go; Docker Go projection | Keep native and Docker results separate |
 | Gradle | OpenTelemetry Java | Qualify rolling source and seed lineage |
 | Maven | Spring AI | Qualify rolling source and seed lineage |
-| Nx remote cache | Storybook `nx` variant | Uses upstream production compile with the native Nx adapter; hosted cold/replay qualification remains pending |
+| Nx remote cache | Storybook `nx` variant | [Hosted cold/replay correctness screen passed](../data/observations/diagnostic/37459274804.json): four cold misses and four remote warm hits; per-task results and both providers' storage measurements retained. Rolling lineage remains a separate check |
 | Turbo | n8n; PostHog combined mount and tool-cache profile | Qualify each selected workload and timing boundary |
 | Bazel | gRPC C++ client and server | [One three-provider cold/warm sample passed](../results/grpc/local-outputs-01/report.md), including local output checks; NativeLink has retained correctness and scoped R2 storage evidence; BuildBuddy storage remains unmeasured |
 | Moon | [OpenCut](../cases/opencut-moon/proposal.md), [Gogs](../cases/gogs-moon/proposal.md), ZITADEL drafts | OpenCut and Gogs passed two native cold/warm samples each; ZITADEL remains a draft |

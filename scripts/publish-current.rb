@@ -43,10 +43,12 @@ module PublishCurrent
     current.fetch("outcomes").each do |cadence, outcome|
       groups = Array(outcome["repositories"]).flat_map { |repo| Array(repo.dig("dispatch", "runs")) } +
         Array(outcome["cases"]).flat_map { |item| Array(item["runs"]) }
-      groups.each do |run|
+      groups.group_by { |run| run["id"] }.each_value do |members|
+        run = members.first
         next unless run["id"].is_a?(Integer) && run["id"].positive?
         BenchmarkCases.write_json(File.join(directory, cadence, "#{run.fetch('id')}.json"),
-          {"schema_version" => 1, "cadence" => cadence, "collected_at" => outcome.fetch("collected_at"), "run" => run})
+          {"schema_version" => 1, "cadence" => cadence, "collected_at" => outcome.fetch("collected_at"), "run" => run,
+            **(members.length > 1 ? {"case_records" => members} : {})})
       end
     end
   end
