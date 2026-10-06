@@ -8,6 +8,24 @@ require "minitest/mock"
 class SourcePromotionTest < Minitest::Test
   VERSION = "vcli-canary-0123456789ab"
 
+  def test_monitor_ignores_a_newer_source_check_that_never_ran
+    now = Time.utc(2026, 10, 6, 14, 30)
+    executed = {"id" => 10, "event" => "workflow_dispatch", "status" => "in_progress", "conclusion" => nil,
+      "created_at" => (now - 300).iso8601}
+    skipped = {"id" => 11, "event" => "schedule", "status" => "completed", "conclusion" => "skipped",
+      "created_at" => (now - 60).iso8601}
+    runner = Object.new
+    runner.define_singleton_method(:api) { |_path| {"workflow_runs" => [skipped, executed]} }
+    Dir.mktmpdir do |directory|
+      BenchmarkCadence.stub(:source_cases, []) do
+        result = RollingMonitor.collect(root: directory, runner: runner, now: now)
+        assert_equal 10, result.dig("source_check", "id")
+        assert_equal true, result.fetch("passed")
+        refute result.key?("source_error")
+      end
+    end
+  end
+
   def proposal(item)
     prefix = item.dig("execution", "source_prefix")
     base = if prefix

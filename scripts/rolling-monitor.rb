@@ -8,7 +8,8 @@ module RollingMonitor
     baseline = BenchmarkBaseline.selection(root: root)
     result = {"schema_version" => 1, "baseline_id" => baseline&.fetch("id"), "collected_at" => now.iso8601, "passed" => true, "sources" => [], "cases" => []}
     checks = runner.api("repos/#{repository}/actions/workflows/source-sync.yml/runs?branch=main&per_page=20").fetch("workflow_runs")
-    latest = checks.reject { |run| run["event"] == "push" }.select { |run| BenchmarkBaseline.current?(run.fetch("created_at"), baseline) }.max_by { |run| run.fetch("created_at") }
+    latest = checks.reject { |run| run["event"] == "push" || run["conclusion"] == "skipped" }
+      .select { |run| BenchmarkBaseline.current?(run.fetch("created_at"), baseline) }.max_by { |run| run.fetch("created_at") }
     result["source_check"] = latest&.slice("id", "status", "conclusion", "created_at", "html_url")
     result["passed"] = false unless latest && now - Time.iso8601(latest.fetch("created_at")) <= 4 * 3600
     if latest && latest["status"] == "completed"
