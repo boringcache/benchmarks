@@ -108,10 +108,12 @@ jobs:
         test -z "$(git -C upstream status --porcelain=v1 --untracked-files=all)"
     - name: Report disk before release build
       run: df -h
+    - name: Use one Cargo cache lifecycle for both release commands
+      run: ruby ./scripts/select-deno-cargo-phase.rb job
     - name: Start build and reuse timing
       id: proof_timer
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
-    - name: Build Deno release binaries through boringcache cargo
+    - name: Restore the Deno Cargo cache for both release commands
       id: build_primary
       uses: "./.github/actions/boringcache"
       with:
@@ -121,16 +123,12 @@ jobs:
         working-directory: upstream
       env:
         DENO_SNAPSHOT_MINIFY_SOURCES: '1'
-    - name: Select Deno's denort_desktop release command
-      run: "./scripts/select-deno-cargo-phase.rb desktop"
-    - name: Build denort_desktop through boringcache cargo
-      id: build_desktop
-      uses: "./.github/actions/boringcache"
-      with:
-        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip' || inputs.cli_version }}"
-        trust-policy: publish
-        mode: cargo
-        working-directory: upstream
+    - name: Build Deno release binaries
+      run: ruby ./scripts/select-deno-cargo-phase.rb run primary
+      env:
+        DENO_SNAPSHOT_MINIFY_SOURCES: '1'
+    - name: Build denort_desktop
+      run: ruby ./scripts/select-deno-cargo-phase.rb run desktop
       env:
         DENO_SNAPSHOT_MINIFY_SOURCES: '1'
     - name: Capture build and reuse timing
@@ -148,7 +146,6 @@ jobs:
         test -s upstream/target/release/libdenort.so
         test -z "$(git -C upstream status --porcelain=v1 --untracked-files=all)"
         cp "${{ steps.build_primary.outputs.evidence-path }}" /tmp/deno-base-primary-action.json
-        cp "${{ steps.build_desktop.outputs.evidence-path }}" /tmp/deno-base-desktop-action.json
     - name: Write verified case records
       env:
         PROOF_SECONDS: "${{ steps.proof_timing.outputs.seconds }}"
@@ -271,10 +268,12 @@ jobs:
         test -z "$(git -C upstream status --porcelain=v1 --untracked-files=all)"
     - name: Report disk before release build
       run: df -h
+    - name: Use one Cargo cache lifecycle for both release commands
+      run: ruby ./scripts/select-deno-cargo-phase.rb job
     - name: Start build and reuse timing
       id: proof_timer
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
-    - name: Restore and build Deno release binaries through boringcache cargo
+    - name: Restore the Deno Cargo cache for both release commands
       id: build_primary
       uses: "./.github/actions/boringcache"
       with:
@@ -284,16 +283,12 @@ jobs:
         working-directory: upstream
       env:
         DENO_SNAPSHOT_MINIFY_SOURCES: '1'
-    - name: Select Deno's denort_desktop release command
-      run: "./scripts/select-deno-cargo-phase.rb desktop"
-    - name: Build denort_desktop through boringcache cargo
-      id: build_desktop
-      uses: "./.github/actions/boringcache"
-      with:
-        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip' || inputs.cli_version }}"
-        trust-policy: restore
-        mode: cargo
-        working-directory: upstream
+    - name: Build Deno release binaries
+      run: ruby ./scripts/select-deno-cargo-phase.rb run primary
+      env:
+        DENO_SNAPSHOT_MINIFY_SOURCES: '1'
+    - name: Build denort_desktop
+      run: ruby ./scripts/select-deno-cargo-phase.rb run desktop
       env:
         DENO_SNAPSHOT_MINIFY_SOURCES: '1'
     - name: Capture build and reuse timing
@@ -311,7 +306,6 @@ jobs:
         test -s upstream/target/release/libdenort.so
         test -z "$(git -C upstream status --porcelain=v1 --untracked-files=all)"
         cp "${{ steps.build_primary.outputs.evidence-path }}" /tmp/deno-head-primary-action.json
-        cp "${{ steps.build_desktop.outputs.evidence-path }}" /tmp/deno-head-desktop-action.json
     - name: Write verified case records
       env:
         PROOF_SECONDS: "${{ steps.proof_timing.outputs.seconds }}"
@@ -336,8 +330,7 @@ jobs:
           echo
           echo "- CLI override: \`${{ inputs.cli_version || 'Action default' }}\`"
           echo "- Source: \`${{ needs.publish-base.outputs.base_sha }}\` → \`${{ needs.publish-base.outputs.head_sha }}\`"
-          echo "- Primary target available before the adjacent build: \`${{ steps.build_primary.outputs.cache-hit }}\`"
-          echo "- Desktop target available before the adjacent build: \`${{ steps.build_desktop.outputs.cache-hit }}\`"
+          echo "- Cargo cache available before the release commands: \`${{ steps.build_primary.outputs.cache-hit }}\`"
         } >> "$GITHUB_STEP_SUMMARY"
     - name: Upload head evidence
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f

@@ -75,7 +75,7 @@
     "providers": [
       "boringcache"
     ],
-    "timed_scope": "The two BoringCache Cargo release operations, including restore, build, and any permitted publication. Fresh changed-source consumers use restore-only trust; rolling jobs permit publication to the declared cohort. Output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.",
+    "timed_scope": "One BoringCache Cargo restore followed by the two declared Cargo release commands in a shared job lifecycle. Publication and cleanup run in the Action post step and are excluded from build timing. Fresh changed-source consumers use restore-only trust; rolling jobs permit publication to the declared cohort. Output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.",
     "primary_metric": "correctness",
     "storage": "provider-reported",
     "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
