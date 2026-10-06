@@ -97,7 +97,8 @@ module BenchmarkReport
   def self.github_identity
     %w[repository run_id run_attempt job workflow ref_name].to_h { |key| [key, ENV["GITHUB_#{key.upcase}"]] }.merge(
       %w[os arch name environment].to_h { |key| ["runner_#{key}", ENV["RUNNER_#{key.upcase}"]] },
-      "runner_image" => ENV["ImageOS"], "runner_image_version" => ENV["ImageVersion"])
+      "runner_image" => ENV["ImageOS"], "runner_image_version" => ENV["ImageVersion"],
+      "runner_class" => ENV["BENCHMARK_RUNNER_CLASS"])
   end
 
   def self.identity(args, restore)
@@ -317,8 +318,8 @@ module BenchmarkReport
       phase = item["observation"] ? OBSERVATIONS.fetch(item["observation"]) : PHASES.fetch(item["phase"])
       lines << "| #{item['benchmark']} | #{item['lane']} | #{label} | #{phase} | #{values.join(' | ')} | #{cache_state(item)} |"
     end
-    lines += ["", "*Dependency setup and compile can overlap the build measurement. Workflow time is measured separately.", "",
-      "Comparator: #{PROVIDERS.fetch(baseline, baseline)}.", ""]
+    lines += ["", "*Dependency setup and compile can overlap the build measurement. Workflow time is measured separately.", ""]
+    lines += ["Comparator: #{PROVIDERS.fetch(baseline, baseline)}.", ""] if phases.map { |item| item["strategy"] }.uniq.length > 1
     phases.map { |item| item["source"] }.uniq.each { |source| lines << "Source: `#{source['repository']}@#{source['sha']}`" }
     lines.join("\n") + "\n"
   end

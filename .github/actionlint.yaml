@@ -3,3 +3,7 @@
 self-hosted-runner:
   labels:
     - ubuntu-26.04
+    - depot-ubuntu-24.04-4
+    - depot-ubuntu-24.04-8
+    - namespace-profile-buildkit-4c
+    - namespace-profile-buildkit-8c
