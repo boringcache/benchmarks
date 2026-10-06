@@ -61,7 +61,7 @@ module SourcePromotion
     inputs = {"cli_version" => version}
     case item.dig("execution", "sync")
     when "adjacent-pair", "build-relevant-pair"
-      inputs.merge!("base_sha" => proposal.fetch("base_sha"), "head_sha" => proposal.fetch("head_sha"), "cache_scope" => "rolling-main")
+      inputs.merge!("base_sha" => proposal.fetch("base_sha"), "head_sha" => proposal.fetch("head_sha"), "cache_scope" => "rolling-#{BenchmarkBaseline.selection(root: root)&.fetch("rolling_scope") || 'main'}")
     when "verified-pair"
       inputs.merge!("base_sha" => proposal.fetch("base_sha"), "head_sha" => proposal.fetch("head_sha"), "source_distance" => proposal.fetch("source_distance").to_s)
     end
@@ -147,7 +147,7 @@ module SourcePromotion
         tree.fetch("tree").select do |entry|
           path = entry.fetch("path")
           entry["type"] == "blob" && !except.include?(path) &&
-            (path.start_with?(".github/", "scripts/", "bin/", *Array(@case_ids || @case_id).map { |id| "cases/#{id}/" }) || %w[Gemfile Gemfile.lock .tool-versions suites/scheduled.json config/cli.json].include?(path))
+            (path.start_with?(".github/", "scripts/", "bin/", *Array(@case_ids || @case_id).map { |id| "cases/#{id}/" }) || %w[Gemfile Gemfile.lock .tool-versions suites/scheduled.json config/cli.json config/baseline.json].include?(path))
         end.to_h { |entry| [entry.fetch("path"), entry.fetch("sha")] }
       end
       raise Error, "The case or shared harness changed during source inspection" unless snapshots.first == snapshots.last

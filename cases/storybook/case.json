@@ -25,7 +25,8 @@
         "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
         "inputs": {
-          "case_id": "storybook"
+          "case_id": "storybook",
+          "cache_scope": "baseline-20261006"
         },
         "historical_workflow": "storybook-benchmark.yml",
         "variant_input": "variant",

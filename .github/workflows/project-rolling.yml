@@ -4,6 +4,10 @@ run-name: "${{ inputs.case_id }} Rolling | ${{ inputs.cli_version }}"
 'on':
   workflow_dispatch:
     inputs:
+      observation:
+        description: Seed, identical-source replay, or changed-source build.
+        type: string
+        default: changed-source
       case_id:
         type: string
         required: true
@@ -50,6 +54,7 @@ jobs:
       matrix: "${{ fromJSON(needs.select.outputs.native_rolling_benchmark) }}"
     uses: "./.github/workflows/native-rolling-benchmark.yml"
     with:
+      observation: "${{ matrix.inputs.observation || inputs.observation }}"
       cli_version: "${{ inputs.cli_version }}"
       series_id: "${{ matrix.inputs.series_id || '' }}"
       sample: "${{ matrix.inputs.sample || '1' }}"
@@ -66,6 +71,7 @@ jobs:
     uses: "./.github/workflows/nix-rolling-benchmark.yml"
     secrets: inherit
     with:
+      observation: "${{ matrix.inputs.observation || inputs.observation }}"
       cli_version: "${{ inputs.cli_version }}"
       case_id: "${{ matrix.inputs.case_id }}"
       provider: "${{ matrix.inputs.provider || 'all' }}"
@@ -81,6 +87,7 @@ jobs:
       matrix: "${{ fromJSON(needs.select.outputs.zed_zed_cargo_rolling_auto) }}"
     uses: "./.github/workflows/zed-zed-cargo-rolling-auto.yml"
     with:
+      observation: "${{ matrix.inputs.observation || inputs.observation }}"
       cli_version: "${{ inputs.cli_version }}"
       base_sha: "${{ matrix.inputs.base_sha }}"
       head_sha: "${{ matrix.inputs.head_sha }}"

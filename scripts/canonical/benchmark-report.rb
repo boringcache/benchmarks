@@ -19,6 +19,7 @@ module BenchmarkReport
     "nativelink" => "NativeLink (R2)", "cachix" => "Cachix", "bazel-remote" => "bazel-remote",
     "registry-cache" => "Registry cache", "depot-cache" => "Depot Cache"}.freeze
   PHASES = {"cold" => "Cold build", "warm" => "Warm build", "commit" => "Changed-source build"}.freeze
+  OBSERVATIONS = {"seed" => "Seed build", "replay" => "Identical-source replay", "changed-source" => "Changed-source build"}.freeze
   METRICS = {"build_and_reuse_seconds" => "build and cache reuse (s)", "build_seconds" => "build (s)",
     "storage_bytes" => "storage (bytes)", "total_seconds" => "cache and build (s)"}.freeze
   LANES = {"fresh" => %w[cold warm], "rolling" => %w[commit]}.freeze
@@ -229,6 +230,11 @@ module BenchmarkReport
         "checks" => verified ? ["Output verification completed before recording this phase"] : [],
         "declared_checks" => context.fetch("verification", [])}
     end
+    if args["lane"] == "rolling"
+      observation = ENV.fetch("BENCHMARK_OBSERVATION", "changed-source")
+      raise Error, "Invalid rolling observation" unless OBSERVATIONS.key?(observation)
+      payload["observation"] = observation
+    end
     series = args["series"] || ENV["BENCHMARK_SERIES_ID"]
     unless series.to_s.empty?
       raise Error, "Series recording requires a prepared case" unless context && context["comparison"]
@@ -308,7 +314,8 @@ module BenchmarkReport
       label += " (#{item['variant']})" if item["variant"]
       timing = item.fetch("timing")
       values = %w[restore_or_setup_seconds build_seconds dependency_setup_seconds compile_seconds total_seconds workflow_seconds].map { |name| seconds(timing[name]) }
-      lines << "| #{item['benchmark']} | #{item['lane']} | #{label} | #{PHASES.fetch(item['phase'])} | #{values.join(' | ')} | #{cache_state(item)} |"
+      phase = item["observation"] ? OBSERVATIONS.fetch(item["observation"]) : PHASES.fetch(item["phase"])
+      lines << "| #{item['benchmark']} | #{item['lane']} | #{label} | #{phase} | #{values.join(' | ')} | #{cache_state(item)} |"
     end
     lines += ["", "*Dependency setup and compile can overlap the build measurement. Workflow time is measured separately.", "",
       "Comparator: #{PROVIDERS.fetch(baseline, baseline)}.", ""]

@@ -101,13 +101,13 @@ module NixBenchmark
   def self.build_command(phase:, provider:, cache_name: "")
     raise Error, "Use cold, warm or commit" unless %w[cold warm commit].include?(phase)
     command = BenchmarkPlan.command("nix").dup
-    if phase == "cold"
+    if phase == "cold" || ENV["BENCHMARK_OBSERVATION"] == "seed"
       command += %w[--option substitute false]
     else
       config = JSON.parse(capture("nix", "config", "show", "--json"))
       url = provider_substituter(config, provider, cache_name)
       command += ["--option", "substituters", url, "--option", "extra-substituters", ""]
-      command += ["--max-jobs", "0", "--builders", ""] if phase == "warm"
+      command += ["--max-jobs", "0", "--builders", ""] if phase == "warm" || ENV["BENCHMARK_OBSERVATION"] == "replay"
     end
     command
   end

@@ -35,7 +35,8 @@
         "path": ".github/workflows/reapi-rolling-benchmark.yml",
         "lane": "rolling",
         "inputs": {
-          "case_id": "executorch-buck2"
+          "case_id": "executorch-buck2",
+          "cache_scope": "baseline-20261006"
         }
       }
     ],

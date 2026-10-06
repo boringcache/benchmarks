@@ -25,7 +25,8 @@
         "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
         "inputs": {
-          "case_id": "spring-ai"
+          "case_id": "spring-ai",
+          "cache_scope": "baseline-20261006"
         },
         "historical_workflow": "spring-ai-maven-benchmark.yml"
       },

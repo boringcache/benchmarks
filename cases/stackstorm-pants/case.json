@@ -34,7 +34,8 @@
         "path": ".github/workflows/reapi-rolling-benchmark.yml",
         "lane": "rolling",
         "inputs": {
-          "case_id": "stackstorm-pants"
+          "case_id": "stackstorm-pants",
+          "cache_scope": "baseline-20261006"
         }
       }
     ],

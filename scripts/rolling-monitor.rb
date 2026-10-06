@@ -5,9 +5,10 @@ require_relative "benchmark-cadence"
 module RollingMonitor
   def self.collect(root: BenchmarkCases::ROOT, runner: NightlyCanaries::Runner.new, now: Time.now.utc)
     repository = BenchmarkCases::REPOSITORY
-    result = {"schema_version" => 1, "collected_at" => now.iso8601, "passed" => true, "sources" => [], "cases" => []}
+    baseline = BenchmarkBaseline.selection(root: root)
+    result = {"schema_version" => 1, "baseline_id" => baseline&.fetch("id"), "collected_at" => now.iso8601, "passed" => true, "sources" => [], "cases" => []}
     checks = runner.api("repos/#{repository}/actions/workflows/source-sync.yml/runs?branch=main&per_page=20").fetch("workflow_runs")
-    latest = checks.reject { |run| run["event"] == "push" }.max_by { |run| run.fetch("created_at") }
+    latest = checks.reject { |run| run["event"] == "push" }.select { |run| BenchmarkBaseline.current?(run.fetch("created_at"), baseline) }.max_by { |run| run.fetch("created_at") }
     result["source_check"] = latest&.slice("id", "status", "conclusion", "created_at", "html_url")
     result["passed"] = false unless latest && now - Time.iso8601(latest.fetch("created_at")) <= 4 * 3600
     if latest && latest["status"] == "completed"
@@ -27,6 +28,7 @@ module RollingMonitor
         next
       end
       receipt = JSON.parse(File.read(path))
+      next unless BenchmarkBaseline.current?(receipt.fetch("created_at"), baseline)
       value = receipt.merge("runs" => Marshal.load(Marshal.dump(receipt.fetch("runs"))))
       result["cases"] << value
       result["passed"] = false if %w[dispatching dispatch-failed failed blocked].include?(receipt.fetch("state"))
@@ -39,7 +41,8 @@ module RollingMonitor
 
   def self.check_run(item, run, proposal:, runner:)
     if run["selections"]
-      run["selections"] = ProjectRuns.expand(run).map { |child| check_run(item, child, proposal: proposal, runner: runner) }
+      run["selections"] = ProjectRuns.expand(run).select { |child| ProjectRuns.selection_case(child) == item.fetch("id") }
+        .map { |child| check_run(item, child, proposal: proposal, runner: runner) }
       run["canonical_records"] = run.fetch("selections").flat_map { |child| Array(child["canonical_records"]) }
       run["state"] = run.fetch("selections").map { |child| child.fetch("state") }.find { |state| state != "success" } || "success"
       return run
@@ -50,12 +53,25 @@ module RollingMonitor
     current = runner.api("repos/#{run.fetch('repository')}/actions/runs/#{run.fetch('id')}")
     run["state"] = current["status"] == "completed" ? current.fetch("conclusion") : current.fetch("status")
     return run unless current["status"] == "completed"
-    variant = run.dig("inputs", "variant")
+    variant = run.dig("inputs", "variant") || run.dig("inputs", "cache_tool")
+    variant = nil if variant == "all"
     records = runner.phase_evidence(run, attempt: current.fetch("run_attempt")).select do |record|
       record["benchmark"] && record["phase"] && record.dig("case", "case_id") == item.fetch("id") &&
         (!variant || record["variant"] == variant)
     end
     run["canonical_records"] = records
+    observation = run.dig("inputs", "observation") || "changed-source"
+    observation_verified = records.all? do |record|
+      next true if observation == "changed-source"
+      next false unless record["observation"] == observation
+      if observation == "seed"
+        record.dig("cache", "hit") != true
+      elsif %w[docker buildkit].include?(record["mode"])
+        record.dig("cache", "import_ready") == true && record.dig("cache", "import_refs").to_i.positive?
+      else
+        record.dig("cache", "hit") == true
+      end
+    end
     workflow = item.dig("execution", "workflows").find { |entry| File.basename(entry.fetch("path")) == run.fetch("workflow") }
     raise BenchmarkCadence::Error, "Unregistered rolling workflow" unless workflow
     phases = BenchmarkSeries.phases_for(workflow.fetch("lane"), workflow["phases"])
@@ -71,7 +87,7 @@ module RollingMonitor
       group.map { |record| [record.fetch("source"), record["environment"] || record.fetch("github").slice("runner_os", "runner_arch"), record.dig("case", "definition_sha256")] }.uniq.length == 1
     end
     run["comparison_plan"] = records.all? { |record| record["series"] } ? "declared-series" : "diagnostic"
-    if run["state"] == "success" && !(verified && paired && observed.sort == expected.sort)
+    if run["state"] == "success" && !(verified && paired && observation_verified && observed.sort == expected.sort)
       run["state"] = "evidence-missing-or-invalid"
     end
     run

@@ -34,7 +34,8 @@
         "path": ".github/workflows/reapi-rolling-benchmark.yml",
         "lane": "rolling",
         "inputs": {
-          "case_id": "msgpack-sbt"
+          "case_id": "msgpack-sbt",
+          "cache_scope": "baseline-20261006"
         }
       }
     ],

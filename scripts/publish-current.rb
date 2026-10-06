@@ -60,6 +60,10 @@ module PublishCurrent
     raise BenchmarkCases::Error, "No central monitor outcomes were retained" if files.empty?
     outcomes = files.to_h { |path| [File.basename(path, ".json").delete_prefix("benchmark-outcomes-"), JSON.parse(File.read(path))] }
     raise BenchmarkCases::Error, "The monitor did not retain every cadence" unless (outcomes.keys & %w[daily weekly rolling]).sort == %w[daily rolling weekly]
+    baseline = BenchmarkBaseline.selection(root: root)
+    if baseline && outcomes.values.any? { |outcome| outcome["baseline_id"] != baseline.fetch("id") || !BenchmarkBaseline.current?(outcome.fetch("collected_at"), baseline) }
+      raise BenchmarkCases::Error, "Monitor outcomes belong to a discarded baseline"
+    end
     records = outcomes.values.flat_map do |outcome|
       fresh = Array(outcome["repositories"]).flat_map { |repo| Array(repo.dig("dispatch", "runs")) }
         .flat_map { |run| Array(run["observations"]).filter_map { |observation| observation["phase_record"] } }
@@ -67,6 +71,7 @@ module PublishCurrent
       fresh + rolling
     end.uniq
     {"schema_version" => 1, "repository" => BenchmarkCases::REPOSITORY, "generated_at" => Time.now.utc.iso8601,
+      "baseline_id" => baseline&.fetch("id"),
       "cli_selection" => BenchmarkCLI.selection(root: root), "publication" => "unreviewed",
       "scope" => "Central scheduled and rolling receipts; original phase artifacts remain authoritative",
       "monitor_files" => files.to_h { |path| [File.basename(path), Digest::SHA256.file(path).hexdigest] },
