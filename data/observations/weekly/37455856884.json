@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "cadence": "weekly",
-  "collected_at": "2026-10-06T11:25:11Z",
+  "collected_at": "2026-10-06T12:13:08Z",
   "run": {
     "repository": "boringcache/benchmarks",
     "workflow": "native-fresh-benchmark.yml",
