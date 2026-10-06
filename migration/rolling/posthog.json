@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "case_id": "posthog",
+  "state": "dispatching",
+  "cli_version": "vcli-canary-252077d7b8fb",
+  "ref": "main",
+  "proposal": {
+    "case_id": "posthog",
+    "updated": true,
+    "base_sha": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+    "head_sha": "5202af95fd153f32ffc999dc1b75157e17e6362b",
+    "state": "proposal",
+    "requires_case_qualification": true
+  },
+  "created_at": "2026-10-06T11:22:18Z",
+  "runs": [
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "project-rolling.yml",
+      "inputs": {
+        "case_id": "posthog",
+        "selections": "[{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"layers\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"combined\"}}]"
+      },
+      "state": "requesting",
+      "selections": [
+        {
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-rolling-benchmark.yml",
+          "inputs": {
+            "case_id": "posthog",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "variant": "layers"
+          },
+          "state": "requesting"
+        },
+        {
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-rolling-benchmark.yml",
+          "inputs": {
+            "case_id": "posthog",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "variant": "combined"
+          },
+          "state": "requesting"
+        }
+      ]
+    }
+  ]
+}
