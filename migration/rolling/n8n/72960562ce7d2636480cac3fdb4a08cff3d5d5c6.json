@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "case_id": "n8n",
+  "state": "dispatching",
+  "cli_version": "vcli-canary-252077d7b8fb",
+  "ref": "main",
+  "proposal": {
+    "case_id": "n8n",
+    "updated": true,
+    "base_sha": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+    "head_sha": "72960562ce7d2636480cac3fdb4a08cff3d5d5c6",
+    "state": "proposal",
+    "requires_case_qualification": true
+  },
+  "created_at": "2026-10-06T11:25:55Z",
+  "runs": [
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "project-rolling.yml",
+      "inputs": {
+        "case_id": "n8n",
+        "selections": "[{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"n8n\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"turbo\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"n8n\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"docker\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"n8n\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"runners\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"n8n\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"distroless\"}}]"
+      },
+      "state": "requesting",
+      "selections": [
+        {
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-rolling-benchmark.yml",
+          "inputs": {
+            "case_id": "n8n",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "variant": "turbo"
+          },
+          "state": "requesting"
+        },
+        {
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-rolling-benchmark.yml",
+          "inputs": {
+            "case_id": "n8n",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "variant": "docker"
+          },
+          "state": "requesting"
+        },
+        {
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-rolling-benchmark.yml",
+          "inputs": {
+            "case_id": "n8n",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "variant": "runners"
+          },
+          "state": "requesting"
+        },
+        {
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-rolling-benchmark.yml",
+          "inputs": {
+            "case_id": "n8n",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "variant": "distroless"
+          },
+          "state": "requesting"
+        }
+      ]
+    }
+  ]
+}
