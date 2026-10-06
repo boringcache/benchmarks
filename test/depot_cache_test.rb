@@ -9,6 +9,20 @@ require_relative "../scripts/benchmark-series"
 require_relative "../scripts/rolling-monitor"
 
 class DepotCacheTest < Minitest::Test
+  def test_n8n_docker_accepts_the_shared_depot_actions_adapter
+    path = File.join(BenchmarkCases::ROOT, "cases/n8n/payload/.github/actions/n8n-docker-benchmark/action.yml")
+    steps = YAML.safe_load_file(path).dig("runs", "steps")
+    validation = steps.find { |step| step["name"] == "Validate benchmark strategy" }.fetch("run")
+    %w[actions-cache boringcache depot-actions-cache].each do |provider|
+      _, error, status = Open3.capture3({"STRATEGY" => provider}, "bash", "-e", "-c", validation)
+      assert status.success?, error
+    end
+    _, _, status = Open3.capture3({"STRATEGY" => "depot-cache"}, "bash", "-e", "-c", validation)
+    refute status.success?, "The native Depot client belongs to the Turbo variant"
+    shared = steps.find { |step| step["name"] == "Build with the declared cache provider" }
+    assert_equal "./.github/actions/docker-benchmark", shared.fetch("uses")
+  end
+
   def test_other_providers_do_not_inherit_depot_native_cache_credentials
     Dir.mktmpdir do |directory|
       env = {"BENCHMARK_RUNNER_CLASS" => "depot-ubuntu-24.04-4", "GITHUB_ENV" => File.join(directory, "env"),
