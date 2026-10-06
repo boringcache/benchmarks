@@ -14,10 +14,10 @@ module ReapiSetup
 
   def self.download(repository, release, asset, binary, sha256: nil, destination: nil)
     Dir.mktmpdir("reapi-download-") do |directory|
-      run("gh", "release", "download", release, "--repo", repository, "--pattern", asset, "--dir", directory)
+      download_asset(repository, release, asset, directory)
       path = File.join(directory, asset)
       unless sha256
-        run("gh", "release", "download", release, "--repo", repository, "--pattern", "SHA256SUMS", "--dir", directory)
+        download_asset(repository, release, "SHA256SUMS", directory)
         rows = File.readlines(File.join(directory, "SHA256SUMS")).map(&:split)
         sha256 = rows.find { |row| row[1] == asset }&.first
       end
@@ -31,6 +31,19 @@ module ReapiSetup
       end
       File.chmod(0o755, destination)
       {"repository" => repository, "release" => release, "asset" => asset, "sha256" => sha256}
+    end
+  end
+
+  def self.download_asset(repository, release, asset, directory)
+    attempts = 0
+    begin
+      attempts += 1
+      run("gh", "release", "download", release, "--repo", repository, "--pattern", asset, "--dir", directory, "--clobber")
+    rescue RuntimeError
+      raise if attempts >= 3
+      warn "Release asset download failed; retrying #{asset} (attempt #{attempts + 1}/3)"
+      sleep attempts
+      retry
     end
   end
 
