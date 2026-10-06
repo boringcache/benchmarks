@@ -29,9 +29,12 @@ module ProjectReport
       variant = inputs["variant"] || inputs["cache_tool"]
       phases = records.select { |record| record.dig("case", "case_id") == item.fetch("id") && (!variant || record["variant"].to_s == variant.to_s) }
       if selection.fetch("workflow") == "native-fresh-benchmark.yml"
+        recipe = NativeCase.resolve(item.dig("execution", "native"), variant)
+        benchmark = recipe.fetch("benchmark_id") + inputs.fetch("benchmark_id_suffix", "")
+        phases = phases.select { |record| record["benchmark"] == benchmark }
         selected_jobs = jobs.select { |job| job.fetch("name").start_with?("#{selection.fetch('label')} /") }
-        FreshReport.reconcile(FreshReport.expected(item.fetch("id")), jobs: selected_jobs, records: phases, run_url: run_url)
-          .map { |value| value.merge("variant" => variant || item.fetch("id")) }
+        FreshReport.reconcile(FreshReport.expected(item.fetch("id"), provider: inputs.fetch("provider", "both")), jobs: selected_jobs, records: phases, run_url: run_url)
+          .map { |value| value.merge("variant" => variant || item.fetch("id"), "runner_class" => inputs.fetch("runner_label", "ubuntu-latest")) }
       else
         providers.product(plan.fetch("phases")).map do |provider, phase|
           matches = phases.select { |record| record.values_at("strategy", "phase") == [provider, phase] }
@@ -46,9 +49,9 @@ module ProjectReport
   end
 
   def self.markdown(observations, project:)
-    lines = ["## #{project} measurements", "", "| Workload | Provider | Phase | State | Output verified | Build (s) | Cache + build (s) | Storage (bytes) |", "| --- | --- | --- | --- | --- | ---: | ---: | ---: |"]
-    observations.sort_by { |value| [value["variant"].to_s, value["strategy"], value["phase"]] }.each do |value|
-      lines << "| #{value['variant'] || project} | #{value['strategy']} | #{value['phase']} | #{value['state']} | #{value['verification']} | #{value.dig('timing', 'build_seconds') || 'unmeasured'} | #{value.dig('timing', 'build_and_reuse_seconds') || 'unmeasured'} | #{value['storage_bytes'] || 'unmeasured'} |"
+    lines = ["## #{project} measurements", "", "| Workload | Runner | Provider | Phase | State | Output verified | Build (s) | Cache + build (s) | Storage (bytes) |", "| --- | --- | --- | --- | --- | --- | ---: | ---: | ---: |"]
+    observations.sort_by { |value| [value["variant"].to_s, value["runner_class"].to_s, value["strategy"], value["phase"]] }.each do |value|
+      lines << "| #{value['variant'] || project} | #{value['runner_class'] || 'unrecorded'} | #{value['strategy']} | #{value['phase']} | #{value['state']} | #{value['verification']} | #{value.dig('timing', 'build_seconds') || 'unmeasured'} | #{value.dig('timing', 'total_seconds') || value.dig('timing', 'build_and_reuse_seconds') || 'unmeasured'} | #{value['storage_bytes'] || 'unmeasured'} |"
     end
     lines += ["", "Publication: unreviewed. Storage without a measurement: unmeasured.", ""]
     lines.join("\n")
