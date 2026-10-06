@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
+const { execFileSync } = require('node:child_process');
 
 function register(core) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'benchmark-evidence-'));
@@ -10,7 +11,20 @@ function register(core) {
   core.setOutput('registry-path', registry);
 }
 
-async function retain(core, artifact) {
+function measureStorage(evidence, source, directory) {
+  const workspace = evidence.phases.restore?.workspace;
+  if (!workspace) return null;
+  const target = path.join(directory, 'storage.json');
+  const script = path.resolve(__dirname, '../../../scripts/benchmark-storage.rb');
+  execFileSync('boringcache', ['ci', 'run', '--oidc-provider', 'github-actions', '--',
+    'ruby', script, source, target], {
+    env: { ...process.env, BORINGCACHE_WORKSPACE: workspace },
+    timeout: 90000, stdio: ['ignore', 'pipe', 'pipe']
+  });
+  return target;
+}
+
+async function retain(core, artifact, measure = measureStorage) {
   const directory = core.getState('evidence-directory');
   const supplied = fs.readFileSync(path.join(directory, 'evidence-path'), 'utf8').trim();
   if (!supplied) {
@@ -36,6 +50,11 @@ async function retain(core, artifact) {
   const target = path.join(directory, name);
   fs.writeFileSync(target, content, { mode: 0o600 });
   await artifact.uploadArtifact(`product-${name.slice(0, -5)}`, [target], directory, { retentionDays: 90 });
+  // Query after the product post step has finished uploading or flushing.
+  const storage = measure(evidence, target, directory);
+  if (storage) {
+    await artifact.uploadArtifact(`storage-${name.slice(0, -5)}`, [storage], directory, { retentionDays: 90 });
+  }
 }
 
 module.exports = { register, retain };

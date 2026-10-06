@@ -58,7 +58,7 @@ class BenchmarkIdentityTest < Minitest::Test
     assert_equal 2, obs.map { |run| run.fetch("series") }.uniq.length
     assert obs.all? { |run| run.dig("series", "phases") == %w[cold commit] }
     record = {"state" => "planned", "cli_version" => "v1.40.0", "channel" => "stable", "ref" => "main", "runs" => runs}
-    assert_equal 31, CadenceDispatch.matrix(record).fetch("include").length
+    assert_equal 34, CadenceDispatch.matrix(record).fetch("include").length
     runs.each { |run| run["state"] = "planned" }
     Dir.mktmpdir do |directory|
       CadenceDispatch.materialize(record, directory: directory)
@@ -66,7 +66,7 @@ class BenchmarkIdentityTest < Minitest::Test
       path = File.join(directory, first.fetch("case_id"), first.fetch("series_id"))
       assert_equal first, BenchmarkSeries.load(path)
       assert File.file?(File.join(path, "report.json"))
-      assert_equal 29, Dir[File.join(directory, "*/*/series.json")].length
+      assert_equal 32, Dir[File.join(directory, "*/*/series.json")].length
     end
     runs.first.fetch("inputs")["sample"] = "2"
     assert_raises(CadenceDispatch::Error) { CadenceDispatch.matrix(record) }

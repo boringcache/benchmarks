@@ -1,6 +1,6 @@
 ---
 name: Native comparison fresh
-run-name: "${{ inputs.case_id }}${{ inputs.variant != '' && format(' / {0}', inputs.variant) || '' }} | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} fresh | ${{ inputs.series_id || github.ref_name }} / sample ${{ inputs.sample || '1' }}"
+run-name: "${{ inputs.case_id }} ${{ inputs.cadence == 'nightly' && 'Nightly' || 'Fresh' }} | ${{ inputs.cli_version }}"
 permissions:
   contents: read
   actions: read
@@ -107,7 +107,9 @@ jobs:
         == 'main' && inputs.runner_label || 'ubuntu-latest' }}"
   report:
     name: "${{ inputs.case_id }} fresh report"
-    needs: [cold, warm]
+    needs:
+    - cold
+    - warm
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -119,9 +121,9 @@ jobs:
         persist-credentials: false
     - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
       with:
-        working-directory: .harness
+        working-directory: ".harness"
     - run: bundle install --jobs 4 --retry 2
-      working-directory: .harness
+      working-directory: ".harness"
     - name: Download the benchmark phase evidence
       uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
       with:
@@ -133,35 +135,48 @@ jobs:
       with:
         pattern: outcome-*
         path: phase-evidence
+    - name: Download post-publication storage measurements
+      if: always()
+      uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        pattern: storage-*
+        path: phase-evidence
     - name: Generate the benchmark report
       if: always()
       env:
-        GH_TOKEN: ${{ github.token }}
-        CASE_ID: ${{ inputs.case_id }}
-        VARIANT: ${{ inputs.variant }}
-        BENCHMARK_SUFFIX: ${{ inputs.benchmark_id_suffix }}
-        BUNDLE_GEMFILE: ${{ github.workspace }}/.harness/Gemfile
+        GH_TOKEN: "${{ github.token }}"
+        CASE_ID: "${{ inputs.case_id }}"
+        VARIANT: "${{ inputs.variant }}"
+        BENCHMARK_SUFFIX: "${{ inputs.benchmark_id_suffix }}"
+        BUNDLE_GEMFILE: "${{ github.workspace }}/.harness/Gemfile"
       run: ruby .harness/scripts/fresh-report.rb report
     - name: Retain run manifest and report
       if: always()
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: fresh-run-report
+        name: fresh-run-report-${{ inputs.case_id }}${{ inputs.variant != '' && format('-{0}',
+          inputs.variant) || '' }}
         path: benchmark-results/
         if-no-files-found: error
     - name: Retain the BoringCache fresh result
-      if: always() && hashFiles('benchmark-results/*-boringcache*-fresh.json') != ''
+      if: always() && hashFiles('benchmark-results/*-boringcache*-fresh.json') !=
+        ''
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: benchmark-${{ env.BENCHMARK_ID }}-boringcache${{ env.BENCHMARK_VARIANT_SUFFIX }}-fresh
-        path: benchmark-results/${{ env.BENCHMARK_ID }}-boringcache${{ env.BENCHMARK_VARIANT_SUFFIX }}-fresh.json
+        name: benchmark-${{ env.BENCHMARK_ID }}-boringcache${{ env.BENCHMARK_VARIANT_SUFFIX
+          }}-fresh
+        path: benchmark-results/${{ env.BENCHMARK_ID }}-boringcache${{ env.BENCHMARK_VARIANT_SUFFIX
+          }}-fresh.json
         if-no-files-found: error
     - name: Retain the GitHub Actions fresh result
-      if: always() && hashFiles('benchmark-results/*-actions-cache*-fresh.json') != ''
+      if: always() && hashFiles('benchmark-results/*-actions-cache*-fresh.json') !=
+        ''
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache${{ env.BENCHMARK_VARIANT_SUFFIX }}-fresh
-        path: benchmark-results/${{ env.BENCHMARK_ID }}-actions-cache${{ env.BENCHMARK_VARIANT_SUFFIX }}-fresh.json
+        name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache${{ env.BENCHMARK_VARIANT_SUFFIX
+          }}-fresh
+        path: benchmark-results/${{ env.BENCHMARK_ID }}-actions-cache${{ env.BENCHMARK_VARIANT_SUFFIX
+          }}-fresh.json
         if-no-files-found: error
     env:
       BENCHMARK_RUNNER_CLASS: ubuntu-latest
@@ -218,6 +233,11 @@ jobs:
         default: ''
         description: Reviewed native workload variant; required when the case declares
           variants.
+      cadence:
+        type: string
+        default: fresh
+        description: Fresh or nightly scheduling; measured phases retain the fresh
+          lane.
   workflow_call:
     inputs:
       expected_identity:
@@ -260,3 +280,8 @@ jobs:
         type: string
         required: false
         default: ''
+      cadence:
+        type: string
+        default: fresh
+        description: Fresh or nightly scheduling; measured phases retain the fresh
+          lane.

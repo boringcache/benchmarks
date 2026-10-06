@@ -1,5 +1,5 @@
-name: Canary Benchmarks
-run-name: Canary benchmark results
+name: Benchmark cadence monitor
+run-name: Benchmark cadence results
 permissions:
   contents: read
   actions: read
@@ -9,7 +9,7 @@ concurrency:
 jobs:
   results:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 30
     env:
       GH_TOKEN: "${{ github.token }}"
     steps:
@@ -19,21 +19,19 @@ jobs:
     - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
     - run: bundle install --jobs 4 --retry 2
     - name: Check repository canaries
-      env:
-        CADENCE_ACTIVE: ${{ vars.BENCHMARK_CADENCE_ACTIVE }}
       run: |
-        if [[ "$CADENCE_ACTIVE" == true ]]; then
-          failed=0
-          for channel in canary stable; do
-            bundle exec ruby scripts/benchmark-cadence.rb --collect --channel "$channel" \
-              --summary "$RUNNER_TEMP/$channel-summary.md" \
-              --output "$RUNNER_TEMP/benchmark-outcomes-$channel.json" || failed=1
-            cat "$RUNNER_TEMP/$channel-summary.md" >> "$GITHUB_STEP_SUMMARY"
-          done
-          exit "$failed"
-        else
-          bundle exec ruby scripts/nightly-canaries.rb --collect --summary "$GITHUB_STEP_SUMMARY" --output "$RUNNER_TEMP/benchmark-outcomes.json"
-        fi
+        failed=0
+        for cadence in daily weekly; do
+          bundle exec ruby scripts/benchmark-cadence.rb --collect --cadence "$cadence" \
+            --summary "$RUNNER_TEMP/$cadence-summary.md" \
+            --output "$RUNNER_TEMP/benchmark-outcomes-$cadence.json" || failed=1
+          cat "$RUNNER_TEMP/$cadence-summary.md" >> "$GITHUB_STEP_SUMMARY"
+        done
+        bundle exec ruby scripts/rolling-monitor.rb \
+          --summary "$RUNNER_TEMP/rolling-summary.md" \
+          --output "$RUNNER_TEMP/benchmark-outcomes-rolling.json" || failed=1
+        cat "$RUNNER_TEMP/rolling-summary.md" >> "$GITHUB_STEP_SUMMARY"
+        exit "$failed"
     - name: Retain collected outcomes
       if: always()
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f

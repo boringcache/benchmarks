@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "benchmark-cases"
+require_relative "benchmark-storage"
 
 module FreshReport
   PROVIDERS = {"actions-cache" => "GitHub Actions", "boringcache" => "BoringCache"}.freeze
@@ -77,6 +78,7 @@ module FreshReport
     if ENV["GITHUB_RUN_ID"]
       outcomes.select! { |value| value["run_id"].to_s == ENV["GITHUB_RUN_ID"] && value["run_attempt"].to_s == ENV.fetch("GITHUB_RUN_ATTEMPT") }
     end
+    records = records.map { |record| BenchmarkStorage.apply(record, payloads.select { |value| value.is_a?(Hash) && value["kind"] == "post-publication-storage" }) }
     observations = reconcile(expected(item.fetch("id")), jobs: jobs, records: records, outcomes: outcomes, run_url: run_url)
     manifest = {"schema_version" => 1, "case_id" => item.fetch("id"), "variant" => variant,
       "run_url" => run_url, "observations" => observations}

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "case_id": "zed",
+  "series_id": "native-mbx-01",
+  "sample": 1,
+  "run_id": "37376777074",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376777074",
+  "source_sha": "82339ba8890435501faceabe8c94fbd6fc29bf79",
+  "github_conclusion": "failure",
+  "status": "failed",
+  "errors": [
+    "Workflow concluded failure",
+    "Cold: target + mbx seed: failure"
+  ],
+  "evidence_manifest_sha256": "f97fdeb64b98ff79cca6890392637083c3d6d20af9f842b65238446f02932ed1"
+}

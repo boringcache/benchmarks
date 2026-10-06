@@ -16,6 +16,10 @@
     },
     {
       "case_id": "mastodon",
+      "variant": "server-ccache"
+    },
+    {
+      "case_id": "mastodon",
       "variant": "streaming"
     },
     {
@@ -23,7 +27,16 @@
       "variant": "layers"
     },
     {
-      "case_id": "storybook"
+      "case_id": "posthog",
+      "variant": "combined"
+    },
+    {
+      "case_id": "storybook",
+      "variant": "archive-sandbox"
+    },
+    {
+      "case_id": "storybook",
+      "variant": "nx"
     },
     {
       "case_id": "opentelemetry-java"

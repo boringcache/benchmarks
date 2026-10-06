@@ -1,0 +1,33 @@
+{
+  "case_id": "grpc",
+  "repository": "boringcache/benchmarks",
+  "workflow": "grpc-grpc-bazel-fresh-benchmark.yml",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "grpc/grpc",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "lane": "fresh",
+  "inputs": {
+    "cli_version": "vcli-canary-7a5b27146ebe",
+    "series_id": "nativelink-r2-fresh-01",
+    "sample": "2"
+  },
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "variants": null,
+  "schema_version": 1,
+  "requested_at": "2026-10-05T18:36:24Z",
+  "ref": "grpc-nativelink",
+  "state": "requested",
+  "run_id": 37357215892,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37357215892"
+}

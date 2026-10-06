@@ -1,0 +1,36 @@
+{
+  "case_id": "msgpack-sbt",
+  "repository": "boringcache/benchmarks",
+  "workflow": "reapi-fresh-benchmark.yml",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "msgpack/msgpack-java",
+    "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+        "kind": "snapshot"
+      }
+    ],
+    "patch": "cache.patch"
+  },
+  "lane": "fresh",
+  "inputs": {
+    "case_id": "msgpack-sbt",
+    "cli_version": "vcli-canary-b26bccd2becb",
+    "series_id": "native-reapi-01",
+    "sample": "1"
+  },
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "variants": null,
+  "schema_version": 1,
+  "requested_at": "2026-10-05T21:34:45Z",
+  "ref": "native-adapter-qualification",
+  "state": "requested",
+  "run_id": 37376766204,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376766204"
+}

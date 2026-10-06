@@ -4,7 +4,7 @@ permissions:
   actions: read
 concurrency:
   group: publish-benchmark-index
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -19,20 +19,20 @@ jobs:
         bundler-cache: true
     - name: Build canonical series catalog
       run: bin/bench catalog
-    - name: Build index JSON
+    - name: Import the latest central monitor receipts
       env:
-        GH_TOKEN: "${{ secrets.BENCHMARKS_READ_TOKEN || secrets.GH_TOKEN || github.token
-          }}"
-        GITHUB_TOKEN: "${{ secrets.BENCHMARKS_READ_TOKEN || secrets.GH_TOKEN || github.token
-          }}"
-      run: 'ruby scripts/publish-index.rb
-
-'
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        run_id="$(gh api 'repos/boringcache/benchmarks/actions/workflows/nightly-canaries.yml/runs?branch=main&status=completed&per_page=20' --jq '.workflow_runs | max_by(.created_at) | .id')"
+        [[ "$run_id" =~ ^[0-9]+$ ]] || { echo "No completed central monitor run" >&2; exit 1; }
+        gh run download "$run_id" --repo boringcache/benchmarks --name benchmark-outcomes --dir "$RUNNER_TEMP/outcomes"
+        ruby scripts/publish-current.rb --input "$RUNNER_TEMP/outcomes" --output data/latest/current.json --history data/observations
+        cp "$RUNNER_TEMP/outcomes/"*.json data/latest/
     - name: Commit and push index
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add data/latest
+        git add data/latest data/observations
         if git diff --cached --quiet; then
           echo "No index changes detected"
           exit 0

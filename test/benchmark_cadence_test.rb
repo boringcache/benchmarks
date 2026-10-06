@@ -123,7 +123,7 @@ class BenchmarkCadenceTest < Minitest::Test
     end
   end
 
-  def test_schedules_require_explicit_cutover_and_preserve_historical_monitoring
+  def test_schedules_require_explicit_cutover_and_monitor_all_central_cadences
     %w[weekly-fresh canary source-sync].each do |name|
       workflow = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/#{name}.yml")))
       job = workflow.fetch("jobs").values.first
@@ -131,7 +131,9 @@ class BenchmarkCadenceTest < Minitest::Test
     end
     workflow = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/nightly-canaries.yml")))
     step = workflow.dig("jobs", "results", "steps").find { |item| item["name"] == "Check repository canaries" }
-    assert_includes step.fetch("run"), 'scripts/nightly-canaries.rb --collect'
+    refute_includes step.fetch("run"), 'scripts/nightly-canaries.rb --collect'
+    assert_includes step.fetch("run"), 'scripts/rolling-monitor.rb'
+    assert_includes step.fetch("run"), 'daily weekly'
     assert_includes step.fetch("run"), 'scripts/benchmark-cadence.rb --collect'
   end
 
@@ -144,18 +146,18 @@ class BenchmarkCadenceTest < Minitest::Test
         runner.dispatch(repository: BenchmarkCases::REPOSITORY, benchmarks: BenchmarkCadence.fresh_targets,
           channel: "stable", output: path, preflight: preflight)
       end
-      assert_includes error.message, "--reapi-port"
+      assert_includes error.message, "native moon"
       assert_empty runner.dispatches
       receipt = JSON.parse(File.read(path))
       assert_equal "dispatch-failed", receipt.fetch("state")
-      assert_equal 31, receipt.fetch("runs").length
+      assert_equal 34, receipt.fetch("runs").length
       assert receipt.fetch("runs").all? { |run| run.fetch("state") == "planned" }
     end
   end
 
   def test_cli_capability_probe_is_required_for_reapi_but_not_other_targets
     runs = [{"workflow" => "reapi-fresh-benchmark.yml"}]
-    assert_nil BenchmarkCadence.verify_cli("v1.34.0", runs, probe: ->(*) { "--reapi-port PORT" })
+    assert_nil BenchmarkCadence.verify_cli("v1.34.0", runs, probe: ->(_version, tool) { "Usage: boringcache #{tool}" })
     assert_nil BenchmarkCadence.verify_cli("v1.33.0", [{"workflow" => "native-fresh-benchmark.yml"}],
       probe: ->(*) { flunk "No REAPI capability is needed" })
   end

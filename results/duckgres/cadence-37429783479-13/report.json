@@ -1,40 +1,823 @@
 {
   "schema_version": 1,
   "plan_sha256": "63eb9c0f35d0d7e0c14e90f6ef410818271e6112c8ae96dbc25947d345a6c559",
-  "complete": false,
+  "complete": true,
   "valid_for_comparison": false,
   "failures": [],
   "methodology_issues": [],
   "execution_verified": false,
-  "missing_completions": [],
+  "missing_completions": [
+    "37429897120"
+  ],
   "failed_completions": [],
   "completions": [],
   "publication": "unreviewed",
   "evidence_preservation": "requires-review",
   "primary_metric": "build_and_reuse_seconds",
-  "missing": [
-    [
-      1,
-      "cold",
-      "boringcache"
-    ],
-    [
-      1,
-      "cold",
-      "actions-cache"
-    ],
-    [
-      1,
-      "warm",
-      "boringcache"
-    ],
-    [
-      1,
-      "warm",
-      "actions-cache"
-    ]
+  "missing": [],
+  "summaries": [
+    {
+      "phase": "cold",
+      "provider": "actions-cache",
+      "count": 1,
+      "measurement": {
+        "median": 353,
+        "min": 353,
+        "max": 353
+      },
+      "storage": null,
+      "storage_measured_count": 0
+    },
+    {
+      "phase": "warm",
+      "provider": "actions-cache",
+      "count": 1,
+      "measurement": {
+        "median": 24,
+        "min": 24,
+        "max": 24
+      },
+      "storage": null,
+      "storage_measured_count": 0
+    },
+    {
+      "phase": "cold",
+      "provider": "boringcache",
+      "count": 1,
+      "measurement": {
+        "median": 241,
+        "min": 241,
+        "max": 241
+      },
+      "storage": {
+        "median": 1881011324,
+        "min": 1881011324,
+        "max": 1881011324
+      },
+      "storage_measured_count": 1
+    },
+    {
+      "phase": "warm",
+      "provider": "boringcache",
+      "count": 1,
+      "measurement": {
+        "median": 20,
+        "min": 20,
+        "max": 20
+      },
+      "storage": {
+        "median": 1881011324,
+        "min": 1881011324,
+        "max": 1881011324
+      },
+      "storage_measured_count": 1
+    }
   ],
-  "summaries": [],
-  "records": [],
+  "records": [
+    {
+      "schema_version": 1,
+      "benchmark": "duckgres",
+      "strategy": "actions-cache",
+      "lane": "fresh",
+      "phase": "cold",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "duckgres",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "d9c3006725f0f0687f3ab346977ef12a3ffd2993c02152213f49afc52d53bda9",
+        "source": {
+          "repository": "PostHog/duckgres",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "12e26cf3a900823cf415d826ab2a9b8f0d57b2a3",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-duckgres",
+          "branch": "main",
+          "revision": "43060b6b39cff5aecd2138b6cf99571f6876d98b"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "duckgres"
+              },
+              "historical_workflow": "duckgres-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "duckgres"
+              },
+              "historical_workflow": "duckgres-fresh-benchmark.yml"
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 5,
+          "native": {
+            "action": ".github/actions/duckgres-docker-benchmark",
+            "benchmark_id": "duckgres",
+            "rolling_inputs": {
+              "load_image": "true"
+            },
+            "environment": {},
+            "fresh_inputs": {
+              "load_image": "true"
+            }
+          },
+          "cache_tags": {
+            "duckgres-docker-local": "{scope}-docker"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 7,
+        "build_seconds": 346,
+        "workflow_seconds": 357,
+        "total_seconds": 353,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 353
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": null,
+        "workspace": null,
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": {
+          "key": "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1",
+          "complete": false,
+          "measured_bytes": 0,
+          "total_bytes": null,
+          "observations": []
+        }
+      },
+      "source": {
+        "repository": "PostHog/duckgres",
+        "sha": "12e26cf3a900823cf415d826ab2a9b8f0d57b2a3"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37429897120",
+        "run_attempt": "1",
+        "job": "cold",
+        "workflow": "Native comparison fresh",
+        "ref_name": "main",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000175315",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37429897120-1",
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "series": {
+        "id": "cadence-37429783479-13",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37429897120"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "duckgres",
+      "strategy": "actions-cache",
+      "lane": "fresh",
+      "phase": "warm",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "duckgres",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "d9c3006725f0f0687f3ab346977ef12a3ffd2993c02152213f49afc52d53bda9",
+        "source": {
+          "repository": "PostHog/duckgres",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "12e26cf3a900823cf415d826ab2a9b8f0d57b2a3",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-duckgres",
+          "branch": "main",
+          "revision": "43060b6b39cff5aecd2138b6cf99571f6876d98b"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "duckgres"
+              },
+              "historical_workflow": "duckgres-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "duckgres"
+              },
+              "historical_workflow": "duckgres-fresh-benchmark.yml"
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 5,
+          "native": {
+            "action": ".github/actions/duckgres-docker-benchmark",
+            "benchmark_id": "duckgres",
+            "rolling_inputs": {
+              "load_image": "true"
+            },
+            "environment": {},
+            "fresh_inputs": {
+              "load_image": "true"
+            }
+          },
+          "cache_tags": {
+            "duckgres-docker-local": "{scope}-docker"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 9,
+        "build_seconds": 15,
+        "workflow_seconds": 28,
+        "total_seconds": 24,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 24
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": null,
+        "workspace": null,
+        "storage_bytes": null,
+        "storage_source": null,
+        "storage_breakdown": {
+          "key": "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1",
+          "complete": false,
+          "measured_bytes": 0,
+          "total_bytes": null,
+          "observations": []
+        }
+      },
+      "source": {
+        "repository": "PostHog/duckgres",
+        "sha": "12e26cf3a900823cf415d826ab2a9b8f0d57b2a3"
+      },
+      "product_refs": {},
+      "action": {
+        "resolved_mode": null,
+        "resolved_tags": null,
+        "trust_state": null,
+        "diagnostics_level": null
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37429897120",
+        "run_attempt": "1",
+        "job": "warm",
+        "workflow": "Native comparison fresh",
+        "ref_name": "main",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000175441",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37429897120-1",
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "series": {
+        "id": "cadence-37429783479-13",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37429897120"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "duckgres",
+      "strategy": "boringcache",
+      "lane": "fresh",
+      "phase": "cold",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "duckgres",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "d9c3006725f0f0687f3ab346977ef12a3ffd2993c02152213f49afc52d53bda9",
+        "source": {
+          "repository": "PostHog/duckgres",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "12e26cf3a900823cf415d826ab2a9b8f0d57b2a3",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-duckgres",
+          "branch": "main",
+          "revision": "43060b6b39cff5aecd2138b6cf99571f6876d98b"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "duckgres"
+              },
+              "historical_workflow": "duckgres-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "duckgres"
+              },
+              "historical_workflow": "duckgres-fresh-benchmark.yml"
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 5,
+          "native": {
+            "action": ".github/actions/duckgres-docker-benchmark",
+            "benchmark_id": "duckgres",
+            "rolling_inputs": {
+              "load_image": "true"
+            },
+            "environment": {},
+            "fresh_inputs": {
+              "load_image": "true"
+            }
+          },
+          "cache_tags": {
+            "duckgres-docker-local": "{scope}-docker"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 241,
+        "workflow_seconds": 247,
+        "total_seconds": 241,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 241
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": {
+          "import_tags": [
+            "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1-docker-linux-amd64",
+            "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1-docker-ubuntu-24-x86_64"
+          ],
+          "planned_import_refs": 2,
+          "export_tag": "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1-docker-linux-amd64"
+        },
+        "tag": "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1-docker",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": 1881011324,
+        "storage_source": "boringcache-check",
+        "storage_breakdown": {
+          "workspace": "boringcache/benchmarks",
+          "tags": [
+            "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1-docker-linux-amd64"
+          ],
+          "complete": true,
+          "measured_bytes": 1881011324,
+          "unmeasured_tags": [],
+          "total_bytes": 1881011324,
+          "observations": [
+            {
+              "requested_tag": "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1-docker-linux-amd64",
+              "tag": "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1-docker-linux-amd64",
+              "status": "hit",
+              "cache_type": "cache_entry",
+              "cache_entry_id": "704b585a-6e75-4e75-a46e-ca8a7605c6ed",
+              "manifest_root_digest": "sha256:327f01553ad9b6e3aefc12f644953ab1bb2c327c863d48e7f169febf5d3ce01c",
+              "kv_total_size": 0,
+              "compressed_size": 1881011324,
+              "size": 1881011324
+            }
+          ]
+        }
+      },
+      "source": {
+        "repository": "PostHog/duckgres",
+        "sha": "12e26cf3a900823cf415d826ab2a9b8f0d57b2a3"
+      },
+      "product_refs": {
+        "schema_version": 1,
+        "cli_version": "1.40.0",
+        "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+        "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+      },
+      "action": {
+        "resolved_mode": "docker",
+        "resolved_tags": [
+          "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1-docker-linux-amd64"
+        ],
+        "trust_state": {
+          "status": "publish",
+          "event_name": "workflow_dispatch",
+          "requested_policy": "publish",
+          "resolved_policy": "publish",
+          "write_allowed": true,
+          "decision_source": "cli",
+          "reason": "explicit_request",
+          "provider": "github-actions",
+          "detail": "Publication updates the published cache tag.",
+          "next_step": "Let the run finish; the next matching run restores what it publishes.",
+          "token_capabilities": {
+            "restore": true,
+            "stage": true,
+            "save": true
+          }
+        },
+        "diagnostics_level": "off"
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37429897120",
+        "run_attempt": "1",
+        "job": "cold",
+        "workflow": "Native comparison fresh",
+        "ref_name": "main",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000175314",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37429897120-1",
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "series": {
+        "id": "cadence-37429783479-13",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37429897120"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "duckgres",
+      "strategy": "boringcache",
+      "lane": "fresh",
+      "phase": "warm",
+      "variant": null,
+      "mode": "docker",
+      "adapter": "oci",
+      "case": {
+        "schema_version": 1,
+        "case_id": "duckgres",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "d9c3006725f0f0687f3ab346977ef12a3ffd2993c02152213f49afc52d53bda9",
+        "source": {
+          "repository": "PostHog/duckgres",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "12e26cf3a900823cf415d826ab2a9b8f0d57b2a3",
+              "kind": "gitlink"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-duckgres",
+          "branch": "main",
+          "revision": "43060b6b39cff5aecd2138b6cf99571f6876d98b"
+        },
+        "verification": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ],
+        "comparison": {
+          "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+          "providers": [
+            "boringcache",
+            "actions-cache"
+          ],
+          "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+          "primary_metric": "build_and_reuse_seconds",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/native-rolling-benchmark.yml",
+              "lane": "rolling",
+              "inputs": {
+                "case_id": "duckgres"
+              },
+              "historical_workflow": "duckgres-benchmark.yml"
+            },
+            {
+              "path": ".github/workflows/native-fresh-benchmark.yml",
+              "lane": "fresh",
+              "inputs": {
+                "case_id": "duckgres"
+              },
+              "historical_workflow": "duckgres-fresh-benchmark.yml"
+            }
+          ],
+          "sync": "upstream-head",
+          "sync_minute": 5,
+          "native": {
+            "action": ".github/actions/duckgres-docker-benchmark",
+            "benchmark_id": "duckgres",
+            "rolling_inputs": {
+              "load_image": "true"
+            },
+            "environment": {},
+            "fresh_inputs": {
+              "load_image": "true"
+            }
+          },
+          "cache_tags": {
+            "duckgres-docker-local": "{scope}-docker"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 20,
+        "workflow_seconds": 24,
+        "total_seconds": 20,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "build_and_reuse_seconds": 20
+      },
+      "cache": {
+        "hit": null,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": {
+          "import_tags": [
+            "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1-docker-linux-amd64",
+            "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1-docker-ubuntu-24-x86_64"
+          ],
+          "planned_import_refs": 2,
+          "export_tag": null
+        },
+        "tag": "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1-docker",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": 1881011324,
+        "storage_source": "boringcache-check",
+        "storage_breakdown": {
+          "workspace": "boringcache/benchmarks",
+          "tags": [
+            "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1-docker-linux-amd64"
+          ],
+          "complete": true,
+          "measured_bytes": 1881011324,
+          "unmeasured_tags": [],
+          "total_bytes": 1881011324,
+          "observations": [
+            {
+              "requested_tag": "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1-docker-linux-amd64",
+              "tag": "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1-docker-linux-amd64",
+              "status": "hit",
+              "cache_type": "cache_entry",
+              "cache_entry_id": "704b585a-6e75-4e75-a46e-ca8a7605c6ed",
+              "manifest_root_digest": "sha256:327f01553ad9b6e3aefc12f644953ab1bb2c327c863d48e7f169febf5d3ce01c",
+              "kv_total_size": 0,
+              "compressed_size": 1881011324,
+              "size": 1881011324
+            }
+          ]
+        }
+      },
+      "source": {
+        "repository": "PostHog/duckgres",
+        "sha": "12e26cf3a900823cf415d826ab2a9b8f0d57b2a3"
+      },
+      "product_refs": {
+        "schema_version": 1,
+        "cli_version": "1.40.0",
+        "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+        "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+      },
+      "action": {
+        "resolved_mode": "docker",
+        "resolved_tags": [
+          "duckgres-series-cadence-37429783479-13-s1-r37429897120-a1-docker-linux-amd64"
+        ],
+        "trust_state": {
+          "status": "restore_only",
+          "event_name": "workflow_dispatch",
+          "requested_policy": "restore",
+          "resolved_policy": "restore",
+          "write_allowed": false,
+          "decision_source": "cli",
+          "reason": "explicit_request",
+          "provider": "github-actions",
+          "detail": "trust-policy is restore.",
+          "next_step": "Use trust-policy stage or publish only when this job is trusted for that operation.",
+          "token_capabilities": {
+            "restore": true,
+            "stage": true,
+            "save": true
+          }
+        },
+        "diagnostics_level": "off"
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37429897120",
+        "run_attempt": "1",
+        "job": "warm",
+        "workflow": "Native comparison fresh",
+        "ref_name": "main",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000175440",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37429897120-1",
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Pinned upstream recipe and build success",
+          "The freshly loaded output image exists in the local Docker image store"
+        ]
+      },
+      "series": {
+        "id": "cadence-37429783479-13",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-latest"
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37429897120"
+      ]
+    }
+  ],
   "exclusions": []
 }

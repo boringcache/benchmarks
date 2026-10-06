@@ -2,6 +2,8 @@
 
 require "minitest/autorun"
 require_relative "../scripts/source-promotion"
+require_relative "../scripts/rolling-monitor"
+require "minitest/mock"
 
 class SourcePromotionTest < Minitest::Test
   VERSION = "vcli-canary-0123456789ab"
@@ -100,20 +102,21 @@ class SourcePromotionTest < Minitest::Test
     assert_raises(SourcePromotion::Error) { SourcePromotion.changes(item, proposal(item).merge("requires_verified_build" => false)) }
   end
 
-  def test_request_failure_retains_other_variants_and_blocks_blind_retry
+  def test_grouped_request_failure_retains_all_variants_and_blocks_blind_retry
     item = BenchmarkCases.load_case("n8n")
     publisher = Publisher.new
-    publisher.fail_request = 2
+    publisher.fail_request = 1
     Dir.mktmpdir do |directory|
       path = File.join(directory, "receipt.json")
       assert_raises(SourcePromotion::Error) { publisher.publish(item, proposal(item), version: VERSION, output: path) }
-      assert_equal 4, publisher.requests.length
+      assert_equal 1, publisher.requests.length
       record = JSON.parse(File.read(path))
       assert_equal "dispatch-failed", record.fetch("state")
-      assert_equal %w[requested request-unknown requested requested], record.fetch("runs").map { |run| run.fetch("state") }
+      assert_equal ["request-unknown"], record.fetch("runs").map { |run| run.fetch("state") }
+      assert_equal 4, record.fetch("runs").first.fetch("selections").length
       assert publisher.saved.first.fetch("changes").key?("cases/n8n/case.json")
       assert_raises(SourcePromotion::Error) { publisher.publish(item, proposal(item), version: VERSION, output: path) }
-      assert_equal 4, publisher.requests.length
+      assert_equal 1, publisher.requests.length
     end
   end
 
@@ -127,7 +130,10 @@ class SourcePromotionTest < Minitest::Test
       assert_equal "requested", publisher.reconcile(item, output: path).fetch("state")
       assert_equal 2, publisher.saved.length
       publisher.outcome = "success"
-      assert_equal "promoted", publisher.reconcile(item, output: path).fetch("state")
+      check = ->(_item, run, **_options) { run.merge("state" => "success") }
+      RollingMonitor.stub(:check_run, check) do
+        assert_equal "promoted", publisher.reconcile(item, output: path).fetch("state")
+      end
       assert publisher.saved.last.fetch("changes").key?("cases/zed/case.json")
       assert publisher.saved.last.fetch("changes").key?("cases/zed/payload/benchmark-source.env")
     end
@@ -140,7 +146,10 @@ class SourcePromotionTest < Minitest::Test
       path = File.join(directory, "receipt.json")
       publisher.publish(item, proposal(item), version: VERSION, output: path)
       publisher.outcome = "failure"
-      assert_equal "failed", publisher.reconcile(item, output: path).fetch("state")
+      check = ->(_item, run, **_options) { run.merge("state" => "failure") }
+      RollingMonitor.stub(:check_run, check) do
+        assert_equal "failed", publisher.reconcile(item, output: path).fetch("state")
+      end
       assert publisher.saved.all? { |entry| entry.fetch("changes").empty? }
       assert_raises(SourcePromotion::Error) { publisher.publish(item, proposal(item), version: VERSION, output: path) }
     end

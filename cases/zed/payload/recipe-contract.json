@@ -16,6 +16,10 @@
     "54edefa0832e4728bcf077e4a48b25912eea5433": {
       "rust-toolchain.toml": "3d9002e97d5c3de93d49a1a36649153da4f40c29b061d0f2e09ea84ee143ba3e",
       "script/bundle-linux": "6c8ceb443cb364259aeadebbfb47dba829cef81fccef304bd19d20724f1f0be7"
+    },
+    "2239fa76b1f32b4f1ea46687bcd2cf6961b7082a": {
+      "rust-toolchain.toml": "3d9002e97d5c3de93d49a1a36649153da4f40c29b061d0f2e09ea84ee143ba3e",
+      "script/bundle-linux": "b2bebd1368af34484603df4c3c27f88a9d309cd34fdd0e691ffaa8de3487bb22"
     }
   }
 }

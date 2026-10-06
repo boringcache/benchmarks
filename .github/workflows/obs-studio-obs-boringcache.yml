@@ -1,6 +1,8 @@
 ---
 name: 'obs-studio: OBS Studio BoringCache benchmark'
-run-name: "obs-studio / ${{ inputs.cache_tool || 'all' }} / BoringCache | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} fresh | ${{ inputs.series_id || github.ref_name }} / sample ${{ inputs.sample || '1' }}"
+run-name: obs-studio / ${{ inputs.cache_tool || 'all' }} / BoringCache | ${{ startsWith(inputs.cli_version,
+  'vcli-canary-') && 'Canary' || 'Stable' }} ${{ inputs.cadence }} | ${{ inputs.series_id
+  || github.ref_name }} / sample ${{ inputs.sample || '1' }}
 permissions:
   actions: read
   contents: read
@@ -444,3 +446,47 @@ jobs:
         type: string
         required: false
         default: '1'
+      cadence:
+        type: string
+        default: fresh
+        description: Fresh or nightly scheduling; measured phases retain the fresh
+          lane.
+  workflow_call:
+    inputs:
+      expected_identity:
+        type: string
+        required: false
+        default: ''
+      cli_version:
+        required: false
+        default: ''
+        type: string
+      cache_tool:
+        required: false
+        type: string
+        default: all
+      source_run_id:
+        required: false
+        default: ''
+        type: string
+      source_run_attempt:
+        required: false
+        default: '1'
+        type: string
+      runner_label:
+        required: false
+        default: ''
+        type: string
+      series_id:
+        type: string
+        required: false
+        default: ''
+      sample:
+        type: string
+        required: false
+        default: '1'
+      cadence:
+        type: string
+        default: fresh
+        description: Fresh or nightly scheduling; measured phases retain the fresh
+          lane.

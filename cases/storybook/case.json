@@ -9,7 +9,7 @@
     "pins": [
       {
         "path": "upstream",
-        "revision": "474a5399b5b2728b562d61ddc952ce4caa750fa0",
+        "revision": "3c97d29c70d3215aab512e678d9c8567356cabd3",
         "kind": "gitlink"
       }
     ]
@@ -27,7 +27,12 @@
         "inputs": {
           "case_id": "storybook"
         },
-        "historical_workflow": "storybook-benchmark.yml"
+        "historical_workflow": "storybook-benchmark.yml",
+        "variant_input": "variant",
+        "variants": [
+          "archive-sandbox",
+          "nx"
+        ]
       },
       {
         "path": ".github/workflows/native-fresh-benchmark.yml",
@@ -35,7 +40,12 @@
         "inputs": {
           "case_id": "storybook"
         },
-        "historical_workflow": "storybook-fresh-benchmark.yml"
+        "historical_workflow": "storybook-fresh-benchmark.yml",
+        "variant_input": "variant",
+        "variants": [
+          "archive-sandbox",
+          "nx"
+        ]
       }
     ],
     "sync": "upstream-head",
@@ -49,11 +59,34 @@
       "environment": {},
       "fresh_inputs": {
         "node_version": "22.22.3"
+      },
+      "variants": {
+        "archive-sandbox": {
+          "fresh_inputs": {
+            "workload": "sandbox"
+          },
+          "rolling_inputs": {
+            "workload": "sandbox"
+          }
+        },
+        "nx": {
+          "benchmark_id": "storybook-nx",
+          "fresh_inputs": {
+            "workload": "nx"
+          },
+          "rolling_inputs": {
+            "workload": "nx"
+          },
+          "environment": {
+            "STORYBOOK_WORKLOAD": "nx"
+          }
+        }
       }
     },
     "cache_tags": {
       "storybook-nx-cache-local": "{scope}-nx-cache",
-      "storybook-nx-workspace-data-local": "{scope}-nx-workspace-data"
+      "storybook-nx-workspace-data-local": "{scope}-nx-workspace-data",
+      "storybook-nx-local": "{scope}-nx"
     }
   },
   "reporting": {
@@ -71,7 +104,7 @@
       "boringcache",
       "actions-cache"
     ],
-    "timed_scope": "Timed Storybook sandbox build plus measured cache restore/setup; dependency installation and sandbox creation are excluded; output checks and unmeasured cache publication are reported separately",
+    "timed_scope": "Timed upstream Storybook sandbox build or production Nx compilation, selected by variant, plus measured cache restore/setup; dependency preparation, output checks and post-job publication are reported separately",
     "primary_metric": "build_and_reuse_seconds",
     "storage": "provider-reported",
     "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
