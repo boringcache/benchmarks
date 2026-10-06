@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "baseline_id": "baseline-20261006",
+  "observation": "seed",
+  "case_id": "deno",
+  "state": "dispatching",
+  "cli_version": "vcli-canary-252077d7b8fb",
+  "created_at": "2026-10-06T13:32:13Z",
+  "proposal": {
+    "case_id": "deno",
+    "base_sha": "7a96f1b3620fd3b6b4cff44093ca1393f341fded",
+    "head_sha": "7a96f1b3620fd3b6b4cff44093ca1393f341fded"
+  },
+  "runs": [
+    {
+      "case_id": "deno",
+      "repository": "boringcache/benchmarks",
+      "workflow": "deno-deno-cargo-rolling-chain.yml",
+      "workspace": "boringcache/benchmarks",
+      "source": {
+        "repository": "denoland/deno",
+        "pins": [
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "17410fd868dd3e7c0a6766e0dd9bc9a37d4da44f",
+            "kind": "env"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "7a96f1b3620fd3b6b4cff44093ca1393f341fded",
+            "kind": "env"
+          }
+        ]
+      },
+      "lane": "rolling",
+      "inputs": {
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "observation": "seed",
+        "base_sha": "7a96f1b3620fd3b6b4cff44093ca1393f341fded",
+        "head_sha": "7a96f1b3620fd3b6b4cff44093ca1393f341fded",
+        "cache_scope": "rolling-baseline-20261006",
+        "cache_profile": "cargo-product"
+      },
+      "phases": [
+        "commit"
+      ],
+      "variants": [
+        "cargo-product",
+        "compiler-only"
+      ],
+      "source_sha": "7a96f1b3620fd3b6b4cff44093ca1393f341fded",
+      "state": "planned"
+    }
+  ]
+}

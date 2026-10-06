@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "baseline_id": "baseline-20261006",
+  "observation": "seed",
+  "case_id": "opentelemetry-java",
+  "state": "dispatching",
+  "cli_version": "vcli-canary-252077d7b8fb",
+  "created_at": "2026-10-06T13:32:13Z",
+  "proposal": {
+    "case_id": "opentelemetry-java",
+    "base_sha": "59581d4103edf5d5b82bf1269ab86a2377f94dbb",
+    "head_sha": "59581d4103edf5d5b82bf1269ab86a2377f94dbb"
+  },
+  "runs": [
+    {
+      "case_id": "opentelemetry-java",
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-rolling-benchmark.yml",
+      "workspace": "boringcache/benchmarks",
+      "source": {
+        "repository": "open-telemetry/opentelemetry-java",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "59581d4103edf5d5b82bf1269ab86a2377f94dbb",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "lane": "rolling",
+      "inputs": {
+        "case_id": "opentelemetry-java",
+        "cache_scope": "baseline-20261006",
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "observation": "seed"
+      },
+      "phases": [
+        "commit"
+      ],
+      "variants": null,
+      "source_sha": "59581d4103edf5d5b82bf1269ab86a2377f94dbb",
+      "state": "planned"
+    }
+  ]
+}

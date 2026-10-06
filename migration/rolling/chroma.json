@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "baseline_id": "baseline-20261006",
+  "observation": "seed",
+  "case_id": "chroma",
+  "state": "dispatching",
+  "cli_version": "vcli-canary-252077d7b8fb",
+  "created_at": "2026-10-06T13:32:13Z",
+  "proposal": {
+    "case_id": "chroma",
+    "base_sha": "e5c22977da46f9410c2e8f2aea54c45d84d29299",
+    "head_sha": "e5c22977da46f9410c2e8f2aea54c45d84d29299"
+  },
+  "runs": [
+    {
+      "case_id": "chroma",
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-rolling-benchmark.yml",
+      "workspace": "boringcache/benchmarks",
+      "source": {
+        "repository": "chroma-core/chroma",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "e5c22977da46f9410c2e8f2aea54c45d84d29299",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "lane": "rolling",
+      "inputs": {
+        "case_id": "chroma",
+        "cache_scope": "baseline-20261006",
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "observation": "seed"
+      },
+      "phases": [
+        "commit"
+      ],
+      "variants": null,
+      "source_sha": "e5c22977da46f9410c2e8f2aea54c45d84d29299",
+      "state": "planned"
+    }
+  ]
+}

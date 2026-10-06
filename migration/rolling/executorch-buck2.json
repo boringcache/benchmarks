@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "baseline_id": "baseline-20261006",
+  "observation": "seed",
+  "case_id": "executorch-buck2",
+  "state": "dispatching",
+  "cli_version": "vcli-canary-252077d7b8fb",
+  "created_at": "2026-10-06T13:32:13Z",
+  "proposal": {
+    "case_id": "executorch-buck2",
+    "base_sha": "ab907e0ca527057c059dbcbfb9bf392bb03ba771",
+    "head_sha": "ab907e0ca527057c059dbcbfb9bf392bb03ba771"
+  },
+  "runs": [
+    {
+      "case_id": "executorch-buck2",
+      "repository": "boringcache/benchmarks",
+      "workflow": "reapi-rolling-benchmark.yml",
+      "workspace": "boringcache/benchmarks",
+      "source": {
+        "repository": "pytorch/executorch",
+        "revision": "ab907e0ca527057c059dbcbfb9bf392bb03ba771",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "ab907e0ca527057c059dbcbfb9bf392bb03ba771"
+          }
+        ],
+        "patch": "cache.patch"
+      },
+      "lane": "rolling",
+      "inputs": {
+        "case_id": "executorch-buck2",
+        "cache_scope": "baseline-20261006",
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "observation": "seed"
+      },
+      "phases": [
+        "commit"
+      ],
+      "variants": null,
+      "source_sha": "ab907e0ca527057c059dbcbfb9bf392bb03ba771",
+      "state": "planned"
+    }
+  ]
+}
