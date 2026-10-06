@@ -18,9 +18,11 @@ module DepotCache
 
   def self.environment(mode, env: ENV)
     raise Error, "Unsupported Depot native cache mode: #{mode}" unless NATIVE.include?(mode)
-    token = env.fetch("DEPOT_TOKEN", "")
+    token = env.fetch("DEPOT_CACHE_TOKEN", "")
+    token = env.fetch("DEPOT_TOKEN", "") if token.empty?
     raise Error, "Depot native cache requires DEPOT_TOKEN" if token.empty?
-    case mode
+    raise Error, "Cache credentials must be single-line" if token.include?("\n") || token.include?("\r")
+    settings = case mode
     when "go" then {"GOCACHEPROG" => "depot gocache --verbose"}
     when "turbo"
       team = env.fetch("DEPOT_ORGANIZATION_ID", "")
@@ -33,6 +35,7 @@ module DepotCache
       {"SCCACHE_GHA_ENABLED" => "false", "SCCACHE_WEBDAV_ENDPOINT" => ENDPOINT, "SCCACHE_WEBDAV_TOKEN" => token, "RUSTC_WRAPPER" => "sccache"}
     else {}
     end
+    settings.merge("DEPOT_TOKEN" => token)
   end
 
   def self.configure(mode, phase:, env: ENV, root: Dir.pwd)
@@ -63,7 +66,7 @@ module DepotCache
       FileUtils.mkdir_p(File.dirname(config))
       extension = File.join(root, "upstream/.mvn/extensions.xml")
       if File.file?(extension)
-        raise Error, "Maven requires the reviewed build-cache extension version" unless File.read(extension).include?("<artifactId>maven-build-cache-extension</artifactId>") && File.read(extension).include?("<version>1.3.0</version>")
+        raise Error, "Maven requires the upstream build-cache extension" unless File.read(extension).include?("<artifactId>maven-build-cache-extension</artifactId>")
       else
         File.write(extension, '<extensions><extension><groupId>org.apache.maven.extensions</groupId><artifactId>maven-build-cache-extension</artifactId><version>1.3.0</version></extension></extensions>')
       end
@@ -109,14 +112,16 @@ module DepotCache
       raise Error, "Depot runners use Depot Cache for the Actions API; select depot-actions-cache explicitly" if provider == "actions-cache"
       if provider == "depot-actions-cache"
         urls = %w[ACTIONS_CACHE_URL ACTIONS_RESULTS_URL].filter_map { |name| URI.parse(env.fetch(name, "")).host }
-        raise Error, "Runner did not expose a Depot Actions cache endpoint" unless urls.any? { |host| host == "depot.dev" || host.end_with?(".depot.dev") }
+        raise Error, "Runner did not expose a Depot Actions cache endpoint; observed hosts: #{urls.join(', ')}" unless urls.any? { |host| host == "depot.dev" || host.end_with?(".depot.dev") }
       end
     end
     FileUtils.mkdir_p(".depot-cache")
     File.write(".depot-cache/configuration.json", JSON.pretty_generate({"provider" => provider,
       "mode" => mode, "protocol" => provider == "depot-cache" ? "native" : "github-actions-cache-api",
       "endpoint_host" => provider == "depot-cache" ? "cache.depot.dev" : urls.find { |host| host == "depot.dev" || host.end_with?(".depot.dev") }, "isolation" => provider == "depot-cache" ? "unmeasured" : "declared-cache-key",
+      "authentication" => provider == "depot-cache" ? (env.fetch("DEPOT_CACHE_TOKEN", "").empty? ? "configured-token" : "job-token") : "actions-runtime",
       "runner_class" => env.fetch("BENCHMARK_RUNNER_CLASS")}) + "\n") if provider.start_with?("depot-")
+    puts "::add-mask::#{settings.fetch('DEPOT_TOKEN')}" if env["GITHUB_ACTIONS"] == "true" && settings["DEPOT_TOKEN"]
     write_environment(settings, env: env)
     settings
   rescue URI::InvalidURIError

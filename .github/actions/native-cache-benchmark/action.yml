@@ -62,12 +62,11 @@ runs:
     shell: bash
     run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
   - name: Select the runner cache provider
-    shell: bash
-    env:
-      CACHE_PROVIDER: ${{ inputs.strategy }}
-      CACHE_MODE: ${{ inputs.command_mode || inputs.mode }}
-      CACHE_PHASE: ${{ inputs.phase }}
-    run: ruby ./scripts/depot-cache.rb
+    uses: ./.github/actions/select-cache-provider
+    with:
+      provider: ${{ inputs.strategy }}
+      mode: ${{ inputs.command_mode || inputs.mode }}
+      phase: ${{ inputs.phase }}
   - name: Restore the GitHub Actions cache
     if: (inputs.strategy == 'actions-cache' || inputs.strategy == 'depot-actions-cache') && inputs.phase == 'publish'
     uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25
