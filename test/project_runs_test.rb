@@ -118,4 +118,22 @@ class ProjectRunsTest < Minitest::Test
     assert_equal "evidence-missing-or-invalid", result.fetch("state")
     assert_equal 4, result.fetch("selections").length
   end
+  def test_rolling_runner_records_are_reconciled_by_exact_benchmark_identity
+    selections = JSON.parse(File.read(File.join(BenchmarkCases::ROOT, "cases/posthog/runner-screen-selections.json")))
+      .map { |selection| selection.merge("workflow" => "native-rolling-benchmark.yml") }
+    records = selections.map do |selection|
+      inputs = selection.fetch("inputs")
+      {"benchmark" => "posthog#{inputs.fetch('benchmark_id_suffix')}", "strategy" => "boringcache", "phase" => "commit",
+        "case" => {"case_id" => "posthog"}, "variant" => "layers", "verification" => {"passed" => true}, "timing" => {"build_seconds" => 7}}
+    end
+    jobs = selections.map do |selection|
+      {"name" => "layers #{selection.dig('inputs', 'runner_label')} / BoringCache posthog commit", "status" => "completed", "conclusion" => "success"}
+    end
+    observations = ProjectReport.observations(records, selections: selections, project: "posthog", lane: "rolling", jobs: jobs, run_url: "https://example.test/run")
+    assert_equal 4, observations.length
+    assert_equal ["succeeded"], observations.map { |value| value.fetch("state") }.uniq
+    assert_equal records.map { |value| value.fetch("benchmark") }, observations.map { |value| value.dig("phase_record", "benchmark") }
+    assert_equal selections.map { |value| value.dig("inputs", "runner_label") }, observations.map { |value| value.fetch("runner_class") }
+  end
+
 end

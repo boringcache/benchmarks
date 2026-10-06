@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
-          ref: ${{ vars.BENCHMARK_CADENCE_ACTIVE == 'true' && github.ref_name == 'main' && 'main' || github.sha }}
+          ref: ${{ (vars.BENCHMARK_CADENCE_ACTIVE == 'true' || contains(fromJSON(vars.BENCHMARK_ACTIVE_CASES || '[]'), inputs.case_id)) && github.ref_name == 'main' && 'main' || github.sha }}
           persist-credentials: false
       - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
       - run: bundle install --jobs 4 --retry 2
@@ -30,7 +30,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           CASE_ID: ${{ inputs.case_id }}
-          BENCHMARK_CADENCE_ACTIVE: ${{ vars.BENCHMARK_CADENCE_ACTIVE }}
+          BENCHMARK_CADENCE_ACTIVE: ${{ (vars.BENCHMARK_CADENCE_ACTIVE == 'true' || contains(fromJSON(vars.BENCHMARK_ACTIVE_CASES || '[]'), inputs.case_id)) }}
         run: |
           if [[ "$BENCHMARK_CADENCE_ACTIVE" == true && "$GITHUB_REF_NAME" == main ]]; then
             ruby scripts/source-promotion.rb --case "$CASE_ID" --project --reconcile \
@@ -58,7 +58,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
-          ref: ${{ vars.BENCHMARK_CADENCE_ACTIVE == 'true' && github.ref_name == 'main' && 'main' || github.sha }}
+          ref: ${{ (vars.BENCHMARK_CADENCE_ACTIVE == 'true' || contains(fromJSON(vars.BENCHMARK_ACTIVE_CASES || '[]'), inputs.case_id)) && github.ref_name == 'main' && 'main' || github.sha }}
           fetch-depth: 0
           persist-credentials: false
       - name: Select the inspected revision from trusted history
@@ -89,7 +89,7 @@ jobs:
   publish:
     name: Prepare rolling runs
     needs: [previous, inspect]
-    if: needs.inspect.outputs.changed == 'true' && vars.BENCHMARK_CADENCE_ACTIVE == 'true' && github.ref_name == 'main'
+    if: needs.inspect.outputs.changed == 'true' && (vars.BENCHMARK_CADENCE_ACTIVE == 'true' || contains(fromJSON(vars.BENCHMARK_ACTIVE_CASES || '[]'), inputs.case_id)) && github.ref_name == 'main'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
@@ -98,7 +98,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
-          ref: ${{ vars.BENCHMARK_CADENCE_ACTIVE == 'true' && github.ref_name == 'main' && 'main' || github.sha }}
+          ref: ${{ (vars.BENCHMARK_CADENCE_ACTIVE == 'true' || contains(fromJSON(vars.BENCHMARK_ACTIVE_CASES || '[]'), inputs.case_id)) && github.ref_name == 'main' && 'main' || github.sha }}
           fetch-depth: 0
           persist-credentials: false
       - name: Select the inspected revision from trusted history
@@ -118,7 +118,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           CASE_ID: ${{ inputs.case_id }}
-          BENCHMARK_CADENCE_ACTIVE: ${{ vars.BENCHMARK_CADENCE_ACTIVE }}
+          BENCHMARK_CADENCE_ACTIVE: ${{ (vars.BENCHMARK_CADENCE_ACTIVE == 'true' || contains(fromJSON(vars.BENCHMARK_ACTIVE_CASES || '[]'), inputs.case_id)) }}
         run: |
           args=()
           if [[ "$BENCHMARK_CADENCE_ACTIVE" == true && "$GITHUB_REF_NAME" == main ]]; then
