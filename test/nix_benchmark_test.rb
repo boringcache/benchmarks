@@ -5,6 +5,22 @@ require "tmpdir"
 require_relative "../scripts/nix-benchmark"
 
 class NixBenchmarkTest < Minitest::Test
+  def test_cache_state_distinguishes_package_substitution_from_a_rebuild
+    baseline = {"outputs" => ["/nix/store/package"], "derivation" => "/nix/store/package.drv"}
+    url = "http://127.0.0.1:22243/nix?trusted=true"
+    restored = NixBenchmark.cache_state(baseline, log: "copying path '/nix/store/package' from 'http://127.0.0.1:22243/nix'...", substituter: url)
+    assert_equal true, restored.fetch("hit")
+    assert_equal "substituted", restored.fetch("operation")
+    built = NixBenchmark.cache_state(baseline, log: "building '/nix/store/package.drv'...", substituter: url)
+    assert_equal false, built.fetch("hit")
+    assert_equal "built", built.fetch("operation")
+    other = NixBenchmark.cache_state(baseline, log: "copying path '/nix/store/package' from 'https://another.cachix.org'...", substituter: url)
+    assert_nil other.fetch("hit")
+    assert_equal "unobserved", other.fetch("operation")
+    dependency = NixBenchmark.cache_state(baseline, log: "building '/nix/store/dependency.drv'...", substituter: url)
+    assert_nil dependency.fetch("hit")
+  end
+
   def test_storage_uses_provider_file_sizes_and_keeps_missing_narinfo_unmeasured
     paths = ["/nix/store/#{'a' * 32}-one", "/nix/store/#{'b' * 32}-two"]
     fetch = ->(url) { {"FileSize" => url.include?('/aaaa') ? "10" : "20", "URL" => url, "NarSize" => "100"} }
