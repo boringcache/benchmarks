@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "case_id": "n8n",
-  "state": "dispatching",
+  "state": "requested",
   "cli_version": "vcli-canary-252077d7b8fb",
   "ref": "main",
   "proposal": {
@@ -21,7 +21,7 @@
         "case_id": "n8n",
         "selections": "[{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"n8n\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"turbo\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"n8n\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"docker\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"n8n\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"runners\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"n8n\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"distroless\"}}]"
       },
-      "state": "requesting",
+      "state": "requested",
       "selections": [
         {
           "repository": "boringcache/benchmarks",
@@ -63,7 +63,9 @@
           },
           "state": "requesting"
         }
-      ]
+      ],
+      "id": 37465056845,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37465056845"
     }
   ]
 }
