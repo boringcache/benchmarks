@@ -1990,5 +1990,17 @@
     "phase_path": "obs-studio-actions-cache-xcode-rolling-commit.json",
     "phase_sha256": "fd8dde64aff4d34ec2a5ba4d7334ac47da9a0348d45063bc7edb90baf6aa89ab",
     "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429963857"
+  },
+  {
+    "run_id": "37429887430",
+    "run_attempt": "1",
+    "case_id": "zed",
+    "series_id": "cadence-37429783479-11",
+    "artifact_id": 11403073764,
+    "artifact_name": "zed-cargo-layers-combined",
+    "artifact_sha256": "54f103712f0ef87e5f0c114f4befe1c8bc9bf17992085d117cae4ab0df5c8188",
+    "phase_path": "home/runner/work/benchmarks/benchmarks/benchmark-results/zed-cargo-layers-boringcache-combined-rolling-commit.json",
+    "phase_sha256": "3ada399c26ae6aefbe18bd2ebbe4ef9c93915ecb33d03b8b4f28f4eecae84711",
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429887430"
   }
 ]

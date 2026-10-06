@@ -1,31 +1,49 @@
 {
   "schema_version": 1,
   "plan_sha256": "b62f2e4041cdd558ef303733347c5559a21bdab388229188f3c0fa0f915060b9",
-  "complete": false,
+  "complete": true,
   "valid_for_comparison": false,
   "failures": [],
   "methodology_issues": [
     "This series does not declare a comparison of provider performance."
   ],
-  "execution_verified": false,
-  "missing_completions": [
-    "37429887430"
-  ],
+  "execution_verified": true,
+  "missing_completions": [],
   "failed_completions": [],
-  "completions": [],
+  "completions": [
+    {
+      "schema_version": 1,
+      "case_id": "zed",
+      "series_id": "cadence-37429783479-11",
+      "sample": 1,
+      "run_id": "37429887430",
+      "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429887430",
+      "source_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+      "github_conclusion": "success",
+      "status": "success",
+      "errors": [],
+      "evidence_manifest_sha256": "6b5f4512df7bd0e6a2a288a2402837be2282c775dcda32ac07942278c9f0580a"
+    }
+  ],
   "publication": "unreviewed",
   "evidence_preservation": "requires-review",
   "primary_metric": "correctness",
-  "missing": [
-    [
-      1,
-      "commit",
-      "boringcache"
-    ]
-  ],
+  "missing": [],
   "summaries": [
     {
       "phase": "cold",
+      "provider": "boringcache",
+      "count": 1,
+      "measurement": null,
+      "storage": {
+        "median": 8997988095,
+        "min": 8997988095,
+        "max": 8997988095
+      },
+      "storage_measured_count": 1
+    },
+    {
+      "phase": "commit",
       "provider": "boringcache",
       "count": 1,
       "measurement": null,
@@ -280,6 +298,280 @@
         "runner_os": "Linux",
         "runner_arch": "X64",
         "runner_name": "GitHub Actions 1000175350",
+        "runner_environment": "github-hosted",
+        "runner_image": "ubuntu24",
+        "runner_image_version": "20260927.320.1"
+      },
+      "run_uid": "gh-37429887430-1",
+      "verification": {
+        "passed": true,
+        "checks": [
+          "Output verification completed before recording this phase"
+        ],
+        "declared_checks": [
+          "Require an empty target",
+          "Checkout the selected Zed source",
+          "Require an empty destination",
+          "Verify the Zed build"
+        ]
+      },
+      "series": {
+        "id": "cadence-37429783479-11",
+        "sample": 1
+      },
+      "environment": {
+        "os": "Linux",
+        "arch": "X64",
+        "image": "ubuntu24",
+        "image_version": "20260927.320.1",
+        "machine": "ubuntu-24.04"
+      },
+      "evidence_links": [
+        "https://github.com/boringcache/benchmarks/actions/runs/37429887430"
+      ]
+    },
+    {
+      "schema_version": 1,
+      "benchmark": "zed-cargo-layers",
+      "strategy": "boringcache",
+      "lane": "rolling",
+      "phase": "commit",
+      "variant": "combined",
+      "mode": "cargo",
+      "adapter": "sccache",
+      "case": {
+        "schema_version": 1,
+        "case_id": "zed",
+        "workspace": "boringcache/benchmarks",
+        "definition_sha256": "11ee8f393e887078996c7720555b0a18522f25c4155982fd6bfecc14a77f2bba",
+        "source": {
+          "repository": "zed-industries/zed",
+          "pins": [
+            {
+              "path": "upstream",
+              "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+              "kind": "gitlink"
+            },
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "35bba8eef7f68b8cc61a6e883e7e041cf24a96cd",
+              "kind": "env"
+            },
+            {
+              "path": "payload/benchmark-source.env",
+              "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+              "kind": "env"
+            },
+            {
+              "path": "payload/cargo-layer-source.env",
+              "revision": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+              "kind": "env"
+            },
+            {
+              "path": "payload/cargo-layer-source.env",
+              "revision": "ee3b5558c581429633937e458fad8d109f29e9ee",
+              "kind": "env"
+            }
+          ]
+        },
+        "origin": {
+          "repository": "boringcache/benchmark-zed",
+          "branch": "main",
+          "revision": "b874b511e77f76aba9618c9a9c7bb3808ee563b1"
+        },
+        "verification": [
+          "Require an empty target",
+          "Checkout the selected Zed source",
+          "Require an empty destination",
+          "Verify the Zed build"
+        ],
+        "comparison": {
+          "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+          "providers": [
+            "boringcache"
+          ],
+          "timed_scope": "The BoringCache Cargo operations, including their restore, build, and publication; output verification and unrelated setup are excluded. The layer proof uses a combined cold seed for each restore-only variant and makes no provider timing comparison.",
+          "primary_metric": "correctness",
+          "storage": "provider-reported",
+          "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+          "sample_count": 10
+        },
+        "execution": {
+          "workflows": [
+            {
+              "path": ".github/workflows/zed-zed-cargo-product.yml",
+              "lane": "fresh",
+              "inputs": {
+                "base_sha": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+                "head_sha": "ee3b5558c581429633937e458fad8d109f29e9ee"
+              },
+              "phases": [
+                "cold",
+                "commit"
+              ],
+              "variants": [
+                "target-only",
+                "sccache-only",
+                "combined"
+              ],
+              "variant_input": "cache_layer"
+            },
+            {
+              "path": ".github/workflows/zed-zed-cargo-rolling-auto.yml",
+              "lane": "rolling",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/zed-zed-cargo-rolling-chain.yml",
+              "lane": "rolling",
+              "inputs": {}
+            },
+            {
+              "path": ".github/workflows/zed-zed-cargo-rolling-manual.yml",
+              "lane": "rolling",
+              "inputs": {}
+            }
+          ],
+          "sync": "verified-pair",
+          "rolling_workflow": ".github/workflows/zed-zed-cargo-rolling-auto.yml",
+          "sync_minute": 28,
+          "source_prefix": "ZED",
+          "cache_tags": {
+            "zed-cargo-rolling-main-cargo": "{scope}-cargo",
+            "zed-sccache-local": "{scope}-sccache",
+            "zed-cargo-registry-local": "{scope}-cargo-registry",
+            "zed-cargo-git-local": "{scope}-cargo-git",
+            "zed-target-local": "{scope}-target"
+          }
+        }
+      },
+      "timing": {
+        "restore_or_setup_seconds": 0,
+        "build_seconds": 3652,
+        "workflow_seconds": null,
+        "total_seconds": 3652,
+        "dependency_setup_seconds": null,
+        "compile_seconds": null,
+        "verification_seconds": null,
+        "save_seconds": null,
+        "comparison_scope": "The BoringCache Cargo operations, including their restore, build, and publication; output verification and unrelated setup are excluded. The layer proof uses a combined cold seed for each restore-only variant and makes no provider timing comparison.",
+        "build_and_reuse_seconds": 3652
+      },
+      "cache": {
+        "hit": true,
+        "sccache_proof": null,
+        "import_ready": null,
+        "import_refs": 0,
+        "docker_plan": null,
+        "tag": "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-target",
+        "workspace": "boringcache/benchmarks",
+        "storage_bytes": 8997988095,
+        "storage_source": "boringcache-check",
+        "storage_breakdown": {
+          "workspace": "boringcache/benchmarks",
+          "tags": [
+            "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-registry-ubuntu-24-x86_64",
+            "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-git-ubuntu-24-x86_64",
+            "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-target-ubuntu-24-x86_64",
+            "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-sccache-ubuntu-24-x86_64"
+          ],
+          "complete": true,
+          "measured_bytes": 8997988095,
+          "unmeasured_tags": [],
+          "total_bytes": 8997988095,
+          "observations": [
+            {
+              "requested_tag": "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-registry-ubuntu-24-x86_64",
+              "tag": "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-registry-ubuntu-24-x86_64",
+              "status": "hit",
+              "cache_type": "cache_entry",
+              "cache_entry_id": "8a686b56-a5cf-41f9-abdb-7d5eb813cbd2",
+              "manifest_root_digest": "sha256:d7917f875018e122f55cc3f64633dcdf4a0ec38c87418bada6c6c42ca75063a8",
+              "kv_total_size": 0,
+              "compressed_size": 209380443,
+              "size": 209380443
+            },
+            {
+              "requested_tag": "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-git-ubuntu-24-x86_64",
+              "tag": "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-git-ubuntu-24-x86_64",
+              "status": "hit",
+              "cache_type": "cache_entry",
+              "cache_entry_id": "c67c0a38-0cac-49f9-8b5e-59ba1f64a5d8",
+              "manifest_root_digest": "sha256:17fee3276b99e9a1dad6c6ace054915837b63b220dd236e50326adc97ede5e51",
+              "kv_total_size": 0,
+              "compressed_size": 509749420,
+              "size": 509749420
+            },
+            {
+              "requested_tag": "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-target-ubuntu-24-x86_64",
+              "tag": "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-target-ubuntu-24-x86_64",
+              "status": "hit",
+              "cache_type": "cache_entry",
+              "cache_entry_id": "e7650a06-b553-4ab5-af6f-052de1a994fe",
+              "manifest_root_digest": "sha256:cc187145a006c68b0b5e861316ae805674ee962a5cbc1ab7fd26abbb39f939bd",
+              "kv_total_size": 0,
+              "compressed_size": 4777030792,
+              "size": 4777030792
+            },
+            {
+              "requested_tag": "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-sccache-ubuntu-24-x86_64",
+              "tag": "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-sccache-ubuntu-24-x86_64",
+              "status": "hit",
+              "cache_type": "kv",
+              "kv_total_size": 3501827440,
+              "compressed_size": 3501827440,
+              "size": 3501827440
+            }
+          ]
+        }
+      },
+      "source": {
+        "repository": "zed-industries/zed",
+        "sha": "ee3b5558c581429633937e458fad8d109f29e9ee"
+      },
+      "product_refs": {
+        "schema_version": 1,
+        "cli_version": "1.40.0",
+        "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+        "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+      },
+      "action": {
+        "resolved_mode": "cargo",
+        "resolved_tags": [
+          "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-registry-ubuntu-24-x86_64",
+          "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-git-ubuntu-24-x86_64",
+          "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-target-ubuntu-24-x86_64",
+          "zed-cargo-layers-series-cadence-37429783479-11-s1-r37429887430-a1-sccache-ubuntu-24-x86_64"
+        ],
+        "trust_state": {
+          "status": "restore_only",
+          "event_name": "workflow_dispatch",
+          "requested_policy": "restore",
+          "resolved_policy": "restore",
+          "write_allowed": false,
+          "decision_source": "cli",
+          "reason": "explicit_request",
+          "provider": "github-actions",
+          "detail": "trust-policy is restore.",
+          "next_step": "Use trust-policy stage or publish only when this job is trusted for that operation.",
+          "token_capabilities": {
+            "restore": true,
+            "stage": true,
+            "save": true
+          }
+        },
+        "diagnostics_level": "summary"
+      },
+      "github": {
+        "repository": "boringcache/benchmarks",
+        "run_id": "37429887430",
+        "run_attempt": "1",
+        "job": "reuse",
+        "workflow": "zed: Zed Cargo layer matrix",
+        "ref_name": "main",
+        "runner_os": "Linux",
+        "runner_arch": "X64",
+        "runner_name": "GitHub Actions 1000175540",
         "runner_environment": "github-hosted",
         "runner_image": "ubuntu24",
         "runner_image_version": "20260927.320.1"
