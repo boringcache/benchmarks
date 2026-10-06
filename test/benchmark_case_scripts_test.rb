@@ -47,6 +47,7 @@ class BenchmarkCaseScriptsTest < Minitest::Test
         _, error, status = run.call(state)
         refute status.success?
         assert_includes error, "selected provider cache"
+        assert_includes error, JSON.generate({state => 1})
       end
       _, error, status = run.call("remote-cache-hit")
       assert status.success?, error

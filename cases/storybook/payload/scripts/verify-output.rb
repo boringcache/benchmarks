@@ -12,7 +12,7 @@ if ENV["STORYBOOK_WORKLOAD"] == "nx"
   states = tasks.map { |task| task.fetch("cacheStatus") }
   if ENV["BENCHMARK_NX_PHASE"] == "warm"
     expected = %w[boringcache depot-cache].include?(ENV.fetch("BENCHMARK_NX_PROVIDER")) ? "remote-cache-hit" : "local-cache-hit"
-    abort "Nx warm tasks did not all use the selected provider cache" unless states.all? { |state| state == expected }
+    abort "Nx warm tasks did not all use the selected provider cache; observed: #{JSON.generate(states.tally)}" unless states.all? { |state| state == expected }
   elsif ENV["BENCHMARK_NX_LANE"] == "fresh"
     abort "Nx cold tasks unexpectedly reused cached output" unless states.all? { |state| state == "cache-miss" }
   end

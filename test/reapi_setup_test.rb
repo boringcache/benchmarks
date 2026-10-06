@@ -5,6 +5,48 @@ require "tmpdir"
 require_relative "../scripts/reapi-setup"
 
 class ReapiSetupTest < Minitest::Test
+  def test_release_download_retries_before_installing_a_checksum_verified_binary
+    Dir.mktmpdir do |directory|
+      attempts = 0
+      binary = "verified executable"
+      download = lambda do |*command|
+        attempts += 1
+        raise "HTTP 500" if attempts == 1
+        File.write(File.join(command[command.index("--dir") + 1], "tool"), binary)
+        true
+      end
+      destination = File.join(directory, "bin/tool")
+      ReapiSetup.stub(:run, download) do
+        ReapiSetup.stub(:sleep, nil) do
+          ReapiSetup.download("owner/tool", "v1.0.0", "tool", "tool", sha256: Digest::SHA256.hexdigest(binary), destination: destination)
+        end
+      end
+      assert_equal 2, attempts
+      assert_equal binary, File.read(destination)
+      assert File.executable?(destination)
+    end
+  end
+
+  def test_release_download_stops_after_three_failures_without_installing_a_binary
+    Dir.mktmpdir do |directory|
+      attempts = 0
+      download = lambda do |*|
+        attempts += 1
+        raise "HTTP 500"
+      end
+      destination = File.join(directory, "bin/tool")
+      ReapiSetup.stub(:run, download) do
+        ReapiSetup.stub(:sleep, nil) do
+          assert_raises(RuntimeError) do
+            ReapiSetup.download("owner/tool", "v1.0.0", "tool", "tool", sha256: "a" * 64, destination: destination)
+          end
+        end
+      end
+      assert_equal 3, attempts
+      refute File.exist?(destination)
+    end
+  end
+
   def test_restored_receipt_is_retained_outside_the_running_store
     with_store do |previous|
       ReapiSetup.rolling_seed

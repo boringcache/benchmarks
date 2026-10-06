@@ -69,10 +69,22 @@ runs:
     env:
       STORYBOOK_WORKLOAD: ${{ inputs.workload }}
       NX_NO_CLOUD: 'true'
+      NX_DAEMON: 'false'
+      NX_SKIP_REMOTE_CACHE: ${{ inputs.workload != 'nx' || (inputs.strategy != 'boringcache' && inputs.strategy != 'depot-cache') }}
+      NX_NATIVE_FILE_LOGGING: nx::native::cache=trace
       NX_CACHE_DIRECTORY: .nx/cache
       BENCHMARK_NX_PHASE: ${{ inputs.phase }}
       BENCHMARK_NX_PROVIDER: ${{ inputs.strategy }}
       BENCHMARK_NX_LANE: ${{ inputs.cache_lane }}
+  - name: Retain Nx task and cache diagnostics
+    if: always() && inputs.workload == 'nx'
+    uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+    with:
+      name: nx-diagnostics-${{ inputs.benchmark_id }}-${{ inputs.strategy }}-${{ inputs.cache_lane }}-${{ inputs.phase }}
+      path: |
+        upstream/.nx/cache/run.json
+        upstream/.nx/workspace-data/nx.log
+      if-no-files-found: warn
 outputs:
   cache_scope:
     description: Published cache cohort
