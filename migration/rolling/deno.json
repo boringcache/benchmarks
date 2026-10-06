@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "case_id": "deno",
-  "state": "requested",
+  "state": "failed",
   "cli_version": "vcli-canary-252077d7b8fb",
   "ref": "main",
   "proposal": {
@@ -30,9 +30,13 @@
         "cache_scope": "rolling-main",
         "cache_profile": "cargo-product"
       },
-      "state": "requested",
+      "state": "failure",
       "id": 37456160200,
-      "url": "https://github.com/boringcache/benchmarks/actions/runs/37456160200"
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37456160200",
+      "outcome": "failure",
+      "evidence_error": "Phase artifacts unavailable: no artifact matches any of the names or patterns provided",
+      "canonical_records": [],
+      "comparison_plan": "declared-series"
     }
   ]
 }
