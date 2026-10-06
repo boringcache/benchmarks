@@ -8,6 +8,42 @@ require "digest"
 # pending and failed work. Website publication remains a separate review.
 module PublishCurrent
   class Publisher < SourcePromotion::Publisher
+    def commit(changes, expected:, message:)
+      unless changes.keys.all? { |path| path.match?(%r{\Adata/(?:latest|observations)/[a-zA-Z0-9_./-]+\.json\z}) && !path.split("/").include?("..") } && (changes.keys - expected.keys).empty?
+        raise SourcePromotion::Error, "Index publication requires protected data files"
+      end
+      blobs = nil
+      20.times do
+        head = api("repos/#{repository}/git/ref/heads/#{branch}").dig("object", "sha")
+        verify_expected(head, expected)
+        blobs ||= changes.map do |path, contents|
+          blob = api("repos/#{repository}/git/blobs", body: {"content" => Base64.strict_encode64(contents), "encoding" => "base64"})
+          {"path" => path, "mode" => "100644", "type" => "blob", "sha" => blob.fetch("sha")}
+        end
+        base = api("repos/#{repository}/git/commits/#{head}").dig("tree", "sha")
+        tree = api("repos/#{repository}/git/trees", body: {"base_tree" => base, "tree" => blobs})
+        created = api("repos/#{repository}/git/commits", body: {"message" => message, "tree" => tree.fetch("sha"), "parents" => [head]})
+        return created.fetch("sha") if advance_ref(created.fetch("sha"))
+        current = api("repos/#{repository}/git/ref/heads/#{branch}").dig("object", "sha")
+        raise SourcePromotion::Error, "Index reference update was rejected" if current == head
+      end
+      raise SourcePromotion::Error, "Index publication could not acquire the current branch head"
+    end
+
+    def advance_ref(sha)
+      output, error, status = Open3.capture3("gh", "api", "repos/#{repository}/git/refs/heads/#{branch}",
+        "--method", "PATCH", "--input", "-", stdin_data: JSON.generate({"sha" => sha, "force" => false}))
+      if status.success?
+        raise SourcePromotion::Error, "Index reference response differs from the requested commit" unless JSON.parse(output).dig("object", "sha") == sha
+        return true
+      end
+      rejected = JSON.parse(output) rescue {}
+      return false if error.include?("HTTP 422") && rejected["message"] == "Update is not a fast forward"
+      current = api("repos/#{repository}/git/ref/heads/#{branch}").dig("object", "sha")
+      return true if current == sha
+      raise SourcePromotion::Error, "GitHub index reference update failed: #{error.strip}"
+    end
+
     def verify_expected(head, expected)
       tree = api("repos/#{repository}/git/trees/#{head}?recursive=1")
       raise BenchmarkCases::Error, "Cannot verify a truncated observation tree" if tree["truncated"]
