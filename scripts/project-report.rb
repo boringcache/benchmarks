@@ -30,7 +30,7 @@ module ProjectReport
       phases = records.select { |record| record.dig("case", "case_id") == item.fetch("id") && (!variant || record["variant"].to_s == variant.to_s) }
       if selection.fetch("workflow") == "native-fresh-benchmark.yml"
         recipe = NativeCase.resolve(item.dig("execution", "native"), variant)
-        benchmark = recipe.fetch("benchmark_id") + inputs.fetch("benchmark_id_suffix", "")
+        benchmark = NativeCase.benchmark_id(recipe, suffix: inputs.fetch("benchmark_id_suffix", ""))
         phases = phases.select { |record| record["benchmark"] == benchmark }
         selected_jobs = jobs.select { |job| job.fetch("name").start_with?("#{selection.fetch('label')} /") }
         FreshReport.reconcile(FreshReport.expected(item.fetch("id"), provider: inputs.fetch("provider", "both")), jobs: selected_jobs, records: phases, run_url: run_url)

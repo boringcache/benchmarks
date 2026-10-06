@@ -222,6 +222,7 @@ module BenchmarkCases
     if item.dig("execution", "native") && File.basename(entry.fetch("path")).start_with?("native-")
       raise Error, "case_id must match the selected case" unless combined["case_id"] == item.fetch("id")
       recipe = NativeCase.resolve(item.dig("execution", "native"), variant || combined["variant"])
+      NativeCase.benchmark_id(recipe, suffix: combined.fetch("benchmark_id_suffix", ""))
       NativeCase.verify_report(recipe, payload: File.join(root, "cases", item.fetch("id"), "payload"), lane: entry.fetch("lane"), shared_root: root)
     end
     revisions = item.fetch("source").fetch("pins").map { |pin| pin.fetch("revision") }

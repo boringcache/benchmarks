@@ -52,7 +52,7 @@ class ProjectRunsTest < Minitest::Test
   def test_runner_group_keeps_each_seed_replay_and_job_result_separate
     selections = %w[depot-ubuntu-24.04-4 namespace-profile-buildkit-4c].map do |label|
       {"workflow" => "native-fresh-benchmark.yml", "inputs" => {"case_id" => "posthog", "variant" => "layers",
-        "provider" => "boringcache", "runner_label" => label, "benchmark_id_suffix" => "-#{label}"}}
+        "provider" => "boringcache", "runner_label" => label, "benchmark_id_suffix" => "-#{label.tr('.', '-')}"}}
     end
     matrix = ProjectRuns.matrix(selections, case_id: "posthog", lane: "fresh")
     assert_equal ["layers depot-ubuntu-24.04-4", "layers namespace-profile-buildkit-4c"], matrix.fetch("native-fresh-benchmark.yml").fetch("include").map { |row| row.fetch("label") }
@@ -74,6 +74,24 @@ class ProjectRunsTest < Minitest::Test
     assert_equal selections.map { |value| value.dig("inputs", "runner_label") }, rows.map { |row| row.fetch("runner_class") }.uniq
     selections.last.fetch("inputs")["benchmark_id_suffix"] = selections.first.dig("inputs", "benchmark_id_suffix")
     assert_raises(RuntimeError) { ProjectRuns.matrix(selections, case_id: "posthog", lane: "fresh") }
+  end
+
+  def test_checked_in_posthog_runner_selections_prepare_distinct_workloads
+    selections = JSON.parse(File.read(File.join(BenchmarkCases::ROOT, "cases/posthog/runner-screen-selections.json")))
+    item = BenchmarkCases.load_case("posthog")
+    identities = Dir.mktmpdir do |root|
+      selections.map.with_index do |selection, index|
+        inputs = selection.fetch("inputs")
+        BenchmarkCases.plan(item, workflow: selection.fetch("workflow"), inputs: inputs)
+        directory = BenchmarkCases.prepare(item, directory: File.join(root, index.to_s), native_lane: "fresh",
+          variant: inputs.fetch("variant"), suffix: inputs.fetch("benchmark_id_suffix"))
+        action = YAML.safe_load_file(File.join(directory, ".github/actions/benchmark-phase/action.yml"))
+        action.dig("runs", "steps", 1, "env", "BENCHMARK_ID")
+      end
+    end
+    assert_equal 4, identities.uniq.length
+    bad = selections.first.fetch("inputs").merge("benchmark_id_suffix" => "-depot-ubuntu-24.04-4")
+    assert_raises(NativeCase::Error) { BenchmarkCases.plan(item, inputs: bad) }
   end
 
   def test_rolling_zed_matrix_preserves_cargo_and_nix_inputs

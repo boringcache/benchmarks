@@ -6,7 +6,7 @@
       "variant": "layers",
       "provider": "boringcache",
       "runner_label": "depot-ubuntu-24.04-4",
-      "benchmark_id_suffix": "-depot-ubuntu-24.04-4"
+      "benchmark_id_suffix": "-depot-ubuntu-24-04-4"
     }
   },
   {
@@ -16,7 +16,7 @@
       "variant": "layers",
       "provider": "boringcache",
       "runner_label": "depot-ubuntu-24.04-8",
-      "benchmark_id_suffix": "-depot-ubuntu-24.04-8"
+      "benchmark_id_suffix": "-depot-ubuntu-24-04-8"
     }
   },
   {
