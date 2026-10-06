@@ -8,11 +8,12 @@
     "base_sha": "7a96f1b3620fd3b6b4cff44093ca1393f341fded",
     "head_sha": "7a96f1b3620fd3b6b4cff44093ca1393f341fded"
   },
-  "state": "failed",
-  "observation": "seed",
-  "created_at": "2026-10-06T18:56:31Z",
-  "previous_receipt": "migration/rolling/deno/pending-37513800863.json",
-  "reason": "Repeat the unstarted health observation in the corrected independent provider queue",
+  "state": "completed",
+  "observation": "replay",
+  "created_at": "2026-10-06T19:07:00Z",
+  "previous_receipt": "migration/rolling/deno/recovery-seed-37515186494.json",
+  "sample_count": 1,
+  "reason": "The declared recovery seed restored existing cache and cannot establish cold behavior. Retain it and verify the same source as an explicit replay.",
   "runs": [
     {
       "case_id": "deno",
@@ -37,7 +38,7 @@
       "lane": "rolling",
       "inputs": {
         "cli_version": "vcli-canary-252077d7b8fb",
-        "observation": "seed",
+        "observation": "replay",
         "base_sha": "7a96f1b3620fd3b6b4cff44093ca1393f341fded",
         "head_sha": "7a96f1b3620fd3b6b4cff44093ca1393f341fded",
         "cache_scope": "rolling-baseline-20261006",
@@ -51,9 +52,9 @@
         "cargo-product",
         "compiler-only"
       ],
-      "state": "evidence-missing-or-invalid",
-      "id": 37515186494,
-      "url": "https://github.com/boringcache/benchmarks/actions/runs/37515186494",
+      "state": "success",
+      "id": 37516531291,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37516531291",
       "outcome": "success",
       "canonical_records": [
         {
@@ -69,7 +70,7 @@
             "schema_version": 1,
             "case_id": "deno",
             "workspace": "boringcache/benchmarks",
-            "definition_sha256": "31f87c9317f4c9cb79538aad36efab78629155c51b567f9fc8e5be98b6697853",
+            "definition_sha256": "a5b5401a8ffa1a59a5140435a37d684d0103a596407e5434300808ac1908cb4d",
             "source": {
               "repository": "denoland/deno",
               "pins": [
@@ -147,9 +148,9 @@
           },
           "timing": {
             "restore_or_setup_seconds": 0,
-            "build_seconds": 122,
-            "workflow_seconds": 186,
-            "total_seconds": 122,
+            "build_seconds": 116,
+            "workflow_seconds": 174,
+            "total_seconds": 116,
             "dependency_setup_seconds": null,
             "compile_seconds": null,
             "verification_seconds": null,
@@ -175,7 +176,7 @@
                 "deno-rust-cache-rolling-baseline-20261006-ubuntu-24-x86_64"
               ],
               "complete": false,
-              "measured_bytes": 4649469074,
+              "measured_bytes": 4649469373,
               "unmeasured_tags": [
                 "deno-cargo-git-db-rolling-baseline-20261006-ubuntu-24-x86_64"
               ],
@@ -214,11 +215,11 @@
                   "tag": "deno-cargo-target-rolling-baseline-20261006-ubuntu-24-x86_64",
                   "status": "hit",
                   "cache_type": "cache_entry",
-                  "cache_entry_id": "43ce1d6c-3406-4996-8fa2-0d5fa1eb4284",
-                  "manifest_root_digest": "sha256:e11da1ea1520d5261c44df0e1b57461a9cdfa2ad99980c648de0496aa294ee14",
+                  "cache_entry_id": "d1fa41a7-ce22-4b2c-ba67-cbd588d4e1e3",
+                  "manifest_root_digest": "sha256:4601680a2d8a679af646027189b822659085392b749b257657523efd44bbcb53",
                   "kv_total_size": 0,
-                  "compressed_size": 2417082497,
-                  "size": 2417082497
+                  "compressed_size": 2417082796,
+                  "size": 2417082796
                 },
                 {
                   "requested_tag": "deno-rust-cache-rolling-baseline-20261006-ubuntu-24-x86_64",
@@ -231,8 +232,8 @@
                 }
               ]
             },
-            "storage_observed_at": "2026-10-06T19:00:24Z",
-            "storage_evidence_file": "boringcache-one-evidence-2077b670594f3025e916d80a02b270c9182829248f31d162e994565d461ee843.json"
+            "storage_observed_at": "2026-10-06T19:10:39Z",
+            "storage_evidence_file": "boringcache-one-evidence-2e848ae1a4c61c6015de3a74420b0658389d638ff5681f4c36613bb57561505b.json"
           },
           "source": {
             "repository": "denoland/deno",
@@ -274,20 +275,20 @@
           },
           "github": {
             "repository": "boringcache/benchmarks",
-            "run_id": "37515186494",
+            "run_id": "37516531291",
             "run_attempt": "1",
             "job": "advance",
             "workflow": "deno: Deno Cargo rolling run",
             "ref_name": "main",
             "runner_os": "Linux",
             "runner_arch": "X64",
-            "runner_name": "GitHub Actions 1000177435",
+            "runner_name": "GitHub Actions 1000177474",
             "runner_environment": "github-hosted",
             "runner_image": "ubuntu24",
             "runner_image_version": "20260927.320.1",
             "runner_class": "ubuntu-24.04"
           },
-          "run_uid": "gh-37515186494-1",
+          "run_uid": "gh-37516531291-1",
           "verification": {
             "passed": true,
             "checks": [
@@ -303,7 +304,7 @@
               "Verify the Deno build"
             ]
           },
-          "observation": "seed",
+          "observation": "replay",
           "original_cache_measurement": {
             "storage_bytes": null,
             "storage_source": null,
@@ -317,7 +318,7 @@
                 "deno-rust-cache-rolling-baseline-20261006-ubuntu-24-x86_64"
               ],
               "complete": false,
-              "measured_bytes": 4649469074,
+              "measured_bytes": 4649469373,
               "unmeasured_tags": [
                 "deno-cargo-git-db-rolling-baseline-20261006-ubuntu-24-x86_64"
               ],
@@ -356,11 +357,11 @@
                   "tag": "deno-cargo-target-rolling-baseline-20261006-ubuntu-24-x86_64",
                   "status": "hit",
                   "cache_type": "cache_entry",
-                  "cache_entry_id": "43ce1d6c-3406-4996-8fa2-0d5fa1eb4284",
-                  "manifest_root_digest": "sha256:e11da1ea1520d5261c44df0e1b57461a9cdfa2ad99980c648de0496aa294ee14",
+                  "cache_entry_id": "d1fa41a7-ce22-4b2c-ba67-cbd588d4e1e3",
+                  "manifest_root_digest": "sha256:4601680a2d8a679af646027189b822659085392b749b257657523efd44bbcb53",
                   "kv_total_size": 0,
-                  "compressed_size": 2417082497,
-                  "size": 2417082497
+                  "compressed_size": 2417082796,
+                  "size": 2417082796
                 },
                 {
                   "requested_tag": "deno-rust-cache-rolling-baseline-20261006-ubuntu-24-x86_64",
