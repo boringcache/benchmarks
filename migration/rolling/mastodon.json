@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "baseline_id": "baseline-20261006",
+  "observation": "seed",
+  "case_id": "mastodon",
+  "state": "dispatching",
+  "cli_version": "vcli-canary-252077d7b8fb",
+  "created_at": "2026-10-06T13:32:13Z",
+  "proposal": {
+    "case_id": "mastodon",
+    "base_sha": "ba40fcf62bf7f2e8a53a7bbed406fc6315b058a0",
+    "head_sha": "ba40fcf62bf7f2e8a53a7bbed406fc6315b058a0"
+  },
+  "runs": [
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "project-rolling.yml",
+      "inputs": {
+        "case_id": "mastodon",
+        "selections": "[{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"mastodon\",\"cache_scope\":\"baseline-20261006\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"observation\":\"seed\",\"variant\":\"server\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"mastodon\",\"cache_scope\":\"baseline-20261006\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"observation\":\"seed\",\"variant\":\"server-ccache\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"mastodon\",\"cache_scope\":\"baseline-20261006\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"observation\":\"seed\",\"variant\":\"streaming\"}}]"
+      },
+      "state": "planned",
+      "selections": [
+        {
+          "case_id": "mastodon",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-rolling-benchmark.yml",
+          "workspace": "boringcache/benchmarks",
+          "source": {
+            "repository": "mastodon/mastodon",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "ba40fcf62bf7f2e8a53a7bbed406fc6315b058a0",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "lane": "rolling",
+          "inputs": {
+            "case_id": "mastodon",
+            "cache_scope": "baseline-20261006",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "observation": "seed",
+            "variant": "server"
+          },
+          "phases": [
+            "commit"
+          ],
+          "variants": [
+            "server",
+            "server-sccache",
+            "streaming",
+            "server-ccache"
+          ],
+          "source_sha": "ba40fcf62bf7f2e8a53a7bbed406fc6315b058a0",
+          "state": "planned"
+        },
+        {
+          "case_id": "mastodon",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-rolling-benchmark.yml",
+          "workspace": "boringcache/benchmarks",
+          "source": {
+            "repository": "mastodon/mastodon",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "ba40fcf62bf7f2e8a53a7bbed406fc6315b058a0",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "lane": "rolling",
+          "inputs": {
+            "case_id": "mastodon",
+            "cache_scope": "baseline-20261006",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "observation": "seed",
+            "variant": "server-ccache"
+          },
+          "phases": [
+            "commit"
+          ],
+          "variants": [
+            "server",
+            "server-sccache",
+            "streaming",
+            "server-ccache"
+          ],
+          "source_sha": "ba40fcf62bf7f2e8a53a7bbed406fc6315b058a0",
+          "state": "planned"
+        },
+        {
+          "case_id": "mastodon",
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-rolling-benchmark.yml",
+          "workspace": "boringcache/benchmarks",
+          "source": {
+            "repository": "mastodon/mastodon",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "ba40fcf62bf7f2e8a53a7bbed406fc6315b058a0",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "lane": "rolling",
+          "inputs": {
+            "case_id": "mastodon",
+            "cache_scope": "baseline-20261006",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "observation": "seed",
+            "variant": "streaming"
+          },
+          "phases": [
+            "commit"
+          ],
+          "variants": [
+            "server",
+            "server-sccache",
+            "streaming",
+            "server-ccache"
+          ],
+          "source_sha": "ba40fcf62bf7f2e8a53a7bbed406fc6315b058a0",
+          "state": "planned"
+        }
+      ]
+    }
+  ]
+}

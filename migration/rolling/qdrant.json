@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "baseline_id": "baseline-20261006",
+  "observation": "seed",
+  "case_id": "qdrant",
+  "state": "dispatching",
+  "cli_version": "vcli-canary-252077d7b8fb",
+  "created_at": "2026-10-06T13:32:13Z",
+  "proposal": {
+    "case_id": "qdrant",
+    "base_sha": "3a15fa96a163ec4e8614a283f9bf489c47f39b25",
+    "head_sha": "3a15fa96a163ec4e8614a283f9bf489c47f39b25"
+  },
+  "runs": [
+    {
+      "case_id": "qdrant",
+      "repository": "boringcache/benchmarks",
+      "workflow": "native-rolling-benchmark.yml",
+      "workspace": "boringcache/benchmarks",
+      "source": {
+        "repository": "qdrant/qdrant",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "3a15fa96a163ec4e8614a283f9bf489c47f39b25",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "lane": "rolling",
+      "inputs": {
+        "case_id": "qdrant",
+        "cache_scope": "baseline-20261006",
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "observation": "seed"
+      },
+      "phases": [
+        "commit"
+      ],
+      "variants": null,
+      "source_sha": "3a15fa96a163ec4e8614a283f9bf489c47f39b25",
+      "state": "planned"
+    }
+  ]
+}
