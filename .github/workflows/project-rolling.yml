@@ -73,7 +73,7 @@ jobs:
       series_id: "${{ matrix.inputs.series_id || '' }}"
       sample: "${{ matrix.inputs.sample || '1' }}"
   zed_zed_cargo_rolling_auto:
-    name: Cargo
+    name: "${{ matrix.label }}"
     needs: select
     if: needs.select.outputs.zed_zed_cargo_rolling_auto != ''
     strategy:
