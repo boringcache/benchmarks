@@ -6,12 +6,12 @@
   "workspace": "boringcache/benchmarks",
   "source": {
     "repository": "zed-industries/zed",
-    "revision": "96837d78cb0f2128c1965716f8df56b8aea59742",
+    "revision": "ba8159b4d324d137e08993d85fb023b484388ede",
     "pins": [
       {
         "path": "proposal.md",
         "kind": "snapshot",
-        "revision": "96837d78cb0f2128c1965716f8df56b8aea59742"
+        "revision": "ba8159b4d324d137e08993d85fb023b484388ede"
       }
     ]
   },
