@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "cadence": "rolling",
+  "collected_at": "2026-10-06T11:25:30Z",
+  "run": {
+    "repository": "boringcache/benchmarks",
+    "workflow": "grpc-grpc-bazel-benchmark.yml",
+    "inputs": {
+      "cli_version": "vcli-canary-252077d7b8fb"
+    },
+    "state": "in_progress",
+    "id": 37456138548,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37456138548"
+  }
+}

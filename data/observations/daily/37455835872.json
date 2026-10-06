@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "cadence": "daily",
+  "collected_at": "2026-10-06T11:24:52Z",
+  "run": {
+    "repository": "boringcache/benchmarks",
+    "workflow": "reapi-fresh-benchmark.yml",
+    "inputs": {
+      "case_id": "msgpack-sbt",
+      "cadence": "nightly",
+      "series_id": "cadence-37455668133-28",
+      "sample": "1",
+      "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"msgpack-sbt\",\"definition_sha256\":\"a4d26f763b0f0eb647d1a8f29d65ae3cb69f9d5eb5fdc3e19e8ac58f77ea5287\"}"
+    },
+    "state": "in_progress",
+    "series": {
+      "schema_version": 1,
+      "case_id": "msgpack-sbt",
+      "series_id": "cadence-37455668133-28",
+      "created_at": "2026-10-06T11:20:53Z",
+      "lane": "fresh",
+      "phases": [
+        "cold",
+        "warm"
+      ],
+      "sample_count": 1,
+      "definition_sha256": "a4d26f763b0f0eb647d1a8f29d65ae3cb69f9d5eb5fdc3e19e8ac58f77ea5287",
+      "variant": null,
+      "workflow_inputs": {
+        "case_id": "msgpack-sbt",
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "cadence": "nightly"
+      },
+      "comparison": {
+        "question": "Does sbt reuse MessagePack compilation and test results on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+        "primary_metric": "correctness",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "msgpack/msgpack-java",
+        "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+            "kind": "snapshot"
+          }
+        ],
+        "patch": "cache.patch"
+      },
+      "verification": [
+        "Require the declared native command to succeed",
+        "Require declared outputs and successful output checks",
+        "Require native remote-hit evidence and the same output hashes on the warm worker",
+        "Require registry shutdown to complete successfully"
+      ],
+      "plan_sha256": "ff7e34ea32759d977badd259be23a3a91062a6759c3125e35a6d171262c90345"
+    },
+    "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+    "id": 37455835872,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37455835872",
+    "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+    "observations": [
+      {
+        "strategy": "boringcache",
+        "phase": "cold",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      },
+      {
+        "strategy": "boringcache",
+        "phase": "warm",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      },
+      {
+        "strategy": "bazel-remote",
+        "phase": "cold",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      },
+      {
+        "strategy": "bazel-remote",
+        "phase": "warm",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      }
+    ]
+  }
+}
