@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "cadence": "daily",
-  "collected_at": "2026-10-06T11:24:52Z",
+  "collected_at": "2026-10-06T12:11:40Z",
   "run": {
     "repository": "boringcache/benchmarks",
     "workflow": "native-fresh-benchmark.yml",
@@ -12,7 +12,7 @@
       "sample": "1",
       "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"opentelemetry-java\",\"definition_sha256\":\"aa4174ae46a94645c609b610b90cf99e5dcdc5518002d80fbe5ed2101a961327\"}"
     },
-    "state": "in_progress",
+    "state": "success",
     "series": {
       "schema_version": 1,
       "case_id": "opentelemetry-java",
@@ -68,14 +68,211 @@
         "strategy": "actions-cache",
         "phase": "cold",
         "job_name": "GitHub Actions opentelemetry-java cold",
-        "state": "in_progress",
-        "job_conclusion": null,
-        "timing": {},
-        "verification": "unrecorded",
-        "storage_bytes": null,
+        "state": "succeeded",
+        "job_conclusion": "success",
+        "timing": {
+          "restore_or_setup_seconds": 0,
+          "build_seconds": 812,
+          "workflow_seconds": 820,
+          "total_seconds": 812,
+          "dependency_setup_seconds": null,
+          "compile_seconds": null,
+          "verification_seconds": null,
+          "save_seconds": null,
+          "comparison_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+          "build_and_reuse_seconds": 812
+        },
+        "verification": true,
+        "storage_bytes": 50717649,
         "errors": [],
-        "phase_record": null,
-        "outcome": null,
+        "phase_record": {
+          "schema_version": 1,
+          "benchmark": "otel-gradle",
+          "strategy": "actions-cache",
+          "lane": "fresh",
+          "phase": "cold",
+          "variant": null,
+          "mode": "gradle",
+          "adapter": "gradle",
+          "case": {
+            "schema_version": 1,
+            "case_id": "opentelemetry-java",
+            "workspace": "boringcache/benchmarks",
+            "definition_sha256": "aa4174ae46a94645c609b610b90cf99e5dcdc5518002d80fbe5ed2101a961327",
+            "source": {
+              "repository": "open-telemetry/opentelemetry-java",
+              "pins": [
+                {
+                  "path": "upstream",
+                  "revision": "a674ff1acea16754a2ed413fb8966084220fbd8b",
+                  "kind": "gitlink"
+                }
+              ]
+            },
+            "origin": {
+              "repository": "boringcache/benchmark-opentelemetry-java",
+              "branch": "main",
+              "revision": "b4694de47a6595986d88a56c45910e832b7053bf"
+            },
+            "verification": [
+              "Pinned upstream recipe and build success"
+            ],
+            "comparison": {
+              "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+              "providers": [
+                "boringcache",
+                "actions-cache"
+              ],
+              "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+              "primary_metric": "build_and_reuse_seconds",
+              "storage": "provider-reported",
+              "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+              "sample_count": 10
+            },
+            "execution": {
+              "workflows": [
+                {
+                  "path": ".github/workflows/native-rolling-benchmark.yml",
+                  "lane": "rolling",
+                  "inputs": {
+                    "case_id": "opentelemetry-java"
+                  },
+                  "historical_workflow": "opentelemetry-java-gradle-benchmark.yml"
+                },
+                {
+                  "path": ".github/workflows/native-fresh-benchmark.yml",
+                  "lane": "fresh",
+                  "inputs": {
+                    "case_id": "opentelemetry-java"
+                  },
+                  "historical_workflow": "opentelemetry-java-gradle-fresh-benchmark.yml"
+                }
+              ],
+              "sync": "upstream-head",
+              "sync_minute": 20,
+              "native": {
+                "action": ".github/actions/opentelemetry-gradle-benchmark",
+                "benchmark_id": "otel-gradle",
+                "rolling_inputs": {
+                  "java_version": "21"
+                },
+                "environment": {
+                  "GRADLE_USER_HOME": "${{ github.workspace }}/.gradle-user-home"
+                },
+                "fresh_inputs": {
+                  "java_version": "21"
+                }
+              },
+              "cache_tags": {
+                "otel-gradle-local": "{scope}-gradle-remote"
+              }
+            }
+          },
+          "timing": {
+            "restore_or_setup_seconds": 0,
+            "build_seconds": 812,
+            "workflow_seconds": 820,
+            "total_seconds": 812,
+            "dependency_setup_seconds": null,
+            "compile_seconds": null,
+            "verification_seconds": null,
+            "save_seconds": null,
+            "comparison_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+            "build_and_reuse_seconds": 812
+          },
+          "cache": {
+            "hit": null,
+            "sccache_proof": null,
+            "import_ready": null,
+            "import_refs": 0,
+            "docker_plan": null,
+            "tag": null,
+            "workspace": null,
+            "storage_bytes": 50717649,
+            "storage_source": "github-actions-cache-api",
+            "storage_breakdown": {
+              "key": "gradle-otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-a674ff1acea16754a2ed413fb8966084220fbd8b",
+              "complete": true,
+              "measured_bytes": 50717649,
+              "total_bytes": 50717649,
+              "observations": [
+                {
+                  "id": 8566499550,
+                  "key": "gradle-otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-a674ff1acea16754a2ed413fb8966084220fbd8b",
+                  "ref": "refs/heads/refs/tags/benchmark-37455668133",
+                  "version": "ca4b9f92e8196ffb8b11714a7714c34e7c28d966642a14b0de5ffe99b949fe3c",
+                  "created_at": "2026-10-06T11:35:28.716254Z",
+                  "last_accessed_at": "2026-10-06T11:35:28.716254Z",
+                  "size_in_bytes": 50717649
+                }
+              ]
+            }
+          },
+          "source": {
+            "repository": "open-telemetry/opentelemetry-java",
+            "sha": "a674ff1acea16754a2ed413fb8966084220fbd8b"
+          },
+          "product_refs": {},
+          "action": {
+            "resolved_mode": null,
+            "resolved_tags": null,
+            "trust_state": null,
+            "diagnostics_level": null
+          },
+          "github": {
+            "repository": "boringcache/benchmarks",
+            "run_id": "37455843189",
+            "run_attempt": "1",
+            "job": "cold",
+            "workflow": "Native comparison fresh",
+            "ref_name": "benchmark-37455668133",
+            "runner_os": "Linux",
+            "runner_arch": "X64",
+            "runner_name": "GitHub Actions 1000175735",
+            "runner_environment": "github-hosted",
+            "runner_image": "ubuntu24",
+            "runner_image_version": "20260927.320.1"
+          },
+          "run_uid": "gh-37455843189-1",
+          "verification": {
+            "passed": true,
+            "checks": [
+              "Output verification completed before recording this phase"
+            ],
+            "declared_checks": [
+              "Pinned upstream recipe and build success"
+            ]
+          },
+          "series": {
+            "id": "cadence-37455668133-11",
+            "sample": 1
+          },
+          "environment": {
+            "os": "Linux",
+            "arch": "X64",
+            "image": "ubuntu24",
+            "image_version": "20260927.320.1",
+            "machine": "ubuntu-latest"
+          },
+          "evidence_links": [
+            "https://github.com/boringcache/benchmarks/actions/runs/37455843189"
+          ]
+        },
+        "outcome": {
+          "strategy": "actions-cache",
+          "phase": "cold",
+          "case_id": "opentelemetry-java",
+          "benchmark_id": "otel-gradle",
+          "variant": "",
+          "run_id": "37455843189",
+          "run_attempt": "1",
+          "step_outcome": "success",
+          "timing": {
+            "build_seconds": 812.0,
+            "restore_or_setup_seconds": 0.0
+          },
+          "verification": true
+        },
         "evidence_links": [
           "https://github.com/boringcache/benchmarks/actions/runs/37455843189/job/112243126647",
           "https://github.com/boringcache/benchmarks/actions/runs/37455843189"
@@ -86,15 +283,213 @@
         "strategy": "actions-cache",
         "phase": "warm",
         "job_name": "GitHub Actions opentelemetry-java warm",
-        "state": "missing",
-        "job_conclusion": null,
-        "timing": {},
-        "verification": "unrecorded",
-        "storage_bytes": null,
+        "state": "succeeded",
+        "job_conclusion": "success",
+        "timing": {
+          "restore_or_setup_seconds": 1,
+          "build_seconds": 147,
+          "workflow_seconds": 157,
+          "total_seconds": 148,
+          "dependency_setup_seconds": null,
+          "compile_seconds": null,
+          "verification_seconds": null,
+          "save_seconds": null,
+          "comparison_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+          "build_and_reuse_seconds": 148
+        },
+        "verification": true,
+        "storage_bytes": 50717649,
         "errors": [],
-        "phase_record": null,
-        "outcome": null,
+        "phase_record": {
+          "schema_version": 1,
+          "benchmark": "otel-gradle",
+          "strategy": "actions-cache",
+          "lane": "fresh",
+          "phase": "warm",
+          "variant": null,
+          "mode": "gradle",
+          "adapter": "gradle",
+          "case": {
+            "schema_version": 1,
+            "case_id": "opentelemetry-java",
+            "workspace": "boringcache/benchmarks",
+            "definition_sha256": "aa4174ae46a94645c609b610b90cf99e5dcdc5518002d80fbe5ed2101a961327",
+            "source": {
+              "repository": "open-telemetry/opentelemetry-java",
+              "pins": [
+                {
+                  "path": "upstream",
+                  "revision": "a674ff1acea16754a2ed413fb8966084220fbd8b",
+                  "kind": "gitlink"
+                }
+              ]
+            },
+            "origin": {
+              "repository": "boringcache/benchmark-opentelemetry-java",
+              "branch": "main",
+              "revision": "b4694de47a6595986d88a56c45910e832b7053bf"
+            },
+            "verification": [
+              "Pinned upstream recipe and build success"
+            ],
+            "comparison": {
+              "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+              "providers": [
+                "boringcache",
+                "actions-cache"
+              ],
+              "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+              "primary_metric": "build_and_reuse_seconds",
+              "storage": "provider-reported",
+              "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+              "sample_count": 10
+            },
+            "execution": {
+              "workflows": [
+                {
+                  "path": ".github/workflows/native-rolling-benchmark.yml",
+                  "lane": "rolling",
+                  "inputs": {
+                    "case_id": "opentelemetry-java"
+                  },
+                  "historical_workflow": "opentelemetry-java-gradle-benchmark.yml"
+                },
+                {
+                  "path": ".github/workflows/native-fresh-benchmark.yml",
+                  "lane": "fresh",
+                  "inputs": {
+                    "case_id": "opentelemetry-java"
+                  },
+                  "historical_workflow": "opentelemetry-java-gradle-fresh-benchmark.yml"
+                }
+              ],
+              "sync": "upstream-head",
+              "sync_minute": 20,
+              "native": {
+                "action": ".github/actions/opentelemetry-gradle-benchmark",
+                "benchmark_id": "otel-gradle",
+                "rolling_inputs": {
+                  "java_version": "21"
+                },
+                "environment": {
+                  "GRADLE_USER_HOME": "${{ github.workspace }}/.gradle-user-home"
+                },
+                "fresh_inputs": {
+                  "java_version": "21"
+                }
+              },
+              "cache_tags": {
+                "otel-gradle-local": "{scope}-gradle-remote"
+              }
+            }
+          },
+          "timing": {
+            "restore_or_setup_seconds": 1,
+            "build_seconds": 147,
+            "workflow_seconds": 157,
+            "total_seconds": 148,
+            "dependency_setup_seconds": null,
+            "compile_seconds": null,
+            "verification_seconds": null,
+            "save_seconds": null,
+            "comparison_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+            "build_and_reuse_seconds": 148
+          },
+          "cache": {
+            "hit": true,
+            "sccache_proof": null,
+            "import_ready": null,
+            "import_refs": 0,
+            "docker_plan": null,
+            "tag": null,
+            "workspace": null,
+            "storage_bytes": 50717649,
+            "storage_source": "github-actions-cache-api",
+            "storage_breakdown": {
+              "key": "gradle-otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-a674ff1acea16754a2ed413fb8966084220fbd8b",
+              "complete": true,
+              "measured_bytes": 50717649,
+              "total_bytes": 50717649,
+              "observations": [
+                {
+                  "id": 8566499550,
+                  "key": "gradle-otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-a674ff1acea16754a2ed413fb8966084220fbd8b",
+                  "ref": "refs/heads/refs/tags/benchmark-37455668133",
+                  "version": "ca4b9f92e8196ffb8b11714a7714c34e7c28d966642a14b0de5ffe99b949fe3c",
+                  "created_at": "2026-10-06T11:35:28.716254Z",
+                  "last_accessed_at": "2026-10-06T11:36:06.843999Z",
+                  "size_in_bytes": 50717649
+                }
+              ]
+            }
+          },
+          "source": {
+            "repository": "open-telemetry/opentelemetry-java",
+            "sha": "a674ff1acea16754a2ed413fb8966084220fbd8b"
+          },
+          "product_refs": {},
+          "action": {
+            "resolved_mode": null,
+            "resolved_tags": null,
+            "trust_state": null,
+            "diagnostics_level": null
+          },
+          "github": {
+            "repository": "boringcache/benchmarks",
+            "run_id": "37455843189",
+            "run_attempt": "1",
+            "job": "warm",
+            "workflow": "Native comparison fresh",
+            "ref_name": "benchmark-37455668133",
+            "runner_os": "Linux",
+            "runner_arch": "X64",
+            "runner_name": "GitHub Actions 1000176256",
+            "runner_environment": "github-hosted",
+            "runner_image": "ubuntu24",
+            "runner_image_version": "20260927.320.1"
+          },
+          "run_uid": "gh-37455843189-1",
+          "verification": {
+            "passed": true,
+            "checks": [
+              "Output verification completed before recording this phase"
+            ],
+            "declared_checks": [
+              "Pinned upstream recipe and build success"
+            ]
+          },
+          "series": {
+            "id": "cadence-37455668133-11",
+            "sample": 1
+          },
+          "environment": {
+            "os": "Linux",
+            "arch": "X64",
+            "image": "ubuntu24",
+            "image_version": "20260927.320.1",
+            "machine": "ubuntu-latest"
+          },
+          "evidence_links": [
+            "https://github.com/boringcache/benchmarks/actions/runs/37455843189"
+          ]
+        },
+        "outcome": {
+          "strategy": "actions-cache",
+          "phase": "warm",
+          "case_id": "opentelemetry-java",
+          "benchmark_id": "otel-gradle",
+          "variant": "",
+          "run_id": "37455843189",
+          "run_attempt": "1",
+          "step_outcome": "success",
+          "timing": {
+            "build_seconds": 147.0,
+            "restore_or_setup_seconds": 1.0
+          },
+          "verification": true
+        },
         "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455843189/job/112248333315",
           "https://github.com/boringcache/benchmarks/actions/runs/37455843189"
         ]
       },
@@ -103,14 +498,265 @@
         "strategy": "boringcache",
         "phase": "cold",
         "job_name": "BoringCache opentelemetry-java cold",
-        "state": "in_progress",
-        "job_conclusion": null,
-        "timing": {},
-        "verification": "unrecorded",
-        "storage_bytes": null,
+        "state": "succeeded",
+        "job_conclusion": "success",
+        "timing": {
+          "restore_or_setup_seconds": 4,
+          "build_seconds": 690,
+          "workflow_seconds": 701,
+          "total_seconds": 694,
+          "dependency_setup_seconds": null,
+          "compile_seconds": null,
+          "verification_seconds": null,
+          "save_seconds": null,
+          "comparison_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+          "build_and_reuse_seconds": 694
+        },
+        "verification": true,
+        "storage_bytes": 51253234,
         "errors": [],
-        "phase_record": null,
-        "outcome": null,
+        "phase_record": {
+          "schema_version": 1,
+          "benchmark": "otel-gradle",
+          "strategy": "boringcache",
+          "lane": "fresh",
+          "phase": "cold",
+          "variant": null,
+          "mode": "gradle",
+          "adapter": "gradle",
+          "case": {
+            "schema_version": 1,
+            "case_id": "opentelemetry-java",
+            "workspace": "boringcache/benchmarks",
+            "definition_sha256": "aa4174ae46a94645c609b610b90cf99e5dcdc5518002d80fbe5ed2101a961327",
+            "source": {
+              "repository": "open-telemetry/opentelemetry-java",
+              "pins": [
+                {
+                  "path": "upstream",
+                  "revision": "a674ff1acea16754a2ed413fb8966084220fbd8b",
+                  "kind": "gitlink"
+                }
+              ]
+            },
+            "origin": {
+              "repository": "boringcache/benchmark-opentelemetry-java",
+              "branch": "main",
+              "revision": "b4694de47a6595986d88a56c45910e832b7053bf"
+            },
+            "verification": [
+              "Pinned upstream recipe and build success"
+            ],
+            "comparison": {
+              "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+              "providers": [
+                "boringcache",
+                "actions-cache"
+              ],
+              "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+              "primary_metric": "build_and_reuse_seconds",
+              "storage": "provider-reported",
+              "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+              "sample_count": 10
+            },
+            "execution": {
+              "workflows": [
+                {
+                  "path": ".github/workflows/native-rolling-benchmark.yml",
+                  "lane": "rolling",
+                  "inputs": {
+                    "case_id": "opentelemetry-java"
+                  },
+                  "historical_workflow": "opentelemetry-java-gradle-benchmark.yml"
+                },
+                {
+                  "path": ".github/workflows/native-fresh-benchmark.yml",
+                  "lane": "fresh",
+                  "inputs": {
+                    "case_id": "opentelemetry-java"
+                  },
+                  "historical_workflow": "opentelemetry-java-gradle-fresh-benchmark.yml"
+                }
+              ],
+              "sync": "upstream-head",
+              "sync_minute": 20,
+              "native": {
+                "action": ".github/actions/opentelemetry-gradle-benchmark",
+                "benchmark_id": "otel-gradle",
+                "rolling_inputs": {
+                  "java_version": "21"
+                },
+                "environment": {
+                  "GRADLE_USER_HOME": "${{ github.workspace }}/.gradle-user-home"
+                },
+                "fresh_inputs": {
+                  "java_version": "21"
+                }
+              },
+              "cache_tags": {
+                "otel-gradle-local": "{scope}-gradle-remote"
+              }
+            }
+          },
+          "timing": {
+            "restore_or_setup_seconds": 4,
+            "build_seconds": 690,
+            "workflow_seconds": 701,
+            "total_seconds": 694,
+            "dependency_setup_seconds": null,
+            "compile_seconds": null,
+            "verification_seconds": null,
+            "save_seconds": null,
+            "comparison_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+            "build_and_reuse_seconds": 694
+          },
+          "cache": {
+            "hit": false,
+            "sccache_proof": null,
+            "import_ready": null,
+            "import_refs": 0,
+            "docker_plan": null,
+            "tag": "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote",
+            "workspace": "boringcache/benchmarks",
+            "storage_bytes": 51253234,
+            "storage_source": "boringcache-check",
+            "storage_breakdown": {
+              "workspace": "boringcache/benchmarks",
+              "tags": [
+                "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote"
+              ],
+              "complete": true,
+              "measured_bytes": 51253234,
+              "unmeasured_tags": [],
+              "total_bytes": 51253234,
+              "observations": [
+                {
+                  "requested_tag": "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote",
+                  "tag": "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote",
+                  "status": "hit",
+                  "cache_type": "kv",
+                  "kv_total_size": 51253234,
+                  "compressed_size": 51253234,
+                  "size": 51253234
+                }
+              ]
+            },
+            "storage_observed_at": "2026-10-06T11:38:36Z",
+            "storage_evidence_file": "boringcache-one-evidence-2706d60c148cd99dc63b324e9153b8d4016b8550e69dd507a5d64eeb67327f7d.json"
+          },
+          "source": {
+            "repository": "open-telemetry/opentelemetry-java",
+            "sha": "a674ff1acea16754a2ed413fb8966084220fbd8b"
+          },
+          "product_refs": {
+            "schema_version": 1,
+            "cli_version": "1.40.0",
+            "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+            "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+          },
+          "action": {
+            "resolved_mode": "gradle",
+            "resolved_tags": [
+              "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote"
+            ],
+            "trust_state": {
+              "status": "publish",
+              "event_name": "workflow_dispatch",
+              "requested_policy": "publish",
+              "resolved_policy": "publish",
+              "write_allowed": true,
+              "decision_source": "cli",
+              "reason": "explicit_request",
+              "provider": "github-actions",
+              "detail": "Publication updates the published cache tag.",
+              "next_step": "Let the run finish; the next matching run restores what it publishes.",
+              "token_capabilities": {
+                "restore": true,
+                "stage": true,
+                "save": true
+              }
+            },
+            "diagnostics_level": "off"
+          },
+          "github": {
+            "repository": "boringcache/benchmarks",
+            "run_id": "37455843189",
+            "run_attempt": "1",
+            "job": "cold",
+            "workflow": "Native comparison fresh",
+            "ref_name": "benchmark-37455668133",
+            "runner_os": "Linux",
+            "runner_arch": "X64",
+            "runner_name": "GitHub Actions 1000175736",
+            "runner_environment": "github-hosted",
+            "runner_image": "ubuntu24",
+            "runner_image_version": "20260927.320.1"
+          },
+          "run_uid": "gh-37455843189-1",
+          "verification": {
+            "passed": true,
+            "checks": [
+              "Output verification completed before recording this phase"
+            ],
+            "declared_checks": [
+              "Pinned upstream recipe and build success"
+            ]
+          },
+          "series": {
+            "id": "cadence-37455668133-11",
+            "sample": 1
+          },
+          "environment": {
+            "os": "Linux",
+            "arch": "X64",
+            "image": "ubuntu24",
+            "image_version": "20260927.320.1",
+            "machine": "ubuntu-latest"
+          },
+          "evidence_links": [
+            "https://github.com/boringcache/benchmarks/actions/runs/37455843189"
+          ],
+          "original_cache_measurement": {
+            "storage_bytes": 51133385,
+            "storage_source": "boringcache-check",
+            "storage_breakdown": {
+              "workspace": "boringcache/benchmarks",
+              "tags": [
+                "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote"
+              ],
+              "complete": true,
+              "measured_bytes": 51133385,
+              "unmeasured_tags": [],
+              "total_bytes": 51133385,
+              "observations": [
+                {
+                  "requested_tag": "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote",
+                  "tag": "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote",
+                  "status": "hit",
+                  "cache_type": "kv",
+                  "kv_total_size": 51133385,
+                  "compressed_size": 51133385,
+                  "size": 51133385
+                }
+              ]
+            }
+          }
+        },
+        "outcome": {
+          "strategy": "boringcache",
+          "phase": "cold",
+          "case_id": "opentelemetry-java",
+          "benchmark_id": "otel-gradle",
+          "variant": "",
+          "run_id": "37455843189",
+          "run_attempt": "1",
+          "step_outcome": "success",
+          "timing": {
+            "build_seconds": 690.0,
+            "restore_or_setup_seconds": 4.0
+          },
+          "verification": true
+        },
         "evidence_links": [
           "https://github.com/boringcache/benchmarks/actions/runs/37455843189/job/112243126910",
           "https://github.com/boringcache/benchmarks/actions/runs/37455843189"
@@ -121,15 +767,267 @@
         "strategy": "boringcache",
         "phase": "warm",
         "job_name": "BoringCache opentelemetry-java warm",
-        "state": "missing",
-        "job_conclusion": null,
-        "timing": {},
-        "verification": "unrecorded",
-        "storage_bytes": null,
+        "state": "succeeded",
+        "job_conclusion": "success",
+        "timing": {
+          "restore_or_setup_seconds": 5,
+          "build_seconds": 144,
+          "workflow_seconds": 156,
+          "total_seconds": 149,
+          "dependency_setup_seconds": null,
+          "compile_seconds": null,
+          "verification_seconds": null,
+          "save_seconds": null,
+          "comparison_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+          "build_and_reuse_seconds": 149
+        },
+        "verification": true,
+        "storage_bytes": 51253234,
         "errors": [],
-        "phase_record": null,
-        "outcome": null,
+        "phase_record": {
+          "schema_version": 1,
+          "benchmark": "otel-gradle",
+          "strategy": "boringcache",
+          "lane": "fresh",
+          "phase": "warm",
+          "variant": null,
+          "mode": "gradle",
+          "adapter": "gradle",
+          "case": {
+            "schema_version": 1,
+            "case_id": "opentelemetry-java",
+            "workspace": "boringcache/benchmarks",
+            "definition_sha256": "aa4174ae46a94645c609b610b90cf99e5dcdc5518002d80fbe5ed2101a961327",
+            "source": {
+              "repository": "open-telemetry/opentelemetry-java",
+              "pins": [
+                {
+                  "path": "upstream",
+                  "revision": "a674ff1acea16754a2ed413fb8966084220fbd8b",
+                  "kind": "gitlink"
+                }
+              ]
+            },
+            "origin": {
+              "repository": "boringcache/benchmark-opentelemetry-java",
+              "branch": "main",
+              "revision": "b4694de47a6595986d88a56c45910e832b7053bf"
+            },
+            "verification": [
+              "Pinned upstream recipe and build success"
+            ],
+            "comparison": {
+              "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+              "providers": [
+                "boringcache",
+                "actions-cache"
+              ],
+              "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+              "primary_metric": "build_and_reuse_seconds",
+              "storage": "provider-reported",
+              "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+              "sample_count": 10
+            },
+            "execution": {
+              "workflows": [
+                {
+                  "path": ".github/workflows/native-rolling-benchmark.yml",
+                  "lane": "rolling",
+                  "inputs": {
+                    "case_id": "opentelemetry-java"
+                  },
+                  "historical_workflow": "opentelemetry-java-gradle-benchmark.yml"
+                },
+                {
+                  "path": ".github/workflows/native-fresh-benchmark.yml",
+                  "lane": "fresh",
+                  "inputs": {
+                    "case_id": "opentelemetry-java"
+                  },
+                  "historical_workflow": "opentelemetry-java-gradle-fresh-benchmark.yml"
+                }
+              ],
+              "sync": "upstream-head",
+              "sync_minute": 20,
+              "native": {
+                "action": ".github/actions/opentelemetry-gradle-benchmark",
+                "benchmark_id": "otel-gradle",
+                "rolling_inputs": {
+                  "java_version": "21"
+                },
+                "environment": {
+                  "GRADLE_USER_HOME": "${{ github.workspace }}/.gradle-user-home"
+                },
+                "fresh_inputs": {
+                  "java_version": "21"
+                }
+              },
+              "cache_tags": {
+                "otel-gradle-local": "{scope}-gradle-remote"
+              }
+            }
+          },
+          "timing": {
+            "restore_or_setup_seconds": 5,
+            "build_seconds": 144,
+            "workflow_seconds": 156,
+            "total_seconds": 149,
+            "dependency_setup_seconds": null,
+            "compile_seconds": null,
+            "verification_seconds": null,
+            "save_seconds": null,
+            "comparison_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+            "build_and_reuse_seconds": 149
+          },
+          "cache": {
+            "hit": true,
+            "sccache_proof": null,
+            "import_ready": null,
+            "import_refs": 0,
+            "docker_plan": null,
+            "tag": "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote",
+            "workspace": "boringcache/benchmarks",
+            "storage_bytes": 51253234,
+            "storage_source": "boringcache-check",
+            "storage_breakdown": {
+              "workspace": "boringcache/benchmarks",
+              "tags": [
+                "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote"
+              ],
+              "complete": true,
+              "measured_bytes": 51253234,
+              "unmeasured_tags": [],
+              "total_bytes": 51253234,
+              "observations": [
+                {
+                  "requested_tag": "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote",
+                  "tag": "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote",
+                  "status": "hit",
+                  "cache_type": "kv",
+                  "kv_total_size": 51253234,
+                  "compressed_size": 51253234,
+                  "size": 51253234
+                }
+              ]
+            },
+            "storage_observed_at": "2026-10-06T11:38:36Z",
+            "storage_evidence_file": "boringcache-one-evidence-2706d60c148cd99dc63b324e9153b8d4016b8550e69dd507a5d64eeb67327f7d.json"
+          },
+          "source": {
+            "repository": "open-telemetry/opentelemetry-java",
+            "sha": "a674ff1acea16754a2ed413fb8966084220fbd8b"
+          },
+          "product_refs": {
+            "schema_version": 1,
+            "cli_version": "1.40.0",
+            "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+            "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+          },
+          "action": {
+            "resolved_mode": "gradle",
+            "resolved_tags": [
+              "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote"
+            ],
+            "trust_state": {
+              "status": "restore_only",
+              "event_name": "workflow_dispatch",
+              "requested_policy": "restore",
+              "resolved_policy": "restore",
+              "write_allowed": false,
+              "decision_source": "cli",
+              "reason": "explicit_request",
+              "provider": "github-actions",
+              "detail": "trust-policy is restore.",
+              "next_step": "Use trust-policy stage or publish only when this job is trusted for that operation.",
+              "token_capabilities": {
+                "restore": true,
+                "stage": true,
+                "save": true
+              }
+            },
+            "diagnostics_level": "off"
+          },
+          "github": {
+            "repository": "boringcache/benchmarks",
+            "run_id": "37455843189",
+            "run_attempt": "1",
+            "job": "warm",
+            "workflow": "Native comparison fresh",
+            "ref_name": "benchmark-37455668133",
+            "runner_os": "Linux",
+            "runner_arch": "X64",
+            "runner_name": "GitHub Actions 1000176257",
+            "runner_environment": "github-hosted",
+            "runner_image": "ubuntu24",
+            "runner_image_version": "20260927.320.1"
+          },
+          "run_uid": "gh-37455843189-1",
+          "verification": {
+            "passed": true,
+            "checks": [
+              "Output verification completed before recording this phase"
+            ],
+            "declared_checks": [
+              "Pinned upstream recipe and build success"
+            ]
+          },
+          "series": {
+            "id": "cadence-37455668133-11",
+            "sample": 1
+          },
+          "environment": {
+            "os": "Linux",
+            "arch": "X64",
+            "image": "ubuntu24",
+            "image_version": "20260927.320.1",
+            "machine": "ubuntu-latest"
+          },
+          "evidence_links": [
+            "https://github.com/boringcache/benchmarks/actions/runs/37455843189"
+          ],
+          "original_cache_measurement": {
+            "storage_bytes": 51253234,
+            "storage_source": "boringcache-check",
+            "storage_breakdown": {
+              "workspace": "boringcache/benchmarks",
+              "tags": [
+                "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote"
+              ],
+              "complete": true,
+              "measured_bytes": 51253234,
+              "unmeasured_tags": [],
+              "total_bytes": 51253234,
+              "observations": [
+                {
+                  "requested_tag": "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote",
+                  "tag": "otel-gradle-series-cadence-37455668133-11-s1-r37455843189-a1-gradle-remote",
+                  "status": "hit",
+                  "cache_type": "kv",
+                  "kv_total_size": 51253234,
+                  "compressed_size": 51253234,
+                  "size": 51253234
+                }
+              ]
+            }
+          }
+        },
+        "outcome": {
+          "strategy": "boringcache",
+          "phase": "warm",
+          "case_id": "opentelemetry-java",
+          "benchmark_id": "otel-gradle",
+          "variant": "",
+          "run_id": "37455843189",
+          "run_attempt": "1",
+          "step_outcome": "success",
+          "timing": {
+            "build_seconds": 144.0,
+            "restore_or_setup_seconds": 5.0
+          },
+          "verification": true
+        },
         "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455843189/job/112248333431",
           "https://github.com/boringcache/benchmarks/actions/runs/37455843189"
         ]
       }

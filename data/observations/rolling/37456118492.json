@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "cadence": "rolling",
-  "collected_at": "2026-10-06T11:25:30Z",
+  "collected_at": "2026-10-06T12:14:36Z",
   "run": {
     "repository": "boringcache/benchmarks",
     "workflow": "native-rolling-benchmark.yml",
@@ -9,8 +9,375 @@
       "case_id": "spring-ai",
       "cli_version": "vcli-canary-252077d7b8fb"
     },
-    "state": "in_progress",
+    "state": "success",
     "id": 37456118492,
-    "url": "https://github.com/boringcache/benchmarks/actions/runs/37456118492"
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37456118492",
+    "canonical_records": [
+      {
+        "schema_version": 1,
+        "benchmark": "spring-ai-maven",
+        "strategy": "actions-cache",
+        "lane": "rolling",
+        "phase": "commit",
+        "variant": null,
+        "mode": "maven",
+        "adapter": "maven",
+        "case": {
+          "schema_version": 1,
+          "case_id": "spring-ai",
+          "workspace": "boringcache/benchmarks",
+          "definition_sha256": "1f35cddeb89050142605e8a37ccaecc09d46e7bdd8c72bdec2a4dc5a41170482",
+          "source": {
+            "repository": "spring-projects/spring-ai",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "3611ad078dd883e297f6fb40d540e856d66978f9",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "origin": {
+            "repository": "boringcache/benchmark-spring-ai",
+            "branch": "main",
+            "revision": "a7c6468d2f7c4d7d6f96692e52875c7b4c6b499b"
+          },
+          "verification": [
+            "Pinned upstream recipe and build success"
+          ],
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "execution": {
+            "workflows": [
+              {
+                "path": ".github/workflows/native-rolling-benchmark.yml",
+                "lane": "rolling",
+                "inputs": {
+                  "case_id": "spring-ai"
+                },
+                "historical_workflow": "spring-ai-maven-benchmark.yml"
+              },
+              {
+                "path": ".github/workflows/native-fresh-benchmark.yml",
+                "lane": "fresh",
+                "inputs": {
+                  "case_id": "spring-ai"
+                },
+                "historical_workflow": "spring-ai-maven-fresh-benchmark.yml"
+              }
+            ],
+            "sync": "upstream-head",
+            "sync_minute": 25,
+            "native": {
+              "action": ".github/actions/spring-maven-benchmark",
+              "benchmark_id": "spring-ai-maven",
+              "rolling_inputs": {
+                "java_version": "17"
+              },
+              "environment": {},
+              "fresh_inputs": {
+                "java_version": "17"
+              }
+            },
+            "cache_tags": {
+              "spring-ai-maven-local": "{scope}-maven-remote"
+            }
+          }
+        },
+        "timing": {
+          "restore_or_setup_seconds": 0,
+          "build_seconds": 513,
+          "workflow_seconds": 535,
+          "total_seconds": 513,
+          "dependency_setup_seconds": null,
+          "compile_seconds": null,
+          "verification_seconds": null,
+          "save_seconds": null
+        },
+        "cache": {
+          "hit": null,
+          "sccache_proof": null,
+          "import_ready": null,
+          "import_refs": 0,
+          "docker_plan": null,
+          "tag": null,
+          "workspace": null,
+          "storage_bytes": 189505463,
+          "storage_source": "github-actions-cache-api",
+          "storage_breakdown": {
+            "key": "maven-spring-ai-maven-rolling-main-3611ad078dd883e297f6fb40d540e856d66978f9",
+            "complete": true,
+            "measured_bytes": 189505463,
+            "total_bytes": 189505463,
+            "observations": [
+              {
+                "id": 8566406428,
+                "key": "maven-spring-ai-maven-rolling-main-3611ad078dd883e297f6fb40d540e856d66978f9",
+                "ref": "refs/heads/main",
+                "version": "88e4aed05ddbe54778fbd006b6ae35f10c6b82ab7dba90a1df00350d5f12e47f",
+                "created_at": "2026-10-06T11:33:12.511845Z",
+                "last_accessed_at": "2026-10-06T11:33:12.511845Z",
+                "size_in_bytes": 189505463
+              }
+            ]
+          }
+        },
+        "source": {
+          "repository": "spring-projects/spring-ai",
+          "sha": "3611ad078dd883e297f6fb40d540e856d66978f9"
+        },
+        "product_refs": {},
+        "action": {
+          "resolved_mode": null,
+          "resolved_tags": null,
+          "trust_state": null,
+          "diagnostics_level": null
+        },
+        "github": {
+          "repository": "boringcache/benchmarks",
+          "run_id": "37456118492",
+          "run_attempt": "1",
+          "job": "publish",
+          "workflow": "Native comparison rolling",
+          "ref_name": "main",
+          "runner_os": "Linux",
+          "runner_arch": "X64",
+          "runner_name": "GitHub Actions 1000175983",
+          "runner_environment": "github-hosted",
+          "runner_image": "ubuntu24",
+          "runner_image_version": "20260927.320.1"
+        },
+        "run_uid": "gh-37456118492-1",
+        "verification": {
+          "passed": true,
+          "checks": [
+            "Output verification completed before recording this phase"
+          ],
+          "declared_checks": [
+            "Pinned upstream recipe and build success"
+          ]
+        }
+      },
+      {
+        "schema_version": 1,
+        "benchmark": "spring-ai-maven",
+        "strategy": "boringcache",
+        "lane": "rolling",
+        "phase": "commit",
+        "variant": null,
+        "mode": "maven",
+        "adapter": "maven",
+        "case": {
+          "schema_version": 1,
+          "case_id": "spring-ai",
+          "workspace": "boringcache/benchmarks",
+          "definition_sha256": "1f35cddeb89050142605e8a37ccaecc09d46e7bdd8c72bdec2a4dc5a41170482",
+          "source": {
+            "repository": "spring-projects/spring-ai",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "3611ad078dd883e297f6fb40d540e856d66978f9",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "origin": {
+            "repository": "boringcache/benchmark-spring-ai",
+            "branch": "main",
+            "revision": "a7c6468d2f7c4d7d6f96692e52875c7b4c6b499b"
+          },
+          "verification": [
+            "Pinned upstream recipe and build success"
+          ],
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "execution": {
+            "workflows": [
+              {
+                "path": ".github/workflows/native-rolling-benchmark.yml",
+                "lane": "rolling",
+                "inputs": {
+                  "case_id": "spring-ai"
+                },
+                "historical_workflow": "spring-ai-maven-benchmark.yml"
+              },
+              {
+                "path": ".github/workflows/native-fresh-benchmark.yml",
+                "lane": "fresh",
+                "inputs": {
+                  "case_id": "spring-ai"
+                },
+                "historical_workflow": "spring-ai-maven-fresh-benchmark.yml"
+              }
+            ],
+            "sync": "upstream-head",
+            "sync_minute": 25,
+            "native": {
+              "action": ".github/actions/spring-maven-benchmark",
+              "benchmark_id": "spring-ai-maven",
+              "rolling_inputs": {
+                "java_version": "17"
+              },
+              "environment": {},
+              "fresh_inputs": {
+                "java_version": "17"
+              }
+            },
+            "cache_tags": {
+              "spring-ai-maven-local": "{scope}-maven-remote"
+            }
+          }
+        },
+        "timing": {
+          "restore_or_setup_seconds": 4,
+          "build_seconds": 446,
+          "workflow_seconds": 467,
+          "total_seconds": 450,
+          "dependency_setup_seconds": null,
+          "compile_seconds": null,
+          "verification_seconds": null,
+          "save_seconds": null
+        },
+        "cache": {
+          "hit": false,
+          "sccache_proof": null,
+          "import_ready": null,
+          "import_refs": 0,
+          "docker_plan": null,
+          "tag": "spring-ai-maven-rolling-main-maven-remote",
+          "workspace": "boringcache/benchmarks",
+          "storage_bytes": 210738774,
+          "storage_source": "boringcache-check",
+          "storage_breakdown": {
+            "workspace": "boringcache/benchmarks",
+            "tags": [
+              "spring-ai-maven-rolling-main-maven-remote-ubuntu-24-x86_64"
+            ],
+            "complete": true,
+            "measured_bytes": 210738774,
+            "unmeasured_tags": [],
+            "total_bytes": 210738774,
+            "observations": [
+              {
+                "requested_tag": "spring-ai-maven-rolling-main-maven-remote-ubuntu-24-x86_64",
+                "tag": "spring-ai-maven-rolling-main-maven-remote-ubuntu-24-x86_64",
+                "status": "hit",
+                "cache_type": "kv",
+                "kv_total_size": 210738774,
+                "compressed_size": 210738774,
+                "size": 210738774
+              }
+            ]
+          },
+          "storage_observed_at": "2026-10-06T11:32:22Z",
+          "storage_evidence_file": "boringcache-one-evidence-c8a6a87f948d4918e8cb321a774e55013a88b387932398ceb7a5f22e704c30c1.json"
+        },
+        "source": {
+          "repository": "spring-projects/spring-ai",
+          "sha": "3611ad078dd883e297f6fb40d540e856d66978f9"
+        },
+        "product_refs": {
+          "schema_version": 1,
+          "cli_version": "1.40.0",
+          "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+          "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+        },
+        "action": {
+          "resolved_mode": "maven",
+          "resolved_tags": [
+            "spring-ai-maven-rolling-main-maven-remote-ubuntu-24-x86_64"
+          ],
+          "trust_state": {
+            "status": "publish",
+            "event_name": "workflow_dispatch",
+            "requested_policy": "publish",
+            "resolved_policy": "publish",
+            "write_allowed": true,
+            "decision_source": "cli",
+            "reason": "explicit_request",
+            "provider": "github-actions",
+            "detail": "Publication updates the published cache tag.",
+            "next_step": "Let the run finish; the next matching run restores what it publishes.",
+            "token_capabilities": {
+              "restore": true,
+              "stage": true,
+              "save": true
+            }
+          },
+          "diagnostics_level": "off"
+        },
+        "github": {
+          "repository": "boringcache/benchmarks",
+          "run_id": "37456118492",
+          "run_attempt": "1",
+          "job": "publish",
+          "workflow": "Native comparison rolling",
+          "ref_name": "main",
+          "runner_os": "Linux",
+          "runner_arch": "X64",
+          "runner_name": "GitHub Actions 1000175984",
+          "runner_environment": "github-hosted",
+          "runner_image": "ubuntu24",
+          "runner_image_version": "20260927.320.1"
+        },
+        "run_uid": "gh-37456118492-1",
+        "verification": {
+          "passed": true,
+          "checks": [
+            "Output verification completed before recording this phase"
+          ],
+          "declared_checks": [
+            "Pinned upstream recipe and build success"
+          ]
+        },
+        "original_cache_measurement": {
+          "storage_bytes": 207247776,
+          "storage_source": "boringcache-check",
+          "storage_breakdown": {
+            "workspace": "boringcache/benchmarks",
+            "tags": [
+              "spring-ai-maven-rolling-main-maven-remote-ubuntu-24-x86_64"
+            ],
+            "complete": true,
+            "measured_bytes": 207247776,
+            "unmeasured_tags": [],
+            "total_bytes": 207247776,
+            "observations": [
+              {
+                "requested_tag": "spring-ai-maven-rolling-main-maven-remote-ubuntu-24-x86_64",
+                "tag": "spring-ai-maven-rolling-main-maven-remote-ubuntu-24-x86_64",
+                "status": "hit",
+                "cache_type": "kv",
+                "kv_total_size": 207247776,
+                "compressed_size": 207247776,
+                "size": 207247776
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "comparison_plan": "diagnostic"
   }
 }
