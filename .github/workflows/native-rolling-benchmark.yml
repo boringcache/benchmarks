@@ -1,6 +1,6 @@
 ---
 name: Native comparison rolling
-run-name: "${{ inputs.case_id }} Rolling | ${{ inputs.cli_version }}"
+run-name: "${{ inputs.case_id == 'hugo-go' && 'hugo' || inputs.case_id }} Rolling | ${{ inputs.cli_version }}"
 permissions:
   contents: read
   actions: read

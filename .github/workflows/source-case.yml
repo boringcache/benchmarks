@@ -33,7 +33,7 @@ jobs:
           BENCHMARK_CADENCE_ACTIVE: ${{ vars.BENCHMARK_CADENCE_ACTIVE }}
         run: |
           if [[ "$BENCHMARK_CADENCE_ACTIVE" == true && "$GITHUB_REF_NAME" == main ]]; then
-            ruby scripts/source-promotion.rb --case "$CASE_ID" --reconcile \
+            ruby scripts/source-promotion.rb --case "$CASE_ID" --project --reconcile \
               --output "$RUNNER_TEMP/rolling-previous.json"
           else
             echo 'proceed=true' >> "$GITHUB_OUTPUT"
@@ -76,8 +76,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           CASE_ID: ${{ inputs.case_id }}
         run: |
-          ruby scripts/sync-sources.rb --case "$CASE_ID" --output "$RUNNER_TEMP/source-proposals.json"
-          echo "changed=$(ruby -rjson -e 'puts JSON.parse(File.read(ARGV[0])).fetch("records").first.fetch("state") == "proposal"' "$RUNNER_TEMP/source-proposals.json")" >> "$GITHUB_OUTPUT"
+          ruby scripts/sync-sources.rb --case "$CASE_ID" --project --output "$RUNNER_TEMP/source-proposals.json"
+          echo "changed=$(ruby -rjson -e 'puts JSON.parse(File.read(ARGV[0])).fetch("records").any? { |record| record.fetch("state") == "proposal" }' "$RUNNER_TEMP/source-proposals.json")" >> "$GITHUB_OUTPUT"
       - name: Retain the source observation
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
@@ -124,7 +124,7 @@ jobs:
           if [[ "$BENCHMARK_CADENCE_ACTIVE" == true && "$GITHUB_REF_NAME" == main ]]; then
             args+=(--publish)
           fi
-          ruby scripts/source-promotion.rb --case "$CASE_ID" "${args[@]}" \
+          ruby scripts/source-promotion.rb --case "$CASE_ID" --project "${args[@]}" \
             --proposal "$RUNNER_TEMP/proposal/source-proposals.json" \
             --output "$RUNNER_TEMP/rolling-dispatch.json"
       - name: Retain rolling dispatch receipt

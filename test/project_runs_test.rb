@@ -49,6 +49,19 @@ class ProjectRunsTest < Minitest::Test
     assert_includes ProjectReport.markdown(rows, project: "n8n"), "unmeasured"
   end
 
+  def test_rolling_zed_matrix_preserves_cargo_and_nix_inputs
+    selections = [
+      {"repository" => BenchmarkCases::REPOSITORY, "workflow" => "zed-zed-cargo-rolling-auto.yml", "inputs" => {"base_sha" => "a" * 40, "head_sha" => "b" * 40, "source_distance" => "3"}},
+      {"repository" => BenchmarkCases::REPOSITORY, "workflow" => "nix-rolling-benchmark.yml", "inputs" => {"case_id" => "zed-nix", "provider" => "all"}}
+    ]
+    run = ProjectRuns.group(selections, lane: "rolling").fetch(0)
+    assert_equal "project-rolling.yml", run.fetch("workflow")
+    matrices = ProjectRuns.matrix(JSON.parse(run.dig("inputs", "selections")), case_id: "zed", lane: "rolling")
+    assert_equal %w[nix-rolling-benchmark.yml zed-zed-cargo-rolling-auto.yml], matrices.keys.sort
+    assert_equal selections.first.fetch("inputs"), matrices.fetch("zed-zed-cargo-rolling-auto.yml").fetch("include").first.fetch("inputs")
+    assert_raises(RuntimeError) { ProjectRuns.matrix(JSON.parse(run.dig("inputs", "selections")), case_id: "hugo", lane: "rolling") }
+  end
+
   def test_grouped_rolling_success_without_phases_is_not_accepted
     item = BenchmarkCases.load_case("n8n")
     runs = BenchmarkCadence.rolling_targets(case_id: "n8n").map { |plan| plan.slice("repository", "workflow", "inputs") }

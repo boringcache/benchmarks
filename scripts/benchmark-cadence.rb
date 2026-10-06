@@ -71,6 +71,11 @@ module BenchmarkCadence
     ids.select { |id| !case_id || id == case_id }.map { |id| BenchmarkCases.load_case(id, root) }
   end
 
+  def self.source_project(case_id, root: BenchmarkCases::ROOT)
+    selected = source_cases(root: root, case_id: case_id).fetch(0)
+    source_cases(root: root).select { |item| item.dig("source", "repository") == selected.dig("source", "repository") }
+  end
+
   def self.rolling_targets(root: BenchmarkCases::ROOT, case_id:, inputs: {}, item: nil)
     source_cases(root: root, case_id: case_id)
     item ||= BenchmarkCases.load_case(case_id, root)
