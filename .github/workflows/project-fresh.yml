@@ -121,7 +121,7 @@ jobs:
         path: project-evidence
     - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
       with:
-        pattern: zed-cargo-product-*
+        pattern: zed-cargo-layers-*
         path: project-evidence
     - name: Report all project measurements
       env:

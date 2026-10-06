@@ -32,6 +32,39 @@ class CadenceDispatchTest < Minitest::Test
     end
   end
 
+  def test_pin_creates_and_verifies_one_reference_without_moving_main
+    value = plan
+    value.fetch("runs").each { |run| run["harness_sha"] = "a" * 40 }
+    existing = nil
+    mutations = []
+    runner = NightlyCanaries::Runner.new
+    runner.stub(:api, ->(path, body: nil) {
+      if body
+        mutations << [path, body]
+        existing = {"object" => {"sha" => body.fetch("sha")}}
+      else
+        raise NightlyCanaries::Error, "HTTP 404" unless existing
+        existing
+      end
+    }) do
+      pinned = CadenceDispatch.pin(value, run_id: "42", runner: runner)
+      assert_equal "benchmark-42", pinned.fetch("ref")
+      assert_equal "main", value.fetch("ref")
+      assert_equal pinned, CadenceDispatch.pin(value, run_id: "42", runner: runner)
+    end
+    assert_equal [["repos/boringcache/benchmarks/git/refs", {"ref" => "refs/tags/benchmark-42", "sha" => "a" * 40}]], mutations
+  end
+
+  def test_pin_rejects_a_different_existing_harness_without_mutation
+    value = plan
+    value.fetch("runs").each { |run| run["harness_sha"] = "a" * 40 }
+    runner = NightlyCanaries::Runner.new
+    runner.stub(:api, ->(_path, body: nil) {
+      flunk "No ref may be changed" if body
+      {"object" => {"sha" => "b" * 40}}
+    }) { assert_raises(CadenceDispatch::Error) { CadenceDispatch.pin(value, run_id: "42", runner: runner) } }
+  end
+
   def test_independent_dispatch_receipts_combine_in_declared_order
     first, second = dispatch(0), dispatch(1, response: {"workflow_run_id" => 456})
     combined = CadenceDispatch.combine(plan, [second, first])
