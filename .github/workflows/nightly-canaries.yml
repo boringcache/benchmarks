@@ -12,6 +12,8 @@ jobs:
     timeout-minutes: 30
     env:
       GH_TOKEN: "${{ github.token }}"
+      BENCHMARK_CADENCE_ACTIVE: "${{ vars.BENCHMARK_CADENCE_ACTIVE }}"
+      BENCHMARK_ACTIVE_CASES: "${{ vars.BENCHMARK_ACTIVE_CASES }}"
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       with:
@@ -21,8 +23,12 @@ jobs:
     - name: Check repository canaries
       run: |
         failed=0
+        args=()
+        if [[ "$BENCHMARK_CADENCE_ACTIVE" != true && -n "$BENCHMARK_ACTIVE_CASES" && "$BENCHMARK_ACTIVE_CASES" != '[]' ]]; then
+          args+=(--active-only)
+        fi
         for cadence in daily weekly; do
-          bundle exec ruby scripts/benchmark-cadence.rb --collect --cadence "$cadence" \
+          bundle exec ruby scripts/benchmark-cadence.rb --collect "${args[@]}" --cadence "$cadence" \
             --summary "$RUNNER_TEMP/$cadence-summary.md" \
             --output "$RUNNER_TEMP/benchmark-outcomes-$cadence.json" || failed=1
           cat "$RUNNER_TEMP/$cadence-summary.md" >> "$GITHUB_STEP_SUMMARY"

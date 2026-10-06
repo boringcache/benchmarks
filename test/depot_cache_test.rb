@@ -34,6 +34,10 @@ class DepotCacheTest < Minitest::Test
     assert_raises(DepotCache::Error) { DepotCache.environment("buck2", env: {"DEPOT_TOKEN" => "private-token"}) }
     assert_raises(DepotCache::Error) { DepotCache.environment("turbo", env: {"DEPOT_TOKEN" => "private-token"}) }
     assert_equal "team", DepotCache.environment("turbo", env: {"DEPOT_TOKEN" => "private-token", "DEPOT_ORGANIZATION_ID" => "", "TURBO_TEAM" => "team"}).fetch("TURBO_TEAM")
+    settings = DepotCache.environment("sccache", env: {"DEPOT_CACHE_TOKEN" => "job-token", "DEPOT_TOKEN" => "configured-token"})
+    assert_equal "job-token", settings.fetch("SCCACHE_WEBDAV_TOKEN")
+    assert_equal "job-token", settings.fetch("DEPOT_TOKEN")
+    assert_raises(DepotCache::Error) { DepotCache.environment("go", env: {"DEPOT_CACHE_TOKEN" => "invalid\ntoken"}) }
   end
 
   def test_depot_actions_api_records_the_endpoint_host_without_credentials
@@ -84,6 +88,25 @@ class DepotCacheTest < Minitest::Test
       assert_includes settings.fetch("MAVEN_ARGS"), "--settings"
       assert_includes File.read(File.join(directory, "upstream/.mvn/extensions.xml")), "<version>1.3.0</version>"
     end
+  end
+
+  def test_maven_preserves_the_pinned_upstream_extension_and_other_extensions
+    Dir.mktmpdir do |directory|
+      path = File.join(directory, "upstream/.mvn/extensions.xml")
+      FileUtils.mkdir_p(File.dirname(path))
+      original = '<extensions><extension><artifactId>maven-profiler</artifactId><version>3.3</version></extension><extension><groupId>org.apache.maven.extensions</groupId><artifactId>maven-build-cache-extension</artifactId><version>1.2.3</version></extension></extensions>'
+      File.write(path, original)
+      DepotCache.configure("maven", phase: "publish", root: directory, env: {"DEPOT_TOKEN" => "private-token"})
+      assert_equal original, File.read(path)
+    end
+  end
+
+  def test_actions_api_validation_runs_with_the_javascript_runtime_environment
+    path = File.join(BenchmarkCases::ROOT, ".github/actions/select-cache-provider/action.yml")
+    steps = YAML.safe_load_file(path).fetch("runs").fetch("steps")
+    api = steps.find { |step| step["if"] == "inputs.provider == 'depot-actions-cache'" }
+    assert_match(/\Aactions\/github-script@[0-9a-f]{40}\z/, api.fetch("uses"))
+    assert_equal "await exec.exec('ruby', ['./scripts/depot-cache.rb']);", api.dig("with", "script")
   end
 
   def test_native_depot_plans_do_not_claim_an_isolated_cold_cache_or_change_variants

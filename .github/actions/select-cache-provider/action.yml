@@ -1,0 +1,27 @@
+name: Select the declared runner cache provider
+description: Configures the shared provider adapter with the required Actions runtime context.
+inputs:
+  provider:
+    required: true
+  mode:
+    required: true
+  phase:
+    required: true
+runs:
+  using: composite
+  steps:
+    - if: inputs.provider != 'depot-actions-cache'
+      shell: bash
+      env:
+        CACHE_PROVIDER: ${{ inputs.provider }}
+        CACHE_MODE: ${{ inputs.mode }}
+        CACHE_PHASE: ${{ inputs.phase }}
+      run: ruby ./scripts/depot-cache.rb
+    - if: inputs.provider == 'depot-actions-cache'
+      uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
+      env:
+        CACHE_PROVIDER: ${{ inputs.provider }}
+        CACHE_MODE: ${{ inputs.mode }}
+        CACHE_PHASE: ${{ inputs.phase }}
+      with:
+        script: await exec.exec('ruby', ['./scripts/depot-cache.rb']);
