@@ -230,7 +230,8 @@ module BenchmarkCases
         raise Error, "#{name} must be an exact declared source pin; review and update the case before execution"
       end
       raise Error, "Invalid cache_scope" if name == "cache_scope" && !value.match?(/\A[a-z0-9][a-z0-9._-]+\z/)
-      raise Error, "source_distance must be a positive integer" if name == "source_distance" && !value.match?(/\A[1-9]\d*\z/)
+      seed_distance = %w[seed replay].include?(combined["observation"]) && combined["base_sha"] == combined["head_sha"] && value == "0"
+      raise Error, "source_distance must be a positive integer or zero for an identical-source seed/replay" if name == "source_distance" && !value.match?(/\A[1-9]\d*\z/) && !seed_distance
     end
     raise Error, "cache_lane must match the selected workflow lane" if combined["cache_lane"] && combined["cache_lane"] != entry.fetch("lane")
     if item["adapter"] == "docker" && combined["case_id"] != item.fetch("id").delete_prefix("docker-")

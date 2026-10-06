@@ -6,6 +6,7 @@ permissions:
   actions: read
   packages: read
 env:
+  BENCHMARK_OBSERVATION: "${{ inputs.observation || 'changed-source' }}"
   BORINGCACHE_NO_GIT: 'true'
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
   BENCHMARK_SAMPLE: "${{ inputs.sample }}"
@@ -106,6 +107,10 @@ jobs:
 'on':
   workflow_dispatch:
     inputs:
+      observation:
+        description: Seed, identical-source replay, or changed-source build.
+        type: string
+        default: changed-source
       cli_version:
         description: Optional exact BoringCache CLI release tag.
         required: false
@@ -156,6 +161,10 @@ jobs:
         default: ''
   workflow_call:
     inputs:
+      observation:
+        description: Seed, identical-source replay, or changed-source build.
+        type: string
+        default: changed-source
       cli_version:
         required: false
         type: string

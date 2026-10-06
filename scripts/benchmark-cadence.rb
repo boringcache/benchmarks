@@ -6,6 +6,7 @@ require_relative "benchmark-cases"
 require_relative "nightly-canaries"
 require_relative "benchmark-cli"
 require_relative "project-runs"
+require_relative "benchmark-baseline"
 
 module BenchmarkCadence
   class Error < StandardError; end
@@ -141,7 +142,8 @@ if $PROGRAM_NAME == __FILE__
     raise BenchmarkCadence::Error, "No scheduled cases selected" if targets.empty?
     if options.delete(:collect)
       exit(NightlyCanaries::Runner.new.collect(summary: options.fetch(:summary), output: options[:output],
-        channel: options.fetch(:channel), expected_version: options.fetch(:version), cadence: options.fetch(:cadence, "daily"), benchmarks: targets) ? 0 : 1)
+        channel: options.fetch(:channel), expected_version: options.fetch(:version), cadence: options.fetch(:cadence, "daily"), benchmarks: targets,
+        baseline: BenchmarkBaseline.selection) ? 0 : 1)
     elsif options.delete(:check)
       puts "Validated #{targets.length} scheduled fresh workflows"
     else

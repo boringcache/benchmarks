@@ -50,7 +50,8 @@
         "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
         "inputs": {
-          "case_id": "n8n"
+          "case_id": "n8n",
+          "cache_scope": "baseline-20261006"
         },
         "variants": [
           "turbo",

@@ -38,7 +38,8 @@
         "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
         "inputs": {
-          "case_id": "immich"
+          "case_id": "immich",
+          "cache_scope": "baseline-20261006"
         }
       }
     ],

@@ -80,8 +80,8 @@ module NativeLinkCache
   def self.start
     %w[AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY].each { |name| abort "Missing #{name}" if ENV.fetch(name, "").empty? }
     FileUtils.mkdir_p(DIRECTORY)
-    cold = ENV.fetch("CACHE_LANE") == "fresh" && ENV.fetch("PHASE") == "publish"
-    abort "Fresh NativeLink cache prefix is not empty" if cold && !objects(limit: 1).empty?
+    cold = (ENV.fetch("CACHE_LANE") == "fresh" && ENV.fetch("PHASE") == "publish") || ENV["BENCHMARK_OBSERVATION"] == "seed"
+    abort "NativeLink seed cache prefix is not empty" if cold && !objects(limit: 1).empty?
     previous = nil
     seeds = cold ? [] : objects(key_prefix: "#{prefix}seed.json", limit: 1)
     if seeds.any? { |row| row["Key"] == "#{prefix}seed.json" }

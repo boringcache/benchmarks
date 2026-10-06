@@ -5,26 +5,26 @@ workspace = "boringcache/benchmarks"
 # independently without rewriting this file in a workflow.
 
 [entries.cargo-registry]
-tag = "zed-cargo-rolling-main-registry"
+tag = "zed-cargo-rolling-baseline-20261006-registry"
 
 [entries.cargo-git]
-tag = "zed-cargo-rolling-main-git"
+tag = "zed-cargo-rolling-baseline-20261006-git"
 
 [entries.zed-target]
 kind = "cargo-target"
-tag = "zed-cargo-rolling-main-target-v2"
+tag = "zed-cargo-rolling-baseline-20261006-target-v2"
 path = "upstream/target"
 
 [profiles.cargo-product]
 entries = ["cargo-registry", "cargo-git", "zed-target"]
 
 [adapters.sccache]
-tag = "zed-cargo-rolling-main-sccache"
+tag = "zed-cargo-rolling-baseline-20261006-sccache"
 no-git = true
 metadata-hints = ["benchmark=zed", "lane=rolling", "layer=compiler"]
 
 [adapters.cargo]
-tag = "zed-cargo-rolling-main-cargo"
+tag = "zed-cargo-rolling-baseline-20261006-cargo"
 profiles = ["cargo-product"]
 compiler-cache = "sccache"
 no-git = true

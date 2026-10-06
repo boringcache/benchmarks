@@ -21,7 +21,10 @@ The provider wrapper and direct CLI workers use that same default. Changing the
 reviewed pin changes the execution definition; earlier series retain their
 original selector. A compatible stable release can replace this pin later.
 `BENCHMARK_CADENCE_ACTIVE=true` enables automatic dispatch and source publication.
-Manual dispatch and dry runs remain available.
+Manual dispatch and dry runs remain available. Scheduling, monitoring and publication
+are currently paused for the reset. Rolling cache scopes are explicit and remain
+stable across harness refs. Each rolling series begins with a seed build, then an
+identical-source replay, before advancing to changed-source builds.
 
 ## Runs and evidence
 
@@ -58,7 +61,9 @@ receipts and measurements. [`data/observations/`](../data/observations/) retains
 observations by cadence and run ID, including pending and failed work. The
 existing [`series catalog`](../data/latest/series.json) retains declared manual
 and imported series. Publication on the product website remains a separate
-review. Earlier published feeds retain their historical scope.
+review. Pre-reset measurements and receipts have been removed. The monitor filters parent
+runs and rolling receipts against the cutoff in `config/baseline.json`; publication
+rejects outcomes from another baseline.
 
 Storage probes run after publication. Original product and phase JSON remain
 retained; a separate measurement joins by run, attempt, workspace and exact

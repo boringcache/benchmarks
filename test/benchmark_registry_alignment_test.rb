@@ -36,9 +36,8 @@ class BenchmarkRegistryAlignmentTest < Minitest::Test
     assert_includes readme, "cases/"
     assert_includes readme, "docs/process.md"
     assert_includes readme, "[product benchmark page](https://boringcache.com/benchmarks)"
-    assert_includes readme, "[`data/latest/report.md`](data/latest/report.md)"
-    assert_includes readme, "[`data/latest/index.json`](data/latest/index.json)"
-    assert_includes readme, "[`data/latest/providers.json`](data/latest/providers.json)"
+    assert_includes readme, "[`data/latest/current.json`](data/latest/current.json)"
+    assert_includes readme, "[`config/baseline.json`](config/baseline.json)"
   end
 
   private

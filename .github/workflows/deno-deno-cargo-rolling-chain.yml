@@ -1,6 +1,6 @@
 ---
 name: 'deno: Deno Cargo rolling run'
-run-name: "Deno Cargo / ${{ inputs.cache_profile || 'cargo-product' }} | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} Rolling | ${{ inputs.base_sha }} to ${{ inputs.head_sha }}"
+run-name: "Deno Rolling | ${{ inputs.cli_version }}"
 permissions:
   actions: read
   contents: read
@@ -9,6 +9,7 @@ concurrency:
   cancel-in-progress: false
   queue: max
 env:
+  BENCHMARK_OBSERVATION: "${{ inputs.observation || 'changed-source' }}"
   CACHE_PROFILE: "${{ inputs.cache_profile || 'cargo-product' }}"
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: full
@@ -97,7 +98,13 @@ jobs:
       run: |
         set -euo pipefail
         test "$(git -C upstream rev-parse HEAD)" = "$RESOLVED_HEAD_SHA"
-        test "$(git -C upstream rev-parse HEAD^)" = "$RESOLVED_BASE_SHA"
+        if [[ "$BENCHMARK_OBSERVATION" == seed || "$BENCHMARK_OBSERVATION" == replay ]]; then
+          source benchmark-source.env
+          test "$RESOLVED_HEAD_SHA" = "$DENO_HEAD_SHA"
+          test "$RESOLVED_BASE_SHA" = "$RESOLVED_HEAD_SHA"
+        else
+          test "$(git -C upstream rev-parse HEAD^)" = "$RESOLVED_BASE_SHA"
+        fi
         git -C upstream clean -fdx
         test -z "$(git -C upstream status --porcelain=v1 --untracked-files=all)"
     - name: Clone submodule ./tests/util/std
@@ -246,6 +253,10 @@ jobs:
 'on':
   workflow_dispatch:
     inputs:
+      observation:
+        description: Seed, identical-source replay, or changed-source build.
+        type: string
+        default: changed-source
       cli_version:
         description: Exact immutable BoringCache CLI release tag.
         required: false
