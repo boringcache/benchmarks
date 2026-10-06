@@ -13,6 +13,48 @@ require "yaml"
 class BenchmarkCaseScriptsTest < Minitest::Test
   ROOT = File.expand_path("..", __dir__)
 
+  def test_storybook_cache_configuration_removes_cloud_bindings_and_preserves_tasks
+    with_case("storybook") do |directory|
+      path = File.join(directory, "upstream/nx.json")
+      FileUtils.mkdir_p(File.dirname(path))
+      config = {"nxCloudId" => "another-workspace", "codexCacheBust" => true,
+        "tasksRunnerOptions" => {"default" => {"runner" => "nx-cloud", "options" => {"accessToken" => "fixture", "parallel" => 8}}},
+        "targetDefaults" => {"compile" => {"cache" => true, "dependsOn" => ["^compile"]}}}
+      File.write(path, JSON.generate(config))
+      _, errors, status = run_script(directory, "configure-nx-cache")
+      assert status.success?, errors
+      actual = JSON.parse(File.read(path))
+      refute actual.key?("nxCloudId")
+      refute actual.key?("codexCacheBust")
+      assert_equal({"options" => {"parallel" => 8}}, actual.dig("tasksRunnerOptions", "default"))
+      assert_equal config.fetch("targetDefaults"), actual.fetch("targetDefaults")
+    end
+  end
+
+  def test_storybook_warm_verification_requires_native_task_cache_hits
+    with_case("storybook") do |directory|
+      output = File.join(directory, "upstream/code/frameworks/react-vite/dist/index.js")
+      FileUtils.mkdir_p(File.dirname(output))
+      File.write(output, "compiled output")
+      results = File.join(directory, "upstream/.nx/cache/run.json")
+      FileUtils.mkdir_p(File.dirname(results))
+      env = {"STORYBOOK_WORKLOAD" => "nx", "BENCHMARK_NX_PHASE" => "warm", "BENCHMARK_NX_PROVIDER" => "boringcache"}
+      run = lambda do |state|
+        File.write(results, JSON.generate({"tasks" => [{"target" => "compile", "status" => 0, "cacheStatus" => state}]}))
+        Open3.capture3(env, RbConfig.ruby, File.join(directory, "scripts/verify-output.rb"), chdir: directory)
+      end
+      %w[cache-miss local-cache-hit].each do |state|
+        _, error, status = run.call(state)
+        refute status.success?
+        assert_includes error, "selected provider cache"
+      end
+      _, error, status = run.call("remote-cache-hit")
+      assert status.success?, error
+      assert_equal true, JSON.parse(File.read(File.join(directory, "nx-cache-state.json"))).fetch("hit")
+      assert File.file?(File.join(directory, "benchmark-results/nx-task-results.json"))
+    end
+  end
+
   def test_grpc_requests_the_same_reviewed_outputs_for_every_provider
     with_case("grpc") do |directory|
       tools = File.join(directory, "upstream/tools")

@@ -9,25 +9,7 @@ git -C "${repo_root}/upstream" clean -fdx
 
 nx_json="${repo_root}/upstream/nx.json"
 if [[ -f "${nx_json}" ]]; then
-  node - "${nx_json}" <<'JS'
-const fs = require('fs');
-
-const nxJsonPath = process.argv[2];
-const nxJson = JSON.parse(fs.readFileSync(nxJsonPath, 'utf8'));
-let changed = false;
-
-for (const key of ['nxCloudId', 'nxCloudAccessToken', 'nxCloudUrl', 'codexCacheBust']) {
-  if (Object.prototype.hasOwnProperty.call(nxJson, key)) {
-    delete nxJson[key];
-    changed = true;
-  }
-}
-
-if (changed) {
-  fs.writeFileSync(nxJsonPath, `${JSON.stringify(nxJson, null, 2)}\n`);
-  console.log('Removed Nx Cloud binding and legacy cache-bust marker from the benchmark checkout');
-}
-JS
+  (cd "${repo_root}" && ruby scripts/configure-nx-cache.rb)
 fi
 
 case "${scenario}" in

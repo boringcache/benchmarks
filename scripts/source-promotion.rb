@@ -107,9 +107,7 @@ module SourcePromotion
       20.times do
         head = api("repos/#{repository}/git/ref/heads/#{branch}").dig("object", "sha")
         protect_harness(head, except: expected.keys) if @case_id
-        expected.each do |path, contents|
-          raise Error, "#{path} changed while this source was being checked" unless optional_file(path, ref: head) == contents
-        end
+        verify_expected(head, expected)
         input = {"branch" => {"repositoryNameWithOwner" => repository, "branchName" => branch},
           "expectedHeadOid" => head, "message" => {"headline" => message},
           "fileChanges" => {"additions" => changes.map { |path, contents| {"path" => path, "contents" => Base64.strict_encode64(contents)} }}}
@@ -133,6 +131,12 @@ module SourcePromotion
         raise Error, "Source publication failed: #{errors.map { |error| error['message'] }.join('; ')}" unless retryable
       end
       raise Error, "Source publication could not acquire the current branch head"
+    end
+
+    def verify_expected(head, expected)
+      expected.each do |path, contents|
+        raise Error, "#{path} changed while this source was being checked" unless optional_file(path, ref: head) == contents
+      end
     end
 
     def protect_harness(head, except:)
