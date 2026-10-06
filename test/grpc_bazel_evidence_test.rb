@@ -8,13 +8,13 @@ require_relative "../scripts/benchmark-cadence"
 require_relative "../scripts/benchmark-phase"
 
 class GrpcBazelEvidenceTest < Minitest::Test
-  def test_scheduled_rolling_keeps_the_populated_cache_across_harness_refs
+  def test_scheduled_rolling_keeps_the_baseline_cache_across_harness_refs
     inputs = BenchmarkCadence.rolling_targets(case_id: "grpc").fetch(0).fetch("inputs")
-    assert_equal "main", inputs.fetch("cache_scope")
+    assert_equal "baseline-20261006", inputs.fetch("cache_scope")
     environment = {"BENCHMARK_ID" => "grpc-bazel", "CACHE_LANE" => "rolling",
       "BENCHMARK_ROLLING_SCOPE" => inputs.fetch("cache_scope")}
     %w[main benchmark-updated-harness].each do |ref|
-      assert_equal "grpc-bazel-rolling-main", BenchmarkPhase.scope(environment.merge("GITHUB_REF_NAME" => ref))
+      assert_equal "grpc-bazel-rolling-baseline-20261006", BenchmarkPhase.scope(environment.merge("GITHUB_REF_NAME" => ref))
     end
   end
 

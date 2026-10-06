@@ -172,7 +172,7 @@ jobs:
     needs:
     - source
     - advance
-    if: needs.advance.result == 'success'
+    if: needs.advance.result == 'success' && inputs.observation != 'seed' && inputs.observation != 'replay'
     runs-on: ubuntu-24.04
     env:
       EXPECTED_BASE_SHA: "${{ inputs.base_sha }}"
@@ -211,6 +211,10 @@ jobs:
 'on':
   workflow_dispatch:
     inputs:
+      observation:
+        description: Seed, identical-source replay, or changed-source build.
+        type: string
+        default: changed-source
       base_sha:
         description: Source commit currently represented by the published target.
         required: true
@@ -247,6 +251,10 @@ jobs:
         default: '1'
   workflow_call:
     inputs:
+      observation:
+        description: Seed, identical-source replay, or changed-source build.
+        type: string
+        default: changed-source
       base_sha:
         type: string
         required: true
@@ -269,5 +277,6 @@ jobs:
         type: string
         default: '1'
 env:
+  BENCHMARK_OBSERVATION: "${{ inputs.observation || 'changed-source' }}"
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
   BENCHMARK_SAMPLE: "${{ inputs.sample }}"

@@ -1,0 +1,29 @@
+name: Reset benchmark cache
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reset:
+    if: github.ref_name == 'main' && vars.BENCHMARK_CADENCE_ACTIVE == 'false'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      BORINGCACHE_WORKSPACE: boringcache/benchmarks
+      BENCHMARK_CADENCE_ACTIVE: ${{ vars.BENCHMARK_CADENCE_ACTIVE }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
+      - name: Install the reviewed CLI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ruby -e 'require_relative "scripts/reapi-setup"; require_relative "scripts/benchmark-cli"; ReapiSetup.download("boringcache/cli", BenchmarkCLI.selection.fetch("version"), "boringcache-linux-amd64", "boringcache", destination: File.join(ENV.fetch("RUNNER_TEMP"), "boringcache"))'
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+      - name: Reset only the benchmark workspace
+        run: boringcache ci run --oidc-provider github-actions -- ruby scripts/reset-benchmark-cache.rb

@@ -25,7 +25,8 @@
         "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
         "inputs": {
-          "case_id": "chroma"
+          "case_id": "chroma",
+          "cache_scope": "baseline-20261006"
         },
         "historical_workflow": "chroma-benchmark.yml"
       },

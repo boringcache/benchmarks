@@ -25,7 +25,8 @@
         "path": ".github/workflows/native-rolling-benchmark.yml",
         "lane": "rolling",
         "inputs": {
-          "case_id": "hugo"
+          "case_id": "hugo",
+          "cache_scope": "baseline-20261006"
         },
         "historical_workflow": "hugo-benchmark.yml"
       },
