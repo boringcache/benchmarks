@@ -1,45 +1,38 @@
 # Cadence cutover
 
-The new workflows are merged, but central activation is off. The user deferred
-activation until a compatible stable CLI is released. Historical cron triggers
-remain active. Do not apply the prepared patches or set the activation variable
-before the release and qualification gates in [cadence.md](cadence.md) pass.
+`boringcache/benchmarks` owns the selected benchmark execution and monitoring.
+The retired execution repositories are archived. On October 6, the user approved
+central scheduling with the latest published canary until a compatible stable
+release is available. The earlier stable-release gate is superseded.
+
+The current suite selects 24 source cases, 32 case/variant selections and 34
+underlying fresh workers, grouped into 22 project runs. Fresh, Nightly and Rolling
+retain separate cadence identities. The Docker corpus is excluded from scheduling.
+See [cadence.md](cadence.md) for schedules, evidence and storage scope.
+
+Activation verification:
+
+1. Verify the exact published selector in `config/cli.json`, its release checksums
+   and the required native CLI commands. Run the full suite preflight on the
+   committed harness and require hosted guardrails to pass.
+2. Confirm retired execution repositories are archived and retain their run URLs
+   and exported evidence. Archiving prevents their historical schedules from
+   requesting new work.
+3. Set `BENCHMARK_CADENCE_ACTIVE=true` in `boringcache/benchmarks`. This enables
+   automatic Fresh/Nightly dispatch and reviewed upstream source publication.
+4. Inspect the first Fresh and Nightly receipts, immutable harness refs and
+   project runs. Check each receipt against the full suite and inspect the source
+   cycle's proposals and rolling requests. A requested build is not completed.
+5. Verify the central monitor retains all three cadence outcomes and the publisher
+   commits current observations. Failed, cancelled, pending and unmeasured states
+   remain explicit.
 
 The [October 5 inventory](../migration/cadence-schedule-inventory-2026-10-05.json)
-records 48 scheduled workflows in the 17 historical repositories represented by
-the maintained suite. It records the default branch, observed head, workflow
-blob SHA, cron expressions and remaining entrypoints. The seven snapshot cases
-have no replaced BoringCache repository schedules.
+and [prepared patches](../migration/cadence-cutover-patches) retain the historical
+48-schedule retirement review. Archiving the execution repositories supersedes
+applying those patches. Historical qualification documents describe their original
+review date and do not set the current activation policy.
 
-[Prepared patches](../migration/cadence-cutover-patches) remove only each
-inventoried workflow's `schedule` event. Each edited document was parsed and
-compared with the original after removing that event; manual and PR events, jobs,
-permissions and other workflow behavior remain equivalent. These patches have
-not been applied. Unselected repositories, including Docker corpus, are outside
-this cutover.
-
-When release and qualification are complete:
-
-1. Resolve the exact stable CLI and run the full 31-target dry run on `main`.
-   Require the REAPI capability check to pass without omissions or substitution
-   of a canary. Confirm hosted checks and the retained qualification records.
-2. Refresh the historical inventory. Review any changed workflow blobs before
-   applying their patches. Keep central activation off while removing all 48
-   historical cron triggers. Preserve their manual and PR entrypoints.
-3. Query every historical repository for queued, pending and running scheduled
-   or source-dispatched work. Allow those runs and downstream requests to finish;
-   retain their run IDs. Recheck that no replaced cron triggers remain. Do not
-   cancel unrelated runs or treat a stopped scheduler as a drained queue.
-4. Set `BENCHMARK_CADENCE_ACTIVE=true` in `boringcache/benchmarks`. This transfers
-   source checks, weekly/nightly dispatch and canary monitoring to the central
-   suite. The first hourly source check should produce per-case observations;
-   changed cases should retain intent and requested run IDs independently.
-5. Verify the first complete source cycle and the first weekly and nightly
-   dispatches. Compare each receipt with the 24-case / 31-fresh-target inventory,
-   then inspect leaf outcomes and comparison reports. Request acceptance alone
-   is not build completion.
-
-If central ownership must be stopped, unset the activation variable first and
-inspect already requested central runs. Restore historical cron triggers only
-after central requests have drained, so both owners do not request the same
-work. Retain source receipts and observations during either transition.
+To stop automatic central dispatch, unset the activation variable and inspect
+already requested runs. Keep their receipts and observations. Restore retired
+schedules only after reviewing repository ownership and draining central requests.
