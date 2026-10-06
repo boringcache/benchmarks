@@ -3,7 +3,7 @@
   "baseline_id": "baseline-20261006",
   "observation": "seed",
   "case_id": "executorch-buck2",
-  "state": "dispatching",
+  "state": "requested",
   "cli_version": "vcli-canary-252077d7b8fb",
   "created_at": "2026-10-06T13:32:13Z",
   "proposal": {
@@ -41,7 +41,9 @@
       ],
       "variants": null,
       "source_sha": "ab907e0ca527057c059dbcbfb9bf392bb03ba771",
-      "state": "planned"
+      "state": "requested",
+      "id": 37471717086,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37471717086"
     }
   ]
 }
