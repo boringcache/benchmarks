@@ -41,7 +41,7 @@
     "sync": "upstream-head",
     "sync_minute": 10,
     "native": {
-      "action": ".github/actions/hugo-go-benchmark",
+      "action": ".github/actions/go-benchmark",
       "benchmark_id": "hugo-go",
       "rolling_inputs": {
         "go_version": "1.27.0"
@@ -70,7 +70,7 @@
       "boringcache",
       "actions-cache"
     ],
-    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+    "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured cache publication is reported separately",
     "primary_metric": "build_and_reuse_seconds",
     "storage": "provider-reported",
     "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",

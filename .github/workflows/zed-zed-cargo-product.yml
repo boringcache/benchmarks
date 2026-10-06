@@ -5,6 +5,7 @@ permissions:
   actions: read
   contents: read
 env:
+  BENCHMARK_EXPECTED_IDENTITY: "${{ inputs.expected_identity }}"
   CARGO_INCREMENTAL: '0'
   ZED_BUNDLE: 'true'
   CC: clang
@@ -310,6 +311,11 @@ jobs:
 'on':
   workflow_dispatch:
     inputs:
+      expected_identity:
+        description: Frozen scheduled harness and case identity; checked before preparation.
+        type: string
+        required: false
+        default: ''
       cli_version:
         description: Optional exact immutable BoringCache CLI release tag.
         required: false

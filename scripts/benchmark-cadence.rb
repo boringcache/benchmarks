@@ -8,6 +8,36 @@ require_relative "nightly-canaries"
 module BenchmarkCadence
   class Error < StandardError; end
 
+  def self.freeze_runs(version, runs, root: BenchmarkCases::ROOT, series_prefix: "cadence-#{ENV.fetch('GITHUB_RUN_ID', Time.now.utc.strftime('%Y%m%d%H%M%S'))}")
+    sha = BenchmarkCases.command("git", "rev-parse", "HEAD", chdir: root).strip
+    tracked = BenchmarkCases.command("git", "status", "--porcelain", "--untracked-files=no", chdir: root)
+    raise Error, "Commit harness changes before planning scheduled runs" unless tracked.empty?
+    targets = fresh_targets(root: root)
+    series = {}
+    runs.each_with_index do |run, index|
+      target = targets.find do |entry|
+        entry.fetch("fresh_workflow") == run.fetch("workflow") && entry.fetch("fresh_inputs") == run.fetch("inputs")
+      end
+      raise Error, "Scheduled target differs from the selected suite" unless target
+      item = BenchmarkCases.load_case(target.fetch("case_id"), root)
+      selection = BenchmarkCases.plan(item, workflow: run.fetch("workflow"), inputs: run.fetch("inputs"), root: root)
+      workflow = item.dig("execution", "workflows").find { |entry| File.basename(entry.fetch("path")) == run.fetch("workflow") }
+      variant = workflow["variant_input"] && run.fetch("inputs")[workflow.fetch("variant_input")]
+      identity = {"harness_sha" => sha, "case_id" => item.fetch("id"), "definition_sha256" => BenchmarkCases.definition_sha256(item, root: root)}
+      key = [item.fetch("id"), variant, selection.fetch("phases"), run.fetch("inputs")]
+      series[key] ||= Dir.mktmpdir("scheduled-series-") do |directory|
+        BenchmarkSeries.create(item, directory: File.join(directory, "series"),
+          series: "#{series_prefix}-#{index + 1}", lane: "fresh", samples: 1, variant: variant,
+          definition_sha256: identity.fetch("definition_sha256"), phases: selection.fetch("phases"),
+          workflow_inputs: run.fetch("inputs").merge("cli_version" => version))
+      end
+      run["series"] = series.fetch(key)
+      run["harness_sha"] = sha
+      run["inputs"] = run.fetch("inputs").merge("series_id" => run.fetch("series").fetch("series_id"),
+        "sample" => "1", "expected_identity" => JSON.generate(identity))
+    end
+  end
+
   def self.cases(root: BenchmarkCases::ROOT)
     suite = JSON.parse(File.read(File.join(root, "suites/scheduled.json")))
     raise Error, "Unsupported scheduled suite version" unless suite.fetch("schema_version") == 1
@@ -98,14 +128,15 @@ if $PROGRAM_NAME == __FILE__
     targets = BenchmarkCadence.fresh_targets(case_id: options.delete(:case_id))
     raise BenchmarkCadence::Error, "No scheduled cases selected" if targets.empty?
     if options.delete(:collect)
-      exit(NightlyCanaries::Runner.new.collect(summary: options.fetch(:summary), benchmarks: targets) ? 0 : 1)
+      exit(NightlyCanaries::Runner.new.collect(summary: options.fetch(:summary), output: options[:output],
+        channel: options.fetch(:channel, "canary"), benchmarks: targets) ? 0 : 1)
     elsif options.delete(:check)
       puts "Validated #{targets.length} scheduled fresh workflows"
     else
       raise BenchmarkCadence::Error, "Use stable or canary" unless %w[stable canary].include?(options[:channel])
       raise BenchmarkCadence::Error, "Inspect the previous receipt before retrying a dispatch" if ENV.fetch("GITHUB_RUN_ATTEMPT", "1").to_i > 1 && !options[:dry_run]
       NightlyCanaries::Runner.new.dispatch(repository: BenchmarkCases::REPOSITORY, benchmarks: targets,
-        preflight: BenchmarkCadence.method(:verify_cli), **options)
+        preflight: ->(version, runs) { BenchmarkCadence.verify_cli(version, runs); BenchmarkCadence.freeze_runs(version, runs) }, **options)
     end
   rescue BenchmarkCadence::Error, BenchmarkCases::Error, NightlyCanaries::Error, KeyError => error
     abort error.message

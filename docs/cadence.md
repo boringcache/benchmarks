@@ -27,6 +27,38 @@ and missing targets. A dispatch succeeding does not establish that the builds
 passed. Dry runs request no builds. Interrupted requests require receipt review
 before retrying; an absent HTTP response does not prove GitHub rejected a run.
 
+Preflight freezes a one-sample series for each case and variant using the same
+series contract as manual experiments. The plan retains source pins, phase
+sequence, provider set, CLI release, definition digest and harness commit.
+Separate OBS provider workflows share their variant's series. Every scheduled
+workflow checks the expected commit and definition before preparing the workload.
+If the dispatch branch advances after preflight, preparation fails; it does not
+execute the new snapshot as the old plan. Commit local harness changes before
+creating a schedule plan.
+
+The retained dispatch receipt can be imported into the existing series layout:
+
+```sh
+ruby scripts/cadence-dispatch.rb --plan /tmp/benchmark-dispatch.json --materialize results
+```
+
+This writes frozen series and dispatch records without requesting builds. Then
+use `bin/bench preserve`, `collect` and `catalog` with the recorded series and run
+IDs. A conflicting retained record is rejected. Uncertain and missing requests
+remain in the imported series.
+
+The native fresh report runs after failed or skipped build jobs and retains
+`run-manifest.json` and `run-report.md` alongside available canonical lane files.
+It combines original phase records, shared phase outcomes and final job
+conclusions. A successful output check does not override a later post-step
+failure. Missing durations and storage remain unmeasured. The current cold
+matrix dependency still skips both warm jobs when either cold provider fails;
+the report records those skipped phases explicitly.
+The parent canary collector reconciles the same expected observations from the
+attempt's jobs and available phase artifacts if cancellation or runner loss
+prevents the child report from running. A successful job without a phase record
+has missing evidence. This does not replace durable evidence preservation.
+
 Source checks fan out by case, with six checks running at a time. Each case owns
 its source-controller lock; one failed or slow case does not stop the others.
 Rolling workflows serialize publication to the same cache with `queue: max`.

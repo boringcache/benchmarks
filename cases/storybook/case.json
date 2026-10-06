@@ -71,7 +71,7 @@
       "boringcache",
       "actions-cache"
     ],
-    "timed_scope": "Timed Storybook sandbox build plus measured cache restore/setup; dependency installation and sandbox creation are excluded; output checks and unmeasured post-job save are reported separately",
+    "timed_scope": "Timed Storybook sandbox build plus measured cache restore/setup; dependency installation and sandbox creation are excluded; output checks and unmeasured cache publication are reported separately",
     "primary_metric": "build_and_reuse_seconds",
     "storage": "provider-reported",
     "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",

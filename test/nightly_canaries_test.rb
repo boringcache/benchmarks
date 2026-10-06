@@ -25,7 +25,7 @@ class NightlyCanariesTest < Minitest::Test
       @requests << {path: path, body: body}
       return @releases if path.include?("releases?")
       return @releases.first if path.include?("releases/tags/")
-      return {"workflow_runs" => @parents} if path.include?("canary.yml/runs?")
+      return {"workflow_runs" => @parents} if path.include?("canary.yml/runs?") || path.include?("weekly-fresh.yml/runs?")
       if path.include?("/actions/runs/")
         return {"head_sha" => "a" * 40, "status" => @conclusion ? "completed" : "in_progress", "conclusion" => @conclusion}
       end
@@ -124,7 +124,7 @@ class NightlyCanariesTest < Minitest::Test
     record = JSON.parse(File.read(@output))
     assert_equal "dispatch-failed", record["state"]
     assert_equal 1, record["runs"].first["id"]
-    assert_equal "planned", record["runs"].last["state"]
+    assert_equal "request-unknown", record["runs"].last["state"]
   end
 
   def test_checks_the_recorded_run_and_reports_failure
@@ -180,6 +180,18 @@ class NightlyCanariesTest < Minitest::Test
     assert_equal [[BENCHMARK.fetch("source_repo"), 21]], @runner.receipt_requests
     assert_includes File.read(@summary), "**failure**"
     assert_includes File.read(@summary), "/actions/runs/1"
+  end
+
+  def test_weekly_collection_uses_its_own_dispatch_and_retains_structured_outcomes
+    prepare_collection
+    @runner.record["cli_version"] = "v1.40.0"
+    @runner.record["channel"] = "stable"
+    assert @runner.collect(summary: @summary, output: @output, channel: "stable", benchmarks: [BENCHMARK], now: Time.utc(2026, 10, 5))
+    assert @runner.requests.any? { |request| request[:path].include?("weekly-fresh.yml/runs?") }
+    retained = JSON.parse(File.read(@output))
+    assert_equal true, retained.fetch("passed")
+    assert_equal "success", retained.dig("repositories", 0, "dispatch", "runs", 0, "state")
+    assert_includes File.read(@summary), "CLI stable benchmark results"
   end
 
   def test_missing_latest_receipt_does_not_fall_back_to_an_older_success

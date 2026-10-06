@@ -1,6 +1,7 @@
 ---
-name: Run Hugo Go benchmark phase
-description: Runs one Hugo Go cache provider and phase.
+name: Run a native cache phase
+description: Selects the provider, measures the declared command, verifies outputs
+  and retains phase evidence.
 inputs:
   strategy:
     required: true
@@ -13,67 +14,67 @@ inputs:
   cli_version:
     required: false
     default: ''
-  go_version:
+  mode:
     required: true
+  cache_path:
+    required: true
+  workflow_started_at:
+    required: true
+  configure_script:
+    default: ''
+  command_mode:
+    default: ''
+  working_directory:
+    default: upstream
+  cache_profiles:
+    default: ''
+  prepare_script:
+    default: ''
+  dependency_token:
+    default: ''
+  report_variant:
+    default: ''
+outputs:
+  cache_scope:
+    description: Published cache cohort
+    value: "${{ steps.scope.outputs.cache_scope }}"
 runs:
   using: composite
   steps:
-  - name: Start the workflow timer
-    id: workflow_timer
-    shell: bash
-    run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
-  - name: Checkout pinned Hugo source
-    shell: bash
-    run: |
-      git submodule sync --recursive
-      git -c protocol.version=2 submodule update --init --depth 1 --recommend-shallow --jobs 4 upstream
-  - name: Verify the upstream benchmark recipe
-    shell: bash
-    run: ruby ./scripts/verify-upstream-recipe.rb
-  - name: Prepare clean Hugo source
-    shell: bash
-    env:
-      PREPARE_PHASE: "${{ inputs.phase == 'warm' && 'warm1' || 'base' }}"
-    run: ruby ./scripts/prepare-source.rb "$PREPARE_PHASE"
   - name: Select the cache cohort
     id: scope
     shell: bash
     env:
       CACHE_LANE: "${{ inputs.cache_lane }}"
       BENCHMARK_ID: "${{ inputs.benchmark_id }}"
+      CACHE_MODE: "${{ inputs.command_mode || inputs.mode }}"
     run: |
       set -euo pipefail
       cache_scope="$(ruby ./scripts/benchmark-phase.rb scope)"
       ruby ./scripts/scope-case-cache.rb "$cache_scope"
       source_sha="$(git rev-parse HEAD:upstream)"
       echo "cache_scope=${cache_scope}" >> "$GITHUB_OUTPUT"
-      echo "cache_key=go-${cache_scope}-${source_sha}" >> "$GITHUB_OUTPUT"
-      echo "source_repository=gohugoio/hugo" >> "$GITHUB_OUTPUT"
+      echo "cache_key=${CACHE_MODE}-${cache_scope}-${source_sha}" >> "$GITHUB_OUTPUT"
+      ruby -rjson -e 'puts "source_repository=#{JSON.parse(File.read("benchmark-context.json")).fetch("source").fetch("repository")}"' >> "$GITHUB_OUTPUT"
       echo "source_sha=${source_sha}" >> "$GITHUB_OUTPUT"
-  - name: Set up Go
-    uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16
-    with:
-      go-version: "${{ inputs.go_version }}"
-      cache: false
   - name: Start the provider setup timer
     id: setup_timer
     shell: bash
     run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
   - name: Restore the GitHub Actions cache
     if: inputs.strategy == 'actions-cache' && inputs.phase == 'publish'
-    uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25
+    uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25
     with:
-      path: "${{ github.workspace }}/.go/build-cache"
+      path: "${{ inputs.cache_path }}"
       key: "${{ steps.scope.outputs.cache_key }}"
-      restore-keys: 'go-${{ steps.scope.outputs.cache_scope }}-
-
-        '
+      restore-keys: "${{ inputs.command_mode || inputs.mode }}-${{ steps.scope.outputs.cache_scope
+        }}-"
     id: actions_cache_0
   - name: Restore the exact GitHub Actions cache
     if: inputs.strategy == 'actions-cache' && inputs.phase == 'warm'
     uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25
     with:
-      path: "${{ github.workspace }}/.go/build-cache"
+      path: "${{ inputs.cache_path }}"
       key: "${{ steps.scope.outputs.cache_key }}"
       fail-on-cache-miss: true
     id: actions_cache_1
@@ -83,25 +84,30 @@ runs:
     uses: "./.github/actions/boringcache"
     with:
       cli-version: "${{ inputs.cli_version }}"
-      mode: go
+      mode: "${{ inputs.mode }}"
       trust-policy: publish
-      working-directory: upstream
-    env:
-      GOCACHE: "${{ github.workspace }}/.go/build-cache"
+      working-directory: "${{ inputs.working_directory }}"
+      cache-profiles: "${{ inputs.cache_profiles }}"
   - name: Restore with BoringCache
     id: boringcache-restore
     if: inputs.strategy == 'boringcache' && inputs.phase == 'warm'
     uses: "./.github/actions/boringcache"
     with:
       cli-version: "${{ inputs.cli_version }}"
-      mode: go
+      mode: "${{ inputs.mode }}"
       trust-policy: restore
-      working-directory: upstream
+      working-directory: "${{ inputs.working_directory }}"
       fail-on-cache-miss: true
+      cache-profiles: "${{ inputs.cache_profiles }}"
+  - name: Configure the native comparator
+    if: inputs.configure_script != ''
+    shell: bash
     env:
-      GOCACHE: "${{ github.workspace }}/.go/build-cache"
-  - name: Start the build timer
-    id: build_timer
+      CONFIGURE_SCRIPT: "${{ inputs.configure_script }}"
+      CACHE_STRATEGY: "${{ inputs.strategy }}"
+    run: bash "$CONFIGURE_SCRIPT" "$CACHE_STRATEGY"
+  - name: Capture cache setup timing
+    id: setup_timing
     shell: bash
     env:
       SETUP_STARTED_AT: "${{ steps.setup_timer.outputs.started_at }}"
@@ -109,25 +115,35 @@ runs:
       set -euo pipefail
       now="$(date +%s)"
       echo "setup_seconds=$(( now - SETUP_STARTED_AT ))" >> "$GITHUB_OUTPUT"
-      echo "started_at=${now}" >> "$GITHUB_OUTPUT"
-  - name: Build Hugo
+  - name: Prepare workload dependencies outside measurement
+    if: inputs.prepare_script != ''
     shell: bash
     env:
-      GOCACHE: "${{ github.workspace }}/.go/build-cache"
-    run: ruby ./scripts/run-benchmark-plan.rb go --working-directory upstream
+      PREPARE_SCRIPT: "${{ inputs.prepare_script }}"
+      GITHUB_TOKEN: "${{ inputs.dependency_token }}"
+    run: ruby "$PREPARE_SCRIPT"
+  - name: Start the build timer
+    id: build_timer
+    shell: bash
+    run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+  - name: Run the declared product-plan command
+    id: build
+    shell: bash
+    env:
+      BENCHMARK_MODE: "${{ inputs.command_mode || inputs.mode }}"
+    run: ruby ./scripts/run-benchmark-plan.rb "$BENCHMARK_MODE" --working-directory
+      upstream
   - name: Capture the build timing
+    if: always() && steps.build_timer.outcome == 'success'
     id: build_timing
     shell: bash
     env:
       BUILD_STARTED_AT: "${{ steps.build_timer.outputs.started_at }}"
     run: echo "build_seconds=$(( $(date +%s) - BUILD_STARTED_AT ))" >> "$GITHUB_OUTPUT"
-  - name: Verify the Hugo build
+  - name: Verify workload outputs
+    id: verify
     shell: bash
-    run: |
-      set -euo pipefail
-      artifact="$(go env GOPATH)/bin/dragonfly_amd64/hugo"
-      test -x "$artifact"
-      test -z "$(git -C upstream status --porcelain=v1 --untracked-files=all)"
+    run: ruby ./scripts/verify-output.rb
   - name: Write the benchmark phase evidence
     shell: bash
     env:
@@ -136,8 +152,8 @@ runs:
       CACHE_LANE: "${{ inputs.cache_lane }}"
       REPORT_PHASE: "${{ inputs.cache_lane == 'rolling' && 'commit' || inputs.phase
         == 'warm' && 'warm' || 'cold' }}"
-      WORKFLOW_STARTED_AT: "${{ steps.workflow_timer.outputs.started_at }}"
-      SETUP_SECONDS: "${{ steps.build_timer.outputs.setup_seconds }}"
+      WORKFLOW_STARTED_AT: "${{ inputs.workflow_started_at }}"
+      SETUP_SECONDS: "${{ steps.setup_timing.outputs.setup_seconds }}"
       BUILD_SECONDS: "${{ steps.build_timing.outputs.build_seconds }}"
       CACHE_HIT: "${{ steps.boringcache-publish.outputs.cache-hit || steps.boringcache-restore.outputs.cache-hit
         || steps.actions_cache_0.outputs.cache-hit || steps.actions_cache_1.outputs.cache-hit
@@ -148,6 +164,8 @@ runs:
       GITHUB_TOKEN: "${{ github.token }}"
       SOURCE_REPOSITORY: "${{ steps.scope.outputs.source_repository }}"
       SOURCE_SHA: "${{ steps.scope.outputs.source_sha }}"
+      BENCHMARK_MODE: "${{ inputs.mode }}"
+      REPORT_VARIANT: "${{ inputs.report_variant }}"
     run: |
       set -euo pipefail
       ruby ./scripts/benchmark-report.rb phase --verified-output \
@@ -155,7 +173,7 @@ runs:
         --strategy "$STRATEGY" \
         --lane "$CACHE_LANE" \
         --phase "$REPORT_PHASE" \
-        --mode go \
+        --variant "$REPORT_VARIANT" --mode "$BENCHMARK_MODE" \
         --restore-or-setup-seconds "$SETUP_SECONDS" \
         --workflow-seconds "$(( $(date +%s) - WORKFLOW_STARTED_AT ))" \
         --build-seconds "$BUILD_SECONDS" \
@@ -172,3 +190,21 @@ runs:
         && 'warm' || 'cold' }}
       path: benchmark-results/
       if-no-files-found: error
+  - name: Publish the GitHub Actions cache after measurement
+    if: inputs.strategy == 'actions-cache' && inputs.phase == 'publish' && steps.actions_cache_0.outputs.cache-hit != 'true'
+    uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25
+    with:
+      path: "${{ inputs.cache_path }}"
+      key: "${{ steps.scope.outputs.cache_key }}"
+  - name: Retain available timing and verification state
+    if: always()
+    shell: bash
+    env:
+      BUILD_SECONDS: "${{ steps.build_timing.outputs.build_seconds }}"
+      SETUP_SECONDS: "${{ steps.setup_timing.outputs.setup_seconds }}"
+      VERIFIED: "${{ steps.verify.outcome }}"
+    run: |
+      ruby -rjson -e '
+        timing = {"build_seconds" => ENV["BUILD_SECONDS"], "restore_or_setup_seconds" => ENV["SETUP_SECONDS"]}
+          .transform_values { |value| value.to_s.empty? ? nil : Float(value) }.compact
+        File.write("benchmark-partial.json", JSON.generate({"timing" => timing, "verification" => ENV["VERIFIED"] == "success"}))'
