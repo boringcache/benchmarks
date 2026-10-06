@@ -199,7 +199,7 @@ module NightlyCanaries
       return @phase_evidence[key] if @phase_evidence.key?(key)
       @phase_evidence[key] = Dir.mktmpdir("cadence-phases-") do |directory|
         _, error, status = Open3.capture3("gh", "run", "download", run.fetch("id").to_s,
-          "--repo", run.fetch("repository"), "--pattern", "phase-*", "--pattern", "outcome-*", "--pattern", "storage-*", "--pattern", "deno-cargo-product-*", "--pattern", "zed-cargo-product-*", "--pattern", "benchmark-zed-cargo-*", "--dir", directory)
+          "--repo", run.fetch("repository"), "--pattern", "phase-*", "--pattern", "outcome-*", "--pattern", "storage-*", "--pattern", "deno-cargo-product-*", "--pattern", "zed-cargo-layers-*", "--pattern", "benchmark-zed-cargo-*", "--dir", directory)
         run["evidence_error"] = "Phase artifacts unavailable: #{error.strip}" unless status.success?
         payloads = Dir[File.join(directory, "**", "*.json")].map { |path| JSON.parse(File.read(path)) }
         values = payloads.flat_map { |value| value.is_a?(Hash) && value["runs"].is_a?(Array) ? value.fetch("runs") : [value] }.filter_map do |value|

@@ -51,6 +51,30 @@ module CadenceDispatch
     end}
   end
 
+  def self.pin(plan, run_id:, runner: NightlyCanaries::Runner.new)
+    matrix(plan)
+    raise Error, "Invalid cadence run ID" unless run_id.to_s.match?(/\A[1-9][0-9]*\z/)
+    selections = plan.fetch("runs").flat_map { |run| ProjectRuns.expand(run) }
+    hashes = selections.map { |run| run.fetch("harness_sha") }.uniq
+    raise Error, "The batch must use one exact harness commit" unless hashes.length == 1 && hashes.first.match?(/\A[0-9a-f]{40}\z/)
+    reference = "benchmark-#{run_id}"
+    path = "repos/#{BenchmarkCases::REPOSITORY}/git/ref/tags/#{reference}"
+    existing = begin
+      runner.api(path)
+    rescue NightlyCanaries::Error => error
+      raise unless error.message.include?("HTTP 404")
+      nil
+    end
+    if existing
+      raise Error, "Cadence reference already points to another harness" unless existing.dig("object", "sha") == hashes.first
+    else
+      runner.api("repos/#{BenchmarkCases::REPOSITORY}/git/refs",
+        body: {"ref" => "refs/tags/#{reference}", "sha" => hashes.first})
+    end
+    raise Error, "Cadence reference did not retain the planned harness" unless runner.api(path).dig("object", "sha") == hashes.first
+    plan.merge("ref" => reference)
+  end
+
   def self.dispatch(plan, index:, output:, runner: NightlyCanaries::Runner.new)
     raise Error, "Inspect the previous receipt before retrying a dispatch" if ENV.fetch("GITHUB_RUN_ATTEMPT", "1").to_i > 1
     matrix(plan)
@@ -118,6 +142,7 @@ if $PROGRAM_NAME == __FILE__
   options = {}
   OptionParser.new do |parser|
     parser.on("--plan PATH") { |value| options[:plan] = value }
+    parser.on("--pin RUN_ID") { |value| options[:pin] = value }
     parser.on("--matrix") { options[:matrix] = true }
     parser.on("--index N", Integer) { |value| options[:index] = value }
     parser.on("--receipts PATH") { |value| options[:receipts] = value }
@@ -128,7 +153,9 @@ if $PROGRAM_NAME == __FILE__
   end.parse!
   begin
     plan = JSON.parse(File.read(options.fetch(:plan)))
-    if options[:materialize]
+    if options[:pin]
+      BenchmarkCases.write_json(options.fetch(:plan), CadenceDispatch.pin(plan, run_id: options.fetch(:pin)))
+    elsif options[:materialize]
       CadenceDispatch.materialize(plan, directory: options.fetch(:materialize))
     elsif options[:matrix]
       puts JSON.generate(CadenceDispatch.matrix(plan))
