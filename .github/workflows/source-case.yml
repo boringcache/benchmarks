@@ -89,7 +89,7 @@ jobs:
   publish:
     name: Prepare rolling runs
     needs: [previous, inspect]
-    if: needs.inspect.outputs.changed == 'true'
+    if: needs.inspect.outputs.changed == 'true' && vars.BENCHMARK_CADENCE_ACTIVE == 'true' && github.ref_name == 'main'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:

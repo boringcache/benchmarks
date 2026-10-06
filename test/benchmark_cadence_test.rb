@@ -131,11 +131,15 @@ class BenchmarkCadenceTest < Minitest::Test
   end
 
   def test_schedules_require_explicit_cutover_and_monitor_all_central_cadences
-    %w[weekly-fresh canary source-sync].each do |name|
+    %w[weekly-fresh canary].each do |name|
       workflow = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/#{name}.yml")))
       job = workflow.fetch("jobs").values.first
       assert_equal "github.event_name == 'workflow_dispatch' || vars.BENCHMARK_CADENCE_ACTIVE == 'true'", job.fetch("if")
     end
+    source = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/source-sync.yml")))
+    refute source.dig("jobs", "select").key?("if"), "Upstream inspection must continue while automatic dispatch is paused"
+    controller = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/source-case.yml")))
+    assert_equal "needs.inspect.outputs.changed == 'true' && vars.BENCHMARK_CADENCE_ACTIVE == 'true' && github.ref_name == 'main'", controller.dig("jobs", "publish", "if")
     workflow = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/nightly-canaries.yml")))
     refute workflow.dig("jobs", "results").key?("if"), "Monitoring must continue while automatic dispatch is paused"
     assert_equal({"contents" => "read", "actions" => "read"}, workflow.fetch("permissions"))
