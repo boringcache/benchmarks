@@ -31,7 +31,13 @@ jobs:
       native_rolling_benchmark: "${{ steps.matrix.outputs.native_rolling_benchmark
         }}"
       nix_rolling_benchmark: "${{ steps.matrix.outputs.nix_rolling_benchmark }}"
-      zed_zed_cargo_rolling_auto: "${{ steps.matrix.outputs.zed_zed_cargo_rolling_auto }}"
+      zed_zed_cargo_rolling_auto: "${{ steps.matrix.outputs.zed_zed_cargo_rolling_auto
+        }}"
+      deno_deno_cargo_rolling_chain: "${{ steps.matrix.outputs.deno_deno_cargo_rolling_chain
+        }}"
+      reapi_rolling_benchmark: "${{ steps.matrix.outputs.reapi_rolling_benchmark }}"
+      grpc_grpc_bazel_benchmark: "${{ steps.matrix.outputs.grpc_grpc_bazel_benchmark
+        }}"
     steps:
     - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
       with:
@@ -111,6 +117,9 @@ jobs:
     - native_rolling_benchmark
     - nix_rolling_benchmark
     - zed_zed_cargo_rolling_auto
+    - deno_deno_cargo_rolling_chain
+    - reapi_rolling_benchmark
+    - grpc_grpc_bazel_benchmark
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -145,3 +154,59 @@ jobs:
         path: project-results/
         if-no-files-found: error
         retention-days: 90
+  deno_deno_cargo_rolling_chain:
+    name: "${{ matrix.label }}"
+    needs: select
+    if: needs.select.outputs.deno_deno_cargo_rolling_chain != ''
+    strategy:
+      fail-fast: false
+      matrix: "${{ fromJSON(needs.select.outputs.deno_deno_cargo_rolling_chain) }}"
+    uses: "./.github/workflows/deno-deno-cargo-rolling-chain.yml"
+    secrets: inherit
+    with:
+      provider: "${{ matrix.inputs.provider || 'boringcache' }}"
+      observation: "${{ matrix.inputs.observation || inputs.observation }}"
+      cli_version: "${{ inputs.cli_version }}"
+      cache_scope: "${{ matrix.inputs.cache_scope || '' }}"
+      base_sha: "${{ matrix.inputs.base_sha || '' }}"
+      head_sha: "${{ matrix.inputs.head_sha || '' }}"
+      cache_profile: "${{ matrix.inputs.cache_profile || 'cargo-product' }}"
+      runner_label: "${{ matrix.inputs.runner_label || '' }}"
+      series_id: "${{ matrix.inputs.series_id || '' }}"
+      sample: "${{ matrix.inputs.sample || '1' }}"
+  reapi_rolling_benchmark:
+    name: "${{ matrix.label }}"
+    needs: select
+    if: needs.select.outputs.reapi_rolling_benchmark != ''
+    strategy:
+      fail-fast: false
+      matrix: "${{ fromJSON(needs.select.outputs.reapi_rolling_benchmark) }}"
+    uses: "./.github/workflows/reapi-rolling-benchmark.yml"
+    secrets: inherit
+    with:
+      observation: "${{ matrix.inputs.observation || inputs.observation }}"
+      case_id: "${{ matrix.inputs.case_id || '' }}"
+      provider: "${{ matrix.inputs.provider || 'all' }}"
+      runner_label: "${{ matrix.inputs.runner_label || '' }}"
+      cli_version: "${{ inputs.cli_version }}"
+      series_id: "${{ matrix.inputs.series_id || '' }}"
+      sample: "${{ matrix.inputs.sample || '1' }}"
+      cache_scope: "${{ matrix.inputs.cache_scope || '' }}"
+  grpc_grpc_bazel_benchmark:
+    name: "${{ matrix.label }}"
+    needs: select
+    if: needs.select.outputs.grpc_grpc_bazel_benchmark != ''
+    strategy:
+      fail-fast: false
+      matrix: "${{ fromJSON(needs.select.outputs.grpc_grpc_bazel_benchmark) }}"
+    uses: "./.github/workflows/grpc-grpc-bazel-benchmark.yml"
+    secrets: inherit
+    with:
+      provider: "${{ matrix.inputs.provider || 'all' }}"
+      observation: "${{ matrix.inputs.observation || inputs.observation }}"
+      cache_scope: "${{ matrix.inputs.cache_scope || '' }}"
+      cli_version: "${{ inputs.cli_version }}"
+      benchmark_id_suffix: "${{ matrix.inputs.benchmark_id_suffix || '' }}"
+      runner_label: "${{ matrix.inputs.runner_label || '' }}"
+      series_id: "${{ matrix.inputs.series_id || '' }}"
+      sample: "${{ matrix.inputs.sample || '1' }}"

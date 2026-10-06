@@ -117,6 +117,16 @@ class FreshReportTest < Minitest::Test
     assert run.fetch("observations").all? { |value| value.fetch("timing").empty? }
   end
 
+  def test_depot_fresh_upload_does_not_select_the_github_actions_filename
+    workflow = YAML.safe_load_file(File.expand_path("../.github/workflows/native-fresh-benchmark.yml", __dir__))
+    steps = workflow.fetch("jobs").fetch("report").fetch("steps")
+    github = steps.find { |step| step["name"] == "Retain the GitHub Actions fresh result" }
+    assert_includes github.fetch("if"), "inputs.provider == 'both' || inputs.provider == 'actions-cache'"
+    depot = steps.find { |step| step["name"] == "Retain the selected Depot fresh result" }
+    assert_includes depot.fetch("if"), "startsWith(inputs.provider, 'depot-')"
+    assert_includes depot.dig("with", "name"), "${{ inputs.provider }}"
+  end
+
   def test_partial_report_keeps_canonical_measurements_and_names
     item = BenchmarkCases.load_case("hugo-go")
     record = {"schema_version" => 1, "benchmark" => "hugo-go", "strategy" => "actions-cache", "phase" => "cold", "lane" => "fresh",

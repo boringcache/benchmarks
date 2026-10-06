@@ -24,7 +24,11 @@ permissions:
   contents: write
   actions: read
 jobs:
+  window:
+    uses: ./.github/workflows/cadence-window.yml
   plan:
+    needs: window
+    if: needs.window.outputs.open == 'true'
     name: Validate suite and CLI
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -106,6 +110,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_INDEX: ${{ matrix.index }}
+          BENCHMARK_CADENCE_UNTIL: ${{ vars.BENCHMARK_CADENCE_UNTIL }}
         run: |
           ruby scripts/cadence-dispatch.rb \
             --plan "$RUNNER_TEMP/plan/benchmark-dispatch.json" --index "$TARGET_INDEX" \
