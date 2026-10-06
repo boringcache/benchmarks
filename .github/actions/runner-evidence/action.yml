@@ -5,6 +5,8 @@ inputs:
     required: true
   provider:
     required: true
+  runner:
+    required: true
 runs:
   using: composite
   steps:
@@ -21,6 +23,6 @@ runs:
     - name: Retain environment
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
-        name: environment-${{ inputs.provider }}-${{ inputs.phase }}
+        name: environment-${{ inputs.provider }}-${{ inputs.phase }}-${{ inputs.runner }}
         path: runner-evidence/
         if-no-files-found: error

@@ -49,6 +49,33 @@ class ProjectRunsTest < Minitest::Test
     assert_includes ProjectReport.markdown(rows, project: "n8n"), "unmeasured"
   end
 
+  def test_runner_group_keeps_each_seed_replay_and_job_result_separate
+    selections = %w[depot-ubuntu-24.04-4 namespace-profile-buildkit-4c].map do |label|
+      {"workflow" => "native-fresh-benchmark.yml", "inputs" => {"case_id" => "posthog", "variant" => "layers",
+        "provider" => "boringcache", "runner_label" => label, "benchmark_id_suffix" => "-#{label}"}}
+    end
+    matrix = ProjectRuns.matrix(selections, case_id: "posthog", lane: "fresh")
+    assert_equal ["layers depot-ubuntu-24.04-4", "layers namespace-profile-buildkit-4c"], matrix.fetch("native-fresh-benchmark.yml").fetch("include").map { |row| row.fetch("label") }
+    records = selections.flat_map.with_index do |selection, index|
+      %w[cold warm].map do |phase|
+        {"case" => {"case_id" => "posthog"}, "variant" => "layers", "benchmark" => "posthog#{selection.dig('inputs', 'benchmark_id_suffix')}",
+          "strategy" => "boringcache", "phase" => phase, "verification" => {"passed" => true}, "timing" => {"build_seconds" => 10 + index}}
+      end
+    end
+    jobs = selections.flat_map.with_index do |selection, index|
+      %w[cold warm].map do |phase|
+        {"name" => "layers #{selection.dig('inputs', 'runner_label')} / BoringCache posthog #{phase}",
+          "status" => "completed", "conclusion" => index.zero? ? "success" : "failure"}
+      end
+    end
+    rows = ProjectReport.observations(records, selections: selections, project: "posthog", lane: "fresh", jobs: jobs, run_url: "https://example.com/run/42")
+    assert_equal %w[succeeded succeeded failed failed], rows.map { |row| row.fetch("state") }
+    assert_equal [10, 10, 11, 11], rows.map { |row| row.dig("timing", "build_seconds") }
+    assert_equal selections.map { |value| value.dig("inputs", "runner_label") }, rows.map { |row| row.fetch("runner_class") }.uniq
+    selections.last.fetch("inputs")["benchmark_id_suffix"] = selections.first.dig("inputs", "benchmark_id_suffix")
+    assert_raises(RuntimeError) { ProjectRuns.matrix(selections, case_id: "posthog", lane: "fresh") }
+  end
+
   def test_rolling_zed_matrix_preserves_cargo_and_nix_inputs
     selections = [
       {"repository" => BenchmarkCases::REPOSITORY, "workflow" => "zed-zed-cargo-rolling-auto.yml", "inputs" => {"base_sha" => "a" * 40, "head_sha" => "b" * 40, "source_distance" => "3"}},
