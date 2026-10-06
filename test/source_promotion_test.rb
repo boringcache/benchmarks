@@ -68,6 +68,83 @@ class SourcePromotionTest < Minitest::Test
     assert_equal old.fetch("upstream_files"), actual.fetch("upstream_files")
   end
 
+  class ProjectPublisher < SourcePromotion::Publisher
+    attr_reader :commits, :requests
+    attr_accessor :unknown_request
+
+    def initialize
+      super
+      @commits, @requests, @files = [], [], {}
+    end
+
+    def optional_file(path, ref: "main") = @files[path]
+
+    def commit(changes, expected:, message:)
+      expected.each do |path, content|
+        raise "Rolling intent changed" if path.start_with?("migration/rolling/") && @files[path] != content
+      end
+      @commits << Marshal.load(Marshal.dump(changes))
+      @files.merge!(changes)
+      "b" * 40
+    end
+
+    def api(path, body: nil)
+      raise "Expected a workflow dispatch" unless body && path.end_with?("/dispatches")
+      selections = JSON.parse(body.fetch("inputs").fetch("selections"))
+      selections.each do |selection|
+        id = ProjectRuns.selection_case(selection)
+        raise "Dispatch preceded durable project intent" unless JSON.parse(@files.fetch(state_path(id))).fetch("state") == "dispatching"
+      end
+      @requests << body
+      @unknown_request ? {} : {"workflow_run_id" => 91}
+    end
+  end
+
+  def test_two_hugo_tools_share_one_durable_project_dispatch
+    items = %w[hugo-go hugo].map { |id| BenchmarkCases.load_case(id) }
+    publisher = ProjectPublisher.new
+    Dir.mktmpdir do |directory|
+      records = publisher.publish_project(items.map { |item| [item, proposal(item)] }, version: VERSION, output: File.join(directory, "receipt.json"))
+      assert_equal 1, publisher.requests.length
+      assert_equal "hugo", publisher.requests.first.dig("inputs", "case_id")
+      assert_equal 2, JSON.parse(publisher.requests.first.dig("inputs", "selections")).length
+      assert_equal [91], records.flat_map { |record| record.fetch("runs").map { |run| run.fetch("id") } }.uniq
+      records.each do |record|
+        assert_equal "requested", record.fetch("state")
+        assert_equal [record.fetch("case_id")], record.fetch("runs").first.fetch("selections").map { |selection| ProjectRuns.selection_case(selection) }
+      end
+      assert publisher.commits.first.key?("cases/hugo-go/case.json")
+      assert publisher.commits.first.key?("cases/hugo/case.json")
+    end
+  end
+
+  def test_uncertain_project_dispatch_blocks_both_cases_without_retry
+    items = %w[hugo-go hugo].map { |id| BenchmarkCases.load_case(id) }
+    publisher = ProjectPublisher.new
+    publisher.unknown_request = true
+    Dir.mktmpdir do |directory|
+      path = File.join(directory, "receipt.json")
+      pairs = items.map { |item| [item, proposal(item)] }
+      assert_raises(SourcePromotion::Error) { publisher.publish_project(pairs, version: VERSION, output: path) }
+      assert_equal ["dispatch-failed"], JSON.parse(File.read(path)).fetch("records").map { |record| record.fetch("state") }.uniq
+      assert_raises(SourcePromotion::Error) { publisher.publish_project(pairs, version: VERSION, output: path) }
+      assert_equal 1, publisher.requests.length
+    end
+  end
+
+  def test_grouped_zed_keeps_cargo_source_until_verified_build
+    items = %w[zed zed-nix].map { |id| BenchmarkCases.load_case(id) }
+    publisher = ProjectPublisher.new
+    Dir.mktmpdir do |directory|
+      publisher.publish_project(items.map { |item| [item, proposal(item)] }, version: VERSION, output: File.join(directory, "receipt.json"))
+      assert_equal 1, publisher.requests.length
+      assert_equal %w[nix-rolling-benchmark.yml zed-zed-cargo-rolling-auto.yml], JSON.parse(publisher.requests.first.dig("inputs", "selections")).map { |selection| selection.fetch("workflow") }.sort
+      refute publisher.commits.first.key?("cases/zed/case.json")
+      refute publisher.commits.first.key?("cases/zed/payload/benchmark-source.env")
+      assert publisher.commits.first.key?("cases/zed-nix/case.json")
+    end
+  end
+
   def test_source_environment_cannot_change_toolchain_repository_or_commands
     item = BenchmarkCases.load_case("deno")
     proposed = proposal(item)

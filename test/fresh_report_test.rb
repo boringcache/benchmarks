@@ -35,6 +35,16 @@ class FreshReportTest < Minitest::Test
     assert_equal "cancelled", values[2].fetch("state")
   end
 
+  def test_nx_warm_compile_success_requires_native_cache_reuse
+    record = {"strategy" => "actions-cache", "phase" => "warm", "mode" => "nx", "cache" => {"hit" => false}, "verification" => {"passed" => true}}
+    observed = jobs(%w[success success success success])
+    values = FreshReport.reconcile(FreshReport.expected("hugo-go"), jobs: observed, records: [record], run_url: "https://example.com/run")
+    assert_equal "cache-reuse-unverified", values.find { |value| value.values_at("strategy", "phase") == %w[actions-cache warm] }.fetch("state")
+    record.fetch("cache")["hit"] = true
+    values = FreshReport.reconcile(FreshReport.expected("hugo-go"), jobs: observed, records: [record], run_url: "https://example.com/run")
+    assert_equal "succeeded", values.find { |value| value.values_at("strategy", "phase") == %w[actions-cache warm] }.fetch("state")
+  end
+
   def test_skipped_warm_matrix_does_not_require_expanded_provider_jobs
     observed = jobs(%w[failure skipped failure skipped]).reject { |job| job["conclusion"] == "skipped" }
     observed << {"name" => "warm", "status" => "completed", "conclusion" => "skipped"}

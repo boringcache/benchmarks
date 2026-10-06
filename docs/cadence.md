@@ -29,7 +29,9 @@ Run names show the project, cadence and CLI selector. Providers, native tools an
 variants appear inside the project run. n8n's four workloads, Mastodon's selected
 Docker/compiler/streaming workloads, PostHog's profiles, Storybook's archive and
 Nx workloads, and OBS's provider/tool arms each share their project's run. Hugo's Go and Docker
-workloads share one run; Zed's Cargo and Nix workloads share one fresh run.
+workloads share one run; Zed's Cargo and Nix workloads share one run. Rolling
+source inspection batches changed tool cases from the same upstream project
+into one dispatch while preserving each case's source and promotion contract.
 Fresh and Nightly are distinct cadences; their measured phases retain the fresh
 lane. Rolling remains a changed-source observation.
 
@@ -44,7 +46,8 @@ gRPC provider jobs have a 120-minute budget in both lanes.
 
 The monitor checks the configured CLI selector, receipt freshness, executed
 harness identity, expected provider/phase slots and canonical record validation.
-GitHub success without required phase evidence fails monitoring. Native fresh
+GitHub success without required phase evidence fails monitoring. Native Nx warm
+compilation without observed cache reuse also fails monitoring. Native fresh
 reports also retain failed, cancelled and skipped jobs, including post-step
 failures. A verified output does not override a failed job. Rolling diagnostic
 records without a frozen series remain labelled diagnostic; they do not acquire
@@ -68,10 +71,12 @@ Docker blob attribution still lack complete storage measurements.
 
 ## Upstream changes
 
-Each case has an independent source-controller lock. Recipe inspection runs
+Each upstream project has one source-controller lock. Recipe inspection runs
 with read-only permissions; a separate publisher applies only reviewed source
 pin changes using a conditional commit. It preserves dispatch intent before
 requesting builds and retains candidate history under `migration/rolling/`.
+When several tool cases change, one conditional commit retains all their intents
+before the shared dispatch. An uncertain dispatch blocks every affected case.
 
 The next cycle reconciles requested runs and their output evidence before
 advancing again. Uncertain dispatches block automatic retries. Unchanged sources

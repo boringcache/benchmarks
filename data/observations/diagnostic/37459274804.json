@@ -1,0 +1,1096 @@
+{
+  "schema_version": 1,
+  "cadence": "diagnostic",
+  "collected_at": "2026-10-06T11:59:27Z",
+  "run": {
+    "id": 37459274804,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37459274804",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-fresh-benchmark.yml",
+    "state": "success",
+    "comparison_plan": "diagnostic",
+    "canonical_records": [
+      {
+        "schema_version": 1,
+        "benchmark": "storybook-nx-nx-qualification-20261006",
+        "strategy": "actions-cache",
+        "lane": "fresh",
+        "phase": "cold",
+        "variant": "nx",
+        "mode": "nx",
+        "adapter": "nx",
+        "case": {
+          "schema_version": 1,
+          "case_id": "storybook",
+          "workspace": "boringcache/benchmarks",
+          "definition_sha256": "5c80957732fe21749e44d0048639cfe02cd3bd20851fff71bb249537d33dcaf9",
+          "source": {
+            "repository": "storybookjs/storybook",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "3c97d29c70d3215aab512e678d9c8567356cabd3",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "origin": {
+            "repository": "boringcache/benchmark-storybook",
+            "branch": "main",
+            "revision": "a21c17fbfbb0f903ee7664e0b59d17726d8c5301"
+          },
+          "verification": [
+            "Pinned upstream recipe and build success"
+          ],
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Timed upstream Storybook sandbox build or production Nx compilation, selected by variant, plus measured cache restore/setup; dependency preparation, output checks and post-job publication are reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "execution": {
+            "workflows": [
+              {
+                "path": ".github/workflows/native-rolling-benchmark.yml",
+                "lane": "rolling",
+                "inputs": {
+                  "case_id": "storybook"
+                },
+                "historical_workflow": "storybook-benchmark.yml",
+                "variant_input": "variant",
+                "variants": [
+                  "archive-sandbox",
+                  "nx"
+                ]
+              },
+              {
+                "path": ".github/workflows/native-fresh-benchmark.yml",
+                "lane": "fresh",
+                "inputs": {
+                  "case_id": "storybook"
+                },
+                "historical_workflow": "storybook-fresh-benchmark.yml",
+                "variant_input": "variant",
+                "variants": [
+                  "archive-sandbox",
+                  "nx"
+                ]
+              }
+            ],
+            "sync": "upstream-head",
+            "sync_minute": 26,
+            "native": {
+              "action": ".github/actions/storybook-nx-benchmark",
+              "benchmark_id": "storybook",
+              "rolling_inputs": {
+                "node_version": "22.22.3"
+              },
+              "environment": {},
+              "fresh_inputs": {
+                "node_version": "22.22.3"
+              },
+              "variants": {
+                "archive-sandbox": {
+                  "fresh_inputs": {
+                    "workload": "sandbox"
+                  },
+                  "rolling_inputs": {
+                    "workload": "sandbox"
+                  }
+                },
+                "nx": {
+                  "benchmark_id": "storybook-nx",
+                  "fresh_inputs": {
+                    "workload": "nx"
+                  },
+                  "rolling_inputs": {
+                    "workload": "nx"
+                  },
+                  "environment": {
+                    "STORYBOOK_WORKLOAD": "nx"
+                  }
+                }
+              }
+            },
+            "cache_tags": {
+              "storybook-nx-cache-local": "{scope}-nx-cache",
+              "storybook-nx-workspace-data-local": "{scope}-nx-workspace-data",
+              "storybook-nx-local": "{scope}-nx"
+            }
+          }
+        },
+        "timing": {
+          "restore_or_setup_seconds": 1,
+          "build_seconds": 14,
+          "workflow_seconds": 155,
+          "total_seconds": 15,
+          "dependency_setup_seconds": null,
+          "compile_seconds": null,
+          "verification_seconds": null,
+          "save_seconds": null
+        },
+        "cache": {
+          "hit": false,
+          "sccache_proof": null,
+          "import_ready": null,
+          "import_refs": 0,
+          "docker_plan": null,
+          "tag": null,
+          "workspace": null,
+          "storage_bytes": 5624571,
+          "storage_source": "github-actions-cache-api",
+          "storage_breakdown": {
+            "key": "nx-storybook-nx-nx-qualification-20261006-run-r37459274804-a1-3c97d29c70d3215aab512e678d9c8567356cabd3",
+            "complete": true,
+            "measured_bytes": 5624571,
+            "total_bytes": 5624571,
+            "observations": [
+              {
+                "id": 8567317633,
+                "key": "nx-storybook-nx-nx-qualification-20261006-run-r37459274804-a1-3c97d29c70d3215aab512e678d9c8567356cabd3",
+                "ref": "refs/heads/main",
+                "version": "8448ebf87772b13034f4b4ab0e8486e13c9465998b6fef63efe165aff2d5a066",
+                "created_at": "2026-10-06T11:55:08.438261Z",
+                "last_accessed_at": "2026-10-06T11:55:08.438261Z",
+                "size_in_bytes": 5624571
+              }
+            ]
+          }
+        },
+        "source": {
+          "repository": "storybookjs/storybook",
+          "sha": "3c97d29c70d3215aab512e678d9c8567356cabd3"
+        },
+        "product_refs": {},
+        "action": {
+          "resolved_mode": null,
+          "resolved_tags": null,
+          "trust_state": null,
+          "diagnostics_level": null
+        },
+        "github": {
+          "repository": "boringcache/benchmarks",
+          "run_id": "37459274804",
+          "run_attempt": "1",
+          "job": "cold",
+          "workflow": "Native comparison fresh",
+          "ref_name": "main",
+          "runner_os": "Linux",
+          "runner_arch": "X64",
+          "runner_name": "GitHub Actions 1000176330",
+          "runner_environment": "github-hosted",
+          "runner_image": "ubuntu24",
+          "runner_image_version": "20260927.320.1"
+        },
+        "run_uid": "gh-37459274804-1",
+        "verification": {
+          "passed": true,
+          "checks": [
+            "Output verification completed before recording this phase"
+          ],
+          "declared_checks": [
+            "Pinned upstream recipe and build success"
+          ]
+        }
+      },
+      {
+        "schema_version": 1,
+        "benchmark": "storybook-nx-nx-qualification-20261006",
+        "strategy": "actions-cache",
+        "lane": "fresh",
+        "phase": "warm",
+        "variant": "nx",
+        "mode": "nx",
+        "adapter": "nx",
+        "case": {
+          "schema_version": 1,
+          "case_id": "storybook",
+          "workspace": "boringcache/benchmarks",
+          "definition_sha256": "5c80957732fe21749e44d0048639cfe02cd3bd20851fff71bb249537d33dcaf9",
+          "source": {
+            "repository": "storybookjs/storybook",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "3c97d29c70d3215aab512e678d9c8567356cabd3",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "origin": {
+            "repository": "boringcache/benchmark-storybook",
+            "branch": "main",
+            "revision": "a21c17fbfbb0f903ee7664e0b59d17726d8c5301"
+          },
+          "verification": [
+            "Pinned upstream recipe and build success"
+          ],
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Timed upstream Storybook sandbox build or production Nx compilation, selected by variant, plus measured cache restore/setup; dependency preparation, output checks and post-job publication are reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "execution": {
+            "workflows": [
+              {
+                "path": ".github/workflows/native-rolling-benchmark.yml",
+                "lane": "rolling",
+                "inputs": {
+                  "case_id": "storybook"
+                },
+                "historical_workflow": "storybook-benchmark.yml",
+                "variant_input": "variant",
+                "variants": [
+                  "archive-sandbox",
+                  "nx"
+                ]
+              },
+              {
+                "path": ".github/workflows/native-fresh-benchmark.yml",
+                "lane": "fresh",
+                "inputs": {
+                  "case_id": "storybook"
+                },
+                "historical_workflow": "storybook-fresh-benchmark.yml",
+                "variant_input": "variant",
+                "variants": [
+                  "archive-sandbox",
+                  "nx"
+                ]
+              }
+            ],
+            "sync": "upstream-head",
+            "sync_minute": 26,
+            "native": {
+              "action": ".github/actions/storybook-nx-benchmark",
+              "benchmark_id": "storybook",
+              "rolling_inputs": {
+                "node_version": "22.22.3"
+              },
+              "environment": {},
+              "fresh_inputs": {
+                "node_version": "22.22.3"
+              },
+              "variants": {
+                "archive-sandbox": {
+                  "fresh_inputs": {
+                    "workload": "sandbox"
+                  },
+                  "rolling_inputs": {
+                    "workload": "sandbox"
+                  }
+                },
+                "nx": {
+                  "benchmark_id": "storybook-nx",
+                  "fresh_inputs": {
+                    "workload": "nx"
+                  },
+                  "rolling_inputs": {
+                    "workload": "nx"
+                  },
+                  "environment": {
+                    "STORYBOOK_WORKLOAD": "nx"
+                  }
+                }
+              }
+            },
+            "cache_tags": {
+              "storybook-nx-cache-local": "{scope}-nx-cache",
+              "storybook-nx-workspace-data-local": "{scope}-nx-workspace-data",
+              "storybook-nx-local": "{scope}-nx"
+            }
+          }
+        },
+        "timing": {
+          "restore_or_setup_seconds": 1,
+          "build_seconds": 3,
+          "workflow_seconds": 115,
+          "total_seconds": 4,
+          "dependency_setup_seconds": null,
+          "compile_seconds": null,
+          "verification_seconds": null,
+          "save_seconds": null
+        },
+        "cache": {
+          "hit": true,
+          "sccache_proof": null,
+          "import_ready": null,
+          "import_refs": 0,
+          "docker_plan": null,
+          "tag": null,
+          "workspace": null,
+          "storage_bytes": 5624571,
+          "storage_source": "github-actions-cache-api",
+          "storage_breakdown": {
+            "key": "nx-storybook-nx-nx-qualification-20261006-run-r37459274804-a1-3c97d29c70d3215aab512e678d9c8567356cabd3",
+            "complete": true,
+            "measured_bytes": 5624571,
+            "total_bytes": 5624571,
+            "observations": [
+              {
+                "id": 8567317633,
+                "key": "nx-storybook-nx-nx-qualification-20261006-run-r37459274804-a1-3c97d29c70d3215aab512e678d9c8567356cabd3",
+                "ref": "refs/heads/main",
+                "version": "8448ebf87772b13034f4b4ab0e8486e13c9465998b6fef63efe165aff2d5a066",
+                "created_at": "2026-10-06T11:55:08.438261Z",
+                "last_accessed_at": "2026-10-06T11:55:54.781092Z",
+                "size_in_bytes": 5624571
+              }
+            ]
+          }
+        },
+        "source": {
+          "repository": "storybookjs/storybook",
+          "sha": "3c97d29c70d3215aab512e678d9c8567356cabd3"
+        },
+        "product_refs": {},
+        "action": {
+          "resolved_mode": null,
+          "resolved_tags": null,
+          "trust_state": null,
+          "diagnostics_level": null
+        },
+        "github": {
+          "repository": "boringcache/benchmarks",
+          "run_id": "37459274804",
+          "run_attempt": "1",
+          "job": "warm",
+          "workflow": "Native comparison fresh",
+          "ref_name": "main",
+          "runner_os": "Linux",
+          "runner_arch": "X64",
+          "runner_name": "GitHub Actions 1000176336",
+          "runner_environment": "github-hosted",
+          "runner_image": "ubuntu24",
+          "runner_image_version": "20260927.320.1"
+        },
+        "run_uid": "gh-37459274804-1",
+        "verification": {
+          "passed": true,
+          "checks": [
+            "Output verification completed before recording this phase"
+          ],
+          "declared_checks": [
+            "Pinned upstream recipe and build success"
+          ]
+        }
+      },
+      {
+        "schema_version": 1,
+        "benchmark": "storybook-nx-nx-qualification-20261006",
+        "strategy": "boringcache",
+        "lane": "fresh",
+        "phase": "cold",
+        "variant": "nx",
+        "mode": "nx",
+        "adapter": "nx",
+        "case": {
+          "schema_version": 1,
+          "case_id": "storybook",
+          "workspace": "boringcache/benchmarks",
+          "definition_sha256": "5c80957732fe21749e44d0048639cfe02cd3bd20851fff71bb249537d33dcaf9",
+          "source": {
+            "repository": "storybookjs/storybook",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "3c97d29c70d3215aab512e678d9c8567356cabd3",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "origin": {
+            "repository": "boringcache/benchmark-storybook",
+            "branch": "main",
+            "revision": "a21c17fbfbb0f903ee7664e0b59d17726d8c5301"
+          },
+          "verification": [
+            "Pinned upstream recipe and build success"
+          ],
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Timed upstream Storybook sandbox build or production Nx compilation, selected by variant, plus measured cache restore/setup; dependency preparation, output checks and post-job publication are reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "execution": {
+            "workflows": [
+              {
+                "path": ".github/workflows/native-rolling-benchmark.yml",
+                "lane": "rolling",
+                "inputs": {
+                  "case_id": "storybook"
+                },
+                "historical_workflow": "storybook-benchmark.yml",
+                "variant_input": "variant",
+                "variants": [
+                  "archive-sandbox",
+                  "nx"
+                ]
+              },
+              {
+                "path": ".github/workflows/native-fresh-benchmark.yml",
+                "lane": "fresh",
+                "inputs": {
+                  "case_id": "storybook"
+                },
+                "historical_workflow": "storybook-fresh-benchmark.yml",
+                "variant_input": "variant",
+                "variants": [
+                  "archive-sandbox",
+                  "nx"
+                ]
+              }
+            ],
+            "sync": "upstream-head",
+            "sync_minute": 26,
+            "native": {
+              "action": ".github/actions/storybook-nx-benchmark",
+              "benchmark_id": "storybook",
+              "rolling_inputs": {
+                "node_version": "22.22.3"
+              },
+              "environment": {},
+              "fresh_inputs": {
+                "node_version": "22.22.3"
+              },
+              "variants": {
+                "archive-sandbox": {
+                  "fresh_inputs": {
+                    "workload": "sandbox"
+                  },
+                  "rolling_inputs": {
+                    "workload": "sandbox"
+                  }
+                },
+                "nx": {
+                  "benchmark_id": "storybook-nx",
+                  "fresh_inputs": {
+                    "workload": "nx"
+                  },
+                  "rolling_inputs": {
+                    "workload": "nx"
+                  },
+                  "environment": {
+                    "STORYBOOK_WORKLOAD": "nx"
+                  }
+                }
+              }
+            },
+            "cache_tags": {
+              "storybook-nx-cache-local": "{scope}-nx-cache",
+              "storybook-nx-workspace-data-local": "{scope}-nx-workspace-data",
+              "storybook-nx-local": "{scope}-nx"
+            }
+          }
+        },
+        "timing": {
+          "restore_or_setup_seconds": 4,
+          "build_seconds": 16,
+          "workflow_seconds": 154,
+          "total_seconds": 20,
+          "dependency_setup_seconds": null,
+          "compile_seconds": null,
+          "verification_seconds": null,
+          "save_seconds": null
+        },
+        "cache": {
+          "hit": false,
+          "sccache_proof": null,
+          "import_ready": null,
+          "import_refs": 0,
+          "docker_plan": null,
+          "tag": "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx",
+          "workspace": "boringcache/benchmarks",
+          "storage_bytes": 4495088,
+          "storage_source": "boringcache-check",
+          "storage_breakdown": {
+            "workspace": "boringcache/benchmarks",
+            "tags": [
+              "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx"
+            ],
+            "complete": true,
+            "measured_bytes": 4495088,
+            "unmeasured_tags": [],
+            "total_bytes": 4495088,
+            "observations": [
+              {
+                "requested_tag": "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx",
+                "tag": "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx",
+                "status": "hit",
+                "cache_type": "kv",
+                "kv_total_size": 4495088,
+                "compressed_size": 4495088,
+                "size": 4495088
+              }
+            ]
+          },
+          "storage_observed_at": "2026-10-06T11:57:35Z",
+          "storage_evidence_file": "boringcache-one-evidence-cd3f9b6baa345fceaff099317baa1e4c37d03d683ab4ea6b01acfe979fc297f9.json"
+        },
+        "source": {
+          "repository": "storybookjs/storybook",
+          "sha": "3c97d29c70d3215aab512e678d9c8567356cabd3"
+        },
+        "product_refs": {
+          "schema_version": 1,
+          "cli_version": "1.40.0",
+          "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+          "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+        },
+        "action": {
+          "resolved_mode": "nx",
+          "resolved_tags": [
+            "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx"
+          ],
+          "trust_state": {
+            "status": "publish",
+            "event_name": "workflow_dispatch",
+            "requested_policy": "publish",
+            "resolved_policy": "publish",
+            "write_allowed": true,
+            "decision_source": "cli",
+            "reason": "explicit_request",
+            "provider": "github-actions",
+            "detail": "Publication updates the published cache tag.",
+            "next_step": "Let the run finish; the next matching run restores what it publishes.",
+            "token_capabilities": {
+              "restore": true,
+              "stage": true,
+              "save": true
+            }
+          },
+          "diagnostics_level": "off"
+        },
+        "github": {
+          "repository": "boringcache/benchmarks",
+          "run_id": "37459274804",
+          "run_attempt": "1",
+          "job": "cold",
+          "workflow": "Native comparison fresh",
+          "ref_name": "main",
+          "runner_os": "Linux",
+          "runner_arch": "X64",
+          "runner_name": "GitHub Actions 1000176331",
+          "runner_environment": "github-hosted",
+          "runner_image": "ubuntu24",
+          "runner_image_version": "20260927.320.1"
+        },
+        "run_uid": "gh-37459274804-1",
+        "verification": {
+          "passed": true,
+          "checks": [
+            "Output verification completed before recording this phase"
+          ],
+          "declared_checks": [
+            "Pinned upstream recipe and build success"
+          ]
+        },
+        "original_cache_measurement": {
+          "storage_bytes": null,
+          "storage_source": null,
+          "storage_breakdown": {
+            "workspace": "boringcache/benchmarks",
+            "tags": [
+              "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx"
+            ],
+            "complete": false,
+            "measured_bytes": 0,
+            "unmeasured_tags": [
+              "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx"
+            ],
+            "total_bytes": null,
+            "observations": [
+              {
+                "requested_tag": "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx",
+                "tag": "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx",
+                "status": "miss",
+                "kv_total_size": 0
+              }
+            ]
+          }
+        }
+      },
+      {
+        "schema_version": 1,
+        "benchmark": "storybook-nx-nx-qualification-20261006",
+        "strategy": "boringcache",
+        "lane": "fresh",
+        "phase": "warm",
+        "variant": "nx",
+        "mode": "nx",
+        "adapter": "nx",
+        "case": {
+          "schema_version": 1,
+          "case_id": "storybook",
+          "workspace": "boringcache/benchmarks",
+          "definition_sha256": "5c80957732fe21749e44d0048639cfe02cd3bd20851fff71bb249537d33dcaf9",
+          "source": {
+            "repository": "storybookjs/storybook",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "3c97d29c70d3215aab512e678d9c8567356cabd3",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "origin": {
+            "repository": "boringcache/benchmark-storybook",
+            "branch": "main",
+            "revision": "a21c17fbfbb0f903ee7664e0b59d17726d8c5301"
+          },
+          "verification": [
+            "Pinned upstream recipe and build success"
+          ],
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Timed upstream Storybook sandbox build or production Nx compilation, selected by variant, plus measured cache restore/setup; dependency preparation, output checks and post-job publication are reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "execution": {
+            "workflows": [
+              {
+                "path": ".github/workflows/native-rolling-benchmark.yml",
+                "lane": "rolling",
+                "inputs": {
+                  "case_id": "storybook"
+                },
+                "historical_workflow": "storybook-benchmark.yml",
+                "variant_input": "variant",
+                "variants": [
+                  "archive-sandbox",
+                  "nx"
+                ]
+              },
+              {
+                "path": ".github/workflows/native-fresh-benchmark.yml",
+                "lane": "fresh",
+                "inputs": {
+                  "case_id": "storybook"
+                },
+                "historical_workflow": "storybook-fresh-benchmark.yml",
+                "variant_input": "variant",
+                "variants": [
+                  "archive-sandbox",
+                  "nx"
+                ]
+              }
+            ],
+            "sync": "upstream-head",
+            "sync_minute": 26,
+            "native": {
+              "action": ".github/actions/storybook-nx-benchmark",
+              "benchmark_id": "storybook",
+              "rolling_inputs": {
+                "node_version": "22.22.3"
+              },
+              "environment": {},
+              "fresh_inputs": {
+                "node_version": "22.22.3"
+              },
+              "variants": {
+                "archive-sandbox": {
+                  "fresh_inputs": {
+                    "workload": "sandbox"
+                  },
+                  "rolling_inputs": {
+                    "workload": "sandbox"
+                  }
+                },
+                "nx": {
+                  "benchmark_id": "storybook-nx",
+                  "fresh_inputs": {
+                    "workload": "nx"
+                  },
+                  "rolling_inputs": {
+                    "workload": "nx"
+                  },
+                  "environment": {
+                    "STORYBOOK_WORKLOAD": "nx"
+                  }
+                }
+              }
+            },
+            "cache_tags": {
+              "storybook-nx-cache-local": "{scope}-nx-cache",
+              "storybook-nx-workspace-data-local": "{scope}-nx-workspace-data",
+              "storybook-nx-local": "{scope}-nx"
+            }
+          }
+        },
+        "timing": {
+          "restore_or_setup_seconds": 2,
+          "build_seconds": 3,
+          "workflow_seconds": 109,
+          "total_seconds": 5,
+          "dependency_setup_seconds": null,
+          "compile_seconds": null,
+          "verification_seconds": null,
+          "save_seconds": null
+        },
+        "cache": {
+          "hit": true,
+          "sccache_proof": null,
+          "import_ready": null,
+          "import_refs": 0,
+          "docker_plan": null,
+          "tag": "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx",
+          "workspace": "boringcache/benchmarks",
+          "storage_bytes": 4495088,
+          "storage_source": "boringcache-check",
+          "storage_breakdown": {
+            "workspace": "boringcache/benchmarks",
+            "tags": [
+              "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx"
+            ],
+            "complete": true,
+            "measured_bytes": 4495088,
+            "unmeasured_tags": [],
+            "total_bytes": 4495088,
+            "observations": [
+              {
+                "requested_tag": "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx",
+                "tag": "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx",
+                "status": "hit",
+                "cache_type": "kv",
+                "kv_total_size": 4495088,
+                "compressed_size": 4495088,
+                "size": 4495088
+              }
+            ]
+          },
+          "storage_observed_at": "2026-10-06T11:57:35Z",
+          "storage_evidence_file": "boringcache-one-evidence-cd3f9b6baa345fceaff099317baa1e4c37d03d683ab4ea6b01acfe979fc297f9.json"
+        },
+        "source": {
+          "repository": "storybookjs/storybook",
+          "sha": "3c97d29c70d3215aab512e678d9c8567356cabd3"
+        },
+        "product_refs": {
+          "schema_version": 1,
+          "cli_version": "1.40.0",
+          "action_ref": "boringcache/one@f0fb9b2d926a32b10c543e92093ba00c5a291b79",
+          "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
+        },
+        "action": {
+          "resolved_mode": "nx",
+          "resolved_tags": [
+            "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx"
+          ],
+          "trust_state": {
+            "status": "restore_only",
+            "event_name": "workflow_dispatch",
+            "requested_policy": "restore",
+            "resolved_policy": "restore",
+            "write_allowed": false,
+            "decision_source": "cli",
+            "reason": "explicit_request",
+            "provider": "github-actions",
+            "detail": "trust-policy is restore.",
+            "next_step": "Use trust-policy stage or publish only when this job is trusted for that operation.",
+            "token_capabilities": {
+              "restore": true,
+              "stage": true,
+              "save": true
+            }
+          },
+          "diagnostics_level": "off"
+        },
+        "github": {
+          "repository": "boringcache/benchmarks",
+          "run_id": "37459274804",
+          "run_attempt": "1",
+          "job": "warm",
+          "workflow": "Native comparison fresh",
+          "ref_name": "main",
+          "runner_os": "Linux",
+          "runner_arch": "X64",
+          "runner_name": "GitHub Actions 1000176337",
+          "runner_environment": "github-hosted",
+          "runner_image": "ubuntu24",
+          "runner_image_version": "20260927.320.1"
+        },
+        "run_uid": "gh-37459274804-1",
+        "verification": {
+          "passed": true,
+          "checks": [
+            "Output verification completed before recording this phase"
+          ],
+          "declared_checks": [
+            "Pinned upstream recipe and build success"
+          ]
+        },
+        "original_cache_measurement": {
+          "storage_bytes": 4495088,
+          "storage_source": "boringcache-check",
+          "storage_breakdown": {
+            "workspace": "boringcache/benchmarks",
+            "tags": [
+              "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx"
+            ],
+            "complete": true,
+            "measured_bytes": 4495088,
+            "unmeasured_tags": [],
+            "total_bytes": 4495088,
+            "observations": [
+              {
+                "requested_tag": "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx",
+                "tag": "storybook-nx-nx-qualification-20261006-run-r37459274804-a1-nx",
+                "status": "hit",
+                "cache_type": "kv",
+                "kv_total_size": 4495088,
+                "compressed_size": 4495088,
+                "size": 4495088
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "task_results": {
+      "phase-storybook-nx-nx-qualification-20261006-actions-cache-fresh-cold": {
+        "run": {
+          "command": "nx run-many -t compile -c production -p react-vite --parallel=8",
+          "startTime": "2026-10-06T11:54:55.090Z",
+          "endTime": "2026-10-06T11:55:06.800Z",
+          "inner": false
+        },
+        "tasks": [
+          {
+            "taskId": "core:compile:production",
+            "target": "compile",
+            "projectName": "core",
+            "hash": "7249246155239051608",
+            "startTime": "2026-10-06T11:54:55.110Z",
+            "endTime": "2026-10-06T11:55:04.089Z",
+            "params": "",
+            "cacheStatus": "cache-miss",
+            "status": 0
+          },
+          {
+            "taskId": "builder-vite:compile:production",
+            "target": "compile",
+            "projectName": "builder-vite",
+            "hash": "1156949985153397904",
+            "startTime": "2026-10-06T11:55:04.108Z",
+            "endTime": "2026-10-06T11:55:05.385Z",
+            "params": "",
+            "cacheStatus": "cache-miss",
+            "status": 0
+          },
+          {
+            "taskId": "react:compile:production",
+            "target": "compile",
+            "projectName": "react",
+            "hash": "2496011206191104242",
+            "startTime": "2026-10-06T11:55:04.108Z",
+            "endTime": "2026-10-06T11:55:05.881Z",
+            "params": "",
+            "cacheStatus": "cache-miss",
+            "status": 0
+          },
+          {
+            "taskId": "react-vite:compile:production",
+            "target": "compile",
+            "projectName": "react-vite",
+            "hash": "9425333286817971322",
+            "startTime": "2026-10-06T11:55:05.955Z",
+            "endTime": "2026-10-06T11:55:06.799Z",
+            "params": "",
+            "cacheStatus": "cache-miss",
+            "status": 0
+          }
+        ]
+      },
+      "phase-storybook-nx-nx-qualification-20261006-actions-cache-fresh-warm": {
+        "run": {
+          "command": "nx run-many -t compile -c production -p react-vite --parallel=8",
+          "startTime": "2026-10-06T11:57:38.922Z",
+          "endTime": "2026-10-06T11:57:39.068Z",
+          "inner": false
+        },
+        "tasks": [
+          {
+            "taskId": "core:compile:production",
+            "target": "compile",
+            "projectName": "core",
+            "hash": "7249246155239051608",
+            "startTime": "2026-10-06T11:57:38.949Z",
+            "endTime": "2026-10-06T11:57:39.045Z",
+            "params": "",
+            "cacheStatus": "local-cache-hit",
+            "status": 0
+          },
+          {
+            "taskId": "builder-vite:compile:production",
+            "target": "compile",
+            "projectName": "builder-vite",
+            "hash": "1156949985153397904",
+            "startTime": "2026-10-06T11:57:39.048Z",
+            "endTime": "2026-10-06T11:57:39.062Z",
+            "params": "",
+            "cacheStatus": "local-cache-hit",
+            "status": 0
+          },
+          {
+            "taskId": "react:compile:production",
+            "target": "compile",
+            "projectName": "react",
+            "hash": "2496011206191104242",
+            "startTime": "2026-10-06T11:57:39.049Z",
+            "endTime": "2026-10-06T11:57:39.062Z",
+            "params": "",
+            "cacheStatus": "local-cache-hit",
+            "status": 0
+          },
+          {
+            "taskId": "react-vite:compile:production",
+            "target": "compile",
+            "projectName": "react-vite",
+            "hash": "9425333286817971322",
+            "startTime": "2026-10-06T11:57:39.063Z",
+            "endTime": "2026-10-06T11:57:39.067Z",
+            "params": "",
+            "cacheStatus": "local-cache-hit",
+            "status": 0
+          }
+        ]
+      },
+      "phase-storybook-nx-nx-qualification-20261006-boringcache-fresh-cold": {
+        "run": {
+          "command": "nx run-many -t compile -c production -p react-vite --parallel=8",
+          "startTime": "2026-10-06T11:54:57.350Z",
+          "endTime": "2026-10-06T11:55:09.982Z",
+          "inner": false
+        },
+        "tasks": [
+          {
+            "taskId": "core:compile:production",
+            "target": "compile",
+            "projectName": "core",
+            "hash": "7249246155239051608",
+            "startTime": "2026-10-06T11:54:57.416Z",
+            "endTime": "2026-10-06T11:55:06.242Z",
+            "params": "",
+            "cacheStatus": "cache-miss",
+            "status": 0
+          },
+          {
+            "taskId": "builder-vite:compile:production",
+            "target": "compile",
+            "projectName": "builder-vite",
+            "hash": "1156949985153397904",
+            "startTime": "2026-10-06T11:55:07.409Z",
+            "endTime": "2026-10-06T11:55:08.608Z",
+            "params": "",
+            "cacheStatus": "cache-miss",
+            "status": 0
+          },
+          {
+            "taskId": "react:compile:production",
+            "target": "compile",
+            "projectName": "react",
+            "hash": "2496011206191104242",
+            "startTime": "2026-10-06T11:55:07.409Z",
+            "endTime": "2026-10-06T11:55:09.157Z",
+            "params": "",
+            "cacheStatus": "cache-miss",
+            "status": 0
+          },
+          {
+            "taskId": "react-vite:compile:production",
+            "target": "compile",
+            "projectName": "react-vite",
+            "hash": "9425333286817971322",
+            "startTime": "2026-10-06T11:55:09.249Z",
+            "endTime": "2026-10-06T11:55:09.978Z",
+            "params": "",
+            "cacheStatus": "cache-miss",
+            "status": 0
+          }
+        ]
+      },
+      "phase-storybook-nx-nx-qualification-20261006-boringcache-fresh-warm": {
+        "run": {
+          "command": "nx run-many -t compile -c production -p react-vite --parallel=8",
+          "startTime": "2026-10-06T11:57:30.028Z",
+          "endTime": "2026-10-06T11:57:30.225Z",
+          "inner": false
+        },
+        "tasks": [
+          {
+            "taskId": "core:compile:production",
+            "target": "compile",
+            "projectName": "core",
+            "hash": "7249246155239051608",
+            "startTime": "2026-10-06T11:57:30.101Z",
+            "endTime": "2026-10-06T11:57:30.203Z",
+            "params": "",
+            "cacheStatus": "remote-cache-hit",
+            "status": 0
+          },
+          {
+            "taskId": "builder-vite:compile:production",
+            "target": "compile",
+            "projectName": "builder-vite",
+            "hash": "1156949985153397904",
+            "startTime": "2026-10-06T11:57:30.207Z",
+            "endTime": "2026-10-06T11:57:30.211Z",
+            "params": "",
+            "cacheStatus": "remote-cache-hit",
+            "status": 0
+          },
+          {
+            "taskId": "react:compile:production",
+            "target": "compile",
+            "projectName": "react",
+            "hash": "2496011206191104242",
+            "startTime": "2026-10-06T11:57:30.207Z",
+            "endTime": "2026-10-06T11:57:30.218Z",
+            "params": "",
+            "cacheStatus": "remote-cache-hit",
+            "status": 0
+          },
+          {
+            "taskId": "react-vite:compile:production",
+            "target": "compile",
+            "projectName": "react-vite",
+            "hash": "9425333286817971322",
+            "startTime": "2026-10-06T11:57:30.220Z",
+            "endTime": "2026-10-06T11:57:30.224Z",
+            "params": "",
+            "cacheStatus": "remote-cache-hit",
+            "status": 0
+          }
+        ]
+      }
+    }
+  }
+}

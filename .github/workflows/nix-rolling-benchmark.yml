@@ -1,6 +1,6 @@
 ---
 name: Nix comparison rolling
-run-name: "${{ inputs.case_id }} Rolling | ${{ inputs.cli_version }}"
+run-name: "${{ inputs.case_id == 'zed-nix' && 'zed' || 'helix' }} Rolling | ${{ inputs.cli_version }}"
 permissions:
   contents: read
   actions: read
@@ -201,6 +201,29 @@ concurrency:
         default: ''
       cli_version:
         description: Exact released CLI or canary; empty uses the Action default.
+        type: string
+        default: ''
+      series_id:
+        type: string
+        default: ''
+      sample:
+        type: string
+        default: '1'
+      cache_scope:
+        type: string
+        default: ''
+  workflow_call:
+    inputs:
+      case_id:
+        type: string
+        required: true
+      provider:
+        type: string
+        default: all
+      cachix_cache:
+        type: string
+        default: ''
+      cli_version:
         type: string
         default: ''
       series_id:

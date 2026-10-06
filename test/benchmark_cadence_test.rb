@@ -79,11 +79,18 @@ class BenchmarkCadenceTest < Minitest::Test
     output, status = Open3.capture2e(RbConfig.ruby, script, "--matrix")
     assert status.success?, output
     ids = JSON.parse(output).fetch("case_id")
-    assert_equal BenchmarkCadence.source_cases.map { |item| item.fetch("id") }, ids
+    assert_equal 22, ids.length
+    assert_equal BenchmarkCadence.source_cases.map { |item| item.dig("source", "repository") }.uniq.sort,
+      ids.map { |id| BenchmarkCases.load_case(id).dig("source", "repository") }.sort
+    assert_includes ids, "hugo"
+    assert_includes ids, "zed"
     assert_equal ids.uniq, ids
     output, status = Open3.capture2e(RbConfig.ruby, script, "--matrix", "--case", "helix-nix")
     assert status.success?, output
     assert_equal({"case_id" => ["helix-nix"]}, JSON.parse(output))
+    output, status = Open3.capture2e(RbConfig.ruby, script, "--matrix", "--case", "hugo-go")
+    assert status.success?, output
+    assert_equal({"case_id" => ["hugo"]}, JSON.parse(output))
     output, status = Open3.capture2e(RbConfig.ruby, script, "--matrix", "--case", "unknown")
     refute status.success?
     assert_includes output, "not in the scheduled suite"

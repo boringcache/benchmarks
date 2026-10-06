@@ -1,6 +1,6 @@
 ---
 name: 'zed: Zed Cargo rolling run'
-run-name: "Zed Cargo | ${{ startsWith(inputs.cli_version, 'vcli-canary-') && 'Canary' || 'Stable' }} Rolling | ${{ inputs.base_sha }} to ${{ inputs.head_sha }}"
+run-name: "zed Rolling | ${{ inputs.cli_version }}"
 permissions:
   actions: read
   checks: read
@@ -244,6 +244,29 @@ jobs:
         description: Observation number in the predeclared series
         type: string
         required: false
+        default: '1'
+  workflow_call:
+    inputs:
+      base_sha:
+        type: string
+        required: true
+      head_sha:
+        type: string
+        required: true
+      source_distance:
+        type: string
+        required: true
+      cli_version:
+        type: string
+        default: ''
+      runner_label:
+        type: string
+        default: ''
+      series_id:
+        type: string
+        default: ''
+      sample:
+        type: string
         default: '1'
 env:
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
