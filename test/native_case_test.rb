@@ -67,7 +67,7 @@ class NativeCaseTest < Minitest::Test
     with_payload("mastodon") do |item, directory|
       action = NativeCase.write_action(item, directory: directory, lane: "fresh", variant: "server-sccache")
       assert_equal "server", action.dig("runs", "steps", 0, "with", "workload")
-      assert_equal "${{ inputs.strategy == 'actions-cache' && 'false' || 'true' }}", action.dig("runs", "steps", 0, "with", "docker_tool_cache")
+      assert_equal "${{ (inputs.strategy == 'actions-cache' || inputs.strategy == 'depot-actions-cache') && 'false' || 'true' }}", action.dig("runs", "steps", 0, "with", "docker_tool_cache")
       item["execution"]["native"]["variants"]["streaming"]["fresh_inputs"]["workload"] = "${{ inputs.workload }}"
       assert_raises(NativeCase::Error) { NativeCase.write_action(item, directory: directory, lane: "fresh", variant: "server") }
     end
@@ -120,7 +120,7 @@ class NativeCaseTest < Minitest::Test
       item["execution"]["native"]["variants"]["combined"]["provider_flags"] = {"actions-cache" => {"docker_mount_cache" => "false"}}
       action = NativeCase.write_action(item, directory: directory, lane: "fresh", variant: "combined")
       %w[docker_tool_cache docker_mount_cache].each do |name|
-        assert_equal "${{ inputs.strategy == 'actions-cache' && 'false' || 'true' }}", action.dig("runs", "steps", 0, "with", name)
+        assert_equal "${{ (inputs.strategy == 'actions-cache' || inputs.strategy == 'depot-actions-cache') && 'false' || 'true' }}", action.dig("runs", "steps", 0, "with", name)
       end
       item["execution"]["native"]["provider_flags"]["actions-cache"]["phase"] = "true"
       error = assert_raises(NativeCase::Error) { NativeCase.write_action(item, directory: directory, lane: "fresh", variant: "combined") }

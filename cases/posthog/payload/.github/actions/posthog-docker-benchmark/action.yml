@@ -106,6 +106,15 @@ runs:
     env:
       PREPARE_PHASE: "${{ inputs.phase == 'warm' && 'warm1' || 'base' }}"
     run: ruby ./scripts/prepare-source.rb "$PREPARE_PHASE"
+  - name: Configure the native Depot task cache for the container
+    if: inputs.strategy == 'depot-cache'
+    shell: bash
+    env:
+      CACHE_PROVIDER: depot-cache
+      CACHE_MODE: turbo
+      CACHE_PHASE: ${{ inputs.phase }}
+      DEPOT_CONTAINER_TOOL_CACHE: turbo
+    run: ruby ./scripts/depot-cache.rb
   - name: Prepare the product Dockerfile
     id: dockerfile
     shell: bash
@@ -185,6 +194,7 @@ runs:
       provenance: 'false'
       secrets: "${{ inputs.posthog_sourcemap_api_key != '' && format('posthog_upload_sourcemaps_cli_api_key={0}',
         inputs.posthog_sourcemap_api_key) || '' }}"
+      tool-cache-env: ${{ inputs.strategy == 'depot-cache' && '.depot-cache/tool-cache-env' || '' }}
       strategy: "${{ inputs.strategy == 'runs-on-cache' && 'actions-cache' || inputs.strategy
         }}"
       phase: "${{ inputs.phase }}"

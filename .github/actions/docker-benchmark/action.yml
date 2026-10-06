@@ -35,6 +35,8 @@ inputs:
     default: ''
   sbom:
     default: 'false'
+  tool-cache-env:
+    default: ''
   secrets:
     default: ''
   no-cache:
@@ -66,8 +68,15 @@ runs:
       id: setup_timer
       shell: bash
       run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+    - name: Select the runner cache provider
+      shell: bash
+      env:
+        CACHE_PROVIDER: ${{ inputs.strategy }}
+        CACHE_MODE: ${{ inputs.strategy == 'depot-cache' && 'turbo' || 'docker' }}
+        CACHE_PHASE: ${{ inputs.phase }}
+      run: ruby ./scripts/depot-cache.rb
     - name: Set up the Actions Cache builder
-      if: inputs.strategy == 'actions-cache'
+      if: (inputs.strategy == 'actions-cache' || inputs.strategy == 'depot-actions-cache' || inputs.strategy == 'depot-cache')
       uses: ./.github/actions/setup-docker
     - name: Start the build timer
       id: build_timer
@@ -79,7 +88,7 @@ runs:
         echo "setup_seconds=$(( now - SETUP_STARTED_AT ))" >> "$GITHUB_OUTPUT"
         echo "started_at=$now" >> "$GITHUB_OUTPUT"
     - name: Build with Actions Cache
-      if: inputs.strategy == 'actions-cache'
+      if: (inputs.strategy == 'actions-cache' || inputs.strategy == 'depot-actions-cache' || inputs.strategy == 'depot-cache')
       uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
       env:
         DOCKER_BUILD_SUMMARY: 'false'
@@ -96,9 +105,10 @@ runs:
         provenance: ${{ inputs.provenance }}
         sbom: ${{ inputs.sbom == 'true' }}
         secrets: ${{ inputs.secrets }}
+        secret-files: ${{ inputs.tool-cache-env != '' && format('boringcache-tool-cache-env={0}', inputs.tool-cache-env) || '' }}
         no-cache: ${{ inputs.no-cache == 'true' }}
-        cache-from: type=gha,scope=${{ inputs.cache-scope }}
-        cache-to: ${{ steps.policy.outputs.publish_cache == 'true' && format('type=gha,scope={0},mode=max', inputs.cache-scope) || '' }}
+        cache-from: ${{ inputs.strategy != 'depot-cache' && format('type=gha,scope={0}', inputs.cache-scope) || '' }}
+        cache-to: ${{ inputs.strategy != 'depot-cache' && steps.policy.outputs.publish_cache == 'true' && format('type=gha,scope={0},mode=max', inputs.cache-scope) || '' }}
     - name: Build and publish with BoringCache
       id: publish
       if: inputs.strategy == 'boringcache' && steps.policy.outputs.publish_cache == 'true'

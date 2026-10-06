@@ -147,6 +147,66 @@
         "runner_label": "namespace-profile-buildkit-8c",
         "benchmark_id_suffix": "-namespace-profile-buildkit-8c"
       }
+    },
+    {
+      "case_id": "posthog",
+      "variant": "layers",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "posthog",
+      "variant": "combined",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "posthog",
+      "variant": "combined",
+      "lanes": [
+        "rolling"
+      ],
+      "inputs": {
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-native-4c"
+      }
+    },
+    {
+      "case_id": "posthog",
+      "variant": "layers",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-8",
+        "benchmark_id_suffix": "-depot-api-8c"
+      }
+    },
+    {
+      "case_id": "posthog",
+      "variant": "combined",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-8",
+        "benchmark_id_suffix": "-depot-api-8c"
+      }
+    },
+    {
+      "case_id": "posthog",
+      "variant": "combined",
+      "lanes": [
+        "rolling"
+      ],
+      "inputs": {
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-8",
+        "benchmark_id_suffix": "-depot-native-8c"
+      }
     }
   ]
 }
