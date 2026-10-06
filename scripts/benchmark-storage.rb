@@ -23,12 +23,12 @@ module BenchmarkStorage
         value.dig("github", "run_id").to_s == record.dig("github", "run_id").to_s &&
         value.dig("github", "run_attempt").to_s == record.dig("github", "run_attempt").to_s &&
         value.dig("identity", "workspace") == record.dig("cache", "workspace") &&
-        Array(value.dig("identity", "tags")).sort == tags.sort
+        Array(value.dig("identity", "tags")).uniq.sort == tags.uniq.sort
     end
     return record if matches.empty?
     latest = matches.max_by { |value| value.fetch("observed_at") }
     storage = latest["measurement"]
-    return record unless storage && !storage["bytes"].nil?
+    return record unless storage
     copy = Marshal.load(Marshal.dump(record))
     copy["original_cache_measurement"] = record.fetch("cache").slice("storage_bytes", "storage_source", "storage_breakdown")
     copy["cache"].merge!("storage_bytes" => storage.fetch("bytes"), "storage_source" => storage.fetch("source"),

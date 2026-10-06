@@ -1,6 +1,6 @@
 ---
 name: 'grpc: gRPC Bazel Benchmark'
-run-name: "gRPC rolling | ${{ inputs.cli_version }}"
+run-name: "gRPC Rolling | ${{ inputs.cli_version }}"
 permissions:
   contents: read
   actions: read

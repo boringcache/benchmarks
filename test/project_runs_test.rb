@@ -25,6 +25,21 @@ class ProjectRunsTest < Minitest::Test
     assert_equal selections.map { |run| run.fetch("inputs") }, expanded.map { |run| run.fetch("inputs") }
   end
 
+  def test_suite_groups_different_tools_for_the_same_upstream_project
+    runs = BenchmarkCadence.fresh_targets.map do |target|
+      {"repository" => BenchmarkCases::REPOSITORY, "workflow" => target.fetch("fresh_workflow"),
+        "inputs" => target.fetch("fresh_inputs"), "series" => {"case_id" => target.fetch("case_id")}}
+    end
+    grouped = ProjectRuns.group(runs, lane: "fresh")
+    assert_equal 22, grouped.length
+    %w[hugo zed].each do |project|
+      run = grouped.find { |value| value.dig("inputs", "case_id") == project && value["selections"] }
+      assert_equal 2, run.fetch("selections").length
+      matrices = ProjectRuns.matrix(JSON.parse(run.dig("inputs", "selections")), case_id: project, lane: "fresh")
+      assert_equal 2, matrices.values.sum { |value| value.fetch("include").length }
+    end
+  end
+
   def test_missing_project_phases_remain_visible
     rows = ProjectReport.observations([], selections: selections.map { |run| run.slice("workflow", "inputs") },
       project: "n8n", lane: "fresh", run_url: "https://example.com/run/42")

@@ -5,6 +5,18 @@ require "tmpdir"
 require_relative "../scripts/nix-benchmark"
 
 class NixBenchmarkTest < Minitest::Test
+  def test_storage_uses_provider_file_sizes_and_keeps_missing_narinfo_unmeasured
+    paths = ["/nix/store/#{'a' * 32}-one", "/nix/store/#{'b' * 32}-two"]
+    fetch = ->(url) { {"FileSize" => url.include?('/aaaa') ? "10" : "20", "URL" => url, "NarSize" => "100"} }
+    value = NixBenchmark.cachix_storage("benchmark", paths: paths, fetch: fetch)
+    assert_equal 30, value.fetch("bytes")
+    assert_equal "cachix-narinfo-file-size", value.fetch("source")
+    missing = NixBenchmark.cachix_storage("benchmark", paths: paths, fetch: ->(_url) { {} })
+    assert_nil missing.fetch("bytes")
+    assert_equal false, missing.dig("breakdown", "complete")
+    assert_equal 2, missing.dig("breakdown", "observations").length
+  end
+
   def test_warm_provider_selection_excludes_public_caches
     config = {"substituters" => {"value" => ["https://cache.nixos.org", "https://helix.cachix.org", "http://127.0.0.1:23456/nix?trusted=true"]}}
     assert_equal "http://127.0.0.1:23456/nix?trusted=true", NixBenchmark.provider_substituter(config, "boringcache", "")

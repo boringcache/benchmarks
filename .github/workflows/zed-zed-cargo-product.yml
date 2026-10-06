@@ -1,6 +1,6 @@
 ---
 name: 'zed: Zed Cargo layer matrix'
-run-name: Zed ${{ inputs.cadence }} | ${{ inputs.cli_version }}
+run-name: Zed ${{ inputs.cadence == 'nightly' && 'Nightly' || 'Fresh' }} | ${{ inputs.cli_version }}
 permissions:
   actions: read
   contents: read
@@ -53,7 +53,7 @@ jobs:
     env:
       BENCHMARK_RUNNER_CLASS: ubuntu-24.04
   cold:
-    name: "Cold: target + ${{ inputs.compiler_cache || 'sccache' }} seed"
+    name: 'Cold: target + ${{ inputs.compiler_cache || ''sccache'' }} seed'
     needs: source
     if: inputs.runner_label == '' || github.ref_name == 'main'
     runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
@@ -74,11 +74,11 @@ jobs:
     - name: Install retained benchmark candidate
       if: inputs.cli_version == 'vcli-canary-b26bccd2becb'
       env:
-        GH_TOKEN: ${{ github.token }}
+        GH_TOKEN: "${{ github.token }}"
       run: ruby scripts/benchmark-candidate.rb "${{ inputs.cli_version }}"
     - name: Install selected compiler cache
       env:
-        GH_TOKEN: ${{ github.token }}
+        GH_TOKEN: "${{ github.token }}"
       run: ruby scripts/compiler-cache-setup.rb "$COMPILER_CACHE"
     - name: Install sccache
       uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba
@@ -95,7 +95,8 @@ jobs:
       id: primary
       uses: "./.github/actions/boringcache"
       with:
-        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip' || inputs.cli_version }}"
+        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip'
+          || inputs.cli_version }}"
         mode: cargo
         trust-policy: publish
         working-directory: upstream
@@ -108,7 +109,8 @@ jobs:
       id: remote
       uses: "./.github/actions/boringcache"
       with:
-        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip' || inputs.cli_version }}"
+        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip'
+          || inputs.cli_version }}"
         mode: cargo
         trust-policy: publish
         working-directory: upstream
@@ -169,7 +171,8 @@ jobs:
       BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
         == 'main' && inputs.runner_label || 'ubuntu-24.04' }}"
   reuse:
-    name: "${{ inputs.compiler_cache || 'sccache' }} ${{ matrix.cache_layer == 'sccache-only' && 'compiler-only' || matrix.cache_layer }}: changed source"
+    name: "${{ inputs.compiler_cache || 'sccache' }} ${{ matrix.cache_layer == 'sccache-only'
+      && 'compiler-only' || matrix.cache_layer }}: changed source"
     needs:
     - source
     - cold
@@ -189,15 +192,14 @@ jobs:
     - name: Prepare the adjacent source and release toolchain
       run: ./scripts/prepare-zed-lane.sh "${{ needs.source.outputs.head_sha }}" "${{
         needs.source.outputs.base_sha }}"
-      run: ./scripts/prepare-zed-lane.sh "${{ needs.source.outputs.head_sha }}" "${{ needs.source.outputs.base_sha }}"
     - name: Install retained benchmark candidate
       if: inputs.cli_version == 'vcli-canary-b26bccd2becb'
       env:
-        GH_TOKEN: ${{ github.token }}
+        GH_TOKEN: "${{ github.token }}"
       run: ruby scripts/benchmark-candidate.rb "${{ inputs.cli_version }}"
     - name: Install selected compiler cache
       env:
-        GH_TOKEN: ${{ github.token }}
+        GH_TOKEN: "${{ github.token }}"
       run: ruby scripts/compiler-cache-setup.rb "$COMPILER_CACHE"
     - name: Install sccache
       uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba
@@ -215,7 +217,8 @@ jobs:
       id: primary
       uses: "./.github/actions/boringcache"
       with:
-        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip' || inputs.cli_version }}"
+        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip'
+          || inputs.cli_version }}"
         mode: cargo
         trust-policy: restore
         working-directory: upstream
@@ -228,7 +231,8 @@ jobs:
       id: remote
       uses: "./.github/actions/boringcache"
       with:
-        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip' || inputs.cli_version }}"
+        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip'
+          || inputs.cli_version }}"
         mode: cargo
         trust-policy: restore
         working-directory: upstream
@@ -349,7 +353,10 @@ jobs:
         description: Compiler cache engine for this qualification
         type: choice
         default: sccache
-        options: [sccache, kache, mbx]
+        options:
+        - sccache
+        - kache
+        - mbx
       cli_version:
         description: Optional exact immutable BoringCache CLI release tag.
         required: false
@@ -390,6 +397,57 @@ jobs:
         - target-only
         - sccache-only
         - combined
+      cadence:
+        type: string
+        default: fresh
+        description: Fresh or nightly scheduling; measured phases retain the fresh
+          lane.
+  workflow_call:
+    inputs:
+      expected_identity:
+        description: Frozen scheduled harness and case identity; checked before preparation.
+        type: string
+        required: false
+        default: ''
+      compiler_cache:
+        description: Compiler cache engine for this qualification
+        type: string
+        default: sccache
+      cli_version:
+        description: Optional exact immutable BoringCache CLI release tag.
+        required: false
+        type: string
+        default: ''
+      base_sha:
+        description: Seed commit. Defaults to cargo-layer-source.env.
+        required: false
+        type: string
+        default: ''
+      head_sha:
+        description: Adjacent commit built by every warm lane. Defaults to cargo-layer-source.env.
+        required: false
+        type: string
+        default: ''
+      runner_label:
+        description: Optional runner label for a manual main-branch experiment.
+        required: false
+        type: string
+        default: ''
+      series_id:
+        description: Predeclared series ID; empty for legacy diagnostics
+        type: string
+        required: false
+        default: ''
+      sample:
+        description: Observation number in the predeclared series
+        type: string
+        required: false
+        default: '1'
+      cache_layer:
+        description: Restore variant; all runs the diagnostic layer matrix
+        required: false
+        type: string
+        default: all
       cadence:
         type: string
         default: fresh

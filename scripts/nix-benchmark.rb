@@ -209,7 +209,7 @@ if $PROGRAM_NAME == __FILE__
     when "verify" then NixBenchmark.verify(phase: ENV.fetch("NIX_PHASE"), provider: ENV.fetch("NIX_PROVIDER"), cache_name: ENV.fetch("CACHIX_CACHE", ""))
     when "publish-and-measure" then NixBenchmark.publish_and_measure(phase: ENV.fetch("NIX_PHASE"), cache_name: ENV.fetch("CACHIX_CACHE"))
     when "compare" then NixBenchmark.compare(seed: ARGV.fetch(0))
-    else raise NixBenchmark::Error, "Use prepare, build, verify or compare"
+    else raise NixBenchmark::Error, "Use prepare, export-dependencies, import-dependencies, build, verify, publish-and-measure or compare"
     end
   rescue NixBenchmark::Error, KeyError, ArgumentError => error
     abort error.message

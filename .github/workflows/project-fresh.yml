@@ -1,6 +1,6 @@
 ---
 name: Project fresh
-run-name: "${{ inputs.case_id }} ${{ inputs.cadence }} | ${{ inputs.cli_version }}"
+run-name: "${{ inputs.case_id }} ${{ inputs.cadence == 'nightly' && 'Nightly' || 'Fresh' }} | ${{ inputs.cli_version }}"
 'on':
   workflow_dispatch:
     inputs:
@@ -33,6 +33,8 @@ jobs:
         }}"
       obs_studio_obs_boringcache: "${{ steps.matrix.outputs.obs_studio_obs_boringcache
         }}"
+      nix_fresh_benchmark: "${{ steps.matrix.outputs.nix_fresh_benchmark }}"
+      zed_zed_cargo_product: "${{ steps.matrix.outputs.zed_zed_cargo_product }}"
     steps:
     - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
       with:
@@ -99,6 +101,8 @@ jobs:
     - native_fresh_benchmark
     - obs_studio_obs_actions_cache
     - obs_studio_obs_boringcache
+    - nix_fresh_benchmark
+    - zed_zed_cargo_product
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -115,6 +119,10 @@ jobs:
       with:
         pattern: storage-*
         path: project-evidence
+    - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+      with:
+        pattern: zed-cargo-product-*
+        path: project-evidence
     - name: Report all project measurements
       env:
         CASE_ID: "${{ inputs.case_id }}"
@@ -129,3 +137,40 @@ jobs:
         path: project-results/
         if-no-files-found: error
         retention-days: 90
+  nix_fresh_benchmark:
+    name: "${{ matrix.label }}"
+    needs: select
+    if: needs.select.outputs.nix_fresh_benchmark != ''
+    strategy:
+      fail-fast: false
+      matrix: "${{ fromJSON(needs.select.outputs.nix_fresh_benchmark) }}"
+    uses: "./.github/workflows/nix-fresh-benchmark.yml"
+    secrets: inherit
+    with:
+      case_id: "${{ matrix.inputs.case_id || '' }}"
+      provider: "${{ matrix.inputs.provider || 'all' }}"
+      cachix_cache: "${{ matrix.inputs.cachix_cache || '' }}"
+      cli_version: "${{ inputs.cli_version }}"
+      series_id: "${{ matrix.inputs.series_id || '' }}"
+      sample: "${{ matrix.inputs.sample || '1' }}"
+      expected_identity: "${{ matrix.inputs.expected_identity || '' }}"
+      cadence: "${{ inputs.cadence }}"
+  zed_zed_cargo_product:
+    name: "${{ matrix.label }}"
+    needs: select
+    if: needs.select.outputs.zed_zed_cargo_product != ''
+    strategy:
+      fail-fast: false
+      matrix: "${{ fromJSON(needs.select.outputs.zed_zed_cargo_product) }}"
+    uses: "./.github/workflows/zed-zed-cargo-product.yml"
+    secrets: inherit
+    with:
+      cache_layer: "${{ matrix.inputs.cache_layer || '' }}"
+      base_sha: "${{ matrix.inputs.base_sha || '' }}"
+      head_sha: "${{ matrix.inputs.head_sha || '' }}"
+      compiler_cache: "${{ matrix.inputs.compiler_cache || 'sccache' }}"
+      cli_version: "${{ inputs.cli_version }}"
+      series_id: "${{ matrix.inputs.series_id || '' }}"
+      sample: "${{ matrix.inputs.sample || '1' }}"
+      expected_identity: "${{ matrix.inputs.expected_identity || '' }}"
+      cadence: "${{ inputs.cadence }}"

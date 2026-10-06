@@ -103,6 +103,7 @@ module ReapiSetup
     {"restore_or_setup_seconds" => "--restore-or-setup-seconds", "save_seconds" => "--save-seconds"}.each do |key, flag|
       args += [flag, timings.fetch(key).to_s] unless timings[key].nil?
     end
+    args += ["--storage-evidence", "reapi-evidence/storage.json"] if ENV.fetch("PROVIDER") == "bazel-remote" && File.file?("reapi-evidence/storage.json")
     args += ["--cache-hit", "true"] if ReapiClient.remote_cache_hit?
     if ENV.fetch("PROVIDER") == "boringcache"
       version, status = Open3.capture2("boringcache", "--version")

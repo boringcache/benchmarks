@@ -1,6 +1,6 @@
 ---
 name: 'deno: Deno Cargo product run'
-run-name: Deno ${{ inputs.cadence }} | ${{ inputs.cli_version }}
+run-name: Deno ${{ inputs.cadence == 'nightly' && 'Nightly' || 'Fresh' }} | ${{ inputs.cli_version }}
 permissions:
   actions: read
   contents: read

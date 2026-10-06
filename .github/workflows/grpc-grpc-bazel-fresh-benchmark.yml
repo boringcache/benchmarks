@@ -1,6 +1,6 @@
 ---
 name: 'grpc: gRPC Bazel Fresh'
-run-name: gRPC ${{ inputs.cadence }} | ${{ inputs.cli_version }}
+run-name: gRPC ${{ inputs.cadence == 'nightly' && 'Nightly' || 'Fresh' }} | ${{ inputs.cli_version }}
 permissions:
   contents: read
   actions: read

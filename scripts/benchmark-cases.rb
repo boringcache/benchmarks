@@ -599,7 +599,9 @@ module BenchmarkCases
           document = YAML.safe_load(File.read(path), aliases: true)
           if File.basename(path).match?(/\A(?:reapi|nix)-(?:fresh|rolling)-benchmark\.yml\z/)
             inputs = (document["on"] || document[true]).dig("workflow_dispatch", "inputs")
-            inputs.fetch("case_id")["default"] = item.fetch("id")
+            (document["on"] || document[true]).each_value do |trigger|
+              trigger.fetch("inputs").fetch("case_id")["default"] = item.fetch("id") if trigger.is_a?(Hash) && trigger.dig("inputs", "case_id")
+            end
             providers = inputs.fetch("provider").fetch("options") - ["all"]
             raise Error, "Provider selector differs from the declared comparison" unless providers.sort == item.dig("comparison", "providers").sort
             document.fetch("jobs").each_value do |job|

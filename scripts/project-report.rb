@@ -12,13 +12,14 @@ module ProjectReport
       value if value.is_a?(Hash)
     end
     storage = values.select { |value| value["kind"] == "post-publication-storage" }
+    values = values.flat_map { |value| value["runs"].is_a?(Array) ? value.fetch("runs") : [value] }
     phases = values.select { |value| value["benchmark"] && value["phase"] && value.dig("case", "case_id") }
     phases.uniq.map { |value| BenchmarkStorage.apply(value, storage) }
   end
 
   def self.observations(records, selections:, project:, lane:, jobs: [], run_url:)
     ProjectRuns.matrix(selections, case_id: project, lane: lane).values.flat_map { |matrix| matrix.fetch("include") }.flat_map do |selection|
-      item = BenchmarkCases.load_case(project)
+      item = BenchmarkCases.load_case(ProjectRuns.selection_case(selection))
       inputs = selection.fetch("inputs")
       plan = BenchmarkCases.plan(item, workflow: selection.fetch("workflow"), inputs: inputs)
       providers = item.dig("comparison", "providers")
@@ -26,17 +27,17 @@ module ProjectReport
         providers = [selection.fetch("workflow").include?("actions-cache") ? "actions-cache" : "boringcache"]
       end
       variant = inputs["variant"] || inputs["cache_tool"]
-      phases = records.select { |record| !variant || record["variant"].to_s == variant.to_s }
+      phases = records.select { |record| record.dig("case", "case_id") == item.fetch("id") && (!variant || record["variant"].to_s == variant.to_s) }
       if selection.fetch("workflow") == "native-fresh-benchmark.yml"
         selected_jobs = jobs.select { |job| job.fetch("name").start_with?("#{selection.fetch('label')} /") }
-        FreshReport.reconcile(FreshReport.expected(project), jobs: selected_jobs, records: phases, run_url: run_url)
-          .map { |value| value.merge("variant" => variant) }
+        FreshReport.reconcile(FreshReport.expected(item.fetch("id")), jobs: selected_jobs, records: phases, run_url: run_url)
+          .map { |value| value.merge("variant" => variant || item.fetch("id")) }
       else
         providers.product(plan.fetch("phases")).map do |provider, phase|
           matches = phases.select { |record| record.values_at("strategy", "phase") == [provider, phase] }
           raise BenchmarkCases::Error, "Duplicate project phase evidence" if matches.length > 1
           value = matches.first
-          {"variant" => variant, "strategy" => provider, "phase" => phase,
+          {"variant" => variant || item.fetch("id"), "strategy" => provider, "phase" => phase,
             "state" => value ? "recorded" : "missing", "verification" => value&.dig("verification", "passed") || "unrecorded",
             "timing" => value&.fetch("timing") || {}, "storage_bytes" => value&.dig("cache", "storage_bytes"), "phase_record" => value}
         end

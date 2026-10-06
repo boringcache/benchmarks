@@ -1,4 +1,4 @@
-name: Weekly fresh benchmarks
+name: Fresh benchmarks
 on:
   schedule:
     - cron: '0 4 * * 1'

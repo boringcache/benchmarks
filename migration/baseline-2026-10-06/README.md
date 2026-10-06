@@ -27,3 +27,11 @@ The user subsequently limited cleanup to October 5 migration experiments and
 checks in the central GitHub Actions history. The deletion audit is retained in
 `deleted-migration-runs.json`; scheduled runs, automated main-branch runs, other
 repositories, and today's baseline are outside that cleanup. No caches were deleted.
+
+The 166 canonical phase records downloaded during the October 6 audit are now
+imported into their original frozen series. Each record passed the existing
+series validator. `phase-artifacts.json` retains the GitHub artifact ID, original
+run/attempt, ZIP checksum and original phase-file checksum. Raw product evidence
+and logs remain separate. Completion checks are still required where a complete
+verified run export has not been imported; phase measurements do not substitute
+for that check.

@@ -97,6 +97,11 @@ module ReapiRegistry
     end
     measurements["save_seconds"] = elapsed - measurements.delete("shutdown_started")
     raise Error, "Native build failed; see #{directory}/build.log" unless measurements["build_success"]
+    files = Dir["reapi-store/**/*"].select { |path| File.file?(path) && !File.symlink?(path) }.sort
+    storage = {"bytes" => files.sum { |path| File.size(path) }, "source" => "bazel-remote-local-store-files",
+      "breakdown" => {"complete" => true, "scope" => "Uncompressed local comparator AC/CAS store after shutdown; remote archive size unmeasured",
+        "observations" => files.map { |path| {"path" => path, "bytes" => File.size(path)} }}}
+    File.write(File.join(directory, "storage.json"), JSON.pretty_generate(storage) + "\n")
     measurements["success"] = true
   ensure
     if measurements

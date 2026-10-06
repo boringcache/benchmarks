@@ -1,6 +1,6 @@
 ---
 name: Project rolling
-run-name: "${{ inputs.case_id }} rolling | ${{ inputs.cli_version }}"
+run-name: "${{ inputs.case_id }} Rolling | ${{ inputs.cli_version }}"
 'on':
   workflow_dispatch:
     inputs:

@@ -1,4 +1,4 @@
-name: Dispatch CLI Canary Cases
+name: Nightly benchmarks
 on:
   schedule:
     - cron: '17 1 * * *'

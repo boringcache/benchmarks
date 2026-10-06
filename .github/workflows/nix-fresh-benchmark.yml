@@ -1,6 +1,6 @@
 ---
 name: Nix comparison fresh
-run-name: "${{ inputs.case_id }} ${{ inputs.cadence }} | ${{ inputs.cli_version }}"
+run-name: "${{ inputs.case_id }} ${{ inputs.cadence == 'nightly' && 'Nightly' || 'Fresh' }} | ${{ inputs.cli_version }}"
 permissions:
   contents: read
   actions: read
@@ -234,6 +234,39 @@ jobs:
         - all
         - boringcache
         - cachix
+        default: all
+      cachix_cache:
+        description: Cachix cache name; empty uses the repository variable.
+        type: string
+        default: ''
+      cli_version:
+        description: Exact released CLI or canary; empty uses the Action default.
+        type: string
+        default: ''
+      series_id:
+        type: string
+        default: ''
+      sample:
+        type: string
+        default: '1'
+      cadence:
+        type: string
+        default: fresh
+        description: Fresh or nightly scheduling; measured phases retain the fresh
+          lane.
+  workflow_call:
+    inputs:
+      expected_identity:
+        description: Frozen scheduled harness and case identity; checked before preparation.
+        type: string
+        required: false
+        default: ''
+      case_id:
+        type: string
+        required: true
+      provider:
+        description: A single provider is a correctness screen, not a comparison.
+        type: string
         default: all
       cachix_cache:
         description: Cachix cache name; empty uses the repository variable.
