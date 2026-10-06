@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "case_id": "obs-studio",
-  "state": "dispatching",
+  "state": "requested",
   "cli_version": "vcli-canary-252077d7b8fb",
   "ref": "main",
   "proposal": {
@@ -30,7 +30,9 @@
         "cache_scope": "rolling-main",
         "cache_tool": "ccache"
       },
-      "state": "requesting"
+      "state": "requested",
+      "id": 37465309078,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37465309078"
     },
     {
       "repository": "boringcache/benchmarks",
@@ -42,7 +44,9 @@
         "cache_scope": "rolling-main",
         "cache_tool": "xcode"
       },
-      "state": "requesting"
+      "state": "requested",
+      "id": 37465312530,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37465312530"
     }
   ]
 }
