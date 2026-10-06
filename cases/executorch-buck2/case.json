@@ -6,12 +6,12 @@
   "workspace": "boringcache/benchmarks",
   "source": {
     "repository": "pytorch/executorch",
-    "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb",
+    "revision": "91b2e907c48f0c0043dd9b64ce9a5563f0de86bf",
     "pins": [
       {
         "path": "proposal.md",
         "kind": "snapshot",
-        "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+        "revision": "91b2e907c48f0c0043dd9b64ce9a5563f0de86bf"
       }
     ],
     "patch": "cache.patch"
