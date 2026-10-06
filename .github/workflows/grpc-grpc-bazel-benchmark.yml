@@ -16,6 +16,7 @@ env:
   BENCHMARK_ID: "${{ format('grpc-bazel{0}', inputs.benchmark_id_suffix) }}"
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
   BENCHMARK_SAMPLE: "${{ inputs.sample }}"
+  BENCHMARK_ROLLING_SCOPE: "${{ inputs.cache_scope }}"
 jobs:
   commit:
     name: "${{ matrix.provider }} gRPC Bazel commit"
@@ -117,6 +118,11 @@ jobs:
 'on':
   workflow_dispatch:
     inputs:
+      cache_scope:
+        description: Persistent rolling cohort; scheduled runs retain main.
+        required: false
+        type: string
+        default: ''
       cli_version:
         description: Optional exact BoringCache CLI release tag.
         required: false
