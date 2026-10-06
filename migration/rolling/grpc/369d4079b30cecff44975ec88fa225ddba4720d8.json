@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "case_id": "grpc",
-  "state": "dispatching",
+  "state": "requested",
   "cli_version": "vcli-canary-252077d7b8fb",
   "ref": "main",
   "proposal": {
@@ -20,7 +20,9 @@
       "inputs": {
         "cli_version": "vcli-canary-252077d7b8fb"
       },
-      "state": "requesting"
+      "state": "requested",
+      "id": 37456138548,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37456138548"
     }
   ]
 }
