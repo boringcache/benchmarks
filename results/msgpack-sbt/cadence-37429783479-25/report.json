@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "plan_sha256": "1b8fc6a0ce1820ab9a787753e05df894513eec408ca0b38904d59988bc6d717b",
+  "complete": false,
+  "valid_for_comparison": false,
+  "failures": [],
+  "methodology_issues": [
+    "This series does not declare a comparison of provider performance."
+  ],
+  "execution_verified": false,
+  "missing_completions": [],
+  "failed_completions": [],
+  "completions": [],
+  "publication": "unreviewed",
+  "evidence_preservation": "requires-review",
+  "primary_metric": "correctness",
+  "missing": [
+    [
+      1,
+      "cold",
+      "boringcache"
+    ],
+    [
+      1,
+      "cold",
+      "bazel-remote"
+    ],
+    [
+      1,
+      "warm",
+      "boringcache"
+    ],
+    [
+      1,
+      "warm",
+      "bazel-remote"
+    ]
+  ],
+  "summaries": [],
+  "records": [],
+  "exclusions": []
+}

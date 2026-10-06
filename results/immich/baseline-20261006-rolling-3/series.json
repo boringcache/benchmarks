@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "case_id": "immich",
+  "series_id": "baseline-20261006-rolling-3",
+  "created_at": "2026-10-06T07:28:38Z",
+  "lane": "rolling",
+  "phases": [
+    "commit"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "b282ddaf1e2451649fcd7a858e75e36079ed1197fef2ad3b85e1de5c9c445351",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "immich",
+    "cli_version": "vcli-canary-8a5868ac875b"
+  },
+  "comparison": {
+    "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+    "providers": [
+      "boringcache",
+      "actions-cache"
+    ],
+    "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+    "primary_metric": "build_and_reuse_seconds",
+    "storage": "provider-reported",
+    "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+    "sample_count": 10
+  },
+  "source": {
+    "repository": "immich-app/immich",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "007c18aec6cc9552fb7d8b7c791c41d7424876b0",
+        "kind": "gitlink"
+      }
+    ]
+  },
+  "verification": [
+    "Pinned upstream recipe and build success",
+    "The freshly loaded output image exists in the local Docker image store"
+  ],
+  "plan_sha256": "a90dae3fdecf1b11e444e601edd1f957a1306aa63be48c569b103b599ed3da99"
+}

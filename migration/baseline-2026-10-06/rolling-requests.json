@@ -1,0 +1,955 @@
+[
+  {
+    "case_id": "hugo",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "gohugoio/hugo",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "hugo",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-1",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:35Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429889300,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429889300"
+  },
+  {
+    "case_id": "hugo-go",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "gohugoio/hugo",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "6b3ba3a7e22ae2809605b8118aeed08b244f1955",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "hugo-go",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-2",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:36Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429892088,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429892088"
+  },
+  {
+    "case_id": "immich",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "immich-app/immich",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "007c18aec6cc9552fb7d8b7c791c41d7424876b0",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "immich",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-3",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:38Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429895230,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429895230"
+  },
+  {
+    "case_id": "mastodon",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "mastodon/mastodon",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "mastodon",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "variant": "server",
+      "series_id": "baseline-20261006-rolling-4",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": [
+      "server",
+      "server-sccache",
+      "streaming"
+    ],
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:40Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429897730,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429897730"
+  },
+  {
+    "case_id": "mastodon",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "mastodon/mastodon",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "mastodon",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "variant": "streaming",
+      "series_id": "baseline-20261006-rolling-5",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": [
+      "server",
+      "server-sccache",
+      "streaming"
+    ],
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:41Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429900473,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429900473"
+  },
+  {
+    "case_id": "posthog",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "PostHog/posthog",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "posthog",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "variant": "layers",
+      "series_id": "baseline-20261006-rolling-6",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": [
+      "layers",
+      "combined"
+    ],
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:43Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429903293,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429903293"
+  },
+  {
+    "case_id": "storybook",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "storybookjs/storybook",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "474a5399b5b2728b562d61ddc952ce4caa750fa0",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "storybook",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-7",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:45Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429906464,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429906464"
+  },
+  {
+    "case_id": "opentelemetry-java",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "open-telemetry/opentelemetry-java",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "a674ff1acea16754a2ed413fb8966084220fbd8b",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "opentelemetry-java",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-8",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:46Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429909323,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429909323"
+  },
+  {
+    "case_id": "spring-ai",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "spring-projects/spring-ai",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "46d05c2fdbab52f6ef04207abe19b12687a47453",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "spring-ai",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-9",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:48Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429911746,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429911746"
+  },
+  {
+    "case_id": "grpc",
+    "repository": "boringcache/benchmarks",
+    "workflow": "grpc-grpc-bazel-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "grpc/grpc",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "e1245717f658d10fee8fa0ea7b6f301a872330f2",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-10",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:49Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429914438,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429914438"
+  },
+  {
+    "case_id": "duckgres",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "PostHog/duckgres",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "12e26cf3a900823cf415d826ab2a9b8f0d57b2a3",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "duckgres",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-11",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:51Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429917412,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429917412"
+  },
+  {
+    "case_id": "chroma",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "chroma-core/chroma",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "848cf58dd6dd952f8d0ff672af7b30cbf4d67f81",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "chroma",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-12",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:53Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429920675,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429920675"
+  },
+  {
+    "case_id": "linkerd2",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "linkerd/linkerd2",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "e7c15f3a6c933d4d92a4959575d5f9d093fdffc5",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "linkerd2",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-13",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:55Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429923180,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429923180"
+  },
+  {
+    "case_id": "qdrant",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "qdrant/qdrant",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "9ae05efdc1ef96352889b2a6b6b574c35232b974",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "qdrant",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-14",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:56Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429926318,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429926318"
+  },
+  {
+    "case_id": "n8n",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "n8n-io/n8n",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "n8n",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "variant": "turbo",
+      "series_id": "baseline-20261006-rolling-15",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": [
+      "turbo",
+      "docker",
+      "runners",
+      "distroless"
+    ],
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:58Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429928768,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429928768"
+  },
+  {
+    "case_id": "n8n",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "n8n-io/n8n",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "n8n",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "variant": "docker",
+      "series_id": "baseline-20261006-rolling-16",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": [
+      "turbo",
+      "docker",
+      "runners",
+      "distroless"
+    ],
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:28:59Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429931681,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429931681"
+  },
+  {
+    "case_id": "n8n",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "n8n-io/n8n",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "n8n",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "variant": "runners",
+      "series_id": "baseline-20261006-rolling-17",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": [
+      "turbo",
+      "docker",
+      "runners",
+      "distroless"
+    ],
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:29:01Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429934205,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429934205"
+  },
+  {
+    "case_id": "n8n",
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "n8n-io/n8n",
+      "pins": [
+        {
+          "path": "upstream",
+          "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+          "kind": "gitlink"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "n8n",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "variant": "distroless",
+      "series_id": "baseline-20261006-rolling-18",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": [
+      "turbo",
+      "docker",
+      "runners",
+      "distroless"
+    ],
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:29:03Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429937117,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429937117"
+  },
+  {
+    "case_id": "gogs-moon",
+    "repository": "boringcache/benchmarks",
+    "workflow": "reapi-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "gogs/gogs",
+      "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0",
+      "pins": [
+        {
+          "path": "proposal.md",
+          "kind": "snapshot",
+          "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "gogs-moon",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-19",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:29:04Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429939686,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429939686"
+  },
+  {
+    "case_id": "opencut-moon",
+    "repository": "boringcache/benchmarks",
+    "workflow": "reapi-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "OpenCut-app/OpenCut",
+      "revision": "e668010778568641babef2cc40be4703ae6916d6",
+      "pins": [
+        {
+          "path": "proposal.md",
+          "kind": "snapshot",
+          "revision": "e668010778568641babef2cc40be4703ae6916d6"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "opencut-moon",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-20",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:29:06Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429942605,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429942605"
+  },
+  {
+    "case_id": "stackstorm-pants",
+    "repository": "boringcache/benchmarks",
+    "workflow": "reapi-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "StackStorm/st2",
+      "revision": "9824de4dfd0c869869e310dee729308f398ad83a",
+      "pins": [
+        {
+          "path": "proposal.md",
+          "kind": "snapshot",
+          "revision": "9824de4dfd0c869869e310dee729308f398ad83a"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "stackstorm-pants",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-21",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:29:08Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429945809,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429945809"
+  },
+  {
+    "case_id": "executorch-buck2",
+    "repository": "boringcache/benchmarks",
+    "workflow": "reapi-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "pytorch/executorch",
+      "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb",
+      "pins": [
+        {
+          "path": "proposal.md",
+          "kind": "snapshot",
+          "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+        }
+      ],
+      "patch": "cache.patch"
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "executorch-buck2",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-22",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:29:10Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429949073,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429949073"
+  },
+  {
+    "case_id": "msgpack-sbt",
+    "repository": "boringcache/benchmarks",
+    "workflow": "reapi-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "msgpack/msgpack-java",
+      "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+      "pins": [
+        {
+          "path": "proposal.md",
+          "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+          "kind": "snapshot"
+        }
+      ],
+      "patch": "cache.patch"
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "msgpack-sbt",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-23",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:29:12Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429952088,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429952088"
+  },
+  {
+    "case_id": "helix-nix",
+    "repository": "boringcache/benchmarks",
+    "workflow": "nix-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "helix-editor/helix",
+      "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc",
+      "pins": [
+        {
+          "path": "proposal.md",
+          "kind": "snapshot",
+          "revision": "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "helix-nix",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-24",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:29:13Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429954604,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429954604"
+  },
+  {
+    "case_id": "zed-nix",
+    "repository": "boringcache/benchmarks",
+    "workflow": "nix-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "zed-industries/zed",
+      "revision": "96837d78cb0f2128c1965716f8df56b8aea59742",
+      "pins": [
+        {
+          "path": "proposal.md",
+          "kind": "snapshot",
+          "revision": "96837d78cb0f2128c1965716f8df56b8aea59742"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "case_id": "zed-nix",
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "series_id": "baseline-20261006-rolling-25",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": null,
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:29:15Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429957363,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429957363"
+  },
+  {
+    "case_id": "obs-studio",
+    "repository": "boringcache/benchmarks",
+    "workflow": "obs-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "obsproject/obs-studio",
+      "pins": [
+        {
+          "path": "payload/benchmark-source.env",
+          "revision": "e7136951c052db9a74de853f2f0ec5d1bc8f6f4a",
+          "kind": "env"
+        },
+        {
+          "path": "payload/benchmark-source.env",
+          "revision": "ef5814431c6af9061874470201d0b799bc84602b",
+          "kind": "env"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "cache_tool": "ccache",
+      "series_id": "baseline-20261006-rolling-26",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": [
+      "ccache",
+      "xcode"
+    ],
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:29:17Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429960914,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429960914"
+  },
+  {
+    "case_id": "obs-studio",
+    "repository": "boringcache/benchmarks",
+    "workflow": "obs-rolling-benchmark.yml",
+    "workspace": "boringcache/benchmarks",
+    "source": {
+      "repository": "obsproject/obs-studio",
+      "pins": [
+        {
+          "path": "payload/benchmark-source.env",
+          "revision": "e7136951c052db9a74de853f2f0ec5d1bc8f6f4a",
+          "kind": "env"
+        },
+        {
+          "path": "payload/benchmark-source.env",
+          "revision": "ef5814431c6af9061874470201d0b799bc84602b",
+          "kind": "env"
+        }
+      ]
+    },
+    "lane": "rolling",
+    "inputs": {
+      "cli_version": "vcli-canary-8a5868ac875b",
+      "cache_tool": "xcode",
+      "series_id": "baseline-20261006-rolling-27",
+      "sample": "1"
+    },
+    "phases": [
+      "commit"
+    ],
+    "variants": [
+      "ccache",
+      "xcode"
+    ],
+    "schema_version": 1,
+    "requested_at": "2026-10-06T07:29:19Z",
+    "ref": "main",
+    "state": "requested",
+    "run_id": 37429963857,
+    "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429963857"
+  }
+]
