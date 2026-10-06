@@ -45,7 +45,7 @@ runs:
       STRATEGY: "${{ inputs.strategy }}"
     run: |
       case "$STRATEGY" in
-        actions-cache|boringcache) ;;
+        actions-cache|depot-actions-cache|boringcache) ;;
         *)
           echo "Unsupported benchmark strategy: $STRATEGY" >&2
           exit 1
