@@ -5446,7 +5446,8 @@
           },
           "ref": "shared-benchmark-cadence",
           "state": "rejected",
-          "requested_at": "2026-10-05T14:28:34Z"
+          "requested_at": "2026-10-05T14:28:34Z",
+          "error": "GitHub HTTP 422: merged PR branch shared-benchmark-cadence was deleted; no ref found."
         }
       ],
       "completions": [
