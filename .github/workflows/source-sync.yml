@@ -5,8 +5,6 @@ permissions:
   actions: read
 jobs:
   select:
-    if: github.event_name == 'workflow_dispatch' || vars.BENCHMARK_CADENCE_ACTIVE
-      == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     outputs:
