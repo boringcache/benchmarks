@@ -24,7 +24,7 @@
       {
         "path": ".github/workflows/grpc-grpc-bazel-benchmark.yml",
         "lane": "rolling",
-        "inputs": {}
+        "inputs": {"cache_scope": "main"}
       },
       {
         "path": ".github/workflows/grpc-grpc-bazel-fresh-benchmark.yml",
