@@ -32,6 +32,8 @@ parser = OptionParser.new do |value|
   value.on("--repository NAME") { |input| options[:repository] = input }
   value.on("--revision SHA") { |input| options[:revision] = input }
   value.on("--question TEXT") { |input| options[:question] = input }
+  value.on("--shape SHAPE", "Scaffold an existing execution shape (go)") { |input| options[:shape] = input }
+  value.on("--tool-version VERSION", "Exact tool version for the selected shape") { |input| options[:tool_version] = input }
   value.on("--samples COUNT", Integer) { |input| options[:samples] = input }
   value.on("--sample NUMBER", Integer) { |input| options[:sample] = input }
   value.on("--variant NAME") { |input| options[:variant] = input }
@@ -54,8 +56,8 @@ begin
     puts "Indexed #{catalog.fetch('series').length} series in #{output}"
   when "new"
     raise BenchmarkCases::Error, "Select a case ID, --repository, --revision, and --question" unless id && options.values_at(:repository, :revision, :question).all?
-    BenchmarkCases.create(id, **options.slice(:repository, :revision, :question))
-    puts "Created cases/#{id}/case.json and proposal.md. Execution is blocked until the workload is reviewed and verified."
+    BenchmarkCases.create(id, **options.slice(:repository, :revision, :question, :shape, :tool_version))
+    puts "Created cases/#{id}/case.json and proposal.md#{options[:shape] ? ', with a product plan, recipe contract, and output-check stub' : ''}. Execution is blocked until the workload is reviewed and verified."
   when "check"
     selected = item ? [item] : BenchmarkCases.documents
     BenchmarkCases.validate(selected)

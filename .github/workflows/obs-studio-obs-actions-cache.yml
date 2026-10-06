@@ -5,6 +5,7 @@ permissions:
   actions: read
   contents: read
 env:
+  BENCHMARK_EXPECTED_IDENTITY: "${{ inputs.expected_identity }}"
   BENCHMARK_ID: obs-studio-compiler-cache
   BENCHMARK_SERIES_ID: "${{ inputs.series_id }}"
   BENCHMARK_SAMPLE: "${{ inputs.sample }}"
@@ -332,6 +333,11 @@ jobs:
 'on':
   workflow_dispatch:
     inputs:
+      expected_identity:
+        description: Frozen scheduled harness and case identity; checked before preparation.
+        type: string
+        required: false
+        default: ''
       cache_tool:
         description: Select the tool declared by the evaluation series.
         required: false
