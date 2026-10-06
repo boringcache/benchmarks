@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "case_id": "chroma",
+  "repository": "boringcache/benchmarks",
+  "workflow": "native-fresh-benchmark.yml",
+  "lane": "fresh",
+  "ref": "main",
+  "state": "requested",
+  "requested_at": "2026-10-06T07:27:56Z",
+  "inputs": {
+    "case_id": "chroma",
+    "series_id": "cadence-37429783479-14",
+    "sample": "1",
+    "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"chroma\",\"definition_sha256\":\"4911e3d71c206938a5644329251c225f4e1fc3ee0123e96fee716ea0f2e1b53f\"}",
+    "cli_version": "vcli-canary-8a5868ac875b"
+  },
+  "run_id": 37429881454,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429881454",
+  "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+  "error": null
+}

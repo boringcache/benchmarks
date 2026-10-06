@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "case_id": "grpc",
+  "repository": "boringcache/benchmarks",
+  "workflow": "grpc-grpc-bazel-fresh-benchmark.yml",
+  "lane": "fresh",
+  "ref": "main",
+  "state": "requested",
+  "requested_at": "2026-10-06T07:27:56Z",
+  "inputs": {
+    "series_id": "cadence-37429783479-10",
+    "sample": "1",
+    "expected_identity": "{\"harness_sha\":\"04dfe2e8fefb85fc93898059df208b2f4f3cf26e\",\"case_id\":\"grpc\",\"definition_sha256\":\"45e7ad8adde59ee18a9c779db4b14adde68dd8fb357f2edd757d7fbecee0f3a4\"}",
+    "cli_version": "vcli-canary-8a5868ac875b"
+  },
+  "run_id": 37429879437,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37429879437",
+  "harness_sha": "04dfe2e8fefb85fc93898059df208b2f4f3cf26e",
+  "error": null
+}

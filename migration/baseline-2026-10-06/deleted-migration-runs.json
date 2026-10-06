@@ -1,0 +1,2445 @@
+{
+  "repository": "boringcache/benchmarks",
+  "created_date_utc": "2026-10-05",
+  "reason": "User requested removal of yesterday migration experiments and checks from GitHub Actions history",
+  "excluded": "Scheduled runs and automated main push/index runs; other repositories and dates",
+  "requested_ids": [
+    37378101796,
+    37378097421,
+    37377947724,
+    37377940644,
+    37376867009,
+    37376787731,
+    37376784408,
+    37376780672,
+    37376777074,
+    37376772894,
+    37376769643,
+    37376766204,
+    37376762709,
+    37376758991,
+    37376755061,
+    37376751453,
+    37374193132,
+    37374188679,
+    37374173514,
+    37374170192,
+    37374167360,
+    37366171737,
+    37366170340,
+    37365008673,
+    37362622816,
+    37362617219,
+    37362131605,
+    37362126215,
+    37358852206,
+    37358851818,
+    37358839544,
+    37358834711,
+    37357892389,
+    37357743320,
+    37357736793,
+    37357537232,
+    37357215892,
+    37357216555,
+    37357199661,
+    37357197097,
+    37355659695,
+    37355655426,
+    37333719534,
+    37333712869,
+    37333261184,
+    37333250700,
+    37332364698,
+    37332356130,
+    37332132100,
+    37331951586,
+    37328503229,
+    37328494099,
+    37328206030,
+    37328200081,
+    37327598048,
+    37327591035,
+    37327069343,
+    37326340221,
+    37326133177,
+    37326053352,
+    37326046130,
+    37325503530,
+    37325493399,
+    37325287254,
+    37325282767,
+    37325183094,
+    37325140807,
+    37325135541,
+    37325075463,
+    37324228460,
+    37324223748,
+    37324219008,
+    37324214890,
+    37324209639,
+    37324204556,
+    37324036688,
+    37324032100,
+    37324025714,
+    37324020999,
+    37324016178,
+    37323980132,
+    37323973176,
+    37323465858,
+    37323262131,
+    37323254349,
+    37323234591,
+    37323174641,
+    37323169828,
+    37323164071,
+    37323159608,
+    37323155106,
+    37323150431,
+    37323145174,
+    37323140444,
+    37323136088,
+    37323131290,
+    37323126507,
+    37323121773,
+    37323117664,
+    37323112601,
+    37323107836,
+    37322983836,
+    37322979117,
+    37322843590,
+    37322801842,
+    37322636399,
+    37322630658,
+    37322625973,
+    37322621030,
+    37322616359,
+    37322609279,
+    37322604229,
+    37322598011,
+    37322592957,
+    37321772493,
+    37321767409,
+    37321762921,
+    37321758035,
+    37321753318,
+    37321748690,
+    37321744434,
+    37321739971,
+    37321566845,
+    37321531803,
+    37321524662,
+    37320869828,
+    37320867908,
+    37320685242,
+    37320679142,
+    37315116541,
+    37315116759,
+    37315094987,
+    37315088389,
+    37310965090,
+    37310929106,
+    37310923326,
+    37308688212,
+    37308678979,
+    37308676035,
+    37308084546,
+    37308081718,
+    37305931541,
+    37305928053,
+    37305498994,
+    37305492593,
+    37305294241,
+    37305289015,
+    37304834734,
+    37304819030,
+    37304814424,
+    37304682839,
+    37304678244,
+    37304481509,
+    37304476303,
+    37304358750,
+    37304344369,
+    37303782303,
+    37303778364,
+    37303756955,
+    37303670119,
+    37303666267,
+    37303662752,
+    37303647482,
+    37302932865,
+    37302929873,
+    37302906442,
+    37302896058,
+    37302853102,
+    37302721578,
+    37302718511,
+    37302715178,
+    37302711581,
+    37302693473,
+    37302688305,
+    37302678892,
+    37302647345,
+    37302642872,
+    37302476504,
+    37302470350,
+    37302464552,
+    37302464782,
+    37302462400,
+    37302443623,
+    37302439213,
+    37302419107,
+    37302415053,
+    37302345686,
+    37302331070,
+    37302325678,
+    37302224116,
+    37302220026,
+    37302010045,
+    37302007157,
+    37302004103,
+    37302001164,
+    37301997879,
+    37301738861,
+    37301733314,
+    37301680997,
+    37301676473,
+    37301148648,
+    37301146101,
+    37297244527,
+    37297238955,
+    37296872364,
+    37296866147,
+    37296520042,
+    37296515861,
+    37296214039,
+    37296210599,
+    37296157157,
+    37296135520,
+    37295930945,
+    37295929228,
+    37295925543,
+    37295807809,
+    37295761035,
+    37295757394,
+    37295727480,
+    37294909230,
+    37294902355,
+    37294276051,
+    37294269385,
+    37294039807,
+    37294037661,
+    37293351120,
+    37293348447,
+    37292113222,
+    37292106034,
+    37291917929,
+    37291910658,
+    37289179981,
+    37289174845,
+    37288249894,
+    37288246103,
+    37288242432,
+    37288240708,
+    37288238643,
+    37285365010,
+    37285361728,
+    37285092516,
+    37278550079,
+    37278547772
+  ],
+  "deleted": [
+    {
+      "id": 37378101796,
+      "name": "Benchmark Guardrails",
+      "head_branch": "grpc-nativelink",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:46:26Z",
+      "deleted_at": "2026-10-06T08:13:43.104299+00:00"
+    },
+    {
+      "id": 37378097421,
+      "name": "PR #44",
+      "head_branch": "refs/pull/44/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:46:23Z",
+      "deleted_at": "2026-10-06T08:13:43.765806+00:00"
+    },
+    {
+      "id": 37377947724,
+      "name": "mbx / Zed Cargo layers | Canary fresh | native-mbx-02 / sample 1",
+      "head_branch": "native-adapter-qualification",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:45:07Z",
+      "deleted_at": "2026-10-06T08:13:44.453879+00:00"
+    },
+    {
+      "id": 37377940644,
+      "name": "Benchmark Guardrails",
+      "head_branch": "native-adapter-qualification",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:45:03Z",
+      "deleted_at": "2026-10-06T08:13:45.123043+00:00"
+    },
+    {
+      "id": 37376867009,
+      "name": "Benchmark Guardrails",
+      "head_branch": "native-adapter-qualification",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:35:40Z",
+      "deleted_at": "2026-10-06T08:13:45.683606+00:00"
+    },
+    {
+      "id": 37376787731,
+      "name": "mbx / Deno Cargo / compiler-only | Canary fresh | native-mbx-01 / sample 1",
+      "head_branch": "native-adapter-qualification",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:34:57Z",
+      "deleted_at": "2026-10-06T08:13:46.350658+00:00"
+    },
+    {
+      "id": 37376784408,
+      "name": "kache / Deno Cargo / compiler-only | Canary fresh | native-kache-01 / sample 1",
+      "head_branch": "native-adapter-qualification",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:34:56Z",
+      "deleted_at": "2026-10-06T08:13:47.024852+00:00"
+    },
+    {
+      "id": 37376780672,
+      "name": "sccache / Deno Cargo / compiler-only | Canary fresh | native-sccache-01 / sample 1",
+      "head_branch": "native-adapter-qualification",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:34:54Z",
+      "deleted_at": "2026-10-06T08:13:47.780024+00:00"
+    },
+    {
+      "id": 37376777074,
+      "name": "mbx / Zed Cargo layers | Canary fresh | native-mbx-01 / sample 1",
+      "head_branch": "native-adapter-qualification",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T21:34:52Z",
+      "deleted_at": "2026-10-06T08:13:48.468239+00:00"
+    },
+    {
+      "id": 37376772894,
+      "name": "kache / Zed Cargo layers | Canary fresh | native-kache-01 / sample 1",
+      "head_branch": "native-adapter-qualification",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T21:34:50Z",
+      "deleted_at": "2026-10-06T08:13:49.164951+00:00"
+    },
+    {
+      "id": 37376769643,
+      "name": "sccache / Zed Cargo layers | Canary fresh | native-sccache-01 / sample 1",
+      "head_branch": "native-adapter-qualification",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:34:48Z",
+      "deleted_at": "2026-10-06T08:13:49.806723+00:00"
+    },
+    {
+      "id": 37376766204,
+      "name": "msgpack-sbt | Canary fresh | native-reapi-01 / sample 1",
+      "head_branch": "native-adapter-qualification",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:34:46Z",
+      "deleted_at": "2026-10-06T08:13:50.555611+00:00"
+    },
+    {
+      "id": 37376762709,
+      "name": "executorch-buck2 | Canary fresh | native-reapi-01 / sample 1",
+      "head_branch": "native-adapter-qualification",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:34:44Z",
+      "deleted_at": "2026-10-06T08:13:51.146194+00:00"
+    },
+    {
+      "id": 37376758991,
+      "name": "stackstorm-pants | Canary fresh | native-reapi-01 / sample 1",
+      "head_branch": "native-adapter-qualification",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:34:42Z",
+      "deleted_at": "2026-10-06T08:13:51.847034+00:00"
+    },
+    {
+      "id": 37376755061,
+      "name": "gogs-moon | Canary fresh | native-reapi-01 / sample 1",
+      "head_branch": "native-adapter-qualification",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:34:40Z",
+      "deleted_at": "2026-10-06T08:13:52.534258+00:00"
+    },
+    {
+      "id": 37376751453,
+      "name": "opencut-moon | Canary fresh | native-reapi-01 / sample 1",
+      "head_branch": "native-adapter-qualification",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:34:38Z",
+      "deleted_at": "2026-10-06T08:13:53.187645+00:00"
+    },
+    {
+      "id": 37374193132,
+      "name": "Benchmark Guardrails",
+      "head_branch": "grpc-nativelink",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:10:09Z",
+      "deleted_at": "2026-10-06T08:13:53.850834+00:00"
+    },
+    {
+      "id": 37374188679,
+      "name": "PR #44",
+      "head_branch": "refs/pull/44/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:10:07Z",
+      "deleted_at": "2026-10-06T08:13:54.404844+00:00"
+    },
+    {
+      "id": 37374173514,
+      "name": "Benchmark Guardrails",
+      "head_branch": "grpc-nativelink",
+      "event": "pull_request",
+      "conclusion": "cancelled",
+      "created_at": "2026-10-05T21:09:58Z",
+      "deleted_at": "2026-10-06T08:13:55.161108+00:00"
+    },
+    {
+      "id": 37374170192,
+      "name": "PR #44",
+      "head_branch": "refs/pull/44/head",
+      "event": "dynamic",
+      "conclusion": "cancelled",
+      "created_at": "2026-10-05T21:09:56Z",
+      "deleted_at": "2026-10-06T08:13:55.766391+00:00"
+    },
+    {
+      "id": 37374167360,
+      "name": "gRPC Bazel | Canary fresh | nativelink-r2-fresh-03 / sample 1",
+      "head_branch": "grpc-nativelink",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T21:09:54Z",
+      "deleted_at": "2026-10-06T08:13:56.385029+00:00"
+    },
+    {
+      "id": 37366171737,
+      "name": "Benchmark Guardrails",
+      "head_branch": "grpc-nativelink",
+      "event": "pull_request",
+      "conclusion": "cancelled",
+      "created_at": "2026-10-05T19:52:15Z",
+      "deleted_at": "2026-10-06T08:13:56.955665+00:00"
+    },
+    {
+      "id": 37366170340,
+      "name": "PR #44",
+      "head_branch": "refs/pull/44/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T19:52:14Z",
+      "deleted_at": "2026-10-06T08:13:57.501087+00:00"
+    },
+    {
+      "id": 37365008673,
+      "name": "gRPC Bazel | Canary rolling | nativelink-r2-rolling-advance-04 / sample 1",
+      "head_branch": "grpc-nativelink-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T19:41:18Z",
+      "deleted_at": "2026-10-06T08:13:58.184396+00:00"
+    },
+    {
+      "id": 37362622816,
+      "name": "Benchmark Guardrails",
+      "head_branch": "grpc-nativelink",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T19:19:48Z",
+      "deleted_at": "2026-10-06T08:13:58.848332+00:00"
+    },
+    {
+      "id": 37362617219,
+      "name": "PR #44",
+      "head_branch": "refs/pull/44/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T19:19:45Z",
+      "deleted_at": "2026-10-06T08:13:59.508189+00:00"
+    },
+    {
+      "id": 37362131605,
+      "name": "Benchmark Guardrails",
+      "head_branch": "grpc-nativelink",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T19:15:42Z",
+      "deleted_at": "2026-10-06T08:14:00.185031+00:00"
+    },
+    {
+      "id": 37362126215,
+      "name": "PR #44",
+      "head_branch": "refs/pull/44/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T19:15:39Z",
+      "deleted_at": "2026-10-06T08:14:00.670692+00:00"
+    },
+    {
+      "id": 37358852206,
+      "name": "gRPC Bazel | Canary fresh | nativelink-r2-fresh-02 / sample 2",
+      "head_branch": "grpc-nativelink",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T18:49:24Z",
+      "deleted_at": "2026-10-06T08:14:01.368657+00:00"
+    },
+    {
+      "id": 37358851818,
+      "name": "gRPC Bazel | Canary fresh | nativelink-r2-fresh-02 / sample 1",
+      "head_branch": "grpc-nativelink",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T18:49:24Z",
+      "deleted_at": "2026-10-06T08:14:02.013870+00:00"
+    },
+    {
+      "id": 37358839544,
+      "name": "Benchmark Guardrails",
+      "head_branch": "grpc-nativelink",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T18:49:18Z",
+      "deleted_at": "2026-10-06T08:14:02.736156+00:00"
+    },
+    {
+      "id": 37358834711,
+      "name": "PR #44",
+      "head_branch": "refs/pull/44/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T18:49:16Z",
+      "deleted_at": "2026-10-06T08:14:03.478168+00:00"
+    },
+    {
+      "id": 37357892389,
+      "name": "gRPC Bazel | Canary rolling | nativelink-r2-rolling-seed-02 / sample 1",
+      "head_branch": "grpc-nativelink-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T18:41:50Z",
+      "deleted_at": "2026-10-06T08:14:04.131369+00:00"
+    },
+    {
+      "id": 37357743320,
+      "name": "Benchmark Guardrails",
+      "head_branch": "grpc-nativelink",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T18:40:38Z",
+      "deleted_at": "2026-10-06T08:14:04.789728+00:00"
+    },
+    {
+      "id": 37357736793,
+      "name": "PR #44",
+      "head_branch": "refs/pull/44/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T18:40:35Z",
+      "deleted_at": "2026-10-06T08:14:05.601892+00:00"
+    },
+    {
+      "id": 37357537232,
+      "name": "gRPC Bazel | Canary rolling | nativelink-r2-rolling-seed-01 / sample 1",
+      "head_branch": "grpc-nativelink-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "cancelled",
+      "created_at": "2026-10-05T18:38:59Z",
+      "deleted_at": "2026-10-06T08:14:06.267136+00:00"
+    },
+    {
+      "id": 37357215892,
+      "name": "gRPC Bazel | Canary fresh | nativelink-r2-fresh-01 / sample 2",
+      "head_branch": "grpc-nativelink",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T18:36:25Z",
+      "deleted_at": "2026-10-06T08:14:06.930801+00:00"
+    },
+    {
+      "id": 37357216555,
+      "name": "gRPC Bazel | Canary fresh | nativelink-r2-fresh-01 / sample 1",
+      "head_branch": "grpc-nativelink",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T18:36:25Z",
+      "deleted_at": "2026-10-06T08:14:07.757019+00:00"
+    },
+    {
+      "id": 37357199661,
+      "name": "Benchmark Guardrails",
+      "head_branch": "grpc-nativelink",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T18:36:17Z",
+      "deleted_at": "2026-10-06T08:14:08.367441+00:00"
+    },
+    {
+      "id": 37357197097,
+      "name": "PR #44",
+      "head_branch": "refs/pull/44/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T18:36:16Z",
+      "deleted_at": "2026-10-06T08:14:08.984334+00:00"
+    },
+    {
+      "id": 37355659695,
+      "name": "Benchmark Guardrails",
+      "head_branch": "cadence-qualification",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T18:24:10Z",
+      "deleted_at": "2026-10-06T08:14:09.542082+00:00"
+    },
+    {
+      "id": 37355655426,
+      "name": "PR #43",
+      "head_branch": "refs/pull/43/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T18:24:08Z",
+      "deleted_at": "2026-10-06T08:14:10.094189+00:00"
+    },
+    {
+      "id": 37333719534,
+      "name": "Benchmark Guardrails",
+      "head_branch": "cadence-qualification",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T15:32:57Z",
+      "deleted_at": "2026-10-06T08:14:10.652879+00:00"
+    },
+    {
+      "id": 37333712869,
+      "name": "PR #43",
+      "head_branch": "refs/pull/43/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T15:32:54Z",
+      "deleted_at": "2026-10-06T08:14:11.278698+00:00"
+    },
+    {
+      "id": 37333261184,
+      "name": "Benchmark Guardrails",
+      "head_branch": "cadence-qualification",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T15:29:36Z",
+      "deleted_at": "2026-10-06T08:14:11.896460+00:00"
+    },
+    {
+      "id": 37333250700,
+      "name": "PR #43",
+      "head_branch": "refs/pull/43/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T15:29:32Z",
+      "deleted_at": "2026-10-06T08:14:12.631453+00:00"
+    },
+    {
+      "id": 37332364698,
+      "name": "Benchmark Guardrails",
+      "head_branch": "cadence-qualification",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T15:22:57Z",
+      "deleted_at": "2026-10-06T08:14:13.196939+00:00"
+    },
+    {
+      "id": 37332356130,
+      "name": "PR #43",
+      "head_branch": "refs/pull/43/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T15:22:53Z",
+      "deleted_at": "2026-10-06T08:14:13.686934+00:00"
+    },
+    {
+      "id": 37332132100,
+      "name": "Cadence evidence | Zed Nix qualification",
+      "head_branch": "cadence-evidence",
+      "event": "push",
+      "conclusion": "success",
+      "created_at": "2026-10-05T15:21:15Z",
+      "deleted_at": "2026-10-06T08:14:14.511480+00:00"
+    },
+    {
+      "id": 37331951586,
+      "name": "Cadence evidence | Zed Nix qualification",
+      "head_branch": "cadence-evidence",
+      "event": "push",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T15:19:57Z",
+      "deleted_at": "2026-10-06T08:14:15.230826+00:00"
+    },
+    {
+      "id": 37328503229,
+      "name": "Benchmark Guardrails",
+      "head_branch": "cadence-qualification",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:54:22Z",
+      "deleted_at": "2026-10-06T08:14:15.804810+00:00"
+    },
+    {
+      "id": 37328494099,
+      "name": "PR #43",
+      "head_branch": "refs/pull/43/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:54:18Z",
+      "deleted_at": "2026-10-06T08:14:16.376870+00:00"
+    },
+    {
+      "id": 37328206030,
+      "name": "Benchmark Guardrails",
+      "head_branch": "cadence-qualification",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:52:12Z",
+      "deleted_at": "2026-10-06T08:14:17.073457+00:00"
+    },
+    {
+      "id": 37328200081,
+      "name": "PR #43",
+      "head_branch": "refs/pull/43/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:52:09Z",
+      "deleted_at": "2026-10-06T08:14:17.623576+00:00"
+    },
+    {
+      "id": 37327598048,
+      "name": "Benchmark Guardrails",
+      "head_branch": "cadence-qualification",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:47:43Z",
+      "deleted_at": "2026-10-06T08:14:18.195498+00:00"
+    },
+    {
+      "id": 37327591035,
+      "name": "PR #43",
+      "head_branch": "refs/pull/43/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:47:40Z",
+      "deleted_at": "2026-10-06T08:14:18.708026+00:00"
+    },
+    {
+      "id": 37327069343,
+      "name": "zed-nix fresh cadence-fresh-01 sample 2",
+      "head_branch": "cadence-fresh-qualification",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:43:56Z",
+      "deleted_at": "2026-10-06T08:14:19.286401+00:00"
+    },
+    {
+      "id": 37326340221,
+      "name": "obs-studio xcode rolling cadence-rolling-advance-xcode-02 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:38:32Z",
+      "deleted_at": "2026-10-06T08:14:19.940799+00:00"
+    },
+    {
+      "id": 37326133177,
+      "name": "obs-studio xcode rolling cadence-rolling-seed-xcode-02 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:37:00Z",
+      "deleted_at": "2026-10-06T08:14:20.573604+00:00"
+    },
+    {
+      "id": 37326053352,
+      "name": "Benchmark Guardrails",
+      "head_branch": "cadence-qualification",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:36:23Z",
+      "deleted_at": "2026-10-06T08:14:21.236263+00:00"
+    },
+    {
+      "id": 37326046130,
+      "name": "PR #43",
+      "head_branch": "refs/pull/43/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:36:20Z",
+      "deleted_at": "2026-10-06T08:14:21.851308+00:00"
+    },
+    {
+      "id": 37325503530,
+      "name": "Benchmark Guardrails",
+      "head_branch": "cadence-qualification",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:32:18Z",
+      "deleted_at": "2026-10-06T08:14:22.403637+00:00"
+    },
+    {
+      "id": 37325493399,
+      "name": "PR #43",
+      "head_branch": "refs/pull/43/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:32:13Z",
+      "deleted_at": "2026-10-06T08:14:22.957390+00:00"
+    },
+    {
+      "id": 37325287254,
+      "name": "opencut-moon rolling cadence-rolling-advance-03 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:30:43Z",
+      "deleted_at": "2026-10-06T08:14:23.530595+00:00"
+    },
+    {
+      "id": 37325282767,
+      "name": "gogs-moon rolling cadence-rolling-advance-03 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:30:41Z",
+      "deleted_at": "2026-10-06T08:14:24.125250+00:00"
+    },
+    {
+      "id": 37325183094,
+      "name": "n8n turbo rolling cadence-rolling-next-turbo sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:29:57Z",
+      "deleted_at": "2026-10-06T08:14:24.677319+00:00"
+    },
+    {
+      "id": 37325140807,
+      "name": "opencut-moon rolling cadence-rolling-seed-03 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:29:38Z",
+      "deleted_at": "2026-10-06T08:14:25.231095+00:00"
+    },
+    {
+      "id": 37325135541,
+      "name": "gogs-moon rolling cadence-rolling-seed-03 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:29:36Z",
+      "deleted_at": "2026-10-06T08:14:25.845096+00:00"
+    },
+    {
+      "id": 37325075463,
+      "name": "helix-nix fresh cadence-fresh-01 sample 2",
+      "head_branch": "cadence-fresh-qualification",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:29:08Z",
+      "deleted_at": "2026-10-06T08:14:26.501529+00:00"
+    },
+    {
+      "id": 37324228460,
+      "name": "stackstorm-pants rolling cadence-rolling-advance-02 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:22:51Z",
+      "deleted_at": "2026-10-06T08:14:27.049513+00:00"
+    },
+    {
+      "id": 37324223748,
+      "name": "opencut-moon rolling cadence-rolling-advance-02 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T14:22:49Z",
+      "deleted_at": "2026-10-06T08:14:27.616343+00:00"
+    },
+    {
+      "id": 37324219008,
+      "name": "obs-studio ccache rolling cadence-rolling-advance-ccache-02 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:22:47Z",
+      "deleted_at": "2026-10-06T08:14:28.210781+00:00"
+    },
+    {
+      "id": 37324214890,
+      "name": "msgpack-sbt rolling cadence-rolling-advance-02 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:22:45Z",
+      "deleted_at": "2026-10-06T08:14:28.874415+00:00"
+    },
+    {
+      "id": 37324209639,
+      "name": "gogs-moon rolling cadence-rolling-advance-02 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T14:22:42Z",
+      "deleted_at": "2026-10-06T08:14:29.507514+00:00"
+    },
+    {
+      "id": 37324204556,
+      "name": "executorch-buck2 rolling cadence-rolling-advance-02 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:22:40Z",
+      "deleted_at": "2026-10-06T08:14:30.151983+00:00"
+    },
+    {
+      "id": 37324036688,
+      "name": "msgpack-sbt rolling cadence-rolling-seed-02 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:21:26Z",
+      "deleted_at": "2026-10-06T08:14:30.790851+00:00"
+    },
+    {
+      "id": 37324032100,
+      "name": "executorch-buck2 rolling cadence-rolling-seed-02 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:21:23Z",
+      "deleted_at": "2026-10-06T08:14:31.416110+00:00"
+    },
+    {
+      "id": 37324025714,
+      "name": "stackstorm-pants rolling cadence-rolling-seed-02 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:21:21Z",
+      "deleted_at": "2026-10-06T08:14:32.123015+00:00"
+    },
+    {
+      "id": 37324020999,
+      "name": "opencut-moon rolling cadence-rolling-seed-02 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:21:19Z",
+      "deleted_at": "2026-10-06T08:14:32.788574+00:00"
+    },
+    {
+      "id": 37324016178,
+      "name": "gogs-moon rolling cadence-rolling-seed-02 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:21:16Z",
+      "deleted_at": "2026-10-06T08:14:33.387476+00:00"
+    },
+    {
+      "id": 37323980132,
+      "name": "Benchmark Guardrails",
+      "head_branch": "cadence-qualification",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:21:00Z",
+      "deleted_at": "2026-10-06T08:14:33.932393+00:00"
+    },
+    {
+      "id": 37323973176,
+      "name": "PR #43",
+      "head_branch": "refs/pull/43/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:20:57Z",
+      "deleted_at": "2026-10-06T08:14:34.522699+00:00"
+    },
+    {
+      "id": 37323465858,
+      "name": "obs-studio ccache rolling cadence-rolling-seed-ccache-02 sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:17:09Z",
+      "deleted_at": "2026-10-06T08:14:35.070348+00:00"
+    },
+    {
+      "id": 37323262131,
+      "name": "Benchmark Guardrails",
+      "head_branch": "cadence-qualification",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:15:36Z",
+      "deleted_at": "2026-10-06T08:14:35.699363+00:00"
+    },
+    {
+      "id": 37323254349,
+      "name": "PR #43",
+      "head_branch": "refs/pull/43/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:15:33Z",
+      "deleted_at": "2026-10-06T08:14:36.337397+00:00"
+    },
+    {
+      "id": 37323234591,
+      "name": "obs-studio xcode rolling cadence-rolling-advance-xcode sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T14:15:24Z",
+      "deleted_at": "2026-10-06T08:14:37.085826+00:00"
+    },
+    {
+      "id": 37323174641,
+      "name": "zed-nix rolling cadence-rolling-advance sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:14:59Z",
+      "deleted_at": "2026-10-06T08:14:37.726737+00:00"
+    },
+    {
+      "id": 37323169828,
+      "name": "stackstorm-pants rolling cadence-rolling-advance sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T14:14:57Z",
+      "deleted_at": "2026-10-06T08:14:38.314867+00:00"
+    },
+    {
+      "id": 37323164071,
+      "name": "posthog layers rolling cadence-rolling-advance-layers sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:14:55Z",
+      "deleted_at": "2026-10-06T08:14:38.934838+00:00"
+    },
+    {
+      "id": 37323159608,
+      "name": "opencut-moon rolling cadence-rolling-advance sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T14:14:53Z",
+      "deleted_at": "2026-10-06T08:14:39.724596+00:00"
+    },
+    {
+      "id": 37323155106,
+      "name": "n8n turbo rolling cadence-rolling-advance-turbo sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:14:51Z",
+      "deleted_at": "2026-10-06T08:14:40.325729+00:00"
+    },
+    {
+      "id": 37323150431,
+      "name": "n8n runners rolling cadence-rolling-advance-runners sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:14:49Z",
+      "deleted_at": "2026-10-06T08:14:40.943391+00:00"
+    },
+    {
+      "id": 37323145174,
+      "name": "n8n docker rolling cadence-rolling-advance-docker sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:14:47Z",
+      "deleted_at": "2026-10-06T08:14:41.583373+00:00"
+    },
+    {
+      "id": 37323140444,
+      "name": "n8n distroless rolling cadence-rolling-advance-distroless sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:14:45Z",
+      "deleted_at": "2026-10-06T08:14:42.267597+00:00"
+    },
+    {
+      "id": 37323136088,
+      "name": "msgpack-sbt rolling cadence-rolling-advance sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T14:14:42Z",
+      "deleted_at": "2026-10-06T08:14:42.957266+00:00"
+    },
+    {
+      "id": 37323131290,
+      "name": "mastodon streaming rolling cadence-rolling-advance-streaming sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:14:40Z",
+      "deleted_at": "2026-10-06T08:14:43.524245+00:00"
+    },
+    {
+      "id": 37323126507,
+      "name": "mastodon server rolling cadence-rolling-advance-server sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:14:38Z",
+      "deleted_at": "2026-10-06T08:14:44.181141+00:00"
+    },
+    {
+      "id": 37323121773,
+      "name": "immich  rolling cadence-rolling-advance sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:14:36Z",
+      "deleted_at": "2026-10-06T08:14:44.886163+00:00"
+    },
+    {
+      "id": 37323117664,
+      "name": "helix-nix rolling cadence-rolling-advance sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:14:34Z",
+      "deleted_at": "2026-10-06T08:14:45.499570+00:00"
+    },
+    {
+      "id": 37323112601,
+      "name": "gogs-moon rolling cadence-rolling-advance sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T14:14:31Z",
+      "deleted_at": "2026-10-06T08:14:46.145868+00:00"
+    },
+    {
+      "id": 37323107836,
+      "name": "executorch-buck2 rolling cadence-rolling-advance sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "cancelled",
+      "created_at": "2026-10-05T14:14:29Z",
+      "deleted_at": "2026-10-06T08:14:46.764459+00:00"
+    },
+    {
+      "id": 37322983836,
+      "name": "mastodon streaming rolling  sample 1",
+      "head_branch": "cadence-rehearsal-publication",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:13:33Z",
+      "deleted_at": "2026-10-06T08:14:47.603486+00:00"
+    },
+    {
+      "id": 37322979117,
+      "name": "mastodon server rolling  sample 1",
+      "head_branch": "cadence-rehearsal-publication",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:13:31Z",
+      "deleted_at": "2026-10-06T08:14:48.203401+00:00"
+    },
+    {
+      "id": 37322843590,
+      "name": "Benchmark Guardrails",
+      "head_branch": "cadence-qualification",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:12:29Z",
+      "deleted_at": "2026-10-06T08:14:49.045959+00:00"
+    },
+    {
+      "id": 37322801842,
+      "name": "PR #43",
+      "head_branch": "refs/pull/43/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:12:11Z",
+      "deleted_at": "2026-10-06T08:14:49.533512+00:00"
+    },
+    {
+      "id": 37322636399,
+      "name": "zed-nix rolling cadence-rolling-seed sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:10:58Z",
+      "deleted_at": "2026-10-06T08:14:50.200020+00:00"
+    },
+    {
+      "id": 37322630658,
+      "name": "stackstorm-pants rolling cadence-rolling-seed sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:10:55Z",
+      "deleted_at": "2026-10-06T08:14:50.848524+00:00"
+    },
+    {
+      "id": 37322625973,
+      "name": "opencut-moon rolling cadence-rolling-seed sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:10:53Z",
+      "deleted_at": "2026-10-06T08:14:51.458991+00:00"
+    },
+    {
+      "id": 37322621030,
+      "name": "obs-studio xcode rolling cadence-rolling-seed-xcode sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T14:10:50Z",
+      "deleted_at": "2026-10-06T08:14:52.047474+00:00"
+    },
+    {
+      "id": 37322616359,
+      "name": "obs-studio ccache rolling cadence-rolling-seed-ccache sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T14:10:48Z",
+      "deleted_at": "2026-10-06T08:14:52.741104+00:00"
+    },
+    {
+      "id": 37322609279,
+      "name": "msgpack-sbt rolling cadence-rolling-seed sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:10:45Z",
+      "deleted_at": "2026-10-06T08:14:53.412689+00:00"
+    },
+    {
+      "id": 37322604229,
+      "name": "helix-nix rolling cadence-rolling-seed sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:10:43Z",
+      "deleted_at": "2026-10-06T08:14:54.042100+00:00"
+    },
+    {
+      "id": 37322598011,
+      "name": "gogs-moon rolling cadence-rolling-seed sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:10:40Z",
+      "deleted_at": "2026-10-06T08:14:54.690098+00:00"
+    },
+    {
+      "id": 37322592957,
+      "name": "executorch-buck2 rolling cadence-rolling-seed sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:10:38Z",
+      "deleted_at": "2026-10-06T08:14:55.472068+00:00"
+    },
+    {
+      "id": 37321772493,
+      "name": "posthog layers rolling cadence-rolling-seed-layers sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:04:32Z",
+      "deleted_at": "2026-10-06T08:14:56.026617+00:00"
+    },
+    {
+      "id": 37321767409,
+      "name": "n8n turbo rolling cadence-rolling-seed-turbo sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:04:30Z",
+      "deleted_at": "2026-10-06T08:14:56.698267+00:00"
+    },
+    {
+      "id": 37321762921,
+      "name": "n8n runners rolling cadence-rolling-seed-runners sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:04:28Z",
+      "deleted_at": "2026-10-06T08:14:57.414372+00:00"
+    },
+    {
+      "id": 37321758035,
+      "name": "n8n docker rolling cadence-rolling-seed-docker sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:04:25Z",
+      "deleted_at": "2026-10-06T08:14:57.928693+00:00"
+    },
+    {
+      "id": 37321753318,
+      "name": "n8n distroless rolling cadence-rolling-seed-distroless sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:04:23Z",
+      "deleted_at": "2026-10-06T08:14:58.605759+00:00"
+    },
+    {
+      "id": 37321748690,
+      "name": "mastodon streaming rolling cadence-rolling-seed-streaming sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:04:21Z",
+      "deleted_at": "2026-10-06T08:14:59.213595+00:00"
+    },
+    {
+      "id": 37321744434,
+      "name": "mastodon server rolling cadence-rolling-seed-server sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:04:19Z",
+      "deleted_at": "2026-10-06T08:14:59.797031+00:00"
+    },
+    {
+      "id": 37321739971,
+      "name": "immich  rolling cadence-rolling-seed sample 1",
+      "head_branch": "cadence-rehearsal-rolling",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:04:17Z",
+      "deleted_at": "2026-10-06T08:15:00.487571+00:00"
+    },
+    {
+      "id": 37321566845,
+      "name": "Check upstream source updates",
+      "head_branch": "shared-benchmark-cadence",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:02:57Z",
+      "deleted_at": "2026-10-06T08:15:01.022975+00:00"
+    },
+    {
+      "id": 37321531803,
+      "name": "Benchmark Guardrails",
+      "head_branch": "shared-benchmark-cadence",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:02:41Z",
+      "deleted_at": "2026-10-06T08:15:01.615384+00:00"
+    },
+    {
+      "id": 37321524662,
+      "name": "PR #42",
+      "head_branch": "refs/pull/42/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T14:02:38Z",
+      "deleted_at": "2026-10-06T08:15:02.331765+00:00"
+    },
+    {
+      "id": 37320869828,
+      "name": "zed-nix fresh cadence-fresh-01 sample 1",
+      "head_branch": "shared-benchmark-cadence",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T13:57:43Z",
+      "deleted_at": "2026-10-06T08:15:02.944204+00:00"
+    },
+    {
+      "id": 37320867908,
+      "name": "helix-nix fresh cadence-fresh-01 sample 1",
+      "head_branch": "shared-benchmark-cadence",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T13:57:42Z",
+      "deleted_at": "2026-10-06T08:15:03.564907+00:00"
+    },
+    {
+      "id": 37320685242,
+      "name": "Benchmark Guardrails",
+      "head_branch": "shared-benchmark-cadence",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T13:56:19Z",
+      "deleted_at": "2026-10-06T08:15:04.241391+00:00"
+    },
+    {
+      "id": 37320679142,
+      "name": "PR #42",
+      "head_branch": "refs/pull/42/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T13:56:16Z",
+      "deleted_at": "2026-10-06T08:15:04.823128+00:00"
+    },
+    {
+      "id": 37315116541,
+      "name": "Dispatch CLI Canary Cases",
+      "head_branch": "shared-benchmark-cadence",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T13:13:11Z",
+      "deleted_at": "2026-10-06T08:15:05.505106+00:00"
+    },
+    {
+      "id": 37315116759,
+      "name": "Check upstream source updates",
+      "head_branch": "shared-benchmark-cadence",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T13:13:11Z",
+      "deleted_at": "2026-10-06T08:15:06.212597+00:00"
+    },
+    {
+      "id": 37315094987,
+      "name": "Benchmark Guardrails",
+      "head_branch": "shared-benchmark-cadence",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T13:13:01Z",
+      "deleted_at": "2026-10-06T08:15:06.857556+00:00"
+    },
+    {
+      "id": 37315088389,
+      "name": "PR #42",
+      "head_branch": "refs/pull/42/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T13:12:57Z",
+      "deleted_at": "2026-10-06T08:15:07.398474+00:00"
+    },
+    {
+      "id": 37310965090,
+      "name": "Dispatch CLI Canary Cases",
+      "head_branch": "shared-benchmark-cadence",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T12:38:42Z",
+      "deleted_at": "2026-10-06T08:15:08.033484+00:00"
+    },
+    {
+      "id": 37310929106,
+      "name": "Benchmark Guardrails",
+      "head_branch": "shared-benchmark-cadence",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T12:38:23Z",
+      "deleted_at": "2026-10-06T08:15:08.661084+00:00"
+    },
+    {
+      "id": 37310923326,
+      "name": "PR #42",
+      "head_branch": "refs/pull/42/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T12:38:20Z",
+      "deleted_at": "2026-10-06T08:15:09.425575+00:00"
+    },
+    {
+      "id": 37308688212,
+      "name": "Dispatch CLI Canary Cases",
+      "head_branch": "shared-benchmark-cadence",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T12:19:04Z",
+      "deleted_at": "2026-10-06T08:15:10.158018+00:00"
+    },
+    {
+      "id": 37308678979,
+      "name": "Benchmark Guardrails",
+      "head_branch": "shared-benchmark-cadence",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T12:18:59Z",
+      "deleted_at": "2026-10-06T08:15:10.771446+00:00"
+    },
+    {
+      "id": 37308676035,
+      "name": "PR #42",
+      "head_branch": "refs/pull/42/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T12:18:57Z",
+      "deleted_at": "2026-10-06T08:15:11.380783+00:00"
+    },
+    {
+      "id": 37308084546,
+      "name": "Benchmark Guardrails",
+      "head_branch": "qualify-native-registry",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T12:13:50Z",
+      "deleted_at": "2026-10-06T08:15:11.859263+00:00"
+    },
+    {
+      "id": 37308081718,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T12:13:49Z",
+      "deleted_at": "2026-10-06T08:15:12.518924+00:00"
+    },
+    {
+      "id": 37305931541,
+      "name": "executorch-buck2 REAPI registry-qualification-01 sample 2",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:54:16Z",
+      "deleted_at": "2026-10-06T08:15:13.187784+00:00"
+    },
+    {
+      "id": 37305928053,
+      "name": "executorch-buck2 REAPI registry-qualification-01 sample 1",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:54:14Z",
+      "deleted_at": "2026-10-06T08:15:13.843579+00:00"
+    },
+    {
+      "id": 37305498994,
+      "name": "Benchmark Guardrails",
+      "head_branch": "qualify-native-registry",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:50:16Z",
+      "deleted_at": "2026-10-06T08:15:14.475731+00:00"
+    },
+    {
+      "id": 37305492593,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:50:12Z",
+      "deleted_at": "2026-10-06T08:15:15.009294+00:00"
+    },
+    {
+      "id": 37305294241,
+      "name": "Benchmark Guardrails",
+      "head_branch": "qualify-native-registry",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:48:19Z",
+      "deleted_at": "2026-10-06T08:15:15.586345+00:00"
+    },
+    {
+      "id": 37305289015,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:48:16Z",
+      "deleted_at": "2026-10-06T08:15:16.142766+00:00"
+    },
+    {
+      "id": 37304834734,
+      "name": "executorch-buck2 REAPI registry-screening-06 sample 1",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:44:06Z",
+      "deleted_at": "2026-10-06T08:15:16.797655+00:00"
+    },
+    {
+      "id": 37304819030,
+      "name": "Benchmark Guardrails",
+      "head_branch": "qualify-native-registry",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:43:58Z",
+      "deleted_at": "2026-10-06T08:15:17.339502+00:00"
+    },
+    {
+      "id": 37304814424,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:43:55Z",
+      "deleted_at": "2026-10-06T08:15:17.907298+00:00"
+    },
+    {
+      "id": 37304682839,
+      "name": "Benchmark Guardrails",
+      "head_branch": "qualify-native-registry",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:42:42Z",
+      "deleted_at": "2026-10-06T08:15:18.480106+00:00"
+    },
+    {
+      "id": 37304678244,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:42:40Z",
+      "deleted_at": "2026-10-06T08:15:19.148709+00:00"
+    },
+    {
+      "id": 37304481509,
+      "name": "Benchmark Guardrails",
+      "head_branch": "qualify-native-registry",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:40:48Z",
+      "deleted_at": "2026-10-06T08:15:19.776667+00:00"
+    },
+    {
+      "id": 37304476303,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:40:46Z",
+      "deleted_at": "2026-10-06T08:15:20.336609+00:00"
+    },
+    {
+      "id": 37304358750,
+      "name": "executorch-buck2 REAPI registry-screening-05 sample 1",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T11:39:40Z",
+      "deleted_at": "2026-10-06T08:15:21.038764+00:00"
+    },
+    {
+      "id": 37304344369,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:39:32Z",
+      "deleted_at": "2026-10-06T08:15:21.644947+00:00"
+    },
+    {
+      "id": 37303782303,
+      "name": "helix-nix Nix canary-qualification-01 sample 2",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:34:14Z",
+      "deleted_at": "2026-10-06T08:15:22.226773+00:00"
+    },
+    {
+      "id": 37303778364,
+      "name": "helix-nix Nix canary-qualification-01 sample 1",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:34:12Z",
+      "deleted_at": "2026-10-06T08:15:22.820215+00:00"
+    },
+    {
+      "id": 37303756955,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:34:01Z",
+      "deleted_at": "2026-10-06T08:15:23.456516+00:00"
+    },
+    {
+      "id": 37303670119,
+      "name": "stackstorm-pants REAPI registry-qualification-01 sample 2",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:33:14Z",
+      "deleted_at": "2026-10-06T08:15:24.091115+00:00"
+    },
+    {
+      "id": 37303666267,
+      "name": "stackstorm-pants REAPI registry-qualification-01 sample 1",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:33:12Z",
+      "deleted_at": "2026-10-06T08:15:24.676762+00:00"
+    },
+    {
+      "id": 37303662752,
+      "name": "executorch-buck2 REAPI registry-screening-04 sample 1",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T11:33:10Z",
+      "deleted_at": "2026-10-06T08:15:25.308472+00:00"
+    },
+    {
+      "id": 37303647482,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:33:02Z",
+      "deleted_at": "2026-10-06T08:15:26.100436+00:00"
+    },
+    {
+      "id": 37302932865,
+      "name": "opencut-moon REAPI registry-qualification-01 sample 2",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:26:22Z",
+      "deleted_at": "2026-10-06T08:15:26.772761+00:00"
+    },
+    {
+      "id": 37302929873,
+      "name": "opencut-moon REAPI registry-qualification-01 sample 1",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:26:20Z",
+      "deleted_at": "2026-10-06T08:15:27.460033+00:00"
+    },
+    {
+      "id": 37302906442,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:26:07Z",
+      "deleted_at": "2026-10-06T08:15:28.010836+00:00"
+    },
+    {
+      "id": 37302896058,
+      "name": "stackstorm-pants REAPI registry-screening-04 sample 1",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:26:01Z",
+      "deleted_at": "2026-10-06T08:15:28.614525+00:00"
+    },
+    {
+      "id": 37302853102,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:25:38Z",
+      "deleted_at": "2026-10-06T08:15:29.136735+00:00"
+    },
+    {
+      "id": 37302721578,
+      "name": "msgpack-sbt REAPI registry-qualification-01 sample 2",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:24:25Z",
+      "deleted_at": "2026-10-06T08:15:29.921387+00:00"
+    },
+    {
+      "id": 37302718511,
+      "name": "msgpack-sbt REAPI registry-qualification-01 sample 1",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:24:24Z",
+      "deleted_at": "2026-10-06T08:15:30.531475+00:00"
+    },
+    {
+      "id": 37302715178,
+      "name": "gogs-moon REAPI registry-qualification-01 sample 2",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:24:22Z",
+      "deleted_at": "2026-10-06T08:15:31.243259+00:00"
+    },
+    {
+      "id": 37302711581,
+      "name": "gogs-moon REAPI registry-qualification-01 sample 1",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:24:20Z",
+      "deleted_at": "2026-10-06T08:15:31.937557+00:00"
+    },
+    {
+      "id": 37302693473,
+      "name": "Benchmark Guardrails",
+      "head_branch": "qualify-native-registry",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:24:09Z",
+      "deleted_at": "2026-10-06T08:15:32.455163+00:00"
+    },
+    {
+      "id": 37302688305,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:24:06Z",
+      "deleted_at": "2026-10-06T08:15:32.983361+00:00"
+    },
+    {
+      "id": 37302678892,
+      "name": "executorch-buck2 REAPI registry-screening-03 sample 1",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T11:24:01Z",
+      "deleted_at": "2026-10-06T08:15:33.597548+00:00"
+    },
+    {
+      "id": 37302647345,
+      "name": "Benchmark Guardrails",
+      "head_branch": "qualify-native-registry",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:23:43Z",
+      "deleted_at": "2026-10-06T08:15:34.268510+00:00"
+    },
+    {
+      "id": 37302642872,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:23:41Z",
+      "deleted_at": "2026-10-06T08:15:34.891353+00:00"
+    },
+    {
+      "id": 37302476504,
+      "name": "opencut-moon REAPI registry-screening-04 sample 1",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:22:06Z",
+      "deleted_at": "2026-10-06T08:15:35.544182+00:00"
+    },
+    {
+      "id": 37302470350,
+      "name": "Benchmark Guardrails",
+      "head_branch": "qualify-native-registry",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:22:02Z",
+      "deleted_at": "2026-10-06T08:15:36.213196+00:00"
+    },
+    {
+      "id": 37302464552,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:21:59Z",
+      "deleted_at": "2026-10-06T08:15:36.789449+00:00"
+    },
+    {
+      "id": 37302464782,
+      "name": "Benchmark Guardrails",
+      "head_branch": "record-grpc-output-check",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:21:59Z",
+      "deleted_at": "2026-10-06T08:15:37.350845+00:00"
+    },
+    {
+      "id": 37302462400,
+      "name": "PR #41",
+      "head_branch": "refs/pull/41/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:21:58Z",
+      "deleted_at": "2026-10-06T08:15:38.068407+00:00"
+    },
+    {
+      "id": 37302443623,
+      "name": "Benchmark Guardrails",
+      "head_branch": "qualify-native-registry",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:21:47Z",
+      "deleted_at": "2026-10-06T08:15:38.869819+00:00"
+    },
+    {
+      "id": 37302439213,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:21:44Z",
+      "deleted_at": "2026-10-06T08:15:39.606983+00:00"
+    },
+    {
+      "id": 37302419107,
+      "name": "Benchmark Guardrails",
+      "head_branch": "qualify-native-registry",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:21:33Z",
+      "deleted_at": "2026-10-06T08:15:40.217886+00:00"
+    },
+    {
+      "id": 37302415053,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:21:31Z",
+      "deleted_at": "2026-10-06T08:15:40.838151+00:00"
+    },
+    {
+      "id": 37302345686,
+      "name": "stackstorm-pants REAPI registry-screening-03 sample 1",
+      "head_branch": "qualify-native-registry",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T11:20:50Z",
+      "deleted_at": "2026-10-06T08:15:41.546713+00:00"
+    },
+    {
+      "id": 37302331070,
+      "name": "Benchmark Guardrails",
+      "head_branch": "qualify-native-registry",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:20:42Z",
+      "deleted_at": "2026-10-06T08:15:42.166477+00:00"
+    },
+    {
+      "id": 37302325678,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:20:39Z",
+      "deleted_at": "2026-10-06T08:15:42.757106+00:00"
+    },
+    {
+      "id": 37302224116,
+      "name": "Benchmark Guardrails",
+      "head_branch": "qualify-native-registry",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:19:43Z",
+      "deleted_at": "2026-10-06T08:15:43.380308+00:00"
+    },
+    {
+      "id": 37302220026,
+      "name": "PR #40",
+      "head_branch": "refs/pull/40/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:19:40Z",
+      "deleted_at": "2026-10-06T08:15:43.891523+00:00"
+    },
+    {
+      "id": 37302010045,
+      "name": "msgpack-sbt REAPI registry-screening-03 sample 1",
+      "head_branch": "main",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:17:41Z",
+      "deleted_at": "2026-10-06T08:15:44.599542+00:00"
+    },
+    {
+      "id": 37302007157,
+      "name": "executorch-buck2 REAPI registry-screening-02 sample 1",
+      "head_branch": "main",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T11:17:39Z",
+      "deleted_at": "2026-10-06T08:15:45.332510+00:00"
+    },
+    {
+      "id": 37302004103,
+      "name": "stackstorm-pants REAPI registry-screening-02 sample 1",
+      "head_branch": "main",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T11:17:37Z",
+      "deleted_at": "2026-10-06T08:15:45.938099+00:00"
+    },
+    {
+      "id": 37302001164,
+      "name": "opencut-moon REAPI registry-screening-02 sample 1",
+      "head_branch": "main",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T11:17:35Z",
+      "deleted_at": "2026-10-06T08:15:46.559256+00:00"
+    },
+    {
+      "id": 37301997879,
+      "name": "gogs-moon REAPI registry-screening-02 sample 1",
+      "head_branch": "main",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:17:34Z",
+      "deleted_at": "2026-10-06T08:15:47.287719+00:00"
+    },
+    {
+      "id": 37301738861,
+      "name": "Benchmark Guardrails",
+      "head_branch": "native-reapi-cases",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:15:10Z",
+      "deleted_at": "2026-10-06T08:15:47.857496+00:00"
+    },
+    {
+      "id": 37301733314,
+      "name": "PR #39",
+      "head_branch": "refs/pull/39/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:15:07Z",
+      "deleted_at": "2026-10-06T08:15:48.523535+00:00"
+    },
+    {
+      "id": 37301680997,
+      "name": "Benchmark Guardrails",
+      "head_branch": "native-reapi-cases",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:14:39Z",
+      "deleted_at": "2026-10-06T08:15:49.192152+00:00"
+    },
+    {
+      "id": 37301676473,
+      "name": "PR #39",
+      "head_branch": "refs/pull/39/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:14:36Z",
+      "deleted_at": "2026-10-06T08:15:49.842333+00:00"
+    },
+    {
+      "id": 37301148648,
+      "name": "Benchmark Guardrails",
+      "head_branch": "native-reapi-cases",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:09:45Z",
+      "deleted_at": "2026-10-06T08:15:50.349996+00:00"
+    },
+    {
+      "id": 37301146101,
+      "name": "PR #39",
+      "head_branch": "refs/pull/39/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T11:09:43Z",
+      "deleted_at": "2026-10-06T08:15:50.893686+00:00"
+    },
+    {
+      "id": 37297244527,
+      "name": "Benchmark Guardrails",
+      "head_branch": "grpc-local-outputs",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:32:36Z",
+      "deleted_at": "2026-10-06T08:15:51.450096+00:00"
+    },
+    {
+      "id": 37297238955,
+      "name": "PR #38",
+      "head_branch": "refs/pull/38/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:32:33Z",
+      "deleted_at": "2026-10-06T08:15:52.096308+00:00"
+    },
+    {
+      "id": 37296872364,
+      "name": "Benchmark Guardrails",
+      "head_branch": "grpc-local-outputs",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:29:09Z",
+      "deleted_at": "2026-10-06T08:15:52.634751+00:00"
+    },
+    {
+      "id": 37296866147,
+      "name": "PR #38",
+      "head_branch": "refs/pull/38/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:29:05Z",
+      "deleted_at": "2026-10-06T08:15:53.227694+00:00"
+    },
+    {
+      "id": 37296520042,
+      "name": "Benchmark Guardrails",
+      "head_branch": "grpc-local-outputs",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:25:48Z",
+      "deleted_at": "2026-10-06T08:15:53.762016+00:00"
+    },
+    {
+      "id": 37296515861,
+      "name": "PR #38",
+      "head_branch": "refs/pull/38/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:25:45Z",
+      "deleted_at": "2026-10-06T08:15:54.296199+00:00"
+    },
+    {
+      "id": 37296214039,
+      "name": "zed-nix Nix canary-screening-02 sample 1",
+      "head_branch": "run-tool-family-cases",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T10:22:55Z",
+      "deleted_at": "2026-10-06T08:15:55.004863+00:00"
+    },
+    {
+      "id": 37296210599,
+      "name": "helix-nix Nix canary-screening-02 sample 1",
+      "head_branch": "run-tool-family-cases",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:22:53Z",
+      "deleted_at": "2026-10-06T08:15:55.613047+00:00"
+    },
+    {
+      "id": 37296157157,
+      "name": "Benchmark Canary | Manual dispatch (run-tool-family-cases)",
+      "head_branch": "run-tool-family-cases",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:22:21Z",
+      "deleted_at": "2026-10-06T08:15:56.153253+00:00"
+    },
+    {
+      "id": 37296135520,
+      "name": "PR #38",
+      "head_branch": "refs/pull/38/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:22:09Z",
+      "deleted_at": "2026-10-06T08:15:56.706558+00:00"
+    },
+    {
+      "id": 37295930945,
+      "name": "Benchmark Guardrails",
+      "head_branch": "run-tool-family-cases",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:20:15Z",
+      "deleted_at": "2026-10-06T08:15:57.492728+00:00"
+    },
+    {
+      "id": 37295929228,
+      "name": "PR #37",
+      "head_branch": "refs/pull/37/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:20:14Z",
+      "deleted_at": "2026-10-06T08:15:58.140626+00:00"
+    },
+    {
+      "id": 37295925543,
+      "name": "PR #37",
+      "head_branch": "refs/pull/37/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:20:12Z",
+      "deleted_at": "2026-10-06T08:15:58.857120+00:00"
+    },
+    {
+      "id": 37295807809,
+      "name": "Benchmark Canary | Manual dispatch (grpc-local-outputs)",
+      "head_branch": "grpc-local-outputs",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:19:07Z",
+      "deleted_at": "2026-10-06T08:15:59.593484+00:00"
+    },
+    {
+      "id": 37295761035,
+      "name": "Benchmark Guardrails",
+      "head_branch": "grpc-local-outputs",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:18:40Z",
+      "deleted_at": "2026-10-06T08:16:00.203752+00:00"
+    },
+    {
+      "id": 37295757394,
+      "name": "PR #38",
+      "head_branch": "refs/pull/38/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:18:38Z",
+      "deleted_at": "2026-10-06T08:16:00.851978+00:00"
+    },
+    {
+      "id": 37295727480,
+      "name": "PR #37",
+      "head_branch": "refs/pull/37/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:18:21Z",
+      "deleted_at": "2026-10-06T08:16:01.433342+00:00"
+    },
+    {
+      "id": 37294909230,
+      "name": "Benchmark Guardrails",
+      "head_branch": "simplify-benchmark-cases",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:10:54Z",
+      "deleted_at": "2026-10-06T08:16:02.024587+00:00"
+    },
+    {
+      "id": 37294902355,
+      "name": "PR #36",
+      "head_branch": "refs/pull/36/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:10:50Z",
+      "deleted_at": "2026-10-06T08:16:02.549272+00:00"
+    },
+    {
+      "id": 37294276051,
+      "name": "Benchmark Guardrails",
+      "head_branch": "simplify-benchmark-cases",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:05:13Z",
+      "deleted_at": "2026-10-06T08:16:03.064737+00:00"
+    },
+    {
+      "id": 37294269385,
+      "name": "PR #36",
+      "head_branch": "refs/pull/36/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:05:10Z",
+      "deleted_at": "2026-10-06T08:16:03.590026+00:00"
+    },
+    {
+      "id": 37294039807,
+      "name": "PR #36",
+      "head_branch": "refs/pull/36/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:03:07Z",
+      "deleted_at": "2026-10-06T08:16:04.243265+00:00"
+    },
+    {
+      "id": 37294037661,
+      "name": "hugo-go fresh shared-evidence-01 sample 1",
+      "head_branch": "simplify-benchmark-cases",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T10:03:06Z",
+      "deleted_at": "2026-10-06T08:16:04.853420+00:00"
+    },
+    {
+      "id": 37293351120,
+      "name": "Benchmark Guardrails",
+      "head_branch": "oss-tool-family-cases",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T09:56:44Z",
+      "deleted_at": "2026-10-06T08:16:05.486941+00:00"
+    },
+    {
+      "id": 37293348447,
+      "name": "PR #35",
+      "head_branch": "refs/pull/35/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T09:56:42Z",
+      "deleted_at": "2026-10-06T08:16:06.034863+00:00"
+    },
+    {
+      "id": 37292113222,
+      "name": "Benchmark Guardrails",
+      "head_branch": "independent-benchmark-samples",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T09:45:13Z",
+      "deleted_at": "2026-10-06T08:16:06.621083+00:00"
+    },
+    {
+      "id": 37292106034,
+      "name": "PR #34",
+      "head_branch": "refs/pull/34/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T09:45:09Z",
+      "deleted_at": "2026-10-06T08:16:07.297356+00:00"
+    },
+    {
+      "id": 37291917929,
+      "name": "Benchmark Guardrails",
+      "head_branch": "independent-benchmark-samples",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T09:43:26Z",
+      "deleted_at": "2026-10-06T08:16:07.832171+00:00"
+    },
+    {
+      "id": 37291910658,
+      "name": "PR #34",
+      "head_branch": "refs/pull/34/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T09:43:21Z",
+      "deleted_at": "2026-10-06T08:16:08.350135+00:00"
+    },
+    {
+      "id": 37289179981,
+      "name": "Benchmark Guardrails",
+      "head_branch": "independent-benchmark-samples",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T09:18:35Z",
+      "deleted_at": "2026-10-06T08:16:09.002007+00:00"
+    },
+    {
+      "id": 37289174845,
+      "name": "PR #34",
+      "head_branch": "refs/pull/34/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T09:18:32Z",
+      "deleted_at": "2026-10-06T08:16:09.580595+00:00"
+    },
+    {
+      "id": 37288249894,
+      "name": "Benchmark Canary | Manual dispatch (independent-benchmark-samples)",
+      "head_branch": "independent-benchmark-samples",
+      "event": "workflow_dispatch",
+      "conclusion": "failure",
+      "created_at": "2026-10-05T09:10:06Z",
+      "deleted_at": "2026-10-06T08:16:10.153315+00:00"
+    },
+    {
+      "id": 37288246103,
+      "name": "hugo-go fresh independent-samples-01 sample 2",
+      "head_branch": "independent-benchmark-samples",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T09:10:04Z",
+      "deleted_at": "2026-10-06T08:16:10.733056+00:00"
+    },
+    {
+      "id": 37288242432,
+      "name": "Benchmark Guardrails",
+      "head_branch": "independent-benchmark-samples",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T09:10:03Z",
+      "deleted_at": "2026-10-06T08:16:11.289473+00:00"
+    },
+    {
+      "id": 37288240708,
+      "name": "hugo-go fresh independent-samples-01 sample 1",
+      "head_branch": "independent-benchmark-samples",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T09:10:02Z",
+      "deleted_at": "2026-10-06T08:16:11.863276+00:00"
+    },
+    {
+      "id": 37288238643,
+      "name": "PR #34",
+      "head_branch": "refs/pull/34/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T09:10:01Z",
+      "deleted_at": "2026-10-06T08:16:12.453296+00:00"
+    },
+    {
+      "id": 37285365010,
+      "name": "Benchmark Guardrails",
+      "head_branch": "deno-canary-repeat-01",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T08:43:05Z",
+      "deleted_at": "2026-10-06T08:16:13.038011+00:00"
+    },
+    {
+      "id": 37285361728,
+      "name": "PR #33",
+      "head_branch": "refs/pull/33/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T08:43:03Z",
+      "deleted_at": "2026-10-06T08:16:13.593387+00:00"
+    },
+    {
+      "id": 37285092516,
+      "name": "Deno Cargo fresh | cargo-product | CLI vcli-canary-4c236cd7ee00",
+      "head_branch": "deno-canary-repeat-01",
+      "event": "workflow_dispatch",
+      "conclusion": "success",
+      "created_at": "2026-10-05T08:40:28Z",
+      "deleted_at": "2026-10-06T08:16:14.306874+00:00"
+    },
+    {
+      "id": 37278550079,
+      "name": "Benchmark Guardrails",
+      "head_branch": "canary-evidence-results",
+      "event": "pull_request",
+      "conclusion": "success",
+      "created_at": "2026-10-05T07:35:01Z",
+      "deleted_at": "2026-10-06T08:16:14.839090+00:00"
+    },
+    {
+      "id": 37278547772,
+      "name": "PR #32",
+      "head_branch": "refs/pull/32/head",
+      "event": "dynamic",
+      "conclusion": "success",
+      "created_at": "2026-10-05T07:35:00Z",
+      "deleted_at": "2026-10-06T08:16:15.487418+00:00"
+    }
+  ],
+  "failed": [],
+  "verification": {
+    "remaining_target_ids": 0,
+    "remaining_other_runs_on_date": 82
+  }
+}
