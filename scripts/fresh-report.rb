@@ -60,7 +60,7 @@ module FreshReport
 
   def self.report(item, input_dir:, output_dir:, jobs:, run_url:, variant: nil, suffix: "", provider: "both", job_prefix: "")
     recipe = NativeCase.resolve(item.dig("execution", "native"), variant)
-    benchmark = recipe.fetch("benchmark_id") + suffix
+    benchmark = NativeCase.benchmark_id(recipe, suffix: suffix)
     if ENV["GITHUB_ENV"]
       File.open(ENV.fetch("GITHUB_ENV"), "a") do |file|
         file.puts("BENCHMARK_ID=#{benchmark}")
