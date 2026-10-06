@@ -207,6 +207,290 @@
         "runner_label": "depot-ubuntu-24.04-8",
         "benchmark_id_suffix": "-depot-native-8c"
       }
+    },
+    {
+      "case_id": "hugo",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "hugo-go",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "immich",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "mastodon",
+      "variant": "server",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "mastodon",
+      "variant": "server-ccache",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "mastodon",
+      "variant": "streaming",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "storybook",
+      "variant": "archive-sandbox",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "storybook",
+      "variant": "nx",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "opentelemetry-java",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "spring-ai",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "grpc",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      },
+      "lanes": [
+        "rolling"
+      ]
+    },
+    {
+      "case_id": "duckgres",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "chroma",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "linkerd2",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "qdrant",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "n8n",
+      "variant": "turbo",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "n8n",
+      "variant": "docker",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "n8n",
+      "variant": "runners",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "n8n",
+      "variant": "distroless",
+      "inputs": {
+        "provider": "depot-actions-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-api-4c"
+      }
+    },
+    {
+      "case_id": "hugo-go",
+      "lanes": [
+        "rolling"
+      ],
+      "inputs": {
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-native-4c"
+      }
+    },
+    {
+      "case_id": "opentelemetry-java",
+      "lanes": [
+        "rolling"
+      ],
+      "inputs": {
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-native-4c"
+      }
+    },
+    {
+      "case_id": "spring-ai",
+      "lanes": [
+        "rolling"
+      ],
+      "inputs": {
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-native-4c"
+      }
+    },
+    {
+      "case_id": "n8n",
+      "lanes": [
+        "rolling"
+      ],
+      "inputs": {
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-native-4c"
+      },
+      "variant": "turbo"
+    },
+    {
+      "case_id": "storybook",
+      "lanes": [
+        "rolling"
+      ],
+      "inputs": {
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-native-4c"
+      },
+      "variant": "nx"
+    },
+    {
+      "case_id": "grpc",
+      "lanes": [
+        "rolling"
+      ],
+      "inputs": {
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "benchmark_id_suffix": "-depot-native-4c"
+      }
+    },
+    {
+      "case_id": "gogs-moon",
+      "lanes": [
+        "rolling"
+      ],
+      "inputs": {
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4"
+      }
+    },
+    {
+      "case_id": "opencut-moon",
+      "lanes": [
+        "rolling"
+      ],
+      "inputs": {
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4"
+      }
+    },
+    {
+      "case_id": "stackstorm-pants",
+      "lanes": [
+        "rolling"
+      ],
+      "inputs": {
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4"
+      }
+    },
+    {
+      "case_id": "deno",
+      "lanes": [
+        "rolling"
+      ],
+      "inputs": {
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4"
+      },
+      "variant": "compiler-only"
+    },
+    {
+      "case_id": "zed",
+      "lanes": [
+        "rolling"
+      ],
+      "inputs": {
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4"
+      },
+      "variant": "combined"
     }
   ]
 }

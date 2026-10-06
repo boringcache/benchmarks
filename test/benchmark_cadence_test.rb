@@ -61,7 +61,7 @@ class BenchmarkCadenceTest < Minitest::Test
     native = targets.select { |item| item.fetch("fresh_workflow") == "reapi-fresh-benchmark.yml" }
     assert_equal %w[executorch-buck2 gogs-moon msgpack-sbt opencut-moon stackstorm-pants], native.map { |item| item.dig("fresh_inputs", "case_id") }.sort
     n8n = targets.select { |item| item.fetch("case_id") == "n8n" }
-    assert_equal %w[distroless docker runners turbo], n8n.map { |item| item.dig("fresh_inputs", "variant") }.sort
+    assert_equal %w[distroless docker runners turbo], n8n.map { |item| item.dig("fresh_inputs", "variant") }.uniq.sort
     obs = targets.select { |item| item.fetch("case_id") == "obs-studio" }
     assert_equal 4, obs.length
     assert_equal 4, NightlyCanaries::Runner.new.targets(obs).length
@@ -124,9 +124,9 @@ class BenchmarkCadenceTest < Minitest::Test
     end
     %w[gogs-moon opencut-moon stackstorm-pants executorch-buck2 msgpack-sbt helix-nix zed-nix].each do |id|
       targets = BenchmarkCadence.rolling_targets(case_id: id)
-      assert_equal 1, targets.length
-      assert_equal id, targets.first.dig("inputs", "case_id")
-      assert_equal "rolling", targets.first.fetch("lane")
+      assert_equal BenchmarkCadence.cases.count { |entry| entry.fetch("case_id") == id }, targets.length
+      assert targets.all? { |target| target.dig("inputs", "case_id") == id }
+      assert targets.all? { |target| target.fetch("lane") == "rolling" }
     end
   end
 
@@ -139,7 +139,11 @@ class BenchmarkCadenceTest < Minitest::Test
     source = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/source-sync.yml")))
     refute source.dig("jobs", "select").key?("if"), "Upstream inspection must continue while automatic dispatch is paused"
     controller = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/source-case.yml")))
-    assert_equal "needs.inspect.outputs.changed == 'true' && (vars.BENCHMARK_CADENCE_ACTIVE == 'true' || contains(fromJSON(vars.BENCHMARK_ACTIVE_CASES || '[]'), inputs.case_id)) && github.ref_name == 'main'", controller.dig("jobs", "publish", "if")
+    assert_equal "inputs.cadence_window_open && needs.inspect.outputs.changed == 'true' && (vars.BENCHMARK_CADENCE_ACTIVE == 'true' || contains(fromJSON(vars.BENCHMARK_ACTIVE_CASES || '[]'), inputs.case_id)) && github.ref_name == 'main'", controller.dig("jobs", "publish", "if")
+    assert_equal "${{ vars.BENCHMARK_CADENCE_UNTIL }}", controller.dig("jobs", "publish", "steps").find { |step| step["name"] == "Publish source and request the declared rolling variants" }.dig("env", "BENCHMARK_CADENCE_UNTIL")
+    fresh = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/fresh-cadence.yml")))
+    assert_equal "./.github/workflows/cadence-window.yml", fresh.dig("jobs", "window", "uses")
+    assert_equal "needs.window.outputs.open == 'true'", fresh.dig("jobs", "plan", "if")
     workflow = YAML.safe_load(File.read(File.join(BenchmarkCases::ROOT, ".github/workflows/nightly-canaries.yml")))
     refute workflow.dig("jobs", "results").key?("if"), "Monitoring must continue while automatic dispatch is paused"
     assert_equal({"contents" => "read", "actions" => "read"}, workflow.fetch("permissions"))
@@ -188,6 +192,22 @@ class BenchmarkCadenceTest < Minitest::Test
     assert_equal 2, native.length
     assert_equal ["combined"], native.map { |row| row.dig("inputs", "variant") }.uniq
     assert_equal 12, ProjectRuns.matrix(rolling, case_id: "posthog", lane: "rolling").fetch("native-rolling-benchmark.yml").fetch("include").length
+  end
+
+  def test_every_eligible_depot_native_tool_has_a_normal_rolling_selection
+    suite = JSON.parse(File.read(File.join(BenchmarkCases::ROOT, "suites/depot-cache.json")))
+    suite.fetch("selections").each do |selection|
+      id = selection.fetch("case_id")
+      entries = BenchmarkCadence.cases.select { |entry| entry["case_id"] == id && entry.dig("inputs", "provider") == "depot-cache" }
+      refute_empty entries, id
+      assert entries.all? { |entry| entry["lanes"] == ["rolling"] }, id
+      assert entries.none? { |entry| entry.fetch("inputs").key?("observation") }, "Normal rolling must follow source proposals"
+    end
+    fresh = BenchmarkCadence.fresh_targets
+    api_ids = BenchmarkCadence.source_cases.select { |item| item.dig("comparison", "optional_providers")&.include?("depot-actions-cache") }.map { |item| item.fetch("id") }
+    selections = BenchmarkCadence.cases.select { |entry| entry.dig("inputs", "provider") == "depot-actions-cache" }
+    assert_empty api_ids - selections.map { |entry| entry.fetch("case_id") }
+    refute fresh.any? { |entry| entry.dig("fresh_inputs", "provider") == "depot-cache" }
   end
 
   def test_active_cases_reject_unknown_and_duplicate_cases

@@ -2,6 +2,7 @@
 
 require "base64"
 require_relative "benchmark-cadence"
+require_relative "cadence-window"
 
 # Publication uses reviewed harness code only. Candidate workloads run in jobs
 # with read-only repository access; this module never executes their code.
@@ -346,6 +347,10 @@ if $PROGRAM_NAME == __FILE__
     parser.on("--project") { options[:project] = true }
   end.parse!
   begin
+    if options[:publish] && !CadenceWindow.open?
+      BenchmarkCases.write_json(options.fetch(:output), {"schema_version" => 1, "case_id" => options[:case_id], "state" => "window-closed", "records" => []})
+      exit
+    end
     items = options[:project] ? BenchmarkCadence.source_project(options.fetch(:case_id)) : BenchmarkCadence.source_cases(case_id: options.fetch(:case_id))
     if options[:publish] || options[:reconcile]
       unless ENV["BENCHMARK_CADENCE_ACTIVE"] == "true" && ENV["GITHUB_REF_NAME"] == "main" && ENV["GITHUB_REPOSITORY"] == BenchmarkCases::REPOSITORY
@@ -381,7 +386,7 @@ if $PROGRAM_NAME == __FILE__
       end
       publisher.publish_project(pairs, version: version, output: output, dry_run: !options[:publish])
     end
-  rescue SourcePromotion::Error, BenchmarkCases::Error, BenchmarkCadence::Error, NightlyCanaries::Error, KeyError, JSON::ParserError => error
+  rescue CadenceWindow::Error, SourcePromotion::Error, BenchmarkCases::Error, BenchmarkCadence::Error, NightlyCanaries::Error, KeyError, JSON::ParserError => error
     if options[:output] && !File.exist?(options[:output])
       BenchmarkCases.write_json(options[:output], {"case_id" => options[:case_id], "state" => "blocked", "error" => error.message})
     end

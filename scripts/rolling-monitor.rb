@@ -54,7 +54,7 @@ module RollingMonitor
     current = runner.api("repos/#{run.fetch('repository')}/actions/runs/#{run.fetch('id')}")
     run["state"] = current["status"] == "completed" ? current.fetch("conclusion") : current.fetch("status")
     return run unless current["status"] == "completed"
-    variant = run.dig("inputs", "variant") || run.dig("inputs", "cache_tool")
+    variant = run.dig("inputs", "variant") || run.dig("inputs", "cache_tool") || run.dig("inputs", "cache_profile")
     variant = nil if variant == "all"
     records = runner.phase_evidence(run, attempt: current.fetch("run_attempt")).select do |record|
       record["benchmark"] && record["phase"] && record.dig("case", "case_id") == item.fetch("id") &&
@@ -65,6 +65,13 @@ module RollingMonitor
       benchmark = NativeCase.benchmark_id(recipe, suffix: run.fetch("inputs").fetch("benchmark_id_suffix", ""))
       records.select! { |record| record["benchmark"] == benchmark }
     end
+    if run.fetch("workflow") == "grpc-grpc-bazel-benchmark.yml"
+      benchmark = "grpc-bazel#{run.fetch('inputs').fetch('benchmark_id_suffix', '')}"
+      records.select! { |record| record["benchmark"] == benchmark }
+    end
+    selected = run.dig("inputs", "provider") || "both"
+    providers = %w[both all].include?(selected) ? item.dig("comparison", "providers") : [selected]
+    records.select! { |record| providers.include?(record["strategy"]) }
     run["canonical_records"] = records
     observation = run.dig("inputs", "observation") || "changed-source"
     observation_verified = records.all? do |record|
@@ -81,9 +88,6 @@ module RollingMonitor
     workflow = item.dig("execution", "workflows").find { |entry| File.basename(entry.fetch("path")) == run.fetch("workflow") }
     raise BenchmarkCadence::Error, "Unregistered rolling workflow" unless workflow
     phases = BenchmarkSeries.phases_for(workflow.fetch("lane"), workflow["phases"])
-    providers = item.dig("comparison", "providers")
-    selected = run.dig("inputs", "provider") || "both"
-    providers = [selected] unless %w[both all].include?(selected)
     expected = providers.product(phases)
     observed = records.map { |record| record.values_at("strategy", "phase") }
     verified = records.all? do |record|

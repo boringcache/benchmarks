@@ -3,6 +3,8 @@
 require "json"
 
 module ProjectRuns
+  ROLLING_WORKFLOWS = %w[nix-rolling-benchmark.yml zed-zed-cargo-rolling-auto.yml
+    deno-deno-cargo-rolling-chain.yml reapi-rolling-benchmark.yml grpc-grpc-bazel-benchmark.yml].freeze
   def self.group(runs, lane:, case_id: nil)
     runs.group_by { |run| case_id || project(selection_case(run)) }.flat_map do |id, selections|
       if lane == "rolling" && selections.length > 1 && selections.all? { |run| run.fetch("workflow") == "obs-rolling-benchmark.yml" }
@@ -14,7 +16,7 @@ module ProjectRuns
         run.fetch("workflow") == "native-#{lane}-benchmark.yml" ||
           (lane == "fresh" && %w[nix-fresh-benchmark.yml zed-zed-cargo-product.yml].include?(run.fetch("workflow"))) ||
           (lane == "fresh" && run.fetch("workflow").start_with?("obs-studio-obs-")) ||
-          (lane == "rolling" && %w[nix-rolling-benchmark.yml zed-zed-cargo-rolling-auto.yml].include?(run.fetch("workflow")))
+          (lane == "rolling" && ROLLING_WORKFLOWS.include?(run.fetch("workflow")))
       end
       next selections unless id && selections.length > 1 && supported
       [{"repository" => selections.first.fetch("repository"), "workflow" => "project-#{lane}.yml",
@@ -31,7 +33,7 @@ module ProjectRuns
 
   def self.selection_case(selection)
     selection.dig("series", "case_id") || selection.dig("inputs", "case_id") ||
-      {"zed-zed-cargo-product.yml" => "zed", "zed-zed-cargo-rolling-auto.yml" => "zed", "obs-studio-obs-actions-cache.yml" => "obs-studio", "obs-studio-obs-boringcache.yml" => "obs-studio", "obs-rolling-benchmark.yml" => "obs-studio"}.fetch(selection.fetch("workflow"))
+      {"zed-zed-cargo-product.yml" => "zed", "zed-zed-cargo-rolling-auto.yml" => "zed", "deno-deno-cargo-rolling-chain.yml" => "deno", "grpc-grpc-bazel-benchmark.yml" => "grpc", "obs-studio-obs-actions-cache.yml" => "obs-studio", "obs-studio-obs-boringcache.yml" => "obs-studio", "obs-rolling-benchmark.yml" => "obs-studio"}.fetch(selection.fetch("workflow"))
   end
 
   def self.project(id)
@@ -45,7 +47,7 @@ module ProjectRuns
     allowed = ["native-#{lane}-benchmark.yml"]
     allowed += %w[nix-fresh-benchmark.yml zed-zed-cargo-product.yml] if lane == "fresh" && case_id == "zed"
     allowed += %w[obs-studio-obs-actions-cache.yml obs-studio-obs-boringcache.yml] if lane == "fresh" && case_id == "obs-studio"
-    allowed += %w[nix-rolling-benchmark.yml zed-zed-cargo-rolling-auto.yml] if lane == "rolling" && case_id == "zed"
+    allowed += ROLLING_WORKFLOWS if lane == "rolling"
     values = selections.map do |selection|
       workflow, inputs = selection.values_at("workflow", "inputs")
       raise "Unregistered project workflow" unless allowed.include?(workflow)

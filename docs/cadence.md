@@ -4,8 +4,8 @@
 repositories are archived. Historical run URLs and exported evidence retain
 their original repository identity.
 
-`suites/scheduled.json` selects 24 source cases, 32 case/variant selections and
-34 underlying fresh workers. Project dispatch groups variants and provider
+`suites/scheduled.json` selects 24 source cases and declares the case, variant,
+provider and runner for each selection. Project dispatch groups variants and provider
 workflows into 22 project runs. The 47-workload Docker corpus and prospect drafts
 are excluded from scheduling.
 
@@ -16,22 +16,39 @@ are excluded from scheduling.
 | Rolling | Hourly source check at :11 | New upstream commits that pass recipe inspection |
 | Monitor | Hourly at :47 | Both scheduled cadences and rolling receipts |
 
-All cadences use the exact published canary in [`config/cli.json`](../config/cli.json).
+All cadences use the exact published release in [`config/cli.json`](../config/cli.json).
 The provider wrapper and direct CLI workers use that same default. Changing the
 reviewed pin changes the execution definition; earlier series retain their
-original selector. A compatible stable release can replace this pin later.
+original selector.
 `BENCHMARK_CADENCE_ACTIVE=true` enables automatic dispatch and source publication.
-Manual dispatch and dry runs remain available. Hourly source inspection and monitoring run independently
+`BENCHMARK_ACTIVE_CASES` can instead activate a JSON list of scheduled case IDs.
+Set `BENCHMARK_CADENCE_UNTIL` to an ISO 8601 timestamp with a timezone for a bounded
+observation window. Fresh dispatch and rolling publication stop at that deadline;
+queued dispatch workers recheck it before requesting a batch. Already requested
+builds finish, and source inspection, reconciliation and monitoring continue.
+An empty deadline leaves dispatch unbounded; an invalid timestamp blocks dispatch.
+Manual cadence dispatch also observes the deadline. Direct diagnostic benchmark
+workflows remain available.
+
+Hourly source inspection and monitoring run independently
 of this dispatch control, including during baseline qualification. Paused source checks
 retain candidate observations and skip rolling preparation. Automatic builds,
 source advancement and publication remain paused for the reset. Rolling cache scopes are explicit and remain
 stable across harness refs. Each rolling series begins with a seed build, then an
 identical-source replay, before advancing to changed-source builds.
 
+Eligible Depot Actions Cache selections share the fresh and rolling project groups.
+The gRPC Actions API selection currently has only a rolling executor. Native Depot
+tool-cache selections use rolling only because empty-provider isolation is unmeasured.
+Runner classes are retained per observation; measurements across different runner
+classes do not establish a provider speed comparison. Provider storage remains
+unmeasured where its API does not expose it.
+
 ## Runs and evidence
 
 Run names show the project, cadence and CLI selector. Providers, native tools and
-variants appear inside the project run. n8n's four workloads, Mastodon's selected
+variants appear inside the project run. Depot tool and Actions API selections join
+their existing project groups. n8n's four workloads, Mastodon's selected
 Docker/compiler/streaming workloads, PostHog's profiles, Storybook's archive and
 Nx workloads, and OBS's provider/tool arms each share their project's run. Hugo's Go and Docker
 workloads share one run; Zed's Cargo and Nix workloads share one run. Rolling
