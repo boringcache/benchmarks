@@ -6,6 +6,16 @@ require_relative "../scripts/publish-current"
 require_relative "../scripts/nix-benchmark"
 
 class BenchmarkBaselineTest < Minitest::Test
+  def test_seed_dispatch_waits_for_a_verified_ui_reset
+    publisher = Object.new
+    publisher.define_singleton_method(:root) { BenchmarkCases::ROOT }
+    publisher.define_singleton_method(:api) { |*| flunk "No GitHub request is allowed before reset verification" }
+    BenchmarkBaseline.stub(:selection, {"cache_reset_at" => nil}) do
+      error = assert_raises(RuntimeError) { RollingSeed.dispatch({"cli_version" => "reviewed"}, publisher: publisher) }
+      assert_equal "Verify the UI cache reset before seeding", error.message
+    end
+  end
+
   def test_seed_plan_groups_every_project_and_keeps_rolling_cohorts_explicit
     BenchmarkCadence.stub(:verify_cli, nil) do
       seed = RollingSeed.plan

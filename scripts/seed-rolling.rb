@@ -40,10 +40,9 @@ module RollingSeed
   def self.dispatch(plan, publisher: SourcePromotion::Publisher.new)
     root = publisher.root
     version = plan.fetch("cli_version")
-    resets = publisher.api("repos/#{publisher.repository}/actions/workflows/reset-benchmark-cache.yml/runs?branch=main&status=completed&per_page=20").fetch("workflow_runs")
     baseline = BenchmarkBaseline.selection(root: root)
-    reset = resets.select { |run| BenchmarkBaseline.current?(run.fetch("created_at"), baseline) }.max_by { |run| run.fetch("created_at") }
-    raise "Complete the benchmark cache reset before seeding" unless reset && reset["conclusion"] == "success"
+    reset_at = baseline["cache_reset_at"]
+    raise "Verify the UI cache reset before seeding" unless reset_at && BenchmarkBaseline.current?(reset_at, baseline)
     if plan.fetch("observation") == "replay"
       BenchmarkCadence.source_cases(root: root).each do |item|
         Dir.mktmpdir("rolling-seed-check-") do |directory|
