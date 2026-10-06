@@ -26599,16 +26599,22 @@
       "methodology_issues": [
         "This series does not declare a comparison of provider performance."
       ],
-      "missing_observations": [
-        [
-          1,
-          "commit",
-          "boringcache"
-        ]
-      ],
+      "missing_observations": [],
       "summaries": [
         {
           "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": {
+            "median": 8997988095,
+            "min": 8997988095,
+            "max": 8997988095
+          },
+          "storage_measured_count": 1
+        },
+        {
+          "phase": "commit",
           "provider": "boringcache",
           "count": 1,
           "measurement": null,
