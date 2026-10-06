@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "case_id": "mastodon",
+  "state": "dispatching",
+  "cli_version": "vcli-canary-252077d7b8fb",
+  "ref": "main",
+  "proposal": {
+    "case_id": "mastodon",
+    "updated": true,
+    "base_sha": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+    "head_sha": "44bb0e890620862c29c2314c28bc2e1228e21a48",
+    "state": "proposal",
+    "requires_case_qualification": true
+  },
+  "created_at": "2026-10-06T11:21:36Z",
+  "runs": [
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "project-rolling.yml",
+      "inputs": {
+        "case_id": "mastodon",
+        "selections": "[{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"mastodon\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"server\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"mastodon\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"server-ccache\"}},{\"workflow\":\"native-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"mastodon\",\"cli_version\":\"vcli-canary-252077d7b8fb\",\"variant\":\"streaming\"}}]"
+      },
+      "state": "requesting",
+      "selections": [
+        {
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-rolling-benchmark.yml",
+          "inputs": {
+            "case_id": "mastodon",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "variant": "server"
+          },
+          "state": "requesting"
+        },
+        {
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-rolling-benchmark.yml",
+          "inputs": {
+            "case_id": "mastodon",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "variant": "server-ccache"
+          },
+          "state": "requesting"
+        },
+        {
+          "repository": "boringcache/benchmarks",
+          "workflow": "native-rolling-benchmark.yml",
+          "inputs": {
+            "case_id": "mastodon",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "variant": "streaming"
+          },
+          "state": "requesting"
+        }
+      ]
+    }
+  ]
+}
