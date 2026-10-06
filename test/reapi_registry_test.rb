@@ -6,13 +6,6 @@ require "rbconfig"
 require_relative "../scripts/reapi-registry"
 
 class ReapiRegistryTest < Minitest::Test
-  def test_warm_registry_is_read_only_and_cache_errors_are_fatal
-    args = ReapiRegistry.command(provider: "boringcache", phase: "warm", workspace: "boringcache/benchmarks", tag: "case-series")
-    assert_includes args, "--read-only"
-    assert_includes args, "--fail-on-cache-error"
-    refute_includes ReapiRegistry.command(provider: "boringcache", phase: "cold", workspace: "boringcache/benchmarks", tag: "case-series"), "--read-only"
-  end
-
   def test_failed_start_does_not_run_the_build
     Dir.mktmpdir do |directory|
       server = TCPServer.new("127.0.0.1", 0)
@@ -32,9 +25,6 @@ class ReapiRegistryTest < Minitest::Test
   end
 
   def test_changed_source_registries_allow_reads_and_publication
-    args = ReapiRegistry.command(provider: "boringcache", phase: "commit", workspace: "boringcache/benchmarks", tag: "case-series")
-    refute_includes args, "--read-only"
-    assert_includes args, "--fail-on-cache-error"
     args = ReapiRegistry.command(provider: "bazel-remote", phase: "commit", workspace: "boringcache/benchmarks", tag: "case-series")
     refute_includes args, "--htpasswd_file"
     assert_includes args, "reapi-store"

@@ -1,0 +1,35 @@
+{
+  "case_id": "stackstorm-pants",
+  "repository": "boringcache/benchmarks",
+  "workflow": "reapi-fresh-benchmark.yml",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "StackStorm/st2",
+    "revision": "9824de4dfd0c869869e310dee729308f398ad83a",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "9824de4dfd0c869869e310dee729308f398ad83a"
+      }
+    ]
+  },
+  "lane": "fresh",
+  "inputs": {
+    "case_id": "stackstorm-pants",
+    "cli_version": "vcli-canary-b26bccd2becb",
+    "series_id": "native-reapi-01",
+    "sample": "1"
+  },
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "variants": null,
+  "schema_version": 1,
+  "requested_at": "2026-10-05T21:34:41Z",
+  "ref": "native-adapter-qualification",
+  "state": "requested",
+  "run_id": 37376758991,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376758991"
+}

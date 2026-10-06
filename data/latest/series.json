@@ -1092,6 +1092,255 @@
     },
     {
       "case_id": "deno",
+      "series_id": "native-kache-01",
+      "plan_path": "results/deno/native-kache-01/series.json",
+      "lane": "fresh",
+      "variant": "compiler-only",
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+        "providers": [
+          "boringcache"
+        ],
+        "timed_scope": "The two BoringCache Cargo release operations, including restore, build, and any permitted publication. Fresh changed-source consumers use restore-only trust; rolling jobs permit publication to the declared cohort. Output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.",
+        "primary_metric": "correctness",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "denoland/deno",
+        "pins": [
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+            "kind": "env"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "b4f08f127652d8442b4d3dbabc277aca3840bc1d",
+            "kind": "env"
+          }
+        ]
+      },
+      "plan_sha256": "e8d609e3a2de6ca448c7cc69603684e5704b72ec62c21602059ed3d2eae7bd09",
+      "definition_sha256": "2281cee91b6778388765f712302a780710b465b0d893ecb6e5fb287bc1bc4647",
+      "state": "requested",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "commit",
+          "boringcache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "deno",
+          "repository": "boringcache/benchmarks",
+          "workflow": "deno-deno-cargo-product.yml",
+          "lane": "fresh",
+          "inputs": {
+            "cli_version": "vcli-canary-b26bccd2becb",
+            "compiler_cache": "kache",
+            "cache_profile": "compiler-only",
+            "series_id": "native-kache-01",
+            "sample": "1"
+          },
+          "ref": "native-adapter-qualification",
+          "state": "requested",
+          "requested_at": "2026-10-05T21:34:54Z",
+          "run_id": 37376784408,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376784408"
+        }
+      ],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": [
+        "37376784408"
+      ]
+    },
+    {
+      "case_id": "deno",
+      "series_id": "native-mbx-01",
+      "plan_path": "results/deno/native-mbx-01/series.json",
+      "lane": "fresh",
+      "variant": "compiler-only",
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+        "providers": [
+          "boringcache"
+        ],
+        "timed_scope": "The two BoringCache Cargo release operations, including restore, build, and any permitted publication. Fresh changed-source consumers use restore-only trust; rolling jobs permit publication to the declared cohort. Output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.",
+        "primary_metric": "correctness",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "denoland/deno",
+        "pins": [
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+            "kind": "env"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "b4f08f127652d8442b4d3dbabc277aca3840bc1d",
+            "kind": "env"
+          }
+        ]
+      },
+      "plan_sha256": "88928451cf688516e20e81b016de4f92349ed0e0598b5300787d43a38cdd4bea",
+      "definition_sha256": "2281cee91b6778388765f712302a780710b465b0d893ecb6e5fb287bc1bc4647",
+      "state": "requested",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "commit",
+          "boringcache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "deno",
+          "repository": "boringcache/benchmarks",
+          "workflow": "deno-deno-cargo-product.yml",
+          "lane": "fresh",
+          "inputs": {
+            "cli_version": "vcli-canary-b26bccd2becb",
+            "compiler_cache": "mbx",
+            "cache_profile": "compiler-only",
+            "series_id": "native-mbx-01",
+            "sample": "1"
+          },
+          "ref": "native-adapter-qualification",
+          "state": "requested",
+          "requested_at": "2026-10-05T21:34:56Z",
+          "run_id": 37376787731,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376787731"
+        }
+      ],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": [
+        "37376787731"
+      ]
+    },
+    {
+      "case_id": "deno",
+      "series_id": "native-sccache-01",
+      "plan_path": "results/deno/native-sccache-01/series.json",
+      "lane": "fresh",
+      "variant": "compiler-only",
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+        "providers": [
+          "boringcache"
+        ],
+        "timed_scope": "The two BoringCache Cargo release operations, including restore, build, and any permitted publication. Fresh changed-source consumers use restore-only trust; rolling jobs permit publication to the declared cohort. Output verification and unrelated setup are excluded. This is a correctness proof, not a provider timing comparison.",
+        "primary_metric": "correctness",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "denoland/deno",
+        "pins": [
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "b8681dfa6442a0dfa5c7ddc43b279c504079cf2a",
+            "kind": "env"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "b4f08f127652d8442b4d3dbabc277aca3840bc1d",
+            "kind": "env"
+          }
+        ]
+      },
+      "plan_sha256": "55cd1ef51deb6ccfca8ba7ff59d141ef517fab5122a248db4f91b21eb371a5c0",
+      "definition_sha256": "2281cee91b6778388765f712302a780710b465b0d893ecb6e5fb287bc1bc4647",
+      "state": "requested",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "commit",
+          "boringcache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "deno",
+          "repository": "boringcache/benchmarks",
+          "workflow": "deno-deno-cargo-product.yml",
+          "lane": "fresh",
+          "inputs": {
+            "cli_version": "vcli-canary-b26bccd2becb",
+            "compiler_cache": "sccache",
+            "cache_profile": "compiler-only",
+            "series_id": "native-sccache-01",
+            "sample": "1"
+          },
+          "ref": "native-adapter-qualification",
+          "state": "requested",
+          "requested_at": "2026-10-05T21:34:52Z",
+          "run_id": 37376780672,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376780672"
+        }
+      ],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": [
+        "37376780672"
+      ]
+    },
+    {
+      "case_id": "deno",
       "series_id": "rolling-cargo-product-qualification",
       "plan_path": "results/deno/rolling-cargo-product-qualification/series.json",
       "lane": "rolling",
@@ -3462,6 +3711,122 @@
     },
     {
       "case_id": "executorch-buck2",
+      "series_id": "native-reapi-01",
+      "plan_path": "results/executorch-buck2/native-reapi-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Buck2 restore the ExecuTorch portable runner on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "primary_metric": "correctness",
+        "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "pytorch/executorch",
+        "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+          }
+        ],
+        "patch": "cache.patch"
+      },
+      "plan_sha256": "a0f8cded0cfdbd715bd02b00f494f01d6c8b37bdb390978ff8ef8c21c829ffb9",
+      "definition_sha256": "555a674e4a07aeea3e2af6a913c949003e0d5aaa6026c3b52f10b738775ceb96",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "bazel-remote",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "bazel-remote",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "executorch-buck2",
+          "repository": "boringcache/benchmarks",
+          "workflow": "reapi-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "executorch-buck2",
+            "cli_version": "vcli-canary-b26bccd2becb",
+            "series_id": "native-reapi-01",
+            "sample": "1"
+          },
+          "ref": "native-adapter-qualification",
+          "state": "requested",
+          "requested_at": "2026-10-05T21:34:43Z",
+          "run_id": 37376762709,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376762709"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "executorch-buck2",
+          "series_id": "native-reapi-01",
+          "sample": 1,
+          "run_id": "37376762709",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376762709",
+          "source_sha": "82339ba8890435501faceabe8c94fbd6fc29bf79",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "075213368c2e9d77d9a98ac326155e449dd70fd562ba66461a9ed801af15e2b5"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/executorch-buck2/native-reapi-01/report.json",
+      "evidence": [],
+      "runs_without_archives": [
+        "37376762709"
+      ]
+    },
+    {
+      "case_id": "executorch-buck2",
       "series_id": "registry-qualification-01",
       "plan_path": "results/executorch-buck2/registry-qualification-01/series.json",
       "lane": "fresh",
@@ -5165,6 +5530,121 @@
         }
       ],
       "runs_without_archives": []
+    },
+    {
+      "case_id": "gogs-moon",
+      "series_id": "native-reapi-01",
+      "plan_path": "results/gogs-moon/native-reapi-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Moon restore the Gogs web build on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "primary_metric": "correctness",
+        "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "gogs/gogs",
+        "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+          }
+        ]
+      },
+      "plan_sha256": "6a3d6bd82506b427a27ac1eb27092314a3a9ec6314a90595b17397ba7ff5f924",
+      "definition_sha256": "2c8187ec098c8da8d0258b3b07483345c640f40103708b239dbdcfe30515c41f",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "bazel-remote",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "bazel-remote",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "gogs-moon",
+          "repository": "boringcache/benchmarks",
+          "workflow": "reapi-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "gogs-moon",
+            "cli_version": "vcli-canary-b26bccd2becb",
+            "series_id": "native-reapi-01",
+            "sample": "1"
+          },
+          "ref": "native-adapter-qualification",
+          "state": "requested",
+          "requested_at": "2026-10-05T21:34:38Z",
+          "run_id": 37376755061,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376755061"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "gogs-moon",
+          "series_id": "native-reapi-01",
+          "sample": 1,
+          "run_id": "37376755061",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376755061",
+          "source_sha": "82339ba8890435501faceabe8c94fbd6fc29bf79",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "62333af7fc90467f43975423021b8de0ebb4aa29a9069cee5cc475945340c8e6"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/gogs-moon/native-reapi-01/report.json",
+      "evidence": [],
+      "runs_without_archives": [
+        "37376755061"
+      ]
     },
     {
       "case_id": "gogs-moon",
@@ -13371,6 +13851,122 @@
     },
     {
       "case_id": "msgpack-sbt",
+      "series_id": "native-reapi-01",
+      "plan_path": "results/msgpack-sbt/native-reapi-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does sbt reuse MessagePack compilation and test results on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+        "primary_metric": "correctness",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "msgpack/msgpack-java",
+        "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "revision": "5c28fbad6cd360d8ea822df109830ae2517a7ae4",
+            "kind": "snapshot"
+          }
+        ],
+        "patch": "cache.patch"
+      },
+      "plan_sha256": "69f2211a27eece275fc5638cbc2a579c5a16b008861a8cfbcf97e4e26f3afb44",
+      "definition_sha256": "8f2b5fe7f83eb772d4bac756a9e4dce41ca99289832b118c1bbea399aa8eb4d0",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "bazel-remote",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "bazel-remote",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "msgpack-sbt",
+          "repository": "boringcache/benchmarks",
+          "workflow": "reapi-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "msgpack-sbt",
+            "cli_version": "vcli-canary-b26bccd2becb",
+            "series_id": "native-reapi-01",
+            "sample": "1"
+          },
+          "ref": "native-adapter-qualification",
+          "state": "requested",
+          "requested_at": "2026-10-05T21:34:45Z",
+          "run_id": 37376766204,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376766204"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "msgpack-sbt",
+          "series_id": "native-reapi-01",
+          "sample": 1,
+          "run_id": "37376766204",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376766204",
+          "source_sha": "82339ba8890435501faceabe8c94fbd6fc29bf79",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "87e7b1b61dca748561a17226c1a2a60d6a0776ca8a159da19e09b946cd0715fb"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/msgpack-sbt/native-reapi-01/report.json",
+      "evidence": [],
+      "runs_without_archives": [
+        "37376766204"
+      ]
+    },
+    {
+      "case_id": "msgpack-sbt",
       "series_id": "registry-qualification-01",
       "plan_path": "results/msgpack-sbt/registry-qualification-01/series.json",
       "lane": "fresh",
@@ -18909,6 +19505,121 @@
     },
     {
       "case_id": "opencut-moon",
+      "series_id": "native-reapi-01",
+      "plan_path": "results/opencut-moon/native-reapi-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Moon restore the OpenCut web build on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "primary_metric": "correctness",
+        "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "OpenCut-app/OpenCut",
+        "revision": "e668010778568641babef2cc40be4703ae6916d6",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "e668010778568641babef2cc40be4703ae6916d6"
+          }
+        ]
+      },
+      "plan_sha256": "fee3d08d81bffe8eb44d73f7060f28c5b560a47cd97bc6c56b4fe525311c7fbc",
+      "definition_sha256": "550c9584072bedcc6068490dbaa20fd1760c26cd4d18364a876201d8a7653807",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "bazel-remote",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "bazel-remote",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "opencut-moon",
+          "repository": "boringcache/benchmarks",
+          "workflow": "reapi-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "opencut-moon",
+            "cli_version": "vcli-canary-b26bccd2becb",
+            "series_id": "native-reapi-01",
+            "sample": "1"
+          },
+          "ref": "native-adapter-qualification",
+          "state": "requested",
+          "requested_at": "2026-10-05T21:34:36Z",
+          "run_id": 37376751453,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376751453"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "opencut-moon",
+          "series_id": "native-reapi-01",
+          "sample": 1,
+          "run_id": "37376751453",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376751453",
+          "source_sha": "82339ba8890435501faceabe8c94fbd6fc29bf79",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "b39c0f6d3f2092eae00d63c1ae27ead1122b97f533f9ec86a20a44645a014e0a"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/opencut-moon/native-reapi-01/report.json",
+      "evidence": [],
+      "runs_without_archives": [
+        "37376751453"
+      ]
+    },
+    {
+      "case_id": "opencut-moon",
       "series_id": "registry-qualification-01",
       "plan_path": "results/opencut-moon/registry-qualification-01/series.json",
       "lane": "fresh",
@@ -22448,6 +23159,121 @@
     },
     {
       "case_id": "stackstorm-pants",
+      "series_id": "native-reapi-01",
+      "plan_path": "results/stackstorm-pants/native-reapi-01/series.json",
+      "lane": "fresh",
+      "variant": null,
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does Pants restore StackStorm pack metadata test results on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "primary_metric": "correctness",
+        "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "StackStorm/st2",
+        "revision": "9824de4dfd0c869869e310dee729308f398ad83a",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "9824de4dfd0c869869e310dee729308f398ad83a"
+          }
+        ]
+      },
+      "plan_sha256": "4ff1542c95600e404aaee20d2cfbf4e64b6bf3217a4673aaf7ede3dc09bacea1",
+      "definition_sha256": "5806f346f86322610ea0760ce5aa75d8557a0f42967a3f4f4317b83e8a522fd6",
+      "state": "completed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": true,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [],
+      "summaries": [
+        {
+          "phase": "cold",
+          "provider": "bazel-remote",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "bazel-remote",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "cold",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        },
+        {
+          "phase": "warm",
+          "provider": "boringcache",
+          "count": 1,
+          "measurement": null,
+          "storage": null,
+          "storage_measured_count": 0
+        }
+      ],
+      "dispatches": [
+        {
+          "case_id": "stackstorm-pants",
+          "repository": "boringcache/benchmarks",
+          "workflow": "reapi-fresh-benchmark.yml",
+          "lane": "fresh",
+          "inputs": {
+            "case_id": "stackstorm-pants",
+            "cli_version": "vcli-canary-b26bccd2becb",
+            "series_id": "native-reapi-01",
+            "sample": "1"
+          },
+          "ref": "native-adapter-qualification",
+          "state": "requested",
+          "requested_at": "2026-10-05T21:34:41Z",
+          "run_id": 37376758991,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376758991"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "stackstorm-pants",
+          "series_id": "native-reapi-01",
+          "sample": 1,
+          "run_id": "37376758991",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376758991",
+          "source_sha": "82339ba8890435501faceabe8c94fbd6fc29bf79",
+          "github_conclusion": "success",
+          "status": "success",
+          "errors": [],
+          "evidence_manifest_sha256": "a89defebba01cfcc0cce06df6b16a8085d9662bc327bfcb9cda84059d36fc972"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/stackstorm-pants/native-reapi-01/report.json",
+      "evidence": [],
+      "runs_without_archives": [
+        "37376758991"
+      ]
+    },
+    {
+      "case_id": "stackstorm-pants",
       "series_id": "registry-qualification-01",
       "plan_path": "results/stackstorm-pants/registry-qualification-01/series.json",
       "lane": "fresh",
@@ -24644,6 +25470,423 @@
         }
       ],
       "runs_without_archives": []
+    },
+    {
+      "case_id": "zed",
+      "series_id": "native-kache-01",
+      "plan_path": "results/zed/native-kache-01/series.json",
+      "lane": "fresh",
+      "variant": "sccache-only",
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+        "providers": [
+          "boringcache"
+        ],
+        "timed_scope": "The BoringCache Cargo operations, including their restore, build, and publication; output verification and unrelated setup are excluded. The layer proof uses a combined cold seed for each restore-only variant and makes no provider timing comparison.",
+        "primary_metric": "correctness",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "zed-industries/zed",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+            "kind": "gitlink"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "35bba8eef7f68b8cc61a6e883e7e041cf24a96cd",
+            "kind": "env"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+            "kind": "env"
+          },
+          {
+            "path": "payload/cargo-layer-source.env",
+            "revision": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+            "kind": "env"
+          },
+          {
+            "path": "payload/cargo-layer-source.env",
+            "revision": "ee3b5558c581429633937e458fad8d109f29e9ee",
+            "kind": "env"
+          }
+        ]
+      },
+      "plan_sha256": "8ee7d4283ab2f80a1d1bdad04d766fbecd58f3b6339ee8ce1cbaa7131db827f5",
+      "definition_sha256": "88257efcd2b68be826845f522c1549a9969ed051da41f3be6d81acf407fb26bf",
+      "state": "requested",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "commit",
+          "boringcache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "zed",
+          "repository": "boringcache/benchmarks",
+          "workflow": "zed-zed-cargo-product.yml",
+          "lane": "fresh",
+          "inputs": {
+            "base_sha": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+            "head_sha": "ee3b5558c581429633937e458fad8d109f29e9ee",
+            "cli_version": "vcli-canary-b26bccd2becb",
+            "compiler_cache": "kache",
+            "cache_layer": "sccache-only",
+            "series_id": "native-kache-01",
+            "sample": "1"
+          },
+          "ref": "native-adapter-qualification",
+          "state": "requested",
+          "requested_at": "2026-10-05T21:34:48Z",
+          "run_id": 37376772894,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376772894"
+        }
+      ],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": [
+        "37376772894"
+      ]
+    },
+    {
+      "case_id": "zed",
+      "series_id": "native-mbx-01",
+      "plan_path": "results/zed/native-mbx-01/series.json",
+      "lane": "fresh",
+      "variant": "sccache-only",
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+        "providers": [
+          "boringcache"
+        ],
+        "timed_scope": "The BoringCache Cargo operations, including their restore, build, and publication; output verification and unrelated setup are excluded. The layer proof uses a combined cold seed for each restore-only variant and makes no provider timing comparison.",
+        "primary_metric": "correctness",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "zed-industries/zed",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+            "kind": "gitlink"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "35bba8eef7f68b8cc61a6e883e7e041cf24a96cd",
+            "kind": "env"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+            "kind": "env"
+          },
+          {
+            "path": "payload/cargo-layer-source.env",
+            "revision": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+            "kind": "env"
+          },
+          {
+            "path": "payload/cargo-layer-source.env",
+            "revision": "ee3b5558c581429633937e458fad8d109f29e9ee",
+            "kind": "env"
+          }
+        ]
+      },
+      "plan_sha256": "30cb90aa407602e5b9bf502b5fbb0a6b2468bf8e627372aff69ec694669da632",
+      "definition_sha256": "88257efcd2b68be826845f522c1549a9969ed051da41f3be6d81acf407fb26bf",
+      "state": "failed",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "commit",
+          "boringcache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "zed",
+          "repository": "boringcache/benchmarks",
+          "workflow": "zed-zed-cargo-product.yml",
+          "lane": "fresh",
+          "inputs": {
+            "base_sha": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+            "head_sha": "ee3b5558c581429633937e458fad8d109f29e9ee",
+            "cli_version": "vcli-canary-b26bccd2becb",
+            "compiler_cache": "mbx",
+            "cache_layer": "sccache-only",
+            "series_id": "native-mbx-01",
+            "sample": "1"
+          },
+          "ref": "native-adapter-qualification",
+          "state": "requested",
+          "requested_at": "2026-10-05T21:34:50Z",
+          "run_id": 37376777074,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376777074"
+        }
+      ],
+      "completions": [
+        {
+          "schema_version": 1,
+          "case_id": "zed",
+          "series_id": "native-mbx-01",
+          "sample": 1,
+          "run_id": "37376777074",
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376777074",
+          "source_sha": "82339ba8890435501faceabe8c94fbd6fc29bf79",
+          "github_conclusion": "failure",
+          "status": "failed",
+          "errors": [
+            "Workflow concluded failure",
+            "Cold: target + mbx seed: failure"
+          ],
+          "evidence_manifest_sha256": "f97fdeb64b98ff79cca6890392637083c3d6d20af9f842b65238446f02932ed1"
+        }
+      ],
+      "report_state": "current",
+      "report_path": "results/zed/native-mbx-01/report.json",
+      "evidence": [],
+      "runs_without_archives": [
+        "37376777074"
+      ]
+    },
+    {
+      "case_id": "zed",
+      "series_id": "native-mbx-02",
+      "plan_path": "results/zed/native-mbx-02/series.json",
+      "lane": "fresh",
+      "variant": "sccache-only",
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+        "providers": [
+          "boringcache"
+        ],
+        "timed_scope": "The BoringCache Cargo operations, including their restore, build, and publication; output verification and unrelated setup are excluded. The layer proof uses a combined cold seed for each restore-only variant and makes no provider timing comparison.",
+        "primary_metric": "correctness",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "zed-industries/zed",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+            "kind": "gitlink"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "35bba8eef7f68b8cc61a6e883e7e041cf24a96cd",
+            "kind": "env"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+            "kind": "env"
+          },
+          {
+            "path": "payload/cargo-layer-source.env",
+            "revision": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+            "kind": "env"
+          },
+          {
+            "path": "payload/cargo-layer-source.env",
+            "revision": "ee3b5558c581429633937e458fad8d109f29e9ee",
+            "kind": "env"
+          }
+        ]
+      },
+      "plan_sha256": "bc9c79b0b782385f84b528e219d8a42cbc9011a3624c05aec9cc58ea7de77daa",
+      "definition_sha256": "169b8746d86ffa9baa3cc658b14c617a845f1aff508fa52b9013a239363d491b",
+      "state": "requested",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "commit",
+          "boringcache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "zed",
+          "repository": "boringcache/benchmarks",
+          "workflow": "zed-zed-cargo-product.yml",
+          "lane": "fresh",
+          "inputs": {
+            "base_sha": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+            "head_sha": "ee3b5558c581429633937e458fad8d109f29e9ee",
+            "compiler_cache": "mbx",
+            "cli_version": "vcli-canary-b26bccd2becb",
+            "cache_layer": "sccache-only",
+            "series_id": "native-mbx-02",
+            "sample": "1"
+          },
+          "ref": "native-adapter-qualification",
+          "state": "requested",
+          "requested_at": "2026-10-05T21:45:05Z",
+          "run_id": 37377947724,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37377947724"
+        }
+      ],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": [
+        "37377947724"
+      ]
+    },
+    {
+      "case_id": "zed",
+      "series_id": "native-sccache-01",
+      "plan_path": "results/zed/native-sccache-01/series.json",
+      "lane": "fresh",
+      "variant": "sccache-only",
+      "sample_count": 1,
+      "comparison": {
+        "question": "Does the pinned workload produce verified output and reuse its declared cache?",
+        "providers": [
+          "boringcache"
+        ],
+        "timed_scope": "The BoringCache Cargo operations, including their restore, build, and publication; output verification and unrelated setup are excluded. The layer proof uses a combined cold seed for each restore-only variant and makes no provider timing comparison.",
+        "primary_metric": "correctness",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "zed-industries/zed",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+            "kind": "gitlink"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "35bba8eef7f68b8cc61a6e883e7e041cf24a96cd",
+            "kind": "env"
+          },
+          {
+            "path": "payload/benchmark-source.env",
+            "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+            "kind": "env"
+          },
+          {
+            "path": "payload/cargo-layer-source.env",
+            "revision": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+            "kind": "env"
+          },
+          {
+            "path": "payload/cargo-layer-source.env",
+            "revision": "ee3b5558c581429633937e458fad8d109f29e9ee",
+            "kind": "env"
+          }
+        ]
+      },
+      "plan_sha256": "3024e28848f96bd66d4c0d0493cacb4c39abfd8f82a044fb2458ccd69c615b92",
+      "definition_sha256": "88257efcd2b68be826845f522c1549a9969ed051da41f3be6d81acf407fb26bf",
+      "state": "requested",
+      "publication": "unreviewed",
+      "valid_for_comparison": false,
+      "execution_verified": false,
+      "methodology_issues": [
+        "This series does not declare a comparison of provider performance."
+      ],
+      "missing_observations": [
+        [
+          1,
+          "cold",
+          "boringcache"
+        ],
+        [
+          1,
+          "commit",
+          "boringcache"
+        ]
+      ],
+      "summaries": [],
+      "dispatches": [
+        {
+          "case_id": "zed",
+          "repository": "boringcache/benchmarks",
+          "workflow": "zed-zed-cargo-product.yml",
+          "lane": "fresh",
+          "inputs": {
+            "base_sha": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+            "head_sha": "ee3b5558c581429633937e458fad8d109f29e9ee",
+            "cli_version": "vcli-canary-b26bccd2becb",
+            "compiler_cache": "sccache",
+            "cache_layer": "sccache-only",
+            "series_id": "native-sccache-01",
+            "sample": "1"
+          },
+          "ref": "native-adapter-qualification",
+          "state": "requested",
+          "requested_at": "2026-10-05T21:34:46Z",
+          "run_id": 37376769643,
+          "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376769643"
+        }
+      ],
+      "completions": [],
+      "report_state": "missing",
+      "report_path": null,
+      "evidence": [],
+      "runs_without_archives": [
+        "37376769643"
+      ]
     }
   ]
 }

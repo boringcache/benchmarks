@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "case_id": "stackstorm-pants",
+  "series_id": "native-reapi-01",
+  "created_at": "2026-10-05T21:33:58Z",
+  "lane": "fresh",
+  "phases": [
+    "cold",
+    "warm"
+  ],
+  "sample_count": 1,
+  "definition_sha256": "5806f346f86322610ea0760ce5aa75d8557a0f42967a3f4f4317b83e8a522fd6",
+  "variant": null,
+  "workflow_inputs": {
+    "case_id": "stackstorm-pants",
+    "cli_version": "vcli-canary-b26bccd2becb"
+  },
+  "comparison": {
+    "question": "Does Pants restore StackStorm pack metadata test results on a clean worker?",
+    "providers": [
+      "boringcache",
+      "bazel-remote"
+    ],
+    "primary_metric": "correctness",
+    "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+    "storage": "unmeasured",
+    "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+    "sample_count": 2
+  },
+  "source": {
+    "repository": "StackStorm/st2",
+    "revision": "9824de4dfd0c869869e310dee729308f398ad83a",
+    "pins": [
+      {
+        "path": "proposal.md",
+        "kind": "snapshot",
+        "revision": "9824de4dfd0c869869e310dee729308f398ad83a"
+      }
+    ]
+  },
+  "verification": [
+    "Require the declared native command to succeed",
+    "Require declared outputs and successful output checks",
+    "Require native remote-hit evidence and the same output hashes on the warm worker",
+    "Require registry shutdown to complete successfully"
+  ],
+  "plan_sha256": "4ff1542c95600e404aaee20d2cfbf4e64b6bf3217a4673aaf7ede3dc09bacea1"
+}

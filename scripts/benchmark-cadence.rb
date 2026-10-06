@@ -89,10 +89,13 @@ module BenchmarkCadence
 
   def self.verify_cli(version, runs, probe: method(:cli_help))
     return unless runs.any? { |run| run.fetch("workflow").start_with?("reapi-") }
-    help = probe.call(version, "cache-registry")
-    unless help.match?(/--reapi-port\b/)
-      raise Error, "#{version} does not support cache-registry --reapi-port required by the REAPI cases; no builds dispatched"
+    %w[moon pants buck2 sbt].each do |tool|
+      help = probe.call(version, tool)
+      unless help.include?("Usage: boringcache #{tool}")
+        raise Error, "#{version} does not support native #{tool} required by the REAPI cases; no builds dispatched"
+      end
     end
+    nil
   end
 
   def self.cli_help(version, command)

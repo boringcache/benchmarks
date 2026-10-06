@@ -6,6 +6,7 @@ permissions:
   contents: read
 env:
   BENCHMARK_EXPECTED_IDENTITY: "${{ inputs.expected_identity }}"
+  COMPILER_CACHE: "${{ inputs.compiler_cache || 'sccache' }}"
   CACHE_SCOPE: r${{ github.run_id }}-a${{ github.run_attempt }}
   CACHE_PROFILE: "${{ inputs.cache_profile || 'cargo-product' }}"
   CARGO_TERM_COLOR: always
@@ -15,7 +16,7 @@ env:
   BENCHMARK_SAMPLE: "${{ inputs.sample }}"
 jobs:
   publish-base:
-    name: BoringCache Deno Cargo cold
+    name: "${{ inputs.compiler_cache || 'sccache' }} Deno Cargo cold"
     if: inputs.runner_label == '' || github.ref_name == 'main'
     runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
       && inputs.runner_label || 'ubuntu-24.04' }}"
@@ -64,6 +65,15 @@ jobs:
     - name: Expose Deno's pinned toolchain file
       run: ln -s upstream/rust-toolchain.toml rust-toolchain.toml
     - uses: dsherret/rust-toolchain-file@3551321aa44dd44a0393eb3b6bdfbc5d25ecf621
+    - name: Install retained benchmark candidate
+      if: inputs.cli_version == 'vcli-canary-b26bccd2becb'
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: ruby scripts/benchmark-candidate.rb "${{ inputs.cli_version }}"
+    - name: Install selected compiler cache
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: ruby scripts/compiler-cache-setup.rb "$COMPILER_CACHE"
     - name: Install sccache
       uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba
       with:
@@ -105,7 +115,7 @@ jobs:
       id: build_primary
       uses: "./.github/actions/boringcache"
       with:
-        cli-version: "${{ inputs.cli_version }}"
+        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip' || inputs.cli_version }}"
         trust-policy: publish
         mode: cargo
         working-directory: upstream
@@ -117,7 +127,7 @@ jobs:
       id: build_desktop
       uses: "./.github/actions/boringcache"
       with:
-        cli-version: "${{ inputs.cli_version }}"
+        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip' || inputs.cli_version }}"
         trust-policy: publish
         mode: cargo
         working-directory: upstream
@@ -218,6 +228,15 @@ jobs:
     - name: Expose Deno's pinned toolchain file
       run: ln -s upstream/rust-toolchain.toml rust-toolchain.toml
     - uses: dsherret/rust-toolchain-file@3551321aa44dd44a0393eb3b6bdfbc5d25ecf621
+    - name: Install retained benchmark candidate
+      if: inputs.cli_version == 'vcli-canary-b26bccd2becb'
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: ruby scripts/benchmark-candidate.rb "${{ inputs.cli_version }}"
+    - name: Install selected compiler cache
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: ruby scripts/compiler-cache-setup.rb "$COMPILER_CACHE"
     - name: Install sccache
       uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba
       with:
@@ -259,7 +278,7 @@ jobs:
       id: build_primary
       uses: "./.github/actions/boringcache"
       with:
-        cli-version: "${{ inputs.cli_version }}"
+        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip' || inputs.cli_version }}"
         trust-policy: restore
         mode: cargo
         working-directory: upstream
@@ -271,7 +290,7 @@ jobs:
       id: build_desktop
       uses: "./.github/actions/boringcache"
       with:
-        cli-version: "${{ inputs.cli_version }}"
+        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip' || inputs.cli_version }}"
         trust-policy: restore
         mode: cargo
         working-directory: upstream
@@ -343,6 +362,11 @@ jobs:
         type: string
         required: false
         default: ''
+      compiler_cache:
+        description: Compiler cache engine for this qualification
+        type: choice
+        default: sccache
+        options: [sccache, kache, mbx]
       cli_version:
         description: Exact immutable BoringCache CLI release tag.
         required: false
@@ -383,6 +407,10 @@ jobs:
         type: string
         required: false
         default: ''
+      compiler_cache:
+        description: Compiler cache engine for this qualification
+        type: string
+        default: sccache
       cli_version:
         description: Exact immutable BoringCache CLI release tag.
         required: false

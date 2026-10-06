@@ -35,6 +35,7 @@ module ReapiSetup
   end
 
   def self.install
+    require_relative "benchmark-candidate"
     FileUtils.mkdir_p("reapi-evidence")
     installed = []
     if ENV.fetch("PROVIDER") == "boringcache"
@@ -42,7 +43,11 @@ module ReapiSetup
       release = ENV.fetch("CLI_RELEASE", "")
       release = BenchmarkCLI.selection.fetch("version") if release.empty?
       raise "Select an exact CLI release" unless release.match?(/\Av(?:cli-canary-[0-9a-f]{9,40}|\d+\.\d+\.\d+)\z/)
-      installed << download("boringcache/cli", release, "boringcache-linux-amd64", "boringcache")
+      installed << if release == BenchmarkCandidate::VERSION
+        BenchmarkCandidate.install(release, destination: File.join(ENV.fetch("RUNNER_TEMP"), "reapi-bin", "boringcache"))
+      else
+        download("boringcache/cli", release, "boringcache-linux-amd64", "boringcache")
+      end
     else
       installed << download("buchgr/bazel-remote", "v2.6.2", "bazel-remote-2.6.2-linux-amd64", "bazel-remote",
         sha256: "62e236bf8396e69396928e0d0c32062fbd5575f20fe55dc10a82eb791297e1a0")
@@ -94,8 +99,10 @@ module ReapiSetup
       "--lane", ENV.fetch("CACHE_LANE", "fresh"), "--phase", ENV.fetch("PHASE"), "--mode", "reapi",
       "--workspace", "boringcache/benchmarks", "--cache-tag", BenchmarkPhase.scope(ENV),
       "--source-repository", context.dig("source", "repository"), "--source-sha", context.dig("source", "revision"),
-      "--build-seconds", timings.fetch("build_seconds").to_s, "--restore-or-setup-seconds", timings.fetch("restore_or_setup_seconds").to_s,
-      "--save-seconds", timings.fetch("save_seconds").to_s]
+      "--build-seconds", timings.fetch("build_seconds").to_s]
+    {"restore_or_setup_seconds" => "--restore-or-setup-seconds", "save_seconds" => "--save-seconds"}.each do |key, flag|
+      args += [flag, timings.fetch(key).to_s] unless timings[key].nil?
+    end
     args += ["--cache-hit", "true"] if ReapiClient.remote_cache_hit?
     if ENV.fetch("PROVIDER") == "boringcache"
       version, status = Open3.capture2("boringcache", "--version")

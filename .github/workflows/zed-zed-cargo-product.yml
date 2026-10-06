@@ -6,6 +6,7 @@ permissions:
   contents: read
 env:
   BENCHMARK_EXPECTED_IDENTITY: "${{ inputs.expected_identity }}"
+  COMPILER_CACHE: "${{ inputs.compiler_cache || 'sccache' }}"
   CARGO_INCREMENTAL: '0'
   ZED_BUNDLE: 'true'
   CC: clang
@@ -52,7 +53,7 @@ jobs:
     env:
       BENCHMARK_RUNNER_CLASS: ubuntu-24.04
   cold:
-    name: 'Cold: target + sccache seed'
+    name: "Cold: target + ${{ inputs.compiler_cache || 'sccache' }} seed"
     needs: source
     if: inputs.runner_label == '' || github.ref_name == 'main'
     runs-on: "${{ github.event_name == 'workflow_dispatch' && github.ref_name == 'main'
@@ -70,6 +71,15 @@ jobs:
         case-id: zed
     - name: Prepare the seed source and release toolchain
       run: ./scripts/prepare-zed-lane.sh "${{ needs.source.outputs.base_sha }}"
+    - name: Install retained benchmark candidate
+      if: inputs.cli_version == 'vcli-canary-b26bccd2becb'
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: ruby scripts/benchmark-candidate.rb "${{ inputs.cli_version }}"
+    - name: Install selected compiler cache
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: ruby scripts/compiler-cache-setup.rb "$COMPILER_CACHE"
     - name: Install sccache
       uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba
       with:
@@ -85,7 +95,7 @@ jobs:
       id: primary
       uses: "./.github/actions/boringcache"
       with:
-        cli-version: "${{ inputs.cli_version }}"
+        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip' || inputs.cli_version }}"
         mode: cargo
         trust-policy: publish
         working-directory: upstream
@@ -98,7 +108,7 @@ jobs:
       id: remote
       uses: "./.github/actions/boringcache"
       with:
-        cli-version: "${{ inputs.cli_version }}"
+        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip' || inputs.cli_version }}"
         mode: cargo
         trust-policy: publish
         working-directory: upstream
@@ -159,7 +169,7 @@ jobs:
       BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && github.ref_name
         == 'main' && inputs.runner_label || 'ubuntu-24.04' }}"
   reuse:
-    name: "${{ matrix.cache_layer }}: restore the combined cold seed"
+    name: "${{ inputs.compiler_cache || 'sccache' }} ${{ matrix.cache_layer == 'sccache-only' && 'compiler-only' || matrix.cache_layer }}: changed source"
     needs:
     - source
     - cold
@@ -179,6 +189,16 @@ jobs:
     - name: Prepare the adjacent source and release toolchain
       run: ./scripts/prepare-zed-lane.sh "${{ needs.source.outputs.head_sha }}" "${{
         needs.source.outputs.base_sha }}"
+      run: ./scripts/prepare-zed-lane.sh "${{ needs.source.outputs.head_sha }}" "${{ needs.source.outputs.base_sha }}"
+    - name: Install retained benchmark candidate
+      if: inputs.cli_version == 'vcli-canary-b26bccd2becb'
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: ruby scripts/benchmark-candidate.rb "${{ inputs.cli_version }}"
+    - name: Install selected compiler cache
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: ruby scripts/compiler-cache-setup.rb "$COMPILER_CACHE"
     - name: Install sccache
       uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba
       with:
@@ -195,7 +215,7 @@ jobs:
       id: primary
       uses: "./.github/actions/boringcache"
       with:
-        cli-version: "${{ inputs.cli_version }}"
+        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip' || inputs.cli_version }}"
         mode: cargo
         trust-policy: restore
         working-directory: upstream
@@ -208,7 +228,7 @@ jobs:
       id: remote
       uses: "./.github/actions/boringcache"
       with:
-        cli-version: "${{ inputs.cli_version }}"
+        cli-version: "${{ inputs.cli_version == 'vcli-canary-b26bccd2becb' && 'skip' || inputs.cli_version }}"
         mode: cargo
         trust-policy: restore
         working-directory: upstream
@@ -325,6 +345,11 @@ jobs:
         type: string
         required: false
         default: ''
+      compiler_cache:
+        description: Compiler cache engine for this qualification
+        type: choice
+        default: sccache
+        options: [sccache, kache, mbx]
       cli_version:
         description: Optional exact immutable BoringCache CLI release tag.
         required: false

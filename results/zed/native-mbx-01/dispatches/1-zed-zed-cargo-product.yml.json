@@ -1,0 +1,61 @@
+{
+  "case_id": "zed",
+  "repository": "boringcache/benchmarks",
+  "workflow": "zed-zed-cargo-product.yml",
+  "workspace": "boringcache/benchmarks",
+  "source": {
+    "repository": "zed-industries/zed",
+    "pins": [
+      {
+        "path": "upstream",
+        "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+        "kind": "gitlink"
+      },
+      {
+        "path": "payload/benchmark-source.env",
+        "revision": "35bba8eef7f68b8cc61a6e883e7e041cf24a96cd",
+        "kind": "env"
+      },
+      {
+        "path": "payload/benchmark-source.env",
+        "revision": "54edefa0832e4728bcf077e4a48b25912eea5433",
+        "kind": "env"
+      },
+      {
+        "path": "payload/cargo-layer-source.env",
+        "revision": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+        "kind": "env"
+      },
+      {
+        "path": "payload/cargo-layer-source.env",
+        "revision": "ee3b5558c581429633937e458fad8d109f29e9ee",
+        "kind": "env"
+      }
+    ]
+  },
+  "lane": "fresh",
+  "inputs": {
+    "base_sha": "5313741ffaa73955ccf5b7cb2c8e15e61d9f92d3",
+    "head_sha": "ee3b5558c581429633937e458fad8d109f29e9ee",
+    "cli_version": "vcli-canary-b26bccd2becb",
+    "compiler_cache": "mbx",
+    "cache_layer": "sccache-only",
+    "series_id": "native-mbx-01",
+    "sample": "1"
+  },
+  "phases": [
+    "cold",
+    "commit"
+  ],
+  "variants": [
+    "target-only",
+    "sccache-only",
+    "combined"
+  ],
+  "schema_version": 1,
+  "requested_at": "2026-10-05T21:34:50Z",
+  "ref": "native-adapter-qualification",
+  "state": "requested",
+  "run_id": 37376777074,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37376777074"
+}
