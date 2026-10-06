@@ -66,6 +66,11 @@ its warm jobs depend on its own seed. Rolling publication is ordered by cache
 identity, with `queue: max` and no cancellation of an existing observation.
 gRPC provider jobs have a 120-minute budget in both lanes.
 
+Retry a fresh project with **Re-run all jobs**, retaining the previous attempt.
+**Re-run failed jobs** can reuse a successful cold job from the previous attempt
+while the warm job selects the new attempt's fresh cache scope. That retry does
+not share the cold job's cache identity and cannot qualify reuse.
+
 The monitor checks the configured CLI selector, receipt freshness, executed
 harness identity, expected provider/phase slots and canonical record validation.
 GitHub success without required phase evidence fails monitoring. Native Nx warm
