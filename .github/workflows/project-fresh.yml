@@ -58,11 +58,16 @@ jobs:
     uses: "./.github/workflows/native-fresh-benchmark.yml"
     with:
       expected_identity: "${{ matrix.inputs.expected_identity || '' }}"
+      job_prefix: "${{ matrix.label }}"
       cli_version: "${{ inputs.cli_version }}"
       series_id: "${{ matrix.inputs.series_id || '' }}"
       sample: "${{ matrix.inputs.sample || '1' }}"
       case_id: "${{ matrix.inputs.case_id || '' }}"
       variant: "${{ matrix.inputs.variant || '' }}"
+      provider: "${{ matrix.inputs.provider || 'both' }}"
+      runner_label: "${{ matrix.inputs.runner_label || '' }}"
+      benchmark_id_suffix: "${{ matrix.inputs.benchmark_id_suffix || '' }}"
+      buildkit_image: "${{ matrix.inputs.buildkit_image || '' }}"
       cadence: "${{ inputs.cadence }}"
   obs_studio_obs_actions_cache:
     name: "${{ matrix.label }}"

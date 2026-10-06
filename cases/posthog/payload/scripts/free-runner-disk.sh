@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-required_gb="${BORINGCACHE_MIN_FREE_DISK_GB:-70}"
+required_gb="${BORINGCACHE_MIN_FREE_DISK_GB:-40}"
 required_kb=$((required_gb * 1024 * 1024))
 
 available_kb() {
