@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "sample_count": 1,
+  "cache_isolation": "unmeasured",
+  "selections": [
+    {
+      "case_id": "hugo-go",
+      "workflow": "native-rolling-benchmark.yml",
+      "inputs": {
+        "case_id": "hugo-go",
+        "cache_scope": "depot-screen-20261006",
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "observation": "seed",
+        "benchmark_id_suffix": "-depot-native-4c"
+      }
+    },
+    {
+      "case_id": "opentelemetry-java",
+      "workflow": "native-rolling-benchmark.yml",
+      "inputs": {
+        "case_id": "opentelemetry-java",
+        "cache_scope": "depot-screen-20261006",
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "observation": "seed",
+        "benchmark_id_suffix": "-depot-native-4c"
+      }
+    },
+    {
+      "case_id": "spring-ai",
+      "workflow": "native-rolling-benchmark.yml",
+      "inputs": {
+        "case_id": "spring-ai",
+        "cache_scope": "depot-screen-20261006",
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "observation": "seed",
+        "benchmark_id_suffix": "-depot-native-4c"
+      }
+    },
+    {
+      "case_id": "n8n",
+      "workflow": "native-rolling-benchmark.yml",
+      "inputs": {
+        "case_id": "n8n",
+        "cache_scope": "depot-screen-20261006",
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "observation": "seed",
+        "benchmark_id_suffix": "-depot-native-4c",
+        "variant": "turbo"
+      }
+    },
+    {
+      "case_id": "storybook",
+      "workflow": "native-rolling-benchmark.yml",
+      "inputs": {
+        "case_id": "storybook",
+        "cache_scope": "depot-screen-20261006",
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "observation": "seed",
+        "benchmark_id_suffix": "-depot-native-4c",
+        "variant": "nx"
+      }
+    },
+    {
+      "case_id": "posthog",
+      "workflow": "native-rolling-benchmark.yml",
+      "inputs": {
+        "case_id": "posthog",
+        "cache_scope": "depot-screen-20261006",
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "observation": "seed",
+        "benchmark_id_suffix": "-depot-native-4c",
+        "variant": "combined"
+      }
+    },
+    {
+      "case_id": "grpc",
+      "workflow": "grpc-grpc-bazel-benchmark.yml",
+      "inputs": {
+        "cache_scope": "depot-screen-20261006",
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "observation": "seed",
+        "benchmark_id_suffix": "-depot-native-4c"
+      }
+    },
+    {
+      "case_id": "gogs-moon",
+      "workflow": "reapi-rolling-benchmark.yml",
+      "inputs": {
+        "case_id": "gogs-moon",
+        "cache_scope": "depot-screen-20261006",
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "observation": "seed"
+      }
+    },
+    {
+      "case_id": "opencut-moon",
+      "workflow": "reapi-rolling-benchmark.yml",
+      "inputs": {
+        "case_id": "opencut-moon",
+        "cache_scope": "depot-screen-20261006",
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "observation": "seed"
+      }
+    },
+    {
+      "case_id": "stackstorm-pants",
+      "workflow": "reapi-rolling-benchmark.yml",
+      "inputs": {
+        "case_id": "stackstorm-pants",
+        "cache_scope": "depot-screen-20261006",
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "observation": "seed"
+      }
+    },
+    {
+      "case_id": "deno",
+      "workflow": "deno-deno-cargo-rolling-chain.yml",
+      "inputs": {
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "observation": "seed",
+        "cache_scope": "depot-screen-20261006",
+        "base_sha": "7a96f1b3620fd3b6b4cff44093ca1393f341fded",
+        "head_sha": "7a96f1b3620fd3b6b4cff44093ca1393f341fded",
+        "cache_profile": "compiler-only"
+      }
+    },
+    {
+      "case_id": "zed",
+      "workflow": "zed-zed-cargo-rolling-auto.yml",
+      "inputs": {
+        "provider": "depot-cache",
+        "runner_label": "depot-ubuntu-24.04-4",
+        "observation": "seed",
+        "base_sha": "54edefa0832e4728bcf077e4a48b25912eea5433",
+        "head_sha": "54edefa0832e4728bcf077e4a48b25912eea5433",
+        "source_distance": "0"
+      }
+    }
+  ]
+}

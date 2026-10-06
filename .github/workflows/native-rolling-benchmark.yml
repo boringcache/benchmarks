@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(inputs.provider == 'boringcache' && '[{"provider":"BoringCache","strategy":"boringcache"}]' || inputs.provider == 'actions-cache' && '[{"provider":"GitHub Actions","strategy":"actions-cache"}]' || '[{"provider":"GitHub Actions","strategy":"actions-cache"},{"provider":"BoringCache","strategy":"boringcache"}]') }}
+        include: ${{ fromJSON(inputs.provider == 'depot-cache' && '[{"provider":"Depot Cache","strategy":"depot-cache"}]' || inputs.provider == 'depot-actions-cache' && '[{"provider":"Depot Actions Cache","strategy":"depot-actions-cache"}]' || inputs.provider == 'boringcache' && '[{"provider":"BoringCache","strategy":"boringcache"}]' || inputs.provider == 'actions-cache' && '[{"provider":"GitHub Actions","strategy":"actions-cache"}]' || '[{"provider":"GitHub Actions","strategy":"actions-cache"},{"provider":"BoringCache","strategy":"boringcache"}]') }}
     steps:
     - name: Checkout benchmark definitions
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -34,6 +34,8 @@ jobs:
       uses: "./.harness/.github/actions/prepare-case"
       with:
         case-id: "${{ inputs.case_id }}"
+        provider: "${{ inputs.provider }}"
+        provider-runner: "${{ inputs.runner_label }}"
         native-lane: rolling
         suffix: "${{ inputs.benchmark_id_suffix }}"
         variant: "${{ inputs.variant }}"
@@ -60,6 +62,8 @@ jobs:
       id-token: write
       packages: read
     env:
+      DEPOT_TOKEN: ${{ matrix.strategy == 'depot-cache' && secrets.DEPOT_TOKEN || '' }}
+      DEPOT_ORGANIZATION_ID: ${{ vars.DEPOT_ORGANIZATION_ID }}
       BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || (startsWith(github.ref, 'refs/tags/benchmark-') && inputs.expected_identity != '' && fromJSON(inputs.expected_identity).harness_sha == github.sha)) && inputs.runner_label || 'ubuntu-latest' }}"
   report:
     name: "${{ inputs.case_id }} rolling report"
@@ -77,6 +81,8 @@ jobs:
       uses: "./.harness/.github/actions/prepare-case"
       with:
         case-id: "${{ inputs.case_id }}"
+        provider: "${{ inputs.provider }}"
+        provider-runner: "${{ inputs.runner_label }}"
         native-lane: rolling
         suffix: "${{ inputs.benchmark_id_suffix }}"
         variant: "${{ inputs.variant }}"
@@ -92,7 +98,7 @@ jobs:
           --input-dir phase-evidence \
           --output-dir benchmark-results
     - name: Retain the BoringCache rolling result
-      if: inputs.provider != 'actions-cache'
+      if: inputs.provider == 'both' || inputs.provider == 'boringcache'
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: benchmark-${{ env.BENCHMARK_ID }}-boringcache${{ env.BENCHMARK_VARIANT_SUFFIX
@@ -101,13 +107,20 @@ jobs:
           }}-rolling.json
         if-no-files-found: error
     - name: Retain the GitHub Actions rolling result
-      if: inputs.provider != 'boringcache'
+      if: inputs.provider == 'both' || inputs.provider == 'actions-cache'
       uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: benchmark-${{ env.BENCHMARK_ID }}-actions-cache${{ env.BENCHMARK_VARIANT_SUFFIX
           }}-rolling
         path: benchmark-results/${{ env.BENCHMARK_ID }}-actions-cache${{ env.BENCHMARK_VARIANT_SUFFIX
           }}-rolling.json
+        if-no-files-found: error
+    - name: Retain the selected Depot rolling result
+      if: startsWith(inputs.provider, 'depot-')
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+      with:
+        name: benchmark-${{ env.BENCHMARK_ID }}-${{ inputs.provider }}${{ env.BENCHMARK_VARIANT_SUFFIX }}-rolling
+        path: benchmark-results/
         if-no-files-found: error
     env:
       BENCHMARK_RUNNER_CLASS: ubuntu-latest
@@ -117,7 +130,7 @@ jobs:
       provider:
         description: Native cache provider; both retains the existing comparison.
         type: choice
-        options: [both, boringcache, actions-cache]
+        options: [both, boringcache, actions-cache, depot-cache, depot-actions-cache]
         default: both
       expected_identity:
         type: string
@@ -175,6 +188,9 @@ jobs:
         type: string
         default: ''
   workflow_call:
+    secrets:
+      DEPOT_TOKEN:
+        required: false
     inputs:
       provider:
         description: Native cache provider; both retains the existing comparison.

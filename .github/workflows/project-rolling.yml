@@ -53,6 +53,7 @@ jobs:
       fail-fast: false
       matrix: "${{ fromJSON(needs.select.outputs.native_rolling_benchmark) }}"
     uses: "./.github/workflows/native-rolling-benchmark.yml"
+    secrets: inherit
     with:
       observation: "${{ matrix.inputs.observation || inputs.observation }}"
       cli_version: "${{ inputs.cli_version }}"
@@ -92,7 +93,10 @@ jobs:
       fail-fast: false
       matrix: "${{ fromJSON(needs.select.outputs.zed_zed_cargo_rolling_auto) }}"
     uses: "./.github/workflows/zed-zed-cargo-rolling-auto.yml"
+    secrets: inherit
     with:
+      provider: "${{ matrix.inputs.provider || 'boringcache' }}"
+      runner_label: "${{ matrix.inputs.runner_label || '' }}"
       observation: "${{ matrix.inputs.observation || inputs.observation }}"
       cli_version: "${{ inputs.cli_version }}"
       base_sha: "${{ matrix.inputs.base_sha }}"

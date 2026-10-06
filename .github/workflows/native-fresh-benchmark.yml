@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(inputs.provider == 'boringcache' && '[{"provider":"BoringCache","strategy":"boringcache"}]' || inputs.provider == 'actions-cache' && '[{"provider":"GitHub Actions","strategy":"actions-cache"}]' || '[{"provider":"GitHub Actions","strategy":"actions-cache"},{"provider":"BoringCache","strategy":"boringcache"}]') }}
+        include: ${{ fromJSON(inputs.provider == 'depot-cache' && '[{"provider":"Depot Cache","strategy":"depot-cache"}]' || inputs.provider == 'depot-actions-cache' && '[{"provider":"Depot Actions Cache","strategy":"depot-actions-cache"}]' || inputs.provider == 'boringcache' && '[{"provider":"BoringCache","strategy":"boringcache"}]' || inputs.provider == 'actions-cache' && '[{"provider":"GitHub Actions","strategy":"actions-cache"}]' || '[{"provider":"GitHub Actions","strategy":"actions-cache"},{"provider":"BoringCache","strategy":"boringcache"}]') }}
     steps:
     - name: Checkout benchmark definitions
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -34,6 +34,8 @@ jobs:
       uses: "./.harness/.github/actions/prepare-case"
       with:
         case-id: "${{ inputs.case_id }}"
+        provider: "${{ inputs.provider }}"
+        provider-runner: "${{ inputs.runner_label }}"
         native-lane: fresh
         suffix: "${{ inputs.benchmark_id_suffix }}"
         variant: "${{ inputs.variant }}"
@@ -61,6 +63,8 @@ jobs:
       id-token: write
       packages: read
     env:
+      DEPOT_TOKEN: ${{ matrix.strategy == 'depot-cache' && secrets.DEPOT_TOKEN || '' }}
+      DEPOT_ORGANIZATION_ID: ${{ vars.DEPOT_ORGANIZATION_ID }}
       BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || (startsWith(github.ref, 'refs/tags/benchmark-') && inputs.expected_identity != '' && fromJSON(inputs.expected_identity).harness_sha == github.sha)) && inputs.runner_label || 'ubuntu-latest' }}"
   warm:
     name: "${{ matrix.provider }} ${{ inputs.case_id }} warm"
@@ -71,7 +75,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(inputs.provider == 'boringcache' && '[{"provider":"BoringCache","strategy":"boringcache"}]' || inputs.provider == 'actions-cache' && '[{"provider":"GitHub Actions","strategy":"actions-cache"}]' || '[{"provider":"GitHub Actions","strategy":"actions-cache"},{"provider":"BoringCache","strategy":"boringcache"}]') }}
+        include: ${{ fromJSON(inputs.provider == 'depot-cache' && '[{"provider":"Depot Cache","strategy":"depot-cache"}]' || inputs.provider == 'depot-actions-cache' && '[{"provider":"Depot Actions Cache","strategy":"depot-actions-cache"}]' || inputs.provider == 'boringcache' && '[{"provider":"BoringCache","strategy":"boringcache"}]' || inputs.provider == 'actions-cache' && '[{"provider":"GitHub Actions","strategy":"actions-cache"}]' || '[{"provider":"GitHub Actions","strategy":"actions-cache"},{"provider":"BoringCache","strategy":"boringcache"}]') }}
     steps:
     - name: Checkout benchmark definitions
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -82,6 +86,8 @@ jobs:
       uses: "./.harness/.github/actions/prepare-case"
       with:
         case-id: "${{ inputs.case_id }}"
+        provider: "${{ inputs.provider }}"
+        provider-runner: "${{ inputs.runner_label }}"
         native-lane: fresh
         suffix: "${{ inputs.benchmark_id_suffix }}"
         variant: "${{ inputs.variant }}"
@@ -109,6 +115,8 @@ jobs:
       id-token: write
       packages: read
     env:
+      DEPOT_TOKEN: ${{ matrix.strategy == 'depot-cache' && secrets.DEPOT_TOKEN || '' }}
+      DEPOT_ORGANIZATION_ID: ${{ vars.DEPOT_ORGANIZATION_ID }}
       BENCHMARK_RUNNER_CLASS: "${{ github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || (startsWith(github.ref, 'refs/tags/benchmark-') && inputs.expected_identity != '' && fromJSON(inputs.expected_identity).harness_sha == github.sha)) && inputs.runner_label || 'ubuntu-latest' }}"
   report:
     name: "${{ inputs.case_id }} fresh report"
@@ -193,7 +201,7 @@ jobs:
       provider:
         description: Run both providers or one diagnostic arm.
         type: choice
-        options: [both, boringcache, actions-cache]
+        options: [both, boringcache, actions-cache, depot-cache, depot-actions-cache]
         default: both
       expected_identity:
         description: Frozen scheduled harness and case identity; checked before preparation.
@@ -251,6 +259,9 @@ jobs:
         description: Fresh or nightly scheduling; measured phases retain the fresh
           lane.
   workflow_call:
+    secrets:
+      DEPOT_TOKEN:
+        required: false
     inputs:
       job_prefix:
         description: Parent project job label used to reconcile only this selection.

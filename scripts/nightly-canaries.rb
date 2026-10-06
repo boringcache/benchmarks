@@ -162,9 +162,12 @@ module NightlyCanaries
             require_relative "fresh-report"
             observed_jobs = jobs(run.fetch("repository"), run.fetch("id"), current.fetch("run_attempt"))
             if run["project_grouped"] && (variant = run.dig("inputs", "variant"))
-              observed_jobs.select! { |job| job.fetch("name").start_with?("#{variant} /") || job.fetch("name").include?(" / #{variant} /") }
+              label = variant
+              runner = run.dig("inputs", "runner_label")
+              label = "#{label} #{runner}" unless runner.to_s.empty?
+              observed_jobs.select! { |job| job.fetch("name").start_with?("#{label} /") || job.fetch("name").include?(" / #{label} /") }
             end
-            run["observations"] = FreshReport.reconcile(FreshReport.expected(run.dig("series", "case_id")),
+            run["observations"] = FreshReport.reconcile(FreshReport.expected(run.dig("series", "case_id"), provider: run.fetch("inputs", {}).fetch("provider", "both")),
               jobs: observed_jobs, records: records, outcomes: evidence.select { |value| value["step_outcome"] && value["variant"].to_s == run.dig("series", "variant").to_s }, run_url: run.fetch("url"))
             next
           end
