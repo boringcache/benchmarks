@@ -1,8 +1,8 @@
 # Latest Benchmark Report
 
-Generated: 2026-10-06 06:27 UTC
+Generated: 2026-10-06 08:41 UTC
 
-Coverage: 20 benchmarks; fresh 20/20, rolling 6/20.
+Coverage: 20 benchmarks; fresh 20/20, rolling 7/20.
 
 Rows are latest complete same-commit pairs.
 
@@ -38,6 +38,7 @@ Rows are latest complete same-commit pairs.
 | Hugo | Changed-source build | 180.0s | 167.0s | -13.0s | -831244853 bytes | recorded |
 | Hugo Go | Changed-source build | 23.0s | 30.0s | +7.0s | -494173650 bytes | recorded |
 | OpenTelemetry Java | Changed-source build | 60.0s | 71.0s | +11.0s | -1003826009 bytes | recorded |
-| Spring AI | Changed-source build | 258.0s | 259.0s | +1.0s | +215033832 bytes | recorded |
+| Spring AI | Changed-source build | 49.0s | 46.0s | -3.0s | -1324873908 bytes | recorded |
 | Chroma | Changed-source build | 1221.0s | 654.0s | -567.0s | unmeasured | recorded |
 | Linkerd2 Web | Changed-source build | 16.0s | 9.0s | -7.0s | unmeasured | recorded |
+| n8n | Changed-source build | 251.0s | 211.0s | -40.0s | -2108038865 bytes | recorded |
