@@ -120,8 +120,8 @@ runs:
         build_seconds="$(ruby -rjson -e 'puts JSON.parse(File.read("nix-evidence/timing.json")).fetch("build_seconds")')"
         args=()
         [[ "$PROVIDER" != cachix ]] || args+=(--storage-evidence nix-evidence/storage.json)
-        [[ "$PHASE" != warm ]] || args+=(--cache-hit true)
-        [[ "$PHASE" != cold ]] || args+=(--cache-hit false)
+        cache_hit="$(ruby -rjson -e 'puts JSON.parse(File.read("nix-evidence/cache-state.json"))["hit"]' )"
+        [[ -z "$cache_hit" ]] || args+=(--cache-hit "$cache_hit")
         ruby scripts/benchmark-report.rb phase --verified-output \
           --benchmark "$BENCHMARK_ID" --strategy "$PROVIDER" --lane "$CACHE_LANE" --phase "$PHASE" --mode nix \
           --restore-or-setup-seconds "$SETUP_SECONDS" --build-seconds "$build_seconds" \

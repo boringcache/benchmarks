@@ -41,6 +41,7 @@ runs:
     env:
       STORYBOOK_WORKLOAD: ${{ inputs.workload }}
     run: |
+      ruby scripts/configure-nx-cache.rb
       if [[ "$STORYBOOK_WORKLOAD" == nx ]]; then
         cp plans/nx.toml .boringcache.toml
       elif [[ "$STORYBOOK_WORKLOAD" != sandbox ]]; then
@@ -67,6 +68,11 @@ runs:
       cache_profiles: ${{ inputs.workload == 'sandbox' && 'storybook-nx' || '' }}
     env:
       STORYBOOK_WORKLOAD: ${{ inputs.workload }}
+      NX_NO_CLOUD: 'true'
+      NX_CACHE_DIRECTORY: .nx/cache
+      BENCHMARK_NX_PHASE: ${{ inputs.phase }}
+      BENCHMARK_NX_PROVIDER: ${{ inputs.strategy }}
+      BENCHMARK_NX_LANE: ${{ inputs.cache_lane }}
 outputs:
   cache_scope:
     description: Published cache cohort

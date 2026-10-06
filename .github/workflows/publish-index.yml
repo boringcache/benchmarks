@@ -13,6 +13,7 @@ jobs:
       uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
       with:
         ref: main
+        persist-credentials: false
     - name: Set up Ruby
       uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
       with:
@@ -32,21 +33,10 @@ jobs:
         fi
         ruby scripts/publish-current.rb --input "$RUNNER_TEMP/outcomes" --output data/latest/current.json --history data/observations
         cp "$RUNNER_TEMP/outcomes/"*.json data/latest/
-    - name: Commit and push index
-      run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add data/latest
-        if [[ -d data/observations ]]; then
-          git add data/observations
-        fi
-        if git diff --cached --quiet; then
-          echo "No index changes detected"
-          exit 0
-        fi
-
-        git commit -m "data: refresh benchmark index"
-        git push origin main
+    - name: Commit current benchmark observations
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: ruby scripts/publish-current.rb --commit
 'on':
   workflow_dispatch:
   schedule:

@@ -138,14 +138,23 @@ module NixBenchmark
     raise Error, "Unexpected package output" unless baseline.fetch("outputs").include?(output)
     version = capture(File.join(output, "bin", executable), "--version")
     raise Error, "Empty package version" if version.empty?
-    if phase == "warm"
-      log = File.read("nix-evidence/build.log")
-      config = JSON.parse(capture("nix", "config", "show", "--json"))
-      url = provider_substituter(config, provider, cache_name)
-      expected = "copying path '#{output}' from '#{url.split('?').first}"
-      raise Error, "No selected-provider substitution for the package output" unless log.include?(expected)
-    end
+    config = JSON.parse(capture("nix", "config", "show", "--json"))
+    url = provider_substituter(config, provider, cache_name)
+    state = cache_state(baseline, log: File.read("nix-evidence/build.log"), substituter: url)
+    raise Error, "No selected-provider substitution for the package output" if phase == "warm" && state.fetch("hit") != true
+    write("nix-evidence/cache-state.json", state)
     write("nix-evidence/output.json", {"output" => output, "closure" => closure([output]), "version" => version})
+  end
+
+  def self.cache_state(baseline, log:, substituter:)
+    outputs = baseline.fetch("outputs")
+    restored = !outputs.empty? && outputs.all? do |output|
+      log.include?("copying path '#{output}' from '#{substituter.split('?').first}")
+    end
+    built = log.include?("building '#{baseline.fetch('derivation')}'")
+    {"hit" => restored ? true : (built ? false : nil),
+      "operation" => restored ? "substituted" : (built ? "built" : "unobserved"),
+      "outputs" => outputs, "substituter" => substituter}
   end
 
   def self.cachix_storage(cache_name, paths:, fetch: method(:narinfo))
