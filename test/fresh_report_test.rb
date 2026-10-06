@@ -26,6 +26,20 @@ class FreshReportTest < Minitest::Test
     end
   end
 
+  def test_grouped_report_reconciles_only_the_selected_runner_jobs
+    Dir.mktmpdir do |directory|
+      observed = %w[other selected].flat_map do |prefix|
+        FreshReport.expected("posthog", provider: "boringcache").map do |slot|
+          {"name" => "#{prefix} / #{slot.fetch('job_name')}", "status" => "completed",
+            "conclusion" => prefix == "other" ? "cancelled" : "failure"}
+        end
+      end
+      manifest = FreshReport.report(BenchmarkCases.load_case("posthog"), input_dir: File.join(directory, "missing"),
+        output_dir: directory, jobs: observed, run_url: "https://example.com/run", variant: "layers", provider: "boringcache", job_prefix: "selected")
+      assert_equal %w[failed failed], manifest.fetch("observations").map { |value| value.fetch("state") }
+    end
+  end
+
   def test_failed_cold_provider_keeps_completed_observation_and_skipped_warm_phases
     record = {"strategy" => "actions-cache", "phase" => "cold", "verification" => {"passed" => true}, "timing" => {"build_seconds" => 12}}
     outcome = {"strategy" => "boringcache", "phase" => "cold", "verification" => false, "timing" => {"build_seconds" => 5}}

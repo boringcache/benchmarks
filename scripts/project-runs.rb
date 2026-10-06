@@ -54,9 +54,16 @@ module ProjectRuns
       raise "Invalid case ID" unless id.match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/)
       raise "Selection belongs to another project" unless project(id) == case_id
       label = workflow == "zed-zed-cargo-rolling-auto.yml" ? "cargo" : inputs["variant"] || inputs["cache_tool"] || inputs["cache_layer"] || id
+      label = "#{label} #{inputs.fetch('runner_label')}" unless inputs.fetch("runner_label", "").empty?
       {"workflow" => workflow, "label" => label, "inputs" => inputs}
     end
     raise "Duplicate project selection" unless values.uniq.length == values.length
+    native = values.select { |value| value.fetch("workflow") == "native-#{lane}-benchmark.yml" }
+    identities = native.map do |value|
+      inputs = value.fetch("inputs")
+      %w[case_id variant benchmark_id_suffix].map { |name| inputs.fetch(name, "") }
+    end
+    raise "Project selections must use distinct benchmark suffixes for the same case and variant" unless identities.uniq.length == identities.length
     values.group_by { |value| value.fetch("workflow") }.transform_values { |rows| {"include" => rows} }
   end
 end

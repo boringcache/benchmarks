@@ -58,7 +58,7 @@ module FreshReport
     BenchmarkCases.write_json("benchmark-outcome/outcome.json", value)
   end
 
-  def self.report(item, input_dir:, output_dir:, jobs:, run_url:, variant: nil, suffix: "", provider: "both")
+  def self.report(item, input_dir:, output_dir:, jobs:, run_url:, variant: nil, suffix: "", provider: "both", job_prefix: "")
     recipe = NativeCase.resolve(item.dig("execution", "native"), variant)
     benchmark = recipe.fetch("benchmark_id") + suffix
     if ENV["GITHUB_ENV"]
@@ -84,6 +84,7 @@ module FreshReport
       outcomes.select! { |value| value["run_id"].to_s == ENV["GITHUB_RUN_ID"] && value["run_attempt"].to_s == ENV.fetch("GITHUB_RUN_ATTEMPT") }
     end
     records = records.map { |record| BenchmarkStorage.apply(record, payloads.select { |value| value.is_a?(Hash) && value["kind"] == "post-publication-storage" }) }
+    jobs = jobs.select { |job| job.fetch("name").start_with?("#{job_prefix} /") } unless job_prefix.empty?
     observations = reconcile(expected(item.fetch("id"), provider: provider), jobs: jobs, records: records, outcomes: outcomes, run_url: run_url)
     manifest = {"schema_version" => 1, "case_id" => item.fetch("id"), "variant" => variant,
       "run_url" => run_url, "observations" => observations}
@@ -121,6 +122,6 @@ if $PROGRAM_NAME == __FILE__
     FreshReport.report(BenchmarkCases.load_case(ENV.fetch("CASE_ID")), input_dir: "phase-evidence", output_dir: "benchmark-results",
       jobs: jobs, run_url: "https://github.com/#{repository}/actions/runs/#{run_id}",
       variant: ENV.fetch("VARIANT", "").then { |value| value.empty? ? nil : value }, suffix: ENV.fetch("BENCHMARK_SUFFIX", ""),
-      provider: ENV.fetch("PROVIDER", "both"))
+      provider: ENV.fetch("PROVIDER", "both"), job_prefix: ENV.fetch("JOB_PREFIX", ""))
   end
 end
