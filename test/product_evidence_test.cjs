@@ -104,3 +104,59 @@ test('post-publication storage is uploaded separately after original evidence', 
     fs.rmSync(directory, { recursive: true });
   }
 });
+
+for (const brokerConfigured of [true, false]) {
+  test(`storage is measured ${brokerConfigured ? 'with the existing broker' : 'with a new OIDC session'}`, () => {
+    const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'storage-broker-test-'));
+    try {
+      const calls = path.join(directory, 'calls.jsonl');
+      const broker = path.join(directory, 'broker.json');
+      fs.writeFileSync(broker, '{}');
+      const cli = path.join(directory, 'boringcache');
+      fs.writeFileSync(cli, `#!/usr/bin/env node
+const fs = require('node:fs');
+const { spawnSync } = require('node:child_process');
+const args = process.argv.slice(2);
+fs.appendFileSync(process.env.PROBE_CALLS, JSON.stringify(args) + '\\n');
+if (args[0] === 'ci') {
+  if (process.env.BORINGCACHE_CI_BROKER_FILE) {
+    console.error("A CI workload broker is already configured; nested 'ci run' is not supported");
+    process.exit(1);
+  }
+  const command = args.slice(args.indexOf('--') + 1);
+  const child = spawnSync(command[0], command.slice(1), {
+    env: { ...process.env, BORINGCACHE_CI_BROKER_FILE: process.env.PROBE_BROKER }, stdio: 'inherit'
+  });
+  process.exit(child.status ?? 1);
+}
+if (args[0] !== 'check' || !process.env.BORINGCACHE_CI_BROKER_FILE) process.exit(1);
+console.log(JSON.stringify({ results: [
+  { requested_tag: 'compiler', status: 'hit', cache_type: 'direct_kv', kv_total_size: 123 },
+  { requested_tag: 'target', status: 'hit', cache_type: 'cache_entry', compressed_size: 456 }
+] }));
+`, { mode: 0o700 });
+      const source = path.join(directory, 'evidence.json');
+      fs.writeFileSync(source, JSON.stringify({ phases: { restore: {
+        workspace: 'boringcache/benchmarks', resolved_tags: ['compiler', 'target']
+      } } }));
+      const action = path.resolve(__dirname, '../.github/actions/retain-product-evidence/index.cjs');
+      const script = `const fs = require('node:fs');
+        const { measureStorage } = require(${JSON.stringify(action)});
+        measureStorage(JSON.parse(fs.readFileSync(process.argv[1])), process.argv[1], process.argv[2]);`;
+      const result = spawnSync(process.execPath, ['-e', script, source, directory], {
+        encoding: 'utf8', env: { ...process.env, PATH: `${directory}${path.delimiter}${process.env.PATH}`,
+          BORINGCACHE_CI_BROKER_FILE: brokerConfigured ? broker : '', PROBE_BROKER: broker, PROBE_CALLS: calls }
+      });
+      assert.equal(result.status, 0, result.stderr);
+      const commands = fs.readFileSync(calls, 'utf8').trim().split('\n').map(JSON.parse);
+      assert.deepEqual(commands.map(args => args[0]), brokerConfigured ? ['check'] : ['ci', 'check']);
+      assert.deepEqual(commands.at(-1), ['check', 'boringcache/benchmarks', 'compiler,target', '--no-git', '--no-platform', '--json']);
+      const storage = JSON.parse(fs.readFileSync(path.join(directory, 'storage.json')));
+      assert.equal(storage.state, 'measured');
+      assert.equal(storage.measurement.bytes, 579);
+      assert.deepEqual(storage.identity.tags, ['compiler', 'target']);
+    } finally {
+      fs.rmSync(directory, { recursive: true });
+    }
+  });
+}
