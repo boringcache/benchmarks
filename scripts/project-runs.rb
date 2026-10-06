@@ -48,7 +48,8 @@ module ProjectRuns
       id = selection_case(selection)
       raise "Invalid case ID" unless id.match?(/\A[a-z0-9]+(?:-[a-z0-9]+)*\z/)
       raise "Selection belongs to another project" unless project(id) == case_id
-      {"workflow" => workflow, "label" => inputs["variant"] || inputs["cache_tool"] || id, "inputs" => inputs}
+      label = workflow == "zed-zed-cargo-rolling-auto.yml" ? "cargo" : inputs["variant"] || inputs["cache_tool"] || inputs["cache_layer"] || id
+      {"workflow" => workflow, "label" => label, "inputs" => inputs}
     end
     raise "Duplicate project selection" unless values.uniq.length == values.length
     values.group_by { |value| value.fetch("workflow") }.transform_values { |rows| {"include" => rows} }
