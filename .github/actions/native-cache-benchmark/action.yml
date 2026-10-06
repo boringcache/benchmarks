@@ -63,7 +63,7 @@ runs:
     run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
   - name: Restore the GitHub Actions cache
     if: inputs.strategy == 'actions-cache' && inputs.phase == 'publish'
-    uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25
+    uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25
     with:
       path: "${{ inputs.cache_path }}"
       key: "${{ steps.scope.outputs.cache_key }}"
@@ -190,6 +190,12 @@ runs:
         && 'warm' || 'cold' }}
       path: benchmark-results/
       if-no-files-found: error
+  - name: Publish the GitHub Actions cache after measurement
+    if: inputs.strategy == 'actions-cache' && inputs.phase == 'publish' && steps.actions_cache_0.outputs.cache-hit != 'true'
+    uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25
+    with:
+      path: "${{ inputs.cache_path }}"
+      key: "${{ steps.scope.outputs.cache_key }}"
   - name: Retain available timing and verification state
     if: always()
     shell: bash
