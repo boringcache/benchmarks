@@ -1,0 +1,646 @@
+{
+  "schema_version": 1,
+  "cadence": "weekly",
+  "collected_at": "2026-10-06T11:25:11Z",
+  "run": {
+    "repository": "boringcache/benchmarks",
+    "workflow": "project-fresh.yml",
+    "inputs": {
+      "case_id": "mastodon",
+      "cadence": "fresh",
+      "selections": "[{\"workflow\":\"native-fresh-benchmark.yml\",\"inputs\":{\"case_id\":\"mastodon\",\"variant\":\"server\",\"cadence\":\"fresh\",\"series_id\":\"cadence-37455664953-4\",\"sample\":\"1\",\"expected_identity\":\"{\\\"harness_sha\\\":\\\"b378dfe72d9af36c731c25fedffc36776c34ae6c\\\",\\\"case_id\\\":\\\"mastodon\\\",\\\"definition_sha256\\\":\\\"2973ad45e8cfc445a621a01f3fff56e224ec0e4407a48043db570dc4faa1c0af\\\"}\"}},{\"workflow\":\"native-fresh-benchmark.yml\",\"inputs\":{\"case_id\":\"mastodon\",\"variant\":\"server-ccache\",\"cadence\":\"fresh\",\"series_id\":\"cadence-37455664953-5\",\"sample\":\"1\",\"expected_identity\":\"{\\\"harness_sha\\\":\\\"b378dfe72d9af36c731c25fedffc36776c34ae6c\\\",\\\"case_id\\\":\\\"mastodon\\\",\\\"definition_sha256\\\":\\\"2973ad45e8cfc445a621a01f3fff56e224ec0e4407a48043db570dc4faa1c0af\\\"}\"}},{\"workflow\":\"native-fresh-benchmark.yml\",\"inputs\":{\"case_id\":\"mastodon\",\"variant\":\"streaming\",\"cadence\":\"fresh\",\"series_id\":\"cadence-37455664953-6\",\"sample\":\"1\",\"expected_identity\":\"{\\\"harness_sha\\\":\\\"b378dfe72d9af36c731c25fedffc36776c34ae6c\\\",\\\"case_id\\\":\\\"mastodon\\\",\\\"definition_sha256\\\":\\\"2973ad45e8cfc445a621a01f3fff56e224ec0e4407a48043db570dc4faa1c0af\\\"}\"}}]"
+    },
+    "state": "in_progress",
+    "selections": [
+      {
+        "repository": "boringcache/benchmarks",
+        "workflow": "native-fresh-benchmark.yml",
+        "inputs": {
+          "case_id": "mastodon",
+          "variant": "server",
+          "cadence": "fresh",
+          "series_id": "cadence-37455664953-4",
+          "sample": "1",
+          "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"mastodon\",\"definition_sha256\":\"2973ad45e8cfc445a621a01f3fff56e224ec0e4407a48043db570dc4faa1c0af\"}"
+        },
+        "state": "in_progress",
+        "series": {
+          "schema_version": 1,
+          "case_id": "mastodon",
+          "series_id": "cadence-37455664953-4",
+          "created_at": "2026-10-06T11:21:03Z",
+          "lane": "fresh",
+          "phases": [
+            "cold",
+            "warm"
+          ],
+          "sample_count": 1,
+          "definition_sha256": "2973ad45e8cfc445a621a01f3fff56e224ec0e4407a48043db570dc4faa1c0af",
+          "variant": "server",
+          "workflow_inputs": {
+            "case_id": "mastodon",
+            "variant": "server",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "cadence": "fresh"
+          },
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "source": {
+            "repository": "mastodon/mastodon",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "verification": [
+            "Pinned upstream recipe and build success",
+            "The freshly loaded output image exists in the local Docker image store"
+          ],
+          "plan_sha256": "323577bae8003cb5c659f48da8dbb06b90b61521f187b08baee91e7db809803f"
+        },
+        "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "id": 37455864089,
+        "url": "https://github.com/boringcache/benchmarks/actions/runs/37455864089",
+        "project_grouped": true,
+        "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "observations": [
+          {
+            "case_id": "mastodon",
+            "strategy": "actions-cache",
+            "phase": "cold",
+            "job_name": "GitHub Actions mastodon cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243254333",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+            ]
+          },
+          {
+            "case_id": "mastodon",
+            "strategy": "actions-cache",
+            "phase": "warm",
+            "job_name": "GitHub Actions mastodon warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+            ]
+          },
+          {
+            "case_id": "mastodon",
+            "strategy": "boringcache",
+            "phase": "cold",
+            "job_name": "BoringCache mastodon cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243254315",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+            ]
+          },
+          {
+            "case_id": "mastodon",
+            "strategy": "boringcache",
+            "phase": "warm",
+            "job_name": "BoringCache mastodon warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+            ]
+          }
+        ]
+      },
+      {
+        "repository": "boringcache/benchmarks",
+        "workflow": "native-fresh-benchmark.yml",
+        "inputs": {
+          "case_id": "mastodon",
+          "variant": "server-ccache",
+          "cadence": "fresh",
+          "series_id": "cadence-37455664953-5",
+          "sample": "1",
+          "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"mastodon\",\"definition_sha256\":\"2973ad45e8cfc445a621a01f3fff56e224ec0e4407a48043db570dc4faa1c0af\"}"
+        },
+        "state": "in_progress",
+        "series": {
+          "schema_version": 1,
+          "case_id": "mastodon",
+          "series_id": "cadence-37455664953-5",
+          "created_at": "2026-10-06T11:21:03Z",
+          "lane": "fresh",
+          "phases": [
+            "cold",
+            "warm"
+          ],
+          "sample_count": 1,
+          "definition_sha256": "2973ad45e8cfc445a621a01f3fff56e224ec0e4407a48043db570dc4faa1c0af",
+          "variant": "server-ccache",
+          "workflow_inputs": {
+            "case_id": "mastodon",
+            "variant": "server-ccache",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "cadence": "fresh"
+          },
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "source": {
+            "repository": "mastodon/mastodon",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "verification": [
+            "Pinned upstream recipe and build success",
+            "The freshly loaded output image exists in the local Docker image store"
+          ],
+          "plan_sha256": "4aa274edc8996675082d824b027eec42a2e2fdc757c97f77f8edffbe6d468239"
+        },
+        "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "id": 37455864089,
+        "url": "https://github.com/boringcache/benchmarks/actions/runs/37455864089",
+        "project_grouped": true,
+        "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "observations": [
+          {
+            "case_id": "mastodon",
+            "strategy": "actions-cache",
+            "phase": "cold",
+            "job_name": "GitHub Actions mastodon cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243254466",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+            ]
+          },
+          {
+            "case_id": "mastodon",
+            "strategy": "actions-cache",
+            "phase": "warm",
+            "job_name": "GitHub Actions mastodon warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+            ]
+          },
+          {
+            "case_id": "mastodon",
+            "strategy": "boringcache",
+            "phase": "cold",
+            "job_name": "BoringCache mastodon cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243254440",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+            ]
+          },
+          {
+            "case_id": "mastodon",
+            "strategy": "boringcache",
+            "phase": "warm",
+            "job_name": "BoringCache mastodon warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+            ]
+          }
+        ]
+      },
+      {
+        "repository": "boringcache/benchmarks",
+        "workflow": "native-fresh-benchmark.yml",
+        "inputs": {
+          "case_id": "mastodon",
+          "variant": "streaming",
+          "cadence": "fresh",
+          "series_id": "cadence-37455664953-6",
+          "sample": "1",
+          "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"mastodon\",\"definition_sha256\":\"2973ad45e8cfc445a621a01f3fff56e224ec0e4407a48043db570dc4faa1c0af\"}"
+        },
+        "state": "in_progress",
+        "series": {
+          "schema_version": 1,
+          "case_id": "mastodon",
+          "series_id": "cadence-37455664953-6",
+          "created_at": "2026-10-06T11:21:03Z",
+          "lane": "fresh",
+          "phases": [
+            "cold",
+            "warm"
+          ],
+          "sample_count": 1,
+          "definition_sha256": "2973ad45e8cfc445a621a01f3fff56e224ec0e4407a48043db570dc4faa1c0af",
+          "variant": "streaming",
+          "workflow_inputs": {
+            "case_id": "mastodon",
+            "variant": "streaming",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "cadence": "fresh"
+          },
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "source": {
+            "repository": "mastodon/mastodon",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "4995c7ccbe03ce84795fff3b9bdc899f675ab08c",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "verification": [
+            "Pinned upstream recipe and build success",
+            "The freshly loaded output image exists in the local Docker image store"
+          ],
+          "plan_sha256": "95d888bbbcf74445c895fed8c67ab4c4cdca5b7631c9643d4459ba0775809bc8"
+        },
+        "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "id": 37455864089,
+        "url": "https://github.com/boringcache/benchmarks/actions/runs/37455864089",
+        "project_grouped": true,
+        "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "observations": [
+          {
+            "case_id": "mastodon",
+            "strategy": "actions-cache",
+            "phase": "cold",
+            "job_name": "GitHub Actions mastodon cold",
+            "state": "missing",
+            "job_conclusion": "success",
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243254507",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+            ]
+          },
+          {
+            "case_id": "mastodon",
+            "strategy": "actions-cache",
+            "phase": "warm",
+            "job_name": "GitHub Actions mastodon warm",
+            "state": "missing",
+            "job_conclusion": "success",
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243650669",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+            ]
+          },
+          {
+            "case_id": "mastodon",
+            "strategy": "boringcache",
+            "phase": "cold",
+            "job_name": "BoringCache mastodon cold",
+            "state": "missing",
+            "job_conclusion": "success",
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243254472",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+            ]
+          },
+          {
+            "case_id": "mastodon",
+            "strategy": "boringcache",
+            "phase": "warm",
+            "job_name": "BoringCache mastodon warm",
+            "state": "missing",
+            "job_conclusion": "success",
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243650656",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+            ]
+          }
+        ]
+      }
+    ],
+    "id": 37455864089,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37455864089",
+    "observations": [
+      {
+        "case_id": "mastodon",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions mastodon cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243254333",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+        ]
+      },
+      {
+        "case_id": "mastodon",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions mastodon warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+        ]
+      },
+      {
+        "case_id": "mastodon",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache mastodon cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243254315",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+        ]
+      },
+      {
+        "case_id": "mastodon",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache mastodon warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+        ]
+      },
+      {
+        "case_id": "mastodon",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions mastodon cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243254466",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+        ]
+      },
+      {
+        "case_id": "mastodon",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions mastodon warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+        ]
+      },
+      {
+        "case_id": "mastodon",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache mastodon cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243254440",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+        ]
+      },
+      {
+        "case_id": "mastodon",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache mastodon warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+        ]
+      },
+      {
+        "case_id": "mastodon",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions mastodon cold",
+        "state": "missing",
+        "job_conclusion": "success",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243254507",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+        ]
+      },
+      {
+        "case_id": "mastodon",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions mastodon warm",
+        "state": "missing",
+        "job_conclusion": "success",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243650669",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+        ]
+      },
+      {
+        "case_id": "mastodon",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache mastodon cold",
+        "state": "missing",
+        "job_conclusion": "success",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243254472",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+        ]
+      },
+      {
+        "case_id": "mastodon",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache mastodon warm",
+        "state": "missing",
+        "job_conclusion": "success",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089/job/112243650656",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455864089"
+        ]
+      }
+    ]
+  }
+}

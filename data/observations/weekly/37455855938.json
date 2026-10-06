@@ -1,0 +1,435 @@
+{
+  "schema_version": 1,
+  "cadence": "weekly",
+  "collected_at": "2026-10-06T11:25:11Z",
+  "run": {
+    "repository": "boringcache/benchmarks",
+    "workflow": "project-fresh.yml",
+    "inputs": {
+      "case_id": "posthog",
+      "cadence": "fresh",
+      "selections": "[{\"workflow\":\"native-fresh-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"variant\":\"layers\",\"cadence\":\"fresh\",\"series_id\":\"cadence-37455664953-7\",\"sample\":\"1\",\"expected_identity\":\"{\\\"harness_sha\\\":\\\"b378dfe72d9af36c731c25fedffc36776c34ae6c\\\",\\\"case_id\\\":\\\"posthog\\\",\\\"definition_sha256\\\":\\\"6b2226524c458b088967c79b30a9dd3a97cb7422a320e5a14e1a0ffd85736de0\\\"}\"}},{\"workflow\":\"native-fresh-benchmark.yml\",\"inputs\":{\"case_id\":\"posthog\",\"variant\":\"combined\",\"cadence\":\"fresh\",\"series_id\":\"cadence-37455664953-8\",\"sample\":\"1\",\"expected_identity\":\"{\\\"harness_sha\\\":\\\"b378dfe72d9af36c731c25fedffc36776c34ae6c\\\",\\\"case_id\\\":\\\"posthog\\\",\\\"definition_sha256\\\":\\\"6b2226524c458b088967c79b30a9dd3a97cb7422a320e5a14e1a0ffd85736de0\\\"}\"}}]"
+    },
+    "state": "in_progress",
+    "selections": [
+      {
+        "repository": "boringcache/benchmarks",
+        "workflow": "native-fresh-benchmark.yml",
+        "inputs": {
+          "case_id": "posthog",
+          "variant": "layers",
+          "cadence": "fresh",
+          "series_id": "cadence-37455664953-7",
+          "sample": "1",
+          "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"posthog\",\"definition_sha256\":\"6b2226524c458b088967c79b30a9dd3a97cb7422a320e5a14e1a0ffd85736de0\"}"
+        },
+        "state": "in_progress",
+        "series": {
+          "schema_version": 1,
+          "case_id": "posthog",
+          "series_id": "cadence-37455664953-7",
+          "created_at": "2026-10-06T11:21:03Z",
+          "lane": "fresh",
+          "phases": [
+            "cold",
+            "warm"
+          ],
+          "sample_count": 1,
+          "definition_sha256": "6b2226524c458b088967c79b30a9dd3a97cb7422a320e5a14e1a0ffd85736de0",
+          "variant": "layers",
+          "workflow_inputs": {
+            "case_id": "posthog",
+            "variant": "layers",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "cadence": "fresh"
+          },
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "source": {
+            "repository": "PostHog/posthog",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "verification": [
+            "Pinned upstream recipe and build success",
+            "The freshly loaded output image exists in the local Docker image store"
+          ],
+          "plan_sha256": "16fc18b4f5eead29f6ed87b276d695721754f28a13a1eb48a653d19aff5db1ef"
+        },
+        "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "id": 37455855938,
+        "url": "https://github.com/boringcache/benchmarks/actions/runs/37455855938",
+        "project_grouped": true,
+        "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "observations": [
+          {
+            "case_id": "posthog",
+            "strategy": "actions-cache",
+            "phase": "cold",
+            "job_name": "GitHub Actions posthog cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455855938/job/112243246216",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+            ]
+          },
+          {
+            "case_id": "posthog",
+            "strategy": "actions-cache",
+            "phase": "warm",
+            "job_name": "GitHub Actions posthog warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+            ]
+          },
+          {
+            "case_id": "posthog",
+            "strategy": "boringcache",
+            "phase": "cold",
+            "job_name": "BoringCache posthog cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455855938/job/112243246283",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+            ]
+          },
+          {
+            "case_id": "posthog",
+            "strategy": "boringcache",
+            "phase": "warm",
+            "job_name": "BoringCache posthog warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+            ]
+          }
+        ]
+      },
+      {
+        "repository": "boringcache/benchmarks",
+        "workflow": "native-fresh-benchmark.yml",
+        "inputs": {
+          "case_id": "posthog",
+          "variant": "combined",
+          "cadence": "fresh",
+          "series_id": "cadence-37455664953-8",
+          "sample": "1",
+          "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"posthog\",\"definition_sha256\":\"6b2226524c458b088967c79b30a9dd3a97cb7422a320e5a14e1a0ffd85736de0\"}"
+        },
+        "state": "in_progress",
+        "series": {
+          "schema_version": 1,
+          "case_id": "posthog",
+          "series_id": "cadence-37455664953-8",
+          "created_at": "2026-10-06T11:21:03Z",
+          "lane": "fresh",
+          "phases": [
+            "cold",
+            "warm"
+          ],
+          "sample_count": 1,
+          "definition_sha256": "6b2226524c458b088967c79b30a9dd3a97cb7422a320e5a14e1a0ffd85736de0",
+          "variant": "combined",
+          "workflow_inputs": {
+            "case_id": "posthog",
+            "variant": "combined",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "cadence": "fresh"
+          },
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "source": {
+            "repository": "PostHog/posthog",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "662f459147d2df2a44b008e4a9b6e75d8ac46e93",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "verification": [
+            "Pinned upstream recipe and build success",
+            "The freshly loaded output image exists in the local Docker image store"
+          ],
+          "plan_sha256": "34e334e640a9f67a6730be9aeb87286bcd9cf2d966a0b11b6da891b470890924"
+        },
+        "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "id": 37455855938,
+        "url": "https://github.com/boringcache/benchmarks/actions/runs/37455855938",
+        "project_grouped": true,
+        "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "observations": [
+          {
+            "case_id": "posthog",
+            "strategy": "actions-cache",
+            "phase": "cold",
+            "job_name": "GitHub Actions posthog cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455855938/job/112243246285",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+            ]
+          },
+          {
+            "case_id": "posthog",
+            "strategy": "actions-cache",
+            "phase": "warm",
+            "job_name": "GitHub Actions posthog warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+            ]
+          },
+          {
+            "case_id": "posthog",
+            "strategy": "boringcache",
+            "phase": "cold",
+            "job_name": "BoringCache posthog cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455855938/job/112243246232",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+            ]
+          },
+          {
+            "case_id": "posthog",
+            "strategy": "boringcache",
+            "phase": "warm",
+            "job_name": "BoringCache posthog warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+            ]
+          }
+        ]
+      }
+    ],
+    "id": 37455855938,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37455855938",
+    "observations": [
+      {
+        "case_id": "posthog",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions posthog cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455855938/job/112243246216",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+        ]
+      },
+      {
+        "case_id": "posthog",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions posthog warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+        ]
+      },
+      {
+        "case_id": "posthog",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache posthog cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455855938/job/112243246283",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+        ]
+      },
+      {
+        "case_id": "posthog",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache posthog warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+        ]
+      },
+      {
+        "case_id": "posthog",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions posthog cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455855938/job/112243246285",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+        ]
+      },
+      {
+        "case_id": "posthog",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions posthog warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+        ]
+      },
+      {
+        "case_id": "posthog",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache posthog cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455855938/job/112243246232",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+        ]
+      },
+      {
+        "case_id": "posthog",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache posthog warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455855938"
+        ]
+      }
+    ]
+  }
+}

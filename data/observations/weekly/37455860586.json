@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "cadence": "weekly",
+  "collected_at": "2026-10-06T11:25:11Z",
+  "run": {
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-fresh-benchmark.yml",
+    "inputs": {
+      "case_id": "duckgres",
+      "cadence": "fresh",
+      "series_id": "cadence-37455664953-16",
+      "sample": "1",
+      "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"duckgres\",\"definition_sha256\":\"9424d57c07d36f17cc94a764c30bc6244c215f7993ae16d009a65a41714446c5\"}"
+    },
+    "state": "in_progress",
+    "series": {
+      "schema_version": 1,
+      "case_id": "duckgres",
+      "series_id": "cadence-37455664953-16",
+      "created_at": "2026-10-06T11:21:03Z",
+      "lane": "fresh",
+      "phases": [
+        "cold",
+        "warm"
+      ],
+      "sample_count": 1,
+      "definition_sha256": "9424d57c07d36f17cc94a764c30bc6244c215f7993ae16d009a65a41714446c5",
+      "variant": null,
+      "workflow_inputs": {
+        "case_id": "duckgres",
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "cadence": "fresh"
+      },
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed Docker build including image export and load, plus measured provider setup; output inspection is outside the timed build; provider post-job work is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "PostHog/duckgres",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "12e26cf3a900823cf415d826ab2a9b8f0d57b2a3",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "verification": [
+        "Pinned upstream recipe and build success",
+        "The freshly loaded output image exists in the local Docker image store"
+      ],
+      "plan_sha256": "ab74b6f0a64b0f9391025e7b1281bb6b83aae27974ceebe4cd7f849af218e3de"
+    },
+    "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+    "id": 37455860586,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37455860586",
+    "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+    "observations": [
+      {
+        "case_id": "duckgres",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions duckgres cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455860586/job/112243187951",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455860586"
+        ]
+      },
+      {
+        "case_id": "duckgres",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions duckgres warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455860586"
+        ]
+      },
+      {
+        "case_id": "duckgres",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache duckgres cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455860586/job/112243187696",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455860586"
+        ]
+      },
+      {
+        "case_id": "duckgres",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache duckgres warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455860586"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "cadence": "daily",
+  "collected_at": "2026-10-06T11:24:52Z",
+  "run": {
+    "repository": "boringcache/benchmarks",
+    "workflow": "native-fresh-benchmark.yml",
+    "inputs": {
+      "case_id": "qdrant",
+      "cadence": "nightly",
+      "series_id": "cadence-37455668133-19",
+      "sample": "1",
+      "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"qdrant\",\"definition_sha256\":\"d316a1043dec9074fea9349f981d8340ef700686a0536e2e8147c57bc4584443\"}"
+    },
+    "state": "in_progress",
+    "series": {
+      "schema_version": 1,
+      "case_id": "qdrant",
+      "series_id": "cadence-37455668133-19",
+      "created_at": "2026-10-06T11:20:53Z",
+      "lane": "fresh",
+      "phases": [
+        "cold",
+        "warm"
+      ],
+      "sample_count": 1,
+      "definition_sha256": "d316a1043dec9074fea9349f981d8340ef700686a0536e2e8147c57bc4584443",
+      "variant": null,
+      "workflow_inputs": {
+        "case_id": "qdrant",
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "cadence": "nightly"
+      },
+      "comparison": {
+        "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+        "providers": [
+          "boringcache",
+          "actions-cache"
+        ],
+        "timed_scope": "Timed build entrypoint plus measured cache restore/setup; upstream dependency installation remains included when the entrypoint performs it; unmeasured post-job save is reported separately",
+        "primary_metric": "build_and_reuse_seconds",
+        "storage": "provider-reported",
+        "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+        "sample_count": 10
+      },
+      "source": {
+        "repository": "qdrant/qdrant",
+        "pins": [
+          {
+            "path": "upstream",
+            "revision": "9ae05efdc1ef96352889b2a6b6b574c35232b974",
+            "kind": "gitlink"
+          }
+        ]
+      },
+      "verification": [
+        "Pinned upstream recipe and build success"
+      ],
+      "plan_sha256": "f7f7fb71cb9666102d79566338c3534087ad2a61d8a05b74cc68279308744c18"
+    },
+    "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+    "id": 37455843071,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37455843071",
+    "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+    "observations": [
+      {
+        "case_id": "qdrant",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions qdrant cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455843071/job/112243127921",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455843071"
+        ]
+      },
+      {
+        "case_id": "qdrant",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions qdrant warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455843071"
+        ]
+      },
+      {
+        "case_id": "qdrant",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache qdrant cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455843071/job/112243127752",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455843071"
+        ]
+      },
+      {
+        "case_id": "qdrant",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache qdrant warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455843071"
+        ]
+      }
+    ]
+  }
+}

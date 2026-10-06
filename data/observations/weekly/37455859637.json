@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "cadence": "weekly",
+  "collected_at": "2026-10-06T11:25:11Z",
+  "run": {
+    "repository": "boringcache/benchmarks",
+    "workflow": "reapi-fresh-benchmark.yml",
+    "inputs": {
+      "case_id": "executorch-buck2",
+      "cadence": "fresh",
+      "series_id": "cadence-37455664953-27",
+      "sample": "1",
+      "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"executorch-buck2\",\"definition_sha256\":\"68dffb4e79b81bb6c2631d1478df2bdcd13bae7bb4cbd500e05e7ebdd11f7b47\"}"
+    },
+    "state": "in_progress",
+    "series": {
+      "schema_version": 1,
+      "case_id": "executorch-buck2",
+      "series_id": "cadence-37455664953-27",
+      "created_at": "2026-10-06T11:21:03Z",
+      "lane": "fresh",
+      "phases": [
+        "cold",
+        "warm"
+      ],
+      "sample_count": 1,
+      "definition_sha256": "68dffb4e79b81bb6c2631d1478df2bdcd13bae7bb4cbd500e05e7ebdd11f7b47",
+      "variant": null,
+      "workflow_inputs": {
+        "case_id": "executorch-buck2",
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "cadence": "fresh"
+      },
+      "comparison": {
+        "question": "Does Buck2 restore the ExecuTorch portable runner on a clean worker?",
+        "providers": [
+          "boringcache",
+          "bazel-remote"
+        ],
+        "primary_metric": "correctness",
+        "timed_scope": "BoringCache measures the complete managed native CLI operation, including cache setup, build and publication. The bazel-remote comparator records setup, build and shutdown separately. Output verification is excluded. This is a correctness screening, not a provider performance ranking.",
+        "storage": "unmeasured",
+        "cache_scope": "BoringCache uses a fresh case, series, sample and run tag. bazel-remote uses a fresh local store transferred to a new warm worker. Native local result state starts empty on each worker. Rolling runs retain the case and series cache across commits; an initial run or evicted seed is a bootstrap observation, not proof of reuse.",
+        "sample_count": 2
+      },
+      "source": {
+        "repository": "pytorch/executorch",
+        "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb",
+        "pins": [
+          {
+            "path": "proposal.md",
+            "kind": "snapshot",
+            "revision": "5e21c13cc9e34fa2922d5708ba5962e3e365afdb"
+          }
+        ],
+        "patch": "cache.patch"
+      },
+      "verification": [
+        "Require the declared native command to succeed",
+        "Require declared outputs and successful output checks",
+        "Require native remote-hit evidence and the same output hashes on the warm worker",
+        "Require registry shutdown to complete successfully"
+      ],
+      "plan_sha256": "89b761d36a57da25b1eddcda3c728299d6818ed83523b389a9a5a38ccafe0ef4"
+    },
+    "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+    "id": 37455859637,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37455859637",
+    "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+    "observations": [
+      {
+        "strategy": "boringcache",
+        "phase": "cold",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      },
+      {
+        "strategy": "boringcache",
+        "phase": "warm",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      },
+      {
+        "strategy": "bazel-remote",
+        "phase": "cold",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      },
+      {
+        "strategy": "bazel-remote",
+        "phase": "warm",
+        "state": "in_progress",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "phase_record": null
+      }
+    ]
+  }
+}

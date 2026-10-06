@@ -25644,6 +25644,7 @@
       "valid_for_comparison": false,
       "execution_verified": false,
       "methodology_issues": [
+        "Measured package cache states differ: BoringCache built the package (0 hits, 711 misses); Cachix substituted the exact package output.",
         "Rolling seed and changed-source sequence are unverified."
       ],
       "missing_observations": [],

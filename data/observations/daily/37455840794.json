@@ -1,0 +1,853 @@
+{
+  "schema_version": 1,
+  "cadence": "daily",
+  "collected_at": "2026-10-06T11:24:52Z",
+  "run": {
+    "repository": "boringcache/benchmarks",
+    "workflow": "project-fresh.yml",
+    "inputs": {
+      "case_id": "n8n",
+      "cadence": "nightly",
+      "selections": "[{\"workflow\":\"native-fresh-benchmark.yml\",\"inputs\":{\"case_id\":\"n8n\",\"variant\":\"turbo\",\"cadence\":\"nightly\",\"series_id\":\"cadence-37455668133-20\",\"sample\":\"1\",\"expected_identity\":\"{\\\"harness_sha\\\":\\\"b378dfe72d9af36c731c25fedffc36776c34ae6c\\\",\\\"case_id\\\":\\\"n8n\\\",\\\"definition_sha256\\\":\\\"247c1b028814cfa5604c6afba2fa09cbb3404fe8973bc4b0151b7ff7eebd72d6\\\"}\"}},{\"workflow\":\"native-fresh-benchmark.yml\",\"inputs\":{\"case_id\":\"n8n\",\"variant\":\"docker\",\"cadence\":\"nightly\",\"series_id\":\"cadence-37455668133-21\",\"sample\":\"1\",\"expected_identity\":\"{\\\"harness_sha\\\":\\\"b378dfe72d9af36c731c25fedffc36776c34ae6c\\\",\\\"case_id\\\":\\\"n8n\\\",\\\"definition_sha256\\\":\\\"247c1b028814cfa5604c6afba2fa09cbb3404fe8973bc4b0151b7ff7eebd72d6\\\"}\"}},{\"workflow\":\"native-fresh-benchmark.yml\",\"inputs\":{\"case_id\":\"n8n\",\"variant\":\"runners\",\"cadence\":\"nightly\",\"series_id\":\"cadence-37455668133-22\",\"sample\":\"1\",\"expected_identity\":\"{\\\"harness_sha\\\":\\\"b378dfe72d9af36c731c25fedffc36776c34ae6c\\\",\\\"case_id\\\":\\\"n8n\\\",\\\"definition_sha256\\\":\\\"247c1b028814cfa5604c6afba2fa09cbb3404fe8973bc4b0151b7ff7eebd72d6\\\"}\"}},{\"workflow\":\"native-fresh-benchmark.yml\",\"inputs\":{\"case_id\":\"n8n\",\"variant\":\"distroless\",\"cadence\":\"nightly\",\"series_id\":\"cadence-37455668133-23\",\"sample\":\"1\",\"expected_identity\":\"{\\\"harness_sha\\\":\\\"b378dfe72d9af36c731c25fedffc36776c34ae6c\\\",\\\"case_id\\\":\\\"n8n\\\",\\\"definition_sha256\\\":\\\"247c1b028814cfa5604c6afba2fa09cbb3404fe8973bc4b0151b7ff7eebd72d6\\\"}\"}}]"
+    },
+    "state": "queued",
+    "selections": [
+      {
+        "repository": "boringcache/benchmarks",
+        "workflow": "native-fresh-benchmark.yml",
+        "inputs": {
+          "case_id": "n8n",
+          "variant": "turbo",
+          "cadence": "nightly",
+          "series_id": "cadence-37455668133-20",
+          "sample": "1",
+          "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"n8n\",\"definition_sha256\":\"247c1b028814cfa5604c6afba2fa09cbb3404fe8973bc4b0151b7ff7eebd72d6\"}"
+        },
+        "state": "queued",
+        "series": {
+          "schema_version": 1,
+          "case_id": "n8n",
+          "series_id": "cadence-37455668133-20",
+          "created_at": "2026-10-06T11:20:53Z",
+          "lane": "fresh",
+          "phases": [
+            "cold",
+            "warm"
+          ],
+          "sample_count": 1,
+          "definition_sha256": "247c1b028814cfa5604c6afba2fa09cbb3404fe8973bc4b0151b7ff7eebd72d6",
+          "variant": "turbo",
+          "workflow_inputs": {
+            "case_id": "n8n",
+            "variant": "turbo",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "cadence": "nightly"
+          },
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "source": {
+            "repository": "n8n-io/n8n",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "verification": [
+            "Pinned upstream recipe and build success",
+            "Turbo variant: built CLI entrypoint exists; Docker variants: freshly loaded output image exists"
+          ],
+          "plan_sha256": "9438c956108865289c0e4fff975d30528c8bf805ffe992bf17b4f4abe52b72e1"
+        },
+        "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "id": 37455840794,
+        "url": "https://github.com/boringcache/benchmarks/actions/runs/37455840794",
+        "project_grouped": true,
+        "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "observations": [
+          {
+            "case_id": "n8n",
+            "strategy": "actions-cache",
+            "phase": "cold",
+            "job_name": "GitHub Actions n8n cold",
+            "state": "missing",
+            "job_conclusion": "success",
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176736",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          },
+          {
+            "case_id": "n8n",
+            "strategy": "actions-cache",
+            "phase": "warm",
+            "job_name": "GitHub Actions n8n warm",
+            "state": "queued",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112244473019",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          },
+          {
+            "case_id": "n8n",
+            "strategy": "boringcache",
+            "phase": "cold",
+            "job_name": "BoringCache n8n cold",
+            "state": "missing",
+            "job_conclusion": "success",
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176811",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          },
+          {
+            "case_id": "n8n",
+            "strategy": "boringcache",
+            "phase": "warm",
+            "job_name": "BoringCache n8n warm",
+            "state": "queued",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112244472880",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          }
+        ]
+      },
+      {
+        "repository": "boringcache/benchmarks",
+        "workflow": "native-fresh-benchmark.yml",
+        "inputs": {
+          "case_id": "n8n",
+          "variant": "docker",
+          "cadence": "nightly",
+          "series_id": "cadence-37455668133-21",
+          "sample": "1",
+          "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"n8n\",\"definition_sha256\":\"247c1b028814cfa5604c6afba2fa09cbb3404fe8973bc4b0151b7ff7eebd72d6\"}"
+        },
+        "state": "queued",
+        "series": {
+          "schema_version": 1,
+          "case_id": "n8n",
+          "series_id": "cadence-37455668133-21",
+          "created_at": "2026-10-06T11:20:53Z",
+          "lane": "fresh",
+          "phases": [
+            "cold",
+            "warm"
+          ],
+          "sample_count": 1,
+          "definition_sha256": "247c1b028814cfa5604c6afba2fa09cbb3404fe8973bc4b0151b7ff7eebd72d6",
+          "variant": "docker",
+          "workflow_inputs": {
+            "case_id": "n8n",
+            "variant": "docker",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "cadence": "nightly"
+          },
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "source": {
+            "repository": "n8n-io/n8n",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "verification": [
+            "Pinned upstream recipe and build success",
+            "Turbo variant: built CLI entrypoint exists; Docker variants: freshly loaded output image exists"
+          ],
+          "plan_sha256": "e62053426bda31bb634b6ee3de4478f7309b05275f9c09fa37cf0834788978a6"
+        },
+        "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "id": 37455840794,
+        "url": "https://github.com/boringcache/benchmarks/actions/runs/37455840794",
+        "project_grouped": true,
+        "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "observations": [
+          {
+            "case_id": "n8n",
+            "strategy": "actions-cache",
+            "phase": "cold",
+            "job_name": "GitHub Actions n8n cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176547",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          },
+          {
+            "case_id": "n8n",
+            "strategy": "actions-cache",
+            "phase": "warm",
+            "job_name": "GitHub Actions n8n warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          },
+          {
+            "case_id": "n8n",
+            "strategy": "boringcache",
+            "phase": "cold",
+            "job_name": "BoringCache n8n cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176570",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          },
+          {
+            "case_id": "n8n",
+            "strategy": "boringcache",
+            "phase": "warm",
+            "job_name": "BoringCache n8n warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          }
+        ]
+      },
+      {
+        "repository": "boringcache/benchmarks",
+        "workflow": "native-fresh-benchmark.yml",
+        "inputs": {
+          "case_id": "n8n",
+          "variant": "runners",
+          "cadence": "nightly",
+          "series_id": "cadence-37455668133-22",
+          "sample": "1",
+          "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"n8n\",\"definition_sha256\":\"247c1b028814cfa5604c6afba2fa09cbb3404fe8973bc4b0151b7ff7eebd72d6\"}"
+        },
+        "state": "in_progress",
+        "series": {
+          "schema_version": 1,
+          "case_id": "n8n",
+          "series_id": "cadence-37455668133-22",
+          "created_at": "2026-10-06T11:20:53Z",
+          "lane": "fresh",
+          "phases": [
+            "cold",
+            "warm"
+          ],
+          "sample_count": 1,
+          "definition_sha256": "247c1b028814cfa5604c6afba2fa09cbb3404fe8973bc4b0151b7ff7eebd72d6",
+          "variant": "runners",
+          "workflow_inputs": {
+            "case_id": "n8n",
+            "variant": "runners",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "cadence": "nightly"
+          },
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "source": {
+            "repository": "n8n-io/n8n",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "verification": [
+            "Pinned upstream recipe and build success",
+            "Turbo variant: built CLI entrypoint exists; Docker variants: freshly loaded output image exists"
+          ],
+          "plan_sha256": "8ff8863c9f16d0544bc1ec5b62e04aed4cac8d5d3df901f0d07f94d422e3985b"
+        },
+        "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "id": 37455840794,
+        "url": "https://github.com/boringcache/benchmarks/actions/runs/37455840794",
+        "project_grouped": true,
+        "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "observations": [
+          {
+            "case_id": "n8n",
+            "strategy": "actions-cache",
+            "phase": "cold",
+            "job_name": "GitHub Actions n8n cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176463",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          },
+          {
+            "case_id": "n8n",
+            "strategy": "actions-cache",
+            "phase": "warm",
+            "job_name": "GitHub Actions n8n warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          },
+          {
+            "case_id": "n8n",
+            "strategy": "boringcache",
+            "phase": "cold",
+            "job_name": "BoringCache n8n cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176640",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          },
+          {
+            "case_id": "n8n",
+            "strategy": "boringcache",
+            "phase": "warm",
+            "job_name": "BoringCache n8n warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          }
+        ]
+      },
+      {
+        "repository": "boringcache/benchmarks",
+        "workflow": "native-fresh-benchmark.yml",
+        "inputs": {
+          "case_id": "n8n",
+          "variant": "distroless",
+          "cadence": "nightly",
+          "series_id": "cadence-37455668133-23",
+          "sample": "1",
+          "expected_identity": "{\"harness_sha\":\"b378dfe72d9af36c731c25fedffc36776c34ae6c\",\"case_id\":\"n8n\",\"definition_sha256\":\"247c1b028814cfa5604c6afba2fa09cbb3404fe8973bc4b0151b7ff7eebd72d6\"}"
+        },
+        "state": "in_progress",
+        "series": {
+          "schema_version": 1,
+          "case_id": "n8n",
+          "series_id": "cadence-37455668133-23",
+          "created_at": "2026-10-06T11:20:53Z",
+          "lane": "fresh",
+          "phases": [
+            "cold",
+            "warm"
+          ],
+          "sample_count": 1,
+          "definition_sha256": "247c1b028814cfa5604c6afba2fa09cbb3404fe8973bc4b0151b7ff7eebd72d6",
+          "variant": "distroless",
+          "workflow_inputs": {
+            "case_id": "n8n",
+            "variant": "distroless",
+            "cli_version": "vcli-canary-252077d7b8fb",
+            "cadence": "nightly"
+          },
+          "comparison": {
+            "question": "How do build and cache reuse time and measured storage compare for the same pinned workload?",
+            "providers": [
+              "boringcache",
+              "actions-cache"
+            ],
+            "timed_scope": "Selected workload build plus measured provider setup: Turbo excludes dependency installation; Docker includes image export and load and excludes prepared source setup. Output checks and unmeasured post-job work are reported separately",
+            "primary_metric": "build_and_reuse_seconds",
+            "storage": "provider-reported",
+            "cache_scope": "Case-specific tags; fresh series use run and attempt identity; rolling series retain their declared cohort",
+            "sample_count": 10
+          },
+          "source": {
+            "repository": "n8n-io/n8n",
+            "pins": [
+              {
+                "path": "upstream",
+                "revision": "7576de5f26ccfd20c1aceee0e6f5657833e267d9",
+                "kind": "gitlink"
+              }
+            ]
+          },
+          "verification": [
+            "Pinned upstream recipe and build success",
+            "Turbo variant: built CLI entrypoint exists; Docker variants: freshly loaded output image exists"
+          ],
+          "plan_sha256": "bc8f932bf8b0d08927a6d7943d666b2322d94fcb1de40fdf1ec25cca57bd6465"
+        },
+        "harness_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "id": 37455840794,
+        "url": "https://github.com/boringcache/benchmarks/actions/runs/37455840794",
+        "project_grouped": true,
+        "source_sha": "b378dfe72d9af36c731c25fedffc36776c34ae6c",
+        "observations": [
+          {
+            "case_id": "n8n",
+            "strategy": "actions-cache",
+            "phase": "cold",
+            "job_name": "GitHub Actions n8n cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176306",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          },
+          {
+            "case_id": "n8n",
+            "strategy": "actions-cache",
+            "phase": "warm",
+            "job_name": "GitHub Actions n8n warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          },
+          {
+            "case_id": "n8n",
+            "strategy": "boringcache",
+            "phase": "cold",
+            "job_name": "BoringCache n8n cold",
+            "state": "in_progress",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176480",
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          },
+          {
+            "case_id": "n8n",
+            "strategy": "boringcache",
+            "phase": "warm",
+            "job_name": "BoringCache n8n warm",
+            "state": "missing",
+            "job_conclusion": null,
+            "timing": {},
+            "verification": "unrecorded",
+            "storage_bytes": null,
+            "errors": [],
+            "phase_record": null,
+            "outcome": null,
+            "evidence_links": [
+              "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+            ]
+          }
+        ]
+      }
+    ],
+    "id": 37455840794,
+    "url": "https://github.com/boringcache/benchmarks/actions/runs/37455840794",
+    "observations": [
+      {
+        "case_id": "n8n",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions n8n cold",
+        "state": "missing",
+        "job_conclusion": "success",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176736",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      },
+      {
+        "case_id": "n8n",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions n8n warm",
+        "state": "queued",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112244473019",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      },
+      {
+        "case_id": "n8n",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache n8n cold",
+        "state": "missing",
+        "job_conclusion": "success",
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176811",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      },
+      {
+        "case_id": "n8n",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache n8n warm",
+        "state": "queued",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112244472880",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      },
+      {
+        "case_id": "n8n",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions n8n cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176547",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      },
+      {
+        "case_id": "n8n",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions n8n warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      },
+      {
+        "case_id": "n8n",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache n8n cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176570",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      },
+      {
+        "case_id": "n8n",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache n8n warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      },
+      {
+        "case_id": "n8n",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions n8n cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176463",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      },
+      {
+        "case_id": "n8n",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions n8n warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      },
+      {
+        "case_id": "n8n",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache n8n cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176640",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      },
+      {
+        "case_id": "n8n",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache n8n warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      },
+      {
+        "case_id": "n8n",
+        "strategy": "actions-cache",
+        "phase": "cold",
+        "job_name": "GitHub Actions n8n cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176306",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      },
+      {
+        "case_id": "n8n",
+        "strategy": "actions-cache",
+        "phase": "warm",
+        "job_name": "GitHub Actions n8n warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      },
+      {
+        "case_id": "n8n",
+        "strategy": "boringcache",
+        "phase": "cold",
+        "job_name": "BoringCache n8n cold",
+        "state": "in_progress",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794/job/112243176480",
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      },
+      {
+        "case_id": "n8n",
+        "strategy": "boringcache",
+        "phase": "warm",
+        "job_name": "BoringCache n8n warm",
+        "state": "missing",
+        "job_conclusion": null,
+        "timing": {},
+        "verification": "unrecorded",
+        "storage_bytes": null,
+        "errors": [],
+        "phase_record": null,
+        "outcome": null,
+        "evidence_links": [
+          "https://github.com/boringcache/benchmarks/actions/runs/37455840794"
+        ]
+      }
+    ]
+  }
+}
