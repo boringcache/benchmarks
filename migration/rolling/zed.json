@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "case_id": "zed",
-  "state": "dispatching",
+  "state": "requested",
   "cli_version": "vcli-canary-252077d7b8fb",
   "ref": "main",
   "proposal": {
@@ -30,7 +30,7 @@
         "case_id": "zed",
         "selections": "[{\"workflow\":\"zed-zed-cargo-rolling-auto.yml\",\"inputs\":{\"cli_version\":\"vcli-canary-252077d7b8fb\",\"base_sha\":\"54edefa0832e4728bcf077e4a48b25912eea5433\",\"head_sha\":\"53421b7f3f94ac1e741f42035e09c1d5428eb1a3\",\"source_distance\":\"76\"}},{\"workflow\":\"nix-rolling-benchmark.yml\",\"inputs\":{\"case_id\":\"zed-nix\",\"cli_version\":\"vcli-canary-252077d7b8fb\"}}]"
       },
-      "state": "requesting",
+      "state": "requested",
       "selections": [
         {
           "repository": "boringcache/benchmarks",
@@ -43,7 +43,9 @@
           },
           "state": "requesting"
         }
-      ]
+      ],
+      "id": 37461383560,
+      "url": "https://github.com/boringcache/benchmarks/actions/runs/37461383560"
     }
   ]
 }
