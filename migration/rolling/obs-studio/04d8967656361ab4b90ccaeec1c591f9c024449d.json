@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "case_id": "obs-studio",
+  "state": "dispatching",
+  "cli_version": "vcli-canary-252077d7b8fb",
+  "ref": "main",
+  "proposal": {
+    "source_repository": "obsproject/obs-studio",
+    "source_sha": "04d8967656361ab4b90ccaeec1c591f9c024449d",
+    "source_short_sha": "04d8967",
+    "base_sha": "97ca37291c4e5f5c5c8a0719b8c7b897d2fbc6b5",
+    "head_sha": "04d8967656361ab4b90ccaeec1c591f9c024449d",
+    "previous_sha": "ef5814431c6af9061874470201d0b799bc84602b",
+    "case_id": "obs-studio",
+    "updated": true,
+    "requires_verified_build": false,
+    "candidate_source_env": "OBS_SOURCE_REPOSITORY=obsproject/obs-studio\nOBS_BASE_SHA=97ca37291c4e5f5c5c8a0719b8c7b897d2fbc6b5\nOBS_HEAD_SHA=04d8967656361ab4b90ccaeec1c591f9c024449d\nOBS_VERSION_OVERRIDE=32.2.0\nOBS_XCODE_PATH=/Applications/Xcode_26.5.app/Contents/Developer\n",
+    "state": "proposal",
+    "requires_case_qualification": true
+  },
+  "created_at": "2026-10-06T11:27:45Z",
+  "runs": [
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "obs-rolling-benchmark.yml",
+      "inputs": {
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "base_sha": "97ca37291c4e5f5c5c8a0719b8c7b897d2fbc6b5",
+        "head_sha": "04d8967656361ab4b90ccaeec1c591f9c024449d",
+        "cache_scope": "rolling-main",
+        "cache_tool": "ccache"
+      },
+      "state": "requesting"
+    },
+    {
+      "repository": "boringcache/benchmarks",
+      "workflow": "obs-rolling-benchmark.yml",
+      "inputs": {
+        "cli_version": "vcli-canary-252077d7b8fb",
+        "base_sha": "97ca37291c4e5f5c5c8a0719b8c7b897d2fbc6b5",
+        "head_sha": "04d8967656361ab4b90ccaeec1c591f9c024449d",
+        "cache_scope": "rolling-main",
+        "cache_tool": "xcode"
+      },
+      "state": "requesting"
+    }
+  ]
+}
