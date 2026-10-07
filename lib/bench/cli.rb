@@ -11,7 +11,7 @@ module Bench
         bin/bench build <tool>/<case> --lane LANE
         bin/bench record <tool>/<case> --lane LANE --exit-status N
         bin/bench label <runner>
-        bin/bench matrix <tool>/<case> [--lane LANE] [--runner KEY]
+        bin/bench matrix <project|tool/case> [--lane LANES] [--runner KEYS]
         bin/bench image
         bin/bench report [--results DIR] [--out DIR]
     TEXT
@@ -104,11 +104,14 @@ module Bench
 
       def matrix
         options = parse({})
-        kase = @catalog.find_case(@argv.first || raise(Error, "matrix needs <tool>/<case>"))
-        entries = kase.runs.flat_map do |lane_name, runners|
-          lane = kase.tool.lane(lane_name)
-          Array(runners).reject { it == "local" }.map do |runner|
-            { "lane" => lane.name, "runner" => runner, "label" => @catalog.runner_label(runner), "secrets" => lane.secrets }
+        cases = @catalog.project_cases(@argv.first || raise(Error, "matrix needs <project> or <tool>/<case>"))
+        entries = cases.flat_map do |kase|
+          kase.runs.flat_map do |lane_name, runners|
+            lane = kase.tool.lane(lane_name)
+            Array(runners).reject { it == "local" }.map do |runner|
+              { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets,
+                "label" => [kase.tool.name, (kase.name unless kase.name == kase.project), (runner unless runner == "github"), lane.label].compact.join(" ") }
+            end
           end
         end
         lanes = options[:lane]&.split(/[\s,]+/)

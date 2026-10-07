@@ -15,6 +15,10 @@ module Bench
       "#{tool.name}/#{name}"
     end
 
+    def project
+      config.fetch("project", name)
+    end
+
     def repo
       config["repo"]
     end
