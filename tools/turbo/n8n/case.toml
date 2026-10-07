@@ -8,7 +8,7 @@ shared = [".pnpm-store"]
 
 [env]
 CI = "true"
-NPM_CONFIG_STORE_DIR = "${BENCH_DIR}/.pnpm-store"
+PNPM_CONFIG_STORE_DIR = "${BENCH_DIR}/.pnpm-store"
 
 [runs]
 boringcache-turbo = ["github", "local"]
