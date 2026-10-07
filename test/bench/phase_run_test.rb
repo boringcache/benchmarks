@@ -64,6 +64,27 @@ class PhaseRunTest < Minitest::Test
     assert_equal "demo/app boringcache-demo rolling: no upstream commit after the last step\n", out.string
   end
 
+  def test_actions_steps_prepare_start_build_and_record_across_processes
+    outputs = File.join(@root, "github_output")
+    exported = File.join(@root, "github_env")
+    with_fixture_env do
+      ENV.update("GITHUB_OUTPUT" => outputs, "GITHUB_ENV" => exported)
+      assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r6", "--github")
+      assert_equal 0, cli("start", "demo/app", "--lane", "remote")
+      assert_equal 0, cli("build", "demo/app", "--lane", "remote")
+      assert_equal 0, cli("record", "demo/app", "--lane", "remote", "--exit-status", "0")
+    ensure
+      ENV.delete("GITHUB_OUTPUT")
+      ENV.delete("GITHUB_ENV")
+    end
+
+    assert_includes File.read(outputs), "provider<<BENCH_EOF\nremote\nBENCH_EOF"
+    assert_includes File.read(outputs), "cache_key<<BENCH_EOF\ndemo-app-remote-local-r6\nBENCH_EOF"
+    assert_includes File.read(exported), "DEMO_CACHE=remote-secret"
+    assert_includes File.read(exported), "BENCH_SCOPE=remote-local-r6"
+    assert_equal [0, true, @upstream_sha], record("remote-local-r6", "remote-local-cold").values_at("exit_status", "output_ok", "sha")
+  end
+
   def test_actions_only_lane_is_skipped_locally
     out = StringIO.new
     assert_equal 0, Bench::CLI.new(%w[run demo/app --lane gha], catalog:, out:).call

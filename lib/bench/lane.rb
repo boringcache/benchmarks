@@ -35,6 +35,10 @@ module Bench
       config.fetch("actions_only", false)
     end
 
+    def paths
+      config.fetch("paths", [])
+    end
+
     def allowed_runners
       config["runners"]
     end

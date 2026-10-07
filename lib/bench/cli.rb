@@ -6,6 +6,11 @@ module Bench
         bin/bench list
         bin/bench run <tool>/<case> --lane LANE [--phase cold|warm|rolling] [--runner KEY] [--run-id ID] [--results DIR] [--work DIR]
                       [--container [--env-file PATH]]
+        bin/bench prepare <tool>/<case> --lane LANE --phase PHASE [--runner KEY] [--run-id ID] [--github]
+        bin/bench start <tool>/<case> --lane LANE
+        bin/bench build <tool>/<case> --lane LANE
+        bin/bench record <tool>/<case> --lane LANE --exit-status N
+        bin/bench label <runner>
         bin/bench image
         bin/bench report [--results DIR] [--out DIR]
     TEXT
@@ -21,6 +26,11 @@ module Bench
       when "check" then check
       when "list" then list
       when "run" then run
+      when "prepare" then prepare
+      when "start" then resumed { it.start; 0 }
+      when "build" then resumed(&:build)
+      when "record" then record
+      when "label" then label
       when "report" then report
       when "image" then image
       else usage
@@ -49,21 +59,45 @@ module Bench
       end
 
       def run
-        options = parse(runner: ENV.fetch("BENCH_RUNNER", "local"), run_id: default_run_id, work: File.join(@catalog.root, ".work"),
-                        results: File.join(@catalog.root, "tmp", "results"), env_file: File.join(@catalog.root, ".env"))
-        kase = @catalog.find_case(@argv.first || raise(Error, "run needs <tool>/<case>"))
-        lane = kase.tool.lane(options[:lane] || raise(Error, "run needs --lane"))
+        options = parse(defaults)
+        kase, lane = case_and_lane(options)
         return skip(kase, lane, options[:runner]) unless lane.allows?(options[:runner])
 
         phases = options[:phase] ? [options[:phase]] : PHASES
         return in_containers(kase, lane, phases, options) if options[:container]
 
         records = phases.filter_map { phase_run(kase, lane, it, options)&.call }
-        records.each do |record|
-          @out.puts "#{kase.id} #{lane.name} #{[record["phase"], record["step"]].compact.join(" ")}: " \
-                    "#{record["seconds"]}s exit=#{record["exit_status"]} output_ok=#{record["output_ok"].inspect}"
-        end
+        records.each { summarize(kase, lane, it) }
         records.all? { it["exit_status"].zero? } ? 0 : 1
+      end
+
+      def prepare
+        options = parse(defaults)
+        kase, lane = case_and_lane(options)
+        phase_run = phase_run(kase, lane, options[:phase] || raise(Error, "prepare needs --phase"), options)
+        phase_run&.prepare
+        export_to_github(kase, lane, phase_run) if options[:github]
+        0
+      end
+
+      def record
+        options = parse(defaults)
+        exit_status = Integer(options[:exit_status] || raise(Error, "record needs --exit-status"))
+        kase, lane = case_and_lane(options)
+        record = PhaseRun.resume(kase, lane, work_root: options[:work], results_dir: options[:results]).record(exit_status)
+        summarize(kase, lane, record)
+        exit_status.zero? ? 0 : 1
+      end
+
+      def resumed
+        options = parse(defaults)
+        kase, lane = case_and_lane(options)
+        yield PhaseRun.resume(kase, lane, work_root: options[:work], results_dir: options[:results])
+      end
+
+      def label
+        @out.puts @catalog.runners.fetch(@argv.first) { raise Error, "unknown runner #{@argv.first.inspect}" }
+        0
       end
 
       def phase_run(kase, lane, phase, options)
@@ -76,6 +110,17 @@ module Bench
 
         @out.puts "#{kase.id} #{lane.name} rolling: no upstream commit after the last step"
         nil
+      end
+
+      def export_to_github(kase, lane, phase_run)
+        outputs = { "ready" => (!phase_run.nil?).to_s }
+        if phase_run
+          outputs.merge!("tool" => kase.tool.name, "provider" => lane.provider, "build_dir" => phase_run.build_dir,
+                         "cache_key" => "#{kase.id.tr("/", "-")}-#{phase_run.scope}", "cache_paths" => phase_run.cache_paths.join("\n"),
+                         "boringcache_version" => @catalog.versions.fetch("boringcache"))
+          File.open(ENV.fetch("GITHUB_ENV"), "a") { |file| phase_run.exported_env.each { |key, value| file.puts "#{key}=#{value}" } }
+        end
+        File.open(ENV.fetch("GITHUB_OUTPUT"), "a") { |file| outputs.each { |key, value| file.puts "#{key}<<BENCH_EOF\n#{value}\nBENCH_EOF" } }
       end
 
       def in_containers(kase, lane, phases, options)
@@ -97,6 +142,11 @@ module Bench
         0
       end
 
+      def defaults
+        { runner: ENV.fetch("BENCH_RUNNER", "local"), run_id: ENV.fetch("GITHUB_RUN_ID") { Time.now.utc.strftime("%Y%m%d%H%M%S") },
+          work: File.join(@catalog.root, ".work"), results: File.join(@catalog.root, "tmp", "results"), env_file: File.join(@catalog.root, ".env") }
+      end
+
       def parse(defaults)
         defaults.tap do |options|
           OptionParser.new do |opts|
@@ -109,8 +159,20 @@ module Bench
             opts.on("--out DIR") { options[:out] = File.expand_path(it) }
             opts.on("--container") { options[:container] = true }
             opts.on("--env-file PATH") { options[:env_file] = File.expand_path(it) }
+            opts.on("--exit-status N") { options[:exit_status] = it }
+            opts.on("--github") { options[:github] = true }
           end.parse!(@argv)
         end
+      end
+
+      def case_and_lane(options)
+        kase = @catalog.find_case(@argv.first || raise(Error, "needs <tool>/<case>"))
+        [kase, kase.tool.lane(options[:lane] || raise(Error, "needs --lane"))]
+      end
+
+      def summarize(kase, lane, record)
+        @out.puts "#{kase.id} #{lane.name} #{[record["phase"], record["step"]].compact.join(" ")}: " \
+                  "#{record["seconds"]}s exit=#{record["exit_status"]} output_ok=#{record["output_ok"].inspect}"
       end
 
       def skip(kase, lane, runner)
@@ -121,12 +183,6 @@ module Bench
       def usage
         @out.puts USAGE
         1
-      end
-
-      def default_run_id
-        return "#{ENV["GITHUB_RUN_ID"]}-#{ENV.fetch("GITHUB_RUN_ATTEMPT", "1")}" if ENV["GITHUB_RUN_ID"]
-
-        Time.now.utc.strftime("%Y%m%d%H%M%S")
       end
   end
 end
