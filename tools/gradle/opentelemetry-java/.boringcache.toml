@@ -1,0 +1,20 @@
+workspace = "boringcache/benchmarks"
+
+[entries.gradle-dependencies]
+tag = "opentelemetry-java-gradle-dependencies"
+path = ".gradle-user-home/caches/modules-2"
+
+[entries.gradle-wrapper]
+tag = "opentelemetry-java-gradle-wrapper"
+path = ".gradle-user-home/wrapper/dists"
+
+[profiles.deps]
+entries = ["gradle-dependencies", "gradle-wrapper"]
+
+[adapters.gradle]
+tag = "opentelemetry-java-gradle"
+profiles = ["deps"]
+no-platform = true
+no-git = true
+metadata-hints = ["benchmark=opentelemetry-java", "upstream-job=build-test-java-21"]
+command = ["./gradlew", "build", "-PtestJavaVersion=21", "-Porg.gradle.java.installations.fromEnv=TEST_JAVA_HOME", "-Porg.gradle.java.installations.auto-download=false"]

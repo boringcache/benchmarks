@@ -1,0 +1,1 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"><servers><server><id>depot-cache</id><configuration><httpHeaders><property><name>Authorization</name><value>Bearer ${env.DEPOT_TOKEN}</value></property></httpHeaders></configuration></server></servers></settings>

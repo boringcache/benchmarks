@@ -1,0 +1,17 @@
+repo = "spring-projects/spring-ai"
+branch = "main"
+start_sha = "c9dde9c58bac76efd20eef2f344c24a43787c7b2"
+directory = "upstream"
+prepare = ["mise trust && mise install"]
+check = "test -s \"$(find upstream/spring-ai-commons/target -maxdepth 1 -type f -name 'spring-ai-commons-*.jar' -print -quit)\""
+shared = [".m2/repository", ".m2/wrapper/dists"]
+
+[env]
+JAVA_HOME = "${HOME}/.local/share/mise/installs/java/liberica-17.0.20+10"
+MAVEN_OPTS = "-Dmaven.repo.local=${BENCH_DIR}/.m2/repository"
+MAVEN_USER_HOME = "${BENCH_DIR}/.m2"
+
+[runs]
+boringcache-maven = ["github", "local"]
+gha = ["github"]
+depot-cache = ["github", "local"]

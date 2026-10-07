@@ -1,0 +1,19 @@
+workspace = "boringcache/benchmarks"
+
+[entries.maven-repository]
+tag = "spring-ai-maven-repository"
+path = ".m2/repository"
+
+[entries.maven-wrapper]
+tag = "spring-ai-maven-wrapper"
+path = ".m2/wrapper/dists"
+
+[profiles.deps]
+entries = ["maven-repository", "maven-wrapper"]
+
+[adapters.maven]
+tag = "spring-ai-maven"
+profiles = ["deps"]
+no-git = true
+metadata-hints = ["benchmark=spring-ai", "upstream-job=integration-tests-build"]
+command = ["./mvnw", "--batch-mode", "-ntp", "--update-snapshots", "clean", "install", "-DskipTests"]

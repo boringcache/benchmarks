@@ -1,0 +1,64 @@
+name: Run benchmark
+
+on:
+  workflow_dispatch:
+    inputs:
+      case:
+        description: tool/case, for example docker/hugo
+        type: string
+        required: true
+      lane:
+        description: lane name, for example boringcache-docker
+        type: string
+        required: true
+      runner:
+        description: runner key from runners.toml
+        type: string
+        default: github
+
+permissions:
+  contents: read
+  id-token: write
+
+run-name: ${{ inputs.case }} ${{ inputs.lane }} on ${{ inputs.runner }}
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      label: ${{ steps.label.outputs.label }}
+    env:
+      BENCH_RUNNER: ${{ inputs.runner }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
+        with:
+          bundler-cache: true
+      - id: label
+        run: echo "label=$(bundle exec bin/bench label "$BENCH_RUNNER")" >> "$GITHUB_OUTPUT"
+
+  cold:
+    needs: plan
+    uses: ./.github/workflows/bench.yml
+    secrets: inherit
+    with:
+      case: ${{ inputs.case }}
+      lane: ${{ inputs.lane }}
+      runner: ${{ inputs.runner }}
+      runner_label: ${{ needs.plan.outputs.label }}
+      phase: cold
+      run_id: ${{ github.run_id }}
+
+  warm:
+    needs: [plan, cold]
+    uses: ./.github/workflows/bench.yml
+    secrets: inherit
+    with:
+      case: ${{ inputs.case }}
+      lane: ${{ inputs.lane }}
+      runner: ${{ inputs.runner }}
+      runner_label: ${{ needs.plan.outputs.label }}
+      phase: warm
+      run_id: ${{ github.run_id }}

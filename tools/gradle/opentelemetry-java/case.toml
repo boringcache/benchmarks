@@ -1,0 +1,18 @@
+repo = "open-telemetry/opentelemetry-java"
+branch = "main"
+start_sha = "bace7e2236b29c8a9da2cbd4b4d069e690a502dd"
+directory = "upstream"
+prepare = ["mise trust && mise install"]
+check = "test -s \"$(find upstream/sdk/all/build/libs -maxdepth 1 -type f -name 'opentelemetry-sdk-*.jar' -print -quit)\""
+shared = [".gradle-user-home/caches/modules-2", ".gradle-user-home/wrapper/dists"]
+
+[env]
+CI = "true"
+DISABLE_REMOTE_BUILD_CACHE = "true"
+GRADLE_USER_HOME = "${BENCH_DIR}/.gradle-user-home"
+JAVA_HOME = "${HOME}/.local/share/mise/installs/java/temurin-25.0.4+101.0.LTS"
+TEST_JAVA_HOME = "${HOME}/.local/share/mise/installs/java/zulu-21.52.15.0"
+
+[runs]
+boringcache-gradle = ["github", "local"]
+gha = ["github"]

@@ -1,0 +1,23 @@
+workspace = "boringcache/benchmarks"
+
+[entries.coursier-cache]
+tag = "msgpack-java-coursier-cache"
+path-env = "COURSIER_CACHE"
+
+[entries.sbt-launchers]
+tag = "msgpack-java-sbt-launchers"
+path = ".sbt/launchers"
+
+[entries.sbt-boot]
+tag = "msgpack-java-sbt-boot"
+path = ".sbt/boot"
+
+[profiles.deps]
+entries = ["coursier-cache", "sbt-launchers", "sbt-boot"]
+
+[adapters.sbt]
+tag = "msgpack-java-sbt"
+profiles = ["deps"]
+no-platform = true
+no-git = true
+command = ["./sbt", "--debug", "test"]

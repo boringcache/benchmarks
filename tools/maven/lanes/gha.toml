@@ -1,0 +1,8 @@
+provider = "github-actions-cache"
+level = "base"
+actions_only = true
+runners = ["github"]
+paths = [".maven-build-cache"]
+
+[env]
+MAVEN_OPTS = "${MAVEN_OPTS} -Dmaven.build.cache.enabled=true -Dmaven.build.cache.remote.enabled=false -Dmaven.build.cache.location=${BENCH_DIR}/.maven-build-cache"
