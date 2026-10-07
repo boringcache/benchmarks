@@ -109,7 +109,7 @@ module Bench
           kase.runs.flat_map do |lane_name, runners|
             lane = kase.tool.lane(lane_name)
             Array(runners).reject { it == "local" }.map do |runner|
-              { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets,
+              { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets, "setup" => lane.setup.join(" "),
                 "label" => [(kase.name unless kase.name == kase.project), (runner unless runner == "github"), lane.label].compact.join(" ") }
             end
           end
