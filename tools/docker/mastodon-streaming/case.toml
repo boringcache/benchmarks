@@ -1,0 +1,8 @@
+repo = "mastodon/mastodon"
+branch = "main"
+start_sha = "9b97c67be3c67e992c184167bd7425502aad12da"
+check = "docker image inspect mastodon-streaming-benchmark:local"
+
+[runs]
+boringcache-docker = ["github", "local"]
+boringcache-docker-plus = ["github", "local"]

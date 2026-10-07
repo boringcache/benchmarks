@@ -1,0 +1,14 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+tag = "linkerd2-docker"
+no-git = true
+metadata-hints = ["benchmark=linkerd2-web", "upstream-command=bin/docker-build-web"]
+command = [
+  "docker", "buildx", "build",
+  "--file", "upstream/web/Dockerfile",
+  "--build-arg", "LINKERD_VERSION=git-8f398ed9",
+  "--tag", "linkerd2-web-benchmark:local",
+  "--load",
+  "upstream",
+]

@@ -1,0 +1,8 @@
+repo = "PostHog/posthog"
+branch = "master"
+start_sha = "73d408d6e3caca2b5294de229c93612d5250f186"
+check = "docker image inspect posthog-benchmark:local"
+
+[runs]
+boringcache-docker = ["github", "depot-4", "depot-8", "namespace-4", "namespace-8", "local"]
+boringcache-docker-plus = ["github", "depot-4", "depot-8", "namespace-4", "namespace-8", "local"]

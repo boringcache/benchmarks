@@ -1,0 +1,17 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+tag = "posthog-docker"
+no-git = true
+metadata-hints = ["benchmark=posthog", "upstream-job=build-image-amd64"]
+tool-cache = ["turbo:posthog-turbo"]
+mount-cache = true
+command = [
+  "docker", "buildx", "build",
+  "--file", "../overlay/PostHog.Dockerfile",
+  "--platform", "linux/amd64",
+  "--provenance", "false",
+  "--tag", "posthog-benchmark:local",
+  "--load",
+  "../upstream",
+]

@@ -1,0 +1,8 @@
+repo = "n8n-io/n8n"
+branch = "master"
+start_sha = "0976d925b91c0652f2fd774737d0cc3ae620f59b"
+prepare = ["mise trust && mise install", "cd upstream && CI=1 pnpm install --frozen-lockfile && CI=1 N8N_SKIP_LICENSES=true pnpm build:n8n"]
+check = "docker image inspect n8n-runners-distroless-benchmark:local"
+
+[runs]
+boringcache-docker = ["github", "local"]
