@@ -12,4 +12,4 @@ tag = "pants-jvm-pants"
 profiles = ["deps"]
 no-git = true
 no-platform = true
-command = ["pants", "check", "test", "package", "::"]
+command = ["pants", "--stats-log", "check", "test", "package", "::"]
