@@ -61,6 +61,26 @@ runs:
         username: ${{ github.actor }}
         password: ${{ github.token }}
 
+    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache'
+      shell: bash
+      env:
+        VERSION: v${{ steps.prepare.outputs.boringcache_version }}
+      run: |
+        case "$(uname -s)-$(uname -m)" in
+          Linux-x86_64) asset=boringcache-linux-amd64 ;;
+          Linux-aarch64) asset=boringcache-linux-arm64 ;;
+          Darwin-*) asset=boringcache-macos-universal ;;
+        esac
+        dir="$RUNNER_TEMP/boringcache-cli"
+        mkdir -p "$dir"
+        cd "$dir"
+        curl --fail --silent --show-error --location --retry 3 --remote-name-all \
+          "https://github.com/boringcache/cli/releases/download/$VERSION/$asset" \
+          "https://github.com/boringcache/cli/releases/download/$VERSION/SHA256SUMS"
+        grep " $asset\$" SHA256SUMS | shasum -a 256 --check
+        install -m 0755 "$asset" "$dir/boringcache"
+        echo "$dir" >> "$GITHUB_PATH"
+
     - if: steps.prepare.outputs.ready == 'true'
       shell: bash
       run: bundle exec bin/bench start "$BENCH_CASE" --lane "$BENCH_LANE"
@@ -72,21 +92,18 @@ runs:
         key: ${{ steps.prepare.outputs.cache_key }}
         restore-keys: ${{ steps.prepare.outputs.restore_key }}
 
-    - id: boringcache
-      if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache'
-      continue-on-error: true
-      uses: boringcache/one@696d081c557c070471a175d72aa67d27709a3f31 # v1.40.0
-      with:
-        mode: ${{ steps.prepare.outputs.tool }}
-        working-directory: ${{ steps.prepare.outputs.build_dir }}
-        cli-version: v${{ steps.prepare.outputs.boringcache_version }}
-        trust-policy: ${{ inputs.phase == 'warm' && 'restore' || 'publish' }}
-
     - id: build
-      if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache'
+      if: steps.prepare.outputs.ready == 'true'
       continue-on-error: true
       shell: bash
-      run: bundle exec bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
+      env:
+        PROVIDER: ${{ steps.prepare.outputs.provider }}
+      run: |
+        if [ "$PROVIDER" = boringcache ]; then
+          boringcache ci run --oidc-provider github-actions -- bundle exec bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
+        else
+          bundle exec bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
+        fi
 
     - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != '' && inputs.phase != 'warm'
       uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -97,7 +114,7 @@ runs:
     - if: steps.prepare.outputs.ready == 'true'
       shell: bash
       env:
-        BUILD_FAILED: ${{ steps.boringcache.outcome == 'failure' || steps.build.outcome == 'failure' }}
+        BUILD_FAILED: ${{ steps.build.outcome == 'failure' }}
       run: bundle exec bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --results results --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
 
     - if: always() && steps.prepare.outputs.ready == 'true'
