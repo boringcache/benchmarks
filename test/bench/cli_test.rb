@@ -3,17 +3,17 @@ require_relative "test_helper"
 class CLITest < Minitest::Test
   include BenchFixture
 
-  def test_matrix_lists_lane_runner_pairs_without_local
+  def test_matrix_lists_every_lane_and_runner_of_a_project_without_local
     assert_equal [
-      { "lane" => "boringcache-demo", "runner" => "github", "label" => "ubuntu-latest", "secrets" => [] },
-      { "lane" => "remote", "runner" => "github", "label" => "ubuntu-latest", "secrets" => ["REMOTE_TOKEN"] },
-      { "lane" => "gha", "runner" => "github", "label" => "ubuntu-latest", "secrets" => [] }
-    ], matrix("demo/app")
+      { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => [], "label" => "demo boringcache" },
+      { "case" => "demo/app", "lane" => "remote", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => ["REMOTE_TOKEN"], "label" => "demo remote" },
+      { "case" => "demo/app", "lane" => "gha", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => [], "label" => "demo gha" }
+    ], matrix("app")
   end
 
   def test_matrix_filters_by_lane
-    assert_equal ["remote"], matrix("demo/app", "--lane", "remote").map { it["lane"] }
-    assert_equal ["boringcache-demo", "gha"], matrix("demo/app", "--lane", "boringcache-demo gha").map { it["lane"] }
+    assert_equal ["remote"], matrix("app", "--lane", "remote").map { it["lane"] }
+    assert_equal ["boringcache-demo", "gha"], matrix("app", "--lane", "boringcache-demo gha").map { it["lane"] }
   end
 
   def test_runner_env_reaches_the_build

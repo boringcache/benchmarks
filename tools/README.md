@@ -69,6 +69,7 @@ gha = ["github"]
 
 | Key | Meaning |
 | --- | --- |
+| `project` | the project this case belongs to, default the case name; one project run covers every case, lane and runner of the project |
 | `repo`, `branch` | upstream GitHub repository and the branch rolling follows |
 | `start_sha` | first-parent commit on `branch` as of 2026-09-30 23:59 UTC |
 | `directory` | where the build command runs, relative to the plan directory, default `.` |
@@ -111,9 +112,9 @@ env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
 ## On GitHub Actions
 
-`.github/workflows/project.yml` runs one case: `bin/bench matrix <tool>/<case>` turns `[runs]` into a flat list of lane and runner jobs, all `cold` jobs run side by side, then all `warm` jobs. Each job calls `.github/actions/phase`, which runs the same `bin/bench prepare`, `start`, `build` and `record` steps as a local run, with the `boringcache/one` Action for BoringCache lanes and `actions/cache` for the paths other lanes cache. A job only receives the secrets its lane lists.
+`.github/workflows/project.yml` runs one project: `bin/bench matrix <project>` turns every case of the project into one flat list of jobs labelled `tool [case] [runner] lane` (for example `turbo boringcache`, `docker n8n-runners boringcache`, `docker depot-4 boringcache plus`). All `cold` jobs run side by side, then all `warm` jobs. Each job calls `.github/actions/phase`, which runs the same `bin/bench` steps as a local run. A job only receives the secrets its lane lists.
 
 ```sh
-gh workflow run project.yml -f case=docker/posthog
-gh workflow run project.yml -f case=docker/posthog -f lane=boringcache-docker -f runner=depot-4
+gh workflow run project.yml -f project=n8n
+gh workflow run project.yml -f project=posthog -f lane=boringcache-docker -f runner="github depot-4"
 ```
