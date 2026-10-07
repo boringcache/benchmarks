@@ -5,9 +5,9 @@ class CLITest < Minitest::Test
 
   def test_matrix_lists_every_lane_and_runner_of_a_project_without_local
     assert_equal [
-      { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => [], "setup" => "", "label" => "boringcache" },
-      { "case" => "demo/app", "lane" => "remote", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => ["REMOTE_TOKEN"], "setup" => "", "label" => "remote" },
-      { "case" => "demo/app", "lane" => "gha", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => [], "setup" => "", "label" => "gha" }
+      { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "boringcache" },
+      { "case" => "demo/app", "lane" => "remote", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => ["REMOTE_TOKEN"], "setup" => "", "label" => "remote" },
+      { "case" => "demo/app", "lane" => "gha", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "gha" }
     ], matrix("app")
   end
 
@@ -24,7 +24,7 @@ class CLITest < Minitest::Test
   end
 
   def test_runner_env_reaches_the_build
-    write "runners.toml", %([github]\nlabel = "ubuntu-latest"\n[local]\nlabel = "local"\nenv = { DEMO_CACHE = "from-runner" }\n)
+    write "runners.toml", %([github]\nlabel = "ubuntu-24.04"\n[local]\nlabel = "local"\nenv = { DEMO_CACHE = "from-runner" }\n)
     write "tools/demo/lanes/remote.toml", %(provider = "remote"\nlevel = "base"\n)
 
     with_fixture_env do
