@@ -16,7 +16,7 @@ module BenchFixture
   def setup
     @root = Dir.mktmpdir("bench")
     @upstream_sha = create_upstream
-    write "runners.toml", %(github = "ubuntu-latest"\nlocal = "local"\n)
+    write "runners.toml", %([github]\nlabel = "ubuntu-latest"\n[local]\nlabel = "local"\n)
     write "versions.toml", %(boringcache = "1.40.0"\n)
     write "tools/demo/tool.toml", %([levels]\nbase = ["remote-cache"]\n)
     write "tools/demo/lanes/boringcache-demo.toml", %(provider = "boringcache"\nlevel = "base"\n)
