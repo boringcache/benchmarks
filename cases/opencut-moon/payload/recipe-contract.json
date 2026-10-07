@@ -1,9 +1,0 @@
-{
-  "upstream_files": {
-    ".moon/workspace.yml": "8e360846878956aafc1539cc379ff4db966cf3fcff6827d389596aad0d9c3d38",
-    "apps/web/moon.yml": "99e8c02f54c608ef6631ea0f2779eaf73e6aa65d0bc32588a520fe85e86efe15",
-    "apps/web/package.json": "fa0267776e850317041686c04ab456d28d734cbdea13c5aa384342b1d324b56c",
-    ".prototools": "ac9fcd60187f1336b542f82fe6aed1b03b2dc4149bdd493922d9034778755636"
-  },
-  "commands": {}
-}
