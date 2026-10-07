@@ -60,7 +60,7 @@ check = "test -s upstream/packages/cli/dist/index.js"
 shared = [".pnpm-store"]
 
 [env]
-NPM_CONFIG_STORE_DIR = "${BENCH_DIR}/.pnpm-store"
+PNPM_CONFIG_STORE_DIR = "${BENCH_DIR}/.pnpm-store"
 
 [runs]
 boringcache-turbo = ["github", "local"]

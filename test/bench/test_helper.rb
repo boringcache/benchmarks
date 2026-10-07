@@ -8,7 +8,8 @@ module BenchFixture
     if [ "$1" = "--version" ]; then echo "boringcache 9.9.9"; exit 0; fi
     tool="$1"; shift
     echo "$tool $*" >> "$STUB_LOG"
-    touch "$BORINGCACHE_OBSERVABILITY_JSONL_PATH"
+    echo '{"operation":"cache_blob_read"}' > "$BORINGCACHE_OBSERVABILITY_JSONL_PATH"
+    echo '{"operation":"cache_session_summary","duration_ms":7}' >> "$BORINGCACHE_OBSERVABILITY_JSONL_PATH"
     echo boringcache > upstream/out.txt
   BASH
 
