@@ -1,0 +1,102 @@
+name: Bench phase
+
+on:
+  workflow_call:
+    inputs:
+      case:
+        type: string
+        required: true
+      lane:
+        type: string
+        required: true
+      runner:
+        type: string
+        required: true
+      runner_label:
+        type: string
+        required: true
+      phase:
+        type: string
+        required: true
+      run_id:
+        type: string
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  phase:
+    name: ${{ inputs.case }} ${{ inputs.lane }} ${{ inputs.runner }} ${{ inputs.phase }}
+    runs-on: ${{ inputs.runner_label }}
+    timeout-minutes: 180
+    env:
+      BENCH_CASE: ${{ inputs.case }}
+      BENCH_LANE: ${{ inputs.lane }}
+      BENCH_RUNNER: ${{ inputs.runner }}
+      BENCH_PHASE: ${{ inputs.phase }}
+      BENCH_RUN_ID: ${{ inputs.run_id }}
+      MISE_TRUSTED_CONFIG_PATHS: ${{ github.workspace }}/.work
+      MISE_YES: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
+        with:
+          bundler-cache: true
+
+      - uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca # v5.1.1
+        with:
+          install: false
+          cache: false
+
+      - run: echo "$HOME/.local/share/mise/shims" >> "$GITHUB_PATH"
+
+      - id: prepare
+        run: bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" --results results --github
+
+      - if: steps.prepare.outputs.ready == 'true'
+        run: bundle exec bin/bench start "$BENCH_CASE" --lane "$BENCH_LANE"
+
+      - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != ''
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.prepare.outputs.cache_paths }}
+          key: ${{ steps.prepare.outputs.cache_key }}
+          restore-keys: ${{ steps.prepare.outputs.restore_key }}
+
+      - id: boringcache
+        if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache'
+        continue-on-error: true
+        uses: boringcache/one@696d081c557c070471a175d72aa67d27709a3f31 # v1.40.0
+        with:
+          mode: ${{ steps.prepare.outputs.tool }}
+          working-directory: ${{ steps.prepare.outputs.build_dir }}
+          cli-version: v${{ steps.prepare.outputs.boringcache_version }}
+          trust-policy: ${{ inputs.phase == 'warm' && 'restore' || 'publish' }}
+
+      - id: build
+        if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache'
+        continue-on-error: true
+        run: bundle exec bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
+
+      - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != '' && inputs.phase != 'warm'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.prepare.outputs.cache_paths }}
+          key: ${{ steps.prepare.outputs.cache_key }}
+
+      - if: steps.prepare.outputs.ready == 'true'
+        env:
+          BUILD_FAILED: ${{ steps.boringcache.outcome == 'failure' || steps.build.outcome == 'failure' }}
+        run: bundle exec bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
+
+      - if: always() && steps.prepare.outputs.ready == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: results-${{ steps.prepare.outputs.cache_key }}-${{ inputs.phase }}-${{ github.run_attempt }}
+          path: results
+          if-no-files-found: warn
