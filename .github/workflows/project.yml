@@ -11,16 +11,8 @@ on:
         description: project, for example Hugo or PostHog
         type: string
         required: true
-      lane:
-        description: only these lanes, space separated (empty runs every lane in the case)
-        type: string
-        default: ""
-      runner:
-        description: only these runner keys, space separated (empty runs every runner in the case)
-        type: string
-        default: ""
 
-run-name: ${{ inputs.project }} - ${{ inputs.tool }}${{ inputs.lane != '' && format(' ({0})', inputs.lane) || '' }}${{ inputs.runner != '' && format(' on {0}', inputs.runner) || '' }}
+run-name: ${{ inputs.project }} - ${{ inputs.tool }}
 
 permissions:
   contents: read
@@ -43,9 +35,7 @@ jobs:
         env:
           TOOL: ${{ inputs.tool }}
           PROJECT: ${{ inputs.project }}
-          LANE: ${{ inputs.lane }}
-          RUNNER: ${{ inputs.runner }}
-        run: echo "matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${LANE:+--lane "$LANE"} ${RUNNER:+--runner "$RUNNER"})" >> "$GITHUB_OUTPUT"
+        run: echo "matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL")" >> "$GITHUB_OUTPUT"
 
   cold:
     needs: plan
