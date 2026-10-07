@@ -1,0 +1,17 @@
+workspace = "boringcache/benchmarks"
+
+[entries.yarn-global]
+tag = "storybook-yarn-global"
+path-env = "YARN_GLOBAL_FOLDER"
+default-path = ".yarn-global"
+
+[profiles.deps]
+entries = ["yarn-global"]
+
+[adapters.nx]
+tag = "storybook-nx"
+profiles = ["deps"]
+no-platform = true
+no-git = true
+metadata-hints = ["benchmark=storybook-nx"]
+command = ["bash", "-c", "corepack yarn install --immutable && corepack yarn nx run-many -t compile -c production -p react-vite --parallel=8"]

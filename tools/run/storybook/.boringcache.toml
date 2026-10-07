@@ -1,0 +1,20 @@
+workspace = "boringcache/benchmarks"
+
+[entries.nx-cache]
+tag = "storybook-nx-cache"
+path = "upstream/.nx/cache"
+
+[entries.nx-workspace-data]
+tag = "storybook-nx-workspace-data"
+path = "upstream/.nx/workspace-data"
+
+[profiles.storybook-nx]
+entries = ["nx-cache", "nx-workspace-data"]
+
+[adapters.run]
+tag = "storybook-run"
+profiles = ["storybook-nx"]
+no-platform = true
+no-git = true
+metadata-hints = ["benchmark=storybook", "upstream-job=create-react-vite-default-ts"]
+command = ["corepack", "yarn", "task", "build", "--template", "react-vite/default-ts", "--no-link", "-s", "build"]

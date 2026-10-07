@@ -34,7 +34,7 @@ TURBO_API = "https://cache.depot.dev"
 TURBO_TOKEN = "${DEPOT_TOKEN}"
 
 [warm.env]
-TURBO_CACHE = "remote:r"
+TURBO_CACHE = "local:rw,remote:r"
 ```
 
 | Key | Meaning |

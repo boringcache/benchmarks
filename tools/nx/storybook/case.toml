@@ -1,0 +1,17 @@
+repo = "storybookjs/storybook"
+branch = "next"
+start_sha = "523e561cf330879201a73d7634e910ac04decf0b"
+directory = "upstream"
+prepare = ["mise trust && mise install", "ruby overlay/configure-nx-cache.rb", "cd upstream && corepack install"]
+check = "test -s upstream/code/frameworks/react-vite/dist/index.js"
+shared = [".yarn-global"]
+
+[env]
+NX_NO_CLOUD = "true"
+NX_DAEMON = "false"
+YARN_GLOBAL_FOLDER = "${BENCH_DIR}/.yarn-global"
+
+[runs]
+boringcache-nx = ["github", "local"]
+gha = ["github"]
+depot-cache = ["github", "local"]
