@@ -1,6 +1,7 @@
 workspace = "boringcache/benchmarks"
 
 [adapters.docker]
+fail-on-cache-error = true
 tag = "mastodon-streaming-docker"
 no-git = true
 metadata-hints = ["benchmark=mastodon-streaming", "upstream-job=build-image-amd64"]

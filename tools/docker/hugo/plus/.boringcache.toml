@@ -1,6 +1,7 @@
 workspace = "boringcache/benchmarks"
 
 [adapters.docker]
+fail-on-cache-error = true
 tag = "hugo-docker"
 no-git = true
 metadata-hints = ["benchmark=hugo", "upstream-job=build-and-push"]

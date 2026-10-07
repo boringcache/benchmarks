@@ -8,6 +8,7 @@ path-env = "BUN_INSTALL_CACHE_DIR"
 entries = ["bun-cache"]
 
 [adapters.moon]
+fail-on-cache-error = true
 tag = "opencut-moon"
 profiles = ["deps"]
 no-git = true

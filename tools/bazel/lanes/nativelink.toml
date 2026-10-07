@@ -11,5 +11,8 @@ build --remote_cache=grpc://127.0.0.1:50051
 build --remote_instance_name=main
 """
 
+[cold.env]
+BAZEL_PHASE_RC = "build --remote_accept_cached=false"
+
 [warm.env]
 BAZEL_PHASE_RC = "build --remote_upload_local_results=false"

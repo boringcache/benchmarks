@@ -9,5 +9,8 @@ build --remote_cache=https://cache.depot.dev
 build --remote_header=authorization=${DEPOT_TOKEN}
 """
 
+[cold.env]
+BAZEL_PHASE_RC = "build --remote_accept_cached=false"
+
 [warm.env]
 BAZEL_PHASE_RC = "build --remote_upload_local_results=false"

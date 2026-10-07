@@ -8,6 +8,7 @@ path-env = "PANTS_NAMED_CACHES_DIR"
 entries = ["pants-named-caches"]
 
 [adapters.pants]
+fail-on-cache-error = true
 tag = "stackstorm-pants"
 profiles = ["deps"]
 no-git = true

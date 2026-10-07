@@ -1,6 +1,7 @@
 workspace = "boringcache/benchmarks"
 
 [adapters.docker]
+fail-on-cache-error = true
 tag = "posthog-docker"
 no-git = true
 metadata-hints = ["benchmark=posthog", "upstream-job=build-image-amd64"]

@@ -8,6 +8,7 @@ path-env = "GOMODCACHE"
 entries = ["go-mod-cache"]
 
 [adapters.go]
+fail-on-cache-error = true
 tag = "hugo-go"
 profiles = ["deps"]
 no-platform = true
