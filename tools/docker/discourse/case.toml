@@ -1,0 +1,8 @@
+repo = "discourse/discourse_docker"
+branch = "main"
+start_sha = "8d705a91866c320592ce851f30895ddb4c3e85fe"
+directory = "upstream/image"
+check = "docker image inspect local_discourse/discourse_test:release"
+
+[runs]
+boringcache-docker = ["github", "local"]

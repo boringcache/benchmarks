@@ -1,0 +1,20 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+tag = "immich-docker"
+no-git = true
+metadata-hints = ["benchmark=immich-server", "upstream-job=server-amd64"]
+mount-cache = true
+command = [
+  "docker", "buildx", "build",
+  "--file", "../upstream/server/Dockerfile",
+  "--platform", "linux/amd64",
+  "--build-arg", "BUILD_ID=36788420153",
+  "--build-arg", "BUILD_IMAGE=ghcr.io/immich-app/immich-server:main",
+  "--build-arg", "BUILD_SOURCE_REF=main",
+  "--build-arg", "BUILD_SOURCE_COMMIT=a3c8b359f2fdc47699f1530215a23fe8bd34c454",
+  "--build-arg", "DEVICE=cpu",
+  "--tag", "immich-server-benchmark:local",
+  "--load",
+  "../upstream",
+]

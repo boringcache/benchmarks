@@ -1,0 +1,8 @@
+repo = "immich-app/immich"
+branch = "main"
+start_sha = "a3c8b359f2fdc47699f1530215a23fe8bd34c454"
+check = "docker image inspect immich-server-benchmark:local"
+
+[runs]
+boringcache-docker = ["github", "local"]
+boringcache-docker-plus = ["github", "local"]

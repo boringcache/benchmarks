@@ -1,0 +1,9 @@
+repo = "immich-app/base-images"
+branch = "main"
+start_sha = "71fbae519f9a62bfd13977f6d3f3d046c89bfe11"
+prepare = ["bash overlay/stage-ccache-binary.sh upstream/server"]
+check = "docker image inspect immich-base-images-benchmark:local"
+
+[runs]
+boringcache-docker = ["github", "local"]
+boringcache-docker-plus = ["github", "local"]

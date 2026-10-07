@@ -1,0 +1,7 @@
+repo = "PostHog/duckgres"
+branch = "main"
+start_sha = "fe14612b9384f7b739263c44cb614495713bf012"
+check = "docker image inspect duckgres-benchmark:local"
+
+[runs]
+boringcache-docker = ["github", "local"]

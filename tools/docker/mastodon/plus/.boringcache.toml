@@ -1,0 +1,19 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+tag = "mastodon-docker"
+no-git = true
+metadata-hints = ["benchmark=mastodon", "upstream-job=build-image-amd64"]
+tool-cache = ["ccache:mastodon-ccache"]
+mount-cache = true
+command = [
+  "docker", "buildx", "build",
+  "--file", "../overlay/mastodon-ccache.Dockerfile",
+  "--platform", "linux/amd64",
+  "--build-arg", "MASTODON_VERSION_PRERELEASE=nightly.2026-09-30",
+  "--build-arg", "MASTODON_VERSION_METADATA=",
+  "--build-arg", "SOURCE_COMMIT=9b97c67be3c67e992c184167bd7425502aad12da",
+  "--tag", "mastodon-server-benchmark:local",
+  "--load",
+  "../upstream",
+]

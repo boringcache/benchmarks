@@ -1,0 +1,17 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+tag = "duckgres-docker"
+no-git = true
+metadata-hints = ["benchmark=duckgres", "upstream-job=build-amd64"]
+command = [
+  "docker", "buildx", "build",
+  "--file", "upstream/Dockerfile",
+  "--platform", "linux/amd64",
+  "--build-arg", "VERSION=build-fe14612b9384f7b739263c44cb614495713bf012",
+  "--build-arg", "COMMIT=fe14612b9384f7b739263c44cb614495713bf012",
+  "--build-arg", "BUILD_TAGS=kubernetes",
+  "--tag", "duckgres-benchmark:local",
+  "--load",
+  "upstream",
+]

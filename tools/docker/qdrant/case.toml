@@ -1,0 +1,7 @@
+repo = "qdrant/qdrant"
+branch = "dev"
+start_sha = "1dd962aa15cad888b88220b3cb1da125252ab006"
+check = "docker image inspect qdrant/qdrant:e2e-tests"
+
+[runs]
+boringcache-docker = ["github", "local"]

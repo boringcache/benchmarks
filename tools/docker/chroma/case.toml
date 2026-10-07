@@ -1,0 +1,8 @@
+repo = "chroma-core/chroma"
+branch = "main"
+start_sha = "848cf58dd6dd952f8d0ff672af7b30cbf4d67f81"
+check = "docker image inspect chroma-benchmark:local"
+
+[runs]
+boringcache-docker = ["github", "local"]
+boringcache-docker-plus = ["github", "local"]

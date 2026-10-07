@@ -1,0 +1,15 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+tag = "immich-base-images-docker"
+no-git = true
+metadata-hints = ["benchmark=immich-base-images", "upstream-job=server-native-amd64"]
+command = [
+  "docker", "buildx", "build",
+  "--file", "upstream/server/Dockerfile",
+  "--platform", "linux/amd64",
+  "--target", "libvips",
+  "--tag", "immich-base-images-benchmark:local",
+  "--load",
+  "upstream/server",
+]

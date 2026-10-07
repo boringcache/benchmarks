@@ -1,0 +1,7 @@
+repo = "linkerd/linkerd2"
+branch = "main"
+start_sha = "8f398ed9312b6daea937036940f11477b80b0620"
+check = "docker image inspect linkerd2-web-benchmark:local"
+
+[runs]
+boringcache-docker = ["github", "local"]
