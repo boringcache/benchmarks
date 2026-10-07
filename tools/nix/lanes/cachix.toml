@@ -1,6 +1,5 @@
 provider = "cachix"
 level = "base"
-run_scoped = false
 actions_only = true
 runners = ["github"]
 secrets = ["CACHIX_AUTH_TOKEN", "CACHIX_CACHE"]
