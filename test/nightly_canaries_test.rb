@@ -25,7 +25,7 @@ class NightlyCanariesTest < Minitest::Test
       @requests << {path: path, body: body}
       return @releases if path.include?("releases?")
       return @releases.first if path.include?("releases/tags/")
-      return {"workflow_runs" => @parents} if path.include?("canary.yml/runs?") || path.include?("weekly-fresh.yml/runs?")
+      return {"workflow_runs" => @parents} if path.include?("canary.yml/runs?")
       if path.include?("/actions/runs/")
         return {"head_sha" => "a" * 40, "status" => @conclusion ? "completed" : "in_progress", "conclusion" => @conclusion}
       end
@@ -72,37 +72,6 @@ class NightlyCanariesTest < Minitest::Test
     assert_empty @runner.requests.select { |request| request[:body] }
   end
 
-  def test_shared_workflow_dispatches_each_case_once_and_retains_its_selector
-    first = {"source_repo" => "boringcache/benchmarks", "fresh_workflow" => "native-fresh-benchmark.yml", "case_id" => "hugo-go"}
-    second = first.merge("case_id" => "storybook")
-    record = @runner.dispatch(repository: "boringcache/benchmarks", output: @output, benchmarks: [first, first, second])
-    posts = @runner.requests.select { |request| request[:body] }
-    assert_equal 2, posts.length
-    assert_equal %w[hugo-go storybook], posts.map { |request| request[:body].dig("inputs", "case_id") }
-    assert_equal %w[hugo-go storybook], record["runs"].map { |run| run.dig("inputs", "case_id") }
-    assert posts.all? { |request| request[:body].dig("inputs", "cli_version") == VERSION }
-  end
-
-  def test_shared_workflow_keeps_distinct_reviewed_variants_in_requests_and_receipts
-    first = {"source_repo" => "boringcache/benchmarks", "fresh_workflow" => "native-fresh-benchmark.yml", "case_id" => "n8n", "fresh_inputs" => {"variant" => "turbo"}}
-    second = first.merge("fresh_inputs" => {"variant" => "docker"})
-    record = @runner.dispatch(repository: "boringcache/benchmarks", output: @output, summary: @summary, benchmarks: [first, first, second])
-    posts = @runner.requests.select { |request| request[:body] }
-    assert_equal 2, posts.length
-    assert_equal %w[turbo docker], posts.map { |request| request[:body].dig("inputs", "variant") }
-    assert_equal %w[turbo docker], record["runs"].map { |run| run.dig("inputs", "variant") }
-    assert_includes File.read(@summary), "native-fresh-benchmark.yml n8n turbo"
-    assert_includes File.read(@summary), "native-fresh-benchmark.yml n8n docker"
-  end
-
-  def test_invalid_workload_selectors_fail_before_any_network_or_build_request
-    item = {"source_repo" => "boringcache/benchmarks", "fresh_workflow" => "native-fresh-benchmark.yml", "case_id" => "n8n"}
-    [{"case_id" => "another-case"}, {"variant" => true}, {"cli_version" => VERSION}].each do |inputs|
-      assert_raises(NightlyCanaries::Error) { @runner.dispatch(repository: "boringcache/benchmarks", output: @output, benchmarks: [item.merge("fresh_inputs" => inputs)]) }
-    end
-    assert_empty @runner.requests
-  end
-
   def test_incomplete_latest_canary_does_not_fall_back_to_an_older_one
     @runner.releases << @runner.releases.first.merge("tag_name" => "vcli-canary-abcdef012345", "published_at" => "2026-09-30T02:00:00Z", "assets" => [])
     assert_raises(NightlyCanaries::Error) { dispatch }
@@ -124,7 +93,7 @@ class NightlyCanariesTest < Minitest::Test
     record = JSON.parse(File.read(@output))
     assert_equal "dispatch-failed", record["state"]
     assert_equal 1, record["runs"].first["id"]
-    assert_equal "request-unknown", record["runs"].last["state"]
+    assert_equal "planned", record["runs"].last["state"]
   end
 
   def test_checks_the_recorded_run_and_reports_failure
@@ -142,21 +111,6 @@ class NightlyCanariesTest < Minitest::Test
     assert @runner.check(record, summary: @summary)
     assert_includes File.read(@summary), "**in_progress**"
     refute_includes File.read(@summary), "**success**"
-  end
-
-  def test_collects_zed_layer_artifacts_for_the_requested_attempt
-    record = {"benchmark" => "zed-cargo-layers", "phase" => "commit",
-      "github" => {"run_id" => "42", "run_attempt" => "2"}}
-    download = lambda do |*arguments|
-      assert_includes arguments, "zed-cargo-layers-*"
-      directory = arguments.fetch(arguments.index("--dir") + 1)
-      File.write(File.join(directory, "phase.json"), JSON.generate(record))
-      File.write(File.join(directory, "old-attempt.json"), JSON.generate(record.merge("github" => {"run_id" => "42", "run_attempt" => "1"})))
-      ["", "", Struct.new(:success?).new(true)]
-    end
-    Open3.stub(:capture3, download) do
-      assert_equal [record], NightlyCanaries::Runner.new.phase_evidence({"repository" => "boringcache/benchmarks", "id" => 42}, attempt: 2)
-    end
   end
 
   def test_dispatch_is_limited_to_the_selected_repository
@@ -197,32 +151,12 @@ class NightlyCanariesTest < Minitest::Test
     assert_includes File.read(@summary), "/actions/runs/1"
   end
 
-  def test_weekly_collection_uses_its_own_dispatch_and_retains_structured_outcomes
-    prepare_collection
-    @runner.record["cli_version"] = "v1.40.0"
-    @runner.record["channel"] = "stable"
-    assert @runner.collect(summary: @summary, output: @output, channel: "stable", benchmarks: [BENCHMARK], now: Time.utc(2026, 10, 5))
-    assert @runner.requests.any? { |request| request[:path].include?("weekly-fresh.yml/runs?") }
-    retained = JSON.parse(File.read(@output))
-    assert_equal true, retained.fetch("passed")
-    assert_equal "success", retained.dig("repositories", 0, "dispatch", "runs", 0, "state")
-    assert_includes File.read(@summary), "CLI stable benchmark results"
-  end
-
   def test_missing_latest_receipt_does_not_fall_back_to_an_older_success
     prepare_collection
     @runner.receipt_error = true
     refute collect
     assert_equal [[BENCHMARK.fetch("source_repo"), 21]], @runner.receipt_requests
     assert_includes File.read(@summary), "Receipt missing"
-  end
-
-  def test_reset_cutoff_never_imports_a_discarded_dispatch
-    prepare_collection
-    refute @runner.collect(summary: @summary, output: @output, benchmarks: [BENCHMARK], now: Time.utc(2026, 10, 6),
-      baseline: {"id" => "new-baseline", "started_at" => "2026-10-06T00:00:00Z"})
-    assert_empty @runner.receipt_requests
-    assert_equal "new-baseline", JSON.parse(File.read(@output)).fetch("baseline_id")
   end
 
   def test_receipt_cannot_report_another_repository
@@ -268,28 +202,6 @@ class NightlyCanariesTest < Minitest::Test
 
   def test_collector_skips_archived_benchmarks
     assert @runner.collect(summary: @summary, benchmarks: [BENCHMARK.merge("archived" => true)])
-    assert_empty @runner.requests
-  end
-
-  def test_collects_the_active_historical_canary_until_cutover
-    prepare_collection
-    item = BENCHMARK.merge("source_repo" => "boringcache/benchmarks", "case_id" => "example",
-      "fresh_workflow" => "native-fresh-benchmark.yml", "fresh_inputs" => {"variant" => "layers"},
-      "historical_source_repo" => BENCHMARK.fetch("source_repo"), "historical_fresh_workflow" => "fresh.yml",
-      "canary_location" => "historical")
-    assert @runner.collect(summary: @summary, benchmarks: [item], now: Time.utc(2026, 9, 30, 12))
-    assert_equal [[BENCHMARK.fetch("source_repo"), 21]], @runner.receipt_requests
-    refute @runner.requests.any? { |request| request[:path].start_with?("repos/boringcache/benchmarks/") }
-
-    @runner.conclusion = "failure"
-    refute @runner.collect(summary: @summary, benchmarks: [item], now: Time.utc(2026, 9, 30, 12))
-    assert_includes File.read(@summary), "**failure**"
-  end
-
-  def test_canary_cutover_requires_a_known_location
-    assert_raises(NightlyCanaries::Error) do
-      @runner.collect(summary: @summary, benchmarks: [BENCHMARK.merge("canary_location" => "typo")])
-    end
     assert_empty @runner.requests
   end
 end

@@ -1,18 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "rbconfig"
-
 require "yaml"
-require "json"
-
-if ARGV.empty? && !ENV["BENCHMARK_REPOS_DIR"]
-  require "bundler/setup"
-  require_relative "benchmark-cases"
-  BenchmarkCases.contract_views do |directory|
-    exit(system(RbConfig.ruby, __FILE__, directory) ? 0 : 1)
-  end
-end
 
 def default_repos_dir
   candidates = [
@@ -108,19 +97,6 @@ class Workflow
   def evaluate(expression, matrix)
     return Regexp.last_match(1) if expression.match(/\A'([^']*)'\z/)
 
-    if (json = expression.match(/\AfromJSON\((.*)\)\z/m))
-      return evaluate(json[1].strip, matrix)
-    end
-
-    if (choice = expression.match(/\Ainputs\.([a-z_]+)\s*==\s*'([^']*)'\s*&&\s*'([^']*)'\s*\|\|\s*(.*)\z/m))
-      return @inputs[choice[1]] == choice[2] ? choice[3] : evaluate(choice[4].strip, matrix)
-    end
-
-    if (fallback = expression.match(/\A(inputs\.[a-z_]+)\s*\|\|\s*'([^']*)'\z/))
-      selected = lookup(fallback[1], matrix)
-      return selected.to_s.empty? ? fallback[2] : selected
-    end
-
     if (choice = expression.match(/\Ainputs\.([a-z_]+)\s*&&\s*(format\(.+?\))\s*\|\|\s*(format\(.+\))\z/m))
       return evaluate(@inputs[choice[1]] == "true" ? choice[2] : choice[3], matrix)
     end
@@ -168,13 +144,11 @@ class Workflow
   end
 end
 
-def matrix_combinations(matrix, workflow)
+def matrix_combinations(matrix)
   return [{}] unless matrix.is_a?(Hash)
 
   axes = matrix.reject { |key, _| %w[include exclude].include?(key) }
-  includes = matrix["include"]
-  includes = JSON.parse(workflow.resolve(includes, {})) if includes.is_a?(String)
-  includes = includes.is_a?(Array) ? includes.select { |entry| entry.is_a?(Hash) } : []
+  includes = matrix["include"].is_a?(Array) ? matrix["include"].select { |entry| entry.is_a?(Hash) } : []
   return includes.map(&:dup) if axes.empty? && includes.any?
 
   combinations = axes.reduce([{}]) do |carried, (key, values)|
@@ -195,13 +169,12 @@ def matrix_combinations(matrix, workflow)
   combinations
 end
 
-def action_variant_input(repo_dir, uses, inputs)
+def action_variant_input(repo_dir, uses)
   action_dir = uses.delete_prefix("./")
   path = ["action.yml", "action.yaml"].map { |basename| File.join(repo_dir, action_dir, basename) }.find { |candidate| File.file?(candidate) }
   return nil unless path
 
   source = File.read(path)
-  return "report_variant" if inputs.key?("report_variant") && YAML.safe_load(source, aliases: true).fetch("inputs", {}).key?("report_variant")
   return nil unless source.include?("--variant")
 
   return "arch" if source.match?(/--variant\s+["']?\$ARCH\b/)
@@ -210,25 +183,19 @@ def action_variant_input(repo_dir, uses, inputs)
 end
 
 def phase_flags(run)
-  segment = run[/benchmark-report\.rb\s+phase\b.*/m].to_s
+  segment = run[/benchmark-report\.py\s+phase\b.*/m].to_s
   segment.scan(/--(benchmark|strategy|lane|phase|variant)[= ]+"?([^"\s\\]*)"?/).to_h
 end
 
 def producers_for(workflow:, repo_dir:, job_id:, job:)
-  matrix_combinations(job.dig("strategy", "matrix"), workflow).flat_map do |matrix|
+  matrix_combinations(job.dig("strategy", "matrix")).flat_map do |matrix|
     Array(job["steps"]).filter_map do |step|
       next unless step.is_a?(Hash)
 
       uses = step["uses"].to_s
-      if %w[./.github/actions/reapi-benchmark ./.github/actions/nix-benchmark].include?(uses)
-        with = step.fetch("with")
-        fields = {"benchmark" => workflow.resolve(with.fetch("case-id"), matrix),
-          "strategy" => workflow.resolve(with.fetch("provider"), matrix),
-          "lane" => workflow.resolve(with.fetch("lane", "fresh"), matrix),
-          "phase" => workflow.resolve(with.fetch("phase"), matrix), "variant" => ""}
-      elsif uses.start_with?("./.github/actions/")
+      if uses.start_with?("./.github/actions/")
         with = step["with"].is_a?(Hash) ? step["with"] : {}
-        variant_input = action_variant_input(repo_dir, uses, with)
+        variant_input = action_variant_input(repo_dir, uses)
         variant = workflow.resolve(with[variant_input].to_s, matrix).to_s if variant_input
         fields = {
           "benchmark" => workflow.resolve(with["benchmark_id"].to_s, matrix),
@@ -237,13 +204,7 @@ def producers_for(workflow:, repo_dir:, job_id:, job:)
           "phase" => workflow.resolve(with["phase"].to_s, matrix),
           "variant" => variant_input && variant != DEFAULT_PLATFORM ? variant : ""
         }
-      elsif step["run"].to_s.include?("write_phase_result.rb")
-        flags = step.fetch("run").scan(/--(surface|strategy|phase)\s+([^\s\\]+)/).to_h
-        surface = flags.fetch("surface")
-        base = flags.fetch("phase") == "base"
-        fields = {"benchmark" => step.fetch("run").include?("--continuous") ? "obs-studio" : "obs-studio-#{surface}",
-          "strategy" => flags.fetch("strategy"), "lane" => base ? "fresh" : "rolling", "phase" => base ? "cold" : "commit", "variant" => surface}
-      elsif step["run"].to_s.match?(/benchmark-report\.rb\s+phase\b/)
+      elsif step["run"].to_s.match?(/benchmark-report\.py\s+phase\b/)
         shell_env = workflow.shell_env_for(job, step, matrix)
         fields = phase_flags(step["run"].to_s).transform_values { |value| workflow.resolve(value, matrix, shell_env) }
       else
@@ -292,16 +253,16 @@ def download_patterns(workflow:, job:)
 end
 
 def summarizing?(job)
-  Array(job["steps"]).any? { |step| step.is_a?(Hash) && step["run"].to_s.match?(/(?:benchmark-report\.rb summarize|fresh-report\.rb report)/) }
+  Array(job["steps"]).any? { |step| step.is_a?(Hash) && step["run"].to_s.include?("benchmark-report.py summarize") }
 end
 
-SUMMARIZE_FLAGS = %w[title input-dir output-dir baseline-strategy].freeze
+SUMMARIZE_FLAGS = %w[title input-dir output-dir].freeze
 
 def summarize_flags(job)
   Array(job["steps"]).flat_map do |step|
     next [] unless step.is_a?(Hash)
 
-    step["run"].to_s[/benchmark-report\.rb\s+summarize\b.*/m].to_s.scan(/--([a-z-]+)/).flatten
+    step["run"].to_s[/benchmark-report\.py\s+summarize\b.*/m].to_s.scan(/--([a-z-]+)/).flatten
   end.uniq
 end
 
@@ -310,17 +271,17 @@ CANARY_SUFFIX = "-canary"
 repos_dir = ARGV[0] || ENV.fetch("BENCHMARK_REPOS_DIR", default_repos_dir)
 abort "benchmark repos directory not found: #{repos_dir}" unless Dir.exist?(repos_dir)
 
-canonical_reporter = File.expand_path("canonical/benchmark-report.rb", __dir__)
+canonical_reporter = File.expand_path("canonical/benchmark-report.py", __dir__)
 errors = []
 checked = 0
 
 Dir[File.join(repos_dir, "benchmark-*")].select { |path| File.directory?(path) }.sort.each do |repo_dir|
   repo = File.basename(repo_dir)
 
-  reporter = File.join(repo_dir, "scripts", "benchmark-report.rb")
+  reporter = File.join(repo_dir, "scripts", "benchmark-report.py")
   # Chroma adds sccache proof fields to the shared reporter.
-  if File.file?(reporter) && File.file?(canonical_reporter) && File.read(reporter) != File.read(canonical_reporter)
-    errors << "#{repo}/scripts/benchmark-report.rb: has drifted from scripts/canonical/benchmark-report.rb"
+  if repo != "benchmark-chroma" && File.file?(reporter) && File.file?(canonical_reporter) && File.read(reporter) != File.read(canonical_reporter)
+    errors << "#{repo}/scripts/benchmark-report.py: has drifted from scripts/canonical/benchmark-report.py"
   end
 
   Dir[File.join(repo_dir, ".github", "workflows", "*.{yml,yaml}")].sort.each do |path|

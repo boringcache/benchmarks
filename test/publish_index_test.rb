@@ -1,82 +1,10 @@
 # frozen_string_literal: true
 
 require "minitest/autorun"
-require "minitest/mock"
 require "rbconfig"
 require_relative "../scripts/publish-index"
 
 class PublishIndexTest < Minitest::Test
-  def test_legacy_index_does_not_auto_publish_central_actions_results
-    benchmark = {"source_repo" => "boringcache/benchmarks", "historical_source_repo" => "boringcache/benchmark-hugo", "case_id" => "hugo",
-      "fresh_workflow" => "native-fresh-benchmark.yml", "historical_fresh_workflow" => "hugo-fresh-benchmark.yml"}
-    calls = []
-    lookup = lambda do |repo:, workflow_name:|
-      calls << [repo, workflow_name]
-      if repo == "boringcache/benchmarks"
-        [{"databaseId" => 1, "createdAt" => "2026-10-02T00:00:00Z", "displayTitle" => "hugo fresh screening sample 1"},
-          {"databaseId" => 2, "createdAt" => "2026-10-02T00:00:00Z", "displayTitle" => "hugo-go fresh screening sample 1"}]
-      else
-        [{"databaseId" => 3, "createdAt" => "2026-10-01T00:00:00Z"}]
-      end
-    end
-    stub(:latest_successful_runs, lookup) do
-      runs = benchmark_workflow_runs(benchmark, "native-fresh-benchmark.yml", {})
-      assert_equal [3], runs.map { |run| run.fetch("databaseId") }
-      assert_equal "boringcache/benchmark-hugo", runs.last.fetch("repository")
-    end
-    assert_equal [["boringcache/benchmark-hugo", "hugo-fresh-benchmark.yml"]], calls
-  end
-
-  def test_new_central_case_has_no_legacy_publication_feed
-    benchmark = {"source_repo" => "boringcache/benchmarks", "case_id" => "evaluation", "fresh_workflow" => "native-fresh-benchmark.yml"}
-    stub(:latest_successful_runs, ->(**) { flunk "Central artifacts must use the reviewed series publication path" }) do
-      assert_empty benchmark_workflow_runs(benchmark, "native-fresh-benchmark.yml", {})
-    end
-  end
-
-  def test_shared_canary_selectors_do_not_change_original_publication_workflows
-    expected = {"immich" => "immich-fresh-benchmark.yml", "mastodon-docker" => "mastodon-fresh-benchmark.yml",
-      "mastodon-streaming" => "mastodon-fresh-benchmark.yml", "posthog" => "posthog-fresh-benchmark.yml",
-      "n8n" => "n8n-fresh-benchmark.yml", "n8n-docker" => "n8n-docker-fresh-benchmark.yml",
-      "n8n-runners" => "n8n-docker-fresh-benchmark.yml", "n8n-runners-distroless" => "n8n-docker-fresh-benchmark.yml"}
-    expected.each do |id, workflow|
-      item = BENCHMARKS.find { |row| row.fetch("benchmark") == id }
-      calls = []
-      stub(:latest_successful_runs, ->(repo:, workflow_name:) { calls << [repo, workflow_name]; [] }) do
-        benchmark_workflow_runs(item, item.fetch("fresh_workflow"), {})
-      end
-      assert_equal [[item.fetch("historical_source_repo"), workflow]], calls
-    end
-  end
-
-  def test_migration_keeps_historical_execution_repository
-    benchmark = {"source_repo" => "boringcache/benchmarks", "historical_source_repo" => "boringcache/benchmark-hugo", "case_id" => "hugo"}
-    calls = []
-    lookup = lambda do |repo:, workflow_name:|
-      calls << [repo, workflow_name]
-      raise "HTTP 404: Not Found" if repo == "boringcache/benchmarks"
-      [{"databaseId" => 123, "createdAt" => "2026-10-01T00:00:00Z"}]
-    end
-    stub(:latest_successful_runs, lookup) do
-      runs = benchmark_workflow_runs(benchmark, "hugo-hugo-fresh-benchmark.yml", {})
-      assert_equal "boringcache/benchmark-hugo", runs.first.fetch("repository")
-    end
-    assert_equal [["boringcache/benchmark-hugo", "hugo-fresh-benchmark.yml"]], calls
-    stub(:latest_successful_runs, ->(**) { raise "HTTP 403: Forbidden" }) do
-      assert_raises(RuntimeError) { benchmark_workflow_runs(benchmark, "hugo-hugo-fresh-benchmark.yml", {}) }
-    end
-  end
-
-  def test_artifact_lookup_uses_original_run_repository_after_migration
-    run = {"databaseId" => 123, "createdAt" => "2026-10-01T00:00:00Z", "repository" => "boringcache/benchmark-hugo"}
-    requests = []
-    stub(:run_cmd, lambda { |*args| requests << args; '{"artifacts":[{"name":"benchmark-hugo-boringcache-fresh","expired":false}]}' }) do
-      found = latest_run_with_artifact(runs_for_head: [run], repo: "boringcache/benchmarks", benchmark_id: "hugo", strategy: "boringcache", lane: "fresh", artifacts_cache: {})
-      assert_equal run, found
-    end
-    assert_equal ["gh", "api", "repos/boringcache/benchmark-hugo/actions/runs/123/artifacts"], requests.first
-  end
-
   PRODUCT_REFS = {
     "schema_version" => 1,
     "action_ref" => "boringcache/one@v1",
@@ -233,11 +161,11 @@ class PublishIndexTest < Minitest::Test
         "name" => "Hugo",
         "lane" => "fresh",
         "lanes" => {
-          "fresh" => lane_entry(lane: "fresh", scenario: "warm", label: "Warm build"),
+          "fresh" => lane_entry(lane: "fresh", scenario: "warm", label: "Warm Build"),
           "rolling" => lane_entry(
             lane: "rolling",
             scenario: "cold",
-            label: "Changed-source build",
+            label: "Commit Build",
             sample_count: 3,
             classification: {
               "reporting_reason" => "rolling_reseed",
@@ -248,9 +176,9 @@ class PublishIndexTest < Minitest::Test
               "comparative" => false,
               "status" => "investigation_only",
               "reason" => "rolling_cache_bootstrap",
-              "headline_label" => "Changed-source build",
+              "headline_label" => "Commit Build",
               "result_text" => "cache bootstrap 1/3",
-              "note" => "Rolling cache was unavailable for 1/3 samples; cache restore did not report a hit for those samples."
+              "note" => "Rolling cache was unavailable for 1/3 samples; those samples populated the rolling cache and are excluded from parity claims."
             }
           )
         }
@@ -263,8 +191,8 @@ class PublishIndexTest < Minitest::Test
     assert_includes report, "## Rolling"
     assert_includes report, "Coverage: 1 benchmarks; fresh 1/1, rolling 1/1."
     assert_includes report, "Rows are latest complete same-commit pairs."
-    assert_includes report, "| Benchmark | Metric | Actions Cache | BoringCache | Time difference (BoringCache − Actions Cache) | Storage difference (BoringCache − Actions Cache) | Sample status |"
-    assert_includes report, "| Hugo | Changed-source build | 10s | 8s | -2s | -200 bytes | cache bootstrap 1/3 |"
+    assert_includes report, "| Benchmark | Metric | GitHub Actions Cache | BoringCache | Result | Storage |"
+    assert_includes report, "| Hugo | Commit Build | 0m 10s | 0m 8s | cache bootstrap 1/3 | 200.00 B less (20.0%) |"
     refute_includes report, "BoringCache storage:"
     refute_includes report, "setup dominates"
     refute_includes report, "Caveat"
@@ -365,10 +293,10 @@ class PublishIndexTest < Minitest::Test
       },
       provider_workflows_for(docker_benchmark)
     )
-    assert_equal "BoringCache native", provider_label("boringcache-native")
-    assert_equal "BoringCache tool cache", provider_label("boringcache-toolcache")
-    assert_equal "BoringCache mount cache", provider_label("boringcache-mountcache")
-    assert_equal "Amazon ECR (retired)", provider_label("ecr-cache")
+    assert_equal "BoringCache Native", provider_label("boringcache-native")
+    assert_equal "BoringCache Toolcache", provider_label("boringcache-toolcache")
+    assert_equal "BoringCache Mount Cache", provider_label("boringcache-mountcache")
+    assert_equal "ECR (retired control)", provider_label("ecr-cache")
     assert_equal false, provider_storage_available?("boringcache-native")
     assert_equal true, provider_storage_available?("boringcache-toolcache")
     assert_equal true, provider_storage_available?("boringcache-mountcache")
@@ -517,26 +445,112 @@ class PublishIndexTest < Minitest::Test
     refute payload.key?("samples")
   end
 
-  def test_provider_report_preserves_different_timings_without_diagnosing_the_runner
-    snapshots = {
-      "actions-cache" => provider_native_snapshot(run_id: "actions", compiler_seconds: 37.475, seconds: 2_131),
-      "depot-cache" => provider_native_snapshot(run_id: "depot", compiler_seconds: 29.292, seconds: 1_821),
-      "boringcache" => provider_native_snapshot(run_id: "boringcache", compiler_seconds: 50.0, seconds: 2_600)
-    }
-    loader = lambda do |**args|
-      provider_lane_payload(lane: args.fetch(:lane), runs: [{}], unique_head_count: 1,
-        snapshots: [snapshots.fetch(args.fetch(:strategy))], storage_available: true)
-    end
-    stub(:load_provider_lane_data, loader) do
-      entry = load_provider_entry(temp_root: "/tmp", benchmark: benchmark_config(category: "rust"),
-        provider_workflows: snapshots.transform_values { "benchmark.yml" }, provider_runs: {}, cache: {}, artifacts_cache: {})
-      snapshots.each do |provider, snapshot|
-        lane = entry.dig("providers", provider, "lanes", "rolling")
-        assert_equal [snapshot], lane.fetch("samples")
-        assert_equal snapshot.fetch("native_tool"), lane.dig("samples", 0, "native_tool")
-        refute lane.key?("runner_variance_candidates")
-        refute lane.key?("reporting_note")
-      end
+  def test_runner_variance_filter_excludes_only_matching_native_tool_outlier
+    providers = provider_matrix({
+      "actions-cache" => [
+        provider_native_snapshot(run_id: "actions", compiler_seconds: 37.475, hits: 2290, misses: 84, seconds: 2_131)
+      ],
+      "boringcache" => [
+        provider_native_snapshot(run_id: "boringcache", compiler_seconds: 37.329, hits: 2290, misses: 84, seconds: 2_128)
+      ],
+      "depot-cache" => [
+        provider_native_snapshot(run_id: "depot", compiler_seconds: 29.292, hits: 2289, misses: 85, timeouts: 1, seconds: 1_821)
+      ]
+    })
+
+    filtered = apply_runner_variance_outlier_filter(providers)
+    depot_lane = filtered.dig("depot-cache", "lanes", "rolling")
+
+    assert_equal "missing_sample", depot_lane["state"]
+    assert_equal 1, depot_lane["source_sample_count"]
+    assert_equal 1, depot_lane["excluded_runner_variance_outlier_count"]
+    assert_equal ["depot"], depot_lane["runner_variance_outliers"].map { |row| row["run_id"] }
+    assert_equal "faster", depot_lane.dig("runner_variance_outliers", 0, "outlier_direction")
+    assert_equal ["actions", "boringcache"], depot_lane.dig("runner_variance_outliers", 0, "peer_run_ids")
+    assert_equal 1, filtered.dig("actions-cache", "lanes", "rolling", "selected_sample_count")
+    assert_equal 1, filtered.dig("boringcache", "lanes", "rolling", "selected_sample_count")
+    refute filtered.dig("actions-cache", "lanes", "rolling").key?("runner_variance_outliers")
+    refute filtered.dig("boringcache", "lanes", "rolling").key?("runner_variance_outliers")
+  end
+
+  def test_runner_variance_filter_keeps_sample_when_cache_work_differs
+    providers = provider_matrix({
+      "actions-cache" => [
+        provider_native_snapshot(run_id: "actions", compiler_seconds: 37.475, hits: 2290, misses: 84, seconds: 2_131)
+      ],
+      "boringcache" => [
+        provider_native_snapshot(run_id: "boringcache", compiler_seconds: 37.329, hits: 2290, misses: 84, seconds: 2_128)
+      ],
+      "depot-cache" => [
+        provider_native_snapshot(run_id: "depot", compiler_seconds: 29.292, hits: 2254, misses: 120, seconds: 1_821)
+      ]
+    })
+
+    filtered = apply_runner_variance_outlier_filter(providers)
+    depot_lane = filtered.dig("depot-cache", "lanes", "rolling")
+
+    assert_equal "healthy", depot_lane["state"]
+    assert_equal 1, depot_lane["selected_sample_count"]
+    refute depot_lane.key?("runner_variance_outliers")
+  end
+
+  def test_runner_variance_filter_keeps_sample_when_headline_timing_is_not_distorted
+    providers = provider_matrix({
+      "actions-cache" => [
+        provider_native_snapshot(run_id: "actions", compiler_seconds: 63.691, hits: 2296, misses: 3, seconds: 1_287)
+      ],
+      "boringcache" => [
+        provider_native_snapshot(run_id: "boringcache", compiler_seconds: 68.374, hits: 2296, misses: 3, seconds: 1_293)
+      ],
+      "depot-cache" => [
+        provider_native_snapshot(run_id: "depot", compiler_seconds: 47.146, hits: 2295, misses: 4, seconds: 1_353)
+      ]
+    })
+
+    filtered = apply_runner_variance_outlier_filter(providers)
+    depot_lane = filtered.dig("depot-cache", "lanes", "rolling")
+
+    assert_equal "healthy", depot_lane["state"]
+    assert_equal 1, depot_lane["selected_sample_count"]
+    refute depot_lane.key?("runner_variance_outliers")
+  end
+
+  def test_runner_variance_filter_needs_two_comparable_peers
+    providers = provider_matrix({
+      "actions-cache" => [
+        provider_native_snapshot(run_id: "actions", compiler_seconds: 37.475, seconds: 2_131)
+      ],
+      "depot-cache" => [
+        provider_native_snapshot(run_id: "depot", compiler_seconds: 29.292, seconds: 1_821)
+      ]
+    })
+
+    filtered = apply_runner_variance_outlier_filter(providers)
+
+    assert_equal 1, filtered.dig("depot-cache", "lanes", "rolling", "selected_sample_count")
+    refute filtered.dig("depot-cache", "lanes", "rolling").key?("runner_variance_outliers")
+  end
+
+  def test_runner_variance_filter_keeps_samples_when_peers_disagree
+    providers = provider_matrix({
+      "actions-cache" => [
+        provider_native_snapshot(run_id: "actions", compiler_seconds: 32.0, seconds: 2_131)
+      ],
+      "boringcache" => [
+        provider_native_snapshot(run_id: "boringcache", compiler_seconds: 44.0, seconds: 2_128)
+      ],
+      "depot-cache" => [
+        provider_native_snapshot(run_id: "depot", compiler_seconds: 25.0, seconds: 1_821)
+      ]
+    })
+
+    filtered = apply_runner_variance_outlier_filter(providers)
+
+    filtered.each_value do |provider|
+      lane = provider.dig("lanes", "rolling")
+      assert_equal "healthy", lane["state"]
+      assert_equal 1, lane["selected_sample_count"]
+      refute lane.key?("runner_variance_outliers")
     end
   end
 
@@ -749,10 +763,10 @@ class PublishIndexTest < Minitest::Test
 
     averaged = average_lane_entries([entry], benchmark: benchmark_config(category: "docker"), lane: "fresh")
 
-    assert_equal "Cold build", averaged["headline_label"]
+    assert_equal "Cold Build", averaged["headline_label"]
     assert_equal 80, averaged["before_seconds"]
     assert_equal 90, averaged["after_seconds"]
-    assert_equal "-13", averaged["faster"]
+    assert_equal "0", averaged["faster"]
     assert_equal(-12.5, averaged.dig("comparison", "cold_improvement_pct"))
     assert_equal(-100.0, averaged.dig("comparison", "cold_build_improvement_pct"))
     refute averaged.fetch("comparison").key?("run_total_improvement_pct")

@@ -1,62 +1,158 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "bundler/setup"
-require_relative "benchmark-cases"
+require_relative "publish-index"
+require "open3"
 
-begin
-  cases = BenchmarkCases.validate
-  by_id = cases.to_h { |item| [item.fetch("id"), item] }
-  suites = Dir[File.join(BenchmarkCases::ROOT, "suites", "*.json")].to_h { |path| [File.basename(path, ".json"), JSON.parse(File.read(path))] }
-  errors = []
-  suites.each do |name, suite|
-    next unless suite.is_a?(Hash)
-    Array(suite["cases"]).each do |entry|
-      id = entry.is_a?(Hash) ? entry.fetch("case_id") : entry
-      item = by_id[id]
-      errors << "#{name}: unknown case #{id}" unless item
-      errors << "#{name}: retained case #{id} cannot execute" if item && item["kind"] == "retained"
-    end
-  end
-  published = suites.fetch("published")
-  published.each do |row|
-    next if row["source_repo"] == "boringcache/benchmark-discourse"
-    id = row.fetch("case_id")
-    item = by_id[id]
-    errors << "Published entry #{row.fetch('benchmark')}: unknown case #{id}" unless item
-    errors << "#{id}: current execution must use boringcache/benchmarks" unless row["source_repo"] == BenchmarkCases::REPOSITORY
-    paths = item&.dig("execution", "workflows")&.map { |entry| File.basename(entry.fetch("path")) } || []
-    %w[workflow fresh_workflow].each do |field|
-      errors << "#{id}: unregistered #{row[field]}" if row[field] && !paths.include?(row[field])
-    end
-    next unless item && row["fresh_workflow"]
-    entry = item.dig("execution", "workflows").find { |candidate| File.basename(candidate.fetch("path")) == row.fetch("fresh_workflow") }
-    next unless entry
-    if entry.fetch("lane") != "fresh"
-      errors << "#{id}: fresh callers must select a reviewed fresh workflow, not a diagnostic matrix"
-      next
-    end
-    inputs = row.fetch("fresh_inputs", {})
-    unless inputs.is_a?(Hash) && inputs.all? { |name, value| name.is_a?(String) && value.is_a?(String) } && !inputs.key?("cli_version")
-      errors << "#{id}: fresh selectors must be string inputs without cli_version"
-      next
-    end
-    inputs = {"case_id" => id}.merge(inputs) if row.fetch("fresh_workflow").start_with?("native-")
-    variant = inputs[entry["variant_input"]]
-    if entry["variants"] && !entry.fetch("variants").include?(variant)
-      errors << "#{id}: fresh caller must select an explicit reviewed variant"
-      next
-    end
-    begin
-      BenchmarkCases.plan(item, lane: "fresh", workflow: row.fetch("fresh_workflow"), inputs: inputs, variant: variant)
-    rescue BenchmarkCases::Error, NativeCase::Error => error
-      errors << "#{id}: #{error.message}"
-    end
-  end
-  ids = published.map { |row| row.fetch("benchmark") }
-  errors << "Duplicate published benchmark IDs" unless ids.uniq.length == ids.length
-  raise BenchmarkCases::Error, errors.join("\n") unless errors.empty?
-  puts "benchmark registry aligned: #{cases.length} cases, #{published.length} published entries"
-rescue BenchmarkCases::Error, KeyError, JSON::ParserError => error
-  abort error.message
+def default_repos_dir
+  candidates = [
+    File.expand_path("../../benchmarks-repos", __dir__),
+    File.expand_path("../../benchmark-repos", __dir__)
+  ]
+  candidates.find { |path| Dir.exist?(path) } || candidates.first
 end
+
+BENCHMARK_ID_ASSIGNMENT = /\b(?:benchmark_id|BENCHMARK_ID):[ \t]*(?:"([^"]*)"|'([^']*)'|((?:\$\{\{.*?\}\}|[^,}\s])+))/
+BENCHMARK_ID_VALUES = [
+  /\A([A-Za-z0-9._-]+)\z/,
+  /\A([A-Za-z0-9._-]+)\$\{\{\s*inputs\.benchmark_id_suffix\s*\}\}\z/,
+  /\A\$\{\{\s*format\('([A-Za-z0-9._-]+)\{0\}',\s*inputs\.benchmark_id_suffix\)\s*\}\}\z/
+].freeze
+
+def benchmark_ids_in(line)
+  line.scan(BENCHMARK_ID_ASSIGNMENT).filter_map do |captures|
+    value = captures.compact.first.to_s.strip
+    BENCHMARK_ID_VALUES.filter_map { |pattern| value[pattern, 1] }.first
+  end
+end
+
+def canonical_checkout?(path)
+  remote, status = Open3.capture2("git", "-C", path, "remote", "get-url", "origin")
+  return true unless status.success?
+
+  remote_name = File.basename(remote.strip).delete_suffix(".git")
+  remote_name == File.basename(path)
+end
+
+repos_dir = ARGV[0] || ENV.fetch("BENCHMARK_REPOS_DIR", default_repos_dir)
+abort "benchmark repos directory not found: #{repos_dir}" unless Dir.exist?(repos_dir)
+
+registry_by_repo = BENCHMARKS.each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |benchmark, index|
+  repo_name = benchmark.fetch("source_repo").split("/").last
+  index[repo_name] << benchmark
+end
+
+registry_exempt_repos = ["benchmark-docker", "benchmark-obs-studio"]
+sync_exempt_repos = ["benchmark-docker"]
+owned_repo_names = Dir[File.join(repos_dir, "benchmark-*")]
+  .select { |path| File.directory?(path) && canonical_checkout?(path) }
+  .map { |path| File.basename(path) }
+  .sort
+repo_names = owned_repo_names - registry_exempt_repos
+
+missing_from_registry = repo_names - registry_by_repo.keys
+extra_in_registry = registry_by_repo.keys - repo_names - ["benchmark-discourse"] # Archived historical benchmark.
+errors = []
+sync_offsets = Hash.new { |offsets, minute| offsets[minute] = [] }
+
+errors << "benchmark repos missing from aggregate registry: #{missing_from_registry.join(", ")}" if missing_from_registry.any?
+errors << "aggregate registry points at missing repos: #{extra_in_registry.join(", ")}" if extra_in_registry.any?
+
+owned_repo_names.each do |repo_name|
+  repo_path = File.join(repos_dir, repo_name)
+  readme_path = File.join(repo_path, "README.md")
+  lines = File.file?(readme_path) ? File.readlines(readme_path, chomp: true) : []
+  title = lines.first.to_s
+  subject = title.delete_prefix("# BoringCache ").delete_suffix(" benchmark")
+  valid_readme = !subject.empty? &&
+    title == "# BoringCache #{subject} benchmark" &&
+    lines.drop(1).any? { |line| !line.empty? } &&
+    lines.any? { |line| line.include?(".boringcache.toml") }
+
+  errors << "#{repo_name}: README must use the owned benchmark title and point to .boringcache.toml" unless valid_readme
+  workflows_path = File.join(repo_path, ".github", "workflows")
+  errors << "#{repo_name}: .github/workflows is missing" unless Dir.exist?(workflows_path)
+  errors << "#{repo_name}: .boringcache.toml is missing" unless File.file?(File.join(repo_path, ".boringcache.toml"))
+
+  next if sync_exempt_repos.include?(repo_name)
+
+  sync_path = File.join(workflows_path, "sync.yml")
+  unless File.file?(sync_path)
+    errors << "#{repo_name}: sync.yml is missing for a single-upstream benchmark"
+    next
+  end
+
+  sync_text = File.read(sync_path)
+  sync_minutes = sync_text[/^\s*- cron: "(\d+),(\d+) \* \* \* \*"$/m] ? [Regexp.last_match(1).to_i, Regexp.last_match(2).to_i] : nil
+  unless sync_minutes && sync_minutes[1] - sync_minutes[0] == 30 && sync_minutes[0].between?(1, 29)
+    errors << "#{repo_name}: sync.yml must run twice an hour on a repo-specific offset, as \"<m>,<m+30> * * * *\" with m between 1 and 29"
+  end
+  sync_offsets[sync_minutes[0]] << repo_name if sync_minutes
+  unless sync_text.include?("secrets.BOT_PUBLIC_GITHUB_TOKEN") || sync_text.include?("github.token")
+    errors << "#{repo_name}: sync.yml must use a GitHub token for source updates"
+  end
+
+  source_pin = File.file?(File.join(repo_path, "benchmark-source.env")) ? "benchmark-source.env" : "upstream"
+  if sync_text.include?("gh run list") || sync_text.include?("steps.previous.outputs.ready")
+    errors << "#{repo_name}: source sync must not depend on a previous benchmark conclusion"
+  end
+  benchmark_workflows = Dir[File.join(workflows_path, "*.yml")].reject { |path| path == sync_path }.map { |path| File.read(path) }
+  source_push_trigger = benchmark_workflows.any? do |workflow|
+    workflow.match?(/^\s{2}push:\s*$/) && workflow.include?(source_pin)
+  end
+  zed_verified_dispatch = repo_name == "benchmark-zed" &&
+    sync_text.include?("gh workflow run zed-cargo-rolling-auto.yml") &&
+    benchmark_workflows.any? { |workflow| workflow.include?("needs.benchmark.result == 'success'") && workflow.include?("git push origin HEAD:main") }
+  errors << "#{repo_name}: source updates must trigger a benchmark from #{source_pin}" unless source_push_trigger || zed_verified_dispatch
+
+  cargo_rolling_chain = Dir[File.join(workflows_path, "*cargo-rolling-chain.yml")].any?
+  if cargo_rolling_chain
+    rolling_source_push = benchmark_workflows.any? do |workflow|
+      workflow.match?(/^\s{2}push:\s*$/) && workflow.include?(source_pin) && workflow.include?("cargo-rolling-chain")
+    end
+    errors << "#{repo_name}: Cargo source updates must trigger the persistent rolling chain" unless rolling_source_push || zed_verified_dispatch
+  end
+end
+
+sync_offsets.select { |_, repos| repos.length > 1 }.each do |minute, repos|
+  errors << "sync offset #{minute} is shared by #{repos.sort.join(", ")}; give each benchmark its own minute"
+end
+
+registry_by_repo.each do |repo_name, benchmarks|
+  repo_path = File.join(repos_dir, repo_name)
+  next unless Dir.exist?(repo_path)
+
+  workflow_ids = Dir[File.join(repo_path, ".github", "workflows", "*.yml")].flat_map do |path|
+    File.readlines(path).flat_map { |line| benchmark_ids_in(line) }
+  end.uniq.sort
+
+  config_path = File.join(repo_path, ".boringcache.toml")
+  config_ids = if File.file?(config_path)
+    File.read(config_path).scan(/\bbenchmark=([A-Za-z0-9._-]+)/).flatten
+  else
+    []
+  end
+  declared_ids = (workflow_ids + config_ids).uniq.sort
+
+  allowed_ids = benchmarks.flat_map do |benchmark|
+    ids = [benchmark.fetch("benchmark"), *Array(benchmark["aliases"])]
+    ids.concat(ids.map { |id| "#{id}-toolcache" }) if Array(benchmark["extra_providers"]).include?("boringcache-toolcache")
+    ids.concat(ids.map { |id| "#{id}-mountcache" }) if Array(benchmark["extra_providers"]).include?("boringcache-mountcache")
+    ids.concat(Array(benchmark["workflow_benchmark_ids"]))
+    ids
+  end.uniq.sort
+  allowed_ids << "immich-base-images" if repo_name == "benchmark-immich"
+  unknown_ids = declared_ids - allowed_ids
+  missing_id = (declared_ids & allowed_ids).empty?
+
+  errors << "#{repo_name}: no concrete benchmark id found in workflows or .boringcache.toml" if declared_ids.empty?
+  errors << "#{repo_name}: declared benchmark ids #{declared_ids.join(", ")} do not match registry ids #{allowed_ids.join(", ")}" if missing_id
+  errors << "#{repo_name}: unknown declared benchmark ids #{unknown_ids.join(", ")}; registry ids are #{allowed_ids.join(", ")}" if unknown_ids.any?
+end
+
+if errors.any?
+  warn errors.join("\n")
+  exit 1
+end
+
+puts "benchmark registry aligned: #{registry_by_repo.length} repos"

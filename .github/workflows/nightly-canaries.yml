@@ -1,51 +1,31 @@
-name: Benchmark cadence monitor
-run-name: Benchmark cadence results
+name: Canary Benchmarks
+run-name: Canary benchmark results
+
+on:
+  schedule:
+    - cron: "47 * * * *"
+  workflow_dispatch:
+
 permissions:
   contents: read
   actions: read
+
 concurrency:
   group: nightly-canary-results
   cancel-in-progress: false
+
 jobs:
   results:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 15
     env:
-      GH_TOKEN: "${{ github.token }}"
-      BENCHMARK_CADENCE_ACTIVE: "${{ vars.BENCHMARK_CADENCE_ACTIVE }}"
-      BENCHMARK_ACTIVE_CASES: "${{ vars.BENCHMARK_ACTIVE_CASES }}"
+      GH_TOKEN: ${{ github.token }}
     steps:
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-      with:
-        persist-credentials: false
-    - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b
-    - run: bundle install --jobs 4 --retry 2
-    - name: Check repository canaries
-      run: |
-        failed=0
-        args=()
-        if [[ "$BENCHMARK_CADENCE_ACTIVE" != true && -n "$BENCHMARK_ACTIVE_CASES" && "$BENCHMARK_ACTIVE_CASES" != '[]' ]]; then
-          args+=(--active-only)
-        fi
-        for cadence in daily weekly; do
-          bundle exec ruby scripts/benchmark-cadence.rb --collect "${args[@]}" --cadence "$cadence" \
-            --summary "$RUNNER_TEMP/$cadence-summary.md" \
-            --output "$RUNNER_TEMP/benchmark-outcomes-$cadence.json" || failed=1
-          cat "$RUNNER_TEMP/$cadence-summary.md" >> "$GITHUB_STEP_SUMMARY"
-        done
-        bundle exec ruby scripts/rolling-monitor.rb \
-          --summary "$RUNNER_TEMP/rolling-summary.md" \
-          --output "$RUNNER_TEMP/benchmark-outcomes-rolling.json" || failed=1
-        cat "$RUNNER_TEMP/rolling-summary.md" >> "$GITHUB_STEP_SUMMARY"
-        exit "$failed"
-    - name: Retain collected outcomes
-      if: always()
-      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
-      with:
-        name: benchmark-outcomes
-        path: ${{ runner.temp }}/benchmark-outcomes*.json
-        if-no-files-found: error
-'on':
-  schedule:
-  - cron: 47 * * * *
-  workflow_dispatch:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+        with:
+          ruby-version: "3.4.4"
+      - name: Check repository canaries
+        run: ruby scripts/nightly-canaries.rb --collect --summary "${GITHUB_STEP_SUMMARY}"

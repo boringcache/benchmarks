@@ -1,4 +1,3 @@
-require "rbconfig"
 # frozen_string_literal: true
 
 require "minitest/autorun"
@@ -9,9 +8,16 @@ require "tmpdir"
 
 class BenchmarkReportContractTest < Minitest::Test
   SCRIPT = File.expand_path("../scripts/check-report-contract.rb", __dir__)
-  CANONICAL = File.expand_path("../scripts/canonical/benchmark-report.rb", __dir__)
-  def test_every_central_summarized_lane_is_retained
-    stdout, stderr, status = Open3.capture3({"BENCHMARK_REPOS_DIR" => nil}, RbConfig.ruby, SCRIPT)
+  CANONICAL = File.expand_path("../scripts/canonical/benchmark-report.py", __dir__)
+  REPOS_DIR = ENV["BENCHMARK_REPOS_DIR"] || [
+    File.expand_path("../../benchmarks-repos", __dir__),
+    File.expand_path("../../benchmark-repos", __dir__)
+  ].find { |path| Dir.exist?(path) }
+
+  def test_every_summarized_lane_is_retained
+    skip "benchmark repos checkout not available" unless REPOS_DIR
+
+    stdout, stderr, status = Open3.capture3(SCRIPT, REPOS_DIR)
     assert status.success?, "report contract failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
     assert_includes stdout, "benchmark report contract aligned"
   end
@@ -21,62 +27,6 @@ class BenchmarkReportContractTest < Minitest::Test
 
     refute status.success?
     assert_includes stderr, "retains acme-boringcache-rolling.json, which no benchmark job in this workflow produces"
-  end
-
-  def test_profile_variant_must_be_in_the_retained_report_filename
-    _, stderr, status = run_profile_workflow(uploaded_variant: nil)
-    refute status.success?
-    assert_includes stderr, "produce acme-boringcache-cargo-product-rolling.json, which the report never retains"
-
-    _, stderr, status = run_profile_workflow(uploaded_variant: "cargo-product")
-    assert status.success?, stderr
-  end
-
-  def test_provider_selection_resolves_the_retained_matrix_results
-    %w[both boringcache actions-cache].each do |provider|
-      Dir.mktmpdir do |root|
-        repo = File.join(root, "benchmark-acme")
-        FileUtils.mkdir_p(File.join(repo, ".github/workflows"))
-        selected = provider == "both" ? %w[boringcache actions-cache] : [provider]
-        uploads = selected.map do |strategy|
-          <<~YAML.lines.map { |line| "        #{line}" }.join
-            - uses: actions/upload-artifact@v6
-              with:
-                name: benchmark-acme-#{strategy}-rolling
-                path: benchmark-results/acme-#{strategy}-rolling.json
-                if-no-files-found: error
-          YAML
-        end.join
-        File.write(File.join(repo, ".github/workflows/providers.yml"), <<~YAML)
-          on:
-            workflow_dispatch:
-              inputs:
-                provider: {type: choice, default: #{provider}, options: [both, boringcache, actions-cache]}
-          jobs:
-            commit:
-              runs-on: ubuntu-latest
-              env:
-                STRATEGY: ${{ matrix.strategy }}
-              strategy:
-                matrix:
-                  include: ${{ fromJSON(inputs.provider == 'boringcache' && '[{"strategy":"boringcache"}]' || inputs.provider == 'actions-cache' && '[{"strategy":"actions-cache"}]' || '[{"strategy":"boringcache"},{"strategy":"actions-cache"}]') }}
-              steps:
-                - run: ruby ./scripts/benchmark-report.rb phase --benchmark acme --strategy "$STRATEGY" --lane rolling --phase commit
-            report:
-              needs: commit
-              runs-on: ubuntu-latest
-              steps:
-                - uses: actions/download-artifact@v6
-                  with:
-                    pattern: phase-*
-                    path: benchmark-results
-                - run: ruby ./scripts/benchmark-report.rb summarize --title Acme --input-dir benchmark-results --output-dir benchmark-results
-        #{uploads}
-        YAML
-        _, stderr, status = Open3.capture3(SCRIPT, root)
-        assert status.success?, "#{provider}: #{stderr}"
-      end
-    end
   end
 
   def test_a_lane_the_report_never_retains_fails
@@ -111,7 +61,7 @@ class BenchmarkReportContractTest < Minitest::Test
     _, stderr, status = run_against(reporter: "print('drifted')\n")
 
     refute status.success?
-    assert_includes stderr, "has drifted from scripts/canonical/benchmark-report.rb"
+    assert_includes stderr, "has drifted from scripts/canonical/benchmark-report.py"
   end
 
   def test_reporter_carries_action_product_refs_into_the_lane
@@ -132,7 +82,7 @@ class BenchmarkReportContractTest < Minitest::Test
       }))
 
       _, stderr, status = Open3.capture3(
-        RbConfig.ruby, CANONICAL, "phase",
+        "python3", CANONICAL, "phase",
         "--benchmark", "hugo", "--strategy", "boringcache",
         "--lane", "rolling", "--phase", "commit", "--mode", "docker",
         "--build-seconds", "37", "--evidence", evidence_path,
@@ -142,7 +92,7 @@ class BenchmarkReportContractTest < Minitest::Test
       assert status.success?, stderr
 
       _, stderr, status = Open3.capture3(
-        RbConfig.ruby, CANONICAL, "summarize",
+        "python3", CANONICAL, "summarize",
         "--title", "Hugo", "--input-dir", phase_dir, "--output-dir", output_dir
       )
       assert status.success?, stderr
@@ -156,41 +106,13 @@ class BenchmarkReportContractTest < Minitest::Test
 
   private
 
-  def run_profile_workflow(uploaded_variant:)
-    Dir.mktmpdir do |root|
-      repo = File.join(root, "benchmark-acme")
-      FileUtils.mkdir_p(File.join(repo, ".github/workflows"))
-      slug = uploaded_variant ? "-#{uploaded_variant}" : ""
-      File.write(File.join(repo, ".github/workflows/profile.yml"), <<~YAML)
-        on:
-          workflow_dispatch:
-            inputs:
-              cache_profile: {type: choice, default: cargo-product, options: [cargo-product, compiler-only]}
-        env:
-          CACHE_PROFILE: ${{ inputs.cache_profile || 'cargo-product' }}
-        jobs:
-          commit:
-            runs-on: ubuntu-latest
-            steps:
-              - run: ruby ./scripts/benchmark-report.rb phase --benchmark acme --strategy boringcache --lane rolling --phase commit --variant "$CACHE_PROFILE"
-              - run: ruby ./scripts/benchmark-report.rb summarize --title Acme --input-dir benchmark-results --output-dir benchmark-results
-              - uses: actions/upload-artifact@v6
-                with:
-                  name: benchmark-acme-boringcache#{slug}-rolling
-                  path: benchmark-results/acme-boringcache#{slug}-rolling.json
-                  if-no-files-found: error
-      YAML
-      Open3.capture3(SCRIPT, root)
-    end
-  end
-
   def run_against(uploaded: :default, artifact_name: nil, suffixed: true, reporter: nil, summarize_flags: "")
     Dir.mktmpdir do |root|
       repo = File.join(root, "benchmark-acme")
       FileUtils.mkdir_p(File.join(repo, ".github", "workflows"))
       FileUtils.mkdir_p(File.join(repo, ".github", "actions", "acme-docker-benchmark"))
       FileUtils.mkdir_p(File.join(repo, "scripts"))
-      File.write(File.join(repo, "scripts", "benchmark-report.rb"), reporter || File.read(CANONICAL))
+      File.write(File.join(repo, "scripts", "benchmark-report.py"), reporter || File.read(CANONICAL))
       File.write(File.join(repo, ".github", "actions", "acme-docker-benchmark", "action.yml"), action_yaml)
       File.write(File.join(repo, ".github", "workflows", "acme-benchmark.yml"), workflow_yaml(
         uploaded: uploaded == :default ? "acme-docker#{suffixed ? SUFFIX : ""}-boringcache-rolling.json" : uploaded,
@@ -215,7 +137,7 @@ class BenchmarkReportContractTest < Minitest::Test
         using: composite
         steps:
           - shell: bash
-            run: ruby ./scripts/benchmark-report.rb phase --benchmark x --strategy y --lane rolling --phase commit --mode docker --build-seconds 1
+            run: python3 ./scripts/benchmark-report.py phase --benchmark x --strategy y --lane rolling --phase commit --mode docker --build-seconds 1
     YAML
   end
 
@@ -253,7 +175,7 @@ class BenchmarkReportContractTest < Minitest::Test
                 with:
                   pattern: phase-*
                   path: phase-evidence
-              - run: ruby ./scripts/benchmark-report.rb summarize #{summarize_flags}--title Acme --input-dir phase-evidence --output-dir benchmark-results
+              - run: python3 ./scripts/benchmark-report.py summarize #{summarize_flags}--title Acme --input-dir phase-evidence --output-dir benchmark-results
       YAML
       *retain
     ].join("\n") + "\n"

@@ -1,27 +1,15 @@
 # Nightly CLI canary benchmarks
 
-Central `canary.yml` dispatches the active fresh workflows registered in
-`suites/published.json`. It selects the latest published CLI canary with a complete
+Each active benchmark repository runs `canary.yml` daily, staggered between
+02:02 and 02:29 UTC. It selects the latest published CLI canary with a complete
 set of release assets and dispatches its registered fresh workflows with that
 exact `cli_version`. Archived repositories are excluded.
-Entries with several workload variants declare `fresh_inputs` in that registry.
-The dispatcher keeps case and variant selectors in each requested run and in
-its receipt; distinct variants of a shared workflow remain distinct requests.
-Registry checks resolve those inputs through the case planner and reject an
-unselected variant or a diagnostic matrix before caller configuration is accepted.
-The selected PostHog layer, Mastodon server/streaming, n8n workloads, Zed combined
-layer, and Deno Cargo-product paths do not imply coverage of every other variant.
-
-Central dispatch is manual until OIDC and workload qualification pass. The
-original repositories retain their nightly schedules during cutover. Enable the
-central schedule and disable each original caller only after verifying its
-central workload and collected receipt. See [the migration gates](migration.md).
 
 The dispatcher uses the repository's built-in `GITHUB_TOKEN` with Actions write
-permission. The repository-local Ruby dispatcher can request runs only in the
-calling repository. Source synchronization produces a reviewed case proposal;
-verified-pair advancement requires a successful build before its pins move.
-Installed tool versions remain explicit in the case payload.
+permission. A pinned shared action provides the dispatch code; it can request
+runs only in the calling repository. Upstream synchronization keeps its existing
+schedule. Benchmark workloads, source pins, installed tool versions, and stable
+weekly runs keep their existing settings.
 
 Each dispatch retains `nightly-canaries.json`, recording the exact CLI tag and
 requested run IDs. The aggregate `Canary Benchmarks` workflow checks these
@@ -32,17 +20,17 @@ and dispatches more than 36 hours old. It never substitutes an older green run.
 A successful dispatch means the requests were accepted; it does not mean the
 benchmarks passed.
 
-Start the central latest-canary run manually with:
+Start a repository's latest-canary run manually with:
 
 ```sh
-gh workflow run canary.yml --repo boringcache/benchmarks --ref main
+gh workflow run canary.yml --repo boringcache/benchmark-hugo-go --ref main
 ```
 
 For an exact canary tag, dispatch the existing fresh workflow with its
 `cli_version` input. Preview the shared dispatcher without starting builds with:
 
 ```sh
-ruby scripts/nightly-canaries.rb --repository boringcache/benchmarks --dry-run
+ruby scripts/nightly-canaries.rb --repository boringcache/benchmark-hugo-go --dry-run
 ```
 
 Inspect a failed or partial dispatch receipt before starting another run.
