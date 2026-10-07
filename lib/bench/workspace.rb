@@ -43,6 +43,7 @@ module Bench
 
       def copy_overlay
         FileUtils.cp_r(kase.overlay_dir, dir) if Dir.exist?(kase.overlay_dir)
+        FileUtils.cp(kase.mise_path, dir) if File.exist?(kase.mise_path)
       end
 
       def checkout(sha)

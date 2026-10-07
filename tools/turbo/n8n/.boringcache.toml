@@ -1,0 +1,15 @@
+workspace = "boringcache/benchmarks"
+
+[entries.pnpm-store]
+tag = "n8n-pnpm-store"
+path-env = "NPM_CONFIG_STORE_DIR"
+
+[profiles.deps]
+entries = ["pnpm-store"]
+
+[adapters.turbo]
+tag = "n8n-turbo"
+profiles = ["deps"]
+no-git = true
+metadata-hints = ["benchmark=n8n-turbo", "upstream-command=pnpm-build"]
+command = ["bash", "-c", "pnpm install --frozen-lockfile && pnpm build"]

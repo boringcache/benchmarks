@@ -46,9 +46,7 @@ module Bench
     end
 
     def env(phase, source = ENV)
-      config.fetch("env", {}).merge(config.dig(phase, "env") || {}).transform_values do |value|
-        value.to_s.gsub(/\$\{?([A-Z0-9_]+)\}?/) { source.fetch(it[/[A-Z0-9_]+/], "") }
-      end
+      Bench.interpolate(config.fetch("env", {}).merge(config.dig(phase, "env") || {}), source)
     end
 
     private

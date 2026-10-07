@@ -1,0 +1,17 @@
+repo = "n8n-io/n8n"
+branch = "master"
+start_sha = "0976d925b91c0652f2fd774737d0cc3ae620f59b"
+directory = "upstream"
+prepare = ["mise trust && mise install"]
+check = "test -s upstream/packages/cli/dist/index.js"
+shared = [".pnpm-store"]
+
+[env]
+CI = "true"
+NPM_CONFIG_STORE_DIR = "${BENCH_DIR}/.pnpm-store"
+
+[runs]
+boringcache-turbo = ["github", "local"]
+gha = ["github"]
+depot-cache = ["github", "local"]
+vercel = ["github"]

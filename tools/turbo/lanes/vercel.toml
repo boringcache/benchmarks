@@ -1,0 +1,8 @@
+provider = "vercel"
+level = "base"
+actions_only = true
+runners = ["github"]
+secrets = ["TURBO_NAME"]
+
+[warm.env]
+TURBO_CACHE = "remote:r"

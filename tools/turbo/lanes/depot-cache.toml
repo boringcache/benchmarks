@@ -1,0 +1,12 @@
+provider = "depot"
+level = "base"
+runners = ["github", "local"]
+secrets = ["DEPOT_TOKEN", "DEPOT_ORG_ID"]
+
+[env]
+TURBO_API = "https://cache.depot.dev"
+TURBO_TOKEN = "${DEPOT_TOKEN}"
+TURBO_TEAM = "${DEPOT_ORG_ID}"
+
+[warm.env]
+TURBO_CACHE = "remote:r"
