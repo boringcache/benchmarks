@@ -1,20 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "rbconfig"
-
 require_relative "publish-index"
 require "yaml"
-
-if ARGV.empty? && !ENV["BENCHMARK_REPOS_DIR"]
-  require "bundler/setup"
-  require_relative "benchmark-cases"
-  BenchmarkCases.contract_views do |directory|
-    exit(system(RbConfig.ruby, __FILE__, directory, "--central") ? 0 : 1)
-  end
-end
-
-central_execution = ARGV.delete("--central")
 
 def default_repos_dir
   candidates = [
@@ -28,15 +16,14 @@ repos_dir = ARGV[0] || ENV.fetch("BENCHMARK_REPOS_DIR", default_repos_dir)
 abort "benchmark repos directory not found: #{repos_dir}" unless Dir.exist?(repos_dir)
 
 repo_names = BENCHMARKS
-  .map { |benchmark| benchmark.fetch("historical_source_repo", benchmark.fetch("source_repo")).split("/").last }
+  .map { |benchmark| benchmark.fetch("source_repo").split("/").last }
   .concat(%w[benchmark-docker benchmark-obs-studio])
-  .concat(Dir[File.join(repos_dir, "benchmark-*")].select { |path| File.directory?(path) }.map { |path| File.basename(path) })
   .uniq
   .sort
 
 docker_repo_names = BENCHMARKS
   .select { |benchmark| benchmark.fetch("category") == "docker" }
-  .map { |benchmark| benchmark.fetch("historical_source_repo", benchmark.fetch("source_repo")).split("/").last }
+  .map { |benchmark| benchmark.fetch("source_repo").split("/").last }
   .concat(%w[benchmark-docker])
   .uniq
   .sort
@@ -81,11 +68,11 @@ PUBLIC_BOUNDARY_MARKERS = [
   ".planning/"
 ].freeze
 
-PRODUCT_INVOCATION = /(?:\bboringcache\s+(?:bazel|cargo|ccache|docker|go|gradle|maven|nx|sccache|turbo|xcode)\b|boringcache\/one@|\.\/\.github\/actions\/boringcache)/
+PRODUCT_INVOCATION = /(?:\bboringcache\s+(?:bazel|cargo|ccache|docker|go|gradle|maven|nx|sccache|turbo|xcode)\b|boringcache\/one@)/
 CLI_CANARY_INPUT = /^\s+cli_version:\s*(?:$|\{)/
-CLI_CANARY_FORWARD = /(?:cli-version|cli_version):\s*["\x27]?\$\{\{\s*inputs\.cli_version\b/
+CLI_CANARY_FORWARD = /(?:cli-version|cli_version):\s*\$\{\{\s*inputs\.cli_version\b/
 BUILDKIT_CANARY_INPUT = /^\s+buildkit_image:\s*(?:$|\{)/
-BUILDKIT_CANARY_FORWARD = /(?:managed-buildkit-image|buildkit_image|BORINGCACHE_MANAGED_BUILDKIT_IMAGE):\s*["\x27]?\$\{\{[^\n]*inputs\.buildkit_image\b/
+BUILDKIT_CANARY_FORWARD = /(?:managed-buildkit-image|buildkit_image|BORINGCACHE_MANAGED_BUILDKIT_IMAGE):\s*\$\{\{[^\n]*inputs\.buildkit_image\b/
 
 DEPENDENCY_CACHE_PATHS = {
   /(?:^|\/)node_modules(?:\/|$)/i => "node_modules",
@@ -160,7 +147,7 @@ repo_names.each do |repo_name|
       errors << "#{repo_name}/#{relative}: remove #{description}; this contract belongs to product E2E" if basename.match?(pattern)
     end
     FORBIDDEN_INTERNAL_PATTERNS.each do |pattern, description|
-      next if pattern == /\bboringcache\s+(?:check|inspect|cache-registry)\b/ && relative == "scripts/benchmark-report.rb"
+      next if pattern == /\bboringcache\s+(?:check|inspect|cache-registry)\b/ && relative == "scripts/benchmark-report.py"
       next unless text.match?(pattern)
 
       errors << "#{repo_name}/#{relative}: #{description}"
@@ -190,13 +177,6 @@ repo_names.each do |repo_name|
       errors << "#{repo_name}/#{relative}: runner_label overrides must be restricted to manual main-branch dispatches"
     end
 
-    if text.include?("refs/tags/benchmark-") && text.include?("inputs.runner_label")
-      unless text.include?("inputs.expected_identity != ''") && text.include?("fromJSON(inputs.expected_identity).harness_sha == github.sha") &&
-          text.include?("BENCHMARK_EXPECTED_IDENTITY:") && text.include?("inputs.expected_identity")
-        errors << "#{repo_name}/#{relative}: frozen runner dispatches require a matching harness identity"
-      end
-    end
-
     next unless file_path.match?(%r{/\.github/(?:workflows|actions)/})
 
     duplicate_yaml_keys(text).each do |key, line|
@@ -205,11 +185,6 @@ repo_names.each do |repo_name|
 
     begin
       document = YAML.safe_load(text, aliases: true)
-      workflow_steps(document).each do |step|
-        if step["run"].to_s.match?(%r{\bpython(?:3)?\s+["']?(?:\./)?scripts/[^\s"']+\.rb\b})
-          errors << "#{repo_name}/#{relative} (#{step.fetch('name', 'unnamed step')}): invoke maintained Ruby scripts with ruby"
-        end
-      end
       runs = document.is_a?(Hash) ? document["runs"] : nil
       if runs.is_a?(Hash) && runs["using"] == "composite"
         if text.match?(/\$\{\{\s*secrets\./)
@@ -223,19 +198,9 @@ repo_names.each do |repo_name|
       end
 
       jobs = document.is_a?(Hash) && document["jobs"].is_a?(Hash) ? document["jobs"] : {}
-      concurrency = document.is_a?(Hash) ? document["concurrency"] : nil
-      concurrency = concurrency["group"] if concurrency.is_a?(Hash)
-      if central_execution && concurrency == "benchmark-provider-comparisons"
-        errors << "#{repo_name}/#{relative}: unrelated benchmark cases must not share one workflow queue"
-      end
       if relative.start_with?(".github/workflows/") && basename.include?("fresh")
         display_names = jobs.values.map { |job| job.is_a?(Hash) ? job["name"].to_s.downcase : nil }.compact
-        if central_execution
-          errors << "#{repo_name}/#{relative}: central fresh benchmarks must be manually dispatchable" unless text.include?("workflow_dispatch:")
-          errors << "#{repo_name}/#{relative}: central workload activation requires reviewed cutover" if text.match?(/^\s+(?:pull_request|push|schedule):/)
-        else
-          errors << "#{repo_name}/#{relative}: fresh benchmarks must run on pull requests" unless text.include?("pull_request:")
-        end
+        errors << "#{repo_name}/#{relative}: fresh benchmarks must run on pull requests" unless text.include?("pull_request:")
         errors << "#{repo_name}/#{relative}: fresh benchmarks must expose direct cold jobs" unless display_names.any? { |name| name.include?("cold") }
         errors << "#{repo_name}/#{relative}: fresh benchmarks must expose direct warm jobs" unless display_names.any? { |name| name.include?("warm") }
         jobs.each do |job_name, job|
@@ -286,7 +251,7 @@ repo_names.each do |repo_name|
         next unless job["steps"].is_a?(Array)
 
         steps = job["steps"].select { |step| step.is_a?(Hash) }
-        product_steps = steps.select { |step| step["uses"].to_s.start_with?("boringcache/one@") || step["uses"] == "./.github/actions/boringcache" }
+        product_steps = steps.select { |step| step["uses"].to_s.start_with?("boringcache/one@") }
         product_modes = product_steps.each_with_object([]) do |step, modes|
           inputs = step["with"].is_a?(Hash) ? step["with"] : {}
           mode = inputs["mode"].to_s.strip
@@ -340,11 +305,7 @@ repo_names.each do |repo_name|
     .select { |file_path| file_path.match?(%r{/\.github/(?:workflows|actions)/}) }
     .map { |file_path| File.read(file_path) }
     .join("\n")
-  registry_action = File.join(repo_dir, ".github/actions/reapi-benchmark/action.yml")
-  registry_steps = File.file?(registry_action) ? YAML.safe_load(File.read(registry_action)).dig("runs", "steps") : []
-  registry_invocation = File.file?(File.join(repo_dir, "reapi-recipe.json")) &&
-    registry_steps.any? { |step| step["run"].to_s.strip == "boringcache ci run --oidc-provider github-actions -- ruby scripts/reapi-client.rb build" }
-  unless workflow_text.match?(PRODUCT_INVOCATION) || registry_invocation
+  unless workflow_text.match?(PRODUCT_INVOCATION)
     errors << "#{repo_name}: benchmark workflows must invoke one public BoringCache product lifecycle directly"
   end
 

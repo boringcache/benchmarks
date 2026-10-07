@@ -8,7 +8,6 @@ require "optparse"
 require "tempfile"
 require "time"
 require "tmpdir"
-require_relative "benchmark-reporting"
 
 BENCHMARK_ROOT = File.expand_path("..", __dir__)
 TABLE_SCRIPT = File.join(BENCHMARK_ROOT, "scripts", "benchmark-table.rb")
@@ -16,8 +15,171 @@ DEFAULT_CACHE_DIR = ENV.fetch("BENCHMARK_TABLE_CACHE_DIR", File.join(Dir.tmpdir,
 MAX_GH_RETRIES = ENV.fetch("BENCHMARK_COHORT_GH_RETRIES", "3").to_i
 LANES = %w[fresh rolling].freeze
 
-BENCHMARKS = JSON.parse(File.read(File.expand_path("../suites/published.json", __dir__)))
-  .map { |entry| entry.merge("repo" => entry.fetch("source_repo")) }.freeze
+BENCHMARKS = [
+  {
+    "benchmark" => "hugo",
+    "name" => "Hugo",
+    "repo" => "boringcache/benchmark-hugo",
+    "category" => "docker",
+    "workflow" => "hugo-benchmark.yml"
+  },
+  {
+    "benchmark" => "hugo-go",
+    "name" => "Hugo Go",
+    "repo" => "boringcache/benchmark-hugo-go",
+    "category" => "go",
+    "workflow" => "hugo-go-benchmark.yml"
+  },
+  {
+    "benchmark" => "immich",
+    "name" => "Immich",
+    "repo" => "boringcache/benchmark-immich",
+    "category" => "docker",
+    "workflow" => "immich-benchmark.yml"
+  },
+  {
+    "benchmark" => "mastodon-docker",
+    "aliases" => ["mastodon"],
+    "name" => "Mastodon",
+    "repo" => "boringcache/benchmark-mastodon",
+    "category" => "docker",
+    "workflow" => "mastodon-docker-benchmark.yml"
+  },
+  {
+    "benchmark" => "mastodon-streaming",
+    "name" => "Mastodon Streaming",
+    "repo" => "boringcache/benchmark-mastodon",
+    "category" => "docker",
+    "workflow" => "mastodon-streaming-docker-benchmark.yml"
+  },
+  {
+    "benchmark" => "discourse-image-factory-amd64",
+    "aliases" => ["discourse", "discourse-image-factory"],
+    "name" => "Discourse Image Factory (amd64)",
+    "repo" => "boringcache/benchmark-discourse",
+    "category" => "docker",
+    "workflow" => "discourse-image-factory.yml"
+  },
+  {
+    "benchmark" => "discourse-image-factory-arm64",
+    "aliases" => ["discourse-arm64"],
+    "name" => "Discourse Image Factory (arm64)",
+    "repo" => "boringcache/benchmark-discourse",
+    "category" => "docker",
+    "workflow" => "discourse-image-factory.yml"
+  },
+  {
+    "benchmark" => "posthog",
+    "name" => "PostHog",
+    "repo" => "boringcache/benchmark-posthog",
+    "category" => "docker",
+    "workflow" => "posthog-benchmark.yml"
+  },
+  {
+    "benchmark" => "storybook",
+    "name" => "Storybook",
+    "repo" => "boringcache/benchmark-storybook",
+    "category" => "nodejs",
+    "workflow" => "storybook-benchmark.yml"
+  },
+  {
+    "benchmark" => "otel-gradle",
+    "aliases" => ["otel", "opentelemetry", "opentelemetry-java"],
+    "name" => "OpenTelemetry Java",
+    "repo" => "boringcache/benchmark-opentelemetry-java",
+    "category" => "gradle",
+    "workflow" => "opentelemetry-java-gradle-benchmark.yml"
+  },
+  {
+    "benchmark" => "spring-ai-maven",
+    "aliases" => ["spring", "spring-ai"],
+    "name" => "Spring AI",
+    "repo" => "boringcache/benchmark-spring-ai",
+    "category" => "maven",
+    "workflow" => "spring-ai-maven-benchmark.yml"
+  },
+  {
+    "benchmark" => "grpc-bazel",
+    "aliases" => ["grpc", "gRPC"],
+    "name" => "gRPC",
+    "repo" => "boringcache/benchmark-grpc",
+    "category" => "bazel",
+    "workflow" => "grpc-bazel-benchmark.yml"
+  },
+  {
+    "benchmark" => "zed-cargo",
+    "aliases" => ["zed", "zed-sccache"],
+    "name" => "Zed",
+    "repo" => "boringcache/benchmark-zed",
+    "category" => "rust",
+    "workflow" => "zed-cargo-product.yml"
+  },
+  {
+    "benchmark" => "deno-cargo",
+    "aliases" => ["deno"],
+    "name" => "Deno",
+    "repo" => "boringcache/benchmark-deno",
+    "category" => "rust",
+    "workflow" => "deno-cargo-product.yml"
+  },
+  {
+    "benchmark" => "duckgres",
+    "name" => "Duckgres",
+    "repo" => "boringcache/benchmark-duckgres",
+    "category" => "docker",
+    "workflow" => "duckgres-benchmark.yml"
+  },
+  {
+    "benchmark" => "chroma",
+    "name" => "Chroma",
+    "repo" => "boringcache/benchmark-chroma",
+    "category" => "docker",
+    "workflow" => "chroma-benchmark.yml"
+  },
+  {
+    "benchmark" => "linkerd2-v2",
+    "aliases" => ["linkerd", "linkerd2", "linkerd2-web"],
+    "name" => "Linkerd2 Web",
+    "repo" => "boringcache/benchmark-linkerd2",
+    "category" => "docker",
+    "workflow" => "linkerd2-benchmark.yml"
+  },
+  {
+    "benchmark" => "qdrant",
+    "name" => "Qdrant",
+    "repo" => "boringcache/benchmark-qdrant",
+    "category" => "docker",
+    "workflow" => "qdrant-benchmark.yml"
+  },
+  {
+    "benchmark" => "n8n",
+    "name" => "n8n",
+    "repo" => "boringcache/benchmark-n8n",
+    "category" => "nodejs",
+    "workflow" => "n8n-benchmark.yml"
+  },
+  {
+    "benchmark" => "n8n-docker",
+    "name" => "n8n Docker",
+    "repo" => "boringcache/benchmark-n8n",
+    "category" => "docker",
+    "workflow" => "n8n-docker-benchmark.yml"
+  },
+  {
+    "benchmark" => "n8n-runners",
+    "name" => "n8n Runners",
+    "repo" => "boringcache/benchmark-n8n",
+    "category" => "docker",
+    "workflow" => "n8n-docker-benchmark.yml"
+  },
+  {
+    "benchmark" => "n8n-runners-distroless",
+    "name" => "n8n Runners Distroless",
+    "repo" => "boringcache/benchmark-n8n",
+    "category" => "docker",
+    "workflow" => "n8n-docker-benchmark.yml"
+  }
+].freeze
 
 BENCHMARK_BY_KEY = BENCHMARKS.each_with_object({}) do |benchmark, acc|
   ([benchmark.fetch("benchmark"), benchmark.fetch("name")] + Array(benchmark["aliases"])).each do |key|
@@ -179,7 +341,44 @@ def average(values)
 end
 
 def seconds_text(value)
-  BenchmarkReport.seconds(value)
+  return "—" if value.nil?
+
+  total = value.round
+  "#{total / 60}m #{total % 60}s"
+end
+
+def bytes_text(value)
+  return "—" if value.nil?
+
+  units = %w[B KB MB GB TB]
+  size = value.to_f.abs
+  unit = 0
+  while size >= 1024.0 && unit < units.length - 1
+    size /= 1024.0
+    unit += 1
+  end
+  suffix = value.to_f.negative? ? " more" : ""
+  format("%.2f %s%s", size, units.fetch(unit), suffix)
+end
+
+def result_text(before_value, after_value)
+  delta = percent_delta(before_value, after_value)
+  return "—" if delta.nil?
+
+  longest = [before_value.to_f, after_value.to_f].max
+  delta_seconds = (before_value.to_f - after_value.to_f).abs
+  return "near tie" if delta_seconds <= 5 && longest <= 60
+  return "near tie" if delta.abs < 3.0
+
+  delta.positive? ? "#{delta.round}% faster" : "#{delta.abs.round}% slower"
+end
+
+def rolling_bootstrap_investigation?(row)
+  row.dig("reporting", "status") == "investigation_only"
+end
+
+def invalid_sample?(row)
+  row.dig("reporting", "status") == "invalid"
 end
 
 def most_common(values)
@@ -304,7 +503,13 @@ def build_report(aggregates, cohort)
 
   LANES.each do |lane|
     rows = aggregates.select { |row| row.fetch("lane") == lane }.map do |row|
-      cold_result = BenchmarkReporting.timing_difference(row.dig("actions_cache", "avg_cold_seconds"), row.dig("boringcache", "avg_cold_seconds"))
+      cold_result = if invalid_sample?(row)
+        row.dig("reporting", "result_text") || "invalid sample"
+      elsif rolling_bootstrap_investigation?(row)
+        row.dig("reporting", "result_text") || "investigation only"
+      else
+        result_text(row.dig("actions_cache", "avg_cold_seconds"), row.dig("boringcache", "avg_cold_seconds"))
+      end
 
       [
         row.fetch("name"),
@@ -315,13 +520,12 @@ def build_report(aggregates, cohort)
         cold_result,
         seconds_text(row.dig("actions_cache", "avg_warm_seconds")),
         seconds_text(row.dig("boringcache", "avg_warm_seconds")),
-        BenchmarkReporting.storage_difference(
+        bytes_text(
           if row.dig("actions_cache", "avg_storage_bytes") && row.dig("boringcache", "avg_storage_bytes")
             row.dig("actions_cache", "avg_storage_bytes") - row.dig("boringcache", "avg_storage_bytes")
           end
         ),
-        row.dig("boringcache", "cache_bootstrap_count").to_s,
-        row.dig("reporting", "result_text") || "recorded"
+        row.dig("boringcache", "cache_bootstrap_count").to_s
       ]
     end
     next if rows.empty?
@@ -329,14 +533,20 @@ def build_report(aggregates, cohort)
     sections << "## #{lane == 'fresh' ? 'Fresh' : 'Rolling'}"
     sections << ""
     sections << markdown_table(
-      ["Benchmark", "Category", "Pairs", "GitHub Actions Cache Cold/Commit Build", "BoringCache Cold/Commit Build", "Build difference (BoringCache − Actions Cache)", "GitHub Actions Cache Warm Build", "BoringCache Warm Build", "Mean storage difference (BoringCache − Actions Cache)", "BoringCache Bootstraps", "Sample status"],
+      ["Benchmark", "Category", "Pairs", "GitHub Actions Cache Cold/Commit Build", "BoringCache Cold/Commit Build", "Build Result", "GitHub Actions Cache Warm Build", "BoringCache Warm Build", "Avg Storage Delta", "BoringCache Bootstraps"],
       rows
     )
     sections << ""
   end
 
   docker_rows = aggregates.select { |row| row.fetch("category") == "docker" }.map do |row|
-    export_result = BenchmarkReporting.timing_difference(row.dig("actions_cache", "avg_docker_export_seconds"), row.dig("boringcache", "avg_docker_export_seconds"))
+    export_result = if invalid_sample?(row)
+      row.dig("reporting", "result_text") || "invalid sample"
+    elsif rolling_bootstrap_investigation?(row)
+      row.dig("reporting", "result_text") || "investigation only"
+    else
+      result_text(row.dig("actions_cache", "avg_docker_export_seconds"), row.dig("boringcache", "avg_docker_export_seconds"))
+    end
 
     [
       row.fetch("name"),
@@ -346,15 +556,14 @@ def build_report(aggregates, cohort)
       seconds_text(row.dig("boringcache", "avg_docker_export_seconds")),
       export_result,
       row.dig("boringcache", "avg_oci_new_blob_count")&.round(1)&.to_s || "—",
-      row.dig("boringcache", "cache_bootstrap_count").to_s,
-      row.dig("reporting", "result_text") || "recorded"
+      row.dig("boringcache", "cache_bootstrap_count").to_s
     ]
   end
   if docker_rows.any?
     sections << "## Docker Export Detail"
     sections << ""
     sections << markdown_table(
-      ["Benchmark", "Lane", "Pairs", "GitHub Actions Cache Export", "BoringCache Export", "Export difference (BoringCache − Actions Cache)", "Avg BoringCache New Blobs", "BoringCache Bootstraps", "Sample status"],
+      ["Benchmark", "Lane", "Pairs", "GitHub Actions Cache Export", "BoringCache Export", "Export Result", "Avg BoringCache New Blobs", "BoringCache Bootstraps"],
       docker_rows
     )
     sections << ""
@@ -363,7 +572,6 @@ def build_report(aggregates, cohort)
   sections.join("\n").rstrip + "\n"
 end
 
-if $PROGRAM_NAME == __FILE__
 options = {
   pairs_per_lane: 3,
   run_limit: 100,
@@ -457,5 +665,3 @@ if options[:output_md]
   File.write(options[:output_md], report)
 end
 puts report unless options[:output_md]
-
-end

@@ -14,30 +14,28 @@ class BenchmarkRegistryAlignmentTest < Minitest::Test
     File.expand_path("../../benchmark-repos", __dir__)
   ].find { |path| Dir.exist?(path) }
 
-  def test_aggregate_registry_matches_cases_and_suites
-    stdout, stderr, status = Open3.capture3(RbConfig.ruby, SCRIPT)
+  def test_aggregate_registry_matches_local_benchmark_repos
+    skip "benchmark repos checkout not available" unless REPOS_DIR
+
+    stdout, stderr, status = Open3.capture3(SCRIPT, REPOS_DIR)
     assert status.success?, "registry alignment failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
     assert_includes stdout, "benchmark registry aligned"
   end
 
   def test_helper_registries_list_all_published_benchmark_repos
-    [TABLE_SCRIPT, COHORT_SCRIPT].each do |script|
-      stdout, stderr, status = Open3.capture3(RbConfig.ruby, "-rjson", "-e", 'load ARGV.fetch(0); puts JSON.generate(BENCHMARKS)', script)
-      assert status.success?, stderr
-      rows = JSON.parse(stdout)
-      assert_equal published_repos, rows.map { |row| row.fetch("source_repo") }.uniq.sort
-      assert_equal BENCHMARKS.map { |row| row.fetch("benchmark") }, rows.map { |row| row.fetch("benchmark") }
-    end
+    assert_equal published_repos, ruby_hash_values(File.read(TABLE_SCRIPT), "source_repo")
+    assert_equal published_repos, ruby_hash_values(File.read(COHORT_SCRIPT), "repo")
   end
 
-  def test_readme_links_execution_and_publication_contracts
+  def test_aggregate_readme_stays_minimal
     readme = File.read(README)
 
-    assert_includes readme, "cases/"
-    assert_includes readme, "docs/process.md"
+    assert_operator readme.lines.length, :<=, 40
+    assert_includes readme, "**Real repositories. Exact runs.**"
     assert_includes readme, "[product benchmark page](https://boringcache.com/benchmarks)"
-    assert_includes readme, "[`data/latest/current.json`](data/latest/current.json)"
-    assert_includes readme, "[`config/baseline.json`](config/baseline.json)"
+    assert_includes readme, "[`data/latest/report.md`](data/latest/report.md)"
+    assert_includes readme, "[`data/latest/index.json`](data/latest/index.json)"
+    assert_includes readme, "[`data/latest/providers.json`](data/latest/providers.json)"
   end
 
   private

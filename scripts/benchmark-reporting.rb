@@ -1,24 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative "canonical/benchmark-report"
-
 module BenchmarkReporting
   module_function
-
-  def timing_difference(before_value, after_value)
-    return "unmeasured" if before_value.nil? || after_value.nil?
-
-    difference = after_value - before_value
-    "#{difference.positive? ? '+' : ''}#{difference}s"
-  end
-
-  def storage_difference(saved_bytes)
-    return "unmeasured" if saved_bytes.nil?
-
-    difference = -saved_bytes
-    "#{difference.positive? ? '+' : ''}#{difference} bytes"
-  end
 
   IMPORT_MODES = %w[docker buildkit].freeze
 
@@ -57,7 +41,7 @@ module BenchmarkReporting
     {
       "sample_valid" => true,
       "reporting_mode" => "comparative",
-      "validity_reason" => "cold build with a fresh cache scope",
+      "validity_reason" => "cold build against an empty cache cohort",
       "cache_import_status" => "cold"
     }
   end
@@ -76,7 +60,7 @@ module BenchmarkReporting
       {
         "sample_valid" => true,
         "reporting_mode" => "comparative",
-        "validity_reason" => "warm cache restore reported a hit",
+        "validity_reason" => "warm build restored the cold cache on a fresh runner",
         "cache_import_status" => "ok"
       }
     else
@@ -115,7 +99,7 @@ module BenchmarkReporting
       {
         "sample_valid" => true,
         "reporting_mode" => "comparative",
-        "validity_reason" => "changed-source cache import reported a hit",
+        "validity_reason" => "commit build imported the prior rolling cache",
         "cache_import_status" => "ok",
         "rolling_reseed" => false,
         "steady_state_candidate" => true
@@ -247,17 +231,17 @@ module BenchmarkReporting
     if lane.to_s == "rolling"
       case scenario.to_s
       when "warm"
-        return "Warm build"
+        return "Warm Build"
       else
-        return "Changed-source build"
+        return "Commit Build"
       end
     end
 
     case scenario.to_s
     when "warm"
-      "Warm build"
+      "Warm Build"
     else
-      "Cold build"
+      "Cold Build"
     end
   end
 
@@ -288,12 +272,12 @@ module BenchmarkReporting
     reporting_note = case reporting_reason
     when "rolling_cache_bootstrap"
       if sample_count > 1 && bootstrap_count.positive?
-        "Rolling cache was unavailable for #{bootstrap_count}/#{sample_count} samples; cache restore did not report a hit for those samples."
+        "Rolling cache was unavailable for #{bootstrap_count}/#{sample_count} samples; those samples populated the rolling cache and are excluded from parity claims."
       else
-        "Rolling cache restore did not report a hit."
+        "Rolling cache was unavailable; this sample populated the rolling cache and is excluded from parity claims."
       end
     when "rolling_cache_import_not_ok"
-      "Rolling cache import was unavailable."
+      "Rolling cache import was unavailable, so this sample populated the rolling cache and is excluded from parity claims."
     else
       most_common(classifications.map { |classification| classification["reporting_note"] })
     end
@@ -336,9 +320,9 @@ module BenchmarkReporting
   def invalid_note(reason:, lane:)
     case reason.to_s
     when "fresh_warm_cache_import_not_ok"
-      "Warm cache import did not report a hit."
+      "Fresh BoringCache warm reruns require a usable cache import; this sample is diagnostic only."
     else
-      lane.to_s == "rolling" ? "Rolling sample checks failed." : "Fresh sample checks failed."
+      lane.to_s == "rolling" ? "This rolling sample is invalid and should not be used for parity claims." : "This fresh sample is invalid and should not be used for parity claims."
     end
   end
 
@@ -367,12 +351,12 @@ module BenchmarkReporting
     when "rolling_cache_bootstrap"
       bootstrap_count = rolling_bootstrap_count(classification)
       if sample_count.to_i > 1 && bootstrap_count.positive?
-        "Rolling cache was unavailable for #{bootstrap_count}/#{sample_count} samples; cache restore did not report a hit for those samples."
+        "Rolling cache was unavailable for #{bootstrap_count}/#{sample_count} samples; those samples populated the rolling cache and are excluded from parity claims."
       else
-        "Rolling cache restore did not report a hit."
+        "Rolling cache was unavailable; this sample populated the rolling cache and is excluded from parity claims."
       end
     when "rolling_cache_import_not_ok"
-      "Rolling cache import was unavailable."
+      "Rolling cache import was unavailable, so this sample populated the rolling cache and is excluded from parity claims."
     else
       lane.to_s == "rolling" ? "This rolling sample is investigation-only." : "This sample is investigation-only."
     end

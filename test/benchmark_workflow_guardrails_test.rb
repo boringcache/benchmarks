@@ -8,23 +8,15 @@ require "tmpdir"
 
 class BenchmarkWorkflowGuardrailsTest < Minitest::Test
   SCRIPT = File.expand_path("../scripts/check-workflow-guardrails.rb", __dir__)
-  def test_unrelated_cases_cannot_share_a_central_workflow_queue
-    with_repo do |repo_dir|
-      write_workflow(repo_dir, <<~YAML)
-        concurrency:
-          group: benchmark-provider-comparisons
-          cancel-in-progress: false
-          queue: max
-        jobs: {}
-      YAML
-      _stdout, stderr, status = Open3.capture3(RbConfig.ruby, SCRIPT, File.dirname(repo_dir), "--central")
-      refute status.success?
-      assert_includes stderr, "unrelated benchmark cases must not share one workflow queue"
-    end
-  end
+  REPOS_DIR = ENV["BENCHMARK_REPOS_DIR"] || [
+    File.expand_path("../../benchmarks-repos", __dir__),
+    File.expand_path("../../benchmark-repos", __dir__)
+  ].find { |candidate| Dir.exist?(candidate) }
 
-  def test_central_benchmarks_keep_the_leaf_boundary
-    stdout, stderr, status = Open3.capture3({"BENCHMARK_REPOS_DIR" => nil}, RbConfig.ruby, SCRIPT)
+  def test_current_benchmarks_keep_the_leaf_boundary
+    skip "benchmark repositories checkout not available" unless REPOS_DIR
+
+    stdout, stderr, status = Open3.capture3(RbConfig.ruby, SCRIPT, REPOS_DIR)
 
     assert status.success?, "leaf boundary failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
     assert_includes stdout, "benchmark leaf boundary passed"
@@ -65,45 +57,6 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
 
       assert status.success?, "minimal product run failed\nstdout:\n#{stdout}\nstderr:\n#{stderr}"
       assert_includes stdout, "benchmark leaf boundary passed: 1 repositories"
-    end
-  end
-
-  def test_workflows_and_composites_use_ruby_for_the_migrated_scripts
-    with_repo do |repo_dir|
-      action_dir = File.join(repo_dir, ".github/actions/verify")
-      FileUtils.mkdir_p(action_dir)
-      {"python3" => false, "ruby" => true}.each do |interpreter, expected|
-        write_workflow(repo_dir, <<~YAML)
-          on:
-            workflow_dispatch:
-              inputs:
-                cli_version: {required: false, type: string}
-                buildkit_image: {required: false, type: string}
-          jobs:
-            verify:
-              runs-on: ubuntu-latest
-              steps:
-                - run: #{interpreter} ./scripts/verify-upstream-recipe.rb
-                - uses: boringcache/one@0123456789012345678901234567890123456789
-                  with:
-                    mode: docker
-                    cli-version: ${{ inputs.cli_version }}
-                    managed-buildkit-image: ${{ inputs.buildkit_image }}
-        YAML
-        File.write(File.join(action_dir, "action.yml"), <<~YAML)
-          runs:
-            using: composite
-            steps:
-              - shell: bash
-                run: #{interpreter} ./scripts/verify-upstream-recipe.rb
-        YAML
-        stdout, stderr, status = run_guard(repo_dir)
-        assert_equal expected, status.success?, "#{stdout}\n#{stderr}"
-        unless expected
-          assert_includes stderr, ".github/workflows/benchmark.yml (unnamed step): invoke maintained Ruby scripts with ruby"
-          assert_includes stderr, ".github/actions/verify/action.yml (unnamed step): invoke maintained Ruby scripts with ruby"
-        end
-      end
     end
   end
 
@@ -171,7 +124,7 @@ class BenchmarkWorkflowGuardrailsTest < Minitest::Test
     with_repo do |repo_dir|
       scripts_dir = File.join(repo_dir, "scripts")
       FileUtils.mkdir_p(scripts_dir)
-      File.write(File.join(scripts_dir, "benchmark-report.rb"), <<~PYTHON)
+      File.write(File.join(scripts_dir, "benchmark-report.py"), <<~PYTHON)
         import subprocess
         subprocess.run(["boringcache", "check", "example", "tag", "--exact"])
       PYTHON

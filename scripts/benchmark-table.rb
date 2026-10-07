@@ -17,7 +17,198 @@ MAX_GH_RETRIES = ENV.fetch("BENCHMARK_TABLE_GH_RETRIES", "3").to_i
 LANES = %w[fresh rolling].freeze
 STRATEGIES = %w[actions-cache boringcache].freeze
 
-BENCHMARKS = JSON.parse(File.read(File.expand_path("../suites/published.json", __dir__))).freeze
+BENCHMARKS = [
+  {
+    "benchmark" => "hugo",
+    "name" => "Hugo",
+    "repo" => "gohugoio/hugo",
+    "source_repo" => "boringcache/benchmark-hugo",
+    "category" => "docker",
+    "step" => "Docker build (Go)"
+  },
+  {
+    "benchmark" => "hugo-go",
+    "name" => "Hugo Go",
+    "repo" => "gohugoio/hugo",
+    "source_repo" => "boringcache/benchmark-hugo-go",
+    "category" => "go",
+    "step" => "Go build (native build cache)"
+  },
+  {
+    "benchmark" => "immich",
+    "name" => "Immich",
+    "repo" => "immich-app/immich",
+    "source_repo" => "boringcache/benchmark-immich",
+    "category" => "docker",
+    "step" => "Docker build (server)"
+  },
+  {
+    "benchmark" => "mastodon-docker",
+    "aliases" => ["mastodon"],
+    "name" => "Mastodon",
+    "repo" => "mastodon/mastodon",
+    "source_repo" => "boringcache/benchmark-mastodon",
+    "category" => "docker",
+    "step" => "Docker build (Ruby+Node)"
+  },
+  {
+    "benchmark" => "mastodon-streaming",
+    "name" => "Mastodon Streaming",
+    "repo" => "mastodon/mastodon",
+    "source_repo" => "boringcache/benchmark-mastodon",
+    "category" => "docker",
+    "step" => "Docker build (streaming service)"
+  },
+  {
+    "benchmark" => "discourse-image-factory-amd64",
+    "aliases" => ["discourse", "discourse-image-factory"],
+    "artifact_benchmark" => "discourse-image-factory",
+    "artifact_variants" => {"actions-cache" => ["amd64"], "boringcache" => ["amd64"]},
+    "name" => "Discourse Image Factory (amd64)",
+    "repo" => "discourse/discourse_docker",
+    "source_repo" => "boringcache/benchmark-discourse",
+    "category" => "docker",
+    "step" => "Docker Bake (base and test image graph, amd64)"
+  },
+  {
+    "benchmark" => "discourse-image-factory-arm64",
+    "aliases" => ["discourse-arm64"],
+    "artifact_benchmark" => "discourse-image-factory",
+    "artifact_variants" => {"actions-cache" => ["arm64"], "boringcache" => ["arm64"]},
+    "name" => "Discourse Image Factory (arm64)",
+    "repo" => "discourse/discourse_docker",
+    "source_repo" => "boringcache/benchmark-discourse",
+    "category" => "docker",
+    "step" => "Docker Bake (base and test image graph, arm64)"
+  },
+  {
+    "benchmark" => "posthog",
+    "name" => "PostHog",
+    "repo" => "PostHog/posthog",
+    "source_repo" => "boringcache/benchmark-posthog",
+    "category" => "docker",
+    "step" => "Docker build (full stack)",
+    "extra_providers" => ["boringcache-toolcache"]
+  },
+  {
+    "benchmark" => "storybook",
+    "name" => "Storybook",
+    "repo" => "storybookjs/storybook",
+    "source_repo" => "boringcache/benchmark-storybook",
+    "category" => "nodejs",
+    "step" => "Nx build (Yarn monorepo)"
+  },
+  {
+    "benchmark" => "otel-gradle",
+    "aliases" => ["otel", "opentelemetry", "opentelemetry-java"],
+    "name" => "OpenTelemetry Java",
+    "repo" => "open-telemetry/opentelemetry-java",
+    "source_repo" => "boringcache/benchmark-opentelemetry-java",
+    "category" => "gradle",
+    "step" => "Gradle build (native HTTP cache)"
+  },
+  {
+    "benchmark" => "spring-ai-maven",
+    "aliases" => ["spring", "spring-ai"],
+    "name" => "Spring AI",
+    "repo" => "spring-projects/spring-ai",
+    "source_repo" => "boringcache/benchmark-spring-ai",
+    "category" => "maven",
+    "step" => "Maven build (build-cache extension)"
+  },
+  {
+    "benchmark" => "grpc-bazel",
+    "aliases" => ["grpc", "gRPC"],
+    "name" => "gRPC",
+    "repo" => "grpc/grpc",
+    "source_repo" => "boringcache/benchmark-grpc",
+    "category" => "bazel",
+    "step" => "Bazel build (remote cache)"
+  },
+  {
+    "benchmark" => "zed-cargo",
+    "aliases" => ["zed", "zed-sccache"],
+    "name" => "Zed",
+    "repo" => "zed-industries/zed",
+    "source_repo" => "boringcache/benchmark-zed",
+    "category" => "rust",
+    "step" => "Cargo build (target + sccache)"
+  },
+  {
+    "benchmark" => "deno-cargo",
+    "aliases" => ["deno"],
+    "name" => "Deno",
+    "repo" => "denoland/deno",
+    "source_repo" => "boringcache/benchmark-deno",
+    "category" => "rust",
+    "step" => "Cargo build (target + sccache)"
+  },
+  {
+    "benchmark" => "duckgres",
+    "name" => "Duckgres",
+    "repo" => "PostHog/duckgres",
+    "source_repo" => "boringcache/benchmark-duckgres",
+    "category" => "docker",
+    "step" => "Docker build (Postgres extension image)"
+  },
+  {
+    "benchmark" => "chroma",
+    "name" => "Chroma",
+    "repo" => "chroma-core/chroma",
+    "source_repo" => "boringcache/benchmark-chroma",
+    "category" => "docker",
+    "step" => "Docker build (Rust CLI image)"
+  },
+  {
+    "benchmark" => "linkerd2-v2",
+    "aliases" => ["linkerd", "linkerd2", "linkerd2-web"],
+    "name" => "Linkerd2 Web",
+    "repo" => "linkerd/linkerd2",
+    "source_repo" => "boringcache/benchmark-linkerd2",
+    "category" => "docker",
+    "step" => "Docker build (web image)"
+  },
+  {
+    "benchmark" => "qdrant",
+    "name" => "Qdrant",
+    "repo" => "qdrant/qdrant",
+    "source_repo" => "boringcache/benchmark-qdrant",
+    "category" => "docker",
+    "step" => "Docker build (Rust vector database)"
+  },
+  {
+    "benchmark" => "n8n",
+    "name" => "n8n",
+    "repo" => "n8n-io/n8n",
+    "source_repo" => "boringcache/benchmark-n8n",
+    "category" => "nodejs",
+    "step" => "Turbo build (pnpm monorepo)"
+  },
+  {
+    "benchmark" => "n8n-docker",
+    "name" => "n8n Docker",
+    "repo" => "n8n-io/n8n",
+    "source_repo" => "boringcache/benchmark-n8n",
+    "category" => "docker",
+    "step" => "Docker build (n8n image)"
+  },
+  {
+    "benchmark" => "n8n-runners",
+    "name" => "n8n Runners",
+    "repo" => "n8n-io/n8n",
+    "source_repo" => "boringcache/benchmark-n8n",
+    "category" => "docker",
+    "step" => "Docker build (task runners)"
+  },
+  {
+    "benchmark" => "n8n-runners-distroless",
+    "name" => "n8n Runners Distroless",
+    "repo" => "n8n-io/n8n",
+    "source_repo" => "boringcache/benchmark-n8n",
+    "category" => "docker",
+    "step" => "Docker build (distroless task runners)"
+  }
+].freeze
 
 BENCHMARK_BY_KEY = BENCHMARKS.each_with_object({}) do |benchmark, acc|
   ([benchmark.fetch("benchmark"), benchmark.fetch("name")] + Array(benchmark["aliases"])).each do |key|
@@ -42,15 +233,36 @@ rescue ArgumentError, TypeError
 end
 
 def seconds_to_text(value)
-  BenchmarkReport.seconds(value)
+  return "—" if value.nil?
+
+  total = value.round
+  minutes = total / 60
+  seconds = total % 60
+  "#{minutes}m #{seconds}s"
 end
 
 def seconds_to_detail_text(value)
-  BenchmarkReport.seconds(value)
+  return "—" if value.nil?
+
+  seconds = value.to_f
+  return format("%.1fs", seconds) if seconds < 10 && seconds != seconds.round
+
+  seconds_to_text(seconds)
 end
 
 def bytes_to_text(value)
-  value.nil? ? "unmeasured" : "#{value} bytes"
+  return "—" if value.nil?
+
+  units = ["B", "KB", "MB", "GB", "TB"].freeze
+  size = value.to_f.abs
+  unit_index = 0
+
+  while size >= 1024 && unit_index < units.length - 1
+    size /= 1024.0
+    unit_index += 1
+  end
+
+  format("%<size>.2f %<unit>s", size: size, unit: units[unit_index])
 end
 
 def markdown_escape(value)
@@ -73,8 +285,42 @@ def percent_delta(before_value, after_value)
   ((before_value.to_f - after_value.to_f) / before_value.to_f) * 100.0
 end
 
+def timing_result_bucket(before_value, after_value)
+  delta_pct = percent_delta(before_value, after_value)
+  return nil if delta_pct.nil?
+
+  delta_seconds = (before_value.to_f - after_value.to_f).abs
+  longest = [before_value.to_f, after_value.to_f].max
+  return :tie if delta_seconds <= 5 && longest <= 60
+  return :tie if delta_pct.abs < 3.0
+
+  delta_pct.positive? ? :faster : :slower
+end
+
+def timing_result_text(before_value, after_value)
+  delta_pct = percent_delta(before_value, after_value)
+  return "—" if delta_pct.nil?
+
+  case timing_result_bucket(before_value, after_value)
+  when :faster
+    "#{delta_pct.round}% faster"
+  when :slower
+    "#{delta_pct.abs.round}% slower"
+  else
+    "near tie"
+  end
+end
+
 def storage_summary_text(comparison)
-  BenchmarkReporting.storage_difference(comparison["storage_saved_bytes"])
+  saved_bytes = comparison["storage_saved_bytes"]
+  improvement_pct = comparison["storage_improvement_pct"]
+  return "—" if saved_bytes.nil?
+
+  if saved_bytes.to_f >= 0
+    "#{bytes_to_text(saved_bytes)} less (#{improvement_pct.to_f.abs}%)"
+  else
+    "#{bytes_to_text(saved_bytes.to_f.abs)} more (#{improvement_pct.to_f.abs}%)"
+  end
 end
 
 def normalize_storage_sample(bytes, source)
@@ -488,7 +734,7 @@ def build_entry(benchmark:, lane:, actions_data:, boringcache_data:)
   return nil unless headline
 
   headline_scenario, before_value, after_value = headline
-  faster_pct = percent_delta(before_value, after_value)
+  faster_pct = [percent_delta(before_value, after_value).to_f, 0].max
 
   {
     "lane" => lane,
@@ -506,7 +752,7 @@ def build_entry(benchmark:, lane:, actions_data:, boringcache_data:)
     "after" => seconds_to_text(after_value),
     "before_seconds" => before_value.round(2),
     "after_seconds" => after_value.round(2),
-    "faster" => reporting["comparative"] ? faster_pct&.round&.to_s : nil,
+    "faster" => reporting["comparative"] ? faster_pct.round.to_s : nil,
     "comparison" => {
       "paired_on_head_sha" => paired_head,
       "pairing_head_sha" => paired_head ? actions_head : nil,
@@ -568,11 +814,10 @@ def lane_report_row(entry, lane)
 
   {
     benchmark: entry.fetch("name"),
-    scenario: BenchmarkReporting.headline_label(lane: lane, scenario: reporting["headline_scenario"] || current["headline_scenario"]),
-    actions: BenchmarkReport.seconds(current["before_seconds"]),
-    boringcache: BenchmarkReport.seconds(current["after_seconds"]),
-    result: BenchmarkReporting.timing_difference(current["before_seconds"], current["after_seconds"]),
-    checks: reporting.fetch("comparative", true) ? "recorded" : reporting["result_text"],
+    scenario: current["headline_label"] || reporting["headline_label"] || BenchmarkReporting.headline_label(lane: lane, scenario: current["headline_scenario"]),
+    actions: current["before"],
+    boringcache: current["after"],
+    result: reporting.fetch("comparative", true) ? timing_result_text(current["before_seconds"], current["after_seconds"]) : reporting["result_text"],
     storage: storage_summary_text(comparison)
   }
 end
@@ -654,8 +899,8 @@ def build_markdown(entries, generated_at:, format:)
         "### #{lane_label(lane).split.map(&:capitalize).join(' ')}",
         "",
         markdown_table(
-          ["Benchmark", "Metric", "Actions Cache", "BoringCache", "Time difference (BoringCache − Actions Cache)", "Storage difference (BoringCache − Actions Cache)", "Sample status"],
-          rows.map { |row| [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage], row[:checks]] }
+          ["Benchmark", "Metric", "GitHub Actions Cache", "BoringCache", "Result", "Storage"],
+          rows.map { |row| [row[:benchmark], row[:scenario], row[:actions], row[:boringcache], row[:result], row[:storage]] }
         ),
         ""
       ]
@@ -749,7 +994,6 @@ def load_cohort_file(path)
   [pairs, runs]
 end
 
-if $PROGRAM_NAME == __FILE__
 options = {
   source: :latest,
   index_path: DEFAULT_INDEX_PATH,
@@ -906,6 +1150,4 @@ if options[:output_md]
   File.write(options[:output_md], markdown)
 else
   puts markdown
-end
-
 end
