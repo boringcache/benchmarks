@@ -39,6 +39,18 @@ module Bench
       config.fetch("runs", {})
     end
 
+    def directory
+      config.fetch("directory", ".")
+    end
+
+    def env(source)
+      Bench.interpolate(config.fetch("env", {}), source)
+    end
+
+    def mise_path
+      File.join(dir, "mise.toml")
+    end
+
     def plan_path(lane)
       File.join(dir, lane.plan_dir, ".boringcache.toml")
     end

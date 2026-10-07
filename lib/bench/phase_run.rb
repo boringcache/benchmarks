@@ -41,24 +41,26 @@ module Bench
       end
 
       def build
-        if lane.boringcache?
-          execute({ "BORINGCACHE_OBSERVABILITY_JSONL_PATH" => evidence_path }, "boringcache", kase.tool.name, *("--read-only" if phase == "warm"))
-        else
-          execute(lane.env(phase, @env), *product_command)
-        end
+        system(environment, *command, chdir: File.join(plan_dir, kase.directory)) ? 0 : ($?&.exitstatus || 127)
       end
 
-      def product_command
+      def command
+        return ["boringcache", kase.tool.name, *("--read-only" if phase == "warm")] if lane.boringcache?
+
         TomlRB.load_file(File.join(plan_dir, ".boringcache.toml")).dig("adapters", kase.tool.name, "command") or
           raise Error, "#{kase.id}: #{lane.plan_dir}/.boringcache.toml has no [adapters.#{kase.tool.name}].command"
       end
 
-      def execute(env, *command)
-        system(@env.to_h.merge(env), *command, chdir: plan_dir) ? 0 : ($?&.exitstatus || 127)
+      def environment
+        @environment ||= begin
+          base = @env.to_h.merge("BENCH_DIR" => workspace.dir)
+          shared = base.merge(kase.env(base))
+          shared.merge(lane.boringcache? ? { "BORINGCACHE_OBSERVABILITY_JSONL_PATH" => evidence_path } : lane.env(phase, shared))
+        end
       end
 
       def shell(command)
-        system(@env.to_h, "bash", "-c", command, chdir: workspace.dir)
+        system(environment, "bash", "-c", command, chdir: workspace.dir)
       end
 
       def measure
