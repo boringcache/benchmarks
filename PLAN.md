@@ -1,6 +1,6 @@
-# Benchmarks rebuild plan (v3)
+# Benchmarks rebuild plan (v4)
 
-Status: agreed shape, a few items open (end of file). Nothing is built yet.
+Status: agreed shape; one item open at the end. Nothing is built yet.
 
 `main` was reset on 2026-10-07 to the tree of `c750b51d` (2026-09-30, the index
 before the consolidation) by a normal commit, `16c684ee`. The consolidated layout
@@ -8,16 +8,72 @@ stays in history at `e24f6442`. The 827 workflow runs it created were deleted;
 their inventory is kept outside the repo.
 
 Facts here come from the archived `benchmark-*` repos, the consolidated repo at
-`e24f6442`, the BoringCache CLI and `boringcache/one`, and provider docs.
+`e24f6442`, BoringCache CLI 1.40.0 source, `boringcache/one` v1.40.0, the
+monorepo product contract (`config/benchmark-product-contract.yml`), and provider
+docs.
 
 ## Goal
 
 A benchmark that is easy to configure and easy to extend. Every lane uses each
 product the way its docs tell a user to: BoringCache through its CLI and Action
 with a committed `.boringcache.toml`, competitors through their documented setup.
-The harness around them stays thin. Each run produces numbers for build time,
-cache restore and save, storage, and any latency the product reports. Adding a
-case or a provider follows the same steps every time and yields the same record.
+The harness stays thin. Each run produces build time, cache restore and save,
+storage, and whatever latency each product reports. Adding a case or a provider
+follows the same steps and yields the same record.
+
+## Model: tool → capabilities → lanes → projects
+
+Like code modules. A **tool** is a BoringCache adapter. It has a **base**
+capability and may have optional capabilities. A **level** is a named set of
+capabilities. A **lane** is one provider implementing one level. A **project**
+(case) picks the lanes that apply to it.
+
+Capabilities below are from CLI 1.40.0 (`project_config/model.rs`,
+`commands/adapters/command/*`).
+
+| Tool | `base` level | `plus` level adds | Shared layers every lane caches |
+| --- | --- | --- | --- |
+| docker | BuildKit OCI layer cache (`cache-mode = max`) | `tool-cache` for the tool used inside the Dockerfile, `mount-cache` for `RUN --mount=type=cache` | none (dependencies live inside the image build) |
+| cargo | compiler cache: sccache (`compiler-cache = "sccache"`) | registry entries (`cargo-registry-cache`, `cargo-registry-index`, `cargo-git-db`) + `cargo-target` | none (registry is part of `plus`) |
+| bazel | HTTP remote cache (`/ac`, `/cas`) | — | per case (e.g. Bazel repository cache), set when ported |
+| go | `GOCACHEPROG` build cache | — | Go module cache |
+| gradle | HTTP build cache (init script) | — | Gradle dependency cache |
+| maven | Build Cache Extension remote | — | `~/.m2/repository` |
+| turbo | Turborepo remote cache | — | package-manager store (e.g. pnpm store) |
+| nx | Nx self-hosted remote cache | — | package-manager store (e.g. yarn cache) |
+| ccache | ccache remote storage | — | none |
+| xcode | compilation cache (macOS) | — | none |
+| nix | binary cache | — | none |
+| moon, pants, buck2, sbt | REAPI cache (loopback gRPC) | — | per case, set when ported |
+| run | archive of declared entries | — | the entries are the cache |
+
+`buildkit`, `sccache`, `gha` and `bazel-reapi` exist in the CLI but have no case
+yet, so they get no directory until one does.
+
+### Lane names
+
+- BoringCache: `boringcache-<tool>` for `base`, `boringcache-<tool>-plus` for
+  `plus` (today: `boringcache-docker-plus`, `boringcache-cargo-plus`).
+- Others: `<provider>` for `base`, `<provider>-plus` where the provider can do
+  `plus` (e.g. cargo `gha-plus` = sccache GitHub Actions backend +
+  `Swatinem/rust-cache` for registry and target).
+- Every record carries the lane's level and capability list, and the report
+  groups lanes by level, so readers always see what is being compared.
+
+### Fairness rules
+
+1. Lanes compared with each other implement the same level.
+2. Shared layers are cached by every lane. BoringCache caches them with entries
+   or profiles in the same plan. GitHub Actions cache lanes and remote-only
+   providers (Depot Cache, Vercel, Cachely, BuildBuddy, NativeLink) cache them
+   with `actions/cache`, as their users would on GitHub runners.
+3. The timer covers the same window for every lane: restore every cached layer,
+   install dependencies, build, save. Checkout, toolchain install and the output
+   check are outside it.
+4. Same source, command, runner class, architecture and toolchain for every lane
+   of a case. Runner comparisons are their own explicit series.
+5. Docker `plus` has no like-for-like competitor lane. It is shown next to the
+   Docker `base` lanes and labelled with its capabilities, not ranked against them.
 
 ## Layout
 
@@ -30,19 +86,19 @@ runners.toml                 # runner keys -> labels
 schedule.toml                # what runs when
 tools/
   docker/
-    README.md                # what the product does here, link to product docs
+    tool.toml                # levels and shared layers for this tool
     lanes/                   # one small Ruby file per lane
       boringcache-docker.rb
       boringcache-docker-plus.rb
       gha.rb
       depot-builder.rb
     posthog/
-      case.toml              # source, prepare, output check, lane -> runners
-      .boringcache.toml      # plan for boringcache-docker; its [adapters.docker].command IS the build command
-      plus/.boringcache.toml # plan for boringcache-docker-plus: + tool-cache, mount-cache
+      case.toml              # source, check, lane -> runners
+      .boringcache.toml      # base plan; [adapters.docker].command IS the build command
+      plus/.boringcache.toml # plus plan: + tool-cache, mount-cache, overlay Dockerfile
       overlay/               # upstream changes a lane needs, recorded, never hidden
       upstream/              # source checkout (gitignored)
-  turbo/ nx/ run/ bazel/ cargo/ go/ gradle/ maven/ ccache/ xcode/ nix/ moon/ pants/ buck2/ sbt/
+  cargo/ turbo/ nx/ run/ bazel/ go/ gradle/ maven/ ccache/ xcode/ nix/ moon/ pants/ buck2/ sbt/
 results/                     # one JSON record per phase run (also the rolling cursor)
 data/results.json            # generated report, new format
 data/latest/                 # September index the website reads today; removed when the reader switches
@@ -52,32 +108,25 @@ data/latest/                 # September index the website reads today; removed 
   check.yml                  # bin/bench check + tests on pull requests
 ```
 
-A tool directory exists only when it has a case. `buildkit`, `sccache`, `gha` and
-`bazel-reapi` have none yet (sccache is used inside the cargo and docker cases).
-
 ## One command, one plan
 
 The build command lives once, in the case's `.boringcache.toml`
-(`[adapters.<tool>].command`), next to an `upstream/` checkout, the same layout
-the archived repos used.
+(`[adapters.<tool>].command`), next to an `upstream/` checkout, as in the
+archived repos.
 
-- **BoringCache on a laptop:** `bin/bench` runs `boringcache <tool>` in the case
-  directory. The CLI finds the plan by walking up from the working directory.
-- **BoringCache on Actions:** `bench.yml` uses `boringcache/one` with
-  `mode: <tool>` and `working-directory: tools/<tool>/<case>`. The Action runs
-  the committed command, as its README describes. `boringcache-docker-plus`
-  points `working-directory` at `plus/`.
-- **Every other lane** reads the same command from that plan and attaches its own
-  cache (flags, env, init script), so all lanes build exactly the same thing.
-
-`case.toml` holds only what the plan does not:
+- **Laptop:** `bin/bench` runs `boringcache <tool>` in the case directory (the
+  CLI finds the plan by walking up from the working directory).
+- **Actions:** `bench.yml` uses `boringcache/one` (v1.40.0 lists every mode,
+  including bazel-reapi, moon, pants, buck2, sbt) with `mode: <tool>` and
+  `working-directory: tools/<tool>/<case>` (or `.../plus` for a `plus` lane).
+- **Other lanes** read the same command from that plan and attach their own
+  cache (flags, env, init script), so every lane builds the same thing.
 
 ```toml
 # tools/docker/posthog/case.toml — shape only; values come from e24f6442:cases/posthog
 repo      = "PostHog/posthog"
 branch    = "master"
 start_sha = "<first-parent commit on master at 2026-09-30 23:59 UTC>"
-prepare   = []                                        # untimed, after checkout
 check     = ["docker", "image", "inspect", "posthog:bench"]   # after the timer
 
 [runs]                                                # lane -> runners; only these pairs run
@@ -87,10 +136,10 @@ gha                     = ["github"]
 depot-builder           = ["github"]
 ```
 
-A lane declares setup (untimed), how it wraps the command, which runner keys it
-is valid on, its secrets, and how it shows reuse. `bin/bench check` rejects a
-pair the lane does not allow (for example `gha` on a Depot runner, where
-`type=gha` and `actions/cache` go to Depot Cache instead).
+A lane file declares its level, setup (untimed), how it wraps the command, the
+runner keys it allows, its secrets, and its own reuse signal. `bin/bench check`
+rejects a pair a lane does not allow, a case missing a shared layer in any lane,
+and lanes of different levels marked as comparable.
 
 ## Phases
 
@@ -101,106 +150,88 @@ pair the lane does not allow (for example `gha` on a Depot runner, where
 | `cold` | `start_sha` | empty, new scope | yes |
 | `warm` | `start_sha` | what cold saved | no, restore only |
 
-**Rolling** (a chain through real upstream history, starting at the reset date):
+**Rolling** (through real upstream history, starting at the reset date):
 
-- The series starts with a cold seed at `start_sha`, the upstream first-parent
-  commit as of 2026-09-30.
+- A cold seed at `start_sha`, the upstream first-parent commit as of 2026-09-30.
 - Each tick builds the next first-parent commit after the last recorded one,
   restoring and saving the series scope. Every lane of a case builds the same
   commit in the same tick.
-- The cursor is the last rolling record in `results/`, so no separate state file
-  exists. The commit list comes from `git rev-list --first-parent` on upstream.
+- The cursor is the last rolling record in `results/`; there is no other state.
 - The scope is fixed per series: `<tool>-<case>-<lane>-<runner>-rolling-<series>`.
 
-**Rules for every lane:**
-- Each phase runs on a fresh runner (its own job on Actions). Locally, `bin/bench`
-  resets the work directory, tool caches and the Docker builder between phases.
-- Warm only restores: BoringCache read-only, `actions/cache/restore`, remote
-  caches with uploads off. Warm must show reuse, or it is a failed run, not a
-  timing (the archived repos used `fail-on-cache-miss: true`).
-- The timer covers restore, the command and save. On Actions, `bin/bench time
-  start` and `bin/bench time stop` bracket the Action or cache steps.
-  Checkout, toolchain install, `prepare` and the output check are untimed.
-- A timing counts only after the output check passes.
+**Every phase:** its own fresh runner on Actions; locally `bin/bench` resets the
+work directory, tool caches and Docker builder between phases. Warm only
+restores (BoringCache read-only, `actions/cache/restore`, remote uploads off).
 
-## Result record
+**Warm reuse** comes from each product's own signal: BoringCache's
+`fail-on-cache-miss` / `cache-hit` Action output, `actions/cache` `cache-hit`,
+the tool's own hit statistics for others. Where a product has no such signal,
+`reused` is recorded as unmeasured. The benchmark never computes reuse from
+BoringCache telemetry (product contract: no telemetry assertions, reuse
+calculators or artifact normalizers).
 
-`results/<tool>/<case>/<series-or-run>/<lane>-<runner>-<phase>[-<n>].json`
+A timing counts only after the output check passes.
+
+## Results
+
+1. Each phase writes one record:
+   `results/<tool>/<case>/<series-or-run>/<lane>-<runner>-<phase>[-<step>].json`.
+2. On Actions each job uploads its record and the raw product evidence (the
+   Action's `evidence-path` file, the CLI session JSONL) as an artifact. At the
+   end of a tick one job downloads them, commits the records to `main` in one
+   commit, and regenerates `data/results.json` and `data/report.md`.
+3. Rolling reads the last committed record to find the next upstream commit.
+4. Local runs write the same records to a gitignored directory; they verify a
+   case and are never published.
+5. Failed runs are recorded and kept. Missing values are `null` (unmeasured).
 
 ```json
 {
-  "tool": "docker", "case": "posthog", "lane": "boringcache-docker", "runner": "github",
-  "runner_label": "ubuntu-latest", "phase": "rolling", "step": 12, "sha": "...",
+  "tool": "docker", "case": "posthog", "lane": "boringcache-docker", "level": "base",
+  "capabilities": ["layers"], "runner": "github", "runner_label": "ubuntu-latest",
+  "phase": "rolling", "step": 12, "sha": "...",
   "seconds": 212.4, "exit_status": 0, "output_ok": true, "reused": true,
-  "cache": { "source": "boringcache", "restore_seconds": null, "save_seconds": null,
-             "hits": null, "misses": null, "restored_bytes": null, "saved_bytes": null },
-  "storage_bytes": null,
+  "provider_reported": { "...": "fields copied verbatim from the product's own evidence" },
+  "evidence": ["artifact path of each raw evidence file"],
   "versions": { "boringcache": "1.40.0" },
   "run_url": "https://github.com/boringcache/benchmarks/actions/runs/...", "attempt": 1,
   "started_at": "2026-10-07T10:00:00Z"
 }
 ```
 
-Values a provider does not report stay `null` and show as unmeasured, never zero.
-Local runs record `runner = "local"`; they verify cases and are not published.
+## Lanes per case
 
-## Commands
-
-```sh
-bin/bench check                                            # validate cases, lanes, runners, pins
-bin/bench list                                             # tools, cases, lanes, runners
-bin/bench run docker/posthog --lane boringcache-docker     # fresh cold + warm locally
-bin/bench run docker/posthog --lane boringcache-docker --phase rolling   # next rolling step
-bin/bench report                                           # results/ -> data/results.json
-```
-
-Lanes that only work on Actions (`gha`, `depot-builder`, Depot/Namespace runners)
-are skipped locally with the reason printed.
-
-## Lanes per tool
-
-BoringCache lanes are named `boringcache-<tool>`; Docker also has
-`boringcache-docker-plus` (layers + tool cache + mount cache, the whole backend).
-
-| Tool | Cases | Other lanes |
+| Tool | Cases | Lanes |
 | --- | --- | --- |
-| docker | posthog, n8n, n8n-runners, n8n-runners-distroless, immich, immich-base-images, mastodon, mastodon-streaming, hugo, duckgres, chroma, linkerd2, qdrant, discourse | `gha` (type=gha, mode=max), `depot-builder` |
-| turbo | n8n | `gha` (actions/cache on .turbo), `depot-cache`, `vercel` |
-| nx | storybook | `gha`, `depot-cache`, `nx-cloud` (when a workspace exists) |
-| run | storybook (archive sandbox, the original benchmark) | `gha` |
-| bazel | grpc | `gha` (disk cache), `buildbuddy`, `cachely`, `nativelink` (R2), `depot-cache` |
-| cargo | deno, zed | `gha`: sccache with its GitHub Actions cache backend + `Swatinem/rust-cache` for target and registry; `depot-cache` (sccache WebDAV) |
-| go | hugo | `gha`, `depot-cache` |
-| gradle | opentelemetry-java | `gha`, `depot-cache` |
-| maven | spring-ai | `gha`, `depot-cache` |
-| ccache | obs-studio (Linux) | `gha` |
-| xcode | obs-studio (macOS) | `gha`, `bitrise` |
-| nix | helix, zed | `cachix`, `magic-nix-cache` |
-| moon | gogs, opencut | `depot-cache` |
-| pants | stackstorm | `depot-cache`, `nativelink` |
-| buck2 | executorch | `nativelink` |
-| sbt | msgpack-java | `gha` (`actions/setup-java` with `cache: sbt`) |
+| docker | posthog, n8n, n8n-runners, n8n-runners-distroless, immich, immich-base-images, mastodon, mastodon-streaming, hugo, duckgres, chroma, linkerd2, qdrant, discourse | `boringcache-docker`, `boringcache-docker-plus` (where it applies), `gha` (type=gha, mode=max), `depot-builder` |
+| cargo | deno, zed | `boringcache-cargo`, `boringcache-cargo-plus`, `gha` (sccache GitHub Actions backend), `gha-plus` (+ `Swatinem/rust-cache`), `depot-cache` (sccache WebDAV) |
+| turbo | n8n | `boringcache-turbo`, `gha` (actions/cache on .turbo), `depot-cache`, `vercel` (OIDC policy "Boringcache turbo") |
+| nx | storybook | `boringcache-nx`, `gha`, `depot-cache`; `nx-cloud` last (needs an Nx workspace) |
+| run | storybook (archive sandbox, the original benchmark) | `boringcache-run`, `gha` |
+| bazel | grpc | `boringcache-bazel`, `gha` (disk cache), `buildbuddy`, `cachely`, `nativelink` (R2), `depot-cache` |
+| go | hugo | `boringcache-go`, `gha`, `depot-cache` |
+| gradle | opentelemetry-java | `boringcache-gradle`, `gha`, `depot-cache` |
+| maven | spring-ai | `boringcache-maven`, `gha`, `depot-cache` |
+| ccache | obs-studio (Linux) | `boringcache-ccache`, `gha` |
+| xcode | obs-studio (macOS) | `boringcache-xcode`, `gha`, `bitrise` |
+| nix | helix, zed | `boringcache-nix`, `cachix`, `magic-nix-cache` |
+| moon | gogs, opencut | `boringcache-moon`, `depot-cache` |
+| pants | stackstorm | `boringcache-pants`, `depot-cache`, `nativelink` |
+| buck2 | executorch | `boringcache-buck2`, `nativelink` |
+| sbt | msgpack-java | `boringcache-sbt`, `gha` (`actions/setup-java` with `cache: sbt`) |
 
 - Depot Cache is configured by hand on the `github` runner with `DEPOT_TOKEN`
-  (`cache.depot.dev`, per Depot's docs for each tool), so every lane shares the
-  runner class.
-- The local `bazel-remote` comparator from the consolidation is dropped.
-- Never-run cases (buck2-prelude, pants-jvm, zitadel-moon) come after everything
-  above works.
-- Discourse uses the upstream `discourse/discourse` and `discourse/discourse_docker`
-  repos, as the archived repo did, not the fork.
-
-### `boringcache-docker-plus`, from overlays that already exist
-
-| Case | Tool cache | Mount cache | Overlay source |
-| --- | --- | --- | --- |
-| posthog | turbo | yes | archived `render-posthog-toolcache-dockerfile.sh` |
-| chroma | sccache | cargo target, registry, git | archived `docker/chroma.Dockerfile` |
-| mastodon | ccache (libvips, ffmpeg) | apt cache mounts | consolidated `server-ccache` Dockerfile (ccache 4.13.6) |
-| immich-base-images | ccache (libvips) | to check | archived `prepare-immich-base-images-source.py` |
-
-Other Docker cases get the plus lane only if the upstream Dockerfile already has
-`RUN --mount=type=cache` steps; that is checked when each case is ported.
+  (`cache.depot.dev`, per Depot's docs for each tool).
+- The `boringcache-docker-plus` overlays that already exist: posthog (turbo +
+  mount cache), chroma (sccache + cargo target/registry/git mounts), mastodon
+  (ccache for libvips and ffmpeg + apt cache mounts), immich-base-images (ccache).
+  Other Docker cases get `plus` only if upstream already has cache mounts.
+- Discourse uses upstream `discourse/discourse` and `discourse/discourse_docker`,
+  as the archived repo did.
+- Never-run cases (buck2-prelude, pants-jvm, zitadel-moon) come after the above.
+- OpenTelemetry Java: both archived lanes cached only Gradle's build cache
+  (`caches/build-cache-*` vs the HTTP cache) and neither cached dependencies.
+  Under rule 2 the Gradle dependency cache becomes a shared layer for all lanes.
 
 ## Runners
 
@@ -218,35 +249,44 @@ local       = "local"
 
 - PostHog runner comparison: both BoringCache Docker lanes on `github`,
   `depot-4/8` and `namespace-4/8`, against `depot-builder` and `gha` on `github`.
-- Zed runs its cargo lanes on `namespace-8` without any Namespace cache, since
-  upstream runs on Namespace. Upstream uses profiles up to 16x32; the largest
-  profile in this workspace is 8x16.
+- Zed's cargo lanes run on `namespace-8` with no Namespace cache, as upstream
+  runs on Namespace (upstream uses up to 16x32; the largest profile here is 8x16).
+- Non-Docker lanes do not run on Depot runners, which auto-connect every
+  supported tool to Depot Cache.
+
+## Local qualification
+
+Before anything runs on Actions, each tool is qualified locally with the same
+`bin/bench` commands, in its own Linux container on the Colima `benchmark`
+profile (arm64, 8 CPU, 24 GB), several in parallel. Docker cases get light
+checks only. Heavy cases already proven (grpc, zed, deno) get one setup check.
+Lanes that only exist on Actions (`gha*`, `depot-builder`, Depot and Namespace
+runners) are qualified on Actions. Local builds are arm64 and Actions runners
+are amd64, so local runs prove setup, not timings.
 
 ## Things to watch
 
 - Namespace is a trial (23 days left on 2026-10-07). Bitrise Build Cache is a
   30-day trial with no documented after-state.
 - Cachely's free plan caps storage at 1 GiB; the "benchmark" workspace showed
-  about 889 MB uploaded in the last month. It worked before, so we keep it and
-  watch for write failures.
-- The GitHub Actions cache has a per-repository size limit (10 GB unless raised).
-  Many `gha` lanes in one repo compete for it, and evictions would show up as
-  warm misses.
-- Depot runners auto-connect every supported tool to Depot Cache (org setting),
-  which is why non-Docker lanes do not run on Depot runners.
+  about 889 MB uploaded in the last month. It worked before; watch for write
+  failures.
+- GitHub Actions cache storage for the repo is 200 GB.
 
 ## Version pins
 
 `versions.toml` holds every pin. `bench.yml` pins `boringcache/one@<sha> # vX.Y.Z`
 once and passes `cli-version` from `versions.toml`, so laptop and Actions use the
 same CLI. Release tooling (`monorepo/bin/sync-benchmark-pins`) is changed later
-to update those two lines and run `bin/bench check`.
+to update those two lines and run `bin/bench check`. The monorepo product
+contract's `maintained_cases` lane names (`docker-tool-cache`,
+`docker-mountcache`, …) are updated in the same follow-up.
 
 ## Reports and the website
 
 `bin/bench report` writes `data/results.json` and `data/report.md` from
-`results/`: measurements, units, sample counts, unmeasured cells, failed runs,
-run links. No verdicts. The website keeps reading the September
+`results/`: measurements, units, levels, sample counts, unmeasured cells, failed
+runs, run links. No verdicts. The website keeps reading the September
 `data/latest/index.json` until its reader
 (`web/app/models/reporting/benchmark_comparisons.rb`) switches to the new file;
 then `data/latest/` and its old scripts go in one commit.
@@ -254,26 +294,23 @@ then `data/latest/` and its old scripts go in one commit.
 ## Build order
 
 1. `bin/bench` (check, list, run, time, report), `versions.toml`, `runners.toml`,
-   tests. No cases.
-2. `docker/posthog`: both BoringCache lanes locally (fresh cold + warm, then two
-   rolling steps). Then `bench.yml` on `github` with all four Docker lanes.
-3. PostHog runner comparison on Depot and Namespace runners.
-4. The other Docker cases, one at a time, each verified locally first.
-5. One case per remaining tool: turbo/n8n, bazel/grpc, cargo/zed (Namespace),
-   nx/storybook, go, gradle, maven, ccache, xcode, nix, moon, pants, buck2, sbt.
-   Then the rest of the cases.
-6. `schedule.yml` for each tool once its cases pass on Actions.
-7. Monorepo follow-ups: release pin tooling, website reader.
+   `tool.toml` per tool, tests. No cases.
+2. One small case per tool, qualified locally in containers, in parallel:
+   turbo/n8n, nx/storybook, go/hugo, gradle, maven, cargo (setup check), bazel
+   (setup check), ccache, nix, moon, pants, buck2, sbt; docker/posthog light.
+   xcode needs macOS and is qualified on Actions.
+3. `bench.yml` on Actions with docker/posthog (all four Docker lanes) and one
+   non-Docker case, to prove the same orchestration there.
+4. PostHog runner comparison on Depot and Namespace runners.
+5. The remaining cases, each verified locally first.
+6. `schedule.yml` per tool once its cases pass on Actions.
+7. Monorepo follow-ups: release pin tooling, product contract lane names,
+   website reader.
 
-Each step is checked locally first, then on Actions, before it lands on `main`.
+## Open item
 
-## Open items
-
-1. **"cas backend"** in your last message: what should that change?
-2. **Results commit.** Rolling reads its cursor from `results/`, so each scheduled
-   tick ends with one job committing that tick's records to `main` (not a pull
-   request, which would stall the chain). OK?
-3. **Vercel credentials** for the `vercel` lane: either an OIDC policy (team
-   Settings, OIDC Policies for CLI Access) plus a `TURBO_TEAM` variable, or a
-   `TURBO_TOKEN` secret plus a `TURBO_TEAM` variable. Neither exists on the repo yet.
-4. **Nx Cloud** needs a workspace before its lane can run.
+**Product-reported numbers.** The contract forbids normalizing BoringCache
+artifacts. The plan copies a fixed list of fields verbatim from the product's
+own evidence (session summary: hits, bytes, storage, p50/p95 latency) into
+`provider_reported`, keeps the raw files, and never computes from them. Is that
+inside the contract, or should the record only link the raw files?
