@@ -165,7 +165,7 @@ module Bench
 
       def defaults
         { runner: ENV.fetch("BENCH_RUNNER", "local"), run_id: ENV.fetch("GITHUB_RUN_ID") { Time.now.utc.strftime("%Y%m%d%H%M%S") },
-          work: File.join(@catalog.root, ".work"), results: File.join(@catalog.root, "tmp", "results"), env_file: File.join(@catalog.root, ".env") }
+          work: ENV.fetch("BENCH_WORK") { File.join(@catalog.root, ".work") }, results: File.join(@catalog.root, "tmp", "results"), env_file: File.join(@catalog.root, ".env") }
       end
 
       def parse(defaults)

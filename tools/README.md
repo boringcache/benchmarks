@@ -85,7 +85,7 @@ gha = ["github"]
 
 A `mise.toml` beside `case.toml` pins the case toolchain; it is copied into the run directory.
 
-Each phase runs in `.work/<tool>/<case>/<lane>/`, rebuilt from scratch for every phase at the same path, as on Actions, so tools that key caches on absolute paths behave the same: the plans with run-scoped tags, `overlay/`, and the upstream checkout in `upstream/`. `prepare` and `check` run there with `bash -c`, outside the timer, so their paths start at the run directory (`upstream/...`), not at the plan directory.
+Each phase runs in `<work>/<tool>/<case>/` (`.work` locally, `$HOME/w` on Actions, or `BENCH_WORK`), rebuilt from scratch for every phase at the same short path, as an upstream checkout would be, so tools that key caches or names on absolute paths behave the same: the plans with run-scoped tags, `overlay/`, and the upstream checkout in `upstream/`. `prepare` and `check` run there with `bash -c`, outside the timer, so their paths start at the run directory (`upstream/...`), not at the plan directory.
 
 ## Adding
 
@@ -116,7 +116,7 @@ env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
 ## On GitHub Actions
 
-`.github/workflows/project.yml` runs one tool for one project, named `<project> - <tool>` (for example `Hugo - Docker`, `n8n - Turbo`, `Zed - Rust/Cargo`). `bin/bench matrix <project> --tool <tool>` turns every matching case into one flat list of jobs named `cold: [case] [runner] lane` and `warm: ...` (for example `cold: boringcache`, `warm: github-arm boringcache plus`, `cold: n8n-runners gha`). All `cold` jobs run side by side, then all `warm` jobs. Each job calls `.github/actions/phase`, which runs the same `bin/bench` steps as a local run. A job only receives the secrets its lane lists.
+`.github/workflows/project.yml` runs one tool for one project, named `<tool> - <project>` (for example `Docker - PostHog`, `Go - Hugo`, `Turbo - n8n`); the tool is the grouping and a project can appear under several tools. `bin/bench matrix <project> --tool <tool>` turns every matching case into one flat list of jobs named `cold: [case] [runner] lane` and `warm: ...` (for example `cold: boringcache`, `warm: github-arm boringcache plus`, `cold: n8n-runners gha`). All `cold` jobs run side by side, then all `warm` jobs. Each job calls `.github/actions/phase`, which runs the same `bin/bench` steps as a local run. A job only receives the secrets its lane lists.
 
 ```sh
 gh workflow run project.yml -f tool=Docker -f project=Hugo

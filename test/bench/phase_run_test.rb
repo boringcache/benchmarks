@@ -20,7 +20,7 @@ class PhaseRunTest < Minitest::Test
   def test_plans_get_run_scoped_tags
     with_fixture_env { cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "cold", "--run-id", "r2") }
 
-    plan = TomlRB.load_file(File.join(@root, ".work/demo/app/boringcache-demo/.boringcache.toml"))
+    plan = TomlRB.load_file(File.join(@root, ".work/demo/app/.boringcache.toml"))
     assert_equal "demo-app-boringcache-demo-local-r2", plan.dig("adapters", "demo", "tag")
     assert_equal "demo-deps-boringcache-demo-local-r2", plan.dig("entries", "deps", "tag")
   end
@@ -28,7 +28,7 @@ class PhaseRunTest < Minitest::Test
   def test_other_lanes_run_the_product_command_with_their_env
     with_fixture_env { assert_equal 0, cli("run", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r3") }
 
-    output = File.read(File.join(@root, ".work/demo/app/remote/upstream/out.txt"))
+    output = File.read(File.join(@root, ".work/demo/app/upstream/out.txt"))
     assert_equal "remote-secret\n", output
     assert_equal true, record("remote-local-r3", "remote-local-cold")["output_ok"]
   end
@@ -44,7 +44,7 @@ class PhaseRunTest < Minitest::Test
 
     with_fixture_env { assert_equal 0, cli("run", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r4") }
 
-    run_dir = File.join(@root, ".work/demo/app/remote")
+    run_dir = File.join(@root, ".work/demo/app")
     assert_equal "remote-secret #{run_dir}/store\n", File.read(File.join(run_dir, "upstream/out.txt"))
   end
 

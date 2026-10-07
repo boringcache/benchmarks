@@ -31,7 +31,7 @@ class CLITest < Minitest::Test
       Bench::CLI.new(%W[run demo/app --lane remote --phase cold --run-id r1 --results #{@root}/tmp/results --work #{@root}/.work], catalog:, out: StringIO.new).call
     end
 
-    assert_equal "from-runner\n", File.read(File.join(@root, ".work/demo/app/remote/upstream/out.txt"))
+    assert_equal "from-runner\n", File.read(File.join(@root, ".work/demo/app/upstream/out.txt"))
   end
 
   def test_lane_args_follow_the_plan_command_and_warm_overrides_them
@@ -41,7 +41,7 @@ class CLITest < Minitest::Test
       with_fixture_env do
         Bench::CLI.new(%W[run demo/app --lane remote --phase #{phase} --run-id r7 --results #{@root}/tmp/results --work #{@root}/.work], catalog:, out: StringIO.new).call
       end
-      File.read(File.join(@root, ".work/demo/app/remote/upstream/out.txt"))
+      File.read(File.join(@root, ".work/demo/app/upstream/out.txt"))
     end
 
     assert_equal ["cold-args demo-app-remote-local-r7\n", "warm-args demo-app-remote-local-r7\n"], outputs
@@ -56,7 +56,7 @@ class CLITest < Minitest::Test
       Bench::CLI.new(%W[run demo/app --lane remote --phase cold --run-id r8 --results #{@root}/tmp/results --work #{@root}/.work], catalog:, out: StringIO.new).call
     end
 
-    run_dir = File.join(@root, ".work/demo/app/remote")
+    run_dir = File.join(@root, ".work/demo/app")
     assert_equal "depot build upstream --project p1\n", File.read(File.join(run_dir, "upstream/out.txt"))
     assert File.exist?(File.join(run_dir, "cold-prepared"))
   end
