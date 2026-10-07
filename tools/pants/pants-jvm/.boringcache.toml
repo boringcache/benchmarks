@@ -1,0 +1,15 @@
+workspace = "boringcache/benchmarks"
+
+[entries.pants-named-caches]
+tag = "pants-jvm-pants-named-caches"
+path-env = "PANTS_NAMED_CACHES_DIR"
+
+[profiles.deps]
+entries = ["pants-named-caches"]
+
+[adapters.pants]
+tag = "pants-jvm-pants"
+profiles = ["deps"]
+no-git = true
+no-platform = true
+command = ["pants", "check", "test", "package", "::"]

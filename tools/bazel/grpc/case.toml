@@ -1,0 +1,17 @@
+repo = "grpc/grpc"
+branch = "master"
+start_sha = "96644e6ef6e179746bf4bff36f6a58c6c9224bab"
+directory = "upstream"
+prepare = [
+  '{ echo "startup --output_user_root=$BENCH_DIR/.bazel/output-root"; echo "startup --output_base=$BENCH_DIR/.bazel/output-base"; echo "${BAZEL_LANE_RC:-}"; echo "${BAZEL_PHASE_RC:-}"; } > bench.bazelrc',
+  "upstream/tools/bazel --version",
+]
+check = "for name in client server; do test -s upstream/bazel-bin/examples/cpp/csm/csm_greeter_$name && test -x upstream/bazel-bin/examples/cpp/csm/csm_greeter_$name || exit 1; done"
+
+[runs]
+boringcache-bazel = ["github", "local"]
+gha = ["github"]
+buildbuddy = ["github", "local"]
+cachely = ["github", "local"]
+depot-cache = ["github", "local"]
+nativelink = ["github"]

@@ -1,0 +1,19 @@
+repo = "OpenCut-app/OpenCut"
+branch = "main"
+start_sha = "e668010778568641babef2cc40be4703ae6916d6"
+directory = "upstream"
+prepare = [
+  "mise trust && mise install",
+  "cp overlay/apps/web/bun.lock upstream/apps/web/bun.lock",
+  "cd upstream && moon setup",
+]
+check = "test -n \"$(find upstream/apps/web/dist -type f -print -quit)\""
+shared = [".bun-cache"]
+
+[env]
+CI = "true"
+BUN_INSTALL_CACHE_DIR = "${BENCH_DIR}/.bun-cache"
+
+[runs]
+boringcache-moon = ["github", "local"]
+depot-cache = ["github", "local"]

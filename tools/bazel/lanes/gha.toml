@@ -1,0 +1,8 @@
+provider = "github-actions-cache"
+level = "base"
+actions_only = true
+runners = ["github"]
+paths = [".bazel/disk-cache"]
+
+[env]
+BAZEL_LANE_RC = "build --disk_cache=${BENCH_DIR}/.bazel/disk-cache"

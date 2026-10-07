@@ -1,0 +1,15 @@
+repo = "gogs/gogs"
+branch = "main"
+start_sha = "dbbd717e923694c36f41b0360515b4374bbe6ee0"
+directory = "upstream"
+prepare = ["mise trust && mise install"]
+check = "test -s upstream/public/dist/index.html"
+shared = [".pnpm-store"]
+
+[env]
+CI = "true"
+PNPM_CONFIG_STORE_DIR = "${BENCH_DIR}/.pnpm-store"
+
+[runs]
+boringcache-moon = ["github", "local"]
+depot-cache = ["github", "local"]

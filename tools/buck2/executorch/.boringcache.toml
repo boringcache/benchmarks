@@ -1,0 +1,7 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.buck2]
+tag = "executorch-buck2"
+no-git = true
+no-platform = true
+command = ["buck2", "build", "//examples/portable/executor_runner:executor_runner", "--show-output"]

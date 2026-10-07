@@ -1,0 +1,18 @@
+repo = "zitadel/nextgen"
+branch = "main"
+start_sha = "fba561b67cfb771c0f72c4e293793e4ab86db284"
+directory = "upstream"
+prepare = [
+  "mise trust && mise install",
+  "cd upstream && COREPACK_ENABLE_DOWNLOAD_PROMPT=0 corepack pnpm --version",
+]
+check = "test -s upstream/internal/staticui/console/dist/index.html"
+shared = [".pnpm-store"]
+
+[env]
+CI = "true"
+npm_config_store_dir = "${BENCH_DIR}/.pnpm-store"
+
+[runs]
+boringcache-moon = ["github", "local"]
+depot-cache = ["github", "local"]
