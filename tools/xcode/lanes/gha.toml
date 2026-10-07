@@ -1,0 +1,8 @@
+provider = "github-actions-cache"
+level = "base"
+actions_only = true
+runners = ["macos"]
+paths = [".xcode-compilation-cache"]
+
+[env]
+XCODE_CAS_PATH = "${BENCH_DIR}/.xcode-compilation-cache"

@@ -1,0 +1,8 @@
+provider = "github-actions-cache"
+level = "base"
+actions_only = true
+runners = ["github", "github-26"]
+paths = [".ccache"]
+
+[env]
+CCACHE_STATSLOG = "${BENCH_DIR}/.ccache-stats.log"

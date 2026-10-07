@@ -1,0 +1,23 @@
+repo = "obsproject/obs-studio"
+branch = "master"
+start_sha = "a8b04ac5e15115591d8a184701e1670fb5dc00af"
+directory = "upstream"
+prepare = [
+  "git -C upstream fetch --quiet --unshallow --tags origin",
+  "git -C upstream submodule update --init --recursive",
+  "eval \"$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\" && brew install --quiet zsh",
+  "mise trust && mise install",
+]
+check = "test -x upstream/build_ubuntu/install/RelWithDebInfo/bin/obs"
+
+[env]
+CI = "true"
+PATH = "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}"
+CCACHE_DIR = "${BENCH_DIR}/.ccache"
+CCACHE_BASEDIR = "${BENCH_DIR}/upstream"
+CCACHE_NOHASHDIR = "1"
+CCACHE_COMPILERCHECK = "content"
+
+[runs]
+boringcache-ccache = ["github-26"]
+gha = ["github-26"]

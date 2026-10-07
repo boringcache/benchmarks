@@ -1,0 +1,18 @@
+repo = "obsproject/obs-studio"
+branch = "master"
+start_sha = "a8b04ac5e15115591d8a184701e1670fb5dc00af"
+directory = "upstream"
+prepare = [
+  "git -C upstream fetch --quiet --unshallow --tags origin",
+  "git -C upstream submodule update --init --recursive",
+  "sudo xcode-select --switch /Applications/Xcode_26.5.app/Contents/Developer",
+]
+check = "test -d upstream/build_macos/OBS.app"
+
+[env]
+CI = "true"
+
+[runs]
+boringcache-xcode = ["macos"]
+gha = ["macos"]
+bitrise = ["macos"]
