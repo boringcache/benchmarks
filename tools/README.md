@@ -61,7 +61,7 @@ boringcache-docker = ["github", "depot-4"]
 gha = ["github"]
 ```
 
-`prepare` and `check` run with `bash -c` in the run directory, outside the timer.
+Each phase runs in its own directory under `.work/<tool>/<case>/<scope>/<phase>/`: the plans with run-scoped tags, `overlay/`, and the upstream checkout in `upstream/`. `prepare` and `check` run there with `bash -c`, outside the timer, so their paths start at the run directory (`upstream/...`), not at the plan directory.
 
 ## Adding
 
