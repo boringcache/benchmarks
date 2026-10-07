@@ -43,10 +43,20 @@ module Bench
       end
 
       def command
-        return ["boringcache", kase.tool.name, *("--read-only" if phase == "warm")] if lane.boringcache?
+        lane.boringcache? ? boringcache_command : adapter.fetch("command")
+      end
 
-        TomlRB.load_file(File.join(plan_dir, ".boringcache.toml")).dig("adapters", kase.tool.name, "command") or
-          raise Error, "#{kase.id}: #{lane.plan_dir}/.boringcache.toml has no [adapters.#{kase.tool.name}].command"
+      def boringcache_command
+        read_only = ("--read-only" if phase == "warm")
+        return ["boringcache", kase.tool.name, *read_only] unless kase.tool.name == "run"
+
+        ["boringcache", "run", *adapter.fetch("profiles", []).flat_map { ["--profile", it] },
+         *("--no-platform" if adapter["no-platform"]), *("--no-git" if adapter["no-git"]), *read_only, "--", *adapter.fetch("command")]
+      end
+
+      def adapter
+        @adapter ||= TomlRB.load_file(File.join(plan_dir, ".boringcache.toml")).dig("adapters", kase.tool.name) or
+          raise Error, "#{kase.id}: #{lane.plan_dir}/.boringcache.toml has no [adapters.#{kase.tool.name}]"
       end
 
       def environment

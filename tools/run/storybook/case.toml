@@ -1,0 +1,14 @@
+repo = "storybookjs/storybook"
+branch = "next"
+start_sha = "523e561cf330879201a73d7634e910ac04decf0b"
+directory = "upstream"
+prepare = ["mise trust && mise install", "ruby overlay/configure-nx-cache.rb", "cd upstream && corepack install", "cd upstream && corepack yarn install --immutable", "cd upstream && corepack yarn task --task sandbox --start-from=auto --template react-vite/default-ts --no-link --debug"]
+check = "test -s storybook-sandboxes/react-vite-default-ts/storybook-static/index.html"
+
+[env]
+NX_NO_CLOUD = "true"
+NX_DAEMON = "false"
+
+[runs]
+boringcache-run = ["github", "local"]
+gha = ["github"]

@@ -64,6 +64,28 @@ class PhaseRunTest < Minitest::Test
     assert_equal "demo/app boringcache-demo rolling: no upstream commit after the last step\n", out.string
   end
 
+  def test_run_tool_passes_profiles_flags_and_command_after_double_dash
+    write "tools/run/tool.toml", %([levels]\nbase = ["archive"]\n)
+    write "tools/run/lanes/boringcache-run.toml", %(provider = "boringcache"\nlevel = "base"\n)
+    write "tools/run/app/case.toml", %(repo = "#{File.join(@root, "upstream")}"\nbranch = "main"\nstart_sha = "#{@upstream_sha}"\ncheck = "test -s upstream/out.txt"\n[runs]\nboringcache-run = ["local"]\n)
+    write "tools/run/app/.boringcache.toml", <<~TOML
+      [entries.deps]
+      tag = "deps"
+      path = "upstream/deps"
+      [profiles.build]
+      entries = ["deps"]
+      [adapters.run]
+      profiles = ["build"]
+      no-git = true
+      command = ["make", "all"]
+    TOML
+
+    with_fixture_env { cli("run", "run/app", "--lane", "boringcache-run", "--run-id", "r5") }
+
+    assert_equal ["run --profile build --no-git -- make all", "run --profile build --no-git --read-only -- make all"],
+                 File.readlines(File.join(@root, "stub.log"), chomp: true)
+  end
+
   def test_actions_only_lane_is_skipped_locally
     out = StringIO.new
     assert_equal 0, Bench::CLI.new(%w[run demo/app --lane gha], catalog:, out:).call
