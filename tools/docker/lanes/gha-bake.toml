@@ -1,7 +1,7 @@
 provider = "github-actions-cache"
 level = "base"
 actions_only = true
-runners = ["github"]
+runners = ["github", "github-arm"]
 setup = ["buildx"]
 args = ["--set=*.cache-from=type=gha,scope=${BENCH_SCOPE}", "--set=*.cache-to=type=gha,scope=${BENCH_SCOPE},mode=max"]
 

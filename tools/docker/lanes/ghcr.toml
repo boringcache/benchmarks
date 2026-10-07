@@ -1,7 +1,7 @@
 provider = "github-container-registry"
 level = "base"
 actions_only = true
-runners = ["github"]
+runners = ["github", "github-arm"]
 setup = ["buildx", "ghcr"]
 args = ["--cache-from", "type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}", "--cache-to", "type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE},mode=max"]
 

@@ -4,6 +4,6 @@ start_sha = "fe14612b9384f7b739263c44cb614495713bf012"
 check = "docker image inspect duckgres-benchmark:local"
 
 [runs]
-boringcache-docker = ["github", "local"]
-gha = ["github"]
-ghcr = ["github"]
+boringcache-docker = ["github", "github-arm", "local"]
+gha = ["github", "github-arm"]
+ghcr = ["github", "github-arm"]

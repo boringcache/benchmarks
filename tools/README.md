@@ -112,7 +112,7 @@ label = "depot-ubuntu-24.04-4"
 env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 ```
 
-`label` is the `runs-on` value. `env` applies to every phase on that runner; Depot and Namespace runners are single-tenant and destroyed after the job, which is what the CLI asks before it starts managed BuildKit there.
+`label` is the `runs-on` value. Docker cases run on the architectures their mirrored upstream job builds, each natively on its own runner (`github` amd64, `github-arm` arm64), so plans carry no `--platform`. `env` applies to every phase on that runner; Depot and Namespace runners are single-tenant and destroyed after the job, which is what the CLI asks before it starts managed BuildKit there.
 
 ## On GitHub Actions
 

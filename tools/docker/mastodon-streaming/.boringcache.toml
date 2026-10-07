@@ -7,7 +7,6 @@ metadata-hints = ["benchmark=mastodon-streaming", "upstream-job=build-image-amd6
 command = [
   "docker", "buildx", "build",
   "--file", "upstream/streaming/Dockerfile",
-  "--platform", "linux/amd64",
   "--build-arg", "MASTODON_VERSION_PRERELEASE=nightly.2026-09-30",
   "--build-arg", "MASTODON_VERSION_METADATA=",
   "--build-arg", "SOURCE_COMMIT=9b97c67be3c67e992c184167bd7425502aad12da",

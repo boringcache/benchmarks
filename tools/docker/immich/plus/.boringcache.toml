@@ -8,7 +8,6 @@ mount-cache = true
 command = [
   "docker", "buildx", "build",
   "--file", "upstream/server/Dockerfile",
-  "--platform", "linux/amd64",
   "--build-arg", "BUILD_ID=36788420153",
   "--build-arg", "BUILD_IMAGE=ghcr.io/immich-app/immich-server:main",
   "--build-arg", "BUILD_SOURCE_REF=main",

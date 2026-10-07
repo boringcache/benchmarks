@@ -5,6 +5,6 @@ directory = "upstream/image"
 check = "docker image inspect local_discourse/discourse_test:release"
 
 [runs]
-boringcache-docker = ["github", "local"]
-gha-bake = ["github"]
-ghcr-bake = ["github"]
+boringcache-docker = ["github", "github-arm", "local"]
+gha-bake = ["github", "github-arm"]
+ghcr-bake = ["github", "github-arm"]

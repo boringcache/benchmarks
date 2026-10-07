@@ -4,7 +4,7 @@ start_sha = "ec69d0e64931715e490ae411cba2b305636d20e0"
 check = "docker image inspect hugo-benchmark:local"
 
 [runs]
-boringcache-docker = ["github", "local"]
-boringcache-docker-plus = ["github", "local"]
-gha = ["github"]
-ghcr = ["github"]
+boringcache-docker = ["github", "github-arm", "local"]
+boringcache-docker-plus = ["github", "github-arm", "local"]
+gha = ["github", "github-arm"]
+ghcr = ["github", "github-arm"]

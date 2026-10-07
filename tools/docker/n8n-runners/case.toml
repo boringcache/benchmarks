@@ -6,6 +6,6 @@ prepare = ["mise trust && mise install", "cd upstream && CI=1 pnpm install --fro
 check = "docker image inspect n8n-runners-benchmark:local"
 
 [runs]
-boringcache-docker = ["github", "local"]
-gha = ["github"]
-ghcr = ["github"]
+boringcache-docker = ["github", "github-arm", "local"]
+gha = ["github", "github-arm"]
+ghcr = ["github", "github-arm"]
