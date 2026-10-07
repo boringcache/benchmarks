@@ -155,10 +155,22 @@ module Bench
       end
 
       def provider_reported
-        return {} unless File.exist?(evidence_path)
+        { "cache_session_summary" => session_summary, "buildx_builder" => buildx_builder }.compact
+      end
 
-        summary = File.foreach(evidence_path).filter_map { JSON.parse(it) rescue nil }.reverse.find { it["operation"] == "cache_session_summary" }
-        summary ? { "cache_session_summary" => summary } : {}
+      def session_summary
+        return unless File.exist?(evidence_path)
+
+        File.foreach(evidence_path).filter_map { JSON.parse(it) rescue nil }.reverse.find { it["operation"] == "cache_session_summary" }
+      end
+
+      def buildx_builder
+        return if lane.boringcache? || kase.tool.name != "docker"
+
+        output, status = Open3.capture2e(environment, "docker", "buildx", "inspect")
+        output.lines.grep(/\A(Name|Driver|Endpoint):/).to_h { it.split(":", 2).map(&:strip) } if status.success?
+      rescue Errno::ENOENT
+        nil
       end
 
       def boringcache_version
