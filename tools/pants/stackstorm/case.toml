@@ -1,0 +1,22 @@
+repo = "StackStorm/st2"
+branch = "master"
+start_sha = "9824de4dfd0c869869e310dee729308f398ad83a"
+directory = "upstream"
+prepare = [
+  "mise trust && mise install",
+  "upstream/get-pants.sh --bin-dir \"$BENCH_DIR/.bin\" --version 0.13.2",
+  "git -C upstream submodule update --init --recursive",
+  "cd upstream && pants --version",
+]
+check = 'python3 -c "import glob,xml.etree.ElementTree as E; roots=[E.parse(p).getroot() for p in glob.glob(\"upstream/dist/test/reports/**/*.xml\",recursive=True)]; assert sum(len(list(r.iter(\"testcase\"))) for r in roots)>0; assert not any(list(r.iter(\"failure\"))+list(r.iter(\"error\")) for r in roots)"'
+shared = [".pants-named-caches"]
+
+[env]
+PATH = "${BENCH_DIR}/.bin:${PATH}"
+PANTS_NAMED_CACHES_DIR = "${BENCH_DIR}/.pants-named-caches"
+PANTS_LOCAL_STORE_DIR = "${BENCH_DIR}/.pants-local-store"
+
+[runs]
+boringcache-pants = ["github", "local"]
+depot-cache = ["github", "local"]
+nativelink = ["github"]

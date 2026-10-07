@@ -1,0 +1,16 @@
+provider = "cachely"
+level = "base"
+runners = ["github", "local"]
+secrets = ["CACHELY_TOKEN"]
+
+[env]
+BAZEL_LANE_RC = """
+build --remote_cache=https://remote.cachely.dev
+build --remote_header="Authorization=Bearer ${CACHELY_TOKEN}"
+"""
+
+[cold.env]
+BAZEL_PHASE_RC = "build --remote_accept_cached=false"
+
+[warm.env]
+BAZEL_PHASE_RC = "build --remote_upload_local_results=false"

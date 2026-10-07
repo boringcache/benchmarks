@@ -1,0 +1,17 @@
+provider = "nativelink"
+level = "base"
+runners = ["github"]
+secrets = ["NATIVELINK_R2_ACCESS_KEY_ID", "NATIVELINK_R2_SECRET_ACCESS_KEY"]
+
+[env]
+BUCK2_LANE_CONFIG = """
+[buck2_re_client]
+engine_address = 127.0.0.1:50051
+action_cache_address = 127.0.0.1:50051
+cas_address = 127.0.0.1:50051
+tls = false
+instance_name = main
+"""
+
+[warm.env]
+BUCK2_CACHE_UPLOADS = "false"

@@ -1,0 +1,15 @@
+provider = "nativelink"
+level = "base"
+runners = ["github"]
+secrets = ["NATIVELINK_R2_ACCESS_KEY_ID", "NATIVELINK_R2_SECRET_ACCESS_KEY"]
+
+[env]
+PANTS_REMOTE_STORE_ADDRESS = "grpc://127.0.0.1:50051"
+PANTS_REMOTE_INSTANCE_NAME = "main"
+PANTS_REMOTE_CACHE_READ = "true"
+PANTS_REMOTE_CACHE_WRITE = "true"
+PANTS_REMOTE_EXECUTION = "false"
+PANTS_PANTSD = "false"
+
+[warm.env]
+PANTS_REMOTE_CACHE_WRITE = "false"

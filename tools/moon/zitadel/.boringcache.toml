@@ -1,0 +1,15 @@
+workspace = "boringcache/benchmarks"
+
+[entries.pnpm-store]
+tag = "zitadel-pnpm-store"
+path-env = "npm_config_store_dir"
+
+[profiles.deps]
+entries = ["pnpm-store"]
+
+[adapters.moon]
+tag = "zitadel-moon"
+profiles = ["deps"]
+no-git = true
+no-platform = true
+command = ["bash", "-c", "corepack pnpm install --frozen-lockfile && corepack pnpm exec moon run console:build"]

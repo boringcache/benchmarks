@@ -1,0 +1,15 @@
+workspace = "boringcache/benchmarks"
+
+[entries.bun-cache]
+tag = "opencut-bun-cache"
+path-env = "BUN_INSTALL_CACHE_DIR"
+
+[profiles.deps]
+entries = ["bun-cache"]
+
+[adapters.moon]
+tag = "opencut-moon"
+profiles = ["deps"]
+no-git = true
+no-platform = true
+command = ["bash", "-c", "bun install --frozen-lockfile --cwd apps/web && moon run web:build"]
