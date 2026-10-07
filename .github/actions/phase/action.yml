@@ -15,6 +15,12 @@ inputs:
   setup:
     required: false
     default: ""
+  sha:
+    required: false
+    default: ""
+  step:
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -109,7 +115,10 @@ runs:
     - id: prepare
       if: inputs.phase != 'preflight'
       shell: bash
-      run: bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" --github
+      env:
+        SHA: ${{ inputs.sha }}
+        STEP: ${{ inputs.step }}
+      run: bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" ${SHA:+--sha "$SHA" --step "$STEP"} --github
 
     - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache'
       shell: bash

@@ -6,13 +6,14 @@ module Bench
         bin/bench list
         bin/bench run <tool>/<case> --lane LANE [--phase cold|warm|rolling] [--runner KEY] [--run-id ID] [--results DIR] [--work DIR]
                       [--container [--env-file PATH]]
-        bin/bench prepare <tool>/<case> --lane LANE --phase PHASE [--runner KEY] [--run-id ID] [--github]
+        bin/bench prepare <tool>/<case> --lane LANE --phase PHASE [--runner KEY] [--run-id ID] [--sha SHA --step N] [--github]
         bin/bench start <tool>/<case> --lane LANE
         bin/bench build <tool>/<case> --lane LANE
         bin/bench record <tool>/<case> --lane LANE --exit-status N
         bin/bench probe <tool>/<case> --lane LANE [--runner KEY] [--run-id ID]
         bin/bench label <runner>
-        bin/bench matrix <project|tool/case> [--tool TOOL] [--lane LANES] [--runner KEYS]
+        bin/bench matrix <project|tool/case> [--tool TOOL] [--lane LANES] [--runner KEYS] [--rolling]
+        bin/bench rolling-projects
         bin/bench image
         bin/bench report [--results DIR] [--out DIR]
     TEXT
@@ -36,6 +37,7 @@ module Bench
       when "label" then label
       when "matrix" then matrix
       when "report" then report
+      when "rolling-projects" then rolling_projects
       when "image" then image
       else usage
       end
@@ -121,14 +123,19 @@ module Bench
       end
 
       def matrix
-        options = parse({})
+        options = parse(defaults.except(:runner))
         cases = @catalog.project_cases(@argv.first || raise(Error, "matrix needs <project> or <tool>/<case>"), tool: options[:tool])
         entries = cases.flat_map do |kase|
+          position = options[:rolling] ? Rolling.new(kase, results_dir: options[:results], work_root: options[:work]).next_step : []
+          next [] if options[:rolling] && position.nil?
+
+          step, sha = position
           kase.runs.flat_map do |lane_name, runners|
             lane = kase.tool.lane(lane_name)
             Array(runners).reject { it == "local" }.map do |runner|
               { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets, "setup" => lane.setup.join(" "),
-                "label" => [(kase.name unless kase.name == kase.project), @catalog.runner_machine(runner), lane.label].compact.join(" · ") }
+                "label" => [(kase.name unless kase.name == kase.project), @catalog.runner_machine(runner), lane.label].compact.join(" · "),
+                "step" => step&.to_s || "", "sha" => sha || "" }
             end
           end
         end
@@ -142,9 +149,8 @@ module Bench
         common = { phase:, runner: options[:runner], work_root: options[:work], results_dir: options[:results] }
         return PhaseRun.new(kase, lane, scope: "#{lane.name}-#{options[:runner]}-#{options[:run_id]}", **common) unless phase == ROLLING
 
-        rolling = Rolling.new(kase, lane, runner: options[:runner], results_dir: options[:results], work_root: options[:work])
-        step, sha = rolling.next_step
-        return PhaseRun.new(kase, lane, scope: rolling.scope, sha:, step:, **common) if sha
+        step, sha = options[:sha] ? [Integer(options[:step]), options[:sha]] : Rolling.new(kase, results_dir: options[:results], work_root: options[:work]).next_step
+        return PhaseRun.new(kase, lane, scope: Rolling.scope(lane, options[:runner]), sha:, step:, **common) if sha
 
         @out.puts "#{kase.id} #{lane.name} rolling: no upstream commit after the last step"
         nil
@@ -168,6 +174,11 @@ module Bench
           container.bench("run", kase.id, "--lane", lane.name, "--phase", phase, "--run-id", options[:run_id],
                           "--work", "/work", "--results", "/bench/tmp/results", docker: kase.tool.name == "docker")
         end ? 0 : 1
+      end
+
+      def rolling_projects
+        @catalog.rolling.each { |tool, project| @out.puts "#{tool.title}\t#{project}" }
+        0
       end
 
       def image
@@ -201,6 +212,9 @@ module Bench
             opts.on("--env-file PATH") { options[:env_file] = File.expand_path(it) }
             opts.on("--exit-status N") { options[:exit_status] = it }
             opts.on("--github") { options[:github] = true }
+            opts.on("--rolling") { options[:rolling] = true }
+            opts.on("--sha SHA") { options[:sha] = it }
+            opts.on("--step N") { options[:step] = it }
           end.parse!(@argv)
         end
       end

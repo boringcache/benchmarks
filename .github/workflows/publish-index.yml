@@ -2,15 +2,6 @@ name: "Publish Benchmark Index"
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "30 */4 * * *"
-  push:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/publish-index.yml"
-      - ".tool-versions"
-      - "scripts/**"
 
 permissions:
   contents: write
