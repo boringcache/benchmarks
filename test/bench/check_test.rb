@@ -33,6 +33,15 @@ class CheckTest < Minitest::Test
     assert_includes Bench::Check.new(catalog).problems, "demo/app: boringcache-demo has no plan at ./.boringcache.toml"
   end
 
+  def test_boringcache_plan_must_cache_every_shared_path
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml"))
+      .sub("check = ", %(shared = ["upstream/deps", ".store", ".missing"]\ncheck = )).concat(%([env]\nSTORE = "${BENCH_DIR}/.store"\n))
+    write "tools/demo/app/.boringcache.toml", File.read(File.join(@root, "tools/demo/app/.boringcache.toml"))
+      .concat(%([entries.store]\ntag = "demo-store"\npath-env = "STORE"\n))
+
+    assert_equal ["demo/app: boringcache-demo does not cache shared path .missing"], Bench::Check.new(catalog).problems
+  end
+
   def test_lane_level_must_exist_in_tool
     write "tools/demo/lanes/remote.toml", %(provider = "remote"\nlevel = "plus"\n)
 

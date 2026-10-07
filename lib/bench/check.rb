@@ -57,9 +57,10 @@ module Bench
             "#{kase.id}: #{lane_name} cannot run on #{runner}"
           end
         end
-        return problems unless lane.boringcache? && !File.exist?(kase.plan_path(lane))
+        return problems unless lane.boringcache?
+        return problems << "#{kase.id}: #{lane_name} has no plan at #{File.join(lane.plan_dir, ".boringcache.toml")}" unless File.exist?(kase.plan_path(lane))
 
-        problems << "#{kase.id}: #{lane_name} has no plan at #{File.join(lane.plan_dir, ".boringcache.toml")}"
+        problems + (kase.shared - kase.cached_paths(lane)).map { "#{kase.id}: #{lane_name} does not cache shared path #{it}" }
       end
   end
 end

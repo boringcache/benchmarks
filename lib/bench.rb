@@ -2,6 +2,7 @@ require "fileutils"
 require "json"
 require "open3"
 require "optparse"
+require "pathname"
 require "time"
 require "toml-rb"
 
