@@ -1,0 +1,8 @@
+provider = "depot"
+level = "base"
+runners = ["github", "local"]
+secrets = ["DEPOT_TOKEN"]
+
+[env]
+NX_SELF_HOSTED_REMOTE_CACHE_SERVER = "https://cache.depot.dev"
+NX_SELF_HOSTED_REMOTE_CACHE_ACCESS_TOKEN = "${DEPOT_TOKEN}"

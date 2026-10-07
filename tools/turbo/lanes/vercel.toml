@@ -5,4 +5,4 @@ runners = ["github"]
 secrets = ["TURBO_NAME"]
 
 [warm.env]
-TURBO_CACHE = "remote:r"
+TURBO_CACHE = "local:rw,remote:r"

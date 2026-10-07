@@ -9,4 +9,4 @@ TURBO_TOKEN = "${DEPOT_TOKEN}"
 TURBO_TEAM = "${DEPOT_ORG_ID}"
 
 [warm.env]
-TURBO_CACHE = "remote:r"
+TURBO_CACHE = "local:rw,remote:r"
