@@ -93,11 +93,11 @@ schedule.toml                # what runs when
 tools/
   docker/
     tool.toml                # levels and shared layers for this tool
-    lanes/                   # one small Ruby file per lane
-      boringcache-docker.rb
-      boringcache-docker-plus.rb
-      gha.rb
-      depot-builder.rb
+    lanes/                   # one small TOML file per lane
+      boringcache-docker.toml
+      boringcache-docker-plus.toml
+      gha.toml
+      depot-builder.toml
     posthog/
       case.toml              # source, check, lane -> runners
       .boringcache.toml      # base plan; [adapters.docker].command IS the build command
@@ -148,11 +148,11 @@ depot-builder           = ["github"]
 ```
 
 A lane file declares its level, setup (untimed), how it wraps the command, the
-runner keys it allows, its secrets, and its own reuse signal. `bin/bench check`
+runner keys it allows, and its secrets. `bin/bench check`
 rejects a pair a lane does not allow and a case that leaves a shared layer out
 of any lane.
 
-Implementation: Ruby 3.4 (`.tool-versions`), `toml-rb` for our own TOML files
+Implementation: Ruby 4.0.7 (`.tool-versions`), `toml-rb` for our own TOML files
 (the consolidation used it), Minitest.
 
 ## Phases
@@ -179,13 +179,11 @@ Implementation: Ruby 3.4 (`.tool-versions`), `toml-rb` for our own TOML files
 work directory, tool caches and Docker builder between phases. Warm only
 restores (BoringCache read-only, `actions/cache/restore`, remote uploads off).
 
-**Warm reuse** is recorded from each product's own signal (BoringCache's
-`cache-hit` output and session summary, `actions/cache` `cache-hit`, the tool's
-own hit statistics). A warm run that missed is still recorded, with
-`reused: false` shown next to its time; nothing is hidden or dropped. Where a
-product reports nothing, `reused` is `null`.
-
-The output check result is recorded with every timing.
+**Numbers only.** The record holds what ran and what was measured: time, exit
+status, output check, and whatever numbers each product reports itself, copied
+as reported. The harness does not judge whether a cache was reused or whether a
+result is good. What it guarantees is honest wiring: the same command for every
+lane, and each product's cache set up the way that product documents it.
 
 ## Results
 
@@ -208,7 +206,7 @@ The output check result is recorded with every timing.
   "adapter_command": "docker", "case": "posthog", "lane": "boringcache-docker", "level": "base",
   "capabilities": ["layers"], "runner": "github", "runner_label": "ubuntu-latest",
   "phase": "rolling", "step": 12, "sha": "...",
-  "seconds": 212.4, "exit_status": 0, "output_ok": true, "reused": true,
+  "seconds": 212.4, "exit_status": 0, "output_ok": true,
   "provider_reported": { "...": "fields copied verbatim from the product's own evidence" },
   "evidence": ["artifact path of each raw evidence file"],
   "versions": { "boringcache": "1.40.0" },
@@ -222,7 +220,7 @@ The output check result is recorded with every timing.
 | Tool | Cases | Lanes |
 | --- | --- | --- |
 | docker | posthog, n8n, n8n-runners, n8n-runners-distroless, immich, immich-base-images, mastodon, mastodon-streaming, hugo, duckgres, chroma, linkerd2, qdrant, discourse | `boringcache-docker`, `boringcache-docker-plus` (where it applies), `gha` (type=gha, mode=max), `depot-builder` |
-| cargo | deno, zed | `boringcache-cargo`, `boringcache-cargo-plus`, `gha` (sccache GitHub Actions backend), `gha-plus` (+ `Swatinem/rust-cache`), `depot-cache` (sccache WebDAV) |
+| cargo | deno, zed | `boringcache-cargo`, `boringcache-cargo-plus`, `gha` (sccache GitHub Actions backend), `gha-plus` (+ `Swatinem/rust-cache`), `depot-cache` (sccache WebDAV), `kache` (`kunobi-ninja/kache-action`, RUSTC_WRAPPER compiler cache on the GitHub Actions cache), `mbx` (`jdx/mr-boxington-action`, target + registry + git on the GitHub Actions cache; `plus` level) |
 | turbo | n8n | `boringcache-turbo`, `gha` (actions/cache on .turbo), `depot-cache`, `vercel` (OIDC policy "Boringcache turbo") |
 | nx | storybook | `boringcache-nx`, `gha`, `depot-cache`; `nx-cloud` last (needs an Nx workspace) |
 | run | storybook (archive sandbox, the original benchmark) | `boringcache-run`, `gha` |
@@ -331,7 +329,7 @@ then `data/latest/` and its old scripts go in one commit.
 ## What the benchmark is
 
 It runs each product's commands (BoringCache and every competitor lane) on the
-same workloads and reports the numbers truthfully: time, reuse, storage and
+same workloads and reports the numbers truthfully: time, storage and
 whatever latency each product reports, with the raw evidence kept. Product
 numbers are copied into `provider_reported` as reported. Interpreting them is
 for people and agents reading the report, not for the harness.

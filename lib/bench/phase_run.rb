@@ -1,0 +1,121 @@
+module Bench
+  class PhaseRun
+    attr_reader :kase, :lane, :phase, :runner, :scope
+
+    def initialize(kase, lane, phase:, runner:, scope:, work_root:, results_dir:, env: ENV)
+      @kase = kase
+      @lane = lane
+      @phase = phase
+      @runner = runner
+      @scope = scope
+      @work_root = work_root
+      @results_dir = results_dir
+      @env = env
+    end
+
+    def call
+      workspace.prepare(sha)
+      FileUtils.mkdir_p(File.dirname(record_path))
+      kase.prepare.each { shell(it) or raise Error, "#{kase.id}: prepare failed: #{it}" }
+
+      started_at = Time.now.utc
+      seconds, exit_status = measure { build }
+      write_record(started_at:, seconds:, exit_status:)
+    end
+
+    def record_path
+      File.join(@results_dir, kase.tool.name, kase.name, scope, "#{lane.name}-#{runner}-#{phase}.json")
+    end
+
+    private
+      def sha
+        kase.start_sha
+      end
+
+      def workspace
+        @workspace ||= Workspace.new(kase, scope:, phase:, root: @work_root)
+      end
+
+      def plan_dir
+        workspace.plan_dir(lane)
+      end
+
+      def build
+        if lane.boringcache?
+          execute({ "BORINGCACHE_OBSERVABILITY_JSONL_PATH" => evidence_path }, "boringcache", kase.tool.name, *("--read-only" if phase == "warm"))
+        else
+          execute(lane.env(phase, @env), *product_command)
+        end
+      end
+
+      def product_command
+        output, status = Open3.capture2("boringcache", kase.tool.name, "--dry-run", "--json", chdir: plan_dir)
+        raise Error, "#{kase.id}: boringcache #{kase.tool.name} --dry-run failed" unless status.success?
+
+        JSON.parse(output).fetch("command")
+      end
+
+      def execute(env, *command)
+        system(@env.to_h.merge(env), *command, chdir: plan_dir) ? 0 : ($?&.exitstatus || 127)
+      end
+
+      def shell(command)
+        system(@env.to_h, "bash", "-c", command, chdir: workspace.dir)
+      end
+
+      def measure
+        start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        result = yield
+        [(Process.clock_gettime(Process::CLOCK_MONOTONIC) - start).round(3), result]
+      end
+
+      def output_ok(exit_status)
+        return false unless exit_status.zero?
+
+        kase.check.empty? ? nil : shell(kase.check)
+      end
+
+      def evidence_path
+        record_path.sub(/\.json\z/, ".boringcache.jsonl")
+      end
+
+      def write_record(started_at:, seconds:, exit_status:)
+        record = {
+          "adapter_command" => kase.tool.name,
+          "case" => kase.name,
+          "lane" => lane.name,
+          "provider" => lane.provider,
+          "level" => lane.level,
+          "capabilities" => lane.capabilities,
+          "runner" => runner,
+          "runner_label" => kase.tool.catalog.runners[runner],
+          "phase" => phase,
+          "scope" => scope,
+          "repo" => kase.repo,
+          "sha" => sha,
+          "seconds" => seconds,
+          "exit_status" => exit_status,
+          "output_ok" => output_ok(exit_status),
+          "provider_reported" => {},
+          "evidence" => File.exist?(evidence_path) ? [File.basename(evidence_path)] : [],
+          "versions" => { "boringcache" => boringcache_version },
+          "run_url" => run_url,
+          "attempt" => @env["GITHUB_RUN_ATTEMPT"]&.to_i,
+          "started_at" => started_at.iso8601
+        }
+        File.write(record_path, JSON.pretty_generate(record) + "\n")
+        record
+      end
+
+      def boringcache_version
+        output, status = Open3.capture2("boringcache", "--version")
+        output.split.last if status.success?
+      rescue Errno::ENOENT
+        nil
+      end
+
+      def run_url
+        "#{@env.fetch("GITHUB_SERVER_URL", "https://github.com")}/#{@env["GITHUB_REPOSITORY"]}/actions/runs/#{@env["GITHUB_RUN_ID"]}" if @env["GITHUB_RUN_ID"]
+      end
+  end
+end
