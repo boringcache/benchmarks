@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require_relative "../lib/bench"
+
+exit Bench::CLI.new(ARGV).call
