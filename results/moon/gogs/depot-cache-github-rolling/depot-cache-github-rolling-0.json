@@ -1,0 +1,29 @@
+{
+  "adapter_command": "moon",
+  "case": "gogs",
+  "lane": "depot-cache",
+  "provider": "depot",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "phase": "rolling",
+  "step": 0,
+  "scope": "depot-cache-github-rolling",
+  "repo": "gogs/gogs",
+  "sha": "dbbd717e923694c36f41b0360515b4374bbe6ee0",
+  "seconds": 12.611,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {},
+  "evidence": [],
+  "versions": {
+    "boringcache": null
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37689552216",
+  "attempt": 1,
+  "started_at": "2026-10-07T21:28:08Z"
+}
