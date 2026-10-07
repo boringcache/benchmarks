@@ -1,15 +1,13 @@
 module Bench
   class Rolling
-    def initialize(kase, lane, runner:, results_dir:, work_root:)
-      @kase = kase
-      @lane = lane
-      @runner = runner
-      @results_dir = results_dir
-      @work_root = work_root
+    def self.scope(lane, runner)
+      "#{lane.name}-#{runner}-rolling"
     end
 
-    def scope
-      "#{@lane.name}-#{@runner}-rolling"
+    def initialize(kase, results_dir:, work_root:)
+      @kase = kase
+      @results_dir = results_dir
+      @work_root = work_root
     end
 
     def next_step
@@ -21,7 +19,7 @@ module Bench
 
     private
       def last
-        @last ||= Dir.glob(File.join(@results_dir, @kase.tool.name, @kase.name, scope, "*-rolling-*.json"))
+        @last ||= Dir.glob(File.join(@results_dir, @kase.tool.name, @kase.name, "*-rolling", "*-rolling-*.json"))
           .map { JSON.parse(File.read(it)) }.max_by { it["step"] }
       end
   end

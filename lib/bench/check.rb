@@ -8,7 +8,7 @@ module Bench
     end
 
     def problems
-      runner_problems + version_problems + @catalog.tools.flat_map { tool_problems(it) }
+      runner_problems + version_problems + rolling_problems + @catalog.tools.flat_map { tool_problems(it) }
     end
 
     private
@@ -20,6 +20,14 @@ module Bench
           end
         end
         @catalog.runners.key?("local") ? problems : problems << "runners.toml must define local"
+      end
+
+      def rolling_problems
+        @catalog.rolling.filter_map do |tool, project|
+          "rolling.toml: no #{tool.name} cases for project #{project.inspect}" unless tool.cases.any? { it.project.casecmp?(project) }
+        end
+      rescue Error => error
+        ["rolling.toml: #{error.message}"]
       end
 
       def version_problems

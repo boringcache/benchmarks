@@ -13,6 +13,13 @@ class CheckTest < Minitest::Test
     assert_equal ["runners.toml: github must use an explicit Ubuntu version"], Bench::Check.new(catalog).problems
   end
 
+  def test_rolling_list_must_name_existing_projects
+    write "rolling.toml", %(demo = ["app", "missing"]\n)
+
+    assert_equal ["rolling.toml: no demo cases for project \"missing\""], Bench::Check.new(catalog).problems
+    assert_equal [["demo", "app"], ["demo", "missing"]], catalog.rolling.map { |tool, project| [tool.name, project] }
+  end
+
   def test_accepts_explicit_ubuntu_26_runner
     write "runners.toml", %([github]\nlabel = "ubuntu-26.04"\nmachine = "github 4c"\n[local]\nlabel = "local"\nmachine = "local"\n)
 
