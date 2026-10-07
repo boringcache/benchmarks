@@ -1,2 +1,4 @@
+name = "Pants"
+
 [levels]
 base = ["remote-cache"]

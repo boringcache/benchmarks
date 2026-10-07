@@ -11,6 +11,14 @@ module Bench
       File.basename(dir)
     end
 
+    def title
+      config.fetch("name", name)
+    end
+
+    def matches?(text)
+      [name, title].any? { it.casecmp?(text) }
+    end
+
     def levels
       config.fetch("levels", {})
     end

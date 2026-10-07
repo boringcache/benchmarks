@@ -5,10 +5,17 @@ class CLITest < Minitest::Test
 
   def test_matrix_lists_every_lane_and_runner_of_a_project_without_local
     assert_equal [
-      { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => [], "label" => "demo boringcache" },
-      { "case" => "demo/app", "lane" => "remote", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => ["REMOTE_TOKEN"], "label" => "demo remote" },
-      { "case" => "demo/app", "lane" => "gha", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => [], "label" => "demo gha" }
+      { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => [], "label" => "boringcache" },
+      { "case" => "demo/app", "lane" => "remote", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => ["REMOTE_TOKEN"], "label" => "remote" },
+      { "case" => "demo/app", "lane" => "gha", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => [], "label" => "gha" }
     ], matrix("app")
+  end
+
+  def test_matrix_filters_by_tool_case_insensitively
+    write "tools/demo/tool.toml", %(name = "Demo Tool"\n[levels]\nbase = ["remote-cache"]\n)
+
+    assert_equal 3, matrix("APP", "--tool", "demo tool").size
+    assert_equal 3, matrix("app", "--tool", "demo").size
   end
 
   def test_matrix_filters_by_lane

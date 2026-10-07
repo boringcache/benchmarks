@@ -1,3 +1,5 @@
+name = "Rust/Cargo"
+
 [levels]
 base = ["compiler-cache"]
 plus = ["compiler-cache", "registry", "target"]

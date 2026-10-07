@@ -1,2 +1,4 @@
+name = "Go"
+
 [levels]
 base = ["build-cache"]

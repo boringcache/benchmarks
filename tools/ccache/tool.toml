@@ -1,2 +1,4 @@
+name = "ccache"
+
 [levels]
 base = ["remote-storage"]

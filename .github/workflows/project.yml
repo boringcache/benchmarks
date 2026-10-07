@@ -3,8 +3,12 @@ name: Project benchmark
 on:
   workflow_dispatch:
     inputs:
+      tool:
+        description: tool, for example Docker, Turbo or Rust/Cargo
+        type: string
+        required: true
       project:
-        description: project, for example posthog, or one tool/case such as docker/posthog
+        description: project, for example Hugo or PostHog
         type: string
         required: true
       lane:
@@ -16,7 +20,7 @@ on:
         type: string
         default: ""
 
-run-name: ${{ inputs.project }}${{ inputs.lane != '' && format(' {0}', inputs.lane) || '' }}${{ inputs.runner != '' && format(' on {0}', inputs.runner) || '' }}
+run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.lane != '' && format(' ({0})', inputs.lane) || '' }}${{ inputs.runner != '' && format(' on {0}', inputs.runner) || '' }}
 
 permissions:
   contents: read
@@ -37,10 +41,11 @@ jobs:
           bundler-cache: true
       - id: matrix
         env:
+          TOOL: ${{ inputs.tool }}
           PROJECT: ${{ inputs.project }}
           LANE: ${{ inputs.lane }}
           RUNNER: ${{ inputs.runner }}
-        run: echo "matrix=$(bundle exec bin/bench matrix "$PROJECT" ${LANE:+--lane "$LANE"} ${RUNNER:+--runner "$RUNNER"})" >> "$GITHUB_OUTPUT"
+        run: echo "matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${LANE:+--lane "$LANE"} ${RUNNER:+--runner "$RUNNER"})" >> "$GITHUB_OUTPUT"
 
   cold:
     needs: plan
