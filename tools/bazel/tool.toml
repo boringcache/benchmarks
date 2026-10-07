@@ -1,2 +1,4 @@
+name = "Bazel"
+
 [levels]
 base = ["remote-cache"]

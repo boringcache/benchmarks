@@ -11,7 +11,7 @@ module Bench
         bin/bench build <tool>/<case> --lane LANE
         bin/bench record <tool>/<case> --lane LANE --exit-status N
         bin/bench label <runner>
-        bin/bench matrix <project|tool/case> [--lane LANES] [--runner KEYS]
+        bin/bench matrix <project|tool/case> [--tool TOOL] [--lane LANES] [--runner KEYS]
         bin/bench image
         bin/bench report [--results DIR] [--out DIR]
     TEXT
@@ -104,13 +104,13 @@ module Bench
 
       def matrix
         options = parse({})
-        cases = @catalog.project_cases(@argv.first || raise(Error, "matrix needs <project> or <tool>/<case>"))
+        cases = @catalog.project_cases(@argv.first || raise(Error, "matrix needs <project> or <tool>/<case>"), tool: options[:tool])
         entries = cases.flat_map do |kase|
           kase.runs.flat_map do |lane_name, runners|
             lane = kase.tool.lane(lane_name)
             Array(runners).reject { it == "local" }.map do |runner|
               { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets,
-                "label" => [kase.tool.name, (kase.name unless kase.name == kase.project), (runner unless runner == "github"), lane.label].compact.join(" ") }
+                "label" => [(kase.name unless kase.name == kase.project), (runner unless runner == "github"), lane.label].compact.join(" ") }
             end
           end
         end
@@ -172,6 +172,7 @@ module Bench
         defaults.tap do |options|
           OptionParser.new do |opts|
             opts.on("--lane NAME") { options[:lane] = it }
+            opts.on("--tool NAME") { options[:tool] = it }
             opts.on("--phase PHASE", [*PHASES, ROLLING]) { options[:phase] = it }
             opts.on("--runner KEY") { options[:runner] = it }
             opts.on("--run-id ID") { options[:run_id] = it }

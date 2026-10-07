@@ -1,2 +1,4 @@
+name = "sbt"
+
 [levels]
 base = ["remote-cache"]

@@ -34,10 +34,11 @@ module Bench
       tools.flat_map(&:cases)
     end
 
-    def project_cases(name)
+    def project_cases(name, tool: nil)
       return [find_case(name)] if name.to_s.include?("/")
-
-      cases.select { it.project == name }.then { it.empty? ? raise(Error, "unknown project #{name.inspect}") : it }
+    
+      matches = cases.select { it.project.casecmp?(name.to_s) && (tool.nil? || it.tool.matches?(tool)) }
+      matches.empty? ? raise(Error, "no cases for project #{name.inspect}#{" and tool #{tool.inspect}" if tool}") : matches
     end
 
     def find_case(id)

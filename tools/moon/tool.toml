@@ -1,2 +1,4 @@
+name = "moon"
+
 [levels]
 base = ["remote-cache"]

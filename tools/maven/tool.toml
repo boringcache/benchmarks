@@ -1,2 +1,4 @@
+name = "Maven"
+
 [levels]
 base = ["build-cache"]

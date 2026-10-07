@@ -1,2 +1,4 @@
+name = "Nx"
+
 [levels]
 base = ["remote-cache"]
