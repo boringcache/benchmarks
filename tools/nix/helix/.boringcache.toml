@@ -1,0 +1,7 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.nix]
+tag = "helix-nix"
+no-platform = true
+no-git = true
+command = ["nix", "build", ".#default", "-L", "--no-update-lock-file", "--option", "accept-flake-config", "false"]

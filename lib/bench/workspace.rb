@@ -10,10 +10,10 @@ module Bench
       plan
     end
 
-    def initialize(kase, scope:, phase:, root:)
+    def initialize(kase, lane:, scope:, root:)
       @kase = kase
       @scope = scope
-      @dir = File.join(root, kase.tool.name, kase.name, scope, phase)
+      @dir = File.join(root, kase.tool.name, kase.name, lane.name)
     end
 
     def prepare(sha)

@@ -1,0 +1,3 @@
+provider = "boringcache"
+level = "base"
+runners = ["macos", "local"]

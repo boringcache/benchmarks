@@ -1,0 +1,10 @@
+repo = "helix-editor/helix"
+branch = "master"
+start_sha = "ba40e547426b0f9896c8bdc699a4ab11f2b37dbc"
+directory = "upstream"
+check = "test -x upstream/result/bin/hx && upstream/result/bin/hx --version"
+
+[runs]
+boringcache-nix = ["github", "local"]
+cachix = ["github"]
+magic-nix-cache = ["github"]

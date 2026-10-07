@@ -33,7 +33,7 @@ module Bench
 
     private
       def workspace
-        @workspace ||= Workspace.new(kase, scope:, phase: [phase, step].compact.join("-"), root: @work_root)
+        @workspace ||= Workspace.new(kase, lane:, scope:, root: @work_root)
       end
 
       def plan_dir
