@@ -169,9 +169,17 @@ module Bench
       end
 
       def observed
-        return {} unless kase.tool.name == "docker"
+        machine = { "cpu" => cpu_model, "cores" => Etc.nprocessors }.compact
+        return { "machine" => machine } unless kase.tool.name == "docker"
 
-        { "image_platform" => image_platform, "buildx_builder" => buildx_builder }.compact
+        { "machine" => machine, "image_platform" => image_platform, "buildx_builder" => buildx_builder }.compact
+      end
+
+      def cpu_model
+        lscpu = (Open3.capture2("lscpu").first rescue "")[/^Model name:\s*(.+)$/, 1]
+        cpuinfo = File.exist?("/proc/cpuinfo") ? File.read("/proc/cpuinfo")[/^model name\s*:\s*(.+)$/, 1] : nil
+        sysctl = (Open3.capture2("sysctl", "-n", "machdep.cpu.brand_string").first rescue "") unless lscpu || cpuinfo
+        [lscpu, cpuinfo, sysctl].map { it.to_s.strip }.find { !it.empty? && it != "-" }
       end
 
       def image_platform
