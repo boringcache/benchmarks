@@ -2,3 +2,6 @@ provider = "mbx"
 level = "plus"
 actions_only = true
 runners = ["github", "namespace-8"]
+setup = ["mbx"]
+program = ["mbx"]
+replaces = ["cargo"]

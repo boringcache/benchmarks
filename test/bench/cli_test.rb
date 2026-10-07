@@ -5,9 +5,9 @@ class CLITest < Minitest::Test
 
   def test_matrix_lists_every_lane_and_runner_of_a_project_without_local
     assert_equal [
-      { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "boringcache" },
-      { "case" => "demo/app", "lane" => "remote", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => ["REMOTE_TOKEN"], "setup" => "", "label" => "remote" },
-      { "case" => "demo/app", "lane" => "gha", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "gha" }
+      { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "github 4c · boringcache" },
+      { "case" => "demo/app", "lane" => "remote", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => ["REMOTE_TOKEN"], "setup" => "", "label" => "github 4c · remote" },
+      { "case" => "demo/app", "lane" => "gha", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "github 4c · gha" }
     ], matrix("app")
   end
 
@@ -24,7 +24,7 @@ class CLITest < Minitest::Test
   end
 
   def test_runner_env_reaches_the_build
-    write "runners.toml", %([github]\nlabel = "ubuntu-24.04"\n[local]\nlabel = "local"\nenv = { DEMO_CACHE = "from-runner" }\n)
+    write "runners.toml", %([github]\nlabel = "ubuntu-24.04"\nmachine = "github 4c"\n[local]\nlabel = "local"\nmachine = "local"\nenv = { DEMO_CACHE = "from-runner" }\n)
     write "tools/demo/lanes/remote.toml", %(provider = "remote"\nlevel = "base"\n)
 
     with_fixture_env do
@@ -51,7 +51,7 @@ class CLITest < Minitest::Test
     write "tools/demo/app/.boringcache.toml", %([adapters.demo]\ntag = "demo-app"\ncommand = ["docker", "buildx", "build", "upstream"]\n)
     write "bin/depot", "#!/usr/bin/env bash\necho \"depot $*\" > upstream/out.txt\n"
     File.chmod(0o755, File.join(@root, "bin/depot"))
-    write "tools/demo/lanes/remote.toml", %(provider = "depot"\nlevel = "base"\nprogram = ["depot"]\nargs = ["--project", "p1"]\n[cold]\nprepare = ["touch cold-prepared"]\n)
+    write "tools/demo/lanes/remote.toml", %(provider = "depot"\nlevel = "base"\nprogram = ["depot"]\nreplaces = ["docker", "buildx"]\nargs = ["--project", "p1"]\n[cold]\nprepare = ["touch cold-prepared"]\n)
     with_fixture_env do
       Bench::CLI.new(%W[run demo/app --lane remote --phase cold --run-id r8 --results #{@root}/tmp/results --work #{@root}/.work], catalog:, out: StringIO.new).call
     end
@@ -59,6 +59,31 @@ class CLITest < Minitest::Test
     run_dir = File.join(@root, ".work/demo/app")
     assert_equal "depot build upstream --project p1\n", File.read(File.join(run_dir, "upstream/out.txt"))
     assert File.exist?(File.join(run_dir, "cold-prepared"))
+  end
+
+  def test_phase_wrap_and_finish_run_inside_the_build
+    write "tools/demo/app/.boringcache.toml", %([adapters.demo]\ntag = "demo-app"\ncommand = ["bash", "-c", "echo \\"wrapped=$WRAPPED\\" > upstream/out.txt"]\n)
+    write "tools/demo/lanes/remote.toml", %(provider = "remote"\nlevel = "base"\n[cold]\nwrap = ["env", "WRAPPED=yes"]\nfinish = ["echo pushed > finished.txt"]\n)
+    %w[cold warm].each do |phase|
+      with_fixture_env do
+        Bench::CLI.new(%W[run demo/app --lane remote --phase #{phase} --run-id r10 --results #{@root}/tmp/results --work #{@root}/.work], catalog:, out: StringIO.new).call
+      end
+      run_dir = File.join(@root, ".work/demo/app")
+      assert_equal "wrapped=#{"yes" if phase == "cold"}\n", File.read(File.join(run_dir, "upstream/out.txt"))
+      assert_equal phase == "cold", File.exist?(File.join(run_dir, "finished.txt"))
+    end
+  end
+
+  def test_probe_runs_lane_checks_without_a_checkout
+    write "tools/demo/lanes/remote.toml", %(provider = "remote"\nlevel = "base"\nprobe = ["test \\"$BENCH_CASE\\" = demo/app && echo \\"$BENCH_SCOPE\\" > probed"]\n)
+    probe = -> { with_fixture_env { Bench::CLI.new(%W[probe demo/app --lane remote --run-id r11 --results #{@root}/tmp/results --work #{@root}/.work], catalog:, out: StringIO.new).call } }
+
+    assert_equal 0, probe.call
+    assert_equal "demo-app-remote-local-r11\n", File.read(File.join(@root, ".work/demo/app/probed"))
+    refute File.exist?(File.join(@root, ".work/demo/app/upstream"))
+
+    write "tools/demo/lanes/remote.toml", %(provider = "remote"\nlevel = "base"\nprobe = ["false"]\n)
+    assert_equal 1, probe.call
   end
 
   private

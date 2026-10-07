@@ -3,3 +3,8 @@ level = "base"
 actions_only = true
 runners = ["github"]
 secrets = ["CACHIX_AUTH_TOKEN", "CACHIX_CACHE"]
+setup = ["cachix"]
+probe = ["printf %s \"$BENCH_SCOPE\" > preflight && cachix push \"$CACHIX_CACHE\" \"$(nix-store --add preflight)\""]
+
+[cold]
+wrap = ["cachix", "watch-exec", "${CACHIX_CACHE}", "--"]

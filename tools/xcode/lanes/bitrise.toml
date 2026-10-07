@@ -3,3 +3,5 @@ level = "base"
 actions_only = true
 runners = ["macos"]
 secrets = ["BITRISE_BUILD_CACHE_AUTH_TOKEN", "BITRISE_BUILD_CACHE_WORKSPACE_ID"]
+setup = ["bitrise"]
+probe = ["bitrise-build-cache doctor"]

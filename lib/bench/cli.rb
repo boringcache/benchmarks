@@ -10,6 +10,7 @@ module Bench
         bin/bench start <tool>/<case> --lane LANE
         bin/bench build <tool>/<case> --lane LANE
         bin/bench record <tool>/<case> --lane LANE --exit-status N
+        bin/bench probe <tool>/<case> --lane LANE [--runner KEY] [--run-id ID]
         bin/bench label <runner>
         bin/bench matrix <project|tool/case> [--tool TOOL] [--lane LANES] [--runner KEYS]
         bin/bench image
@@ -31,6 +32,7 @@ module Bench
       when "start" then resumed { it.start; 0 }
       when "build" then resumed(&:build)
       when "record" then record
+      when "probe" then probe
       when "label" then label
       when "matrix" then matrix
       when "report" then report
@@ -91,6 +93,14 @@ module Bench
         exit_status.zero? ? 0 : 1
       end
 
+      def probe
+        options = parse(defaults)
+        kase, lane = case_and_lane(options)
+        phase_run(kase, lane, PHASES.first, options).probe
+        @out.puts "#{kase.id} #{lane.name}: probe ok (#{lane.probe.size} checks)"
+        0
+      end
+
       def resumed
         options = parse(defaults)
         kase, lane = case_and_lane(options)
@@ -110,7 +120,7 @@ module Bench
             lane = kase.tool.lane(lane_name)
             Array(runners).reject { it == "local" }.map do |runner|
               { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets, "setup" => lane.setup.join(" "),
-                "label" => [(kase.name unless kase.name == kase.project), (runner unless runner == "github"), lane.label].compact.join(" ") }
+                "label" => [(kase.name unless kase.name == kase.project), @catalog.runner_machine(runner), lane.label].compact.join(" · ") }
             end
           end
         end

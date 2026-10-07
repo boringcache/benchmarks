@@ -13,7 +13,7 @@ module Bench
 
     private
       def runner_problems
-        problems = @catalog.runners.reject { |_, runner| runner.is_a?(Hash) && runner["label"].to_s != "" }.keys.map { "runners.toml: #{it} needs a label" }
+        problems = @catalog.runners.reject { |_, runner| runner.is_a?(Hash) && runner["label"].to_s != "" && runner["machine"].to_s != "" }.keys.map { "runners.toml: #{it} needs a label and a machine" }
         @catalog.runners.each do |name, runner|
           if runner.is_a?(Hash) && runner["label"] == "ubuntu-latest"
             problems << "runners.toml: #{name} must use an explicit Ubuntu version"
@@ -38,6 +38,7 @@ module Bench
         problems << "#{where}: needs a provider" if lane.provider.to_s.empty?
         problems << "#{where}: level #{lane.level.inspect} is not in tool.toml" unless lane.tool.levels.key?(lane.level)
         problems += (lane.setup - Lane::SETUPS).map { "#{where}: unknown setup #{it}" }
+        problems << "#{where}: program needs replaces" if lane.program && lane.replaces.empty?
         problems + Array(lane.allowed_runners).reject { @catalog.runners.key?(it) }.map { "#{where}: unknown runner #{it}" }
       end
 
