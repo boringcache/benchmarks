@@ -44,7 +44,8 @@ tools/
     n8n/ ...
   turbo/ nx/ bazel/ cargo/ go/ gradle/ maven/ ccache/ xcode/ nix/ moon/ pants/ buck2/ sbt/ run/
 results/                     # one JSON record per phase run, append only
-data/latest/                 # generated report files the website reads
+data/results.json            # generated report (new format)
+data/latest/                 # September index the website reads today; removed when the reader switches
 .github/workflows/
   bench.yml                  # one reusable workflow: cold -> warm -> changed for one case/lane/runner
   schedule.yml               # cron; reads schedule.toml; calls bench.yml
@@ -57,8 +58,14 @@ cases), so they start without a directory.
 
 Lanes are small Ruby files because each provider attaches differently (flags,
 env, init scripts). A lane declares setup (untimed), how it wraps the case
-command, whether it needs GitHub Actions, and which secrets it reads. Nothing in
-a lane times, records or decides policy; `bin/bench` does that for every lane.
+command for each phase, which runner keys it is valid on, which secrets it reads,
+and how it shows reuse on warm. Nothing in a lane times, records or decides
+policy; `bin/bench` does that for every lane.
+
+Pairs are explicit. A case's `[runs]` table lists the runners for each lane, and
+`bin/bench check` rejects a pair the lane does not allow. Example: `gha` is valid
+only on `github`, because on Depot runners `type=gha` and `actions/cache` go to
+Depot Cache, which is a different provider.
 
 ## The case file
 
@@ -71,8 +78,12 @@ changed_sha = "<40-char sha>"    # changed phase builds this (see open question 
 prepare = []                     # untimed, after checkout (e.g. pnpm install)
 command = ["docker", "buildx", "build", "--file", "Dockerfile", "--platform", "linux/amd64", "--provenance", "false", "--load", "--tag", "posthog:bench", "."]
 check   = ["docker", "image", "inspect", "posthog:bench"]   # runs after the timer
-lanes   = ["boringcache", "boringcache-plus", "gha", "depot-builder"]
-runners = ["github", "depot-4", "depot-8", "namespace-4", "namespace-8"]
+
+[runs]                           # lane -> runners; exactly these pairs run, nothing else
+boringcache      = ["github", "depot-4", "depot-8", "namespace-4", "namespace-8"]
+boringcache-plus = ["github", "depot-4", "depot-8", "namespace-4", "namespace-8"]
+gha              = ["github"]
+depot-builder    = ["github"]
 
 [plus]                           # docker only: what boringcache-plus adds
 tool_cache = ["turbo"]
@@ -86,11 +97,19 @@ the archived repo plans unchanged apart from the workspace.
 
 ## Phases and timing
 
-| Phase | Source | Cache before | Runs on |
-| --- | --- | --- | --- |
-| `cold` | `sha` | empty scope | fresh runner |
-| `warm` | `sha` | what cold saved | fresh runner |
-| `changed` | `changed_sha` | what warm left | fresh runner |
+| Phase | Source | Cache before | Saves? | Runs on |
+| --- | --- | --- | --- | --- |
+| `cold` | `sha` | empty scope | yes | fresh runner |
+| `warm` | `sha` | what cold saved | no, restore only | fresh runner |
+| `changed` | `changed_sha` | what cold saved | yes | fresh runner |
+
+- The save rule is the same for every lane. Warm is restore-only, as in every
+  archived repo: BoringCache `--read-only` (or `trust-policy: restore`),
+  `actions/cache/restore`, remote caches with uploads off
+  (`--remote_upload_local_results=false` and equivalents).
+- Warm must show reuse, or it is recorded as a failed run, not a timing. The
+  archived repos used `fail-on-cache-miss: true`; each lane states how it shows
+  reuse (cache hit output, provider-reported hits, BoringCache evidence).
 
 - Each phase is its own job on Actions, so no local state carries over. This is
   what the archived repos did for fresh runs. Locally, `bin/bench` resets the work
@@ -131,7 +150,7 @@ bin/bench check                                   # validate every case, lane, r
 bin/bench list                                    # tools, cases, lanes, runners
 bin/bench run docker/posthog --lane boringcache   # cold, warm, changed locally
 bin/bench run docker/posthog --lane boringcache --phase warm   # one phase (what Actions calls)
-bin/bench report                                  # results/ -> data/latest/
+bin/bench report                                  # results/ -> data/results.json
 ```
 
 - BoringCache on a laptop uses the developer's login. On Actions the step runs
@@ -203,7 +222,11 @@ local       = "local"
 - Zed runs its cargo lanes on `namespace-8` with no Namespace cache, as upstream
   runs on Namespace. Upstream uses profiles up to 16x32; the largest profile in
   this workspace is 8x16.
-- Namespace is on a trial with 23 days left as of 2026-10-07.
+- Namespace is on a trial with 23 days left as of 2026-10-07. Bitrise Build Cache
+  is a 30-day trial; what happens after it is not documented.
+- Cachely's free plan caps storage at 1 GiB and stops writes at the cap. The
+  "benchmark" workspace already shows about 889 MB uploaded in the last month,
+  so the Bazel Cachely lane may hit the cap unless the workspace is on a paid plan.
 - Depot runners route `actions/cache` and every supported tool to Depot Cache
   automatically (org setting). That matters for any non-Docker lane on a Depot
   runner (question 4).
@@ -218,12 +241,16 @@ monorepo change and its proof come after the Docker family runs here.
 
 ## Reports and the website
 
-`bin/bench report` writes `data/latest/index.json` and `data/latest/report.md`
-from `results/`: measurements, units, sample counts, unmeasured cells, failed
-runs, run links. No verdicts. The new index format replaces the old one. The web
-reader (`web/app/models/reporting/benchmark_comparisons.rb`) is updated after the
-first real results exist; until then the website keeps the September data now on
-`main`.
+`bin/bench report` writes `data/results.json` and `data/report.md` from
+`results/`: measurements, units, sample counts, unmeasured cells, failed runs,
+run links. No verdicts.
+
+The website reads `main/data/latest/index.json`, which now holds the September
+data again. The new report goes to a new path so that file is never overwritten
+by accident. When the web reader
+(`web/app/models/reporting/benchmark_comparisons.rb`) switches to
+`data/results.json`, the old `data/latest/` directory and its scripts are removed
+in one commit.
 
 ## Build order
 
@@ -242,35 +269,40 @@ first real results exist; until then the website keeps the September data now on
 Each step is checked locally first, then on Actions, before it is pushed to
 `main`.
 
-## Open questions
+## Open questions (each has a default; say only where you disagree)
 
-1. **Changed phase source.** Deno, Zed and OBS already have base/head pairs. The
-   others have one pin. Use `sha = pin's first parent`, `changed_sha = pin` (one
-   real upstream commit)? Or another rule?
+1. **Changed phase source.** Deno, Zed and OBS already have base/head pairs.
+   Default for the rest: `sha` = the pin's first parent, `changed_sha` = the pin.
+   That is one real upstream commit.
 2. **Rolling.** The archived repos also ran a rolling chain per upstream commit.
-   Leave rolling out until cold/warm/changed is steady?
-3. **BoringCache on Actions.** The plan runs the CLI under `boringcache ci run`
-   so laptop and Actions run the same command with one version pin. The archived
-   repos used the `boringcache/one` action. Is the CLI path right, or should the
-   Actions runs go through the action?
-4. **Depot Cache lanes.** Configure Depot Cache by hand (`cache.depot.dev` with
-   `DEPOT_TOKEN`) on the same `github` runner as the other lanes, or run them on
-   Depot runners with the automatic setup?
-5. **Cargo `gha` lane.** The archived Zed lane used `actions/cache` on cargo
-   registry, git and a local sccache directory. Keep that, or use
-   `Swatinem/rust-cache` (not used before)?
-6. **Moon, Pants, Buck2, sbt comparators.** The consolidation compared them with a
-   local `bazel-remote` server. NativeLink documents Buck2 and Pants; Depot
-   documents Moon and Pants. Which to keep?
-7. **Extra providers the docs support.** Cachely also does Gradle, Nx and Turbo
-   (free plan: 1 GiB storage, 500k requests per month). Bitrise also does Gradle
-   and Bazel. Vercel Remote Cache for Turbo is free with OIDC. Magic Nix Cache
-   stores Nix paths in the GitHub Actions cache; it works again since June 2025
-   (v15, September 2026). Which of these do you want?
-8. **Cases.** Bring Discourse back from the `boringcache/discourse_docker` fork?
-   Include `run/storybook` (the original archive-mode benchmark)? Include
-   buck2-prelude, pants-jvm and zitadel-moon, which never ran?
-9. **Publishing results.** After a scheduled run, should one job commit the
-   records to `main`, or open a pull request for review?
-10. **Lane names.** `boringcache` and `boringcache-plus` for your "docker" and
-    "docker+". OK?
+   Default: leave it out until cold/warm/changed runs steadily.
+3. **BoringCache on Actions.** Default: the CLI under `boringcache ci run`, so
+   laptop and Actions run the same command with one version pin. The alternative
+   is the `boringcache/one` action, which the archived repos used.
+4. **Depot Cache lanes.** Default: configure Depot Cache by hand (`cache.depot.dev`
+   with `DEPOT_TOKEN`) on the same `github` runner as the other lanes, so the
+   runner class matches. Depot runners are used only for the PostHog runner
+   comparison.
+5. **Cargo `gha` lane.** Default: keep the archived Zed lane (`actions/cache` on
+   cargo registry, git and a local sccache directory). `Swatinem/rust-cache` was
+   never used here.
+6. **Moon, Pants, Buck2, sbt comparators.** The consolidation used a local
+   `bazel-remote` server. Default: NativeLink for Buck2 and Pants, Depot Cache for
+   Moon and Pants (both documented), and drop `bazel-remote`. sbt has no
+   documented provider, so it starts as BoringCache only. Do you want a comparator
+   for sbt?
+7. **Extra providers the docs support.** Default: add Magic Nix Cache for Nix. It
+   needs no credentials and works again since June 2025 (v15, September 2026).
+   Hold these until you ask:
+   - Cachely for Gradle, Nx and Turbo
+   - Bitrise for Gradle and Bazel
+   - Vercel Remote Cache for Turbo (free, OIDC)
+8. **Cases.** Default: bring Discourse back from the `boringcache/discourse_docker`
+   fork and include `run/storybook` (the original archive-mode benchmark). Add
+   buck2-prelude, pants-jvm and zitadel-moon, which never ran, last.
+9. **Publishing results.** Default: one job opens a pull request with the new
+   records after a scheduled run, so publication is a reviewed step.
+10. **Lane names.** Default: `boringcache` and `boringcache-plus` for your
+    "docker" and "docker+".
+11. **Cachely plan.** Is the "benchmark" workspace on a paid plan? If not, the
+    Bazel lane may hit the 1 GiB storage cap.
