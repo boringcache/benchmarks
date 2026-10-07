@@ -61,10 +61,6 @@ module Bench
       config.fetch("prepare", []) + (config.dig(phase, "prepare") || [])
     end
 
-    def run_scoped?
-      config.fetch("run_scoped", true)
-    end
-
     def secrets
       config.fetch("secrets", [])
     end

@@ -1,6 +1,5 @@
 provider = "depot"
 level = "base"
-run_scoped = false
 runners = ["github"]
 secrets = ["DEPOT_TOKEN"]
 setup = ["depot"]
