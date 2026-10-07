@@ -4,6 +4,7 @@ start_sha = "fba561b67cfb771c0f72c4e293793e4ab86db284"
 directory = "upstream"
 prepare = [
   "mise trust && mise install",
+  "mkdir -p .bin && corepack enable --install-directory .bin pnpm",
   "cd upstream && COREPACK_ENABLE_DOWNLOAD_PROMPT=0 corepack pnpm --version",
 ]
 check = "test -s upstream/internal/staticui/console/dist/index.html"
@@ -11,6 +12,7 @@ shared = [".pnpm-store"]
 
 [env]
 CI = "true"
+PATH = "${BENCH_DIR}/.bin:${PATH}"
 npm_config_store_dir = "${BENCH_DIR}/.pnpm-store"
 
 [runs]

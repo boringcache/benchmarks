@@ -15,6 +15,7 @@ shared = [".pants-named-caches"]
 PATH = "${BENCH_DIR}/.bin:${PATH}"
 PANTS_NAMED_CACHES_DIR = "${BENCH_DIR}/.pants-named-caches"
 PANTS_LOCAL_STORE_DIR = "${BENCH_DIR}/.pants-local-store"
+PANTS_PYTHON_BOOTSTRAP_SEARCH_PATH = "[\"${HOME}/.local/share/mise/installs/python/3.11.11/bin\"]"
 
 [runs]
 boringcache-pants = ["github", "local"]
