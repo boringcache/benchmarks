@@ -1,5 +1,7 @@
 module Bench
   class Lane
+    SETUPS = %w[buildx ghcr].freeze
+
     attr_reader :tool, :path
 
     def initialize(tool, path)
@@ -41,6 +43,14 @@ module Bench
 
     def paths
       config.fetch("paths", [])
+    end
+
+    def setup
+      Array(config["setup"])
+    end
+
+    def args(phase, source = ENV)
+      (config.dig(phase, "args") || config.fetch("args", [])).map { Bench.expand(it, source) }
     end
 
     def secrets

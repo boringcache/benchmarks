@@ -6,3 +6,5 @@ check = "docker image inspect immich-server-benchmark:local"
 [runs]
 boringcache-docker = ["github", "local"]
 boringcache-docker-plus = ["github", "local"]
+gha = ["github"]
+ghcr = ["github"]

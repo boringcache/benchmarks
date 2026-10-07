@@ -32,6 +32,7 @@ module Bench
         problems = []
         problems << "#{where}: needs a provider" if lane.provider.to_s.empty?
         problems << "#{where}: level #{lane.level.inspect} is not in tool.toml" unless lane.tool.levels.key?(lane.level)
+        problems += (lane.setup - Lane::SETUPS).map { "#{where}: unknown setup #{it}" }
         problems + Array(lane.allowed_runners).reject { @catalog.runners.key?(it) }.map { "#{where}: unknown runner #{it}" }
       end
 

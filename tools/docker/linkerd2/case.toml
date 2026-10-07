@@ -5,3 +5,5 @@ check = "docker image inspect linkerd2-web-benchmark:local"
 
 [runs]
 boringcache-docker = ["github", "local"]
+gha = ["github"]
+ghcr = ["github"]

@@ -21,6 +21,7 @@ run-name: ${{ inputs.project }}${{ inputs.lane != '' && format(' {0}', inputs.la
 permissions:
   contents: read
   id-token: write
+  packages: write
 
 jobs:
   plan:
