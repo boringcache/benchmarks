@@ -1,8 +1,8 @@
 module Bench
   class PhaseRun
-    attr_reader :kase, :lane, :phase, :runner, :scope
+    attr_reader :kase, :lane, :phase, :runner, :scope, :sha, :step
 
-    def initialize(kase, lane, phase:, runner:, scope:, work_root:, results_dir:, env: ENV)
+    def initialize(kase, lane, phase:, runner:, scope:, work_root:, results_dir:, sha: kase.start_sha, step: nil, env: ENV)
       @kase = kase
       @lane = lane
       @phase = phase
@@ -10,6 +10,8 @@ module Bench
       @scope = scope
       @work_root = work_root
       @results_dir = results_dir
+      @sha = sha
+      @step = step
       @env = env
     end
 
@@ -24,16 +26,12 @@ module Bench
     end
 
     def record_path
-      File.join(@results_dir, kase.tool.name, kase.name, scope, "#{lane.name}-#{runner}-#{phase}.json")
+      File.join(@results_dir, kase.tool.name, kase.name, scope, "#{[lane.name, runner, phase, step].compact.join("-")}.json")
     end
 
     private
-      def sha
-        kase.start_sha
-      end
-
       def workspace
-        @workspace ||= Workspace.new(kase, scope:, phase:, root: @work_root)
+        @workspace ||= Workspace.new(kase, scope:, phase: [phase, step].compact.join("-"), root: @work_root)
       end
 
       def plan_dir
@@ -90,6 +88,7 @@ module Bench
           "runner" => runner,
           "runner_label" => kase.tool.catalog.runners[runner],
           "phase" => phase,
+          "step" => step,
           "scope" => scope,
           "repo" => kase.repo,
           "sha" => sha,

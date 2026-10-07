@@ -48,6 +48,22 @@ class PhaseRunTest < Minitest::Test
     assert_equal "remote-secret #{run_dir}/store\n", File.read(File.join(run_dir, "upstream/out.txt"))
   end
 
+  def test_rolling_seeds_at_start_sha_then_follows_first_parent_commits
+    second = commit_upstream("two")
+    third = commit_upstream("three")
+    out = StringIO.new
+
+    with_fixture_env do
+      3.times { assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "rolling") }
+      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "rolling", out:)
+    end
+
+    steps = Dir[File.join(@root, "tmp/results/demo/app/boringcache-demo-local-rolling/*.json")].map { JSON.parse(File.read(it)) }
+    assert_equal [[0, @upstream_sha], [1, second], [2, third]], steps.sort_by { it["step"] }.map { it.values_at("step", "sha") }
+    assert_equal ["demo "] * 3, File.readlines(File.join(@root, "stub.log"), chomp: true)
+    assert_equal "demo/app boringcache-demo rolling: no upstream commit after the last step\n", out.string
+  end
+
   def test_actions_only_lane_is_skipped_locally
     out = StringIO.new
     assert_equal 0, Bench::CLI.new(%w[run demo/app --lane gha], catalog:, out:).call
@@ -55,8 +71,8 @@ class PhaseRunTest < Minitest::Test
   end
 
   private
-    def cli(*argv)
-      Bench::CLI.new([*argv, "--results", File.join(@root, "tmp/results"), "--work", File.join(@root, ".work")], catalog:, out: StringIO.new).call
+    def cli(*argv, out: StringIO.new)
+      Bench::CLI.new([*argv, "--results", File.join(@root, "tmp/results"), "--work", File.join(@root, ".work")], catalog:, out:).call
     end
 
     def record(scope, name)

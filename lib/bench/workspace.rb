@@ -48,15 +48,8 @@ module Bench
 
       def checkout(sha)
         FileUtils.mkdir_p(upstream_dir)
-        git "init", "--quiet"
-        git "remote", "add", "origin", kase.clone_url
-        git "fetch", "--quiet", "--depth", "1", "origin", sha
-        git "checkout", "--quiet", "--detach", "FETCH_HEAD"
-      end
-
-      def git(*args)
-        output, status = Open3.capture2e("git", *args, chdir: upstream_dir)
-        raise Error, "git #{args.first} failed for #{kase.id}: #{output.strip}" unless status.success?
+        [%w[init --quiet], ["remote", "add", "origin", kase.clone_url], ["fetch", "--quiet", "--depth", "1", "origin", sha],
+         %w[checkout --quiet --detach FETCH_HEAD]].each { Bench.git(*it, chdir: upstream_dir) }
       end
   end
 end
