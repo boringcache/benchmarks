@@ -8,6 +8,7 @@ path-env = "PNPM_CONFIG_STORE_DIR"
 entries = ["pnpm-store"]
 
 [adapters.moon]
+fail-on-cache-error = true
 tag = "gogs-moon"
 profiles = ["deps"]
 no-git = true

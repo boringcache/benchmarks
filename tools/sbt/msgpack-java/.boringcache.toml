@@ -16,6 +16,7 @@ path = ".sbt/boot"
 entries = ["coursier-cache", "sbt-launchers", "sbt-boot"]
 
 [adapters.sbt]
+fail-on-cache-error = true
 tag = "msgpack-java-sbt"
 profiles = ["deps"]
 no-platform = true

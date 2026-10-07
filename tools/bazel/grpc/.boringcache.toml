@@ -1,6 +1,7 @@
 workspace = "boringcache/benchmarks"
 
 [adapters.bazel]
+fail-on-cache-error = true
 tag = "grpc-bazel"
 no-platform = true
 no-git = true

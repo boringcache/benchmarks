@@ -1,6 +1,7 @@
 workspace = "boringcache/benchmarks"
 
 [adapters.docker]
+fail-on-cache-error = true
 tag = "duckgres-docker"
 no-git = true
 metadata-hints = ["benchmark=duckgres", "upstream-job=build-amd64"]

@@ -12,6 +12,7 @@ path = ".m2/wrapper/dists"
 entries = ["maven-repository", "maven-wrapper"]
 
 [adapters.maven]
+fail-on-cache-error = true
 tag = "spring-ai-maven"
 profiles = ["deps"]
 no-git = true

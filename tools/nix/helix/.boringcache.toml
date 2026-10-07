@@ -1,6 +1,7 @@
 workspace = "boringcache/benchmarks"
 
 [adapters.nix]
+fail-on-cache-error = true
 tag = "helix-nix"
 no-platform = true
 no-git = true

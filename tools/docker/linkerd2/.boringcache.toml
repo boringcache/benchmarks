@@ -1,6 +1,7 @@
 workspace = "boringcache/benchmarks"
 
 [adapters.docker]
+fail-on-cache-error = true
 tag = "linkerd2-docker"
 no-git = true
 metadata-hints = ["benchmark=linkerd2-web", "upstream-command=bin/docker-build-web"]

@@ -24,6 +24,7 @@ entries = ["cargo-registry-cache", "cargo-registry-index", "cargo-git-db"]
 entries = []
 
 [adapters.cargo]
+fail-on-cache-error = true
 tag = "deno-cargo"
 profiles = ["cargo-product"]
 compiler-cache = "sccache"

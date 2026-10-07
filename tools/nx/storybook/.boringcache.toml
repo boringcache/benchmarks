@@ -9,6 +9,7 @@ default-path = ".yarn-global"
 entries = ["yarn-global"]
 
 [adapters.nx]
+fail-on-cache-error = true
 tag = "storybook-nx"
 profiles = ["deps"]
 no-platform = true

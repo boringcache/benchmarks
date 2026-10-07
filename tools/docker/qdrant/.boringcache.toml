@@ -1,6 +1,7 @@
 workspace = "boringcache/benchmarks"
 
 [adapters.docker]
+fail-on-cache-error = true
 tag = "qdrant-docker"
 no-git = true
 metadata-hints = ["benchmark=qdrant", "upstream-job=integration-tests-build"]

@@ -1,6 +1,7 @@
 workspace = "boringcache/benchmarks"
 
 [adapters.ccache]
+fail-on-cache-error = true
 tag = "obs-studio-ccache"
 no-git = true
 metadata-hints = ["benchmark=obs-studio-compiler-cache", "tool=ccache", "upstream-job=ubuntu-build-26.04"]

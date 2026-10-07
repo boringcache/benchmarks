@@ -1,6 +1,7 @@
 workspace = "boringcache/benchmarks"
 
 [adapters.docker]
+fail-on-cache-error = true
 tag = "n8n-runners-docker"
 no-git = true
 metadata-hints = ["benchmark=n8n-runners", "upstream-job=build-and-push-docker-image-amd64"]

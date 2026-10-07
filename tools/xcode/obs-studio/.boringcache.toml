@@ -1,6 +1,7 @@
 workspace = "boringcache/benchmarks"
 
 [adapters.xcode]
+fail-on-cache-error = true
 tag = "obs-studio-xcode"
 no-git = true
 metadata-hints = ["benchmark=obs-studio-compiler-cache", "tool=xcode", "upstream-job=macos-build-arm64"]

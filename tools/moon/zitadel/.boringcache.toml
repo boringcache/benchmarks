@@ -8,6 +8,7 @@ path-env = "npm_config_store_dir"
 entries = ["pnpm-store"]
 
 [adapters.moon]
+fail-on-cache-error = true
 tag = "zitadel-moon"
 profiles = ["deps"]
 no-git = true
