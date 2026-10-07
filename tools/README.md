@@ -120,5 +120,4 @@ env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
 ```sh
 gh workflow run project.yml -f tool=Docker -f project=Hugo
-gh workflow run project.yml -f tool=Docker -f project=PostHog -f lane=boringcache-docker -f runner="github depot-4"
 ```
