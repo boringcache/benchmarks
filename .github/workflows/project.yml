@@ -8,11 +8,11 @@ on:
         type: string
         required: true
       lane:
-        description: only this lane (empty runs every lane in the case)
+        description: only these lanes, space separated (empty runs every lane in the case)
         type: string
         default: ""
       runner:
-        description: only this runner key (empty runs every runner in the case)
+        description: only these runner keys, space separated (empty runs every runner in the case)
         type: string
         default: ""
 
