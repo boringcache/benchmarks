@@ -39,6 +39,10 @@ module Bench
       config.fetch("paths", [])
     end
 
+    def secrets
+      config.fetch("secrets", [])
+    end
+
     def allowed_runners
       config["runners"]
     end

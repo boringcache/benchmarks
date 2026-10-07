@@ -10,6 +10,14 @@ module Bench
       @runners ||= read("runners.toml")
     end
 
+    def runner_label(key)
+      runners.dig(key, "label") or raise Error, "unknown runner #{key.inspect}"
+    end
+
+    def runner_env(key)
+      runners.dig(key, "env") || {}
+    end
+
     def versions
       @versions ||= read("versions.toml")
     end

@@ -98,3 +98,22 @@ bin/bench run <tool>/<case> --lane <lane> --container
 ```
 
 `--container` reads BoringCache tokens from `.env` (`BORINGCACHE_RESTORE_TOKEN`, `BORINGCACHE_SAVE_TOKEN`).
+
+## runners.toml
+
+```toml
+[depot-4]
+label = "depot-ubuntu-24.04-4"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+```
+
+`label` is the `runs-on` value. `env` applies to every phase on that runner; Depot and Namespace runners are single-tenant and destroyed after the job, which is what the CLI asks before it starts managed BuildKit there.
+
+## On GitHub Actions
+
+`.github/workflows/project.yml` runs one case: `bin/bench matrix <tool>/<case>` turns `[runs]` into a flat list of lane and runner jobs, all `cold` jobs run side by side, then all `warm` jobs. Each job calls `.github/actions/phase`, which runs the same `bin/bench prepare`, `start`, `build` and `record` steps as a local run, with the `boringcache/one` Action for BoringCache lanes and `actions/cache` for the paths other lanes cache. A job only receives the secrets its lane lists.
+
+```sh
+gh workflow run project.yml -f case=docker/posthog
+gh workflow run project.yml -f case=docker/posthog -f lane=boringcache-docker -f runner=depot-4
+```

@@ -1,9 +1,30 @@
-github = "ubuntu-latest"
-github-arm = "ubuntu-24.04-arm"
-github-26 = "ubuntu-26.04"
-macos = "macos-26"
-depot-4 = "depot-ubuntu-24.04-4"
-depot-8 = "depot-ubuntu-24.04-8"
-namespace-4 = "namespace-profile-buildkit-4c"
-namespace-8 = "namespace-profile-buildkit-8c"
-local = "local"
+[github]
+label = "ubuntu-latest"
+
+[github-arm]
+label = "ubuntu-24.04-arm"
+
+[github-26]
+label = "ubuntu-26.04"
+
+[macos]
+label = "macos-26"
+
+[depot-4]
+label = "depot-ubuntu-24.04-4"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
+[depot-8]
+label = "depot-ubuntu-24.04-8"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
+[namespace-4]
+label = "namespace-profile-buildkit-4c"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
+[namespace-8]
+label = "namespace-profile-buildkit-8c"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
+[local]
+label = "local"

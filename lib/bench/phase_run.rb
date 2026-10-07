@@ -96,7 +96,7 @@ module Bench
 
       def environment
         @environment ||= begin
-          base = @env.to_h.merge("BENCH_DIR" => workspace.dir, "BENCH_SCOPE" => scope)
+          base = @env.to_h.merge(kase.tool.catalog.runner_env(runner), "BENCH_DIR" => workspace.dir, "BENCH_SCOPE" => scope)
           shared = base.merge(kase.env(base))
           shared.merge(lane.boringcache? ? { "BORINGCACHE_OBSERVABILITY_JSONL_PATH" => evidence_path } : lane.env(phase, shared))
         end
@@ -125,7 +125,7 @@ module Bench
           "level" => lane.level,
           "capabilities" => lane.capabilities.reject { PLAN_CAPABILITIES.include?(it) && !adapter[it] },
           "runner" => runner,
-          "runner_label" => kase.tool.catalog.runners[runner],
+          "runner_label" => kase.tool.catalog.runner_label(runner),
           "phase" => phase,
           "step" => step,
           "scope" => scope,
