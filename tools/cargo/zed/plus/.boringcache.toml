@@ -1,10 +1,13 @@
 workspace = "boringcache/benchmarks"
 
-[entries.cargo-registry]
-tag = "zed-cargo-registry"
+[entries.cargo-registry-cache]
+tag = "zed-cargo-registry-cache"
 
-[entries.cargo-git]
-tag = "zed-cargo-git"
+[entries.cargo-registry-index]
+tag = "zed-cargo-registry-index"
+
+[entries.cargo-git-db]
+tag = "zed-cargo-git-db"
 
 [entries.zed-target]
 kind = "cargo-target"
@@ -12,7 +15,7 @@ tag = "zed-target"
 path = "upstream/target"
 
 [profiles.cargo-product]
-entries = ["cargo-registry", "cargo-git", "zed-target"]
+entries = ["cargo-registry-cache", "cargo-registry-index", "cargo-git-db", "zed-target"]
 
 [profiles.compiler-only]
 entries = []

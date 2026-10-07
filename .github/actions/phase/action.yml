@@ -1,5 +1,5 @@
 name: Bench phase
-description: Prepare, time, build and record one phase of one case, lane and runner.
+description: Prepare, time, build and record one phase of one case, lane and runner, or probe its provider setup.
 
 inputs:
   case:
@@ -62,13 +62,42 @@ runs:
       uses: vercel/setup-turborepo-remote-cache-action@49d7b1b46ba4c9251e1977986bfe18336feabc8f # v1.1.0
       with:
         team: ${{ env.TURBO_TEAM_ID }}
-    
+
     - if: contains(inputs.setup, 'namespace')
       uses: namespacelabs/nscloud-setup@df198f982fcecfb8264bea3f1274b56a61b6dfdc # v0
-    
+
     - if: contains(inputs.setup, 'namespace')
       uses: namespacelabs/nscloud-setup-buildx-action@d059ed7184f0bc7c8b27e8810cea153d02bcc6dd # v0
-    
+
+    - if: contains(inputs.setup, 'nix')
+      uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+      with:
+        github_access_token: ${{ github.token }}
+
+    - if: contains(inputs.setup, 'cachix')
+      uses: cachix/cachix-action@38b082610b782e7e93e209c35fd730d399dee866 # v17
+      with:
+        name: ${{ env.CACHIX_CACHE }}
+        authToken: ${{ env.CACHIX_AUTH_TOKEN }}
+        skipPush: true
+
+    - if: contains(inputs.setup, 'bitrise')
+      shell: bash
+      env:
+        PUSH: ${{ inputs.phase != 'warm' }}
+      run: |
+        mkdir -p "$HOME/.local/bin"
+        curl --fail --silent --show-error --location --retry 5 \
+          https://raw.githubusercontent.com/bitrise-io/bitrise-build-cache-cli/a18bb60cc4b3b1c1eb0e2e016c6fc7599993a518/install/installer.sh |
+          sh -s -- -b "$HOME/.local/bin" v3.17.2
+        "$HOME/.local/bin/bitrise-build-cache" activate xcode --cache --cache-push="$PUSH"
+        echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+        echo "$HOME/.bitrise-xcelerate/bin" >> "$GITHUB_PATH"
+
+    - if: contains(inputs.setup, 'nativelink')
+      shell: bash
+      run: ruby scripts/nativelink.rb
+
     - if: contains(inputs.setup, 'ghcr')
       uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
       with:
@@ -81,6 +110,7 @@ runs:
       run: docker buildx ls
 
     - id: prepare
+      if: inputs.phase != 'preflight'
       shell: bash
       run: bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" --github
 
@@ -107,6 +137,30 @@ runs:
     - if: steps.prepare.outputs.ready == 'true'
       shell: bash
       run: bundle exec bin/bench start "$BENCH_CASE" --lane "$BENCH_LANE"
+
+    - if: (steps.prepare.outputs.ready == 'true' || inputs.phase == 'preflight') && contains(inputs.setup, 'kache')
+      uses: kunobi-ninja/kache-action@ad7317540dcdd71c904f7a60a87b620a0c0e67ed # v1
+      with:
+        version: v1.0.0
+        s3-bucket: ${{ env.R2_BUCKET }}
+        s3-endpoint: ${{ env.R2_ENDPOINT }}
+        s3-region: auto
+        s3-prefix: kache/${{ inputs.case }}
+        s3-access-key-id: ${{ env.NATIVELINK_R2_ACCESS_KEY_ID }}
+        s3-secret-access-key: ${{ env.NATIVELINK_R2_SECRET_ACCESS_KEY }}
+        save-cache: ${{ inputs.phase == 'cold' || inputs.phase == 'rolling' }}
+
+    - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'mbx')
+      uses: jdx/mr-boxington-action@d0825fbaf3cc36ca2609aa38e71046265a1f1e37 # v1.7.1
+      with:
+        version: 1.22.0
+        working-directory: ${{ steps.prepare.outputs.build_dir }}
+        cache-generation: ${{ env.BENCH_SCOPE }}
+        save-on-workflow-dispatch: ${{ inputs.phase == 'cold' || inputs.phase == 'rolling' }}
+
+    - if: inputs.phase == 'preflight'
+      shell: bash
+      run: bundle exec bin/bench probe "$BENCH_CASE" --lane "$BENCH_LANE" --run-id "$BENCH_RUN_ID"
 
     - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != ''
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0

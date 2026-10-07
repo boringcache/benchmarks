@@ -21,6 +21,8 @@ base = ["layers"]
 plus = ["layers", "tool-cache", "mount-cache"]
 ```
 
+An optional `setup` list applies to every lane of the tool, for example `setup = ["nix"]` so every Nix lane installs Nix the same way.
+
 ## lanes/<lane>.toml
 
 ```toml
@@ -48,8 +50,11 @@ TURBO_CACHE = "local:rw,remote:r"
 | `env`, `warm.env` | environment for the build, and extra environment for warm |
 | `paths` | GitHub Actions cache lanes: tool cache paths to save and restore, relative to the run directory |
 | `args`, `warm.args` | arguments appended to the plan command, and the warm replacement (for example `--cache-from`/`--cache-to`) |
-| `setup` | workflow setup the lane needs before the timer: `buildx` (Buildx builder), `actions-runtime` (Actions cache credentials for type=gha and sccache), `ghcr` (log in to GHCR), `depot` (Depot CLI), `vercel` (Vercel Remote Cache token through OIDC), `namespace` (Namespace CLI and remote Buildx builder) |
-| `program` | replaces `docker buildx` at the start of the plan command, for example `depot` |
+| `setup` | workflow setup the lane needs: `buildx` (Buildx builder), `actions-runtime` (Actions cache credentials for type=gha and sccache), `ghcr` (log in to GHCR), `depot` (Depot CLI), `vercel` (Vercel Remote Cache token through OIDC), `namespace` (Namespace CLI and remote Buildx builder), `nix` (Nix), `cachix` (Cachix CLI and substituter, no push), `bitrise` (Bitrise Build Cache CLI and Xcode activation), `nativelink` (local NativeLink server backed by R2) before the timer; `kache` and `mbx` run their actions after the timer starts because they restore cache data |
+| `program`, `replaces` | `program` replaces the leading `replaces` words of the plan command, for example `depot` for `docker buildx` or `mbx` for `cargo` |
+| `wrap`, `cold.wrap` | command prefix around the build, for example `cachix watch-exec <cache> --` on cold |
+| `finish`, `cold.finish` | commands run after a successful build inside the timer, for example a provider push that would otherwise happen after the job |
+| `probe` | credential and connection checks for a preflight run; they run in the run directory without a checkout |
 | `prepare`, `cold.prepare` | untimed commands the lane runs after the case `prepare`, for every phase or one phase |
 
 ## case.toml
@@ -109,15 +114,19 @@ bin/bench run <tool>/<case> --lane <lane> --container
 ```toml
 [depot-4]
 label = "depot-ubuntu-24.04-4"
+machine = "depot 4c"
 env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 ```
 
-`label` is the `runs-on` value. Docker cases run on the architectures their mirrored upstream job builds, each natively on its own runner (`github` amd64, `github-arm` arm64), so plans carry no `--platform`. `env` applies to every phase on that runner; Depot and Namespace runners are single-tenant and destroyed after the job, which is what the CLI asks before it starts managed BuildKit there.
+`label` is the `runs-on` value and `machine` names the provider and core count in job labels (GitHub standard runners for public repositories: 4 cores on Linux, 3 on macOS). Docker cases run on the architectures their mirrored upstream job builds, each natively on its own runner (`github` amd64, `github-arm` arm64), so plans carry no `--platform`. `env` applies to every phase on that runner; Depot and Namespace runners are single-tenant and destroyed after the job, which is what the CLI asks before it starts managed BuildKit there.
 
 ## On GitHub Actions
 
-`.github/workflows/project.yml` runs one tool for one project, named `<tool> - <project>` (for example `Docker - PostHog`, `Go - Hugo`, `Turbo - n8n`); the tool is the grouping and a project can appear under several tools. `bin/bench matrix <project> --tool <tool>` turns every matching case into one flat list of jobs named `cold: [case] [runner] lane` and `warm: ...` (for example `cold: boringcache`, `warm: github-arm boringcache plus`, `cold: n8n-runners gha`). All `cold` jobs run side by side, then all `warm` jobs. Each job calls `.github/actions/phase`, which runs the same `bin/bench` steps as a local run. A job only receives the secrets its lane lists.
+`.github/workflows/project.yml` runs one tool for one project, named `<tool> - <project>` (for example `Docker - PostHog`, `Go - Hugo`, `Turbo - n8n`); the tool is the grouping and a project can appear under several tools. `bin/bench matrix <project> --tool <tool>` turns every matching case into one flat list of jobs named `cold: [case ·] machine · lane` and `warm: ...` (for example `cold: github 4c · boringcache`, `warm: github arm 4c · boringcache plus`, `cold: n8n-runners · github 4c · gha`). All `cold` jobs run side by side, then all `warm` jobs. Each job calls `.github/actions/phase`, which runs the same `bin/bench` steps as a local run. A job only receives the secrets its lane lists.
 
 ```sh
 gh workflow run project.yml -f tool=Docker -f project=Hugo
+gh workflow run project.yml -f tool=Nix -f project=Helix -f preflight=true
 ```
+
+A preflight run (`<tool> - <project> (preflight)`) runs every lane's setup and `probe` with the lane's secrets and no checkout or build, so missing keys and auth problems show up in minutes. A cold phase refuses to run on a rerun attempt, because the run's cache scope may already hold data; dispatch a fresh run instead.

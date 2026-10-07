@@ -7,4 +7,3 @@ check = "test -x upstream/result/bin/hx && upstream/result/bin/hx --version"
 [runs]
 boringcache-nix = ["github", "local"]
 cachix = ["github"]
-magic-nix-cache = ["github"]

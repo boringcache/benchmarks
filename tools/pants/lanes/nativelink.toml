@@ -2,6 +2,8 @@ provider = "nativelink"
 level = "base"
 runners = ["github"]
 secrets = ["NATIVELINK_R2_ACCESS_KEY_ID", "NATIVELINK_R2_SECRET_ACCESS_KEY"]
+setup = ["nativelink"]
+probe = ["ruby \"$BENCH_ROOT/scripts/r2-check.rb\" \"nativelink/$BENCH_CASE\" && curl --fail --silent --show-error --output /dev/null http://127.0.0.1:50051/status"]
 
 [env]
 PANTS_REMOTE_STORE_ADDRESS = "grpc://127.0.0.1:50051"

@@ -7,4 +7,3 @@ check = "test -x upstream/result/bin/zed && upstream/result/bin/zed --version"
 [runs]
 boringcache-nix = ["github", "local"]
 cachix = ["github"]
-magic-nix-cache = ["github"]

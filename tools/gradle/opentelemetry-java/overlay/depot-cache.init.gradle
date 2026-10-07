@@ -1,0 +1,13 @@
+gradle.settingsEvaluated { settings ->
+    settings.buildCache {
+        remote(HttpBuildCache) {
+            url = 'https://cache.depot.dev'
+            enabled = true
+            push = System.getenv('BENCH_CACHE_PUSH') != 'false'
+            credentials {
+                username = ''
+                password = System.getenv('DEPOT_TOKEN')
+            }
+        }
+    }
+}

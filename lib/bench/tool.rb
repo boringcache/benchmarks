@@ -23,6 +23,10 @@ module Bench
       config.fetch("levels", {})
     end
 
+    def setup
+      Array(config["setup"])
+    end
+
     def lanes
       @lanes ||= Dir.glob(File.join(dir, "lanes", "*.toml")).sort.map { Lane.new(self, it) }
     end
