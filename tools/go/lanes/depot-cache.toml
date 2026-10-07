@@ -5,4 +5,4 @@ secrets = ["DEPOT_TOKEN"]
 setup = ["depot"]
 
 [env]
-GOCACHEPROG = "depot gocache"
+GOCACHEPROG = "depot gocache --verbose"
