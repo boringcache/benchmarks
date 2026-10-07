@@ -38,9 +38,13 @@ module Bench
       tools.flat_map(&:cases)
     end
 
+    def rolling
+      @rolling ||= read("rolling.toml").flat_map { |tool_name, projects| Array(projects).map { [tool(tool_name), it] } }
+    end
+
     def project_cases(name, tool: nil)
       return [find_case(name)] if name.to_s.include?("/")
-    
+
       matches = cases.select { it.project.casecmp?(name.to_s) && (tool.nil? || it.tool.matches?(tool)) }
       matches.empty? ? raise(Error, "no cases for project #{name.inspect}#{" and tool #{tool.inspect}" if tool}") : matches
     end

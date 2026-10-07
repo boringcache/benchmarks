@@ -74,6 +74,18 @@ class PhaseRunTest < Minitest::Test
     assert_equal "demo/app boringcache-demo rolling: no upstream commit after the last step\n", out.string
   end
 
+  def test_rolling_prepare_uses_the_step_and_commit_it_is_given
+    second = commit_upstream("two")
+    with_fixture_env do
+      assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "rolling", "--sha", second, "--step", "5")
+      assert_equal 0, cli("start", "demo/app", "--lane", "remote")
+      assert_equal 0, cli("build", "demo/app", "--lane", "remote")
+      assert_equal 0, cli("record", "demo/app", "--lane", "remote", "--exit-status", "0")
+    end
+
+    assert_equal [5, second], record("remote-local-rolling", "remote-local-rolling-5").values_at("step", "sha")
+  end
+
   def test_a_failed_build_is_recorded_softly_with_a_warning_on_actions
     out = StringIO.new
     with_fixture_env do
