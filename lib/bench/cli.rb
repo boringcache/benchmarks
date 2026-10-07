@@ -82,7 +82,7 @@ module Bench
         container = Container.new(@catalog, env_file: options[:env_file])
         phases.all? do |phase|
           container.bench("run", kase.id, "--lane", lane.name, "--phase", phase, "--run-id", options[:run_id],
-                          "--work", "/work", "--results", "/bench/tmp/results")
+                          "--work", "/work", "--results", "/bench/tmp/results", docker: kase.tool.name == "docker")
         end ? 0 : 1
       end
 
