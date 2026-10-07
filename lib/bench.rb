@@ -20,8 +20,12 @@ module Bench
     output
   end
 
+  def self.expand(value, source)
+    value.to_s.gsub(/\$\{?([A-Z0-9_]+)\}?/) { source.fetch(Regexp.last_match(1), "") }
+  end
+
   def self.interpolate(values, source)
-    values.transform_values { it.to_s.gsub(/\$\{?([A-Z0-9_]+)\}?/) { source.fetch(Regexp.last_match(1), "") } }
+    values.transform_values { expand(it, source) }
   end
 end
 

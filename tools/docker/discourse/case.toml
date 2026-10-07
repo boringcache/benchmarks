@@ -6,3 +6,5 @@ check = "docker image inspect local_discourse/discourse_test:release"
 
 [runs]
 boringcache-docker = ["github", "local"]
+gha-bake = ["github"]
+ghcr-bake = ["github"]

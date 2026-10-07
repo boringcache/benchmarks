@@ -81,7 +81,7 @@ class PhaseRunTest < Minitest::Test
     assert_includes File.read(outputs), "provider<<BENCH_EOF\nremote\nBENCH_EOF"
     assert_includes File.read(outputs), "cache_key<<BENCH_EOF\ndemo-app-remote-local-r6\nBENCH_EOF"
     assert_includes File.read(exported), "DEMO_CACHE=remote-secret"
-    assert_includes File.read(exported), "BENCH_SCOPE=remote-local-r6"
+    assert_includes File.read(exported), "BENCH_SCOPE=demo-app-remote-local-r6"
     assert_equal [0, true, @upstream_sha], record("remote-local-r6", "remote-local-cold").values_at("exit_status", "output_ok", "sha")
   end
 

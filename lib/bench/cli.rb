@@ -138,7 +138,7 @@ module Bench
           restore_key = "#{kase.id.tr("/", "-")}-#{phase_run.scope}"
           outputs.merge!("tool" => kase.tool.name, "provider" => lane.provider, "build_dir" => phase_run.build_dir,
                          "restore_key" => restore_key, "cache_key" => [restore_key, phase_run.step].compact.join("-"),
-                         "cache_paths" => phase_run.cache_paths.join("\n"), "boringcache_version" => @catalog.versions.fetch("boringcache"))
+                         "cache_paths" => phase_run.cache_paths.join("\n"), "setup" => lane.setup.join(" "), "boringcache_version" => @catalog.versions.fetch("boringcache"))
           File.open(ENV.fetch("GITHUB_ENV"), "a") { |file| phase_run.exported_env.each { |key, value| file.puts "#{key}=#{value}" } }
         end
         File.open(ENV.fetch("GITHUB_OUTPUT"), "a") { |file| outputs.each { |key, value| file.puts "#{key}<<BENCH_EOF\n#{value}\nBENCH_EOF" } }

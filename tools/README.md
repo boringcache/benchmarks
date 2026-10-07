@@ -47,6 +47,8 @@ TURBO_CACHE = "local:rw,remote:r"
 | `secrets` | environment the lane reads |
 | `env`, `warm.env` | environment for the build, and extra environment for warm |
 | `paths` | GitHub Actions cache lanes: tool cache paths to save and restore, relative to the run directory |
+| `args`, `warm.args` | arguments appended to the plan command, and the warm replacement (for example `--cache-from`/`--cache-to`) |
+| `setup` | workflow setup the lane needs before the timer: `buildx` (Buildx builder and the Actions cache runtime), `ghcr` (log in to GHCR) |
 
 ## case.toml
 
@@ -76,7 +78,7 @@ gha = ["github"]
 | `prepare` | untimed commands before the build |
 | `check` | untimed output check after the build |
 | `shared` | paths every lane caches (dependencies), relative to the run directory |
-| `env` | environment for every lane; `${BENCH_DIR}` is the run directory |
+| `env` | environment for every lane; `${BENCH_DIR}` is the run directory; `${BENCH_SCOPE}` is the run-scoped cache identity (tool, case, lane, runner, run) |
 | `runs` | lane name to the runner keys it runs on |
 
 A `mise.toml` beside `case.toml` pins the case toolchain; it is copied into the run directory.
