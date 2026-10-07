@@ -1,0 +1,20 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    minitest (5.27.0)
+    toml-rb (6.0.0)
+
+PLATFORMS
+  arm64-darwin-23
+  ruby
+
+DEPENDENCIES
+  minitest (~> 5.0)
+  toml-rb (~> 6.0)
+
+CHECKSUMS
+  minitest (5.27.0) sha256=2d3b17f8a36fe7801c1adcffdbc38233b938eb0b4966e97a6739055a45fa77d5
+  toml-rb (6.0.0) sha256=35db853da1befde1cf49b0d0c61e50368ddb3ae1cde64d8f85267e500304127b
+
+BUNDLED WITH
+  4.0.20
