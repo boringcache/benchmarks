@@ -43,7 +43,8 @@ runs:
           echo "BENCH_RUNNER=$RUNNER"
           echo "BENCH_PHASE=$PHASE"
           echo "BENCH_RUN_ID=$RUN_ID"
-          echo "MISE_TRUSTED_CONFIG_PATHS=$GITHUB_WORKSPACE/.work"
+          echo "BENCH_WORK=$HOME/w"
+          echo "MISE_TRUSTED_CONFIG_PATHS=$HOME/w"
           echo "MISE_YES=1"
         } >> "$GITHUB_ENV"
 

@@ -12,7 +12,7 @@ on:
         type: string
         required: true
 
-run-name: ${{ inputs.project }} - ${{ inputs.tool }}
+run-name: ${{ inputs.tool }} - ${{ inputs.project }}
 
 permissions:
   contents: read

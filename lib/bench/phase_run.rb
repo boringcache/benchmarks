@@ -7,7 +7,7 @@ module Bench
     attr_reader :kase, :lane, :phase, :runner, :scope, :sha, :step
 
     def self.resume(kase, lane, work_root:, results_dir:, env: ENV)
-      state = JSON.parse(File.read(File.join(work_root, kase.tool.name, kase.name, lane.name, STATE)))
+      state = JSON.parse(File.read(File.join(work_root, kase.tool.name, kase.name, STATE)))
       new(kase, lane, phase: state["phase"], runner: state["runner"], scope: state["scope"], sha: state["sha"], step: state["step"],
                       work_root:, results_dir:, env:)
     end

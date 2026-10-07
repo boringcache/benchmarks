@@ -14,7 +14,7 @@ module Bench
       @kase = kase
       @lane = lane
       @scope = scope
-      @dir = File.join(root, kase.tool.name, kase.name, lane.name)
+      @dir = File.join(root, kase.tool.name, kase.name)
     end
 
     def prepare(sha)
