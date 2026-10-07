@@ -7,7 +7,7 @@ metadata-hints = ["benchmark=immich-server", "upstream-job=server-amd64"]
 mount-cache = true
 command = [
   "docker", "buildx", "build",
-  "--file", "../upstream/server/Dockerfile",
+  "--file", "upstream/server/Dockerfile",
   "--platform", "linux/amd64",
   "--build-arg", "BUILD_ID=36788420153",
   "--build-arg", "BUILD_IMAGE=ghcr.io/immich-app/immich-server:main",
@@ -16,5 +16,5 @@ command = [
   "--build-arg", "DEVICE=cpu",
   "--tag", "immich-server-benchmark:local",
   "--load",
-  "../upstream",
+  "upstream",
 ]

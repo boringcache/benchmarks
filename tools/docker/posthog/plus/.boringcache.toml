@@ -8,10 +8,10 @@ tool-cache = ["turbo:posthog-turbo"]
 mount-cache = true
 command = [
   "docker", "buildx", "build",
-  "--file", "../overlay/PostHog.Dockerfile",
+  "--file", "overlay/PostHog.Dockerfile",
   "--platform", "linux/amd64",
   "--provenance", "false",
   "--tag", "posthog-benchmark:local",
   "--load",
-  "../upstream",
+  "upstream",
 ]

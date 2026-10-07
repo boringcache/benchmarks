@@ -1,6 +1,6 @@
 module Bench
   class Workspace
-    attr_reader :kase, :scope, :dir
+    attr_reader :kase, :lane, :scope, :dir
 
     def self.scope_plan(plan, scope)
       plan.values_at("adapters", "entries").compact.flat_map(&:values).grep(Hash).each do |table|
@@ -12,6 +12,7 @@ module Bench
 
     def initialize(kase, lane:, scope:, root:)
       @kase = kase
+      @lane = lane
       @scope = scope
       @dir = File.join(root, kase.tool.name, kase.name, lane.name)
     end
@@ -19,13 +20,13 @@ module Bench
     def prepare(sha)
       FileUtils.rm_rf(dir)
       FileUtils.mkdir_p(dir)
-      write_plans
+      write_plan
       copy_overlay
       checkout(sha)
     end
 
-    def plan_dir(lane)
-      File.join(dir, lane.plan_dir)
+    def plan_path
+      File.join(dir, ".boringcache.toml")
     end
 
     def upstream_dir
@@ -33,12 +34,8 @@ module Bench
     end
 
     private
-      def write_plans
-        Dir.glob("**/.boringcache.toml", File::FNM_DOTMATCH, base: kase.dir).each do |relative|
-          target = File.join(dir, relative)
-          FileUtils.mkdir_p(File.dirname(target))
-          File.write(target, TomlRB.dump(self.class.scope_plan(TomlRB.load_file(File.join(kase.dir, relative)), scope)))
-        end
+      def write_plan
+        File.write(plan_path, TomlRB.dump(self.class.scope_plan(TomlRB.load_file(kase.plan_path(lane)), scope)))
       end
 
       def copy_overlay

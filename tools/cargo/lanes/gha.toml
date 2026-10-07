@@ -1,0 +1,11 @@
+provider = "github-actions-cache"
+level = "base"
+actions_only = true
+runners = ["github", "namespace-8"]
+
+[env]
+SCCACHE_GHA_ENABLED = "true"
+RUSTC_WRAPPER = "sccache"
+
+[warm.env]
+SCCACHE_GHA_RW_MODE = "READ_ONLY"

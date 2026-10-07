@@ -52,7 +52,7 @@ module Bench
       paths = env("BENCH_DIR" => "")
       plan.fetch("entries", {}).values.filter_map do |entry|
         if entry["path"]
-          Pathname(File.join(lane.plan_dir, entry["path"])).cleanpath.to_s
+          Pathname(entry["path"]).cleanpath.to_s
         elsif paths[entry["path-env"]]
           paths[entry["path-env"]].delete_prefix("/")
         end

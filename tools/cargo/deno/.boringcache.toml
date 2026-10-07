@@ -1,0 +1,42 @@
+workspace = "boringcache/benchmarks"
+
+[entries.cargo-registry-cache]
+tag = "deno-cargo-registry-cache"
+
+[entries.cargo-registry-index]
+tag = "deno-cargo-registry-index"
+
+[entries.cargo-git-db]
+tag = "deno-cargo-git-db"
+
+[entries.cargo-target]
+kind = "cargo-target"
+tag = "deno-cargo-target"
+path = "upstream/target"
+
+[profiles.cargo-product]
+entries = ["cargo-registry-cache", "cargo-registry-index", "cargo-git-db", "cargo-target"]
+
+[profiles.sccache-only]
+entries = ["cargo-registry-cache", "cargo-registry-index", "cargo-git-db"]
+
+[profiles.compiler-only]
+entries = []
+
+[adapters.cargo]
+tag = "deno-cargo"
+profiles = ["compiler-only"]
+compiler-cache = "sccache"
+no-git = true
+metadata-hints = ["benchmark=deno", "lane=compiler-only"]
+command = [
+  "cargo", "build", "-Zbuild-std=core,alloc,std,proc_macro,panic_abort",
+  "--release", "--locked",
+  "-p", "deno",
+  "-p", "denort",
+  "-p", "test_server",
+  "--bin", "deno",
+  "--bin", "denort",
+  "--bin", "test_server",
+  "--features=deno/panic-trace-frame-pointer",
+]

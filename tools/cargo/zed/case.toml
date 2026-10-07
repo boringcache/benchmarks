@@ -1,0 +1,21 @@
+repo = "zed-industries/zed"
+branch = "main"
+start_sha = "40180d9c40e2d20eb63d388bff920818f2910b53"
+directory = "upstream"
+prepare = ["mise trust && mise install", "cd upstream && ./script/linux"]
+check = "test -x upstream/target/release/zed && test -z \"$(git -C upstream status --porcelain=v1 --untracked-files=all)\""
+
+[env]
+CARGO_INCREMENTAL = "0"
+ZED_BUNDLE = "true"
+CC = "clang"
+CXX = "clang++"
+
+[runs]
+boringcache-cargo = ["namespace-8", "local"]
+boringcache-cargo-plus = ["namespace-8", "local"]
+gha = ["namespace-8"]
+gha-plus = ["namespace-8"]
+depot-cache = ["namespace-8"]
+kache = ["namespace-8"]
+mbx = ["namespace-8"]

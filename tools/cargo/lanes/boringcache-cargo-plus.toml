@@ -1,0 +1,3 @@
+provider = "boringcache"
+level = "plus"
+plan = "plus"
