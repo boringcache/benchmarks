@@ -48,7 +48,8 @@ TURBO_CACHE = "local:rw,remote:r"
 | `env`, `warm.env` | environment for the build, and extra environment for warm |
 | `paths` | GitHub Actions cache lanes: tool cache paths to save and restore, relative to the run directory |
 | `args`, `warm.args` | arguments appended to the plan command, and the warm replacement (for example `--cache-from`/`--cache-to`) |
-| `setup` | workflow setup the lane needs before the timer: `buildx` (Buildx builder and the Actions cache runtime), `ghcr` (log in to GHCR), `depot` (Depot CLI) |
+| `setup` | workflow setup the lane needs before the timer: `buildx` (Buildx builder and the Actions cache runtime), `ghcr` (log in to GHCR), `depot` (Depot CLI), `vercel` (Vercel Remote Cache token through OIDC), `namespace` (Namespace CLI and remote Buildx builder) |
+| `run_scoped` | `false` when the provider store cannot be namespaced per run, so cold may find entries from earlier runs; copied into every record |
 | `program` | replaces `docker buildx` at the start of the plan command, for example `depot` |
 | `prepare`, `cold.prepare` | untimed commands the lane runs after the case `prepare`, for every phase or one phase |
 

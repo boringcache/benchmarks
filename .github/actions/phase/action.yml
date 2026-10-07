@@ -57,6 +57,17 @@ runs:
     - if: contains(inputs.setup, 'depot')
       uses: depot/setup-action@91bc8495a33ebfc504ffc89e5674379ccf23c29c # v1.7.2
 
+    - if: contains(inputs.setup, 'vercel')
+      uses: vercel/setup-turborepo-remote-cache-action@49d7b1b46ba4c9251e1977986bfe18336feabc8f # v1.1.0
+      with:
+        team: ${{ env.TURBO_TEAM_ID }}
+    
+    - if: contains(inputs.setup, 'namespace')
+      uses: namespacelabs/nscloud-setup@df198f982fcecfb8264bea3f1274b56a61b6dfdc # v0
+    
+    - if: contains(inputs.setup, 'namespace')
+      uses: namespacelabs/nscloud-setup-buildx-action@d059ed7184f0bc7c8b27e8810cea153d02bcc6dd # v0
+    
     - if: contains(inputs.setup, 'ghcr')
       uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
       with:
