@@ -4,4 +4,10 @@ actions_only = true
 runners = ["macos"]
 secrets = ["BITRISE_BUILD_CACHE_AUTH_TOKEN", "BITRISE_BUILD_CACHE_WORKSPACE_ID"]
 setup = ["bitrise"]
-probe = ["bitrise-build-cache doctor"]
+probe = ["bitrise-build-cache activate xcode --cache --cache-push=false && bitrise-build-cache doctor"]
+
+[cold]
+prepare = ["bitrise-build-cache activate xcode --cache --cache-push=true"]
+
+[warm]
+prepare = ["bitrise-build-cache activate xcode --cache --cache-push=false"]
