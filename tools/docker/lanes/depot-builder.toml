@@ -4,6 +4,7 @@ runners = ["github"]
 secrets = ["DEPOT_TOKEN", "DEPOT_DOCKER_PROJECT_ID"]
 setup = ["depot"]
 program = ["depot"]
+replaces = ["docker", "buildx"]
 args = ["--project", "${DEPOT_DOCKER_PROJECT_ID}"]
 
 [cold]

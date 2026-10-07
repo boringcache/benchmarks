@@ -8,13 +8,13 @@ class CheckTest < Minitest::Test
   end
 
   def test_rejects_floating_ubuntu_runner
-    write "runners.toml", %([github]\nlabel = "ubuntu-latest"\n[local]\nlabel = "local"\n)
+    write "runners.toml", %([github]\nlabel = "ubuntu-latest"\nmachine = "github 4c"\n[local]\nlabel = "local"\nmachine = "local"\n)
 
     assert_equal ["runners.toml: github must use an explicit Ubuntu version"], Bench::Check.new(catalog).problems
   end
 
   def test_accepts_explicit_ubuntu_26_runner
-    write "runners.toml", %([github]\nlabel = "ubuntu-26.04"\n[local]\nlabel = "local"\n)
+    write "runners.toml", %([github]\nlabel = "ubuntu-26.04"\nmachine = "github 4c"\n[local]\nlabel = "local"\nmachine = "local"\n)
 
     assert_empty Bench::Check.new(catalog).problems
   end

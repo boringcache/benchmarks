@@ -1,6 +1,6 @@
 module Bench
   class Lane
-    SETUPS = %w[buildx actions-runtime ghcr depot vercel namespace].freeze
+    SETUPS = %w[buildx actions-runtime ghcr depot vercel namespace nix cachix nativelink bitrise kache mbx].freeze
 
     attr_reader :tool, :path
 
@@ -46,7 +46,7 @@ module Bench
     end
 
     def setup
-      Array(config["setup"])
+      [*tool.setup, *Array(config["setup"])].uniq
     end
 
     def args(phase, source = ENV)
@@ -57,8 +57,24 @@ module Bench
       config["program"]
     end
 
+    def replaces
+      config.fetch("replaces", [])
+    end
+
+    def wrap(phase, source = ENV)
+      (config.dig(phase, "wrap") || config.fetch("wrap", [])).map { Bench.expand(it, source) }
+    end
+
     def prepare(phase)
       config.fetch("prepare", []) + (config.dig(phase, "prepare") || [])
+    end
+
+    def probe
+      config.fetch("probe", [])
+    end
+
+    def finish(phase)
+      config.fetch("finish", []) + (config.dig(phase, "finish") || [])
     end
 
     def secrets

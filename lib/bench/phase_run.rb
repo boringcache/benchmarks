@@ -40,12 +40,19 @@ module Bench
       save_state
     end
 
+    def probe
+      FileUtils.mkdir_p(workspace.dir)
+      lane.probe.each { shell(it) or raise Error, "#{kase.id} #{lane.name}: probe failed: #{it}" }
+    end
+
     def start
       save_state("monotonic" => Process.clock_gettime(Process::CLOCK_MONOTONIC), "started_at" => Time.now.utc.iso8601)
     end
 
     def build
-      system(environment, *command, chdir: build_dir) ? 0 : ($?&.exitstatus || 127)
+      return $?&.exitstatus || 127 unless system(environment, *command, chdir: build_dir)
+
+      lane.finish(phase).all? { shell(it) } ? 0 : 1
     end
 
     def record(exit_status)
@@ -66,7 +73,7 @@ module Bench
     end
 
     def cache_paths
-      [*lane.paths, *kase.shared].map { File.join(workspace.dir, it) }
+      [*lane.paths, *kase.shared].map { File.expand_path(it, workspace.dir) }
     end
 
     private
@@ -88,15 +95,16 @@ module Bench
       end
 
       def command
-        lane.boringcache? ? ["boringcache", kase.tool.name, *("--read-only" if phase == "warm")] : [*lane_program, *lane.args(phase, environment)]
+        lane.boringcache? ? ["boringcache", kase.tool.name, *("--read-only" if phase == "warm")] : [*lane.wrap(phase, environment), *lane_program, *lane.args(phase, environment)]
       end
 
       def lane_program
         plan_command = adapter.fetch("command")
         return plan_command unless lane.program
-        raise Error, "#{lane.name} replaces docker buildx but the plan runs #{plan_command.first(2).join(" ")}" unless plan_command.first(2) == %w[docker buildx]
+        prefix = plan_command.first(lane.replaces.size)
+        raise Error, "#{lane.name} replaces #{lane.replaces.join(" ")} but the plan runs #{prefix.join(" ")}" unless lane.replaces.any? && prefix == lane.replaces
 
-        [*lane.program, *plan_command.drop(2)]
+        [*lane.program, *plan_command.drop(lane.replaces.size)]
       end
 
       def adapter
@@ -106,7 +114,7 @@ module Bench
 
       def environment
         @environment ||= begin
-          base = @env.to_h.merge(kase.tool.catalog.runner_env(runner), "BENCH_DIR" => workspace.dir, "BENCH_SCOPE" => "#{kase.tool.name}-#{kase.name}-#{scope}")
+          base = @env.to_h.merge(kase.tool.catalog.runner_env(runner), "BENCH_ROOT" => kase.tool.catalog.root, "BENCH_CASE" => kase.id, "BENCH_DIR" => workspace.dir, "BENCH_SCOPE" => "#{kase.tool.name}-#{kase.name}-#{scope}")
           shared = base.merge(kase.env(base))
           shared.merge(lane.boringcache? ? { "BORINGCACHE_OBSERVABILITY_JSONL_PATH" => evidence_path } : lane.env(phase, shared))
         end

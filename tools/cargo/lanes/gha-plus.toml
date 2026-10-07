@@ -3,6 +3,7 @@ level = "plus"
 actions_only = true
 runners = ["github", "namespace-8"]
 setup = ["actions-runtime"]
+paths = ["~/.cargo/registry/index", "~/.cargo/registry/cache", "~/.cargo/git/db", "upstream/target"]
 
 [env]
 SCCACHE_GHA_ENABLED = "true"

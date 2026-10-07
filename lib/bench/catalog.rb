@@ -14,6 +14,10 @@ module Bench
       runners.dig(key, "label") or raise Error, "unknown runner #{key.inspect}"
     end
 
+    def runner_machine(key)
+      runners.dig(key, "machine") or raise Error, "runner #{key.inspect} has no machine"
+    end
+
     def runner_env(key)
       runners.dig(key, "env") || {}
     end

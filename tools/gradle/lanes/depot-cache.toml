@@ -1,4 +1,9 @@
 provider = "depot"
 level = "base"
 runners = ["github", "local"]
-secrets = ["DEPOT_TOKEN", "DEPOT_ORG_ID"]
+secrets = ["DEPOT_TOKEN"]
+prepare = ["mkdir -p \"$GRADLE_USER_HOME/init.d\" && cp overlay/depot-cache.init.gradle \"$GRADLE_USER_HOME/init.d/\""]
+probe = ["key=$(printf %s \"$BENCH_SCOPE\" | shasum -a 256 | cut -c1-64) && curl --fail --silent --show-error --user \":$DEPOT_TOKEN\" --upload-file /dev/null \"https://cache.depot.dev/$key\" && curl --fail --silent --show-error --user \":$DEPOT_TOKEN\" --output /dev/null \"https://cache.depot.dev/$key\""]
+
+[warm.env]
+BENCH_CACHE_PUSH = "false"

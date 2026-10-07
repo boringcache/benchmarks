@@ -2,6 +2,7 @@ provider = "cachely"
 level = "base"
 runners = ["github", "local"]
 secrets = ["CACHELY_TOKEN"]
+probe = ["printf %s \"$BENCH_SCOPE\" > preflight && hash=$(shasum -a 256 preflight | cut -c1-64) && curl --fail --silent --show-error --header \"Authorization: Bearer $CACHELY_TOKEN\" --upload-file preflight \"https://remote.cachely.dev/cas/$hash\" && curl --fail --silent --show-error --header \"Authorization: Bearer $CACHELY_TOKEN\" --output /dev/null \"https://remote.cachely.dev/cas/$hash\""]
 
 [env]
 BAZEL_LANE_RC = """

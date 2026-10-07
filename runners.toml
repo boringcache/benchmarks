@@ -1,30 +1,39 @@
 [github]
 label = "ubuntu-24.04"
+machine = "github 4c"
 
 [github-arm]
 label = "ubuntu-24.04-arm"
+machine = "github arm 4c"
 
 [github-26]
 label = "ubuntu-26.04"
+machine = "github 4c"
 
 [macos]
 label = "macos-26"
+machine = "github macos 3c"
 
 [depot-4]
 label = "depot-ubuntu-24.04-4"
+machine = "depot 4c"
 env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
 [depot-8]
 label = "depot-ubuntu-24.04-8"
+machine = "depot 8c"
 env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
 [namespace-4]
 label = "namespace-profile-buildkit-4c"
+machine = "namespace 4c"
 env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
 [namespace-8]
 label = "namespace-profile-buildkit-8c"
+machine = "namespace 8c"
 env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
 [local]
 label = "local"
+machine = "local"
