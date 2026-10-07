@@ -6,7 +6,7 @@ prepare = [
   "mise trust && mise install",
   "upstream/get-pants.sh --bin-dir \"$BENCH_DIR/.bin\" --version 0.13.2",
   "git -C upstream submodule update --init --recursive",
-  "cd upstream && pants --version",
+  "cd upstream && PANTS_NAMED_CACHES_DIR=\"$(mktemp -d)\" PANTS_LOCAL_STORE_DIR=\"$(mktemp -d)\" pants --version",
 ]
 check = 'python3 -c "import glob,xml.etree.ElementTree as E; roots=[E.parse(p).getroot() for p in glob.glob(\"upstream/dist/test/reports/**/*.xml\",recursive=True)]; assert sum(len(list(r.iter(\"testcase\"))) for r in roots)>0; assert not any(list(r.iter(\"failure\"))+list(r.iter(\"error\")) for r in roots)"'
 shared = [".pants-named-caches"]

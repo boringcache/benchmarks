@@ -4,7 +4,7 @@ start_sha = "675ee75d36f2c1b096b0def51efcfffd02bd1251"
 directory = "upstream"
 prepare = [
   "upstream/get-pants.sh --bin-dir \"$BENCH_DIR/.bin\" --version 0.13.2",
-  "cd upstream && pants --version",
+  "cd upstream && PANTS_NAMED_CACHES_DIR=\"$(mktemp -d)\" PANTS_LOCAL_STORE_DIR=\"$(mktemp -d)\" pants --version",
 ]
 check = "test -s upstream/dist/src.jvm.org.pantsbuild.example.app/bin.jar"
 shared = [".pants-named-caches"]
