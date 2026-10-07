@@ -40,6 +40,20 @@ class CLITest < Minitest::Test
     assert_equal ["cold-args demo-app-remote-local-r7\n", "warm-args demo-app-remote-local-r7\n"], outputs
   end
 
+  def test_lane_program_replaces_docker_buildx_and_lane_prepare_runs_on_its_phase
+    write "tools/demo/app/.boringcache.toml", %([adapters.demo]\ntag = "demo-app"\ncommand = ["docker", "buildx", "build", "upstream"]\n)
+    write "bin/depot", "#!/usr/bin/env bash\necho \"depot $*\" > upstream/out.txt\n"
+    File.chmod(0o755, File.join(@root, "bin/depot"))
+    write "tools/demo/lanes/remote.toml", %(provider = "depot"\nlevel = "base"\nprogram = ["depot"]\nargs = ["--project", "p1"]\n[cold]\nprepare = ["touch cold-prepared"]\n)
+    with_fixture_env do
+      Bench::CLI.new(%W[run demo/app --lane remote --phase cold --run-id r8 --results #{@root}/tmp/results --work #{@root}/.work], catalog:, out: StringIO.new).call
+    end
+
+    run_dir = File.join(@root, ".work/demo/app/remote")
+    assert_equal "depot build upstream --project p1\n", File.read(File.join(run_dir, "upstream/out.txt"))
+    assert File.exist?(File.join(run_dir, "cold-prepared"))
+  end
+
   private
     def matrix(*argv)
       out = StringIO.new

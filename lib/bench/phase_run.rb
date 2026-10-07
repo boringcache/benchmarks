@@ -34,7 +34,7 @@ module Bench
     def prepare
       workspace.prepare(sha)
       FileUtils.mkdir_p(File.dirname(record_path))
-      kase.prepare.each { shell(it) or raise Error, "#{kase.id}: prepare failed: #{it}" }
+      [*kase.prepare, *lane.prepare(phase)].each { shell(it) or raise Error, "#{kase.id}: prepare failed: #{it}" }
       save_state
     end
 
@@ -86,7 +86,15 @@ module Bench
       end
 
       def command
-        lane.boringcache? ? ["boringcache", kase.tool.name, *("--read-only" if phase == "warm")] : [*adapter.fetch("command"), *lane.args(phase, environment)]
+        lane.boringcache? ? ["boringcache", kase.tool.name, *("--read-only" if phase == "warm")] : [*lane_program, *lane.args(phase, environment)]
+      end
+
+      def lane_program
+        plan_command = adapter.fetch("command")
+        return plan_command unless lane.program
+        raise Error, "#{lane.name} replaces docker buildx but the plan runs #{plan_command.first(2).join(" ")}" unless plan_command.first(2) == %w[docker buildx]
+
+        [*lane.program, *plan_command.drop(2)]
       end
 
       def adapter
