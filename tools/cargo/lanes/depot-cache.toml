@@ -6,6 +6,7 @@ secrets = ["DEPOT_TOKEN"]
 [env]
 SCCACHE_WEBDAV_ENDPOINT = "https://cache.depot.dev"
 SCCACHE_WEBDAV_TOKEN = "${DEPOT_TOKEN}"
+SCCACHE_WEBDAV_KEY_PREFIX = "${BENCH_SCOPE}"
 RUSTC_WRAPPER = "sccache"
 
 [warm.env]
