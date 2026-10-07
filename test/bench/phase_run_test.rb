@@ -32,6 +32,21 @@ class PhaseRunTest < Minitest::Test
     assert_equal true, record("remote-local-r3", "remote-local-cold")["output_ok"]
   end
 
+  def test_case_env_and_directory_apply_to_every_lane
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml"))
+      .sub("check = ", %(directory = "upstream"\ncheck = )).concat(%([env]\nDEMO_STORE = "${BENCH_DIR}/store"\n))
+    write "tools/demo/app/.boringcache.toml", <<~TOML
+      [adapters.demo]
+      tag = "demo-app"
+      command = ["bash", "-c", "echo \\"$DEMO_CACHE $DEMO_STORE\\" > out.txt"]
+    TOML
+
+    with_fixture_env { assert_equal 0, cli("run", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r4") }
+
+    run_dir = File.join(@root, ".work/demo/app/remote-local-r4/cold")
+    assert_equal "remote-secret #{run_dir}/store\n", File.read(File.join(run_dir, "upstream/out.txt"))
+  end
+
   def test_actions_only_lane_is_skipped_locally
     out = StringIO.new
     assert_equal 0, Bench::CLI.new(%w[run demo/app --lane gha], catalog:, out:).call
