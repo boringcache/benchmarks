@@ -62,7 +62,8 @@ class CLITest < Minitest::Test
   end
 
   def test_phase_wrap_and_finish_run_inside_the_build
-    write "tools/demo/app/.boringcache.toml", %([adapters.demo]\ntag = "demo-app"\ncommand = ["bash", "-c", "echo \\"wrapped=$WRAPPED\\" > upstream/out.txt"]\n)
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("check = ", %(directory = "upstream"\ncheck = ))
+    write "tools/demo/app/.boringcache.toml", %([adapters.demo]\ntag = "demo-app"\ncommand = ["bash", "-c", "echo \\"wrapped=$WRAPPED\\" > out.txt"]\n)
     write "tools/demo/lanes/remote.toml", %(provider = "remote"\nlevel = "base"\n[cold]\nwrap = ["env", "WRAPPED=yes"]\nfinish = ["echo pushed > finished.txt"]\n)
     %w[cold warm].each do |phase|
       with_fixture_env do
@@ -70,7 +71,7 @@ class CLITest < Minitest::Test
       end
       run_dir = File.join(@root, ".work/demo/app")
       assert_equal "wrapped=#{"yes" if phase == "cold"}\n", File.read(File.join(run_dir, "upstream/out.txt"))
-      assert_equal phase == "cold", File.exist?(File.join(run_dir, "finished.txt"))
+      assert_equal phase == "cold", File.exist?(File.join(run_dir, "upstream/finished.txt"))
     end
   end
 
