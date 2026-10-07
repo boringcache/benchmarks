@@ -8,3 +8,4 @@ boringcache-docker = ["github", "depot-4", "depot-8", "namespace-4", "namespace-
 boringcache-docker-plus = ["github", "depot-4", "depot-8", "namespace-4", "namespace-8", "local"]
 gha = ["github"]
 ghcr = ["github"]
+depot-builder = ["github"]

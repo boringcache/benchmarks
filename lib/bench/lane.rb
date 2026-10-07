@@ -1,6 +1,6 @@
 module Bench
   class Lane
-    SETUPS = %w[buildx ghcr].freeze
+    SETUPS = %w[buildx ghcr depot].freeze
 
     attr_reader :tool, :path
 
@@ -51,6 +51,14 @@ module Bench
 
     def args(phase, source = ENV)
       (config.dig(phase, "args") || config.fetch("args", [])).map { Bench.expand(it, source) }
+    end
+
+    def program
+      config["program"]
+    end
+
+    def prepare(phase)
+      config.fetch("prepare", []) + (config.dig(phase, "prepare") || [])
     end
 
     def secrets

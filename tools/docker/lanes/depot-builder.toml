@@ -1,0 +1,10 @@
+provider = "depot"
+level = "base"
+runners = ["github"]
+secrets = ["DEPOT_TOKEN", "DEPOT_DOCKER_PROJECT_ID"]
+setup = ["depot"]
+program = ["depot"]
+args = ["--project", "${DEPOT_DOCKER_PROJECT_ID}"]
+
+[cold]
+prepare = ["depot cache reset --project \"$DEPOT_DOCKER_PROJECT_ID\""]
