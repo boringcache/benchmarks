@@ -12,6 +12,7 @@ path = ".gradle-user-home/wrapper/dists"
 entries = ["gradle-dependencies", "gradle-wrapper"]
 
 [adapters.gradle]
+fail-on-cache-error = true
 tag = "opentelemetry-java-gradle"
 profiles = ["deps"]
 no-platform = true

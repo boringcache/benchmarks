@@ -18,11 +18,13 @@ entries = ["cargo-registry", "cargo-git", "zed-target"]
 entries = []
 
 [adapters.sccache]
+fail-on-cache-error = true
 tag = "zed-sccache"
 no-git = true
 metadata-hints = ["benchmark=zed", "layer=compiler"]
 
 [adapters.cargo]
+fail-on-cache-error = true
 tag = "zed-cargo"
 profiles = ["compiler-only"]
 compiler-cache = "sccache"

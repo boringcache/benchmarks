@@ -1,6 +1,7 @@
 workspace = "boringcache/benchmarks"
 
 [adapters.buck2]
+fail-on-cache-error = true
 tag = "executorch-buck2"
 no-git = true
 no-platform = true

@@ -8,6 +8,7 @@ path-env = "PNPM_CONFIG_STORE_DIR"
 entries = ["pnpm-store"]
 
 [adapters.turbo]
+fail-on-cache-error = true
 tag = "n8n-turbo"
 profiles = ["deps"]
 no-git = true
