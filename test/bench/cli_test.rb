@@ -13,6 +13,7 @@ class CLITest < Minitest::Test
 
   def test_matrix_filters_by_lane
     assert_equal ["remote"], matrix("demo/app", "--lane", "remote").map { it["lane"] }
+    assert_equal ["boringcache-demo", "gha"], matrix("demo/app", "--lane", "boringcache-demo gha").map { it["lane"] }
   end
 
   def test_runner_env_reaches_the_build
