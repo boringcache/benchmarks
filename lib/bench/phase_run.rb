@@ -52,7 +52,7 @@ module Bench
     def build
       return $?&.exitstatus || 127 unless system(environment, *command, chdir: build_dir)
 
-      lane.finish(phase).all? { shell(it) } ? 0 : 1
+      lane.finish(phase).all? { shell(it, chdir: build_dir) } ? 0 : 1
     end
 
     def record(exit_status)
@@ -120,8 +120,8 @@ module Bench
         end
       end
 
-      def shell(command)
-        system(environment, "bash", "-c", command, chdir: workspace.dir)
+      def shell(command, chdir: workspace.dir)
+        system(environment, "bash", "-c", command, chdir:)
       end
 
       def output_ok(exit_status)
