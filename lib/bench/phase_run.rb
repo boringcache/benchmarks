@@ -131,7 +131,6 @@ module Bench
           "lane" => lane.name,
           "provider" => lane.provider,
           "level" => lane.level,
-          "run_scoped" => lane.run_scoped?,
           "capabilities" => lane.capabilities.reject { PLAN_CAPABILITIES.include?(it) && !adapter[it] },
           "runner" => runner,
           "runner_label" => kase.tool.catalog.runner_label(runner),
