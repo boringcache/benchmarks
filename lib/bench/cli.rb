@@ -114,7 +114,7 @@ module Bench
       def default_run_id
         return "#{ENV["GITHUB_RUN_ID"]}-#{ENV.fetch("GITHUB_RUN_ATTEMPT", "1")}" if ENV["GITHUB_RUN_ID"]
 
-        "local-#{Time.now.utc.strftime("%Y%m%d%H%M%S")}"
+        Time.now.utc.strftime("%Y%m%d%H%M%S")
       end
   end
 end

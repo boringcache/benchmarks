@@ -13,6 +13,7 @@ class PhaseRunTest < Minitest::Test
     assert_equal({ "exit_status" => 0, "output_ok" => true, "sha" => @upstream_sha, "provider" => "boringcache" },
                  cold.slice("exit_status", "output_ok", "sha", "provider"))
     assert_equal ["boringcache-demo-local-cold.boringcache.jsonl"], cold["evidence"]
+    assert_equal({ "operation" => "cache_session_summary", "duration_ms" => 7 }, cold.dig("provider_reported", "cache_session_summary"))
     assert_equal({ "boringcache" => "9.9.9" }, cold["versions"])
   end
 

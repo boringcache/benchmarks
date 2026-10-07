@@ -2,7 +2,7 @@ workspace = "boringcache/benchmarks"
 
 [entries.pnpm-store]
 tag = "n8n-pnpm-store"
-path-env = "NPM_CONFIG_STORE_DIR"
+path-env = "PNPM_CONFIG_STORE_DIR"
 
 [profiles.deps]
 entries = ["pnpm-store"]

@@ -96,7 +96,7 @@ module Bench
           "seconds" => seconds,
           "exit_status" => exit_status,
           "output_ok" => output_ok(exit_status),
-          "provider_reported" => {},
+          "provider_reported" => provider_reported,
           "evidence" => File.exist?(evidence_path) ? [File.basename(evidence_path)] : [],
           "versions" => { "boringcache" => boringcache_version },
           "run_url" => run_url,
@@ -105,6 +105,13 @@ module Bench
         }
         File.write(record_path, JSON.pretty_generate(record) + "\n")
         record
+      end
+
+      def provider_reported
+        return {} unless File.exist?(evidence_path)
+
+        summary = File.foreach(evidence_path).filter_map { JSON.parse(it) rescue nil }.reverse.find { it["operation"] == "cache_session_summary" }
+        summary ? { "cache_session_summary" => summary } : {}
       end
 
       def boringcache_version
