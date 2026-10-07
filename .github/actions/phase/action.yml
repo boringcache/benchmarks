@@ -44,6 +44,7 @@ runs:
           echo "BENCH_PHASE=$PHASE"
           echo "BENCH_RUN_ID=$RUN_ID"
           echo "BENCH_WORK=$HOME/w"
+          echo "BENCH_RESULTS=$GITHUB_WORKSPACE/results"
           echo "MISE_TRUSTED_CONFIG_PATHS=$HOME/w"
           echo "MISE_YES=1"
         } >> "$GITHUB_ENV"
@@ -81,7 +82,7 @@ runs:
 
     - id: prepare
       shell: bash
-      run: bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" --results results --github
+      run: bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" --github
 
     - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache'
       shell: bash
@@ -137,7 +138,7 @@ runs:
       shell: bash
       env:
         BUILD_FAILED: ${{ steps.build.outcome == 'failure' }}
-      run: bundle exec bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --results results --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
+      run: bundle exec bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
 
     - if: always() && steps.prepare.outputs.ready == 'true'
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
