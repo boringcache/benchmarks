@@ -5,9 +5,9 @@ class CLITest < Minitest::Test
 
   def test_matrix_lists_every_lane_and_runner_of_a_project_without_local
     assert_equal [
-      { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => [], "label" => "boringcache" },
-      { "case" => "demo/app", "lane" => "remote", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => ["REMOTE_TOKEN"], "label" => "remote" },
-      { "case" => "demo/app", "lane" => "gha", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => [], "label" => "gha" }
+      { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => [], "setup" => "", "label" => "boringcache" },
+      { "case" => "demo/app", "lane" => "remote", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => ["REMOTE_TOKEN"], "setup" => "", "label" => "remote" },
+      { "case" => "demo/app", "lane" => "gha", "runner" => "github", "runs_on" => "ubuntu-latest", "secrets" => [], "setup" => "", "label" => "gha" }
     ], matrix("app")
   end
 

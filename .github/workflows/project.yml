@@ -77,6 +77,7 @@ jobs:
           case: ${{ matrix.case }}
           lane: ${{ matrix.lane }}
           runner: ${{ matrix.runner }}
+          setup: ${{ matrix.setup }}
           phase: ${{ github.job }}
           run-id: ${{ github.run_id }}
 
