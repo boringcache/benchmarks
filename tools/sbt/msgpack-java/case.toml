@@ -1,0 +1,17 @@
+repo = "msgpack/msgpack-java"
+branch = "main"
+start_sha = "5c28fbad6cd360d8ea822df109830ae2517a7ae4"
+directory = "upstream"
+prepare = ["mise trust && mise install", "git -C upstream apply ../overlay/cache.patch && cp overlay/benchmark-cache.sbt upstream/benchmark-cache.sbt"]
+check = "test -n \"$(find upstream/target/out/jvm/u/msgpack-core upstream/target/out/jvm/u/jackson-dataformat-msgpack -type f -name '*.class' -print -quit)\" && test -z \"$(find upstream/target/out/jvm/u/msgpack-core upstream/target/out/jvm/u/jackson-dataformat-msgpack -type f -name '*.class' -empty -print -quit)\""
+shared = [".cache/coursier", ".sbt/launchers", ".sbt/boot"]
+
+[env]
+COURSIER_CACHE = "${BENCH_DIR}/.cache/coursier"
+JAVA_HOME = "${HOME}/.local/share/mise/installs/java/zulu-21.52.15.0"
+SBT_OPTS = "-sbt-launch-dir ${BENCH_DIR}/.sbt/launchers -Dsbt.boot.directory=${BENCH_DIR}/.sbt/boot -Dsbt.global.localcache=${BENCH_DIR}/.cache/sbt"
+TEST_JAVA_HOME = "${HOME}/.local/share/mise/installs/java/zulu-21.52.15.0"
+
+[runs]
+boringcache-sbt = ["github", "local"]
+gha = ["github"]

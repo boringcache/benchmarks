@@ -1,0 +1,11 @@
+provider = "depot"
+level = "base"
+runners = ["github", "local"]
+secrets = ["DEPOT_TOKEN"]
+
+[env]
+MAVEN_CONFIG = "--settings ${BENCH_DIR}/overlay/depot-cache-settings.xml"
+MAVEN_OPTS = "${MAVEN_OPTS} -Dmaven.build.cache.enabled=true -Dmaven.build.cache.remote.enabled=true -Dmaven.build.cache.remote.url=https://cache.depot.dev -Dmaven.build.cache.remote.server.id=depot-cache -Dmaven.build.cache.remote.save.enabled=true"
+
+[warm.env]
+MAVEN_OPTS = "${MAVEN_OPTS} -Dmaven.build.cache.enabled=true -Dmaven.build.cache.remote.enabled=true -Dmaven.build.cache.remote.url=https://cache.depot.dev -Dmaven.build.cache.remote.server.id=depot-cache -Dmaven.build.cache.remote.save.enabled=false"
