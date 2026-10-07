@@ -1,0 +1,5 @@
+provider = "github-actions-cache"
+level = "base"
+actions_only = true
+runners = ["github"]
+paths = [".go/build-cache"]

@@ -1,0 +1,7 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.xcode]
+tag = "obs-studio-xcode"
+no-git = true
+metadata-hints = ["benchmark=obs-studio-compiler-cache", "tool=xcode", "upstream-job=macos-build-arm64"]
+command = [".github/scripts/build-macos", "--config", "RelWithDebInfo", "--target", "macos-arm64"]

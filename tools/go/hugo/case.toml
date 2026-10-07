@@ -1,0 +1,16 @@
+repo = "gohugoio/hugo"
+branch = "master"
+start_sha = "ec69d0e64931715e490ae411cba2b305636d20e0"
+directory = "upstream"
+prepare = ["mise trust && mise install"]
+check = "test -x \"$(go env GOPATH)/bin/dragonfly_amd64/hugo\" && test -z \"$(git -C upstream status --porcelain=v1 --untracked-files=all)\""
+shared = [".go/mod-cache"]
+
+[env]
+GOCACHE = "${BENCH_DIR}/.go/build-cache"
+GOMODCACHE = "${BENCH_DIR}/.go/mod-cache"
+
+[runs]
+boringcache-go = ["github", "local"]
+gha = ["github"]
+depot-cache = ["github"]

@@ -1,0 +1,10 @@
+repo = "zed-industries/zed"
+branch = "main"
+start_sha = "40180d9c40e2d20eb63d388bff920818f2910b53"
+directory = "upstream"
+check = "test -x upstream/result/bin/zed && upstream/result/bin/zed --version"
+
+[runs]
+boringcache-nix = ["github", "local"]
+cachix = ["github"]
+magic-nix-cache = ["github"]

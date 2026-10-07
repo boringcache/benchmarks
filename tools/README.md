@@ -80,7 +80,7 @@ gha = ["github"]
 
 A `mise.toml` beside `case.toml` pins the case toolchain; it is copied into the run directory.
 
-Each phase runs in its own directory under `.work/<tool>/<case>/<scope>/<phase>/`: the plans with run-scoped tags, `overlay/`, and the upstream checkout in `upstream/`. `prepare` and `check` run there with `bash -c`, outside the timer, so their paths start at the run directory (`upstream/...`), not at the plan directory.
+Each phase runs in `.work/<tool>/<case>/<lane>/`, rebuilt from scratch for every phase at the same path, as on Actions, so tools that key caches on absolute paths behave the same: the plans with run-scoped tags, `overlay/`, and the upstream checkout in `upstream/`. `prepare` and `check` run there with `bash -c`, outside the timer, so their paths start at the run directory (`upstream/...`), not at the plan directory.
 
 ## Adding
 

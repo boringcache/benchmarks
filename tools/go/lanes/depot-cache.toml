@@ -1,0 +1,7 @@
+provider = "depot"
+level = "base"
+runners = ["github"]
+secrets = ["DEPOT_TOKEN"]
+
+[env]
+GOCACHEPROG = "depot gocache"

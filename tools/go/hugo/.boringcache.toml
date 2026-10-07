@@ -1,0 +1,16 @@
+workspace = "boringcache/benchmarks"
+
+[entries.go-mod-cache]
+tag = "hugo-go-mod-cache"
+path-env = "GOMODCACHE"
+
+[profiles.deps]
+entries = ["go-mod-cache"]
+
+[adapters.go]
+tag = "hugo-go"
+profiles = ["deps"]
+no-platform = true
+no-git = true
+metadata-hints = ["benchmark=hugo-go", "upstream-step=build-for-dragonfly"]
+command = ["env", "GOARCH=amd64", "GOOS=dragonfly", "go", "install"]

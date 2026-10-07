@@ -1,5 +1,6 @@
 github = "ubuntu-latest"
 github-arm = "ubuntu-24.04-arm"
+github-26 = "ubuntu-26.04"
 macos = "macos-26"
 depot-4 = "depot-ubuntu-24.04-4"
 depot-8 = "depot-ubuntu-24.04-8"
