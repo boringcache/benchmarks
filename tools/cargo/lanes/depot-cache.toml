@@ -1,0 +1,12 @@
+provider = "depot"
+level = "base"
+runners = ["github", "namespace-8", "local"]
+secrets = ["DEPOT_TOKEN"]
+
+[env]
+SCCACHE_WEBDAV_ENDPOINT = "https://cache.depot.dev"
+SCCACHE_WEBDAV_TOKEN = "${DEPOT_TOKEN}"
+RUSTC_WRAPPER = "sccache"
+
+[warm.env]
+SCCACHE_WEBDAV_RW_MODE = "READ_ONLY"

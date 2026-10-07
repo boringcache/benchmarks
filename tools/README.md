@@ -9,7 +9,7 @@ tools/<tool>/
   <case>/
     case.toml             upstream source, preparation, output check, lane -> runners
     .boringcache.toml     the product plan; [adapters.<tool>].command is the build
-    plus/.boringcache.toml  the plan for a plus-level BoringCache lane, if any
+    plus/.boringcache.toml  the plan for a plus-level lane, if any (same root-relative paths as the base plan)
     overlay/              upstream changes a lane needs
 ```
 
@@ -41,7 +41,7 @@ TURBO_CACHE = "local:rw,remote:r"
 | --- | --- |
 | `provider` | `boringcache` runs `boringcache <tool>` in the plan directory; anything else runs the plan's command with the lane's `env` |
 | `level` | a level from `tool.toml` |
-| `plan` | plan directory inside the case, default `.`; `plus` for a plus-level lane |
+| `plan` | which plan the lane uses, default `.`; `plus` for a plus-level lane. It is copied to the run directory as its only `.boringcache.toml` |
 | `runners` | runner keys from `runners.toml` the lane may use; omitted means any |
 | `actions_only` | the lane needs GitHub Actions and is skipped locally |
 | `secrets` | environment the lane reads |
