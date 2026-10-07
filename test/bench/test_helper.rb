@@ -72,15 +72,22 @@ module BenchFixture
     ENV.update(saved)
   end
 
+  def commit_upstream(message)
+    dir = File.join(@root, "upstream")
+    File.write(File.join(dir, "README"), "#{message}\n")
+    [%w[add README], ["-c", "user.name=bench", "-c", "user.email=bench@example.com", "commit", "--quiet", "-m", message]].each do |args|
+      system("git", *args, chdir: dir, exception: true)
+    end
+    `git -C #{dir} rev-parse HEAD`.strip
+  end
+
   private
     def create_upstream
       dir = File.join(@root, "upstream")
       FileUtils.mkdir_p(dir)
-      File.write(File.join(dir, "README"), "upstream\n")
-      [%w[init --quiet], %w[config uploadpack.allowAnySHA1InWant true], %w[add README],
-       %w[-c user.name=bench -c user.email=bench@example.com commit --quiet -m init]].each do |args|
+      [%w[init --quiet --initial-branch main], %w[config uploadpack.allowAnySHA1InWant true], %w[config uploadpack.allowFilter true]].each do |args|
         system("git", *args, chdir: dir, exception: true)
       end
-      `git -C #{dir} rev-parse HEAD`.strip
+      commit_upstream("init")
     end
 end

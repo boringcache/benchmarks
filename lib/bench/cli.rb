@@ -4,7 +4,7 @@ module Bench
       Usage:
         bin/bench check
         bin/bench list
-        bin/bench run <tool>/<case> --lane LANE [--phase cold|warm] [--runner KEY] [--run-id ID] [--results DIR] [--work DIR]
+        bin/bench run <tool>/<case> --lane LANE [--phase cold|warm|rolling] [--runner KEY] [--run-id ID] [--results DIR] [--work DIR]
                       [--container [--env-file PATH]]
         bin/bench image
         bin/bench report [--results DIR] [--out DIR]
@@ -58,12 +58,24 @@ module Bench
         phases = options[:phase] ? [options[:phase]] : PHASES
         return in_containers(kase, lane, phases, options) if options[:container]
 
-        records = phases.map do |phase|
-          PhaseRun.new(kase, lane, phase:, runner: options[:runner], scope: "#{lane.name}-#{options[:runner]}-#{options[:run_id]}",
-                                   work_root: options[:work], results_dir: options[:results]).call
+        records = phases.filter_map { phase_run(kase, lane, it, options)&.call }
+        records.each do |record|
+          @out.puts "#{kase.id} #{lane.name} #{[record["phase"], record["step"]].compact.join(" ")}: " \
+                    "#{record["seconds"]}s exit=#{record["exit_status"]} output_ok=#{record["output_ok"].inspect}"
         end
-        records.each { @out.puts "#{kase.id} #{lane.name} #{it["phase"]}: #{it["seconds"]}s exit=#{it["exit_status"]} output_ok=#{it["output_ok"].inspect}" }
         records.all? { it["exit_status"].zero? } ? 0 : 1
+      end
+
+      def phase_run(kase, lane, phase, options)
+        common = { phase:, runner: options[:runner], work_root: options[:work], results_dir: options[:results] }
+        return PhaseRun.new(kase, lane, scope: "#{lane.name}-#{options[:runner]}-#{options[:run_id]}", **common) unless phase == ROLLING
+
+        rolling = Rolling.new(kase, lane, runner: options[:runner], results_dir: options[:results], work_root: options[:work])
+        step, sha = rolling.next_step
+        return PhaseRun.new(kase, lane, scope: rolling.scope, sha:, step:, **common) if sha
+
+        @out.puts "#{kase.id} #{lane.name} rolling: no upstream commit after the last step"
+        nil
       end
 
       def in_containers(kase, lane, phases, options)
@@ -89,7 +101,7 @@ module Bench
         defaults.tap do |options|
           OptionParser.new do |opts|
             opts.on("--lane NAME") { options[:lane] = it }
-            opts.on("--phase PHASE", PHASES) { options[:phase] = it }
+            opts.on("--phase PHASE", [*PHASES, ROLLING]) { options[:phase] = it }
             opts.on("--runner KEY") { options[:runner] = it }
             opts.on("--run-id ID") { options[:run_id] = it }
             opts.on("--results DIR") { options[:results] = File.expand_path(it) }
