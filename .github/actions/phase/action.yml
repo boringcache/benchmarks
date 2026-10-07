@@ -83,14 +83,11 @@ runs:
 
     - if: contains(inputs.setup, 'bitrise')
       shell: bash
-      env:
-        PUSH: ${{ inputs.phase != 'warm' }}
       run: |
         mkdir -p "$HOME/.local/bin"
         curl --fail --silent --show-error --location --retry 5 \
           https://raw.githubusercontent.com/bitrise-io/bitrise-build-cache-cli/a18bb60cc4b3b1c1eb0e2e016c6fc7599993a518/install/installer.sh |
           sh -s -- -b "$HOME/.local/bin" v3.17.2
-        "$HOME/.local/bin/bitrise-build-cache" activate xcode --cache --cache-push="$PUSH"
         echo "$HOME/.local/bin" >> "$GITHUB_PATH"
         echo "$HOME/.bitrise-xcelerate/bin" >> "$GITHUB_PATH"
 
@@ -120,18 +117,18 @@ runs:
         VERSION: v${{ steps.prepare.outputs.boringcache_version }}
       run: |
         case "$(uname -s)-$(uname -m)" in
-          Linux-x86_64) asset=boringcache-linux-amd64 ;;
-          Linux-aarch64) asset=boringcache-linux-arm64 ;;
-          Darwin-*) asset=boringcache-macos-universal ;;
+          Linux-x86_64) assets=(boringcache-linux-amd64) ;;
+          Linux-aarch64) assets=(boringcache-linux-arm64) ;;
+          Darwin-*) assets=(boringcache-macos-universal libboringcache_xcode_cas-macos-universal.dylib) ;;
         esac
         dir="$RUNNER_TEMP/boringcache-cli"
+        base="https://github.com/boringcache/cli/releases/download/$VERSION"
         mkdir -p "$dir"
         cd "$dir"
-        curl --fail --silent --show-error --location --retry 3 --remote-name-all \
-          "https://github.com/boringcache/cli/releases/download/$VERSION/$asset" \
-          "https://github.com/boringcache/cli/releases/download/$VERSION/SHA256SUMS"
-        grep " $asset\$" SHA256SUMS | shasum -a 256 --check
-        install -m 0755 "$asset" "$dir/boringcache"
+        curl --fail --silent --show-error --location --retry 3 --remote-name-all "$base/SHA256SUMS" "${assets[@]/#/$base/}"
+        for asset in "${assets[@]}"; do grep " $asset\$" SHA256SUMS; done | shasum -a 256 --check
+        install -m 0755 "${assets[0]}" "$dir/boringcache"
+        if [ "${#assets[@]}" -gt 1 ]; then install -m 0644 "${assets[1]}" "$dir/libboringcache_xcode_cas.dylib"; fi
         echo "$dir" >> "$GITHUB_PATH"
 
     - if: steps.prepare.outputs.ready == 'true'
