@@ -139,12 +139,7 @@ runs:
       uses: kunobi-ninja/kache-action@ad7317540dcdd71c904f7a60a87b620a0c0e67ed # v1
       with:
         version: v1.0.0
-        s3-bucket: ${{ env.R2_BUCKET }}
-        s3-endpoint: ${{ env.R2_ENDPOINT }}
-        s3-region: auto
-        s3-prefix: kache/${{ inputs.case }}
-        s3-access-key-id: ${{ env.NATIVELINK_R2_ACCESS_KEY_ID }}
-        s3-secret-access-key: ${{ env.NATIVELINK_R2_SECRET_ACCESS_KEY }}
+        cache-key-prefix: kache-${{ env.BENCH_SCOPE }}
         save-cache: ${{ inputs.phase == 'cold' || inputs.phase == 'rolling' }}
 
     - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'mbx')
