@@ -7,7 +7,6 @@ metadata-hints = ["benchmark=immich-base-images", "upstream-job=server-native-am
 command = [
   "docker", "buildx", "build",
   "--file", "upstream/server/Dockerfile",
-  "--platform", "linux/amd64",
   "--target", "libvips",
   "--tag", "immich-base-images-benchmark:local",
   "--load",
