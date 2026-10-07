@@ -1,0 +1,25 @@
+workspace = "boringcache/benchmarks"
+
+[entries.pants-named-caches]
+tag = "stackstorm-pants-named-caches"
+path-env = "PANTS_NAMED_CACHES_DIR"
+
+[profiles.deps]
+entries = ["pants-named-caches"]
+
+[adapters.pants]
+tag = "stackstorm-pants"
+profiles = ["deps"]
+no-git = true
+no-platform = true
+command = [
+  "pants",
+  "--no-pantsd",
+  "--stats-log",
+  "--pytest-install-from-resolve=pants-plugins",
+  "--pytest-requirements=['pytest==7.0.1']",
+  "--no-python-infer-conftests",
+  "test",
+  "--report",
+  "pants-plugins/pack_metadata/target_types_test.py",
+]

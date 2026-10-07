@@ -1,0 +1,15 @@
+provider = "depot"
+level = "base"
+runners = ["github", "local"]
+secrets = ["DEPOT_TOKEN"]
+
+[env]
+MOON_REMOTE_HOST = "grpcs://cache.depot.dev"
+MOON_REMOTE_API = "grpc"
+MOON_REMOTE_AUTH_TOKEN = "DEPOT_TOKEN"
+MOON_REMOTE_CACHE_INSTANCE_NAME = ""
+MOON_REMOTE_CACHE_COMPRESSION = "none"
+MOON_REMOTE_CACHE_VERIFY_INTEGRITY = "true"
+
+[warm.env]
+MOON_CACHE = "read"

@@ -1,0 +1,16 @@
+provider = "buildbuddy"
+level = "base"
+runners = ["github", "local"]
+secrets = ["BUILDBUDDY_API_KEY"]
+
+[env]
+BAZEL_LANE_RC = """
+build --bes_results_url=https://app.buildbuddy.io/invocation/
+build --bes_backend=grpcs://remote.buildbuddy.io
+build --remote_cache=grpcs://remote.buildbuddy.io
+build --remote_header=x-buildbuddy-api-key=${BUILDBUDDY_API_KEY}
+build --remote_instance_name=${BENCH_SCOPE}
+"""
+
+[warm.env]
+BAZEL_PHASE_RC = "build --remote_upload_local_results=false"

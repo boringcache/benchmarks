@@ -1,0 +1,13 @@
+provider = "depot"
+level = "base"
+runners = ["github", "local"]
+secrets = ["DEPOT_TOKEN"]
+
+[env]
+BAZEL_LANE_RC = """
+build --remote_cache=https://cache.depot.dev
+build --remote_header=authorization=${DEPOT_TOKEN}
+"""
+
+[warm.env]
+BAZEL_PHASE_RC = "build --remote_upload_local_results=false"

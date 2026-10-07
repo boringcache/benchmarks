@@ -1,0 +1,10 @@
+--- a/shim_et/xplat/executorch/build/runtime_wrapper.bzl
++++ b/shim_et/xplat/executorch/build/runtime_wrapper.bzl
+@@ -301,6 +301,7 @@
+     return kwargs
+ 
+ def _patch_kwargs_cxx(kwargs):
++    kwargs["allow_cache_upload"] = True
+     env.patch_platforms(kwargs)
+     env.remove_platform_specific_args(kwargs)
+     return _patch_kwargs_common(kwargs)

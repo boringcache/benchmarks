@@ -1,0 +1,16 @@
+provider = "depot"
+level = "base"
+runners = ["github", "local"]
+secrets = ["DEPOT_TOKEN"]
+
+[env]
+PANTS_REMOTE_STORE_ADDRESS = "grpcs://cache.depot.dev"
+PANTS_REMOTE_STORE_HEADERS = "{\"Authorization\": \"${DEPOT_TOKEN}\"}"
+PANTS_REMOTE_CACHE_READ = "true"
+PANTS_REMOTE_CACHE_WRITE = "true"
+PANTS_REMOTE_INSTANCE_NAME = ""
+PANTS_REMOTE_EXECUTION = "false"
+PANTS_PANTSD = "false"
+
+[warm.env]
+PANTS_REMOTE_CACHE_WRITE = "false"

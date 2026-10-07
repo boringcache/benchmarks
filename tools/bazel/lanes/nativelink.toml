@@ -1,0 +1,13 @@
+provider = "nativelink"
+level = "base"
+runners = ["github"]
+secrets = ["NATIVELINK_R2_ACCESS_KEY_ID", "NATIVELINK_R2_SECRET_ACCESS_KEY"]
+
+[env]
+BAZEL_LANE_RC = """
+build --remote_cache=grpc://127.0.0.1:50051
+build --remote_instance_name=main
+"""
+
+[warm.env]
+BAZEL_PHASE_RC = "build --remote_upload_local_results=false"
