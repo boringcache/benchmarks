@@ -19,6 +19,10 @@ module Bench
       provider == "boringcache"
     end
 
+    def label
+      boringcache? ? ["boringcache", ("plus" if level == "plus")].compact.join(" ") : name
+    end
+
     def level
       config["level"]
     end

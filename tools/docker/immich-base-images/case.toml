@@ -1,3 +1,4 @@
+project = "immich"
 repo = "immich-app/base-images"
 branch = "main"
 start_sha = "71fbae519f9a62bfd13977f6d3f3d046c89bfe11"
