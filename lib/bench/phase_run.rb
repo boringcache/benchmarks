@@ -153,6 +153,7 @@ module Bench
           "exit_status" => exit_status,
           "output_ok" => output_ok(exit_status),
           "provider_reported" => provider_reported,
+          "observed" => observed,
           "evidence" => File.exist?(evidence_path) ? [File.basename(evidence_path)] : [],
           "versions" => { "boringcache" => boringcache_version },
           "run_url" => run_url,
@@ -164,7 +165,23 @@ module Bench
       end
 
       def provider_reported
-        { "cache_session_summary" => session_summary, "buildx_builder" => buildx_builder }.compact
+        { "cache_session_summary" => session_summary }.compact
+      end
+
+      def observed
+        return {} unless kase.tool.name == "docker"
+
+        { "image_platform" => image_platform, "buildx_builder" => buildx_builder }.compact
+      end
+
+      def image_platform
+        tag = adapter.fetch("command").each_cons(2).find { |flag, _| %w[--tag -t].include?(flag) }&.last
+        return unless tag
+
+        output, status = Open3.capture2(environment, "docker", "image", "inspect", "--format", "{{.Os}}/{{.Architecture}}", tag)
+        output.strip if status.success?
+      rescue Errno::ENOENT
+        nil
       end
 
       def session_summary
@@ -174,10 +191,14 @@ module Bench
       end
 
       def buildx_builder
-        return if lane.boringcache? || kase.tool.name != "docker"
+        return if lane.boringcache? || lane.program
 
         output, status = Open3.capture2e(environment, "docker", "buildx", "inspect")
-        output.lines.grep(/\A(Name|Driver|Endpoint):/).to_h { it.split(":", 2).map(&:strip) } if status.success?
+        return unless status.success?
+
+        header, nodes = output.split(/^Nodes:\n/, 2)
+        { "name" => header[/^Name:\s*(.+)$/, 1], "driver" => header[/^Driver:\s*(.+)$/, 1],
+          "nodes" => nodes.to_s.scan(/^Name:\s*(.+)\nEndpoint:\s*(.+)$/).map { |name, endpoint| { "name" => name.strip, "endpoint" => endpoint.strip } } }
       rescue Errno::ENOENT
         nil
       end
