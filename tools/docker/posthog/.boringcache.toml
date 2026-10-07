@@ -7,7 +7,6 @@ metadata-hints = ["benchmark=posthog", "upstream-job=build-image-amd64"]
 command = [
   "docker", "buildx", "build",
   "--file", "upstream/Dockerfile",
-  "--platform", "linux/amd64",
   "--provenance", "false",
   "--tag", "posthog-benchmark:local",
   "--load",

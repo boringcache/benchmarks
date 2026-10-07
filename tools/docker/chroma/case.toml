@@ -4,7 +4,7 @@ start_sha = "848cf58dd6dd952f8d0ff672af7b30cbf4d67f81"
 check = "docker image inspect chroma-benchmark:local"
 
 [runs]
-boringcache-docker = ["github", "local"]
-boringcache-docker-plus = ["github", "local"]
-gha = ["github"]
-ghcr = ["github"]
+boringcache-docker = ["github", "github-arm", "local"]
+boringcache-docker-plus = ["github", "github-arm", "local"]
+gha = ["github", "github-arm"]
+ghcr = ["github", "github-arm"]

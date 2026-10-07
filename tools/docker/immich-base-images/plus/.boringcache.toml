@@ -8,7 +8,6 @@ tool-cache = ["ccache:immich-base-images-ccache"]
 command = [
   "docker", "buildx", "build",
   "--file", "overlay/server.Dockerfile",
-  "--platform", "linux/amd64",
   "--target", "libvips",
   "--tag", "immich-base-images-benchmark:local",
   "--load",

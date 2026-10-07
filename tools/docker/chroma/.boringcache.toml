@@ -8,7 +8,6 @@ command = [
   "docker", "buildx", "build",
   "--file", "upstream/rust/Dockerfile",
   "--target", "cli",
-  "--platform", "linux/amd64",
   "--build-arg", "RELEASE_MODE=1",
   "--tag", "chroma-benchmark:local",
   "--load",

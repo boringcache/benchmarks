@@ -7,7 +7,6 @@ metadata-hints = ["benchmark=n8n-runners-distroless", "upstream-job=build-and-pu
 command = [
   "docker", "buildx", "build",
   "--file", "upstream/docker/images/runners/Dockerfile.distroless",
-  "--platform", "linux/amd64",
   "--build-arg", "NODE_VERSION=26.7.0",
   "--build-arg", "N8N_VERSION=snapshot",
   "--build-arg", "N8N_RELEASE_TYPE=dev",
