@@ -1,6 +1,6 @@
 module Bench
   class Lane
-    SETUPS = %w[buildx ghcr depot vercel namespace].freeze
+    SETUPS = %w[buildx actions-runtime ghcr depot vercel namespace].freeze
 
     attr_reader :tool, :path
 

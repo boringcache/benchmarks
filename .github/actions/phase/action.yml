@@ -52,7 +52,7 @@ runs:
     - if: contains(inputs.setup, 'buildx')
       uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
-    - if: contains(inputs.setup, 'buildx')
+    - if: contains(inputs.setup, 'actions-runtime')
       uses: crazy-max/ghaction-github-runtime@04d248b84655b509d8c44dc1d6f990c879747487 # v4.0.0
 
     - if: contains(inputs.setup, 'depot')

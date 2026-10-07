@@ -17,6 +17,16 @@ class PhaseRunTest < Minitest::Test
     assert_equal({ "boringcache" => "9.9.9" }, cold["versions"])
   end
 
+  def test_cold_refuses_a_rerun_attempt_but_warm_runs
+    with_fixture_env do
+      ENV["GITHUB_RUN_ATTEMPT"] = "2"
+      refute_equal 0, cli("run", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r9")
+      assert_equal 0, cli("run", "demo/app", "--lane", "remote", "--phase", "warm", "--run-id", "r9")
+    ensure
+      ENV.delete("GITHUB_RUN_ATTEMPT")
+    end
+  end
+
   def test_plans_get_run_scoped_tags
     with_fixture_env { cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "cold", "--run-id", "r2") }
 
