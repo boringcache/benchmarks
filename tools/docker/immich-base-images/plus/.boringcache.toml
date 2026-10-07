@@ -7,10 +7,10 @@ metadata-hints = ["benchmark=immich-base-images", "upstream-job=server-native-am
 tool-cache = ["ccache:immich-base-images-ccache"]
 command = [
   "docker", "buildx", "build",
-  "--file", "../overlay/server.Dockerfile",
+  "--file", "overlay/server.Dockerfile",
   "--platform", "linux/amd64",
   "--target", "libvips",
   "--tag", "immich-base-images-benchmark:local",
   "--load",
-  "../upstream/server",
+  "upstream/server",
 ]

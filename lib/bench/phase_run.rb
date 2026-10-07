@@ -36,12 +36,8 @@ module Bench
         @workspace ||= Workspace.new(kase, lane:, scope:, root: @work_root)
       end
 
-      def plan_dir
-        workspace.plan_dir(lane)
-      end
-
       def build
-        system(environment, *command, chdir: File.join(plan_dir, kase.directory)) ? 0 : ($?&.exitstatus || 127)
+        system(environment, *command, chdir: File.join(workspace.dir, kase.directory)) ? 0 : ($?&.exitstatus || 127)
       end
 
       def command
@@ -57,13 +53,13 @@ module Bench
       end
 
       def adapter
-        @adapter ||= TomlRB.load_file(File.join(plan_dir, ".boringcache.toml")).dig("adapters", kase.tool.name) or
-          raise Error, "#{kase.id}: #{lane.plan_dir}/.boringcache.toml has no [adapters.#{kase.tool.name}]"
+        @adapter ||= TomlRB.load_file(workspace.plan_path).dig("adapters", kase.tool.name) or
+          raise Error, "#{kase.id}: #{kase.plan_path(lane)} has no [adapters.#{kase.tool.name}]"
       end
 
       def environment
         @environment ||= begin
-          base = @env.to_h.merge("BENCH_DIR" => workspace.dir)
+          base = @env.to_h.merge("BENCH_DIR" => workspace.dir, "BENCH_SCOPE" => scope)
           shared = base.merge(kase.env(base))
           shared.merge(lane.boringcache? ? { "BORINGCACHE_OBSERVABILITY_JSONL_PATH" => evidence_path } : lane.env(phase, shared))
         end

@@ -1,0 +1,51 @@
+repo = "denoland/deno"
+branch = "main"
+start_sha = "1b48a20f85a8164aebe4fb29ae53909136a3d777"
+directory = "upstream"
+prepare = [
+  "mise trust && mise install",
+  "git -C upstream submodule update --init --recursive --depth=1 -- ./tests/util/std",
+  """set -eo pipefail
+cd upstream
+export DEBIAN_FRONTEND=noninteractive
+sudo apt-get -qq remove --purge -y man-db > /dev/null 2> /dev/null
+sudo apt-get -qq remove   'clang-12*' 'clang-13*' 'clang-14*' 'clang-15*' 'clang-16*' 'clang-17*' 'clang-18*' 'clang-19*' 'clang-20*' 'clang-21*' 'llvm-12*' 'llvm-13*' 'llvm-14*' 'llvm-15*' 'llvm-16*' 'llvm-17*' 'llvm-18*' 'llvm-19*' 'llvm-20*' 'llvm-21*' 'lld-12*' 'lld-13*' 'lld-14*' 'lld-15*' 'lld-16*' 'lld-17*' 'lld-18*' 'lld-19*' 'lld-20*' 'lld-21*' > /dev/null 2> /dev/null
+echo "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-22 main" | sudo dd of=/etc/apt/sources.list.d/llvm-toolchain-noble-22.list
+curl https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor | sudo dd of=/etc/apt/trusted.gpg.d/llvm-snapshot.gpg
+sudo apt-get update
+sudo apt-get install -y --no-install-recommends clang-22 lld-22 clang-tools-22 clang-format-22 clang-tidy-22 || (echo 'Failed. Trying again.' && sudo apt-get clean && sudo apt-get update && sudo apt-get install -y --no-install-recommends clang-22 lld-22 clang-tools-22 clang-format-22 clang-tidy-22)
+(yes '' | sudo update-alternatives --force --all) > /dev/null 2> /dev/null || true
+clang-22 -c -o /tmp/memfd_create_shim.o tools/memfd_create_shim.c -fPIC
+clang-22 -c -o /tmp/glibc_math_shim.o tools/glibc_math_shim.c -fPIC
+wget -q https://github.com/denoland/deno_sysroot_build/releases/download/sysroot-20250207/sysroot-`uname -m`.tar.xz -O /tmp/sysroot.tar.xz
+cd /
+xzcat /tmp/sysroot.tar.xz | sudo tar -x
+sudo mount --rbind /dev /sysroot/dev
+sudo mount --rbind /sys /sysroot/sys
+sudo mount --rbind /home /sysroot/home
+sudo mount -t proc /proc /sysroot/proc""",
+]
+check = "test -x upstream/target/release/deno && test -x upstream/target/release/denort && test -x upstream/target/release/test_server && test -z \"$(git -C upstream status --porcelain=v1 --untracked-files=all)\""
+
+[env]
+CARGO_TERM_COLOR = "always"
+RUST_BACKTRACE = "full"
+RUST_LIB_BACKTRACE = "0"
+CARGO_PROFILE_BENCH_INCREMENTAL = "false"
+CARGO_PROFILE_RELEASE_INCREMENTAL = "false"
+RUSTFLAGS = "-C linker-plugin-lto=true -C linker=clang-22 -C link-arg=-fuse-ld=lld-22 -C link-arg=-Wl,--icf=safe -C link-arg=-ldl -C link-arg=-Wl,--allow-shlib-undefined -C link-arg=-Wl,--thinlto-cache-dir=${HOME}/target/release/lto-cache -C link-arg=-Wl,--thinlto-cache-policy,cache_size_bytes=700m -C link-arg=/tmp/memfd_create_shim.o -C link-arg=/tmp/glibc_math_shim.o -C link-arg=-Wl,--wrap=expf -C link-arg=-Wl,--wrap=powf -C link-arg=-Wl,--wrap=exp2f -C link-arg=-Wl,--wrap=log2f -C link-arg=-Wl,--wrap=logf --cfg tokio_unstable -C link-arg=-L/sysroot/lib/x86_64-linux-gnu -C link-arg=-L/sysroot/usr/lib/x86_64-linux-gnu -C link-arg=--sysroot=/sysroot -C force-frame-pointers=yes -C force-unwind-tables=no -C link-arg=-Wl,--no-eh-frame-hdr"
+RUSTDOCFLAGS = "-C linker-plugin-lto=true -C linker=clang-22 -C link-arg=-fuse-ld=lld-22 -C link-arg=-Wl,--icf=safe -C link-arg=-ldl -C link-arg=-Wl,--allow-shlib-undefined -C link-arg=-Wl,--thinlto-cache-dir=${HOME}/target/release/lto-cache -C link-arg=-Wl,--thinlto-cache-policy,cache_size_bytes=700m -C link-arg=/tmp/memfd_create_shim.o -C link-arg=/tmp/glibc_math_shim.o -C link-arg=-Wl,--wrap=expf -C link-arg=-Wl,--wrap=powf -C link-arg=-Wl,--wrap=exp2f -C link-arg=-Wl,--wrap=log2f -C link-arg=-Wl,--wrap=logf --cfg tokio_unstable -C link-arg=-L/sysroot/lib/x86_64-linux-gnu -C link-arg=-L/sysroot/usr/lib/x86_64-linux-gnu -C link-arg=--sysroot=/sysroot"
+CC = "/usr/bin/clang-22"
+CFLAGS = "-L/sysroot/lib/x86_64-linux-gnu -L/sysroot/usr/lib/x86_64-linux-gnu --sysroot=/sysroot"
+DENO_CANARY = "true"
+RUSTC_BOOTSTRAP = "1"
+DENO_SNAPSHOT_MINIFY_SOURCES = "1"
+
+[runs]
+boringcache-cargo = ["github", "local"]
+boringcache-cargo-plus = ["github", "local"]
+gha = ["github"]
+gha-plus = ["github"]
+depot-cache = ["github"]
+kache = ["github"]
+mbx = ["github"]
