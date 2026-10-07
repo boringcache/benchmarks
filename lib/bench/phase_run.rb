@@ -2,7 +2,15 @@ module Bench
   class PhaseRun
     PLAN_CAPABILITIES = %w[tool-cache mount-cache].freeze
 
+    STATE = ".bench-state.json"
+
     attr_reader :kase, :lane, :phase, :runner, :scope, :sha, :step
+
+    def self.resume(kase, lane, work_root:, results_dir:, env: ENV)
+      state = JSON.parse(File.read(File.join(work_root, kase.tool.name, kase.name, lane.name, STATE)))
+      new(kase, lane, phase: state["phase"], runner: state["runner"], scope: state["scope"], sha: state["sha"], step: state["step"],
+                      work_root:, results_dir:, env:)
+    end
 
     def initialize(kase, lane, phase:, runner:, scope:, work_root:, results_dir:, sha: kase.start_sha, step: nil, env: ENV)
       @kase = kase
@@ -18,17 +26,45 @@ module Bench
     end
 
     def call
+      prepare
+      start
+      record(build)
+    end
+
+    def prepare
       workspace.prepare(sha)
       FileUtils.mkdir_p(File.dirname(record_path))
       kase.prepare.each { shell(it) or raise Error, "#{kase.id}: prepare failed: #{it}" }
+      save_state
+    end
 
-      started_at = Time.now.utc
-      seconds, exit_status = measure { build }
-      write_record(started_at:, seconds:, exit_status:)
+    def start
+      save_state("monotonic" => Process.clock_gettime(Process::CLOCK_MONOTONIC), "started_at" => Time.now.utc.iso8601)
+    end
+
+    def build
+      system(environment, *command, chdir: build_dir) ? 0 : ($?&.exitstatus || 127)
+    end
+
+    def record(exit_status)
+      seconds = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - state.fetch("monotonic")).round(3)
+      write_record(started_at: state.fetch("started_at"), seconds:, exit_status:)
     end
 
     def record_path
       File.join(@results_dir, kase.tool.name, kase.name, scope, "#{[lane.name, runner, phase, step].compact.join("-")}.json")
+    end
+
+    def build_dir
+      File.join(workspace.dir, kase.directory)
+    end
+
+    def exported_env
+      environment.reject { |key, value| @env[key] == value }
+    end
+
+    def cache_paths
+      [*lane.paths, *kase.shared].map { File.join(workspace.dir, it) }
     end
 
     private
@@ -36,8 +72,17 @@ module Bench
         @workspace ||= Workspace.new(kase, lane:, scope:, root: @work_root)
       end
 
-      def build
-        system(environment, *command, chdir: File.join(workspace.dir, kase.directory)) ? 0 : ($?&.exitstatus || 127)
+      def state
+        @state ||= JSON.parse(File.read(state_path))
+      end
+
+      def save_state(extra = {})
+        @state = { "phase" => phase, "runner" => runner, "scope" => scope, "sha" => sha, "step" => step, **extra }
+        File.write(state_path, JSON.generate(@state))
+      end
+
+      def state_path
+        File.join(workspace.dir, STATE)
       end
 
       def command
@@ -59,12 +104,6 @@ module Bench
 
       def shell(command)
         system(environment, "bash", "-c", command, chdir: workspace.dir)
-      end
-
-      def measure
-        start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-        result = yield
-        [(Process.clock_gettime(Process::CLOCK_MONOTONIC) - start).round(3), result]
       end
 
       def output_ok(exit_status)
@@ -100,7 +139,7 @@ module Bench
           "versions" => { "boringcache" => boringcache_version },
           "run_url" => run_url,
           "attempt" => @env["GITHUB_RUN_ATTEMPT"]&.to_i,
-          "started_at" => started_at.iso8601
+          "started_at" => started_at
         }
         File.write(record_path, JSON.pretty_generate(record) + "\n")
         record
