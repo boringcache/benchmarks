@@ -7,3 +7,5 @@ check = "docker image inspect n8n-runners-distroless-benchmark:local"
 
 [runs]
 boringcache-docker = ["github", "local"]
+gha = ["github"]
+ghcr = ["github"]

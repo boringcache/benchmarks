@@ -86,7 +86,7 @@ module Bench
       end
 
       def command
-        lane.boringcache? ? ["boringcache", kase.tool.name, *("--read-only" if phase == "warm")] : adapter.fetch("command")
+        lane.boringcache? ? ["boringcache", kase.tool.name, *("--read-only" if phase == "warm")] : [*adapter.fetch("command"), *lane.args(phase, environment)]
       end
 
       def adapter
@@ -96,7 +96,7 @@ module Bench
 
       def environment
         @environment ||= begin
-          base = @env.to_h.merge(kase.tool.catalog.runner_env(runner), "BENCH_DIR" => workspace.dir, "BENCH_SCOPE" => scope)
+          base = @env.to_h.merge(kase.tool.catalog.runner_env(runner), "BENCH_DIR" => workspace.dir, "BENCH_SCOPE" => "#{kase.tool.name}-#{kase.name}-#{scope}")
           shared = base.merge(kase.env(base))
           shared.merge(lane.boringcache? ? { "BORINGCACHE_OBSERVABILITY_JSONL_PATH" => evidence_path } : lane.env(phase, shared))
         end

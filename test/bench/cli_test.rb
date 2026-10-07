@@ -27,6 +27,19 @@ class CLITest < Minitest::Test
     assert_equal "from-runner\n", File.read(File.join(@root, ".work/demo/app/remote/upstream/out.txt"))
   end
 
+  def test_lane_args_follow_the_plan_command_and_warm_overrides_them
+    write "tools/demo/app/.boringcache.toml", %([adapters.demo]\ntag = "demo-app"\ncommand = ["bash", "-c", "echo \\"$0 $1\\" > upstream/out.txt"]\n)
+    write "tools/demo/lanes/remote.toml", %(provider = "remote"\nlevel = "base"\nargs = ["cold-args", "${BENCH_SCOPE}"]\n[warm]\nargs = ["warm-args", "${BENCH_SCOPE}"]\n)
+    outputs = %w[cold warm].map do |phase|
+      with_fixture_env do
+        Bench::CLI.new(%W[run demo/app --lane remote --phase #{phase} --run-id r7 --results #{@root}/tmp/results --work #{@root}/.work], catalog:, out: StringIO.new).call
+      end
+      File.read(File.join(@root, ".work/demo/app/remote/upstream/out.txt"))
+    end
+
+    assert_equal ["cold-args demo-app-remote-local-r7\n", "warm-args demo-app-remote-local-r7\n"], outputs
+  end
+
   private
     def matrix(*argv)
       out = StringIO.new
