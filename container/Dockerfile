@@ -4,7 +4,12 @@ ARG BORINGCACHE_VERSION
 ARG TARGETARCH
 
 RUN apt-get update \
- && apt-get install --yes --no-install-recommends bash build-essential ca-certificates curl git unzip xz-utils \
+ && apt-get install --yes --no-install-recommends bash build-essential ca-certificates curl git gnupg unzip xz-utils \
+ && install -m 0755 -d /etc/apt/keyrings \
+ && curl --fail --silent --show-error --location https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
+ && echo "deb [arch=${TARGETARCH} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian trixie stable" > /etc/apt/sources.list.d/docker.list \
+ && apt-get update \
+ && apt-get install --yes --no-install-recommends docker-ce-cli docker-buildx-plugin \
  && rm -rf /var/lib/apt/lists/*
 
 RUN curl --fail --silent --show-error --location https://mise.run | MISE_INSTALL_PATH=/usr/local/bin/mise sh

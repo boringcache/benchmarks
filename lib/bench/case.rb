@@ -43,6 +43,22 @@ module Bench
       config.fetch("directory", ".")
     end
 
+    def shared
+      config.fetch("shared", [])
+    end
+
+    def cached_paths(lane)
+      plan = TomlRB.load_file(plan_path(lane))
+      paths = env("BENCH_DIR" => "")
+      plan.fetch("entries", {}).values.filter_map do |entry|
+        if entry["path"]
+          Pathname(File.join(lane.plan_dir, entry["path"])).cleanpath.to_s
+        elsif paths[entry["path-env"]]
+          paths[entry["path-env"]].delete_prefix("/")
+        end
+      end
+    end
+
     def env(source)
       Bench.interpolate(config.fetch("env", {}), source)
     end
