@@ -41,15 +41,7 @@ module Bench
       end
 
       def command
-        lane.boringcache? ? boringcache_command : adapter.fetch("command")
-      end
-
-      def boringcache_command
-        read_only = ("--read-only" if phase == "warm")
-        return ["boringcache", kase.tool.name, *read_only] unless kase.tool.name == "run"
-
-        ["boringcache", "run", *adapter.fetch("profiles", []).flat_map { ["--profile", it] },
-         *("--no-platform" if adapter["no-platform"]), *("--no-git" if adapter["no-git"]), *read_only, "--", *adapter.fetch("command")]
+        lane.boringcache? ? ["boringcache", kase.tool.name, *("--read-only" if phase == "warm")] : adapter.fetch("command")
       end
 
       def adapter
