@@ -4,7 +4,7 @@ Each directory here is a BoringCache adapter command (`docker`, `cargo`, `turbo`
 
 ```
 tools/<tool>/
-  tool.toml               levels: the capability sets lanes implement
+  tool.toml               display name and levels: the capability sets lanes implement
   lanes/<lane>.toml       one provider implementing one level
   <case>/
     case.toml             upstream source, preparation, output check, lane -> runners
@@ -116,9 +116,9 @@ env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
 ## On GitHub Actions
 
-`.github/workflows/project.yml` runs one project: `bin/bench matrix <project>` turns every case of the project into one flat list of jobs labelled `tool [case] [runner] lane` (for example `turbo boringcache`, `docker n8n-runners boringcache`, `docker depot-4 boringcache plus`). All `cold` jobs run side by side, then all `warm` jobs. Each job calls `.github/actions/phase`, which runs the same `bin/bench` steps as a local run. A job only receives the secrets its lane lists.
+`.github/workflows/project.yml` runs one tool for one project, named `<tool> - <project>` (for example `Docker - Hugo`, `Turbo - n8n`, `Rust/Cargo - Zed`). `bin/bench matrix <project> --tool <tool>` turns every matching case into one flat list of jobs labelled `[case] [runner] lane` (for example `boringcache`, `github-arm boringcache plus`, `n8n-runners gha`). All `cold` jobs run side by side, then all `warm` jobs. Each job calls `.github/actions/phase`, which runs the same `bin/bench` steps as a local run. A job only receives the secrets its lane lists.
 
 ```sh
-gh workflow run project.yml -f project=n8n
-gh workflow run project.yml -f project=posthog -f lane=boringcache-docker -f runner="github depot-4"
+gh workflow run project.yml -f tool=Docker -f project=Hugo
+gh workflow run project.yml -f tool=Docker -f project=PostHog -f lane=boringcache-docker -f runner="github depot-4"
 ```

@@ -1,2 +1,4 @@
+name = "Xcode"
+
 [levels]
 base = ["compilation-cache"]

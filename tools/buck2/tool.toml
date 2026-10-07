@@ -1,2 +1,4 @@
+name = "Buck2"
+
 [levels]
 base = ["remote-cache"]
