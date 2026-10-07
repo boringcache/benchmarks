@@ -41,25 +41,44 @@ TURBO_CACHE = "remote:r"
 | --- | --- |
 | `provider` | `boringcache` runs `boringcache <tool>` in the plan directory; anything else runs the plan's command with the lane's `env` |
 | `level` | a level from `tool.toml` |
-| `plan` | BoringCache lanes only: plan directory inside the case, default `.` |
+| `plan` | plan directory inside the case, default `.`; `plus` for a plus-level lane |
 | `runners` | runner keys from `runners.toml` the lane may use; omitted means any |
 | `actions_only` | the lane needs GitHub Actions and is skipped locally |
 | `secrets` | environment the lane reads |
 | `env`, `warm.env` | environment for the build, and extra environment for warm |
+| `paths` | GitHub Actions cache lanes: tool cache paths to save and restore, relative to the run directory |
 
 ## case.toml
 
 ```toml
-repo = "PostHog/posthog"
+repo = "n8n-io/n8n"
 branch = "master"
 start_sha = "<40-character sha>"
-prepare = ["git -C upstream submodule update --init"]
-check = "docker image inspect posthog:bench"
+directory = "upstream"
+prepare = ["mise trust && mise install"]
+check = "test -s upstream/packages/cli/dist/index.js"
+shared = [".pnpm-store"]
+
+[env]
+NPM_CONFIG_STORE_DIR = "${BENCH_DIR}/.pnpm-store"
 
 [runs]
-boringcache-docker = ["github", "depot-4"]
+boringcache-turbo = ["github", "local"]
 gha = ["github"]
 ```
+
+| Key | Meaning |
+| --- | --- |
+| `repo`, `branch` | upstream GitHub repository and the branch rolling follows |
+| `start_sha` | first-parent commit on `branch` as of 2026-09-30 23:59 UTC |
+| `directory` | where the build command runs, relative to the plan directory, default `.` |
+| `prepare` | untimed commands before the build |
+| `check` | untimed output check after the build |
+| `shared` | paths every lane caches (dependencies), relative to the run directory |
+| `env` | environment for every lane; `${BENCH_DIR}` is the run directory |
+| `runs` | lane name to the runner keys it runs on |
+
+A `mise.toml` beside `case.toml` pins the case toolchain; it is copied into the run directory.
 
 Each phase runs in its own directory under `.work/<tool>/<case>/<scope>/<phase>/`: the plans with run-scoped tags, `overlay/`, and the upstream checkout in `upstream/`. `prepare` and `check` run there with `bash -c`, outside the timer, so their paths start at the run directory (`upstream/...`), not at the plan directory.
 
@@ -69,8 +88,13 @@ Each phase runs in its own directory under `.work/<tool>/<case>/<scope>/<phase>/
 - A lane: copy a lane file in the same tool, change `provider`, `env` and `runners`.
 - A tool: add `tools/<tool>/tool.toml`, a `boringcache-<tool>` lane and one case.
 
-Then run it locally:
+Then run it locally, directly or with each phase in a fresh container:
 
 ```sh
+bundle install
 bin/bench run <tool>/<case> --lane <lane>
+bin/bench image
+bin/bench run <tool>/<case> --lane <lane> --container
 ```
+
+`--container` reads BoringCache tokens from `.env` (`BORINGCACHE_RESTORE_TOKEN`, `BORINGCACHE_SAVE_TOKEN`).
