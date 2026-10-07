@@ -1,0 +1,19 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+tag = "n8n-runners-docker"
+no-git = true
+metadata-hints = ["benchmark=n8n-runners", "upstream-job=build-and-push-docker-image-amd64"]
+command = [
+  "docker", "buildx", "build",
+  "--file", "upstream/docker/images/runners/Dockerfile",
+  "--platform", "linux/amd64",
+  "--build-arg", "NODE_VERSION=26.7.0",
+  "--build-arg", "N8N_VERSION=snapshot",
+  "--build-arg", "N8N_RELEASE_TYPE=dev",
+  "--provenance", "false",
+  "--sbom", "false",
+  "--tag", "n8n-runners-benchmark:local",
+  "--load",
+  "upstream",
+]

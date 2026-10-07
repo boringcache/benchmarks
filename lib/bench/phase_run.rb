@@ -1,5 +1,7 @@
 module Bench
   class PhaseRun
+    PLAN_CAPABILITIES = %w[tool-cache mount-cache].freeze
+
     attr_reader :kase, :lane, :phase, :runner, :scope, :sha, :step
 
     def initialize(kase, lane, phase:, runner:, scope:, work_root:, results_dir:, sha: kase.start_sha, step: nil, env: ENV)
@@ -94,7 +96,7 @@ module Bench
           "lane" => lane.name,
           "provider" => lane.provider,
           "level" => lane.level,
-          "capabilities" => lane.capabilities,
+          "capabilities" => lane.capabilities.reject { PLAN_CAPABILITIES.include?(it) && !adapter[it] },
           "runner" => runner,
           "runner_label" => kase.tool.catalog.runners[runner],
           "phase" => phase,

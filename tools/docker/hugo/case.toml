@@ -1,0 +1,8 @@
+repo = "gohugoio/hugo"
+branch = "master"
+start_sha = "ec69d0e64931715e490ae411cba2b305636d20e0"
+check = "docker image inspect hugo-benchmark:local"
+
+[runs]
+boringcache-docker = ["github", "local"]
+boringcache-docker-plus = ["github", "local"]
