@@ -1,0 +1,12 @@
+provider = "nx-cloud"
+level = "base"
+runners = ["github"]
+secrets = ["NX_CLOUD_ID", "NX_CLOUD_ACCESS_TOKEN", "NX_CLOUD_READ_ONLY_TOKEN"]
+prepare = ["ruby -rjson -e 'path = \"upstream/nx.json\"; config = JSON.parse(File.read(path)); config[\"nxCloudId\"] = ENV.fetch(\"NX_CLOUD_ID\"); File.write(path, JSON.pretty_generate(config) + \"\\n\")'"]
+probe = ["test -n \"$NX_CLOUD_ID\" && test -n \"$NX_CLOUD_ACCESS_TOKEN\" && test -n \"$NX_CLOUD_READ_ONLY_TOKEN\""]
+
+[env]
+NX_NO_CLOUD = "false"
+
+[warm.env]
+NX_CLOUD_ACCESS_TOKEN = "${NX_CLOUD_READ_ONLY_TOKEN}"
