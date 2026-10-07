@@ -111,7 +111,9 @@ module Bench
             { "lane" => lane.name, "runner" => runner, "label" => @catalog.runner_label(runner), "secrets" => lane.secrets }
           end
         end
-        @out.puts JSON.generate(entries.select { (options[:lane].nil? || it["lane"] == options[:lane]) && (options[:runner].nil? || it["runner"] == options[:runner]) })
+        lanes = options[:lane]&.split(/[\s,]+/)
+        runners = options[:runner]&.split(/[\s,]+/)
+        @out.puts JSON.generate(entries.select { (lanes.nil? || lanes.include?(it["lane"])) && (runners.nil? || runners.include?(it["runner"])) })
         0
       end
 
