@@ -9,3 +9,4 @@ boringcache-docker-plus = ["github", "github-arm", "depot-4", "depot-8", "namesp
 gha = ["github", "github-arm"]
 ghcr = ["github", "github-arm"]
 depot-builder = ["github"]
+namespace-builder = ["github"]

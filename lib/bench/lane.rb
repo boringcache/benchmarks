@@ -1,6 +1,6 @@
 module Bench
   class Lane
-    SETUPS = %w[buildx ghcr depot].freeze
+    SETUPS = %w[buildx ghcr depot vercel namespace].freeze
 
     attr_reader :tool, :path
 
@@ -59,6 +59,10 @@ module Bench
 
     def prepare(phase)
       config.fetch("prepare", []) + (config.dig(phase, "prepare") || [])
+    end
+
+    def run_scoped?
+      config.fetch("run_scoped", true)
     end
 
     def secrets

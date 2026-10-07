@@ -1,4 +1,5 @@
 provider = "magic-nix-cache"
 level = "base"
+run_scoped = false
 actions_only = true
 runners = ["github"]

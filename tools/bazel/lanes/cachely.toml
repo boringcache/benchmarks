@@ -1,5 +1,6 @@
 provider = "cachely"
 level = "base"
+run_scoped = false
 runners = ["github", "local"]
 secrets = ["CACHELY_TOKEN"]
 

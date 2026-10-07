@@ -2,7 +2,9 @@ provider = "vercel"
 level = "base"
 actions_only = true
 runners = ["github"]
-secrets = ["TURBO_NAME"]
+secrets = ["TURBO_TEAM_ID"]
+setup = ["vercel"]
+run_scoped = false
 
 [warm.env]
 TURBO_CACHE = "local:rw,remote:r"

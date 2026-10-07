@@ -1,0 +1,6 @@
+provider = "namespace"
+level = "base"
+actions_only = true
+runners = ["github"]
+setup = ["namespace"]
+run_scoped = false
