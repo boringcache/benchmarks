@@ -1,6 +1,6 @@
-# Benchmarks rebuild plan (v4)
+# Benchmarks rebuild plan (v5)
 
-Status: agreed shape; one item open at the end. Nothing is built yet.
+Status: agreed. Build starts with step 1.
 
 `main` was reset on 2026-10-07 to the tree of `c750b51d` (2026-09-30, the index
 before the consolidation) by a normal commit, `16c684ee`. The consolidated layout
@@ -34,7 +34,7 @@ Capabilities below are from CLI 1.40.0 (`project_config/model.rs`,
 | Tool | `base` level | `plus` level adds | Shared layers every lane caches |
 | --- | --- | --- | --- |
 | docker | BuildKit OCI layer cache (`cache-mode = max`) | `tool-cache` for the tool used inside the Dockerfile, `mount-cache` for `RUN --mount=type=cache` | none (dependencies live inside the image build) |
-| cargo | compiler cache: sccache (`compiler-cache = "sccache"`) | registry entries (`cargo-registry-cache`, `cargo-registry-index`, `cargo-git-db`) + `cargo-target` | none (registry is part of `plus`) |
+| cargo | compiler cache: sccache, with a profile of `entries = []` (deno's existing `compiler-only` profile; the CLI default would add registry entries) | registry entries (`cargo-registry-cache`, `cargo-registry-index`, `cargo-git-db`) + `cargo-target` (deno's `cargo-product` profile) | none (registry is part of `plus`) |
 | bazel | HTTP remote cache (`/ac`, `/cas`) | — | per case (e.g. Bazel repository cache), set when ported |
 | go | `GOCACHEPROG` build cache | — | Go module cache |
 | gradle | HTTP build cache (init script) | — | Gradle dependency cache |
@@ -63,17 +63,23 @@ yet, so they get no directory until one does.
 ### Fairness rules
 
 1. Lanes compared with each other implement the same level.
-2. Shared layers are cached by every lane. BoringCache caches them with entries
-   or profiles in the same plan. GitHub Actions cache lanes and remote-only
+2. Shared layers are cached by every lane. BoringCache caches them in the same
+   plan and the same product step: `[adapters.<tool>].profiles = ["deps"]`
+   (`boringcache turbo --dry-run --json` shows the adapter restoring and saving
+   those archive entries itself). GitHub Actions cache lanes and remote-only
    providers (Depot Cache, Vercel, Cachely, BuildBuddy, NativeLink) cache them
-   with `actions/cache`, as their users would on GitHub runners.
+   with `actions/cache/restore` and `actions/cache/save` as normal steps inside
+   the timer, as their users would on GitHub runners.
 3. The timer covers the same window for every lane: restore every cached layer,
-   install dependencies, build, save. Checkout, toolchain install and the output
-   check are outside it.
+   install dependencies, build, save. When a case puts install in the window, the
+   committed command does install then build. Checkout, `prepare` (submodules,
+   toolchain) and the output check are outside it.
 4. Same source, command, runner class, architecture and toolchain for every lane
    of a case. Runner comparisons are their own explicit series.
-5. Docker `plus` has no like-for-like competitor lane. It is shown next to the
-   Docker `base` lanes and labelled with its capabilities, not ranked against them.
+5. Some comparisons are knowingly not like-for-like (Docker `plus` against the
+   Docker `base` lanes, 4-core against 8-core runners). They are run on purpose
+   to see how things behave, and every number carries its lane, capabilities and
+   runner so a reader knows what it is.
 
 ## Layout
 
@@ -119,14 +125,19 @@ archived repos.
 - **Actions:** `bench.yml` uses `boringcache/one` (v1.40.0 lists every mode,
   including bazel-reapi, moon, pants, buck2, sbt) with `mode: <tool>` and
   `working-directory: tools/<tool>/<case>` (or `.../plus` for a `plus` lane).
-- **Other lanes** read the same command from that plan and attach their own
-  cache (flags, env, init script), so every lane builds the same thing.
+- **Other lanes** get the same command from the product, not by parsing its file:
+  `bin/bench` reads `command` from `boringcache <tool> --dry-run --json`, then
+  attaches the lane's own cache (flags, env, init script). Every lane builds the
+  same thing.
+- The `plus/` plan is the same command with `../upstream` paths plus the extra
+  capabilities.
 
 ```toml
 # tools/docker/posthog/case.toml — shape only; values come from e24f6442:cases/posthog
 repo      = "PostHog/posthog"
 branch    = "master"
 start_sha = "<first-parent commit on master at 2026-09-30 23:59 UTC>"
+prepare   = []                                        # untimed: submodules, toolchain
 check     = ["docker", "image", "inspect", "posthog:bench"]   # after the timer
 
 [runs]                                                # lane -> runners; only these pairs run
@@ -138,8 +149,11 @@ depot-builder           = ["github"]
 
 A lane file declares its level, setup (untimed), how it wraps the command, the
 runner keys it allows, its secrets, and its own reuse signal. `bin/bench check`
-rejects a pair a lane does not allow, a case missing a shared layer in any lane,
-and lanes of different levels marked as comparable.
+rejects a pair a lane does not allow and a case that leaves a shared layer out
+of any lane.
+
+Implementation: Ruby 3.4 (`.tool-versions`), `toml-rb` for our own TOML files
+(the consolidation used it), Minitest.
 
 ## Phases
 
@@ -158,19 +172,20 @@ and lanes of different levels marked as comparable.
   commit in the same tick.
 - The cursor is the last rolling record in `results/`; there is no other state.
 - The scope is fixed per series: `<tool>-<case>-<lane>-<runner>-rolling-<series>`.
+- `schedule.yml` uses one `concurrency` group per case series, so two ticks can
+  never read the same cursor and build the same commit.
 
 **Every phase:** its own fresh runner on Actions; locally `bin/bench` resets the
 work directory, tool caches and Docker builder between phases. Warm only
 restores (BoringCache read-only, `actions/cache/restore`, remote uploads off).
 
-**Warm reuse** comes from each product's own signal: BoringCache's
-`fail-on-cache-miss` / `cache-hit` Action output, `actions/cache` `cache-hit`,
-the tool's own hit statistics for others. Where a product has no such signal,
-`reused` is recorded as unmeasured. The benchmark never computes reuse from
-BoringCache telemetry (product contract: no telemetry assertions, reuse
-calculators or artifact normalizers).
+**Warm reuse** is recorded from each product's own signal (BoringCache's
+`cache-hit` output and session summary, `actions/cache` `cache-hit`, the tool's
+own hit statistics). A warm run that missed is still recorded, with
+`reused: false` shown next to its time; nothing is hidden or dropped. Where a
+product reports nothing, `reused` is `null`.
 
-A timing counts only after the output check passes.
+The output check result is recorded with every timing.
 
 ## Results
 
@@ -184,10 +199,13 @@ A timing counts only after the output check passes.
 4. Local runs write the same records to a gitignored directory; they verify a
    case and are never published.
 5. Failed runs are recorded and kept. Missing values are `null` (unmeasured).
+6. Field names follow the product vocabulary: the command name goes in
+   `adapter_command` (`docker`, `turbo`, `go`); any `tool` field would have to use
+   the canonical names (`oci`, `turborepo`, `gocache`, …), so the record has none.
 
 ```json
 {
-  "tool": "docker", "case": "posthog", "lane": "boringcache-docker", "level": "base",
+  "adapter_command": "docker", "case": "posthog", "lane": "boringcache-docker", "level": "base",
   "capabilities": ["layers"], "runner": "github", "runner_label": "ubuntu-latest",
   "phase": "rolling", "step": 12, "sha": "...",
   "seconds": 212.4, "exit_status": 0, "output_ok": true, "reused": true,
@@ -297,20 +315,23 @@ then `data/latest/` and its old scripts go in one commit.
    `tool.toml` per tool, tests. No cases.
 2. One small case per tool, qualified locally in containers, in parallel:
    turbo/n8n, nx/storybook, go/hugo, gradle, maven, cargo (setup check), bazel
-   (setup check), ccache, nix, moon, pants, buck2, sbt; docker/posthog light.
+   (setup check), ccache, nix, moon, pants, buck2, sbt. Docker locally uses a
+   runner-native case (hugo, linkerd2 or qdrant have no `--platform`), because
+   posthog's `linux/amd64` build would run under emulation on arm64 Colima.
    xcode needs macOS and is qualified on Actions.
 3. `bench.yml` on Actions with docker/posthog (all four Docker lanes) and one
    non-Docker case, to prove the same orchestration there.
 4. PostHog runner comparison on Depot and Namespace runners.
 5. The remaining cases, each verified locally first.
 6. `schedule.yml` per tool once its cases pass on Actions.
-7. Monorepo follow-ups: release pin tooling, product contract lane names,
-   website reader.
+7. Follow-ups outside this repo: release pin tooling, product contract lane
+   names, website reader, and the `benchmark-workflows` skill (it still
+   describes the consolidation's `cases/` and `bin/bench new/start/preserve`).
 
-## Open item
+## What the benchmark is
 
-**Product-reported numbers.** The contract forbids normalizing BoringCache
-artifacts. The plan copies a fixed list of fields verbatim from the product's
-own evidence (session summary: hits, bytes, storage, p50/p95 latency) into
-`provider_reported`, keeps the raw files, and never computes from them. Is that
-inside the contract, or should the record only link the raw files?
+It runs each product's commands (BoringCache and every competitor lane) on the
+same workloads and reports the numbers truthfully: time, reuse, storage and
+whatever latency each product reports, with the raw evidence kept. Product
+numbers are copied into `provider_reported` as reported. Interpreting them is
+for people and agents reading the report, not for the harness.
