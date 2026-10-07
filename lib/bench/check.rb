@@ -14,6 +14,11 @@ module Bench
     private
       def runner_problems
         problems = @catalog.runners.reject { |_, runner| runner.is_a?(Hash) && runner["label"].to_s != "" }.keys.map { "runners.toml: #{it} needs a label" }
+        @catalog.runners.each do |name, runner|
+          if runner.is_a?(Hash) && runner["label"] == "ubuntu-latest"
+            problems << "runners.toml: #{name} must use an explicit Ubuntu version"
+          end
+        end
         @catalog.runners.key?("local") ? problems : problems << "runners.toml must define local"
       end
 

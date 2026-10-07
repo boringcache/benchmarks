@@ -1,5 +1,5 @@
 [github]
-label = "ubuntu-latest"
+label = "ubuntu-24.04"
 
 [github-arm]
 label = "ubuntu-24.04-arm"
