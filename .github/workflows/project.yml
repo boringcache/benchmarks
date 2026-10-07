@@ -1,0 +1,84 @@
+name: Project benchmark
+
+on:
+  workflow_dispatch:
+    inputs:
+      case:
+        description: tool/case, for example docker/posthog
+        type: string
+        required: true
+      lane:
+        description: only this lane (empty runs every lane in the case)
+        type: string
+        default: ""
+      runner:
+        description: only this runner key (empty runs every runner in the case)
+        type: string
+        default: ""
+
+run-name: ${{ inputs.case }}${{ inputs.lane != '' && format(' {0}', inputs.lane) || '' }}${{ inputs.runner != '' && format(' on {0}', inputs.runner) || '' }}
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
+        with:
+          bundler-cache: true
+      - id: matrix
+        env:
+          CASE: ${{ inputs.case }}
+          LANE: ${{ inputs.lane }}
+          RUNNER: ${{ inputs.runner }}
+        run: echo "matrix=$(bundle exec bin/bench matrix "$CASE" ${LANE:+--lane "$LANE"} ${RUNNER:+--runner "$RUNNER"})" >> "$GITHUB_OUTPUT"
+
+  cold:
+    needs: plan
+    name: cold ${{ matrix.lane }} ${{ matrix.runner }}
+    runs-on: ${{ matrix.label }}
+    timeout-minutes: 180
+    strategy: &matrix
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    env: &secrets
+      BUILDBUDDY_API_KEY: ${{ contains(matrix.secrets, 'BUILDBUDDY_API_KEY') && secrets.BUILDBUDDY_API_KEY || '' }}
+      CACHELY_TOKEN: ${{ contains(matrix.secrets, 'CACHELY_TOKEN') && secrets.CACHELY_TOKEN || '' }}
+      CACHIX_AUTH_TOKEN: ${{ contains(matrix.secrets, 'CACHIX_AUTH_TOKEN') && secrets.CACHIX_AUTH_TOKEN || '' }}
+      CACHIX_CACHE: ${{ contains(matrix.secrets, 'CACHIX_CACHE') && vars.CACHIX_CACHE || '' }}
+      DEPOT_TOKEN: ${{ contains(matrix.secrets, 'DEPOT_TOKEN') && secrets.DEPOT_TOKEN || '' }}
+      DEPOT_ORG_ID: ${{ contains(matrix.secrets, 'DEPOT_ORG_ID') && secrets.DEPOT_ORG_ID || '' }}
+      BITRISE_BUILD_CACHE_AUTH_TOKEN: ${{ contains(matrix.secrets, 'BITRISE_BUILD_CACHE_AUTH_TOKEN') && secrets.BITRISE_BUILD_CACHE_AUTH_TOKEN || '' }}
+      BITRISE_BUILD_CACHE_WORKSPACE_ID: ${{ contains(matrix.secrets, 'BITRISE_BUILD_CACHE_WORKSPACE_ID') && vars.BITRISE_BUILD_CACHE_WORKSPACE_ID || '' }}
+      TURBO_NAME: ${{ contains(matrix.secrets, 'TURBO_NAME') && secrets.TURBO_NAME || '' }}
+      TURBO_TEAM_ID: ${{ contains(matrix.secrets, 'TURBO_TEAM_ID') && secrets.TURBO_TEAM_ID || '' }}
+    steps: &steps
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/phase
+        with:
+          case: ${{ inputs.case }}
+          lane: ${{ matrix.lane }}
+          runner: ${{ matrix.runner }}
+          phase: ${{ github.job }}
+          run-id: ${{ github.run_id }}
+
+  warm:
+    needs: [plan, cold]
+    if: ${{ !cancelled() }}
+    name: warm ${{ matrix.lane }} ${{ matrix.runner }}
+    runs-on: ${{ matrix.label }}
+    timeout-minutes: 180
+    strategy: *matrix
+    env: *secrets
+    steps: *steps

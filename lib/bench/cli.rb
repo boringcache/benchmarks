@@ -11,6 +11,7 @@ module Bench
         bin/bench build <tool>/<case> --lane LANE
         bin/bench record <tool>/<case> --lane LANE --exit-status N
         bin/bench label <runner>
+        bin/bench matrix <tool>/<case> [--lane LANE] [--runner KEY]
         bin/bench image
         bin/bench report [--results DIR] [--out DIR]
     TEXT
@@ -31,6 +32,7 @@ module Bench
       when "build" then resumed(&:build)
       when "record" then record
       when "label" then label
+      when "matrix" then matrix
       when "report" then report
       when "image" then image
       else usage
@@ -96,7 +98,20 @@ module Bench
       end
 
       def label
-        @out.puts @catalog.runners.fetch(@argv.first) { raise Error, "unknown runner #{@argv.first.inspect}" }
+        @out.puts @catalog.runner_label(@argv.first)
+        0
+      end
+
+      def matrix
+        options = parse({})
+        kase = @catalog.find_case(@argv.first || raise(Error, "matrix needs <tool>/<case>"))
+        entries = kase.runs.flat_map do |lane_name, runners|
+          lane = kase.tool.lane(lane_name)
+          Array(runners).reject { it == "local" }.map do |runner|
+            { "lane" => lane.name, "runner" => runner, "label" => @catalog.runner_label(runner), "secrets" => lane.secrets }
+          end
+        end
+        @out.puts JSON.generate(entries.select { (options[:lane].nil? || it["lane"] == options[:lane]) && (options[:runner].nil? || it["runner"] == options[:runner]) })
         0
       end
 
