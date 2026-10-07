@@ -45,7 +45,7 @@ Capabilities below are from CLI 1.40.0 (`project_config/model.rs`,
 | xcode | compilation cache (macOS) | — | none |
 | nix | binary cache | — | none |
 | moon, pants, buck2, sbt | REAPI cache (loopback gRPC) | — | per case, set when ported |
-| run | archive of declared entries | — | the entries are the cache |
+| run | archive of declared entries (no case: `run/storybook` was dropped on 2026-10-07) | — | the entries are the cache |
 
 `buildkit`, `sccache`, `gha` and `bazel-reapi` exist in the CLI but have no case
 yet, so they get no directory until one does.
@@ -222,7 +222,6 @@ lane, and each product's cache set up the way that product documents it.
 | cargo | deno, zed | `boringcache-cargo`, `boringcache-cargo-plus`, `gha` (sccache GitHub Actions backend), `gha-plus` (+ `Swatinem/rust-cache`), `depot-cache` (sccache WebDAV), `kache` (`kunobi-ninja/kache-action`, RUSTC_WRAPPER compiler cache on the GitHub Actions cache), `mbx` (`jdx/mr-boxington-action`, target + registry + git on the GitHub Actions cache; `plus` level) |
 | turbo | n8n | `boringcache-turbo`, `gha` (actions/cache on .turbo), `depot-cache`, `vercel` (OIDC policy "Boringcache turbo") |
 | nx | storybook | `boringcache-nx`, `gha`, `depot-cache`; `nx-cloud` last (needs an Nx workspace) |
-| run | storybook (archive sandbox, the original benchmark) | `boringcache-run`, `gha` |
 | bazel | grpc | `boringcache-bazel`, `gha` (disk cache), `buildbuddy`, `cachely`, `nativelink` (R2), `depot-cache` |
 | go | hugo | `boringcache-go`, `gha`, `depot-cache` |
 | gradle | opentelemetry-java | `boringcache-gradle`, `gha`, `depot-cache` |

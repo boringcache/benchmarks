@@ -42,8 +42,8 @@ RUSTC_BOOTSTRAP = "1"
 DENO_SNAPSHOT_MINIFY_SOURCES = "1"
 
 [runs]
-boringcache-cargo = ["github", "local"]
-boringcache-cargo-plus = ["github", "local"]
+boringcache-cargo = ["github"]
+boringcache-cargo-plus = ["github"]
 gha = ["github"]
 gha-plus = ["github"]
 depot-cache = ["github"]
