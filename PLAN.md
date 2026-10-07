@@ -103,7 +103,6 @@ tools/
       .boringcache.toml      # base plan; [adapters.docker].command IS the build command
       plus/.boringcache.toml # plus plan: + tool-cache, mount-cache, overlay Dockerfile
       overlay/               # upstream changes a lane needs, recorded, never hidden
-      upstream/              # source checkout (gitignored)
   cargo/ turbo/ nx/ run/ bazel/ go/ gradle/ maven/ ccache/ xcode/ nix/ moon/ pants/ buck2/ sbt/
 results/                     # one JSON record per phase run (also the rolling cursor)
 data/results.json            # generated report, new format
@@ -125,10 +124,10 @@ archived repos.
 - **Actions:** `bench.yml` uses `boringcache/one` (v1.40.0 lists every mode,
   including bazel-reapi, moon, pants, buck2, sbt) with `mode: <tool>` and
   `working-directory: tools/<tool>/<case>` (or `.../plus` for a `plus` lane).
-- **Other lanes** get the same command from the product, not by parsing its file:
-  `bin/bench` reads `command` from `boringcache <tool> --dry-run --json`, then
-  attaches the lane's own cache (flags, env, init script). Every lane builds the
-  same thing.
+- **Other lanes** run the committed `[adapters.<tool>].command` from the same plan
+  file, then attach their own cache (flags, env, init script). Every lane builds
+  the same thing. (The dry-run `command` is not used: for Docker it already
+  carries BoringCache's injected `--cache-from/--cache-to type=boringcache`.)
 - The `plus/` plan is the same command with `../upstream` paths plus the extra
   capabilities.
 
@@ -251,17 +250,18 @@ lane, and each product's cache set up the way that product documents it.
 
 ## Runners
 
-```toml
-# runners.toml
-github      = "ubuntu-latest"
-github-arm  = "ubuntu-24.04-arm"
-macos       = "macos-26"
-depot-4     = "depot-ubuntu-24.04-4"          # 4 vCPU / 16 GB
-depot-8     = "depot-ubuntu-24.04-8"          # 8 vCPU / 32 GB
-namespace-4 = "namespace-profile-buildkit-4c" # 4 vCPU / 16 GB, Docker "No caching", no volumes
-namespace-8 = "namespace-profile-buildkit-8c" # 8 vCPU / 16 GB, Docker "No caching", no volumes
-local       = "local"
-```
+`runners.toml` maps keys to labels:
+
+| Key | Label | Size |
+| --- | --- | --- |
+| `github` | `ubuntu-latest` | GitHub standard |
+| `github-arm` | `ubuntu-24.04-arm` | GitHub standard |
+| `macos` | `macos-26` | GitHub standard |
+| `depot-4` | `depot-ubuntu-24.04-4` | 4 vCPU / 16 GB |
+| `depot-8` | `depot-ubuntu-24.04-8` | 8 vCPU / 32 GB |
+| `namespace-4` | `namespace-profile-buildkit-4c` | 4 vCPU / 16 GB, Docker "No caching", no volumes |
+| `namespace-8` | `namespace-profile-buildkit-8c` | 8 vCPU / 16 GB, Docker "No caching", no volumes |
+| `local` | `local` | a laptop or container |
 
 - PostHog runner comparison: both BoringCache Docker lanes on `github`,
   `depot-4/8` and `namespace-4/8`, against `depot-builder` and `gha` on `github`.

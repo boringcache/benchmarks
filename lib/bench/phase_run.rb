@@ -49,10 +49,8 @@ module Bench
       end
 
       def product_command
-        output, status = Open3.capture2("boringcache", kase.tool.name, "--dry-run", "--json", chdir: plan_dir)
-        raise Error, "#{kase.id}: boringcache #{kase.tool.name} --dry-run failed" unless status.success?
-
-        JSON.parse(output).fetch("command")
+        TomlRB.load_file(File.join(plan_dir, ".boringcache.toml")).dig("adapters", kase.tool.name, "command") or
+          raise Error, "#{kase.id}: #{lane.plan_dir}/.boringcache.toml has no [adapters.#{kase.tool.name}].command"
       end
 
       def execute(env, *command)

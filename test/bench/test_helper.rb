@@ -7,10 +7,6 @@ module BenchFixture
     #!/usr/bin/env bash
     if [ "$1" = "--version" ]; then echo "boringcache 9.9.9"; exit 0; fi
     tool="$1"; shift
-    if [ "$1" = "--dry-run" ]; then
-      echo '{"command":["bash","-c","echo \\"$DEMO_CACHE\\" > upstream/out.txt"]}'
-      exit 0
-    fi
     echo "$tool $*" >> "$STUB_LOG"
     touch "$BORINGCACHE_OBSERVABILITY_JSONL_PATH"
     echo boringcache > upstream/out.txt
@@ -40,7 +36,7 @@ module BenchFixture
       workspace = "boringcache/benchmarks"
       [adapters.demo]
       tag = "demo-app"
-      command = ["make"]
+      command = ["bash", "-c", "echo \\"$DEMO_CACHE\\" > upstream/out.txt"]
       [entries.deps]
       tag = "demo-deps"
       path = "upstream/deps"

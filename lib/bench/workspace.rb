@@ -3,8 +3,9 @@ module Bench
     attr_reader :kase, :scope, :dir
 
     def self.scope_plan(plan, scope)
-      plan.values_at("adapters", "entries").compact.flat_map(&:values).each do |table|
-        table["tag"] = "#{table["tag"]}-#{scope}" if table.is_a?(Hash) && table["tag"]
+      plan.values_at("adapters", "entries").compact.flat_map(&:values).grep(Hash).each do |table|
+        table["tag"] = "#{table["tag"]}-#{scope}" if table["tag"]
+        table["tool-cache"] = table["tool-cache"].map { it.include?(":") ? "#{it}-#{scope}" : it } if table["tool-cache"]
       end
       plan
     end
