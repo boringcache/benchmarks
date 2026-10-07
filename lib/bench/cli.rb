@@ -90,7 +90,15 @@ module Bench
         kase, lane = case_and_lane(options)
         record = PhaseRun.resume(kase, lane, work_root: options[:work], results_dir: options[:results]).record(exit_status)
         summarize(kase, lane, record)
-        exit_status.zero? ? 0 : 1
+        annotate_failure(kase, lane, record)
+        0
+      end
+
+      def annotate_failure(kase, lane, record)
+        return if record["exit_status"].zero? && record["output_ok"] != false
+        return unless ENV["GITHUB_ACTIONS"] == "true"
+
+        @out.puts "::warning title=#{kase.id} #{lane.name} #{record["phase"]}::exit_status=#{record["exit_status"]} output_ok=#{record["output_ok"].inspect}"
       end
 
       def probe

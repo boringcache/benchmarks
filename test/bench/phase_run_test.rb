@@ -74,6 +74,21 @@ class PhaseRunTest < Minitest::Test
     assert_equal "demo/app boringcache-demo rolling: no upstream commit after the last step\n", out.string
   end
 
+  def test_a_failed_build_is_recorded_softly_with_a_warning_on_actions
+    out = StringIO.new
+    with_fixture_env do
+      ENV["GITHUB_ACTIONS"] = "true"
+      assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r12")
+      assert_equal 0, cli("start", "demo/app", "--lane", "remote")
+      assert_equal 0, cli("record", "demo/app", "--lane", "remote", "--exit-status", "1", out:)
+    ensure
+      ENV.delete("GITHUB_ACTIONS")
+    end
+
+    assert_includes out.string, "::warning title=demo/app remote cold::exit_status=1 output_ok=false"
+    assert_equal 1, record("remote-local-r12", "remote-local-cold")["exit_status"]
+  end
+
   def test_actions_steps_prepare_start_build_and_record_across_processes
     outputs = File.join(@root, "github_output")
     exported = File.join(@root, "github_env")
