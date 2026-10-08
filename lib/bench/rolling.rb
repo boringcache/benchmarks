@@ -28,7 +28,7 @@ module Bench
 
       def fresh_scope(lane, runner)
         records(File.join("#{lane.name}-#{runner}-*", "#{lane.name}-#{runner}-cold*.json"))
-          .select { it["exit_status"] == 0 && it["output_ok"] == true }
+          .select { it["exit_status"] == 0 && it["output_ok"] == true && it["sha"] == @kase.start_sha }
           .max_by { it["scope"].to_s[/\d+\z/].to_i }&.fetch("scope")
       end
 

@@ -161,9 +161,10 @@ module Bench
       def export_to_github(kase, lane, phase_run)
         outputs = { "ready" => (!phase_run.nil?).to_s }
         if phase_run
-          restore_key = "#{kase.id.tr("/", "-")}-#{phase_run.cache_scope}"
+          base_key = "#{kase.id.tr("/", "-")}-#{phase_run.cache_scope}"
+          restore_keys = phase_run.phase == ROLLING ? ["#{base_key}-", base_key] : [base_key]
           outputs.merge!("tool" => kase.tool.name, "provider" => lane.provider, "build_dir" => phase_run.build_dir,
-                         "restore_key" => restore_key, "cache_key" => [restore_key, phase_run.step].compact.join("-"),
+                         "restore_key" => restore_keys.join("\n"), "cache_key" => [base_key, phase_run.step].compact.join("-"),
                          "cache_paths" => phase_run.cache_paths.join("\n"), "setup" => lane.setup.join(" "), "boringcache_version" => @catalog.versions.fetch("boringcache"))
           File.open(ENV.fetch("GITHUB_ENV"), "a") { |file| phase_run.exported_env.each { |key, value| file.puts "#{key}=#{value}" } }
         end

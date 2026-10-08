@@ -162,6 +162,7 @@ module Bench
           "step" => step,
           "scope" => scope,
           "cache_scope" => cache_scope,
+          "cache_seeded" => (cache_scope != scope if phase == "rolling"),
           "repo" => kase.repo,
           "sha" => sha,
           "seconds" => seconds,

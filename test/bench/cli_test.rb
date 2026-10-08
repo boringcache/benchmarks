@@ -26,8 +26,9 @@ class CLITest < Minitest::Test
   end
 
   def test_rolling_matrix_continues_each_lanes_latest_passing_fresh_cache
-    write "tmp/results/demo/app/remote-github-r1/remote-github-cold.json", JSON.generate("scope" => "remote-github-r1", "exit_status" => 0, "output_ok" => true)
-    write "tmp/results/demo/app/remote-github-r2/remote-github-cold.json", JSON.generate("scope" => "remote-github-r2", "exit_status" => 1, "output_ok" => false)
+    write "tmp/results/demo/app/remote-github-r1/remote-github-cold.json", JSON.generate("scope" => "remote-github-r1", "sha" => @upstream_sha, "exit_status" => 0, "output_ok" => true)
+    write "tmp/results/demo/app/remote-github-r2/remote-github-cold.json", JSON.generate("scope" => "remote-github-r2", "sha" => @upstream_sha, "exit_status" => 1, "output_ok" => false)
+    write "tmp/results/demo/app/remote-github-r3/remote-github-cold.json", JSON.generate("scope" => "remote-github-r3", "sha" => "f" * 40, "exit_status" => 0, "output_ok" => true)
 
     scopes = matrix("app", "--rolling").to_h { [it["lane"], it["cache_scope"]] }
     assert_equal({ "boringcache-demo" => "boringcache-demo-github-rolling", "remote" => "remote-github-r1", "gha" => "gha-github-rolling" }, scopes)
