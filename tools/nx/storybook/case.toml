@@ -15,3 +15,4 @@ YARN_GLOBAL_FOLDER = "${BENCH_DIR}/.yarn-global"
 boringcache-nx = ["github", "local"]
 gha = ["github"]
 depot-cache = ["github", "local"]
+nx-cloud = ["github"]
