@@ -1,0 +1,36 @@
+{
+  "adapter_command": "xcode",
+  "case": "obs-studio",
+  "lane": "bitrise-sdkroot",
+  "provider": "bitrise",
+  "level": "base",
+  "capabilities": [
+    "compilation-cache"
+  ],
+  "runner": "macos",
+  "runner_label": "macos-26",
+  "machine": "github macos 3c",
+  "phase": "warm",
+  "step": null,
+  "scope": "bitrise-sdkroot-macos-37768474822",
+  "repo": "obsproject/obs-studio",
+  "sha": "a8b04ac5e15115591d8a184701e1670fb5dc00af",
+  "seconds": 13.857,
+  "cache_save_timing": "in-phase",
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Apple M1 (Virtual)",
+      "cores": 3
+    }
+  },
+  "evidence": [],
+  "versions": {
+    "boringcache": null
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37768474822",
+  "attempt": 1,
+  "started_at": "2026-10-08T11:14:22Z"
+}
