@@ -65,7 +65,7 @@ class ReportTest < Minitest::Test
     record "a.json", seconds: 5.0, exit_status: 2, output_ok: false
 
     assert_includes Bench::Report.new(@dir).markdown,
-                    "| docker | posthog | gha | base | github | cold | - | aaaaaaaaaaaa | 1.40.1 | 1 | post-job | github 4c | AMD EPYC 7763 | 4 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured |"
+                    "| docker | posthog | gha | base | github | cold | - | aaaaaaaaaaaa | 1.40.1 | 1 | - | post-job | github 4c | AMD EPYC 7763 | 4 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured |"
   end
 
   private

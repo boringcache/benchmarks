@@ -70,6 +70,7 @@ class PhaseRunTest < Minitest::Test
 
     steps = Dir[File.join(@root, "tmp/results/demo/app/boringcache-demo-local-rolling/*.json")].map { JSON.parse(File.read(it)) }
     assert_equal [[0, @upstream_sha], [1, second], [2, third]], steps.sort_by { it["step"] }.map { it.values_at("step", "sha") }
+    assert_equal [false], steps.map { it["cache_seeded"] }.uniq
     assert_equal ["demo "] * 3, File.readlines(File.join(@root, "stub.log"), chomp: true)
     assert_equal "demo/app boringcache-demo rolling: no upstream commit after the last step\n", out.string
   end
@@ -114,7 +115,20 @@ class PhaseRunTest < Minitest::Test
     end
 
     rolling = Dir[File.join(@root, "tmp/results/demo/app/boringcache-demo-local-rolling/*.json")].map { JSON.parse(File.read(it)) }
-    assert_equal [[0, "boringcache-demo-local-r20"], [1, "boringcache-demo-local-r20"]], rolling.map { it.values_at("step", "cache_scope") }.sort
+    assert_equal [[0, "boringcache-demo-local-r20", true], [1, "boringcache-demo-local-r20", true]],
+                 rolling.map { it.values_at("step", "cache_scope", "cache_seeded") }.sort
+  end
+
+  def test_rolling_restores_the_newest_rolling_cache_before_the_fresh_seed
+    outputs = File.join(@root, "github_output")
+    with_fixture_env do
+      ENV.update("GITHUB_OUTPUT" => outputs, "GITHUB_ENV" => File.join(@root, "github_env"))
+      assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "rolling", "--sha", @upstream_sha, "--step", "3",
+                          "--cache-scope", "remote-local-r30", "--github")
+    end
+
+    assert_includes File.read(outputs), "restore_key<<BENCH_EOF\ndemo-app-remote-local-r30-\ndemo-app-remote-local-r30\nBENCH_EOF"
+    assert_includes File.read(outputs), "cache_key<<BENCH_EOF\ndemo-app-remote-local-r30-3\nBENCH_EOF"
   end
 
   def test_rolling_records_from_separate_dispatches_of_one_step_do_not_collide
