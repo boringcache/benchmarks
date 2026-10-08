@@ -16,6 +16,11 @@ on:
         type: choice
         options: [fresh, rolling, preflight]
         default: fresh
+      lane:
+        description: only these lanes, space separated (optional, for debugging one lane)
+        type: string
+        required: false
+        default: ""
 
 run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}
 
@@ -43,11 +48,12 @@ jobs:
           TOOL: ${{ inputs.tool }}
           PROJECT: ${{ inputs.project }}
           ROLLING: ${{ inputs.mode == 'rolling' && 'true' || '' }}
+          LANE: ${{ inputs.lane }}
         run: |
           git fetch --quiet --depth=1 origin main
           rm -rf results
           if git cat-file -e FETCH_HEAD:results 2>/dev/null; then git checkout FETCH_HEAD -- results; fi
-          echo "matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} --results results)" >> "$GITHUB_OUTPUT"
+          echo "matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${LANE:+--lane "$LANE"} --results results)" >> "$GITHUB_OUTPUT"
 
   cold:
     needs: plan
