@@ -21,6 +21,10 @@ module Bench
       pinned(lane, runner) || fresh_scope(lane, runner) || self.class.scope(lane, runner)
     end
 
+    def continues?(lane, runner)
+      records(File.join(self.class.scope(lane, runner), "*.json")).any?
+    end
+
     private
       def pinned(lane, runner)
         records(File.join(self.class.scope(lane, runner), "*.json")).filter_map { it["cache_scope"] }.first

@@ -27,6 +27,9 @@ inputs:
   cli-release:
     required: false
     default: ""
+  continues:
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -119,7 +122,8 @@ runs:
         SHA: ${{ inputs.sha }}
         STEP: ${{ inputs.step }}
         CACHE_SCOPE: ${{ inputs.cache-scope }}
-      run: bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" ${SHA:+--sha "$SHA" --step "$STEP"} ${CACHE_SCOPE:+--cache-scope "$CACHE_SCOPE"} --github
+        CONTINUES: ${{ inputs.continues }}
+      run: bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" ${SHA:+--sha "$SHA" --step "$STEP"} ${CACHE_SCOPE:+--cache-scope "$CACHE_SCOPE"} ${CONTINUES:+--continues} --github
 
     - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache'
       shell: bash
@@ -179,21 +183,24 @@ runs:
       shell: bash
       run: bundle exec bin/bench probe "$BENCH_CASE" --lane "$BENCH_LANE" --run-id "$BENCH_RUN_ID"
 
-    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != ''
+    - id: actions-cache-restore
+      if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != ''
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ steps.prepare.outputs.cache_paths }}
         key: ${{ steps.prepare.outputs.cache_key }}
         restore-keys: ${{ steps.prepare.outputs.restore_key }}
 
-    - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance') && inputs.phase != 'warm'
+    - id: dance-cache
+      if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance') && inputs.phase != 'warm'
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ runner.temp }}/cache-dance
         key: ${{ steps.prepare.outputs.cache_key }}
         restore-keys: ${{ steps.prepare.outputs.restore_key }}
 
-    - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance') && inputs.phase == 'warm'
+    - id: dance-restore
+      if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance') && inputs.phase == 'warm'
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ runner.temp }}/cache-dance
@@ -232,6 +239,7 @@ runs:
       shell: bash
       env:
         BUILD_FAILED: ${{ steps.build.outcome == 'failure' }}
+        BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-cache.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
       run: bundle exec bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
 
     - if: always() && steps.prepare.outputs.ready == 'true'

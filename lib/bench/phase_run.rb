@@ -168,6 +168,7 @@ module Bench
           "scope" => scope,
           "cache_scope" => cache_scope,
           "cache_seeded" => (cache_scope != scope if phase == "rolling"),
+          "cache_restored_key" => (@env["BENCH_CACHE_RESTORED_KEY"] unless @env["BENCH_CACHE_RESTORED_KEY"].to_s.empty?),
           "repo" => kase.repo,
           "sha" => sha,
           "seconds" => seconds,
