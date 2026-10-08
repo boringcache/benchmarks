@@ -12,6 +12,8 @@ on:
       - "*.toml"
       - "Gemfile*"
       - ".github/workflows/**"
+      - ".github/actions/**"
+      - "scripts/**"
 
 permissions:
   contents: read
