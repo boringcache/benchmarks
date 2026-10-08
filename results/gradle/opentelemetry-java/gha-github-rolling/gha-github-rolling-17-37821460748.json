@@ -1,0 +1,36 @@
+{
+  "adapter_command": "gradle",
+  "case": "opentelemetry-java",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "build-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 17,
+  "scope": "gha-github-rolling",
+  "cache_scope": "gha-github-37761401237",
+  "cache_seeded": true,
+  "repo": "open-telemetry/opentelemetry-java",
+  "sha": "cc4f5f22aed0d69369941cde8029e73507cf438f",
+  "seconds": 624.617,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) 6973P-C",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37821460748",
+  "attempt": 1,
+  "started_at": "2026-10-08T18:05:26Z"
+}
