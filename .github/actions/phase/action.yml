@@ -186,6 +186,29 @@ runs:
         key: ${{ steps.prepare.outputs.cache_key }}
         restore-keys: ${{ steps.prepare.outputs.restore_key }}
 
+    - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance') && inputs.phase != 'warm'
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ runner.temp }}/cache-dance
+        key: ${{ steps.prepare.outputs.cache_key }}
+        restore-keys: ${{ steps.prepare.outputs.restore_key }}
+
+    - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance') && inputs.phase == 'warm'
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ runner.temp }}/cache-dance
+        key: ${{ steps.prepare.outputs.cache_key }}
+        restore-keys: ${{ steps.prepare.outputs.restore_key }}
+
+    - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance')
+      uses: reproducible-containers/buildkit-cache-dance@2925f5cfd92896e0f5a155899ff2ed2922b575c6 # v3.4.0
+      with:
+        dockerfile: ${{ steps.prepare.outputs.dockerfile }}
+        cache-dir: ${{ runner.temp }}/cache-dance
+        scratch-dir: ${{ runner.temp }}/cache-dance-scratch
+        skip-extraction: ${{ inputs.phase == 'warm' }}
+        utility-image: ghcr.io/containerd/busybox@sha256:52f73a0a43a16cf37cd0720c90887ce972fe60ee06a687ee71fb93a7ca601df7
+
     - id: build
       if: steps.prepare.outputs.ready == 'true'
       continue-on-error: true

@@ -197,6 +197,25 @@ class PhaseRunTest < Minitest::Test
     assert_equal [0, true, @upstream_sha], record("remote-local-r6", "remote-local-cold").values_at("exit_status", "output_ok", "sha")
   end
 
+  def test_prepare_exports_the_plan_dockerfile_for_cache_mount_lanes
+    write "tools/demo/app/.boringcache.toml", <<~TOML
+      workspace = "boringcache/benchmarks"
+      [adapters.demo]
+      tag = "demo-app"
+      command = ["docker", "buildx", "build", "--file", "overlay/app.Dockerfile", "upstream"]
+    TOML
+    outputs = File.join(@root, "github_output")
+    with_fixture_env do
+      ENV.update("GITHUB_OUTPUT" => outputs, "GITHUB_ENV" => File.join(@root, "github_env"))
+      assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r7", "--github")
+    ensure
+      ENV.delete("GITHUB_OUTPUT")
+      ENV.delete("GITHUB_ENV")
+    end
+
+    assert_match %r{dockerfile<<BENCH_EOF\n/\S+/\.work/demo/app/\S*overlay/app\.Dockerfile\nBENCH_EOF}, File.read(outputs)
+  end
+
   def test_actions_only_lane_is_skipped_locally
     out = StringIO.new
     assert_equal 0, Bench::CLI.new(%w[run demo/app --lane gha], catalog:, out:).call
