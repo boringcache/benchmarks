@@ -65,7 +65,7 @@ class ReportTest < Minitest::Test
     record "a.json", seconds: 5.0, exit_status: 2, output_ok: false
 
     assert_includes Bench::Report.new(@dir).markdown,
-                    "| docker | posthog | gha | base | github | cold | - | aaaaaaaaaaaa | 1.40.1 | 1 | post-job | AMD EPYC 7763 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured |"
+                    "| docker | posthog | gha | base | github | cold | - | aaaaaaaaaaaa | 1.40.1 | 1 | post-job | github 4c | AMD EPYC 7763 | 4 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured |"
   end
 
   private
@@ -74,7 +74,7 @@ class ReportTest < Minitest::Test
       File.write(File.join(@dir, name), JSON.generate(
         "adapter_command" => "docker", "case" => "posthog", "lane" => "gha", "level" => "base", "runner" => "github",
         "phase" => phase, "step" => step, "scope" => scope, "sha" => sha, "seconds" => seconds, "attempt" => attempt,
-        "exit_status" => exit_status, "output_ok" => output_ok, "cache_save_timing" => save,
+        "exit_status" => exit_status, "output_ok" => output_ok, "cache_save_timing" => save, "machine" => "github 4c",
         "observed" => { "machine" => { "cpu" => cpu, "cores" => 4 } }, "versions" => { "boringcache" => boringcache }
       ))
     end
