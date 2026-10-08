@@ -74,7 +74,7 @@ module Bench
 
         records = phases.filter_map { phase_run(kase, lane, it, options)&.call }
         records.each { summarize(kase, lane, it) }
-        records.all? { it["exit_status"].zero? } ? 0 : 1
+        records.any? { failed?(it) } ? 1 : 0
       end
 
       def prepare
@@ -92,15 +92,14 @@ module Bench
         kase, lane = case_and_lane(options)
         record = PhaseRun.resume(kase, lane, work_root: options[:work], results_dir: options[:results]).record(exit_status)
         summarize(kase, lane, record)
-        annotate_failure(kase, lane, record)
-        0
+        return 0 unless failed?(record)
+
+        @out.puts "::error title=#{kase.id} #{lane.name} #{record["phase"]}::exit_status=#{record["exit_status"]} output_ok=#{record["output_ok"].inspect}" if ENV["GITHUB_ACTIONS"] == "true"
+        1
       end
 
-      def annotate_failure(kase, lane, record)
-        return if record["exit_status"].zero? && record["output_ok"] != false
-        return unless ENV["GITHUB_ACTIONS"] == "true"
-
-        @out.puts "::warning title=#{kase.id} #{lane.name} #{record["phase"]}::exit_status=#{record["exit_status"]} output_ok=#{record["output_ok"].inspect}"
+      def failed?(record)
+        record["exit_status"].nonzero? || record["output_ok"] == false
       end
 
       def probe
