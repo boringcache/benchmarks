@@ -148,6 +148,12 @@ runs:
       shell: bash
       run: bundle exec bin/bench start "$BENCH_CASE" --lane "$BENCH_LANE"
 
+    - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'kache')
+      shell: bash
+      env:
+        BUILD_DIR: ${{ steps.prepare.outputs.build_dir }}
+      run: mkdir -p .kache-lock && cp "$BUILD_DIR/Cargo.lock" .kache-lock/Cargo.lock
+
     - if: (steps.prepare.outputs.ready == 'true' || inputs.phase == 'preflight') && contains(inputs.setup, 'kache')
       uses: kunobi-ninja/kache-action@ad7317540dcdd71c904f7a60a87b620a0c0e67ed # v1
       with:
