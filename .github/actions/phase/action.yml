@@ -91,16 +91,6 @@ runs:
         authToken: ${{ env.CACHIX_AUTH_TOKEN }}
         skipPush: true
 
-    - if: contains(inputs.setup, 'bitrise')
-      shell: bash
-      run: |
-        mkdir -p "$HOME/.local/bin"
-        curl --fail --silent --show-error --location --retry 5 \
-          https://raw.githubusercontent.com/bitrise-io/bitrise-build-cache-cli/a18bb60cc4b3b1c1eb0e2e016c6fc7599993a518/install/installer.sh |
-          sh -s -- -b "$HOME/.local/bin" v3.17.2
-        echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-        echo "$HOME/.bitrise-xcelerate/bin" >> "$GITHUB_PATH"
-
     - if: contains(inputs.setup, 'nativelink')
       shell: bash
       run: ruby scripts/nativelink.rb
