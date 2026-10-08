@@ -86,19 +86,27 @@ class PhaseRunTest < Minitest::Test
     assert_equal [5, second], record("remote-local-rolling", "remote-local-rolling-5").values_at("step", "sha")
   end
 
-  def test_a_failed_build_is_recorded_softly_with_a_warning_on_actions
+  def test_a_failed_build_is_recorded_then_fails_the_step_on_actions
     out = StringIO.new
     with_fixture_env do
       ENV["GITHUB_ACTIONS"] = "true"
       assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r12")
       assert_equal 0, cli("start", "demo/app", "--lane", "remote")
-      assert_equal 0, cli("record", "demo/app", "--lane", "remote", "--exit-status", "1", out:)
+      assert_equal 1, cli("record", "demo/app", "--lane", "remote", "--exit-status", "1", out:)
     ensure
       ENV.delete("GITHUB_ACTIONS")
     end
 
-    assert_includes out.string, "::warning title=demo/app remote cold::exit_status=1 output_ok=false"
+    assert_includes out.string, "::error title=demo/app remote cold::exit_status=1 output_ok=false"
     assert_equal 1, record("remote-local-r12", "remote-local-cold")["exit_status"]
+  end
+
+  def test_a_failed_output_check_fails_the_run
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub(/^check = .*$/, %(check = "false"))
+
+    with_fixture_env { assert_equal 1, cli("run", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r13") }
+
+    assert_equal [0, false], record("remote-local-r13", "remote-local-cold").values_at("exit_status", "output_ok")
   end
 
   def test_actions_steps_prepare_start_build_and_record_across_processes
