@@ -2,6 +2,6 @@
   "name": "boringcache-benchmarks",
   "private": true,
   "devDependencies": {
-    "nx": "22.6.1"
+    "nx": "22.7.10"
   }
 }
