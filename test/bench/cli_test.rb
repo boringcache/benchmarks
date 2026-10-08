@@ -32,6 +32,12 @@ class CLITest < Minitest::Test
     assert_equal 3, matrix("app", "--tool", "demo").size
   end
 
+  def test_a_remote_builder_lane_is_labelled_with_its_builder_not_the_runner
+    write "tools/demo/lanes/remote.toml", %(provider = "remote"\nlevel = "base"\nmachine = "remote builder"\n)
+
+    assert_equal "remote builder", matrix("app", "--lane", "remote").first["label"]
+  end
+
   def test_matrix_filters_by_lane
     assert_equal ["remote"], matrix("app", "--lane", "remote").map { it["lane"] }
     assert_equal ["boringcache-demo", "gha"], matrix("app", "--lane", "boringcache-demo gha").map { it["lane"] }
