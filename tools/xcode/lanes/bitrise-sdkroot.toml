@@ -5,7 +5,7 @@ runners = ["macos"]
 secrets = ["BITRISE_BUILD_CACHE_AUTH_TOKEN", "BITRISE_BUILD_CACHE_WORKSPACE_ID"]
 setup = ["bitrise"]
 probe = ["bitrise-build-cache activate xcode --cache --cache-push=false && bitrise-build-cache doctor && xcrun --sdk macosx --show-sdk-path"]
-wrap = ["bash", "-c", "SDKROOT=\"$(xcrun --sdk macosx --show-sdk-path)\" exec \"$@\"", "sdkroot"]
+wrap = ["bash", "-c", "echo \"xcrun on PATH: $(command -v xcrun) -> $(xcrun --sdk macosx --show-sdk-path 2>&1 | tr '\\n' ' ')\"; export SDKROOT=\"$(/usr/bin/xcrun --sdk macosx --show-sdk-path)\" && printenv SDKROOT && exec \"$@\"", "sdkroot"]
 
 [cold]
 prepare = ["bitrise-build-cache activate xcode --cache --cache-push=true"]
