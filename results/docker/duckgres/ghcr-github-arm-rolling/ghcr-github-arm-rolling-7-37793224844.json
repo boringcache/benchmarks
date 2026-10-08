@@ -1,0 +1,49 @@
+{
+  "adapter_command": "docker",
+  "case": "duckgres",
+  "lane": "ghcr",
+  "provider": "github-container-registry",
+  "level": "base",
+  "capabilities": [
+    "layers"
+  ],
+  "runner": "github-arm",
+  "runner_label": "ubuntu-24.04-arm",
+  "machine": "github arm 4c",
+  "phase": "rolling",
+  "step": 7,
+  "scope": "ghcr-github-arm-rolling",
+  "cache_scope": "ghcr-github-arm-37761365760",
+  "cache_seeded": true,
+  "repo": "PostHog/duckgres",
+  "sha": "551a9747d88036db31f1f1cf835e5c61c28757c0",
+  "seconds": 207.134,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Neoverse-N2",
+      "cores": 4
+    },
+    "image_platform": "linux/arm64",
+    "buildx_builder": {
+      "name": "builder-586ab4b1-ac45-4a7f-9cef-1c1c2a02b93b",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-586ab4b1-ac45-4a7f-9cef-1c1c2a02b93b0",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {
+    "boringcache": null
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37793224844",
+  "attempt": 1,
+  "started_at": "2026-10-08T14:32:56Z"
+}
