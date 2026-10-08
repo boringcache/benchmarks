@@ -1,0 +1,36 @@
+{
+  "adapter_command": "buck2",
+  "case": "buck2-prelude",
+  "lane": "nativelink",
+  "provider": "nativelink",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 19,
+  "scope": "nativelink-github-rolling",
+  "cache_scope": "nativelink-github-37767350279",
+  "cache_seeded": true,
+  "repo": "facebook/buck2",
+  "sha": "764d608123cbec1ccdcd1f234b5f8623dcef8fec",
+  "seconds": 4.404,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37819315476",
+  "attempt": 1,
+  "started_at": "2026-10-08T17:48:54Z"
+}
