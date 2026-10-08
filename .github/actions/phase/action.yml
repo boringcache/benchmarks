@@ -21,6 +21,9 @@ inputs:
   step:
     required: false
     default: ""
+  cache-scope:
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -112,7 +115,8 @@ runs:
       env:
         SHA: ${{ inputs.sha }}
         STEP: ${{ inputs.step }}
-      run: bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" ${SHA:+--sha "$SHA" --step "$STEP"} --github
+        CACHE_SCOPE: ${{ inputs.cache-scope }}
+      run: bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" ${SHA:+--sha "$SHA" --step "$STEP"} ${CACHE_SCOPE:+--cache-scope "$CACHE_SCOPE"} --github
 
     - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache'
       shell: bash

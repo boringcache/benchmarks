@@ -4,20 +4,21 @@ module Bench
 
     STATE = ".bench-state.json"
 
-    attr_reader :kase, :lane, :phase, :runner, :scope, :sha, :step
+    attr_reader :kase, :lane, :phase, :runner, :scope, :cache_scope, :sha, :step
 
     def self.resume(kase, lane, work_root:, results_dir:, env: ENV)
       state = JSON.parse(File.read(File.join(work_root, kase.tool.name, kase.name, STATE)))
-      new(kase, lane, phase: state["phase"], runner: state["runner"], scope: state["scope"], sha: state["sha"], step: state["step"],
-                      work_root:, results_dir:, env:)
+      new(kase, lane, phase: state["phase"], runner: state["runner"], scope: state["scope"], cache_scope: state["cache_scope"],
+                      sha: state["sha"], step: state["step"], work_root:, results_dir:, env:)
     end
 
-    def initialize(kase, lane, phase:, runner:, scope:, work_root:, results_dir:, sha: kase.start_sha, step: nil, env: ENV)
+    def initialize(kase, lane, phase:, runner:, scope:, work_root:, results_dir:, cache_scope: nil, sha: kase.start_sha, step: nil, env: ENV)
       @kase = kase
       @lane = lane
       @phase = phase
       @runner = runner
       @scope = scope
+      @cache_scope = cache_scope || scope
       @work_root = work_root
       @results_dir = results_dir
       @sha = sha
@@ -90,7 +91,7 @@ module Bench
       end
 
       def workspace
-        @workspace ||= Workspace.new(kase, lane:, scope:, root: @work_root)
+        @workspace ||= Workspace.new(kase, lane:, scope: cache_scope, root: @work_root)
       end
 
       def state
@@ -98,7 +99,7 @@ module Bench
       end
 
       def save_state(extra = {})
-        @state = { "phase" => phase, "runner" => runner, "scope" => scope, "sha" => sha, "step" => step, **extra }
+        @state = { "phase" => phase, "runner" => runner, "scope" => scope, "cache_scope" => cache_scope, "sha" => sha, "step" => step, **extra }
         File.write(state_path, JSON.generate(@state))
       end
 
@@ -126,7 +127,7 @@ module Bench
 
       def environment
         @environment ||= begin
-          base = @env.to_h.merge(kase.tool.catalog.runner_env(runner), "BENCH_ROOT" => kase.tool.catalog.root, "BENCH_CASE" => kase.id, "BENCH_DIR" => workspace.dir, "BENCH_SCOPE" => "#{kase.tool.name}-#{kase.name}-#{scope}")
+          base = @env.to_h.merge(kase.tool.catalog.runner_env(runner), "BENCH_ROOT" => kase.tool.catalog.root, "BENCH_CASE" => kase.id, "BENCH_DIR" => workspace.dir, "BENCH_SCOPE" => "#{kase.tool.name}-#{kase.name}-#{cache_scope}")
           shared = base.merge(kase.env(base))
           shared.merge(lane.boringcache? ? { "BORINGCACHE_OBSERVABILITY_JSONL_PATH" => evidence_path } : lane.env(phase, shared))
         end
@@ -160,6 +161,7 @@ module Bench
           "phase" => phase,
           "step" => step,
           "scope" => scope,
+          "cache_scope" => cache_scope,
           "repo" => kase.repo,
           "sha" => sha,
           "seconds" => seconds,

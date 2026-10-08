@@ -125,8 +125,9 @@ module Bench
         options = parse(defaults.except(:runner))
         cases = @catalog.project_cases(@argv.first || raise(Error, "matrix needs <project> or <tool>/<case>"), tool: options[:tool])
         entries = cases.flat_map do |kase|
-          position = options[:rolling] ? Rolling.new(kase, results_dir: options[:results], work_root: options[:work]).next_step : []
-          next [] if options[:rolling] && position.nil?
+          rolling = Rolling.new(kase, results_dir: options[:results], work_root: options[:work]) if options[:rolling]
+          position = rolling ? rolling.next_step : []
+          next [] if rolling && position.nil?
 
           step, sha = position
           kase.runs.flat_map do |lane_name, runners|
@@ -134,7 +135,7 @@ module Bench
             Array(runners).reject { it == "local" }.map do |runner|
               { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets, "setup" => lane.setup.join(" "),
                 "label" => [(kase.name unless kase.name == kase.project), lane.machine || @catalog.runner_machine(runner), (lane.label unless lane.machine)].compact.join(" · "),
-                "step" => step&.to_s || "", "sha" => sha || "" }
+                "step" => step&.to_s || "", "sha" => sha || "", "cache_scope" => rolling&.cache_scope(lane, runner) || "" }
             end
           end
         end
@@ -148,8 +149,10 @@ module Bench
         common = { phase:, runner: options[:runner], work_root: options[:work], results_dir: options[:results] }
         return PhaseRun.new(kase, lane, scope: "#{lane.name}-#{options[:runner]}-#{options[:run_id]}", **common) unless phase == ROLLING
 
-        step, sha = options[:sha] ? [Integer(options[:step]), options[:sha]] : Rolling.new(kase, results_dir: options[:results], work_root: options[:work]).next_step
-        return PhaseRun.new(kase, lane, scope: Rolling.scope(lane, options[:runner]), sha:, step:, **common) if sha
+        rolling = Rolling.new(kase, results_dir: options[:results], work_root: options[:work])
+        step, sha = options[:sha] ? [Integer(options[:step]), options[:sha]] : rolling.next_step
+        cache_scope = options[:cache_scope] || rolling.cache_scope(lane, options[:runner])
+        return PhaseRun.new(kase, lane, scope: Rolling.scope(lane, options[:runner]), cache_scope:, sha:, step:, **common) if sha
 
         @out.puts "#{kase.id} #{lane.name} rolling: no upstream commit after the last step"
         nil
@@ -158,7 +161,7 @@ module Bench
       def export_to_github(kase, lane, phase_run)
         outputs = { "ready" => (!phase_run.nil?).to_s }
         if phase_run
-          restore_key = "#{kase.id.tr("/", "-")}-#{phase_run.scope}"
+          restore_key = "#{kase.id.tr("/", "-")}-#{phase_run.cache_scope}"
           outputs.merge!("tool" => kase.tool.name, "provider" => lane.provider, "build_dir" => phase_run.build_dir,
                          "restore_key" => restore_key, "cache_key" => [restore_key, phase_run.step].compact.join("-"),
                          "cache_paths" => phase_run.cache_paths.join("\n"), "setup" => lane.setup.join(" "), "boringcache_version" => @catalog.versions.fetch("boringcache"))
@@ -214,6 +217,7 @@ module Bench
             opts.on("--rolling") { options[:rolling] = true }
             opts.on("--sha SHA") { options[:sha] = it }
             opts.on("--step N") { options[:step] = it }
+            opts.on("--cache-scope SCOPE") { options[:cache_scope] = it }
           end.parse!(@argv)
         end
       end
