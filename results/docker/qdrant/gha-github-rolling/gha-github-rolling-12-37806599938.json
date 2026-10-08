@@ -1,0 +1,49 @@
+{
+  "adapter_command": "docker",
+  "case": "qdrant",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "layers"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 12,
+  "scope": "gha-github-rolling",
+  "cache_scope": "gha-github-37761393538",
+  "cache_seeded": true,
+  "repo": "qdrant/qdrant",
+  "sha": "33d86e394bb643ba0f34d073d10e85d16c03363d",
+  "seconds": 287.698,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V45 96-Core Processor",
+      "cores": 4
+    },
+    "image_platform": "linux/amd64",
+    "buildx_builder": {
+      "name": "builder-79bd0cf1-a390-460d-8024-43c959ccb24d",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-79bd0cf1-a390-460d-8024-43c959ccb24d0",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {
+    "boringcache": null
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37806599938",
+  "attempt": 1,
+  "started_at": "2026-10-08T16:10:52Z"
+}
