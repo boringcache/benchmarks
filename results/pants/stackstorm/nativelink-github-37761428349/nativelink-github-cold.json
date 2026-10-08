@@ -1,0 +1,34 @@
+{
+  "adapter_command": "pants",
+  "case": "stackstorm",
+  "lane": "nativelink",
+  "provider": "nativelink",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "phase": "cold",
+  "step": null,
+  "scope": "nativelink-github-37761428349",
+  "repo": "StackStorm/st2",
+  "sha": "9824de4dfd0c869869e310dee729308f398ad83a",
+  "seconds": 38.144,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {
+    "boringcache": null
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37761428349",
+  "attempt": 1,
+  "started_at": "2026-10-08T10:09:07Z"
+}
