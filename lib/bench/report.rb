@@ -1,7 +1,7 @@
 module Bench
   class Report
-    KEY = %w[adapter_command case lane level runner phase step sha boringcache attempt cache_save_timing cpu].freeze
-    COLUMNS = %w[Tool Case Lane Level Runner Phase Step Commit CLI Attempt Save CPU Samples Failed Seed\ failed Timed\ median\ s Timed\ min\ s Timed\ max\ s].freeze
+    KEY = %w[adapter_command case lane level runner phase step sha boringcache attempt cache_save_timing machine cpu cores].freeze
+    COLUMNS = %w[Tool Case Lane Level Runner Phase Step Commit CLI Attempt Save Machine CPU Cores Samples Failed Seed\ failed Timed\ median\ s Timed\ min\ s Timed\ max\ s].freeze
 
     def initialize(results_dir)
       @results_dir = results_dir
@@ -32,7 +32,8 @@ module Bench
     private
       def key(record)
         [*record.values_at(*%w[adapter_command case lane level runner phase step sha]), record.dig("versions", "boringcache"),
-         [record["attempt"].to_i, 1].max, record["cache_save_timing"], record.dig("observed", "machine", "cpu")]
+         [record["attempt"].to_i, 1].max, record["cache_save_timing"], record["machine"],
+         record.dig("observed", "machine", "cpu"), record.dig("observed", "machine", "cores")]
       end
 
       def row(key, group)
