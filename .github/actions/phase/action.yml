@@ -24,6 +24,9 @@ inputs:
   cache-scope:
     required: false
     default: ""
+  cli-release:
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -121,8 +124,10 @@ runs:
     - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache'
       shell: bash
       env:
-        VERSION: v${{ steps.prepare.outputs.boringcache_version }}
+        VERSION: ${{ inputs.cli-release || format('v{0}', steps.prepare.outputs.boringcache_version) }}
+        CLI_RELEASE: ${{ inputs.cli-release }}
       run: |
+        if [ -n "$CLI_RELEASE" ]; then echo "BENCH_CLI_RELEASE=$CLI_RELEASE" >> "$GITHUB_ENV"; fi
         case "$(uname -s)-$(uname -m)" in
           Linux-x86_64) assets=(boringcache-linux-amd64) ;;
           Linux-aarch64) assets=(boringcache-linux-arm64) ;;

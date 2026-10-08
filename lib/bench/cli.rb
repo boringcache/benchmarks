@@ -12,11 +12,12 @@ module Bench
         bin/bench record <tool>/<case> --lane LANE --exit-status N
         bin/bench probe <tool>/<case> --lane LANE [--runner KEY] [--run-id ID]
         bin/bench label <runner>
-        bin/bench matrix <project|tool/case> [--tool TOOL] [--lane LANES] [--runner KEYS] [--rolling]
+        bin/bench matrix <project|tool/case> [--tool TOOL] [--lane LANES] [--runner KEYS] [--rolling | --cli TAG]
         bin/bench rolling-projects
         bin/bench image
         bin/bench report [--results DIR] [--out DIR]
     TEXT
+    CLI_RELEASE = /\A(v\d+\.\d+\.\d+|vcli-canary-[0-9a-f]{9,40})\z/
 
     def initialize(argv, catalog: Catalog.new, out: $stdout)
       @argv = argv.dup
@@ -123,6 +124,9 @@ module Bench
 
       def matrix
         options = parse(defaults.except(:runner))
+        raise Error, "--cli takes a CLI release tag such as v1.41.0 or vcli-canary-<sha>" if options[:cli] && !options[:cli].match?(CLI_RELEASE)
+        raise Error, "rolling keeps the pinned CLI; use --cli with fresh runs" if options[:cli] && options[:rolling]
+
         cases = @catalog.project_cases(@argv.first || raise(Error, "matrix needs <project> or <tool>/<case>"), tool: options[:tool])
         entries = cases.flat_map do |kase|
           rolling = Rolling.new(kase, results_dir: options[:results], work_root: options[:work]) if options[:rolling]
@@ -219,6 +223,7 @@ module Bench
             opts.on("--sha SHA") { options[:sha] = it }
             opts.on("--step N") { options[:step] = it }
             opts.on("--cache-scope SCOPE") { options[:cache_scope] = it }
+            opts.on("--cli TAG") { options[:cli] = it }
           end.parse!(@argv)
         end
       end

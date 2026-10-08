@@ -34,6 +34,14 @@ This repository benchmarks BoringCache against other cache providers on real pro
 - `schedule.yml` dispatches rolling for every project in `rolling.toml`; the workflow's concurrency group runs one rolling run per project at a time.
 - A failed build or output check is recorded first, then fails its job. A failure in `prepare` leaves no record; that lane continues at the next step.
 
+## Test a CLI canary
+
+`versions.toml` pins the released CLI for every run. To check a fix before release, run a fresh run of the affected lanes with a published canary:
+
+```sh
+gh workflow run project.yml --ref main -f tool=<Tool> -f project=<project> -f mode=fresh -f lane="<lanes>" -f cli=vcli-canary-<sha>
+```
+
 ## Investigate a failure
 
 Classify it before changing anything:
