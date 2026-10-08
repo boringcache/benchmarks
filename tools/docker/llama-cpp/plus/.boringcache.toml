@@ -1,0 +1,16 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+fail-on-cache-error = true
+tag = "llama-cpp-docker"
+no-git = true
+metadata-hints = ["benchmark=llama-cpp", "upstream-job=docker-cuda12-server-amd64"]
+tool-cache = ["ccache:llama-cpp-ccache"]
+command = [
+  "docker", "buildx", "build",
+  "--file", "overlay/llama-cpp-ccache.Dockerfile",
+  "--target", "server",
+  "--tag", "llama-cpp-server-benchmark:local",
+  "--load",
+  "upstream",
+]
