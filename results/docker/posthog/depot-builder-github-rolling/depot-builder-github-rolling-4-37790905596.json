@@ -1,0 +1,39 @@
+{
+  "adapter_command": "docker",
+  "case": "posthog",
+  "lane": "depot-builder",
+  "provider": "depot",
+  "level": "base",
+  "capabilities": [
+    "layers"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "depot builder",
+  "phase": "rolling",
+  "step": 4,
+  "scope": "depot-builder-github-rolling",
+  "cache_scope": "depot-builder-github-37761390054",
+  "cache_seeded": true,
+  "repo": "PostHog/posthog",
+  "sha": "a05d33b5c47d1c92cd98801d3dfd3e5755c49855",
+  "seconds": 426.601,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+      "cores": 4
+    },
+    "image_platform": "linux/amd64"
+  },
+  "evidence": [],
+  "versions": {
+    "boringcache": null
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37790905596",
+  "attempt": 1,
+  "started_at": "2026-10-08T14:16:14Z"
+}
