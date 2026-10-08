@@ -33,4 +33,4 @@ profiles = ["cargo-product"]
 compiler-cache = "sccache"
 no-git = true
 metadata-hints = ["benchmark=zed", "lane=cargo-product"]
-command = ["cargo", "build", "--release", "--locked"]
+command = ["cargo", "build", "--release", "--locked", "--message-format=json-render-diagnostics"]
