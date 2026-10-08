@@ -108,6 +108,7 @@ jobs:
           step: ${{ matrix.step }}
           cache-scope: ${{ matrix.cache_scope }}
           cli-release: ${{ inputs.cli }}
+          continues: ${{ matrix.continues }}
 
   warm:
     needs: [plan, cold]

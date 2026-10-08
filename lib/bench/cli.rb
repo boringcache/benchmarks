@@ -83,7 +83,7 @@ module Bench
         kase, lane = case_and_lane(options)
         phase_run = phase_run(kase, lane, options[:phase] || raise(Error, "prepare needs --phase"), options)
         phase_run&.prepare
-        export_to_github(kase, lane, phase_run) if options[:github]
+        export_to_github(kase, lane, phase_run, continues: options[:continues]) if options[:github]
         0
       end
 
@@ -139,7 +139,7 @@ module Bench
             Array(runners).reject { it == "local" }.map do |runner|
               { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets, "setup" => lane.setup.join(" "),
                 "label" => [(kase.name unless kase.name == kase.project), lane.machine || @catalog.runner_machine(runner), (lane.label unless lane.machine)].compact.join(" · "),
-                "step" => step&.to_s || "", "sha" => sha || "", "cache_scope" => rolling&.cache_scope(lane, runner) || "" }
+                "step" => step&.to_s || "", "sha" => sha || "", "cache_scope" => rolling&.cache_scope(lane, runner) || "", "continues" => rolling&.continues?(lane, runner) ? "true" : "" }
             end
           end
         end
@@ -162,11 +162,11 @@ module Bench
         nil
       end
 
-      def export_to_github(kase, lane, phase_run)
+      def export_to_github(kase, lane, phase_run, continues: false)
         outputs = { "ready" => (!phase_run.nil?).to_s }
         if phase_run
           base_key = "#{kase.id.tr("/", "-")}-#{phase_run.cache_scope}"
-          restore_keys = phase_run.phase == ROLLING ? ["#{base_key}-", base_key] : [base_key]
+          restore_keys = phase_run.phase == ROLLING && continues ? ["#{base_key}-"] : [base_key]
           outputs.merge!("tool" => kase.tool.name, "provider" => lane.provider, "build_dir" => phase_run.build_dir,
                          "restore_key" => restore_keys.join("\n"), "cache_key" => [base_key, phase_run.step].compact.join("-"),
                          "cache_paths" => phase_run.cache_paths.join("\n"), "dockerfile" => phase_run.dockerfile.to_s, "setup" => lane.setup.join(" "), "boringcache_version" => @catalog.versions.fetch("boringcache"))
@@ -224,6 +224,7 @@ module Bench
             opts.on("--step N") { options[:step] = it }
             opts.on("--cache-scope SCOPE") { options[:cache_scope] = it }
             opts.on("--cli TAG") { options[:cli] = it }
+            opts.on("--continues") { options[:continues] = true }
           end.parse!(@argv)
         end
       end
