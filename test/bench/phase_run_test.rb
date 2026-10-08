@@ -101,6 +101,28 @@ class PhaseRunTest < Minitest::Test
     assert_equal 1, record("remote-local-r12", "remote-local-cold")["exit_status"]
   end
 
+  def test_a_retried_attempt_keeps_the_first_attempts_record
+    with_fixture_env do
+      assert_equal 0, cli("run", "demo/app", "--lane", "remote", "--phase", "warm", "--run-id", "r14")
+      ENV["GITHUB_RUN_ATTEMPT"] = "2"
+      assert_equal 0, cli("run", "demo/app", "--lane", "remote", "--phase", "warm", "--run-id", "r14")
+    ensure
+      ENV.delete("GITHUB_RUN_ATTEMPT")
+    end
+
+    assert_nil record("remote-local-r14", "remote-local-warm")["attempt"]
+    assert_equal 2, record("remote-local-r14", "remote-local-warm-attempt-2")["attempt"]
+  end
+
+  def test_records_carry_when_the_lane_saves_its_cache
+    lane = File.join(@root, "tools/demo/lanes/remote.toml")
+    with_fixture_env { cli("run", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r15") }
+    write "tools/demo/lanes/remote.toml", File.read(lane).sub(/^level = .*$/) { "#{it}\ncache_save_timing = \"post-job\"" }
+    with_fixture_env { cli("run", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r16") }
+
+    assert_equal ["in-phase", "post-job"], %w[r15 r16].map { record("remote-local-#{it}", "remote-local-cold")["cache_save_timing"] }
+  end
+
   def test_a_failed_output_check_fails_the_run
     write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub(/^check = .*$/, %(check = "false"))
 

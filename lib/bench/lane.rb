@@ -25,6 +25,10 @@ module Bench
       boringcache? ? ["boringcache", ("plus" if level == "plus")].compact.join(" ") : name
     end
 
+    def machine
+      config["machine"]
+    end
+
     def level
       config["level"]
     end
@@ -43,6 +47,10 @@ module Bench
 
     def paths
       config.fetch("paths", [])
+    end
+
+    def cache_save_timing
+      config.fetch("cache_save_timing", "in-phase")
     end
 
     def setup

@@ -1,5 +1,6 @@
 provider = "mbx"
 level = "plus"
+cache_save_timing = "post-job"
 actions_only = true
 runners = ["github", "namespace-8"]
 setup = ["mbx"]
