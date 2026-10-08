@@ -34,6 +34,18 @@ This repository benchmarks BoringCache against other cache providers on real pro
 - `schedule.yml` dispatches rolling for every project in `rolling.toml`; the workflow's concurrency group runs one rolling run per project at a time.
 - A failed build or output check is recorded first, then fails its job. A failure in `prepare` leaves no record; that lane continues at the next step.
 
+## Test a CLI canary
+
+`versions.toml` pins the released CLI for every run. To check a fix before release, run a fresh run of the affected lanes with a published canary:
+
+```sh
+gh workflow run project.yml --ref main -f tool=<Tool> -f project=<project> -f mode=fresh -f lane="<lanes>" -f cli=vcli-canary-<sha>
+```
+
+- Confirm the canary contains the fix first: `git -C monorepo merge-base --is-ancestor <fix-commit> <canary-sha>`.
+- Canary records carry `versions.boringcache_release`, and the report shows that tag in the CLI column, so they never merge with release rows. Compare them with the release fresh rows at the same commit.
+- Rolling always uses the pinned CLI and never seeds from a canary run. Bump `versions.toml` only after the release is published.
+
 ## Investigate a failure
 
 Classify it before changing anything:

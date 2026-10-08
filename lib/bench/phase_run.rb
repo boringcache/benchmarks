@@ -172,7 +172,7 @@ module Bench
           "provider_reported" => provider_reported,
           "observed" => observed,
           "evidence" => File.exist?(evidence_path) ? [File.basename(evidence_path)] : [],
-          "versions" => { "boringcache" => boringcache_version },
+          "versions" => { "boringcache" => boringcache_version, "boringcache_release" => (@env["BENCH_CLI_RELEASE"] if boringcache_version) }.compact,
           "run_url" => run_url,
           "attempt" => attempt,
           "started_at" => started_at

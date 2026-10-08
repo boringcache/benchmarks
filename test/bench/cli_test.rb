@@ -34,6 +34,21 @@ class CLITest < Minitest::Test
     assert_equal({ "boringcache-demo" => "boringcache-demo-github-rolling", "remote" => "remote-github-r1", "gha" => "gha-github-rolling" }, scopes)
   end
 
+  def test_rolling_matrix_never_seeds_from_a_canary_fresh_run
+    write "tmp/results/demo/app/remote-github-r1/remote-github-cold.json", JSON.generate("scope" => "remote-github-r1", "sha" => @upstream_sha, "exit_status" => 0, "output_ok" => true)
+    write "tmp/results/demo/app/remote-github-r2/remote-github-cold.json", JSON.generate("scope" => "remote-github-r2", "sha" => @upstream_sha, "exit_status" => 0, "output_ok" => true,
+                                                                                       "versions" => { "boringcache" => "1.40.1", "boringcache_release" => "vcli-canary-0123456789ab" })
+
+    assert_equal "remote-github-r1", matrix("app", "--rolling", "--lane", "remote").first["cache_scope"]
+  end
+
+  def test_matrix_takes_a_cli_release_for_fresh_runs_only
+    assert_equal 3, matrix("app", "--cli", "vcli-canary-0123456789ab").size
+    assert_equal 3, matrix("app", "--cli", "v1.41.0").size
+    assert_matrix_refused "app", "--cli", "latest"
+    assert_matrix_refused "app", "--cli", "vcli-canary-0123456789ab", "--rolling"
+  end
+
   def test_matrix_filters_by_tool_case_insensitively
     write "tools/demo/tool.toml", %(name = "Demo Tool"\n[levels]\nbase = ["remote-cache"]\n)
 
@@ -125,5 +140,12 @@ class CLITest < Minitest::Test
       out = StringIO.new
       Bench::CLI.new(["matrix", *argv], catalog:, out:).call
       JSON.parse(out.string)
+    end
+
+    def assert_matrix_refused(*argv)
+      out = StringIO.new
+      _, err = capture_io { assert_equal 1, Bench::CLI.new(["matrix", *argv], catalog:, out:).call }
+      assert_empty out.string
+      assert_match(/--cli/, err)
     end
 end

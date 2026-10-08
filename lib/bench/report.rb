@@ -31,7 +31,7 @@ module Bench
 
     private
       def key(record)
-        [*record.values_at(*%w[adapter_command case lane level runner phase step sha]), record.dig("versions", "boringcache"),
+        [*record.values_at(*%w[adapter_command case lane level runner phase step sha]), record.dig("versions", "boringcache_release") || record.dig("versions", "boringcache"),
          [record["attempt"].to_i, 1].max, record["cache_seeded"], record["cache_save_timing"], record["machine"],
          record.dig("observed", "machine", "cpu"), record.dig("observed", "machine", "cores")]
       end
