@@ -50,18 +50,32 @@ class ReportTest < Minitest::Test
     assert_equal 4, Bench::Report.new(@dir).rows.size
   end
 
+  def test_retries_cpus_and_save_timings_are_reported_separately
+    record "first.json", seconds: 100.0, phase: "rolling", step: 3, attempt: 1
+    record "retry.json", seconds: 5.0, phase: "rolling", step: 3, attempt: 2
+    record "intel.json", seconds: 90.0, phase: "rolling", step: 3, attempt: 1, cpu: "Intel(R) Xeon(R) 6973P-C"
+    record "in-phase.json", seconds: 80.0, phase: "rolling", step: 3, attempt: 1, save: "in-phase"
+
+    rows = Bench::Report.new(@dir).rows
+    assert_equal [5.0, 80.0, 90.0, 100.0], rows.map { it["median_seconds"] }.sort
+    assert_equal [1, 2], rows.map { it["attempt"] }.uniq.sort
+  end
+
   def test_missing_values_are_unmeasured_in_markdown
     record "a.json", seconds: 5.0, exit_status: 2, output_ok: false
 
-    assert_includes Bench::Report.new(@dir).markdown, "| docker | posthog | gha | base | github | cold | unmeasured | aaaaaaaaaaaa | 1.40.1 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured | post-job |"
+    assert_includes Bench::Report.new(@dir).markdown,
+                    "| docker | posthog | gha | base | github | cold | - | aaaaaaaaaaaa | 1.40.1 | 1 | post-job | AMD EPYC 7763 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured |"
   end
 
   private
-    def record(name, seconds:, exit_status: 0, output_ok: true, phase: "cold", scope: "gha-github-1", sha: "a" * 40, step: nil, boringcache: "1.40.1")
+    def record(name, seconds:, exit_status: 0, output_ok: true, phase: "cold", scope: "gha-github-1", sha: "a" * 40, step: nil,
+               boringcache: "1.40.1", attempt: nil, cpu: "AMD EPYC 7763", save: "post-job")
       File.write(File.join(@dir, name), JSON.generate(
         "adapter_command" => "docker", "case" => "posthog", "lane" => "gha", "level" => "base", "runner" => "github",
-        "phase" => phase, "step" => step, "scope" => scope, "sha" => sha, "seconds" => seconds,
-        "exit_status" => exit_status, "output_ok" => output_ok, "cache_save_timing" => "post-job", "versions" => { "boringcache" => boringcache }
+        "phase" => phase, "step" => step, "scope" => scope, "sha" => sha, "seconds" => seconds, "attempt" => attempt,
+        "exit_status" => exit_status, "output_ok" => output_ok, "cache_save_timing" => save,
+        "observed" => { "machine" => { "cpu" => cpu, "cores" => 4 } }, "versions" => { "boringcache" => boringcache }
       ))
     end
 end

@@ -225,7 +225,8 @@ module Bench
 
       def summarize(kase, lane, record)
         @out.puts "#{kase.id} #{lane.name} #{[record["phase"], record["step"]].compact.join(" ")}: " \
-                  "#{record["seconds"]}s exit=#{record["exit_status"]} output_ok=#{record["output_ok"].inspect}"
+                  "#{record["seconds"]}s exit=#{record["exit_status"]} output_ok=#{record["output_ok"].inspect} " \
+                  "machine=#{record["machine"].inspect} cpu=#{record.dig("observed", "machine", "cpu").inspect}"
       end
 
       def skip(kase, lane, runner)

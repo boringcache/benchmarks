@@ -61,7 +61,7 @@ module Bench
     end
 
     def record_path
-      File.join(@results_dir, kase.tool.name, kase.name, scope, "#{[lane.name, runner, phase, step, retry_suffix].compact.join("-")}.json")
+      File.join(@results_dir, kase.tool.name, kase.name, scope, "#{[lane.name, runner, phase, step, rolling_run, retry_suffix].compact.join("-")}.json")
     end
 
     def build_dir
@@ -79,6 +79,10 @@ module Bench
     private
       def retry_suffix
         "attempt-#{attempt}" if attempt.to_i > 1
+      end
+
+      def rolling_run
+        @env["GITHUB_RUN_ID"] if phase == "rolling"
       end
 
       def attempt

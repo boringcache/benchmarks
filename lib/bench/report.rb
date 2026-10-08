@@ -1,7 +1,7 @@
 module Bench
   class Report
-    KEY = %w[adapter_command case lane level runner phase step sha boringcache].freeze
-    COLUMNS = %w[Tool Case Lane Level Runner Phase Step Commit CLI Samples Failed Seed\ failed Median\ s Min\ s Max\ s Save].freeze
+    KEY = %w[adapter_command case lane level runner phase step sha boringcache attempt cache_save_timing cpu].freeze
+    COLUMNS = %w[Tool Case Lane Level Runner Phase Step Commit CLI Attempt Save CPU Samples Failed Seed\ failed Timed\ median\ s Timed\ min\ s Timed\ max\ s].freeze
 
     def initialize(results_dir)
       @results_dir = results_dir
@@ -23,16 +23,16 @@ module Bench
 
     def markdown
       table = rows.map do |row|
-        row.merge("sha" => row["sha"]&.slice(0, 12))
-           .values_at(*KEY, "samples", "failed", "seed_failed", "median_seconds", "min_seconds", "max_seconds", "cache_save_timing")
-           .map { it.nil? ? "unmeasured" : it }
+        row.merge("sha" => row["sha"]&.slice(0, 12)).values_at(*KEY).map { it.nil? ? "-" : it } +
+          row.values_at("samples", "failed", "seed_failed", "median_seconds", "min_seconds", "max_seconds").map { it.nil? ? "unmeasured" : it }
       end
       ["# Benchmark results", "", line(COLUMNS), line(COLUMNS.map { "---" }), *table.map { line(it) }, ""].join("\n")
     end
 
     private
       def key(record)
-        [*record.values_at(*KEY[0...-1]), record.dig("versions", "boringcache")]
+        [*record.values_at(*%w[adapter_command case lane level runner phase step sha]), record.dig("versions", "boringcache"),
+         [record["attempt"].to_i, 1].max, record["cache_save_timing"], record.dig("observed", "machine", "cpu")]
       end
 
       def row(key, group)
@@ -44,7 +44,6 @@ module Bench
           "median_seconds" => median(seconds),
           "min_seconds" => seconds.first,
           "max_seconds" => seconds.last,
-          "cache_save_timing" => group.first["cache_save_timing"],
           "run_urls" => group.filter_map { it["run_url"] }.uniq
         )
       end

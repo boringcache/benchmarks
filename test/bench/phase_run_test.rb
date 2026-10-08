@@ -101,6 +101,21 @@ class PhaseRunTest < Minitest::Test
     assert_equal 1, record("remote-local-r12", "remote-local-cold")["exit_status"]
   end
 
+  def test_rolling_records_from_separate_dispatches_of_one_step_do_not_collide
+    second = commit_upstream("two")
+    with_fixture_env do
+      %w[777 778].each do |run_id|
+        ENV["GITHUB_RUN_ID"] = run_id
+        assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "rolling", "--sha", second, "--step", "5")
+        assert_equal 0, cli("start", "demo/app", "--lane", "remote")
+        assert_equal 0, cli("build", "demo/app", "--lane", "remote")
+        assert_equal 0, cli("record", "demo/app", "--lane", "remote", "--exit-status", "0")
+      end
+    end
+
+    assert_equal [5, 5], %w[777 778].map { record("remote-local-rolling", "remote-local-rolling-5-#{it}")["step"] }
+  end
+
   def test_a_retried_attempt_keeps_the_first_attempts_record
     with_fixture_env do
       assert_equal 0, cli("run", "demo/app", "--lane", "remote", "--phase", "warm", "--run-id", "r14")
