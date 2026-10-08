@@ -73,6 +73,11 @@ module Bench
       environment.reject { |key, value| @env[key] == value }
     end
 
+    def dockerfile
+      file = adapter.fetch("command").each_cons(2).find { |flag, _| %w[--file -f].include?(flag) }&.last
+      File.expand_path(file, workspace.dir) if file
+    end
+
     def cache_paths
       [*lane.paths, *kase.shared].map { File.expand_path(it, workspace.dir) }
     end

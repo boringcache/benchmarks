@@ -11,4 +11,5 @@ check = "docker image inspect llama-cpp-server-benchmark:local"
 boringcache-docker = ["github"]
 boringcache-docker-plus = ["github"]
 gha = ["github"]
+gha-plus = ["github"]
 ghcr = ["github"]
