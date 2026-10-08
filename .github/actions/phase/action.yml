@@ -55,6 +55,10 @@ runs:
           echo "MISE_YES=1"
         } >> "$GITHUB_ENV"
 
+    - if: runner.os == 'Linux'
+      shell: bash
+      run: printf 'Acquire::Retries "5";\nAcquire::http::Timeout "60";\nAcquire::https::Timeout "60";\n' | sudo tee /etc/apt/apt.conf.d/80-bench-timeouts > /dev/null
+
     - if: contains(inputs.setup, 'buildx')
       uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
@@ -152,9 +156,16 @@ runs:
         save-cache: ${{ inputs.phase == 'cold' || inputs.phase == 'rolling' }}
 
     - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'mbx')
+      id: rust
+      shell: bash
+      working-directory: ${{ steps.prepare.outputs.build_dir }}
+      run: echo "toolchain=$(rustup show active-toolchain | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+
+    - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'mbx')
       uses: jdx/mr-boxington-action@d0825fbaf3cc36ca2609aa38e71046265a1f1e37 # v1.7.1
       with:
         version: 1.22.0
+        toolchain: ${{ steps.rust.outputs.toolchain }}
         working-directory: ${{ steps.prepare.outputs.build_dir }}
         cache-generation: ${{ env.BENCH_SCOPE }}
         save-on-workflow-dispatch: ${{ inputs.phase == 'cold' || inputs.phase == 'rolling' }}
