@@ -1,0 +1,34 @@
+{
+  "adapter_command": "moon",
+  "case": "zitadel",
+  "lane": "depot-cache",
+  "provider": "depot",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "phase": "cold",
+  "step": null,
+  "scope": "depot-cache-github-37761411336",
+  "repo": "zitadel/nextgen",
+  "sha": "fba561b67cfb771c0f72c4e293793e4ab86db284",
+  "seconds": 71.542,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {
+    "boringcache": null
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37761411336",
+  "attempt": 1,
+  "started_at": "2026-10-08T10:08:21Z"
+}
