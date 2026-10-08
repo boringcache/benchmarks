@@ -61,7 +61,8 @@ module BenchFixture
   end
 
   def fixture_env
-    { "PATH" => "#{File.join(@root, "bin")}:#{ENV["PATH"]}", "STUB_LOG" => File.join(@root, "stub.log"), "REMOTE_TOKEN" => "remote-secret" }
+    { "PATH" => "#{File.join(@root, "bin")}:#{ENV["PATH"]}", "STUB_LOG" => File.join(@root, "stub.log"), "REMOTE_TOKEN" => "remote-secret",
+      **%w[GITHUB_ACTIONS GITHUB_RUN_ATTEMPT GITHUB_RUN_ID GITHUB_OUTPUT GITHUB_ENV].to_h { [it, nil] } }
   end
 
   def with_fixture_env
