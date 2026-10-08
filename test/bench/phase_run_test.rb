@@ -102,20 +102,21 @@ class PhaseRunTest < Minitest::Test
     assert_equal 1, record("remote-local-r12", "remote-local-cold")["exit_status"]
   end
 
-  def test_rolling_continues_the_fresh_cache_and_keeps_it_pinned
+  def test_rolling_keeps_one_fixed_tag_that_fresh_runs_never_touch
     commit_upstream("two")
     plan_tag = -> { TomlRB.load_file(File.join(@root, ".work/demo/app/.boringcache.toml")).dig("adapters", "demo", "tag") }
     with_fixture_env do
       assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "cold", "--run-id", "r20")
-      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "rolling")
       assert_equal "demo-app-boringcache-demo-local-r20", plan_tag.call
+      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "rolling")
+      assert_equal "demo-app-boringcache-demo-local-rolling", plan_tag.call
       assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "cold", "--run-id", "r21")
       assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "rolling")
-      assert_equal "demo-app-boringcache-demo-local-r20", plan_tag.call
+      assert_equal "demo-app-boringcache-demo-local-rolling", plan_tag.call
     end
 
     rolling = Dir[File.join(@root, "tmp/results/demo/app/boringcache-demo-local-rolling/*.json")].map { JSON.parse(File.read(it)) }
-    assert_equal [[0, "boringcache-demo-local-r20", true], [1, "boringcache-demo-local-r20", true]],
+    assert_equal [[0, "boringcache-demo-local-rolling", false], [1, "boringcache-demo-local-rolling", false]],
                  rolling.map { it.values_at("step", "cache_scope", "cache_seeded") }.sort
   end
 
