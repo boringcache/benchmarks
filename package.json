@@ -1,7 +1,0 @@
-{
-  "name": "boringcache-benchmarks",
-  "private": true,
-  "devDependencies": {
-    "nx": "22.6.1"
-  }
-}
