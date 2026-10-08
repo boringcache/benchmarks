@@ -119,16 +119,26 @@ class PhaseRunTest < Minitest::Test
                  rolling.map { it.values_at("step", "cache_scope", "cache_seeded") }.sort
   end
 
-  def test_rolling_restores_the_newest_rolling_cache_before_the_fresh_seed
-    outputs = File.join(@root, "github_output")
+  def test_rolling_restores_the_fresh_seed_first_then_only_the_newest_rolling_cache
+    seed = rolling_restore_key
+    assert_includes seed, "restore_key<<BENCH_EOF\ndemo-app-remote-local-r30\nBENCH_EOF"
+    assert_includes seed, "cache_key<<BENCH_EOF\ndemo-app-remote-local-r30-3\nBENCH_EOF"
+
+    assert_includes rolling_restore_key("--continues"), "restore_key<<BENCH_EOF\ndemo-app-remote-local-r30-\nBENCH_EOF"
+  end
+
+  def test_a_record_keeps_the_cache_key_the_lane_restored
     with_fixture_env do
-      ENV.update("GITHUB_OUTPUT" => outputs, "GITHUB_ENV" => File.join(@root, "github_env"))
-      assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "rolling", "--sha", @upstream_sha, "--step", "3",
-                          "--cache-scope", "remote-local-r30", "--github")
+      assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r31")
+      assert_equal 0, cli("start", "demo/app", "--lane", "remote")
+      assert_equal 0, cli("build", "demo/app", "--lane", "remote")
+      ENV["BENCH_CACHE_RESTORED_KEY"] = "demo-app-remote-local-r30-2"
+      assert_equal 0, cli("record", "demo/app", "--lane", "remote", "--exit-status", "0")
+    ensure
+      ENV.delete("BENCH_CACHE_RESTORED_KEY")
     end
 
-    assert_includes File.read(outputs), "restore_key<<BENCH_EOF\ndemo-app-remote-local-r30-\ndemo-app-remote-local-r30\nBENCH_EOF"
-    assert_includes File.read(outputs), "cache_key<<BENCH_EOF\ndemo-app-remote-local-r30-3\nBENCH_EOF"
+    assert_equal "demo-app-remote-local-r30-2", record("remote-local-r31", "remote-local-cold")["cache_restored_key"]
   end
 
   def test_rolling_records_from_separate_dispatches_of_one_step_do_not_collide
@@ -225,6 +235,16 @@ class PhaseRunTest < Minitest::Test
   private
     def cli(*argv, out: StringIO.new)
       Bench::CLI.new([*argv, "--results", File.join(@root, "tmp/results"), "--work", File.join(@root, ".work")], catalog:, out:).call
+    end
+
+    def rolling_restore_key(*flags)
+      outputs = File.join(@root, "github_output-#{flags.size}")
+      with_fixture_env do
+        ENV.update("GITHUB_OUTPUT" => outputs, "GITHUB_ENV" => File.join(@root, "github_env"))
+        assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "rolling", "--sha", @upstream_sha, "--step", "3",
+                            "--cache-scope", "remote-local-r30", *flags, "--github")
+      end
+      File.read(outputs)
     end
 
     def record(scope, name)

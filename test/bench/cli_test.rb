@@ -5,9 +5,9 @@ class CLITest < Minitest::Test
 
   def test_matrix_lists_every_lane_and_runner_of_a_project_without_local
     assert_equal [
-      { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "github 4c · boringcache", "step" => "", "sha" => "", "cache_scope" => "" },
-      { "case" => "demo/app", "lane" => "remote", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => ["REMOTE_TOKEN"], "setup" => "", "label" => "github 4c · remote", "step" => "", "sha" => "", "cache_scope" => "" },
-      { "case" => "demo/app", "lane" => "gha", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "github 4c · gha", "step" => "", "sha" => "", "cache_scope" => "" }
+      { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "github 4c · boringcache", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "" },
+      { "case" => "demo/app", "lane" => "remote", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => ["REMOTE_TOKEN"], "setup" => "", "label" => "github 4c · remote", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "" },
+      { "case" => "demo/app", "lane" => "gha", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "github 4c · gha", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "" }
     ], matrix("app")
   end
 
@@ -32,6 +32,14 @@ class CLITest < Minitest::Test
 
     scopes = matrix("app", "--rolling").to_h { [it["lane"], it["cache_scope"]] }
     assert_equal({ "boringcache-demo" => "boringcache-demo-github-rolling", "remote" => "remote-github-r1", "gha" => "gha-github-rolling" }, scopes)
+  end
+
+  def test_rolling_matrix_marks_lanes_that_continue_their_own_rolling_cache
+    commit_upstream("two")
+    rolling_record("remote", 0, @upstream_sha)
+
+    continues = matrix("app", "--rolling").to_h { [it["lane"], it["continues"]] }
+    assert_equal({ "boringcache-demo" => "", "remote" => "true", "gha" => "" }, continues)
   end
 
   def test_rolling_matrix_never_seeds_from_a_canary_fresh_run
