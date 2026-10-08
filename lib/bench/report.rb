@@ -1,7 +1,7 @@
 module Bench
   class Report
-    KEY = %w[adapter_command case lane level runner phase].freeze
-    COLUMNS = %w[Tool Case Lane Level Runner Phase Samples Failed Output\ ok Median\ s Min\ s Max\ s].freeze
+    KEY = %w[adapter_command case lane level runner phase step sha boringcache].freeze
+    COLUMNS = %w[Tool Case Lane Level Runner Phase Step Commit CLI Samples Failed Seed\ failed Median\ s Min\ s Max\ s].freeze
 
     def initialize(results_dir)
       @results_dir = results_dir
@@ -12,7 +12,7 @@ module Bench
     end
 
     def rows
-      records.group_by { it.values_at(*KEY) }.map { |key, group| row(key, group) }.sort_by { it.values_at(*KEY).map(&:to_s) }
+      records.group_by { key(it) }.map { |key, group| row(key, group) }.sort_by { it.values_at(*KEY).map(&:to_s) }
     end
 
     def write(out_dir)
@@ -23,23 +23,41 @@ module Bench
 
     def markdown
       table = rows.map do |row|
-        row.values_at(*KEY, "samples", "failed", "output_ok", "median_seconds", "min_seconds", "max_seconds").map { it.nil? ? "unmeasured" : it }
+        row.merge("sha" => row["sha"]&.slice(0, 12))
+           .values_at(*KEY, "samples", "failed", "seed_failed", "median_seconds", "min_seconds", "max_seconds")
+           .map { it.nil? ? "unmeasured" : it }
       end
       ["# Benchmark results", "", line(COLUMNS), line(COLUMNS.map { "---" }), *table.map { line(it) }, ""].join("\n")
     end
 
     private
+      def key(record)
+        [*record.values_at(*KEY[0...-1]), record.dig("versions", "boringcache")]
+      end
+
       def row(key, group)
-        seconds = group.select { it["exit_status"].to_i.zero? }.filter_map { it["seconds"] }.sort
+        seconds = group.select { passed?(it) && seeded?(it) }.filter_map { it["seconds"] }.sort
         KEY.zip(key).to_h.merge(
           "samples" => group.size,
-          "failed" => group.count { !it["exit_status"].to_i.zero? },
-          "output_ok" => group.count { it["output_ok"] == true },
+          "failed" => group.count { !passed?(it) },
+          "seed_failed" => group.count { passed?(it) && !seeded?(it) },
           "median_seconds" => median(seconds),
           "min_seconds" => seconds.first,
           "max_seconds" => seconds.last,
           "run_urls" => group.filter_map { it["run_url"] }.uniq
         )
+      end
+
+      def passed?(record)
+        record["exit_status"] == 0 && record["output_ok"] == true
+      end
+
+      def seeded?(record)
+        record["phase"] != "warm" || seeds.fetch(record.values_at("adapter_command", "case", "scope"), false)
+      end
+
+      def seeds
+        @seeds ||= records.select { it["phase"] == "cold" }.to_h { [it.values_at("adapter_command", "case", "scope"), passed?(it)] }
       end
 
       def median(values)

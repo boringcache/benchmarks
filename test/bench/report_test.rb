@@ -17,21 +17,51 @@ class ReportTest < Minitest::Test
 
     rows = Bench::Report.new(@dir).rows
     assert_equal 1, rows.size
-    assert_equal({ "samples" => 4, "failed" => 1, "output_ok" => 3, "median_seconds" => 20.0, "min_seconds" => 10.0, "max_seconds" => 30.0 },
-                 rows.first.slice("samples", "failed", "output_ok", "median_seconds", "min_seconds", "max_seconds"))
+    assert_equal({ "samples" => 4, "failed" => 1, "seed_failed" => 0, "median_seconds" => 20.0, "min_seconds" => 10.0, "max_seconds" => 30.0 },
+                 rows.first.slice("samples", "failed", "seed_failed", "median_seconds", "min_seconds", "max_seconds"))
+  end
+
+  def test_failed_output_checks_and_missing_status_are_failures_not_timings
+    record "a.json", seconds: 100.0
+    record "b.json", seconds: 1.0, output_ok: false
+    record "c.json", seconds: 2.0, output_ok: nil
+    record "d.json", seconds: 3.0, exit_status: nil
+
+    row = Bench::Report.new(@dir).rows.first
+    assert_equal [4, 3, 100.0], row.values_at("samples", "failed", "median_seconds")
+  end
+
+  def test_a_warm_after_a_failed_cold_is_a_seed_failure
+    record "cold-ok.json", seconds: 50.0, scope: "lane-github-1"
+    record "warm-ok.json", seconds: 5.0, phase: "warm", scope: "lane-github-1"
+    record "cold-bad.json", seconds: 40.0, scope: "lane-github-2", exit_status: 1, output_ok: false
+    record "warm-after-bad.json", seconds: 30.0, phase: "warm", scope: "lane-github-2"
+
+    warm = Bench::Report.new(@dir).rows.find { it["phase"] == "warm" }
+    assert_equal [2, 0, 1, 5.0], warm.values_at("samples", "failed", "seed_failed", "median_seconds")
+  end
+
+  def test_rows_split_by_commit_step_and_cli_version
+    record "a.json", seconds: 10.0, sha: "a" * 40
+    record "b.json", seconds: 20.0, sha: "b" * 40
+    record "c.json", seconds: 30.0, sha: "b" * 40, boringcache: "1.41.0"
+    record "d.json", seconds: 40.0, sha: "b" * 40, phase: "rolling", step: 3
+
+    assert_equal 4, Bench::Report.new(@dir).rows.size
   end
 
   def test_missing_values_are_unmeasured_in_markdown
     record "a.json", seconds: 5.0, exit_status: 2, output_ok: false
 
-    assert_includes Bench::Report.new(@dir).markdown, "| docker | posthog | gha | base | github | warm | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured |"
+    assert_includes Bench::Report.new(@dir).markdown, "| docker | posthog | gha | base | github | cold | unmeasured | aaaaaaaaaaaa | 1.40.1 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured |"
   end
 
   private
-    def record(name, seconds:, exit_status: 0, output_ok: true)
+    def record(name, seconds:, exit_status: 0, output_ok: true, phase: "cold", scope: "gha-github-1", sha: "a" * 40, step: nil, boringcache: "1.40.1")
       File.write(File.join(@dir, name), JSON.generate(
         "adapter_command" => "docker", "case" => "posthog", "lane" => "gha", "level" => "base", "runner" => "github",
-        "phase" => "warm", "seconds" => seconds, "exit_status" => exit_status, "output_ok" => output_ok
+        "phase" => phase, "step" => step, "scope" => scope, "sha" => sha, "seconds" => seconds,
+        "exit_status" => exit_status, "output_ok" => output_ok, "versions" => { "boringcache" => boringcache }
       ))
     end
 end
