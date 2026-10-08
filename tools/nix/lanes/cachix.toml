@@ -8,3 +8,6 @@ probe = ["printf %s \"$BENCH_SCOPE\" > preflight && cachix push \"$CACHIX_CACHE\
 
 [cold]
 wrap = ["cachix", "watch-exec", "${CACHIX_CACHE}", "--"]
+
+[rolling]
+wrap = ["cachix", "watch-exec", "${CACHIX_CACHE}", "--"]

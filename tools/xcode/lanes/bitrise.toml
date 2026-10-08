@@ -11,3 +11,6 @@ prepare = ["bitrise-build-cache activate xcode --cache --cache-push=true"]
 
 [warm]
 prepare = ["bitrise-build-cache activate xcode --cache --cache-push=false"]
+
+[rolling]
+prepare = ["bitrise-build-cache activate xcode --cache --cache-push=true"]
