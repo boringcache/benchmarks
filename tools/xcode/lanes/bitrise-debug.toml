@@ -4,14 +4,14 @@ actions_only = true
 runners = ["macos"]
 secrets = ["BITRISE_BUILD_CACHE_AUTH_TOKEN", "BITRISE_BUILD_CACHE_WORKSPACE_ID"]
 setup = ["bitrise"]
-probe = ["bitrise-build-cache activate xcode --cache --cache-push=false && bitrise-build-cache doctor && xcrun --sdk macosx --show-sdk-path"]
-wrap = ["bash", "-c", "echo \"xcrun on PATH: $(command -v xcrun) -> $(xcrun --sdk macosx --show-sdk-path 2>&1 | tr '\\n' ' ')\"; export SDKROOT=\"$(/usr/bin/xcrun --sdk macosx --show-sdk-path)\" && printenv SDKROOT; \"$@\"; rc=$?; if [ $rc -ne 0 ]; then grep -n -A12 -E 'apple sysroot|compiler identification|Compiling the C compiler identification' build_macos/CMakeFiles/CMakeConfigureLog.yaml | head -60; grep -E '^CMAKE_(OSX_SYSROOT|GENERATOR|C_COMPILER|CXX_COMPILER|MAKE_PROGRAM|OSX_DEPLOYMENT_TARGET)' build_macos/CMakeCache.txt; for log in $(ls -t ~/.local/state/xcelerate/logs/*.log 2>/dev/null | head -2); do echo \"== $log\"; tail -80 \"$log\"; done; fi; exit $rc", "sdkroot"]
+probe = ["bitrise-build-cache activate xcode --cache --cache-push=false --disable-prefix-mapping && bitrise-build-cache doctor"]
+wrap = ["bash", "-c", "\"$@\"; rc=$?; if [ $rc -ne 0 ]; then grep -n -A12 -E 'apple sysroot|compiler identification|Compiling the C compiler identification' build_macos/CMakeFiles/CMakeConfigureLog.yaml | head -60; grep -E '^CMAKE_(OSX_SYSROOT|GENERATOR|C_COMPILER|CXX_COMPILER|MAKE_PROGRAM|OSX_DEPLOYMENT_TARGET)' build_macos/CMakeCache.txt; for log in $(ls -t ~/.local/state/xcelerate/logs/*.log 2>/dev/null | head -2); do echo \"== $log\"; tail -80 \"$log\"; done; fi; exit $rc", "bitrise-debug"]
 
 [cold]
-prepare = ["bitrise-build-cache activate xcode --cache --cache-push=true"]
+prepare = ["bitrise-build-cache activate xcode --cache --cache-push=true --disable-prefix-mapping"]
 
 [warm]
-prepare = ["bitrise-build-cache activate xcode --cache --cache-push=false"]
+prepare = ["bitrise-build-cache activate xcode --cache --cache-push=false --disable-prefix-mapping"]
 
 [rolling]
-prepare = ["bitrise-build-cache activate xcode --cache --cache-push=true"]
+prepare = ["bitrise-build-cache activate xcode --cache --cache-push=true --disable-prefix-mapping"]
