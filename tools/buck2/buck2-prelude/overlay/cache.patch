@@ -1,5 +1,5 @@
 diff --git a/examples/with_prelude/cpp/hello_world/BUCK b/examples/with_prelude/cpp/hello_world/BUCK
-index 464d77d..5c7ac12 100644
+index 464d77d8e..5c7ac12dc 100644
 --- a/examples/with_prelude/cpp/hello_world/BUCK
 +++ b/examples/with_prelude/cpp/hello_world/BUCK
 @@ -4,6 +4,7 @@ oncall("build_infra")
@@ -11,7 +11,7 @@ index 464d77d..5c7ac12 100644
      link_style = "static",
      deps = ["//cpp/library:print"],
 diff --git a/examples/with_prelude/cpp/library/BUCK b/examples/with_prelude/cpp/library/BUCK
-index 3c19288..9910b86 100644
+index 3c19288d4..9910b86ef 100644
 --- a/examples/with_prelude/cpp/library/BUCK
 +++ b/examples/with_prelude/cpp/library/BUCK
 @@ -2,6 +2,7 @@ oncall("build_infra")
@@ -23,30 +23,14 @@ index 3c19288..9910b86 100644
      exported_headers = glob(["**/*.hpp"]),
      visibility = ["PUBLIC"],
 diff --git a/examples/with_prelude/rust/BUCK b/examples/with_prelude/rust/BUCK
-index 40b5d80..16bef58 100644
+index 40b5d80fb..9737c9194 100644
 --- a/examples/with_prelude/rust/BUCK
 +++ b/examples/with_prelude/rust/BUCK
-@@ -4,6 +4,7 @@ oncall("build_infra")
- 
- rust_library(
-     name = "library",
-+    allow_cache_upload = True,
-     srcs = glob(
-         ["src/**/*.rs"],
-     ),
-@@ -11,6 +12,7 @@ rust_library(
+@@ -11,6 +11,7 @@ rust_library(
  
  rust_binary(
      name = "main",
 +    allow_cache_upload = True,
      srcs = glob(
          ["bin/**/*.rs"],
-     ),
-@@ -20,6 +22,7 @@ rust_binary(
- 
- rust_test(
-     name = "test",
-+    allow_cache_upload = True,
-     srcs = glob(
-         ["test/**/*.rs"],
      ),
