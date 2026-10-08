@@ -37,6 +37,28 @@ class CLITest < Minitest::Test
     assert_equal ["boringcache-demo", "gha"], matrix("app", "--lane", "boringcache-demo gha").map { it["lane"] }
   end
 
+  def test_matrix_filters_lanes_and_runners_together
+    assert_equal [["remote", "github"]], matrix("app", "--lane", "remote", "--runner", "github").map { it.values_at("lane", "runner") }
+    assert_empty matrix("app", "--runner", "missing")
+  end
+
+  def test_rolling_series_has_its_own_scope_and_cursor
+    previous = ENV["BENCH_ROLLING_SERIES"]
+    second = commit_upstream("two")
+    rolling_record("remote", 0, @upstream_sha)
+    ENV["BENCH_ROLLING_SERIES"] = "zed-screen"
+
+    assert_equal "remote-github-rolling-zed-screen", Bench::Rolling.scope(catalog.find_case("demo/app").tool.lane("remote"), "github")
+    assert_equal [["0", @upstream_sha]], matrix("app", "--rolling").map { it.values_at("step", "sha") }.uniq
+    write "results/demo/app/remote-github-rolling-zed-screen/remote-github-rolling-0.json", JSON.generate("step" => 0, "sha" => @upstream_sha)
+    assert_equal [["1", second]], matrix("app", "--rolling", "--results", "#{@root}/results").map { it.values_at("step", "sha") }.uniq
+
+    ENV["BENCH_ROLLING_SERIES"] = "../escape"
+    assert_raises(Bench::Error) { Bench::Rolling.suffix }
+  ensure
+    ENV["BENCH_ROLLING_SERIES"] = previous
+  end
+
   def test_runner_env_reaches_the_build
     write "runners.toml", %([github]\nlabel = "ubuntu-24.04"\nmachine = "github 4c"\n[local]\nlabel = "local"\nmachine = "local"\nenv = { DEMO_CACHE = "from-runner" }\n)
     write "tools/demo/lanes/remote.toml", %(provider = "remote"\nlevel = "base"\n)

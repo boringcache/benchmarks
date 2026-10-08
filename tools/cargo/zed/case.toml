@@ -7,7 +7,7 @@ prepare = [
   "mise trust && mise install",
   "cd upstream && ./script/linux",
 ]
-check = "test -x upstream/target/release/zed && test -z \"$(git -C upstream status --porcelain=v1 --untracked-files=all)\""
+check = "ruby verify.rb"
 
 [env]
 CARGO_INCREMENTAL = "0"

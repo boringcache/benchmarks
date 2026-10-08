@@ -16,6 +16,18 @@ on:
         type: choice
         options: [fresh, rolling, preflight]
         default: fresh
+      lanes:
+        description: Optional comma-separated lane names
+        type: string
+        default: ""
+      runners:
+        description: Optional comma-separated runner keys
+        type: string
+        default: ""
+      series:
+        description: Optional isolated rolling series name
+        type: string
+        default: ""
 
 run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}
 
@@ -45,7 +57,16 @@ jobs:
           TOOL: ${{ inputs.tool }}
           PROJECT: ${{ inputs.project }}
           ROLLING: ${{ inputs.mode == 'rolling' && 'true' || '' }}
-        run: echo "matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling})" >> "$GITHUB_OUTPUT"
+          LANES: ${{ inputs.lanes }}
+          RUNNERS: ${{ inputs.runners }}
+          BENCH_ROLLING_SERIES: ${{ inputs.series }}
+        run: |
+          args=(matrix "$PROJECT" --tool "$TOOL" --results results)
+          if [ -n "$ROLLING" ]; then args+=(--rolling); fi
+          if [ -n "$LANES" ]; then args+=(--lane "$LANES"); fi
+          if [ -n "$RUNNERS" ]; then args+=(--runner "$RUNNERS"); fi
+          matrix=$(bundle exec bin/bench "${args[@]}")
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
   cold:
     needs: plan
@@ -58,6 +79,7 @@ jobs:
       matrix:
         include: ${{ fromJSON(needs.plan.outputs.matrix) }}
     env: &secrets
+      BENCH_ROLLING_SERIES: ${{ inputs.series }}
       R2_ENDPOINT: https://efc17f9311838cfc4a3c41ce37b4246b.r2.cloudflarestorage.com
       R2_BUCKET: benchmarks
       BUILDBUDDY_API_KEY: ${{ contains(matrix.secrets, 'BUILDBUDDY_API_KEY') && secrets.BUILDBUDDY_API_KEY || '' }}
@@ -129,6 +151,7 @@ jobs:
           TITLE: ${{ inputs.tool }} - ${{ inputs.project }}
           MODE: ${{ inputs.mode }}
           RUN_ID: ${{ github.run_id }}
+          RESULT_BRANCH: ${{ github.ref_name }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -136,8 +159,8 @@ jobs:
           git diff --cached --quiet && exit 0
           git commit --quiet -m "Record $TITLE $MODE run $RUN_ID"
           for attempt in 1 2 3 4 5; do
-            git push --quiet origin HEAD:main && exit 0
+            git push --quiet origin "HEAD:refs/heads/$RESULT_BRANCH" && exit 0
             sleep $((attempt * 5))
-            git pull --rebase --quiet origin main
+            git pull --rebase --quiet origin "$RESULT_BRANCH"
           done
           exit 1
