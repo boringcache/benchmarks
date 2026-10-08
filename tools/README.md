@@ -80,7 +80,7 @@ gha = ["github"]
 | --- | --- |
 | `project` | the project this case belongs to, default the case name; one project run covers every case, lane and runner of the project |
 | `repo`, `branch` | upstream GitHub repository and the branch rolling follows |
-| `start_sha` | first-parent commit on `branch` as of 2026-09-30 23:59 UTC |
+| `start_sha` | latest first-parent commit on `branch` when the case is added; fresh runs build it and rolling starts from it |
 | `directory` | where the build command runs, relative to the plan directory, default `.` |
 | `prepare` | untimed commands before the build |
 | `check` | untimed output check after the build |

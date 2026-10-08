@@ -15,7 +15,7 @@ This repository benchmarks BoringCache against other cache providers on real pro
 
 ## Add a case
 
-1. **Source.** Pick the upstream repository and branch. `start_sha` is the last first-parent commit on that branch before the cutoff (2026-10-01 00:00 UTC). Use upstream's own CI build command and target.
+1. **Source.** Pick the upstream repository and branch. `start_sha` is the latest first-parent commit on that branch when the case is added; its fresh run and rolling series start from there. (The initial backfill seeded every case at its last commit before 2026-10-01 00:00 UTC; later cases do not use that date.) Prefer the project's own CI build command and target; when it has none for this tool, use its documented build.
 2. **Files.** Create `tools/<tool>/<case>/case.toml` (repo, branch, `start_sha`, untimed `prepare`, output `check`, `[runs]`) and `.boringcache.toml` (base plan). Add `plus/.boringcache.toml` only when the tool has a `plus` level that applies.
 3. **Lanes.** Reuse `tools/<tool>/lanes/*.toml`. Add a lane only for a provider with documented setup. Phase behaviour: cold and rolling write, warm reads only; anything that forces a cold (for example `--remote_accept_cached=false`) stays under `[cold]`.
 4. **Runners.** Default to `github`. Add other runners per case on purpose. Remote builder lanes set `machine` so labels and records name the builder, not the runner.
