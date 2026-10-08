@@ -67,7 +67,7 @@ yet, so they get no directory until one does.
    plan and the same product step: `[adapters.<tool>].profiles = ["deps"]`
    (`boringcache turbo --dry-run --json` shows the adapter restoring and saving
    those archive entries itself). GitHub Actions cache lanes and remote-only
-   providers (Depot Cache, Vercel, Cachely, BuildBuddy, NativeLink) cache them
+   providers (Depot Cache, Vercel, BuildBuddy, NativeLink) cache them
    with `actions/cache/restore` and `actions/cache/save` as normal steps inside
    the timer, as their users would on GitHub runners.
 3. The timer covers the same window for every lane: restore every cached layer,
@@ -222,7 +222,7 @@ lane, and each product's cache set up the way that product documents it.
 | cargo | deno, zed | `boringcache-cargo`, `boringcache-cargo-plus`, `gha` (sccache GitHub Actions backend), `gha-plus` (+ `Swatinem/rust-cache`), `depot-cache` (sccache WebDAV), `kache` (`kunobi-ninja/kache-action`, RUSTC_WRAPPER compiler cache on the GitHub Actions cache), `mbx` (`jdx/mr-boxington-action`, target + registry + git on the GitHub Actions cache; `plus` level) |
 | turbo | n8n | `boringcache-turbo`, `gha` (actions/cache on .turbo), `depot-cache`, `vercel` (OIDC policy "Boringcache turbo") |
 | nx | storybook | `boringcache-nx`, `gha`, `depot-cache`; `nx-cloud` last (needs an Nx workspace) |
-| bazel | grpc | `boringcache-bazel`, `gha` (disk cache), `buildbuddy`, `cachely`, `nativelink` (R2), `depot-cache` |
+| bazel | grpc | `boringcache-bazel`, `gha` (disk cache), `buildbuddy`, `nativelink` (R2), `depot-cache` |
 | go | hugo | `boringcache-go`, `gha`, `depot-cache` |
 | gradle | opentelemetry-java | `boringcache-gradle`, `gha`, `depot-cache` |
 | maven | spring-ai | `boringcache-maven`, `gha`, `depot-cache` |
@@ -283,10 +283,16 @@ are amd64, so local runs prove setup, not timings.
 
 - Namespace is a trial (23 days left on 2026-10-07). Bitrise Build Cache is a
   30-day trial with no documented after-state.
-- Cachely's free plan caps storage at 1 GiB; the "benchmark" workspace showed
-  about 889 MB uploaded in the last month. It worked before; watch for write
-  failures.
 - GitHub Actions cache storage for the repo is 200 GB.
+
+## Removed lanes
+
+- Cachely was removed from Bazel - gRPC on 2026-10-08. A standalone S3 cache
+  is very slow for chatty adapters like Bazel, which make thousands of small
+  cache reads per build. In fresh run 37691560883 its warm took 1,702 s,
+  against 135 to 616 s for the other remote-cache lanes (BoringCache,
+  BuildBuddy, Depot Cache, NativeLink), and its cold took 3,238 s. Earlier
+  runs also logged upload timeouts.
 
 ## Version pins
 

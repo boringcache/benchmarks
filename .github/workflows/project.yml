@@ -61,7 +61,6 @@ jobs:
       R2_ENDPOINT: https://efc17f9311838cfc4a3c41ce37b4246b.r2.cloudflarestorage.com
       R2_BUCKET: benchmarks
       BUILDBUDDY_API_KEY: ${{ contains(matrix.secrets, 'BUILDBUDDY_API_KEY') && secrets.BUILDBUDDY_API_KEY || '' }}
-      CACHELY_TOKEN: ${{ contains(matrix.secrets, 'CACHELY_TOKEN') && secrets.CACHELY_TOKEN || '' }}
       CACHIX_AUTH_TOKEN: ${{ contains(matrix.secrets, 'CACHIX_AUTH_TOKEN') && secrets.CACHIX_AUTH_TOKEN || '' }}
       CACHIX_CACHE: ${{ contains(matrix.secrets, 'CACHIX_CACHE') && vars.CACHIX_CACHE || '' }}
       DEPOT_TOKEN: ${{ contains(matrix.secrets, 'DEPOT_TOKEN') && secrets.DEPOT_TOKEN || '' }}
