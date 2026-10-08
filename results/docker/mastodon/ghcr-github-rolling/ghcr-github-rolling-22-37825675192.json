@@ -1,0 +1,48 @@
+{
+  "adapter_command": "docker",
+  "case": "mastodon",
+  "lane": "ghcr",
+  "provider": "github-container-registry",
+  "level": "base",
+  "capabilities": [
+    "layers"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 22,
+  "scope": "ghcr-github-rolling",
+  "cache_scope": "ghcr-github-37774888099",
+  "cache_seeded": true,
+  "cache_restored_key": null,
+  "repo": "mastodon/mastodon",
+  "sha": "49e75ef4f23f024c6a20e3566d7e15507c053947",
+  "seconds": 122.591,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+      "cores": 4
+    },
+    "image_platform": "linux/amd64",
+    "buildx_builder": {
+      "name": "builder-210fb6e0-6a8e-4419-a16f-e29769ddd2fc",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-210fb6e0-6a8e-4419-a16f-e29769ddd2fc0",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37825675192",
+  "attempt": 1,
+  "started_at": "2026-10-08T18:38:09Z"
+}
