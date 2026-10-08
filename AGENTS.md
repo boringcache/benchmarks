@@ -33,6 +33,7 @@ This repository benchmarks BoringCache against other cache providers on real pro
 - Each lane's rolling series continues its latest passing fresh cache for the baseline commit and pins that scope in its records (`cache_scope`, `cache_seeded`).
 - `schedule.yml` dispatches rolling for every project in `rolling.toml`; the workflow's concurrency group runs one rolling run per project at a time.
 - A failed build or output check is recorded first, then fails its job. A failure in `prepare` leaves no record; that lane continues at the next step.
+- Re-run a failed rolling job only before the next step of that project starts. A re-run of an older step skips its build once a newer step is recorded for that lane, so it can never overwrite the newer cache.
 
 ## Test a CLI canary
 

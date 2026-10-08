@@ -123,7 +123,12 @@ runs:
         STEP: ${{ inputs.step }}
         CACHE_SCOPE: ${{ inputs.cache-scope }}
         CONTINUES: ${{ inputs.continues }}
-      run: bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" ${SHA:+--sha "$SHA" --step "$STEP"} ${CACHE_SCOPE:+--cache-scope "$CACHE_SCOPE"} ${CONTINUES:+--continues} --github
+      run: |
+        if [ "$BENCH_PHASE" = rolling ] && git fetch --quiet --depth=1 origin main && git cat-file -e "FETCH_HEAD:results/$BENCH_CASE" 2>/dev/null; then
+          RECORDED="$RUNNER_TEMP/recorded"
+          mkdir -p "$RECORDED" && git archive FETCH_HEAD "results/$BENCH_CASE" | tar -x -C "$RECORDED" --strip-components=1
+        fi
+        bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" ${SHA:+--sha "$SHA" --step "$STEP"} ${CACHE_SCOPE:+--cache-scope "$CACHE_SCOPE"} ${CONTINUES:+--continues} ${RECORDED:+--recorded "$RECORDED"} --github
 
     - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache'
       shell: bash
