@@ -16,3 +16,4 @@ CI = "true"
 boringcache-xcode = ["macos"]
 gha = ["macos"]
 bitrise = ["macos"]
+bitrise-sdkroot = ["macos"]
