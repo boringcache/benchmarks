@@ -71,8 +71,8 @@ jobs:
       TURBO_NAME: ${{ contains(matrix.secrets, 'TURBO_NAME') && secrets.TURBO_NAME || '' }}
       TURBO_TEAM_ID: ${{ contains(matrix.secrets, 'TURBO_TEAM_ID') && secrets.TURBO_TEAM_ID || '' }}
       NX_CLOUD_ID: ${{ contains(matrix.secrets, 'NX_CLOUD_ID') && vars.NX_CLOUD_ID || '' }}
-      NX_CLOUD_ACCESS_TOKEN: ${{ contains(matrix.secrets, 'NX_CLOUD_ACCESS_TOKEN') && secrets.NX_CLOUD_ACCESS_TOKEN || '' }}
-      NX_CLOUD_READ_ONLY_TOKEN: ${{ contains(matrix.secrets, 'NX_CLOUD_READ_ONLY_TOKEN') && secrets.NX_CLOUD_READ_ONLY_TOKEN || '' }}
+      NX_CLOUD_ACCESS_TOKEN: ${{ contains(matrix.secrets, 'NX_CLOUD_ACCESS_TOKEN') && secrets.NX_RW_TOKEN || '' }}
+      NX_CLOUD_READ_ONLY_TOKEN: ${{ contains(matrix.secrets, 'NX_CLOUD_READ_ONLY_TOKEN') && secrets.NX_READ_TOKEN || '' }}
       NATIVELINK_R2_ACCESS_KEY_ID: ${{ contains(matrix.secrets, 'NATIVELINK_R2_ACCESS_KEY_ID') && secrets.NATIVELINK_R2_ACCESS_KEY_ID || '' }}
       NATIVELINK_R2_SECRET_ACCESS_KEY: ${{ contains(matrix.secrets, 'NATIVELINK_R2_SECRET_ACCESS_KEY') && secrets.NATIVELINK_R2_SECRET_ACCESS_KEY || '' }}
     steps: &steps
