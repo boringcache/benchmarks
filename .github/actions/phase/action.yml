@@ -50,7 +50,7 @@ runs:
           echo "BENCH_PHASE=$PHASE"
           echo "BENCH_RUN_ID=$RUN_ID"
           echo "BENCH_WORK=$HOME/w"
-          echo "BENCH_RESULTS=$GITHUB_WORKSPACE/results"
+          echo "BENCH_RESULTS=$RUNNER_TEMP/results"
           echo "MISE_TRUSTED_CONFIG_PATHS=$HOME/w"
           echo "MISE_YES=1"
         } >> "$GITHUB_ENV"
@@ -216,5 +216,5 @@ runs:
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         name: results-${{ steps.prepare.outputs.cache_key }}-${{ inputs.phase }}-${{ github.run_attempt }}
-        path: results
+        path: ${{ runner.temp }}/results
         if-no-files-found: warn
