@@ -1,6 +1,6 @@
 module Bench
   class Lane
-    SETUPS = %w[buildx actions-runtime ghcr depot vercel namespace nix cachix nativelink kache mbx].freeze
+    SETUPS = %w[buildx actions-runtime cache-dance ghcr depot vercel namespace nix cachix nativelink kache mbx].freeze
 
     attr_reader :tool, :path
 

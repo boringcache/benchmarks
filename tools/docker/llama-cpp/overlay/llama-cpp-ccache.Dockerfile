@@ -52,7 +52,7 @@ COPY . .
 
 COPY --from=web /app/tools/ui/dist tools/ui/dist
 
-RUN if [ "${CUDA_DOCKER_ARCH}" != "default" ]; then \
+RUN --mount=type=cache,id=llama-cpp-ccache,target=/root/.cache/ccache if [ "${CUDA_DOCKER_ARCH}" != "default" ]; then \
     export CMAKE_ARGS="-DCMAKE_CUDA_ARCHITECTURES=${CUDA_DOCKER_ARCH}"; \
     fi && \
     cmake -B build -DGGML_NATIVE=OFF -DGGML_CUDA=ON -DGGML_BACKEND_DL=ON -DGGML_CPU_ALL_VARIANTS=ON -DLLAMA_BUILD_TESTS=OFF ${CMAKE_ARGS} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_CUDA_COMPILER_LAUNCHER=ccache -DCMAKE_EXE_LINKER_FLAGS=-Wl,--allow-shlib-undefined . && \
