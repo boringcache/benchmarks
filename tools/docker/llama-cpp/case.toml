@@ -1,0 +1,14 @@
+repo = "ggml-org/llama.cpp"
+branch = "master"
+start_sha = "f7b384c1e5c5b2c5b321a4a7cefea04b15b54cb7"
+prepare = [
+  "df -h / && if [ -d /usr/local/lib/android ]; then sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL; fi && df -h /",
+  "bash \"$BENCH_ROOT/tools/docker/shared/stage-ccache-binary.sh\" upstream/bench-ccache",
+]
+check = "docker image inspect llama-cpp-server-benchmark:local"
+
+[runs]
+boringcache-docker = ["github"]
+boringcache-docker-plus = ["github"]
+gha = ["github"]
+ghcr = ["github"]
