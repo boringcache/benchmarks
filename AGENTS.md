@@ -15,7 +15,7 @@ This repository benchmarks BoringCache against other cache providers on real pro
 
 ## Add a case
 
-1. **Source.** Pick the upstream repository and branch. `start_sha` is the latest first-parent commit on that branch when the case is added; its fresh run and rolling series start from there. (The initial backfill seeded every case at its last commit before 2026-10-01 00:00 UTC; later cases do not use that date.) Prefer the project's own CI build command and target; when it has none for this tool, use its documented build.
+1. **Source.** Pick the upstream repository and branch. `start_sha` is the latest first-parent commit on that branch when the case is added; its fresh run and rolling series start from there. Prefer the project's own CI build command and target; when it has none for this tool, use its documented build.
 2. **Files.** Create `tools/<tool>/<case>/case.toml` (repo, branch, `start_sha`, untimed `prepare`, output `check`, `[runs]`) and `.boringcache.toml` (base plan). Add `plus/.boringcache.toml` only when the tool has a `plus` level that applies.
 3. **Lanes.** Reuse `tools/<tool>/lanes/*.toml`. Add a lane only for a provider with documented setup. Phase behaviour: cold and rolling write, warm reads only; anything that forces a cold (for example `--remote_accept_cached=false`) stays under `[cold]`.
 4. **Runners.** Default to `github`. Add other runners per case on purpose. Remote builder lanes set `machine` so labels and records name the builder, not the runner.
@@ -31,7 +31,7 @@ This repository benchmarks BoringCache against other cache providers on real pro
 - Fresh runs build `start_sha` cold then warm. A cold cannot be retried inside a run; dispatch a new fresh run.
 - Rolling keeps one position per tool and project. Every lane builds the same next first-parent commit, and the next run moves on whether or not that commit failed. Projects without new upstream commits plan nothing.
 - Each lane's rolling series continues its latest passing fresh cache for the baseline commit and pins that scope in its records (`cache_scope`, `cache_seeded`).
-- Dispatch the next rolling run for a project only when it has no rolling run in flight. Keep GitHub API use low; never bulk-delete through the API while runs are active.
+- `schedule.yml` dispatches rolling for every project in `rolling.toml`; the workflow's concurrency group runs one rolling run per project at a time.
 - A failed build or output check is recorded first, then fails its job. A failure in `prepare` leaves no record; that lane continues at the next step.
 
 ## Investigate a failure
