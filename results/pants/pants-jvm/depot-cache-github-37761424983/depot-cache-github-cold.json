@@ -1,0 +1,34 @@
+{
+  "adapter_command": "pants",
+  "case": "pants-jvm",
+  "lane": "depot-cache",
+  "provider": "depot",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "phase": "cold",
+  "step": null,
+  "scope": "depot-cache-github-37761424983",
+  "repo": "pantsbuild/example-jvm",
+  "sha": "675ee75d36f2c1b096b0def51efcfffd02bd1251",
+  "seconds": 52.013,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {
+    "boringcache": null
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37761424983",
+  "attempt": 1,
+  "started_at": "2026-10-08T10:08:44Z"
+}
