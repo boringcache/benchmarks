@@ -227,7 +227,7 @@ lane, and each product's cache set up the way that product documents it.
 | gradle | opentelemetry-java | `boringcache-gradle`, `gha`, `depot-cache` |
 | maven | spring-ai | `boringcache-maven`, `gha`, `depot-cache` |
 | ccache | obs-studio (Linux) | `boringcache-ccache`, `gha` |
-| xcode | obs-studio (macOS) | `boringcache-xcode`, `gha`, `bitrise` |
+| xcode | obs-studio (macOS) | `boringcache-xcode`, `gha` |
 | nix | helix, zed | `boringcache-nix`, `cachix`, `magic-nix-cache` |
 | moon | gogs, opencut | `boringcache-moon`, `depot-cache` |
 | pants | stackstorm | `boringcache-pants`, `depot-cache`, `nativelink` |
@@ -281,8 +281,7 @@ are amd64, so local runs prove setup, not timings.
 
 ## Things to watch
 
-- Namespace is a trial (23 days left on 2026-10-07). Bitrise Build Cache is a
-  30-day trial with no documented after-state.
+- Namespace is a trial (23 days left on 2026-10-07).
 - GitHub Actions cache storage for the repo is 200 GB.
 
 ## Removed lanes
@@ -293,6 +292,23 @@ are amd64, so local runs prove setup, not timings.
   against 135 to 616 s for the other remote-cache lanes (BoringCache,
   BuildBuddy, Depot Cache, NativeLink), and its cold took 3,238 s. Earlier
   runs also logged upload timeouts.
+- Bitrise Build Cache was removed from Xcode - OBS on 2026-10-08. With
+  Bitrise's documented GitHub Actions setup (CLI 3.17.2, `activate xcode
+  --cache`), OBS never configured. CMake identifies the compiler by building a
+  throwaway Xcode project by target; Bitrise's `xcodebuild` wrapper added
+  `-derivedDataPath` to that call and Xcode rejected it ("The flag -scheme,
+  -testProductsPath, or -xctestrun is required when specifying
+  -derivedDataPath", exit 64). In the CLI source, `cmd/xcode/xcodebuild.go`
+  line 908 adds the flag without the `AcceptsDerivedDataPath()` check that
+  `internal/xcelerate/xcodeargs/args.go` defines. With Bitrise's documented
+  `--disable-prefix-mapping`, CMake configured but the Swift target
+  `mac-camera-extension` failed: cold with "Driver threw invalid absolute
+  path 'plugin'", warm with "CAS cannot be initialized from the specified
+  '-fcas-*' options: 'plugin': Read-only file system". Setting `SDKROOT` did
+  not help: Bitrise's `xcrun` returned the correct SDK. Evidence: fresh run
+  37761446458 (default setup, cold and warm failed), debug runs 37768474822
+  (default setup with the xcelerate and CMake logs) and 37769123380
+  (`--disable-prefix-mapping`).
 
 ## Version pins
 
