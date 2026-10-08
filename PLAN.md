@@ -135,7 +135,7 @@ archived repos.
 # tools/docker/posthog/case.toml — shape only; values come from e24f6442:cases/posthog
 repo      = "PostHog/posthog"
 branch    = "master"
-start_sha = "<first-parent commit on master at 2026-09-30 23:59 UTC>"
+start_sha = "<latest first-parent commit on master when the case is added>"
 prepare   = []                                        # untimed: submodules, toolchain
 check     = ["docker", "image", "inspect", "posthog:bench"]   # after the timer
 
@@ -163,9 +163,9 @@ Implementation: Ruby 4.0.7 (`.tool-versions`), `toml-rb` for our own TOML files
 | `cold` | `start_sha` | empty, new scope | yes |
 | `warm` | `start_sha` | what cold saved | no, restore only |
 
-**Rolling** (through real upstream history, starting at the reset date):
+**Rolling** (through real upstream history, starting at each case's `start_sha`):
 
-- A cold seed at `start_sha`, the upstream first-parent commit as of 2026-09-30.
+- A seed at `start_sha`, the commit the case starts from. The initial backfill seeded every case at its last commit before 2026-10-01; later cases start from their own latest commit.
 - Each tick builds the next first-parent commit after the last recorded one,
   restoring and saving the series scope. Every lane of a case builds the same
   commit in the same tick.
