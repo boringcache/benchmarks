@@ -53,7 +53,7 @@ class ReportTest < Minitest::Test
   def test_missing_values_are_unmeasured_in_markdown
     record "a.json", seconds: 5.0, exit_status: 2, output_ok: false
 
-    assert_includes Bench::Report.new(@dir).markdown, "| docker | posthog | gha | base | github | cold | unmeasured | aaaaaaaaaaaa | 1.40.1 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured |"
+    assert_includes Bench::Report.new(@dir).markdown, "| docker | posthog | gha | base | github | cold | unmeasured | aaaaaaaaaaaa | 1.40.1 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured | post-job |"
   end
 
   private
@@ -61,7 +61,7 @@ class ReportTest < Minitest::Test
       File.write(File.join(@dir, name), JSON.generate(
         "adapter_command" => "docker", "case" => "posthog", "lane" => "gha", "level" => "base", "runner" => "github",
         "phase" => phase, "step" => step, "scope" => scope, "sha" => sha, "seconds" => seconds,
-        "exit_status" => exit_status, "output_ok" => output_ok, "versions" => { "boringcache" => boringcache }
+        "exit_status" => exit_status, "output_ok" => output_ok, "cache_save_timing" => "post-job", "versions" => { "boringcache" => boringcache }
       ))
     end
 end

@@ -61,7 +61,7 @@ module Bench
     end
 
     def record_path
-      File.join(@results_dir, kase.tool.name, kase.name, scope, "#{[lane.name, runner, phase, step].compact.join("-")}.json")
+      File.join(@results_dir, kase.tool.name, kase.name, scope, "#{[lane.name, runner, phase, step, retry_suffix].compact.join("-")}.json")
     end
 
     def build_dir
@@ -77,6 +77,14 @@ module Bench
     end
 
     private
+      def retry_suffix
+        "attempt-#{attempt}" if attempt.to_i > 1
+      end
+
+      def attempt
+        @env["GITHUB_RUN_ATTEMPT"]&.to_i
+      end
+
       def workspace
         @workspace ||= Workspace.new(kase, lane:, scope:, root: @work_root)
       end
@@ -144,12 +152,14 @@ module Bench
           "capabilities" => lane.capabilities.reject { PLAN_CAPABILITIES.include?(it) && !adapter[it] },
           "runner" => runner,
           "runner_label" => kase.tool.catalog.runner_label(runner),
+          "machine" => lane.machine || kase.tool.catalog.runner_machine(runner),
           "phase" => phase,
           "step" => step,
           "scope" => scope,
           "repo" => kase.repo,
           "sha" => sha,
           "seconds" => seconds,
+          "cache_save_timing" => lane.cache_save_timing,
           "exit_status" => exit_status,
           "output_ok" => output_ok(exit_status),
           "provider_reported" => provider_reported,
@@ -157,7 +167,7 @@ module Bench
           "evidence" => File.exist?(evidence_path) ? [File.basename(evidence_path)] : [],
           "versions" => { "boringcache" => boringcache_version },
           "run_url" => run_url,
-          "attempt" => @env["GITHUB_RUN_ATTEMPT"]&.to_i,
+          "attempt" => attempt,
           "started_at" => started_at
         }
         File.write(record_path, JSON.pretty_generate(record) + "\n")

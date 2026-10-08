@@ -1,5 +1,6 @@
 provider = "depot"
 level = "base"
+machine = "depot builder"
 runners = ["github"]
 secrets = ["DEPOT_TOKEN", "DEPOT_DOCKER_PROJECT_ID"]
 setup = ["depot"]

@@ -1,5 +1,6 @@
 provider = "namespace"
 level = "base"
+machine = "namespace builder"
 actions_only = true
 runners = ["github"]
 setup = ["namespace"]
