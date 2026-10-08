@@ -1,0 +1,34 @@
+{
+  "adapter_command": "nx",
+  "case": "storybook",
+  "lane": "depot-cache",
+  "provider": "depot",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "phase": "cold",
+  "step": null,
+  "scope": "depot-cache-github-37761421772",
+  "repo": "storybookjs/storybook",
+  "sha": "523e561cf330879201a73d7634e910ac04decf0b",
+  "seconds": 128.529,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {
+    "boringcache": null
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37761421772",
+  "attempt": 1,
+  "started_at": "2026-10-08T10:08:29Z"
+}
