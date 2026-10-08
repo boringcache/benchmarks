@@ -1,0 +1,49 @@
+{
+  "adapter_command": "docker",
+  "case": "chroma",
+  "lane": "ghcr",
+  "provider": "github-container-registry",
+  "level": "base",
+  "capabilities": [
+    "layers"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 2,
+  "scope": "ghcr-github-rolling",
+  "cache_scope": "ghcr-github-37761357681",
+  "cache_seeded": true,
+  "repo": "chroma-core/chroma",
+  "sha": "f36d9bba588e81efb0a0e7f155d2ca2cf58d2b4f",
+  "seconds": 4463.153,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    },
+    "image_platform": "linux/amd64",
+    "buildx_builder": {
+      "name": "builder-dbe154ae-d2e5-4a17-a0f3-a7fbd31aead6",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-dbe154ae-d2e5-4a17-a0f3-a7fbd31aead60",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {
+    "boringcache": null
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37806563062",
+  "attempt": 1,
+  "started_at": "2026-10-08T16:10:30Z"
+}
