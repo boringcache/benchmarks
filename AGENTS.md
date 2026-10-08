@@ -24,13 +24,13 @@ This repository benchmarks BoringCache against other cache providers on real pro
 7. **Check on Actions.** Preflight, then a fresh run:
    `gh workflow run project.yml --ref main -f tool=<Tool> -f project=<project> -f mode=preflight`, then `-f mode=fresh`.
 8. **Audit the fresh run.** Every record has `exit_status` 0 and `output_ok` true, each warm follows a passing cold, and logs show the cache restored and saved. A failed cold means its warm is not a comparison.
-9. **Roll.** Add the project to `rolling.toml` only after its fresh run passes, so rolling starts from that fresh cache.
+9. **Roll.** Add the project to `rolling.toml` only after its fresh run passes.
 
 ## Run and roll
 
 - Fresh runs build `start_sha` cold then warm. A cold cannot be retried inside a run; dispatch a new fresh run.
 - Rolling keeps one position per tool and project. Every lane builds the same next first-parent commit, and the next run moves on whether or not that commit failed. Projects without new upstream commits plan nothing.
-- Each lane's rolling series continues its latest passing fresh cache for the baseline commit and pins that scope in its records (`cache_scope`, `cache_seeded`).
+- Each lane rolls on one fixed cache scope, `<lane>-<runner>-rolling`, which every step restores and saves. Fresh runs use their own run-scoped caches and never touch it, so a lane's first rolling step starts empty.
 - `schedule.yml` dispatches rolling for every project in `rolling.toml`; the workflow's concurrency group runs one rolling run per project at a time.
 - A failed build or output check is recorded first, then fails its job. A failure in `prepare` leaves no record; that lane continues at the next step.
 - Re-run a failed rolling job only before the next step of that project starts. A re-run of an older step skips its build once a newer step is recorded for that lane, so it can never overwrite the newer cache.
@@ -45,7 +45,7 @@ gh workflow run project.yml --ref main -f tool=<Tool> -f project=<project> -f mo
 
 - Confirm the canary contains the fix first: `git -C monorepo merge-base --is-ancestor <fix-commit> <canary-sha>`.
 - Canary records carry `versions.boringcache_release`, and the report shows that tag in the CLI column, so they never merge with release rows. Compare them with the release fresh rows at the same commit.
-- Rolling always uses the pinned CLI and never seeds from a canary run. Bump `versions.toml` only after the release is published.
+- Rolling always uses the pinned CLI. Bump `versions.toml` only after the release is published.
 
 ## Investigate a failure
 

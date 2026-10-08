@@ -18,7 +18,7 @@ module Bench
     end
 
     def cache_scope(lane, runner)
-      pinned(lane, runner) || fresh_scope(lane, runner) || self.class.scope(lane, runner)
+      self.class.scope(lane, runner)
     end
 
     def last_step(lane, runner)
@@ -26,20 +26,10 @@ module Bench
     end
 
     def continues?(lane, runner)
-      records(File.join(self.class.scope(lane, runner), "*.json")).any?
+      records(File.join(self.class.scope(lane, runner), "*.json")).any? { it["cache_scope"] == cache_scope(lane, runner) }
     end
 
     private
-      def pinned(lane, runner)
-        records(File.join(self.class.scope(lane, runner), "*.json")).filter_map { it["cache_scope"] }.first
-      end
-
-      def fresh_scope(lane, runner)
-        records(File.join("#{lane.name}-#{runner}-*", "#{lane.name}-#{runner}-cold*.json"))
-          .select { it["exit_status"] == 0 && it["output_ok"] == true && it["sha"] == @kase.start_sha && it.dig("versions", "boringcache_release").nil? }
-          .max_by { it["scope"].to_s[/\d+\z/].to_i }&.fetch("scope")
-      end
-
       def records(pattern)
         Dir.glob(File.join(@results_dir, @kase.tool.name, @kase.name, pattern)).sort.map { JSON.parse(File.read(it)) }
       end

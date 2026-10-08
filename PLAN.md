@@ -165,7 +165,7 @@ Implementation: Ruby 4.0.7 (`.tool-versions`), `toml-rb` for our own TOML files
 
 **Rolling** (through real upstream history, starting at each case's `start_sha`):
 
-- A seed at `start_sha`, the commit the case starts from.
+- Step 0 at `start_sha`, the commit the case starts from, on the lane's fixed rolling cache (`<lane>-<runner>-rolling`), separate from fresh runs.
 - Each tick builds the next first-parent commit after the last recorded one,
   restoring and saving the series scope. Every lane of a case builds the same
   commit in the same tick.

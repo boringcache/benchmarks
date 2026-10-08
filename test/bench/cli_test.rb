@@ -25,29 +25,20 @@ class CLITest < Minitest::Test
     assert_empty matrix("app", "--rolling")
   end
 
-  def test_rolling_matrix_continues_each_lanes_latest_passing_fresh_cache
+  def test_rolling_matrix_keeps_one_fixed_cache_scope_per_lane_apart_from_fresh_runs
     write "tmp/results/demo/app/remote-github-r1/remote-github-cold.json", JSON.generate("scope" => "remote-github-r1", "sha" => @upstream_sha, "exit_status" => 0, "output_ok" => true)
-    write "tmp/results/demo/app/remote-github-r2/remote-github-cold.json", JSON.generate("scope" => "remote-github-r2", "sha" => @upstream_sha, "exit_status" => 1, "output_ok" => false)
-    write "tmp/results/demo/app/remote-github-r3/remote-github-cold.json", JSON.generate("scope" => "remote-github-r3", "sha" => "f" * 40, "exit_status" => 0, "output_ok" => true)
 
     scopes = matrix("app", "--rolling").to_h { [it["lane"], it["cache_scope"]] }
-    assert_equal({ "boringcache-demo" => "boringcache-demo-github-rolling", "remote" => "remote-github-r1", "gha" => "gha-github-rolling" }, scopes)
+    assert_equal({ "boringcache-demo" => "boringcache-demo-github-rolling", "remote" => "remote-github-rolling", "gha" => "gha-github-rolling" }, scopes)
   end
 
   def test_rolling_matrix_marks_lanes_that_continue_their_own_rolling_cache
     commit_upstream("two")
     rolling_record("remote", 0, @upstream_sha)
+    write "tmp/results/demo/app/gha-github-rolling/gha-github-rolling-0.json", JSON.generate("step" => 0, "sha" => @upstream_sha, "cache_scope" => "gha-github-r1")
 
     continues = matrix("app", "--rolling").to_h { [it["lane"], it["continues"]] }
     assert_equal({ "boringcache-demo" => "", "remote" => "true", "gha" => "" }, continues)
-  end
-
-  def test_rolling_matrix_never_seeds_from_a_canary_fresh_run
-    write "tmp/results/demo/app/remote-github-r1/remote-github-cold.json", JSON.generate("scope" => "remote-github-r1", "sha" => @upstream_sha, "exit_status" => 0, "output_ok" => true)
-    write "tmp/results/demo/app/remote-github-r2/remote-github-cold.json", JSON.generate("scope" => "remote-github-r2", "sha" => @upstream_sha, "exit_status" => 0, "output_ok" => true,
-                                                                                       "versions" => { "boringcache" => "1.40.1", "boringcache_release" => "vcli-canary-0123456789ab" })
-
-    assert_equal "remote-github-r1", matrix("app", "--rolling", "--lane", "remote").first["cache_scope"]
   end
 
   def test_matrix_takes_a_cli_release_for_fresh_runs_only
@@ -141,7 +132,7 @@ class CLITest < Minitest::Test
 
   private
     def rolling_record(lane, step, sha)
-      write "tmp/results/demo/app/#{lane}-github-rolling/#{lane}-github-rolling-#{step}.json", JSON.generate("step" => step, "sha" => sha)
+      write "tmp/results/demo/app/#{lane}-github-rolling/#{lane}-github-rolling-#{step}.json", JSON.generate("step" => step, "sha" => sha, "cache_scope" => "#{lane}-github-rolling")
     end
 
     def matrix(*argv)
