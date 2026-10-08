@@ -5,7 +5,7 @@ runners = ["macos"]
 secrets = ["BITRISE_BUILD_CACHE_AUTH_TOKEN", "BITRISE_BUILD_CACHE_WORKSPACE_ID"]
 setup = ["bitrise"]
 probe = ["bitrise-build-cache activate xcode --cache --cache-push=false && bitrise-build-cache doctor && xcrun --sdk macosx --show-sdk-path"]
-wrap = ["bash", "-c", "echo \"xcrun on PATH: $(command -v xcrun) -> $(xcrun --sdk macosx --show-sdk-path 2>&1 | tr '\\n' ' ')\"; export SDKROOT=\"$(/usr/bin/xcrun --sdk macosx --show-sdk-path)\" && printenv SDKROOT && exec \"$@\"", "sdkroot"]
+wrap = ["bash", "-c", "echo \"xcrun on PATH: $(command -v xcrun) -> $(xcrun --sdk macosx --show-sdk-path 2>&1 | tr '\\n' ' ')\"; export SDKROOT=\"$(/usr/bin/xcrun --sdk macosx --show-sdk-path)\" && printenv SDKROOT; \"$@\"; rc=$?; [ $rc -eq 0 ] || grep -n -A12 -E 'apple sysroot|compiler identification|Compiling the C compiler identification' build_macos/CMakeFiles/CMakeConfigureLog.yaml | head -120; exit $rc", "sdkroot"]
 
 [cold]
 prepare = ["bitrise-build-cache activate xcode --cache --cache-push=true"]
