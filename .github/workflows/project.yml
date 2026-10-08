@@ -25,8 +25,6 @@ concurrency:
 
 permissions:
   contents: read
-  id-token: write
-  packages: write
 
 jobs:
   plan:
@@ -45,7 +43,11 @@ jobs:
           TOOL: ${{ inputs.tool }}
           PROJECT: ${{ inputs.project }}
           ROLLING: ${{ inputs.mode == 'rolling' && 'true' || '' }}
-        run: echo "matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling})" >> "$GITHUB_OUTPUT"
+        run: |
+          git fetch --quiet --depth=1 origin main
+          rm -rf results
+          if git cat-file -e FETCH_HEAD:results 2>/dev/null; then git checkout FETCH_HEAD -- results; fi
+          echo "matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} --results results)" >> "$GITHUB_OUTPUT"
 
   cold:
     needs: plan
@@ -53,6 +55,10 @@ jobs:
     name: "${{ inputs.mode == 'preflight' && 'preflight' || 'cold' }}: ${{ matrix.label }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 180
+    permissions: &lane_permissions
+      contents: read
+      id-token: write
+      packages: write
     strategy: &matrix
       fail-fast: false
       matrix:
@@ -96,6 +102,7 @@ jobs:
     name: "warm: ${{ matrix.label }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 180
+    permissions: *lane_permissions
     strategy: *matrix
     env: *secrets
     steps: *steps
@@ -106,19 +113,21 @@ jobs:
     name: "rolling: ${{ matrix.label }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 180
+    permissions: *lane_permissions
     strategy: *matrix
     env: *secrets
     steps: *steps
 
   publish:
     needs: [plan, cold, warm, rolling]
-    if: ${{ !cancelled() && inputs.mode != 'preflight' && needs.plan.outputs.matrix != '[]' }}
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && inputs.mode != 'preflight' && needs.plan.outputs.matrix != '[]' }}
     runs-on: ubuntu-24.04
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: main
           fetch-depth: 0
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
