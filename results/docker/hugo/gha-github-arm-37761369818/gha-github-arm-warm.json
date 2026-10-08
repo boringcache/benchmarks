@@ -1,0 +1,45 @@
+{
+  "adapter_command": "docker",
+  "case": "hugo",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "layers"
+  ],
+  "runner": "github-arm",
+  "runner_label": "ubuntu-24.04-arm",
+  "phase": "warm",
+  "step": null,
+  "scope": "gha-github-arm-37761369818",
+  "repo": "gohugoio/hugo",
+  "sha": "ec69d0e64931715e490ae411cba2b305636d20e0",
+  "seconds": 14.367,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Neoverse-N2",
+      "cores": 4
+    },
+    "image_platform": "linux/arm64",
+    "buildx_builder": {
+      "name": "builder-297f24f4-7876-4052-8c59-591b8f5a8b25",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-297f24f4-7876-4052-8c59-591b8f5a8b250",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {
+    "boringcache": null
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37761369818",
+  "attempt": 1,
+  "started_at": "2026-10-08T10:15:41Z"
+}
