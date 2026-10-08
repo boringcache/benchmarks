@@ -156,6 +156,11 @@ module Bench
         rolling = Rolling.new(kase, results_dir: options[:results], work_root: options[:work])
         step, sha = options[:sha] ? [Integer(options[:step]), options[:sha]] : rolling.next_step
         cache_scope = options[:cache_scope] || rolling.cache_scope(lane, options[:runner])
+        newer = options[:recorded] && Rolling.new(kase, results_dir: options[:recorded], work_root: options[:work]).last_step(lane, options[:runner])
+        if sha && newer && newer > step
+          @out.puts "#{kase.id} #{lane.name} rolling: step #{newer} is already recorded, so step #{step} is not rebuilt"
+          return nil
+        end
         return PhaseRun.new(kase, lane, scope: Rolling.scope(lane, options[:runner]), cache_scope:, sha:, step:, **common) if sha
 
         @out.puts "#{kase.id} #{lane.name} rolling: no upstream commit after the last step"
@@ -225,6 +230,7 @@ module Bench
             opts.on("--cache-scope SCOPE") { options[:cache_scope] = it }
             opts.on("--cli TAG") { options[:cli] = it }
             opts.on("--continues") { options[:continues] = true }
+            opts.on("--recorded DIR") { options[:recorded] = File.expand_path(it) }
           end.parse!(@argv)
         end
       end

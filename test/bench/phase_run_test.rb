@@ -127,6 +127,16 @@ class PhaseRunTest < Minitest::Test
     assert_includes rolling_restore_key("--continues"), "restore_key<<BENCH_EOF\ndemo-app-remote-local-r30-\nBENCH_EOF"
   end
 
+  def test_a_rerun_of_an_older_rolling_step_never_overwrites_a_newer_one
+    recorded = File.join(@root, "recorded")
+    write "recorded/demo/app/remote-local-rolling/remote-local-rolling-4-901.json", JSON.generate("step" => 4, "sha" => @upstream_sha)
+
+    assert_includes rolling_restore_key("--recorded", recorded), "ready<<BENCH_EOF\nfalse\nBENCH_EOF"
+
+    write "recorded/demo/app/remote-local-rolling/remote-local-rolling-4-901.json", JSON.generate("step" => 3, "sha" => @upstream_sha)
+    assert_includes rolling_restore_key("--recorded", recorded), "ready<<BENCH_EOF\ntrue\nBENCH_EOF"
+  end
+
   def test_a_record_keeps_the_cache_key_the_lane_restored
     with_fixture_env do
       assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r31")

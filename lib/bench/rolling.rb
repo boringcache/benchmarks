@@ -21,6 +21,10 @@ module Bench
       pinned(lane, runner) || fresh_scope(lane, runner) || self.class.scope(lane, runner)
     end
 
+    def last_step(lane, runner)
+      records(File.join(self.class.scope(lane, runner), "*.json")).filter_map { it["step"] }.max
+    end
+
     def continues?(lane, runner)
       records(File.join(self.class.scope(lane, runner), "*.json")).any?
     end
