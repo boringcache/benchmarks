@@ -1,0 +1,39 @@
+{
+  "adapter_command": "cargo",
+  "case": "deno",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 7,
+  "scope": "gha-plus-github-rolling",
+  "cache_scope": "gha-plus-github-37761431810",
+  "cache_seeded": true,
+  "cache_restored_key": "cargo-deno-gha-plus-github-37761431810-6",
+  "repo": "denoland/deno",
+  "sha": "0875ce328b9b6b80ec12c008ccf675ce8e28c398",
+  "seconds": 1666.995,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37836762251",
+  "attempt": 1,
+  "started_at": "2026-10-08T20:06:48Z"
+}
