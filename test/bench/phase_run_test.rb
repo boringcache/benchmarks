@@ -17,6 +17,18 @@ class PhaseRunTest < Minitest::Test
     assert_equal({ "boringcache" => "9.9.9" }, cold["versions"])
   end
 
+  def test_an_archive_lane_wraps_the_plan_command_in_boringcache_run
+    write "tools/demo/lanes/boringcache-archive.toml", %(provider = "boringcache"\nlevel = "base"\nprofile = "deps"\n)
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", "[runs]\nboringcache-archive = [\"local\"]\n")
+    with_fixture_env do
+      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-archive", "--run-id", "r40")
+    end
+
+    command = %(bash -c echo "$DEMO_CACHE" > upstream/out.txt)
+    assert_equal ["run --profile deps --no-git --fail-on-cache-error -- #{command}", "run --profile deps --no-git --fail-on-cache-error --read-only -- #{command}"],
+                 File.readlines(File.join(@root, "stub.log"), chomp: true)
+  end
+
   def test_cold_refuses_a_rerun_attempt_but_warm_runs
     with_fixture_env do
       ENV["GITHUB_RUN_ATTEMPT"] = "2"

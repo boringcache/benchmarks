@@ -189,12 +189,17 @@ runs:
       run: bundle exec bin/bench probe "$BENCH_CASE" --lane "$BENCH_LANE" --run-id "$BENCH_RUN_ID"
 
     - id: actions-cache-restore
-      if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != ''
+      if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != '' && !contains(inputs.setup, 'namespace-cache')
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ steps.prepare.outputs.cache_paths }}
         key: ${{ steps.prepare.outputs.cache_key }}
         restore-keys: ${{ steps.prepare.outputs.restore_key }}
+
+    - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'namespace-cache')
+      uses: namespacelabs/nscloud-cache-action@a90bb5d4b27522ce881c6e98eebd7d7e6d1653f9 # v1.4.2
+      with:
+        path: ${{ steps.prepare.outputs.cache_paths }}
 
     - id: dance-cache
       if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance') && inputs.phase != 'warm'
@@ -234,7 +239,7 @@ runs:
           bundle exec bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
         fi
 
-    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != '' && inputs.phase != 'warm'
+    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != '' && !contains(inputs.setup, 'namespace-cache') && inputs.phase != 'warm'
       uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ steps.prepare.outputs.cache_paths }}

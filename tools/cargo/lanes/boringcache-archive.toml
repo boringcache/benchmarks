@@ -1,0 +1,4 @@
+provider = "boringcache"
+level = "plus"
+plan = "archive"
+profile = "bundle"
