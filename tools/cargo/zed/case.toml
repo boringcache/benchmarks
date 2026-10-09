@@ -1,6 +1,7 @@
 repo = "zed-industries/zed"
 branch = "main"
 start_sha = "40180d9c40e2d20eb63d388bff920818f2910b53"
+rolling_stride = 3
 directory = "upstream"
 prepare = [
   "df -h / && if [ -d /usr/local/lib/android ]; then sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL; fi && df -h /",

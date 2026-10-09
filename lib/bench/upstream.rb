@@ -8,7 +8,7 @@ module Bench
     def next_commit(after)
       init unless File.exist?(File.join(@dir, "HEAD"))
       Bench.git("fetch", "--quiet", "--filter=tree:0", "origin", @kase.branch, chdir: @dir)
-      Bench.git("rev-list", "--first-parent", "--reverse", "#{after}..FETCH_HEAD", chdir: @dir).lines.first&.strip
+      Bench.git("rev-list", "--first-parent", "--reverse", "#{after}..FETCH_HEAD", chdir: @dir).lines[(@kase.rolling_stride || 1) - 1]&.strip
     end
 
     private
