@@ -283,6 +283,12 @@ are amd64, so local runs prove setup, not timings.
 
 - Namespace is a trial (23 days left on 2026-10-07).
 - GitHub Actions cache storage for the repo is 200 GB.
+- The Namespace trial caps 8-core profiles at 16 GB; 32 GB needs a paid plan.
+- Reconcile the lanes added in October once they have enough steps. Zed
+  bundle (its own case, for the Namespace cache-volume comparison), PostHog's
+  gha-plus and its runner variants, and the Zed Depot 4c pair each sit beside
+  a project's main comparison. Reports and the website should show each
+  project as one coherent set of lanes, not scattered variants.
 
 ## Removed lanes
 
