@@ -1,0 +1,4 @@
+provider = "depot"
+level = "plus"
+actions_only = true
+runners = ["depot-8"]

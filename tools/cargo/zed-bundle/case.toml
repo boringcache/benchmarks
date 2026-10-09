@@ -5,7 +5,6 @@ directory = "upstream"
 shared = ["~/.cargo/registry/index", "~/.cargo/registry/cache", "~/.cargo/git/db", "upstream/target"]
 prepare = [
   "df -h / && if [ -d /usr/local/lib/android ]; then sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL; fi && df -h /",
-  'if [ -z "$(swapon --show --noheadings)" ]; then (sudo fallocate -l 4G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile) || echo "swap not enabled"; fi; free -m',
   "mise trust && mise install",
   "cd upstream && ./script/linux",
   "cd upstream && CARGO_HOME=\"${RUNNER_TEMP:-/tmp}/cargo-about-home\" cargo install cargo-about@0.8.2 --locked --root \"$HOME/.cargo\"",
@@ -18,5 +17,5 @@ CC = "clang-18"
 CXX = "clang++-18"
 
 [runs]
-boringcache-archive = ["namespace-8"]
-namespace-cache = ["namespace-8-cache"]
+boringcache-archive = ["depot-8"]
+depot-actions-cache = ["depot-8"]
