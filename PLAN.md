@@ -73,7 +73,12 @@ yet, so they get no directory until one does.
 3. The timer covers the same window for every lane: restore every cached layer,
    install dependencies, build, save. When a case puts install in the window, the
    committed command does install then build. Checkout, `prepare` (submodules,
-   toolchain) and the output check are outside it.
+   toolchain) and the output check are outside it. Actions that can only save
+   after the job (the BuildKit cache dance, kache, mbx, Namespace cache volumes)
+   name those steps in the lane's `post_job_save`; the publish job reads their
+   durations from the job log, and the report adds them to the timing. Other
+   post-job steps, such as removing the Buildx builder, are not cache work and
+   stay out.
 4. Same source, command, runner class, architecture and toolchain for every lane
    of a case. Runner comparisons are their own explicit series.
 5. Some comparisons are knowingly not like-for-like (Docker `plus` against the

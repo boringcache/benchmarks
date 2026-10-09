@@ -75,6 +75,41 @@ class CLITest < Minitest::Test
     end
   end
 
+  def test_post_job_saves_adds_only_the_lanes_post_job_cache_saves
+    write "tools/demo/lanes/gha.toml", %(provider = "github-actions-cache"\nlevel = "base"\nactions_only = true\nrunners = ["github"]\npost_job_save = ["acme/save-action", "dance-cache"]\n)
+    write "job.log", <<~LOG
+      2026-10-09T10:00:00Z ##[end-action id=__self.__acme_save-action;outcome=success;conclusion=success;duration_ms=9000]
+      2026-10-09T10:10:00Z Post job cleanup.
+      2026-10-09T10:10:12Z ##[end-action id=__1a2b.__acme_save-action;outcome=success;conclusion=success;duration_ms=12500]
+      2026-10-09T10:10:13Z ##[end-action id=__1a2b.dance-cache;outcome=success;conclusion=success;duration_ms=500]
+      2026-10-09T10:11:21Z ##[end-action id=__1a2b.__docker_setup-buildx-action;outcome=success;conclusion=success;duration_ms=68000]
+    LOG
+    write "bin/gh", <<~BASH
+      #!/usr/bin/env bash
+      echo "gh $*" >> "$STUB_LOG"
+      case "$*" in
+        *runs/42/jobs*) echo '{"id":7,"name":"rolling: github 4c · gha"}' ;;
+        *jobs/7/logs*) cat "#{File.join(@root, "job.log")}" ;;
+      esac
+    BASH
+    File.chmod(0o755, File.join(@root, "bin/gh"))
+    %w[gha remote].each do |lane|
+      write "tmp/results/demo/app/#{lane}-github-rolling/#{lane}-github-rolling-3.json", JSON.generate("adapter_command" => "demo", "case" => "app", "lane" => lane, "runner" => "github", "phase" => "rolling",
+                                                                                                   "run_url" => "https://github.com/boringcache/benchmarks/actions/runs/42")
+    end
+
+    with_fixture_env do
+      ENV["GITHUB_REPOSITORY"] = "boringcache/benchmarks"
+      Bench::CLI.new(%W[post-job-saves --run-id 42 --results #{@root}/tmp/results], catalog:, out: StringIO.new).call
+    ensure
+      ENV.delete("GITHUB_REPOSITORY")
+    end
+
+    saved = %w[gha remote].to_h { [it, JSON.parse(File.read(File.join(@root, "tmp/results/demo/app/#{it}-github-rolling/#{it}-github-rolling-3.json")))["post_job_save_seconds"]] }
+    assert_equal({ "gha" => 13.0, "remote" => nil }, saved)
+    assert_equal 2, File.readlines(File.join(@root, "stub.log")).size
+  end
+
   def test_matrix_takes_a_cli_release_for_fresh_runs_only
     assert_equal 3, matrix("app", "--cli", "vcli-canary-0123456789ab").size
     assert_equal 3, matrix("app", "--cli", "v1.41.0").size

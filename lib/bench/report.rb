@@ -34,12 +34,20 @@ module Bench
     private
       def key(record)
         [*record.values_at(*%w[adapter_command case lane level runner phase step sha]), record.dig("versions", "boringcache_release") || record.dig("versions", "boringcache"),
-         [record["attempt"].to_i, 1].max, record["cache_seeded"], record["cache_save_timing"], record["machine"],
+         [record["attempt"].to_i, 1].max, record["cache_seeded"], save_timing(record), record["machine"],
          record.dig("observed", "machine", "cpu"), record.dig("observed", "machine", "cores")]
       end
 
+      def save_timing(record)
+        record.key?("post_job_save_seconds") ? "post-job, timed" : record["cache_save_timing"]
+      end
+
+      def timed_seconds(record)
+        record["seconds"] && (record["seconds"] + record["post_job_save_seconds"].to_f).round(3)
+      end
+
       def row(key, group)
-        seconds = group.select { passed?(it) && seeded?(it) }.filter_map { it["seconds"] }.sort
+        seconds = group.select { passed?(it) && seeded?(it) }.filter_map { timed_seconds(it) }.sort
         KEY.zip(key).to_h.merge(
           "samples" => group.size,
           "failed" => group.count { !passed?(it) },
