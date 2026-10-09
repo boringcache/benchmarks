@@ -1,0 +1,433 @@
+{
+  "adapter_command": "cargo",
+  "case": "zed",
+  "lane": "boringcache-cargo-plus",
+  "provider": "boringcache",
+  "level": "plus",
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "runner": "depot-4",
+  "runner_label": "depot-ubuntu-24.04-4",
+  "machine": "depot 4c",
+  "phase": "rolling",
+  "step": 23,
+  "scope": "boringcache-cargo-plus-depot-4-rolling",
+  "cache_scope": "boringcache-cargo-plus-depot-4-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "zed-industries/zed",
+  "sha": "54edefa0832e4728bcf077e4a48b25912eea5433",
+  "seconds": 1204.3,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1791563893073,
+      "run_id": "37957532392",
+      "session_id": null,
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 1154761,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "sccache",
+      "proxy": {
+        "adapter": "sccache",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 1154761,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 291,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 14,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_check": 0,
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "upload_session_commit_blobs": 0,
+          "upload_session_commit_manifest": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_check": 35,
+          "cache_blobs_commit": 41,
+          "cache_blobs_download_urls": 94,
+          "cache_blobs_upload_urls": 74,
+          "cache_finalize_publish": 116,
+          "cache_flush_upload": 39,
+          "cache_kv_entries_current_version": 122,
+          "cache_kv_entries_download_urls": 134,
+          "cache_kv_entries_upsert": 118,
+          "cache_kv_entry_reads": 58,
+          "cache_rollups_ingest": 89,
+          "upload_session_commit_blobs": 137,
+          "upload_session_commit_manifest": 159
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_check": 336,
+          "cache_blobs_commit": 63,
+          "cache_blobs_download_urls": 591,
+          "cache_blobs_upload_urls": 206,
+          "cache_finalize_publish": 747,
+          "cache_flush_upload": 183,
+          "cache_kv_entries_current_version": 122,
+          "cache_kv_entries_download_urls": 134,
+          "cache_kv_entries_upsert": 164,
+          "cache_kv_entry_reads": 58,
+          "cache_rollups_ingest": 137,
+          "upload_session_commit_blobs": 137,
+          "upload_session_commit_manifest": 159
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_check": 4,
+          "cache_blobs_commit": 115,
+          "cache_blobs_download_urls": 4,
+          "cache_blobs_upload_urls": 162,
+          "cache_finalize_publish": 4,
+          "cache_flush_upload": 4,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entries_upsert": 43,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 25,
+          "upload_session_commit_blobs": 1,
+          "upload_session_commit_manifest": 1
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_check": 0,
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "upload_session_commit_blobs": 0,
+          "upload_session_commit_manifest": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 366,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_check": 0,
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "upload_session_commit_blobs": 0,
+          "upload_session_commit_manifest": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_check": 35,
+          "cache_blobs_commit": 41,
+          "cache_blobs_download_urls": 94,
+          "cache_blobs_upload_urls": 74,
+          "cache_finalize_publish": 116,
+          "cache_flush_upload": 39,
+          "cache_kv_entries_current_version": 122,
+          "cache_kv_entries_download_urls": 134,
+          "cache_kv_entries_upsert": 118,
+          "cache_kv_entry_reads": 58,
+          "cache_rollups_ingest": 89,
+          "upload_session_commit_blobs": 137,
+          "upload_session_commit_manifest": 159
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_check": 336,
+          "cache_blobs_commit": 63,
+          "cache_blobs_download_urls": 591,
+          "cache_blobs_upload_urls": 206,
+          "cache_finalize_publish": 747,
+          "cache_flush_upload": 183,
+          "cache_kv_entries_current_version": 122,
+          "cache_kv_entries_download_urls": 134,
+          "cache_kv_entries_upsert": 164,
+          "cache_kv_entry_reads": 58,
+          "cache_rollups_ingest": 137,
+          "upload_session_commit_blobs": 137,
+          "upload_session_commit_manifest": 159
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_check": 4,
+          "cache_blobs_commit": 115,
+          "cache_blobs_download_urls": 4,
+          "cache_blobs_upload_urls": 162,
+          "cache_finalize_publish": 4,
+          "cache_flush_upload": 4,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entries_upsert": 43,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 25,
+          "upload_session_commit_blobs": 1,
+          "upload_session_commit_manifest": 1
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_check": 0,
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "upload_session_commit_blobs": 0,
+          "upload_session_commit_manifest": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 366,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 182
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 4751067,
+        "startup_prefetch_blobs_per_sec": 78,
+        "startup_prefetch_bytes_per_sec": 372356789,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 14,
+        "startup_prefetch_concurrency_adjustment_count": 0,
+        "startup_prefetch_concurrency_reason": "medium_blobs",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_duration_ms": 3713,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 14,
+        "startup_prefetch_initial_concurrency": 14,
+        "startup_prefetch_inserted": 291,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 14,
+        "startup_prefetch_mode": "current-version",
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 291,
+        "startup_prefetch_target_bytes": 1382560760,
+        "startup_prefetch_total_unique_blobs": 2293,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 291
+      },
+      "kv_upload": {
+        "kv_upload_allowed_concurrency_max": 1,
+        "kv_upload_already_present_blobs": 116,
+        "kv_upload_batches": 43,
+        "kv_upload_blobs_per_sec": 0,
+        "kv_upload_concurrency_reason": "adaptive_ramp",
+        "kv_upload_concurrency_source": "auto",
+        "kv_upload_duration_ms": 1822,
+        "kv_upload_failed_blobs": 0,
+        "kv_upload_final_concurrency_max": 1,
+        "kv_upload_initial_concurrency_max": 1,
+        "kv_upload_missing_local_blobs": 0,
+        "kv_upload_requested_blobs": 0,
+        "kv_upload_uploaded_blobs": 0
+      },
+      "singleflight": {
+        "singleflight_kv_download_leaders": 291,
+        "singleflight_kv_lookup_leaders": 116
+      },
+      "kv_lookup": {
+        "kv_lookup_sccache_after_refresh_miss": 116,
+        "kv_lookup_sccache_published_fast_hit": 85,
+        "kv_lookup_sccache_published_fast_miss": 116
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 40300203,
+          "blob_read_local_count": 85,
+          "blob_read_local_hit_rate_pct": 23,
+          "blob_read_remote_avg_ms": 172,
+          "blob_read_remote_bytes": 1382560760,
+          "blob_read_remote_count": 291
+        },
+        "blob_read_cache_bytes": 2018565164,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "average_cache_read_hit_seconds": 0.001,
+        "average_cache_write_seconds": 0.006,
+        "average_compiler_seconds": 12.37,
+        "cache_errors": 0,
+        "cache_hits": 85,
+        "cache_misses": 116,
+        "cache_read_errors": 0,
+        "cache_timeouts": 0,
+        "cache_write_errors": 0,
+        "compile_requests": 209,
+        "compile_requests_executed": 201,
+        "hit_counts": {
+          "assembler": 10,
+          "c_cpp": 67,
+          "rust": 8
+        },
+        "hit_rate": 42.3,
+        "miss_counts": {
+          "rust": 116
+        },
+        "non_cacheable_calls": 8,
+        "non_cacheable_reasons": {
+          "-": 2,
+          "crate-type": 4,
+          "missing input": 2
+        },
+        "proxy_cache_read_errors": 0,
+        "proxy_cache_write_errors": 0,
+        "schema_version": "native_tool_evidence.v1",
+        "stats_source": "sccache --show-stats",
+        "tool": "sccache"
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "sccache",
+          "candidates": [
+            {
+              "confidence": "high",
+              "evidence": {
+                "bytes_read": 40300203,
+                "hit_rate": 42.3,
+                "hits": 85,
+                "misses": 116
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 1154761,
+            "errors": 0,
+            "hit_rate": 42.3,
+            "hits": 85,
+            "misses": 116,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 116
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 42.3,
+          "hits": 85,
+          "likely_reason": "mixed_existing_and_new_work",
+          "misses": 116,
+          "state": "warm_mixed",
+          "writes": 116
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9R45",
+      "cores": 4
+    }
+  },
+  "evidence": [
+    "boringcache-cargo-plus-depot-4-rolling-23-37957532392.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.40.2"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37957532392",
+  "attempt": 1,
+  "started_at": "2026-10-09T16:18:09Z"
+}
