@@ -1,0 +1,37 @@
+{
+  "adapter_command": "cargo",
+  "case": "zed",
+  "lane": "depot-cache",
+  "provider": "depot",
+  "level": "base",
+  "capabilities": [
+    "compiler-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 14,
+  "scope": "depot-cache-github-rolling",
+  "cache_scope": "depot-cache-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "zed-industries/zed",
+  "sha": "20d29fc6bc2fc2b58d1fff8d8e0503b9ba7f41d8",
+  "seconds": 2282.127,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37903608854",
+  "attempt": 1,
+  "started_at": "2026-10-09T08:16:10Z"
+}
