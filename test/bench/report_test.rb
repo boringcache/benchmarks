@@ -48,6 +48,17 @@ class ReportTest < Minitest::Test
     assert_equal [2, 0, 1, 5.0], warm.values_at("samples", "failed", "seed_failed", "median_seconds")
   end
 
+  def test_a_rolling_step_that_restored_nothing_from_its_lanes_cache_is_a_seed_failure
+    record "start.json", seconds: 90.0, phase: "rolling", step: 0, scope: "gha-github-rolling"
+    record "hit.json", seconds: 10.0, phase: "rolling", step: 1, scope: "gha-github-rolling", restored: "docker-posthog-gha-github-rolling-0"
+    record "evicted.json", seconds: 80.0, phase: "rolling", step: 2, scope: "gha-github-rolling"
+    record "before-the-field.json", seconds: 70.0, phase: "rolling", step: 3, scope: "gha-github-rolling", restored: :unrecorded
+    record "no-actions-cache.json", seconds: 60.0, phase: "rolling", step: 4, scope: "boringcache-github-rolling"
+
+    rows = Bench::Report.new(@dir).rows.sort_by { it["step"] }
+    assert_equal [[0, 90.0], [0, 10.0], [1, nil], [0, 70.0], [0, 60.0]], rows.map { it.values_at("seed_failed", "median_seconds") }
+  end
+
   def test_rows_split_by_commit_step_and_cli_version
     record "a.json", seconds: 10.0, sha: "a" * 40
     record "b.json", seconds: 20.0, sha: "b" * 40
@@ -84,12 +95,12 @@ class ReportTest < Minitest::Test
 
   private
     def record(name, seconds:, exit_status: 0, output_ok: true, phase: "cold", scope: "gha-github-1", sha: "a" * 40, step: nil,
-               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job")
-      File.write(File.join(@dir, name), JSON.generate(
+               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job", restored: nil)
+      File.write(File.join(@dir, name), JSON.generate({
         "adapter_command" => "docker", "case" => "posthog", "lane" => "gha", "level" => "base", "runner" => "github",
-        "phase" => phase, "step" => step, "scope" => scope, "sha" => sha, "seconds" => seconds, "attempt" => attempt,
+        "phase" => phase, "step" => step, "scope" => scope, "cache_scope" => scope, "sha" => sha, "seconds" => seconds, "attempt" => attempt,
         "exit_status" => exit_status, "output_ok" => output_ok, "cache_save_timing" => save, "machine" => "github 4c",
         "observed" => { "machine" => { "cpu" => cpu, "cores" => 4 } }, "versions" => { "boringcache" => boringcache, "boringcache_release" => release }.compact
-      ))
+      }.merge(restored == :unrecorded ? {} : { "cache_restored_key" => restored })))
     end
 end

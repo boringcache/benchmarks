@@ -83,6 +83,7 @@ gha = ["github"]
 | `repo`, `branch` | upstream GitHub repository and the branch rolling follows |
 | `start_sha` | latest first-parent commit on `branch` when the case is added; fresh runs build it and rolling starts from it |
 | `rolling_series` | optional integer above 1 that restarts rolling from `start_sha` on new scopes, `<lane>-<runner>-rolling-<series>`, so every lane's cache starts empty; records of earlier series are not read |
+| `rolling_stride` | optional integer above 1: each rolling step moves this many first-parent commits, for upstreams that land more commits a day than a step can build; every lane builds the same commits |
 | `directory` | where the build command runs, relative to the plan directory, default `.` |
 | `prepare` | untimed commands before the build |
 | `check` | untimed output check after the build |

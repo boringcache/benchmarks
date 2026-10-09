@@ -56,11 +56,20 @@ module Bench
       end
 
       def seeded?(record)
-        record["phase"] != "warm" || seeds.fetch(record.values_at("adapter_command", "case", "scope"), false)
+        return seeds.fetch(record.values_at("adapter_command", "case", "scope"), false) if record["phase"] == "warm"
+        return true unless record["phase"] == ROLLING && record.key?("cache_restored_key") && record["cache_restored_key"].nil?
+
+        first_step = restoring_scopes[record.values_at("adapter_command", "case", "cache_scope")]
+        first_step.nil? || record["step"] == first_step
       end
 
       def seeds
         @seeds ||= records.select { it["phase"] == "cold" }.to_h { [it.values_at("adapter_command", "case", "scope"), passed?(it)] }
+      end
+
+      def restoring_scopes
+        @restoring_scopes ||= records.select { it["phase"] == ROLLING }.group_by { it.values_at("adapter_command", "case", "cache_scope") }
+          .select { |_, group| group.any? { it["cache_restored_key"] } }.transform_values { |group| group.filter_map { it["step"] }.min }
       end
 
       def median(values)

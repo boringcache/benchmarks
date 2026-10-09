@@ -35,6 +35,10 @@ module Bench
       config["rolling_series"]
     end
 
+    def rolling_stride
+      config["rolling_stride"]
+    end
+
     def prepare
       config.fetch("prepare", [])
     end

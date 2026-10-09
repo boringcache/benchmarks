@@ -282,7 +282,21 @@ are amd64, so local runs prove setup, not timings.
 ## Things to watch
 
 - Namespace is a trial (23 days left on 2026-10-07).
-- GitHub Actions cache storage for the repo is 200 GB.
+- GitHub Actions cache storage for the repo is 200 GB, the enterprise's
+  ceiling. On 2026-10-09 the repo held 214–218 GB, so GitHub was deleting the
+  least recently used entries: the oldest left had been used 95 minutes
+  earlier, and lanes idle longer restored nothing (Spring AI and OTel Java
+  step 25, Turbo n8n step 35). Each rolling lane also keeps up to about six
+  older entries that its newest-first restore never reads, about half of the
+  100 largest caches. Reports count a rolling step that restored nothing from
+  a lane's Actions cache, after the lane's first step, under "Seed failed",
+  not as a timing; records from before 2026-10-08 18:37 carry no
+  `cache_restored_key` and are left as they are. Docker lanes on BuildKit's
+  `type=gha` cache record no key, so their misses are not visible.
+- PostHog (`rolling_stride = 10`), llama.cpp, Nix Zed and Cargo Zed (3 each)
+  move several first-parent commits per rolling step from 2026-10-09, because
+  each lands more commits a day than a step can build (PostHog 223 a day
+  against about 28 steps).
 - The Namespace trial caps 8-core profiles at 16 GB; 32 GB needs a paid plan.
 - Zed bundle runs on Depot 8c (32 GB). Its BoringCache lane is
   `boringcache-cargo-phases`: `boringcache cargo --phase restore`, Zed's own
