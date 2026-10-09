@@ -323,6 +323,12 @@ are amd64, so local runs prove setup, not timings.
   (default setup with the xcelerate and CMake logs) and 37769123380
   (`--disable-prefix-mapping`).
 
+## Restarted series
+
+- Deno restarted on 2026-10-09 as rolling series 2 on CLI 1.40.2, which fixes
+  Cargo source freshness. Series 1 (steps 0 to 12, all on CLI 1.40.1) and the
+  fresh run moved to `archive/deno-cli-1.40.1/`, kept but not reported.
+
 ## Removed cases
 
 Removed on 2026-10-09. Their records stay in `results/`; reports cover only the

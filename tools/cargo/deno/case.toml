@@ -1,6 +1,7 @@
 repo = "denoland/deno"
 branch = "main"
 start_sha = "1b48a20f85a8164aebe4fb29ae53909136a3d777"
+rolling_series = 2
 directory = "upstream"
 prepare = [
   "mise trust && mise install",
