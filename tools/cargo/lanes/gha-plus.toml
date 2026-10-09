@@ -1,7 +1,7 @@
 provider = "github-actions-cache"
 level = "plus"
 actions_only = true
-runners = ["github", "namespace-8"]
+runners = ["github", "namespace-4", "namespace-8"]
 finish = ["sccache --show-stats"]
 setup = ["actions-runtime"]
 paths = ["~/.cargo/registry/index", "~/.cargo/registry/cache", "~/.cargo/git/db", "upstream/target"]
