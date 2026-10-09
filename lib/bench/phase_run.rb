@@ -78,6 +78,19 @@ module Bench
       File.expand_path(file, workspace.dir) if file
     end
 
+    def cache_dance_map(root)
+      return {} unless dockerfile && File.exist?(dockerfile)
+
+      arch = { "x86_64" => "amd64", "aarch64" => "arm64", "arm64" => "arm64" }.fetch(Etc.uname[:machine])
+      platform = { "TARGETPLATFORM" => "linux/#{arch}", "TARGETARCH" => arch, "TARGETOS" => "linux" }
+      File.read(dockerfile).scan(/--mount=(\S+)/).flatten.filter_map do |mount|
+        options = mount.split(",").to_h { it.split("=", 2) }
+        next unless options["type"] == "cache"
+
+        (options["id"] || options["target"]).gsub(/\$\{?(TARGETPLATFORM|TARGETARCH|TARGETOS)\}?/) { platform.fetch($1) }
+      end.uniq.to_h { [File.join(root, it), { "id" => it, "target" => "/var/cache-target" }] }
+    end
+
     def cache_paths
       [*lane.paths, *kase.shared].map { File.expand_path(it, workspace.dir) }
     end
