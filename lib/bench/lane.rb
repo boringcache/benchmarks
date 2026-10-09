@@ -1,6 +1,6 @@
 module Bench
   class Lane
-    SETUPS = %w[buildx actions-runtime cache-dance ghcr depot vercel namespace nix cachix nativelink kache mbx].freeze
+    SETUPS = %w[buildx actions-runtime cache-dance namespace-cache ghcr depot vercel namespace nix cachix nativelink kache mbx].freeze
 
     attr_reader :tool, :path
 
@@ -22,7 +22,13 @@ module Bench
     end
 
     def label
-      boringcache? ? ["boringcache", ("plus" if level == "plus")].compact.join(" ") : name
+      return name unless boringcache?
+
+      ["boringcache", (run_profile ? "archive" : ("plus" if level == "plus"))].compact.join(" ")
+    end
+
+    def run_profile
+      config["profile"]
     end
 
     def machine

@@ -1,0 +1,6 @@
+provider = "namespace"
+level = "plus"
+actions_only = true
+runners = ["namespace-8-cache"]
+setup = ["namespace-cache"]
+cache_save_timing = "post-job"

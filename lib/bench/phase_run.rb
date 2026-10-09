@@ -113,7 +113,10 @@ module Bench
       end
 
       def command
-        lane.boringcache? ? ["boringcache", kase.tool.name, *("--read-only" if phase == "warm")] : [*lane.wrap(phase, environment), *lane_program, *lane.args(phase, environment)]
+        return [*lane.wrap(phase, environment), *lane_program, *lane.args(phase, environment)] unless lane.boringcache?
+        return ["boringcache", kase.tool.name, *("--read-only" if phase == "warm")] unless lane.run_profile
+
+        ["boringcache", "run", "--profile", lane.run_profile, "--no-git", "--fail-on-cache-error", *("--read-only" if phase == "warm"), "--", *adapter.fetch("command")]
       end
 
       def lane_program

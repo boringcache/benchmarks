@@ -37,3 +37,7 @@ env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 [local]
 label = "local"
 machine = "local"
+
+[namespace-8-cache]
+label = "namespace-profile-rust-cache-8c"
+machine = "namespace 8c"
