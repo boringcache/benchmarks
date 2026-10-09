@@ -220,8 +220,7 @@ runs:
     - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance')
       uses: reproducible-containers/buildkit-cache-dance@2925f5cfd92896e0f5a155899ff2ed2922b575c6 # v3.4.0
       with:
-        dockerfile: ${{ steps.prepare.outputs.dockerfile }}
-        cache-dir: ${{ runner.temp }}/cache-dance
+        cache-map: ${{ steps.prepare.outputs.cache_dance_map }}
         scratch-dir: ${{ runner.temp }}/cache-dance-scratch
         skip-extraction: ${{ inputs.phase == 'warm' }}
         utility-image: ghcr.io/containerd/busybox@sha256:52f73a0a43a16cf37cd0720c90887ce972fe60ee06a687ee71fb93a7ca601df7
