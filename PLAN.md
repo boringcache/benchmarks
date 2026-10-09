@@ -296,7 +296,7 @@ are amd64, so local runs prove setup, not timings.
 - PostHog (`rolling_stride = 20`), llama.cpp (5), Nix Zed and Cargo Zed (3
   each) move several first-parent commits per rolling step from 2026-10-09,
   because each lands more commits a day than a step can build (PostHog 223 a
-  day against about 28 steps). PostHog used 10 for its step 37 and llama.cpp
+  day against about 28 steps). PostHog used 10 for steps 37 and 38 and llama.cpp
   3 for one step before the strides were raised.
 - Nix Zed rebuilds both Zed derivations, `zed-editor-deps` and `zed-editor`,
   on every commit in every lane, because the flake puts the commit hash in
