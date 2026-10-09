@@ -31,6 +31,10 @@ module Bench
       config["start_sha"]
     end
 
+    def rolling_series
+      config["rolling_series"]
+    end
+
     def prepare
       config.fetch("prepare", [])
     end

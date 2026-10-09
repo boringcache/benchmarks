@@ -41,6 +41,16 @@ class CLITest < Minitest::Test
     assert_equal({ "boringcache-demo" => "", "remote" => "true", "gha" => "" }, continues)
   end
 
+  def test_a_rolling_series_restarts_at_the_start_commit_on_its_own_scope
+    commit_upstream("two")
+    %w[boringcache-demo remote gha].each { rolling_record(it, 0, @upstream_sha) }
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]", "rolling_series = 2\n\n[runs]")
+
+    entries = matrix("app", "--rolling").map { it.values_at("lane", "step", "sha", "cache_scope", "continues") }
+    assert_equal [["boringcache-demo", "0", @upstream_sha, "boringcache-demo-github-rolling-2", ""], ["remote", "0", @upstream_sha, "remote-github-rolling-2", ""],
+                  ["gha", "0", @upstream_sha, "gha-github-rolling-2", ""]], entries
+  end
+
   def test_rolling_matrix_reruns_a_recorded_step_only_for_lanes_without_a_passing_record
     second = commit_upstream("two")
     commit_upstream("three")
