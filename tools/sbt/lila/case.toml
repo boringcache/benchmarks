@@ -1,0 +1,21 @@
+repo = "lichess-org/lila"
+branch = "master"
+start_sha = "fda690020b843721c3814ee7d3dd2c384cf0147d"
+directory = "upstream"
+prepare = [
+  "mise trust && mise install",
+  "printf '\\naddRemoteCachePlugin\\n' >> upstream/project/plugins.sbt",
+  "cd upstream && cp .sbtopts.default .sbtopts && cp conf/application.conf.default conf/application.conf",
+  "cd upstream && TZ=UTC git log -1 --date=iso-strict-local --pretty='format:app.version.commit = \"%H\"%napp.version.date = \"%ad\"' > conf/version.conf",
+]
+check = "test -x upstream/target/universal/stage/bin/lila"
+shared = [".cache/coursier", ".sbt/boot"]
+
+[env]
+COURSIER_CACHE = "${BENCH_DIR}/.cache/coursier"
+JAVA_HOME = "${HOME}/.local/share/mise/installs/java/temurin-21.0.12+8.0.LTS"
+SBT_OPTS = "-Dsbt.boot.directory=${BENCH_DIR}/.sbt/boot -Dsbt.global.localcache=${BENCH_DIR}/.cache/sbt"
+
+[runs]
+boringcache-sbt = ["github", "local"]
+gha = ["github"]
