@@ -58,6 +58,7 @@ module Bench
         problems << "#{kase.id}: prepare must be a list of commands" unless kase.prepare.is_a?(Array)
         problems << "#{kase.id}: check must be a command" unless kase.check.is_a?(String)
         problems << "#{kase.id}: [runs] lists no lanes" if kase.runs.empty?
+        problems << "#{kase.id}: rolling_stride must be an integer above 1" unless kase.rolling_stride.nil? || (kase.rolling_stride.is_a?(Integer) && kase.rolling_stride > 1)
         problems << "#{kase.id}: rolling_series must be an integer above 1" unless kase.rolling_series.nil? || (kase.rolling_series.is_a?(Integer) && kase.rolling_series > 1)
         problems + kase.runs.flat_map { |lane_name, runners| run_problems(kase, lane_name, Array(runners)) }
       end
