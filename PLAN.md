@@ -327,7 +327,11 @@ and the upstream commits in the 30 days to 2026-10-09.
     same repository.
 
 Pants and sbt get replacement projects with active upstreams, backfilled from
-2026-10-01.
+2026-10-01. Nx rolls `storybook` from its last commit before 2026-10-01, and
+`BENCH_NX_CACHE_KEYSPACE` in Storybook's Nx global inputs gives every lane
+fresh task hashes, as Nx Cloud cannot be emptied. Nix rolls `zed` once Cachix
+is emptied, and Helix (5 upstream commits, none since 2026-10-01) goes once
+Nix `zed` rolls cleanly.
 
 ## Version pins
 
