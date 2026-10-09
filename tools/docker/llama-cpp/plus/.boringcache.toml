@@ -6,6 +6,7 @@ tag = "llama-cpp-docker"
 no-git = true
 metadata-hints = ["benchmark=llama-cpp", "upstream-job=docker-cuda12-server-amd64"]
 tool-cache = ["ccache:llama-cpp-ccache"]
+mount-cache = true
 command = [
   "docker", "buildx", "build",
   "--file", "overlay/llama-cpp-ccache.Dockerfile",
