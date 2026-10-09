@@ -2,7 +2,7 @@ repo = "n8n-io/n8n"
 branch = "master"
 start_sha = "0976d925b91c0652f2fd774737d0cc3ae620f59b"
 directory = "upstream"
-prepare = ["mise trust && mise install"]
+prepare = ["mise trust && mise install", "bash \"$BENCH_ROOT/tools/shared/stage-vscode-ripgrep.sh\" upstream"]
 check = "test -s upstream/packages/cli/dist/index.js"
 shared = [".pnpm-store"]
 
