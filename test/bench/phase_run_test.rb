@@ -230,23 +230,32 @@ class PhaseRunTest < Minitest::Test
     assert_equal [0, true, @upstream_sha], record("remote-local-r6", "remote-local-cold").values_at("exit_status", "output_ok", "sha")
   end
 
-  def test_prepare_exports_the_plan_dockerfile_for_cache_mount_lanes
+  def test_prepare_exports_the_dockerfile_cache_mounts_for_cache_dance_with_platform_ids
     write "tools/demo/app/.boringcache.toml", <<~TOML
       workspace = "boringcache/benchmarks"
       [adapters.demo]
       tag = "demo-app"
       command = ["docker", "buildx", "build", "--file", "overlay/app.Dockerfile", "upstream"]
     TOML
+    write "tools/demo/app/overlay/app.Dockerfile", <<~'DOCKERFILE'
+      FROM scratch
+      RUN --mount=type=cache,id=apt-${TARGETPLATFORM},target=/var/cache/apt,sharing=locked \
+          --mount=type=cache,target=/go/pkg/mod \
+          --mount=type=cache,id=go-build-$TARGETARCH,target=/root/.cache/go-build true
+      RUN --mount=type=cache,id=apt-${TARGETPLATFORM},target=/var/cache/apt --mount=type=bind,source=.,target=/src true
+    DOCKERFILE
     outputs = File.join(@root, "github_output")
     with_fixture_env do
-      ENV.update("GITHUB_OUTPUT" => outputs, "GITHUB_ENV" => File.join(@root, "github_env"))
+      ENV.update("GITHUB_OUTPUT" => outputs, "GITHUB_ENV" => File.join(@root, "github_env"), "RUNNER_TEMP" => "/runner")
       assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r7", "--github")
     ensure
-      ENV.delete("GITHUB_OUTPUT")
-      ENV.delete("GITHUB_ENV")
+      %w[GITHUB_OUTPUT GITHUB_ENV RUNNER_TEMP].each { ENV.delete(it) }
     end
 
-    assert_match %r{dockerfile<<BENCH_EOF\n/\S+/\.work/demo/app/\S*overlay/app\.Dockerfile\nBENCH_EOF}, File.read(outputs)
+    arch = { "x86_64" => "amd64", "aarch64" => "arm64", "arm64" => "arm64" }.fetch(Etc.uname[:machine])
+    map = JSON.parse(File.read(outputs)[/cache_dance_map<<BENCH_EOF\n(.*)\nBENCH_EOF/, 1])
+    assert_equal({ "/runner/cache-dance/apt-linux/#{arch}" => "apt-linux/#{arch}", "/runner/cache-dance/go/pkg/mod" => "/go/pkg/mod",
+                   "/runner/cache-dance/go-build-#{arch}" => "go-build-#{arch}" }, map.transform_values { it.fetch("id") })
   end
 
   def test_actions_only_lane_is_skipped_locally
