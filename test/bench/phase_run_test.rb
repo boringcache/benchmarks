@@ -17,16 +17,20 @@ class PhaseRunTest < Minitest::Test
     assert_equal({ "boringcache" => "9.9.9" }, cold["versions"])
   end
 
-  def test_an_archive_lane_wraps_the_plan_command_in_boringcache_run
-    write "tools/demo/lanes/boringcache-archive.toml", %(provider = "boringcache"\nlevel = "base"\nprofile = "deps"\n)
-    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", "[runs]\nboringcache-archive = [\"local\"]\n")
+  def test_a_phases_lane_runs_the_plan_command_between_the_restore_and_save_phases
+    write "tools/demo/lanes/boringcache-phases.toml", %(provider = "boringcache"\nlevel = "base"\nphases = true\n)
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", "[runs]\nboringcache-phases = [\"local\"]\n")
+    write "tools/demo/app/.boringcache.toml", <<~TOML
+      workspace = "boringcache/benchmarks"
+      [adapters.demo]
+      tag = "demo-app"
+      command = ["bash", "-c", "echo plan >> \\"$STUB_LOG\\" && echo built > upstream/out.txt"]
+    TOML
     with_fixture_env do
-      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-archive", "--run-id", "r40")
+      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-phases", "--run-id", "r40")
     end
 
-    command = %(bash -c echo "$DEMO_CACHE" > upstream/out.txt)
-    assert_equal ["run --profile deps --no-git --fail-on-cache-error -- #{command}", "run --profile deps --no-git --fail-on-cache-error --read-only -- #{command}"],
-                 File.readlines(File.join(@root, "stub.log"), chomp: true)
+    assert_equal ["demo --phase restore", "plan", "demo --phase save", "demo --phase restore", "plan"], File.readlines(File.join(@root, "stub.log"), chomp: true)
   end
 
   def test_cold_refuses_a_rerun_attempt_but_warm_runs
@@ -132,10 +136,10 @@ class PhaseRunTest < Minitest::Test
                  rolling.map { it.values_at("step", "cache_scope", "cache_seeded") }.sort
   end
 
-  def test_rolling_restores_the_fresh_seed_first_then_only_the_newest_rolling_cache
-    seed = rolling_restore_key
-    assert_includes seed, "restore_key<<BENCH_EOF\ndemo-app-remote-local-r30\nBENCH_EOF"
-    assert_includes seed, "cache_key<<BENCH_EOF\ndemo-app-remote-local-r30-3\nBENCH_EOF"
+  def test_a_rolling_lane_restores_nothing_on_its_first_step_then_only_its_newest_cache
+    first = rolling_restore_key
+    assert_includes first, "restore_key<<BENCH_EOF\n\nBENCH_EOF"
+    assert_includes first, "cache_key<<BENCH_EOF\ndemo-app-remote-local-r30-3\nBENCH_EOF"
 
     assert_includes rolling_restore_key("--continues"), "restore_key<<BENCH_EOF\ndemo-app-remote-local-r30-\nBENCH_EOF"
   end
