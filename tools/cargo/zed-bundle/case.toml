@@ -7,7 +7,7 @@ prepare = [
   "df -h / && if [ -d /usr/local/lib/android ]; then sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL; fi && df -h /",
   "mise trust && mise install",
   "cd upstream && ./script/linux",
-  "cd upstream && cargo install cargo-about@0.8.2 --locked",
+  "cd upstream && CARGO_HOME=\"${RUNNER_TEMP:-/tmp}/cargo-about-home\" cargo install cargo-about@0.8.2 --locked --root \"$HOME/.cargo\"",
 ]
 check = "test -s upstream/target/release/zed-linux-x86_64.tar.gz"
 
