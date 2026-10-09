@@ -1,7 +1,7 @@
 module Bench
   class Rolling
-    def self.scope(lane, runner)
-      "#{lane.name}-#{runner}-rolling"
+    def self.scope(lane, runner, series = nil)
+      ["#{lane.name}-#{runner}-rolling", series].compact.join("-")
     end
 
     def initialize(kase, results_dir:, work_root:)
@@ -23,19 +23,19 @@ module Bench
     end
 
     def passed?(lane, runner, step)
-      records(File.join(self.class.scope(lane, runner), "*.json")).any? { it["step"] == step && it["exit_status"] == 0 && it["output_ok"] == true }
+      records(File.join(cache_scope(lane, runner), "*.json")).any? { it["step"] == step && it["exit_status"] == 0 && it["output_ok"] == true }
     end
 
     def cache_scope(lane, runner)
-      self.class.scope(lane, runner)
+      self.class.scope(lane, runner, @kase.rolling_series)
     end
 
     def last_step(lane, runner)
-      records(File.join(self.class.scope(lane, runner), "*.json")).filter_map { it["step"] }.max
+      records(File.join(cache_scope(lane, runner), "*.json")).filter_map { it["step"] }.max
     end
 
     def continues?(lane, runner)
-      records(File.join(self.class.scope(lane, runner), "*.json")).any? { it["cache_scope"] == cache_scope(lane, runner) }
+      records(File.join(cache_scope(lane, runner), "*.json")).any? { it["cache_scope"] == cache_scope(lane, runner) }
     end
 
     private
@@ -48,7 +48,8 @@ module Bench
       end
 
       def rolling_records
-        @rolling_records ||= Dir.glob(File.join(@results_dir, @kase.tool.name, @kase.name, "*-rolling", "*-rolling-*.json")).map { JSON.parse(File.read(it)) }
+        series_dirs = ["*-rolling", @kase.rolling_series].compact.join("-")
+        @rolling_records ||= Dir.glob(File.join(@results_dir, @kase.tool.name, @kase.name, series_dirs, "*-rolling-*.json")).map { JSON.parse(File.read(it)) }
       end
   end
 end

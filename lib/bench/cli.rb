@@ -163,7 +163,7 @@ module Bench
           @out.puts "#{kase.id} #{lane.name} rolling: step #{newer} is already recorded, so step #{step} is not rebuilt"
           return nil
         end
-        return PhaseRun.new(kase, lane, scope: Rolling.scope(lane, options[:runner]), cache_scope:, sha:, step:, **common) if sha
+        return PhaseRun.new(kase, lane, scope: Rolling.scope(lane, options[:runner], kase.rolling_series), cache_scope:, sha:, step:, **common) if sha
 
         @out.puts "#{kase.id} #{lane.name} rolling: no upstream commit after the last step"
         nil
