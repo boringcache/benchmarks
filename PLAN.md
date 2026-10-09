@@ -339,8 +339,8 @@ and the upstream commits in the 30 days to 2026-10-09.
   - Docker: `mastodon-streaming` (28 s cold). The `mastodon` case covers the
     same repository.
 
-sbt rolls `lila` (lichess-org/lila) and Pants gets a replacement project with an
-active upstream; both are backfilled from
+sbt rolls `lila` (lichess-org/lila) and Pants rolls `backend-ai` (lablup/backend.ai,
+`pants check ::`, 234 s cold and 99 s warm when measured); both are backfilled from
 2026-10-01. Nx rolls `storybook` from its last commit before 2026-10-01, and
 `BENCH_NX_CACHE_KEYSPACE` in Storybook's Nx global inputs gives every lane
 fresh task hashes, as Nx Cloud cannot be emptied. Nix rolls `zed` from

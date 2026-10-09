@@ -1,0 +1,16 @@
+workspace = "boringcache/benchmarks"
+
+[entries.pants-named-caches]
+tag = "backend-ai-pants-named-caches"
+path-env = "PANTS_NAMED_CACHES_DIR"
+
+[profiles.deps]
+entries = ["pants-named-caches"]
+
+[adapters.pants]
+fail-on-cache-error = true
+tag = "backend-ai-pants"
+profiles = ["deps"]
+no-git = true
+no-platform = true
+command = ["pants", "--no-pantsd", "--stats-log", "check", "::"]
