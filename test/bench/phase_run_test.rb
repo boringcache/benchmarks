@@ -199,7 +199,7 @@ class PhaseRunTest < Minitest::Test
   def test_records_carry_when_the_lane_saves_its_cache
     lane = File.join(@root, "tools/demo/lanes/remote.toml")
     with_fixture_env { cli("run", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r15") }
-    write "tools/demo/lanes/remote.toml", File.read(lane).sub(/^level = .*$/) { "#{it}\ncache_save_timing = \"post-job\"" }
+    write "tools/demo/lanes/remote.toml", File.read(lane).sub(/^level = .*$/) { "#{it}\npost_job_save = [\"acme/save-action\"]" }
     with_fixture_env { cli("run", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r16") }
 
     assert_equal ["in-phase", "post-job"], %w[r15 r16].map { record("remote-local-#{it}", "remote-local-cold")["cache_save_timing"] }

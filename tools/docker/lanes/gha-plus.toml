@@ -4,7 +4,7 @@ plan = "plus"
 actions_only = true
 runners = ["github", "github-arm"]
 setup = ["buildx", "actions-runtime", "cache-dance"]
-cache_save_timing = "post-job"
+post_job_save = ["reproducible-containers/buildkit-cache-dance", "dance-cache"]
 args = ["--cache-from", "type=gha,scope=${BENCH_SCOPE}", "--cache-to", "type=gha,scope=${BENCH_SCOPE},mode=max"]
 
 [warm]
