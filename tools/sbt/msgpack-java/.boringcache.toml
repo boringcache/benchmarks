@@ -21,4 +21,4 @@ tag = "msgpack-java-sbt"
 profiles = ["deps"]
 no-platform = true
 no-git = true
-command = ["./sbt", "--debug", "test"]
+command = ["./sbt", "test"]
