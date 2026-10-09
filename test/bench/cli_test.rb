@@ -41,6 +41,20 @@ class CLITest < Minitest::Test
     assert_equal({ "boringcache-demo" => "", "remote" => "true", "gha" => "" }, continues)
   end
 
+  def test_rolling_matrix_reruns_a_recorded_step_only_for_lanes_without_a_passing_record
+    second = commit_upstream("two")
+    commit_upstream("three")
+    %w[boringcache-demo remote gha].each { rolling_record(it, 0, @upstream_sha) }
+    write "tmp/results/demo/app/boringcache-demo-github-rolling/boringcache-demo-github-rolling-1.json", JSON.generate("step" => 1, "sha" => second, "exit_status" => 0, "output_ok" => true)
+    write "tmp/results/demo/app/remote-github-rolling/remote-github-rolling-1.json", JSON.generate("step" => 1, "sha" => second, "exit_status" => 1, "output_ok" => false)
+
+    assert_equal [["remote", "1", second], ["gha", "1", second]], matrix("app", "--rolling", "--step", "1").map { it.values_at("lane", "step", "sha") }
+    [%w[app --step 1], %w[app --rolling --step 5]].each do |argv|
+      _, err = capture_io { assert_equal 1, Bench::CLI.new(["matrix", *argv], catalog:, out: StringIO.new).call }
+      assert_match(/step/, err)
+    end
+  end
+
   def test_matrix_takes_a_cli_release_for_fresh_runs_only
     assert_equal 3, matrix("app", "--cli", "vcli-canary-0123456789ab").size
     assert_equal 3, matrix("app", "--cli", "v1.41.0").size
