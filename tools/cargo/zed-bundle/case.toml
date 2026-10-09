@@ -1,3 +1,4 @@
+project = "zed"
 repo = "zed-industries/zed"
 branch = "main"
 start_sha = "f0b38ac75ea769b75287ff1370242d88b3878c2d"
