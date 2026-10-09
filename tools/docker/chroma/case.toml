@@ -6,5 +6,6 @@ check = "docker image inspect chroma-benchmark:local"
 [runs]
 boringcache-docker = ["github", "github-arm", "local"]
 boringcache-docker-plus = ["github", "github-arm", "local"]
+gha-plus = ["github", "github-arm"]
 gha = ["github", "github-arm"]
 ghcr = ["github", "github-arm"]
