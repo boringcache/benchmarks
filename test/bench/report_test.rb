@@ -21,11 +21,12 @@ class ReportTest < Minitest::Test
                  rows.first.slice("samples", "failed", "seed_failed", "median_seconds", "min_seconds", "max_seconds"))
   end
 
-  def test_reports_only_the_cases_it_is_given
+  def test_reports_only_the_lanes_and_runners_its_cases_still_run
     record "a.json", seconds: 10.0
 
-    assert_equal 1, Bench::Report.new(@dir, cases: ["docker/posthog"]).rows.size
-    assert_empty Bench::Report.new(@dir, cases: ["docker/hugo"]).rows
+    assert_equal 1, Bench::Report.new(@dir, runs: ["docker/posthog gha github"]).rows.size
+    assert_empty Bench::Report.new(@dir, runs: ["docker/posthog gha github-arm"]).rows
+    assert_empty Bench::Report.new(@dir, runs: ["docker/hugo gha github"]).rows
   end
 
   def test_failed_output_checks_and_missing_status_are_failures_not_timings

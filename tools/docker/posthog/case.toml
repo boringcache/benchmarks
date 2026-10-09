@@ -5,8 +5,8 @@ rolling_stride = 20
 check = "docker image inspect posthog-benchmark:local"
 
 [runs]
-boringcache-docker = ["github", "github-arm", "depot-4", "depot-8", "local"]
-boringcache-docker-plus = ["github", "github-arm", "depot-4", "depot-8", "local"]
+boringcache-docker = ["github", "github-arm", "depot-8", "local"]
+boringcache-docker-plus = ["github", "github-arm", "depot-8", "local"]
 gha-plus = ["github", "github-arm"]
 gha = ["github", "github-arm"]
 ghcr = ["github", "github-arm"]

@@ -3,14 +3,14 @@ module Bench
     KEY = %w[adapter_command case lane level runner phase step sha boringcache attempt cache_seeded cache_save_timing machine cpu cores].freeze
     COLUMNS = %w[Tool Case Lane Level Runner Phase Step Commit CLI Attempt Seeded Save Machine CPU Cores Samples Failed Seed\ failed Timed\ median\ s Timed\ min\ s Timed\ max\ s].freeze
 
-    def initialize(results_dir, cases: nil)
+    def initialize(results_dir, runs: nil)
       @results_dir = results_dir
-      @cases = cases
+      @runs = runs
     end
 
     def records
       @records ||= Dir.glob(File.join(@results_dir, "**", "*.json")).sort.map { JSON.parse(File.read(it)) }
-        .select { @cases.nil? || @cases.include?("#{it["adapter_command"]}/#{it["case"]}") }
+        .select { @runs.nil? || @runs.include?("#{it["adapter_command"]}/#{it["case"]} #{it["lane"]} #{it["runner"]}") }
     end
 
     def rows
