@@ -1,0 +1,20 @@
+workspace = "boringcache/benchmarks"
+
+[entries.coursier-cache]
+tag = "lila-coursier-cache"
+path-env = "COURSIER_CACHE"
+
+[entries.sbt-boot]
+tag = "lila-sbt-boot"
+path = ".sbt/boot"
+
+[profiles.deps]
+entries = ["coursier-cache", "sbt-boot"]
+
+[adapters.sbt]
+fail-on-cache-error = true
+tag = "lila-sbt"
+profiles = ["deps"]
+no-platform = true
+no-git = true
+command = ["sbt", "-Dreactivemongo.api.bson.document.strict=false", "-Depoll=true", "test;stage"]
