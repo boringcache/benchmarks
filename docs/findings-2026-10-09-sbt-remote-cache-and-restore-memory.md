@@ -37,11 +37,24 @@ lila at `fda69002`, macOS, sbt 2.0.9; every build first deleted all `target` dir
 
 So sbt 2 restores compile outputs through a remote cache, and the per-run paths are not the cause. The 763 misses at step 1 are lookups a working remote cache would have hit.
 
-### Next checks
+### Root cause: BoringCache rejects sbt's ByteStream resource names
 
-- Run `boringcache sbt` twice at the same lila commit, emptying the local disk cache before the second run, and capture which REAPI calls miss (ActionCache `GetActionResult`, or CAS `FindMissingBlobs`, `BatchReadBlobs`, `ByteStream.Read`).
-- Run the same pair against bazel-remote and compare: which action digests bazel-remote returns that BoringCache reports missing, and whether step 0 stored them.
-- Candidates to rule in or out: action-cache entries written but not published in the tag version the next run reads; CAS blobs referenced by an action result but treated as missing; results rejected over output-file metadata.
+Lichess step 6 failed under BoringCache with 21 copies of:
+
+```
+StatusRuntimeException: INVALID_ARGUMENT: expected uploads/{uuid}/blobs/{hash}/{size}
+```
+
+Step 1's BoringCache job logged the same error 24 times without failing; the GitHub Actions cache job logged none.
+
+- sbt names ByteStream uploads `s"$instanceName/uploads/$uuid/blobs/${hash}/${size}"` and downloads `s"$instanceName/blobs/${hash}/${size}"` (`sbt-remote-cache/src/main/scala/sbt/internal/GrpcActionCacheStore.scala` lines 437–445). The instance name is the remote cache URI's path without its leading slash (lines 150–153).
+- The adapter points sbt at `Global / remoteCache := Some(uri(sys.env("BORINGCACHE_SBT_ENDPOINT")))`, an endpoint with no path, so the instance name is empty and every name starts with `/`: `/uploads/…` and `/blobs/…`.
+- BoringCache's REAPI server splits on `/` and requires `uploads` (writes) or `blobs` (reads) as the first segment (CLI `cli/src/serve/reapi/protocol.rs` lines 66–83 on main), so it rejects both forms with `INVALID_ARGUMENT`.
+- sbt uses ByteStream only when a batch of outputs exceeds 1 MiB (`chunkSizeBytes`, line 58); smaller batches go through `BatchUpdateBlobs`, which works.
+
+Every sbt output batch over 1 MiB has therefore never been stored and could not be read back, so those tasks miss on every later step and recompile, and a failed transfer can fail the build. `sbt/msgpack-java` mostly hit because its outputs are small. bazel-remote tolerates the leading slash, which is why the control experiment hit.
+
+**Fix:** parse ByteStream names per the REAPI spec, `{instance_name}/uploads/{uuid}/blobs/{hash}/{size}{/metadata}` and `{instance_name}/blobs/{hash}/{size}`, accepting any instance-name prefix, including an empty one that leaves a leading `/`, by locating the `uploads` or `blobs` segment instead of requiring it first. A regression test: a ByteStream write and read with names starting `/uploads/` and `/blobs/`, as sbt sends them.
 
 ## 2. Does `boringcache run` hold restore memory during the build? (unmeasured)
 
