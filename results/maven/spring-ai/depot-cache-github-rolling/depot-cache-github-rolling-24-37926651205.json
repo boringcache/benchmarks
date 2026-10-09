@@ -1,0 +1,37 @@
+{
+  "adapter_command": "maven",
+  "case": "spring-ai",
+  "lane": "depot-cache",
+  "provider": "depot",
+  "level": "base",
+  "capabilities": [
+    "build-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 24,
+  "scope": "depot-cache-github-rolling",
+  "cache_scope": "depot-cache-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "maven-spring-ai-depot-cache-github-rolling-23",
+  "repo": "spring-projects/spring-ai",
+  "sha": "ecb1eaabd459cd063581c989710a6d8409c9156b",
+  "seconds": 167.243,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37926651205",
+  "attempt": 1,
+  "started_at": "2026-10-09T11:56:13Z"
+}
