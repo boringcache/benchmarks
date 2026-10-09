@@ -5,6 +5,7 @@ directory = "upstream/examples/with_prelude"
 prepare = [
   "mise trust && mise install",
   "cp -R overlay/benchmark-platform upstream/examples/with_prelude/benchmark-platform",
+  "git -C upstream apply ../overlay/cache.patch",
   'printf "[buck2]\n  default_allow_cache_upload = true\n[build]\n  execution_platforms = root//benchmark-platform:local\n[benchmark]\n  cache_uploads = %s\n%s\n" "${BUCK2_CACHE_UPLOADS:-true}" "${BUCK2_LANE_CONFIG:-}" > upstream/examples/with_prelude/.buckconfig.local',
 ]
 check = "find upstream/examples/with_prelude/buck-out -type f -perm -u+x -path '*/rust/__main__/main' | grep -q . && find upstream/examples/with_prelude/buck-out -type f -perm -u+x -path '*/cpp/hello_world/__main__/main' | grep -q ."
