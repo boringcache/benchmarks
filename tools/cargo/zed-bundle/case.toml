@@ -1,0 +1,21 @@
+repo = "zed-industries/zed"
+branch = "main"
+start_sha = "f0b38ac75ea769b75287ff1370242d88b3878c2d"
+directory = "upstream"
+shared = ["~/.cargo/registry/index", "~/.cargo/registry/cache", "~/.cargo/git/db", "upstream/target"]
+prepare = [
+  "df -h / && if [ -d /usr/local/lib/android ]; then sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL; fi && df -h /",
+  "mise trust && mise install",
+  "cd upstream && ./script/linux",
+  "cd upstream && cargo install cargo-about@0.8.2 --locked",
+]
+check = "test -s upstream/target/release/zed-linux-x86_64.tar.gz"
+
+[env]
+CARGO_INCREMENTAL = "0"
+CC = "clang-18"
+CXX = "clang++-18"
+
+[runs]
+boringcache-archive = ["namespace-8"]
+namespace-cache = ["namespace-8-cache"]

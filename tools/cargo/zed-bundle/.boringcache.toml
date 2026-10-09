@@ -1,0 +1,4 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.cargo]
+command = ["bash", "-c", "./script/download-wasi-sdk && ./script/bundle-linux --skip-sentry"]
