@@ -1,0 +1,37 @@
+{
+  "adapter_command": "cargo",
+  "case": "zed",
+  "lane": "kache",
+  "provider": "kache",
+  "level": "base",
+  "capabilities": [
+    "compiler-cache"
+  ],
+  "runner": "depot-4",
+  "runner_label": "depot-ubuntu-24.04-4",
+  "machine": "depot 4c",
+  "phase": "rolling",
+  "step": 26,
+  "scope": "kache-depot-4-rolling",
+  "cache_scope": "kache-depot-4-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "zed-industries/zed",
+  "sha": "309f91f564fa267820e5d426daeeffafc2599530",
+  "seconds": 1297.993,
+  "cache_save_timing": "post-job",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9R45",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37976654483",
+  "attempt": 1,
+  "started_at": "2026-10-09T19:00:54Z"
+}
