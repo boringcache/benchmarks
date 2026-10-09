@@ -8,3 +8,11 @@
      env.patch_platforms(kwargs)
      env.remove_platform_specific_args(kwargs)
      return _patch_kwargs_common(kwargs)
+@@ -327,6 +328,7 @@
+     env.patch_cxx_compiler_flags(kwargs)
+     env.patch_force_static(kwargs)
+ 
++    kwargs["archive_allow_cache_upload"] = True
+     env.cxx_library(*args, **kwargs)
+ 
+ def _cxx_library(*args, **kwargs):
