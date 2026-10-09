@@ -46,5 +46,6 @@
   "versions": {},
   "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37947467636",
   "attempt": 1,
-  "started_at": "2026-10-09T14:54:19Z"
+  "started_at": "2026-10-09T14:54:19Z",
+  "post_job_save_seconds": 33.511
 }
