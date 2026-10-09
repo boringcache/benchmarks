@@ -17,9 +17,9 @@ CXX = "clang++"
 
 [runs]
 boringcache-cargo = ["github", "local"]
-boringcache-cargo-plus = ["github", "namespace-8", "local"]
+boringcache-cargo-plus = ["github", "namespace-4", "local"]
 gha = ["github"]
-gha-plus = ["github"]
+gha-plus = ["github", "namespace-4"]
 depot-cache = ["github"]
-kache = ["github"]
+kache = ["github", "namespace-4"]
 mbx = ["github"]
