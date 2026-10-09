@@ -201,7 +201,7 @@ module Bench
 
       def report
         options = parse(results: File.join(@catalog.root, "results"), out: File.join(@catalog.root, "data"))
-        Report.new(options[:results]).write(options[:out])
+        Report.new(options[:results], cases: @catalog.tools.flat_map { |tool| tool.cases.map(&:id) }).write(options[:out])
         @out.puts "wrote #{File.join(options[:out], "results.json")} and report.md"
         0
       end

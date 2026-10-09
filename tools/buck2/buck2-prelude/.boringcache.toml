@@ -1,8 +1,0 @@
-workspace = "boringcache/benchmarks"
-
-[adapters.buck2]
-fail-on-cache-error = true
-tag = "buck2-prelude-buck2"
-no-git = true
-no-platform = true
-command = ["buck2", "build", "rust/...", "cpp/...", "-v=2"]

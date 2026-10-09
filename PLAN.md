@@ -310,6 +310,25 @@ are amd64, so local runs prove setup, not timings.
   (default setup with the xcelerate and CMake logs) and 37769123380
   (`--disable-prefix-mapping`).
 
+## Removed cases
+
+Removed on 2026-10-09. Their records stay in `results/`; reports cover only the
+cases defined under `tools/`. Figures are the BoringCache lanes' cold medians
+and the upstream commits in the 30 days to 2026-10-09.
+
+- Too few upstream commits to compare, and short builds:
+  - Pants: `pants-jvm` (pantsbuild/example-jvm, 0 commits, 65 s cold) and
+    `stackstorm` (StackStorm/st2, 1 commit, 29 s);
+  - moon: `gogs` (3 commits, 21 s) and `opencut` (1 commit, 19 s);
+  - sbt: `msgpack-java` (3 commits, 55 s).
+- Builds too short for a cache to matter:
+  - Buck2: `buck2-prelude` (13 s cold);
+  - Docker: `mastodon-streaming` (28 s cold). The `mastodon` case covers the
+    same repository.
+
+Pants and sbt get replacement projects with active upstreams, backfilled from
+2026-10-01.
+
 ## Version pins
 
 `versions.toml` holds every pin. `bench.yml` pins `boringcache/one@<sha> # vX.Y.Z`
@@ -323,7 +342,8 @@ contract's `maintained_cases` lane names (`docker-tool-cache`,
 
 `bin/bench report` writes `data/results.json` and `data/report.md` from
 `results/`: measurements, units, levels, sample counts, unmeasured cells, failed
-runs, run links. No verdicts. The website keeps reading the September
+runs, run links. No verdicts. It covers only the cases defined under
+`tools/`, so a removed case's records stay in `results/` unreported. The website keeps reading the September
 `data/latest/index.json` until its reader
 (`web/app/models/reporting/benchmark_comparisons.rb`) switches to the new file;
 then `data/latest/` and its old scripts go in one commit.
