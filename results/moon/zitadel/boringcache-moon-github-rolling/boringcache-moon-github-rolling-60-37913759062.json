@@ -1,0 +1,321 @@
+{
+  "adapter_command": "moon",
+  "case": "zitadel",
+  "lane": "boringcache-moon",
+  "provider": "boringcache",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 60,
+  "scope": "boringcache-moon-github-rolling",
+  "cache_scope": "boringcache-moon-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "zitadel/nextgen",
+  "sha": "e294d9d68a73324d4fb375bea83fefaf8700c0d0",
+  "seconds": 48.317,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1791539488587,
+      "run_id": "37913759062",
+      "session_id": null,
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 26041,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "runtime",
+      "proxy": {
+        "adapter": "runtime",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 26041,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 1572,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 640,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_check": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_check": 251,
+          "cache_blobs_download_urls": 473,
+          "cache_finalize_publish": 150,
+          "cache_flush_upload": 75,
+          "cache_kv_entries_current_version": 360,
+          "cache_kv_entries_download_urls": 94,
+          "cache_kv_entry_reads": 438,
+          "cache_rollups_ingest": 106
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_check": 251,
+          "cache_blobs_download_urls": 473,
+          "cache_finalize_publish": 150,
+          "cache_flush_upload": 75,
+          "cache_kv_entries_current_version": 360,
+          "cache_kv_entries_download_urls": 654,
+          "cache_kv_entry_reads": 438,
+          "cache_rollups_ingest": 140
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_check": 1,
+          "cache_blobs_download_urls": 1,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 2,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 3
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_check": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 11,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_check": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_check": 251,
+          "cache_blobs_download_urls": 473,
+          "cache_finalize_publish": 150,
+          "cache_flush_upload": 75,
+          "cache_kv_entries_current_version": 360,
+          "cache_kv_entries_download_urls": 94,
+          "cache_kv_entry_reads": 438,
+          "cache_rollups_ingest": 106
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_check": 251,
+          "cache_blobs_download_urls": 473,
+          "cache_finalize_publish": 150,
+          "cache_flush_upload": 75,
+          "cache_kv_entries_current_version": 360,
+          "cache_kv_entries_download_urls": 654,
+          "cache_kv_entry_reads": 438,
+          "cache_rollups_ingest": 140
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_check": 1,
+          "cache_blobs_download_urls": 1,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 2,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 3
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_check": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 11,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 801
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 27,
+        "startup_prefetch_average_blob_bytes": 18361,
+        "startup_prefetch_blobs_per_sec": 790,
+        "startup_prefetch_bytes_per_sec": 14771989,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 1572,
+        "startup_prefetch_concurrency_adjustment_count": 2,
+        "startup_prefetch_concurrency_adjustments": "shared_download_policy:256->320,shared_download_policy:320->640",
+        "startup_prefetch_concurrency_reason": "many_small_blobs_rtt_bound",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_duration_ms": 1954,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 640,
+        "startup_prefetch_initial_concurrency": 256,
+        "startup_prefetch_inserted": 1545,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 640,
+        "startup_prefetch_mode": "bazel-action-closure",
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 1572,
+        "startup_prefetch_target_bytes": 28864467,
+        "startup_prefetch_total_unique_blobs": 2962,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 1572
+      },
+      "kv_upload": {},
+      "singleflight": {
+        "singleflight_kv_download_leaders": 1572
+      },
+      "kv_lookup": {
+        "kv_lookup_reapi_ac_published_fast_hit": 10,
+        "kv_lookup_reapi_cas_published_fast_hit": 1466
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 17334569,
+          "blob_read_local_count": 1503,
+          "blob_read_local_hit_rate_pct": 49,
+          "blob_read_remote_avg_ms": 432,
+          "blob_read_remote_bytes": 28864467,
+          "blob_read_remote_count": 1572
+        },
+        "blob_read_cache_bytes": 28864467,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "runtime",
+          "candidates": [],
+          "evidence": {
+            "duration_ms": 26041,
+            "errors": 0,
+            "hit_rate": 100.0,
+            "hits": 1476,
+            "misses": 0,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 0
+          },
+          "primary_bottleneck": null,
+          "state": "cache_side_clear"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 100.0,
+          "hits": 1476,
+          "likely_reason": "all_reads_hit",
+          "misses": 0,
+          "state": "hot",
+          "writes": 0
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": null
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    }
+  },
+  "evidence": [
+    "boringcache-moon-github-rolling-60-37913759062.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.40.2"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37913759062",
+  "attempt": 1,
+  "started_at": "2026-10-09T09:50:40Z"
+}
