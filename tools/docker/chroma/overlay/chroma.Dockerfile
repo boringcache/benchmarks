@@ -75,9 +75,6 @@ FROM build-tools AS builder
 
 # BEGIN BORINGCACHE BENCHMARK CARGO CACHE MOUNTS
 ARG TARGETARCH
-# BEGIN BORINGCACHE BENCHMARK COMPILER CACHE PROOF
-ARG BORINGCACHE_BENCHMARK_SCCACHE_PROOF=0
-# END BORINGCACHE BENCHMARK COMPILER CACHE PROOF
 # END BORINGCACHE BENCHMARK CARGO CACHE MOUNTS
 
 ARG RELEASE_MODE=
@@ -118,10 +115,6 @@ RUN --mount=type=cache,id=chroma-target-${TARGETARCH},sharing=locked,target=/chr
   fi && \
   build_target=$( [ "${ADDRESS_SANITIZER}" = "1" ] && echo '--target x86_64-unknown-linux-gnu' || echo '' ) && \
   release_flag=$( [ "$RELEASE_MODE" = "1" ] && echo '--release' || echo '' ) && \
-  if [ -f "rust/.boringcache-warm-source-change" ] && [ "${BORINGCACHE_BENCHMARK_SCCACHE_PROOF}" = "1" ]; then \
-  test -n "$(find /chroma/target -mindepth 1 -print -quit)" && \
-  printf 'BORINGCACHE_CARGO_TARGET_RESTORED=1\n'; \
-  fi && \
   cargo build ${build_target} --workspace $(printf -- '--exclude %s ' $EXCLUDED_PACKAGES) ${release_flag} && \
   if [ -n "$LOG_SERVICE_CARGO_FEATURES" ]; then \
   cargo build ${build_target} -p chroma-log-service --bin log_service --features "$LOG_SERVICE_CARGO_FEATURES" ${release_flag}; \
@@ -130,15 +123,7 @@ RUN --mount=type=cache,id=chroma-target-${TARGETARCH},sharing=locked,target=/chr
   build_dir=$( [ "${ADDRESS_SANITIZER}" = "1" ] && echo "x86_64-unknown-linux-gnu/${build_dir}" || echo "${build_dir}" ) && \
   for bin in chroma garbage_collector_service chroma-load log_service heap_tender_service query_service compaction_service work_queue_service fn_consumer sysdb_service spanner_migration token_bucket_service; do \
   cp "target/${build_dir}/${bin}" "./${bin}"; \
-  done && \
-  if [ "${BORINGCACHE_BENCHMARK_SCCACHE_PROOF}" = "1" ]; then \
-  test "${RUSTC_WRAPPER##*/}" = "sccache" && \
-  test -n "${SCCACHE_WEBDAV_ENDPOINT:-}" && \
-  test -n "$(find /chroma/target -mindepth 1 -print -quit)" && \
-  printf 'BORINGCACHE_CARGO_TARGET_READY=1\n' && \
-  sccache_stats="$(sccache --show-stats --stats-format=json)" && \
-  printf 'BORINGCACHE_SCCACHE_STATS=%s\n' "${sccache_stats}"; \
-  fi
+  done
 
 FROM debian:stable-slim AS runner
 ARG ADDRESS_SANITIZER
