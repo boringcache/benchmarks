@@ -1,4 +1,4 @@
-# sbt warm builds recompile through BoringCache; restore memory after large archives
+# Product issues found by the benchmark on 2026-10-09
 
 Date: 2026-10-09. Runs on CLI 1.40.2 unless noted. Evidence files are under `results/<tool>/<case>/<scope>/`.
 
@@ -66,6 +66,20 @@ Case `cargo/zed-bundle`, lane `boringcache-archive` (`boringcache run --profile 
 - The CLI uses the default glibc allocator and never calls `malloc_trim`, so its RSS may stay near the peak while `boringcache run` waits on the build.
 
 Next check: sample the `boringcache` process RSS during a large-restore build. If it stays near the peak, release restore memory before running the command (`malloc_trim(0)`, or dropping the restore buffers). The case now runs on Depot 8c / 32 GB, so it does not block rolling.
+
+## 3. A GitHub OIDC blip during renewal stops the whole build
+
+Case `docker/llama-cpp`, lane `boringcache-docker` on `github`, rolling step 9 (run 37941477982), CLI 1.40.2 under `boringcache ci run --oidc-provider github-actions`:
+
+- The OIDC workload session was renewed every ~4.5 minutes from 14:07:15 to 15:19:20 without trouble.
+- At 15:23:58 the next renewal's GitHub OIDC request returned **503**; attempt 2 at 15:24:05 also returned 503.
+- At 15:24:09 the CLI stopped: `OIDC session renewal failed; the wrapped command was stopped and no static credential was used: OIDC session renewal exceeded the remaining session lifetime: deadline has elapsed`. Three of the five attempts were never made.
+- The wrapped Docker build had been running 77 minutes and was at 59% of the CUDA compile; the step failed.
+
+Two product problems:
+
+1. **Renewal leaves no slack.** Renewing about 4.6 minutes into what appears to be a ~5 minute session means one transient GitHub 503 (about 4–7 s per attempt here) exhausts the remaining lifetime before the retries can help. Renewing at about half the lifetime would leave minutes for retries.
+2. **A credential failure kills the user's build.** Stopping the wrapped command throws away a long build because cache credentials could not be refreshed. Continuing without cache writes (or read-only), and reporting it, would keep the build.
 
 ## Withdrawn
 
