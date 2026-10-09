@@ -320,11 +320,13 @@ are amd64, so local runs prove setup, not timings.
   lane's rustc was killed for memory three times at step 1. Revisit the
   Namespace cache-volume lane (`namespace-cache`, runner `namespace-8-cache`,
   profile `rust-cache-8c`) on a paid plan with a 32 GB profile.
-- Reconcile the lanes added in October once they have enough steps. Zed
-  bundle (its own case, now BoringCache archive against Depot's runner cache), PostHog's
-  gha-plus and its runner variants, and the Zed Depot 4c pair each sit beside
-  a project's main comparison. Reports and the website should show each
-  project as one coherent set of lanes, not scattered variants.
+- The October side lanes were folded in on 2026-10-09 so each project reads as
+  one set. Zed: the dev build's main set on GitHub 4c, the same-CPU pair on
+  Depot 4c (BoringCache plus and kache), and the release bundle (`zed-bundle`,
+  now `project = "zed"`) on Depot 8c. PostHog: the main set on GitHub x86 and
+  ARM, and BoringCache on Depot 8c beside the Depot and Namespace remote
+  builders, matching upstream's Depot setup. Reports cover only the lanes and
+  runners a case still runs.
 
 ## Removed lanes
 
@@ -351,6 +353,12 @@ are amd64, so local runs prove setup, not timings.
   37761446458 (default setup, cold and warm failed), debug runs 37768474822
   (default setup with the xcelerate and CMake logs) and 37769123380
   (`--disable-prefix-mapping`).
+- Folded in on 2026-10-09, records kept but not reported: Zed's BoringCache
+  plus on Namespace 8c, which had no other lane on that runner, and PostHog's
+  BoringCache and BoringCache plus on Depot 4c, beside the same lanes on
+  Depot 8c. PostHog's BoringCache lanes on Namespace 4c and 8c were dropped
+  earlier. One-off BoringCache tags from fresh runs, removed cases, dropped
+  runners and sbt series 1 (41 tags, 44.5 GB) were deleted the same day.
 
 ## Restarted series
 
