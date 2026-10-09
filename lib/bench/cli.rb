@@ -126,17 +126,19 @@ module Bench
         options = parse(defaults.except(:runner))
         raise Error, "--cli takes a CLI release tag such as v1.41.0 or vcli-canary-<sha>" if options[:cli] && !options[:cli].match?(CLI_RELEASE)
         raise Error, "rolling keeps the pinned CLI; use --cli with fresh runs" if options[:cli] && options[:rolling]
+        raise Error, "--step re-runs a recorded rolling step; add --rolling" if options[:step] && !options[:rolling]
 
+        rerun = Integer(options[:step]) if options[:step]
         cases = @catalog.project_cases(@argv.first || raise(Error, "matrix needs <project> or <tool>/<case>"), tool: options[:tool])
         entries = cases.flat_map do |kase|
           rolling = Rolling.new(kase, results_dir: options[:results], work_root: options[:work]) if options[:rolling]
-          position = rolling ? rolling.next_step : []
+          position = rolling ? (rerun ? rolling.recorded_step(rerun) || raise(Error, "#{kase.id} has no rolling step #{rerun}") : rolling.next_step) : []
           next [] if rolling && position.nil?
 
           step, sha = position
           kase.runs.flat_map do |lane_name, runners|
             lane = kase.tool.lane(lane_name)
-            Array(runners).reject { it == "local" }.map do |runner|
+            Array(runners).reject { it == "local" || (rerun && rolling.passed?(lane, it, rerun)) }.map do |runner|
               { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets, "setup" => lane.setup.join(" "),
                 "label" => [(kase.name unless kase.name == kase.project), lane.machine || @catalog.runner_machine(runner), (lane.label unless lane.machine)].compact.join(" · "),
                 "step" => step&.to_s || "", "sha" => sha || "", "cache_scope" => rolling&.cache_scope(lane, runner) || "", "continues" => rolling&.continues?(lane, runner) ? "true" : "" }
