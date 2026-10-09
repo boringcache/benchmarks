@@ -1,6 +1,7 @@
 repo = "zed-industries/zed"
 branch = "main"
 start_sha = "f0b38ac75ea769b75287ff1370242d88b3878c2d"
+rolling_series = 2
 directory = "upstream"
 shared = ["~/.cargo/registry/index", "~/.cargo/registry/cache", "~/.cargo/git/db", "upstream/target"]
 prepare = [
@@ -15,7 +16,8 @@ check = "test -s upstream/target/release/zed-linux-x86_64.tar.gz"
 CARGO_INCREMENTAL = "0"
 CC = "clang-18"
 CXX = "clang++-18"
+CARGO_TERM_COLOR = "always"
 
 [runs]
-boringcache-archive = ["depot-8"]
+boringcache-cargo-phases = ["depot-8"]
 depot-actions-cache = ["depot-8"]

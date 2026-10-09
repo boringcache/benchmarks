@@ -10,6 +10,7 @@ prepare = [
 check = "test -x upstream/target/release/zed && test -z \"$(git -C upstream status --porcelain=v1 --untracked-files=all)\""
 
 [env]
+CARGO_TERM_COLOR = "always"
 CARGO_INCREMENTAL = "0"
 ZED_BUNDLE = "true"
 CC = "clang"

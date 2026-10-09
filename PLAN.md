@@ -284,13 +284,18 @@ are amd64, so local runs prove setup, not timings.
 - Namespace is a trial (23 days left on 2026-10-07).
 - GitHub Actions cache storage for the repo is 200 GB.
 - The Namespace trial caps 8-core profiles at 16 GB; 32 GB needs a paid plan.
-- Zed bundle runs on Depot 8c (32 GB): BoringCache archive against
-  `depot-actions-cache`, actions/cache of the same four paths served by Depot's
-  runner cache. On Namespace 8c (16 GB, and `swapon` is not permitted) the
-  BoringCache archive lane's rustc was killed for memory three times at step 1
-  while compiling `project`. Revisit the Namespace cache-volume lane
-  (`namespace-cache`, runner `namespace-8-cache`, profile `rust-cache-8c`) on a
-  paid plan with a 32 GB profile. Its step 0 and 1 records stay in `results/`.
+- Zed bundle runs on Depot 8c (32 GB). Its BoringCache lane is
+  `boringcache-cargo-phases`: `boringcache cargo --phase restore`, Zed's own
+  `script/bundle-linux`, then `--phase save`, so the product's Cargo restore,
+  including source freshness, wraps the unmodified bundle script. The
+  `depot-actions-cache` lane runs the same script with actions/cache on the same
+  four paths, served by Depot's runner cache. Restarted on 2026-10-09 as rolling
+  series 2 with the earlier archive-lane records and tags deleted; the archive
+  lane rebuilt all 539 crates every step because `boringcache run` applies no
+  Cargo freshness. On Namespace 8c (16 GB, and `swapon` is not permitted) that
+  lane's rustc was killed for memory three times at step 1. Revisit the
+  Namespace cache-volume lane (`namespace-cache`, runner `namespace-8-cache`,
+  profile `rust-cache-8c`) on a paid plan with a 32 GB profile.
 - Reconcile the lanes added in October once they have enough steps. Zed
   bundle (its own case, now BoringCache archive against Depot's runner cache), PostHog's
   gha-plus and its runner variants, and the Zed Depot 4c pair each sit beside

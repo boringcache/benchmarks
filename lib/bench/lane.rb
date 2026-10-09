@@ -24,11 +24,11 @@ module Bench
     def label
       return name unless boringcache?
 
-      ["boringcache", (run_profile ? "archive" : ("plus" if level == "plus"))].compact.join(" ")
+      ["boringcache", ("plus" if level == "plus")].compact.join(" ")
     end
 
-    def run_profile
-      config["profile"]
+    def phases?
+      config["phases"] == true
     end
 
     def machine

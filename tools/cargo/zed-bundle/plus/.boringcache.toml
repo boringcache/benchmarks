@@ -1,0 +1,29 @@
+workspace = "boringcache/benchmarks"
+
+[entries.cargo-registry-cache]
+tag = "zed-bundle-cargo-registry-cache"
+path = "~/.cargo/registry/cache"
+
+[entries.cargo-registry-index]
+tag = "zed-bundle-cargo-registry-index"
+path = "~/.cargo/registry/index"
+
+[entries.cargo-git-db]
+tag = "zed-bundle-cargo-git-db"
+path = "~/.cargo/git/db"
+
+[entries.zed-bundle-target]
+kind = "cargo-target"
+tag = "zed-bundle-target"
+path = "upstream/target"
+
+[profiles.cargo-product]
+entries = ["cargo-registry-cache", "cargo-registry-index", "cargo-git-db", "zed-bundle-target"]
+
+[adapters.cargo]
+fail-on-cache-error = true
+tag = "zed-bundle-cargo"
+profiles = ["cargo-product"]
+no-git = true
+metadata-hints = ["benchmark=zed-bundle", "lane=cargo-phases"]
+command = ["bash", "-c", "./script/download-wasi-sdk && ./script/bundle-linux --skip-sentry"]
