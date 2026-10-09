@@ -1,0 +1,37 @@
+{
+  "adapter_command": "buck2",
+  "case": "executorch",
+  "lane": "nativelink",
+  "provider": "nativelink",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 51,
+  "scope": "nativelink-github-rolling",
+  "cache_scope": "nativelink-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "pytorch/executorch",
+  "sha": "89809c4b22e36cfe412a56bc51dcde8b1c0860a2",
+  "seconds": 34.229,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37898870972",
+  "attempt": 1,
+  "started_at": "2026-10-09T07:28:46Z"
+}
