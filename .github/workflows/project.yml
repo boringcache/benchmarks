@@ -26,8 +26,13 @@ on:
         type: string
         required: false
         default: ""
+      step:
+        description: rolling only, re-run this recorded step with the current harness for lanes without a passing record (optional)
+        type: string
+        required: false
+        default: ""
 
-run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}${{ inputs.cli && format(' [{0}]', inputs.cli) || '' }}
+run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}${{ inputs.step && format(' step {0}', inputs.step) || '' }}${{ inputs.cli && format(' [{0}]', inputs.cli) || '' }}
 
 concurrency:
   group: ${{ inputs.mode == 'rolling' && format('rolling-{0}-{1}', inputs.tool, inputs.project) || format('run-{0}', github.run_id) }}
@@ -55,11 +60,12 @@ jobs:
           ROLLING: ${{ inputs.mode == 'rolling' && 'true' || '' }}
           LANE: ${{ inputs.lane }}
           CLI: ${{ inputs.cli }}
+          STEP: ${{ inputs.step }}
         run: |
           git fetch --quiet --depth=1 origin main
           rm -rf results
           if git cat-file -e FETCH_HEAD:results 2>/dev/null; then git checkout FETCH_HEAD -- results; fi
-          matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${LANE:+--lane "$LANE"} ${CLI:+--cli "$CLI"} --results results)
+          matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${LANE:+--lane "$LANE"} ${CLI:+--cli "$CLI"} ${STEP:+--step "$STEP"} --results results)
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
   cold:

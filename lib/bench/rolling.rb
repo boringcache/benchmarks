@@ -17,6 +17,15 @@ module Bench
       [last["step"] + 1, sha] if sha
     end
 
+    def recorded_step(step)
+      sha = rolling_records.find { it["step"] == step }&.dig("sha")
+      [step, sha] if sha
+    end
+
+    def passed?(lane, runner, step)
+      records(File.join(self.class.scope(lane, runner), "*.json")).any? { it["step"] == step && it["exit_status"] == 0 && it["output_ok"] == true }
+    end
+
     def cache_scope(lane, runner)
       self.class.scope(lane, runner)
     end
@@ -35,8 +44,11 @@ module Bench
       end
 
       def last
-        @last ||= Dir.glob(File.join(@results_dir, @kase.tool.name, @kase.name, "*-rolling", "*-rolling-*.json"))
-          .map { JSON.parse(File.read(it)) }.max_by { it["step"] }
+        @last ||= rolling_records.max_by { it["step"] }
+      end
+
+      def rolling_records
+        @rolling_records ||= Dir.glob(File.join(@results_dir, @kase.tool.name, @kase.name, "*-rolling", "*-rolling-*.json")).map { JSON.parse(File.read(it)) }
       end
   end
 end

@@ -34,6 +34,7 @@ This repository benchmarks BoringCache against other cache providers on real pro
 - `schedule.yml` dispatches rolling for every project in `rolling.toml`; the workflow's concurrency group runs one rolling run per project at a time.
 - A failed build or output check is recorded first, then fails its job. A failure in `prepare` leaves no record; that lane continues at the next step.
 - Re-run a failed rolling job only before the next step of that project starts. A re-run of an older step skips its build once a newer step is recorded for that lane, so it can never overwrite the newer cache.
+- A job re-run uses the harness from its original commit. To re-run a recorded step with a harness fix, dispatch `-f mode=rolling -f step=<N>`: it builds that step's commit for every lane without a passing record at that step.
 
 ## Test a CLI canary
 
