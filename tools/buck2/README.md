@@ -8,7 +8,9 @@ Both cases add `overlay/benchmark-platform`, a local execution platform with the
 
 - `overlay/cache.patch` sets `allow_cache_upload` on the C++ binary, the C++ library and the Rust binary, and `archive_allow_cache_upload` on the C++ library.
 - `.buckconfig.local` sets `buck2.default_allow_cache_upload`, which covers actions with no upload preference, such as the Rust library and test.
-- The two `assert_output` genrules are not uploaded, because the prelude caches only genrules marked to run locally.
+- Three actions are never uploaded:
+  - the two `assert_output` genrules, because the prelude caches only genrules marked to run locally;
+  - the C++ library's shared-library link, which the prelude's `link_options` builds with uploads off.
 
 ## executorch
 
