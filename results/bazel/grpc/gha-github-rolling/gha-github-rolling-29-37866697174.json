@@ -1,0 +1,37 @@
+{
+  "adapter_command": "bazel",
+  "case": "grpc",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 29,
+  "scope": "gha-github-rolling",
+  "cache_scope": "gha-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "bazel-grpc-gha-github-rolling-28",
+  "repo": "grpc/grpc",
+  "sha": "ab55e70ab38224b8b6a099dfdc5fdd0d9dce27cc",
+  "seconds": 98.795,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37866697174",
+  "attempt": 1,
+  "started_at": "2026-10-09T00:50:32Z"
+}
