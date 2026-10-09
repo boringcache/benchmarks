@@ -1,6 +1,7 @@
 repo = "lichess-org/lila"
 branch = "master"
 start_sha = "fda690020b843721c3814ee7d3dd2c384cf0147d"
+rolling_series = 2
 directory = "upstream"
 prepare = [
   "mise trust && mise install",

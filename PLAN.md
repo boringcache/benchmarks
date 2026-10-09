@@ -354,6 +354,13 @@ are amd64, so local runs prove setup, not timings.
 - Deno restarted on 2026-10-09 as rolling series 2 on CLI 1.40.2.
   Series 1 (steps 0 to 12, all on CLI 1.40.1) and the
   fresh run moved to `archive/deno-cli-1.40.1/`, kept but not reported.
+- Lichess and Play restarted on 2026-10-09 as rolling series 2 on CLI 1.41.0.
+  Play's version
+  pin also moved from `benchmark-cache.sbt` to `version.sbt`: sbt loads root
+  `.sbt` files alphabetically, so Play's `build.sbt` and its git-derived
+  version won, `PlayVersion.scala` changed on every commit, and both lanes
+  recompiled all 641 sources each step. Series 1 (Lichess steps 0 to 21, Play
+  0 to 13) moved to `archive/sbt-series-1/`, kept but not reported.
 
 ## Removed cases
 
