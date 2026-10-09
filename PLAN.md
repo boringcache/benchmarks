@@ -282,8 +282,9 @@ are amd64, so local runs prove setup, not timings.
 ## Things to watch
 
 - Namespace is a trial (23 days left on 2026-10-07).
-- GitHub Actions cache storage for the repo is 200 GB, the enterprise's
-  ceiling. On 2026-10-09 the repo held 214–218 GB, so GitHub was deleting the
+- GitHub Actions cache storage for the repo is 500 GB, raised with the
+  enterprise and org limits on 2026-10-09 from the enterprise's 200 GB
+  ceiling; retention is 7 days. Before that the repo held 214–218 GB, so GitHub was deleting the
   least recently used entries: the oldest left had been used 95 minutes
   earlier, and lanes idle longer restored nothing (Spring AI and OTel Java
   step 25, Turbo n8n step 35). Each rolling lane also keeps up to about six
