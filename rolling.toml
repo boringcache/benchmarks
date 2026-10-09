@@ -1,6 +1,6 @@
 bazel = ["grpc"]
 buck2 = ["buck2-prelude", "executorch"]
-cargo = ["deno", "zed"]
+cargo = ["deno", "zed", "zed-bundle"]
 ccache = ["obs-studio"]
 docker = ["chroma", "discourse", "duckgres", "hugo", "immich", "linkerd2", "llama-cpp", "mastodon", "n8n", "posthog", "qdrant"]
 go = ["hugo"]

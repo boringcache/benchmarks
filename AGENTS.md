@@ -15,16 +15,16 @@ This repository benchmarks BoringCache against other cache providers on real pro
 
 ## Add a case
 
-1. **Source.** Pick the upstream repository and branch. `start_sha` is the latest first-parent commit on that branch when the case is added; its fresh run and rolling series start from there. Prefer the project's own CI build command and target; when it has none for this tool, use its documented build.
+1. **Source.** Pick the upstream repository and branch. `start_sha` is the latest first-parent commit on that branch when the case is added; its rolling series starts there. Prefer the project's own CI build command and target; when it has none for this tool, use its documented build.
 2. **Files.** Create `tools/<tool>/<case>/case.toml` (repo, branch, `start_sha`, untimed `prepare`, output `check`, `[runs]`) and `.boringcache.toml` (base plan). Add `plus/.boringcache.toml` only when the tool has a `plus` level that applies.
 3. **Lanes.** Reuse `tools/<tool>/lanes/*.toml`. Add a lane only for a provider with documented setup. Phase behaviour: cold and rolling write, warm reads only; anything that forces a cold (for example `--remote_accept_cached=false`) stays under `[cold]`.
 4. **Runners.** Default to `github`. Add other runners per case on purpose. Remote builder lanes set `machine` so labels and records name the builder, not the runner.
 5. **Shared pieces.** If a second case needs the same helper, move it to `tools/<tool>/shared/`, or `tools/shared/` when cases of several tools need it, and call it with `$BENCH_ROOT/...`. Never copy a helper between cases.
 6. **Check locally.** `bundle exec bin/bench check`, the tests (see below), `bin/bench matrix <project> --tool <tool>`, and a local `bin/bench run` when the tool runs on this machine.
-7. **Check on Actions.** Preflight, then a fresh run:
-   `gh workflow run project.yml --ref main -f tool=<Tool> -f project=<project> -f mode=preflight`, then `-f mode=fresh`.
-8. **Audit the fresh run.** Every record has `exit_status` 0 and `output_ok` true, each warm follows a passing cold, and logs show the cache restored and saved. A failed cold means its warm is not a comparison.
-9. **Roll.** Add the project to `rolling.toml` only after its fresh run passes.
+7. **Check on Actions.** Preflight:
+   `gh workflow run project.yml --ref main -f tool=<Tool> -f project=<project> -f mode=preflight`.
+8. **Roll.** Add the project to `rolling.toml` and dispatch `-f mode=rolling`. Step 0 builds `start_sha` with every lane's cache empty, so it is the cold baseline; each later step restores the step before it.
+9. **Audit step 0 and step 1.** Every record has `exit_status` 0 and `output_ok` true, and logs show step 0 saving and step 1 restoring. Fresh runs (`mode=fresh`, cold then warm at one commit) are for one-off comparisons such as CLI canaries.
 
 ## Run and roll
 
