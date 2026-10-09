@@ -129,7 +129,7 @@ env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
 ```sh
 gh workflow run project.yml -f tool=Docker -f project=Hugo
-gh workflow run project.yml -f tool=Nix -f project=Helix -f mode=preflight
+gh workflow run project.yml -f tool=Nix -f project=Zed -f mode=preflight
 ```
 
 A preflight run (`<tool> - <project> (preflight)`) runs every lane's setup and `probe` with the lane's secrets and no checkout or build, so missing keys and auth problems show up in minutes. A cold phase refuses to run on a rerun attempt, because the run's cache scope may already hold data; dispatch a fresh run instead.

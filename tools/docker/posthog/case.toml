@@ -1,7 +1,7 @@
 repo = "PostHog/posthog"
 branch = "master"
 start_sha = "73d408d6e3caca2b5294de229c93612d5250f186"
-rolling_stride = 10
+rolling_stride = 20
 check = "docker image inspect posthog-benchmark:local"
 
 [runs]

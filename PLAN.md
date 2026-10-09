@@ -228,7 +228,7 @@ lane, and each product's cache set up the way that product documents it.
 | maven | spring-ai | `boringcache-maven`, `gha`, `depot-cache` |
 | ccache | obs-studio (Linux) | `boringcache-ccache`, `gha` |
 | xcode | obs-studio (macOS) | `boringcache-xcode`, `gha` |
-| nix | helix, zed | `boringcache-nix`, `cachix`, `magic-nix-cache` |
+| nix | zed | `boringcache-nix`, `cachix`, `magic-nix-cache` |
 | moon | gogs, opencut | `boringcache-moon`, `depot-cache` |
 | pants | stackstorm | `boringcache-pants`, `depot-cache`, `nativelink` |
 | buck2 | executorch | `boringcache-buck2`, `nativelink` |
@@ -293,10 +293,19 @@ are amd64, so local runs prove setup, not timings.
   not as a timing; records from before 2026-10-08 18:37 carry no
   `cache_restored_key` and are left as they are. Docker lanes on BuildKit's
   `type=gha` cache record no key, so their misses are not visible.
-- PostHog (`rolling_stride = 10`), llama.cpp, Nix Zed and Cargo Zed (3 each)
-  move several first-parent commits per rolling step from 2026-10-09, because
-  each lands more commits a day than a step can build (PostHog 223 a day
-  against about 28 steps).
+- PostHog (`rolling_stride = 20`), llama.cpp (5), Nix Zed and Cargo Zed (3
+  each) move several first-parent commits per rolling step from 2026-10-09,
+  because each lands more commits a day than a step can build (PostHog 223 a
+  day against about 28 steps). PostHog used 10 for its step 37 and llama.cpp
+  3 for one step before the strides were raised.
+- Nix Zed rebuilds both Zed derivations, `zed-editor-deps` and `zed-editor`,
+  on every commit in every lane, because the flake puts the commit hash in
+  their version. The cache serves the 2,033-path closure (1.3–1.5 GiB) and
+  stores the 2.2 GiB of outputs, about a minute of a 60–75 minute job, so the
+  total time mostly follows the runner's CPU. At step 1 BoringCache fetched
+  the closure in 21 s and Cachix in 52 s, while compiling took 47.6 minutes
+  on an AMD EPYC 7763 and 38.5 minutes on an AMD EPYC 9V74. Report its fetch
+  and upload phases beside the total.
 - The Namespace trial caps 8-core profiles at 16 GB; 32 GB needs a paid plan.
 - Zed bundle runs on Depot 8c (32 GB). Its BoringCache lane is
   `boringcache-cargo-phases`: `boringcache cargo --phase restore`, Zed's own
@@ -363,6 +372,9 @@ and the upstream commits in the 30 days to 2026-10-09.
   - Buck2: `buck2-prelude` (13 s cold);
   - Docker: `mastodon-streaming` (28 s cold). The `mastodon` case covers the
     same repository.
+- Replaced by a more active project:
+  - Nix: `helix` (helix-editor/helix, 5 commits and none since 2026-10-01;
+    254 s and 818 s cold), removed once Nix `zed` rolled cleanly.
 
 sbt rolls `lila` (lichess-org/lila) and Pants rolls `backend-ai` (lablup/backend.ai,
 `pants check ::`, 234 s cold and 99 s warm when measured); both are backfilled from
@@ -370,8 +382,7 @@ sbt rolls `lila` (lichess-org/lila) and Pants rolls `backend-ai` (lablup/backend
 nightly, 673 s cold and 196 s warm when measured). Nx rolls `storybook` from its last commit before 2026-10-01, and
 `BENCH_NX_CACHE_KEYSPACE` in Storybook's Nx global inputs gives every lane
 fresh task hashes, as Nx Cloud cannot be emptied. Nix rolls `zed` from
-2026-10-01 with Cachix emptied first, and Helix (5 upstream commits, none since 2026-10-01) goes once
-Nix `zed` rolls cleanly.
+2026-10-01 with Cachix emptied first.
 
 ## Version pins
 
