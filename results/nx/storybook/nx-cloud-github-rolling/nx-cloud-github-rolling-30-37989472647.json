@@ -1,0 +1,37 @@
+{
+  "adapter_command": "nx",
+  "case": "storybook",
+  "lane": "nx-cloud",
+  "provider": "nx-cloud",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 30,
+  "scope": "nx-cloud-github-rolling",
+  "cache_scope": "nx-cloud-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "nx-storybook-nx-cloud-github-rolling-29",
+  "repo": "storybookjs/storybook",
+  "sha": "47ed1c02a27f73e912e4e7af0b50668086a65c9c",
+  "seconds": 122.143,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) 6973P-C",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37989472647",
+  "attempt": 1,
+  "started_at": "2026-10-09T20:50:40Z"
+}
