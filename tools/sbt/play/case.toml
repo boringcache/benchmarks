@@ -1,0 +1,21 @@
+repo = "playframework/playframework"
+branch = "main"
+start_sha = "07e5d2357243fc9d5362a71e8c8fa73d13f21f5b"
+directory = "upstream"
+prepare = [
+  "mise trust && mise install",
+  "git -C upstream fetch --quiet --unshallow --tags origin",
+  "printf '\\naddRemoteCachePlugin\\n' >> upstream/project/plugins.sbt",
+  "cp overlay/benchmark-cache.sbt upstream/benchmark-cache.sbt",
+]
+check = "test -n \"$(find upstream -path '*/target/out/jvm/*' -name '*.class' -print -quit)\""
+shared = [".cache/coursier", ".sbt/boot"]
+
+[env]
+COURSIER_CACHE = "${BENCH_DIR}/.cache/coursier"
+JAVA_HOME = "${HOME}/.local/share/mise/installs/java/temurin-17.0.20+8"
+SBT_OPTS = "-Dsbt.boot.directory=${BENCH_DIR}/.sbt/boot -Dsbt.global.localcache=${BENCH_DIR}/.cache/sbt"
+
+[runs]
+boringcache-sbt = ["github", "local"]
+gha = ["github"]

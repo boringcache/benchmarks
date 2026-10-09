@@ -347,7 +347,8 @@ and the upstream commits in the 30 days to 2026-10-09.
 
 sbt rolls `lila` (lichess-org/lila) and Pants rolls `backend-ai` (lablup/backend.ai,
 `pants check ::`, 234 s cold and 99 s warm when measured); both are backfilled from
-2026-10-01. Nx rolls `storybook` from its last commit before 2026-10-01, and
+2026-10-01. sbt also rolls `play` (playframework/playframework, `sbt test` on its sbt
+nightly, 673 s cold and 196 s warm when measured). Nx rolls `storybook` from its last commit before 2026-10-01, and
 `BENCH_NX_CACHE_KEYSPACE` in Storybook's Nx global inputs gives every lane
 fresh task hashes, as Nx Cloud cannot be emptied. Nix rolls `zed` from
 2026-10-01 with Cachix emptied first, and Helix (5 upstream commits, none since 2026-10-01) goes once
