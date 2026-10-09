@@ -49,6 +49,14 @@ class ReportTest < Minitest::Test
     assert_equal [2, 0, 1, 5.0], warm.values_at("samples", "failed", "seed_failed", "median_seconds")
   end
 
+  def test_a_measured_post_job_save_is_added_to_the_timing
+    record "dance.json", seconds: 100.0, phase: "rolling", step: 1, save: "post-job", post_job_save: 28.5
+    record "unmeasured.json", seconds: 90.0, phase: "rolling", step: 2, save: "post-job"
+
+    rows = Bench::Report.new(@dir).rows.sort_by { it["step"] }
+    assert_equal [["post-job, timed", 128.5], ["post-job", 90.0]], rows.map { it.values_at("cache_save_timing", "median_seconds") }
+  end
+
   def test_a_rolling_step_that_restored_nothing_from_its_lanes_cache_is_a_seed_failure
     record "start.json", seconds: 90.0, phase: "rolling", step: 0, scope: "gha-github-rolling"
     record "hit.json", seconds: 10.0, phase: "rolling", step: 1, scope: "gha-github-rolling", restored: "docker-posthog-gha-github-rolling-0"
@@ -96,12 +104,12 @@ class ReportTest < Minitest::Test
 
   private
     def record(name, seconds:, exit_status: 0, output_ok: true, phase: "cold", scope: "gha-github-1", sha: "a" * 40, step: nil,
-               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job", restored: nil)
+               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job", restored: nil, post_job_save: nil)
       File.write(File.join(@dir, name), JSON.generate({
         "adapter_command" => "docker", "case" => "posthog", "lane" => "gha", "level" => "base", "runner" => "github",
         "phase" => phase, "step" => step, "scope" => scope, "cache_scope" => scope, "sha" => sha, "seconds" => seconds, "attempt" => attempt,
         "exit_status" => exit_status, "output_ok" => output_ok, "cache_save_timing" => save, "machine" => "github 4c",
         "observed" => { "machine" => { "cpu" => cpu, "cores" => 4 } }, "versions" => { "boringcache" => boringcache, "boringcache_release" => release }.compact
-      }.merge(restored == :unrecorded ? {} : { "cache_restored_key" => restored })))
+      }.merge(restored == :unrecorded ? {} : { "cache_restored_key" => restored }, post_job_save ? { "post_job_save_seconds" => post_job_save } : {})))
     end
 end

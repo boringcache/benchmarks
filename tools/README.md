@@ -55,6 +55,7 @@ TURBO_CACHE = "local:rw,remote:r"
 | `program`, `replaces` | `program` replaces the leading `replaces` words of the plan command, for example `depot` for `docker buildx` or `mbx` for `cargo` |
 | `wrap`, `cold.wrap` | command prefix around the build, for example `cachix watch-exec <cache> --` on cold |
 | `finish`, `cold.finish` | commands run after a successful build inside the timer, for example a provider push that would otherwise happen after the job |
+| `post_job_save` | actions (`owner/repo`) or step ids that save the lane cache only after the job, such as `reproducible-containers/buildkit-cache-dance`; the publish job adds their logged durations to the record as `post_job_save_seconds`, and the report counts them in the timing |
 | `probe` | credential and connection checks for a preflight run; they run in the run directory without a checkout |
 | `prepare`, `cold.prepare` | untimed commands the lane runs after the case `prepare`, for every phase or one phase |
 

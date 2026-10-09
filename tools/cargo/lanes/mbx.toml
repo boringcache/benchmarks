@@ -1,6 +1,6 @@
 provider = "mbx"
 level = "plus"
-cache_save_timing = "post-job"
+post_job_save = ["jdx/mr-boxington-action"]
 actions_only = true
 runners = ["github", "namespace-8"]
 setup = ["mbx"]

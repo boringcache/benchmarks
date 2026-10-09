@@ -47,6 +47,7 @@ module Bench
         problems << "#{where}: level #{lane.level.inspect} is not in tool.toml" unless lane.tool.levels.key?(lane.level)
         problems += (lane.setup - Lane::SETUPS).map { "#{where}: unknown setup #{it}" }
         problems << "#{where}: program needs replaces" if lane.program && lane.replaces.empty?
+        problems << "#{where}: post_job_save must list actions (owner/repo) or step ids" unless lane.post_job_save.is_a?(Array) && lane.post_job_save.all?(String)
         problems + Array(lane.allowed_runners).reject { @catalog.runners.key?(it) }.map { "#{where}: unknown runner #{it}" }
       end
 

@@ -22,6 +22,13 @@ module Bench
     output
   end
 
+  def self.gh(*args)
+    output, error, status = Open3.capture3("gh", *args)
+    raise Error, "gh #{args.first(2).join(" ")} failed: #{error.strip}" unless status.success?
+
+    output
+  end
+
   def self.expand(value, source)
     value.to_s.gsub(/\$\{?([A-Z0-9_]+)\}?/) { source.fetch(Regexp.last_match(1), "") }
   end

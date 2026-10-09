@@ -55,8 +55,12 @@ module Bench
       config.fetch("paths", [])
     end
 
+    def post_job_save
+      config.fetch("post_job_save", [])
+    end
+
     def cache_save_timing
-      config.fetch("cache_save_timing", "in-phase")
+      post_job_save.empty? ? "in-phase" : "post-job"
     end
 
     def setup

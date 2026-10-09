@@ -1,6 +1,6 @@
 provider = "kache"
 level = "base"
-cache_save_timing = "post-job"
+post_job_save = ["kunobi-ninja/kache-action"]
 actions_only = true
 runners = ["github", "namespace-8", "depot-4"]
 setup = ["kache"]
