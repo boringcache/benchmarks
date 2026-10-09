@@ -76,9 +76,13 @@ Case `docker/llama-cpp`, lane `boringcache-docker` on `github`, rolling step 9 (
 - At 15:24:09 the CLI stopped: `OIDC session renewal failed; the wrapped command was stopped and no static credential was used: OIDC session renewal exceeded the remaining session lifetime: deadline has elapsed`. Three of the five attempts were never made.
 - The wrapped Docker build had been running 77 minutes and was at 59% of the CUDA compile; the step failed.
 
+The same window stopped a second build. Case `cargo/zed`, lane `boringcache-cargo` on `github`, rolling step 22 (run 37949491363, job 113884667067): session ready at 15:12:02, renewed at 15:16:33; at 15:21:13 the next GitHub OIDC request timed out, and at 15:21:22 the CLI stopped `cargo build` with the same error, 9 minutes in.
+
+On CLI main, renewal starts `SESSION_RENEWAL_HEADROOM` (30 s) before expiry (`cli/src/commands/ci.rs` lines 40 and 1194), and `renewal::renew` allows that time less `CHILD_STOP_TIMEOUT` (10 s) and 1 s (`cli/src/commands/ci/renewal.rs` lines 11–22), about 19 s for all attempts. Any renewal error stops the wrapped command (`ci.rs` lines 1219–1226).
+
 Two product problems:
 
-1. **Renewal leaves no slack.** Renewing about 4.6 minutes into what appears to be a ~5 minute session means one transient GitHub 503 (about 4–7 s per attempt here) exhausts the remaining lifetime before the retries can help. Renewing at about half the lifetime would leave minutes for retries.
+1. **Renewal leaves no slack.** Renewing 30 s before a ~5 minute session expires leaves about 19 s, so one slow or failing GitHub OIDC request (4–9 s per attempt here) exhausts it before the retries can help. Renewing at about half the lifetime would leave minutes for retries.
 2. **A credential failure kills the user's build.** Stopping the wrapped command throws away a long build because cache credentials could not be refreshed. Continuing without cache writes (or read-only), and reporting it, would keep the build.
 
 ## Withdrawn
