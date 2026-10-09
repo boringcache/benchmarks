@@ -8,5 +8,6 @@ check = "docker image inspect immich-base-images-benchmark:local"
 [runs]
 boringcache-docker = ["github", "github-arm", "local"]
 boringcache-docker-plus = ["github", "local"]
+gha-plus = ["github"]
 gha = ["github", "github-arm"]
 ghcr = ["github", "github-arm"]

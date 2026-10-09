@@ -255,7 +255,7 @@ RUN meson setup build --prefix /usr/local/libvips --libdir=lib -Ddeprecated=fals
 WORKDIR /usr/local/libvips/src/vips-${VIPS_VERSION}/build
 
 # Compile and install libvips
-RUN ninja && ninja install && ccache --show-stats
+RUN --mount=type=cache,id=mastodon-ccache,target=/root/.cache/ccache ninja && ninja install && ccache --show-stats
 
 # Create temporary ffmpeg specific build layer
 FROM media-build AS ffmpeg
@@ -274,7 +274,7 @@ RUN tar xf n${FFMPEG_VERSION}.tar.gz && mv FFmpeg-n${FFMPEG_VERSION} ffmpeg-${FF
 WORKDIR /usr/local/ffmpeg/src/ffmpeg-${FFMPEG_VERSION}
 
 # Configure and compile ffmpeg
-RUN \
+RUN --mount=type=cache,id=mastodon-ccache,target=/root/.cache/ccache \
   configure_compiler_args=(); \
   if [ -n "${CC:-}" ]; then \
     configure_compiler_args+=(--cc="$CC"); \

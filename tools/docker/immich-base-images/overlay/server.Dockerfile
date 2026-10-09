@@ -98,22 +98,22 @@ FROM base AS jpegli
 
 COPY sources/jpegli.json sources/jpegli.sh ./
 COPY sources/jpegli-patches/ ./jpegli-patches/
-RUN ./jpegli.sh
+RUN --mount=type=cache,id=immich-base-images-ccache,target=/root/.cache/ccache ./jpegli.sh
 
 FROM base AS libheif
 
 COPY sources/libheif.json sources/libheif.sh ./
-RUN ./libheif.sh
+RUN --mount=type=cache,id=immich-base-images-ccache,target=/root/.cache/ccache ./libheif.sh
 
 FROM base AS libjxl
 
 COPY sources/libjxl.json sources/libjxl.sh ./
-RUN ./libjxl.sh
+RUN --mount=type=cache,id=immich-base-images-ccache,target=/root/.cache/ccache ./libjxl.sh
 
 FROM base AS libraw
 
 COPY sources/libraw.json sources/libraw.sh ./
-RUN ./libraw.sh
+RUN --mount=type=cache,id=immich-base-images-ccache,target=/root/.cache/ccache ./libraw.sh
 
 FROM libraw AS imagemagick
 
@@ -132,13 +132,13 @@ RUN cp -r /usr/local/lib/libheif/libheif* /usr/local/lib/libjxl/libjxl* /usr/loc
   rm -r /usr/local/lib/libheif /usr/local/lib/libjxl /usr/local/lib/jpegli
 
 COPY sources/imagemagick.json sources/imagemagick.sh ./
-RUN ./imagemagick.sh
+RUN --mount=type=cache,id=immich-base-images-ccache,target=/root/.cache/ccache ./imagemagick.sh
 
 FROM imagemagick AS libvips
 
 COPY sources/libvips.json sources/libvips.sh ./
 COPY sources/libvips-patches/ ./libvips-patches/
-RUN ./libvips.sh
+RUN --mount=type=cache,id=immich-base-images-ccache,target=/root/.cache/ccache ./libvips.sh
 
 FROM base AS dev
 
