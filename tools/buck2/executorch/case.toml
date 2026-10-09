@@ -7,7 +7,7 @@ prepare = [
   "git -C upstream submodule update --init --recursive",
   "git -C upstream/third-party/prelude fetch --depth 1 origin cb8b34f660977893418853c0001b319cc9314798",
   "git -C upstream/third-party/prelude checkout --detach cb8b34f660977893418853c0001b319cc9314798",
-  "git -C upstream apply ../overlay/cache.patch",
+  "git -C upstream/third-party/prelude apply ../../../overlay/cache.patch",
   "cp -R overlay/benchmark-platform upstream/benchmark-platform",
   "python3 -m pip install PyYAML==6.0.3",
   "python3 -m pip install --no-deps 'https://download-r2.pytorch.org/whl/cpu/torch-2.14.0%2Bcpu-cp311-cp311-manylinux_2_28_x86_64.whl#sha256=673dbf5c9bbadfffab7a386b6dd7a0c219f1408a328b7b4e86d0ae551cdafa42'",
