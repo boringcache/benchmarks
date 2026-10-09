@@ -239,23 +239,30 @@ class PhaseRunTest < Minitest::Test
     TOML
     write "tools/demo/app/overlay/app.Dockerfile", <<~'DOCKERFILE'
       FROM scratch
+      # For --mount=type=cache the value of target is the default cache id
       RUN --mount=type=cache,id=apt-${TARGETPLATFORM},target=/var/cache/apt,sharing=locked \
           --mount=type=cache,target=/go/pkg/mod \
           --mount=type=cache,id=go-build-$TARGETARCH,target=/root/.cache/go-build true
-      RUN --mount=type=cache,id=apt-${TARGETPLATFORM},target=/var/cache/apt --mount=type=bind,source=.,target=/src true
+      RUN --mount=type=cache,id=apt-${TARGETPLATFORM},target=/var/cache/apt --mount=type=bind,source=.,target=/src,readonly true
+      RUN --mount=type=cache,dst=/root/.npm true
     DOCKERFILE
-    outputs = File.join(@root, "github_output")
-    with_fixture_env do
-      ENV.update("GITHUB_OUTPUT" => outputs, "GITHUB_ENV" => File.join(@root, "github_env"), "RUNNER_TEMP" => "/runner")
-      assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r7", "--github")
-    ensure
-      %w[GITHUB_OUTPUT GITHUB_ENV RUNNER_TEMP].each { ENV.delete(it) }
+    map = lambda do |setup|
+      write "tools/demo/lanes/remote.toml", %(provider = "remote"\nlevel = "base"\nsecrets = ["REMOTE_TOKEN"]\nsetup = #{setup}\n[env]\nDEMO_CACHE = "${REMOTE_TOKEN}"\n)
+      outputs = File.join(@root, "github_output")
+      FileUtils.rm_f(outputs)
+      with_fixture_env do
+        ENV.update("GITHUB_OUTPUT" => outputs, "GITHUB_ENV" => File.join(@root, "github_env"), "RUNNER_TEMP" => "/runner")
+        assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r7", "--github")
+      ensure
+        %w[GITHUB_OUTPUT GITHUB_ENV RUNNER_TEMP].each { ENV.delete(it) }
+      end
+      JSON.parse(File.read(outputs)[/cache_dance_map<<BENCH_EOF\n(.*)\nBENCH_EOF/, 1]).transform_values { it.fetch("id") }
     end
 
     arch = { "x86_64" => "amd64", "aarch64" => "arm64", "arm64" => "arm64" }.fetch(Etc.uname[:machine])
-    map = JSON.parse(File.read(outputs)[/cache_dance_map<<BENCH_EOF\n(.*)\nBENCH_EOF/, 1])
+    assert_equal({}, map.(%([])))
     assert_equal({ "/runner/cache-dance/apt-linux/#{arch}" => "apt-linux/#{arch}", "/runner/cache-dance/go/pkg/mod" => "/go/pkg/mod",
-                   "/runner/cache-dance/go-build-#{arch}" => "go-build-#{arch}" }, map.transform_values { it.fetch("id") })
+                   "/runner/cache-dance/go-build-#{arch}" => "go-build-#{arch}", "/runner/cache-dance/root/.npm" => "/root/.npm" }, map.(%(["cache-dance"])))
   end
 
   def test_actions_only_lane_is_skipped_locally
