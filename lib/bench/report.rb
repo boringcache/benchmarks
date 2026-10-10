@@ -86,6 +86,8 @@ module Bench
       def matched_steps
         records.select { matchable?(it) }.group_by { it.values_at("adapter_command", "case", "runner") }.flat_map do |(tool, kase, runner), group|
           lanes = group.map { it["lane"] }.uniq
+          next [] if lanes.size < 2
+
           group.group_by { [series(it), it["step"]] }.filter_map do |(series, step), at_step|
             by_lane = at_step.group_by { it["lane"] }.transform_values { |tries| tries.min_by { it["attempt"].to_i } }
             next unless lanes.all? { by_lane.key?(it) }
@@ -97,7 +99,7 @@ module Bench
       end
 
       def matchable?(record)
-        record["phase"] == ROLLING && record["cache_scope"] == record["scope"] && passed?(record) && seeded?(record) &&
+        record["phase"] == ROLLING && record["cache_scope"] == record["scope"] && passed?(record) && seeded?(record) && save_timing(record) != "post-job" &&
           record["step"] > first_steps.fetch(record.values_at("adapter_command", "case", "cache_scope"))
       end
 
