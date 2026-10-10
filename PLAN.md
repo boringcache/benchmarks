@@ -299,6 +299,19 @@ are amd64, so local runs prove setup, not timings.
   not as a timing; records from before 2026-10-08 18:37 carry no
   `cache_restored_key` and are left as they are. Docker lanes on BuildKit's
   `type=gha` cache record no key, so their misses are not visible.
+- The BoringCache workspace reached its 500 GB storage cap twice: on
+  2026-10-08 from 15:53 to 16:14 UTC, and from 22:44 that day to 02:12 on
+  2026-10-09. Upload requests (`cache_blobs_upload_urls`) got HTTP 507, so
+  those steps saved little or nothing, yet 208 of the 213 records show
+  exit 0 under `fail-on-cache-error = true`; the errors appear only in the
+  product's session summary. 39 BoringCache records carry them in the first
+  window and 174 in the second: Docker PostHog,
+  Mastodon, the three n8n cases, qdrant, llama.cpp, Immich, Chroma and
+  linkerd2, moon Zitadel, Bazel gRPC (steps 25 to 32), Cargo Zed and Deno,
+  Gradle OTel Java and both OBS cases. A step that saved nothing leaves the
+  next steps restoring older entries, so timings around both windows
+  understate BoringCache. The report shows the count as "Cache API errors",
+  and the matched table as "Steps with cache API errors".
 - PostHog (`rolling_stride = 20`), llama.cpp (5), Nix Zed and Cargo Zed (3
   each) move several first-parent commits per rolling step from 2026-10-09,
   because each lands more commits a day than a step can build (PostHog 223 a
