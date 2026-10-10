@@ -1,12 +1,14 @@
 repo = "obsproject/obs-studio"
 branch = "master"
 start_sha = "a8b04ac5e15115591d8a184701e1670fb5dc00af"
+rolling_series = 2
 directory = "upstream"
 prepare = [
   "git -C upstream fetch --quiet --unshallow --tags origin",
   "git -C upstream submodule update --init --recursive",
   "eval \"$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\" && brew install --quiet zsh",
   "mise trust && mise install",
+  "zsh \"$BENCH_ROOT/tools/shared/obs-studio-setup.zsh\" upstream ubuntu-x86_64",
 ]
 check = "test -x upstream/build_ubuntu/install/RelWithDebInfo/bin/obs"
 
