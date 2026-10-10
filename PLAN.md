@@ -404,8 +404,11 @@ are amd64, so local runs prove setup, not timings.
   6 s, as the runner image has every formula. Prepare now runs upstream's own
   `check_ubuntu` and `setup_ubuntu`, or `check_macos`, from the commit being
   built (`tools/shared/obs-studio-setup.zsh`), so the timed script finds them
-  installed. The CEF download stays in the timer, as upstream fetches it on
-  every run. Series 1 (steps 0 to 28 of both, all on CLI 1.40.1) moved to
+  installed. In the timer the script still runs `apt-get update`, downloads
+  and extracts CEF again (upstream fetches it on every run) and finds nothing
+  to install: 9 to 11 s per lane at series 2 step 0, after 75 to 91 s of
+  untimed prepare; on macOS `brew bundle` then takes 1 s. Series 1 (steps 0
+  to 28 of both, all on CLI 1.40.1) moved to
   `archive/obs-studio-series-1/`, kept but not reported.
 
 ## Removed cases
