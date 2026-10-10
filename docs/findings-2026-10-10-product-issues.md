@@ -1,6 +1,6 @@
 # Product issues found by the benchmark on 2026-10-10
 
-Date: 2026-10-10. Runs on CLI 1.40.1. Evidence files are under `results/<tool>/<case>/<scope>/`, or under `archive/obs-studio-series-1/` for OBS.
+Date: 2026-10-10. Runs on CLI 1.40.1 unless noted. Evidence files are under `results/<tool>/<case>/<scope>/`, or under `archive/obs-studio-series-1/` for OBS.
 
 ## 1. A full storage cap skips cache saves without failing the build, and the session summary calls it clean
 
@@ -46,4 +46,4 @@ Case `ccache/obs-studio`, lane `boringcache-ccache` on `github-26`, rolling seri
 
 All 29 series 1 records of this lane have the same classification. The Xcode lane on the same project is classified `hot` on 28 of its 30 records, and Cargo's sccache classification matches its native counters, so the gap looks specific to the ccache adapter: the classifier does not read ccache's KV lookups or native counters.
 
-Next check: the first restoring step of OBS series 2 (CLI 1.41.0) shows whether 1.41.0 still classifies ccache this way.
+CLI 1.41.0 does the same: OBS series 2 step 1 (run 38045662482) reported 596 hits and 3 misses from ccache, and the classification still says `no_cache_reads` with 0 hits.
