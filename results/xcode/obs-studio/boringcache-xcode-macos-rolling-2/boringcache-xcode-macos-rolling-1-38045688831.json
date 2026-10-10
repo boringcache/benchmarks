@@ -1,0 +1,370 @@
+{
+  "adapter_command": "xcode",
+  "case": "obs-studio",
+  "lane": "boringcache-xcode",
+  "provider": "boringcache",
+  "level": "base",
+  "capabilities": [
+    "compilation-cache"
+  ],
+  "runner": "macos",
+  "runner_label": "macos-26",
+  "machine": "github macos 3c",
+  "phase": "rolling",
+  "step": 1,
+  "scope": "boringcache-xcode-macos-rolling-2",
+  "cache_scope": "boringcache-xcode-macos-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "obsproject/obs-studio",
+  "sha": "d20b4698caf196e29f0be7948db97eff63a23b70",
+  "seconds": 317.255,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1791629252372,
+      "run_id": "38045688831",
+      "session_id": null,
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 315093,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "xcode",
+      "proxy": {
+        "adapter": "xcode",
+        "blob_download_max_concurrency": 2,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 315093,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 2,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 2,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 64,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 6398,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 256,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 38,
+          "cache_blobs_upload_urls": 43,
+          "cache_kv_entries_current_version": 976,
+          "cache_kv_entries_download_urls": 673,
+          "cache_kv_entries_upsert": 143,
+          "cache_kv_entry_reads": 1294,
+          "cache_rollups_ingest": 69
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 54,
+          "cache_blobs_upload_urls": 187,
+          "cache_kv_entries_current_version": 976,
+          "cache_kv_entries_download_urls": 753,
+          "cache_kv_entries_upsert": 1146,
+          "cache_kv_entry_reads": 1294,
+          "cache_rollups_ingest": 128
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 10,
+          "cache_blobs_upload_urls": 177,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 5,
+          "cache_kv_entries_upsert": 15,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 11
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 6,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 220,
+        "total_retry_count": 6
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 38,
+          "cache_blobs_upload_urls": 43,
+          "cache_kv_entries_current_version": 976,
+          "cache_kv_entries_download_urls": 673,
+          "cache_kv_entries_upsert": 143,
+          "cache_kv_entry_reads": 1294,
+          "cache_rollups_ingest": 69
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 54,
+          "cache_blobs_upload_urls": 187,
+          "cache_kv_entries_current_version": 976,
+          "cache_kv_entries_download_urls": 753,
+          "cache_kv_entries_upsert": 1146,
+          "cache_kv_entry_reads": 1294,
+          "cache_rollups_ingest": 128
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 10,
+          "cache_blobs_upload_urls": 177,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 5,
+          "cache_kv_entries_upsert": 15,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 11
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 6,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 220,
+        "total_retry_count": 6
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 2893
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 0,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 1,
+        "startup_prefetch_concurrency_adjustment_count": 5,
+        "startup_prefetch_concurrency_adjustments": "shared_download_policy:64->80,shared_download_policy:80->160,shared_download_policy:160->200,shared_download_policy:200->250,shared_download_policy:250->256",
+        "startup_prefetch_concurrency_reason": "empty",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_duration_ms": 0,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 0,
+        "startup_prefetch_initial_concurrency": 1,
+        "startup_prefetch_inserted": 0,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 0,
+        "startup_prefetch_mode": "xcode-apple-cas",
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 0,
+        "startup_prefetch_target_bytes": 0,
+        "startup_prefetch_total_unique_blobs": 7353,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 0
+      },
+      "kv_upload": {
+        "kv_upload_allowed_concurrency_max": 5,
+        "kv_upload_already_present_blobs": 2849,
+        "kv_upload_batches": 15,
+        "kv_upload_blobs_per_sec": 4,
+        "kv_upload_concurrency_reason": "adaptive_ramp",
+        "kv_upload_concurrency_source": "auto",
+        "kv_upload_duration_ms": 1201,
+        "kv_upload_failed_blobs": 0,
+        "kv_upload_final_concurrency_max": 5,
+        "kv_upload_initial_concurrency_max": 5,
+        "kv_upload_missing_local_blobs": 0,
+        "kv_upload_requested_blobs": 5,
+        "kv_upload_uploaded_blobs": 5
+      },
+      "singleflight": {
+        "singleflight_kv_download_leaders": 6398
+      },
+      "kv_lookup": {
+        "kv_lookup_xcode_ac_index_published_fast_hit": 2,
+        "kv_lookup_xcode_cas_published_fast_hit": 6397
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 1,
+          "blob_read_local_bytes": 985790515,
+          "blob_read_local_count": 6399,
+          "blob_read_local_hit_rate_pct": 50,
+          "blob_read_remote_avg_ms": 600,
+          "blob_read_remote_bytes": 983850801,
+          "blob_read_remote_count": 6398
+        },
+        "blob_read_cache_bytes": 986973636,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "action_errors": 0,
+        "action_hits": 876,
+        "action_misses": 142,
+        "actions_published": 171,
+        "actions_warmed": 964,
+        "bridge_protocol": 1,
+        "bytes_fetched": 0,
+        "bytes_published": 57313030,
+        "host_arch": "aarch64",
+        "objects_fetched": 0,
+        "objects_materialized": 6397,
+        "objects_published": 2729,
+        "objects_warmed": 6397,
+        "path_cohort": "55118379dc3fedf6",
+        "path_strategy": "native",
+        "plugin_abi": "0.1",
+        "plugin_sha256": "4a7fbcab4e225229966dfaf4c1cc421abbcbbb0955c9dac65528f7468f0bc31f",
+        "publications_failed": 0,
+        "schema": "boringcache.xcode.v1",
+        "warmed_action_lookups": 876,
+        "warmup_bytes": 981911087,
+        "warmup_duration_ms": 23964,
+        "warmup_failures": 0,
+        "warmup_index_ms": 1066,
+        "warmup_index_source": "packed",
+        "warmup_manifest_fetches": 1,
+        "warmup_materialize_ms": 4563,
+        "xcode_build": "17F42",
+        "xcode_version": "26.5"
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "xcode",
+          "candidates": [
+            {
+              "confidence": "low",
+              "evidence": {
+                "duration_ms": 315093,
+                "hit_rate": 100.0,
+                "hits": 7275,
+                "misses": 0
+              },
+              "kind": "needs_native_diagnostics",
+              "summary": "Cache-side reads were hot; remaining time likely sits in the native tool or runner."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 315093,
+            "errors": 0,
+            "hit_rate": 100.0,
+            "hits": 7275,
+            "misses": 0,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 2901
+          },
+          "primary_bottleneck": "needs_native_diagnostics",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 100.0,
+          "hits": 7275,
+          "likely_reason": "all_reads_hit",
+          "misses": 0,
+          "state": "hot",
+          "writes": 2901
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "needs_native_diagnostics"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "Apple M1 (Virtual)",
+      "cores": 3
+    }
+  },
+  "evidence": [
+    "boringcache-xcode-macos-rolling-1-38045688831.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.41.0"
+  },
+  "harness": {
+    "commit": "75aa31013b58398c7f9f5409f327571a813b8030",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38045688831",
+  "attempt": 1,
+  "started_at": "2026-10-10T10:42:16Z"
+}
