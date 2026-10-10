@@ -3,6 +3,7 @@ module Bench
     PLAN_CAPABILITIES = %w[tool-cache mount-cache].freeze
 
     STATE = ".bench-state.json"
+    TIMER = "restore, build, save; post-job saves in post_job_save_seconds"
 
     attr_reader :kase, :lane, :phase, :runner, :scope, :cache_scope, :sha, :step
 
@@ -196,6 +197,7 @@ module Bench
           "observed" => observed,
           "evidence" => File.exist?(evidence_path) ? [File.basename(evidence_path)] : [],
           "versions" => { "boringcache" => boringcache_version, "boringcache_release" => (@env["BENCH_CLI_RELEASE"] if boringcache_version) }.compact,
+          "harness" => { "commit" => harness_commit, "timer" => TIMER }.compact,
           "run_url" => run_url,
           "attempt" => attempt,
           "started_at" => started_at
@@ -209,10 +211,10 @@ module Bench
       end
 
       def observed
-        machine = { "cpu" => cpu_model, "cores" => Etc.nprocessors }.compact
-        return { "machine" => machine } unless kase.tool.name == "docker"
+        machine = { (lane.machine ? "runner_machine" : "machine") => { "cpu" => cpu_model, "cores" => Etc.nprocessors }.compact }
+        return machine unless kase.tool.name == "docker"
 
-        { "machine" => machine, "image_platform" => image_platform, "buildx_builder" => buildx_builder }.compact
+        { **machine, "image_platform" => image_platform, "buildx_builder" => buildx_builder }.compact
       end
 
       def cpu_model
@@ -254,6 +256,15 @@ module Bench
       def boringcache_version
         output, status = Open3.capture2("boringcache", "--version")
         output.split.last if status.success?
+      rescue Errno::ENOENT
+        nil
+      end
+
+      def harness_commit
+        return @env["GITHUB_SHA"] if @env["GITHUB_SHA"]
+
+        output, _, status = Open3.capture3("git", "rev-parse", "HEAD", chdir: kase.tool.catalog.root)
+        output.strip if status.success?
       rescue Errno::ENOENT
         nil
       end

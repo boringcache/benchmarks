@@ -205,6 +205,25 @@ class PhaseRunTest < Minitest::Test
     assert_equal ["in-phase", "post-job"], %w[r15 r16].map { record("remote-local-#{it}", "remote-local-cold")["cache_save_timing"] }
   end
 
+  def test_records_name_the_harness_commit_and_what_the_timer_covers
+    with_fixture_env do
+      ENV["GITHUB_SHA"] = "0123abcd"
+      cli("run", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r40")
+    end
+
+    assert_equal({ "commit" => "0123abcd", "timer" => Bench::PhaseRun::TIMER }, record("remote-local-r40", "remote-local-cold")["harness"])
+  end
+
+  def test_a_remote_builder_lane_keeps_the_runner_cpu_apart_from_its_machine
+    write "tools/demo/lanes/builder.toml", %(provider = "acme"\nlevel = "base"\nmachine = "acme builder"\n)
+    with_fixture_env { cli("run", "demo/app", "--lane", "builder", "--phase", "cold", "--run-id", "r41") }
+
+    builder = record("builder-local-r41", "builder-local-cold")
+    assert_equal "acme builder", builder["machine"]
+    assert_nil builder.dig("observed", "machine")
+    assert_equal Etc.nprocessors, builder.dig("observed", "runner_machine", "cores")
+  end
+
   def test_a_failed_output_check_fails_the_run
     write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub(/^check = .*$/, %(check = "false"))
 
