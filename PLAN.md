@@ -380,6 +380,20 @@ are amd64, so local runs prove setup, not timings.
   version won, `PlayVersion.scala` changed on every commit, and both lanes
   recompiled all 641 sources each step. Series 1 (Lichess steps 0 to 21, Play
   0 to 13) moved to `archive/sbt-series-1/`, kept but not reported.
+- OBS (ccache and Xcode) restarted on 2026-10-10 as rolling series 2. Upstream's
+  `build-ubuntu` and `build-macos` install their own prerequisites before
+  configuring (apt on Ubuntu, `brew bundle` on macOS), and that ran inside the
+  timer. On Ubuntu, configure and build took about two minutes, while slow apt
+  mirrors added up to half an hour to either lane: BoringCache step 21 spent
+  20 min 58 s of 1,379 s downloading 144 MB, with ccache reporting 579 hits and
+  4 misses; GitHub's steps 10, 14 and 24 spent 21 min 41 s, 12 min 7 s and
+  30 min 45 s of 1,434, 848 and 2,012 s. On macOS `brew bundle` took about
+  6 s, as the runner image has every formula. Prepare now runs upstream's own
+  `check_ubuntu` and `setup_ubuntu`, or `check_macos`, from the commit being
+  built (`tools/shared/obs-studio-setup.zsh`), so the timed script finds them
+  installed. The CEF download stays in the timer, as upstream fetches it on
+  every run. Series 1 (steps 0 to 28 of both, all on CLI 1.40.1) moved to
+  `archive/obs-studio-series-1/`, kept but not reported.
 
 ## Removed cases
 
