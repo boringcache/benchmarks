@@ -1,0 +1,55 @@
+{
+  "adapter_command": "docker",
+  "case": "llama-cpp",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "capabilities": [
+    "layers",
+    "tool-cache",
+    "mount-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 16,
+  "scope": "gha-plus-github-rolling",
+  "cache_scope": "gha-plus-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "ggml-org/llama.cpp",
+  "sha": "fb4b2737a808a3fb7c2117a498f43815dc9be53e",
+  "seconds": 340.593,
+  "cache_save_timing": "post-job",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) 6973P-C",
+      "cores": 4
+    },
+    "image_platform": "linux/amd64",
+    "buildx_builder": {
+      "name": "builder-831a1ac8-8370-4c6f-916f-e5cf75f896f7",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-831a1ac8-8370-4c6f-916f-e5cf75f896f70",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "70c8ab1798ca8a6c28f13f18fcd72da4b998377c",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38052247976",
+  "attempt": 1,
+  "started_at": "2026-10-10T12:35:44Z",
+  "post_job_save_seconds": 21.418
+}
