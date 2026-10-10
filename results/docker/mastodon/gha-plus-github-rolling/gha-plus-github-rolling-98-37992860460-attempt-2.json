@@ -9,33 +9,34 @@
     "tool-cache",
     "mount-cache"
   ],
-  "runner": "github-arm",
-  "runner_label": "ubuntu-24.04-arm",
-  "machine": "github arm 4c",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
   "phase": "rolling",
   "step": 98,
-  "scope": "gha-plus-github-arm-rolling",
-  "cache_scope": "gha-plus-github-arm-rolling",
+  "scope": "gha-plus-github-rolling",
+  "cache_scope": "gha-plus-github-rolling",
   "cache_seeded": false,
   "cache_restored_key": null,
   "repo": "mastodon/mastodon",
   "sha": "c6ec96f0bcfad26cb7528b17624472e0c8ccec90",
-  "seconds": 49.298,
+  "seconds": 201.598,
   "cache_save_timing": "post-job",
-  "exit_status": 1,
-  "output_ok": false,
+  "exit_status": 0,
+  "output_ok": true,
   "provider_reported": {},
   "observed": {
     "machine": {
-      "cpu": "Neoverse-N2",
+      "cpu": "AMD EPYC 9V45 96-Core Processor",
       "cores": 4
     },
+    "image_platform": "linux/amd64",
     "buildx_builder": {
-      "name": "builder-0afe7d92-cf59-4aa4-acde-091d8ce5b6b2",
+      "name": "builder-e9e3e033-980e-4325-8d03-9f4ae661eb07",
       "driver": "docker-container",
       "nodes": [
         {
-          "name": "builder-0afe7d92-cf59-4aa4-acde-091d8ce5b6b20",
+          "name": "builder-e9e3e033-980e-4325-8d03-9f4ae661eb070",
           "endpoint": "unix:///var/run/docker.sock"
         }
       ]
@@ -44,7 +45,7 @@
   "evidence": [],
   "versions": {},
   "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37992860460",
-  "attempt": 1,
-  "started_at": "2026-10-09T21:22:16Z",
-  "post_job_save_seconds": 33.968
+  "attempt": 2,
+  "started_at": "2026-10-10T05:35:02Z",
+  "post_job_save_seconds": 33.564
 }
