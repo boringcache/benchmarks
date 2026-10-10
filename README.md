@@ -65,11 +65,20 @@ Local runs need the lane's tools and credentials. Container runs read credential
 bundle exec bin/bench report --results results --out tmp/report
 ```
 
-The generated report excludes failed builds, failed or missing output checks, and warm records without a passing cold record in the same scope. Rows separate source revisions, rolling steps, and BoringCache versions. Inspect the original records as well: performance comparisons require a completed seed and matching source, capability level, runner class, and harness/tool versions. Full harness identity and final post-job save outcomes are not yet captured. Failed attempts remain evidence, and a rerun attempt is recorded next to the first one.
+The report has two tables. The first has one row per lane, runner, phase, step, commit, CLI version, attempt, save timing and observed CPU. Its timings exclude failed builds, failed or missing output checks, warm records without a passing cold record in the same scope, and rolling steps that restored nothing from the lane's Actions cache after the lane's first step ("Seed failed"). "Cache API errors" copies the error count from BoringCache's session summary; the build can pass while its cache uploads failed, as when the workspace reached its storage cap on 2026-10-08 (see `PLAN.md`).
 
-`seconds` measures the timed phase, excluding preparation and output validation. It is not the full job duration. Kache and mr-boxington save in post-job steps after the record is written, so their records carry `cache_save_timing = "post-job"` and their phase times exclude those saves.
+The second table, "Matched rolling steps", compares lanes only at the rolling steps where every lane on a runner passed, grouped by rolling series and the BoringCache CLI version of that step. A lane's first step on its rolling cache starts empty, so it is left out. "Steps with cache API errors" counts the matched steps whose BoringCache session reported errors. Failed attempts remain evidence, and a rerun attempt is recorded next to the first one.
 
-Cold starts with a fresh local workspace. Providers with shared remote caches may still have existing data unless the lane isolates the cache or disables reads. Runner labels also do not guarantee identical CPUs. Each record stores the machine it ran on and the CPU it observed; remote builder lanes (Depot and Namespace builders) record the builder as their machine. Check the lane configuration and recorded machine before interpreting a timing difference.
+Two harness fixes on 2026-10-08 (UTC) bound which rolling records compare:
+
+- Before `144b6ddd` (18:25), Actions cache lanes restored the fresh run's seed instead of the previous step whenever that seed was still cached. Records from 18:37 carry `cache_restored_key`, the key the lane restored.
+- Before `db639cbad` (21:27), a lane whose fresh cold had passed continued on that fresh run's cache scope; those records have `cache_seeded = true` ("From fresh run" in the report). Every lane then moved to one fixed scope, `<lane>-<runner>-rolling`, starting empty at its next step.
+
+The matched table leaves out records from before both fixes. `harness.commit` names the benchmark commit that produced a record, and `harness.timer` what its `seconds` covers.
+
+`seconds` runs from `bin/bench start`, after checkout, preparation and the BoringCache CLI download, to `bin/bench record`: the lane's cache restore, the build and the lane's in-job cache save. It excludes the output check and is not the full job duration. Kache, mr-boxington, the BuildKit cache dance and Namespace cache volumes save in post-job steps after the record is written; the publish job reads those steps' durations from the job log into `post_job_save_seconds`, and the report adds them to the timing. The kache and mr-boxington actions also install their tool after the timer starts, which took under a second in Zed run 37994555454, about the time of the BoringCache CLI download.
+
+Cold starts with a fresh local workspace. Providers with shared remote caches may still have existing data unless the lane isolates the cache or disables reads. Runner labels also do not guarantee identical CPUs. Each record stores the machine it ran on and the CPU it observed. Remote builder lanes (Depot and Namespace builders) record the builder as their machine; the CPU they observe is the calling runner's, so it is kept as `observed.runner_machine`, and the builder's own hardware is not recorded. Check the lane configuration and recorded machine before interpreting a timing difference.
 
 `base` and `plus` describe declared cache capabilities. They are separate comparisons; a compiler-cache-only lane does not promise the same reuse as a lane that also restores the build directory.
 
