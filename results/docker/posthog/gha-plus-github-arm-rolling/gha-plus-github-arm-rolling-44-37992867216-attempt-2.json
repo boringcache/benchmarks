@@ -20,22 +20,23 @@
   "cache_restored_key": null,
   "repo": "PostHog/posthog",
   "sha": "603a6db472a1326dd5c2b3fb621c3e5980a7fabf",
-  "seconds": 103.316,
+  "seconds": 1105.202,
   "cache_save_timing": "post-job",
-  "exit_status": 1,
-  "output_ok": false,
+  "exit_status": 0,
+  "output_ok": true,
   "provider_reported": {},
   "observed": {
     "machine": {
-      "cpu": "Neoverse-V3",
+      "cpu": "Neoverse-N2",
       "cores": 4
     },
+    "image_platform": "linux/arm64",
     "buildx_builder": {
-      "name": "builder-79378c5b-b6e7-4ab8-9334-74d7559d8744",
+      "name": "builder-1b80392e-4de5-4bbb-af09-b35814621898",
       "driver": "docker-container",
       "nodes": [
         {
-          "name": "builder-79378c5b-b6e7-4ab8-9334-74d7559d87440",
+          "name": "builder-1b80392e-4de5-4bbb-af09-b358146218980",
           "endpoint": "unix:///var/run/docker.sock"
         }
       ]
@@ -44,7 +45,7 @@
   "evidence": [],
   "versions": {},
   "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37992867216",
-  "attempt": 1,
-  "started_at": "2026-10-09T21:24:04Z",
+  "attempt": 2,
+  "started_at": "2026-10-10T05:35:03Z",
   "post_job_save_seconds": 283.819
 }
