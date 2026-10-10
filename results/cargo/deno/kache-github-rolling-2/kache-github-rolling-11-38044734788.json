@@ -1,0 +1,38 @@
+{
+  "adapter_command": "cargo",
+  "case": "deno",
+  "lane": "kache",
+  "provider": "kache",
+  "level": "base",
+  "capabilities": [
+    "compiler-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 11,
+  "scope": "kache-github-rolling-2",
+  "cache_scope": "kache-github-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "denoland/deno",
+  "sha": "2f885193c678c1802f4de6e25659e8ef7aa5e8cd",
+  "seconds": 1489.222,
+  "cache_save_timing": "post-job",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38044734788",
+  "attempt": 1,
+  "started_at": "2026-10-10T10:25:43Z",
+  "post_job_save_seconds": 0.861
+}
