@@ -112,17 +112,19 @@ class ReportTest < Minitest::Test
   def test_matched_steps_need_every_lane_on_the_runner_past_its_first_step_on_its_own_rolling_cache
     { "boringcache-docker" => [90.0, 10.0, 20.0, 30.0, 40.0], "gha" => [80.0, 15.0, 25.0, 35.0, 45.0] }.each do |lane, times|
       times.each_with_index do |seconds, step|
-        record "#{lane}-#{step}.json", lane:, seconds:, phase: "rolling", step:, scope: "#{lane}-github-rolling",
+        record "#{lane}-#{step}.json", lane:, seconds:, phase: "rolling", save: "in-phase", step:, scope: "#{lane}-github-rolling",
                                        restored: (lane == "gha" && step.positive? ? "docker-posthog-gha-github-rolling-#{step - 1}" : nil),
                                        errors: (lane == "boringcache-docker" && step == 4 ? 3 : nil)
       end
     end
-    record "gha-2-failed.json", lane: "gha", seconds: 1.0, phase: "rolling", step: 2, scope: "gha-github-rolling", attempt: 1, exit_status: 1, output_ok: false
-    record "boringcache-docker-5.json", lane: "boringcache-docker", seconds: 50.0, phase: "rolling", step: 5, scope: "boringcache-docker-github-rolling"
-    record "gha-5-evicted.json", lane: "gha", seconds: 55.0, phase: "rolling", step: 5, scope: "gha-github-rolling"
-    record "gha-6-from-fresh.json", lane: "gha", seconds: 5.0, phase: "rolling", step: 6, scope: "gha-github-rolling", cache_scope: "gha-github-123",
+    record "gha-2-failed.json", lane: "gha", seconds: 1.0, phase: "rolling", save: "in-phase", step: 2, scope: "gha-github-rolling", attempt: 1, exit_status: 1, output_ok: false
+    record "boringcache-docker-5.json", lane: "boringcache-docker", seconds: 50.0, phase: "rolling", save: "in-phase", step: 5, scope: "boringcache-docker-github-rolling"
+    record "gha-5-evicted.json", lane: "gha", seconds: 55.0, phase: "rolling", save: "in-phase", step: 5, scope: "gha-github-rolling"
+    record "gha-6-from-fresh.json", lane: "gha", seconds: 5.0, phase: "rolling", save: "in-phase", step: 6, scope: "gha-github-rolling", cache_scope: "gha-github-123",
                                     restored: "docker-posthog-gha-github-123-5"
-    record "boringcache-docker-6.json", lane: "boringcache-docker", seconds: 60.0, phase: "rolling", step: 6, scope: "boringcache-docker-github-rolling"
+    record "boringcache-docker-6.json", lane: "boringcache-docker", seconds: 60.0, phase: "rolling", save: "in-phase", step: 6, scope: "boringcache-docker-github-rolling"
+    record "boringcache-docker-7.json", lane: "boringcache-docker", seconds: 70.0, phase: "rolling", save: "in-phase", step: 7, scope: "boringcache-docker-github-rolling"
+    record "gha-7-untimed-save.json", lane: "gha", seconds: 7.0, phase: "rolling", step: 7, scope: "gha-github-rolling", restored: "docker-posthog-gha-github-rolling-6"
 
     matched = Bench::Report.new(@dir).matched
     assert_equal [["boringcache-docker", 4, 1, 4, 25.0, 1], ["gha", 4, 1, 4, 30.0, 0]],
@@ -130,16 +132,24 @@ class ReportTest < Minitest::Test
     assert_includes Bench::Report.new(@dir).markdown, "| docker | posthog | github | rolling | 1.40.1 | 4 | 1 | 4 | gha | base | github 4c | 30.0 | 15.0 | 45.0 | 0 |"
   end
 
+  def test_a_runner_with_one_lane_has_no_matched_steps
+    (0..2).each { record "#{it}.json", lane: "boringcache-docker", seconds: 10.0, phase: "rolling", step: it, scope: "boringcache-docker-github-rolling" }
+
+    assert_empty Bench::Report.new(@dir).matched
+  end
+
   def test_matched_steps_split_by_cli_version_and_rolling_series
-    [["boringcache-docker", "1.40.2", "rolling"], ["boringcache-docker", "1.41.0", "rolling"], ["boringcache-docker", "1.41.0", "rolling-2"]].each_with_index do |(lane, cli, series), index|
-      (0..2).each do |step|
-        record "#{index}-#{step}.json", lane:, seconds: 10.0 * (step + 1), phase: "rolling", step: step + (cli == "1.41.0" && series == "rolling" ? 3 : 0),
-                                        scope: "#{lane}-github-#{series}", boringcache: cli
+    %w[boringcache-docker ghcr].each do |lane|
+      [["1.40.2", "rolling"], ["1.41.0", "rolling"], ["1.41.0", "rolling-2"]].each_with_index do |(cli, series), index|
+        (0..2).each do |step|
+          record "#{lane}-#{index}-#{step}.json", lane:, seconds: 10.0 * (step + 1), phase: "rolling", step: step + (cli == "1.41.0" && series == "rolling" ? 3 : 0),
+                                                  scope: "#{lane}-github-#{series}", boringcache: cli, save: "in-phase"
+        end
       end
     end
 
     assert_equal [["rolling", "1.40.2", 2], ["rolling", "1.41.0", 3], ["rolling-2", "1.41.0", 2]],
-                 Bench::Report.new(@dir).matched.map { it.values_at("series", "boringcache", "steps") }
+                 Bench::Report.new(@dir).matched.select { it["lane"] == "ghcr" }.map { it.values_at("series", "boringcache", "steps") }
   end
 
   private
