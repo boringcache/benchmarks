@@ -59,6 +59,14 @@ module Bench
       config.fetch("post_job_save", [])
     end
 
+    def cache_key_templates
+      config.fetch("cache_keys", [])
+    end
+
+    def cache_keys(source = ENV)
+      cache_key_templates.map { Bench.expand(it, source) }
+    end
+
     def cache_save_timing
       post_job_save.empty? ? "in-phase" : "post-job"
     end
