@@ -144,7 +144,7 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       contents: write
-      actions: read
+      actions: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -163,6 +163,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           RUN_ID: ${{ github.run_id }}
         run: bundle exec bin/bench post-job-saves --run-id "$RUN_ID" --results results
+      - continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.run_id }}
+        run: bundle exec bin/bench prune-caches --run-id "$RUN_ID" --results results
       - env:
           TITLE: ${{ inputs.tool }} - ${{ inputs.project }}
           MODE: ${{ inputs.mode }}

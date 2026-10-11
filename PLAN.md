@@ -298,7 +298,18 @@ are amd64, so local runs prove setup, not timings.
   a lane's Actions cache, after the lane's first step, under "Seed failed",
   not as a timing; records from before 2026-10-08 18:37 carry no
   `cache_restored_key` and are left as they are. Docker lanes on BuildKit's
-  `type=gha` cache record no key, so their misses are not visible.
+  `type=gha` cache record no key, so their misses are not visible. By
+  2026-10-11 the repo held 539 GB again and GitHub was evicting entries
+  unused for about five hours: backend.ai's Depot Cache and NativeLink lanes
+  restored nothing at step 55, saved Pants named caches whose cached
+  virtualenv lacked jinja2 and mypy, and both failed at step 56 (runs
+  38101422236 and 38109700443). With the user's approval, 107 superseded
+  rolling, mbx and kache entries were deleted (21 more were already
+  evicted), along with backend.ai's step 55 and 56 caches for those two
+  lanes. The publish job now runs `bin/bench prune-caches`, which deletes a
+  lane's older rolling entries once the step's own save exists, and keeps
+  only the newest entry under each prefix a lane lists in `cache_keys`
+  (kache and mbx).
 - PostHog (`rolling_stride = 20`), llama.cpp (5), Nix Zed and Cargo Zed (3
   each) move several first-parent commits per rolling step from 2026-10-09,
   because each lands more commits a day than a step can build (PostHog 223 a
