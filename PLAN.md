@@ -354,8 +354,14 @@ are amd64, so local runs prove setup, not timings.
   4,628 chunks were reused. CLI 1.41.0 has a selective-read path that skips
   unchanged ranges, behind `BORINGCACHE_ARCHIVE_SELECTIVE_READS` or the
   server's `archive_chunks_v3_writes_v1`, which the server source advertises
-  as false; every recorded target save shows `selective_read: null`. The
-  benchmark runs the product default.
+  as false; every recorded target save shows `selective_read: null`. From
+  2026-10-11 the Cargo plus lanes (`boringcache-cargo-plus` for Zed and Deno,
+  `boringcache-cargo-phases` for the Zed bundle) set
+  `BORINGCACHE_ARCHIVE_SELECTIVE_READS=1` for the whole restore, build and
+  save, at the user's request. Their records carry it in `product_env`, and
+  the report shows it beside the CLI version, so these steps compare
+  separately from the earlier ones. `BORINGCACHE_ARCHIVE_SELECTIVE_VERIFY`
+  is not set, as its second full-read pass would add the cost back.
 - Zed bundle runs on Depot 8c (32 GB). Its BoringCache lane is
   `boringcache-cargo-phases`: `boringcache cargo --phase restore`, Zed's own
   `script/bundle-linux`, then `--phase save`, so the product's Cargo restore,
