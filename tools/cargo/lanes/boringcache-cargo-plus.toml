@@ -1,3 +1,6 @@
 provider = "boringcache"
 level = "plus"
 plan = "plus"
+
+[env]
+BORINGCACHE_ARCHIVE_SELECTIVE_READS = "1"

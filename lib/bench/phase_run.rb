@@ -152,7 +152,7 @@ module Bench
         @environment ||= begin
           base = @env.to_h.merge(kase.tool.catalog.runner_env(runner), "BENCH_ROOT" => kase.tool.catalog.root, "BENCH_CASE" => kase.id, "BENCH_DIR" => workspace.dir, "BENCH_SCOPE" => "#{kase.tool.name}-#{kase.name}-#{cache_scope}")
           shared = base.merge(kase.env(base))
-          shared.merge(lane.boringcache? ? { "BORINGCACHE_OBSERVABILITY_JSONL_PATH" => evidence_path } : lane.env(phase, shared))
+          shared.merge(lane.env(phase, shared), lane.boringcache? ? { "BORINGCACHE_OBSERVABILITY_JSONL_PATH" => evidence_path } : {})
         end
       end
 
@@ -197,6 +197,7 @@ module Bench
           "observed" => observed,
           "evidence" => File.exist?(evidence_path) ? [File.basename(evidence_path)] : [],
           "versions" => { "boringcache" => boringcache_version, "boringcache_release" => (@env["BENCH_CLI_RELEASE"] if boringcache_version) }.compact,
+          **({ "product_env" => product_env } if product_env),
           "harness" => { "commit" => harness_commit, "timer" => TIMER }.compact,
           "run_url" => run_url,
           "attempt" => attempt,
@@ -204,6 +205,10 @@ module Bench
         }
         File.write(record_path, JSON.pretty_generate(record) + "\n")
         record
+      end
+
+      def product_env
+        lane.env(phase, environment).select { |key, _| key.start_with?("BORINGCACHE_") }.then { it unless it.empty? } if lane.boringcache?
       end
 
       def provider_reported

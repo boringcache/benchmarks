@@ -77,6 +77,13 @@ class ReportTest < Minitest::Test
     assert_equal 4, Bench::Report.new(@dir).rows.size
   end
 
+  def test_product_settings_are_reported_with_the_cli_version
+    record "default.json", seconds: 20.0
+    File.write(File.join(@dir, "selective.json"), JSON.generate(JSON.parse(File.read(File.join(@dir, "default.json"))).merge("product_env" => { "BORINGCACHE_ARCHIVE_SELECTIVE_READS" => "1" })))
+
+    assert_equal ["1.40.1", "1.40.1 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1"], Bench::Report.new(@dir).rows.map { it["boringcache"] }.sort
+  end
+
   def test_a_canary_is_reported_by_its_release_tag
     record "release.json", seconds: 20.0
     record "canary.json", seconds: 10.0, release: "vcli-canary-0123456789ab"
