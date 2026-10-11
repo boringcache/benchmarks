@@ -326,6 +326,25 @@ are amd64, so local runs prove setup, not timings.
   on an AMD EPYC 7763 and 38.5 minutes on an AMD EPYC 9V74. Report its fetch
   and upload phases beside the total.
 - The Namespace trial caps 8-core profiles at 16 GB; 32 GB needs a paid plan.
+- kache's GitHub Actions cache mode (`kunobi-ninja/kache-action` at the
+  pinned `ad731754`, no S3 remote) keys its archive on the prefix, kache
+  version, platform and a hash of every `Cargo.lock`, and its post step skips
+  the save when the restore matched that key exactly (`src/utils.js` lines
+  513–535 and 606–622). So the lane's archive changes only when `Cargo.lock`
+  does: Zed's kache on GitHub 4c saved at steps 5, 11, 26, 27 and 29 (44 to
+  73 s) and skipped in about a second at every other step, and each step
+  restores the store from the last lockfile change, not from the step before.
+  Its run reports still show new local compiles (216 units at step 38, run
+  38075878621). That is the action's documented behaviour, so the lane keeps
+  it; its short post-job saves are skipped publications, not fast ones.
+- BoringCache Cargo plus spends most of its target save hashing and chunking
+  the whole 26–29 GB archive before it finds reused chunks: at step 38 on
+  Depot 4c, `tar_encode` took 69.5 s of a 98.1 s target save while 3,394 of
+  4,628 chunks were reused. CLI 1.41.0 has a selective-read path that skips
+  unchanged ranges, behind `BORINGCACHE_ARCHIVE_SELECTIVE_READS` or the
+  server's `archive_chunks_v3_writes_v1`, which the server source advertises
+  as false; every recorded target save shows `selective_read: null`. The
+  benchmark runs the product default.
 - Zed bundle runs on Depot 8c (32 GB). Its BoringCache lane is
   `boringcache-cargo-phases`: `boringcache cargo --phase restore`, Zed's own
   `script/bundle-linux`, then `--phase save`, so the product's Cargo restore,
