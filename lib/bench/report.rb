@@ -52,9 +52,14 @@ module Bench
 
     private
       def key(record)
-        [*record.values_at(*%w[adapter_command case lane level runner phase step sha]), record.dig("versions", "boringcache_release") || record.dig("versions", "boringcache"),
+        [*record.values_at(*%w[adapter_command case lane level runner phase step sha]), cli(record),
          [record["attempt"].to_i, 1].max, record["cache_seeded"], save_timing(record), record["machine"],
          record.dig("observed", "machine", "cpu"), record.dig("observed", "machine", "cores")]
+      end
+
+      def cli(record)
+        version = record.dig("versions", "boringcache_release") || record.dig("versions", "boringcache")
+        [version, *record.fetch("product_env", {}).map { |key, value| "#{key}=#{value}" }].compact.join(" ") if version
       end
 
       def save_timing(record)
@@ -92,7 +97,7 @@ module Bench
             by_lane = at_step.group_by { it["lane"] }.transform_values { |tries| tries.min_by { it["attempt"].to_i } }
             next unless lanes.all? { by_lane.key?(it) }
 
-            cli = by_lane.values.filter_map { it.dig("versions", "boringcache_release") || it.dig("versions", "boringcache") }.uniq.sort.join(", ")
+            cli = by_lane.values.filter_map { cli(it) }.uniq.sort.join(", ")
             [[tool, kase, runner, series, (cli unless cli.empty?)], step, by_lane]
           end
         end.group_by(&:first).transform_values { it.to_h { |_, step, by_lane| [step, by_lane] } }
