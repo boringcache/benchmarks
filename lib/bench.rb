@@ -7,6 +7,7 @@ require "pathname"
 require "shellwords"
 require "time"
 require "toml-rb"
+require "uri"
 
 module Bench
   ROOT = File.expand_path("..", __dir__)
@@ -48,5 +49,6 @@ require_relative "bench/upstream"
 require_relative "bench/rolling"
 require_relative "bench/phase_run"
 require_relative "bench/report"
+require_relative "bench/cache_prune"
 require_relative "bench/container"
 require_relative "bench/cli"

@@ -17,6 +17,7 @@ module Bench
         bin/bench image
         bin/bench report [--results DIR] [--out DIR]
         bin/bench post-job-saves --run-id ID [--results DIR]
+        bin/bench prune-caches --run-id ID [--results DIR]
     TEXT
     CLI_RELEASE = /\A(v\d+\.\d+\.\d+|vcli-canary-[0-9a-f]{9,40})\z/
 
@@ -40,6 +41,7 @@ module Bench
       when "matrix" then matrix
       when "report" then report
       when "post-job-saves" then post_job_saves
+      when "prune-caches" then prune_caches
       when "rolling-projects" then rolling_projects
       when "image" then image
       else usage
@@ -160,14 +162,7 @@ module Bench
       def post_job_saves
         options = parse(defaults)
         repo = ENV.fetch("GITHUB_REPOSITORY") { raise Error, "post-job-saves needs GITHUB_REPOSITORY" }
-        pending = Dir.glob(File.join(options[:results], "**", "*.json")).filter_map do |path|
-          record = JSON.parse(File.read(path))
-          next unless record["run_url"].to_s.end_with?("/runs/#{options[:run_id]}") && !record.key?("post_job_save_seconds")
-
-          kase = @catalog.cases.find { it.id == "#{record["adapter_command"]}/#{record["case"]}" }
-          lane = kase&.tool&.lane(record["lane"])
-          [path, record, kase, lane] if lane&.post_job_save&.any?
-        end
+        pending = run_records(options[:run_id], options[:results]).select { |_, record, _, lane| !record.key?("post_job_save_seconds") && lane.post_job_save.any? }
         return 0 if pending.empty?
 
         jobs = Bench.gh("api", "--paginate", "repos/#{repo}/actions/runs/#{options[:run_id]}/jobs?per_page=100", "--jq", ".jobs[] | {id, name}")
@@ -179,6 +174,31 @@ module Bench
           @out.puts "#{record["adapter_command"]}/#{record["case"]} #{record["lane"]} #{record["runner"]}: post-job save #{record["post_job_save_seconds"]}s"
         end
         0
+      end
+
+      def prune_caches
+        options = parse(defaults)
+        repo = ENV.fetch("GITHUB_REPOSITORY") { raise Error, "prune-caches needs GITHUB_REPOSITORY" }
+        prune = CachePrune.new(repo)
+        run_records(options[:run_id], options[:results]).each do |_, record, kase, lane|
+          next if lane.boringcache? || record["phase"] != ROLLING
+
+          scope = "#{kase.tool.name}-#{kase.name}-#{record["cache_scope"]}"
+          deleted = prune.call(scope:, step: record["step"], prefixes: lane.cache_keys("BENCH_SCOPE" => scope))
+          @out.puts "#{kase.id} #{lane.name} #{record["runner"]}: deleted #{deleted.size} older caches#{deleted.map { " #{it["key"]}" }.join}"
+        end
+        0
+      end
+
+      def run_records(run_id, results)
+        Dir.glob(File.join(results, "**", "*.json")).filter_map do |path|
+          record = JSON.parse(File.read(path))
+          next unless record["run_url"].to_s.end_with?("/runs/#{run_id}")
+
+          kase = @catalog.cases.find { it.id == "#{record["adapter_command"]}/#{record["case"]}" }
+          lane = kase&.tool&.lanes&.find { it.name == record["lane"] }
+          [path, record, kase, lane] if lane
+        end
       end
 
       def post_job_save_seconds(log, saves)

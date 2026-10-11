@@ -4,3 +4,4 @@ post_job_save = ["kunobi-ninja/kache-action"]
 actions_only = true
 runners = ["github", "namespace-8", "depot-4"]
 setup = ["kache"]
+cache_keys = ["kache-${BENCH_SCOPE}-v"]
