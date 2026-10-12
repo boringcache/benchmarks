@@ -24,7 +24,11 @@ module Bench
     def label
       return name unless boringcache?
 
-      ["boringcache", ("plus" if level == "plus")].compact.join(" ")
+      config["label"] || ["boringcache", ("plus" if level == "plus")].compact.join(" ")
+    end
+
+    def cli_args
+      config.fetch("cli_args", [])
     end
 
     def phases?

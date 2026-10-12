@@ -237,6 +237,15 @@ class PhaseRunTest < Minitest::Test
     assert_equal({ "target-budget" => "25GiB" }, record("boringcache-demo-local-r42", "boringcache-demo-local-cold")["plan_settings"])
   end
 
+  def test_a_boringcache_lane_passes_its_cli_args_and_records_them
+    write "tools/demo/lanes/boringcache-demo.toml", %(provider = "boringcache"\nlevel = "base"\nlabel = "boringcache on-demand"\ncli_args = ["--on-demand"]\n)
+    with_fixture_env { cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "cold", "--run-id", "r43") }
+
+    assert_includes File.readlines(File.join(@root, "stub.log"), chomp: true), "demo --on-demand"
+    assert_equal ["--on-demand"], record("boringcache-demo-local-r43", "boringcache-demo-local-cold")["product_args"]
+    assert_equal "boringcache on-demand", catalog.find_case("demo/app").tool.lane("boringcache-demo").label
+  end
+
   def test_a_failed_output_check_fails_the_run
     write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub(/^check = .*$/, %(check = "false"))
 

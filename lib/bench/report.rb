@@ -26,7 +26,7 @@ module Bench
     end
 
     def matched
-      @matched ||= matched_steps.flat_map do |(tool, kase, runner, series, cli), steps|
+      @matched ||= matched_steps.flat_map do |(tool, kase, runner, series, cli, _lanes), steps|
         steps.values.flat_map(&:values).group_by { it["lane"] }.map do |lane, group|
           seconds = group.filter_map { timed_seconds(it) }.sort
           { "adapter_command" => tool, "case" => kase, "runner" => runner, "series" => series, "boringcache" => cli, "steps" => steps.size,
@@ -60,7 +60,7 @@ module Bench
       def cli(record)
         version = record.dig("versions", "boringcache_release") || record.dig("versions", "boringcache")
         settings = record.fetch("product_env", {}).merge(record.fetch("plan_settings", {}))
-        [version, *settings.map { |key, value| "#{key}=#{value}" }].compact.join(" ") if version
+        [version, *settings.map { |key, value| "#{key}=#{value}" }, *record.fetch("product_args", [])].compact.join(" ") if version
       end
 
       def save_timing(record)
@@ -90,16 +90,17 @@ module Bench
       end
 
       def matched_steps
-        records.select { matchable?(it) }.group_by { it.values_at("adapter_command", "case", "runner") }.flat_map do |(tool, kase, runner), group|
-          lanes = group.map { it["lane"] }.uniq
-          next [] if lanes.size < 2
+        records.select { matchable?(it) }.group_by { [*it.values_at("adapter_command", "case", "runner"), series(it)] }.flat_map do |(tool, kase, runner, series), group|
+          joined = group.group_by { it["lane"] }.transform_values { |records| records.map { it["step"] }.min }
+          next [] if joined.size < 2
 
-          group.group_by { [series(it), it["step"]] }.filter_map do |(series, step), at_step|
-            by_lane = at_step.group_by { it["lane"] }.transform_values { |tries| tries.min_by { it["attempt"].to_i } }
-            next unless lanes.all? { by_lane.key?(it) }
+          group.group_by { it["step"] }.filter_map do |step, at_step|
+            lanes = joined.select { |_, first| first <= step }.keys.sort
+            by_lane = at_step.group_by { it["lane"] }.transform_values { |tries| tries.min_by { it["attempt"].to_i } }.slice(*lanes)
+            next unless lanes.size >= 2 && lanes.all? { by_lane.key?(it) }
 
             cli = by_lane.values.filter_map { cli(it) }.uniq.sort.join(", ")
-            [[tool, kase, runner, series, (cli unless cli.empty?)], step, by_lane]
+            [[tool, kase, runner, series, (cli unless cli.empty?), lanes], step, by_lane]
           end
         end.group_by(&:first).transform_values { it.to_h { |_, step, by_lane| [step, by_lane] } }
       end

@@ -348,6 +348,18 @@ are amd64, so local runs prove setup, not timings.
   on an AMD EPYC 7763 and 38.5 minutes on an AMD EPYC 9V74. Report its fetch
   and upload phases beside the total.
 - The Namespace trial caps 8-core profiles at 16 GB; 32 GB needs a paid plan.
+- From 2026-10-12, at the user's request, five BoringCache lanes also run
+  with `--on-demand` (the CLI's hidden switch that skips the startup prefetch
+  of the tag's whole current set) beside the default lane on the same runner:
+  Nix Zed and Cargo Zed plus on Depot 4c, and Go Hugo, Buck2 ExecuTorch and
+  Bazel gRPC on GitHub 4c. On CLI 1.41.0 the prefetch downloads every object
+  in the current set while builds read a fraction of it, and the set grows:
+  Nix Zed 13.43 GB prefetched for 1.49 GB read (step 34), Cargo Zed plus
+  3.75 GB of sccache objects for 0.01 GB read (the restored target leaves
+  about 128 compiles a step, 2 of them sccache hits), Go Hugo 2.12 GB for
+  0.71 GB. ccache and Pants read nearly all of theirs. The on-demand lanes
+  start on their own empty scopes, so their first step is a cold start, and
+  the matched table starts a new group when a lane joins a runner.
 - From 2026-10-12, Nix Zed also runs both lanes on Depot 4c, at the user's
   request, so BoringCache and Cachix build on the same machine type. On
   GitHub 4c they matched within noise at the 14 steps where both lanes got
