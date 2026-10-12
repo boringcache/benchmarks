@@ -1,0 +1,43 @@
+{
+  "adapter_command": "cargo",
+  "case": "zed-bundle",
+  "lane": "depot-actions-cache",
+  "provider": "depot",
+  "level": "plus",
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "runner": "depot-8",
+  "runner_label": "depot-ubuntu-24.04-8",
+  "machine": "depot 8c",
+  "phase": "rolling",
+  "step": 29,
+  "scope": "depot-actions-cache-depot-8-rolling-2",
+  "cache_scope": "depot-actions-cache-depot-8-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": "cargo-zed-bundle-depot-actions-cache-depot-8-rolling-2-28",
+  "repo": "zed-industries/zed",
+  "sha": "10644801ad606dd7631ef4c16196b0a9a4c0d8b0",
+  "seconds": 1156.708,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9R45",
+      "cores": 8
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "317a540050e7e6d2a359b37ff75afcc2ad7893a2",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38310382883",
+  "attempt": 1,
+  "started_at": "2026-10-12T22:25:40Z"
+}
