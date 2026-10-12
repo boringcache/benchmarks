@@ -7,4 +7,5 @@ check = "test -x upstream/result/bin/zed && upstream/result/bin/zed --version"
 
 [runs]
 boringcache-nix = ["github", "depot-4", "local"]
+boringcache-nix-ondemand = ["depot-4"]
 cachix = ["github", "depot-4"]

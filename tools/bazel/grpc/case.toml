@@ -10,6 +10,7 @@ check = "for name in client server; do test -s upstream/bazel-bin/examples/cpp/c
 
 [runs]
 boringcache-bazel = ["github", "local"]
+boringcache-bazel-ondemand = ["github"]
 gha = ["github"]
 buildbuddy = ["github", "local"]
 depot-cache = ["github", "local"]

@@ -17,4 +17,5 @@ check = 'python3 -c "import glob,os; paths=[p for p in glob.glob(\"upstream/buck
 
 [runs]
 boringcache-buck2 = ["github"]
+boringcache-buck2-ondemand = ["github"]
 nativelink = ["github"]

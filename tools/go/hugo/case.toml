@@ -12,5 +12,6 @@ GOMODCACHE = "${BENCH_DIR}/.go/mod-cache"
 
 [runs]
 boringcache-go = ["github", "local"]
+boringcache-go-ondemand = ["github"]
 gha = ["github"]
 depot-cache = ["github"]

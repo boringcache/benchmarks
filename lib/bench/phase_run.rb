@@ -129,9 +129,9 @@ module Bench
 
       def command
         return [*lane.wrap(phase, environment), *lane_program, *lane.args(phase, environment)] unless lane.boringcache?
-        return ["boringcache", kase.tool.name, *("--read-only" if phase == "warm")] unless lane.phases?
+        return ["boringcache", kase.tool.name, *lane.cli_args, *("--read-only" if phase == "warm")] unless lane.phases?
 
-        restore, save = %w[restore save].map { Shellwords.join(["boringcache", kase.tool.name, "--phase", it]) }
+        restore, save = %w[restore save].map { Shellwords.join(["boringcache", kase.tool.name, *lane.cli_args, "--phase", it]) }
         ["bash", "-c", [restore, Shellwords.join(adapter.fetch("command")), (save unless phase == "warm")].compact.join(" && ")]
       end
 
@@ -200,6 +200,7 @@ module Bench
           "versions" => { "boringcache" => boringcache_version, "boringcache_release" => (@env["BENCH_CLI_RELEASE"] if boringcache_version) }.compact,
           **({ "product_env" => product_env } if product_env),
           **({ "plan_settings" => plan_settings } if plan_settings),
+          **({ "product_args" => lane.cli_args } if lane.boringcache? && lane.cli_args.any?),
           "harness" => { "commit" => harness_commit, "timer" => TIMER }.compact,
           "run_url" => run_url,
           "attempt" => attempt,
