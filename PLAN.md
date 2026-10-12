@@ -319,6 +319,12 @@ are amd64, so local runs prove setup, not timings.
   on an AMD EPYC 7763 and 38.5 minutes on an AMD EPYC 9V74. Report its fetch
   and upload phases beside the total.
 - The Namespace trial caps 8-core profiles at 16 GB; 32 GB needs a paid plan.
+- From 2026-10-12, Nix Zed also runs both lanes on Depot 4c, at the user's
+  request, so BoringCache and Cachix build on the same machine type. On
+  GitHub 4c they matched within noise at the 14 steps where both lanes got
+  the same CPU; the larger gaps come from the runner CPU. Cachix's cache is
+  shared across runners, so its first Depot step already hits while
+  BoringCache's new Depot scope starts empty.
 - PostHog's gha-plus lanes ran out of runner disk ("no space left on device")
   while the BuildKit cache dance wrote its cache-mount tarballs, on GitHub x86
   (run 38181644104) and then ARM (run 38190654260). From 2026-10-12 PostHog's
