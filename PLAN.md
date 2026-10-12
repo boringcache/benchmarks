@@ -348,6 +348,11 @@ are amd64, so local runs prove setup, not timings.
   save, at the user's request. Their records carry it in `product_env`, and
   the report shows it beside the CLI version, so these steps compare
   separately from the earlier ones.
+- From 2026-10-12 the Cargo plus plans cap BoringCache's target pruning at
+  `target-budget = "25GiB"` for Zed and `"20GiB"` for Deno, at the user's
+  request, instead of the 40 GiB default.
+  Records carry the budget in `plan_settings`, and the report shows it beside
+  the CLI version.
 - Zed bundle runs on Depot 8c (32 GB). Its BoringCache lane is
   `boringcache-cargo-phases`: `boringcache cargo --phase restore`, Zed's own
   `script/bundle-linux`, then `--phase save`, so the product's Cargo restore,

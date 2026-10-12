@@ -1,6 +1,7 @@
 module Bench
   class PhaseRun
     PLAN_CAPABILITIES = %w[tool-cache mount-cache].freeze
+    PLAN_SETTINGS = %w[target-budget].freeze
 
     STATE = ".bench-state.json"
     TIMER = "restore, build, save; post-job saves in post_job_save_seconds"
@@ -198,6 +199,7 @@ module Bench
           "evidence" => File.exist?(evidence_path) ? [File.basename(evidence_path)] : [],
           "versions" => { "boringcache" => boringcache_version, "boringcache_release" => (@env["BENCH_CLI_RELEASE"] if boringcache_version) }.compact,
           **({ "product_env" => product_env } if product_env),
+          **({ "plan_settings" => plan_settings } if plan_settings),
           "harness" => { "commit" => harness_commit, "timer" => TIMER }.compact,
           "run_url" => run_url,
           "attempt" => attempt,
@@ -209,6 +211,10 @@ module Bench
 
       def product_env
         lane.env(phase, environment).select { |key, _| key.start_with?("BORINGCACHE_") }.then { it unless it.empty? } if lane.boringcache?
+      end
+
+      def plan_settings
+        adapter.slice(*PLAN_SETTINGS).then { it unless it.empty? } if lane.boringcache?
       end
 
       def provider_reported

@@ -16,6 +16,7 @@ class PhaseRunTest < Minitest::Test
     assert_equal({ "operation" => "cache_session_summary", "duration_ms" => 7 }, cold.dig("provider_reported", "cache_session_summary"))
     assert_equal({ "boringcache" => "9.9.9" }, cold["versions"])
     refute cold.key?("product_env")
+    refute cold.key?("plan_settings")
   end
 
   def test_a_phases_lane_runs_the_plan_command_between_the_restore_and_save_phases
@@ -226,12 +227,14 @@ class PhaseRunTest < Minitest::Test
   end
 
   def test_a_boringcache_lane_passes_its_env_to_the_cli_and_records_the_product_settings
+    write "tools/demo/app/.boringcache.toml", File.read(File.join(@root, "tools/demo/app/.boringcache.toml")).sub(%(tag = "demo-app"), %(tag = "demo-app"\ntarget-budget = "25GiB"))
     write "tools/demo/lanes/boringcache-demo.toml", %(provider = "boringcache"\nlevel = "base"\n[env]\nBORINGCACHE_ARCHIVE_SELECTIVE_READS = "1"\n)
     write "bin/boringcache", BenchFixture::STUB.sub("tool=\"$1\"", "echo \"selective=$BORINGCACHE_ARCHIVE_SELECTIVE_READS\" >> \"$STUB_LOG\"\ntool=\"$1\"")
     with_fixture_env { cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "cold", "--run-id", "r42") }
 
     assert_includes File.readlines(File.join(@root, "stub.log"), chomp: true), "selective=1"
     assert_equal({ "BORINGCACHE_ARCHIVE_SELECTIVE_READS" => "1" }, record("boringcache-demo-local-r42", "boringcache-demo-local-cold")["product_env"])
+    assert_equal({ "target-budget" => "25GiB" }, record("boringcache-demo-local-r42", "boringcache-demo-local-cold")["plan_settings"])
   end
 
   def test_a_failed_output_check_fails_the_run
