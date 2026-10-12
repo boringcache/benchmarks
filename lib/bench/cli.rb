@@ -19,6 +19,7 @@ module Bench
         bin/bench post-job-saves --run-id ID [--results DIR]
         bin/bench prune-caches --run-id ID [--results DIR]
         bin/bench prune-buildkit [--delete] [--max N] [--out FILE]
+        bin/bench tick [--dry-run] [--results DIR] [--work DIR]
     TEXT
     CLI_RELEASE = /\A(v\d+\.\d+\.\d+|vcli-canary-[0-9a-f]{9,40})\z/
 
@@ -44,6 +45,7 @@ module Bench
       when "post-job-saves" then post_job_saves
       when "prune-caches" then prune_caches
       when "prune-buildkit" then prune_buildkit
+      when "tick" then tick
       when "rolling-projects" then rolling_projects
       when "image" then image
       else usage
@@ -213,6 +215,20 @@ module Bench
         0
       end
 
+      def tick
+        options = parse(defaults.merge(results: File.join(@catalog.root, "results")))
+        repo = ENV.fetch("GITHUB_REPOSITORY") { raise Error, "tick needs GITHUB_REPOSITORY" }
+        tools = @catalog.rolling.to_h { |tool, _| [tool.title, tool] }
+        behind = lambda do |title, project|
+          @catalog.project_cases(project, tool: tools.fetch(title).name).any? { Rolling.new(it, results_dir: options[:results], work_root: options[:work]).next_step }
+        rescue Error => error
+          @out.puts "check    #{Tick.title(title, project)} (upstream check failed, dispatching: #{error.message})"
+          true
+        end
+        failed = Tick.new(repo, out: @out).call(@catalog.rolling.map { |tool, project| [tool.title, project] }, behind:, dry_run: options[:dry_run] == true)
+        failed.zero? ? 0 : 1
+      end
+
       def buildkit_scopes
         @catalog.cases.select { it.tool.name == "docker" }.flat_map do |kase|
           kase.runs.flat_map do |lane_name, runners|
@@ -330,6 +346,7 @@ module Bench
             opts.on("--recorded DIR") { options[:recorded] = File.expand_path(it) }
             opts.on("--delete") { options[:delete] = true }
             opts.on("--max N") { options[:max] = it }
+            opts.on("--dry-run") { options[:dry_run] = true }
           end.parse!(@argv)
         end
       end
