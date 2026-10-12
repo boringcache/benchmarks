@@ -342,6 +342,9 @@ are amd64, so local runs prove setup, not timings.
   Bazel gRPC on GitHub 4c. The on-demand lanes
   start on their own empty scopes, so their first step is a cold start, and
   the matched table starts a new group when a lane joins a runner.
+  They are internal product experiments: the lanes set `experimental = true`,
+  their records carry `"experimental": true`, and the public report on the
+  website leaves them out.
 - From 2026-10-12, Nix Zed also runs both lanes on Depot 4c, at the user's
   request, so BoringCache and Cachix build on the same machine type. On
   GitHub 4c they matched within noise at the 14 steps where both lanes got

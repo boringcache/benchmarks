@@ -2,3 +2,4 @@ provider = "boringcache"
 level = "base"
 label = "boringcache on-demand"
 cli_args = ["--on-demand"]
+experimental = true
