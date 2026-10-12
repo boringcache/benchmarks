@@ -59,7 +59,8 @@ module Bench
 
       def cli(record)
         version = record.dig("versions", "boringcache_release") || record.dig("versions", "boringcache")
-        [version, *record.fetch("product_env", {}).map { |key, value| "#{key}=#{value}" }].compact.join(" ") if version
+        settings = record.fetch("product_env", {}).merge(record.fetch("plan_settings", {}))
+        [version, *settings.map { |key, value| "#{key}=#{value}" }].compact.join(" ") if version
       end
 
       def save_timing(record)

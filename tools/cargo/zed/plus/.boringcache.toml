@@ -31,6 +31,7 @@ fail-on-cache-error = true
 tag = "zed-cargo"
 profiles = ["cargo-product"]
 compiler-cache = "sccache"
+target-budget = "25GiB"
 no-git = true
 metadata-hints = ["benchmark=zed", "lane=cargo-product"]
 command = ["cargo", "build", "--release", "--locked"]
