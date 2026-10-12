@@ -18,6 +18,7 @@ module Bench
         bin/bench report [--results DIR] [--out DIR]
         bin/bench post-job-saves --run-id ID [--results DIR]
         bin/bench prune-caches --run-id ID [--results DIR]
+        bin/bench prune-buildkit [--delete] [--max N] [--out FILE]
     TEXT
     CLI_RELEASE = /\A(v\d+\.\d+\.\d+|vcli-canary-[0-9a-f]{9,40})\z/
 
@@ -42,6 +43,7 @@ module Bench
       when "report" then report
       when "post-job-saves" then post_job_saves
       when "prune-caches" then prune_caches
+      when "prune-buildkit" then prune_buildkit
       when "rolling-projects" then rolling_projects
       when "image" then image
       else usage
@@ -190,6 +192,38 @@ module Bench
         0
       end
 
+      def prune_buildkit
+        options = parse(defaults)
+        prune = BuildkitPrune.new(ENV.fetch("GITHUB_REPOSITORY") { raise Error, "prune-buildkit needs GITHUB_REPOSITORY" })
+        scopes = buildkit_scopes
+        indexes = prune.list("index-")
+        blobs = prune.list(BuildkitPrune::BLOB_PREFIX)
+        layers = BuildkitPrune.newest(indexes, scopes).to_h { [it["key"], prune.layers(it)] }
+        plan = BuildkitPrune.plan(indexes:, blobs:, layers:, active_scopes: scopes, now: Time.now.utc)
+        @out.puts "#{scopes.size} active BuildKit scopes, #{layers.size} with an index; #{plan.referenced} referenced blobs, #{plan.missing} missing " \
+                  "(coverage #{(plan.coverage * 100).round(1)}%)"
+        @out.puts "stale: #{plan.blobs.size} blobs and #{plan.indexes.size} indexes, #{(plan.bytes / 1e9).round(1)} GB"
+        stale = [*plan.blobs.sort_by { it["created_at"] }, *plan.indexes]
+        File.write(options[:out], stale.map { it.values_at("id", "key", "size_in_bytes", "created_at").join("\t") }.join("\n") + "\n") if options[:out]
+        return 0 unless options[:delete]
+        raise Error, "not deleting: index coverage is below #{(BuildkitPrune::MIN_COVERAGE * 100).round}%" unless plan.deletable
+
+        deleted = stale.first(Integer(options[:max] || 400)).each { prune.delete(it) }
+        @out.puts "deleted #{deleted.size} entries, #{(deleted.sum { it["size_in_bytes"].to_i } / 1e9).round(1)} GB"
+        0
+      end
+
+      def buildkit_scopes
+        @catalog.cases.select { it.tool.name == "docker" }.flat_map do |kase|
+          kase.runs.flat_map do |lane_name, runners|
+            lane = kase.tool.lanes.find { it.name == lane_name }
+            next [] unless lane&.args(ROLLING, {})&.any? { it.include?("type=gha") }
+
+            Array(runners).reject { it == "local" }.map { "docker-#{kase.name}-#{Rolling.scope(lane, it, kase.rolling_series)}" }
+          end
+        end.uniq
+      end
+
       def run_records(run_id, results)
         Dir.glob(File.join(results, "**", "*.json")).filter_map do |path|
           record = JSON.parse(File.read(path))
@@ -294,6 +328,8 @@ module Bench
             opts.on("--cli TAG") { options[:cli] = it }
             opts.on("--continues") { options[:continues] = true }
             opts.on("--recorded DIR") { options[:recorded] = File.expand_path(it) }
+            opts.on("--delete") { options[:delete] = true }
+            opts.on("--max N") { options[:max] = it }
           end.parse!(@argv)
         end
       end
