@@ -238,11 +238,12 @@ class PhaseRunTest < Minitest::Test
   end
 
   def test_a_boringcache_lane_passes_its_cli_args_and_records_them
-    write "tools/demo/lanes/boringcache-demo.toml", %(provider = "boringcache"\nlevel = "base"\nlabel = "boringcache on-demand"\ncli_args = ["--on-demand"]\n)
+    write "tools/demo/lanes/boringcache-demo.toml", %(provider = "boringcache"\nlevel = "base"\nlabel = "boringcache on-demand"\ncli_args = ["--on-demand"]\nexperimental = true\n)
     with_fixture_env { cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "cold", "--run-id", "r43") }
 
     assert_includes File.readlines(File.join(@root, "stub.log"), chomp: true), "demo --on-demand"
-    assert_equal ["--on-demand"], record("boringcache-demo-local-r43", "boringcache-demo-local-cold")["product_args"]
+    saved = record("boringcache-demo-local-r43", "boringcache-demo-local-cold")
+    assert_equal [["--on-demand"], true], saved.values_at("product_args", "experimental")
     assert_equal "boringcache on-demand", catalog.find_case("demo/app").tool.lane("boringcache-demo").label
   end
 

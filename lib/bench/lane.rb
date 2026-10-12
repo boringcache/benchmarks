@@ -35,6 +35,14 @@ module Bench
       config["phases"] == true
     end
 
+    def experimental
+      config["experimental"]
+    end
+
+    def experimental?
+      experimental == true
+    end
+
     def machine
       config["machine"]
     end

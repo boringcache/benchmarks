@@ -201,6 +201,7 @@ module Bench
           **({ "product_env" => product_env } if product_env),
           **({ "plan_settings" => plan_settings } if plan_settings),
           **({ "product_args" => lane.cli_args } if lane.boringcache? && lane.cli_args.any?),
+          **({ "experimental" => true } if lane.experimental?),
           "harness" => { "commit" => harness_commit, "timer" => TIMER }.compact,
           "run_url" => run_url,
           "attempt" => attempt,
