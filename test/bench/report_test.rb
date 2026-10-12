@@ -145,6 +145,16 @@ class ReportTest < Minitest::Test
     assert_empty Bench::Report.new(@dir).matched
   end
 
+  def test_a_lane_that_joins_later_starts_a_new_matched_group_and_keeps_the_earlier_steps
+    { "boringcache-docker" => 0, "gha" => 0, "ghcr" => 2 }.each do |lane, first|
+      (first..4).each { record "#{lane}-#{it}.json", lane:, seconds: 10.0 * (it + 1), phase: "rolling", step: it, scope: "#{lane}-github-rolling", save: "in-phase" }
+    end
+
+    groups = Bench::Report.new(@dir).matched.group_by { it["lane"] }.transform_values { |rows| rows.map { it.values_at("first_step", "last_step") } }
+    assert_equal [[1, 2], [3, 4]], groups["boringcache-docker"]
+    assert_equal [[3, 4]], groups["ghcr"]
+  end
+
   def test_matched_steps_split_by_cli_version_and_rolling_series
     %w[boringcache-docker ghcr].each do |lane|
       [["1.40.2", "rolling"], ["1.41.0", "rolling"], ["1.41.0", "rolling-2"]].each_with_index do |(cli, series), index|

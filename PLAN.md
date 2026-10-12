@@ -335,6 +335,13 @@ are amd64, so local runs prove setup, not timings.
   on an AMD EPYC 7763 and 38.5 minutes on an AMD EPYC 9V74. Report its fetch
   and upload phases beside the total.
 - The Namespace trial caps 8-core profiles at 16 GB; 32 GB needs a paid plan.
+- From 2026-10-12, at the user's request, five BoringCache lanes also run
+  with `--on-demand` (the CLI's hidden switch that skips the startup prefetch
+  of the tag's whole current set) beside the default lane on the same runner:
+  Nix Zed and Cargo Zed plus on Depot 4c, and Go Hugo, Buck2 ExecuTorch and
+  Bazel gRPC on GitHub 4c. The on-demand lanes
+  start on their own empty scopes, so their first step is a cold start, and
+  the matched table starts a new group when a lane joins a runner.
 - From 2026-10-12, Nix Zed also runs both lanes on Depot 4c, at the user's
   request, so BoringCache and Cachix build on the same machine type. On
   GitHub 4c they matched within noise at the 14 steps where both lanes got
