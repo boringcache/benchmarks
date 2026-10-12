@@ -1,0 +1,41 @@
+{
+  "adapter_command": "sbt",
+  "case": "lila",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 116,
+  "scope": "gha-github-rolling-2",
+  "cache_scope": "gha-github-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": "sbt-lila-gha-github-rolling-2-115",
+  "repo": "lichess-org/lila",
+  "sha": "fc6bd3d8887a8607c4036fa2dee91e978938fc17",
+  "seconds": 117.671,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V45 96-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "e80098ee074a159e1fe672b6b5eca9ed533ddc7a",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38195818400",
+  "attempt": 1,
+  "started_at": "2026-10-12T02:29:05Z"
+}
