@@ -203,7 +203,7 @@ module Bench
         @out.puts "#{scopes.size} active BuildKit scopes, #{layers.size} with an index; #{plan.referenced} referenced blobs, #{plan.missing} missing " \
                   "(coverage #{(plan.coverage * 100).round(1)}%)"
         @out.puts "stale: #{plan.blobs.size} blobs and #{plan.indexes.size} indexes, #{(plan.bytes / 1e9).round(1)} GB"
-        stale = [*plan.blobs.sort_by { it["created_at"] }, *plan.indexes]
+        stale = [*plan.blobs.sort_by { -it["size_in_bytes"].to_i }, *plan.indexes]
         File.write(options[:out], stale.map { it.values_at("id", "key", "size_in_bytes", "created_at").join("\t") }.join("\n") + "\n") if options[:out]
         return 0 unless options[:delete]
         raise Error, "not deleting: index coverage is below #{(BuildkitPrune::MIN_COVERAGE * 100).round}%" unless plan.deletable
