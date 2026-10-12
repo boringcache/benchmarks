@@ -28,6 +28,7 @@ fail-on-cache-error = true
 tag = "deno-cargo"
 profiles = ["cargo-product"]
 compiler-cache = "sccache"
+target-budget = "20GiB"
 no-git = true
 metadata-hints = ["benchmark=deno", "lane=cargo-product"]
 command = [
