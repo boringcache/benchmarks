@@ -319,6 +319,12 @@ are amd64, so local runs prove setup, not timings.
   on an AMD EPYC 7763 and 38.5 minutes on an AMD EPYC 9V74. Report its fetch
   and upload phases beside the total.
 - The Namespace trial caps 8-core profiles at 16 GB; 32 GB needs a paid plan.
+- PostHog's gha-plus lanes ran out of runner disk ("no space left on device")
+  while the BuildKit cache dance wrote its cache-mount tarballs, on GitHub x86
+  (run 38181644104) and then ARM (run 38190654260). From 2026-10-12 PostHog's
+  untimed prepare removes the GitHub-hosted image's preinstalled .NET,
+  Android, GHC and CodeQL toolchains for every lane, which the build does not
+  use; self-hosted runners such as Depot skip it.
 - kache's GitHub Actions cache mode (`kunobi-ninja/kache-action` at the
   pinned `ad731754`, no S3 remote) keys its archive on the prefix, kache
   version, platform and a hash of every `Cargo.lock`, and its post step skips
