@@ -48,6 +48,7 @@ module Bench
         problems += (lane.setup - Lane::SETUPS).map { "#{where}: unknown setup #{it}" }
         problems << "#{where}: program needs replaces" if lane.program && lane.replaces.empty?
         problems << "#{where}: post_job_save must list actions (owner/repo) or step ids" unless lane.post_job_save.is_a?(Array) && lane.post_job_save.all?(String)
+        problems << "#{where}: experimental must be true or left out" unless [nil, true].include?(lane.experimental)
         problems << "#{where}: cli_args must be BoringCache CLI flags on a BoringCache lane" unless lane.cli_args.is_a?(Array) && lane.cli_args.all? { it.is_a?(String) && it.start_with?("--") } && (lane.cli_args.empty? || lane.boringcache?)
         problems << "#{where}: cache_keys must list key prefixes that name ${BENCH_SCOPE}" unless lane.cache_key_templates.is_a?(Array) && lane.cache_key_templates.all? { it.is_a?(String) && it.include?("${BENCH_SCOPE}") }
         problems + Array(lane.allowed_runners).reject { @catalog.runners.key?(it) }.map { "#{where}: unknown runner #{it}" }

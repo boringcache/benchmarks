@@ -3,6 +3,7 @@ level = "plus"
 plan = "plus"
 label = "boringcache plus on-demand"
 cli_args = ["--on-demand"]
+experimental = true
 
 [env]
 BORINGCACHE_ARCHIVE_SELECTIVE_READS = "1"
