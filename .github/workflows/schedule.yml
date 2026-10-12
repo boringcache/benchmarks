@@ -1,15 +1,27 @@
 name: Rolling schedule
 
 on:
+  schedule:
+    - cron: "*/15 * * * *"
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: list the projects that would be dispatched without dispatching them
+        type: boolean
+        default: false
+
+concurrency:
+  group: rolling-schedule
+  cancel-in-progress: false
 
 permissions:
   contents: read
   actions: write
 
 jobs:
-  dispatch:
+  tick:
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -17,11 +29,21 @@ jobs:
       - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
         with:
           bundler-cache: true
+      - id: day
+        run: echo "day=$(date -u +%F)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .work/history
+          key: upstream-history-${{ steps.day.outputs.day }}
+          restore-keys: upstream-history-
       - env:
           GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
+          DRY_RUN: ${{ inputs.dry_run }}
         run: |
-          bundle exec bin/bench rolling-projects | while IFS=$'\t' read -r tool project; do
-            gh workflow run project.yml --ref main -f tool="$tool" -f project="$project" -f mode=rolling
-            echo "dispatched $tool - $project (rolling)"
-          done
+          args=()
+          if [ "$DRY_RUN" = true ]; then args+=(--dry-run); fi
+          status=0
+          bundle exec bin/bench tick "${args[@]}" > "$RUNNER_TEMP/tick.txt" || status=$?
+          cat "$RUNNER_TEMP/tick.txt"
+          { echo '```'; cat "$RUNNER_TEMP/tick.txt"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"

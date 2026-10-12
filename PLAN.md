@@ -335,6 +335,12 @@ are amd64, so local runs prove setup, not timings.
   on an AMD EPYC 7763 and 38.5 minutes on an AMD EPYC 9V74. Report its fetch
   and upload phases beside the total.
 - The Namespace trial caps 8-core profiles at 16 GB; 32 GB needs a paid plan.
+- From 2026-10-12 the rolling schedule runs from the repository:
+  `schedule.yml` runs `bin/bench tick` every 15 minutes, dispatching only the
+  projects whose upstream has a commit due after their last recorded step, and
+  queueing the next step behind a running one so projects behind upstream catch
+  up. `prune-buildkit.yml` prunes stale BuildKit blobs every 2 hours. This
+  replaces the operator's local 15-minute dispatch loop.
 - From 2026-10-12, at the user's request, five BoringCache lanes also run
   with `--on-demand` (the CLI's hidden switch that skips the startup prefetch
   of the tag's whole current set) beside the default lane on the same runner:
