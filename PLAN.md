@@ -304,7 +304,18 @@ are amd64, so local runs prove setup, not timings.
   lanes. The publish job now runs `bin/bench prune-caches`, which deletes a
   lane's older rolling entries once the step's own save exists, and keeps
   only the newest entry under each prefix a lane lists in `cache_keys`
-  (kache and mbx).
+  (kache and mbx). By 2026-10-12 the repo was over the limit again, at 535 GB, with
+  315 GB in the Docker gha lanes' BuildKit layer blobs, which BuildKit never
+  deletes. `.github/workflows/prune-buildkit.yml` (`bin/bench
+  prune-buildkit`) reads each active scope's newest BuildKit index through
+  the Actions runtime cache API and deletes blobs none of them list, older
+  index versions and indexes of scopes no case runs; it skips entries under
+  six hours old and refuses to delete when the indexes cover under 95% of the
+  blobs they name. Its first dry run found 968 referenced blobs, all present,
+  and 4,451 stale blobs plus 327 indexes (315.6 GB); the largest 2,400
+  (315.2 GB) were deleted the same day. Scopes whose index GitHub had already
+  evicted (Chroma, Hugo, linkerd2, Duckgres, Discourse, Immich base images)
+  had nothing left to reuse.
 - PostHog (`rolling_stride = 20`), llama.cpp (5), Nix Zed and Cargo Zed (3
   each) move several first-parent commits per rolling step from 2026-10-09,
   because each lands more commits a day than a step can build (PostHog 223 a
