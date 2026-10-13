@@ -20,6 +20,12 @@ class CheckTest < Minitest::Test
     assert_equal [["demo", "app"], ["demo", "missing"]], catalog.rolling.map { |tool, project| [tool.name, project] }
   end
 
+  def test_nightly_lanes_must_be_runs_of_the_case
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")) + %([nightly]\nremote = ["github"]\ngha = ["local"]\n)
+
+    assert_equal ["demo/app: nightly gha on local is not in [runs]"], Bench::Check.new(catalog).problems
+  end
+
   def test_accepts_explicit_ubuntu_26_runner
     write "runners.toml", %([github]\nlabel = "ubuntu-26.04"\nmachine = "github 4c"\n[local]\nlabel = "local"\nmachine = "local"\n)
 
