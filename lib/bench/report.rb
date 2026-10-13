@@ -5,9 +5,10 @@ module Bench
     MATCHED = %w[adapter_command case runner series boringcache steps first_step last_step lane level machine median_seconds min_seconds max_seconds cache_api_error_steps].freeze
     MATCHED_COLUMNS = %w[Tool Case Runner Series CLI Steps First\ step Last\ step Lane Level Machine Timed\ median\ s Timed\ min\ s Timed\ max\ s Steps\ with\ cache\ API\ errors].freeze
 
-    def initialize(results_dir, runs: nil)
+    def initialize(results_dir, runs: nil, nightly: [])
       @results_dir = results_dir
       @runs = runs
+      @nightly = nightly
     end
 
     def records
@@ -91,12 +92,12 @@ module Bench
       end
 
       def matched_steps
-        records.select { it["phase"] == ROLLING && it["cache_scope"] == it["scope"] }.group_by { [*it.values_at("adapter_command", "case", "runner"), series(it)] }.flat_map do |(tool, kase, runner, series), group|
+        records.select { it["phase"] == ROLLING && it["cache_scope"] == it["scope"] }.group_by { [*it.values_at("adapter_command", "case"), it["cadence"] || it["runner"], series(it)] }.flat_map do |(tool, kase, runner, series), group|
           joined = group.group_by { it["lane"] }.transform_values { |records| records.map { it["step"] }.min }
           next [] if joined.size < 2
 
           group.group_by { it["step"] }.filter_map do |step, at_step|
-            lanes = joined.select { |_, first| first < step }.keys.sort
+            lanes = joined.select { |lane, first| first < step && (at_step.any? { it["lane"] == lane } || !@nightly.include?("#{tool}/#{kase} #{lane} #{runner}")) }.keys.sort
             by_lane = at_step.select { matchable?(it) }.group_by { it["lane"] }.transform_values { |tries| tries.min_by { it["attempt"].to_i } }.slice(*lanes)
             next unless lanes.size >= 2 && lanes.all? { by_lane.key?(it) }
             next unless by_lane.values.map { it["sha"] }.uniq.size == 1

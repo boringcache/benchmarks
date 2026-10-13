@@ -95,6 +95,7 @@ gha = ["github"]
 | `shared` | paths every lane caches (dependencies), relative to the run directory |
 | `env` | environment for every lane; `${BENCH_DIR}` is the run directory; `${BENCH_SCOPE}` is the run-scoped cache identity (tool, case, lane, runner, run) |
 | `runs` | lane name to the runner keys it runs on |
+| `nightly` | lane name to runner keys from `runs` that roll only at the first rolling step of each UTC day, on their usual fixed scope; their records carry `"cadence": "nightly"` and the report matches them with each other under the runner `nightly`, without holding back the lanes that run every step |
 
 A `mise.toml` beside `case.toml` pins the case toolchain; it is copied into the run directory.
 

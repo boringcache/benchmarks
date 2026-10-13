@@ -30,6 +30,9 @@ inputs:
   continues:
     required: false
     default: ""
+  cadence:
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -50,9 +53,11 @@ runs:
         RUNNER: ${{ inputs.runner }}
         PHASE: ${{ inputs.phase }}
         RUN_ID: ${{ inputs.run-id }}
+        CADENCE: ${{ inputs.cadence }}
       run: |
         echo "$HOME/.local/share/mise/shims" >> "$GITHUB_PATH"
         {
+          echo "BENCH_CADENCE=$CADENCE"
           echo "BENCH_CASE=$CASE"
           echo "BENCH_LANE=$LANE"
           echo "BENCH_RUNNER=$RUNNER"

@@ -215,6 +215,24 @@ class ReportTest < Minitest::Test
     assert_equal [[3, 4]], groups["ghcr"]
   end
 
+  def test_nightly_lanes_are_matched_with_each_other_and_do_not_hold_back_every_step_lanes
+    %w[boringcache-docker gha].each do |lane|
+      (0..6).each { record "#{lane}-#{it}.json", lane:, seconds: 10.0, phase: "rolling", step: it, scope: "#{lane}-github-rolling", save: "in-phase" }
+    end
+    { "depot-builder" => "github", "boringcache-docker" => "depot-8" }.each do |lane, runner|
+      [0, 1, 2, 3, 5].each do |step|
+        record "#{lane}-#{runner}-#{step}.json", lane:, runner:, seconds: 20.0, phase: "rolling", step:, scope: "#{lane}-#{runner}-rolling", save: "in-phase", cadence: ("nightly" if step >= 3)
+      end
+    end
+
+    report = Bench::Report.new(@dir, nightly: ["docker/posthog depot-builder github", "docker/posthog boringcache-docker depot-8"])
+    assert_equal [["github", "boringcache-docker", 1, 2], ["github", "boringcache-docker", 3, 6], ["github", "depot-builder", 1, 2], ["github", "gha", 1, 2], ["github", "gha", 3, 6],
+                  ["nightly", "boringcache-docker", 5, 5], ["nightly", "depot-builder", 5, 5]],
+                 report.matched.map { it.values_at("runner", "lane", "first_step", "last_step") }.sort
+    assert_equal "depot 8c", report.matched.find { it["runner"] == "nightly" && it["lane"] == "boringcache-docker" }["machine"]
+    assert_equal [[1, 2]], Bench::Report.new(@dir).matched.select { it["runner"] == "github" }.map { it.values_at("first_step", "last_step") }.uniq
+  end
+
   def test_matched_steps_split_by_cli_version_and_rolling_series
     %w[boringcache-docker ghcr].each do |lane|
       [["1.40.2", "rolling"], ["1.41.0", "rolling"], ["1.41.0", "rolling-2"]].each_with_index do |(cli, series), index|
@@ -231,14 +249,14 @@ class ReportTest < Minitest::Test
 
   private
     def record(name, seconds:, exit_status: 0, output_ok: true, phase: "cold", scope: "gha-github-1", sha: "a" * 40, step: nil, lane: "gha", cache_scope: scope,
-               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job", restored: nil, post_job_save: nil, errors: nil, experimental: false, restore_tracked: false, job_conclusion: nil)
+               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job", restored: nil, post_job_save: nil, errors: nil, experimental: false, restore_tracked: false, job_conclusion: nil, runner: "github", cadence: nil)
       File.write(File.join(@dir, name), JSON.generate({
-        "adapter_command" => "docker", "case" => "posthog", "lane" => lane, "level" => "base", "runner" => "github",
+        "adapter_command" => "docker", "case" => "posthog", "lane" => lane, "level" => "base", "runner" => runner,
         "phase" => phase, "step" => step, "scope" => scope, "cache_scope" => cache_scope, "sha" => sha, "seconds" => seconds, "attempt" => attempt, "experimental" => experimental, "cache_restore_tracked" => restore_tracked,
-        "exit_status" => exit_status, "output_ok" => output_ok, "cache_save_timing" => save, "machine" => "github 4c",
+        "exit_status" => exit_status, "output_ok" => output_ok, "cache_save_timing" => save, "machine" => runner == "depot-8" ? "depot 8c" : "github 4c",
         "observed" => { "machine" => { "cpu" => cpu, "cores" => 4 } }, "versions" => { "boringcache" => boringcache, "boringcache_release" => release }.compact
       }.merge(restored == :unrecorded ? {} : { "cache_restored_key" => restored }, post_job_save ? { "post_job_save_seconds" => post_job_save } : {},
-              job_conclusion ? { "job_conclusion" => job_conclusion } : {},
+              job_conclusion ? { "job_conclusion" => job_conclusion } : {}, cadence ? { "cadence" => cadence } : {},
               errors ? { "provider_reported" => { "cache_session_summary" => { "backend_api" => { "total_error_count" => errors } } } } : {})))
     end
 end

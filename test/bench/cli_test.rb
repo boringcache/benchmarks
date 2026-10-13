@@ -5,9 +5,9 @@ class CLITest < Minitest::Test
 
   def test_matrix_lists_every_lane_and_runner_of_a_project_without_local
     assert_equal [
-      { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "github 4c · boringcache", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "" },
-      { "case" => "demo/app", "lane" => "remote", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => ["REMOTE_TOKEN"], "setup" => "", "label" => "github 4c · remote", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "" },
-      { "case" => "demo/app", "lane" => "gha", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "github 4c · gha", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "" }
+      { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "github 4c · boringcache", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "", "cadence" => "" },
+      { "case" => "demo/app", "lane" => "remote", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => ["REMOTE_TOKEN"], "setup" => "", "label" => "github 4c · remote", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "", "cadence" => "" },
+      { "case" => "demo/app", "lane" => "gha", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "github 4c · gha", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "", "cadence" => "" }
     ], matrix("app")
   end
 
@@ -100,6 +100,31 @@ class CLITest < Minitest::Test
       _, err = capture_io { assert_equal 1, Bench::CLI.new(["matrix", *argv], catalog:, out: StringIO.new).call }
       assert_match(/step/, err)
     end
+  end
+
+  def test_nightly_lanes_join_the_first_rolling_step_of_each_utc_day
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")) + %([nightly]\nremote = ["github"]\n)
+    commit_upstream("two")
+    %w[boringcache-demo gha].each { rolling_record(it, 0, @upstream_sha) }
+    write "tmp/results/demo/app/remote-github-rolling/remote-github-rolling-0.json", JSON.generate("step" => 0, "sha" => @upstream_sha, "cache_scope" => "remote-github-rolling", "started_at" => "2026-10-14T00:05:00Z")
+
+    assert_equal [["boringcache-demo", ""], ["gha", ""]], matrix("app", "--rolling", now: Time.utc(2026, 10, 14, 23)).map { it.values_at("lane", "cadence") }
+    assert_equal [["boringcache-demo", ""], ["remote", "nightly"], ["gha", ""]], matrix("app", "--rolling", now: Time.utc(2026, 10, 15, 0, 10)).map { it.values_at("lane", "cadence") }
+    assert_equal %w[boringcache-demo remote gha], matrix("app", now: Time.utc(2026, 10, 14, 23)).map { it["lane"] }
+  end
+
+  def test_a_rerun_includes_a_nightly_lane_only_at_steps_it_ran
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")) + %([nightly]\nremote = ["github"]\n)
+    second = commit_upstream("two")
+    commit_upstream("three")
+    %w[boringcache-demo remote gha].each { rolling_record(it, 0, @upstream_sha) }
+    %w[boringcache-demo gha].each do |lane|
+      write "tmp/results/demo/app/#{lane}-github-rolling/#{lane}-github-rolling-1.json", JSON.generate("step" => 1, "sha" => second, "exit_status" => 1, "output_ok" => false)
+    end
+
+    assert_equal %w[boringcache-demo gha], matrix("app", "--rolling", "--step", "1").map { it["lane"] }
+    write "tmp/results/demo/app/remote-github-rolling/remote-github-rolling-1.json", JSON.generate("step" => 1, "sha" => second, "exit_status" => 1, "output_ok" => false)
+    assert_equal [["boringcache-demo", ""], ["remote", "nightly"], ["gha", ""]], matrix("app", "--rolling", "--step", "1").map { it.values_at("lane", "cadence") }
   end
 
   def test_post_job_saves_adds_only_the_lanes_post_job_cache_saves
@@ -247,9 +272,9 @@ class CLITest < Minitest::Test
       write "tmp/results/demo/app/#{lane}-github-rolling/#{lane}-github-rolling-#{step}.json", JSON.generate("step" => step, "sha" => sha, "cache_scope" => "#{lane}-github-rolling")
     end
 
-    def matrix(*argv)
+    def matrix(*argv, now: Time.now.utc)
       out = StringIO.new
-      Bench::CLI.new(["matrix", *argv], catalog:, out:).call
+      Bench::CLI.new(["matrix", *argv], catalog:, out:, now:).call
       JSON.parse(out.string)
     end
 
