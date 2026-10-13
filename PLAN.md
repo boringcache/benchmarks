@@ -20,6 +20,13 @@ The consolidated harness is running. Configuration is in `tools/`, `rolling.toml
 | Xcode OBS: Bitrise | 2026-10-08 | The documented setup failed CMake configuration in [run 37761446458](https://github.com/boringcache/benchmarks/actions/runs/37761446458). [Default setup](https://github.com/boringcache/benchmarks/actions/runs/37768474822) and [disabled prefix mapping](https://github.com/boringcache/benchmarks/actions/runs/37769123380) retained the configuration and Swift build failures. |
 | Zed: unpaired Namespace 8c lane; PostHog: Depot 4c and Namespace lanes | 2026-10-09 | The active comparisons use the runners in each case's `[runs]`. Historical records remain outside the reported lane selection. |
 | Cargo and Nix Zed: Depot 4c lanes (BoringCache, on-demand, kache, Cachix) | 2026-10-13 | Removed for the Depot plan budget (2,000 runner minutes a month); these lanes used about 205 Depot minutes per step. Zed's upstream CI runs on Namespace. Historical records remain outside the reported lane selection. |
+| PostHog: Namespace remote builder | 2026-10-13 | Removed for cost; Namespace has no low-cost plan and the Depot builder covers the remote-builder comparison. 70 matched steps on CLI 1.41.0 remain in the records. |
+
+## Restored lanes
+
+| Lane | Date | Reason |
+| --- | --- | --- |
+| Xcode OBS: Bitrise, with new Bitrise lanes for Bazel gRPC and Gradle OpenTelemetry Java | 2026-10-13 | Bitrise Build Cache CLI [v3.17.4](https://github.com/bitrise-io/bitrise-build-cache-cli/releases/tag/v3.17.4) skips `-derivedDataPath` on target-only `xcodebuild` builds ([PR 592](https://github.com/bitrise-io/bitrise-build-cache-cli/pull/592)), the cause of the CMake configuration failure. The lanes use the default activation, without `--disable-prefix-mapping`. |
 
 ## Restarted series
 

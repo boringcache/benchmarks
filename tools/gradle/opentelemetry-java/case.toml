@@ -17,3 +17,4 @@ TEST_JAVA_HOME = "${HOME}/.local/share/mise/installs/java/zulu-21.52.15.0"
 boringcache-gradle = ["github", "local"]
 gha = ["github"]
 depot-cache = ["github", "local"]
+bitrise = ["github"]
