@@ -54,11 +54,18 @@ class PhaseRunTest < Minitest::Test
   end
 
   def test_other_lanes_run_the_product_command_with_their_env
-    with_fixture_env { assert_equal 0, cli("run", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r3") }
+    with_fixture_env do
+      saved = ENV["BENCH_CACHE_RESTORE_TRACKED"]
+      ENV["BENCH_CACHE_RESTORE_TRACKED"] = "true"
+      assert_equal 0, cli("run", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r3")
+    ensure
+      ENV["BENCH_CACHE_RESTORE_TRACKED"] = saved
+    end
 
     output = File.read(File.join(@root, ".work/demo/app/upstream/out.txt"))
     assert_equal "remote-secret\n", output
     assert_equal true, record("remote-local-r3", "remote-local-cold")["output_ok"]
+    assert_equal true, record("remote-local-r3", "remote-local-cold")["cache_restore_tracked"]
   end
 
   def test_case_env_and_directory_apply_to_every_lane

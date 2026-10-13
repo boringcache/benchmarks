@@ -29,6 +29,18 @@ class ReportTest < Minitest::Test
     assert_empty Bench::Report.new(@dir, runs: ["docker/hugo gha github"]).rows
   end
 
+  def test_experimental_records_are_excluded_from_public_rows_and_matched_steps
+    %w[boringcache-docker gha experiment].each do |lane|
+      (0..2).each do |step|
+        record "#{lane}-#{step}.json", lane:, seconds: 10.0, phase: "rolling", step:, save: "in-phase", scope: "#{lane}-github-rolling", experimental: lane == "experiment"
+      end
+    end
+
+    report = Bench::Report.new(@dir)
+    assert_equal %w[boringcache-docker gha], report.rows.map { it["lane"] }.uniq.sort
+    assert_equal %w[boringcache-docker gha], report.matched.map { it["lane"] }.uniq.sort
+  end
+
   def test_failed_output_checks_and_missing_status_are_failures_not_timings
     record "a.json", seconds: 100.0
     record "b.json", seconds: 1.0, output_ok: false
@@ -75,6 +87,14 @@ class ReportTest < Minitest::Test
     record "d.json", seconds: 40.0, sha: "b" * 40, phase: "rolling", step: 3
 
     assert_equal 4, Bench::Report.new(@dir).rows.size
+  end
+
+  def test_a_tracked_cache_that_has_never_restored_is_unseeded_after_its_first_step
+    (0..2).each do |step|
+      record "#{step}.json", seconds: 10.0, phase: "rolling", step:, scope: "gha-github-rolling", restore_tracked: true
+    end
+
+    assert_equal [[0, 10.0], [1, nil], [1, nil]], Bench::Report.new(@dir).rows.map { it.values_at("seed_failed", "median_seconds") }
   end
 
   def test_product_settings_are_reported_with_the_cli_version
@@ -145,6 +165,26 @@ class ReportTest < Minitest::Test
     assert_empty Bench::Report.new(@dir).matched
   end
 
+  def test_a_lane_with_no_passing_steps_still_prevents_an_incomplete_comparison
+    %w[boringcache-docker gha failed].each do |lane|
+      (0..2).each do |step|
+        record "#{lane}-#{step}.json", lane:, seconds: 10.0, phase: "rolling", step:, scope: "#{lane}-github-rolling", save: "in-phase", exit_status: lane == "failed" ? 1 : 0
+      end
+    end
+
+    assert_empty Bench::Report.new(@dir).matched
+  end
+
+  def test_lanes_on_different_commits_are_not_matched
+    %w[boringcache-docker gha].each do |lane|
+      (0..2).each do |step|
+        record "#{lane}-#{step}.json", lane:, seconds: 10.0, phase: "rolling", step:, scope: "#{lane}-github-rolling", save: "in-phase", sha: (lane == "gha" ? "a" : "b") * 40
+      end
+    end
+
+    assert_empty Bench::Report.new(@dir).matched
+  end
+
   def test_a_lane_that_joins_later_starts_a_new_matched_group_and_keeps_the_earlier_steps
     { "boringcache-docker" => 0, "gha" => 0, "ghcr" => 2 }.each do |lane, first|
       (first..4).each { record "#{lane}-#{it}.json", lane:, seconds: 10.0 * (it + 1), phase: "rolling", step: it, scope: "#{lane}-github-rolling", save: "in-phase" }
@@ -171,10 +211,10 @@ class ReportTest < Minitest::Test
 
   private
     def record(name, seconds:, exit_status: 0, output_ok: true, phase: "cold", scope: "gha-github-1", sha: "a" * 40, step: nil, lane: "gha", cache_scope: scope,
-               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job", restored: nil, post_job_save: nil, errors: nil)
+               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job", restored: nil, post_job_save: nil, errors: nil, experimental: false, restore_tracked: false)
       File.write(File.join(@dir, name), JSON.generate({
         "adapter_command" => "docker", "case" => "posthog", "lane" => lane, "level" => "base", "runner" => "github",
-        "phase" => phase, "step" => step, "scope" => scope, "cache_scope" => cache_scope, "sha" => sha, "seconds" => seconds, "attempt" => attempt,
+        "phase" => phase, "step" => step, "scope" => scope, "cache_scope" => cache_scope, "sha" => sha, "seconds" => seconds, "attempt" => attempt, "experimental" => experimental, "cache_restore_tracked" => restore_tracked,
         "exit_status" => exit_status, "output_ok" => output_ok, "cache_save_timing" => save, "machine" => "github 4c",
         "observed" => { "machine" => { "cpu" => cpu, "cores" => 4 } }, "versions" => { "boringcache" => boringcache, "boringcache_release" => release }.compact
       }.merge(restored == :unrecorded ? {} : { "cache_restored_key" => restored }, post_job_save ? { "post_job_save_seconds" => post_job_save } : {},

@@ -124,9 +124,12 @@ runs:
         CACHE_SCOPE: ${{ inputs.cache-scope }}
         CONTINUES: ${{ inputs.continues }}
       run: |
-        if [ "$BENCH_PHASE" = rolling ] && git fetch --quiet --depth=1 origin main && git cat-file -e "FETCH_HEAD:results/$BENCH_CASE" 2>/dev/null; then
-          RECORDED="$RUNNER_TEMP/recorded"
-          mkdir -p "$RECORDED" && git archive FETCH_HEAD "results/$BENCH_CASE" | tar -x -C "$RECORDED" --strip-components=1
+        if [ "$BENCH_PHASE" = rolling ]; then
+          git fetch --quiet --depth=1 origin main
+          if git cat-file -e "FETCH_HEAD:results/$BENCH_CASE" 2>/dev/null; then
+            RECORDED="$RUNNER_TEMP/recorded"
+            mkdir -p "$RECORDED" && git archive FETCH_HEAD "results/$BENCH_CASE" | tar -x -C "$RECORDED" --strip-components=1
+          fi
         fi
         bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" ${SHA:+--sha "$SHA" --step "$STEP"} ${CACHE_SCOPE:+--cache-scope "$CACHE_SCOPE"} ${CONTINUES:+--continues} ${RECORDED:+--recorded "$RECORDED"} --github
 
@@ -248,6 +251,7 @@ runs:
       shell: bash
       env:
         BUILD_FAILED: ${{ steps.build.outcome == 'failure' }}
+        BENCH_CACHE_RESTORE_TRACKED: ${{ steps.actions-cache-restore.outcome == 'success' || steps.dance-cache.outcome == 'success' || steps.dance-restore.outcome == 'success' }}
         BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-cache.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
       run: bundle exec bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
 

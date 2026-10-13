@@ -2,6 +2,7 @@ module Bench
   class Tick
     RUN_FIELDS = "databaseId,displayTitle,status,conclusion,createdAt".freeze
     WAITING = %w[queued pending waiting requested].freeze
+    ACTIVE = ["in_progress", *WAITING].freeze
 
     def self.title(tool, project) = "#{tool} - #{project} (rolling)"
 
@@ -9,20 +10,22 @@ module Bench
       notes = []
       chosen = projects.select do |tool, project|
         title = title(tool, project)
-        mine = runs.select { it["displayTitle"] == title }
-        if mine.any? { WAITING.include?(it["status"]) }
-          notes << ["queued", title, "next step already waiting"]
+        mine = runs.select { it["displayTitle"].to_s.sub(/ step \d+\z/, "").casecmp?(title) }
+        active = mine.find { ACTIVE.include?(it["status"]) }
+        if active
+          notes << ["busy", title, "run #{active["databaseId"]} is #{active["status"]}"]
           next false
         end
-        unless behind.call(tool, project)
-          notes << ["current", title, "no new upstream commit"]
-          next false
-        end
-
         last = mine.select { it["status"] == "completed" }.max_by { it["createdAt"] }
         notes << ["REVIEW", title, "last run #{last["databaseId"]} concluded #{last["conclusion"]}"] if last && last["conclusion"] != "success"
-        notes << ["busy", title, "next step queues behind run #{mine.find { it["status"] == "in_progress" }["databaseId"]}"] if mine.any? { it["status"] == "in_progress" }
+        unless behind.call(tool, project)
+          notes << ["current", title, "no upstream commit due"]
+          next false
+        end
         true
+      rescue Error => error
+        notes << ["FAILED", title, "upstream check failed: #{error.message}"]
+        false
       end
       [chosen, notes]
     end
@@ -36,7 +39,10 @@ module Bench
 
     def call(projects, behind:, dry_run: false)
       runs = JSON.parse(@gh.call("run", "list", "-R", @repo, "--workflow", "project.yml", "--limit", "300", "--json", RUN_FIELDS))
-        .select { it["displayTitle"].to_s.end_with?("(rolling)") }
+      runs += ACTIVE.flat_map do |status|
+        @gh.call("api", "--paginate", "repos/#{@repo}/actions/workflows/project.yml/runs?per_page=100&status=#{status}", "--jq",
+                 ".workflow_runs[] | {databaseId: .id, displayTitle: .display_title, status, conclusion, createdAt: .created_at}").lines.map { JSON.parse(it) }
+      end
       chosen, notes = self.class.plan(projects, runs, behind:)
       notes.each { |verb, title, note| @out.puts format("%-8s %s (%s)", verb, title, note) }
       failed = chosen.count do |tool, project|
@@ -45,7 +51,7 @@ module Bench
         !ok
       end
       @out.puts "#{dry_run ? "would dispatch" : "dispatched"} #{chosen.size - failed} of #{projects.size} projects at #{@now.strftime("%H:%M")} UTC"
-      failed
+      failed + notes.count { it.first == "FAILED" }
     end
 
     private
