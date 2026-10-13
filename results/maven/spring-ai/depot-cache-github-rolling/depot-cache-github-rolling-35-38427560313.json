@@ -38,5 +38,6 @@
   },
   "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38427560313",
   "attempt": 1,
-  "started_at": "2026-10-13T16:10:41Z"
+  "started_at": "2026-10-13T16:10:41Z",
+  "excluded": "Depot Cache served no cache during the Depot plan lapse on 2026-10-13 (15:35-17:00 UTC): HTTP 402 on 592 cache requests, 0 modules restored"
 }

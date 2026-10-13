@@ -13,7 +13,7 @@ module Bench
 
     def records
       @records ||= Dir.glob(File.join(@results_dir, "**", "*.json")).sort.map { JSON.parse(File.read(it)) }
-        .reject { it["experimental"] }
+        .reject { it["experimental"] || it["excluded"] }
         .select { @runs.nil? || @runs.include?("#{it["adapter_command"]}/#{it["case"]} #{it["lane"]} #{it["runner"]}") }
     end
 

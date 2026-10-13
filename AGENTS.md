@@ -59,6 +59,7 @@ Classify it before changing anything:
 - **BoringCache product**: note the run and evidence, and fix it in `monorepo`. Leave the lane failing until a released CLI carries the fix.
 - **Other provider**: keep the lane failing and note it. If the provider cannot run the case, remove the lane and log the outcome under "Removed lanes" in `PLAN.md` with run links.
 - **Upstream** (their build or a transient download): record it and keep rolling.
+- **Not a measurement** (a build that passed while its provider served no cache, such as a lapsed plan): add `"excluded": "<reason and evidence>"` to those records, and to the next step if it restored a cache the outage never saved. The report leaves them out; the records stay.
 
 ## Checks
 

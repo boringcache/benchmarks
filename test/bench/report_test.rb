@@ -41,6 +41,18 @@ class ReportTest < Minitest::Test
     assert_equal %w[boringcache-docker gha], report.matched.map { it["lane"] }.uniq.sort
   end
 
+  def test_excluded_records_stay_out_of_rows_and_matched_steps
+    %w[boringcache-docker gha].each do |lane|
+      (0..3).each { record "#{lane}-#{it}.json", lane:, seconds: 10.0, phase: "rolling", step: it, scope: "#{lane}-github-rolling", save: "in-phase" }
+    end
+    path = File.join(@dir, "gha-2.json")
+    File.write(path, JSON.generate(JSON.parse(File.read(path)).merge("excluded" => "Depot Cache returned HTTP 402 on every request")))
+
+    report = Bench::Report.new(@dir)
+    assert_equal [0, 1, 3], report.rows.select { it["lane"] == "gha" }.map { it["step"] }
+    assert_equal [[2, 1, 3]], report.matched.select { it["lane"] == "gha" }.map { it.values_at("steps", "first_step", "last_step") }
+  end
+
   def test_failed_output_checks_and_missing_status_are_failures_not_timings
     record "a.json", seconds: 100.0
     record "b.json", seconds: 1.0, output_ok: false

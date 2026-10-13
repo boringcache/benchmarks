@@ -38,5 +38,6 @@
   },
   "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38422797573",
   "attempt": 1,
-  "started_at": "2026-10-13T15:35:26Z"
+  "started_at": "2026-10-13T15:35:26Z",
+  "excluded": "Depot Cache served no cache during the Depot plan lapse on 2026-10-13 (15:35-17:00 UTC): 0 of 72 Turbo tasks hit, log reports Remote caching unavailable"
 }

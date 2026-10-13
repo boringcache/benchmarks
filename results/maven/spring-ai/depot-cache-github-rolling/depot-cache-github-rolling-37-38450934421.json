@@ -38,5 +38,6 @@
   },
   "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38450934421",
   "attempt": 1,
-  "started_at": "2026-10-13T19:02:05Z"
+  "started_at": "2026-10-13T19:02:05Z",
+  "excluded": "Restored a Depot Cache that missed the saves of outage steps 35-36: 2 of 175 modules restored"
 }
