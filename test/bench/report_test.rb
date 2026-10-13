@@ -69,6 +69,26 @@ class ReportTest < Minitest::Test
     assert_equal [["post-job, timed", 128.5], ["post-job", 90.0]], rows.map { it.values_at("cache_save_timing", "median_seconds") }
   end
 
+  def test_a_post_job_failure_is_not_a_timing_or_a_warm_seed
+    record "cold.json", seconds: 100.0, post_job_save: 28.5, job_conclusion: "failure"
+    record "warm.json", seconds: 10.0, phase: "warm"
+
+    rows = Bench::Report.new(@dir).rows
+    assert_equal [1, nil], rows.find { it["phase"] == "cold" }.values_at("failed", "median_seconds")
+    assert_equal [1, nil], rows.find { it["phase"] == "warm" }.values_at("seed_failed", "median_seconds")
+  end
+
+  def test_a_post_job_failure_excludes_the_step_from_matched_results
+    %w[boringcache-docker gha].each do |lane|
+      (0..2).each do |step|
+        record "#{lane}-#{step}.json", lane:, seconds: 10.0, phase: "rolling", step:, post_job_save: 1.0, scope: "#{lane}-github-rolling",
+          restored: :unrecorded, job_conclusion: lane == "gha" && step == 2 ? "failure" : "success"
+      end
+    end
+
+    assert_equal [[1, 1, 1], [1, 1, 1]], Bench::Report.new(@dir).matched.map { it.values_at("steps", "first_step", "last_step") }
+  end
+
   def test_a_rolling_step_that_restored_nothing_from_its_lanes_cache_is_a_seed_failure
     record "start.json", seconds: 90.0, phase: "rolling", step: 0, scope: "gha-github-rolling"
     record "hit.json", seconds: 10.0, phase: "rolling", step: 1, scope: "gha-github-rolling", restored: "docker-posthog-gha-github-rolling-0"
@@ -211,13 +231,14 @@ class ReportTest < Minitest::Test
 
   private
     def record(name, seconds:, exit_status: 0, output_ok: true, phase: "cold", scope: "gha-github-1", sha: "a" * 40, step: nil, lane: "gha", cache_scope: scope,
-               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job", restored: nil, post_job_save: nil, errors: nil, experimental: false, restore_tracked: false)
+               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job", restored: nil, post_job_save: nil, errors: nil, experimental: false, restore_tracked: false, job_conclusion: nil)
       File.write(File.join(@dir, name), JSON.generate({
         "adapter_command" => "docker", "case" => "posthog", "lane" => lane, "level" => "base", "runner" => "github",
         "phase" => phase, "step" => step, "scope" => scope, "cache_scope" => cache_scope, "sha" => sha, "seconds" => seconds, "attempt" => attempt, "experimental" => experimental, "cache_restore_tracked" => restore_tracked,
         "exit_status" => exit_status, "output_ok" => output_ok, "cache_save_timing" => save, "machine" => "github 4c",
         "observed" => { "machine" => { "cpu" => cpu, "cores" => 4 } }, "versions" => { "boringcache" => boringcache, "boringcache_release" => release }.compact
       }.merge(restored == :unrecorded ? {} : { "cache_restored_key" => restored }, post_job_save ? { "post_job_save_seconds" => post_job_save } : {},
+              job_conclusion ? { "job_conclusion" => job_conclusion } : {},
               errors ? { "provider_reported" => { "cache_session_summary" => { "backend_api" => { "total_error_count" => errors } } } } : {})))
     end
 end

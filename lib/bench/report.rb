@@ -122,7 +122,7 @@ module Bench
       end
 
       def passed?(record)
-        record["exit_status"] == 0 && record["output_ok"] == true
+        record["exit_status"] == 0 && record["output_ok"] == true && record.fetch("job_conclusion", "success") == "success"
       end
 
       def seeded?(record)

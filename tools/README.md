@@ -59,7 +59,7 @@ TURBO_CACHE = "local:rw,remote:r"
 | `experimental` | `true` marks an experimental lane, such as the `--on-demand` lanes; records carry `"experimental": true` and the public report leaves them out |
 | `label` | job label for a BoringCache lane, needed when two BoringCache lanes share a runner, for example `boringcache on-demand` |
 | `cache_keys` | GitHub Actions cache key prefixes the lane's own action saves under, naming `${BENCH_SCOPE}`, such as `kache-${BENCH_SCOPE}-v`; after a rolling step the publish job keeps only the newest entry under each |
-| `post_job_save` | actions (`owner/repo`) or step ids that save the lane cache only after the job, such as `reproducible-containers/buildkit-cache-dance`; the publish job adds their logged durations to the record as `post_job_save_seconds`, and the report counts them in the timing |
+| `post_job_save` | actions (`owner/repo`) or step ids that save the lane cache only after the job, such as `reproducible-containers/buildkit-cache-dance`; the publish job records their logged durations as `post_job_save_seconds` and the final `job_conclusion`. Reports include these durations and exclude failed jobs from timings and matched steps. |
 | `probe` | credential and connection checks for a preflight run; they run in the run directory without a checkout |
 | `prepare`, `cold.prepare` | untimed commands the lane runs after the case `prepare`, for every phase or one phase |
 
