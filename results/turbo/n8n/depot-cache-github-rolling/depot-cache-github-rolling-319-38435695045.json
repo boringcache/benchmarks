@@ -38,5 +38,6 @@
   },
   "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38435695045",
   "attempt": 1,
-  "started_at": "2026-10-13T17:10:21Z"
+  "started_at": "2026-10-13T17:10:21Z",
+  "excluded": "Restored a Depot Cache that missed the saves of outage steps 314-318: 58 of 72 Turbo tasks hit"
 }
