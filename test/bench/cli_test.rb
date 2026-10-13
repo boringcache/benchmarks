@@ -92,6 +92,8 @@ class CLITest < Minitest::Test
     write "tmp/results/demo/app/remote-github-rolling/remote-github-rolling-1.json", JSON.generate("step" => 1, "sha" => second, "exit_status" => 1, "output_ok" => false)
 
     assert_equal [["remote", "1", second], ["gha", "1", second]], matrix("app", "--rolling", "--step", "1").map { it.values_at("lane", "step", "sha") }
+    write "tmp/results/demo/app/gha-github-rolling/gha-github-rolling-1.json", JSON.generate("step" => 1, "sha" => second, "exit_status" => 0, "output_ok" => true, "job_conclusion" => "failure")
+    assert_equal %w[remote gha], matrix("app", "--rolling", "--step", "1").map { it["lane"] }
     rolling_record("remote", 2, "b" * 40)
     assert_equal ["gha"], matrix("app", "--rolling", "--step", "1").map { it["lane"] }
     [%w[app --step 1], %w[app --rolling --step 5]].each do |argv|
@@ -113,7 +115,9 @@ class CLITest < Minitest::Test
       #!/usr/bin/env bash
       echo "gh $*" >> "$STUB_LOG"
       case "$*" in
-        *runs/42/jobs*) echo '{"id":7,"name":"rolling: github 4c · gha"}' ;;
+        *runs/42/jobs*)
+          echo '{"id":7,"name":"rolling: github 4c · gha","run_attempt":1,"conclusion":"failure"}'
+          echo '{"id":8,"name":"rolling: github 4c · gha","run_attempt":2,"conclusion":"success"}' ;;
         *jobs/7/logs*) cat "#{File.join(@root, "job.log")}" ;;
       esac
     BASH
@@ -133,6 +137,20 @@ class CLITest < Minitest::Test
     saved = %w[gha remote].to_h { [it, JSON.parse(File.read(File.join(@root, "tmp/results/demo/app/#{it}-github-rolling/#{it}-github-rolling-3.json")))["post_job_save_seconds"]] }
     assert_equal({ "gha" => 13.0, "remote" => nil }, saved)
     assert_equal 2, File.readlines(File.join(@root, "stub.log")).size
+    path = File.join(@root, "tmp/results/demo/app/gha-github-rolling/gha-github-rolling-3.json")
+    record = JSON.parse(File.read(path))
+    assert_equal "failure", record.delete("job_conclusion")
+    File.write(path, JSON.generate(record))
+
+    with_fixture_env do
+      ENV["GITHUB_REPOSITORY"] = "boringcache/benchmarks"
+      Bench::CLI.new(%W[post-job-saves --run-id 42 --results #{@root}/tmp/results], catalog:, out: StringIO.new).call
+    ensure
+      ENV.delete("GITHUB_REPOSITORY")
+    end
+
+    assert_equal "failure", JSON.parse(File.read(path))["job_conclusion"]
+    assert_equal 3, File.readlines(File.join(@root, "stub.log")).size
   end
 
   def test_matrix_takes_a_cli_release_for_fresh_runs_only

@@ -169,16 +169,19 @@ module Bench
       def post_job_saves
         options = parse(defaults)
         repo = ENV.fetch("GITHUB_REPOSITORY") { raise Error, "post-job-saves needs GITHUB_REPOSITORY" }
-        pending = run_records(options[:run_id], options[:results]).select { |_, record, _, lane| !record.key?("post_job_save_seconds") && lane.post_job_save.any? }
+        pending = run_records(options[:run_id], options[:results]).select { |_, record, _, lane| lane.post_job_save.any? && (!record.key?("post_job_save_seconds") || !record.key?("job_conclusion")) }
         return 0 if pending.empty?
 
-        jobs = Bench.gh("api", "--paginate", "repos/#{repo}/actions/runs/#{options[:run_id]}/jobs?per_page=100", "--jq", ".jobs[] | {id, name}")
-          .lines.to_h { job = JSON.parse(it); [job["name"], job["id"]] }
+        jobs = Bench.gh("api", "--paginate", "repos/#{repo}/actions/runs/#{options[:run_id]}/jobs?filter=all&per_page=100", "--jq", ".jobs[] | {id, name, run_attempt, conclusion}")
+          .lines.to_h { job = JSON.parse(it); [[job["name"], job["run_attempt"]], job] }
         pending.each do |path, record, kase, lane|
-          job_id = jobs["#{record["phase"]}: #{job_label(kase, lane, record["runner"])}"] or next
-          record["post_job_save_seconds"] = post_job_save_seconds(Bench.gh("api", "--allow-escape-sequences", "repos/#{repo}/actions/jobs/#{job_id}/logs"), lane.post_job_save)
+          job = jobs[["#{record["phase"]}: #{job_label(kase, lane, record["runner"])}", [record["attempt"].to_i, 1].max]] or next
+          next unless job["conclusion"]
+
+          record["job_conclusion"] = job["conclusion"]
+          record["post_job_save_seconds"] ||= post_job_save_seconds(Bench.gh("api", "--allow-escape-sequences", "repos/#{repo}/actions/jobs/#{job["id"]}/logs"), lane.post_job_save)
           File.write(path, JSON.pretty_generate(record) + "\n")
-          @out.puts "#{record["adapter_command"]}/#{record["case"]} #{record["lane"]} #{record["runner"]}: post-job save #{record["post_job_save_seconds"]}s"
+          @out.puts "#{record["adapter_command"]}/#{record["case"]} #{record["lane"]} #{record["runner"]}: job #{record["job_conclusion"]}, post-job save #{record["post_job_save_seconds"]}s"
         end
         0
       end
