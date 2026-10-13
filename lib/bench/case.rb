@@ -51,6 +51,14 @@ module Bench
       config.fetch("runs", {})
     end
 
+    def nightly
+      config.fetch("nightly", {})
+    end
+
+    def nightly?(lane_name, runner)
+      nightly.is_a?(Hash) && Array(nightly[lane_name]).include?(runner)
+    end
+
     def directory
       config.fetch("directory", ".")
     end

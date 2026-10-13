@@ -169,12 +169,14 @@ class PhaseRunTest < Minitest::Test
       assert_equal 0, cli("start", "demo/app", "--lane", "remote")
       assert_equal 0, cli("build", "demo/app", "--lane", "remote")
       ENV["BENCH_CACHE_RESTORED_KEY"] = "demo-app-remote-local-r30-2"
+      ENV["BENCH_CADENCE"] = "nightly"
       assert_equal 0, cli("record", "demo/app", "--lane", "remote", "--exit-status", "0")
     ensure
       ENV.delete("BENCH_CACHE_RESTORED_KEY")
+      ENV.delete("BENCH_CADENCE")
     end
 
-    assert_equal "demo-app-remote-local-r30-2", record("remote-local-r31", "remote-local-cold")["cache_restored_key"]
+    assert_equal ["demo-app-remote-local-r30-2", "nightly"], record("remote-local-r31", "remote-local-cold").values_at("cache_restored_key", "cadence")
   end
 
   def test_rolling_records_from_separate_dispatches_of_one_step_do_not_collide

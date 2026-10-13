@@ -30,6 +30,14 @@ module Bench
       self.class.scope(lane, runner, @kase.rolling_series)
     end
 
+    def recorded?(lane, runner, step)
+      records(File.join(cache_scope(lane, runner), "*.json")).any? { it["step"] == step }
+    end
+
+    def ran_on?(lane, runner, date)
+      records(File.join(cache_scope(lane, runner), "*.json")).any? { it["started_at"].to_s.start_with?(date) }
+    end
+
     def last_step(lane, runner)
       records(File.join(cache_scope(lane, runner), "*.json")).filter_map { it["step"] }.max
     end

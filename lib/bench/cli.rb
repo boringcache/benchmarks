@@ -23,10 +23,11 @@ module Bench
     TEXT
     CLI_RELEASE = /\A(v\d+\.\d+\.\d+|vcli-canary-[0-9a-f]{9,40})\z/
 
-    def initialize(argv, catalog: Catalog.new, out: $stdout)
+    def initialize(argv, catalog: Catalog.new, out: $stdout, now: Time.now.utc)
       @argv = argv.dup
       @catalog = catalog
       @out = out
+      @now = now
     end
 
     def call
@@ -149,10 +150,11 @@ module Bench
           step, sha = position
           kase.runs.flat_map do |lane_name, runners|
             lane = kase.tool.lane(lane_name)
-            Array(runners).reject { it == "local" || (rerun && (rolling.passed?(lane, it, rerun) || rolling.last_step(lane, it).to_i > rerun)) }.map do |runner|
+            Array(runners).select { planned?(kase, lane, it, rolling, rerun) }.map do |runner|
               { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets, "setup" => lane.setup.join(" "),
                 "label" => job_label(kase, lane, runner),
-                "step" => step&.to_s || "", "sha" => sha || "", "cache_scope" => rolling&.cache_scope(lane, runner) || "", "continues" => rolling&.continues?(lane, runner) ? "true" : "" }
+                "step" => step&.to_s || "", "sha" => sha || "", "cache_scope" => rolling&.cache_scope(lane, runner) || "", "continues" => rolling&.continues?(lane, runner) ? "true" : "",
+                "cadence" => rolling && kase.nightly?(lane.name, runner) ? "nightly" : "" }
             end
           end
         end
@@ -160,6 +162,15 @@ module Bench
         runners = options[:runner]&.split(/[\s,]+/)
         @out.puts JSON.generate(entries.select { (lanes.nil? || lanes.include?(it["lane"])) && (runners.nil? || runners.include?(it["runner"])) })
         0
+      end
+
+      def planned?(kase, lane, runner, rolling, rerun)
+        return false if runner == "local"
+        return true unless rolling
+        return false if rerun && (rolling.passed?(lane, runner, rerun) || rolling.last_step(lane, runner).to_i > rerun)
+        return true unless kase.nightly?(lane.name, runner)
+
+        rerun ? rolling.recorded?(lane, runner, rerun) : !rolling.ran_on?(lane, runner, @now.strftime("%F"))
       end
 
       def job_label(kase, lane, runner)
@@ -317,7 +328,8 @@ module Bench
         runs = @catalog.cases.flat_map do |kase|
           kase.runs.reject { |lane, _| kase.tool.lane(lane).experimental? }.flat_map { |lane, runners| Array(runners).map { "#{kase.id} #{lane} #{it}" } }
         end
-        Report.new(options[:results], runs:).write(options[:out])
+        nightly = @catalog.cases.flat_map { |kase| kase.nightly.flat_map { |lane, runners| Array(runners).map { "#{kase.id} #{lane} #{it}" } } }
+        Report.new(options[:results], runs:, nightly:).write(options[:out])
         @out.puts "wrote #{File.join(options[:out], "results.json")} and report.md"
         0
       end

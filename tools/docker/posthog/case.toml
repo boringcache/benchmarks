@@ -15,3 +15,8 @@ gha = ["github", "github-arm"]
 ghcr = ["github", "github-arm"]
 depot-builder = ["github"]
 namespace-builder = ["github"]
+
+[nightly]
+boringcache-docker = ["depot-8"]
+boringcache-docker-plus = ["depot-8"]
+depot-builder = ["github"]
