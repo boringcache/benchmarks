@@ -128,6 +128,7 @@ module Bench
       end
 
       def command
+        return [*lane.wrap(phase, environment), *kase.script] if kase.script
         return [*lane.wrap(phase, environment), *lane_program, *lane.args(phase, environment)] unless lane.boringcache?
         return ["boringcache", kase.tool.name, *lane.cli_args, *("--read-only" if phase == "warm")] unless lane.phases?
 
@@ -153,8 +154,14 @@ module Bench
         @environment ||= begin
           base = @env.to_h.merge(kase.tool.catalog.runner_env(runner), "BENCH_ROOT" => kase.tool.catalog.root, "BENCH_CASE" => kase.id, "BENCH_DIR" => workspace.dir, "BENCH_SCOPE" => "#{kase.tool.name}-#{kase.name}-#{cache_scope}")
           shared = base.merge(kase.env(base))
-          shared.merge(lane.env(phase, shared), lane.boringcache? ? { "BORINGCACHE_OBSERVABILITY_JSONL_PATH" => evidence_path } : {})
+          shared.merge(lane.env(phase, shared), lane.boringcache? ? { "BORINGCACHE_OBSERVABILITY_JSONL_PATH" => evidence_path, **script_boringcache } : {})
         end
+      end
+
+      def script_boringcache
+        return {} unless kase.script
+
+        { "BENCH_BORINGCACHE" => Shellwords.join(["boringcache", kase.tool.name, *lane.cli_args, *("--read-only" if phase == "warm")]) }
       end
 
       def shell(command, chdir: workspace.dir)
