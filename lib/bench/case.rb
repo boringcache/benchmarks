@@ -51,6 +51,10 @@ module Bench
       config.fetch("runs", {})
     end
 
+    def script
+      config["script"]
+    end
+
     def nightly
       config.fetch("nightly", {})
     end

@@ -26,6 +26,13 @@ class CheckTest < Minitest::Test
     assert_equal ["demo/app: nightly gha on local is not in [runs]"], Bench::Check.new(catalog).problems
   end
 
+  def test_a_script_case_needs_a_command_list_and_lanes_that_keep_the_plan_command
+    write "tools/demo/lanes/boringcache-phases.toml", %(provider = "boringcache"\nlevel = "base"\nphases = true\n)
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", %(script = "make"\n[runs]\nboringcache-phases = ["local"]\n))
+
+    assert_equal ["demo/app: script must be a command list", "demo/app: boringcache-phases replaces the plan command, which a script case does not run"], Bench::Check.new(catalog).problems
+  end
+
   def test_accepts_explicit_ubuntu_26_runner
     write "runners.toml", %([github]\nlabel = "ubuntu-26.04"\nmachine = "github 4c"\n[local]\nlabel = "local"\nmachine = "local"\n)
 

@@ -95,6 +95,7 @@ gha = ["github"]
 | `shared` | paths every lane caches (dependencies), relative to the run directory |
 | `env` | environment for every lane; `${BENCH_DIR}` is the run directory; `${BENCH_SCOPE}` is the run-scoped cache identity (tool, case, lane, runner, run) |
 | `runs` | lane name to the runner keys it runs on |
+| `script` | optional command every lane runs instead of the plan command, for a build of several tool commands, such as `["bash", "../overlay/fuzz-smoke.sh"]`; BoringCache lanes get `BENCH_BORINGCACHE`, the `boringcache <tool>` prefix with the lane's `cli_args` and `--read-only` on warm, and the script runs each tool command through it with `--skip-restore` and `--skip-save` so only the first restores and the last saves; other lanes run the tool directly |
 | `nightly` | lane name to runner keys from `runs` that roll only at the first rolling step of each UTC day, on their usual fixed scope; their records carry `"cadence": "nightly"` and the report matches them with each other under the runner `nightly`, without holding back the lanes that run every step |
 
 A `mise.toml` beside `case.toml` pins the case toolchain; it is copied into the run directory.
