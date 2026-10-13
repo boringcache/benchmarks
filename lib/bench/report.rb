@@ -12,6 +12,7 @@ module Bench
 
     def records
       @records ||= Dir.glob(File.join(@results_dir, "**", "*.json")).sort.map { JSON.parse(File.read(it)) }
+        .reject { it["experimental"] }
         .select { @runs.nil? || @runs.include?("#{it["adapter_command"]}/#{it["case"]} #{it["lane"]} #{it["runner"]}") }
     end
 
@@ -90,14 +91,15 @@ module Bench
       end
 
       def matched_steps
-        records.select { matchable?(it) }.group_by { [*it.values_at("adapter_command", "case", "runner"), series(it)] }.flat_map do |(tool, kase, runner, series), group|
+        records.select { it["phase"] == ROLLING && it["cache_scope"] == it["scope"] }.group_by { [*it.values_at("adapter_command", "case", "runner"), series(it)] }.flat_map do |(tool, kase, runner, series), group|
           joined = group.group_by { it["lane"] }.transform_values { |records| records.map { it["step"] }.min }
           next [] if joined.size < 2
 
           group.group_by { it["step"] }.filter_map do |step, at_step|
-            lanes = joined.select { |_, first| first <= step }.keys.sort
-            by_lane = at_step.group_by { it["lane"] }.transform_values { |tries| tries.min_by { it["attempt"].to_i } }.slice(*lanes)
+            lanes = joined.select { |_, first| first < step }.keys.sort
+            by_lane = at_step.select { matchable?(it) }.group_by { it["lane"] }.transform_values { |tries| tries.min_by { it["attempt"].to_i } }.slice(*lanes)
             next unless lanes.size >= 2 && lanes.all? { by_lane.key?(it) }
+            next unless by_lane.values.map { it["sha"] }.uniq.size == 1
 
             cli = by_lane.values.filter_map { cli(it) }.uniq.sort.join(", ")
             [[tool, kase, runner, series, (cli unless cli.empty?), lanes], step, by_lane]
@@ -127,7 +129,8 @@ module Bench
         return seeds.fetch(record.values_at("adapter_command", "case", "scope"), false) if record["phase"] == "warm"
         return true unless record["phase"] == ROLLING && record.key?("cache_restored_key") && record["cache_restored_key"].nil?
 
-        first_step = restoring_scopes[record.values_at("adapter_command", "case", "cache_scope")]
+        scopes = record["cache_restore_tracked"] ? first_steps : restoring_scopes
+        first_step = scopes[record.values_at("adapter_command", "case", "cache_scope")]
         first_step.nil? || record["step"] == first_step
       end
 

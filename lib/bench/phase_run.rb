@@ -188,6 +188,7 @@ module Bench
           "cache_scope" => cache_scope,
           "cache_seeded" => (cache_scope != scope if phase == "rolling"),
           "cache_restored_key" => (@env["BENCH_CACHE_RESTORED_KEY"] unless @env["BENCH_CACHE_RESTORED_KEY"].to_s.empty?),
+          **({ "cache_restore_tracked" => true } if @env["BENCH_CACHE_RESTORE_TRACKED"] == "true"),
           "repo" => kase.repo,
           "sha" => sha,
           "seconds" => seconds,

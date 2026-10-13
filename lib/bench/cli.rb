@@ -138,6 +138,9 @@ module Bench
 
         rerun = Integer(options[:step]) if options[:step]
         cases = @catalog.project_cases(@argv.first || raise(Error, "matrix needs <project> or <tool>/<case>"), tool: options[:tool])
+        if options[:rolling] && options[:tool] && cases.any? { !it.tool.title.casecmp?(options[:tool]) }
+          raise Error, "rolling requires the tool title #{cases.first.tool.title.inspect} so every dispatch uses the same concurrency group"
+        end
         entries = cases.flat_map do |kase|
           rolling = Rolling.new(kase, results_dir: options[:results], work_root: options[:work]) if options[:rolling]
           position = rolling ? (rerun ? rolling.recorded_step(rerun) || raise(Error, "#{kase.id} has no rolling step #{rerun}") : rolling.next_step) : []
@@ -146,7 +149,7 @@ module Bench
           step, sha = position
           kase.runs.flat_map do |lane_name, runners|
             lane = kase.tool.lane(lane_name)
-            Array(runners).reject { it == "local" || (rerun && rolling.passed?(lane, it, rerun)) }.map do |runner|
+            Array(runners).reject { it == "local" || (rerun && (rolling.passed?(lane, it, rerun) || rolling.last_step(lane, it).to_i > rerun)) }.map do |runner|
               { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets, "setup" => lane.setup.join(" "),
                 "label" => job_label(kase, lane, runner),
                 "step" => step&.to_s || "", "sha" => sha || "", "cache_scope" => rolling&.cache_scope(lane, runner) || "", "continues" => rolling&.continues?(lane, runner) ? "true" : "" }
@@ -221,9 +224,6 @@ module Bench
         tools = @catalog.rolling.to_h { |tool, _| [tool.title, tool] }
         behind = lambda do |title, project|
           @catalog.project_cases(project, tool: tools.fetch(title).name).any? { Rolling.new(it, results_dir: options[:results], work_root: options[:work]).next_step }
-        rescue Error => error
-          @out.puts "check    #{Tick.title(title, project)} (upstream check failed, dispatching: #{error.message})"
-          true
         end
         failed = Tick.new(repo, out: @out).call(@catalog.rolling.map { |tool, project| [tool.title, project] }, behind:, dry_run: options[:dry_run] == true)
         failed.zero? ? 0 : 1
@@ -311,7 +311,9 @@ module Bench
 
       def report
         options = parse(results: File.join(@catalog.root, "results"), out: File.join(@catalog.root, "data"))
-        runs = @catalog.cases.flat_map { |kase| kase.runs.flat_map { |lane, runners| Array(runners).map { "#{kase.id} #{lane} #{it}" } } }
+        runs = @catalog.cases.flat_map do |kase|
+          kase.runs.reject { |lane, _| kase.tool.lane(lane).experimental? }.flat_map { |lane, runners| Array(runners).map { "#{kase.id} #{lane} #{it}" } }
+        end
         Report.new(options[:results], runs:).write(options[:out])
         @out.puts "wrote #{File.join(options[:out], "results.json")} and report.md"
         0

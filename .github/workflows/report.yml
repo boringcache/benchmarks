@@ -1,0 +1,39 @@
+name: Benchmark report
+
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: benchmark-report
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  report:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
+        with:
+          bundler-cache: true
+      - run: bundle exec bin/bench report --results results --out data
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/results.json data/report.md
+          git diff --cached --quiet && exit 0
+          git commit --quiet -m "Update benchmark report"
+          for attempt in 1 2 3 4 5; do
+            git push --quiet origin HEAD:main && exit 0
+            sleep $((attempt * 5))
+            git pull --rebase --quiet origin main
+          done
+          exit 1

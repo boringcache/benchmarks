@@ -11,6 +11,18 @@ class CLITest < Minitest::Test
     ], matrix("app")
   end
 
+  def test_report_excludes_experimental_lanes_even_before_the_record_flag_was_added
+    path = "tools/demo/lanes/boringcache-demo.toml"
+    write path, File.read(File.join(@root, path)) + "experimental = true\n"
+    %w[boringcache-demo remote].each do |lane|
+      write "tmp/results/demo/app/#{lane}.json", JSON.generate("adapter_command" => "demo", "case" => "app", "lane" => lane, "runner" => "github", "phase" => "cold", "seconds" => 1, "exit_status" => 0, "output_ok" => true)
+    end
+
+    assert_equal 0, Bench::CLI.new(%W[report --results #{@root}/tmp/results --out #{@root}/report], catalog:, out: StringIO.new).call
+    rows = JSON.parse(File.read(File.join(@root, "report/results.json"))).fetch("rows")
+    assert_equal ["remote"], rows.map { it["lane"] }
+  end
+
   def test_rolling_matrix_gives_every_lane_of_a_case_one_step_and_commit
     assert_equal [["0", @upstream_sha]], matrix("app", "--rolling").map { it.values_at("step", "sha") }.uniq
 
@@ -23,6 +35,17 @@ class CLITest < Minitest::Test
 
     rolling_record("gha", 2, third)
     assert_empty matrix("app", "--rolling")
+  end
+
+  def test_rolling_requires_the_canonical_tool_title_used_by_the_workflow_concurrency_group
+    write "tools/demo/tool.toml", %(name = "Demo/Build"\n[levels]\nbase = ["remote-cache"]\n)
+    out = StringIO.new
+
+    _, err = capture_io { assert_equal 1, Bench::CLI.new(%w[matrix app --tool demo --rolling], catalog:, out:).call }
+    assert_empty out.string
+    assert_includes err, 'rolling requires the tool title "Demo/Build"'
+    assert_equal 3, matrix("app", "--tool", "demo/build", "--rolling").size
+    assert_equal 3, matrix("app", "--tool", "demo").size
   end
 
   def test_rolling_matrix_keeps_one_fixed_cache_scope_per_lane_apart_from_fresh_runs
@@ -69,6 +92,8 @@ class CLITest < Minitest::Test
     write "tmp/results/demo/app/remote-github-rolling/remote-github-rolling-1.json", JSON.generate("step" => 1, "sha" => second, "exit_status" => 1, "output_ok" => false)
 
     assert_equal [["remote", "1", second], ["gha", "1", second]], matrix("app", "--rolling", "--step", "1").map { it.values_at("lane", "step", "sha") }
+    rolling_record("remote", 2, "b" * 40)
+    assert_equal ["gha"], matrix("app", "--rolling", "--step", "1").map { it["lane"] }
     [%w[app --step 1], %w[app --rolling --step 5]].each do |argv|
       _, err = capture_io { assert_equal 1, Bench::CLI.new(["matrix", *argv], catalog:, out: StringIO.new).call }
       assert_match(/step/, err)
