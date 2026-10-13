@@ -23,7 +23,7 @@ module Bench
     end
 
     def passed?(lane, runner, step)
-      records(File.join(cache_scope(lane, runner), "*.json")).any? { it["step"] == step && it["exit_status"] == 0 && it["output_ok"] == true }
+      records(File.join(cache_scope(lane, runner), "*.json")).any? { it["step"] == step && it["exit_status"] == 0 && it["output_ok"] == true && it.fetch("job_conclusion", "success") == "success" }
     end
 
     def cache_scope(lane, runner)
