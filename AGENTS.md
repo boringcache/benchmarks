@@ -31,11 +31,13 @@ This repository benchmarks BoringCache against other cache providers on real pro
 - Fresh runs build `start_sha` cold then warm. A cold cannot be retried inside a run; dispatch a new fresh run.
 - Rolling keeps one position per tool and project. Every lane builds the same next first-parent commit, and the next run moves on whether or not that commit failed. Projects without new upstream commits plan nothing.
 - Each lane rolls on one fixed cache scope, `<lane>-<runner>-rolling`, which every step restores and saves. Fresh runs use their own run-scoped caches and never touch it, so a lane's first rolling step starts empty.
-- `schedule.yml` runs `bin/bench tick` every 15 minutes. It checks each project in `rolling.toml` against its upstream branch and dispatches the next rolling step only when a new commit is due. A project that is still running gets its next step queued behind the current run, so projects behind upstream catch up run after run; one already waiting is left alone, so nothing is cancelled. The workflow's concurrency group runs one rolling run per project at a time.
+- `schedule.yml` runs `bin/bench tick` every 15 minutes. It checks each idle project in `rolling.toml` against its upstream branch and dispatches only when a commit is due at its configured stride. Active or queued projects wait for a later tick. An upstream check failure is reported and fails the tick without dispatching that project. The workflow's concurrency group runs one rolling run per project at a time.
 - `prune-buildkit.yml` deletes stale BuildKit `type=gha` blobs every 2 hours.
+- `report.yml` regenerates `data/results.json` and `data/report.md` hourly from recorded results. Experimental lanes are excluded.
 - A failed build or output check is recorded first, then fails its job. A failure in `prepare` leaves no record; that lane continues at the next step.
 - Re-run a failed rolling job only before the next step of that project starts. A re-run of an older step skips its build once a newer step is recorded for that lane, so it can never overwrite the newer cache.
-- A job re-run uses the harness from its original commit. To re-run a recorded step with a harness fix, dispatch `-f mode=rolling -f step=<N>`: it builds that step's commit for every lane without a passing record at that step.
+- Rolling dispatches must use the tool's display title, such as `Rust/Cargo`, so manual runs share the scheduler's concurrency group.
+- A job re-run uses the harness from its original commit. To re-run a recorded step with a harness fix, dispatch `-f mode=rolling -f step=<N>`: it builds that step's commit for lanes without a passing record at that step or a newer recorded step.
 
 ## Test a CLI canary
 

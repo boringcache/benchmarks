@@ -18,7 +18,7 @@ reviving this recurring lane.
 
 The table is an archive of existing artifacts; this retirement did not trigger
 new ECR runs. Values are arithmetic means over the latest three healthy rolling
-samples selected on 2026-07-21 by `scripts/publish-index.rb`:
+samples selected on 2026-07-21 by [the historical index publisher](https://github.com/boringcache/benchmarks/blob/25ba1d1a1e9ef4ebed2e404f37b067a6ad78cc18/scripts/publish-index.rb):
 
 - **Scenario** is the benchmark's measured rolling scenario duration.
 - **Tool elapsed** is scenario time plus cache export and any recorded

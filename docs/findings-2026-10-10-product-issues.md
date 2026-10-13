@@ -1,6 +1,6 @@
 # Product issues found by the benchmark on 2026-10-10
 
-Date: 2026-10-10. Runs on CLI 1.40.1 unless noted. Evidence files are under `results/<tool>/<case>/<scope>/`, or under `archive/obs-studio-series-1/` for OBS.
+Date: 2026-10-10. Runs on CLI 1.40.1 unless noted. Evidence files are under `results/<tool>/<case>/<scope>/`, or in the [archived OBS evidence](https://github.com/boringcache/benchmarks/tree/25ba1d1a1e9ef4ebed2e404f37b067a6ad78cc18/archive/obs-studio-series-1).
 
 ## 1. A full storage cap skips cache saves without failing the build, and the session summary calls it clean
 
