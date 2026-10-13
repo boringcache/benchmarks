@@ -1,0 +1,22 @@
+provider = "bitrise"
+level = "base"
+actions_only = true
+runners = ["github"]
+secrets = ["BITRISE_BUILD_CACHE_AUTH_TOKEN", "BITRISE_BUILD_CACHE_WORKSPACE_ID"]
+setup = ["bitrise"]
+probe = ["bitrise-build-cache activate bazel --cache --cache-push=false && bitrise-build-cache doctor"]
+
+[cold]
+prepare = ["bitrise-build-cache activate bazel --cache --cache-push=true"]
+
+[cold.env]
+BAZEL_PHASE_RC = "build --remote_accept_cached=false"
+
+[warm]
+prepare = ["bitrise-build-cache activate bazel --cache --cache-push=false"]
+
+[warm.env]
+BAZEL_PHASE_RC = "build --remote_upload_local_results=false"
+
+[rolling]
+prepare = ["bitrise-build-cache activate bazel --cache --cache-push=true"]

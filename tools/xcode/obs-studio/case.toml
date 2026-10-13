@@ -17,3 +17,4 @@ CI = "true"
 [runs]
 boringcache-xcode = ["macos"]
 gha = ["macos"]
+bitrise = ["macos"]
