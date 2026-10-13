@@ -8,12 +8,13 @@ prepare = [
 check = "docker image inspect posthog-benchmark:local"
 
 [runs]
-boringcache-docker = ["github", "github-arm", "depot-8", "local"]
-boringcache-docker-plus = ["github", "github-arm", "depot-8", "local"]
+boringcache-docker = ["github", "github-arm", "depot-8", "namespace-4", "local"]
+boringcache-docker-plus = ["github", "github-arm", "depot-8", "namespace-4", "local"]
 gha-plus = ["github", "github-arm"]
 gha = ["github", "github-arm"]
 ghcr = ["github", "github-arm"]
 depot-builder = ["github"]
+namespace-builder = ["github"]
 
 [nightly]
 boringcache-docker = ["depot-8"]
