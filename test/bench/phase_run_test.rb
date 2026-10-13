@@ -35,6 +35,18 @@ class PhaseRunTest < Minitest::Test
     assert_equal ["demo --phase restore", "plan", "demo --phase save", "demo --phase restore", "plan"], File.readlines(File.join(@root, "stub.log"), chomp: true)
   end
 
+  def test_a_script_case_runs_every_lane_through_the_script_and_gives_boringcache_lanes_the_cli_prefix
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]", %(script = ["bash", "-c", "echo \\"script ${BENCH_BORINGCACHE:-plain}\\" >> \\"$STUB_LOG\\" && if [ -n \\"${BENCH_BORINGCACHE:-}\\" ]; then $BENCH_BORINGCACHE --skip-save test; else echo plain > upstream/out.txt; fi"]\n[runs]))
+    with_fixture_env do
+      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-demo", "--run-id", "r50")
+      assert_equal 0, cli("run", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r50")
+    end
+
+    assert_equal ["script boringcache demo", "demo --skip-save test", "script boringcache demo --read-only", "demo --read-only --skip-save test", "script plain"],
+                 File.readlines(File.join(@root, "stub.log"), chomp: true)
+    assert_equal true, record("remote-local-r50", "remote-local-cold")["output_ok"]
+  end
+
   def test_cold_refuses_a_rerun_attempt_but_warm_runs
     with_fixture_env do
       ENV["GITHUB_RUN_ATTEMPT"] = "2"

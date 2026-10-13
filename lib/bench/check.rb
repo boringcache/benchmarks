@@ -62,6 +62,7 @@ module Bench
         problems << "#{kase.id}: prepare must be a list of commands" unless kase.prepare.is_a?(Array)
         problems << "#{kase.id}: check must be a command" unless kase.check.is_a?(String)
         problems << "#{kase.id}: [runs] lists no lanes" if kase.runs.empty?
+        problems << "#{kase.id}: script must be a command list" unless kase.script.nil? || (kase.script.is_a?(Array) && kase.script.any? && kase.script.all?(String))
         problems << "#{kase.id}: rolling_stride must be an integer above 1" unless kase.rolling_stride.nil? || (kase.rolling_stride.is_a?(Integer) && kase.rolling_stride > 1)
         problems << "#{kase.id}: rolling_series must be an integer above 1" unless kase.rolling_series.nil? || (kase.rolling_series.is_a?(Integer) && kase.rolling_series > 1)
         problems + kase.runs.flat_map { |lane_name, runners| run_problems(kase, lane_name, Array(runners)) } + nightly_problems(kase)
@@ -78,6 +79,8 @@ module Bench
       def run_problems(kase, lane_name, runners)
         lane = kase.tool.lanes.find { it.name == lane_name }
         return ["#{kase.id}: unknown lane #{lane_name}"] unless lane
+
+        return ["#{kase.id}: #{lane_name} replaces the plan command, which a script case does not run"] if kase.script && (lane.program || lane.phases?)
 
         problems = runners.filter_map do |runner|
           if !@catalog.runners.key?(runner)
