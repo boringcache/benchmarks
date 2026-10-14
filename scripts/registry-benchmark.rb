@@ -2,18 +2,24 @@ require "json"
 require "fileutils"
 require "open3"
 require "time"
+require_relative "registry-source"
 
 class RegistryBenchmark
   PROVIDERS = %w[boringcache ghcr ecr depot].freeze
 
-  def initialize(provider, operation, config:, env: ENV)
+  def initialize(provider, operation, config:, env: ENV, source_dir: nil)
     raise ArgumentError, "unknown registry provider" unless PROVIDERS.include?(provider)
     raise ArgumentError, "operation must be push or pull" unless %w[push pull].include?(operation)
 
     @provider, @operation, @config, @env = provider, operation, config, env
+    @source_dir = source_dir
     @run_id = env.fetch("GITHUB_RUN_ID")
     raise ArgumentError, "run id must contain digits only" unless @run_id.match?(/\A\d+\z/)
-    raise ArgumentError, "source image must be pinned by digest" unless config.fetch("source").match?(/@sha256:[a-f0-9]{64}\z/)
+    if source_dir
+      RegistrySource.validate(config, run_id: env.fetch("SOURCE_RUN_ID"))
+    else
+      raise ArgumentError, "source image must be pinned by digest" unless config.fetch("source").match?(/@sha256:[a-f0-9]{64}\z/)
+    end
   end
 
   def destination
@@ -38,11 +44,12 @@ class RegistryBenchmark
     prepare
     record = { "provider" => @provider, "operation" => @operation, "source" => @config.fetch("source"),
       "source_commit" => @config.fetch("source_commit"), "destination" => destination,
-      "platform" => @config.fetch("platform"), "compressed_layer_bytes" => @config.fetch("compressed_layer_bytes"),
+      "platform" => @config.fetch("platform"),
       "machine" => "github 4c", "runner_image" => @env["ImageVersion"], "started_at" => Time.now.utc.iso8601,
       "run_url" => "https://github.com/#{@env.fetch('GITHUB_REPOSITORY')}/actions/runs/#{@run_id}",
       "docker_version" => capture("docker", "version", "--format", "{{.Server.Version}}"),
       "command" => command, "attempt" => @env.fetch("GITHUB_RUN_ATTEMPT", "1").to_i }
+    record.merge!(@config.slice("compressed_layer_bytes", "image_bytes", "source_archive_bytes", "source_run_id"))
     record["boringcache_version"] = capture("boringcache", "--version") if @provider == "boringcache" && @operation == "push"
     started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     system(*command)
@@ -58,7 +65,11 @@ class RegistryBenchmark
     def prepare
       raise "registry transfer runs cannot be retried; dispatch a new run" unless @env.fetch("GITHUB_RUN_ATTEMPT", "1") == "1"
       if @operation == "push"
-        raise "source image pull failed" unless system("docker", "pull", "--platform", @config.fetch("platform"), @config.fetch("source"))
+        if @source_dir
+          RegistrySource.load(@source_dir, config: @config)
+        else
+          raise "source image pull failed" unless system("docker", "pull", "--platform", @config.fetch("platform"), @config.fetch("source"))
+        end
         raise "source image id differs from the pinned image" unless image_id(@config.fetch("source")) == @config.fetch("image_id")
         raise "image tag failed" unless @provider == "boringcache" || system("docker", "tag", @config.fetch("source"), destination)
       else
@@ -90,5 +101,12 @@ end
 
 if $PROGRAM_NAME == __FILE__
   config = JSON.parse(File.read(File.expand_path("../registry/posthog.json", __dir__)))
-  exit RegistryBenchmark.new(*ARGV, config:).run
+  source_dir = ENV["REGISTRY_SOURCE_DIR"]
+  if source_dir && !source_dir.empty?
+    config.delete("compressed_layer_bytes")
+    config.merge!(RegistrySource.config(source_dir, run_id: ENV.fetch("SOURCE_RUN_ID")))
+  else
+    source_dir = nil
+  end
+  exit RegistryBenchmark.new(*ARGV, config:, source_dir:).run
 end

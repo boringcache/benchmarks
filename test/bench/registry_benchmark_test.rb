@@ -53,4 +53,13 @@ class RegistryBenchmarkTest < Minitest::Test
     error = assert_raises(RuntimeError) { transfer.run }
     assert_match "cannot be retried", error.message
   end
+
+  def test_built_image_uses_the_same_local_source_for_every_provider
+    config = @config.merge("source" => RegistrySource::IMAGE, "source_run_id" => "456", "archive_sha256" => "a" * 64)
+    env = @env.merge("SOURCE_RUN_ID" => "456")
+    transfer = RegistryBenchmark.new("boringcache", "push", config:, env:, source_dir: "source")
+    assert_equal RegistrySource::IMAGE, transfer.command[3]
+    assert_equal "registry-posthog-123:image", transfer.command.last
+    assert_raises(ArgumentError) { RegistryBenchmark.new("ghcr", "push", config:, env:) }
+  end
 end

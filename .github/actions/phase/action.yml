@@ -270,6 +270,28 @@ runs:
         BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-cache.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
       run: bundle exec bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
 
+    - id: registry-source
+      if: success() && github.ref == 'refs/heads/main' && github.run_attempt == 1 && inputs.case == 'docker/posthog' && inputs.lane == 'boringcache-docker' && inputs.runner == 'github' && (inputs.phase == 'rolling' || inputs.phase == 'warm') && steps.build.outcome == 'success'
+      shell: bash
+      run: ruby scripts/registry-source.rb "$RUNNER_TEMP/registry-source"
+
+    - if: steps.registry-source.outcome == 'success'
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+      with:
+        name: registry-source-image
+        path: ${{ runner.temp }}/registry-source/image.tar.gz
+        compression-level: 0
+        retention-days: 2
+        if-no-files-found: error
+
+    - if: steps.registry-source.outcome == 'success'
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+      with:
+        name: registry-source
+        path: ${{ runner.temp }}/registry-source/source.json
+        retention-days: 14
+        if-no-files-found: error
+
     - if: always() && steps.prepare.outputs.ready == 'true'
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:

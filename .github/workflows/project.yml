@@ -190,3 +190,13 @@ jobs:
             git pull --rebase --quiet origin main
           done
           exit 1
+      - name: Dispatch PostHog registry transfers
+        if: inputs.tool == 'Docker' && inputs.project == 'posthog' && github.run_attempt == 1
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          has_source=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID/artifacts" --jq 'any(.artifacts[]; .name == "registry-source" and .expired == false)')
+          if [ "$has_source" = true ]; then
+            gh workflow run registry.yml --ref main -f provider=all -f source_run="$RUN_ID"
+          fi
