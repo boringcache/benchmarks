@@ -2,7 +2,6 @@ project = "ferrum-edge"
 repo = "ferrum-edge/ferrum-edge"
 branch = "main"
 start_sha = "065ffc77c127e94c6699225ca6716f6b70e65ab6"
-rolling_stride = 6
 directory = "upstream/fuzz"
 script = ["bash", "../../overlay/fuzz-smoke.sh"]
 exclude = [
