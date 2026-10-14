@@ -48,8 +48,9 @@ the workflow token. Secrets are passed only to their provider's jobs.
 ECR is in `us-east-1`, under `boringcache-benchmark-storage`. The matching local
 AWS profile assumes that role. Repository variables
 `REGISTRY_BENCHMARK_AWS_ROLE` and `REGISTRY_BENCHMARK_ECR_REPOSITORY` configure
-GitHub OIDC access, restricted to this repository's `main` branch. Role trust
-and local role-assumption access expire on 2026-10-16 at 00:00 UTC. ECR's
+GitHub OIDC access, restricted to this repository's `main` branch, has no expiry
+so recurring PostHog comparisons can continue. Local role-assumption access
+expires on 2026-10-16 at 00:00 UTC. ECR's
 lifecycle policy expires images after one day; AWS may process expiration later.
 The role, empty repository, local profile and bootstrap assumption policy remain
 until removed. Remove the experiment's tags/digests from GHCR, Depot and
