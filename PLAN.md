@@ -4,6 +4,12 @@ The consolidated harness is running. Configuration is in `tools/`, `rolling.toml
 
 ## Remaining migration work
 
+## Upstream failures under review
+
+| Case | Records | Finding |
+| --- | --- | --- |
+| sbt/lila: BoringCache lane, rolling steps 194, 195 and 209 | [194](https://github.com/boringcache/benchmarks/actions/runs/38344612372), [195](https://github.com/boringcache/benchmarks/actions/runs/38347319586), [209](https://github.com/boringcache/benchmarks/actions/runs/38587589423) | Scala 3.9.0 fails while loading `java/lang/invoke/SerializedLambda.class` from the JDK image: `newPosition > limit: (3077 > 1013)`, or a zero magic number for `Class$AnnotationData`. 3,077 is the superclass-field offset of `SerializedLambda` and 1,013 is the size of `Class$AnnotationData` in Temurin 21.0.12, which fits a shared class-file reader being reset while in use ([ReusableDataReader](https://github.com/scala/scala3/blob/3.9.0/compiler/src/dotty/tools/dotc/core/classfile/ReusableDataReader.scala), removed upstream in [scala/scala3#26481](https://github.com/scala/scala3/pull/26481)). The GHA lane passes the same commits; remote-cache hits change which compilations run concurrently. Archive restore finishes before compilation and does not touch the JDK. Keep rolling; recheck when Lichess moves to a Scala release with that change. |
+
 ## Removed lanes
 
 | Lane | Date | Recorded outcome |
