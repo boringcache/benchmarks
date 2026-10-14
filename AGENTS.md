@@ -50,7 +50,7 @@ gh workflow run project.yml --ref main -f tool=<Tool> -f project=<project> -f mo
 
 - Confirm the canary contains the fix first: `git -C monorepo merge-base --is-ancestor <fix-commit> <canary-sha>`.
 - Canary records carry `versions.boringcache_release`, and the report shows that tag in the CLI column, so they never merge with release rows. Compare them with the release fresh rows at the same commit.
-- Rolling always uses the pinned CLI. Bump `versions.toml` only after the release is published.
+- Rolling uses the pinned CLI. A case that needs an unreleased fix can set `cli` to a published canary tag in its `case.toml`; remove it once the release is pinned. Bump `versions.toml` only after the release is published.
 
 ## Investigate a failure
 

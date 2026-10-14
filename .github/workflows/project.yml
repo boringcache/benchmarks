@@ -119,7 +119,7 @@ jobs:
           sha: ${{ matrix.sha }}
           step: ${{ matrix.step }}
           cache-scope: ${{ matrix.cache_scope }}
-          cli-release: ${{ inputs.cli }}
+          cli-release: ${{ matrix.cli }}
           continues: ${{ matrix.continues }}
           cadence: ${{ matrix.cadence }}
 

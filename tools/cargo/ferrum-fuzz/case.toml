@@ -3,6 +3,7 @@ repo = "ferrum-edge/ferrum-edge"
 branch = "main"
 start_sha = "065ffc77c127e94c6699225ca6716f6b70e65ab6"
 rolling_stride = 6
+cli = "vcli-canary-8bfb456f9a79"
 directory = "upstream/fuzz"
 script = ["bash", "../../overlay/fuzz-smoke.sh"]
 exclude = ["upstream/target/x86_64-unknown-linux-gnu/release"]
