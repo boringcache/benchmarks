@@ -1,0 +1,10 @@
+{
+  "source": "docker.io/posthog/posthog@sha256:29e82a3a50297b3c4b4c600a408bfe134322b0a3eec5ed0b5a4915ec7171a59f",
+  "source_commit": "d6162408139a55b99c53c4ac33fd92ebd244e54f",
+  "image_id": "sha256:0fea661f6c8bc1dc47585f7f7d61b693aa2d653f54b8d4ef020e961c775e7d43",
+  "compressed_layer_bytes": 2245856972,
+  "platform": "linux/amd64",
+  "workspace": "boringcache/benchmarks",
+  "depot_registry": "rklzkpbkjv.registry.depot.dev",
+  "aws_region": "us-east-1"
+}
