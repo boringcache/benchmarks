@@ -8,6 +8,10 @@ on:
         type: choice
         options: [all, boringcache, ghcr, ecr, depot]
         default: all
+      source_run:
+        description: PostHog benchmark run containing the built image (empty uses the fixed published image)
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -15,9 +19,19 @@ permissions:
 jobs:
   plan:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
     outputs:
       providers: ${{ steps.providers.outputs.value }}
     steps:
+      - if: inputs.source_run != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN_ID: ${{ inputs.source_run }}
+        run: |
+          [[ "$SOURCE_RUN_ID" =~ ^[0-9]+$ ]]
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN_ID" | jq --exit-status --arg repo "$GITHUB_REPOSITORY" '.head_repository.full_name == $repo and .head_branch == "main" and .path == ".github/workflows/project.yml" and .event == "workflow_dispatch" and .run_attempt == 1'
       - id: providers
         env:
           PROVIDER: ${{ inputs.provider }}
@@ -34,6 +48,7 @@ jobs:
     timeout-minutes: 60
     permissions: &registry_permissions
       contents: read
+      actions: read
       packages: write
       id-token: write
     strategy: &registry_matrix
@@ -45,10 +60,26 @@ jobs:
       DEPOT_TOKEN: ${{ matrix.provider == 'depot' && secrets.DEPOT_TOKEN || '' }}
       GH_REGISTRY_TOKEN: ${{ matrix.provider == 'ghcr' && github.token || '' }}
       ECR_REPOSITORY: ${{ vars.REGISTRY_BENCHMARK_ECR_REPOSITORY }}
+      SOURCE_RUN_ID: ${{ inputs.source_run }}
+      REGISTRY_SOURCE_DIR: ${{ inputs.source_run != '' && 'registry-source' || '' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+      - if: inputs.source_run != ''
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          name: registry-source
+          path: registry-source
+          run-id: ${{ inputs.source_run }}
+          github-token: ${{ github.token }}
+      - if: inputs.source_run != ''
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          name: registry-source-image
+          path: registry-source
+          run-id: ${{ inputs.source_run }}
+          github-token: ${{ github.token }}
       - if: matrix.provider == 'ecr'
         uses: aws-actions/configure-aws-credentials@c9e2a2f463f6142c28674a8bc0f20b5ae9f8e83e
         with:
@@ -71,6 +102,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+      - if: inputs.source_run != ''
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          name: registry-source
+          path: registry-source
+          run-id: ${{ inputs.source_run }}
+          github-token: ${{ github.token }}
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
           name: registry-${{ matrix.provider }}-push
