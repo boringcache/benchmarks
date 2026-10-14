@@ -34,4 +34,4 @@ compiler-cache = "sccache"
 target-budget = "25GiB"
 no-git = true
 metadata-hints = ["benchmark=zed-namespace", "lane=cargo-product"]
-command = ["cargo", "build", "--release", "--locked"]
+command = ["cargo", "build", "--release", "--locked", "--timings"]
