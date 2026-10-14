@@ -1,0 +1,90 @@
+name: Registry transfer benchmark
+
+on:
+  workflow_dispatch:
+    inputs:
+      provider:
+        description: Registry provider
+        type: choice
+        options: [all, boringcache, ghcr, ecr, depot]
+        default: all
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    outputs:
+      providers: ${{ steps.providers.outputs.value }}
+    steps:
+      - id: providers
+        env:
+          PROVIDER: ${{ inputs.provider }}
+        run: |
+          case "$PROVIDER" in
+            all) echo 'value=["boringcache","ghcr","ecr","depot"]' >> "$GITHUB_OUTPUT" ;;
+            boringcache|ghcr|ecr|depot) printf 'value=["%s"]\n' "$PROVIDER" >> "$GITHUB_OUTPUT" ;;
+            *) exit 1 ;;
+          esac
+
+  push:
+    needs: plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions: &registry_permissions
+      contents: read
+      packages: write
+      id-token: write
+    strategy: &registry_matrix
+      fail-fast: false
+      matrix:
+        provider: ${{ fromJSON(needs.plan.outputs.providers) }}
+    env: &registry_env
+      BORINGCACHE_REGISTRY_TOKEN: ${{ matrix.provider == 'boringcache' && secrets.BORINGCACHE_REGISTRY_TOKEN || '' }}
+      DEPOT_TOKEN: ${{ matrix.provider == 'depot' && secrets.DEPOT_TOKEN || '' }}
+      GH_REGISTRY_TOKEN: ${{ matrix.provider == 'ghcr' && github.token || '' }}
+      ECR_REPOSITORY: ${{ vars.REGISTRY_BENCHMARK_ECR_REPOSITORY }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - if: matrix.provider == 'ecr'
+        uses: aws-actions/configure-aws-credentials@c9e2a2f463f6142c28674a8bc0f20b5ae9f8e83e
+        with:
+          role-to-assume: ${{ vars.REGISTRY_BENCHMARK_AWS_ROLE }}
+          aws-region: us-east-1
+      - uses: ./.github/actions/registry-transfer
+        with:
+          provider: ${{ matrix.provider }}
+          operation: push
+
+  pull:
+    needs: [plan, push]
+    if: ${{ !cancelled() && needs.plan.result == 'success' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions: *registry_permissions
+    strategy: *registry_matrix
+    env: *registry_env
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          name: registry-${{ matrix.provider }}-push
+          path: push-results
+      - env:
+          PROVIDER: ${{ matrix.provider }}
+        run: jq --exit-status '.exit_status == 0 and .output_ok == true' "push-results/$PROVIDER-push.json"
+      - if: matrix.provider == 'ecr'
+        uses: aws-actions/configure-aws-credentials@c9e2a2f463f6142c28674a8bc0f20b5ae9f8e83e
+        with:
+          role-to-assume: ${{ vars.REGISTRY_BENCHMARK_AWS_ROLE }}
+          aws-region: us-east-1
+      - run: docker image prune --all --force
+      - uses: ./.github/actions/registry-transfer
+        with:
+          provider: ${{ matrix.provider }}
+          operation: pull

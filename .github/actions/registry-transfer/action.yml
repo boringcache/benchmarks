@@ -1,0 +1,59 @@
+name: Registry transfer
+description: Time one registry push or pull of the pinned PostHog image.
+inputs:
+  provider:
+    required: true
+    description: Registry provider
+  operation:
+    required: true
+    description: Push or pull
+runs:
+  using: composite
+  steps:
+    - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8
+      with:
+        ruby-version: '4.0.7'
+        bundler-cache: true
+    - shell: bash
+      env:
+        PROVIDER: ${{ inputs.provider }}
+      run: |
+        case "$PROVIDER" in
+          boringcache) printf '%s' "$BORINGCACHE_REGISTRY_TOKEN" | docker login registry.boringcache.com --username boringcache --password-stdin ;;
+          ghcr) printf '%s' "$GH_REGISTRY_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin ;;
+          depot) printf '%s' "$DEPOT_TOKEN" | docker login rklzkpbkjv.registry.depot.dev --username x-token --password-stdin ;;
+          ecr)
+            test -n "$ECR_REPOSITORY"
+            aws ecr get-login-password --region us-east-1 | docker login "${ECR_REPOSITORY%%/*}" --username AWS --password-stdin
+            ;;
+          *) exit 1 ;;
+        esac
+    - if: inputs.provider == 'boringcache' && inputs.operation == 'push'
+      shell: bash
+      run: |
+        version=$(bundle exec ruby -rtoml-rb -e 'puts TomlRB.load_file("versions.toml").fetch("boringcache")')
+        dir="$RUNNER_TEMP/registry-cli"
+        mkdir -p "$dir"
+        cd "$dir"
+        base="https://github.com/boringcache/cli/releases/download/v$version"
+        curl --fail --silent --show-error --location --retry 3 --remote-name-all "$base/SHA256SUMS" "$base/boringcache-linux-amd64"
+        grep ' boringcache-linux-amd64$' SHA256SUMS | sha256sum --check
+        install -m 0755 boringcache-linux-amd64 "$dir/boringcache"
+        echo "$dir" >> "$GITHUB_PATH"
+    - shell: bash
+      env:
+        PROVIDER: ${{ inputs.provider }}
+        OPERATION: ${{ inputs.operation }}
+      run: |
+        if [ "$PROVIDER" = boringcache ] && [ "$OPERATION" = push ]; then
+          boringcache ci run --oidc-provider github-actions -- ruby scripts/registry-benchmark.rb "$PROVIDER" "$OPERATION"
+        else
+          ruby scripts/registry-benchmark.rb "$PROVIDER" "$OPERATION"
+        fi
+    - if: always()
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+      with:
+        name: registry-${{ inputs.provider }}-${{ inputs.operation }}
+        path: registry-results
+        if-no-files-found: warn
+        retention-days: 14
