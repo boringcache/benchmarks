@@ -26,6 +26,10 @@ module Bench
       @versions ||= read("versions.toml")
     end
 
+    def case_cli(kase)
+      versions.fetch("cases", {})[kase.id]
+    end
+
     def tools
       @tools ||= Dir.glob(File.join(root, "tools", "*", "tool.toml")).sort.map { Tool.new(self, File.dirname(it)) }
     end

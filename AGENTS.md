@@ -42,7 +42,16 @@ This repository benchmarks BoringCache against other cache providers on real pro
 
 ## Test a CLI canary
 
-`versions.toml` pins the released CLI for every run. To check a fix before release, run a fresh run of the affected lanes with a published canary:
+`versions.toml` owns which CLI every run installs. `boringcache` pins the released CLI for all cases, and `[cases]` maps a case id to a release or canary tag that its rolling and fresh runs install instead:
+
+```toml
+boringcache = "1.41.0"
+
+[cases]
+"cargo/ferrum-fuzz" = "vcli-canary-8bfb456f9a79"
+```
+
+To check a fix once, run a fresh run of the affected lanes with a published canary:
 
 ```sh
 gh workflow run project.yml --ref main -f tool=<Tool> -f project=<project> -f mode=fresh -f lane="<lanes>" -f cli=vcli-canary-<sha>
@@ -50,7 +59,7 @@ gh workflow run project.yml --ref main -f tool=<Tool> -f project=<project> -f mo
 
 - Confirm the canary contains the fix first: `git -C monorepo merge-base --is-ancestor <fix-commit> <canary-sha>`.
 - Canary records carry `versions.boringcache_release`, and the report shows that tag in the CLI column, so they never merge with release rows. Compare them with the release fresh rows at the same commit.
-- Rolling uses the pinned CLI. A case that needs an unreleased fix can set `cli` to a published canary tag in its `case.toml`; remove it once the release is pinned. Bump `versions.toml` only after the release is published.
+- Pin a case in `[cases]` only when it needs an unreleased fix to roll, and remove the entry once a release with the fix is pinned. Bump `boringcache` only after the release is published.
 
 ## Investigate a failure
 
