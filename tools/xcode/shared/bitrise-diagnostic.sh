@@ -15,7 +15,7 @@ printf 'initial: %s\n' "$?" | tee "$out/status.txt"
 set -e
 
 cd build_macos
-for variant in default no-prefix no-integrated no-detached no-builtin-prefix no-modules; do
+for variant in default no-prefix no-integrated no-detached no-builtin-prefix no-modules no-remote no-plugin; do
   args=()
   case "$variant" in
     no-prefix) args=(--no-prefix-map) ;;
@@ -23,6 +23,8 @@ for variant in default no-prefix no-integrated no-detached no-builtin-prefix no-
     no-detached) args=(COMPILATION_CACHE_ENABLE_DETACHED_KEY_QUERIES=NO) ;;
     no-builtin-prefix) args=(CLANG_ENABLE_PREFIX_MAPPING=NO) ;;
     no-modules) args=(CLANG_ENABLE_MODULES=NO) ;;
+    no-remote) args=(COMPILATION_CACHE_REMOTE_SERVICE_PATH=) ;;
+    no-plugin) args=(COMPILATION_CACHE_ENABLE_PLUGIN=NO) ;;
   esac
   /usr/bin/xcodebuild -project obs-studio.xcodeproj -target obsglad -configuration RelWithDebInfo clean > "$out/clean-$variant.log" 2>&1
   set +e
