@@ -5,7 +5,19 @@ start_sha = "065ffc77c127e94c6699225ca6716f6b70e65ab6"
 rolling_stride = 6
 directory = "upstream/fuzz"
 script = ["bash", "../../overlay/fuzz-smoke.sh"]
-exclude = ["upstream/target/x86_64-unknown-linux-gnu/release"]
+exclude = [
+  "upstream/target/x86_64-unknown-linux-gnu/release/build/ferrum-edge-fuzz",
+  "upstream/target/x86_64-unknown-linux-gnu/release/traceparent",
+  "upstream/target/x86_64-unknown-linux-gnu/release/config_decode",
+  "upstream/target/x86_64-unknown-linux-gnu/release/proxy_protocol",
+  "upstream/target/x86_64-unknown-linux-gnu/release/mesh_udp_frame",
+  "upstream/target/x86_64-unknown-linux-gnu/release/k8s_crd",
+  "upstream/target/x86_64-unknown-linux-gnu/release/plugin_config",
+  "upstream/target/x86_64-unknown-linux-gnu/release/ocsp_response",
+  "upstream/target/x86_64-unknown-linux-gnu/release/jwt_svid",
+  "upstream/target/x86_64-unknown-linux-gnu/release/tls_material",
+  "upstream/target/x86_64-unknown-linux-gnu/release/datagram_client_address",
+]
 prepare = [
   "sudo fallocate -l 12G /mnt/ferrum-fuzz-swapfile && sudo chmod 600 /mnt/ferrum-fuzz-swapfile && sudo mkswap /mnt/ferrum-fuzz-swapfile && sudo swapon /mnt/ferrum-fuzz-swapfile",
   "sudo apt-get update && sudo apt-get install -y --no-install-recommends protobuf-compiler",
