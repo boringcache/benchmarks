@@ -24,6 +24,7 @@ The consolidated harness is running. Configuration is in `tools/`, `rolling.toml
 | --- | --- | --- |
 | Xcode OBS: Bitrise, with new Bitrise lanes for Bazel gRPC and Gradle OpenTelemetry Java | 2026-10-13 | Bitrise Build Cache CLI [v3.17.4](https://github.com/bitrise-io/bitrise-build-cache-cli/releases/tag/v3.17.4) skips `-derivedDataPath` on target-only `xcodebuild` builds ([PR 592](https://github.com/bitrise-io/bitrise-build-cache-cli/pull/592)), the cause of the CMake configuration failure. The lanes use the default activation, without `--disable-prefix-mapping`. |
 | PostHog: BoringCache and BoringCache plus on Namespace 4c, beside the Namespace builder | 2026-10-13 | Pairs a Namespace runner with the Namespace builder, as Depot 8c pairs with the Depot builder, while the Namespace trial lasts. The PostHog Namespace runner tags were deleted on 2026-10-09, so the first step back restores nothing. |
+| Zed: BoringCache plus on Namespace 8c, beside the Namespace cache volume | 2026-10-14 | Pairs BoringCache plus with Namespace's cache volume ([nscloud-cache-action](https://namespace.so/docs/reference/github-actions/nscloud-cache-action)) on 8-core runners, where Zed's upstream CI runs, while the Namespace trial lasts. Both lanes cache the Cargo registry, git checkouts and target directory. The Zed Namespace 8c tags were deleted on 2026-10-09, so the first step back restores nothing; the cache volume's first step is its seed. |
 
 ## Restarted series
 
