@@ -1,6 +1,6 @@
 provider = "depot"
 level = "base"
-runners = ["github", "namespace-8x32", "local"]
+runners = ["github", "namespace-4x16", "local"]
 finish = ["sccache --show-stats"]
 secrets = ["DEPOT_TOKEN"]
 
