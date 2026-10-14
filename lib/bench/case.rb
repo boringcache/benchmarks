@@ -71,6 +71,10 @@ module Bench
       config.fetch("shared", [])
     end
 
+    def exclude
+      config.fetch("exclude", [])
+    end
+
     def cached_paths(lane)
       plan = TomlRB.load_file(plan_path(lane))
       paths = env("BENCH_DIR" => "")
