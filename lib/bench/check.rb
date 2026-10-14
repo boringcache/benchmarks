@@ -98,6 +98,7 @@ module Bench
             "#{kase.id}: #{lane_name} cannot run on #{runner}"
           end
         end
+        problems << "#{kase.id}: #{lane_name} mounts the Namespace cache volume without cache paths" if lane.setup.include?("namespace-cache") && lane.paths.empty? && kase.shared.empty?
         return problems unless lane.boringcache?
         return problems << "#{kase.id}: #{lane_name} has no plan at #{File.join(lane.plan_dir, ".boringcache.toml")}" unless File.exist?(kase.plan_path(lane))
 
