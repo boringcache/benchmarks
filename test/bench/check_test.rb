@@ -81,6 +81,24 @@ class CheckTest < Minitest::Test
     assert_equal ["demo/app: boringcache-demo does not cache shared path .missing"], Bench::Check.new(catalog).problems
   end
 
+  def test_namespace_cache_volume_lanes_must_name_cache_paths
+    write "tools/demo/lanes/volume.toml", %(provider = "namespace"
+level = "base"
+setup = ["namespace-cache"]
+)
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", %([runs]\nvolume = ["local"]\n))
+
+    assert_equal ["demo/app: volume mounts the Namespace cache volume without cache paths"], Bench::Check.new(catalog).problems
+
+    write "tools/demo/lanes/volume.toml", %(provider = "namespace"
+level = "base"
+setup = ["namespace-cache"]
+paths = ["upstream/target"]
+)
+
+    assert_empty Bench::Check.new(catalog).problems
+  end
+
   def test_lane_level_must_exist_in_tool
     write "tools/demo/lanes/remote.toml", %(provider = "remote"\nlevel = "plus"\n)
 
