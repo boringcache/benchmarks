@@ -1,0 +1,41 @@
+name: Bitrise Xcode diagnostic
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  diagnose:
+    runs-on: macos-26
+    timeout-minutes: 30
+    env:
+      BITRISE_BUILD_CACHE_AUTH_TOKEN: ${{ secrets.BITRISE_BUILD_CACHE_AUTH_TOKEN }}
+      BITRISE_BUILD_CACHE_WORKSPACE_ID: ${{ vars.BITRISE_BUILD_CACHE_WORKSPACE_ID }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - shell: bash
+        env:
+          VERSION: v1.41.0
+          CLI_RELEASE: ""
+        run: bash scripts/install-boringcache.sh
+      - shell: bash
+        run: |
+          dir="$RUNNER_TEMP/bitrise-patched"
+          boringcache ci run --oidc-provider github-actions -- boringcache artifact pull art_a986752af2b3f98a7c4765b8 "$dir" --workspace boringcache/benchmarks
+          echo "04b1a3b844658bb13973922e3486067b8166e437b2748b0974d112034c986db7  $dir/bitrise-build-cache" | shasum -a 256 --check
+          chmod 0755 "$dir/bitrise-build-cache"
+          echo "$dir" >> "$GITHUB_PATH"
+          echo "$HOME/.bitrise-xcelerate/bin" >> "$GITHUB_PATH"
+          sudo xcode-select --switch /Applications/Xcode_26.5.app/Contents/Developer
+      - shell: bash
+        run: bash tools/xcode/shared/bitrise-diagnostic.sh
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: bitrise-xcode-diagnostic
+          path: ${{ runner.temp }}/bitrise-diagnostic
