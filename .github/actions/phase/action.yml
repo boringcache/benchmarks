@@ -105,7 +105,7 @@ runs:
         authToken: ${{ env.CACHIX_AUTH_TOKEN }}
         skipPush: true
 
-    - if: contains(inputs.setup, 'bitrise')
+    - if: contains(inputs.setup, 'bitrise') && !contains(inputs.setup, 'bitrise-patched')
       shell: bash
       run: |
         mkdir -p "$HOME/.local/bin"
@@ -155,12 +155,13 @@ runs:
         fi
         bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" ${SHA:+--sha "$SHA" --step "$STEP"} ${CACHE_SCOPE:+--cache-scope "$CACHE_SCOPE"} ${CONTINUES:+--continues} ${RECORDED:+--recorded "$RECORDED"} --github
 
-    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache'
+    - if: (steps.prepare.outputs.ready == 'true' && (steps.prepare.outputs.provider == 'boringcache' || contains(inputs.setup, 'bitrise-patched'))) || (inputs.phase == 'preflight' && contains(inputs.setup, 'bitrise-patched'))
       shell: bash
       env:
-        VERSION: ${{ inputs.cli-release || format('v{0}', steps.prepare.outputs.boringcache_version) }}
+        VERSION: ${{ inputs.cli-release || (steps.prepare.outputs.boringcache_version && format('v{0}', steps.prepare.outputs.boringcache_version)) || '' }}
         CLI_RELEASE: ${{ inputs.cli-release }}
       run: |
+        if [ -z "$VERSION" ]; then VERSION="v$(bundle exec ruby -rtoml-rb -e 'puts TomlRB.load_file("versions.toml").fetch("boringcache")')"; fi
         if [ -n "$CLI_RELEASE" ]; then echo "BENCH_CLI_RELEASE=$CLI_RELEASE" >> "$GITHUB_ENV"; fi
         case "$(uname -s)-$(uname -m)" in
           Linux-x86_64) assets=(boringcache-linux-amd64) ;;
@@ -176,6 +177,19 @@ runs:
         install -m 0755 "${assets[0]}" "$dir/boringcache"
         if [ "${#assets[@]}" -gt 1 ]; then install -m 0644 "${assets[1]}" "$dir/libboringcache_xcode_cas.dylib"; fi
         echo "$dir" >> "$GITHUB_PATH"
+
+    - if: (steps.prepare.outputs.ready == 'true' || inputs.phase == 'preflight') && contains(inputs.setup, 'bitrise-patched')
+      shell: bash
+      run: |
+        test "$(uname -s)-$(uname -m)" = Darwin-arm64
+        dir="$RUNNER_TEMP/bitrise-patched"
+        boringcache ci run --oidc-provider github-actions -- \
+          boringcache artifact pull art_a986752af2b3f98a7c4765b8 "$dir" --workspace boringcache/benchmarks
+        echo "04b1a3b844658bb13973922e3486067b8166e437b2748b0974d112034c986db7  $dir/bitrise-build-cache" | shasum -a 256 --check
+        chmod 0755 "$dir/bitrise-build-cache"
+        "$dir/bitrise-build-cache" version
+        echo "$dir" >> "$GITHUB_PATH"
+        echo "$HOME/.bitrise-xcelerate/bin" >> "$GITHUB_PATH"
 
     - if: steps.prepare.outputs.ready == 'true'
       shell: bash

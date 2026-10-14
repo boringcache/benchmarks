@@ -101,6 +101,18 @@ gha = ["github"]
 
 A `mise.toml` beside `case.toml` pins the case toolchain; it is copied into the run directory.
 
+The experimental `xcode/bitrise-patched` lane installs Bitrise CLI
+`3.17.4-cmake-cas.0cf9ac11` from immutable BoringCache Artifact
+`art_a986752af2b3f98a7c4765b8` and verifies the binary SHA-256 before activation.
+The artifact contains the binary, its license, source commit, build command, and
+patch against upstream `03b93452a0b222c803a1032d59661918de2ebccd`. It expires on
+2026-11-13. Artifact downloads use GitHub OIDC; cache traffic uses the lane's
+Bitrise credentials. This lane is excluded from public reports.
+It supplies a writable `COMPILATION_CACHE_CAS_PATH` for generated Xcode projects
+whose project setting is empty, while retaining default prefix mapping. The
+released `bitrise` lane remains a separate measurement. Activation follows
+[Bitrise's Xcode setup](https://github.com/bitrise-io/bitrise-build-cache-cli/blob/03b93452a0b222c803a1032d59661918de2ebccd/docs/install.md).
+
 Each phase runs in `<work>/<tool>/<case>/` (`.work` locally, `$HOME/w` on Actions, or `BENCH_WORK`), rebuilt from scratch for every phase at the same short path, as an upstream checkout would be, so tools that key caches or names on absolute paths behave the same: the plans with run-scoped tags, `overlay/`, and the upstream checkout in `upstream/`. `prepare` and `check` run there with `bash -c`, outside the timer, so their paths start at the run directory (`upstream/...`), not at the plan directory.
 
 ## Adding
