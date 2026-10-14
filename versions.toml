@@ -1,4 +1,1 @@
 boringcache = "1.42.0"
-
-[cases]
-"cargo/ferrum-fuzz" = "vcli-canary-8bfb456f9a79"
