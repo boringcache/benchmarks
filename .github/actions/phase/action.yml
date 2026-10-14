@@ -126,13 +126,6 @@ runs:
         username: ${{ github.actor }}
         password: ${{ github.token }}
 
-    - if: contains(inputs.setup, 'boringcache-registry')
-      uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
-      with:
-        registry: registry.boringcache.com
-        username: boringcache
-        password: ${{ env.BORINGCACHE_REGISTRY_TOKEN }}
-
     - if: contains(inputs.setup, 'buildx') || contains(inputs.setup, 'namespace')
       shell: bash
       run: docker buildx ls

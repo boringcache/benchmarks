@@ -92,7 +92,6 @@ jobs:
       CACHIX_AUTH_TOKEN: ${{ contains(matrix.secrets, 'CACHIX_AUTH_TOKEN') && secrets.CACHIX_AUTH_TOKEN || '' }}
       CACHIX_CACHE: ${{ contains(matrix.secrets, 'CACHIX_CACHE') && vars.CACHIX_CACHE || '' }}
       DEPOT_TOKEN: ${{ contains(matrix.secrets, 'DEPOT_TOKEN') && secrets.DEPOT_TOKEN || '' }}
-      BORINGCACHE_REGISTRY_TOKEN: ${{ contains(matrix.secrets, 'BORINGCACHE_REGISTRY_TOKEN') && secrets.BORINGCACHE_REGISTRY_TOKEN || '' }}
       DEPOT_ORG_ID: ${{ contains(matrix.secrets, 'DEPOT_ORG_ID') && secrets.DEPOT_ORG_ID || '' }}
       DEPOT_DOCKER_PROJECT_ID: ${{ contains(matrix.secrets, 'DEPOT_DOCKER_PROJECT_ID') && secrets.DEPOT_DOCKER_PROJECT_ID || '' }}
       BITRISE_BUILD_CACHE_AUTH_TOKEN: ${{ contains(matrix.secrets, 'BITRISE_BUILD_CACHE_AUTH_TOKEN') && secrets.BITRISE_BUILD_CACHE_AUTH_TOKEN || '' }}
