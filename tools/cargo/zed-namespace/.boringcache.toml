@@ -30,4 +30,4 @@ profiles = ["compiler-only"]
 compiler-cache = "sccache"
 no-git = true
 metadata-hints = ["benchmark=zed-namespace", "lane=compiler-only"]
-command = ["cargo", "build", "--release", "--locked"]
+command = ["cargo", "build", "--release", "--locked", "--timings"]
