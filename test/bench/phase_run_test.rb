@@ -297,6 +297,24 @@ class PhaseRunTest < Minitest::Test
     assert_equal [0, true, @upstream_sha], record("remote-local-r6", "remote-local-cold").values_at("exit_status", "output_ok", "sha")
   end
 
+  def test_actions_cache_paths_leave_out_the_case_exclusions
+    write "tools/demo/lanes/remote.toml", File.read(File.join(@root, "tools/demo/lanes/remote.toml")).sub("level = \"base\"\n", "level = \"base\"\npaths = [\"upstream/target\"]\n")
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]", %(exclude = ["upstream/target/release"]\n[runs]))
+    outputs = File.join(@root, "github_output")
+    with_fixture_env do
+      ENV.update("GITHUB_OUTPUT" => outputs, "GITHUB_ENV" => File.join(@root, "github_env"))
+      assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r7", "--github")
+      assert_equal 0, cli("prepare", "demo/app", "--lane", "boringcache-demo", "--phase", "cold", "--run-id", "r7", "--github")
+    ensure
+      ENV.delete("GITHUB_OUTPUT")
+      ENV.delete("GITHUB_ENV")
+    end
+
+    paths = File.read(outputs).scan(/cache_paths<<BENCH_EOF\n(.*?)BENCH_EOF/m).flatten
+    dir = File.join(@root, ".work/demo/app")
+    assert_equal ["#{dir}/upstream/target\n!#{dir}/upstream/target/release\n", "\n"], paths
+  end
+
   def test_prepare_exports_the_dockerfile_cache_mounts_for_cache_dance_with_platform_ids
     write "tools/demo/app/.boringcache.toml", <<~TOML
       workspace = "boringcache/benchmarks"

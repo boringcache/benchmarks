@@ -94,7 +94,8 @@ module Bench
     end
 
     def cache_paths
-      [*lane.paths, *kase.shared].map { File.expand_path(it, workspace.dir) }
+      paths = [*lane.paths, *kase.shared].map { File.expand_path(it, workspace.dir) }
+      paths.empty? ? paths : paths + kase.exclude.map { "!#{File.expand_path(it, workspace.dir)}" }
     end
 
     private

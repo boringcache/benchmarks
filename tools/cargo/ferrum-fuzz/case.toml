@@ -1,0 +1,27 @@
+project = "ferrum-edge"
+repo = "ferrum-edge/ferrum-edge"
+branch = "main"
+start_sha = "065ffc77c127e94c6699225ca6716f6b70e65ab6"
+rolling_stride = 6
+directory = "upstream/fuzz"
+script = ["bash", "../../overlay/fuzz-smoke.sh"]
+exclude = ["upstream/target/x86_64-unknown-linux-gnu/release"]
+prepare = [
+  "sudo fallocate -l 12G /mnt/ferrum-fuzz-swapfile && sudo chmod 600 /mnt/ferrum-fuzz-swapfile && sudo mkswap /mnt/ferrum-fuzz-swapfile && sudo swapon /mnt/ferrum-fuzz-swapfile",
+  "sudo apt-get update && sudo apt-get install -y --no-install-recommends protobuf-compiler",
+  "mise trust && mise install",
+  "rustup toolchain install nightly-2026-09-30 --profile minimal --component rustfmt",
+  "CARGO_HOME=\"${RUNNER_TEMP:-/tmp}/cargo-fuzz-home\" CARGO_TARGET_DIR=\"${RUNNER_TEMP:-/tmp}/cargo-fuzz-target\" RUSTC_WRAPPER= cargo install cargo-fuzz@0.13.1 --locked --root \"$HOME/.cargo\"",
+  "cp .boringcache.toml upstream/fuzz/.boringcache.toml && echo /fuzz/.boringcache.toml >> upstream/.git/info/exclude",
+]
+check = "for target in traceparent config_decode proxy_protocol mesh_udp_frame k8s_crd plugin_config ocsp_response jwt_svid tls_material datagram_client_address; do test -x upstream/target/x86_64-unknown-linux-gnu/release/$target || exit 1; done && test -z \"$(git -C upstream status --porcelain=v1 --untracked-files=all)\""
+
+[env]
+CARGO_TERM_COLOR = "always"
+CARGO_TARGET_DIR = "${BENCH_DIR}/upstream/target"
+RUSTFLAGS = ""
+
+[runs]
+boringcache-cargo = ["github-26"]
+boringcache-cargo-plus = ["github-26"]
+gha-plus = ["github-26"]
