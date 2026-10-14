@@ -18,6 +18,7 @@ check = "for target in traceparent config_decode proxy_protocol mesh_udp_frame k
 
 [env]
 CARGO_TERM_COLOR = "always"
+MISE_SCCACHE_VERSION = "0.17.0"
 CARGO_TARGET_DIR = "${BENCH_DIR}/upstream/target"
 RUSTFLAGS = ""
 
