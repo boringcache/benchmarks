@@ -33,6 +33,12 @@ class CheckTest < Minitest::Test
     assert_equal ["demo/app: script must be a command list", "demo/app: boringcache-phases replaces the plan command, which a script case does not run"], Bench::Check.new(catalog).problems
   end
 
+  def test_a_case_cli_pin_must_be_a_release_tag
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]", %(cli = "latest"\n[runs]))
+
+    assert_equal ["demo/app: cli must be a CLI release tag such as v1.41.0 or vcli-canary-<sha>"], Bench::Check.new(catalog).problems
+  end
+
   def test_accepts_explicit_ubuntu_26_runner
     write "runners.toml", %([github]\nlabel = "ubuntu-26.04"\nmachine = "github 4c"\n[local]\nlabel = "local"\nmachine = "local"\n)
 

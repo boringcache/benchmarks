@@ -5,9 +5,9 @@ class CLITest < Minitest::Test
 
   def test_matrix_lists_every_lane_and_runner_of_a_project_without_local
     assert_equal [
-      { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "github 4c · boringcache", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "", "cadence" => "" },
-      { "case" => "demo/app", "lane" => "remote", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => ["REMOTE_TOKEN"], "setup" => "", "label" => "github 4c · remote", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "", "cadence" => "" },
-      { "case" => "demo/app", "lane" => "gha", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "github 4c · gha", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "", "cadence" => "" }
+      { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "github 4c · boringcache", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "", "cadence" => "", "cli" => "" },
+      { "case" => "demo/app", "lane" => "remote", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => ["REMOTE_TOKEN"], "setup" => "", "label" => "github 4c · remote", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "", "cadence" => "", "cli" => "" },
+      { "case" => "demo/app", "lane" => "gha", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "github 4c · gha", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "", "cadence" => "", "cli" => "" }
     ], matrix("app")
   end
 
@@ -111,6 +111,14 @@ class CLITest < Minitest::Test
     assert_equal [["boringcache-demo", ""], ["gha", ""]], matrix("app", "--rolling", now: Time.utc(2026, 10, 14, 23)).map { it.values_at("lane", "cadence") }
     assert_equal [["boringcache-demo", ""], ["remote", "nightly"], ["gha", ""]], matrix("app", "--rolling", now: Time.utc(2026, 10, 15, 0, 10)).map { it.values_at("lane", "cadence") }
     assert_equal %w[boringcache-demo remote gha], matrix("app", now: Time.utc(2026, 10, 14, 23)).map { it["lane"] }
+  end
+
+  def test_a_case_cli_pin_applies_to_rolling_and_fresh_runs_unless_a_fresh_run_names_another
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]", %(cli = "vcli-canary-abc123def"\n[runs]))
+
+    assert_equal ["vcli-canary-abc123def"], matrix("app", "--rolling").map { it["cli"] }.uniq
+    assert_equal ["vcli-canary-abc123def"], matrix("app").map { it["cli"] }.uniq
+    assert_equal ["v1.41.0"], matrix("app", "--cli", "v1.41.0").map { it["cli"] }.uniq
   end
 
   def test_a_rerun_includes_a_nightly_lane_only_at_steps_it_ran
