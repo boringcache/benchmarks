@@ -1,7 +1,7 @@
 provider = "namespace"
 level = "plus"
 actions_only = true
-runners = ["namespace-8-cache"]
+runners = ["namespace-8x32-cache"]
 setup = ["namespace-cache"]
 paths = ["~/.cargo/registry/index", "~/.cargo/registry/cache", "~/.cargo/git/db", "upstream/target"]
 post_job_save = ["namespacelabs/nscloud-cache-action"]

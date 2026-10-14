@@ -2,6 +2,7 @@ repo = "zed-industries/zed"
 branch = "main"
 start_sha = "eb466341a6b4306604cffef466cfdf9b1aafcecc"
 rolling_stride = 3
+rolling_series = 2
 directory = "upstream"
 prepare = [
   "df -h / && if [ -d /usr/local/lib/android ]; then sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL; fi && df -h /",
@@ -18,7 +19,7 @@ CC = "clang"
 CXX = "clang++"
 
 [runs]
-boringcache-cargo = ["namespace-8"]
-boringcache-cargo-plus = ["namespace-8"]
-depot-cache = ["namespace-8"]
-namespace-cache = ["namespace-8-cache"]
+boringcache-cargo = ["namespace-8x32"]
+boringcache-cargo-plus = ["namespace-8x32"]
+depot-cache = ["namespace-8x32"]
+namespace-cache = ["namespace-8x32-cache"]

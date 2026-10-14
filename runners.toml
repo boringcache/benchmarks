@@ -38,6 +38,11 @@ env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 label = "local"
 machine = "local"
 
-[namespace-8-cache]
-label = "namespace-profile-rust-cache-8c"
+[namespace-8x32]
+label = "nscloud-ubuntu-24.04-amd64-8x32"
+machine = "namespace 8c"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
+[namespace-8x32-cache]
+label = ["nscloud-ubuntu-24.04-amd64-8x32-with-cache", "nscloud-cache-tag-zed-namespace-cargo", "nscloud-cache-size-100gb"]
 machine = "namespace 8c"
