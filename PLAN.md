@@ -41,6 +41,6 @@ The superseded records and raw evidence are available in [Git history](https://g
 
 ## Removed cases
 
-On 2026-10-13: Cargo `zed-bundle`, which ran only on Depot 8c, for the Depot plan budget. On Namespace 8c its archive lane ran out of memory at step 1 three times under the trial's 16 GB limit, so moving it needs a larger profile. Its definition is in [Git history](https://github.com/boringcache/benchmarks/tree/2e6e09534/tools/cargo/zed-bundle).
+On 2026-10-13: Cargo `zed-bundle`, which ran only on Depot 8c, for the Depot plan budget. Its definition is in [Git history](https://github.com/boringcache/benchmarks/tree/2e6e09534/tools/cargo/zed-bundle).
 
 On 2026-10-09: Pants `pants-jvm` and `stackstorm`, moon `gogs` and `opencut`, sbt `msgpack-java`, Buck2 `buck2-prelude`, Docker `mastodon-streaming`, and Nix `helix`. The recorded reasons were low upstream activity, short builds, or replacement by a more active project. Measurements and detailed decisions are in the [previous plan](https://github.com/boringcache/benchmarks/blob/25ba1d1a1e9ef4ebed2e404f37b067a6ad78cc18/PLAN.md).
