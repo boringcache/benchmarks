@@ -1,0 +1,30 @@
+workspace = "boringcache/benchmarks"
+
+[entries.cargo-registry-cache]
+tag = "ferrum-fuzz-cargo-registry-cache"
+
+[entries.cargo-registry-index]
+tag = "ferrum-fuzz-cargo-registry-index"
+
+[entries.cargo-git-db]
+tag = "ferrum-fuzz-cargo-git-db"
+
+[entries.cargo-target]
+kind = "cargo-target"
+tag = "ferrum-fuzz-cargo-target"
+path-env = "CARGO_TARGET_DIR"
+exclude = ["x86_64-unknown-linux-gnu/release/"]
+
+[profiles.cargo-product]
+entries = ["cargo-registry-cache", "cargo-registry-index", "cargo-git-db", "cargo-target"]
+
+[profiles.compiler-only]
+entries = []
+
+[adapters.cargo]
+fail-on-cache-error = true
+tag = "ferrum-fuzz-cargo"
+profiles = ["cargo-product"]
+compiler-cache = "sccache"
+no-git = true
+metadata-hints = ["benchmark=ferrum-fuzz", "lane=cargo-product"]
