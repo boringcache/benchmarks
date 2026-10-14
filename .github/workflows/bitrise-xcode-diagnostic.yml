@@ -17,6 +17,7 @@ jobs:
     runs-on: macos-26
     timeout-minutes: 30
     env:
+      BITRISE_BUILD_CACHE_BENCHMARK_PHASE_XCODE: established
       BITRISE_BUILD_CACHE_AUTH_TOKEN: ${{ secrets.BITRISE_BUILD_CACHE_AUTH_TOKEN }}
       BITRISE_BUILD_CACHE_WORKSPACE_ID: ${{ vars.BITRISE_BUILD_CACHE_WORKSPACE_ID }}
     steps:

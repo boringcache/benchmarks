@@ -16,19 +16,19 @@ set -e
 
 cd build_macos
 for variant in default no-prefix no-integrated no-detached no-builtin-prefix no-modules no-remote no-plugin; do
-  args=()
+  args=(build)
   case "$variant" in
-    no-prefix) args=(--no-prefix-map) ;;
-    no-integrated) args=(COMPILATION_CACHE_ENABLE_INTEGRATED_QUERIES=NO) ;;
-    no-detached) args=(COMPILATION_CACHE_ENABLE_DETACHED_KEY_QUERIES=NO) ;;
-    no-builtin-prefix) args=(CLANG_ENABLE_PREFIX_MAPPING=NO) ;;
-    no-modules) args=(CLANG_ENABLE_MODULES=NO) ;;
-    no-remote) args=(COMPILATION_CACHE_REMOTE_SERVICE_PATH=) ;;
-    no-plugin) args=(COMPILATION_CACHE_ENABLE_PLUGIN=NO) ;;
+    no-prefix) args+=(--no-prefix-map) ;;
+    no-integrated) args+=(COMPILATION_CACHE_ENABLE_INTEGRATED_QUERIES=NO) ;;
+    no-detached) args+=(COMPILATION_CACHE_ENABLE_DETACHED_KEY_QUERIES=NO) ;;
+    no-builtin-prefix) args+=(CLANG_ENABLE_PREFIX_MAPPING=NO) ;;
+    no-modules) args+=(CLANG_ENABLE_MODULES=NO) ;;
+    no-remote) args+=(COMPILATION_CACHE_REMOTE_SERVICE_PATH=) ;;
+    no-plugin) args+=(COMPILATION_CACHE_ENABLE_PLUGIN=NO) ;;
   esac
   /usr/bin/xcodebuild -project obs-studio.xcodeproj -target obsglad -configuration RelWithDebInfo clean > "$out/clean-$variant.log" 2>&1
   set +e
-  bitrise-build-cache xcelerate xcodebuild --no-xcresult -project obs-studio.xcodeproj -target obsglad -configuration RelWithDebInfo "COMPILATION_CACHE_CAS_PATH=$RUNNER_TEMP/cas-$variant" "${args[@]}" build > "$out/$variant.log" 2>&1
+  bitrise-build-cache xcelerate xcodebuild --no-xcresult -project obs-studio.xcodeproj -target obsglad -configuration RelWithDebInfo "COMPILATION_CACHE_CAS_PATH=$RUNNER_TEMP/cas-$variant" "${args[@]}" > "$out/$variant.log" 2>&1
   printf '%s: %s\n' "$variant" "$?" | tee -a "$out/status.txt"
   set -e
 done

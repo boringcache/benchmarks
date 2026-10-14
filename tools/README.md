@@ -108,6 +108,10 @@ The artifact contains the binary, its license, source commit, build command, and
 patch against upstream `03b93452a0b222c803a1032d59661918de2ebccd`. It expires on
 2026-11-13. Artifact downloads use GitHub OIDC; cache traffic uses the lane's
 Bitrise credentials. This lane is excluded from public reports.
+It sets `BITRISE_BUILD_CACHE_BENCHMARK_PHASE_XCODE=established` so Bitrise's
+automatic baseline phase cannot disable caching during this cache validation.
+The CLI explicitly supports this override for end-to-end tests in
+[its phase resolver](https://github.com/bitrise-io/bitrise-build-cache-cli/blob/03b93452a0b222c803a1032d59661918de2ebccd/internal/config/common/benchmark.go).
 It supplies a writable `COMPILATION_CACHE_CAS_PATH` for generated Xcode projects
 whose project setting is empty, while retaining default prefix mapping. The
 released `bitrise` lane remains a separate measurement. Activation follows
