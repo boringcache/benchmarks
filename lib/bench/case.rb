@@ -55,6 +55,10 @@ module Bench
       config["script"]
     end
 
+    def cli
+      config["cli"]
+    end
+
     def nightly
       config.fetch("nightly", {})
     end
