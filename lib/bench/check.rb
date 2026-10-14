@@ -32,7 +32,15 @@ module Bench
 
       def version_problems
         version = @catalog.versions["boringcache"].to_s
-        version.match?(VERSION) ? [] : ["versions.toml: boringcache must be x.y.z, got #{version.inspect}"]
+        problems = version.match?(VERSION) ? [] : ["versions.toml: boringcache must be x.y.z, got #{version.inspect}"]
+        cases = @catalog.versions.fetch("cases", {})
+        return problems << "versions.toml: [cases] must map case ids to CLI release tags" unless cases.is_a?(Hash)
+
+        ids = @catalog.cases.map(&:id)
+        problems + cases.flat_map do |id, tag|
+          [("versions.toml: [cases] names unknown case #{id}" unless ids.include?(id)),
+           ("versions.toml: #{id} must be a CLI release tag such as v1.41.0 or vcli-canary-<sha>" unless tag.to_s.match?(CLI::CLI_RELEASE))].compact
+        end
       end
 
       def tool_problems(tool)
@@ -62,7 +70,6 @@ module Bench
         problems << "#{kase.id}: prepare must be a list of commands" unless kase.prepare.is_a?(Array)
         problems << "#{kase.id}: check must be a command" unless kase.check.is_a?(String)
         problems << "#{kase.id}: [runs] lists no lanes" if kase.runs.empty?
-        problems << "#{kase.id}: cli must be a CLI release tag such as v1.41.0 or vcli-canary-<sha>" unless kase.cli.nil? || kase.cli.to_s.match?(CLI::CLI_RELEASE)
         problems << "#{kase.id}: exclude must be a list of paths" unless kase.exclude.is_a?(Array) && kase.exclude.all?(String)
         problems << "#{kase.id}: script must be a command list" unless kase.script.nil? || (kase.script.is_a?(Array) && kase.script.any? && kase.script.all?(String))
         problems << "#{kase.id}: rolling_stride must be an integer above 1" unless kase.rolling_stride.nil? || (kase.rolling_stride.is_a?(Integer) && kase.rolling_stride > 1)

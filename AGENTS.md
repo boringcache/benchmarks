@@ -42,7 +42,16 @@ This repository benchmarks BoringCache against other cache providers on real pro
 
 ## Test a CLI canary
 
-`versions.toml` pins the released CLI for every run. To check a fix before release, run a fresh run of the affected lanes with a published canary:
+`versions.toml` owns which CLI every run installs. `boringcache` pins the released CLI for all cases, and `[cases]` maps a case id to a release or canary tag that its rolling and fresh runs install instead:
+
+```toml
+boringcache = "1.41.0"
+
+[cases]
+"cargo/ferrum-fuzz" = "vcli-canary-8bfb456f9a79"
+```
+
+To check a fix once, run a fresh run of the affected lanes with a published canary:
 
 ```sh
 gh workflow run project.yml --ref main -f tool=<Tool> -f project=<project> -f mode=fresh -f lane="<lanes>" -f cli=vcli-canary-<sha>

@@ -113,8 +113,8 @@ class CLITest < Minitest::Test
     assert_equal %w[boringcache-demo remote gha], matrix("app", now: Time.utc(2026, 10, 14, 23)).map { it["lane"] }
   end
 
-  def test_a_case_cli_pin_applies_to_rolling_and_fresh_runs_unless_a_fresh_run_names_another
-    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]", %(cli = "vcli-canary-abc123def"\n[runs]))
+  def test_a_versions_case_pin_applies_to_rolling_and_fresh_runs_unless_a_fresh_run_names_another
+    write "versions.toml", %(boringcache = "1.40.0"\n[cases]\n"demo/app" = "vcli-canary-abc123def"\n)
 
     assert_equal ["vcli-canary-abc123def"], matrix("app", "--rolling").map { it["cli"] }.uniq
     assert_equal ["vcli-canary-abc123def"], matrix("app").map { it["cli"] }.uniq
