@@ -1,0 +1,45 @@
+{
+  "adapter_command": "cargo",
+  "case": "zed-namespace",
+  "lane": "namespace-cache",
+  "provider": "namespace",
+  "level": "plus",
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "runner": "namespace-8-cache",
+  "runner_label": "namespace-profile-rust-cache-8c",
+  "machine": "namespace 8c",
+  "phase": "rolling",
+  "step": 0,
+  "scope": "namespace-cache-namespace-8-cache-rolling",
+  "cache_scope": "namespace-cache-namespace-8-cache-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "zed-industries/zed",
+  "sha": "eb466341a6b4306604cffef466cfdf9b1aafcecc",
+  "seconds": 570.795,
+  "cache_save_timing": "post-job",
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC",
+      "cores": 8
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "fa6b7aa76df4e055c5c26800151a4220b9bd96b0",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38592419644",
+  "attempt": 1,
+  "started_at": "2026-10-14T15:56:14Z",
+  "job_conclusion": "failure",
+  "post_job_save_seconds": 0.0
+}
