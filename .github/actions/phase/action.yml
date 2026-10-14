@@ -137,6 +137,26 @@ runs:
       shell: bash
       run: docker buildx ls
 
+    - if: contains(inputs.setup, 'bitrise-patched')
+      shell: bash
+      env:
+        VERSION: ${{ inputs.cli-release || '' }}
+        CLI_RELEASE: ${{ inputs.cli-release }}
+      run: bash scripts/install-boringcache.sh
+
+    - if: contains(inputs.setup, 'bitrise-patched')
+      shell: bash
+      run: |
+        test "$(uname -s)-$(uname -m)" = Darwin-arm64
+        dir="$RUNNER_TEMP/bitrise-patched"
+        boringcache ci run --oidc-provider github-actions -- \
+          boringcache artifact pull art_a986752af2b3f98a7c4765b8 "$dir" --workspace boringcache/benchmarks
+        echo "04b1a3b844658bb13973922e3486067b8166e437b2748b0974d112034c986db7  $dir/bitrise-build-cache" | shasum -a 256 --check
+        chmod 0755 "$dir/bitrise-build-cache"
+        "$dir/bitrise-build-cache" version
+        echo "$dir" >> "$GITHUB_PATH"
+        echo "$HOME/.bitrise-xcelerate/bin" >> "$GITHUB_PATH"
+
     - id: prepare
       if: inputs.phase != 'preflight'
       shell: bash
@@ -155,41 +175,12 @@ runs:
         fi
         bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" ${SHA:+--sha "$SHA" --step "$STEP"} ${CACHE_SCOPE:+--cache-scope "$CACHE_SCOPE"} ${CONTINUES:+--continues} ${RECORDED:+--recorded "$RECORDED"} --github
 
-    - if: (steps.prepare.outputs.ready == 'true' && (steps.prepare.outputs.provider == 'boringcache' || contains(inputs.setup, 'bitrise-patched'))) || (inputs.phase == 'preflight' && contains(inputs.setup, 'bitrise-patched'))
+    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache'
       shell: bash
       env:
-        VERSION: ${{ inputs.cli-release || (steps.prepare.outputs.boringcache_version && format('v{0}', steps.prepare.outputs.boringcache_version)) || '' }}
+        VERSION: ${{ inputs.cli-release || format('v{0}', steps.prepare.outputs.boringcache_version) }}
         CLI_RELEASE: ${{ inputs.cli-release }}
-      run: |
-        if [ -z "$VERSION" ]; then VERSION="v$(bundle exec ruby -rtoml-rb -e 'puts TomlRB.load_file("versions.toml").fetch("boringcache")')"; fi
-        if [ -n "$CLI_RELEASE" ]; then echo "BENCH_CLI_RELEASE=$CLI_RELEASE" >> "$GITHUB_ENV"; fi
-        case "$(uname -s)-$(uname -m)" in
-          Linux-x86_64) assets=(boringcache-linux-amd64) ;;
-          Linux-aarch64) assets=(boringcache-linux-arm64) ;;
-          Darwin-*) assets=(boringcache-macos-universal libboringcache_xcode_cas-macos-universal.dylib) ;;
-        esac
-        dir="$RUNNER_TEMP/boringcache-cli"
-        base="https://github.com/boringcache/cli/releases/download/$VERSION"
-        mkdir -p "$dir"
-        cd "$dir"
-        curl --fail --silent --show-error --location --retry 3 --remote-name-all "$base/SHA256SUMS" "${assets[@]/#/$base/}"
-        for asset in "${assets[@]}"; do grep " $asset\$" SHA256SUMS; done | shasum -a 256 --check
-        install -m 0755 "${assets[0]}" "$dir/boringcache"
-        if [ "${#assets[@]}" -gt 1 ]; then install -m 0644 "${assets[1]}" "$dir/libboringcache_xcode_cas.dylib"; fi
-        echo "$dir" >> "$GITHUB_PATH"
-
-    - if: (steps.prepare.outputs.ready == 'true' || inputs.phase == 'preflight') && contains(inputs.setup, 'bitrise-patched')
-      shell: bash
-      run: |
-        test "$(uname -s)-$(uname -m)" = Darwin-arm64
-        dir="$RUNNER_TEMP/bitrise-patched"
-        boringcache ci run --oidc-provider github-actions -- \
-          boringcache artifact pull art_a986752af2b3f98a7c4765b8 "$dir" --workspace boringcache/benchmarks
-        echo "04b1a3b844658bb13973922e3486067b8166e437b2748b0974d112034c986db7  $dir/bitrise-build-cache" | shasum -a 256 --check
-        chmod 0755 "$dir/bitrise-build-cache"
-        "$dir/bitrise-build-cache" version
-        echo "$dir" >> "$GITHUB_PATH"
-        echo "$HOME/.bitrise-xcelerate/bin" >> "$GITHUB_PATH"
+      run: bash scripts/install-boringcache.sh
 
     - if: steps.prepare.outputs.ready == 'true'
       shell: bash
@@ -290,6 +281,12 @@ runs:
         BENCH_CACHE_RESTORE_TRACKED: ${{ steps.actions-cache-restore.outcome == 'success' || steps.dance-cache.outcome == 'success' || steps.dance-restore.outcome == 'success' }}
         BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-cache.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
       run: bundle exec bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
+
+    - if: always() && steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'bitrise-patched')
+      shell: bash
+      run: |
+        mkdir -p "$RUNNER_TEMP/results"
+        bitrise-build-cache --no-update-check invocations list --json --limit 20 > "$RUNNER_TEMP/results/bitrise-${BENCH_PHASE}-invocations.txt"
 
     - if: always() && steps.prepare.outputs.ready == 'true'
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
