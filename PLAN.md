@@ -19,6 +19,30 @@ The [preflight](https://github.com/boringcache/benchmarks/actions/runs/387271496
 | 1 | BoringCache | 1970.607 | Intel Xeon Platinum 8370C |
 | 1 | GitHub Actions cache | 1637.991 | AMD EPYC 9V74 |
 
+The [cache inspection](https://github.com/boringcache/benchmarks/actions/runs/38741412878) recovered the GitHub lane's cumulative counters from its saved step-1 archive: 9,512 calls, 1,821 hits, 7,691 misses and zero cleanups, with 4.0 GiB stored against a 5 GiB limit. Subtracting step 0's 4,756 misses gives the same step-1 compilation reuse as BoringCache: 1,821 hits and 2,935 misses (38.29%). Neither provider's first reuse result demonstrates eviction.
+
+Comparing CMake's compile commands at the two commits finds 627 changed commands; four are unbuilt examples. The remaining 623 differ only in `OSQUERY_VERSION`, `OSQUERY_BUILD_VERSION` and `OSQUERY_BUILD_SDK_VERSION`. Upstream derives these from `git describe` and exports them through [public compile definitions](https://github.com/osquery/osquery/blob/6b8969bb09ba5d3c01277ad04e55b87b4021f934/osquery/utils/info/CMakeLists.txt#L41). Step 1 changes only a macOS test, but these definitions change Linux cache keys. Joining the configured object paths to the 4,756 actual compilation lines gives these groups, which exactly match the native hit/miss counts and remote key lookup counts:
+
+| Step-1 compilation group | Commands |
+| --- | ---: |
+| Changed version definitions | 623 |
+| Unchanged PCH-generation commands | 12 |
+| Unchanged commands consuming PCH | 2300 |
+| Unchanged commands without PCH | 1821 |
+
+The [pinned Linux reproduction](https://github.com/boringcache/benchmarks/actions/runs/38744274916) uses the generated Makefile recipes, including dependency flags, for the AWS core PCH and one EC2 source file. Repeating in the same workspace reuses both compilations, including after moving to step 1. Recreating the build directory and updating checkout timestamps without changing contents causes both to miss and changes the PCH SHA-256. The debug log reports that the PCH includes `aws/core/external/cjson/cJSON.h` with a new mtime. Adding `-Xclang -fno-pch-timestamp` through `CMAKE_CXX_FLAGS` makes the PCH identical and both compilations hit after another recreation. The [ccache manual](https://ccache.dev/manual/4.14.1.html#_precompiled_headers) requires that flag for Clang PCH; [its manifest validation](https://github.com/ccache/ccache/blob/v4.14.1/src/ccache/core/manifest.cpp#L405-L412) rejects changed include mtimes without it. The benchmark continues to use the upstream configuration.
+
+An isolated unused-version-macro test with the pinned Linux toolchain gives two misses with ccache's upstream `depend_mode = true`, one miss and one preprocessed hit with depend mode disabled, and two misses with sccache 0.17.0. Sccache's identical-arguments control hits. Switching tools alone does not remove the version-definition invalidation.
+
+The [sccache PCH comparison](https://github.com/boringcache/benchmarks/actions/runs/38744923446) runs the same two AWS Makefile recipes with sccache 0.17.0. After recreating the build directory and updating checkout timestamps, sccache rebuilds the PCH but reuses the EC2 object. With `-Xclang -fno-pch-timestamp`, both tools reuse both compilations and preserve the PCH SHA-256. These probes cover two compilations; whole-build sccache performance remains unmeasured.
+
+| Fresh-checkout probe | PCH generation | EC2 object |
+| --- | --- | --- |
+| ccache, upstream flags | Miss | Miss |
+| sccache 0.17.0, upstream flags | Miss | Hit |
+| ccache, PCH timestamp flag | Hit | Hit |
+| sccache 0.17.0, PCH timestamp flag | Hit | Hit |
+
 ## Remaining migration work
 
 - Migrate the website's `Reporting::BenchmarkComparisons` reader from `data/latest/index.json` to the current report format. The old reader requires an `entries` array; the current report contains `rows` and `matched`. Keep `data/latest/` until the reader and its tests migrate together.
