@@ -6,21 +6,22 @@ module Bench
     STATE = ".bench-state.json"
     TIMER = "restore, build, save; post-job saves in post_job_save_seconds"
 
-    attr_reader :kase, :lane, :phase, :runner, :scope, :cache_scope, :sha, :step
+    attr_reader :kase, :lane, :phase, :runner, :scope, :cache_scope, :seed_scope, :sha, :step
 
     def self.resume(kase, lane, work_root:, results_dir:, env: ENV)
       state = JSON.parse(File.read(File.join(work_root, kase.tool.name, kase.name, STATE)))
       new(kase, lane, phase: state["phase"], runner: state["runner"], scope: state["scope"], cache_scope: state["cache_scope"],
-                      sha: state["sha"], step: state["step"], work_root:, results_dir:, env:)
+                      seed_scope: state["seed_scope"], sha: state["sha"], step: state["step"], work_root:, results_dir:, env:)
     end
 
-    def initialize(kase, lane, phase:, runner:, scope:, work_root:, results_dir:, cache_scope: nil, sha: kase.start_sha, step: nil, env: ENV)
+    def initialize(kase, lane, phase:, runner:, scope:, work_root:, results_dir:, cache_scope: nil, seed_scope: nil, sha: kase.start_sha, step: nil, env: ENV)
       @kase = kase
       @lane = lane
       @phase = phase
       @runner = runner
       @scope = scope
       @cache_scope = cache_scope || scope
+      @seed_scope = seed_scope
       @work_root = work_root
       @results_dir = results_dir
       @sha = sha
@@ -53,7 +54,7 @@ module Bench
     end
 
     def build
-      return $?&.exitstatus || 127 unless system(environment, *command, chdir: build_dir)
+      return $?&.exitstatus || 127 unless seed && system(environment, *command, chdir: build_dir)
 
       lane.finish(phase).all? { shell(it, chdir: build_dir) } ? 0 : 1
     end
@@ -120,12 +121,25 @@ module Bench
       end
 
       def save_state(extra = {})
-        @state = { "phase" => phase, "runner" => runner, "scope" => scope, "cache_scope" => cache_scope, "sha" => sha, "step" => step, **extra }
+        @state = { "phase" => phase, "runner" => runner, "scope" => scope, "cache_scope" => cache_scope, **({ "seed_scope" => seed_scope } if seed_scope),
+                   "sha" => sha, "step" => step, **extra }
         File.write(state_path, JSON.generate(@state))
       end
 
       def state_path
         File.join(workspace.dir, STATE)
+      end
+
+      def seed
+        return true unless seed_scope
+
+        plans = [workspace.plan_path, File.join(build_dir, ".boringcache.toml")].uniq.select { File.exist?(it) }
+        own = plans.to_h { [it, File.read(it)] }
+        seeded = TomlRB.dump(Workspace.scope_plan(TomlRB.load_file(kase.plan_path(lane)), seed_scope))
+        plans.each { File.write(it, seeded) }
+        system(environment, "boringcache", kase.tool.name, *lane.cli_args, "--phase", "restore", chdir: build_dir)
+      ensure
+        own&.each { |path, body| File.write(path, body) }
       end
 
       def command
@@ -195,6 +209,7 @@ module Bench
           "scope" => scope,
           "cache_scope" => cache_scope,
           "cache_seeded" => (cache_scope != scope if phase == "rolling"),
+          **({ "seed_scope" => seed_scope } if seed_scope),
           "cache_restored_key" => (@env["BENCH_CACHE_RESTORED_KEY"] unless @env["BENCH_CACHE_RESTORED_KEY"].to_s.empty?),
           **({ "cache_restore_tracked" => true } if @env["BENCH_CACHE_RESTORE_TRACKED"] == "true"),
           "repo" => kase.repo,

@@ -171,7 +171,7 @@ runs:
         echo "$dir" >> "$GITHUB_PATH"
 
     - id: sampler
-      if: steps.prepare.outputs.ready == 'true' && inputs.case == 'cargo/zed-namespace'
+      if: steps.prepare.outputs.ready == 'true' && (inputs.case == 'cargo/zed-namespace' || inputs.case == 'cargo/ferrum-fuzz')
       shell: bash
       run: |
         dir="$RUNNER_TEMP/diagnostics"
@@ -287,6 +287,8 @@ runs:
         BUILD_DIR: ${{ steps.prepare.outputs.build_dir }}
       run: |
         kill "$PID" 2>/dev/null || true
+        target="$BENCH_DIR/upstream/target"
+        if [ -d "$target" ]; then { du -sb "$target"; find "$target" -maxdepth 3 -type d -name incremental -exec du -sb {} +; } > "$RUNNER_TEMP/diagnostics/target-sizes.txt" 2>/dev/null || true; fi
         timings="$BUILD_DIR/target/cargo-timings"
         if [ -f "$timings/cargo-timing.html" ]; then cp "$timings/cargo-timing.html" "$RUNNER_TEMP/diagnostics/"; fi
         rm -rf "$timings"

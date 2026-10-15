@@ -1,0 +1,10 @@
+provider = "boringcache"
+level = "plus"
+plan = "plus"
+label = "boringcache plus incremental"
+experimental = true
+seed = "boringcache-cargo-plus"
+
+[env]
+BORINGCACHE_ARCHIVE_SELECTIVE_READS = "1"
+CARGO_INCREMENTAL = "1"

@@ -43,6 +43,10 @@ module Bench
       experimental == true
     end
 
+    def seed
+      config["seed"]
+    end
+
     def machine
       config["machine"]
     end
