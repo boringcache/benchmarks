@@ -1,0 +1,21 @@
+repo = "osquery/osquery"
+branch = "master"
+start_sha = "6b8969bb09ba5d3c01277ad04e55b87b4021f934"
+directory = "upstream"
+prepare = [
+  "df -h / && if [ -d /usr/local/lib/android ]; then sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL; fi && df -h /",
+  "git -C upstream fetch --quiet --unshallow --tags origin",
+  "sudo apt-get update && sudo apt-get install --no-install-recommends -y elfutils python3-psutil python3-six python3-wheel linux-headers-generic",
+  "curl -fsSL https://github.com/osquery/osquery-toolchain/releases/download/1.2.0/osquery-toolchain-1.2.0-x86_64.tar.xz -o osquery-toolchain.tar.xz && echo '5f9755ea9c7306ada1710674b6e61202252883e01f7adc45a2dc602555c05a87  osquery-toolchain.tar.xz' | sha256sum --check && sudo tar -xJf osquery-toolchain.tar.xz -C /usr/local && rm osquery-toolchain.tar.xz",
+  "mise trust && mise install",
+  "git -C upstream submodule sync --recursive",
+]
+check = "test -x build/osquery/osqueryd"
+
+[env]
+CCACHE_DIR = "${BENCH_DIR}/.ccache"
+CCACHE_CONFIGPATH = "${BENCH_DIR}/upstream/ccache.conf"
+
+[runs]
+boringcache-ccache = ["github"]
+gha = ["github"]

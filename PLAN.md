@@ -2,6 +2,12 @@
 
 The consolidated harness is running. Configuration is in `tools/`, `rolling.toml`, `runners.toml`, and `versions.toml`. Procedures are in [AGENTS.md](AGENTS.md).
 
+## Added cases
+
+| Case | Start | Build and lanes |
+| --- | --- | --- |
+| ccache/osquery | `6b8969bb09ba5d3c01277ad04e55b87b4021f934`, 2026-09-09 | Last first-parent master commit before [osquery/osquery#9104](https://github.com/osquery/osquery/issues/9104), opened 2026-09-14. Builds upstream's [Linux Release CI configuration](https://github.com/osquery/osquery/blob/6b8969bb09ba5d3c01277ad04e55b87b4021f934/.github/workflows/hosted_runners.yml) with toolchain 1.2.0, tests enabled, debug symbols enabled, and `nproc + 1` jobs. BoringCache ccache remote storage and GitHub Actions ccache archives run on Ubuntu 24.04, GitHub 4 vCPU. Both use upstream's `ccache.conf` and ccache 4.14.1; the archive lane keeps the default 5 GiB local limit. Both rebuild OpenSSL and configure from source. Only compiler outputs are cached; this case does not reproduce competition among upstream's OS, architecture and build-type cache keys. |
+
 ## Remaining migration work
 
 ## Upstream failures under review
