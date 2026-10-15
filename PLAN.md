@@ -10,6 +10,15 @@ The consolidated harness is running. Configuration is in `tools/`, `rolling.toml
 
 The issue's 38.29% hit-rate example comes from the selected commit's [Linux Release job](https://github.com/osquery/osquery/actions/runs/34361072629/job/102498037144): 1,821 hits in 4,756 calls, 2,935 misses, and three cleanups after restoring a cache. That job used ccache 4.5.1 on Ubuntu 22.04. The benchmark uses ccache 4.14.1 on Ubuntu 24.04 for both lanes, matching the harness's existing ccache setup.
 
+The [preflight](https://github.com/boringcache/benchmarks/actions/runs/38727149684), [step 0](https://github.com/boringcache/benchmarks/actions/runs/38727970681) and [step 1](https://github.com/boringcache/benchmarks/actions/runs/38732134849) passed both lanes. Every rolling record has `exit_status = 0` and `output_ok = true`. Step 0 populated both caches; step 1's archive lane restored `ccache-osquery-gha-github-rolling-0` and saved the step-1 key. BoringCache's step-1 native ccache statistics report 1,821 hits in 4,756 compilations (38.29%), 2,935 misses, no cache errors and no failed blob uploads. Remote key lookup hits are a separate measurement from reused compilations.
+
+| Step | Lane | Seconds | CPU, 4 vCPU |
+| --- | --- | ---: | --- |
+| 0 | BoringCache | 1452.793 | AMD EPYC 9V45 |
+| 0 | GitHub Actions cache | 2367.452 | AMD EPYC 7763 |
+| 1 | BoringCache | 1970.607 | Intel Xeon Platinum 8370C |
+| 1 | GitHub Actions cache | 1637.991 | AMD EPYC 9V74 |
+
 ## Remaining migration work
 
 - Migrate the website's `Reporting::BenchmarkComparisons` reader from `data/latest/index.json` to the current report format. The old reader requires an `entries` array; the current report contains `rows` and `matched`. Keep `data/latest/` until the reader and its tests migrate together.
