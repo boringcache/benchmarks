@@ -18,6 +18,7 @@ exclude = [
   "upstream/target/x86_64-unknown-linux-gnu/release/datagram_client_address",
 ]
 prepare = [
+  "df -h / && if [ -d /usr/local/lib/android ]; then sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL; fi && df -h /",
   "sudo fallocate -l 12G /mnt/ferrum-fuzz-swapfile && sudo chmod 600 /mnt/ferrum-fuzz-swapfile && sudo mkswap /mnt/ferrum-fuzz-swapfile && sudo swapon /mnt/ferrum-fuzz-swapfile",
   "sudo apt-get update && sudo apt-get install -y --no-install-recommends protobuf-compiler",
   "mise trust && mise install",
