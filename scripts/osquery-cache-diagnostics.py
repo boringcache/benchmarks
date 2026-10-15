@@ -1,4 +1,5 @@
 import collections
+import hashlib
 import json
 import os
 import pathlib
@@ -18,8 +19,8 @@ def run(args, **kwargs):
     return subprocess.run(args, check=True, text=True, **kwargs)
 
 
-def configure(label):
-    run(['cmake', '-S', str(source), '-B', str(build), '-G', 'Unix Makefiles', '-DOSQUERY_TOOLCHAIN_SYSROOT:PATH=/usr/local/osquery-toolchain', '-DCMAKE_BUILD_TYPE:STRING=Release', '-DOSQUERY_BUILD_TESTS=ON', '-DOSQUERY_BUILD_ROOT_TESTS=ON', '-DOSQUERY_NO_DEBUG_SYMBOLS=OFF'], env=env)
+def configure(label, extra=None):
+    run(['cmake', '-S', str(source), '-B', str(build), '-G', 'Unix Makefiles', '-DOSQUERY_TOOLCHAIN_SYSROOT:PATH=/usr/local/osquery-toolchain', '-DCMAKE_BUILD_TYPE:STRING=Release', '-DOSQUERY_BUILD_TESTS=ON', '-DOSQUERY_BUILD_ROOT_TESTS=ON', '-DOSQUERY_NO_DEBUG_SYMBOLS=OFF', *(extra or [])], env=env)
     commands = json.loads((build / 'compile_commands.json').read_text())
     (evidence / (label + '-commands.json')).write_text(json.dumps(commands, indent=2))
     return commands
@@ -39,11 +40,22 @@ def probe(commands, label, probe_env=None, wrapper='ccache'):
         target_dir = output.relative_to(pathlib.Path(entry['directory'])).parts[:2]
         makefile = pathlib.Path(entry['directory']).joinpath(*target_dir) / 'build.make'
         recipes = [line.strip() for line in makefile.read_text().splitlines() if line.startswith('\t') and ' -c ' in line and str(entry['file']) in line and ' -o ' in line]
-        exact = next(shlex.split(line) for line in recipes if args[0] in shlex.split(line))
+        variables = dict(line.split(' = ', 1) for line in (makefile.parent / 'flags.make').read_text().splitlines() if ' = ' in line and not line.startswith('#'))
+        expanded = []
+        for recipe in recipes:
+            for key, value in variables.items():
+                recipe = recipe.replace('$(' + key + ')', value)
+            if '$(' in recipe:
+                raise ValueError('Unexpanded Make variable: ' + recipe)
+            expanded.append(shlex.split(recipe))
+        exact = next(recipe for recipe in expanded if args[0] in recipe)
         exact = exact[exact.index(args[0]):]
         (evidence / (label + '-' + output.name + '-invocation.json')).write_text(json.dumps(exact, indent=2))
         result = subprocess.run([wrapper, *exact], cwd=entry['directory'], env=probe_env, text=True)
         print('PROBE EXIT', label, output.name, result.returncode, flush=True)
+        result.check_returncode()
+        if output.suffix == '.pch':
+            (evidence / (label + '-pch-sha256.txt')).write_text(hashlib.sha256(output.read_bytes()).hexdigest())
     result = run(['ccache', '--print-log-stats', '--format=json'], env=probe_env, capture_output=True)
     (evidence / (label + '-stats.json')).write_text(result.stdout)
     print(label, result.stdout, flush=True)
@@ -94,3 +106,14 @@ try:
     (evidence / 'sccache-version.json').write_text(stats.stdout)
 finally:
     run(['sccache', '--stop-server'], env=sccache_env)
+
+fix_env = dict(env, CCACHE_DIR=str(root / 'pch-fix-cache'), CCACHE_STATSLOG=str(evidence / 'pch-fix-stats.log'))
+fix_options = ['-DCMAKE_CXX_FLAGS=-Xclang -fno-pch-timestamp']
+fixed = configure('pch-fix-initial', fix_options)
+probe(fixed, 'pch-fix-initial', fix_env)
+shutil.rmtree(build)
+for path in source.rglob('*'):
+    if path.is_file() and '.git' not in path.parts:
+        os.utime(path, None)
+fixed_fresh = configure('pch-fix-fresh', fix_options)
+probe(fixed_fresh, 'pch-fix-fresh', fix_env)
