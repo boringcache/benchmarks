@@ -5,4 +5,4 @@ fail-on-cache-error = true
 tag = "osquery-ccache"
 no-git = true
 metadata-hints = ["benchmark=osquery-compiler-cache", "tool=ccache", "upstream-job=build_linux-Release"]
-command = ["bash", "-c", "mkdir -p ../build && cd ../build && cmake -G 'Unix Makefiles' -DOSQUERY_TOOLCHAIN_SYSROOT:PATH=/usr/local/osquery-toolchain -DCMAKE_BUILD_TYPE:STRING=Release -DOSQUERY_BUILD_TESTS=ON -DOSQUERY_BUILD_ROOT_TESTS=ON -DOSQUERY_NO_DEBUG_SYMBOLS=OFF ../upstream && cmake --build . -j $(($(nproc) + 1))"]
+command = ["bash", "-c", "mkdir -p ../build && cd ../build && cmake -G 'Unix Makefiles' -DOSQUERY_TOOLCHAIN_SYSROOT:PATH=/usr/local/osquery-toolchain -DCMAKE_BUILD_TYPE:STRING=Release '-DCMAKE_CXX_FLAGS=-Xclang -fno-pch-timestamp' -DOSQUERY_BUILD_TESTS=ON -DOSQUERY_BUILD_ROOT_TESTS=ON -DOSQUERY_NO_DEBUG_SYMBOLS=OFF ../upstream && cmake --build . -j $(($(nproc) + 1))"]

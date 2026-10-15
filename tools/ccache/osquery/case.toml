@@ -1,6 +1,7 @@
 repo = "osquery/osquery"
 branch = "master"
 start_sha = "6b8969bb09ba5d3c01277ad04e55b87b4021f934"
+rolling_series = 2
 directory = "upstream"
 prepare = [
   "df -h / && if [ -d /usr/local/lib/android ]; then sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL; fi && df -h /",
