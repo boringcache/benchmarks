@@ -8,6 +8,8 @@ The consolidated harness is running. Configuration is in `tools/`, `rolling.toml
 | --- | --- | --- |
 | ccache/osquery | `6b8969bb09ba5d3c01277ad04e55b87b4021f934`, 2026-09-09 | Last first-parent master commit before [osquery/osquery#9104](https://github.com/osquery/osquery/issues/9104), opened 2026-09-14. Builds upstream's [Linux Release CI configuration](https://github.com/osquery/osquery/blob/6b8969bb09ba5d3c01277ad04e55b87b4021f934/.github/workflows/hosted_runners.yml) with toolchain 1.2.0, tests enabled, debug symbols enabled, and `nproc + 1` jobs. BoringCache ccache remote storage and GitHub Actions ccache archives run on Ubuntu 24.04, GitHub 4 vCPU. Both use upstream's `ccache.conf` and ccache 4.14.1; the archive lane keeps the default 5 GiB local limit. Both rebuild OpenSSL and configure from source. Only compiler outputs are cached; this case does not reproduce competition among upstream's OS, architecture and build-type cache keys. |
 
+The issue's 38.29% hit-rate example comes from the selected commit's [Linux Release job](https://github.com/osquery/osquery/actions/runs/34361072629/job/102498037144): 1,821 hits in 4,756 calls, 2,935 misses, and three cleanups after restoring a cache. That job used ccache 4.5.1 on Ubuntu 22.04. The benchmark uses ccache 4.14.1 on Ubuntu 24.04 for both lanes, matching the harness's existing ccache setup.
+
 ## Remaining migration work
 
 ## Upstream failures under review
