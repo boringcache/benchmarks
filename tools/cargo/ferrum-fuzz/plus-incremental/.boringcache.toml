@@ -22,6 +22,7 @@ entries = ["cargo-registry-cache", "cargo-registry-index", "cargo-git-db", "carg
 entries = []
 
 [adapters.cargo]
+compiler-cache = "none"
 fail-on-cache-error = true
 profiles = ["cargo-product"]
 target-budget = "25GiB"

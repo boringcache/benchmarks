@@ -44,6 +44,17 @@ class CheckTest < Minitest::Test
                   "demo/app: boringcache-seeded seeds from boringcache-demo, whose plan has different entries"], Bench::Check.new(catalog).problems
   end
 
+  def test_an_incremental_lane_needs_a_plan_without_the_compiler_cache
+    write "tools/demo/lanes/boringcache-incremental.toml", %(provider = "boringcache"\nlevel = "base"\nplan = "incremental"\n[env]\nCARGO_INCREMENTAL = "1"\n)
+    write "tools/demo/app/incremental/.boringcache.toml", %(workspace = "boringcache/benchmarks"\n[adapters.cargo]\nprofiles = ["deps"]\n)
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", "[runs]\nboringcache-incremental = [\"local\"]\n")
+
+    assert_equal ["demo/app: boringcache-incremental sets CARGO_INCREMENTAL=1, which sccache refuses; its plan needs compiler-cache = \"none\""], Bench::Check.new(catalog).problems
+
+    write "tools/demo/app/incremental/.boringcache.toml", %(workspace = "boringcache/benchmarks"\n[adapters.cargo]\ncompiler-cache = "none"\nprofiles = ["deps"]\n)
+    assert_empty Bench::Check.new(catalog).problems
+  end
+
   def test_versions_case_pins_name_known_cases_and_release_tags
     write "versions.toml", %(boringcache = "1.40.0"\n[cases]\n"demo/app" = "latest"\n"demo/missing" = "vcli-canary-abc123def"\n)
 
