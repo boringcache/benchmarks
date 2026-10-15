@@ -36,8 +36,9 @@ jobs:
           curl -fsSL https://github.com/osquery/osquery-toolchain/releases/download/1.2.0/osquery-toolchain-1.2.0-x86_64.tar.xz -o "$RUNNER_TEMP/toolchain.tar.xz"
           echo '5f9755ea9c7306ada1710674b6e61202252883e01f7adc45a2dc602555c05a87  '"$RUNNER_TEMP/toolchain.tar.xz" | sha256sum --check
           sudo tar -xJf "$RUNNER_TEMP/toolchain.tar.xz" -C /usr/local
-          git clone --filter=blob:none --no-checkout https://github.com/osquery/osquery.git "$RUNNER_TEMP/osquery-source"
-          git -C "$RUNNER_TEMP/osquery-source" checkout 6b8969bb09ba5d3c01277ad04e55b87b4021f934
+          mkdir -p /home/runner/w/ccache/osquery
+          git clone --filter=blob:none --no-checkout https://github.com/osquery/osquery.git "/home/runner/w/ccache/osquery/upstream"
+          git -C "/home/runner/w/ccache/osquery/upstream" checkout 6b8969bb09ba5d3c01277ad04e55b87b4021f934
       - name: Compare compile commands and cache inputs
         run: mise exec ccache@4.14.1 sccache@0.17.0 -- python3 scripts/osquery-cache-diagnostics.py
       - if: always()
