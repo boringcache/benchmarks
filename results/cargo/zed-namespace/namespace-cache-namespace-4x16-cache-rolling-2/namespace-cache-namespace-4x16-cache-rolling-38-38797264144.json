@@ -1,0 +1,49 @@
+{
+  "adapter_command": "cargo",
+  "case": "zed-namespace",
+  "lane": "namespace-cache",
+  "provider": "namespace",
+  "level": "plus",
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "runner": "namespace-4x16-cache",
+  "runner_label": [
+    "nscloud-ubuntu-24.04-amd64-4x16-with-cache",
+    "nscloud-cache-tag-zed-namespace-cargo",
+    "nscloud-cache-size-100gb"
+  ],
+  "machine": "namespace 4c",
+  "phase": "rolling",
+  "step": 38,
+  "scope": "namespace-cache-namespace-4x16-cache-rolling-2",
+  "cache_scope": "namespace-cache-namespace-4x16-cache-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "zed-industries/zed",
+  "sha": "7fa2adbe088c8feb3173aec4fc5f8ac0fc153f31",
+  "seconds": 1515.043,
+  "cache_save_timing": "post-job",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "e584d668748695b98392f27b2a6e7c0b96331edd",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38797264144",
+  "attempt": 1,
+  "started_at": "2026-10-15T19:57:46Z",
+  "job_conclusion": "success",
+  "post_job_save_seconds": 0.069
+}
