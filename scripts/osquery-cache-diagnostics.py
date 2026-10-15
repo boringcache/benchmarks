@@ -6,6 +6,7 @@ import pathlib
 import shlex
 import shutil
 import subprocess
+import sys
 
 root = pathlib.Path(os.environ['RUNNER_TEMP'])
 source = pathlib.Path('/home/runner/w/ccache/osquery/upstream')
@@ -56,9 +57,36 @@ def probe(commands, label, probe_env=None, wrapper='ccache'):
         result.check_returncode()
         if output.suffix == '.pch':
             (evidence / (label + '-pch-sha256.txt')).write_text(hashlib.sha256(output.read_bytes()).hexdigest())
-    result = run(['ccache', '--print-log-stats', '--format=json'], env=probe_env, capture_output=True)
+    stats_command = ['sccache', '--show-stats', '--stats-format', 'json'] if wrapper == 'sccache' else ['ccache', '--print-log-stats', '--format=json']
+    result = run(stats_command, env=probe_env, capture_output=True)
     (evidence / (label + '-stats.json')).write_text(result.stdout)
     print(label, result.stdout, flush=True)
+
+
+if os.environ.get('DIAGNOSTIC_PROBE') == 'sccache':
+    sccache_probe_env = {key: value for key, value in env.items() if not key.startswith('SCCACHE_')}
+    sccache_probe_env.update(SCCACHE_DIR=str(root / 'sccache-pch-cache'), SCCACHE_SERVER_UDS=str(root / 'sccache-pch.sock'))
+    try:
+        baseline = configure('sccache-initial')
+        probe(baseline, 'sccache-initial', sccache_probe_env, 'sccache')
+        probe(baseline, 'sccache-same-inputs', sccache_probe_env, 'sccache')
+        shutil.rmtree(build)
+        for path in source.rglob('*'):
+            if path.is_file() and '.git' not in path.parts:
+                os.utime(path, None)
+        fresh = configure('sccache-fresh')
+        probe(fresh, 'sccache-fresh', sccache_probe_env, 'sccache')
+        fixed = configure('sccache-fixed-initial', ['-DCMAKE_CXX_FLAGS=-Xclang -fno-pch-timestamp'])
+        probe(fixed, 'sccache-fixed-initial', sccache_probe_env, 'sccache')
+        shutil.rmtree(build)
+        for path in source.rglob('*'):
+            if path.is_file() and '.git' not in path.parts:
+                os.utime(path, None)
+        fixed_fresh = configure('sccache-fixed-fresh', ['-DCMAKE_CXX_FLAGS=-Xclang -fno-pch-timestamp'])
+        probe(fixed_fresh, 'sccache-fixed-fresh', sccache_probe_env, 'sccache')
+    finally:
+        run(['sccache', '--stop-server'], env=sccache_probe_env)
+    sys.exit(0)
 
 
 saved_env = dict(env, CCACHE_DIR=str(source.parent / '.ccache'), CCACHE_READONLY='1', CCACHE_STATSLOG=str(evidence / 'saved-cache-stats.log'))
