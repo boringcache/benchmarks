@@ -21,6 +21,5 @@ CXX = "clang++"
 [runs]
 boringcache-cargo = ["namespace-4x16"]
 boringcache-cargo-plus = ["namespace-4x16"]
-boringcache-cargo-plus-incremental = ["namespace-4x16"]
 depot-cache = ["namespace-4x16"]
 namespace-cache = ["namespace-4x16-cache"]
