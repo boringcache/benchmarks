@@ -1,7 +1,7 @@
 bazel = ["grpc"]
 buck2 = ["executorch"]
 cargo = ["deno", "ferrum-edge", "zed", "zed-namespace"]
-ccache = ["obs-studio"]
+ccache = ["obs-studio", "osquery"]
 docker = ["chroma", "discourse", "duckgres", "hugo", "immich", "linkerd2", "llama-cpp", "mastodon", "n8n", "posthog", "qdrant"]
 go = ["hugo"]
 gradle = ["opentelemetry-java"]
