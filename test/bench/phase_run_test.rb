@@ -157,6 +157,22 @@ class PhaseRunTest < Minitest::Test
                  rolling.map { it.values_at("step", "cache_scope", "cache_seeded") }.sort
   end
 
+  def test_a_seeded_lane_restores_its_seed_lane_caches_on_its_first_rolling_step_only
+    write "tools/demo/lanes/boringcache-seeded.toml", %(provider = "boringcache"\nlevel = "base"\nexperimental = true\nseed = "boringcache-demo"\n)
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", "[runs]\nboringcache-seeded = [\"local\"]\n")
+    write "bin/boringcache", STUB.sub(%(echo "$tool $*" >> "$STUB_LOG"), %(echo "$tool $* | $(grep -m1 -o 'demo-app-[a-z-]*' .boringcache.toml)" >> "$STUB_LOG"))
+    commit_upstream("two")
+    with_fixture_env do
+      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-seeded", "--phase", "rolling")
+      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-seeded", "--phase", "rolling")
+    end
+
+    assert_equal ["demo --phase restore | demo-app-boringcache-demo-local-rolling", "demo  | demo-app-boringcache-seeded-local-rolling",
+                  "demo  | demo-app-boringcache-seeded-local-rolling"], File.readlines(File.join(@root, "stub.log"), chomp: true)
+    rolling = Dir[File.join(@root, "tmp/results/demo/app/boringcache-seeded-local-rolling/*.json")].map { JSON.parse(File.read(it)) }
+    assert_equal [[0, "boringcache-demo-local-rolling"], [1, nil]], rolling.map { it.values_at("step", "seed_scope") }.sort_by(&:first)
+  end
+
   def test_a_rolling_lane_restores_nothing_on_its_first_step_then_only_its_newest_cache
     first = rolling_restore_key
     assert_includes first, "restore_key<<BENCH_EOF\n\nBENCH_EOF"

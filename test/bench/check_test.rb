@@ -33,6 +33,15 @@ class CheckTest < Minitest::Test
     assert_equal ["demo/app: script must be a command list", "demo/app: boringcache-phases replaces the plan command, which a script case does not run"], Bench::Check.new(catalog).problems
   end
 
+  def test_a_seed_names_another_boringcache_lane_that_runs_on_the_same_runners
+    write "tools/demo/lanes/boringcache-seeded.toml", %(provider = "boringcache"\nlevel = "base"\nseed = "boringcache-demo"\n)
+    write "tools/demo/lanes/remote-seeded.toml", %(provider = "remote"\nlevel = "base"\nseed = "remote"\n)
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("boringcache-demo = [\"local\", \"github\"]", "boringcache-demo = [\"github\"]").sub("[runs]\n", "[runs]\nboringcache-seeded = [\"local\"]\n")
+
+    assert_equal ["demo/lanes/remote-seeded: seed must name another BoringCache lane with the same plan",
+                  "demo/app: boringcache-seeded seeds from boringcache-demo, which does not run on local"], Bench::Check.new(catalog).problems
+  end
+
   def test_versions_case_pins_name_known_cases_and_release_tags
     write "versions.toml", %(boringcache = "1.40.0"\n[cases]\n"demo/app" = "latest"\n"demo/missing" = "vcli-canary-abc123def"\n)
 

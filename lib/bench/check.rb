@@ -57,6 +57,7 @@ module Bench
         problems << "#{where}: program needs replaces" if lane.program && lane.replaces.empty?
         problems << "#{where}: post_job_save must list actions (owner/repo) or step ids" unless lane.post_job_save.is_a?(Array) && lane.post_job_save.all?(String)
         problems << "#{where}: experimental must be true or left out" unless [nil, true].include?(lane.experimental)
+        problems << "#{where}: seed must name another BoringCache lane with the same plan" unless lane.seed.nil? || seed_source?(lane)
         problems << "#{where}: cli_args must be BoringCache CLI flags on a BoringCache lane" unless lane.cli_args.is_a?(Array) && lane.cli_args.all? { it.is_a?(String) && it.start_with?("--") } && (lane.cli_args.empty? || lane.boringcache?)
         problems << "#{where}: cache_keys must list key prefixes that name ${BENCH_SCOPE}" unless lane.cache_key_templates.is_a?(Array) && lane.cache_key_templates.all? { it.is_a?(String) && it.include?("${BENCH_SCOPE}") }
         problems + Array(lane.allowed_runners).reject { @catalog.runners.key?(it) }.map { "#{where}: unknown runner #{it}" }
@@ -99,10 +100,16 @@ module Bench
           end
         end
         problems << "#{kase.id}: #{lane_name} mounts the Namespace cache volume without cache paths" if lane.setup.include?("namespace-cache") && lane.paths.empty? && kase.shared.empty?
+        problems += (runners - Array(kase.runs[lane.seed])).map { "#{kase.id}: #{lane_name} seeds from #{lane.seed}, which does not run on #{it}" } if lane.seed
         return problems unless lane.boringcache?
         return problems << "#{kase.id}: #{lane_name} has no plan at #{File.join(lane.plan_dir, ".boringcache.toml")}" unless File.exist?(kase.plan_path(lane))
 
         problems + (kase.shared - kase.cached_paths(lane)).map { "#{kase.id}: #{lane_name} does not cache shared path #{it}" }
+      end
+
+      def seed_source?(lane)
+        source = lane.tool.lanes.find { it.name == lane.seed }
+        lane.boringcache? && source && source != lane && source.boringcache? && source.plan_dir == lane.plan_dir
       end
   end
 end

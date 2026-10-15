@@ -36,4 +36,5 @@ RUSTFLAGS = ""
 [runs]
 boringcache-cargo = ["github-26"]
 boringcache-cargo-plus = ["github-26"]
+boringcache-cargo-plus-incremental = ["github-26"]
 gha-plus = ["github-26"]
