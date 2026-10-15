@@ -43,6 +43,10 @@ The [sccache PCH comparison](https://github.com/boringcache/benchmarks/actions/r
 | ccache, PCH timestamp flag | Hit | Hit |
 | sccache 0.17.0, PCH timestamp flag | Hit | Hit |
 
+The [series-2 first reuse](https://github.com/boringcache/benchmarks/actions/runs/38755781425) passed both lanes. Native ccache evidence reports 4,133 hits and 623 misses in 4,756 compilations (86.90%), recovering the 2,312 PCH-related misses. The remaining miss count matches the changed version-definition group. Timed phases took 1,262.661 s for BoringCache on Xeon 8573C and 1,417.298 s for the archive lane on Xeon 8370C; the CPU difference prevents attributing that gap to storage alone. The archive restored series-2 step 0 and saved step 1, but its native counters were not retained.
+
+BoringCache prefetched 9,512 blobs / 800,888,349 bytes in 4.931 s. All 8,266 successful build-time blob reads were local, with 551 ms summed local blob-read duration and no demand downloads. These timings exclude ccache hashing, storage-helper transport and other handler work. CMake configuration took 421 s and cloned 121 submodules, including a 175 s libcryptsetup checkout; the archive lane spent 472.5 s configuring and 160 s on that checkout. The final local cache read was at 15:13:22 UTC; compilation and linking finished at 15:25:06 UTC. Around 85–87%, build-message timestamps were at most 4.437 s apart. The run does not retain process CPU or pressure evidence, so proxy/compiler resource contention remains unmeasured. Both osquery lanes now collect the existing five-second CPU, memory, I/O-pressure and process samples as 14-day diagnostics, including process wait channels and build/source-preparation processes. The build command, cache scope and rolling series are unchanged.
+
 ## Remaining migration work
 
 - Migrate the website's `Reporting::BenchmarkComparisons` reader from `data/latest/index.json` to the current report format. The old reader requires an `entries` array; the current report contains `rows` and `matched`. Keep `data/latest/` until the reader and its tests migrate together.
