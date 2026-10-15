@@ -27,6 +27,7 @@ no-git = true
 metadata-hints = ["benchmark=zed-namespace", "layer=compiler"]
 
 [adapters.cargo]
+compiler-cache = "none"
 fail-on-cache-error = true
 profiles = ["cargo-product"]
 target-budget = "25GiB"

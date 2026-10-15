@@ -105,7 +105,13 @@ module Bench
         return problems << "#{kase.id}: #{lane_name} has no plan at #{File.join(lane.plan_dir, ".boringcache.toml")}" unless File.exist?(kase.plan_path(lane))
 
         problems << "#{kase.id}: #{lane_name} seeds from #{lane.seed}, whose plan has different entries" if lane.seed && seed_source?(lane) && !same_entries?(kase, lane, kase.tool.lane(lane.seed))
+        problems << "#{kase.id}: #{lane_name} sets CARGO_INCREMENTAL=1, which sccache refuses; its plan needs compiler-cache = \"none\"" if incremental_with_sccache?(kase, lane)
         problems + (kase.shared - kase.cached_paths(lane)).map { "#{kase.id}: #{lane_name} does not cache shared path #{it}" }
+      end
+
+      def incremental_with_sccache?(kase, lane)
+        TomlRB.load_file(lane.path).dig("env", "CARGO_INCREMENTAL") == "1" &&
+          TomlRB.load_file(kase.plan_path(lane)).dig("adapters", "cargo", "compiler-cache") != "none"
       end
 
       def seed_source?(lane)
