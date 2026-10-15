@@ -22,8 +22,8 @@ module Bench
       [step, sha] if sha
     end
 
-    def passed?(lane, runner, step)
-      records(File.join(cache_scope(lane, runner), "*.json")).any? { it["step"] == step && it["exit_status"] == 0 && it["output_ok"] == true && it.fetch("job_conclusion", "success") == "success" }
+    def passed?(lane, runner, step = nil)
+      records(File.join(cache_scope(lane, runner), "*.json")).any? { (step.nil? || it["step"] == step) && it["exit_status"] == 0 && it["output_ok"] == true && it.fetch("job_conclusion", "success") == "success" }
     end
 
     def cache_scope(lane, runner)

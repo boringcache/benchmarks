@@ -1,6 +1,6 @@
 provider = "boringcache"
 level = "plus"
-plan = "plus"
+plan = "plus-incremental"
 label = "boringcache plus incremental"
 experimental = true
 seed = "boringcache-cargo-plus"
