@@ -16,6 +16,12 @@ The issue's 38.29% hit-rate example comes from the selected commit's [Linux Rele
 - Update the monorepo release-pin tooling and benchmark product contract for this repository's `versions.toml`, `.github/actions/phase/action.yml`, and current lane names. Verify those consumers before removing their compatibility assumptions.
 - CLI canary comparisons are manual through `project.yml`, with `mode=fresh` and an exact `cli` tag. The removed hourly collector referred to archived repositories and supplied no coverage for this harness.
 
+## Runner limits under review
+
+| Case | Run | Finding |
+| --- | --- | --- |
+| Cargo Ferrum: experimental incremental lane | [Step 8, attempt 2](https://github.com/boringcache/benchmarks/actions/runs/38722414892) | The build and fuzz runs finished, but saving the target failed while writing archive chunks: `Disk quota exceeded (os error 122)`. SDK cleanup left 97 GiB available before allocating 12 GiB of swap. Diagnostics report a 75.2 GB target, including 12.5 GB of incremental state. The recorded phase took 3,813.308 s with exit status 1; no target cache was saved, so there is no incremental reuse measurement. The three regular lanes passed. |
+
 ## Upstream failures under review
 
 | Case | Records | Finding |
