@@ -173,6 +173,21 @@ class PhaseRunTest < Minitest::Test
     assert_equal [[0, "boringcache-demo-local-rolling"], [1, nil]], rolling.map { it.values_at("step", "seed_scope") }.sort_by(&:first)
   end
 
+  def test_a_seeded_lane_seeds_again_until_it_has_a_passing_step
+    write "tools/demo/lanes/boringcache-seeded.toml", %(provider = "boringcache"\nlevel = "base"\nexperimental = true\nseed = "boringcache-demo"\n)
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", "[runs]\nboringcache-seeded = [\"local\"]\n")
+    write "bin/boringcache", STUB.sub(%(echo "$tool $*" >> "$STUB_LOG"), %(echo "$tool $*" >> "$STUB_LOG"\nif [ "${1:-}" != --phase ] && [ ! -e "$STUB_LOG.failed" ]; then touch "$STUB_LOG.failed"; exit 1; fi))
+    commit_upstream("two")
+    commit_upstream("three")
+    with_fixture_env do
+      refute_equal 0, cli("run", "demo/app", "--lane", "boringcache-seeded", "--phase", "rolling")
+      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-seeded", "--phase", "rolling")
+      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-seeded", "--phase", "rolling")
+    end
+
+    assert_equal ["demo --phase restore", "demo ", "demo --phase restore", "demo ", "demo "], File.readlines(File.join(@root, "stub.log"), chomp: true)
+  end
+
   def test_a_rolling_lane_restores_nothing_on_its_first_step_then_only_its_newest_cache
     first = rolling_restore_key
     assert_includes first, "restore_key<<BENCH_EOF\n\nBENCH_EOF"

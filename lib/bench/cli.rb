@@ -287,7 +287,8 @@ module Bench
           @out.puts "#{kase.id} #{lane.name} rolling: step #{newer} is already recorded, so step #{step} is not rebuilt"
           return nil
         end
-        seed_scope = rolling.cache_scope(kase.tool.lane(lane.seed), options[:runner]) if lane.seed && !options[:continues] && !rolling.continues?(lane, options[:runner])
+        histories = [rolling, *(Rolling.new(kase, results_dir: options[:recorded], work_root: options[:work]) if options[:recorded])]
+        seed_scope = rolling.cache_scope(kase.tool.lane(lane.seed), options[:runner]) if lane.seed && histories.none? { it.passed?(lane, options[:runner]) }
         return PhaseRun.new(kase, lane, scope: Rolling.scope(lane, options[:runner], kase.rolling_series), cache_scope:, seed_scope:, sha:, step:, **common) if sha
 
         @out.puts "#{kase.id} #{lane.name} rolling: no upstream commit after the last step"
