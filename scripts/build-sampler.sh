@@ -13,7 +13,7 @@ while :; do
     done
     grep -E '^(MemTotal|MemAvailable|Cached|Dirty|SwapTotal|SwapFree):' /proc/meminfo | tr -s ' ' | tr '\n' ' '
     echo
-    ps -eo pid=,ppid=,etimes=,times=,rss=,stat=,comm= | awk '$7 ~ /^(boringcache|sccache|cargo|rustc|clang|cc|c\+\+|ld|ld\.lld|lld|mold|build-script-)/'
+    ps -eo pid=,ppid=,etimes=,times=,rss=,stat=,comm=,wchan= | awk '$7 ~ /^(boringcache|sccache|cargo|rustc|clang|cc|c\+\+|cmake|make|ninja|git|ld|ld\.lld|lld|mold|build-script-)/'
   } >> "$out"
   sleep "$interval"
 done
