@@ -15,6 +15,8 @@ class DepsTest < Minitest::Test
       assert_equal jobs.size, jobs.map { it["name"] }.uniq.size
     end
     assert_equal @plan["cases"].size * @plan["lanes"].size, Deps.new(@plan, run_id: "1", preflight: true).jobs("seed").size
+    assert_equal [@plan["lanes"].size, ["discourse-bundler"]], Deps.new(@plan, run_id: "1", preflight: true, only: "discourse-bundler").jobs("seed").then { [it.size, it.map { it["case"] }.uniq] }
+    assert_raises(ArgumentError) { Deps.new(@plan, run_id: "1", only: "nope") }
   end
 
   def test_seed_installs_the_earlier_lockfile_and_later_jobs_the_update
