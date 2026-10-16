@@ -1,0 +1,39 @@
+{
+  "name": "same-namespace-4-actions-cache-compressible",
+  "kind": "same",
+  "lane": "actions-cache",
+  "payload": "compressible",
+  "bytes": 4294967296,
+  "runner": "namespace-4",
+  "machine": "namespace 4c",
+  "producer": "namespace-4",
+  "producer_machine": "namespace 4c",
+  "key": "throughput-38884268550-same-namespace-4-actions-cache-compressible",
+  "run_id": "38884268550",
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38884268550",
+  "recorded_at": "2026-10-16T10:05:31Z",
+  "versions": {
+    "actions_cache": "6.1.0"
+  },
+  "observed": {
+    "cpu": "AMD EPYC",
+    "cores": 4,
+    "disk_free_bytes": 90296193024
+  },
+  "sha256": "43d5b609cbec2062cf6aece5476197c1e0d67900b8e55a79aff4e24a055e68c5",
+  "save": {
+    "seconds": 11.289,
+    "network_bytes": 1340665516,
+    "step_ok": true,
+    "ok": true
+  },
+  "restore": {
+    "seconds": 33.173,
+    "network_bytes": 1339053690,
+    "step_ok": true,
+    "ok": true
+  },
+  "exit_status": 0,
+  "output_ok": true
+}

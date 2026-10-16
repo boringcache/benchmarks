@@ -1,0 +1,33 @@
+{
+  "name": "produce-github-actions-cache-random",
+  "kind": "produce",
+  "lane": "actions-cache",
+  "payload": "random",
+  "bytes": 4294967296,
+  "runner": "github",
+  "machine": "github 4c",
+  "producer": "github",
+  "producer_machine": "github 4c",
+  "key": "throughput-38884268550-produce-github-actions-cache-random",
+  "run_id": "38884268550",
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38884268550",
+  "recorded_at": "2026-10-16T10:10:13Z",
+  "versions": {
+    "actions_cache": "6.1.0"
+  },
+  "observed": {
+    "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+    "cores": 4,
+    "disk_free_bytes": 81599938560
+  },
+  "sha256": "96dbc687bac2c202fee46483c0a18769411126eade9c87a023948a857a0aea40",
+  "save": {
+    "seconds": 20.255,
+    "network_bytes": 4500173309,
+    "step_ok": true,
+    "ok": true
+  },
+  "exit_status": 0,
+  "output_ok": true
+}

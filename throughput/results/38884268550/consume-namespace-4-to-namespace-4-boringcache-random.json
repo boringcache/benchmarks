@@ -1,0 +1,40 @@
+{
+  "name": "consume-namespace-4-to-namespace-4-boringcache-random",
+  "kind": "consume",
+  "lane": "boringcache",
+  "payload": "random",
+  "bytes": 4294967296,
+  "runner": "namespace-4",
+  "machine": "namespace 4c",
+  "producer": "namespace-4",
+  "producer_machine": "namespace 4c",
+  "key": "throughput-38884268550-produce-namespace-4-boringcache-random",
+  "run_id": "38884268550",
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38884268550",
+  "recorded_at": "2026-10-16T10:12:56Z",
+  "versions": {
+    "boringcache": "1.42.0"
+  },
+  "observed": {
+    "cpu": "AMD EPYC",
+    "cores": 4,
+    "disk_free_bytes": 90252677120
+  },
+  "auth_seconds": 0.393,
+  "sha256": "7b3087b71ef802efb156e6d79f58ee2911cfd89f36d7acca336975b181c8b614",
+  "restore": {
+    "seconds": 10.55,
+    "network_bytes": 4319599147,
+    "step_ok": true,
+    "ok": true
+  },
+  "second_restore": {
+    "seconds": 7.593,
+    "network_bytes": 4319601668,
+    "step_ok": true,
+    "ok": true
+  },
+  "exit_status": 0,
+  "output_ok": true
+}
