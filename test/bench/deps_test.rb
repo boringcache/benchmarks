@@ -34,7 +34,7 @@ class DepsTest < Minitest::Test
 
   def test_case_environment_points_at_the_run_directory
     with_job("seed", "posthog-pnpm") do |job, _dir|
-      assert_match %r{\APNPM_CONFIG_STORE_DIR=/.+/bench-deps/posthog-pnpm/\.pnpm-store\n}, job.env_lines
+      assert_match %r{\Anpm_config_store_dir=/.+/bench-deps/posthog-pnpm/\.pnpm-store\n}, job.env_lines
     end
   end
 

@@ -108,6 +108,14 @@ runs:
       env:
         INSTALL: ${{ fromJSON(inputs.job).install }}
       run: eval "$INSTALL"
+    - if: steps.install.outcome == 'failure'
+      shell: bash
+      working-directory: ${{ fromJSON(inputs.job).dir }}
+      run: |
+        grep -rilE --include=mkmf.log --include=gem_make.out --include=config.log "error|failed" . | head -5 | while read -r log; do
+          echo "== $log"
+          tail -n 80 "$log"
+        done
     - if: fromJSON(inputs.job).kind != 'verify'
       shell: bash
       run: |

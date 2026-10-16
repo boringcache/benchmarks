@@ -54,7 +54,9 @@ class DepsJob < ThroughputJob
       Dir.chdir(work) do
         runner = new(job, dir: work, env: ENV.to_h.merge(runner_env(job)))
         ENV.update(runner.env)
+        BUNDLER_ENV.each { ENV.delete(it) }
         runner.checkout
+        ENV["PATH"] = [runner.toolchain, ENV.fetch("PATH")].compact.join(File::PATH_SEPARATOR)
         raise "setup failed" unless system("bash", "-ec", job.fetch("setup"), chdir: runner.upstream)
         runner.probe
         outcomes = {}
@@ -81,6 +83,8 @@ class DepsJob < ThroughputJob
     end.max
   end
 
+  BUNDLER_ENV = %w[BUNDLE_GEMFILE BUNDLE_BIN_PATH BUNDLE_LOCKFILE BUNDLER_VERSION BUNDLER_SETUP RUBYOPT RUBYLIB].freeze
+
   def self.runner_env(job)
     dir = File.expand_path(job.fetch("dir"))
     job.fetch("env").transform_values { it.gsub("${DIR}", dir) }
@@ -103,6 +107,14 @@ class DepsJob < ThroughputJob
       raise "git #{args.first} failed" unless system("git", *args, chdir: upstream)
     end
     0
+  end
+
+  def toolchain
+    version = case @job.fetch("tool")
+    when "pnpm" then File.read(File.join(upstream, ".nvmrc")).strip.delete_prefix("v").then { "node@#{it}" } if File.exist?(File.join(upstream, ".nvmrc"))
+    when "bundler" then "ruby@#{@job.fetch("ruby")}" unless @job.fetch("ruby").empty?
+    end
+    capture("mise", "where", version)&.strip&.then { File.join(it, "bin") } if version
   end
 
   def env_lines

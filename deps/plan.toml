@@ -13,8 +13,9 @@ check = "pnpm install --offline --frozen-lockfile --ignore-scripts"
 steps = [["5871475311c8664a32c7132e94bc17451e8c03d5", "41457ecc938b31430e5966e82fe6356dddd9af1b"]]
 
 [cases.posthog-pnpm.env]
-PNPM_CONFIG_STORE_DIR = "${DIR}/.pnpm-store"
+npm_config_store_dir = "${DIR}/.pnpm-store"
 COREPACK_ENABLE_DOWNLOAD_PROMPT = "0"
+npm_config_ignore_scripts = "true"
 
 [cases.posthog-uv]
 repo = "PostHog/posthog"
