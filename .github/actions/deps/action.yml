@@ -112,9 +112,10 @@ runs:
       shell: bash
       working-directory: ${{ fromJSON(inputs.job).dir }}
       run: |
-        grep -rilE --include=mkmf.log --include=gem_make.out --include=config.log "error|failed" . | head -5 | while read -r log; do
-          echo "== $log"
-          tail -n 80 "$log"
+        grep -rlE --include=gem_make.out "extconf failed|make failed" . | while read -r out; do
+          for log in "$out" "$(dirname "$out")/mkmf.log"; do
+            [ -f "$log" ] && { echo "== $log"; tail -n 120 "$log"; }
+          done
         done
     - if: fromJSON(inputs.job).kind != 'verify'
       shell: bash

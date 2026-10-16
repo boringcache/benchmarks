@@ -12,8 +12,12 @@ on:
         description: index of the dependency update pair in deps/plan.toml
         type: number
         default: 0
+      case:
+        description: only this case, for example discourse-bundler (optional)
+        type: string
+        default: ""
 
-run-name: Dependency cache update step ${{ inputs.step }}${{ inputs.mode == 'preflight' && ' (preflight)' || '' }}
+run-name: Dependency cache update step ${{ inputs.step }}${{ inputs.case && format(' {0}', inputs.case) || '' }}${{ inputs.mode == 'preflight' && ' (preflight)' || '' }}
 
 concurrency:
   group: cache-deps
@@ -39,6 +43,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          sparse-checkout: |
+            .github
+            scripts
+            deps
       - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
         with:
           bundler-cache: true
@@ -47,7 +55,8 @@ jobs:
           RUN_ID: ${{ github.run_id }}
           STEP: ${{ inputs.step }}
           PREFLIGHT: ${{ inputs.mode == 'preflight' && 'true' || '' }}
-        run: bundle exec ruby scripts/deps.rb matrix --run-id "$RUN_ID" --step "$STEP" ${PREFLIGHT:+--preflight} >> "$GITHUB_OUTPUT"
+          CASE: ${{ inputs.case }}
+        run: bundle exec ruby scripts/deps.rb matrix --run-id "$RUN_ID" --step "$STEP" ${PREFLIGHT:+--preflight} ${CASE:+--case "$CASE"} >> "$GITHUB_OUTPUT"
       - uses: ./.github/actions/throughput-cleanup
         with:
           prefix: deps-
@@ -68,6 +77,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          sparse-checkout: |
+            .github
+            scripts
       - uses: ./.github/actions/deps
         with:
           job: ${{ toJSON(matrix) }}
@@ -112,6 +124,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          sparse-checkout: |
+            .github
+            scripts
       - uses: ./.github/actions/throughput-cleanup
         with:
           prefix: deps-${{ github.run_id }}-

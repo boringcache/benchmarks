@@ -10,17 +10,18 @@ class Deps
     TomlRB.load_file(File.join(root, "deps", "plan.toml")).merge("machines" => TomlRB.load_file(File.join(root, "runners.toml")))
   end
 
-  def initialize(plan, run_id:, step: 0, preflight: false)
+  def initialize(plan, run_id:, step: 0, preflight: false, only: nil)
     raise ArgumentError, "run id must contain digits only" unless run_id.to_s.match?(/\A\d+\z/)
+    raise ArgumentError, "unknown case #{only}" if only && !plan.fetch("cases").key?(only)
 
-    @plan, @run_id, @step, @preflight = plan, run_id.to_s, Integer(step), preflight
+    @plan, @run_id, @step, @preflight, @only = plan, run_id.to_s, Integer(step), preflight, only
   end
 
   def jobs(kind)
     raise ArgumentError, "unknown kind #{kind}" unless KINDS.include?(kind)
 
     runners = @preflight ? @plan.fetch("runners").first(1) : @plan.fetch("runners")
-    @plan.fetch("cases").keys.product(@plan.fetch("lanes"), runners).map { |name, lane, runner| job(kind, name, lane, runner) }
+    @plan.fetch("cases").keys.select { @only.nil? || it == @only }.product(@plan.fetch("lanes"), runners).map { |name, lane, runner| job(kind, name, lane, runner) }
   end
 
   def job(kind, name, lane, runner)
@@ -237,7 +238,7 @@ if $PROGRAM_NAME == __FILE__
   job = -> { DepsJob.load(ENV.fetch("THROUGHPUT_DIR")) }
   outcomes = -> { ENV.filter_map { |key, value| [key.delete_prefix("THROUGHPUT_OUTCOME_").downcase, value] if key.start_with?("THROUGHPUT_OUTCOME_") }.to_h }
   exit case command
-  when "matrix" then puts Deps.new(Deps.plan, run_id: options.fetch(:run_id), step: options.fetch(:step, 0), preflight: options[:preflight]).outputs; 0
+  when "matrix" then puts Deps.new(Deps.plan, run_id: options.fetch(:run_id), step: options.fetch(:step, 0), preflight: options[:preflight], only: options[:case]).outputs; 0
   when "env" then print job.call.env_lines; 0
   when "keys" then print job.call.keys; 0
   when "probe", "measure" then job.call.public_send(command)
