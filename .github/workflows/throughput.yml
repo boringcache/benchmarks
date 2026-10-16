@@ -27,7 +27,6 @@ jobs:
       actions: write
     env:
       GH_TOKEN: ${{ github.token }}
-      BORINGCACHE_ADMIN_TOKEN: ${{ secrets.BORINGCACHE_ADMIN_TOKEN }}
     outputs:
       same: ${{ steps.matrix.outputs.same }}
       produce: ${{ steps.matrix.outputs.produce }}
@@ -104,7 +103,6 @@ jobs:
       actions: write
     env:
       GH_TOKEN: ${{ github.token }}
-      BORINGCACHE_ADMIN_TOKEN: ${{ secrets.BORINGCACHE_ADMIN_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

@@ -40,7 +40,7 @@ class ThroughputTest < Minitest::Test
 
   def test_record_times_each_operation_between_its_marks
     with_job("same") do |job, dir|
-      File.write(File.join(dir, "marks"), "save_start 10.0 100 1000\nsave_end 30.5 150 5001000\nrestore_start 31.0 150 5001000\nrestore_end 43.25 4000150 5002000\n")
+      File.write(File.join(dir, "marks"), "save_start 10.0 eth0=100,1000\nsave_end 30.5 eth0=150,5001000\nrestore_start 31.0 eth0=150,5001000\nrestore_end 43.25 eth0=4000150,5002000\n")
       record = job.record("save" => "success", "lookup" => "success", "restore" => "success", "restore_check" => "success")
       assert_equal({ "seconds" => 20.5, "network_bytes" => 5_000_000, "step_ok" => true, "ok" => true }, record["save"])
       assert_equal({ "seconds" => 12.25, "network_bytes" => 4_000_000, "step_ok" => true, "ok" => true }, record["restore"])
@@ -48,9 +48,16 @@ class ThroughputTest < Minitest::Test
     end
   end
 
+  def test_network_bytes_come_from_the_busiest_interface_when_interfaces_count_the_same_traffic
+    with_job("same") do |job, dir|
+      File.write(File.join(dir, "marks"), "restore_start 1.0 eth0=1000,0 enP1s1=500,0 docker0=0,0\nrestore_end 9.0 eth0=4001000,10 enP1s1=4000500,10 docker0=0,0\n")
+      assert_equal 4_000_000, job.record("restore" => "success", "restore_check" => "success").dig("restore", "network_bytes")
+    end
+  end
+
   def test_a_save_that_cannot_be_found_afterwards_is_not_ok
     with_job("produce") do |job, dir|
-      File.write(File.join(dir, "marks"), "save_start 10.0 - -\nsave_end 12.0 - -\n")
+      File.write(File.join(dir, "marks"), "save_start 10.0\nsave_end 12.0\n")
       record = job.record("save" => "success", "lookup" => "failure")
       assert_equal({ "seconds" => 2.0, "step_ok" => true, "ok" => false }, record["save"])
       assert_equal [0, false], record.values_at("exit_status", "output_ok")
@@ -59,7 +66,7 @@ class ThroughputTest < Minitest::Test
 
   def test_a_failed_restore_is_recorded_as_a_failure
     with_job("consume") do |job, dir|
-      File.write(File.join(dir, "marks"), "restore_start 1.0 0 0\nrestore_end 2.0 0 0\nsecond_restore_start 3.0 0 0\nsecond_restore_end 4.0 0 0\n")
+      File.write(File.join(dir, "marks"), "restore_start 1.0 eth0=0,0\nrestore_end 2.0 eth0=0,0\nsecond_restore_start 3.0 eth0=0,0\nsecond_restore_end 4.0 eth0=0,0\n")
       record = job.record("restore" => "failure", "restore_check" => "failure", "second_restore" => "success", "second_restore_check" => "success")
       assert_equal false, record.dig("restore", "ok")
       assert_equal true, record.dig("second_restore", "ok")
@@ -114,17 +121,16 @@ class ThroughputTest < Minitest::Test
     end
   end
 
-  def test_cleanup_deletes_github_entries_and_reports_what_it_could_not_delete
+  def test_cleanup_deletes_github_entries_under_the_prefix
     calls = []
     out = StringIO.new
-    cleanup = ThroughputCleanup.new(@plan, prefix: "throughput-123-", env: { "GITHUB_REPOSITORY" => "boringcache/benchmarks" }, out:)
+    cleanup = ThroughputCleanup.new(prefix: "throughput-123-", env: { "GITHUB_REPOSITORY" => "boringcache/benchmarks" }, out:)
     cleanup.define_singleton_method(:capture) { |*args| calls << args; args.include?("--paginate") ? "11\n12\n" : "" }
     assert_equal 0, cleanup.call
     assert_equal %w[repos/boringcache/benchmarks/actions/caches/11 repos/boringcache/benchmarks/actions/caches/12], calls.drop(1).map(&:last)
     assert_match "Deleted 2 GitHub Actions cache entries", out.string
-    assert_match "BORINGCACHE_ADMIN_TOKEN is not set", out.string
-    assert_match "delete them in the depot dashboard", out.string
-    assert_raises(ArgumentError) { ThroughputCleanup.new(@plan, prefix: "chroma-") }
+    assert_equal "repos/boringcache/benchmarks/actions/caches?per_page=100&key=throughput-123-", calls.first[3]
+    assert_raises(ArgumentError) { ThroughputCleanup.new(prefix: "chroma-") }
   end
 
   private

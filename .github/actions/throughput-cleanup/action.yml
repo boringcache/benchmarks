@@ -1,5 +1,5 @@
 name: Cache throughput cleanup
-description: Delete cache throughput entries under a key prefix.
+description: Delete cache throughput GitHub Actions cache entries under a key prefix.
 inputs:
   prefix:
     required: true
@@ -10,10 +10,6 @@ runs:
     - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
       with:
         bundler-cache: true
-
-    - if: env.BORINGCACHE_ADMIN_TOKEN != ''
-      shell: bash
-      run: bash scripts/install-boringcache.sh
 
     - shell: bash
       env:
