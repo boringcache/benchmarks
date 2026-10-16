@@ -1,0 +1,38 @@
+{
+  "name": "verify-posthog-uv-github-actions-cache",
+  "kind": "verify",
+  "case": "posthog-uv",
+  "tool": "uv",
+  "repo": "PostHog/posthog",
+  "sha": "582cbcd576b94d016f228628cb251bf49d3ca4df",
+  "lockfile": "uv.lock",
+  "lane": "actions-cache",
+  "runner": "github",
+  "machine": "github 4c",
+  "key": "deps-38943162980-posthog-uv-github",
+  "run_id": "38943162980",
+  "step": 0,
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38943162980",
+  "recorded_at": "2026-10-16T18:06:19Z",
+  "versions": {
+    "actions_cache": "6.1.0"
+  },
+  "observed": {
+    "cpu": "AMD EPYC 7763 64-Core Processor",
+    "cores": 4,
+    "disk_free_bytes": 90536370176
+  },
+  "restore": {
+    "seconds": 18.249,
+    "network_bytes": 1043270160,
+    "step_ok": true,
+    "ok": true
+  },
+  "exit_status": 0,
+  "output_ok": true,
+  "cache": {
+    "bytes": 3581948225,
+    "files": 66731
+  }
+}
