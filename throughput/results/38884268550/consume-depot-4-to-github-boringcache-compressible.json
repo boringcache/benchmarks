@@ -1,0 +1,40 @@
+{
+  "name": "consume-depot-4-to-github-boringcache-compressible",
+  "kind": "consume",
+  "lane": "boringcache",
+  "payload": "compressible",
+  "bytes": 4294967296,
+  "runner": "github",
+  "machine": "github 4c",
+  "producer": "depot-4",
+  "producer_machine": "depot 4c",
+  "key": "throughput-38884268550-produce-depot-4-boringcache-compressible",
+  "run_id": "38884268550",
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38884268550",
+  "recorded_at": "2026-10-16T10:13:19Z",
+  "versions": {
+    "boringcache": "1.42.0"
+  },
+  "observed": {
+    "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+    "cores": 4,
+    "disk_free_bytes": 81556688896
+  },
+  "auth_seconds": 0.364,
+  "sha256": "29de2fdef2d135c54dbd98d529015b5a7c6917f308b44e056d20af23a015951f",
+  "restore": {
+    "seconds": 16.933,
+    "network_bytes": 1398447219,
+    "step_ok": true,
+    "ok": true
+  },
+  "second_restore": {
+    "seconds": 17.026,
+    "network_bytes": 1398462949,
+    "step_ok": true,
+    "ok": true
+  },
+  "exit_status": 0,
+  "output_ok": true
+}

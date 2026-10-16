@@ -1,0 +1,40 @@
+{
+  "name": "consume-github-to-github-arm-boringcache-compressible",
+  "kind": "consume",
+  "lane": "boringcache",
+  "payload": "compressible",
+  "bytes": 4294967296,
+  "runner": "github-arm",
+  "machine": "github arm 4c",
+  "producer": "github",
+  "producer_machine": "github 4c",
+  "key": "throughput-38884268550-produce-github-boringcache-compressible",
+  "run_id": "38884268550",
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/38884268550",
+  "recorded_at": "2026-10-16T10:13:41Z",
+  "versions": {
+    "boringcache": "1.42.0"
+  },
+  "observed": {
+    "cpu": "Neoverse-N2",
+    "cores": 4,
+    "disk_free_bytes": 105141702656
+  },
+  "auth_seconds": 0.843,
+  "sha256": "ae70acf2a534f6dea68d87bd30c5dcc07606f87670684ce2a1e5ce1b0d2fa861",
+  "restore": {
+    "seconds": 13.665,
+    "network_bytes": 1398268548,
+    "step_ok": true,
+    "ok": true
+  },
+  "second_restore": {
+    "seconds": 13.191,
+    "network_bytes": 1398278801,
+    "step_ok": true,
+    "ok": true
+  },
+  "exit_status": 0,
+  "output_ok": true
+}
