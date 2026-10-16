@@ -4,6 +4,7 @@ start_sha = "73d408d6e3caca2b5294de229c93612d5250f186"
 rolling_stride = 20
 prepare = [
   "if [ \"${RUNNER_ENVIRONMENT:-}\" = github-hosted ]; then df -h / && sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL && df -h /; fi",
+  "cp upstream/Dockerfile overlay/PostHog.Dockerfile && git apply --no-index --directory=overlay overlay/cache.patch",
 ]
 check = "docker image inspect posthog-benchmark:local"
 
