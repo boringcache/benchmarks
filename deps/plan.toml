@@ -1,0 +1,48 @@
+workspace = "boringcache/benchmarks"
+lanes = ["boringcache", "actions-cache"]
+runners = ["github", "depot-4", "namespace-4"]
+
+[cases.posthog-pnpm]
+repo = "PostHog/posthog"
+tool = "pnpm"
+lockfile = "pnpm-lock.yaml"
+path = ".pnpm-store"
+setup = ["corepack enable", "pnpm --version"]
+install = "pnpm fetch"
+check = "pnpm install --offline --frozen-lockfile --ignore-scripts"
+steps = [["5871475311c8664a32c7132e94bc17451e8c03d5", "41457ecc938b31430e5966e82fe6356dddd9af1b"]]
+
+[cases.posthog-pnpm.env]
+PNPM_CONFIG_STORE_DIR = "${DIR}/.pnpm-store"
+COREPACK_ENABLE_DOWNLOAD_PROMPT = "0"
+
+[cases.posthog-uv]
+repo = "PostHog/posthog"
+tool = "uv"
+lockfile = "uv.lock"
+path = ".uv-cache"
+apt = ["libxml2-dev", "libxmlsec1-dev", "libxmlsec1-openssl"]
+setup = ["env -u UV_CACHE_DIR uv python install 3.14.7"]
+install = "uv sync --frozen --dev"
+check = "rm -rf .venv && uv sync --frozen --dev --offline"
+steps = [["86b8aa0e7fd02b6203aca88ece559a43e15320aa", "582cbcd576b94d016f228628cb251bf49d3ca4df"]]
+
+[cases.posthog-uv.env]
+UV_CACHE_DIR = "${DIR}/.uv-cache"
+UV_PYTHON = "3.14.7"
+
+[cases.discourse-bundler]
+repo = "discourse/discourse"
+tool = "bundler"
+ruby = "3.4"
+lockfile = "Gemfile.lock"
+path = "upstream/vendor/bundle"
+apt = ["libpq-dev"]
+install = "bundle install --jobs 4"
+check = "bundle check"
+steps = [["bab418487a463eede4c7d2f6415fe2eb966a3883", "bbb722e4322eba62306788b6da410655e4d4d343"]]
+
+[cases.discourse-bundler.env]
+BUNDLE_PATH = "vendor/bundle"
+BUNDLE_DEPLOYMENT = "true"
+BUNDLE_WITHOUT = "development"

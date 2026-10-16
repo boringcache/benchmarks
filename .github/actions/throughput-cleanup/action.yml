@@ -1,9 +1,9 @@
 name: Cache throughput cleanup
-description: Delete cache throughput GitHub Actions cache entries under a key prefix.
+description: Delete GitHub Actions cache entries under a key prefix.
 inputs:
   prefix:
     required: true
-    description: Key prefix starting with throughput-
+    description: Key prefix starting with throughput- or deps-
 runs:
   using: composite
   steps:

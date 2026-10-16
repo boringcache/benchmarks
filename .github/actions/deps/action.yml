@@ -1,0 +1,175 @@
+name: Dependency cache update
+description: Time restoring, updating and saving a real dependency cache.
+inputs:
+  job:
+    required: true
+    description: One matrix entry from scripts/deps.rb matrix
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        JOB: ${{ inputs.job }}
+      run: |
+        if [ "${GITHUB_RUN_ATTEMPT:-1}" != 1 ]; then
+          echo "::error::Dependency cache runs cannot be retried; dispatch a new run."
+          exit 1
+        fi
+        dir="$RUNNER_TEMP/deps"
+        mkdir -p "$dir"
+        printf '%s' "$JOB" > "$dir/job.json"
+        echo "THROUGHPUT_DIR=$dir" >> "$GITHUB_ENV"
+
+    - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
+      with:
+        ruby-version: '4.0.7'
+    - shell: bash
+      run: echo "HARNESS_RUBY=$(command -v ruby)" >> "$GITHUB_ENV"
+
+    - if: fromJSON(inputs.job).lane == 'boringcache'
+      shell: bash
+      run: bash scripts/install-boringcache.sh
+
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        repository: ${{ fromJSON(inputs.job).repo }}
+        ref: ${{ fromJSON(inputs.job).sha }}
+        path: ${{ fromJSON(inputs.job).dir }}/upstream
+        persist-credentials: false
+
+    - if: fromJSON(inputs.job).apt != ''
+      shell: bash
+      env:
+        PACKAGES: ${{ fromJSON(inputs.job).apt }}
+      run: |
+        sudo apt-get update
+        read -ra packages <<< "$PACKAGES"
+        sudo apt-get install -y --no-install-recommends "${packages[@]}"
+    - if: fromJSON(inputs.job).tool == 'pnpm'
+      uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+      with:
+        node-version-file: ${{ fromJSON(inputs.job).dir }}/upstream/.nvmrc
+    - if: fromJSON(inputs.job).tool == 'uv'
+      uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
+      with:
+        version: '0.12.13'
+        enable-cache: false
+    - if: fromJSON(inputs.job).tool == 'bundler'
+      uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
+      with:
+        ruby-version: ${{ fromJSON(inputs.job).ruby }}
+        working-directory: ${{ fromJSON(inputs.job).dir }}/upstream
+    - shell: bash
+      run: '"$HARNESS_RUBY" scripts/deps.rb env >> "$GITHUB_ENV"'
+    - shell: bash
+      working-directory: ${{ fromJSON(inputs.job).dir }}/upstream
+      env:
+        SETUP: ${{ fromJSON(inputs.job).setup }}
+      run: eval "$SETUP"
+    - id: keys
+      shell: bash
+      run: '"$HARNESS_RUBY" scripts/deps.rb keys >> "$GITHUB_OUTPUT"'
+    - shell: bash
+      run: '"$HARNESS_RUBY" scripts/deps.rb probe'
+
+    - id: ready
+      shell: bash
+      run: "true"
+
+    - if: fromJSON(inputs.job).kind != 'seed'
+      shell: bash
+      run: '"$HARNESS_RUBY" scripts/deps.rb mark restore_start'
+    - id: restore-actions-cache
+      if: fromJSON(inputs.job).kind != 'seed' && fromJSON(inputs.job).lane == 'actions-cache'
+      continue-on-error: true
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ fromJSON(inputs.job).dir }}/${{ fromJSON(inputs.job).path }}
+        key: ${{ steps.keys.outputs.key }}
+        restore-keys: ${{ steps.keys.outputs.restore_key }}
+        fail-on-cache-miss: true
+    - id: restore-boringcache
+      if: fromJSON(inputs.job).kind != 'seed' && fromJSON(inputs.job).lane == 'boringcache'
+      continue-on-error: true
+      shell: bash
+      run: '"$HARNESS_RUBY" scripts/deps.rb boringcache restore'
+    - if: fromJSON(inputs.job).kind != 'seed'
+      shell: bash
+      run: '"$HARNESS_RUBY" scripts/deps.rb mark restore_end'
+
+    - if: fromJSON(inputs.job).kind != 'verify'
+      shell: bash
+      run: '"$HARNESS_RUBY" scripts/deps.rb mark install_start'
+    - id: install
+      if: fromJSON(inputs.job).kind != 'verify'
+      continue-on-error: true
+      shell: bash
+      working-directory: ${{ fromJSON(inputs.job).dir }}/upstream
+      env:
+        INSTALL: ${{ fromJSON(inputs.job).install }}
+      run: eval "$INSTALL"
+    - if: fromJSON(inputs.job).kind != 'verify'
+      shell: bash
+      run: |
+        "$HARNESS_RUBY" scripts/deps.rb mark install_end
+        "$HARNESS_RUBY" scripts/deps.rb measure
+        "$HARNESS_RUBY" scripts/deps.rb mark save_start
+    - id: save-actions-cache
+      if: fromJSON(inputs.job).kind != 'verify' && fromJSON(inputs.job).lane == 'actions-cache'
+      continue-on-error: true
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ fromJSON(inputs.job).dir }}/${{ fromJSON(inputs.job).path }}
+        key: ${{ steps.keys.outputs.key }}
+    - id: save-boringcache
+      if: fromJSON(inputs.job).kind != 'verify' && fromJSON(inputs.job).lane == 'boringcache'
+      continue-on-error: true
+      shell: bash
+      run: '"$HARNESS_RUBY" scripts/deps.rb boringcache save'
+    - if: fromJSON(inputs.job).kind != 'verify'
+      shell: bash
+      run: '"$HARNESS_RUBY" scripts/deps.rb mark save_end'
+    - id: lookup-actions-cache
+      if: fromJSON(inputs.job).kind != 'verify' && fromJSON(inputs.job).lane == 'actions-cache'
+      continue-on-error: true
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ fromJSON(inputs.job).dir }}/${{ fromJSON(inputs.job).path }}
+        key: ${{ steps.keys.outputs.key }}
+        lookup-only: true
+        fail-on-cache-miss: true
+    - id: lookup-boringcache
+      if: fromJSON(inputs.job).kind != 'verify' && fromJSON(inputs.job).lane == 'boringcache'
+      continue-on-error: true
+      shell: bash
+      run: '"$HARNESS_RUBY" scripts/deps.rb boringcache lookup'
+
+    - if: fromJSON(inputs.job).kind == 'verify'
+      shell: bash
+      run: '"$HARNESS_RUBY" scripts/deps.rb measure'
+    - id: restore-check
+      if: fromJSON(inputs.job).kind == 'verify'
+      continue-on-error: true
+      shell: bash
+      working-directory: ${{ fromJSON(inputs.job).dir }}/upstream
+      env:
+        CHECK: ${{ fromJSON(inputs.job).check }}
+      run: eval "$CHECK"
+
+    - if: always() && steps.ready.outcome == 'success'
+      shell: bash
+      env:
+        THROUGHPUT_OUTCOME_RESTORE: ${{ fromJSON(inputs.job).lane == 'boringcache' && steps.restore-boringcache.outcome || steps.restore-actions-cache.outcome }}
+        THROUGHPUT_OUTCOME_RESTORE_CHECK: ${{ fromJSON(inputs.job).kind == 'verify' && steps.restore-check.outcome || '' }}
+        THROUGHPUT_OUTCOME_INSTALL: ${{ steps.install.outcome }}
+        THROUGHPUT_OUTCOME_SAVE: ${{ fromJSON(inputs.job).lane == 'boringcache' && steps.save-boringcache.outcome || steps.save-actions-cache.outcome }}
+        THROUGHPUT_OUTCOME_LOOKUP: ${{ fromJSON(inputs.job).lane == 'boringcache' && steps.lookup-boringcache.outcome || steps.lookup-actions-cache.outcome }}
+      run: '"$HARNESS_RUBY" scripts/deps.rb record --out deps-results'
+
+    - if: always() && steps.ready.outcome == 'success'
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+      with:
+        name: deps-${{ fromJSON(inputs.job).name }}
+        path: deps-results
+        if-no-files-found: warn
+        retention-days: 14
