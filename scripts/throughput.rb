@@ -79,8 +79,8 @@ class ThroughputJob
 
   def self.marks(text)
     text.lines.to_h do |line|
-      name, at, rx, tx = line.split
-      [name, { "at" => Float(at), "rx" => (Integer(rx) unless rx == "-"), "tx" => (Integer(tx) unless tx == "-") }]
+      name, at, *interfaces = line.split
+      [name, { "at" => Float(at), "interfaces" => interfaces.to_h { |field| iface, counts = field.split("=", 2); [iface, counts.split(",").map { Integer(it) }] } }]
     end
   end
 
@@ -111,8 +111,6 @@ class ThroughputJob
       outcomes["restore_check"] = status(runner.check)
       runner.clear
       runner.write(out, outcomes)
-    ensure
-      runner.delete_tag
     end
   end
 
@@ -152,8 +150,7 @@ class ThroughputJob
 
   def mark(name)
     at = Process.clock_gettime(Process::CLOCK_REALTIME)
-    rx, tx = network
-    File.open(path("marks"), "a") { it.puts [name, format("%.6f", at), rx || "-", tx || "-"].join(" ") }
+    File.open(path("marks"), "a") { it.puts [name, format("%.6f", at), *network.map { |iface, (rx, tx)| "#{iface}=#{rx},#{tx}" }].join(" ") }
     0
   end
 
@@ -188,10 +185,6 @@ class ThroughputJob
     0
   end
 
-  def delete_tag
-    warn "throughput: could not delete #{@job.fetch("key")}" unless system("boringcache", "rm", "--no-platform", "--no-git", workspace, @job.fetch("key"))
-  end
-
   def record(outcomes)
     marks = File.exist?(path("marks")) ? self.class.marks(File.read(path("marks"))) : {}
     probe = File.exist?(path("probe")) ? self.class.probe(File.read(path("probe"))) : {}
@@ -222,9 +215,10 @@ class ThroughputJob
       started, finished = marks["#{name}_start"], marks["#{name}_end"]
       step_ok = outcomes[name] == "success"
       check = name == "save" ? outcomes["lookup"] : outcomes["#{name}_check"]
-      counter = name == "save" ? "tx" : "rx"
+      counter = name == "save" ? 1 : 0
       measured = { "seconds" => (finished["at"] - started["at"]).round(3) } if started && finished
-      measured["network_bytes"] = finished[counter] - started[counter] if measured && finished[counter] && started[counter]
+      deltas = measured ? (finished["interfaces"].keys & started["interfaces"].keys).map { finished["interfaces"][it][counter] - started["interfaces"][it][counter] } : []
+      measured["network_bytes"] = deltas.max if deltas.any?
       { **measured.to_h, "step_ok" => step_ok, "ok" => step_ok && check == "success" }
     end
 
@@ -277,11 +271,12 @@ class ThroughputJob
 
     def network
       if File.readable?("/proc/net/dev")
-        rows = File.readlines("/proc/net/dev").drop(2).map { it.sub(":", " ").split }.reject { it[0] == "lo" }
-        [rows.sum { Integer(it[1]) }, rows.sum { Integer(it[9]) }]
+        File.readlines("/proc/net/dev").drop(2).map { it.sub(":", " ").split }.reject { it[0] == "lo" }.to_h { [it[0], [Integer(it[1]), Integer(it[9])]] }
       elsif (output = capture("netstat", "-ibn"))
         rows = output.lines.drop(1).map(&:split).select { it[2].to_s.start_with?("<Link") && !it[0].start_with?("lo") }
-        [rows.sum { Integer(it[-5]) }, rows.sum { Integer(it[-2]) }]
+        rows.uniq(&:first).to_h { [it[0].delete_suffix("*"), [Integer(it[-5]), Integer(it[-2])]] }
+      else
+        {}
       end
     end
 
@@ -366,10 +361,10 @@ class ThroughputReport
 end
 
 class ThroughputCleanup
-  def initialize(plan, prefix:, env: ENV, out: $stdout)
+  def initialize(prefix:, env: ENV, out: $stdout)
     raise ArgumentError, "prefix must start with throughput-" unless prefix.start_with?("throughput-")
 
-    @plan, @prefix, @env, @out = plan, prefix, env, out
+    @prefix, @env, @out = prefix, env, out
   end
 
   def call
@@ -377,28 +372,10 @@ class ThroughputCleanup
     ids = capture("gh", "api", "--paginate", "repos/#{repo}/actions/caches?per_page=100&key=#{@prefix}", "--jq", ".actions_caches[] | .id").split
     ids.each { capture("gh", "api", "-X", "DELETE", "repos/#{repo}/actions/caches/#{it}") }
     @out.puts "Deleted #{ids.size} GitHub Actions cache entries under `#{@prefix}`."
-    if @env["BORINGCACHE_ADMIN_TOKEN"].to_s.empty?
-      @out.puts "BoringCache tags under `#{@prefix}` were not deleted: BORINGCACHE_ADMIN_TOKEN is not set."
-    else
-      tags = boringcache_tags
-      tags.each_slice(50) { capture("boringcache", "rm", "--no-platform", "--no-git", @plan.fetch("workspace"), it.join(",")) }
-      @out.puts "Deleted #{tags.size} BoringCache tags under `#{@prefix}`."
-    end
-    @plan.fetch("actions_cache_store", {}).each do |runner, store|
-      @out.puts "#{store} keeps the actions/cache entries saved on #{runner} under `#{@prefix}`; delete them in the #{store} dashboard."
-    end
     0
   end
 
   private
-    def boringcache_tags
-      (1..).each_with_object([]) do |page, tags|
-        listing = JSON.parse(capture("boringcache", "ls", @plan.fetch("workspace"), "--json", "--limit", "100", "--page", page.to_s))
-        tags.concat(listing.fetch("entries").map { it.fetch("tag") }.select { it.start_with?(@prefix) })
-        break tags if listing.fetch("entries").empty? || page * 100 >= listing.fetch("total")
-      end
-    end
-
     def capture(*args)
       output, error, status = Open3.capture3(*args)
       raise "#{args.first(2).join(" ")} failed: #{error.strip}" unless status.success?
@@ -428,7 +405,7 @@ if $PROGRAM_NAME == __FILE__
   when "record" then job.call.write(options.fetch(:out), outcomes.call)
   when "local" then ThroughputJob.local(Throughput.plan, payload: options.fetch(:payload, "random"), bytes: options[:bytes], preflight: options[:preflight], out: options[:out])
   when "report" then File.write(options.fetch(:out), ThroughputReport.new(options.fetch(:results), Throughput.plan).markdown); 0
-  when "cleanup" then ThroughputCleanup.new(Throughput.plan, prefix: options.fetch(:prefix)).call
+  when "cleanup" then ThroughputCleanup.new(prefix: options.fetch(:prefix)).call
   else abort "usage: scripts/throughput.rb matrix|probe|generate|mark|boringcache|clear|check|producer|record|local|report|cleanup"
   end
 end
