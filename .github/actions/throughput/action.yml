@@ -1,0 +1,157 @@
+name: Cache throughput
+description: Time BoringCache and actions/cache saves and restores of a new payload.
+inputs:
+  job:
+    required: true
+    description: One matrix entry from scripts/throughput.rb matrix
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        JOB: ${{ inputs.job }}
+      run: |
+        if [ "${GITHUB_RUN_ATTEMPT:-1}" != 1 ]; then
+          echo "::error::Cache throughput runs cannot be retried; dispatch a new run."
+          exit 1
+        fi
+        dir="$RUNNER_TEMP/throughput"
+        mkdir -p "$dir"
+        printf '%s' "$JOB" > "$dir/job.json"
+        echo "THROUGHPUT_DIR=$dir" >> "$GITHUB_ENV"
+
+    - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
+      with:
+        ruby-version: '4.0.7'
+
+    - if: fromJSON(inputs.job).lane == 'boringcache'
+      shell: bash
+      run: bash scripts/install-boringcache.sh
+
+    - if: fromJSON(inputs.job).kind == 'consume'
+      uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+      with:
+        name: ${{ fromJSON(inputs.job).producer_artifact }}
+        path: ${{ runner.temp }}/throughput/producer
+
+    - if: fromJSON(inputs.job).kind == 'consume'
+      shell: bash
+      run: ruby scripts/throughput.rb producer "$THROUGHPUT_DIR/producer"
+
+    - shell: bash
+      run: ruby scripts/throughput.rb probe
+
+    - if: fromJSON(inputs.job).kind != 'consume'
+      shell: bash
+      run: ruby scripts/throughput.rb generate
+
+    - id: ready
+      shell: bash
+      run: "true"
+
+    - if: fromJSON(inputs.job).kind != 'consume'
+      shell: bash
+      run: ruby scripts/throughput.rb mark save_start
+    - id: save-actions-cache
+      if: fromJSON(inputs.job).kind != 'consume' && fromJSON(inputs.job).lane == 'actions-cache'
+      continue-on-error: true
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: payload
+        key: ${{ fromJSON(inputs.job).key }}
+    - id: save-boringcache
+      if: fromJSON(inputs.job).kind != 'consume' && fromJSON(inputs.job).lane == 'boringcache'
+      continue-on-error: true
+      shell: bash
+      run: ruby scripts/throughput.rb boringcache save
+    - if: fromJSON(inputs.job).kind != 'consume'
+      shell: bash
+      run: ruby scripts/throughput.rb mark save_end
+
+    - id: lookup-actions-cache
+      if: fromJSON(inputs.job).kind != 'consume' && fromJSON(inputs.job).lane == 'actions-cache'
+      continue-on-error: true
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: payload
+        key: ${{ fromJSON(inputs.job).key }}
+        lookup-only: true
+        fail-on-cache-miss: true
+    - id: lookup-boringcache
+      if: fromJSON(inputs.job).kind != 'consume' && fromJSON(inputs.job).lane == 'boringcache'
+      continue-on-error: true
+      shell: bash
+      run: ruby scripts/throughput.rb boringcache lookup
+
+    - if: fromJSON(inputs.job).kind != 'produce'
+      shell: bash
+      run: |
+        ruby scripts/throughput.rb clear
+        ruby scripts/throughput.rb mark restore_start
+    - id: restore-actions-cache
+      if: fromJSON(inputs.job).kind != 'produce' && fromJSON(inputs.job).lane == 'actions-cache'
+      continue-on-error: true
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: payload
+        key: ${{ fromJSON(inputs.job).key }}
+        fail-on-cache-miss: true
+    - id: restore-boringcache
+      if: fromJSON(inputs.job).kind != 'produce' && fromJSON(inputs.job).lane == 'boringcache'
+      continue-on-error: true
+      shell: bash
+      run: ruby scripts/throughput.rb boringcache restore
+    - if: fromJSON(inputs.job).kind != 'produce'
+      shell: bash
+      run: ruby scripts/throughput.rb mark restore_end
+    - id: restore-check
+      if: fromJSON(inputs.job).kind != 'produce'
+      continue-on-error: true
+      shell: bash
+      run: ruby scripts/throughput.rb check
+
+    - if: fromJSON(inputs.job).kind == 'consume'
+      shell: bash
+      run: |
+        ruby scripts/throughput.rb clear
+        ruby scripts/throughput.rb mark second_restore_start
+    - id: second-restore-actions-cache
+      if: fromJSON(inputs.job).kind == 'consume' && fromJSON(inputs.job).lane == 'actions-cache'
+      continue-on-error: true
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: payload
+        key: ${{ fromJSON(inputs.job).key }}
+        fail-on-cache-miss: true
+    - id: second-restore-boringcache
+      if: fromJSON(inputs.job).kind == 'consume' && fromJSON(inputs.job).lane == 'boringcache'
+      continue-on-error: true
+      shell: bash
+      run: ruby scripts/throughput.rb boringcache restore
+    - if: fromJSON(inputs.job).kind == 'consume'
+      shell: bash
+      run: ruby scripts/throughput.rb mark second_restore_end
+    - id: second-restore-check
+      if: fromJSON(inputs.job).kind == 'consume'
+      continue-on-error: true
+      shell: bash
+      run: ruby scripts/throughput.rb check
+
+    - if: always() && steps.ready.outcome == 'success'
+      shell: bash
+      env:
+        THROUGHPUT_OUTCOME_SAVE: ${{ fromJSON(inputs.job).lane == 'boringcache' && steps.save-boringcache.outcome || steps.save-actions-cache.outcome }}
+        THROUGHPUT_OUTCOME_LOOKUP: ${{ fromJSON(inputs.job).lane == 'boringcache' && steps.lookup-boringcache.outcome || steps.lookup-actions-cache.outcome }}
+        THROUGHPUT_OUTCOME_RESTORE: ${{ fromJSON(inputs.job).lane == 'boringcache' && steps.restore-boringcache.outcome || steps.restore-actions-cache.outcome }}
+        THROUGHPUT_OUTCOME_RESTORE_CHECK: ${{ steps.restore-check.outcome }}
+        THROUGHPUT_OUTCOME_SECOND_RESTORE: ${{ fromJSON(inputs.job).lane == 'boringcache' && steps.second-restore-boringcache.outcome || steps.second-restore-actions-cache.outcome }}
+        THROUGHPUT_OUTCOME_SECOND_RESTORE_CHECK: ${{ steps.second-restore-check.outcome }}
+      run: ruby scripts/throughput.rb record --out throughput-results
+
+    - if: always() && steps.ready.outcome == 'success'
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+      with:
+        name: throughput-${{ fromJSON(inputs.job).name }}
+        path: throughput-results
+        if-no-files-found: warn
+        retention-days: 14

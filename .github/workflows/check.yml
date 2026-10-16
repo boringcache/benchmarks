@@ -10,6 +10,7 @@ on:
       - "test/bench/**"
       - "tools/**"
       - "*.toml"
+      - "throughput/*.toml"
       - "Gemfile*"
       - ".github/workflows/**"
       - ".github/actions/**"

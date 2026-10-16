@@ -1,0 +1,21 @@
+name: Cache throughput cleanup
+description: Delete cache throughput entries under a key prefix.
+inputs:
+  prefix:
+    required: true
+    description: Key prefix starting with throughput-
+runs:
+  using: composite
+  steps:
+    - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
+      with:
+        bundler-cache: true
+
+    - if: env.BORINGCACHE_ADMIN_TOKEN != ''
+      shell: bash
+      run: bash scripts/install-boringcache.sh
+
+    - shell: bash
+      env:
+        PREFIX: ${{ inputs.prefix }}
+      run: bundle exec ruby scripts/throughput.rb cleanup --prefix "$PREFIX" | tee -a "$GITHUB_STEP_SUMMARY"
