@@ -11,6 +11,7 @@ on:
       - "tools/**"
       - "*.toml"
       - "throughput/*.toml"
+      - "deps/*.toml"
       - "Gemfile*"
       - ".github/workflows/**"
       - ".github/actions/**"

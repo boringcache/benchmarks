@@ -26,10 +26,11 @@ jobs:
           bundler-cache: true
       - run: bundle exec bin/bench report --results results --out data
       - run: bundle exec ruby scripts/throughput.rb report --results throughput/results --out data/throughput.md
+      - run: bundle exec ruby scripts/deps.rb report --results deps/results --out data/deps.md
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/results.json data/report.md data/throughput.md
+          git add data/results.json data/report.md data/throughput.md data/deps.md
           git diff --cached --quiet && exit 0
           git commit --quiet -m "Update benchmark report"
           for attempt in 1 2 3 4 5; do

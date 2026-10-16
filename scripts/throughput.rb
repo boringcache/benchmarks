@@ -155,7 +155,7 @@ class ThroughputJob
   end
 
   def boringcache(operation)
-    entry = "#{@job.fetch("key")}:#{PAYLOAD}"
+    entry = "#{@job.fetch("key")}:#{cache_path}"
     args = case operation
     when "save" then ["save", workspace, "--entry", entry, "--no-platform", "--no-git", "--fail-on-cache-error"]
     when "lookup" then ["restore", workspace, "--entry", "#{entry}-lookup", "--no-platform", "--no-git", "--lookup-only", "--fail-on-cache-miss", "--fail-on-cache-error"]
@@ -188,9 +188,9 @@ class ThroughputJob
   def record(outcomes)
     marks = File.exist?(path("marks")) ? self.class.marks(File.read(path("marks"))) : {}
     probe = File.exist?(path("probe")) ? self.class.probe(File.read(path("probe"))) : {}
-    operations = Throughput::OPERATIONS.fetch(@job.fetch("kind")).to_h { [it, operation(it, marks, outcomes)] }
+    operations = self.operations.to_h { [it, operation(it, marks, outcomes)] }
     record = {
-      **@job.slice("name", "kind", "lane", "payload", "bytes", "runner", "machine", "producer", "producer_machine", "key", "run_id"),
+      **@job.slice(*fields),
       "attempt" => @env.fetch("GITHUB_RUN_ATTEMPT", "1").to_i, "run_url" => run_url, "recorded_at" => Time.now.utc.iso8601,
       "versions" => boringcache? ? { "boringcache" => cli_version } : { "actions_cache" => ACTIONS_CACHE },
       "observed" => { "cpu" => probe["cpu"], "cores" => probe["cores"]&.to_i, "disk_free_bytes" => probe["disk_free_bytes"]&.to_i }.compact,
@@ -206,11 +206,23 @@ class ThroughputJob
     record = record(outcomes)
     FileUtils.mkdir_p(out)
     File.write(File.join(out, "#{@job.fetch("name")}.json"), JSON.pretty_generate(record) + "\n")
-    puts Throughput::OPERATIONS.fetch(@job.fetch("kind")).map { "#{it}: #{record.dig(it, "seconds") || "unmeasured"} s#{" (failed)" unless record.dig(it, "ok")}" }.join(", ")
+    puts operations.map { "#{it}: #{record.dig(it, "seconds") || "unmeasured"} s#{" (failed)" unless record.dig(it, "ok")}" }.join(", ")
     record["exit_status"].zero? && record["output_ok"] ? 0 : 1
   end
 
+  def operations
+    Throughput::OPERATIONS.fetch(@job.fetch("kind"))
+  end
+
   private
+    def fields
+      %w[name kind lane payload bytes runner machine producer producer_machine key run_id]
+    end
+
+    def cache_path
+      PAYLOAD
+    end
+
     def operation(name, marks, outcomes)
       started, finished = marks["#{name}_start"], marks["#{name}_end"]
       step_ok = outcomes[name] == "success"
@@ -219,7 +231,8 @@ class ThroughputJob
       measured = { "seconds" => (finished["at"] - started["at"]).round(3) } if started && finished
       deltas = measured ? (finished["interfaces"].keys & started["interfaces"].keys).map { finished["interfaces"][it][counter] - started["interfaces"][it][counter] } : []
       measured["network_bytes"] = deltas.max if deltas.any?
-      { **measured.to_h, "step_ok" => step_ok, "ok" => step_ok && check == "success" }
+      checked = name == "save" ? check == "success" : check.to_s.empty? || check == "success"
+      { **measured.to_h, "step_ok" => step_ok, "ok" => step_ok && checked }
     end
 
     def path(name)
@@ -362,7 +375,7 @@ end
 
 class ThroughputCleanup
   def initialize(prefix:, env: ENV, out: $stdout)
-    raise ArgumentError, "prefix must start with throughput-" unless prefix.start_with?("throughput-")
+    raise ArgumentError, "prefix must start with throughput- or deps-" unless prefix.match?(/\A(throughput|deps)-/)
 
     @prefix, @env, @out = prefix, env, out
   end
