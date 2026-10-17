@@ -16,8 +16,15 @@ on:
         description: only this case, for example discourse-bundler (optional)
         type: string
         default: ""
+      cli_artifact:
+        description: BoringCache artifact id of a candidate CLI to run instead of the pinned release; never recorded (optional)
+        type: string
+        default: ""
 
 run-name: Dependency cache update step ${{ inputs.step }}${{ inputs.case && format(' {0}', inputs.case) || '' }}${{ inputs.mode == 'preflight' && ' (preflight)' || '' }}
+
+env:
+  CANDIDATE_CLI_ARTIFACT: ${{ inputs.cli_artifact }}
 
 concurrency:
   group: cache-deps
@@ -133,7 +140,7 @@ jobs:
 
   publish:
     needs: [plan, seed, update, verify]
-    if: ${{ !cancelled() && needs.plan.result == 'success' && github.ref == 'refs/heads/main' && inputs.mode == 'run' }}
+    if: ${{ !cancelled() && needs.plan.result == 'success' && github.ref == 'refs/heads/main' && inputs.mode == 'run' && inputs.cli_artifact == '' }}
     runs-on: ubuntu-24.04
     permissions:
       contents: write
