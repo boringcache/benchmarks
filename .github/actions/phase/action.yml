@@ -179,6 +179,15 @@ runs:
         nohup bash scripts/build-sampler.sh "$dir/samples.log" > /dev/null 2>&1 &
         echo "pid=$!" >> "$GITHUB_OUTPUT"
 
+    - id: dance-cache
+      if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance') && inputs.phase != 'warm'
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ runner.temp }}/cache-dance
+        key: ${{ steps.prepare.outputs.cache_key }}
+        restore-keys: ${{ steps.prepare.outputs.restore_key }}
+        lookup-only: true
+
     - if: steps.prepare.outputs.ready == 'true'
       shell: bash
       run: bundle exec bin/bench start "$BENCH_CASE" --lane "$BENCH_LANE"
@@ -228,16 +237,8 @@ runs:
       with:
         path: ${{ steps.prepare.outputs.cache_paths }}
 
-    - id: dance-cache
-      if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance') && inputs.phase != 'warm'
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-      with:
-        path: ${{ runner.temp }}/cache-dance
-        key: ${{ steps.prepare.outputs.cache_key }}
-        restore-keys: ${{ steps.prepare.outputs.restore_key }}
-
     - id: dance-restore
-      if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance') && inputs.phase == 'warm'
+      if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance')
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ runner.temp }}/cache-dance
@@ -275,8 +276,8 @@ runs:
       shell: bash
       env:
         BUILD_FAILED: ${{ steps.build.outcome == 'failure' }}
-        BENCH_CACHE_RESTORE_TRACKED: ${{ steps.actions-cache-restore.outcome == 'success' || steps.dance-cache.outcome == 'success' || steps.dance-restore.outcome == 'success' }}
-        BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-cache.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
+        BENCH_CACHE_RESTORE_TRACKED: ${{ steps.actions-cache-restore.outcome == 'success' || steps.dance-restore.outcome == 'success' }}
+        BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
       run: bundle exec bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
 
     - if: always() && steps.sampler.outcome == 'success'

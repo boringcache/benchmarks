@@ -186,6 +186,45 @@ class CLITest < Minitest::Test
     assert_equal 3, File.readlines(File.join(@root, "stub.log")).size
   end
 
+  def test_restored_keys_recovers_only_cache_dance_restores_the_job_log_proves
+    write "tools/demo/lanes/gha.toml", %(provider = "github-actions-cache"\nlevel = "base"\nactions_only = true\nrunners = ["github"]\nsetup = ["cache-dance"]\npost_job_save = ["dance-cache"]\n)
+    write "restored.log", <<~LOG
+      2026-10-09T10:00:00Z Cache restored from key: demo-app-gha-github-rolling-2
+      2026-10-09T10:10:00Z Post job cleanup.
+    LOG
+    write "missed.log", <<~LOG
+      2026-10-09T10:00:00Z Cache not found for input keys: demo-app-gha-github-rolling-4, demo-app-gha-github-rolling-
+      2026-10-09T10:10:00Z Post job cleanup.
+      2026-10-09T10:10:13Z Cache restored from key: demo-app-gha-github-rolling-3
+    LOG
+    write "bin/gh", <<~BASH
+      #!/usr/bin/env bash
+      echo "gh $*" >> "$STUB_LOG"
+      case "$*" in
+        *runs/42/jobs*) echo '{"id":7,"name":"rolling: github 4c · gha","run_attempt":1,"conclusion":"success"}' ;;
+        *runs/43/jobs*) echo '{"id":8,"name":"rolling: github 4c · gha","run_attempt":1,"conclusion":"success"}' ;;
+        *jobs/7/logs*) cat "#{File.join(@root, "restored.log")}" ;;
+        *jobs/8/logs*) cat "#{File.join(@root, "missed.log")}" ;;
+      esac
+    BASH
+    File.chmod(0o755, File.join(@root, "bin/gh"))
+    paths = { 3 => 42, 4 => 43 }.to_h do |step, run|
+      path = "tmp/results/demo/app/gha-github-rolling/gha-github-rolling-#{step}.json"
+      write path, JSON.generate("adapter_command" => "demo", "case" => "app", "lane" => "gha", "runner" => "github", "phase" => "rolling", "step" => step, "cache_scope" => "gha-github-rolling",
+                                "cache_restored_key" => nil, "cache_restore_tracked" => true, "run_url" => "https://github.com/boringcache/benchmarks/actions/runs/#{run}")
+      [step, File.join(@root, path)]
+    end
+
+    with_fixture_env do
+      ENV["GITHUB_REPOSITORY"] = "boringcache/benchmarks"
+      assert_equal 0, Bench::CLI.new(%W[restored-keys --results #{@root}/tmp/results], catalog:, out: StringIO.new).call
+    ensure
+      ENV.delete("GITHUB_REPOSITORY")
+    end
+
+    assert_equal({ 3 => "demo-app-gha-github-rolling-2", 4 => nil }, paths.transform_values { JSON.parse(File.read(it))["cache_restored_key"] })
+  end
+
   def test_matrix_takes_a_cli_release_for_fresh_runs_only
     assert_equal 3, matrix("app", "--cli", "vcli-canary-0123456789ab").size
     assert_equal 3, matrix("app", "--cli", "v1.41.0").size

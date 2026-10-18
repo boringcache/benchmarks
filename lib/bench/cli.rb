@@ -17,6 +17,7 @@ module Bench
         bin/bench image
         bin/bench report [--results DIR] [--out DIR]
         bin/bench post-job-saves --run-id ID [--results DIR]
+        bin/bench restored-keys [--results DIR]
         bin/bench prune-caches --run-id ID [--results DIR]
         bin/bench prune-buildkit [--delete] [--max N] [--out FILE]
         bin/bench tick [--dry-run] [--results DIR] [--work DIR]
@@ -44,6 +45,7 @@ module Bench
       when "matrix" then matrix
       when "report" then report
       when "post-job-saves" then post_job_saves
+      when "restored-keys" then restored_keys
       when "prune-caches" then prune_caches
       when "prune-buildkit" then prune_buildkit
       when "tick" then tick
@@ -183,10 +185,9 @@ module Bench
         pending = run_records(options[:run_id], options[:results]).select { |_, record, _, lane| lane.post_job_save.any? && (!record.key?("post_job_save_seconds") || !record.key?("job_conclusion")) }
         return 0 if pending.empty?
 
-        jobs = Bench.gh("api", "--paginate", "repos/#{repo}/actions/runs/#{options[:run_id]}/jobs?filter=all&per_page=100", "--jq", ".jobs[] | {id, name, run_attempt, conclusion}")
-          .lines.to_h { job = JSON.parse(it); [[job["name"], job["run_attempt"]], job] }
+        jobs = run_jobs(repo, options[:run_id])
         pending.each do |path, record, kase, lane|
-          job = jobs[["#{record["phase"]}: #{job_label(kase, lane, record["runner"])}", [record["attempt"].to_i, 1].max]] or next
+          job = record_job(jobs, record, kase, lane) or next
           next unless job["conclusion"]
 
           record["job_conclusion"] = job["conclusion"]
@@ -195,6 +196,41 @@ module Bench
           @out.puts "#{record["adapter_command"]}/#{record["case"]} #{record["lane"]} #{record["runner"]}: job #{record["job_conclusion"]}, post-job save #{record["post_job_save_seconds"]}s"
         end
         0
+      end
+
+      def restored_keys
+        options = parse(defaults)
+        repo = ENV.fetch("GITHUB_REPOSITORY") { raise Error, "restored-keys needs GITHUB_REPOSITORY" }
+        pending = result_records(options[:results]).select do |_, record, _, lane|
+          lane.setup.include?("cache-dance") && record["phase"] == ROLLING && record["cache_restore_tracked"] && record.key?("cache_restored_key") && record["cache_restored_key"].nil?
+        end
+        pending.group_by { |_, record, _, _| record["run_url"].to_s[%r{/runs/(\d+)\z}, 1] }.each do |run_id, group|
+          next unless run_id
+
+          jobs = run_jobs(repo, run_id)
+          group.each do |path, record, kase, lane|
+            job = record_job(jobs, record, kase, lane) or next
+            key = restored_key(Bench.gh("api", "--allow-escape-sequences", "repos/#{repo}/actions/jobs/#{job["id"]}/logs"), "#{kase.id.tr("/", "-")}-#{record["cache_scope"]}-", record["step"]) or next
+            record["cache_restored_key"] = key
+            File.write(path, JSON.pretty_generate(record) + "\n")
+            @out.puts "#{kase.id} #{lane.name} #{record["runner"]} step #{record["step"]}: restored #{key}"
+          end
+        end
+        0
+      end
+
+      def restored_key(log, prefix, step)
+        keys = log.lines.take_while { !it.include?("Post job cleanup.") }.filter_map { it.match(/Cache restored from key: (#{Regexp.escape(prefix)}(\d+))\s*\z/)&.captures }
+        keys.first[0] if keys.size == 1 && keys.first[1].to_i < step.to_i
+      end
+
+      def run_jobs(repo, run_id)
+        Bench.gh("api", "--paginate", "repos/#{repo}/actions/runs/#{run_id}/jobs?filter=all&per_page=100", "--jq", ".jobs[] | {id, name, run_attempt, conclusion}")
+          .lines.to_h { job = JSON.parse(it); [[job["name"], job["run_attempt"]], job] }
+      end
+
+      def record_job(jobs, record, kase, lane)
+        jobs[["#{record["phase"]}: #{job_label(kase, lane, record["runner"])}", [record["attempt"].to_i, 1].max]]
       end
 
       def prune_caches
@@ -255,10 +291,12 @@ module Bench
       end
 
       def run_records(run_id, results)
+        result_records(results).select { |_, record, _, _| record["run_url"].to_s.end_with?("/runs/#{run_id}") }
+      end
+
+      def result_records(results)
         Dir.glob(File.join(results, "**", "*.json")).filter_map do |path|
           record = JSON.parse(File.read(path))
-          next unless record["run_url"].to_s.end_with?("/runs/#{run_id}")
-
           kase = @catalog.cases.find { it.id == "#{record["adapter_command"]}/#{record["case"]}" }
           lane = kase&.tool&.lanes&.find { it.name == record["lane"] }
           [path, record, kase, lane] if lane
