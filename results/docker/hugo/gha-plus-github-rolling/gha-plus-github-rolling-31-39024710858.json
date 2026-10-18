@@ -16,7 +16,7 @@
   "scope": "gha-plus-github-rolling",
   "cache_scope": "gha-plus-github-rolling",
   "cache_seeded": false,
-  "cache_restored_key": null,
+  "cache_restored_key": "docker-hugo-gha-plus-github-rolling-30",
   "cache_restore_tracked": true,
   "repo": "gohugoio/hugo",
   "sha": "9d502917ac3d6d7af38e47dc6bed435b59f918e1",

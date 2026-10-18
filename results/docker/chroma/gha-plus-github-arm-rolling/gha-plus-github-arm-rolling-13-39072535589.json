@@ -17,7 +17,7 @@
   "scope": "gha-plus-github-arm-rolling",
   "cache_scope": "gha-plus-github-arm-rolling",
   "cache_seeded": false,
-  "cache_restored_key": null,
+  "cache_restored_key": "docker-chroma-gha-plus-github-arm-rolling-12",
   "cache_restore_tracked": true,
   "repo": "chroma-core/chroma",
   "sha": "ddc17cd7c508f15f237c965e74e536ff64396ddb",

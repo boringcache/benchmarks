@@ -16,7 +16,7 @@
   "scope": "gha-plus-github-rolling",
   "cache_scope": "gha-plus-github-rolling",
   "cache_seeded": false,
-  "cache_restored_key": null,
+  "cache_restored_key": "docker-immich-gha-plus-github-rolling-122",
   "cache_restore_tracked": true,
   "repo": "immich-app/immich",
   "sha": "75700475e84c90fbf8433e7bfd7d18cc81bef4b0",

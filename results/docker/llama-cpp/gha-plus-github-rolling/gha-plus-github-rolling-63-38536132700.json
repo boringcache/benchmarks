@@ -17,7 +17,7 @@
   "scope": "gha-plus-github-rolling",
   "cache_scope": "gha-plus-github-rolling",
   "cache_seeded": false,
-  "cache_restored_key": null,
+  "cache_restored_key": "docker-llama-cpp-gha-plus-github-rolling-62",
   "cache_restore_tracked": true,
   "repo": "ggml-org/llama.cpp",
   "sha": "ed019cd8b94a8194881e3d2448075156939d32a1",

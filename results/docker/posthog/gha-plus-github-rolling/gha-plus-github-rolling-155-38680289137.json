@@ -17,7 +17,7 @@
   "scope": "gha-plus-github-rolling",
   "cache_scope": "gha-plus-github-rolling",
   "cache_seeded": false,
-  "cache_restored_key": null,
+  "cache_restored_key": "docker-posthog-gha-plus-github-rolling-153",
   "cache_restore_tracked": true,
   "repo": "PostHog/posthog",
   "sha": "fbe9e3130259a2f6e20295b6358b77f230c5ec33",

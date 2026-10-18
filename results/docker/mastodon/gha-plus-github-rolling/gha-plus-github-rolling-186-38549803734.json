@@ -17,7 +17,7 @@
   "scope": "gha-plus-github-rolling",
   "cache_scope": "gha-plus-github-rolling",
   "cache_seeded": false,
-  "cache_restored_key": null,
+  "cache_restored_key": "docker-mastodon-gha-plus-github-rolling-185",
   "cache_restore_tracked": true,
   "repo": "mastodon/mastodon",
   "sha": "b1c33364f838c34b685671494f53826ae821e8fb",
