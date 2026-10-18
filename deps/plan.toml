@@ -47,3 +47,19 @@ steps = [["bab418487a463eede4c7d2f6415fe2eb966a3883", "bbb722e4322eba62306788b6d
 BUNDLE_PATH = "vendor/bundle"
 BUNDLE_DEPLOYMENT = "true"
 BUNDLE_WITHOUT = "development"
+
+[cases.mastodon-bundler]
+repo = "mastodon/mastodon"
+tool = "bundler"
+ruby = "4.0.7"
+lockfile = "Gemfile.lock"
+path = "upstream/vendor/bundle"
+apt = ["libpq-dev", "libicu-dev", "libidn-dev", "libyaml-dev"]
+install = "bundle install --jobs 4"
+check = "bundle check"
+steps = [["85cc1449181c774a226ae42ec19dca3a2f7cce26", "bcbf3651da6d2e9d9e7966e8e97fb59bbe7665e0"]]
+
+[cases.mastodon-bundler.env]
+BUNDLE_PATH = "vendor/bundle"
+BUNDLE_DEPLOYMENT = "true"
+BUNDLE_WITHOUT = "development"
