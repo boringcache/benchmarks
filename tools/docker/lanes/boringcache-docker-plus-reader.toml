@@ -1,0 +1,6 @@
+provider = "boringcache"
+level = "plus"
+plan = "plus"
+label = "boringcache plus read-only"
+actions_only = true
+reads = { lane = "boringcache-docker-plus", runner = "github" }

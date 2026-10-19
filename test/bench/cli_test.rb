@@ -67,6 +67,17 @@ class CLITest < Minitest::Test
     assert_equal %w[boringcache-demo remote gha], matrix("app", "--rolling", "--step", "0").map { it["lane"] }
   end
 
+  def test_a_nightly_reader_rolls_once_a_day_on_the_cache_of_the_lane_it_reads
+    write "tools/demo/lanes/boringcache-reader.toml", %(provider = "boringcache"\nlevel = "base"\nreads = { lane = "boringcache-demo", runner = "github" }\n)
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", "[runs]\nboringcache-reader = [\"github\"]\n") + %([nightly]\nboringcache-reader = ["github"]\n)
+    commit_upstream("two")
+    reader = -> { matrix("app", "--rolling").select { it["lane"] == "boringcache-reader" }.map { it.values_at("cadence", "cache_scope") } }
+
+    assert_equal [["nightly", "boringcache-demo-github-rolling"]], reader.call
+    write "tmp/results/demo/app/boringcache-reader-github-rolling/boringcache-reader-github-rolling-0.json", JSON.generate("step" => 0, "sha" => @upstream_sha, "started_at" => Time.now.utc.iso8601)
+    assert_empty reader.call
+  end
+
   def test_rolling_matrix_marks_lanes_that_continue_their_own_rolling_cache
     commit_upstream("two")
     rolling_record("remote", 0, @upstream_sha)

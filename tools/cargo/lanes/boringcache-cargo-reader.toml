@@ -1,5 +1,0 @@
-provider = "boringcache"
-level = "base"
-label = "boringcache read-only"
-actions_only = true
-reads = { lane = "boringcache-cargo", runner = "github" }

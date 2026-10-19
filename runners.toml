@@ -42,7 +42,3 @@ machine = "local"
 label = "namespace-profile-zed-4x16-swap"
 machine = "namespace 4c"
 env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
-
-[namespace-4x16-cache]
-label = ["nscloud-ubuntu-24.04-amd64-4x16-with-cache", "nscloud-cache-tag-zed-namespace-cargo", "nscloud-cache-size-100gb"]
-machine = "namespace 4c"

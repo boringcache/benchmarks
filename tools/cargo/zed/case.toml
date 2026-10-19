@@ -25,5 +25,7 @@ gha-plus = ["github"]
 depot-cache = ["github"]
 kache = ["github"]
 mbx = ["github"]
-boringcache-cargo-reader = ["github", "namespace-4x16"]
+boringcache-cargo-plus-reader = ["github", "namespace-4x16"]
+
+[nightly]
 boringcache-cargo-plus-reader = ["github", "namespace-4x16"]

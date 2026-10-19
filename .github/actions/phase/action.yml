@@ -170,7 +170,7 @@ runs:
         echo "$dir" >> "$GITHUB_PATH"
 
     - id: sampler
-      if: steps.prepare.outputs.ready == 'true' && (inputs.case == 'cargo/zed-namespace' || inputs.case == 'cargo/ferrum-fuzz' || inputs.case == 'ccache/osquery')
+      if: steps.prepare.outputs.ready == 'true' && (inputs.case == 'cargo/ferrum-fuzz' || inputs.case == 'ccache/osquery')
       shell: bash
       run: |
         dir="$RUNNER_TEMP/diagnostics"
