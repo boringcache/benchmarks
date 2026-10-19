@@ -10,26 +10,37 @@ class Deps
     TomlRB.load_file(File.join(root, "deps", "plan.toml")).merge("machines" => TomlRB.load_file(File.join(root, "runners.toml")))
   end
 
-  def initialize(plan, run_id:, step: 0, preflight: false, only: nil)
+  def initialize(plan, run_id:, step: 0, preflight: false, only: nil, runners: nil)
     raise ArgumentError, "run id must contain digits only" unless run_id.to_s.match?(/\A\d+\z/)
     raise ArgumentError, "unknown case #{only}" if only && !plan.fetch("cases").key?(only)
 
     @plan, @run_id, @step, @preflight, @only = plan, run_id.to_s, Integer(step), preflight, only
+    @runners = runners || (@preflight ? @plan.fetch("runners").first(1) : @plan.fetch("runners"))
+    raise ArgumentError, "unknown runner selection" if @runners.empty? || (@runners - @plan.fetch("machines").keys).any?
   end
 
   def jobs(kind)
     raise ArgumentError, "unknown kind #{kind}" unless KINDS.include?(kind)
 
-    runners = @preflight ? @plan.fetch("runners").first(1) : @plan.fetch("runners")
-    @plan.fetch("cases").keys.select { @only.nil? || it == @only }.product(@plan.fetch("lanes"), runners).map { |name, lane, runner| job(kind, name, lane, runner) }
+    cases = @plan.fetch("cases").keys.select { @only.nil? || it == @only }
+    jobs = cases.product(@plan.fetch("lanes"), @runners).map { |name, lane, runner| job(kind, name, lane, runner) }
+    if kind == "verify" && @runners.include?("github")
+      jobs += cases.product(@plan.fetch("lanes"), @runners - ["github"]).filter_map do |name, lane, runner|
+        job(kind, name, lane, runner, producer: "github") if Throughput.possible?(@plan, lane, "github", runner)
+      end
+    end
+    jobs
   end
 
-  def job(kind, name, lane, runner)
+  def job(kind, name, lane, runner, producer: runner)
     kase = @plan.fetch("cases").fetch(name)
     machine = @plan.fetch("machines").fetch(runner)
     before, after = kase.fetch("steps").fetch(@step)
-    scope = "deps-#{@run_id}-#{name}-#{runner}"
-    { "name" => "#{kind}-#{name}-#{runner}-#{lane}", "kind" => kind, "case" => name, "lane" => lane, "runner" => runner,
+    scope = "deps-#{@run_id}-#{name}-#{producer}"
+    route = producer == runner ? runner : "#{producer}-to-#{runner}"
+    { "name" => "#{kind}-#{name}-#{route}-#{lane}", "kind" => kind, "case" => name, "lane" => lane, "runner" => runner,
+      "producer" => producer, "cache_backend" => lane == "boringcache" ? "boringcache" : Throughput.store(@plan, runner),
+      "before_sha" => before, "after_sha" => after,
       "runs_on" => machine.fetch("label"), "machine" => machine.fetch("machine"), "run_id" => @run_id, "step" => @step,
       "repo" => kase.fetch("repo"), "sha" => kind == "seed" ? before : after, "tool" => kase.fetch("tool"), "ruby" => kase["ruby"].to_s,
       "lockfile" => kase.fetch("lockfile"), "path" => kase.fetch("path"), "apt" => kase.fetch("apt", []).join(" "),
@@ -149,12 +160,13 @@ class DepsJob < ThroughputJob
   def record(outcomes)
     record = super
     bytes, files = File.read(path("cache")).split.map { Integer(it) } if File.exist?(path("cache"))
-    record.merge("cache" => ({ "bytes" => bytes, "files" => files } if bytes)).compact
+    record.merge("cache" => ({ "bytes" => bytes, "files" => files } if bytes),
+                 "cache_restored_key" => @env["DEPS_RESTORED_KEY"], "harness_commit" => @env["GITHUB_SHA"]).compact
   end
 
   private
     def fields
-      %w[name kind case tool repo sha lockfile lane runner machine key run_id step]
+      %w[name kind case tool repo sha before_sha after_sha lockfile lane runner machine producer cache_backend key run_id step]
     end
 
     def cache_path
@@ -163,7 +175,7 @@ class DepsJob < ThroughputJob
 end
 
 class DepsReport
-  COLUMNS = ["Lane", "Runner", "Version", "Samples", "Failed", "Restore before s", "Install s", "Save s", "Save network MB",
+  COLUMNS = ["Lane", "Cache backend", "Runner", "Cache from", "Before", "After", "Source CPU", "Consumer CPU", "Version", "Samples", "Failed", "Restore before s", "Install s", "Save s", "Save network MB",
              "Restore after s", "Restore after network MB", "Cache MB", "Cache files"].freeze
 
   def initialize(results_dir)
@@ -175,11 +187,27 @@ class DepsReport
   end
 
   def rows
-    groups = records.select { %w[update verify].include?(it["kind"]) }.group_by { [*it.values_at("case", "lane", "machine"), version(it)] }
-    groups.sort_by { |key, _| key.map(&:to_s) }.map do |(kase, lane, machine, version), group|
-      update, verify = %w[update verify].map { |kind| group.select { it["kind"] == kind } }
-      { "case" => kase, "lane" => lane, "machine" => machine, "version" => version, "samples" => update.size,
-        "failed" => group.count { it["exit_status"] != 0 || it["output_ok"] != true },
+    seeds = records.select { it["kind"] == "seed" }.to_h { [identity(it), it] }
+    updates = records.select { it["kind"] == "update" }.to_h { [identity(it), it] }
+    observations = records.select { it["kind"] == "verify" }.map do |verify|
+      source = identity(verify, verify["producer"] || verify["runner"])
+      seed, update = seeds[source], updates[source]
+      [seed, update, verify]
+    end
+    verified = observations.to_h { [identity(it.last), true] }
+    updates.each { |id, update| observations << [seeds[id], update, nil] unless verified.key?(id) }
+    seeds.each { |id, seed| observations << [seed, nil, nil] unless updates.key?(id) || verified.key?(id) }
+    groups = observations.group_by do |seed, update, verify|
+      row = verify || update || seed
+      [row["case"], row["lane"], row["machine"], row["producer"] || row["runner"], row["cache_backend"] || row["lane"],
+       row["before_sha"] || seed&.dig("sha"), row["after_sha"] || update&.dig("sha"), update&.dig("observed", "cpu"), row.dig("observed", "cpu"), version(row)]
+    end
+    groups.sort_by { |key, _| key.map(&:to_s) }.map do |(kase, lane, machine, producer, backend, before, after, source_cpu, cpu, version), group|
+      complete = group.select { |cycle| cycle.all? { it && it["exit_status"] == 0 && it["output_ok"] == true } }
+      update = complete.map { it[1] }
+      verify = complete.map { it[2] }
+      { "case" => kase, "lane" => lane, "machine" => machine, "producer" => producer, "backend" => backend, "before" => before, "after" => after, "source_cpu" => source_cpu, "cpu" => cpu,
+        "version" => version, "samples" => group.size, "failed" => group.size - complete.size,
         "restore_before" => seconds(update, "restore"), "install" => seconds(update, "install"), "save" => seconds(update, "save"),
         "save_network" => megabytes(update, "save"), "restore_after" => seconds(verify, "restore"), "restore_after_network" => megabytes(verify, "restore"),
         "cache_bytes" => median(verify.filter_map { it.dig("cache", "bytes") }), "cache_files" => median(verify.filter_map { it.dig("cache", "files") }) }
@@ -190,7 +218,8 @@ class DepsReport
     lines = ["# Dependency cache update", ""]
     rows.group_by { it["case"] }.each do |kase, rows|
       body = rows.map do |row|
-        [*row.values_at("lane", "machine", "version", "samples", "failed", "restore_before", "install", "save", "save_network", "restore_after", "restore_after_network"),
+        [*row.values_at("lane", "backend", "machine", "producer"), row["before"]&.slice(0, 12), row["after"]&.slice(0, 12),
+         *row.values_at("source_cpu", "cpu", "version", "samples", "failed", "restore_before", "install", "save", "save_network", "restore_after", "restore_after_network"),
          row["cache_bytes"] ? (row["cache_bytes"] / 1e6).round : nil, row["cache_files"]].map { it.nil? ? "-" : it }
       end
       lines += ["## #{kase}", "", line(COLUMNS), line(COLUMNS.map { "---" }), *body.map { line(it) }, ""]
@@ -199,6 +228,10 @@ class DepsReport
   end
 
   private
+    def identity(record, runner = record["runner"])
+      [record["run_id"], record["case"], record["lane"], runner, record["step"], record["attempt"]]
+    end
+
     def version(record)
       record.dig("versions", "boringcache") || record.dig("versions", "actions_cache")
     end
@@ -232,13 +265,20 @@ if $PROGRAM_NAME == __FILE__
     parser.on("--step N", Integer) { options[:step] = it }
     parser.on("--preflight") { options[:preflight] = true }
     parser.on("--case NAME") { options[:case] = it }
+    parser.on("--runner KEYS") { options[:runners] = it.split(/[\s,]+/) }
+    parser.on("--daily") { options[:daily] = true }
     parser.on("--results DIR") { options[:results] = it }
     parser.on("--out PATH") { options[:out] = it }
   end.parse!(ARGV)
   job = -> { DepsJob.load(ENV.fetch("THROUGHPUT_DIR")) }
   outcomes = -> { ENV.filter_map { |key, value| [key.delete_prefix("THROUGHPUT_OUTCOME_").downcase, value] if key.start_with?("THROUGHPUT_OUTCOME_") }.to_h }
   exit case command
-  when "matrix" then puts Deps.new(Deps.plan, run_id: options.fetch(:run_id), step: options.fetch(:step, 0), preflight: options[:preflight], only: options[:case]).outputs; 0
+  when "matrix"
+    plan = Deps.plan
+    selected = options[:case]
+    selected ||= plan.fetch("cases").keys[Time.now.utc.to_i.div(86400) % plan.fetch("cases").size] if options[:daily]
+    puts Deps.new(plan, run_id: options.fetch(:run_id), step: options.fetch(:step, 0), preflight: options[:preflight], only: selected, runners: options[:runners]).outputs
+    0
   when "env" then print job.call.env_lines; 0
   when "keys" then print job.call.keys; 0
   when "probe", "measure" then job.call.public_send(command)

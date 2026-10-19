@@ -1,0 +1,6 @@
+provider = "blacksmith"
+level = "base"
+actions_only = true
+runners = ["blacksmith-4", "blacksmith-8"]
+setup = ["blacksmith-builder"]
+post_job_save = ["useblacksmith/setup-docker-builder"]

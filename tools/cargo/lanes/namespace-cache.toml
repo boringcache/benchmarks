@@ -1,0 +1,14 @@
+provider = "namespace"
+level = "plus"
+plan = "plus"
+actions_only = true
+runners = ["namespace-4x16-cache", "namespace-8x16-cache"]
+setup = ["namespace-cache"]
+paths = ["~/.cargo/registry/index", "~/.cargo/registry/cache", "~/.cargo/git/db", "upstream/target", ".sccache"]
+post_job_save = ["namespacelabs/nscloud-cache-action"]
+finish = ["sccache --show-stats"]
+
+[env]
+RUSTC_WRAPPER = "sccache"
+SCCACHE_DIR = "${BENCH_DIR}/.sccache"
+SCCACHE_IDLE_TIMEOUT = "0"

@@ -1,6 +1,20 @@
 require_relative "test_helper"
 
 class ReportTest < Minitest::Test
+  def test_runner_samples_keep_operations_and_failed_post_job_saves_visible
+    Dir.mktmpdir("samples-report") do |dir|
+      base = { "adapter_command" => "docker", "case" => "chroma", "phase" => "sample", "runner" => "blacksmith-8", "machine" => "blacksmith 8c",
+               "sha" => "a" * 40, "seconds" => 20.0, "exit_status" => 0, "output_ok" => true, "run_url" => "https://example.test/runs/1" }
+      File.write(File.join(dir, "cache.json"), JSON.generate(base.merge("lane" => "boringcache-reader", "provider" => "boringcache", "read_only" => true,
+        "cache_source" => { "run_url" => "https://example.test/runs/0" })))
+      File.write(File.join(dir, "native.json"), JSON.generate(base.merge("lane" => "blacksmith-builder", "provider" => "blacksmith", "cache_save_timing" => "post-job", "job_conclusion" => "failure")))
+      rows = Bench::Report.new(dir).samples.to_h { [it["lane"], it] }
+      assert_empty Bench::Report.new(dir).rows
+      assert_equal ["GitHub build", "restore, build", 20.0], rows["boringcache-reader"].values_at("cache", "operations", "seconds")
+      assert_nil rows["blacksmith-builder"]["seconds"]
+      assert_equal "failure", rows["blacksmith-builder"]["job_conclusion"]
+    end
+  end
   def setup
     @dir = Dir.mktmpdir("results")
   end

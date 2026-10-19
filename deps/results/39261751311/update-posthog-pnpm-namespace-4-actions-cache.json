@@ -1,0 +1,56 @@
+{
+  "name": "update-posthog-pnpm-namespace-4-actions-cache",
+  "kind": "update",
+  "case": "posthog-pnpm",
+  "tool": "pnpm",
+  "repo": "PostHog/posthog",
+  "sha": "41457ecc938b31430e5966e82fe6356dddd9af1b",
+  "before_sha": "5871475311c8664a32c7132e94bc17451e8c03d5",
+  "after_sha": "41457ecc938b31430e5966e82fe6356dddd9af1b",
+  "lockfile": "pnpm-lock.yaml",
+  "lane": "actions-cache",
+  "runner": "namespace-4",
+  "machine": "namespace 4c",
+  "producer": "namespace-4",
+  "cache_backend": "github",
+  "key": "deps-39261751311-posthog-pnpm-namespace-4",
+  "run_id": "39261751311",
+  "step": 0,
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/39261751311",
+  "recorded_at": "2026-10-19T13:41:16Z",
+  "versions": {
+    "actions_cache": "6.1.0"
+  },
+  "observed": {
+    "cpu": "AMD EPYC",
+    "cores": 4,
+    "disk_free_bytes": 99102896128
+  },
+  "restore": {
+    "seconds": 19.734,
+    "network_bytes": 725173613,
+    "step_ok": true,
+    "ok": true
+  },
+  "install": {
+    "seconds": 5.685,
+    "network_bytes": 949794,
+    "step_ok": true,
+    "ok": true
+  },
+  "save": {
+    "seconds": 7.363,
+    "network_bytes": 727050732,
+    "step_ok": true,
+    "ok": true
+  },
+  "exit_status": 0,
+  "output_ok": true,
+  "cache": {
+    "bytes": 2720950667,
+    "files": 163161
+  },
+  "cache_restored_key": "deps-39261751311-posthog-pnpm-namespace-4-5942a72b167c692a",
+  "harness_commit": "5f082dc5fe0f35c815d0b5cf1e1c4cee6cf5712a"
+}

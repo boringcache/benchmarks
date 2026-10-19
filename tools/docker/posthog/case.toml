@@ -17,6 +17,6 @@ ghcr = ["github", "github-arm"]
 depot-builder = ["github"]
 boringcache-docker-plus-reader = ["github", "depot-4"]
 
-[nightly]
+[samples]
 depot-builder = ["github"]
 boringcache-docker-plus-reader = ["github", "depot-4"]

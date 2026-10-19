@@ -58,7 +58,7 @@ TURBO_CACHE = "local:rw,remote:r"
 | `cli_args` | BoringCache lanes only: flags passed to `boringcache <tool>`, such as `--on-demand`; records carry them in `product_args` and the report shows them beside the CLI version |
 | `experimental` | `true` marks an experimental lane, such as the `--on-demand` lanes; records carry `"experimental": true` and the public report leaves them out |
 | `label` | job label for a BoringCache lane, needed when two BoringCache lanes share a runner, for example `boringcache on-demand` |
-| `reads` | BoringCache lanes only: `{ lane = "<lane>", runner = "<runner key>" }`, another lane with the same level, plan, env and `cli_args` that the case runs on that runner. The lane runs rolling steps only, with `--read-only` on that lane's rolling cache, so it restores what that lane saved at the previous step and never saves. It is never planned for a re-run of a recorded step and skips a step that lane has already saved. Its records carry `"read_only": true` and the report pairs each step with that lane's step at the same commit when the reader started before that lane finished |
+| `reads` | BoringCache lanes only: `{ lane = "<lane>", runner = "<runner key>" }`, a source with the same level, plan, env and `cli_args`. Sample builds use its completed rolling cache with `--read-only`; records include the selected source run and commit. Legacy rolling builds using this setting retain their original previous-step behavior. |
 | `cache_keys` | GitHub Actions cache key prefixes the lane's own action saves under, naming `${BENCH_SCOPE}`, such as `kache-${BENCH_SCOPE}-v`; after a rolling step the publish job keeps only the newest entry under each |
 | `post_job_save` | actions (`owner/repo`) or step ids that save the lane cache only after the job, such as `reproducible-containers/buildkit-cache-dance`; the publish job records their logged durations as `post_job_save_seconds` and the final `job_conclusion`. Reports include these durations and exclude failed jobs from timings and matched steps. |
 | `probe` | credential and connection checks for a preflight run; they run in the run directory without a checkout |
@@ -98,6 +98,7 @@ gha = ["github"]
 | `env` | environment for every lane; `${BENCH_DIR}` is the run directory; `${BENCH_SCOPE}` is the run-scoped cache identity (tool, case, lane, runner, run) |
 | `runs` | lane name to the runner keys it runs on |
 | `script` | optional command every lane runs instead of the plan command, for a build of several tool commands, such as `["bash", "../overlay/fuzz-smoke.sh"]`; BoringCache lanes get `BENCH_BORINGCACHE`, the `boringcache <tool>` prefix with the lane's `cli_args` and `--read-only` on warm, and the script runs each tool command through it with `--skip-restore` and `--skip-save` so only the first restores and the last saves; other lanes run the tool directly |
+| `samples` | lane name to runner keys from `runs` reserved for `mode=sample`; excluded from fresh and rolling matrices. Weekly samples select the latest completed GitHub source commit, including when upstream has no newer commit. |
 | `nightly` | lane name to runner keys from `runs` that roll only at the first rolling step of each UTC day, on their usual fixed scope; their records carry `"cadence": "nightly"` and the report matches them with each other under the runner `nightly`, without holding back the lanes that run every step |
 
 A `mise.toml` beside `case.toml` pins the case toolchain; it is copied into the run directory.
@@ -142,3 +143,30 @@ gh workflow run project.yml -f tool=Nix -f project=Zed -f mode=preflight
 ```
 
 A preflight run (`<tool> - <project> (preflight)`) runs every lane's setup and `probe` with the lane's secrets and no checkout or build, so missing keys and auth problems show up in minutes. A cold phase refuses to run on a rerun attempt, because the run's cache scope may already hold data; dispatch a fresh run instead.
+
+## Weekly runner samples
+
+`samples.yml` dispatches PostHog on Depot, Zed on Namespace, and Chroma on Blacksmith every Monday at 02:31 UTC. Each also rebuilds the same commit on GitHub using the same BoringCache scope. Regular GitHub rolling builds continue producing that scope. Sample and rolling workflows share a project concurrency group, and the scheduler treats both as active work. A sample refuses an excluded or failed latest source, or a source older than the latest recorded project step.
+
+The cache tag is mutable; selecting a source record is not an immutable cache-version pin. Serialization prevents this repository's normal rolling workflow from publishing during the sample. External writes and a cancelled run that published cache without recording its result remain limits of source provenance. Sample records retain the selected source run, commit, scope and CLI version. Repeated samples have separate run scopes and do not advance rolling.
+
+Native comparisons use Depot's persistent remote Docker builder, a Namespace cache volume, and Blacksmith's persistent Docker builder. Sample phases do not execute Depot's cold cache reset. Namespace mounts the dependency stores, Cargo target directory and sccache directory using [nscloud-cache-action](https://namespace.so/docs/reference/github-actions/nscloud-cache-action). Blacksmith uses the pinned official [setup-docker-builder action](https://github.com/useblacksmith/setup-docker-builder); setup and post-job persistence are included in its timed operations.
+
+These native caches retain their own history between samples. BoringCache samples rebuild the commit just built by GitHub and time restore plus build; native samples time restore, build and save. The report lists each run and its operations without calculating a cache-only speedup between those histories. Docker base and plus configurations remain separate levels. The Namespace BoringCache profile has swap configured; the label-configured cache-volume runner does not specify swap. Their timings must not be described as identical-resource cache comparisons. Provider selection matches the project's provider, not its exact upstream machine specification.
+
+Manual samples can select configured larger runners:
+
+```sh
+gh workflow run project.yml --ref main -f tool=Docker -f project=chroma -f mode=sample -f runner=blacksmith-8
+gh workflow run project.yml --ref main -f tool=Rust/Cargo -f project=zed -f mode=sample -f lane=boringcache-cargo-plus-reader -f runner=namespace-8
+```
+
+Use the exact tool title and project key so manual samples share rolling concurrency. Namespace's 8-core BoringCache profile and 8-core cache-volume runner are separate configurations; matching core count alone does not establish matching memory or swap.
+
+## Daily dependency benchmarks
+
+`deps.yml` runs at 03:17 UTC daily, rotating one of the four dependency cases per day across GitHub, Depot, Namespace and Blacksmith. Each case installs the before-lockfile snapshot, restores it for the after-lockfile install, saves the updated cache, then restores and verifies that cache in a new job. Manual runs can select a case and runner keys; an empty case runs all cases.
+
+Additional verification jobs restore the GitHub-produced BoringCache on all three other providers. The actions/cache comparison runs across providers only where they share the same backend. Depot and Blacksmith provide separate Actions-compatible cache stores; records identify those backends instead of calling every actions/cache invocation GitHub storage.
+
+The dependency report groups exact source pairs, consumer CPU, CLI/action version, backend and cache source. Only complete passing seed, update and verification cycles contribute timings. Failed or missing stages count as failed samples. For cross-provider rows, install and save describe the source runner; the final restore describes the consumer runner. Records retain the matched Actions key and harness commit. Native Namespace volumes and Blacksmith Docker volumes are build experiments, not dependency archive backends.

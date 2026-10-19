@@ -3,12 +3,14 @@ bytes = 4294967296
 preflight_bytes = 67108864
 lanes = ["boringcache", "actions-cache"]
 payloads = ["random", "compressible"]
-runners = ["github", "depot-4", "namespace-4"]
+runners = ["github", "depot-4", "namespace-4", "blacksmith-4"]
 
 [consumers]
-github = ["github", "github-arm", "depot-4", "namespace-4"]
+github = ["github", "github-arm", "depot-4", "namespace-4", "blacksmith-4"]
 depot-4 = ["depot-4", "github"]
 namespace-4 = ["namespace-4", "github"]
+blacksmith-4 = ["blacksmith-4", "github"]
 
 [actions_cache_store]
 depot-4 = "depot"
+blacksmith-4 = "blacksmith"

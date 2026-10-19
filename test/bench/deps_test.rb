@@ -11,7 +11,8 @@ class DepsTest < Minitest::Test
   def test_every_case_lane_and_runner_seeds_updates_and_verifies
     Deps::KINDS.each do |kind|
       jobs = @deps.jobs(kind)
-      assert_equal @plan["cases"].size * @plan["lanes"].size * @plan["runners"].size, jobs.size
+      own = jobs.select { it["producer"] == it["runner"] }
+      assert_equal @plan["cases"].size * @plan["lanes"].size * @plan["runners"].size, own.size
       assert_equal jobs.size, jobs.map { it["name"] }.uniq.size
     end
     assert_equal @plan["cases"].size * @plan["lanes"].size, Deps.new(@plan, run_id: "1", preflight: true).jobs("seed").size
@@ -73,9 +74,40 @@ class DepsTest < Minitest::Test
       File.write(File.join(dir, "seed.json"), JSON.generate(base.merge("kind" => "seed", "save" => { "seconds" => 99.0, "ok" => true })))
       markdown = DepsReport.new(dir).markdown
       assert_includes markdown, "## posthog-pnpm"
-      assert_includes markdown, "| boringcache | github 4c | 1.42.0 | 1 | 0 | 20.0 | 30.0 | 5.0 | 50 | 21.0 | 900 | 2000 | 250000 |"
+      assert_includes markdown, "| boringcache | boringcache | github 4c | - | - | - | - | - | 1.42.0 | 1 | 0 | 20.0 | 30.0 | 5.0 | 50 | 21.0 | 900 | 2000 | 250000 |"
       refute_includes markdown, "99.0"
     end
+  end
+
+  def test_cross_runner_verification_uses_the_github_cache_only_where_the_backend_is_shared
+    jobs = @deps.jobs("verify").select { it["producer"] != it["runner"] }
+    assert_equal %w[blacksmith-4 depot-4 namespace-4], jobs.select { it["lane"] == "boringcache" }.map { it["runner"] }.uniq.sort
+    assert_equal ["namespace-4"], jobs.select { it["lane"] == "actions-cache" }.map { it["runner"] }.uniq
+    assert jobs.all? { it["key"].end_with?("-github") }
+    assert_equal ["blacksmith"], @deps.jobs("seed").select { it["runner"] == "blacksmith-4" && it["lane"] == "actions-cache" }.map { it["cache_backend"] }.uniq
+  end
+
+  def test_failed_or_missing_stages_do_not_contribute_timings
+    Dir.mktmpdir("deps-report") do |dir|
+      base = { "run_id" => "1", "case" => "app", "lane" => "boringcache", "runner" => "github", "machine" => "github 4c", "exit_status" => 0, "output_ok" => true }
+      %w[seed update verify].each do |kind|
+        File.write(File.join(dir, "#{kind}.json"), JSON.generate(base.merge("kind" => kind, "exit_status" => kind == "seed" ? 1 : 0,
+          "restore" => { "seconds" => 2, "ok" => true }, "save" => { "seconds" => 3, "ok" => true })))
+      end
+      row = DepsReport.new(dir).rows.fetch(0)
+      assert_equal [1, 1, nil, nil], row.values_at("samples", "failed", "restore_after", "save")
+      File.delete(File.join(dir, "verify.json"))
+      assert_equal [1, 1], DepsReport.new(dir).rows.fetch(0).values_at("samples", "failed")
+    end
+  end
+
+  def test_install_command_does_not_override_autoconf_install
+    require "yaml"
+    action = YAML.load_file(File.join(Throughput::ROOT, ".github/actions/deps/action.yml"))
+    step = action.fetch("runs").fetch("steps").find { it["id"] == "install" }
+    env = step.fetch("env").transform_values { 'test -z "${INSTALL+x}"' }
+    env["INSTALL"] = nil unless env.key?("INSTALL")
+    assert system(env, "bash", "-ec", step.fetch("run"))
   end
 
   private

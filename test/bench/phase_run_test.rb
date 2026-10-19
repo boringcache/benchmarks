@@ -193,6 +193,25 @@ class PhaseRunTest < Minitest::Test
     assert_equal ["boringcache-reader-local-rolling", "boringcache-demo-local-rolling", false, true], reader.values_at("scope", "cache_scope", "cache_seeded", "read_only")
   end
 
+  def test_samples_reuse_the_source_scope_without_writing_or_advancing_rolling
+    write "tools/demo/lanes/boringcache-reader.toml", %(provider = "boringcache"\nlevel = "base"\nreads = { lane = "boringcache-demo", runner = "local" }\n)
+    source = { "step" => 0, "sha" => @upstream_sha, "cache_scope" => "boringcache-demo-local-rolling" }
+    with_fixture_env do
+      ENV["BENCH_CACHE_SOURCE"] = JSON.generate(source)
+      %w[71 72].each do |run|
+        assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-reader", "--phase", "sample", "--sha", @upstream_sha,
+                           "--step", "0", "--cache-scope", source.fetch("cache_scope"), "--run-id", run)
+        saved = record("boringcache-reader-local-sample-#{run}", "boringcache-reader-local-sample-0")
+        assert_equal source, saved["cache_source"]
+        assert_equal source.fetch("cache_scope"), saved["cache_scope"]
+      end
+    ensure
+      ENV.delete("BENCH_CACHE_SOURCE")
+    end
+    assert_equal ["demo --read-only", "demo --read-only"], File.readlines(File.join(@root, "stub.log"), chomp: true)
+    assert_empty Dir[File.join(@root, "tmp/results/demo/app/*-rolling/*.json")]
+  end
+
   def test_a_seeded_lane_seeds_again_until_it_has_a_passing_step
     write "tools/demo/lanes/boringcache-seeded.toml", %(provider = "boringcache"\nlevel = "base"\nexperimental = true\nseed = "boringcache-demo"\n)
     write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", "[runs]\nboringcache-seeded = [\"local\"]\n")

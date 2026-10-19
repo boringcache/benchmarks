@@ -1,6 +1,8 @@
 name: Dependency cache update
 
 on:
+  schedule:
+    - cron: "17 3 * * *"
   workflow_dispatch:
     inputs:
       mode:
@@ -14,6 +16,10 @@ on:
         default: 0
       case:
         description: only this case, for example discourse-bundler (optional)
+        type: string
+        default: ""
+      runner:
+        description: runner keys, space separated; empty uses all four providers
         type: string
         default: ""
       cli_artifact:
@@ -65,10 +71,12 @@ jobs:
       - id: matrix
         env:
           RUN_ID: ${{ github.run_id }}
-          STEP: ${{ inputs.step }}
+          STEP: ${{ inputs.step || '0' }}
           PREFLIGHT: ${{ inputs.mode == 'preflight' && 'true' || '' }}
           CASE: ${{ inputs.case }}
-        run: bundle exec ruby scripts/deps.rb matrix --run-id "$RUN_ID" --step "$STEP" ${PREFLIGHT:+--preflight} ${CASE:+--case "$CASE"} >> "$GITHUB_OUTPUT"
+          DAILY: ${{ github.event_name == 'schedule' && 'true' || '' }}
+          RUNNERS: ${{ inputs.runner }}
+        run: bundle exec ruby scripts/deps.rb matrix --run-id "$RUN_ID" --step "$STEP" ${PREFLIGHT:+--preflight} ${CASE:+--case "$CASE"} ${RUNNERS:+--runner "$RUNNERS"} ${DAILY:+--daily} >> "$GITHUB_OUTPUT"
       - uses: ./.github/actions/throughput-cleanup
         with:
           prefix: deps-
@@ -112,7 +120,7 @@ jobs:
   verify:
     needs: [plan, update]
     if: ${{ !cancelled() && needs.plan.result == 'success' }}
-    name: "verify: ${{ matrix.case }} · ${{ matrix.machine }} · ${{ matrix.lane }}"
+    name: "verify: ${{ matrix.case }} · ${{ matrix.machine }} · ${{ matrix.lane }} · cache from ${{ matrix.producer }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 60
     permissions: *lane_permissions
@@ -145,7 +153,7 @@ jobs:
 
   publish:
     needs: [plan, seed, update, verify]
-    if: ${{ !cancelled() && needs.plan.result == 'success' && github.ref == 'refs/heads/main' && inputs.mode == 'run' && inputs.cli_artifact == '' && !inputs.cli_jsonl }}
+    if: ${{ !cancelled() && needs.plan.result == 'success' && github.ref == 'refs/heads/main' && inputs.mode != 'preflight' && inputs.cli_artifact == '' && !inputs.cli_jsonl }}
     runs-on: ubuntu-24.04
     permissions:
       contents: write
