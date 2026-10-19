@@ -175,7 +175,7 @@ class DepsJob < ThroughputJob
 end
 
 class DepsReport
-  COLUMNS = ["Lane", "Cache backend", "Runner", "Cache from", "Before", "After", "CPU", "Version", "Samples", "Failed", "Restore before s", "Install s", "Save s", "Save network MB",
+  COLUMNS = ["Lane", "Cache backend", "Runner", "Cache from", "Before", "After", "Source CPU", "Consumer CPU", "Version", "Samples", "Failed", "Restore before s", "Install s", "Save s", "Save network MB",
              "Restore after s", "Restore after network MB", "Cache MB", "Cache files"].freeze
 
   def initialize(results_dir)
@@ -200,13 +200,13 @@ class DepsReport
     groups = observations.group_by do |seed, update, verify|
       row = verify || update || seed
       [row["case"], row["lane"], row["machine"], row["producer"] || row["runner"], row["cache_backend"] || row["lane"],
-       row["before_sha"] || seed&.dig("sha"), row["after_sha"] || update&.dig("sha"), row.dig("observed", "cpu"), version(row)]
+       row["before_sha"] || seed&.dig("sha"), row["after_sha"] || update&.dig("sha"), update&.dig("observed", "cpu"), row.dig("observed", "cpu"), version(row)]
     end
-    groups.sort_by { |key, _| key.map(&:to_s) }.map do |(kase, lane, machine, producer, backend, before, after, cpu, version), group|
+    groups.sort_by { |key, _| key.map(&:to_s) }.map do |(kase, lane, machine, producer, backend, before, after, source_cpu, cpu, version), group|
       complete = group.select { |cycle| cycle.all? { it && it["exit_status"] == 0 && it["output_ok"] == true } }
       update = complete.map { it[1] }
       verify = complete.map { it[2] }
-      { "case" => kase, "lane" => lane, "machine" => machine, "producer" => producer, "backend" => backend, "before" => before, "after" => after, "cpu" => cpu,
+      { "case" => kase, "lane" => lane, "machine" => machine, "producer" => producer, "backend" => backend, "before" => before, "after" => after, "source_cpu" => source_cpu, "cpu" => cpu,
         "version" => version, "samples" => group.size, "failed" => group.size - complete.size,
         "restore_before" => seconds(update, "restore"), "install" => seconds(update, "install"), "save" => seconds(update, "save"),
         "save_network" => megabytes(update, "save"), "restore_after" => seconds(verify, "restore"), "restore_after_network" => megabytes(verify, "restore"),
@@ -219,7 +219,7 @@ class DepsReport
     rows.group_by { it["case"] }.each do |kase, rows|
       body = rows.map do |row|
         [*row.values_at("lane", "backend", "machine", "producer"), row["before"]&.slice(0, 12), row["after"]&.slice(0, 12),
-         *row.values_at("cpu", "version", "samples", "failed", "restore_before", "install", "save", "save_network", "restore_after", "restore_after_network"),
+         *row.values_at("source_cpu", "cpu", "version", "samples", "failed", "restore_before", "install", "save", "save_network", "restore_after", "restore_after_network"),
          row["cache_bytes"] ? (row["cache_bytes"] / 1e6).round : nil, row["cache_files"]].map { it.nil? ? "-" : it }
       end
       lines += ["## #{kase}", "", line(COLUMNS), line(COLUMNS.map { "---" }), *body.map { line(it) }, ""]

@@ -120,7 +120,7 @@ jobs:
   verify:
     needs: [plan, update]
     if: ${{ !cancelled() && needs.plan.result == 'success' }}
-    name: "verify: ${{ matrix.case }} · ${{ matrix.machine }} · ${{ matrix.lane }}"
+    name: "verify: ${{ matrix.case }} · ${{ matrix.machine }} · ${{ matrix.lane }} · cache from ${{ matrix.producer }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 60
     permissions: *lane_permissions

@@ -74,7 +74,7 @@ class DepsTest < Minitest::Test
       File.write(File.join(dir, "seed.json"), JSON.generate(base.merge("kind" => "seed", "save" => { "seconds" => 99.0, "ok" => true })))
       markdown = DepsReport.new(dir).markdown
       assert_includes markdown, "## posthog-pnpm"
-      assert_includes markdown, "| boringcache | boringcache | github 4c | - | - | - | - | 1.42.0 | 1 | 0 | 20.0 | 30.0 | 5.0 | 50 | 21.0 | 900 | 2000 | 250000 |"
+      assert_includes markdown, "| boringcache | boringcache | github 4c | - | - | - | - | - | 1.42.0 | 1 | 0 | 20.0 | 30.0 | 5.0 | 50 | 21.0 | 900 | 2000 | 250000 |"
       refute_includes markdown, "99.0"
     end
   end
