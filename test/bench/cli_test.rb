@@ -55,6 +55,15 @@ class CLITest < Minitest::Test
     assert_equal({ "boringcache-demo" => "boringcache-demo-github-rolling", "remote" => "remote-github-rolling", "gha" => "gha-github-rolling" }, scopes)
   end
 
+  def test_a_reader_rolls_on_the_cache_of_the_lane_it_reads_and_stays_out_of_fresh_runs
+    write "tools/demo/lanes/boringcache-reader.toml", %(provider = "boringcache"\nlevel = "base"\nlabel = "boringcache read-only"\nreads = { lane = "boringcache-demo", runner = "github" }\n)
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", "[runs]\nboringcache-reader = [\"github\"]\n")
+
+    assert_equal %w[boringcache-demo remote gha], matrix("app").map { it["lane"] }
+    reader = matrix("app", "--rolling").find { it["lane"] == "boringcache-reader" }
+    assert_equal ["github 4c · boringcache read-only", "boringcache-demo-github-rolling"], reader.values_at("label", "cache_scope")
+  end
+
   def test_rolling_matrix_marks_lanes_that_continue_their_own_rolling_cache
     commit_upstream("two")
     rolling_record("remote", 0, @upstream_sha)

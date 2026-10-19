@@ -44,6 +44,17 @@ class CheckTest < Minitest::Test
                   "demo/app: boringcache-seeded seeds from boringcache-demo, whose plan has different entries"], Bench::Check.new(catalog).problems
   end
 
+  def test_a_reader_names_a_boringcache_lane_with_the_same_settings_that_the_case_runs_on_that_runner
+    write "tools/demo/lanes/boringcache-reader.toml", %(provider = "boringcache"\nlevel = "base"\nreads = { lane = "boringcache-demo", runner = "github" }\n)
+    write "tools/demo/lanes/boringcache-other-reader.toml", %(provider = "boringcache"\nlevel = "base"\nreads = { lane = "boringcache-demo", runner = "github" }\n[env]\nDEMO = "1"\n)
+    write "tools/demo/lanes/remote-reader.toml", %(provider = "remote"\nlevel = "base"\nreads = { lane = "remote", runner = "github" }\n)
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("boringcache-demo = [\"local\", \"github\"]", "boringcache-demo = [\"local\"]").sub("[runs]\n", "[runs]\nboringcache-reader = [\"local\"]\n")
+
+    assert_equal ["demo/lanes/boringcache-other-reader: reads must name another BoringCache lane with the same level, plan, env and cli_args, and a runner",
+                  "demo/lanes/remote-reader: reads must name another BoringCache lane with the same level, plan, env and cli_args, and a runner",
+                  "demo/app: boringcache-reader reads boringcache-demo on github, which this case does not run"], Bench::Check.new(catalog).problems
+  end
+
   def test_an_incremental_lane_needs_a_plan_without_the_compiler_cache
     write "tools/demo/lanes/boringcache-incremental.toml", %(provider = "boringcache"\nlevel = "base"\nplan = "incremental"\n[env]\nCARGO_INCREMENTAL = "1"\n)
     write "tools/demo/app/incremental/.boringcache.toml", %(workspace = "boringcache/benchmarks"\n[adapters.cargo]\nprofiles = ["deps"]\n)

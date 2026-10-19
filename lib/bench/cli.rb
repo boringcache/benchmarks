@@ -155,7 +155,7 @@ module Bench
             Array(runners).select { planned?(kase, lane, it, rolling, rerun) }.map do |runner|
               { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets, "setup" => lane.setup.join(" "),
                 "label" => job_label(kase, lane, runner),
-                "step" => step&.to_s || "", "sha" => sha || "", "cache_scope" => rolling&.cache_scope(lane, runner) || "", "continues" => rolling&.continues?(lane, runner) ? "true" : "",
+                "step" => step&.to_s || "", "sha" => sha || "", "cache_scope" => rolling&.read_scope(lane, runner) || "", "continues" => rolling&.continues?(lane, runner) ? "true" : "",
                 "cadence" => rolling && kase.nightly?(lane.name, runner) ? "nightly" : "", "cli" => options[:cli] || @catalog.case_cli(kase) || "" }
             end
           end
@@ -168,7 +168,7 @@ module Bench
 
       def planned?(kase, lane, runner, rolling, rerun)
         return false if runner == "local"
-        return true unless rolling
+        return !lane.reads unless rolling
         return false if rerun && (rolling.passed?(lane, runner, rerun) || rolling.last_step(lane, runner).to_i > rerun)
         return true unless kase.nightly?(lane.name, runner)
 
@@ -315,11 +315,12 @@ module Bench
 
       def phase_run(kase, lane, phase, options)
         common = { phase:, runner: options[:runner], work_root: options[:work], results_dir: options[:results] }
+        raise Error, "#{kase.id} #{lane.name} reads another lane's rolling cache, so it runs rolling steps only" if lane.reads && phase != ROLLING
         return PhaseRun.new(kase, lane, scope: "#{lane.name}-#{options[:runner]}-#{options[:run_id]}", **common) unless phase == ROLLING
 
         rolling = Rolling.new(kase, results_dir: options[:results], work_root: options[:work])
         step, sha = options[:sha] ? [Integer(options[:step]), options[:sha]] : rolling.next_step
-        cache_scope = options[:cache_scope] || rolling.cache_scope(lane, options[:runner])
+        cache_scope = options[:cache_scope] || rolling.read_scope(lane, options[:runner])
         newer = options[:recorded] && Rolling.new(kase, results_dir: options[:recorded], work_root: options[:work]).last_step(lane, options[:runner])
         if sha && newer && newer > step
           @out.puts "#{kase.id} #{lane.name} rolling: step #{newer} is already recorded, so step #{step} is not rebuilt"
@@ -340,6 +341,7 @@ module Bench
           restore_keys = phase_run.phase != ROLLING ? [base_key] : (continues ? ["#{base_key}-"] : [])
           outputs.merge!("tool" => kase.tool.name, "provider" => lane.provider, "build_dir" => phase_run.build_dir,
                          "restore_key" => restore_keys.join("\n"), "cache_key" => [base_key, phase_run.step].compact.join("-"),
+                         "artifact_key" => ["#{kase.id.tr("/", "-")}-#{phase_run.scope}", phase_run.step].compact.join("-"),
                          "cache_paths" => phase_run.cache_paths.join("\n"), "cache_dance_map" => JSON.generate(lane.setup.include?("cache-dance") ? phase_run.cache_dance_map(File.join(ENV.fetch("RUNNER_TEMP", "/tmp"), "cache-dance")) : {}), "setup" => lane.setup.join(" "), "boringcache_version" => @catalog.versions.fetch("boringcache"))
           File.open(ENV.fetch("GITHUB_ENV"), "a") { |file| phase_run.exported_env.each { |key, value| file.puts "#{key}=#{value}" } }
         end

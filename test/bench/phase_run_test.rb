@@ -173,6 +173,23 @@ class PhaseRunTest < Minitest::Test
     assert_equal [[0, "boringcache-demo-local-rolling"], [1, nil]], rolling.map { it.values_at("step", "seed_scope") }.sort_by(&:first)
   end
 
+  def test_a_reader_restores_the_lane_it_reads_read_only_and_records_its_steps_apart
+    write "tools/demo/lanes/boringcache-reader.toml", %(provider = "boringcache"\nlevel = "base"\nreads = { lane = "boringcache-demo", runner = "local" }\n)
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", "[runs]\nboringcache-reader = [\"local\"]\n")
+    write "bin/boringcache", STUB.sub(%(echo "$tool $*" >> "$STUB_LOG"), %(echo "$tool $* | $(grep -m1 -o 'demo-app-[a-z-]*' .boringcache.toml)" >> "$STUB_LOG"))
+    commit_upstream("two")
+    with_fixture_env do
+      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "rolling")
+      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-reader", "--phase", "rolling", "--sha", @upstream_sha, "--step", "0")
+      _, err = capture_io { assert_equal 1, cli("run", "demo/app", "--lane", "boringcache-reader", "--phase", "cold", "--run-id", "r30") }
+      assert_includes err, "boringcache-reader reads another lane's rolling cache, so it runs rolling steps only"
+    end
+
+    assert_equal ["demo  | demo-app-boringcache-demo-local-rolling", "demo --read-only | demo-app-boringcache-demo-local-rolling"], File.readlines(File.join(@root, "stub.log"), chomp: true)
+    reader = record("boringcache-reader-local-rolling", "boringcache-reader-local-rolling-0")
+    assert_equal ["boringcache-reader-local-rolling", "boringcache-demo-local-rolling", false, true], reader.values_at("scope", "cache_scope", "cache_seeded", "read_only")
+  end
+
   def test_a_seeded_lane_seeds_again_until_it_has_a_passing_step
     write "tools/demo/lanes/boringcache-seeded.toml", %(provider = "boringcache"\nlevel = "base"\nexperimental = true\nseed = "boringcache-demo"\n)
     write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", "[runs]\nboringcache-seeded = [\"local\"]\n")
@@ -192,6 +209,7 @@ class PhaseRunTest < Minitest::Test
     first = rolling_restore_key
     assert_includes first, "restore_key<<BENCH_EOF\n\nBENCH_EOF"
     assert_includes first, "cache_key<<BENCH_EOF\ndemo-app-remote-local-r30-3\nBENCH_EOF"
+    assert_includes first, "artifact_key<<BENCH_EOF\ndemo-app-remote-local-rolling-3\nBENCH_EOF"
 
     assert_includes rolling_restore_key("--continues"), "restore_key<<BENCH_EOF\ndemo-app-remote-local-r30-\nBENCH_EOF"
   end

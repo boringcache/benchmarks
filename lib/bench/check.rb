@@ -58,6 +58,7 @@ module Bench
         problems << "#{where}: post_job_save must list actions (owner/repo) or step ids" unless lane.post_job_save.is_a?(Array) && lane.post_job_save.all?(String)
         problems << "#{where}: experimental must be true or left out" unless [nil, true].include?(lane.experimental)
         problems << "#{where}: seed must name another BoringCache lane" unless lane.seed.nil? || seed_source?(lane)
+        problems << "#{where}: reads must name another BoringCache lane with the same level, plan, env and cli_args, and a runner" unless lane.reads.nil? || reads_source?(lane)
         problems << "#{where}: cli_args must be BoringCache CLI flags on a BoringCache lane" unless lane.cli_args.is_a?(Array) && lane.cli_args.all? { it.is_a?(String) && it.start_with?("--") } && (lane.cli_args.empty? || lane.boringcache?)
         problems << "#{where}: cache_keys must list key prefixes that name ${BENCH_SCOPE}" unless lane.cache_key_templates.is_a?(Array) && lane.cache_key_templates.all? { it.is_a?(String) && it.include?("${BENCH_SCOPE}") }
         problems + Array(lane.allowed_runners).reject { @catalog.runners.key?(it) }.map { "#{where}: unknown runner #{it}" }
@@ -101,6 +102,7 @@ module Bench
         end
         problems << "#{kase.id}: #{lane_name} mounts the Namespace cache volume without cache paths" if lane.setup.include?("namespace-cache") && lane.paths.empty? && kase.shared.empty?
         problems += (runners - Array(kase.runs[lane.seed])).map { "#{kase.id}: #{lane_name} seeds from #{lane.seed}, which does not run on #{it}" } if lane.seed
+        problems << "#{kase.id}: #{lane_name} reads #{lane.reads["lane"]} on #{lane.reads["runner"]}, which this case does not run" if lane.reads.is_a?(Hash) && !Array(kase.runs[lane.reads["lane"]]).include?(lane.reads["runner"])
         return problems unless lane.boringcache?
         return problems << "#{kase.id}: #{lane_name} has no plan at #{File.join(lane.plan_dir, ".boringcache.toml")}" unless File.exist?(kase.plan_path(lane))
 
@@ -117,6 +119,14 @@ module Bench
       def seed_source?(lane)
         source = lane.tool.lanes.find { it.name == lane.seed }
         lane.boringcache? && source && source != lane && source.boringcache?
+      end
+
+      def reads_source?(lane)
+        return false unless lane.reads.is_a?(Hash) && lane.reads.keys.sort == %w[lane runner] && @catalog.runners.key?(lane.reads["runner"])
+
+        source = lane.tool.lanes.find { it.name == lane.reads["lane"] }
+        lane.boringcache? && source && source != lane && source.boringcache? && !source.reads && source.level == lane.level &&
+          source.plan_dir == lane.plan_dir && source.cli_args == lane.cli_args && TomlRB.load_file(source.path)["env"] == TomlRB.load_file(lane.path)["env"]
       end
 
       def same_entries?(kase, lane, source)

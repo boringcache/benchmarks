@@ -1,0 +1,9 @@
+provider = "boringcache"
+level = "plus"
+plan = "plus"
+label = "boringcache plus read-only"
+actions_only = true
+reads = { lane = "boringcache-cargo-plus", runner = "github" }
+
+[env]
+BORINGCACHE_ARCHIVE_SELECTIVE_READS = "1"

@@ -47,6 +47,10 @@ module Bench
       config["seed"]
     end
 
+    def reads
+      config["reads"]
+    end
+
     def machine
       config["machine"]
     end

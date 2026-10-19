@@ -296,7 +296,7 @@ runs:
     - if: always() && steps.sampler.outcome == 'success'
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
-        name: diagnostics-${{ steps.prepare.outputs.cache_key }}-${{ inputs.phase }}-${{ github.run_attempt }}
+        name: diagnostics-${{ steps.prepare.outputs.artifact_key }}-${{ inputs.phase }}-${{ github.run_attempt }}
         path: ${{ runner.temp }}/diagnostics
         retention-days: 14
         if-no-files-found: warn
@@ -326,6 +326,6 @@ runs:
     - if: always() && steps.prepare.outputs.ready == 'true'
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
-        name: results-${{ steps.prepare.outputs.cache_key }}-${{ inputs.phase }}-${{ github.run_attempt }}
+        name: results-${{ steps.prepare.outputs.artifact_key }}-${{ inputs.phase }}-${{ github.run_attempt }}
         path: ${{ runner.temp }}/results
         if-no-files-found: warn

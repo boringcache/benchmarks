@@ -1,0 +1,5 @@
+provider = "boringcache"
+level = "base"
+label = "boringcache read-only"
+actions_only = true
+reads = { lane = "boringcache-bazel", runner = "github" }

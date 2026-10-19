@@ -145,10 +145,14 @@ module Bench
       def command
         return [*lane.wrap(phase, environment), *kase.script] if kase.script
         return [*lane.wrap(phase, environment), *lane_program, *lane.args(phase, environment)] unless lane.boringcache?
-        return ["boringcache", kase.tool.name, *lane.cli_args, *("--read-only" if phase == "warm")] unless lane.phases?
+        return ["boringcache", kase.tool.name, *lane.cli_args, *read_only] unless lane.phases?
 
         restore, save = %w[restore save].map { Shellwords.join(["boringcache", kase.tool.name, *lane.cli_args, "--phase", it]) }
-        ["bash", "-c", [restore, Shellwords.join(adapter.fetch("command")), (save unless phase == "warm")].compact.join(" && ")]
+        ["bash", "-c", [restore, Shellwords.join(adapter.fetch("command")), (save unless read_only)].compact.join(" && ")]
+      end
+
+      def read_only
+        "--read-only" if phase == "warm" || lane.reads
       end
 
       def lane_program
@@ -176,7 +180,7 @@ module Bench
       def script_boringcache
         return {} unless kase.script
 
-        { "BENCH_BORINGCACHE" => Shellwords.join(["boringcache", kase.tool.name, *lane.cli_args, *("--read-only" if phase == "warm")]) }
+        { "BENCH_BORINGCACHE" => Shellwords.join(["boringcache", kase.tool.name, *lane.cli_args, *read_only]) }
       end
 
       def shell(command, chdir: workspace.dir)
@@ -208,8 +212,9 @@ module Bench
           "step" => step,
           "scope" => scope,
           "cache_scope" => cache_scope,
-          "cache_seeded" => (cache_scope != scope if phase == "rolling"),
+          "cache_seeded" => (cache_scope != scope && !lane.reads if phase == "rolling"),
           **({ "seed_scope" => seed_scope } if seed_scope),
+          **({ "read_only" => true } if lane.reads),
           "cache_restored_key" => (@env["BENCH_CACHE_RESTORED_KEY"] unless @env["BENCH_CACHE_RESTORED_KEY"].to_s.empty?),
           **({ "cache_restore_tracked" => true } if @env["BENCH_CACHE_RESTORE_TRACKED"] == "true"),
           "repo" => kase.repo,

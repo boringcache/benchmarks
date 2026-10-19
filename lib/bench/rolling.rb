@@ -30,6 +30,12 @@ module Bench
       self.class.scope(lane, runner, @kase.rolling_series)
     end
 
+    def read_scope(lane, runner)
+      return cache_scope(lane, runner) unless lane.reads
+
+      self.class.scope(@kase.tool.lane(lane.reads.fetch("lane")), lane.reads.fetch("runner"), @kase.rolling_series)
+    end
+
     def recorded?(lane, runner, step)
       records(File.join(cache_scope(lane, runner), "*.json")).any? { it["step"] == step }
     end

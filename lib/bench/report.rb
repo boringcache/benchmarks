@@ -4,6 +4,8 @@ module Bench
     COLUMNS = %w[Tool Case Lane Level Runner Phase Step Commit CLI Attempt From\ fresh\ run Save Machine CPU Cores Samples Failed Seed\ failed Timed\ median\ s Timed\ min\ s Timed\ max\ s Cache\ API\ errors].freeze
     MATCHED = %w[adapter_command case runner series boringcache steps first_step last_step lane level machine median_seconds min_seconds max_seconds cache_api_error_steps].freeze
     MATCHED_COLUMNS = %w[Tool Case Runner Series CLI Steps First\ step Last\ step Lane Level Machine Timed\ median\ s Timed\ min\ s Timed\ max\ s Steps\ with\ cache\ API\ errors].freeze
+    READ_ONLY = %w[adapter_command case lane level machine reads boringcache steps first_step last_step median_seconds source_median_seconds cache_api_error_steps].freeze
+    READ_ONLY_COLUMNS = %w[Tool Case Lane Level Machine Reads CLI Steps First\ step Last\ step Timed\ median\ s Source\ timed\ median\ s Steps\ with\ cache\ API\ errors].freeze
 
     def initialize(results_dir, runs: nil, nightly: [])
       @results_dir = results_dir
@@ -23,7 +25,7 @@ module Bench
 
     def write(out_dir)
       FileUtils.mkdir_p(out_dir)
-      File.write(File.join(out_dir, "results.json"), JSON.pretty_generate("rows" => rows, "matched" => matched) + "\n")
+      File.write(File.join(out_dir, "results.json"), JSON.pretty_generate("rows" => rows, "matched" => matched, "read_only" => read_only) + "\n")
       File.write(File.join(out_dir, "report.md"), markdown)
     end
 
@@ -39,6 +41,20 @@ module Bench
       end.sort_by { it.values_at(*MATCHED.first(5), "lane").map(&:to_s) }
     end
 
+    def read_only
+      @read_only ||= records.select { it["read_only"] && it["phase"] == ROLLING && passed?(it) }
+        .group_by { it.values_at("adapter_command", "case", "lane", "runner", "step") }.values.map { |tries| tries.min_by { it["attempt"].to_i } }
+        .filter_map { |reader| (source = sources[reader.values_at("adapter_command", "case", "cache_scope", "step", "sha")]) && [reader, source] }
+        .group_by { |reader, _| [*reader.values_at("adapter_command", "case", "lane", "level", "machine", "cache_scope"), cli(reader)] }
+        .map do |(tool, kase, lane, level, machine, reads, version), pairs|
+          steps = pairs.map { |reader, _| reader["step"] }
+          { "adapter_command" => tool, "case" => kase, "lane" => lane, "level" => level, "machine" => machine, "reads" => reads, "boringcache" => version,
+            "steps" => pairs.size, "first_step" => steps.min, "last_step" => steps.max,
+            "median_seconds" => median(pairs.filter_map { timed_seconds(it[0]) }.sort), "source_median_seconds" => median(pairs.filter_map { timed_seconds(it[1]) }.sort),
+            "cache_api_error_steps" => pairs.count { cache_api_errors(it[0]).to_i.positive? } }
+        end.sort_by { it.values_at(*READ_ONLY.first(7)).map(&:to_s) }
+    end
+
     def markdown
       table = rows.map do |row|
         row.merge("sha" => row["sha"]&.slice(0, 12)).values_at(*KEY).map { it.nil? ? "-" : it } +
@@ -46,10 +62,14 @@ module Bench
           [row["cache_api_errors"] || "-"]
       end
       matched_table = matched.map { |row| row.values_at(*MATCHED).map { it.nil? ? "-" : it } }
+      read_only_table = read_only.map { |row| row.values_at(*READ_ONLY).map { it.nil? ? "-" : it } }
       ["# Benchmark results", "", line(COLUMNS), line(COLUMNS.map { "---" }), *table.map { line(it) }, "",
        "## Matched rolling steps", "",
        "Rolling steps at which every lane on the runner passed, each on its own rolling cache after that cache's first step. Steps continued from a fresh run's cache and Actions cache steps that restored nothing are left out. Times include post-job saves.", "",
-       line(MATCHED_COLUMNS), line(MATCHED_COLUMNS.map { "---" }), *matched_table.map { line(it) }, ""].join("\n")
+       line(MATCHED_COLUMNS), line(MATCHED_COLUMNS.map { "---" }), *matched_table.map { line(it) }, "",
+       "## Read-only steps on another lane's cache", "",
+       "Rolling steps of read-only lanes that restore another lane's rolling cache and never save, each paired with that lane's passing step at the same commit on its own runner.", "",
+       line(READ_ONLY_COLUMNS), line(READ_ONLY_COLUMNS.map { "---" }), *read_only_table.map { line(it) }, ""].join("\n")
     end
 
     private
@@ -106,6 +126,11 @@ module Bench
             [[tool, kase, runner, series, (cli unless cli.empty?), lanes], step, by_lane]
           end
         end.group_by(&:first).transform_values { it.to_h { |_, step, by_lane| [step, by_lane] } }
+      end
+
+      def sources
+        @sources ||= records.select { matchable?(it) }.group_by { it.values_at("adapter_command", "case", "scope", "step", "sha") }
+          .transform_values { |tries| tries.min_by { it["attempt"].to_i } }
       end
 
       def matchable?(record)
