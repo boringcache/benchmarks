@@ -1,70 +1,6 @@
-# Benchmark follow-ups
+# Benchmark configuration history
 
-The consolidated harness is running. Configuration is in `tools/`, `rolling.toml`, `runners.toml`, and `versions.toml`. Procedures are in [AGENTS.md](AGENTS.md).
-
-## Added cases
-
-| Case | Start | Build and lanes |
-| --- | --- | --- |
-| ccache/osquery | `6b8969bb09ba5d3c01277ad04e55b87b4021f934`, 2026-09-09 | Last first-parent master commit before [osquery/osquery#9104](https://github.com/osquery/osquery/issues/9104), opened 2026-09-14. Builds upstream's [Linux Release CI configuration](https://github.com/osquery/osquery/blob/6b8969bb09ba5d3c01277ad04e55b87b4021f934/.github/workflows/hosted_runners.yml) with toolchain 1.2.0, tests enabled, debug symbols enabled, and `nproc + 1` jobs. Series 2 adds the documented Clang PCH cache flag `-Xclang -fno-pch-timestamp` to both lanes. BoringCache ccache remote storage and GitHub Actions ccache archives run on Ubuntu 24.04, GitHub 4 vCPU. Both use upstream's `ccache.conf` and ccache 4.14.1; the archive lane keeps the default 5 GiB local limit. Both rebuild OpenSSL and configure from source. Only compiler outputs are cached; this case does not reproduce competition among upstream's OS, architecture and build-type cache keys. |
-
-The issue's 38.29% hit-rate example comes from the selected commit's [Linux Release job](https://github.com/osquery/osquery/actions/runs/34361072629/job/102498037144): 1,821 hits in 4,756 calls, 2,935 misses, and three cleanups after restoring a cache. That job used ccache 4.5.1 on Ubuntu 22.04. The benchmark uses ccache 4.14.1 on Ubuntu 24.04 for both lanes, matching the harness's existing ccache setup.
-
-In the original series, the [preflight](https://github.com/boringcache/benchmarks/actions/runs/38727149684), [step 0](https://github.com/boringcache/benchmarks/actions/runs/38727970681) and [step 1](https://github.com/boringcache/benchmarks/actions/runs/38732134849) passed both lanes. Every record from these runs has `exit_status = 0` and `output_ok = true`. Step 0 populated both caches; step 1's archive lane restored `ccache-osquery-gha-github-rolling-0` and saved the step-1 key. BoringCache's step-1 native ccache statistics report 1,821 hits in 4,756 compilations (38.29%), 2,935 misses, no cache errors and no failed blob uploads. Remote key lookup hits are a separate measurement from reused compilations.
-
-| Step | Lane | Seconds | CPU, 4 vCPU |
-| --- | --- | ---: | --- |
-| 0 | BoringCache | 1452.793 | AMD EPYC 9V45 |
-| 0 | GitHub Actions cache | 2367.452 | AMD EPYC 7763 |
-| 1 | BoringCache | 1970.607 | Intel Xeon Platinum 8370C |
-| 1 | GitHub Actions cache | 1637.991 | AMD EPYC 9V74 |
-
-The [cache inspection](https://github.com/boringcache/benchmarks/actions/runs/38741412878) recovered the GitHub lane's cumulative counters from its saved step-1 archive: 9,512 calls, 1,821 hits, 7,691 misses and zero cleanups, with 4.0 GiB stored against a 5 GiB limit. Subtracting step 0's 4,756 misses gives the same step-1 compilation reuse as BoringCache: 1,821 hits and 2,935 misses (38.29%). Neither provider's first reuse result demonstrates eviction.
-
-Comparing CMake's compile commands at the two commits finds 627 changed commands; four are unbuilt examples. The remaining 623 differ only in `OSQUERY_VERSION`, `OSQUERY_BUILD_VERSION` and `OSQUERY_BUILD_SDK_VERSION`. Upstream derives these from `git describe` and exports them through [public compile definitions](https://github.com/osquery/osquery/blob/6b8969bb09ba5d3c01277ad04e55b87b4021f934/osquery/utils/info/CMakeLists.txt#L41). Step 1 changes only a macOS test, but these definitions change Linux cache keys. Joining the configured object paths to the 4,756 actual compilation lines gives these groups, which exactly match the native hit/miss counts and remote key lookup counts:
-
-| Step-1 compilation group | Commands |
-| --- | ---: |
-| Changed version definitions | 623 |
-| Unchanged PCH-generation commands | 12 |
-| Unchanged commands consuming PCH | 2300 |
-| Unchanged commands without PCH | 1821 |
-
-The [pinned Linux reproduction](https://github.com/boringcache/benchmarks/actions/runs/38744274916) uses the generated Makefile recipes, including dependency flags, for the AWS core PCH and one EC2 source file. Repeating in the same workspace reuses both compilations, including after moving to step 1. Recreating the build directory and updating checkout timestamps without changing contents causes both to miss and changes the PCH SHA-256. The debug log reports that the PCH includes `aws/core/external/cjson/cJSON.h` with a new mtime. Adding `-Xclang -fno-pch-timestamp` through `CMAKE_CXX_FLAGS` makes the PCH identical and both compilations hit after another recreation. The [ccache manual](https://ccache.dev/manual/4.14.1.html#_precompiled_headers) requires that flag for Clang PCH; [its manifest validation](https://github.com/ccache/ccache/blob/v4.14.1/src/ccache/core/manifest.cpp#L405-L412) rejects changed include mtimes without it. Series 2 adds this flag to the common build command for both lanes; the original series retains upstream's flags. A local Apple Clang regression with ccache 4.14 verified that changing an included header's contents, while preserving its size and mtime, rebuilds the PCH and consumer and changes the executable's result; subsequent unchanged compilations hit.
-
-An isolated unused-version-macro test with the pinned Linux toolchain gives two misses with ccache's upstream `depend_mode = true`, one miss and one preprocessed hit with depend mode disabled, and two misses with sccache 0.17.0. Sccache's identical-arguments control hits. Switching tools alone does not remove the version-definition invalidation.
-
-The [sccache PCH comparison](https://github.com/boringcache/benchmarks/actions/runs/38744923446) runs the same two AWS Makefile recipes with sccache 0.17.0. After recreating the build directory and updating checkout timestamps, sccache rebuilds the PCH but reuses the EC2 object. With `-Xclang -fno-pch-timestamp`, both tools reuse both compilations and preserve the PCH SHA-256. These probes cover two compilations; whole-build sccache performance remains unmeasured.
-
-| Fresh-checkout probe | PCH generation | EC2 object |
-| --- | --- | --- |
-| ccache, upstream flags | Miss | Miss |
-| sccache 0.17.0, upstream flags | Miss | Hit |
-| ccache, PCH timestamp flag | Hit | Hit |
-| sccache 0.17.0, PCH timestamp flag | Hit | Hit |
-
-The [series-2 first reuse](https://github.com/boringcache/benchmarks/actions/runs/38755781425) passed both lanes. Native ccache evidence reports 4,133 hits and 623 misses in 4,756 compilations (86.90%), recovering the 2,312 PCH-related misses. The remaining miss count matches the changed version-definition group. Timed phases took 1,262.661 s for BoringCache on Xeon 8573C and 1,417.298 s for the archive lane on Xeon 8370C; the CPU difference prevents attributing that gap to storage alone. The archive restored series-2 step 0 and saved step 1, but its native counters were not retained.
-
-BoringCache prefetched 9,512 blobs / 800,888,349 bytes in 4.931 s. All 8,266 successful build-time blob reads were local, with 551 ms summed local blob-read duration and no demand downloads. These timings exclude ccache hashing, storage-helper transport and other handler work. CMake configuration took 421 s and cloned 121 submodules, including a 175 s libcryptsetup checkout; the archive lane spent 472.5 s configuring and 160 s on that checkout. The final local cache read was at 15:13:22 UTC; compilation and linking finished at 15:25:06 UTC. Around 85–87%, build-message timestamps were at most 4.437 s apart. The run does not retain process CPU or pressure evidence, so proxy/compiler resource contention remains unmeasured. Both osquery lanes now collect the existing five-second CPU, memory, I/O-pressure and process samples as 14-day diagnostics, including process wait channels and build/source-preparation processes. The build command, cache scope and rolling series are unchanged.
-
-The [series-2 second reuse](https://github.com/boringcache/benchmarks/actions/runs/38760868616) passed both lanes at `935173f3df6f64d58cacca840ef7a7937eecdb60`. BoringCache again reports 4,133 native hits and 623 misses. Its EPYC 7763 runner took 1,586.285 s; the archive lane's EPYC 9V45 took 865.021 s. The uncached OpenSSL build took 101.388 s against 50.979 s, and BoringCache's first blob-upload URL request occurred after OpenSSL completed. The 1,685 EC2 object build-message timestamps span 48.767 s against 27.188 s; their span includes ccache processing and build scheduling, not just cache reads. The CPU assignment and the slower uncached work prevent attributing this run's gap to the adapter.
-
-This run prefetched 9,512 blobs / 800,880,532 bytes in 6.423 s. Every successful build-time blob read was local (8,266 reads, p95 recorded blob-read duration 1 ms, maximum 10 ms); all remote blob downloads finished at 15:38:24 UTC. Local cache reads ended at 15:47:12 UTC, while compilation and linking finished at 16:04:31 UTC. Final publication drain took 6.584 s. Build messages around 85–87% were at most 6.558 s apart. A genuine 101 s output gap occurred during the uncached OpenSSL build at 33%, and an 80 s gap occurred while cloning the AWS SDK during configuration. These timestamps distinguish application work from an apparent pause in the GitHub log display. This run predates the new sampler, so compiler/proxy CPU and memory contention remain unmeasured.
-
-## Remaining migration work
-
-## Upstream failures under review
-
-| Case | Records | Finding |
-| --- | --- | --- |
-| sbt/lila: both lanes, intermittent class-file loading failures | [194](https://github.com/boringcache/benchmarks/actions/runs/38344612372), [195](https://github.com/boringcache/benchmarks/actions/runs/38347319586), [209](https://github.com/boringcache/benchmarks/actions/runs/38587589423) | Scala 3.9.0 fails while loading `java/lang/invoke/SerializedLambda.class` from the JDK image: `newPosition > limit: (3077 > 1013)`, or a zero magic number for `Class$AnnotationData`. 3,077 is the superclass-field offset of `SerializedLambda` and 1,013 is the size of `Class$AnnotationData` in Temurin 21.0.12, which fits a shared class-file reader being reset while in use ([ReusableDataReader](https://github.com/scala/scala3/blob/3.9.0/compiler/src/dotty/tools/dotc/core/classfile/ReusableDataReader.scala), removed upstream in [scala/scala3#26481](https://github.com/scala/scala3/pull/26481)). GHA also fails with class-file loading errors at [step 228](https://github.com/boringcache/benchmarks/actions/runs/38763375844); both lanes fail at [step 232](https://github.com/boringcache/benchmarks/actions/runs/38775829151), and BoringCache fails at [step 233](https://github.com/boringcache/benchmarks/actions/runs/38777726983). These failures affect both providers and are consistent with the upstream reader race; cache-dependent compilation concurrency remains a hypothesis. Archive restore finishes before compilation and does not touch the JDK. Keep rolling; recheck when Lichess moves to a Scala release with that change. |
-
-## Harness failures under review
-
-| Case | Records | Finding |
-| --- | --- | --- |
-| Docker/PostHog: plus lanes | [Step 189](https://github.com/boringcache/benchmarks/actions/runs/38885710081) | The frozen plus Dockerfile omitted upstream's `agent-contracts` COPY, so frontend builds failed while base lanes passed. Preparation now copies the checked-out Dockerfile and applies only the two Turbo cache changes from `start_sha`. The patch applies at `start_sha`, upstream fix `13ff07ce8`, and step 189. An Actions build with this harness change remains to be verified. |
-| Cargo/ferrum-fuzz: plus lanes, runner disk capacity | [Step 16](https://github.com/boringcache/benchmarks/actions/runs/38802077476), [17](https://github.com/boringcache/benchmarks/actions/runs/38812938227), [29](https://github.com/boringcache/benchmarks/actions/runs/38881014353) | In steps 16–29, twelve GHA plus job logs show `No space left on device` during linking, and twelve BoringCache plus job logs show `Disk quota exceeded` while staging the target archive. Freeing the preinstalled SDKs did not provide enough disk space. GHA plus logs for steps 20 and 26 return `BlobNotFound`, so those two failures remain unclassified. Keep the records; a runner-capacity change must preserve the same machine and build command across lanes. |
+Current procedures and comparison limits are in [tools/README.md](tools/README.md).
 
 ## Removed lanes
 
@@ -100,7 +36,7 @@ This run prefetched 9,512 blobs / 800,880,532 bytes in 6.423 s. Every successful
 | sbt Lichess and Play | Series 2, 2026-10-09 | CLI 1.41.0; Play's version pin moved to `version.sbt`. |
 | ccache and Xcode OBS | Series 2, 2026-10-10 | Prerequisite installation moved into untimed preparation. |
 
-The superseded records and raw evidence are available in [Git history](https://github.com/boringcache/benchmarks/tree/3e705f46e31638de5e323480445b29a92cce3df4/archive). They are not inputs to the current scheduler or report.
+The superseded measurements are available in [Git history](https://github.com/boringcache/benchmarks/tree/3e705f46e31638de5e323480445b29a92cce3df4/archive). They are not inputs to the current scheduler or report.
 
 ## Removed cases
 
