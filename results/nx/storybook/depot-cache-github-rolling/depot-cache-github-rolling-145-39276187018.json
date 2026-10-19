@@ -1,0 +1,42 @@
+{
+  "adapter_command": "nx",
+  "case": "storybook",
+  "lane": "depot-cache",
+  "provider": "depot",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 145,
+  "scope": "depot-cache-github-rolling",
+  "cache_scope": "depot-cache-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "nx-storybook-depot-cache-github-rolling-144",
+  "cache_restore_tracked": true,
+  "repo": "storybookjs/storybook",
+  "sha": "0d7dc8eaa769a048fdbf0b964b34dac366ca3299",
+  "seconds": 121.08,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "02be6e8bd706dce352aeba350a1798a80fa4c72b",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/39276187018",
+  "attempt": 1,
+  "started_at": "2026-10-19T15:15:08Z"
+}
