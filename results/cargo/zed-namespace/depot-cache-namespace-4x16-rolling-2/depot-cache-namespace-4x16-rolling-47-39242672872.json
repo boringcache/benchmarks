@@ -1,0 +1,41 @@
+{
+  "adapter_command": "cargo",
+  "case": "zed-namespace",
+  "lane": "depot-cache",
+  "provider": "depot",
+  "level": "base",
+  "capabilities": [
+    "compiler-cache"
+  ],
+  "runner": "namespace-4x16",
+  "runner_label": "namespace-profile-zed-4x16-swap",
+  "machine": "namespace 4c",
+  "phase": "rolling",
+  "step": 47,
+  "scope": "depot-cache-namespace-4x16-rolling-2",
+  "cache_scope": "depot-cache-namespace-4x16-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "zed-industries/zed",
+  "sha": "1f32ec0ceafddd6a368db8aef9d169a6569a1c23",
+  "seconds": 1350.462,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "1c392f87b523e4d3ce514edd89117bb2e1eea39e",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/39242672872",
+  "attempt": 1,
+  "started_at": "2026-10-19T11:11:30Z"
+}
