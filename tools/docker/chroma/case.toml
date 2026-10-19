@@ -9,3 +9,7 @@ boringcache-docker-plus = ["github", "github-arm", "local"]
 gha-plus = ["github", "github-arm"]
 gha = ["github", "github-arm"]
 ghcr = ["github", "github-arm"]
+boringcache-docker-plus-reader = ["github", "blacksmith-4"]
+
+[nightly]
+boringcache-docker-plus-reader = ["github", "blacksmith-4"]

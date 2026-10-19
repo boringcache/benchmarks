@@ -42,3 +42,8 @@ machine = "local"
 label = "namespace-profile-zed-4x16-swap"
 machine = "namespace 4c"
 env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
+[blacksmith-4]
+label = "blacksmith-4vcpu-ubuntu-2404"
+machine = "blacksmith 4c"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
