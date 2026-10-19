@@ -1,0 +1,41 @@
+{
+  "adapter_command": "cargo",
+  "case": "zed",
+  "lane": "kache",
+  "provider": "kache",
+  "level": "base",
+  "capabilities": [
+    "compiler-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 104,
+  "scope": "kache-github-rolling",
+  "cache_scope": "kache-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "zed-industries/zed",
+  "sha": "15591019b63015f7297a57ce35a99826654c9d13",
+  "seconds": 2187.879,
+  "cache_save_timing": "post-job",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "f2cbb5ad0fe01791bbda268813fe476a969de218",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/39273126365",
+  "attempt": 1,
+  "started_at": "2026-10-19T14:57:40Z"
+}
