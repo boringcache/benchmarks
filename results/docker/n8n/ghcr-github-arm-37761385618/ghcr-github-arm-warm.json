@@ -17,6 +17,7 @@
   "seconds": 114.61,
   "exit_status": 0,
   "output_ok": true,
+  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "Neoverse-N2",
@@ -24,9 +25,17 @@
     },
     "image_platform": "linux/arm64",
     "buildx_builder": {
-      "driver": "docker-container"
+      "name": "builder-ec790f76-f1ca-44d2-ad49-cb99aa0de020",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-ec790f76-f1ca-44d2-ad49-cb99aa0de0200",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
     }
   },
+  "evidence": [],
   "versions": {
     "boringcache": null
   },

@@ -22,12 +22,14 @@
   "cache_save_timing": "in-phase",
   "exit_status": 0,
   "output_ok": true,
+  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "AMD EPYC 9V74 80-Core Processor",
       "cores": 4
     }
   },
+  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "219521a6863dce97354b0f9afaad3425aa0c9289",

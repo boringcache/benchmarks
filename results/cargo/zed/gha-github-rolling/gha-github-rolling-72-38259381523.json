@@ -22,12 +22,14 @@
   "cache_save_timing": "in-phase",
   "exit_status": 0,
   "output_ok": true,
+  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "AMD EPYC 9V45 96-Core Processor",
       "cores": 4
     }
   },
+  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "f42435f6ba9bdf63ce9197341d04d1fcd8c7e774",

@@ -22,12 +22,14 @@
   "cache_save_timing": "in-phase",
   "exit_status": 0,
   "output_ok": true,
+  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "AMD EPYC 7763 64-Core Processor",
       "cores": 4
     }
   },
+  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "30777aa94f3005acb14ed9137fda346723c92abf",

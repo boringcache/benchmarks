@@ -23,12 +23,14 @@
   "cache_save_timing": "in-phase",
   "exit_status": 1,
   "output_ok": false,
+  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "Intel(R) Xeon(R) 6973P-C",
       "cores": 4
     }
   },
+  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "1b51f02e8848690f358107f5b682ddb7f1199aa6",

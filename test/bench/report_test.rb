@@ -302,6 +302,6 @@ class ReportTest < Minitest::Test
         "observed" => { "machine" => { "cpu" => cpu, "cores" => 4 } }, "versions" => { "boringcache" => boringcache, "boringcache_release" => release }.compact
       }.merge(restored == :unrecorded ? {} : { "cache_restored_key" => restored }, post_job_save ? { "post_job_save_seconds" => post_job_save } : {},
               job_conclusion ? { "job_conclusion" => job_conclusion } : {}, cadence ? { "cadence" => cadence } : {}, read_only ? { "read_only" => true } : {}, started_at ? { "started_at" => started_at } : {},
-              errors ? { "cache_api_errors" => errors } : {})))
+              errors ? { "provider_reported" => { "cache_session_summary" => { "backend_api" => { "total_error_count" => errors } } } } : {})))
     end
 end

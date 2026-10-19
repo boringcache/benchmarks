@@ -48,6 +48,8 @@
         "network_bytes_uploaded_source": null,
         "docker_cache_import_seconds": null,
         "docker_cache_export_seconds": null,
+        "startup_prefetch": {},
+        "oci": {},
         "classification": {
           "sample_valid": true,
           "reporting_mode": "comparative",
@@ -58,6 +60,7 @@
           "schema_version": 1
         },
         "product_refs_consistent": false,
+        "launch_proof_paths": [],
         "workspace": null,
         "cache_tag": null,
         "run_uid": "gh-36722494808-1",
@@ -65,11 +68,19 @@
         "adapter": "docker",
         "docker_cache_from_refs": null,
         "docker_cache_import_ready": null,
+        "http_transport": null,
+        "http2_enabled": null,
+        "oci_stream_through_min_bytes": null,
         "restore_result": null,
         "save_result": null,
         "publish_status": null,
+        "session_summary": null,
+        "cache_review": null,
+        "summary_schema": null,
+        "reporting_url": null,
         "tool_outcomes": null,
-        "native_tool": null
+        "native_tool": null,
+        "slow_reason": null
       },
       "boringcache": {
         "run_id": 36722494808,
@@ -95,6 +106,8 @@
         "network_bytes_uploaded_source": null,
         "docker_cache_import_seconds": null,
         "docker_cache_export_seconds": null,
+        "startup_prefetch": {},
+        "oci": {},
         "classification": {
           "sample_valid": true,
           "reporting_mode": "comparative",
@@ -108,6 +121,7 @@
           "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
         },
         "product_refs_consistent": true,
+        "launch_proof_paths": [],
         "workspace": "boringcache/benchmark-posthog",
         "cache_tag": "posthog-run-r36722494808-a1-docker",
         "run_uid": "gh-36722494808-1",
@@ -115,11 +129,19 @@
         "adapter": "docker",
         "docker_cache_from_refs": null,
         "docker_cache_import_ready": null,
+        "http_transport": null,
+        "http2_enabled": null,
+        "oci_stream_through_min_bytes": null,
         "restore_result": null,
         "save_result": null,
         "publish_status": null,
+        "session_summary": null,
+        "cache_review": null,
+        "summary_schema": null,
+        "reporting_url": null,
         "tool_outcomes": null,
-        "native_tool": null
+        "native_tool": null,
+        "slow_reason": null
       },
       "reporting": {
         "comparative": true
@@ -184,6 +206,8 @@
             "network_bytes_uploaded_source": null,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
+            "startup_prefetch": {},
+            "oci": {},
             "classification": {
               "sample_valid": true,
               "reporting_mode": "comparative",
@@ -194,6 +218,7 @@
               "schema_version": 1
             },
             "product_refs_consistent": false,
+            "launch_proof_paths": [],
             "workspace": null,
             "cache_tag": null,
             "run_uid": "gh-36722494808-1",
@@ -201,11 +226,19 @@
             "adapter": "docker",
             "docker_cache_from_refs": null,
             "docker_cache_import_ready": null,
+            "http_transport": null,
+            "http2_enabled": null,
+            "oci_stream_through_min_bytes": null,
             "restore_result": null,
             "save_result": null,
             "publish_status": null,
+            "session_summary": null,
+            "cache_review": null,
+            "summary_schema": null,
+            "reporting_url": null,
             "tool_outcomes": null,
-            "native_tool": null
+            "native_tool": null,
+            "slow_reason": null
           },
           "boringcache": {
             "run_id": 36722494808,
@@ -231,6 +264,8 @@
             "network_bytes_uploaded_source": null,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
+            "startup_prefetch": {},
+            "oci": {},
             "classification": {
               "sample_valid": true,
               "reporting_mode": "comparative",
@@ -244,6 +279,7 @@
               "action_sha": "f0fb9b2d926a32b10c543e92093ba00c5a291b79"
             },
             "product_refs_consistent": true,
+            "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-posthog",
             "cache_tag": "posthog-run-r36722494808-a1-docker",
             "run_uid": "gh-36722494808-1",
@@ -251,11 +287,19 @@
             "adapter": "docker",
             "docker_cache_from_refs": null,
             "docker_cache_import_ready": null,
+            "http_transport": null,
+            "http2_enabled": null,
+            "oci_stream_through_min_bytes": null,
             "restore_result": null,
             "save_result": null,
             "publish_status": null,
+            "session_summary": null,
+            "cache_review": null,
+            "summary_schema": null,
+            "reporting_url": null,
             "tool_outcomes": null,
-            "native_tool": null
+            "native_tool": null,
+            "slow_reason": null
           },
           "reporting": {
             "comparative": true

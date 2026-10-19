@@ -22,12 +22,14 @@
   "cache_save_timing": "in-phase",
   "exit_status": 0,
   "output_ok": true,
+  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "Apple M1 (Virtual)",
       "cores": 3
     }
   },
+  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "14fc69c723d708d1f637315480946a9edadd88b1",

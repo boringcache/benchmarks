@@ -22,6 +22,7 @@
   "cache_save_timing": "in-phase",
   "exit_status": 0,
   "output_ok": true,
+  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
@@ -29,9 +30,17 @@
     },
     "image_platform": "linux/amd64",
     "buildx_builder": {
-      "driver": "docker-container"
+      "name": "builder-3188f2da-9783-4078-b0fd-fefa523c9bdf",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-3188f2da-9783-4078-b0fd-fefa523c9bdf0",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
     }
   },
+  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "d4265c3a043dac261f30a3c480809be553a1136a",

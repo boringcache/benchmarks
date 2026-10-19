@@ -24,6 +24,7 @@
   "cache_save_timing": "post-job",
   "exit_status": 0,
   "output_ok": true,
+  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "Neoverse-N2",
@@ -31,9 +32,17 @@
     },
     "image_platform": "linux/arm64",
     "buildx_builder": {
-      "driver": "docker-container"
+      "name": "builder-0e1c6219-1b6b-4273-b890-b9f8364edbc7",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-0e1c6219-1b6b-4273-b890-b9f8364edbc70",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
     }
   },
+  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "6119d26ab6d66f164f99d97e4f90c1f546d5eb8d",

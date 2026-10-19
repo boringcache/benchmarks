@@ -17,15 +17,24 @@
   "seconds": 875.57,
   "exit_status": 0,
   "output_ok": true,
+  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "Neoverse-N2",
       "cores": 4
     },
     "buildx_builder": {
-      "driver": "docker-container"
+      "name": "builder-e5506b08-58e2-455e-86fe-b969f223ba76",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-e5506b08-58e2-455e-86fe-b969f223ba760",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
     }
   },
+  "evidence": [],
   "versions": {
     "boringcache": null
   },

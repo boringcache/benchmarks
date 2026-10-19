@@ -24,12 +24,14 @@
   "cache_save_timing": "post-job",
   "exit_status": 1,
   "output_ok": false,
+  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "AMD EPYC",
       "cores": 8
     }
   },
+  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "fa6b7aa76df4e055c5c26800151a4220b9bd96b0",

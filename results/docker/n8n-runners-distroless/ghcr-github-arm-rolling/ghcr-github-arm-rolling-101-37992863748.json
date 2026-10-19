@@ -22,15 +22,24 @@
   "cache_save_timing": "in-phase",
   "exit_status": 1,
   "output_ok": false,
+  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "Neoverse-N2",
       "cores": 4
     },
     "buildx_builder": {
-      "driver": "docker-container"
+      "name": "builder-77d1da2a-624f-4ec2-959c-e9c757758896",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-77d1da2a-624f-4ec2-959c-e9c7577588960",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
     }
   },
+  "evidence": [],
   "versions": {},
   "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37992863748",
   "attempt": 1,

@@ -4,6 +4,8 @@ This repository benchmarks BoringCache against other cache providers on real pro
 
 ## Rules every change keeps
 
+- Keep benchmark measurements, outcomes, reproducible configuration and customer-accessible CLI/action logs here. Do not commit internal investigation notes, private operations details or server-side MCP snapshots.
+
 - Every lane of a case runs the same build command on the same source commit. Lanes differ only in their documented cache setup.
 - Every lane caches the same content: dependencies and build outputs. If one lane restores a dependency store, all do.
 - Use each provider's official, documented setup. Cite the doc in the commit when adding or changing a lane. Never spoof events or patch around a provider bug; record the failure instead.

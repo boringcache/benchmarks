@@ -24,6 +24,7 @@
   "cache_save_timing": "post-job",
   "exit_status": 0,
   "output_ok": true,
+  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "Intel(R) Xeon(R) 6973P-C",
@@ -31,9 +32,17 @@
     },
     "image_platform": "linux/amd64",
     "buildx_builder": {
-      "driver": "docker-container"
+      "name": "builder-82e9651e-232c-44fb-b495-f57230dabf07",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-82e9651e-232c-44fb-b495-f57230dabf070",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
     }
   },
+  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "f5ef4a871701ab48bc3cb895161a5902dc47c9de",

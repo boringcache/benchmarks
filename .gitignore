@@ -5,5 +5,3 @@ tmp/
 .bundle/
 vendor/
 .env
-*.boringcache.jsonl
-.bench-telemetry.jsonl

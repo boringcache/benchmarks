@@ -24,12 +24,16 @@
   "cache_save_timing": "in-phase",
   "exit_status": 0,
   "output_ok": true,
+  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "Intel(R) Xeon(R) 6975P-C",
       "cores": 8
     }
   },
+  "evidence": [
+    "boringcache-cargo-phases-depot-8-rolling-9-37983928006.boringcache.jsonl"
+  ],
   "versions": {
     "boringcache": "1.41.0"
   },

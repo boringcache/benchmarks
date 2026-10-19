@@ -128,7 +128,7 @@ module Bench
       end
 
       def cache_api_errors(record)
-        record["cache_api_errors"]
+        record.dig("provider_reported", "cache_session_summary", "backend_api", "total_error_count")
       end
 
       def matched_steps

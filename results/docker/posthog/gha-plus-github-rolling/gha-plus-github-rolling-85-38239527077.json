@@ -24,6 +24,7 @@
   "cache_save_timing": "post-job",
   "exit_status": 0,
   "output_ok": true,
+  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "AMD EPYC 7763 64-Core Processor",
@@ -31,9 +32,17 @@
     },
     "image_platform": "linux/amd64",
     "buildx_builder": {
-      "driver": "docker-container"
+      "name": "builder-36860325-f9c4-4f89-9f8e-f7e6ced395e8",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-36860325-f9c4-4f89-9f8e-f7e6ced395e80",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
     }
   },
+  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "75d7a72b5f169d954b266dfd8d4f2c148a170853",

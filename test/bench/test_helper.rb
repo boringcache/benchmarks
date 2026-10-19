@@ -9,7 +9,7 @@ module BenchFixture
     tool="$1"; shift
     echo "$tool $*" >> "$STUB_LOG"
     echo '{"operation":"cache_blob_read"}' > "$BORINGCACHE_OBSERVABILITY_JSONL_PATH"
-    echo '{"operation":"cache_session_summary","duration_ms":7,"backend_api":{"total_error_count":2},"classification":{"diagnosis":"private diagnostic"}}' >> "$BORINGCACHE_OBSERVABILITY_JSONL_PATH"
+    echo '{"operation":"cache_session_summary","duration_ms":7}' >> "$BORINGCACHE_OBSERVABILITY_JSONL_PATH"
     echo boringcache > upstream/out.txt
   BASH
 
