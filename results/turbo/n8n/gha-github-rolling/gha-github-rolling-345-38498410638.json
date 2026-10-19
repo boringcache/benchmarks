@@ -23,14 +23,12 @@
   "cache_save_timing": "in-phase",
   "exit_status": 0,
   "output_ok": true,
-  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
       "cores": 4
     }
   },
-  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "91d369550ee8ff765b7f3872a7e6bb897928b10a",

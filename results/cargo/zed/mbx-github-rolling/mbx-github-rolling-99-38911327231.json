@@ -24,14 +24,12 @@
   "cache_save_timing": "post-job",
   "exit_status": 0,
   "output_ok": true,
-  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
       "cores": 4
     }
   },
-  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "30777aa94f3005acb14ed9137fda346723c92abf",

@@ -17,14 +17,12 @@
   "seconds": 73.659,
   "exit_status": 0,
   "output_ok": true,
-  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
       "cores": 4
     }
   },
-  "evidence": [],
   "versions": {
     "boringcache": null
   },

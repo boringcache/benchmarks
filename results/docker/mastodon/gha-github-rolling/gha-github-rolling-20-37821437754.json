@@ -21,7 +21,6 @@
   "cache_save_timing": "in-phase",
   "exit_status": 0,
   "output_ok": true,
-  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "AMD EPYC 7763 64-Core Processor",
@@ -29,17 +28,9 @@
     },
     "image_platform": "linux/amd64",
     "buildx_builder": {
-      "name": "builder-de13a000-f105-470a-af1d-4555ffabadd4",
-      "driver": "docker-container",
-      "nodes": [
-        {
-          "name": "builder-de13a000-f105-470a-af1d-4555ffabadd40",
-          "endpoint": "unix:///var/run/docker.sock"
-        }
-      ]
+      "driver": "docker-container"
     }
   },
-  "evidence": [],
   "versions": {},
   "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37821437754",
   "attempt": 1,

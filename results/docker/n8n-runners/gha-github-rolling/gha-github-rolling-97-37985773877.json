@@ -22,7 +22,6 @@
   "cache_save_timing": "in-phase",
   "exit_status": 0,
   "output_ok": true,
-  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
@@ -30,17 +29,9 @@
     },
     "image_platform": "linux/amd64",
     "buildx_builder": {
-      "name": "builder-61af9416-d825-45fa-87bf-81576337ce11",
-      "driver": "docker-container",
-      "nodes": [
-        {
-          "name": "builder-61af9416-d825-45fa-87bf-81576337ce110",
-          "endpoint": "unix:///var/run/docker.sock"
-        }
-      ]
+      "driver": "docker-container"
     }
   },
-  "evidence": [],
   "versions": {},
   "run_url": "https://github.com/boringcache/benchmarks/actions/runs/37985773877",
   "attempt": 1,

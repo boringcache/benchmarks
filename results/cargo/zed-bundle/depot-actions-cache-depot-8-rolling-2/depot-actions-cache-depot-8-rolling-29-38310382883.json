@@ -24,14 +24,12 @@
   "cache_save_timing": "in-phase",
   "exit_status": 0,
   "output_ok": true,
-  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "AMD EPYC 9R45",
       "cores": 8
     }
   },
-  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "317a540050e7e6d2a359b37ff75afcc2ad7893a2",

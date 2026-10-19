@@ -25,14 +25,12 @@
   "cache_save_timing": "in-phase",
   "exit_status": 1,
   "output_ok": false,
-  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
       "cores": 4
     }
   },
-  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "bb6f0d8148a31795c8aaed2e1eb118f6bf4ccbd9",

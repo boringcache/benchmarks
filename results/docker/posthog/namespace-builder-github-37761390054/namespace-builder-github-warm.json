@@ -17,7 +17,6 @@
   "seconds": 231.285,
   "exit_status": 0,
   "output_ok": true,
-  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "AMD EPYC 9V74 80-Core Processor",
@@ -25,21 +24,9 @@
     },
     "image_platform": "linux/amd64",
     "buildx_builder": {
-      "name": "nsc-remote",
-      "driver": "remote",
-      "nodes": [
-        {
-          "name": "amd64",
-          "endpoint": "tcp://amd64.build.iad.namespaceapis.com:443"
-        },
-        {
-          "name": "arm64",
-          "endpoint": "tcp://arm64.build.iad.namespaceapis.com:443"
-        }
-      ]
+      "driver": "remote"
     }
   },
-  "evidence": [],
   "versions": {
     "boringcache": null
   },

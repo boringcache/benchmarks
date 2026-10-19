@@ -19,14 +19,12 @@
   "seconds": 2286.675,
   "exit_status": 0,
   "output_ok": true,
-  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "Intel(R) Xeon(R) 6973P-C",
       "cores": 4
     }
   },
-  "evidence": [],
   "versions": {
     "boringcache": null
   },

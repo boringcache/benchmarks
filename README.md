@@ -53,4 +53,4 @@ Local builds need the lane's tools and credentials. See [configuration](tools/RE
 
 `results/` contains measurements and provider evidence. `data/report.md` and `data/results.json` report the current lanes and runners, excluding experimental lanes. Times cover cache restore, build, and cache save; checkout, preparation, and output checks are excluded. [Measurement details](docs/results.md) describe matching, failures, cache misses, and post-job saves.
 
-`data/latest/` is the historical feed still read by the website. It is retained until that consumer migrates. [PLAN.md](PLAN.md) lists the remaining migration work and records removed lanes and restarted series.
+`data/latest/` contains historical measurements. [PLAN.md](PLAN.md) records removed lanes and restarted series.

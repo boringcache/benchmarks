@@ -22,7 +22,6 @@
   "cache_save_timing": "in-phase",
   "exit_status": 0,
   "output_ok": true,
-  "provider_reported": {},
   "observed": {
     "runner_machine": {
       "cpu": "AMD EPYC 7763 64-Core Processor",
@@ -30,7 +29,6 @@
     },
     "image_platform": "linux/amd64"
   },
-  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "a8f603fa9d5918c26fc0c8aa905d614e6f7b49b5",

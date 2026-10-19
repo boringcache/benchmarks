@@ -22,7 +22,6 @@
   "cache_save_timing": "in-phase",
   "exit_status": 0,
   "output_ok": true,
-  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
@@ -30,17 +29,9 @@
     },
     "image_platform": "linux/amd64",
     "buildx_builder": {
-      "name": "builder-c5b0318d-38eb-4ba6-838e-d22ca84d5723",
-      "driver": "docker-container",
-      "nodes": [
-        {
-          "name": "builder-c5b0318d-38eb-4ba6-838e-d22ca84d57230",
-          "endpoint": "unix:///var/run/docker.sock"
-        }
-      ]
+      "driver": "docker-container"
     }
   },
-  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "af0098170b5f2cfba4bd91b96ea40943ad15334c",

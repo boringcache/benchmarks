@@ -17,7 +17,6 @@
   "seconds": 129.661,
   "exit_status": 0,
   "output_ok": true,
-  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "AMD EPYC 9V74 80-Core Processor",
@@ -25,7 +24,6 @@
     },
     "image_platform": "linux/amd64"
   },
-  "evidence": [],
   "versions": {
     "boringcache": null
   },

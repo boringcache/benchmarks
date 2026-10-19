@@ -22,7 +22,6 @@
   "cache_save_timing": "in-phase",
   "exit_status": 0,
   "output_ok": true,
-  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "AMD EPYC 9V45 96-Core Processor",
@@ -30,17 +29,9 @@
     },
     "image_platform": "linux/amd64",
     "buildx_builder": {
-      "name": "builder-d332e60c-bd10-44a7-9aaa-3c8cfc4bf6f6",
-      "driver": "docker-container",
-      "nodes": [
-        {
-          "name": "builder-d332e60c-bd10-44a7-9aaa-3c8cfc4bf6f60",
-          "endpoint": "unix:///var/run/docker.sock"
-        }
-      ]
+      "driver": "docker-container"
     }
   },
-  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "f3df6eb3f3b854c701f63ed4578f4782702bef8b",

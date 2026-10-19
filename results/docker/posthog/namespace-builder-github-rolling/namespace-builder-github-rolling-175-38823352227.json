@@ -22,28 +22,15 @@
   "cache_save_timing": "in-phase",
   "exit_status": 1,
   "output_ok": false,
-  "provider_reported": {},
   "observed": {
     "runner_machine": {
       "cpu": "AMD EPYC 9V74 80-Core Processor",
       "cores": 4
     },
     "buildx_builder": {
-      "name": "nsc-remote",
-      "driver": "remote",
-      "nodes": [
-        {
-          "name": "amd64",
-          "endpoint": "tcp://amd64.build.iad.namespaceapis.com:443"
-        },
-        {
-          "name": "arm64",
-          "endpoint": "tcp://arm64.build.iad.namespaceapis.com:443"
-        }
-      ]
+      "driver": "remote"
     }
   },
-  "evidence": [],
   "versions": {},
   "harness": {
     "commit": "7608260ddbaba145708de8c29c67cac84d33ba1a",

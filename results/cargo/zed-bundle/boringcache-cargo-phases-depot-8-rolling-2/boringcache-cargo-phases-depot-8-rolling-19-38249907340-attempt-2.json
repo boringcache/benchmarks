@@ -24,16 +24,12 @@
   "cache_save_timing": "in-phase",
   "exit_status": 0,
   "output_ok": true,
-  "provider_reported": {},
   "observed": {
     "machine": {
       "cpu": "AMD EPYC 9R45 96-Core Processor",
       "cores": 8
     }
   },
-  "evidence": [
-    "boringcache-cargo-phases-depot-8-rolling-19-38249907340-attempt-2.boringcache.jsonl"
-  ],
   "versions": {
     "boringcache": "1.41.0"
   },

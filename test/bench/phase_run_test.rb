@@ -12,8 +12,12 @@ class PhaseRunTest < Minitest::Test
     cold = record("boringcache-demo-local-r1", "boringcache-demo-local-cold")
     assert_equal({ "exit_status" => 0, "output_ok" => true, "sha" => @upstream_sha, "provider" => "boringcache" },
                  cold.slice("exit_status", "output_ok", "sha", "provider"))
-    assert_equal ["boringcache-demo-local-cold.boringcache.jsonl"], cold["evidence"]
-    assert_equal({ "operation" => "cache_session_summary", "duration_ms" => 7 }, cold.dig("provider_reported", "cache_session_summary"))
+    assert_equal 2, cold["cache_api_errors"]
+    refute cold.key?("evidence")
+    refute cold.key?("provider_reported")
+    assert_empty Dir[File.join(@root, "tmp/results/**/*.jsonl")]
+    refute File.exist?(File.join(@root, ".work/demo/app/.bench-telemetry.jsonl"))
+    refute_includes JSON.generate(cold), "private diagnostic"
     assert_equal({ "boringcache" => "9.9.9" }, cold["versions"])
     refute cold.key?("product_env")
     refute cold.key?("plan_settings")

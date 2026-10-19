@@ -173,7 +173,7 @@ module Bench
         @environment ||= begin
           base = @env.to_h.merge(kase.tool.catalog.runner_env(runner), "BENCH_ROOT" => kase.tool.catalog.root, "BENCH_CASE" => kase.id, "BENCH_DIR" => workspace.dir, "BENCH_SCOPE" => "#{kase.tool.name}-#{kase.name}-#{cache_scope}")
           shared = base.merge(kase.env(base))
-          shared.merge(lane.env(phase, shared), lane.boringcache? ? { "BORINGCACHE_OBSERVABILITY_JSONL_PATH" => evidence_path, **script_boringcache } : {})
+          shared.merge(lane.env(phase, shared), lane.boringcache? ? { "BORINGCACHE_OBSERVABILITY_JSONL_PATH" => telemetry_path, **script_boringcache } : {})
         end
       end
 
@@ -193,8 +193,8 @@ module Bench
         kase.check.empty? ? nil : shell(kase.check)
       end
 
-      def evidence_path
-        record_path.sub(/\.json\z/, ".boringcache.jsonl")
+      def telemetry_path
+        File.join(workspace.dir, ".bench-telemetry.jsonl")
       end
 
       def write_record(started_at:, seconds:, exit_status:)
@@ -224,9 +224,8 @@ module Bench
           "cache_save_timing" => lane.cache_save_timing,
           "exit_status" => exit_status,
           "output_ok" => output_ok(exit_status),
-          "provider_reported" => provider_reported,
+          "cache_api_errors" => cache_api_errors,
           "observed" => observed,
-          "evidence" => File.exist?(evidence_path) ? [File.basename(evidence_path)] : [],
           "versions" => { "boringcache" => boringcache_version, "boringcache_release" => (@env["BENCH_CLI_RELEASE"] if boringcache_version) }.compact,
           **({ "product_env" => product_env } if product_env),
           **({ "plan_settings" => plan_settings } if plan_settings),
@@ -240,6 +239,8 @@ module Bench
         }
         File.write(record_path, JSON.pretty_generate(record) + "\n")
         record
+      ensure
+        FileUtils.rm_f(telemetry_path)
       end
 
       def product_env
@@ -248,10 +249,6 @@ module Bench
 
       def plan_settings
         adapter.slice(*PLAN_SETTINGS).then { it unless it.empty? } if lane.boringcache?
-      end
-
-      def provider_reported
-        { "cache_session_summary" => session_summary }.compact
       end
 
       def observed
@@ -278,10 +275,18 @@ module Bench
         nil
       end
 
-      def session_summary
-        return unless File.exist?(evidence_path)
+      def cache_api_errors
+        return unless File.exist?(telemetry_path)
 
-        File.foreach(evidence_path).filter_map { JSON.parse(it) rescue nil }.reverse.find { it["operation"] == "cache_session_summary" }
+        count = nil
+        File.foreach(telemetry_path) do |line|
+          event = JSON.parse(line) rescue nil
+          next unless event.is_a?(Hash) && event["operation"] == "cache_session_summary"
+
+          value = event.dig("backend_api", "total_error_count")
+          count = value if value.is_a?(Integer) && value >= 0
+        end
+        count
       end
 
       def buildx_builder
@@ -290,9 +295,7 @@ module Bench
         output, status = Open3.capture2e(environment, "docker", "buildx", "inspect")
         return unless status.success?
 
-        header, nodes = output.split(/^Nodes:\n/, 2)
-        { "name" => header[/^Name:\s*(.+)$/, 1], "driver" => header[/^Driver:\s*(.+)$/, 1],
-          "nodes" => nodes.to_s.scan(/^Name:\s*(.+)\nEndpoint:\s*(.+)$/).map { |name, endpoint| { "name" => name.strip, "endpoint" => endpoint.strip } } }
+        { "driver" => output[/^Driver:\s*(.+)$/, 1] }.compact
       rescue Errno::ENOENT
         nil
       end

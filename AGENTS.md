@@ -57,9 +57,20 @@ To check a fix once, run a fresh run of the affected lanes with a published cana
 gh workflow run project.yml --ref main -f tool=<Tool> -f project=<project> -f mode=fresh -f lane="<lanes>" -f cli=vcli-canary-<sha>
 ```
 
+- Confirm the canary contains the intended change before benchmarking it.
+- Canary records carry `versions.boringcache_release`, and the report shows that tag in the CLI column, so they never merge with release rows. Compare them with the release fresh rows at the same commit.
+- Pin a case in `[cases]` only when it needs an unreleased fix to roll, and remove the entry once a release with the fix is pinned. Bump `boringcache` only after the release is published.
+
 ## Investigate a failure
 
 Classify it before changing anything:
+
+- **Harness** (prepare, wiring, workflow): fix it here with a test.
+- **BoringCache product**: retain the failed benchmark record. Investigate and fix the product outside this repository. Leave the lane failing until a released CLI carries the fix.
+- **Other provider**: keep the lane failing and note it. If the provider cannot run the case, remove the lane and log the outcome under "Removed lanes" in `PLAN.md` with run links.
+- **Upstream** (their build or a transient download): record it and keep rolling.
+- **Not a measurement** (a build that passed while its provider served no cache, such as a lapsed plan): add `"excluded": "<reason and evidence>"` to those records, and to the next step if it restored a cache the outage never saved. The report leaves them out; the records stay.
+- **Unrecorded restore** (a rolling record with `cache_restore_tracked` but no `cache_restored_key`, as `cache-dance` lanes wrote before their restore moved to `actions/cache/restore`): with `gh` signed in, run `GITHUB_REPOSITORY=boringcache/benchmarks bundle exec bin/bench restored-keys --results results`. It fills the key only when the original job log shows that lane's restore before post-job cleanup.
 
 ## Checks
 
