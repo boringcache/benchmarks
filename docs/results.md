@@ -1,6 +1,6 @@
 # Benchmark measurements
 
-The main results table has one row per lane, runner, phase, step, commit, CLI version, attempt, save timing and observed CPU. Its timings exclude failed builds, failed or missing output checks, warm records without a passing cold record in the same scope, and rolling steps that restored nothing from the lane's Actions cache after the lane's first step ("Seed failed"). "Cache API errors" copies the error count from BoringCache's session summary.
+The main results table has one row per lane, runner, phase, step, commit, CLI version, attempt, save timing and observed CPU. Its timings exclude failed builds, failed or missing output checks, warm records without a passing cold record in the same scope, and rolling steps that restored nothing from the lane's Actions cache after the lane's first step ("Seed failed"). "Cache API errors" retains only the aggregate error count. Raw product telemetry and session diagnostics are not stored in the repository or result artifacts.
 
 The second table, "Matched rolling steps", compares lanes only at the rolling steps where every lane on a runner passed, grouped by rolling series and the BoringCache CLI version of that step. A lane's first step on its rolling cache starts empty, so it is left out. "Steps with cache API errors" counts the matched steps whose BoringCache session reported errors. Failed attempts remain evidence, and a rerun attempt is recorded next to the first one.
 

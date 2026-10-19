@@ -48,8 +48,6 @@
         "network_bytes_uploaded_source": null,
         "docker_cache_import_seconds": null,
         "docker_cache_export_seconds": null,
-        "startup_prefetch": {},
-        "oci": {},
         "classification": {
           "sample_valid": true,
           "reporting_mode": "comparative",
@@ -60,7 +58,6 @@
           "schema_version": 1
         },
         "product_refs_consistent": false,
-        "launch_proof_paths": [],
         "workspace": "boringcache/benchmark-discourse",
         "cache_tag": "discourse-image-factory-run-r31590090387-a1-arm64",
         "run_uid": "gh-31590090387-1",
@@ -68,19 +65,11 @@
         "adapter": "docker",
         "docker_cache_from_refs": null,
         "docker_cache_import_ready": null,
-        "http_transport": null,
-        "http2_enabled": null,
-        "oci_stream_through_min_bytes": null,
         "restore_result": null,
         "save_result": null,
         "publish_status": null,
-        "session_summary": null,
-        "cache_review": null,
-        "summary_schema": null,
-        "reporting_url": null,
         "tool_outcomes": null,
-        "native_tool": null,
-        "slow_reason": null
+        "native_tool": null
       },
       "boringcache": {
         "run_id": 31590090387,
@@ -106,8 +95,6 @@
         "network_bytes_uploaded_source": null,
         "docker_cache_import_seconds": null,
         "docker_cache_export_seconds": null,
-        "startup_prefetch": {},
-        "oci": {},
         "classification": {
           "sample_valid": true,
           "reporting_mode": "comparative",
@@ -118,7 +105,6 @@
           "schema_version": 1
         },
         "product_refs_consistent": false,
-        "launch_proof_paths": [],
         "workspace": "boringcache/benchmark-discourse",
         "cache_tag": "discourse-image-factory-run-r31590090387-a1-arm64",
         "run_uid": "gh-31590090387-1",
@@ -126,19 +112,11 @@
         "adapter": "docker",
         "docker_cache_from_refs": null,
         "docker_cache_import_ready": null,
-        "http_transport": null,
-        "http2_enabled": null,
-        "oci_stream_through_min_bytes": null,
         "restore_result": null,
         "save_result": null,
         "publish_status": null,
-        "session_summary": null,
-        "cache_review": null,
-        "summary_schema": null,
-        "reporting_url": null,
         "tool_outcomes": null,
-        "native_tool": null,
-        "slow_reason": null
+        "native_tool": null
       },
       "reporting": {
         "comparative": true
@@ -203,8 +181,6 @@
             "network_bytes_uploaded_source": null,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
-            "startup_prefetch": {},
-            "oci": {},
             "classification": {
               "sample_valid": true,
               "reporting_mode": "comparative",
@@ -215,7 +191,6 @@
               "schema_version": 1
             },
             "product_refs_consistent": false,
-            "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-discourse",
             "cache_tag": "discourse-image-factory-run-r31590090387-a1-arm64",
             "run_uid": "gh-31590090387-1",
@@ -223,19 +198,11 @@
             "adapter": "docker",
             "docker_cache_from_refs": null,
             "docker_cache_import_ready": null,
-            "http_transport": null,
-            "http2_enabled": null,
-            "oci_stream_through_min_bytes": null,
             "restore_result": null,
             "save_result": null,
             "publish_status": null,
-            "session_summary": null,
-            "cache_review": null,
-            "summary_schema": null,
-            "reporting_url": null,
             "tool_outcomes": null,
-            "native_tool": null,
-            "slow_reason": null
+            "native_tool": null
           },
           "boringcache": {
             "run_id": 31590090387,
@@ -261,8 +228,6 @@
             "network_bytes_uploaded_source": null,
             "docker_cache_import_seconds": null,
             "docker_cache_export_seconds": null,
-            "startup_prefetch": {},
-            "oci": {},
             "classification": {
               "sample_valid": true,
               "reporting_mode": "comparative",
@@ -273,7 +238,6 @@
               "schema_version": 1
             },
             "product_refs_consistent": false,
-            "launch_proof_paths": [],
             "workspace": "boringcache/benchmark-discourse",
             "cache_tag": "discourse-image-factory-run-r31590090387-a1-arm64",
             "run_uid": "gh-31590090387-1",
@@ -281,19 +245,11 @@
             "adapter": "docker",
             "docker_cache_from_refs": null,
             "docker_cache_import_ready": null,
-            "http_transport": null,
-            "http2_enabled": null,
-            "oci_stream_through_min_bytes": null,
             "restore_result": null,
             "save_result": null,
             "publish_status": null,
-            "session_summary": null,
-            "cache_review": null,
-            "summary_schema": null,
-            "reporting_url": null,
             "tool_outcomes": null,
-            "native_tool": null,
-            "slow_reason": null
+            "native_tool": null
           },
           "reporting": {
             "comparative": true
