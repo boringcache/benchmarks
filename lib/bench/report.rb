@@ -7,25 +7,26 @@ module Bench
     READ_ONLY = %w[adapter_command case lane level machine reads boringcache steps first_step last_step median_seconds source_median_seconds cache_api_error_steps].freeze
     READ_ONLY_COLUMNS = %w[Tool Case Lane Level Machine Reads CLI Steps First\ step Last\ step Timed\ median\ s Source\ timed\ median\ s Steps\ with\ cache\ API\ errors].freeze
 
-    def initialize(results_dir, runs: nil, nightly: [])
+    def initialize(results_dir, runs: nil, nightly: [], sample_runs: [])
       @results_dir = results_dir
       @runs = runs
       @nightly = nightly
+      @sample_runs = sample_runs
     end
 
     def records
       @records ||= Dir.glob(File.join(@results_dir, "**", "*.json")).sort.map { JSON.parse(File.read(it)) }
         .reject { it["experimental"] || it["excluded"] }
-        .select { @runs.nil? || @runs.include?("#{it["adapter_command"]}/#{it["case"]} #{it["lane"]} #{it["runner"]}") }
+        .select { @runs.nil? || @runs.include?("#{it["adapter_command"]}/#{it["case"]} #{it["lane"]} #{it["runner"]}") || (it["phase"] == "sample" && @sample_runs.include?("#{it["adapter_command"]}/#{it["case"]} #{it["lane"]} #{it["runner"]}")) }
     end
 
     def rows
-      records.group_by { key(it) }.map { |key, group| row(key, group) }.sort_by { it.values_at(*KEY).map(&:to_s) }
+      records.reject { it["phase"] == "sample" }.group_by { key(it) }.map { |key, group| row(key, group) }.sort_by { it.values_at(*KEY).map(&:to_s) }
     end
 
     def write(out_dir)
       FileUtils.mkdir_p(out_dir)
-      File.write(File.join(out_dir, "results.json"), JSON.pretty_generate("rows" => rows, "matched" => matched, "read_only" => read_only) + "\n")
+      File.write(File.join(out_dir, "results.json"), JSON.pretty_generate("rows" => rows, "matched" => matched, "read_only" => read_only, "samples" => samples) + "\n")
       File.write(File.join(out_dir, "report.md"), markdown)
     end
 
@@ -67,12 +68,31 @@ module Bench
        "## Matched rolling steps", "",
        "Rolling steps at which every lane on the runner passed, each on its own rolling cache after that cache's first step. Steps continued from a fresh run's cache and Actions cache steps that restored nothing are left out. Times include post-job saves.", "",
        line(MATCHED_COLUMNS), line(MATCHED_COLUMNS.map { "---" }), *matched_table.map { line(it) }, "",
-       "## Read-only steps on another lane's cache", "",
-       "Rolling steps of read-only lanes that restore another lane's rolling cache and never save, each paired with that lane's passing step at the same commit on its own runner.", "",
-       line(READ_ONLY_COLUMNS), line(READ_ONLY_COLUMNS.map { "---" }), *read_only_table.map { line(it) }, ""].join("\n")
+       "## Historical shared-cache builds", "",
+       "Historical builds using another runner's cache, paired with that runner's passing build at the same commit. These timings exclude cache saves.", "",
+       line(READ_ONLY_COLUMNS), line(READ_ONLY_COLUMNS.map { "---" }), *read_only_table.map { line(it) }, "",
+       "## Runner samples", "", sample_table, ""].join("\n")
+    end
+
+    def samples
+      records.select { it["phase"] == "sample" }.map do |record|
+        record.slice("adapter_command", "case", "lane", "level", "runner", "machine", "sha", "step", "run_url", "cache_source", "exit_status", "output_ok", "job_conclusion").merge(
+          "boringcache" => cli(record), "cpu" => record.dig("observed", "machine", "cpu"), "cores" => record.dig("observed", "machine", "cores"),
+          "cache" => record["read_only"] ? "GitHub build" : record["provider"], "operations" => record["read_only"] ? "restore, build" : "restore, build, save",
+          "seconds" => (timed_seconds(record) if passed?(record) && save_timing(record) != "post-job"))
+      end.sort_by { it.values_at("adapter_command", "case", "run_url", "lane", "runner").map(&:to_s) }
     end
 
     private
+      def sample_table
+        columns = %w[Tool Case Run Commit Lane Level Machine CPU Cores Cache Operations CLI Seconds Exit Output Job]
+        body = samples.map do |sample|
+          [sample["adapter_command"], sample["case"], sample["run_url"], sample["sha"]&.slice(0, 12), sample["lane"].delete_suffix("-reader"), *sample.values_at("level", "machine", "cpu", "cores", "cache", "operations", "boringcache", "seconds", "exit_status", "output_ok", "job_conclusion")]
+            .map { it.nil? ? "unmeasured" : it }
+        end
+        [line(columns), line(columns.map { "---" }), *body.map { line(it) }].join("\n")
+      end
+
       def key(record)
         [*record.values_at(*%w[adapter_command case lane level runner phase step sha]), cli(record),
          [record["attempt"].to_i, 1].max, record["cache_seeded"], save_timing(record), record["machine"],

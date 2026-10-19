@@ -78,6 +78,28 @@ class CLITest < Minitest::Test
     assert_empty reader.call
   end
 
+  def test_samples_use_the_latest_completed_seed_without_new_upstream_commits
+    write "tools/demo/lanes/boringcache-reader.toml", %(provider = "boringcache"\nlevel = "base"\nrunners = ["github", "other"]\nreads = { lane = "boringcache-demo", runner = "github" }\n)
+    write "runners.toml", File.read(File.join(@root, "runners.toml")) + %([other]\nlabel = "other-8"\nmachine = "other 8c"\n)
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", "[runs]\nboringcache-reader = [\"github\"]\n") + %([samples]\nboringcache-reader = ["github"]\nremote = ["github"]\n)
+    write "tmp/results/demo/app/boringcache-demo-github-rolling/seed.json", JSON.generate("step" => 0, "sha" => @upstream_sha,
+      "exit_status" => 0, "output_ok" => true, "cache_scope" => "boringcache-demo-github-rolling", "run_url" => "https://example.test/runs/1")
+
+    jobs = matrix("app", "--tool", "demo", "--sample")
+    assert_equal %w[boringcache-reader remote], jobs.map { it["lane"] }
+    assert_equal [@upstream_sha], jobs.map { it["sha"] }.uniq
+    assert_equal %w[boringcache-demo-github-rolling remote-github-sample], jobs.map { it["cache_scope"] }
+    assert_equal ["boringcache-demo", "gha"], matrix("app").map { it["lane"] }
+    assert_equal ["other"], matrix("app", "--tool", "demo", "--sample", "--lane", "boringcache-reader", "--runner", "other").map { it["runner"] }
+    assert_equal "https://example.test/runs/1", JSON.parse(jobs.first["source"])["run_url"]
+
+    write "tmp/results/demo/app/boringcache-demo-github-rolling/failed.json", JSON.generate("step" => 1, "sha" => "b" * 40, "exit_status" => 1, "output_ok" => false)
+    _, error = capture_io do
+      assert_equal 1, Bench::CLI.new(%W[matrix app --tool demo --sample --results #{@root}/tmp/results], catalog:, out: StringIO.new).call
+    end
+    assert_includes error, "latest boringcache-demo build has no successful cache seed"
+  end
+
   def test_rolling_matrix_marks_lanes_that_continue_their_own_rolling_cache
     commit_upstream("two")
     rolling_record("remote", 0, @upstream_sha)
@@ -207,6 +229,17 @@ class CLITest < Minitest::Test
 
     assert_equal "failure", JSON.parse(File.read(path))["job_conclusion"]
     assert_equal 3, File.readlines(File.join(@root, "stub.log")).size
+
+    record.delete("post_job_save_seconds")
+    File.write(path, JSON.generate(record))
+    write "job.log", "Post job cleanup.\n"
+    with_fixture_env do
+      ENV["GITHUB_REPOSITORY"] = "boringcache/benchmarks"
+      Bench::CLI.new(%W[post-job-saves --run-id 42 --results #{@root}/tmp/results], catalog:, out: StringIO.new).call
+    ensure
+      ENV.delete("GITHUB_REPOSITORY")
+    end
+    refute JSON.parse(File.read(path)).key?("post_job_save_seconds")
   end
 
   def test_restored_keys_recovers_only_cache_dance_restores_the_job_log_proves

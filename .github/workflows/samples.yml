@@ -1,0 +1,30 @@
+name: Weekly runner samples
+
+on:
+  schedule:
+    - cron: "31 2 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - tool: Docker
+            project: posthog
+          - tool: Rust/Cargo
+            project: zed
+          - tool: Docker
+            project: chroma
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TOOL: ${{ matrix.tool }}
+      PROJECT: ${{ matrix.project }}
+    steps:
+      - run: gh workflow run project.yml --repo "$GITHUB_REPOSITORY" --ref main -f tool="$TOOL" -f project="$PROJECT" -f mode=sample

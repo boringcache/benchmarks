@@ -12,14 +12,18 @@ on:
         type: string
         required: true
       mode:
-        description: fresh (cold then warm), rolling (the next upstream commit), or preflight (setup and credential probes only)
+        description: fresh (cold then warm), rolling (next commit), sample (completed GitHub commit), or preflight (setup probes)
         type: choice
-        options: [fresh, rolling, preflight]
+        options: [fresh, rolling, sample, preflight]
         default: fresh
       lane:
         description: only these lanes, space separated (optional, for debugging one lane)
         type: string
         required: false
+        default: ""
+      runner:
+        description: sample only, runner keys such as github depot-8 (optional)
+        type: string
         default: ""
       cli:
         description: CLI release tag instead of the pinned version, for example vcli-canary-<sha> (optional, fresh and preflight only)
@@ -35,7 +39,7 @@ on:
 run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}${{ inputs.step && format(' step {0}', inputs.step) || '' }}${{ inputs.cli && format(' [{0}]', inputs.cli) || '' }}
 
 concurrency:
-  group: ${{ inputs.mode == 'rolling' && format('rolling-{0}-{1}', inputs.tool, inputs.project) || format('run-{0}', github.run_id) }}
+  group: ${{ (inputs.mode == 'rolling' || inputs.mode == 'sample') && format('rolling-{0}-{1}', inputs.tool, inputs.project) || format('run-{0}', github.run_id) }}
   cancel-in-progress: false
 
 permissions:
@@ -65,9 +69,12 @@ jobs:
           LANE: ${{ inputs.lane }}
           CLI: ${{ inputs.cli }}
           STEP: ${{ inputs.step }}
+          SAMPLE: ${{ inputs.mode == 'sample' && 'true' || '' }}
+          RUNNER: ${{ inputs.runner }}
         run: |
           bash scripts/checkout-records.sh
-          matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${LANE:+--lane "$LANE"} ${CLI:+--cli "$CLI"} ${STEP:+--step "$STEP"} --results results)
+          if [ -n "$RUNNER" ] && [ -z "$SAMPLE" ]; then echo 'runner selection requires sample mode' >&2; exit 1; fi
+          matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${SAMPLE:+--sample} ${RUNNER:+--runner "$RUNNER"} ${LANE:+--lane "$LANE"} ${CLI:+--cli "$CLI"} ${STEP:+--step "$STEP"} --results results)
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
           if [ "$matrix" = '[]' ]; then
             echo 'No benchmark jobs are due for this selection.' >> "$GITHUB_STEP_SUMMARY"
@@ -75,7 +82,7 @@ jobs:
 
   cold:
     needs: plan
-    if: ${{ inputs.mode != 'rolling' && needs.plan.outputs.matrix != '[]' }}
+    if: ${{ (inputs.mode == 'fresh' || inputs.mode == 'preflight') && needs.plan.outputs.matrix != '[]' }}
     name: "${{ inputs.mode == 'preflight' && 'preflight' || 'cold' }}: ${{ matrix.label }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 180
@@ -119,7 +126,7 @@ jobs:
           lane: ${{ matrix.lane }}
           runner: ${{ matrix.runner }}
           setup: ${{ matrix.setup }}
-          phase: ${{ inputs.mode == 'preflight' && 'preflight' || github.job }}
+          phase: ${{ (inputs.mode == 'preflight' || inputs.mode == 'sample') && inputs.mode || github.job }}
           run-id: ${{ github.run_id }}
           sha: ${{ matrix.sha }}
           step: ${{ matrix.step }}
@@ -127,6 +134,7 @@ jobs:
           cli-release: ${{ matrix.cli }}
           continues: ${{ matrix.continues }}
           cadence: ${{ matrix.cadence }}
+          cache-source: ${{ matrix.source }}
 
   warm:
     needs: [plan, cold]
@@ -141,8 +149,8 @@ jobs:
 
   rolling:
     needs: plan
-    if: ${{ inputs.mode == 'rolling' && needs.plan.outputs.matrix != '[]' }}
-    name: "rolling: ${{ matrix.label }}"
+    if: ${{ (inputs.mode == 'rolling' || inputs.mode == 'sample') && needs.plan.outputs.matrix != '[]' }}
+    name: "${{ inputs.mode }}: ${{ matrix.label }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 180
     permissions: *lane_permissions

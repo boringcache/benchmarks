@@ -215,6 +215,7 @@ module Bench
           "cache_seeded" => (cache_scope != scope && !lane.reads if phase == "rolling"),
           **({ "seed_scope" => seed_scope } if seed_scope),
           **({ "read_only" => true } if lane.reads),
+          **({ "cache_source" => JSON.parse(@env.fetch("BENCH_CACHE_SOURCE")) } if phase == "sample" && lane.reads && @env["BENCH_CACHE_SOURCE"]),
           "cache_restored_key" => (@env["BENCH_CACHE_RESTORED_KEY"] unless @env["BENCH_CACHE_RESTORED_KEY"].to_s.empty?),
           **({ "cache_restore_tracked" => true } if @env["BENCH_CACHE_RESTORE_TRACKED"] == "true"),
           "repo" => kase.repo,

@@ -12,7 +12,7 @@ module Bench
         bin/bench record <tool>/<case> --lane LANE --exit-status N
         bin/bench probe <tool>/<case> --lane LANE [--runner KEY] [--run-id ID]
         bin/bench label <runner>
-        bin/bench matrix <project|tool/case> [--tool TOOL] [--lane LANES] [--runner KEYS] [--rolling | --cli TAG]
+        bin/bench matrix <project|tool/case> [--tool TOOL] [--lane LANES] [--runner KEYS] [--rolling | --sample | --cli TAG]
         bin/bench rolling-projects
         bin/bench image
         bin/bench report [--results DIR] [--out DIR]
@@ -135,6 +135,7 @@ module Bench
 
       def matrix
         options = parse(defaults.except(:runner))
+        return sample_matrix(options) if options[:sample]
         raise Error, "--cli takes a CLI release tag such as v1.41.0 or vcli-canary-<sha>" if options[:cli] && !options[:cli].match?(CLI_RELEASE)
         raise Error, "rolling keeps the pinned CLI; use --cli with fresh runs" if options[:cli] && options[:rolling]
         raise Error, "--step re-runs a recorded rolling step; add --rolling" if options[:step] && !options[:rolling]
@@ -168,11 +169,45 @@ module Bench
 
       def planned?(kase, lane, runner, rolling, rerun)
         return false if runner == "local"
+        return false if kase.sample?(lane.name, runner)
         return !lane.reads unless rolling && !(rerun && lane.reads)
         return false if rerun && (rolling.passed?(lane, runner, rerun) || rolling.last_step(lane, runner).to_i > rerun)
         return true unless kase.nightly?(lane.name, runner)
 
         rerun ? rolling.recorded?(lane, runner, rerun) : !rolling.ran_on?(lane, runner, @now.strftime("%F"))
+      end
+
+      def sample_matrix(options)
+        raise Error, "--sample cannot be combined with --rolling, --step or --cli" if options.values_at(:rolling, :step, :cli).any?
+        cases = @catalog.project_cases(@argv.first || raise(Error, "matrix needs a project"), tool: options[:tool])
+        lanes = options[:lane]&.split(/[\s,]+/)
+        requested = options[:runner]&.split(/[\s,]+/)
+        entries = cases.flat_map do |kase|
+          next [] if kase.samples.empty?
+          unless options[:tool] == kase.tool.title && @argv.first == kase.project
+            raise Error, "samples require --tool #{kase.tool.title.inspect} and project #{kase.project.inspect} for the shared concurrency group"
+          end
+
+          rolling = Rolling.new(kase, results_dir: options[:results], work_root: options[:work])
+          source = rolling.sample_source
+          kase.samples.flat_map do |lane_name, configured|
+            next [] if lanes && !lanes.include?(lane_name)
+            lane = kase.tool.lane(lane_name)
+            runners = requested || configured
+            runners.filter_map do |runner|
+              next unless lane.allows?(runner)
+              raise Error, "unknown runner #{runner}" unless @catalog.runners.key?(runner)
+              raise Error, "samples require an Actions runner" if runner == "local"
+              { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets,
+                "setup" => lane.setup.join(" "), "label" => job_label(kase, lane, runner), "step" => source.fetch("step").to_s, "sha" => source.fetch("sha"),
+                "cache_scope" => lane.reads ? source.fetch("cache_scope") : "#{lane.name}-#{runner}-sample", "continues" => "true", "cadence" => "sample",
+                "source" => JSON.generate(source), "cli" => @catalog.case_cli(kase) || "" }
+            end
+          end
+        end
+        raise Error, "no sample lanes match this selection" if entries.empty?
+        @out.puts JSON.generate(entries)
+        0
       end
 
       def job_label(kase, lane, runner)
@@ -192,8 +227,9 @@ module Bench
 
           record["job_conclusion"] = job["conclusion"]
           record["post_job_save_seconds"] ||= post_job_save_seconds(Bench.gh("api", "--allow-escape-sequences", "repos/#{repo}/actions/jobs/#{job["id"]}/logs"), lane.post_job_save)
+          record.delete("post_job_save_seconds") if record["post_job_save_seconds"].nil?
           File.write(path, JSON.pretty_generate(record) + "\n")
-          @out.puts "#{record["adapter_command"]}/#{record["case"]} #{record["lane"]} #{record["runner"]}: job #{record["job_conclusion"]}, post-job save #{record["post_job_save_seconds"]}s"
+          @out.puts "#{record["adapter_command"]}/#{record["case"]} #{record["lane"]} #{record["runner"]}: job #{record["job_conclusion"]}, post-job save #{record.key?("post_job_save_seconds") ? "#{record["post_job_save_seconds"]}s" : "unmeasured"}"
         end
         0
       end
@@ -306,15 +342,22 @@ module Bench
       def post_job_save_seconds(log, saves)
         steps = saves.map { it.include?("/") ? "__#{it.tr("/", "_")}" : it }
         post = log.lines.drop_while { !it.include?("Post job cleanup.") }
-        milliseconds = post.sum do |line|
+        durations = post.filter_map do |line|
           id, duration = line.match(/##\[end-action id=([^;\]]+);.*duration_ms=(\d+)/)&.captures
-          id && steps.include?(id.split(".").last) ? duration.to_i : 0
+          [id.split(".").last, duration.to_i] if id && steps.include?(id.split(".").last)
         end
-        (milliseconds / 1000.0).round(3)
+        return unless (steps - durations.map(&:first)).empty?
+
+        (durations.sum(&:last) / 1000.0).round(3)
       end
 
       def phase_run(kase, lane, phase, options)
         common = { phase:, runner: options[:runner], work_root: options[:work], results_dir: options[:results] }
+        if phase == "sample"
+          raise Error, "samples need --sha and --cache-scope from the sample matrix" unless options[:sha] && options[:cache_scope]
+          return PhaseRun.new(kase, lane, scope: "#{lane.name}-#{options[:runner]}-sample-#{options[:run_id]}", cache_scope: options[:cache_scope],
+                              sha: options[:sha], step: Integer(options.fetch(:step)), **common)
+        end
         raise Error, "#{kase.id} #{lane.name} reads another lane's rolling cache, so it runs rolling steps only" if lane.reads && phase != ROLLING
         return PhaseRun.new(kase, lane, scope: "#{lane.name}-#{options[:runner]}-#{options[:run_id]}", **common) unless phase == ROLLING
 
@@ -345,7 +388,7 @@ module Bench
           base_key = "#{kase.id.tr("/", "-")}-#{phase_run.cache_scope}"
           restore_keys = phase_run.phase != ROLLING ? [base_key] : (continues ? ["#{base_key}-"] : [])
           outputs.merge!("tool" => kase.tool.name, "provider" => lane.provider, "build_dir" => phase_run.build_dir,
-                         "restore_key" => restore_keys.join("\n"), "cache_key" => [base_key, phase_run.step].compact.join("-"),
+                         "restore_key" => restore_keys.join("\n"), "cache_key" => [base_key, phase_run.step, (ENV["GITHUB_RUN_ID"] if phase_run.phase == "sample")].compact.join("-"),
                          "artifact_key" => ["#{kase.id.tr("/", "-")}-#{phase_run.scope}", phase_run.step].compact.join("-"),
                          "cache_paths" => phase_run.cache_paths.join("\n"), "cache_dance_map" => JSON.generate(lane.setup.include?("cache-dance") ? phase_run.cache_dance_map(File.join(ENV.fetch("RUNNER_TEMP", "/tmp"), "cache-dance")) : {}), "setup" => lane.setup.join(" "), "boringcache_version" => @catalog.versions.fetch("boringcache"))
           File.open(ENV.fetch("GITHUB_ENV"), "a") { |file| phase_run.exported_env.each { |key, value| file.puts "#{key}=#{value}" } }
@@ -376,7 +419,10 @@ module Bench
           kase.runs.reject { |lane, _| kase.tool.lane(lane).experimental? }.flat_map { |lane, runners| Array(runners).map { "#{kase.id} #{lane} #{it}" } }
         end
         nightly = @catalog.cases.flat_map { |kase| kase.nightly.flat_map { |lane, runners| Array(runners).map { "#{kase.id} #{lane} #{it}" } } }
-        Report.new(options[:results], runs:, nightly:).write(options[:out])
+        sample_runs = @catalog.cases.flat_map do |kase|
+          kase.samples.keys.flat_map { |name| Array(kase.tool.lane(name).allowed_runners).map { "#{kase.id} #{name} #{it}" } }
+        end
+        Report.new(options[:results], runs:, nightly:, sample_runs:).write(options[:out])
         @out.puts "wrote #{File.join(options[:out], "results.json")} and report.md"
         0
       end
@@ -391,7 +437,7 @@ module Bench
           OptionParser.new do |opts|
             opts.on("--lane NAME") { options[:lane] = it }
             opts.on("--tool NAME") { options[:tool] = it }
-            opts.on("--phase PHASE", [*PHASES, ROLLING]) { options[:phase] = it }
+            opts.on("--phase PHASE", [*PHASES, ROLLING, "sample"]) { options[:phase] = it }
             opts.on("--runner KEY") { options[:runner] = it }
             opts.on("--run-id ID") { options[:run_id] = it }
             opts.on("--results DIR") { options[:results] = File.expand_path(it) }
@@ -402,6 +448,7 @@ module Bench
             opts.on("--exit-status N") { options[:exit_status] = it }
             opts.on("--github") { options[:github] = true }
             opts.on("--rolling") { options[:rolling] = true }
+            opts.on("--sample") { options[:sample] = true }
             opts.on("--sha SHA") { options[:sha] = it }
             opts.on("--step N") { options[:step] = it }
             opts.on("--cache-scope SCOPE") { options[:cache_scope] = it }

@@ -2,6 +2,16 @@
 
 The consolidated harness is running. Configuration is in `tools/`, `rolling.toml`, `runners.toml`, and `versions.toml`. Procedures are in [AGENTS.md](AGENTS.md).
 
+## Weekly runners and daily dependencies
+
+The local harness changes reserve weekly samples for PostHog/Depot, Zed/Namespace and Chroma/Blacksmith, with GitHub controls using the same completed source cache. Daily dependencies rotate one case across all four runner providers. Manual sample runner selection supports larger configured machines. See [the procedure and measurement limits](tools/README.md#weekly-runner-samples).
+
+Qualification is pending. The new schedules are not active until the workflow changes reach the default branch. Native volume capacity, runner provisioning, successful restore/save evidence and provider billing must be checked before publishing new comparisons. Namespace's existing BoringCache profile specifies swap; the label-configured volume runner does not, so those configurations are not identical-resource comparisons. No new performance or price claim follows from configuration alone.
+
+The dependency harness exported `INSTALL="bundle install --jobs 4"`, which libtool inherited as its install program while compiling rbtrace's msgpack dependency. [The failing run](https://github.com/boringcache/benchmarks/actions/runs/39035294576/job/117403817989) invoked `../bundle install --jobs 4` and failed. The action now uses `DEPS_INSTALL_COMMAND`; a regression executes the action shell and checks that child processes do not inherit `INSTALL`. Full hosted Bundler qualification remains pending.
+
+Provider setup references: [Namespace cache action](https://namespace.so/docs/reference/github-actions/nscloud-cache-action), [Blacksmith Docker builder](https://github.com/useblacksmith/setup-docker-builder). Historical observations remain in results; failed or incomplete dependency cycles do not contribute timing medians.
+
 ## Added cases
 
 | Case | Start | Build and lanes |

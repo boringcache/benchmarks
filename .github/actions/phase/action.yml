@@ -33,6 +33,9 @@ inputs:
   cadence:
     required: false
     default: ""
+  cache-source:
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -54,10 +57,12 @@ runs:
         PHASE: ${{ inputs.phase }}
         RUN_ID: ${{ inputs.run-id }}
         CADENCE: ${{ inputs.cadence }}
+        CACHE_SOURCE: ${{ inputs.cache-source }}
       run: |
         echo "$HOME/.local/share/mise/shims" >> "$GITHUB_PATH"
         {
           echo "BENCH_CADENCE=$CADENCE"
+          echo "BENCH_CACHE_SOURCE=$CACHE_SOURCE"
           echo "BENCH_CASE=$CASE"
           echo "BENCH_LANE=$LANE"
           echo "BENCH_RUNNER=$RUNNER"
@@ -87,10 +92,10 @@ runs:
       with:
         team: ${{ env.TURBO_TEAM_ID }}
 
-    - if: contains(inputs.setup, 'namespace')
+    - if: contains(format(' {0} ', inputs.setup), ' namespace ')
       uses: namespacelabs/nscloud-setup@df198f982fcecfb8264bea3f1274b56a61b6dfdc # v0
 
-    - if: contains(inputs.setup, 'namespace')
+    - if: contains(format(' {0} ', inputs.setup), ' namespace ')
       uses: namespacelabs/nscloud-setup-buildx-action@d059ed7184f0bc7c8b27e8810cea153d02bcc6dd # v0
 
     - if: contains(inputs.setup, 'nix')
@@ -126,7 +131,7 @@ runs:
         username: ${{ github.actor }}
         password: ${{ github.token }}
 
-    - if: contains(inputs.setup, 'buildx') || contains(inputs.setup, 'namespace')
+    - if: contains(inputs.setup, 'buildx') || contains(format(' {0} ', inputs.setup), ' namespace ')
       shell: bash
       run: docker buildx ls
 
@@ -191,6 +196,12 @@ runs:
     - if: steps.prepare.outputs.ready == 'true'
       shell: bash
       run: bundle exec bin/bench start "$BENCH_CASE" --lane "$BENCH_LANE"
+
+    - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'blacksmith-builder')
+      uses: useblacksmith/setup-docker-builder@19215110ab936351210feebdfa5b440b4493e184
+      with:
+        cache-key: ${{ env.BENCH_SCOPE }}
+        nofallback: true
 
     - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'kache')
       shell: bash

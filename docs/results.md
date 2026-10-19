@@ -1,6 +1,6 @@
 # Benchmark measurements
 
-The report has two tables. The first has one row per lane, runner, phase, step, commit, CLI version, attempt, save timing and observed CPU. Its timings exclude failed builds, failed or missing output checks, warm records without a passing cold record in the same scope, and rolling steps that restored nothing from the lane's Actions cache after the lane's first step ("Seed failed"). "Cache API errors" copies the error count from BoringCache's session summary.
+The main results table has one row per lane, runner, phase, step, commit, CLI version, attempt, save timing and observed CPU. Its timings exclude failed builds, failed or missing output checks, warm records without a passing cold record in the same scope, and rolling steps that restored nothing from the lane's Actions cache after the lane's first step ("Seed failed"). "Cache API errors" copies the error count from BoringCache's session summary.
 
 The second table, "Matched rolling steps", compares lanes only at the rolling steps where every lane on a runner passed, grouped by rolling series and the BoringCache CLI version of that step. A lane's first step on its rolling cache starts empty, so it is left out. "Steps with cache API errors" counts the matched steps whose BoringCache session reported errors. Failed attempts remain evidence, and a rerun attempt is recorded next to the first one.
 
@@ -17,6 +17,12 @@ Cold starts with a fresh local workspace. Providers with shared remote caches ma
 
 `base` and `plus` describe declared cache capabilities. They are separate comparisons; a compiler-cache-only lane does not promise the same reuse as a lane that also restores the build directory.
 
-Experimental lanes are excluded from both tables. A matched step must use the same source commit in every included lane. Lanes with failed or missing measurements still count toward the required comparison set after their first recorded step.
+Experimental lanes are excluded from the report. A matched step must use the same source commit in every included lane. Lanes with failed or missing measurements still count toward the required comparison set after their first recorded step.
 
 New Actions records set `cache_restore_tracked` when the harness ran an Actions cache restore. A missing key after that scope's first step is a seed failure even if the scope has never restored successfully. Older records lack that distinction; the report identifies their restoring scopes from successful restored keys. Providers without a tracked restored key cannot be classified by this field.
+
+## Runner samples
+
+Weekly and manual samples appear as individual runs in `samples` and the Runner samples table, apart from rolling medians. Rows retain source commit, cache source, observed CPU and cores, timed operations, exit status and output check. Missing post-job timing is unmeasured, not zero. The selected GitHub source run is metadata for a mutable cache tag, not an immutable version identifier.
+
+BoringCache samples restore the completed GitHub commit's cache without saving. Native Depot, Namespace and Blacksmith caches retain their own history and include saving. These are different usage patterns; their elapsed-time difference is not a controlled cache-provider speedup. GitHub and third-party BoringCache samples within one dispatch use the same commit, scope and operations. Machine allocation can still vary. See [the runner and dependency procedure](../tools/README.md#weekly-runner-samples) for schedules and remaining resource differences.

@@ -1,6 +1,12 @@
 workspace = "boringcache/benchmarks"
 lanes = ["boringcache", "actions-cache"]
-runners = ["github", "depot-4", "namespace-4"]
+runners = ["github", "depot-4", "namespace-4", "blacksmith-4"]
+
+[actions_cache_store]
+depot-4 = "depot"
+depot-8 = "depot"
+blacksmith-4 = "blacksmith"
+blacksmith-8 = "blacksmith"
 
 [cases.posthog-pnpm]
 repo = "PostHog/posthog"

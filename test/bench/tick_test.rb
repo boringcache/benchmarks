@@ -2,6 +2,12 @@ require_relative "test_helper"
 require "stringio"
 
 class TickTest < Minitest::Test
+  def test_active_sample_run_holds_the_regular_build
+    runs = [{ "displayTitle" => "Docker - posthog (sample)", "status" => "in_progress", "databaseId" => 123 }]
+    chosen, notes = Bench::Tick.plan([["Docker", "posthog"]], runs, behind: ->(*) { raise "must not advance while sampling" })
+    assert_empty chosen
+    assert_equal "busy", notes.first.first
+  end
   NOW = Time.utc(2026, 10, 12, 16)
 
   def run_of(id, tool, project, status: "completed", conclusion: "success", created: NOW - 3600)

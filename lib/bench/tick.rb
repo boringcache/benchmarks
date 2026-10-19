@@ -11,7 +11,7 @@ module Bench
       chosen = projects.select do |tool, project|
         title = title(tool, project)
         mine = runs.select { it["displayTitle"].to_s.sub(/ step \d+\z/, "").casecmp?(title) }
-        active = mine.find { ACTIVE.include?(it["status"]) }
+        active = runs.find { ACTIVE.include?(it["status"]) && [title.downcase, "#{tool} - #{project} (sample)".downcase].include?(it["displayTitle"].to_s.sub(/ step \d+\z/, "").downcase) }
         if active
           notes << ["busy", title, "run #{active["databaseId"]} is #{active["status"]}"]
           next false

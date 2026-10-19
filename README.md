@@ -8,7 +8,9 @@ Build real projects with BoringCache and other cache providers. Each result iden
 
 The rolling schedule checks the projects in `rolling.toml` every 15 minutes. It dispatches an idle project when its upstream branch has advanced by the case's `rolling_stride` (one commit by default). Running or queued projects wait for a later tick. Each tick's Actions summary lists dispatched, active, current, and failed checks.
 
-Every lane of a case builds the same first-parent commit. Step 0 builds `start_sha` with empty rolling caches. Later steps restore and save each lane's fixed cache scope. Recorded build failures advance the series; setup failures without records do not. Fresh runs use separate caches.
+Every regular lane of a case builds the same first-parent commit. Step 0 builds `start_sha` with empty rolling caches. Later steps restore and save each lane's fixed cache scope. Recorded build failures advance the series; setup failures without records do not. Fresh runs use separate caches.
+
+Weekly runner samples compare PostHog on Depot, Zed on Namespace and Chroma on Blacksmith, with GitHub controls. Dependency benchmarks run daily, rotating one case across all four providers. See [sample configuration and measurement limits](tools/README.md#weekly-runner-samples).
 
 The report updates hourly. Stale BuildKit cache cleanup runs every two hours; ordinary Actions caches are pruned after rolling results are published. GitHub may delay scheduled runs.
 
@@ -25,6 +27,7 @@ gh workflow run project.yml --ref main -f tool=Bazel -f project=grpc -f mode=fre
 
 - `fresh`: cold and warm builds of `start_sha` on separate runners.
 - `rolling`: the next upstream commit due at the configured stride.
+- `sample`: the latest completed GitHub source commit on the configured sample lanes; optional `-f runner=<keys>` selects other runner sizes.
 - `preflight`: setup and the lane's declared probes, without a build.
 
 Add `-f lane=<lane>` to select lanes or `-f cli=vcli-canary-<sha>` to test a published CLI canary in fresh mode. Canary runs are manual. A cold phase cannot be retried under the same run ID; dispatch another fresh run.

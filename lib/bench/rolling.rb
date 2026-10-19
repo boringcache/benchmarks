@@ -22,6 +22,21 @@ module Bench
       [step, sha] if sha
     end
 
+    def sample_source
+      sources = @kase.samples.keys.filter_map { @kase.tool.lane(it).reads }.uniq
+      raise Error, "#{@kase.id}: samples need one shared GitHub cache source" unless sources.size == 1
+
+      source = sources.first
+      lane = @kase.tool.lane(source.fetch("lane"))
+      latest = records(File.join(cache_scope(lane, source.fetch("runner")), "*.json")).max_by { [it["step"].to_i, it["started_at"].to_s, it["attempt"].to_i] }
+      newest_step = rolling_records.filter_map { it["step"] }.max
+      unless latest && (!newest_step || latest["step"] == newest_step) && !latest["excluded"] && latest["exit_status"] == 0 && latest["output_ok"] == true && latest.fetch("job_conclusion", "success") == "success"
+        raise Error, "#{@kase.id}: latest #{lane.name} build has no successful cache seed"
+      end
+
+      latest.slice("step", "sha", "run_url", "lane", "runner", "cache_scope", "versions")
+    end
+
     def passed?(lane, runner, step = nil)
       records(File.join(cache_scope(lane, runner), "*.json")).any? { (step.nil? || it["step"] == step) && it["exit_status"] == 0 && it["output_ok"] == true && it.fetch("job_conclusion", "success") == "success" }
     end

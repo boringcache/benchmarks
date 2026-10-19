@@ -106,8 +106,8 @@ runs:
       shell: bash
       working-directory: ${{ fromJSON(inputs.job).dir }}/upstream
       env:
-        INSTALL: ${{ fromJSON(inputs.job).install }}
-      run: eval "$INSTALL"
+        DEPS_INSTALL_COMMAND: ${{ fromJSON(inputs.job).install }}
+      run: eval "$DEPS_INSTALL_COMMAND"
     - if: steps.install.outcome == 'failure'
       shell: bash
       working-directory: ${{ fromJSON(inputs.job).dir }}
@@ -168,6 +168,7 @@ runs:
     - if: always() && steps.ready.outcome == 'success'
       shell: bash
       env:
+        DEPS_RESTORED_KEY: ${{ steps.restore-actions-cache.outputs.cache-matched-key }}
         THROUGHPUT_OUTCOME_RESTORE: ${{ fromJSON(inputs.job).lane == 'boringcache' && steps.restore-boringcache.outcome || steps.restore-actions-cache.outcome }}
         THROUGHPUT_OUTCOME_RESTORE_CHECK: ${{ fromJSON(inputs.job).kind == 'verify' && steps.restore-check.outcome || '' }}
         THROUGHPUT_OUTCOME_INSTALL: ${{ steps.install.outcome }}
