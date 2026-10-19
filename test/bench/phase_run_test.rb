@@ -173,20 +173,23 @@ class PhaseRunTest < Minitest::Test
     assert_equal [[0, "boringcache-demo-local-rolling"], [1, nil]], rolling.map { it.values_at("step", "seed_scope") }.sort_by(&:first)
   end
 
-  def test_a_reader_restores_the_lane_it_reads_read_only_and_records_its_steps_apart
+  def test_a_reader_restores_the_previous_step_of_the_lane_it_reads_read_only_and_records_its_steps_apart
     write "tools/demo/lanes/boringcache-reader.toml", %(provider = "boringcache"\nlevel = "base"\nreads = { lane = "boringcache-demo", runner = "local" }\n)
     write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", "[runs]\nboringcache-reader = [\"local\"]\n")
     write "bin/boringcache", STUB.sub(%(echo "$tool $*" >> "$STUB_LOG"), %(echo "$tool $* | $(grep -m1 -o 'demo-app-[a-z-]*' .boringcache.toml)" >> "$STUB_LOG"))
-    commit_upstream("two")
+    second = commit_upstream("two")
+    out = StringIO.new
     with_fixture_env do
       assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "rolling")
-      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-reader", "--phase", "rolling", "--sha", @upstream_sha, "--step", "0")
+      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-reader", "--phase", "rolling", "--sha", @upstream_sha, "--step", "0", out:)
+      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-reader", "--phase", "rolling", "--sha", second, "--step", "1")
       _, err = capture_io { assert_equal 1, cli("run", "demo/app", "--lane", "boringcache-reader", "--phase", "cold", "--run-id", "r30") }
       assert_includes err, "boringcache-reader reads another lane's rolling cache, so it runs rolling steps only"
     end
 
+    assert_equal "demo/app boringcache-reader rolling: boringcache-demo on local already saved step 0, so step 0 cannot read its previous step\n", out.string
     assert_equal ["demo  | demo-app-boringcache-demo-local-rolling", "demo --read-only | demo-app-boringcache-demo-local-rolling"], File.readlines(File.join(@root, "stub.log"), chomp: true)
-    reader = record("boringcache-reader-local-rolling", "boringcache-reader-local-rolling-0")
+    reader = record("boringcache-reader-local-rolling", "boringcache-reader-local-rolling-1")
     assert_equal ["boringcache-reader-local-rolling", "boringcache-demo-local-rolling", false, true], reader.values_at("scope", "cache_scope", "cache_seeded", "read_only")
   end
 

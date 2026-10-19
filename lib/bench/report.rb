@@ -44,7 +44,7 @@ module Bench
     def read_only
       @read_only ||= records.select { it["read_only"] && it["phase"] == ROLLING && passed?(it) }
         .group_by { it.values_at("adapter_command", "case", "lane", "runner", "step") }.values.map { |tries| tries.min_by { it["attempt"].to_i } }
-        .filter_map { |reader| (source = sources[reader.values_at("adapter_command", "case", "cache_scope", "step", "sha")]) && [reader, source] }
+        .filter_map { |reader| (source = sources[reader.values_at("adapter_command", "case", "cache_scope", "step", "sha")]) && before_save?(reader, source) && [reader, source] }
         .group_by { |reader, _| [*reader.values_at("adapter_command", "case", "lane", "level", "machine", "cache_scope"), cli(reader)] }
         .map do |(tool, kase, lane, level, machine, reads, version), pairs|
           steps = pairs.map { |reader, _| reader["step"] }
@@ -126,6 +126,10 @@ module Bench
             [[tool, kase, runner, series, (cli unless cli.empty?), lanes], step, by_lane]
           end
         end.group_by(&:first).transform_values { it.to_h { |_, step, by_lane| [step, by_lane] } }
+      end
+
+      def before_save?(reader, source)
+        reader["started_at"] && source["started_at"] && Time.iso8601(reader["started_at"]) < Time.iso8601(source["started_at"]) + timed_seconds(source)
       end
 
       def sources

@@ -245,14 +245,15 @@ class ReportTest < Minitest::Test
     assert_equal [[1, 2]], Bench::Report.new(@dir).matched.select { it["runner"] == "github" }.map { it.values_at("first_step", "last_step") }.uniq
   end
 
-  def test_read_only_steps_pair_with_the_step_of_the_lane_they_read_and_stay_out_of_matched_steps
+  def test_read_only_steps_pair_with_the_step_of_the_lane_they_read_when_they_started_before_it_saved
     %w[boringcache-docker gha].each do |lane|
-      (0..3).each { record "#{lane}-#{it}.json", lane:, seconds: 10.0 * (it + 1), phase: "rolling", step: it, scope: "#{lane}-github-rolling", save: "in-phase" }
+      (0..4).each { record "#{lane}-#{it}.json", lane:, seconds: 10.0 * (it + 1), phase: "rolling", step: it, scope: "#{lane}-github-rolling", save: "in-phase", started_at: "2026-10-19T10:00:00Z" }
     end
     { "github" => 5.0, "namespace-4" => 3.0 }.each do |runner, seconds|
-      (1..3).each do |step|
+      (1..4).each do |step|
         record "reader-#{runner}-#{step}.json", lane: "boringcache-docker-reader", runner:, seconds: seconds * step, phase: "rolling", step:, scope: "boringcache-docker-reader-#{runner}-rolling",
-                                                cache_scope: "boringcache-docker-github-rolling", save: "in-phase", read_only: true, sha: step == 3 && runner == "github" ? "b" * 40 : "a" * 40
+                                                cache_scope: "boringcache-docker-github-rolling", save: "in-phase", read_only: true, sha: step == 3 && runner == "github" ? "b" * 40 : "a" * 40,
+                                                started_at: step == 4 ? "2026-10-19T10:00:50Z" : "2026-10-19T10:00:05Z"
       end
     end
 
@@ -279,14 +280,14 @@ class ReportTest < Minitest::Test
 
   private
     def record(name, seconds:, exit_status: 0, output_ok: true, phase: "cold", scope: "gha-github-1", sha: "a" * 40, step: nil, lane: "gha", cache_scope: scope,
-               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job", restored: nil, post_job_save: nil, errors: nil, experimental: false, restore_tracked: false, job_conclusion: nil, runner: "github", cadence: nil, read_only: nil)
+               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job", restored: nil, post_job_save: nil, errors: nil, experimental: false, restore_tracked: false, job_conclusion: nil, runner: "github", cadence: nil, read_only: nil, started_at: nil)
       File.write(File.join(@dir, name), JSON.generate({
         "adapter_command" => "docker", "case" => "posthog", "lane" => lane, "level" => "base", "runner" => runner,
         "phase" => phase, "step" => step, "scope" => scope, "cache_scope" => cache_scope, "sha" => sha, "seconds" => seconds, "attempt" => attempt, "experimental" => experimental, "cache_restore_tracked" => restore_tracked,
         "exit_status" => exit_status, "output_ok" => output_ok, "cache_save_timing" => save, "machine" => { "depot-8" => "depot 8c", "namespace-4" => "namespace 4c" }.fetch(runner, "github 4c"),
         "observed" => { "machine" => { "cpu" => cpu, "cores" => 4 } }, "versions" => { "boringcache" => boringcache, "boringcache_release" => release }.compact
       }.merge(restored == :unrecorded ? {} : { "cache_restored_key" => restored }, post_job_save ? { "post_job_save_seconds" => post_job_save } : {},
-              job_conclusion ? { "job_conclusion" => job_conclusion } : {}, cadence ? { "cadence" => cadence } : {}, read_only ? { "read_only" => true } : {},
+              job_conclusion ? { "job_conclusion" => job_conclusion } : {}, cadence ? { "cadence" => cadence } : {}, read_only ? { "read_only" => true } : {}, started_at ? { "started_at" => started_at } : {},
               errors ? { "provider_reported" => { "cache_session_summary" => { "backend_api" => { "total_error_count" => errors } } } } : {})))
     end
 end

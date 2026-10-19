@@ -168,7 +168,7 @@ module Bench
 
       def planned?(kase, lane, runner, rolling, rerun)
         return false if runner == "local"
-        return !lane.reads unless rolling
+        return !lane.reads unless rolling && !(rerun && lane.reads)
         return false if rerun && (rolling.passed?(lane, runner, rerun) || rolling.last_step(lane, runner).to_i > rerun)
         return true unless kase.nightly?(lane.name, runner)
 
@@ -327,6 +327,11 @@ module Bench
           return nil
         end
         histories = [rolling, *(Rolling.new(kase, results_dir: options[:recorded], work_root: options[:work]) if options[:recorded])]
+        saved = lane.reads && histories.filter_map { it.last_step(kase.tool.lane(lane.reads["lane"]), lane.reads["runner"]) }.max
+        if sha && saved && saved >= step
+          @out.puts "#{kase.id} #{lane.name} rolling: #{lane.reads["lane"]} on #{lane.reads["runner"]} already saved step #{saved}, so step #{step} cannot read its previous step"
+          return nil
+        end
         seed_scope = rolling.cache_scope(kase.tool.lane(lane.seed), options[:runner]) if lane.seed && histories.none? { it.passed?(lane, options[:runner]) }
         return PhaseRun.new(kase, lane, scope: Rolling.scope(lane, options[:runner], kase.rolling_series), cache_scope:, seed_scope:, sha:, step:, **common) if sha
 
