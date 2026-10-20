@@ -218,8 +218,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RUN_ID: ${{ github.run_id }}
-        run: |
-          has_source=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID/artifacts" --jq 'any(.artifacts[]; .name == "registry-source" and .expired == false)')
-          if [ "$has_source" = true ]; then
-            gh workflow run registry.yml --ref main -f provider=all -f source_run="$RUN_ID"
-          fi
+        run: bash scripts/dispatch-registry.sh
