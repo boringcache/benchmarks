@@ -93,6 +93,24 @@ class CLITest < Minitest::Test
     assert_equal ["other"], matrix("app", "--tool", "demo", "--sample", "--lane", "boringcache-reader", "--runner", "other").map { it["runner"] }
     assert_equal "https://example.test/runs/1", JSON.parse(jobs.first["source"])["run_url"]
 
+    newer = commit_upstream("two")
+    changed = matrix("app", "--tool", "demo", "--sample", "--sha", newer)
+    assert_equal [newer], changed.map { it["sha"] }.uniq
+    assert_equal [@upstream_sha], changed.map { JSON.parse(it["source"]).fetch("sha") }.uniq
+    assert_equal jobs.map { it["cache_scope"] }, changed.map { it["cache_scope"] }
+
+    [@upstream_sha, "b" * 40, "main"].each do |sha|
+      _, error = capture_io do
+        assert_equal 1, Bench::CLI.new(%W[matrix app --tool demo --sample --sha #{sha} --results #{@root}/tmp/results], catalog:, out: StringIO.new).call
+      end
+      assert_includes error, "sample --sha must be a newer first-parent commit"
+    end
+
+    _, error = capture_io do
+      assert_equal 1, Bench::CLI.new(%W[matrix app --rolling --sha #{newer}], catalog:, out: StringIO.new).call
+    end
+    assert_includes error, "matrix --sha requires --sample"
+
     write "tmp/results/demo/app/boringcache-demo-github-rolling/failed.json", JSON.generate("step" => 1, "sha" => "b" * 40, "exit_status" => 1, "output_ok" => false)
     _, error = capture_io do
       assert_equal 1, Bench::CLI.new(%W[matrix app --tool demo --sample --results #{@root}/tmp/results], catalog:, out: StringIO.new).call
