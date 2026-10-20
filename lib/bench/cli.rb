@@ -424,11 +424,15 @@ module Bench
       def report
         options = parse(results: File.join(@catalog.root, "results"), out: File.join(@catalog.root, "data"))
         runs = @catalog.cases.flat_map do |kase|
-          kase.runs.reject { |lane, _| kase.tool.lane(lane).experimental? }.flat_map { |lane, runners| Array(runners).map { "#{kase.id} #{lane} #{it}" } }
+          kase.runs.reject { |lane, _| kase.tool.lane(lane).experimental? }.flat_map do |lane, runners|
+            Array(runners).reject { Array(kase.samples[lane]).include?(it) }.map { "#{kase.id} #{lane} #{it}" }
+          end
         end
         nightly = @catalog.cases.flat_map { |kase| kase.nightly.flat_map { |lane, runners| Array(runners).map { "#{kase.id} #{lane} #{it}" } } }
         sample_runs = @catalog.cases.flat_map do |kase|
-          kase.samples.keys.flat_map { |name| Array(kase.tool.lane(name).allowed_runners).map { "#{kase.id} #{name} #{it}" } }
+          kase.samples.keys.reject { kase.tool.lane(it).experimental? }.flat_map do |name|
+            (kase.tool.lane(name).allowed_runners || @catalog.runners.keys).map { "#{kase.id} #{name} #{it}" }
+          end
         end
         Report.new(options[:results], runs:, nightly:, sample_runs:).write(options[:out])
         @out.puts "wrote #{File.join(options[:out], "results.json")} and report.md"

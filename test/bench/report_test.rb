@@ -1,6 +1,29 @@
 require_relative "test_helper"
 
 class ReportTest < Minitest::Test
+  def test_latest_failure_is_visible_when_only_older_steps_are_comparable
+    %w[boringcache-docker gha].each do |lane|
+      (0..2).each do |step|
+        record "#{lane}-#{step}.json", lane:, phase: "rolling", step:, seconds: 10.0, save: "in-phase",
+          scope: "#{lane}-github-rolling", exit_status: lane == "boringcache-docker" && step == 2 ? 1 : 0
+      end
+    end
+    report = Bench::Report.new(@dir)
+    latest = report.latest.find { it["lane"] == "boringcache-docker" }
+    assert_equal [2, "failed", nil], latest.values_at("step", "status", "seconds")
+    assert_equal [1], report.matched.map { it["last_step"] }.uniq
+  end
+
+  def test_latest_exclusion_is_visible_without_becoming_a_measurement
+    record "excluded.json", seconds: 1.0, phase: "rolling", step: 2, save: "in-phase"
+    path = File.join(@dir, "excluded.json")
+    File.write(path, JSON.generate(JSON.parse(File.read(path)).merge("excluded" => "Provider served no cache")))
+    report = Bench::Report.new(@dir)
+
+    assert_empty report.rows
+    assert_equal ["excluded", nil, "Provider served no cache"], report.latest.first.values_at("status", "seconds", "excluded")
+  end
+
   def test_runner_samples_keep_operations_and_failed_post_job_saves_visible
     Dir.mktmpdir("samples-report") do |dir|
       base = { "adapter_command" => "docker", "case" => "chroma", "phase" => "sample", "runner" => "blacksmith-8", "machine" => "blacksmith 8c",
@@ -43,6 +66,22 @@ class ReportTest < Minitest::Test
     assert_empty Bench::Report.new(@dir, runs: ["docker/hugo gha github"]).rows
   end
 
+  def test_sample_only_provider_history_does_not_block_rolling_comparisons
+    %w[boringcache-docker gha depot-builder].each do |lane|
+      (0..2).each do |step|
+        next if lane == "depot-builder" && step == 2
+
+        record "#{lane}-#{step}.json", lane:, seconds: 10.0, phase: "rolling", step:, save: "in-phase", scope: "#{lane}-github-rolling"
+      end
+    end
+    record "depot-sample.json", lane: "depot-builder", seconds: 12.0, phase: "sample", step: 2, save: "in-phase"
+    runs = %w[boringcache-docker gha].map { "docker/posthog #{it} github" }
+    report = Bench::Report.new(@dir, runs:, sample_runs: ["docker/posthog depot-builder github"])
+
+    assert_equal [2], report.matched.map { it["last_step"] }.uniq
+    assert_equal ["depot-builder"], report.samples.map { it["lane"] }
+    refute report.rows.any? { it["lane"] == "depot-builder" }
+  end
   def test_experimental_records_are_excluded_from_public_rows_and_matched_steps
     %w[boringcache-docker gha experiment].each do |lane|
       (0..2).each do |step|

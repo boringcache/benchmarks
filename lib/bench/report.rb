@@ -15,9 +15,7 @@ module Bench
     end
 
     def records
-      @records ||= Dir.glob(File.join(@results_dir, "**", "*.json")).sort.map { JSON.parse(File.read(it)) }
-        .reject { it["experimental"] || it["excluded"] }
-        .select { @runs.nil? || @runs.include?("#{it["adapter_command"]}/#{it["case"]} #{it["lane"]} #{it["runner"]}") || (it["phase"] == "sample" && @sample_runs.include?("#{it["adapter_command"]}/#{it["case"]} #{it["lane"]} #{it["runner"]}")) }
+      @records ||= source_records.reject { it["excluded"] }
     end
 
     def rows
@@ -26,7 +24,7 @@ module Bench
 
     def write(out_dir)
       FileUtils.mkdir_p(out_dir)
-      File.write(File.join(out_dir, "results.json"), JSON.pretty_generate("rows" => rows, "matched" => matched, "read_only" => read_only, "samples" => samples) + "\n")
+      File.write(File.join(out_dir, "results.json"), JSON.pretty_generate("rows" => rows, "matched" => matched, "read_only" => read_only, "samples" => samples, "latest" => latest) + "\n")
       File.write(File.join(out_dir, "report.md"), markdown)
     end
 
@@ -64,7 +62,10 @@ module Bench
       end
       matched_table = matched.map { |row| row.values_at(*MATCHED).map { it.nil? ? "-" : it } }
       read_only_table = read_only.map { |row| row.values_at(*READ_ONLY).map { it.nil? ? "-" : it } }
-      ["# Benchmark results", "", line(COLUMNS), line(COLUMNS.map { "---" }), *table.map { line(it) }, "",
+      latest_columns = %w[Tool Case Lane Runner Step Commit CLI Started Attempt Status Seconds Run]
+      latest_rows = latest.map { it.values_at("adapter_command", "case", "lane", "runner", "step", "sha", "boringcache", "started_at", "attempt", "status", "seconds", "run_url").map { |value| value.nil? ? "unmeasured" : value } }
+      ["# Benchmark results", "", "## Latest recorded rolling attempts", "", line(latest_columns), line(latest_columns.map { "---" }), *latest_rows.map { line(it) }, "",
+       "## Measurements", "", line(COLUMNS), line(COLUMNS.map { "---" }), *table.map { line(it) }, "",
        "## Matched rolling steps", "",
        "Rolling steps at which every lane on the runner passed, each on its own rolling cache after that cache's first step. Steps continued from a fresh run's cache and Actions cache steps that restored nothing are left out. Times include post-job saves.", "",
        line(MATCHED_COLUMNS), line(MATCHED_COLUMNS.map { "---" }), *matched_table.map { line(it) }, "",
@@ -74,9 +75,29 @@ module Bench
        "## Runner samples", "", sample_table, ""].join("\n")
     end
 
+    def latest
+      source_records.select { it["phase"] == ROLLING && !it["read_only"] }
+        .group_by { it.values_at("adapter_command", "case", "lane", "runner") }.values.map do |group|
+          record = group.max_by { [it["started_at"].to_s, it["step"].to_i, it["attempt"].to_i] }
+          status = if record["excluded"]
+            "excluded"
+          elsif !passed?(record)
+            "failed"
+          elsif save_timing(record) == "post-job" || !timed_seconds(record)
+            "unmeasured"
+          elsif !seeded?(record)
+            "seed failed"
+          else
+            "passed"
+          end
+          record.slice("adapter_command", "case", "lane", "runner", "step", "sha", "started_at", "attempt", "run_url", "excluded").merge(
+            "boringcache" => cli(record), "status" => status, "seconds" => (timed_seconds(record) if status == "passed"))
+        end.sort_by { it.values_at("adapter_command", "case", "lane", "runner") }
+    end
+
     def samples
       records.select { it["phase"] == "sample" }.map do |record|
-        record.slice("adapter_command", "case", "lane", "level", "runner", "machine", "sha", "step", "run_url", "cache_source", "exit_status", "output_ok", "job_conclusion").merge(
+        record.slice("adapter_command", "case", "lane", "level", "runner", "machine", "sha", "step", "run_url", "started_at", "cache_source", "exit_status", "output_ok", "job_conclusion").merge(
           "boringcache" => cli(record), "cpu" => record.dig("observed", "machine", "cpu"), "cores" => record.dig("observed", "machine", "cores"),
           "cache" => record["read_only"] ? "GitHub build" : record["provider"], "operations" => record["read_only"] ? "restore, build" : "restore, build, save",
           "seconds" => (timed_seconds(record) if passed?(record) && save_timing(record) != "post-job"))
@@ -84,6 +105,12 @@ module Bench
     end
 
     private
+      def source_records
+        @source_records ||= Dir.glob(File.join(@results_dir, "**", "*.json")).sort.map { JSON.parse(File.read(it)) }
+          .reject { it["experimental"] }
+          .select { @runs.nil? || @runs.include?("#{it["adapter_command"]}/#{it["case"]} #{it["lane"]} #{it["runner"]}") || ((it["phase"] == "sample" || it["read_only"]) && @sample_runs.include?("#{it["adapter_command"]}/#{it["case"]} #{it["lane"]} #{it["runner"]}")) }
+      end
+
       def sample_table
         columns = %w[Tool Case Run Commit Lane Level Machine CPU Cores Cache Operations CLI Seconds Exit Output Job]
         body = samples.map do |sample|

@@ -23,6 +23,26 @@ class CLITest < Minitest::Test
     assert_equal ["remote"], rows.map { it["lane"] }
   end
 
+  def test_report_keeps_samples_without_requiring_their_retired_rolling_lanes
+    path = "tools/demo/app/case.toml"
+    write path, File.read(File.join(@root, path)) + %([samples]\nremote = ["github"]\n)
+    %w[boringcache-demo gha remote].each do |lane|
+      2.times do |step|
+        record = { "adapter_command" => "demo", "case" => "app", "lane" => lane, "runner" => "github", "phase" => "rolling",
+          "step" => step, "sha" => "commit-#{step}", "cache_scope" => "#{lane}-github-rolling", "scope" => "#{lane}-github-rolling", "seconds" => 10,
+          "exit_status" => 0, "output_ok" => true, "versions" => { "boringcache" => "1.40.0" } }
+        write "tmp/results/demo/app/#{lane}-#{step}.json", JSON.generate(record)
+        write "tmp/results/demo/app/sample.json", JSON.generate(record.merge("phase" => "sample")) if lane == "remote" && step == 1
+      end
+    end
+
+    assert_equal 0, Bench::CLI.new(%W[report --results #{@root}/tmp/results --out #{@root}/report], catalog:, out: StringIO.new).call
+    report = JSON.parse(File.read(File.join(@root, "report/results.json")))
+    assert_equal %w[boringcache-demo gha], report.fetch("matched").map { it["lane"] }.sort
+    assert_equal ["remote"], report.fetch("samples").map { it["lane"] }
+    refute report.fetch("latest").any? { it["lane"] == "remote" }
+  end
+
   def test_rolling_matrix_gives_every_lane_of_a_case_one_step_and_commit
     assert_equal [["0", @upstream_sha]], matrix("app", "--rolling").map { it.values_at("step", "sha") }.uniq
 
