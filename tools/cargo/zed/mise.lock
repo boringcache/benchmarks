@@ -1,0 +1,11 @@
+lockfile_version = 1
+
+[[tools.sccache]]
+version = "0.18.0"
+backend = "aqua:mozilla/sccache"
+specifiers = ["0.18.0"]
+
+[tools.sccache."platforms.linux-x64"]
+checksum = "sha256:45f1447fbe231e3037bde351ef70677dd212216c8d62ae7ca409fecc4d6acc89"
+url = "https://github.com/mozilla/sccache/releases/download/v0.18.0/sccache-v0.18.0-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/mozilla/sccache/releases/assets/563130201"

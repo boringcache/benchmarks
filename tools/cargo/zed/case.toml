@@ -5,7 +5,7 @@ rolling_stride = 3
 directory = "upstream"
 prepare = [
   "df -h / && if [ -d /usr/local/lib/android ]; then sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL; fi && df -h /",
-  "mise trust && mise install",
+  'cp "$BENCH_ROOT/tools/cargo/zed/mise.lock" mise.lock && mise trust && mise install && sccache --version',
   "cd upstream && ./script/linux",
 ]
 check = "test -x upstream/target/release/zed && test -z \"$(git -C upstream status --porcelain=v1 --untracked-files=all)\""
