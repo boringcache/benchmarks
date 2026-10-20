@@ -58,5 +58,5 @@ label = ["nscloud-ubuntu-24.04-amd64-4x16-with-cache", "nscloud-cache-tag-zed-sa
 machine = "namespace 4c"
 
 [namespace-8x16-cache]
-label = ["nscloud-ubuntu-24.04-amd64-8x16-with-cache", "nscloud-cache-tag-zed-sample-8c", "nscloud-cache-size-100gb"]
+label = ["nscloud-ubuntu-24.04-amd64-8x16-with-cache", "nscloud-cache-tag-zed-sample", "nscloud-cache-size-100gb"]
 machine = "namespace 8c"
