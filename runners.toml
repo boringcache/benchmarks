@@ -60,3 +60,12 @@ machine = "namespace 4c"
 [namespace-8x16-cache]
 label = ["nscloud-ubuntu-24.04-amd64-8x16-with-cache", "nscloud-cache-tag-zed-sample", "nscloud-cache-size-100gb"]
 machine = "namespace 8c"
+
+[namespace-16]
+label = ["nscloud-ubuntu-24.04-amd64-16x32-with-features", "namespace-features:container.privileged=true"]
+machine = "namespace 16c"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
+[namespace-16x32-cache]
+label = ["nscloud-ubuntu-24.04-amd64-16x32-with-cache", "nscloud-cache-tag-zed-sample", "nscloud-cache-size-100gb"]
+machine = "namespace 16c"

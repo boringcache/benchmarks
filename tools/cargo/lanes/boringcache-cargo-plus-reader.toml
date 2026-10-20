@@ -2,7 +2,7 @@ provider = "boringcache"
 level = "plus"
 plan = "plus"
 label = "boringcache plus · GitHub cache"
-runners = ["github", "namespace-4x16", "namespace-8", "depot-4", "depot-8", "blacksmith-4", "blacksmith-8"]
+runners = ["github", "namespace-4x16", "namespace-8", "namespace-16", "depot-4", "depot-8", "blacksmith-4", "blacksmith-8"]
 actions_only = true
 reads = { lane = "boringcache-cargo-plus", runner = "github" }
 
