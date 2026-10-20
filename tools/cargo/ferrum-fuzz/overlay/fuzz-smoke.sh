@@ -7,7 +7,7 @@ cargo_step() {
     cargo "$@"
     return
   fi
-  local flags=(--target-scope fuzz-smoke)
+  local flags=(--target-scope "fuzz-smoke-${GITHUB_RUN_ID:-$$}-${GITHUB_RUN_ATTEMPT:-1}")
   [ "$restore" = restore ] || flags+=(--skip-restore)
   [ "$save" = save ] || flags+=(--skip-save)
   $BENCH_BORINGCACHE "${flags[@]}" "$@"
