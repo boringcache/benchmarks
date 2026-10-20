@@ -1,0 +1,43 @@
+{
+  "adapter_command": "docker",
+  "case": "posthog",
+  "lane": "depot-builder",
+  "provider": "depot",
+  "level": "base",
+  "capabilities": [
+    "layers"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "depot builder",
+  "phase": "sample",
+  "step": 255,
+  "scope": "depot-builder-github-sample-39400390519",
+  "cache_scope": "depot-builder-github-sample",
+  "cache_seeded": null,
+  "cache_restored_key": null,
+  "repo": "PostHog/posthog",
+  "sha": "b02515729e2c549934b12af52459929dee3a222b",
+  "seconds": 406.674,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "runner_machine": {
+      "cpu": "Intel(R) Xeon(R) 6973P-C",
+      "cores": 4
+    },
+    "image_platform": "linux/amd64"
+  },
+  "evidence": [],
+  "versions": {},
+  "cadence": "sample",
+  "harness": {
+    "commit": "4449f8624882ee7e7d192d9d54300c02739f5eb5",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/39400390519",
+  "attempt": 1,
+  "started_at": "2026-10-20T09:45:09Z"
+}

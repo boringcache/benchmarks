@@ -60,7 +60,7 @@ TURBO_CACHE = "local:rw,remote:r"
 | `label` | job label for a BoringCache lane, needed when two BoringCache lanes share a runner, for example `boringcache on-demand` |
 | `reads` | BoringCache lanes only: `{ lane = "<lane>", runner = "<runner key>" }`, a source with the same level, plan, env and `cli_args`. Sample builds use its completed rolling cache with `--read-only`; records include the selected source run and commit. Legacy rolling builds using this setting retain their original previous-step behavior. |
 | `cache_keys` | GitHub Actions cache key prefixes the lane's own action saves under, naming `${BENCH_SCOPE}`, such as `kache-${BENCH_SCOPE}-v`; after a rolling step the publish job keeps only the newest entry under each |
-| `post_job_save` | actions (`owner/repo`) or step ids that save the lane cache only after the job, such as `reproducible-containers/buildkit-cache-dance`; the publish job records their logged durations as `post_job_save_seconds` and the final `job_conclusion`. Reports include these durations and exclude failed jobs from timings and matched steps. |
+| `post_job_save` | actions (`owner/repo`) or step ids that save the lane cache only after the job, such as `reproducible-containers/buildkit-cache-dance`; the collect job records their logged durations as `post_job_save_seconds` and the final `job_conclusion`. Reports include these durations and exclude failed jobs from timings and matched steps. |
 | `probe` | credential and connection checks for a preflight run; they run in the run directory without a checkout |
 | `prepare`, `cold.prepare` | untimed commands the lane runs after the case `prepare`, for every phase or one phase |
 
@@ -143,6 +143,8 @@ gh workflow run project.yml -f tool=Nix -f project=Zed -f mode=preflight
 ```
 
 A preflight run (`<tool> - <project> (preflight)`) runs every lane's setup and `probe` with the lane's secrets and no checkout or build, so missing keys and auth problems show up in minutes. A cold phase refuses to run on a rerun attempt, because the run's cache scope may already hold data; dispatch a fresh run instead.
+
+The collect job runs on main and branches, adds post-job save durations, and uploads `recorded-results-<attempt>`. The publish job downloads that artifact and writes records only on main. Branch results require review before they are added to the repository.
 
 ## Weekly runner samples
 
