@@ -46,4 +46,24 @@ class BuildkitPruneTest < Minitest::Test
 
     assert_equal [indexes.last["key"]], Bench::BuildkitPrune.newest(indexes, ["docker-app-gha-github-rolling"]).map { it["key"] }
   end
+
+  def test_delete_continues_when_a_listed_cache_is_already_gone
+    calls = []
+    gh = lambda do |*args|
+      calls << args
+      raise Bench::Error, "gh api -X failed: gh: Not Found (HTTP 404)"
+    end
+
+    Bench::BuildkitPrune.new("owner/repo", gh:).delete("id" => 123)
+
+    assert_equal [["api", "-X", "DELETE", "repos/owner/repo/actions/caches/123"]], calls
+  end
+
+  def test_delete_preserves_other_api_errors
+    [403, 429, 500].each do |status|
+      gh = ->(*) { raise Bench::Error, "gh api -X failed: HTTP #{status}" }
+
+      assert_raises(Bench::Error) { Bench::BuildkitPrune.new("owner/repo", gh:).delete("id" => 123) }
+    end
+  end
 end

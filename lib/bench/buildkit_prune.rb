@@ -65,6 +65,8 @@ module Bench
 
     def delete(entry)
       @gh.call("api", "-X", "DELETE", "repos/#{@repo}/actions/caches/#{entry["id"]}")
+    rescue Error => error
+      raise unless error.message.end_with?("(HTTP 404)")
     end
 
     private

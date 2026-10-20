@@ -136,6 +136,7 @@ module Bench
       def matrix
         options = parse(defaults.except(:runner))
         return sample_matrix(options) if options[:sample]
+        raise Error, "matrix --sha requires --sample" if options[:sha]
         raise Error, "--cli takes a CLI release tag such as v1.41.0 or vcli-canary-<sha>" if options[:cli] && !options[:cli].match?(CLI_RELEASE)
         raise Error, "rolling keeps the pinned CLI; use --cli with fresh runs" if options[:cli] && options[:rolling]
         raise Error, "--step re-runs a recorded rolling step; add --rolling" if options[:step] && !options[:rolling]
@@ -190,6 +191,13 @@ module Bench
 
           rolling = Rolling.new(kase, results_dir: options[:results], work_root: options[:work])
           source = rolling.sample_source
+          sha = source.fetch("sha")
+          if options[:sha]
+            unless options[:sha].match?(/\A[0-9a-f]{40}\z/) && Upstream.new(kase, root: options[:work]).commits_after(sha).include?(options[:sha])
+              raise Error, "#{kase.id}: sample --sha must be a newer first-parent commit on #{kase.branch} after cache source #{sha}"
+            end
+            sha = options[:sha]
+          end
           kase.samples.flat_map do |lane_name, configured|
             next [] if lanes && !lanes.include?(lane_name)
             lane = kase.tool.lane(lane_name)
@@ -199,7 +207,7 @@ module Bench
               raise Error, "unknown runner #{runner}" unless @catalog.runners.key?(runner)
               raise Error, "samples require an Actions runner" if runner == "local"
               { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets,
-                "setup" => lane.setup.join(" "), "label" => job_label(kase, lane, runner), "step" => source.fetch("step").to_s, "sha" => source.fetch("sha"),
+                "setup" => lane.setup.join(" "), "label" => job_label(kase, lane, runner), "step" => source.fetch("step").to_s, "sha" => sha,
                 "cache_scope" => lane.reads ? source.fetch("cache_scope") : "#{lane.name}-#{runner}-sample", "continues" => "true", "cadence" => "sample",
                 "source" => JSON.generate(source), "cli" => @catalog.case_cli(kase) || "" }
             end

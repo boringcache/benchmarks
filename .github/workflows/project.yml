@@ -25,6 +25,10 @@ on:
         description: sample only, runner keys such as github depot-8 (optional)
         type: string
         default: ""
+      sha:
+        description: sample only, full SHA of a newer upstream first-parent commit (optional)
+        type: string
+        default: ""
       cli:
         description: CLI release tag instead of the pinned version, for example vcli-canary-<sha> (optional, fresh and preflight only)
         type: string
@@ -71,10 +75,11 @@ jobs:
           STEP: ${{ inputs.step }}
           SAMPLE: ${{ inputs.mode == 'sample' && 'true' || '' }}
           RUNNER: ${{ inputs.runner }}
+          SHA: ${{ inputs.sha }}
         run: |
           bash scripts/checkout-records.sh
           if [ -n "$RUNNER" ] && [ -z "$SAMPLE" ]; then echo 'runner selection requires sample mode' >&2; exit 1; fi
-          matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${SAMPLE:+--sample} ${RUNNER:+--runner "$RUNNER"} ${LANE:+--lane "$LANE"} ${CLI:+--cli "$CLI"} ${STEP:+--step "$STEP"} --results results)
+          matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${SAMPLE:+--sample} ${RUNNER:+--runner "$RUNNER"} ${SHA:+--sha "$SHA"} ${LANE:+--lane "$LANE"} ${CLI:+--cli "$CLI"} ${STEP:+--step "$STEP"} --results results)
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
           if [ "$matrix" = '[]' ]; then
             echo 'No benchmark jobs are due for this selection.' >> "$GITHUB_STEP_SUMMARY"
