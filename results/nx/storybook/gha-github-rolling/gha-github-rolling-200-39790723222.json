@@ -1,0 +1,42 @@
+{
+  "adapter_command": "nx",
+  "case": "storybook",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 200,
+  "scope": "gha-github-rolling",
+  "cache_scope": "gha-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "nx-storybook-gha-github-rolling-199",
+  "cache_restore_tracked": true,
+  "repo": "storybookjs/storybook",
+  "sha": "e8596eee5d2b1329df95767f7d7521ebdab324ba",
+  "seconds": 205.898,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "d5ae51a807b577c416bf15af7bf519472541b906",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/39790723222",
+  "attempt": 1,
+  "started_at": "2026-10-22T13:53:25Z"
+}
