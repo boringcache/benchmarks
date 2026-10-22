@@ -4,7 +4,7 @@ start_sha = "fda690020b843721c3814ee7d3dd2c384cf0147d"
 rolling_series = 2
 directory = "upstream"
 prepare = [
-  "mise trust && mise install",
+  "mise trust && mise install && \"$JAVA_HOME/bin/java\" \"$BENCH_ROOT/tools/shared/JavaCaTrust.java\" --apply",
   "printf '\\naddRemoteCachePlugin\\n' >> upstream/project/plugins.sbt",
   "cd upstream && cp .sbtopts.default .sbtopts && cp conf/application.conf.default conf/application.conf",
   "cd upstream && TZ=UTC git log -1 --date=iso-strict-local --pretty='format:app.version.commit = \"%H\"%napp.version.date = \"%ad\"' > conf/version.conf",
