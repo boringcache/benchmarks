@@ -2,6 +2,17 @@
 
 Each directory here is a BoringCache adapter command (`docker`, `cargo`, `turbo`, ...).
 
+Case `mise.toml` files pin Node 22.23.4, 24.22.1 or 26.12.1 and Go 1.27.3,
+which include the October 2026 certificate security updates. See the
+[Node security release](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases)
+and [Go release history](https://go.dev/doc/devel/release).
+Java cases run `tools/shared/JavaCaTrust.java --apply` with every selected JDK
+after installation and before workload downloads. It removes only the two
+reviewed eMudhra root fingerprints, preserves unrelated entries and permissions,
+and saves the original store without replacing an existing backup. A repair
+failure stops preparation. The same preparation applies to every provider lane.
+Earlier result records retain their original harness and toolchain selection.
+
 ```
 tools/<tool>/
   tool.toml               display name and levels: the capability sets lanes implement
