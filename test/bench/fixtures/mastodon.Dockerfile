@@ -158,9 +158,6 @@ RUN \
 FROM ${BASE_REGISTRY}/ruby:${RUBY_VERSION}-slim-${DEBIAN_VERSION} AS media-build
 
 ARG TARGETPLATFORM
-ARG CCACHE_VERSION=4.13.6
-ARG CCACHE_STORAGE_HTTP_VERSION=0.8
-ENV CC="ccache cc" CXX="ccache c++" CCACHE_COMPILERCHECK=content
 
 # Set default shell used for running commands
 SHELL ["/bin/bash", "-o", "pipefail", "-o", "errexit", "-c"]
@@ -177,8 +174,6 @@ RUN \
   autoconf \
   automake \
   build-essential \
-  ca-certificates \
-  curl \
   libtool \
   meson \
   nasm \
@@ -210,29 +205,6 @@ RUN \
   libx265-dev \
   ;
 
-RUN set -eux; \
-  arch="$(dpkg --print-architecture)"; \
-  case "$arch" in \
-    amd64) ccache_arch=x86_64; helper_arch=amd64; ccache_sha=567b1b648411819590f918f045218c92da14418bdec3b30db94a3b4f5d77cf13; helper_sha=2c2cfafa39f5a4628201ccc11c81829197519159aa128fe00ea251f1f4f2461c ;; \
-    arm64) ccache_arch=aarch64; helper_arch=arm64; ccache_sha=fae67fb810e1f0d390409af6603355483572229e19183e68574cd0f851a6fb98; helper_sha=49587fb0534f5c6265fd1008267af795885f8297c6c51213708da74e4de9d475 ;; \
-    *) echo "unsupported ccache architecture: ${arch}" >&2; exit 1 ;; \
-  esac; \
-  ccache_archive="ccache-${CCACHE_VERSION}-linux-${ccache_arch}-glibc.tar.gz"; \
-  helper_archive="ccache-storage-http-go-${CCACHE_STORAGE_HTTP_VERSION}-linux-${helper_arch}.tar.gz"; \
-  curl -fsSL --retry 5 "https://github.com/ccache/ccache/releases/download/v${CCACHE_VERSION}/${ccache_archive}" -o "/tmp/${ccache_archive}"; \
-  echo "${ccache_sha}  /tmp/${ccache_archive}" | sha256sum --check; \
-  curl -fsSL --retry 5 "https://github.com/ccache/ccache-storage-http-go/releases/download/v${CCACHE_STORAGE_HTTP_VERSION}/${helper_archive}" -o "/tmp/${helper_archive}"; \
-  echo "${helper_sha}  /tmp/${helper_archive}" | sha256sum --check; \
-  tar xzf "/tmp/${ccache_archive}" -C /tmp; \
-  tar xzf "/tmp/${helper_archive}" -C /tmp; \
-  install -m 0755 "/tmp/ccache-${CCACHE_VERSION}-linux-${ccache_arch}-glibc/ccache" /usr/local/bin/ccache; \
-  install -m 0755 "/tmp/ccache-storage-http-go-${CCACHE_STORAGE_HTTP_VERSION}-linux-${helper_arch}/ccache-storage-http" /usr/local/bin/ccache-storage-http; \
-  ccache --version; \
-  helper_version="$(ccache-storage-http --version 2>&1 || true)"; \
-  printf "%s\n" "$helper_version"; \
-  printf "%s\n" "$helper_version" | grep -F "Version: ${CCACHE_STORAGE_HTTP_VERSION}"; \
-  rm -rf /tmp/ccache-*
-
 # Create temporary libvips specific build layer
 FROM media-build AS libvips
 
@@ -255,7 +227,7 @@ RUN meson setup build --prefix /usr/local/libvips --libdir=lib -Ddeprecated=fals
 WORKDIR /usr/local/libvips/src/vips-${VIPS_VERSION}/build
 
 # Compile and install libvips
-RUN --mount=type=cache,id=mastodon-ccache,target=/root/.cache/ccache ninja && ninja install && ccache --show-stats
+RUN ninja && ninja install
 
 # Create temporary ffmpeg specific build layer
 FROM media-build AS ffmpeg
@@ -274,16 +246,8 @@ RUN tar xf n${FFMPEG_VERSION}.tar.gz && mv FFmpeg-n${FFMPEG_VERSION} ffmpeg-${FF
 WORKDIR /usr/local/ffmpeg/src/ffmpeg-${FFMPEG_VERSION}
 
 # Configure and compile ffmpeg
-RUN --mount=type=cache,id=mastodon-ccache,target=/root/.cache/ccache \
-  configure_compiler_args=(); \
-  if [ -n "${CC:-}" ]; then \
-    configure_compiler_args+=(--cc="$CC"); \
-  fi; \
-  if [ -n "${CXX:-}" ]; then \
-    configure_compiler_args+=(--cxx="$CXX"); \
-  fi; \
+RUN \
   ./configure \
-  "${configure_compiler_args[@]}" \
   --prefix=/usr/local/ffmpeg \
   --toolchain=hardened \
   --disable-debug \
@@ -308,16 +272,10 @@ RUN --mount=type=cache,id=mastodon-ccache,target=/root/.cache/ccache \
   --enable-version3 \
   ; \
   make -j"$(nproc)"; \
-  make install; \
-  ccache --show-stats
+  make install;
 
 # Create temporary build layer from base image for Ruby dependencies
 FROM ruby AS ruby-build
-
-# Use ccache for native extensions while keeping compiler selection in this Dockerfile.
-COPY --from=media-build /usr/local/bin/ccache /usr/local/bin/ccache
-COPY --from=media-build /usr/local/bin/ccache-storage-http /usr/local/bin/ccache-storage-http
-ENV CC="ccache cc" CXX="ccache c++" CCACHE_COMPILERCHECK=content
 
 ARG TARGETPLATFORM
 
@@ -327,7 +285,6 @@ RUN \
   --mount=type=cache,id=apt-cache-${TARGETPLATFORM},target=/var/cache/apt,sharing=locked \
   --mount=type=cache,id=apt-lib-${TARGETPLATFORM},target=/var/lib/apt,sharing=locked \
   # Install build tools and bundler dependencies from APT
-  apt-get update; \
   apt-get install -y --no-install-recommends \
   build-essential \
   git \
@@ -348,7 +305,7 @@ FROM ruby-build AS bundler
 ARG TARGETPLATFORM
 
 # Copy Gemfile config into working directory
-COPY .ruby-version Gemfile* /opt/mastodon/
+COPY Gemfile* /opt/mastodon/
 
 # Copy libvips for gems that need it during install
 COPY --from=libvips /usr/local/libvips/lib /usr/local/lib
@@ -368,8 +325,7 @@ RUN \
   # Configure bundle to not warn about root user
   bundle config set silence_root_warning "true"; \
   # Download and install required Gems
-  bundle install -j"$(nproc)"; \
-  ccache --show-stats
+  bundle install -j"$(nproc)";
 
 # Create temporary assets build layer from build layer
 FROM ruby-build AS precompiler
