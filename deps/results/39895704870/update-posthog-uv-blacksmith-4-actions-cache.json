@@ -1,0 +1,56 @@
+{
+  "name": "update-posthog-uv-blacksmith-4-actions-cache",
+  "kind": "update",
+  "case": "posthog-uv",
+  "tool": "uv",
+  "repo": "PostHog/posthog",
+  "sha": "582cbcd576b94d016f228628cb251bf49d3ca4df",
+  "before_sha": "86b8aa0e7fd02b6203aca88ece559a43e15320aa",
+  "after_sha": "582cbcd576b94d016f228628cb251bf49d3ca4df",
+  "lockfile": "uv.lock",
+  "lane": "actions-cache",
+  "runner": "blacksmith-4",
+  "machine": "blacksmith 4c",
+  "producer": "blacksmith-4",
+  "cache_backend": "blacksmith",
+  "key": "deps-39895704870-posthog-uv-blacksmith-4",
+  "run_id": "39895704870",
+  "step": 0,
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/39895704870",
+  "recorded_at": "2026-10-23T03:39:12Z",
+  "versions": {
+    "actions_cache": "6.1.0"
+  },
+  "observed": {
+    "cpu": "AMD EPYC",
+    "cores": 4,
+    "disk_free_bytes": 85545455616
+  },
+  "restore": {
+    "seconds": 8.109,
+    "network_bytes": 997706116,
+    "step_ok": true,
+    "ok": true
+  },
+  "install": {
+    "seconds": 0.896,
+    "network_bytes": 373185,
+    "step_ok": true,
+    "ok": true
+  },
+  "save": {
+    "seconds": 7.217,
+    "network_bytes": 997209672,
+    "step_ok": true,
+    "ok": true
+  },
+  "exit_status": 0,
+  "output_ok": true,
+  "cache": {
+    "bytes": 3582038630,
+    "files": 66752
+  },
+  "cache_restored_key": "deps-39895704870-posthog-uv-blacksmith-4-2b330808c3e07edb",
+  "harness_commit": "2436483e4eade58045058442d1621b0d1521eb85"
+}
