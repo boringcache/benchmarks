@@ -36,7 +36,7 @@ prepare = [
   "CARGO_HOME=\"${RUNNER_TEMP:-/tmp}/cargo-fuzz-home\" CARGO_TARGET_DIR=\"${RUNNER_TEMP:-/tmp}/cargo-fuzz-target\" RUSTC_WRAPPER= cargo install cargo-fuzz@0.13.1 --locked --root \"$HOME/.cargo\"",
   "cp .boringcache.toml upstream/fuzz/.boringcache.toml && echo /fuzz/.boringcache.toml >> upstream/.git/info/exclude",
 ]
-check = "for target in traceparent config_decode proxy_protocol mesh_udp_frame k8s_crd plugin_config ocsp_response jwt_svid tls_material datagram_client_address; do test -x upstream/target/x86_64-unknown-linux-gnu/release/$target || exit 1; done && test -z \"$(git -C upstream status --porcelain=v1 --untracked-files=all)\""
+check = "for target in traceparent config_decode proxy_protocol mesh_udp_frame k8s_crd plugin_config ocsp_response jwt_svid tls_material datagram_client_address; do grep -Fxq \"$target\" fuzz-verified || exit 1; done && test -z \"$(git -C upstream status --porcelain=v1 --untracked-files=all)\""
 
 [env]
 CARGO_TERM_COLOR = "always"

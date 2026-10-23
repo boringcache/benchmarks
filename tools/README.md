@@ -116,6 +116,14 @@ A `mise.toml` beside `case.toml` pins the case toolchain; it is copied into the 
 
 Each phase runs in `<work>/<tool>/<case>/` (`.work` locally, `$HOME/w` on Actions, or `BENCH_WORK`), rebuilt from scratch for every phase at the same short path, as an upstream checkout would be, so tools that key caches or names on absolute paths behave the same: the plans with run-scoped tags, `overlay/`, and the upstream checkout in `upstream/`. `prepare` and `check` run there with `bash -c`, outside the timer, so their paths start at the run directory (`upstream/...`), not at the plan directory.
 
+Mastodon plus applies its compiler-cache patch to the checked-out upstream
+Dockerfile during preparation, preserving that commit's runtime and library
+versions. Ferrum verifies each fuzz executable after its smoke run, records the
+completed target in `fuzz-verified`, then removes that executable and its package
+objects before the next target. These files were already excluded from every
+provider's cache; the shared dependency artifacts remain. Failed targets stop
+the script before verification or cleanup.
+
 ## Adding
 
 - A case: copy an existing case directory, change `case.toml` and `.boringcache.toml`, run `bin/bench check`.
