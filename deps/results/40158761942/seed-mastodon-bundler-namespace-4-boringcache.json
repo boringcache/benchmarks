@@ -1,0 +1,51 @@
+{
+  "name": "seed-mastodon-bundler-namespace-4-boringcache",
+  "kind": "seed",
+  "case": "mastodon-bundler",
+  "tool": "bundler",
+  "repo": "mastodon/mastodon",
+  "sha": "85cc1449181c774a226ae42ec19dca3a2f7cce26",
+  "before_sha": "85cc1449181c774a226ae42ec19dca3a2f7cce26",
+  "after_sha": "bcbf3651da6d2e9d9e7966e8e97fb59bbe7665e0",
+  "lockfile": "Gemfile.lock",
+  "lane": "boringcache",
+  "runner": "namespace-4",
+  "machine": "namespace 4c",
+  "producer": "namespace-4",
+  "cache_backend": "boringcache",
+  "key": "deps-40158761942-mastodon-bundler-namespace-4",
+  "run_id": "40158761942",
+  "step": 0,
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/40158761942",
+  "recorded_at": "2026-10-25T03:36:16Z",
+  "versions": {
+    "boringcache": "1.44.0"
+  },
+  "observed": {
+    "cpu": "AMD EPYC",
+    "cores": 4,
+    "disk_free_bytes": 100473851904
+  },
+  "auth_seconds": 0.218,
+  "install": {
+    "seconds": 22.876,
+    "network_bytes": 65408937,
+    "step_ok": true,
+    "ok": true
+  },
+  "save": {
+    "seconds": 2.609,
+    "network_bytes": 27189085,
+    "step_ok": true,
+    "ok": true
+  },
+  "exit_status": 0,
+  "output_ok": true,
+  "cache": {
+    "bytes": 189784629,
+    "files": 19518
+  },
+  "cache_restored_key": "",
+  "harness_commit": "521875ce0a2f63bbefbfd38ff448639bcf1d48bb"
+}
