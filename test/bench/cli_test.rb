@@ -280,6 +280,80 @@ class CLITest < Minitest::Test
     refute JSON.parse(File.read(path)).key?("post_job_save_seconds")
   end
 
+  def test_post_job_saves_records_whether_the_post_job_cache_save_succeeded
+    logs = {
+      "failed" => "##[warning]Failed to save: \"/usr/bin/tar\" failed with error: The process '/usr/bin/tar' failed with exit code 2\nSaved mbx target cache demo-key (ID -1)",
+      "skipped" => "GitHub cache already holds key kache-demo-v1-linux-x64-abc; skipping save",
+      "saved" => "Cache saved successfully\nCache saved with key: demo-app-dance-3",
+      "reserved" => "Failed to save: Unable to reserve cache with key demo-app-dance-3, another job may be creating this cache."
+    }
+    logs.each_key { write "tools/demo/lanes/#{it}.toml", %(provider = "#{it}"\nlevel = "base"\nactions_only = true\nrunners = ["github"]\npost_job_save = ["acme/save-action"]\n) }
+    logs.each_with_index do |(lane, post), index|
+      write "job-#{index}.log", <<~LOG
+        2026-10-09T10:00:00Z ##[warning]Failed to save: an in-phase step
+        2026-10-09T10:10:00Z Post job cleanup.
+        #{post.lines.map { "2026-10-09T10:10:10Z #{it.chomp}" }.join("\n")}
+        2026-10-09T10:10:12Z ##[end-action id=__1a2b.__acme_save-action;outcome=success;conclusion=success;duration_ms=12500]
+      LOG
+      write "tmp/results/demo/app/#{lane}-github-rolling/#{lane}-github-rolling-3.json", JSON.generate("adapter_command" => "demo", "case" => "app", "lane" => lane, "runner" => "github", "phase" => "rolling",
+                                                                                                   "run_url" => "https://github.com/boringcache/benchmarks/actions/runs/42")
+    end
+    write "jobs.jsonl", logs.keys.each_with_index.map { |lane, index| JSON.generate("id" => index, "name" => "rolling: github 4c · #{lane}", "run_attempt" => 1, "conclusion" => "success") }.join("\n") + "\n"
+    write "bin/gh", <<~BASH
+      #!/usr/bin/env bash
+      case "$*" in
+        *runs/42/jobs*) cat "#{File.join(@root, "jobs.jsonl")}" ;;
+        *jobs/*/logs*) args="$*"; job="${args#*jobs/}"; cat "#{@root}/job-${job%%/*}.log" ;;
+      esac
+    BASH
+    File.chmod(0o755, File.join(@root, "bin/gh"))
+
+    with_fixture_env do
+      ENV["GITHUB_REPOSITORY"] = "boringcache/benchmarks"
+      Bench::CLI.new(%W[post-job-saves --run-id 42 --results #{@root}/tmp/results], catalog:, out: StringIO.new).call
+    ensure
+      ENV.delete("GITHUB_REPOSITORY")
+    end
+
+    recorded = logs.keys.to_h { [it, JSON.parse(File.read(File.join(@root, "tmp/results/demo/app/#{it}-github-rolling/#{it}-github-rolling-3.json")))] }
+    assert_equal({ "failed" => "failed", "skipped" => "skipped", "saved" => "saved", "reserved" => nil }, recorded.transform_values { it["cache_save"] })
+    refute recorded["reserved"].key?("cache_save")
+    assert_equal [12.5], recorded.values.map { it["post_job_save_seconds"] }.uniq
+  end
+
+  def test_cache_saves_backfills_post_job_cache_saves_from_job_logs_that_still_exist
+    write "tools/demo/lanes/gha.toml", %(provider = "github-actions-cache"\nlevel = "base"\nactions_only = true\nrunners = ["github"]\npost_job_save = ["acme/save-action"]\n)
+    write "failed.log", "Post job cleanup.\n##[warning]Failed to save: zstd: error 70 : Write error : cannot write block : No space left on device\n"
+    write "bin/gh", <<~BASH
+      #!/usr/bin/env bash
+      echo "gh $*" >> "$STUB_LOG"
+      case "$*" in
+        *runs/42/jobs*) echo '{"id":7,"name":"rolling: github 4c · gha","run_attempt":1,"conclusion":"success"}' ;;
+        *runs/43/jobs*) echo '{"id":8,"name":"rolling: github 4c · gha","run_attempt":1,"conclusion":"success"}' ;;
+        *runs/44/jobs*) echo '{"id":9,"name":"rolling: github 4c · gha","run_attempt":1,"conclusion":"success"}' ;;
+        *jobs/7/logs*) cat "#{File.join(@root, "failed.log")}" ;;
+        *jobs/8/logs*) echo "log expired" >&2; exit 1 ;;
+      esac
+    BASH
+    File.chmod(0o755, File.join(@root, "bin/gh"))
+    paths = { 3 => 42, 4 => 43, 5 => 44 }.to_h do |step, run|
+      path = "tmp/results/demo/app/gha-github-rolling/gha-github-rolling-#{step}.json"
+      write path, JSON.generate({ "adapter_command" => "demo", "case" => "app", "lane" => "gha", "runner" => "github", "phase" => "rolling", "step" => step,
+                                  "run_url" => "https://github.com/boringcache/benchmarks/actions/runs/#{run}" }.merge(step == 5 ? { "cache_save" => "saved" } : {}))
+      [step, File.join(@root, path)]
+    end
+
+    with_fixture_env do
+      ENV["GITHUB_REPOSITORY"] = "boringcache/benchmarks"
+      assert_equal 0, Bench::CLI.new(%W[cache-saves --results #{@root}/tmp/results], catalog:, out: StringIO.new).call
+    ensure
+      ENV.delete("GITHUB_REPOSITORY")
+    end
+
+    assert_equal({ 3 => "failed", 4 => nil, 5 => "saved" }, paths.transform_values { JSON.parse(File.read(it))["cache_save"] })
+    refute_includes File.read(File.join(@root, "stub.log")), "runs/44/jobs"
+  end
+
   def test_restored_keys_recovers_only_cache_dance_restores_the_job_log_proves
     write "tools/demo/lanes/gha.toml", %(provider = "github-actions-cache"\nlevel = "base"\nactions_only = true\nrunners = ["github"]\nsetup = ["cache-dance"]\npost_job_save = ["dance-cache"]\n)
     write "restored.log", <<~LOG

@@ -37,7 +37,7 @@ This repository benchmarks BoringCache against other cache providers on real pro
 - `schedule.yml` runs `bin/bench tick` every 15 minutes. It checks each idle project in `rolling.toml` against its upstream branch and dispatches only when a commit is due at its configured stride. Active or queued rolling and sample projects wait for a later tick. An upstream check failure is reported and fails the tick without dispatching that project. The workflow's concurrency group runs one rolling run per project at a time.
 - `prune-buildkit.yml` deletes stale BuildKit `type=gha` blobs every 2 hours.
 - `report.yml` regenerates `data/results.json` and `data/report.md` hourly from recorded results. Experimental lanes are excluded.
-- A failed build or output check is recorded first, then fails its job. A failure in `prepare` leaves no record; that lane continues at the next step.
+- A failed build, output check or in-job Actions cache save is recorded first, then fails its job. A failure in `prepare` leaves no record; that lane continues at the next step.
 - Re-run a failed rolling job only before the next step of that project starts. A re-run of an older step skips its build once a newer step is recorded for that lane, so it can never overwrite the newer cache.
 - Rolling dispatches must use the tool's display title, such as `Rust/Cargo`, so manual runs share the scheduler's concurrency group.
 - A job re-run uses the harness from its original commit. To re-run a recorded step with a harness fix, dispatch `-f mode=rolling -f step=<N>`: it builds that step's commit for lanes without a passing record at that step or a newer recorded step.
@@ -72,6 +72,7 @@ Classify it before changing anything:
 - **Other provider**: keep the lane failing and note it. If the provider cannot run the case, remove the lane and log the outcome under "Removed lanes" in `PLAN.md` with run links.
 - **Upstream** (their build or a transient download): record it and keep rolling.
 - **Not a measurement** (a build that passed while its provider served no cache, such as a lapsed plan): add `"excluded": "<reason and evidence>"` to those records, and to the next step if it restored a cache the outage never saved. The report leaves them out; the records stay.
+- **Failed cache save** (`cache_save` is `failed`, or the report shows `stale restore` because a step restored an older step's cache than the lane's previous step): read the save step in the job log. A full runner disk or a provider error is **Other provider**; keep the lane failing. For post-job saves recorded before `cache_save` existed, run `GITHUB_REPOSITORY=boringcache/benchmarks bundle exec bin/bench cache-saves --results results` with `gh` signed in. It fills `cache_save` only when the job log still exists and shows the save outcome.
 - **Unrecorded restore** (a rolling record with `cache_restore_tracked` but no `cache_restored_key`, as `cache-dance` lanes wrote before their restore moved to `actions/cache/restore`): with `gh` signed in, run `GITHUB_REPOSITORY=boringcache/benchmarks bundle exec bin/bench restored-keys --results results`. It fills the key only when the original job log shows that lane's restore before post-job cleanup.
 
 ## Checks

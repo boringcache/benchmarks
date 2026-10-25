@@ -1,7 +1,7 @@
 module Bench
   class Report
     KEY = %w[adapter_command case lane level runner phase step sha boringcache attempt cache_seeded cache_save_timing machine cpu cores].freeze
-    COLUMNS = %w[Tool Case Lane Level Runner Phase Step Commit CLI Attempt From\ fresh\ run Save Machine CPU Cores Samples Failed Seed\ failed Timed\ median\ s Timed\ min\ s Timed\ max\ s Cache\ API\ errors].freeze
+    COLUMNS = %w[Tool Case Lane Level Runner Phase Step Commit CLI Attempt From\ fresh\ run Save Machine CPU Cores Samples Failed Seed\ failed Save\ failed Timed\ median\ s Timed\ min\ s Timed\ max\ s Cache\ API\ errors].freeze
     MATCHED = %w[adapter_command case runner series boringcache steps first_step last_step lane level machine median_seconds min_seconds max_seconds cache_api_error_steps].freeze
     MATCHED_COLUMNS = %w[Tool Case Runner Series CLI Steps First\ step Last\ step Lane Level Machine Timed\ median\ s Timed\ min\ s Timed\ max\ s Steps\ with\ cache\ API\ errors].freeze
     READ_ONLY = %w[adapter_command case lane level machine reads boringcache steps first_step last_step median_seconds source_median_seconds cache_api_error_steps].freeze
@@ -57,17 +57,19 @@ module Bench
     def markdown
       table = rows.map do |row|
         row.merge("sha" => row["sha"]&.slice(0, 12)).values_at(*KEY).map { it.nil? ? "-" : it } +
-          row.values_at("samples", "failed", "seed_failed", "median_seconds", "min_seconds", "max_seconds").map { it.nil? ? "unmeasured" : it } +
+          row.values_at("samples", "failed", "seed_failed", "save_failed", "median_seconds", "min_seconds", "max_seconds").map { it.nil? ? "unmeasured" : it } +
           [row["cache_api_errors"] || "-"]
       end
       matched_table = matched.map { |row| row.values_at(*MATCHED).map { it.nil? ? "-" : it } }
       read_only_table = read_only.map { |row| row.values_at(*READ_ONLY).map { it.nil? ? "-" : it } }
       latest_columns = %w[Tool Case Lane Runner Step Commit CLI Started Attempt Status Seconds Run]
       latest_rows = latest.map { it.values_at("adapter_command", "case", "lane", "runner", "step", "sha", "boringcache", "started_at", "attempt", "status", "seconds", "run_url").map { |value| value.nil? ? "unmeasured" : value } }
-      ["# Benchmark results", "", "## Latest recorded rolling attempts", "", line(latest_columns), line(latest_columns.map { "---" }), *latest_rows.map { line(it) }, "",
+      ["# Benchmark results", "", "## Latest recorded rolling attempts", "",
+       "`save failed`: the build passed but its cache save failed. `stale restore`: the step restored an older step's cache than the lane's previous step. `seed failed`: the step restored nothing from its rolling cache.", "",
+       line(latest_columns), line(latest_columns.map { "---" }), *latest_rows.map { line(it) }, "",
        "## Measurements", "", line(COLUMNS), line(COLUMNS.map { "---" }), *table.map { line(it) }, "",
        "## Matched rolling steps", "",
-       "Rolling steps at which every lane on the runner passed, each on its own rolling cache after that cache's first step. Steps continued from a fresh run's cache and Actions cache steps that restored nothing are left out. Times include post-job saves.", "",
+       "Rolling steps at which every lane on the runner passed, each on its own rolling cache after that cache's first step. Steps continued from a fresh run's cache, steps that restored nothing or an older step's cache than the lane's previous step, and steps whose cache save failed are left out. Times include post-job saves.", "",
        line(MATCHED_COLUMNS), line(MATCHED_COLUMNS.map { "---" }), *matched_table.map { line(it) }, "",
        "## Historical shared-cache builds", "",
        "Historical builds using another runner's cache, paired with that runner's passing build at the same commit. These timings exclude cache saves.", "",
@@ -81,10 +83,14 @@ module Bench
           record = group.max_by { [it["started_at"].to_s, it["step"].to_i, it["attempt"].to_i] }
           status = if record["excluded"]
             "excluded"
-          elsif !passed?(record)
+          elsif !built?(record)
             "failed"
+          elsif save_failed?(record)
+            "save failed"
           elsif save_timing(record) == "post-job" || !timed_seconds(record)
             "unmeasured"
+          elsif stale?(record)
+            "stale restore"
           elsif !seeded?(record)
             "seed failed"
           else
@@ -146,6 +152,7 @@ module Bench
           "samples" => group.size,
           "failed" => group.count { !passed?(it) },
           "seed_failed" => group.count { passed?(it) && !seeded?(it) },
+          "save_failed" => group.count { save_failed?(it) },
           "median_seconds" => median(seconds),
           "min_seconds" => seconds.first,
           "max_seconds" => seconds.last,
@@ -199,11 +206,33 @@ module Bench
       end
 
       def passed?(record)
+        built?(record) && !save_failed?(record)
+      end
+
+      def built?(record)
         record["exit_status"] == 0 && record["output_ok"] == true && record.fetch("job_conclusion", "success") == "success"
+      end
+
+      def save_failed?(record)
+        record["cache_save"] == "failed"
+      end
+
+      def stale?(record)
+        return false unless record["phase"] == ROLLING && record["cache_scope"] == record["scope"]
+
+        restored = record["cache_restored_key"].to_s[/\A#{Regexp.escape("#{record["adapter_command"]}-#{record["case"]}-#{record["cache_scope"]}-")}(\d+)\z/, 1] or return false
+        previous = scope_steps.fetch(record.values_at("adapter_command", "case", "cache_scope"), []).select { it < record["step"] }.max
+        !previous.nil? && restored.to_i < previous
+      end
+
+      def scope_steps
+        @scope_steps ||= source_records.select { it["phase"] == ROLLING && it["step"] }.group_by { it.values_at("adapter_command", "case", "scope") }
+          .transform_values { |group| group.map { it["step"] }.uniq }
       end
 
       def seeded?(record)
         return seeds.fetch(record.values_at("adapter_command", "case", "scope"), false) if record["phase"] == "warm"
+        return false if stale?(record)
         return true unless record["phase"] == ROLLING && record.key?("cache_restored_key") && record["cache_restored_key"].nil?
 
         scopes = record["cache_restore_tracked"] ? first_steps : restoring_scopes

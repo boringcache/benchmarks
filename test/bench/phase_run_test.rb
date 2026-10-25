@@ -246,6 +246,42 @@ class PhaseRunTest < Minitest::Test
     assert_includes rolling_restore_key("--recorded", recorded), "ready<<BENCH_EOF\ntrue\nBENCH_EOF"
   end
 
+  def test_a_failed_cache_save_is_recorded_then_fails_the_step_on_actions
+    out = StringIO.new
+    with_fixture_env do
+      ENV["GITHUB_ACTIONS"] = "true"
+      assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r13")
+      assert_equal 0, cli("start", "demo/app", "--lane", "remote")
+      assert_equal 0, cli("build", "demo/app", "--lane", "remote")
+      ENV["BENCH_CACHE_SAVE"] = "failed"
+      assert_equal 1, cli("record", "demo/app", "--lane", "remote", "--exit-status", "0", out:)
+    ensure
+      ENV.delete("GITHUB_ACTIONS")
+      ENV.delete("BENCH_CACHE_SAVE")
+    end
+
+    assert_includes out.string, "::error title=demo/app remote cold::exit_status=0 output_ok=true cache_save=failed"
+    assert_equal [0, true, "failed"], record("remote-local-r13", "remote-local-cold").values_at("exit_status", "output_ok", "cache_save")
+  end
+
+  def test_the_timer_stops_before_the_save_check_and_the_record
+    with_fixture_env do
+      assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r14")
+      assert_equal 0, cli("start", "demo/app", "--lane", "remote")
+      assert_equal 0, cli("build", "demo/app", "--lane", "remote")
+      assert_equal 0, cli("stop", "demo/app", "--lane", "remote")
+      sleep 1.5
+      ENV["BENCH_CACHE_SAVE"] = "saved"
+      assert_equal 0, cli("record", "demo/app", "--lane", "remote", "--exit-status", "0")
+    ensure
+      ENV.delete("BENCH_CACHE_SAVE")
+    end
+
+    timed = record("remote-local-r14", "remote-local-cold")
+    assert_equal "saved", timed["cache_save"]
+    assert_operator timed["seconds"], :<, 1.5
+  end
+
   def test_a_record_keeps_the_cache_key_the_lane_restored
     with_fixture_env do
       assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r31")

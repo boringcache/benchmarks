@@ -54,8 +54,8 @@ class ReportTest < Minitest::Test
 
     rows = Bench::Report.new(@dir).rows
     assert_equal 1, rows.size
-    assert_equal({ "samples" => 4, "failed" => 1, "seed_failed" => 0, "median_seconds" => 20.0, "min_seconds" => 10.0, "max_seconds" => 30.0 },
-                 rows.first.slice("samples", "failed", "seed_failed", "median_seconds", "min_seconds", "max_seconds"))
+    assert_equal({ "samples" => 4, "failed" => 1, "seed_failed" => 0, "save_failed" => 0, "median_seconds" => 20.0, "min_seconds" => 10.0, "max_seconds" => 30.0 },
+                 rows.first.slice("samples", "failed", "seed_failed", "save_failed", "median_seconds", "min_seconds", "max_seconds"))
   end
 
   def test_reports_only_the_lanes_and_runners_its_cases_still_run
@@ -165,6 +165,47 @@ class ReportTest < Minitest::Test
     assert_equal [[0, 90.0], [0, 10.0], [1, nil], [0, 70.0], [0, 60.0]], rows.map { it.values_at("seed_failed", "median_seconds") }
   end
 
+  def test_a_rolling_step_that_restored_an_older_steps_cache_is_a_stale_restore
+    record "0.json", seconds: 90.0, phase: "rolling", save: "in-phase", step: 0, scope: "gha-github-rolling", restore_tracked: true
+    record "1.json", seconds: 10.0, phase: "rolling", save: "in-phase", step: 1, scope: "gha-github-rolling", restored: "docker-posthog-gha-github-rolling-0"
+    record "2.json", seconds: 11.0, phase: "rolling", save: "in-phase", step: 2, scope: "gha-github-rolling", restored: "docker-posthog-gha-github-rolling-1"
+    record "3.json", seconds: 40.0, phase: "rolling", save: "in-phase", step: 3, scope: "gha-github-rolling", restored: "docker-posthog-gha-github-rolling-1"
+    record "4.json", seconds: 12.0, phase: "rolling", save: "in-phase", step: 4, scope: "gha-github-rolling", restored: "docker-posthog-gha-github-rolling-2-3"
+    record "5.json", seconds: 45.0, phase: "rolling", save: "in-phase", step: 5, scope: "gha-github-rolling", restored: "docker-posthog-gha-github-rolling-3"
+
+    report = Bench::Report.new(@dir)
+    assert_equal [[0, 90.0], [0, 10.0], [0, 11.0], [1, nil], [0, 12.0], [1, nil]], report.rows.sort_by { it["step"] }.map { it.values_at("seed_failed", "median_seconds") }
+    assert_equal "stale restore", report.latest.first["status"]
+  end
+
+  def test_a_step_after_an_excluded_step_that_restored_the_step_before_it_is_a_stale_restore
+    (0..3).each do |step|
+      record "#{step}.json", seconds: 10.0, phase: "rolling", step:, scope: "gha-github-rolling", restore_tracked: true,
+        restored: ("docker-posthog-gha-github-rolling-#{step == 3 ? 1 : step - 1}" if step.positive?)
+    end
+    path = File.join(@dir, "2.json")
+    File.write(path, JSON.generate(JSON.parse(File.read(path)).merge("excluded" => "Provider served no cache")))
+
+    assert_equal [[0, 0], [1, 0], [3, 1]], Bench::Report.new(@dir).rows.map { it.values_at("step", "seed_failed") }
+  end
+
+  def test_a_failed_cache_save_is_a_failure_and_a_skipped_one_is_not
+    %w[boringcache-docker gha].each do |lane|
+      (0..3).each do |step|
+        record "#{lane}-#{step}.json", lane:, seconds: 10.0, phase: "rolling", step:, save: "in-phase", scope: "#{lane}-github-rolling",
+          cache_save: ({ 2 => "failed", 3 => "skipped" }[step] if lane == "gha")
+      end
+    end
+
+    report = Bench::Report.new(@dir)
+    gha = report.rows.select { it["lane"] == "gha" }.sort_by { it["step"] }
+    assert_equal [[0, 0, 10.0], [0, 0, 10.0], [1, 1, nil], [0, 0, 10.0]], gha.map { it.values_at("failed", "save_failed", "median_seconds") }
+    assert_equal [[2, 1, 3]], report.matched.select { it["lane"] == "gha" }.map { it.values_at("steps", "first_step", "last_step") }
+    record "gha-4.json", seconds: 10.0, phase: "rolling", step: 4, save: "in-phase", scope: "gha-github-rolling", cache_save: "failed", exit_status: 1
+    record "boringcache-docker-4.json", lane: "boringcache-docker", seconds: 10.0, phase: "rolling", step: 4, save: "in-phase", scope: "boringcache-docker-github-rolling", cache_save: "failed"
+    assert_equal({ "boringcache-docker" => "save failed", "gha" => "failed" }, Bench::Report.new(@dir).latest.to_h { it.values_at("lane", "status") })
+  end
+
   def test_rows_split_by_commit_step_and_cli_version
     record "a.json", seconds: 10.0, sha: "a" * 40
     record "b.json", seconds: 20.0, sha: "b" * 40
@@ -211,7 +252,7 @@ class ReportTest < Minitest::Test
     record "a.json", seconds: 5.0, exit_status: 2, output_ok: false
 
     assert_includes Bench::Report.new(@dir).markdown,
-                    "| docker | posthog | gha | base | github | cold | - | aaaaaaaaaaaa | 1.40.1 | 1 | - | post-job | github 4c | AMD EPYC 7763 | 4 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured | - |\n"
+                    "| docker | posthog | gha | base | github | cold | - | aaaaaaaaaaaa | 1.40.1 | 1 | - | post-job | github 4c | AMD EPYC 7763 | 4 | 1 | 1 | 0 | 0 | unmeasured | unmeasured | unmeasured | - |\n"
   end
 
   def test_rows_carry_the_cache_api_errors_the_product_reported
@@ -333,7 +374,7 @@ class ReportTest < Minitest::Test
 
   private
     def record(name, seconds:, exit_status: 0, output_ok: true, phase: "cold", scope: "gha-github-1", sha: "a" * 40, step: nil, lane: "gha", cache_scope: scope,
-               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job", restored: nil, post_job_save: nil, errors: nil, experimental: false, restore_tracked: false, job_conclusion: nil, runner: "github", cadence: nil, read_only: nil, started_at: nil)
+               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job", restored: nil, post_job_save: nil, errors: nil, experimental: false, restore_tracked: false, job_conclusion: nil, runner: "github", cadence: nil, read_only: nil, started_at: nil, cache_save: nil)
       File.write(File.join(@dir, name), JSON.generate({
         "adapter_command" => "docker", "case" => "posthog", "lane" => lane, "level" => "base", "runner" => runner,
         "phase" => phase, "step" => step, "scope" => scope, "cache_scope" => cache_scope, "sha" => sha, "seconds" => seconds, "attempt" => attempt, "experimental" => experimental, "cache_restore_tracked" => restore_tracked,
@@ -341,6 +382,7 @@ class ReportTest < Minitest::Test
         "observed" => { "machine" => { "cpu" => cpu, "cores" => 4 } }, "versions" => { "boringcache" => boringcache, "boringcache_release" => release }.compact
       }.merge(restored == :unrecorded ? {} : { "cache_restored_key" => restored }, post_job_save ? { "post_job_save_seconds" => post_job_save } : {},
               job_conclusion ? { "job_conclusion" => job_conclusion } : {}, cadence ? { "cadence" => cadence } : {}, read_only ? { "read_only" => true } : {}, started_at ? { "started_at" => started_at } : {},
+              cache_save ? { "cache_save" => cache_save } : {},
               errors ? { "provider_reported" => { "cache_session_summary" => { "backend_api" => { "total_error_count" => errors } } } } : {})))
     end
 end

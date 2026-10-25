@@ -277,7 +277,8 @@ runs:
           bundle exec bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
         fi
 
-    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != '' && !contains(inputs.setup, 'namespace-cache') && inputs.phase != 'warm'
+    - id: actions-cache-save
+      if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != '' && !contains(inputs.setup, 'namespace-cache') && inputs.phase != 'warm'
       uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ steps.prepare.outputs.cache_paths }}
@@ -285,10 +286,24 @@ runs:
 
     - if: steps.prepare.outputs.ready == 'true'
       shell: bash
+      run: bundle exec bin/bench stop "$BENCH_CASE" --lane "$BENCH_LANE"
+
+    - id: actions-cache-saved
+      if: steps.actions-cache-save.outcome == 'success'
+      continue-on-error: true
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ steps.prepare.outputs.cache_paths }}
+        key: ${{ steps.prepare.outputs.cache_key }}
+        lookup-only: true
+
+    - if: steps.prepare.outputs.ready == 'true'
+      shell: bash
       env:
         BUILD_FAILED: ${{ steps.build.outcome == 'failure' }}
         BENCH_CACHE_RESTORE_TRACKED: ${{ steps.actions-cache-restore.outcome == 'success' || steps.dance-restore.outcome == 'success' }}
         BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
+        BENCH_CACHE_SAVE: ${{ steps.actions-cache-saved.outcome == 'success' && (steps.actions-cache-saved.outputs.cache-hit == 'true' && 'saved' || 'failed') || '' }}
       run: bundle exec bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
 
     - if: always() && steps.sampler.outcome == 'success'

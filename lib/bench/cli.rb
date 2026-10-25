@@ -9,6 +9,7 @@ module Bench
         bin/bench prepare <tool>/<case> --lane LANE --phase PHASE [--runner KEY] [--run-id ID] [--sha SHA --step N] [--github]
         bin/bench start <tool>/<case> --lane LANE
         bin/bench build <tool>/<case> --lane LANE
+        bin/bench stop <tool>/<case> --lane LANE
         bin/bench record <tool>/<case> --lane LANE --exit-status N
         bin/bench probe <tool>/<case> --lane LANE [--runner KEY] [--run-id ID]
         bin/bench label <runner>
@@ -18,11 +19,17 @@ module Bench
         bin/bench report [--results DIR] [--out DIR]
         bin/bench post-job-saves --run-id ID [--results DIR]
         bin/bench restored-keys [--results DIR]
+        bin/bench cache-saves [--results DIR]
         bin/bench prune-caches --run-id ID [--results DIR]
         bin/bench prune-buildkit [--delete] [--max N] [--out FILE]
         bin/bench tick [--dry-run] [--results DIR] [--work DIR]
     TEXT
     CLI_RELEASE = /\A(v\d+\.\d+\.\d+|vcli-canary-[0-9a-f]{9,40})\z/
+    POST_JOB_CACHE_SAVES = {
+      "failed" => /##\[(?:warning|error)\](?:Failed to save:|GitHub cache save failed:)/,
+      "skipped" => /Cache hit occurred on the primary key \S+, not saving cache|GitHub cache already holds key \S+; skipping save/,
+      "saved" => /Cache saved successfully|Cache saved with key: /
+    }.freeze
 
     def initialize(argv, catalog: Catalog.new, out: $stdout, now: Time.now.utc)
       @argv = argv.dup
@@ -39,6 +46,7 @@ module Bench
       when "prepare" then prepare
       when "start" then resumed { it.start; 0 }
       when "build" then resumed(&:build)
+      when "stop" then resumed { it.stop; 0 }
       when "record" then record
       when "probe" then probe
       when "label" then label
@@ -46,6 +54,7 @@ module Bench
       when "report" then report
       when "post-job-saves" then post_job_saves
       when "restored-keys" then restored_keys
+      when "cache-saves" then cache_saves
       when "prune-caches" then prune_caches
       when "prune-buildkit" then prune_buildkit
       when "tick" then tick
@@ -106,12 +115,12 @@ module Bench
         summarize(kase, lane, record)
         return 0 unless failed?(record)
 
-        @out.puts "::error title=#{kase.id} #{lane.name} #{record["phase"]}::exit_status=#{record["exit_status"]} output_ok=#{record["output_ok"].inspect}" if ENV["GITHUB_ACTIONS"] == "true"
+        @out.puts "::error title=#{kase.id} #{lane.name} #{record["phase"]}::exit_status=#{record["exit_status"]} output_ok=#{record["output_ok"].inspect}#{" cache_save=#{record["cache_save"]}" if record["cache_save"]}" if ENV["GITHUB_ACTIONS"] == "true"
         1
       end
 
       def failed?(record)
-        record["exit_status"].nonzero? || record["output_ok"] == false
+        record["exit_status"].nonzero? || record["output_ok"] == false || record["cache_save"] == "failed"
       end
 
       def probe
@@ -234,12 +243,23 @@ module Bench
           next unless job["conclusion"]
 
           record["job_conclusion"] = job["conclusion"]
-          record["post_job_save_seconds"] ||= post_job_save_seconds(Bench.gh("api", "--allow-escape-sequences", "repos/#{repo}/actions/jobs/#{job["id"]}/logs"), lane.post_job_save)
+          unless record.key?("post_job_save_seconds")
+            log = Bench.gh("api", "--allow-escape-sequences", "repos/#{repo}/actions/jobs/#{job["id"]}/logs")
+            record["post_job_save_seconds"] = post_job_save_seconds(log, lane.post_job_save)
+            record["cache_save"] ||= post_job_cache_save(log)
+          end
           record.delete("post_job_save_seconds") if record["post_job_save_seconds"].nil?
+          record.delete("cache_save") if record["cache_save"].nil?
           File.write(path, JSON.pretty_generate(record) + "\n")
-          @out.puts "#{record["adapter_command"]}/#{record["case"]} #{record["lane"]} #{record["runner"]}: job #{record["job_conclusion"]}, post-job save #{record.key?("post_job_save_seconds") ? "#{record["post_job_save_seconds"]}s" : "unmeasured"}"
+          @out.puts "#{record["adapter_command"]}/#{record["case"]} #{record["lane"]} #{record["runner"]}: job #{record["job_conclusion"]}, post-job save #{record.key?("post_job_save_seconds") ? "#{record["post_job_save_seconds"]}s" : "unmeasured"}, " \
+                    "cache save #{record["cache_save"] || "unrecorded"}"
         end
         0
+      end
+
+      def post_job_cache_save(log)
+        post = log.lines.drop_while { !it.include?("Post job cleanup.") }.join
+        POST_JOB_CACHE_SAVES.find { |_, pattern| post.match?(pattern) }&.first
       end
 
       def restored_keys
@@ -258,6 +278,26 @@ module Bench
             record["cache_restored_key"] = key
             File.write(path, JSON.pretty_generate(record) + "\n")
             @out.puts "#{kase.id} #{lane.name} #{record["runner"]} step #{record["step"]}: restored #{key}"
+          end
+        end
+        0
+      end
+
+      def cache_saves
+        options = parse(defaults)
+        repo = ENV.fetch("GITHUB_REPOSITORY") { raise Error, "cache-saves needs GITHUB_REPOSITORY" }
+        pending = result_records(options[:results]).select { |_, record, _, lane| lane.post_job_save.any? && record["phase"] != "warm" && !record.key?("cache_save") }
+        pending.group_by { |_, record, _, _| record["run_url"].to_s[%r{/runs/(\d+)\z}, 1] }.each do |run_id, group|
+          next unless run_id
+
+          jobs = run_jobs(repo, run_id)
+          group.each do |path, record, kase, lane|
+            job = record_job(jobs, record, kase, lane) or next
+            log = (Bench.gh("api", "--allow-escape-sequences", "repos/#{repo}/actions/jobs/#{job["id"]}/logs") rescue nil) or next
+            saved = post_job_cache_save(log) or next
+            record["cache_save"] = saved
+            File.write(path, JSON.pretty_generate(record) + "\n")
+            @out.puts "#{kase.id} #{lane.name} #{record["runner"]} #{[record["phase"], record["step"]].compact.join(" ")}: cache save #{saved}"
           end
         end
         0
@@ -481,7 +521,7 @@ module Bench
 
       def summarize(kase, lane, record)
         @out.puts "#{kase.id} #{lane.name} #{[record["phase"], record["step"]].compact.join(" ")}: " \
-                  "#{record["seconds"]}s exit=#{record["exit_status"]} output_ok=#{record["output_ok"].inspect} " \
+                  "#{record["seconds"]}s exit=#{record["exit_status"]} output_ok=#{record["output_ok"].inspect} #{"cache_save=#{record["cache_save"]} " if record["cache_save"]}" \
                   "machine=#{record["machine"].inspect} cpu=#{record.dig("observed", "machine", "cpu").inspect}"
       end
 

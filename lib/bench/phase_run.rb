@@ -59,8 +59,12 @@ module Bench
       lane.finish(phase).all? { shell(it, chdir: build_dir) } ? 0 : 1
     end
 
+    def stop
+      save_state(state.slice("monotonic", "started_at").merge("stopped" => Process.clock_gettime(Process::CLOCK_MONOTONIC)))
+    end
+
     def record(exit_status)
-      seconds = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - state.fetch("monotonic")).round(3)
+      seconds = (state.fetch("stopped") { Process.clock_gettime(Process::CLOCK_MONOTONIC) } - state.fetch("monotonic")).round(3)
       write_record(started_at: state.fetch("started_at"), seconds:, exit_status:)
     end
 
@@ -218,6 +222,7 @@ module Bench
           **({ "cache_source" => JSON.parse(@env.fetch("BENCH_CACHE_SOURCE")) } if phase == "sample" && lane.reads && @env["BENCH_CACHE_SOURCE"]),
           "cache_restored_key" => (@env["BENCH_CACHE_RESTORED_KEY"] unless @env["BENCH_CACHE_RESTORED_KEY"].to_s.empty?),
           **({ "cache_restore_tracked" => true } if @env["BENCH_CACHE_RESTORE_TRACKED"] == "true"),
+          **({ "cache_save" => @env["BENCH_CACHE_SAVE"] } unless @env["BENCH_CACHE_SAVE"].to_s.empty?),
           "repo" => kase.repo,
           "sha" => sha,
           "seconds" => seconds,
