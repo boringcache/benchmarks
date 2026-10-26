@@ -1,0 +1,41 @@
+{
+  "adapter_command": "cargo",
+  "case": "deno",
+  "lane": "depot-cache",
+  "provider": "depot",
+  "level": "base",
+  "capabilities": [
+    "compiler-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 24,
+  "scope": "depot-cache-github-rolling-2",
+  "cache_scope": "depot-cache-github-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "denoland/deno",
+  "sha": "e7b39ebd55c85aaf6a29290c1f5a99e2e21e09dd",
+  "seconds": 1547.828,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V45 96-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "24211b318abb1c0431d4e4fce12dac560c4cf677",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/40317327599",
+  "attempt": 1,
+  "started_at": "2026-10-26T11:46:09Z"
+}
