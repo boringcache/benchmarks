@@ -1,0 +1,42 @@
+{
+  "adapter_command": "pants",
+  "case": "backend-ai",
+  "lane": "depot-cache",
+  "provider": "depot",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 239,
+  "scope": "depot-cache-github-rolling",
+  "cache_scope": "depot-cache-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "pants-backend-ai-depot-cache-github-rolling-238",
+  "cache_restore_tracked": true,
+  "repo": "lablup/backend.ai",
+  "sha": "85d06a14e9272c27c4e336e6dc411d4d9e717c99",
+  "seconds": 113.443,
+  "cache_save_timing": "in-phase",
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "b7d60303a642e3beafe9c0d5b618ce69002c4453",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/40446027613",
+  "attempt": 1,
+  "started_at": "2026-10-27T03:47:36Z"
+}
