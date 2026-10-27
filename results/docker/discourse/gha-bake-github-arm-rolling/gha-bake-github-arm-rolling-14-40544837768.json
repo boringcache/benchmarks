@@ -1,0 +1,51 @@
+{
+  "adapter_command": "docker",
+  "case": "discourse",
+  "lane": "gha-bake",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "layers"
+  ],
+  "runner": "github-arm",
+  "runner_label": "ubuntu-24.04-arm",
+  "machine": "github arm 4c",
+  "phase": "rolling",
+  "step": 14,
+  "scope": "gha-bake-github-arm-rolling",
+  "cache_scope": "gha-bake-github-arm-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "discourse/discourse_docker",
+  "sha": "6da30173612c18ace37684ea1391a622b693da06",
+  "seconds": 1039.517,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Neoverse-N2",
+      "cores": 4
+    },
+    "buildx_builder": {
+      "name": "builder-d81feabd-eb41-4834-9a96-df0f8236622e",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-d81feabd-eb41-4834-9a96-df0f8236622e0",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "3025aa7949b26606ca45173bbe37ca46cf1823d6",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/40544837768",
+  "attempt": 1,
+  "started_at": "2026-10-27T16:51:28Z"
+}
