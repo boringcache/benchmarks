@@ -1,0 +1,45 @@
+{
+  "name": "verify-posthog-uv-namespace-4-boringcache",
+  "kind": "verify",
+  "case": "posthog-uv",
+  "tool": "uv",
+  "repo": "PostHog/posthog",
+  "sha": "582cbcd576b94d016f228628cb251bf49d3ca4df",
+  "before_sha": "86b8aa0e7fd02b6203aca88ece559a43e15320aa",
+  "after_sha": "582cbcd576b94d016f228628cb251bf49d3ca4df",
+  "lockfile": "uv.lock",
+  "lane": "boringcache",
+  "runner": "namespace-4",
+  "machine": "namespace 4c",
+  "producer": "namespace-4",
+  "cache_backend": "boringcache",
+  "key": "deps-40445016501-posthog-uv-namespace-4",
+  "run_id": "40445016501",
+  "step": 0,
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/40445016501",
+  "recorded_at": "2026-10-27T03:42:45Z",
+  "versions": {
+    "boringcache": "1.44.0"
+  },
+  "observed": {
+    "cpu": "AMD EPYC",
+    "cores": 4,
+    "disk_free_bytes": 99236958208
+  },
+  "auth_seconds": 0.288,
+  "restore": {
+    "seconds": 14.775,
+    "network_bytes": 1010879508,
+    "step_ok": true,
+    "ok": true
+  },
+  "exit_status": 0,
+  "output_ok": true,
+  "cache": {
+    "bytes": 3582252110,
+    "files": 66757
+  },
+  "cache_restored_key": "",
+  "harness_commit": "fdacbf34f146d72cf4ce965e43f1beea1ce33d04"
+}
