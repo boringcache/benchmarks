@@ -1,7 +1,6 @@
 --- a/PostHog.Dockerfile
 +++ b/PostHog.Dockerfile
-@@ -62,5 +62,10 @@
- 
+@@ -63,4 +63,9 @@
  COPY frontend/ frontend/
 -RUN bin/turbo --filter=@posthog/frontend build
 +RUN --mount=type=cache,id=posthog-turbo,target=/code/.turbo/cache \

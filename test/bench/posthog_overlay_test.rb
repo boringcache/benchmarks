@@ -54,6 +54,23 @@ class PosthogOverlayTest < Minitest::Test
     assert_includes File.read(File.join(@dir, "overlay/PostHog.Dockerfile")), "FROM node:25 AS frontend-build"
   end
 
+  def test_preparation_preserves_product_copies_before_the_frontend_build
+    source = SOURCE.sub("COPY frontend/ frontend/", "COPY products/ products/\nCOPY frontend/ frontend/")
+    File.write(File.join(@dir, "upstream/Dockerfile"), source)
+
+    output, status = prepare
+    assert status.success?, output
+    generated = File.read(File.join(@dir, "overlay/PostHog.Dockerfile"))
+    assert_includes generated, "COPY products/ products/\nCOPY frontend/ frontend/"
+    assert_equal 2, generated.scan("--mount=type=cache,id=posthog-turbo").size
+    assert_equal 2, generated.scan("--mount=type=secret,id=boringcache-tool-cache-env").size
+    assert_equal source, File.read(File.join(@dir, "upstream/Dockerfile"))
+
+    output, status = Open3.capture2e("git", "apply", "--reverse", "--no-index", "--directory=overlay", "overlay/cache.patch", chdir: @dir)
+    assert status.success?, output
+    assert_equal source, File.read(File.join(@dir, "overlay/PostHog.Dockerfile"))
+  end
+
   def test_preparation_fails_when_upstream_changes_the_patched_build_command
     File.write(File.join(@dir, "upstream/Dockerfile"), SOURCE.sub("RUN bin/turbo", "RUN pnpm exec turbo"))
 
