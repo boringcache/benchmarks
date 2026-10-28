@@ -38,6 +38,14 @@ Current procedures and comparison limits are in [tools/README.md](tools/README.m
 
 The superseded measurements are available in [Git history](https://github.com/boringcache/benchmarks/tree/3e705f46e31638de5e323480445b29a92cce3df4/archive). They are not inputs to the current scheduler or report.
 
+## Stopped ad hoc cases
+
+| Case | Date | Outcome |
+| --- | --- | --- |
+| Docker Vocion | 2026-10-28 | Removed from the rolling schedule at the user’s request. Definitions and measurements remain in `tools/docker/vocion` and `results/docker/vocion`. Last completed publication run: [40686377453](https://github.com/boringcache/benchmarks/actions/runs/40686377453). Filesystem diagnostic [40676640825](https://github.com/boringcache/benchmarks/actions/runs/40676640825) stopped; its dedicated workflow is disabled. |
+| Docker Eclipse OpenSOVD | 2026-10-28 | Removed from the rolling schedule at the user’s request. Definitions and measurements remain in `tools/docker/opensovd` and `results/docker/opensovd`. Last completed run: [40673476105](https://github.com/boringcache/benchmarks/actions/runs/40673476105). |
+| Cargo Bevy Explorer | 2026-10-28 | Dropped because [the upstream repository](https://github.com/decentraland/bevy-explorer) is archived; GitHub API verified `archived: true` on this date. Removed from the rolling schedule. Definitions and measurements remain in `tools/cargo/bevy-explorer` and `results/cargo/bevy-explorer`. Last completed run: [40686361441](https://github.com/boringcache/benchmarks/actions/runs/40686361441). |
+
 ## Removed cases
 
 On 2026-10-19: Cargo `zed-namespace`, which rolled its own series on Namespace 4c, replaced by the nightly Zed reader on Namespace 4c. Its definition is in [Git history](https://github.com/boringcache/benchmarks/tree/3a8abe91073cc636c281b9a2a54be6dc8fea1722/tools/cargo/zed-namespace).
