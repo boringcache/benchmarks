@@ -38,8 +38,7 @@ The 0.18.0 and 0.19.0 cold jobs in [run 40670513475](https://github.com/boringca
 ended after runner shutdown signals at 10:48:34 and 10:55:10 UTC on October 28.
 Diagnostics upload was skipped, so those attempts have no retained memory
 samples. Both cancelled attempts are preserved. Follow-ups use the same source,
-tools and runner with the added live memory log. Each version gets a separate
-workflow so one cancelled runner does not prevent another version's warm job:
+tools and runner with the added live memory log. Each follow-up version gets a separate workflow:
 
 ```sh
 for lane in boringcache-sccache-018 boringcache-sccache-019; do
@@ -47,4 +46,22 @@ for lane in boringcache-sccache-018 boringcache-sccache-019; do
     -f tool=Rust/Cargo -f project=cargo/zed -f mode=fresh \
     -f lane="$lane" -f cli=v1.45.0
 done
+```
+
+The 0.17.0 cold job in the initial comparison passed. All three warm jobs started;
+the 0.18.0 and 0.19.0 warm jobs therefore follow interrupted cold builds.
+
+A separate experimental lane, `boringcache-sccache-019-client`, sets
+`SCCACHE_CLIENT_SIDE=1`. [Sccache 0.19.0 documents this mode](https://github.com/mozilla/sccache/blob/v0.19.0/docs/Architecture.md#client-side-mode-sccache_client_side):
+the invoking process runs the compile pipeline while the daemon handles cache
+storage and statistics. Source, tool versions, runner, build command and cache
+plan match the 0.19.0 server-mode lane. Preparation rejects `SCCACHE_ERROR_LOG`,
+which would cause sccache to ignore client-side mode. No distributed compiler
+scheduler is configured. This comparison tests execution mode; it does not
+assume that client-side mode reduces memory use.
+
+```sh
+gh workflow run project.yml --ref sccache-comparison \
+  -f tool=Rust/Cargo -f project=cargo/zed -f mode=fresh \
+  -f lane=boringcache-sccache-019-client -f cli=v1.45.0
 ```

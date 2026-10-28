@@ -1,0 +1,11 @@
+provider = "boringcache"
+level = "plus"
+plan = "plus"
+label = "boringcache plus sccache 0.19.0 client-side"
+experimental = true
+prepare = ['sccache --version && test "$(sccache --version)" = "sccache 0.19.0" && test "$SCCACHE_CLIENT_SIDE" = "1" && test -z "${SCCACHE_ERROR_LOG:-}"']
+
+[env]
+BORINGCACHE_ARCHIVE_SELECTIVE_READS = "1"
+MISE_SCCACHE_VERSION = "0.19.0"
+SCCACHE_CLIENT_SIDE = "1"

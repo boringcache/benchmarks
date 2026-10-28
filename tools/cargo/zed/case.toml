@@ -21,6 +21,7 @@ CXX = "clang++"
 boringcache-sccache-017 = ["github"]
 boringcache-sccache-018 = ["github"]
 boringcache-sccache-019 = ["github"]
+boringcache-sccache-019-client = ["github"]
 boringcache-cargo = ["github", "local"]
 boringcache-cargo-plus = ["github", "local"]
 gha = ["github"]
