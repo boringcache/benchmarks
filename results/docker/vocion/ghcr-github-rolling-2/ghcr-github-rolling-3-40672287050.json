@@ -1,0 +1,52 @@
+{
+  "adapter_command": "docker",
+  "case": "vocion",
+  "lane": "ghcr",
+  "provider": "github-container-registry",
+  "level": "base",
+  "capabilities": [
+    "layers"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 3,
+  "scope": "ghcr-github-rolling-2",
+  "cache_scope": "ghcr-github-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "vocion/vocion-core",
+  "sha": "ca40a265c2ce2361a352dd1addcede4c5679c95d",
+  "seconds": 682.025,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    },
+    "image_platform": "linux/amd64",
+    "buildx_builder": {
+      "name": "builder-5543b1bd-4dde-4f1f-82a5-5df64969d2ff",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-5543b1bd-4dde-4f1f-82a5-5df64969d2ff0",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "30ee256d2af30184c3f2e506ef7c71fac644a6e4",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/40672287050",
+  "attempt": 1,
+  "started_at": "2026-10-28T10:28:34Z"
+}
