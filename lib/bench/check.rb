@@ -70,6 +70,7 @@ module Bench
         problems << "#{kase.id}: branch is required" if kase.branch.to_s.empty?
         problems << "#{kase.id}: start_sha must be a full 40-character sha" unless kase.start_sha.to_s.match?(SHA)
         problems << "#{kase.id}: prepare must be a list of commands" unless kase.prepare.is_a?(Array)
+        problems << "#{kase.id}: setup must list supported setup names" unless kase.setup.is_a?(Array) && (kase.setup - Lane::SETUPS).empty?
         problems << "#{kase.id}: check must be a command" unless kase.check.is_a?(String)
         problems << "#{kase.id}: [runs] lists no lanes" if kase.runs.empty?
         problems << "#{kase.id}: exclude must be a list of paths" unless kase.exclude.is_a?(Array) && kase.exclude.all?(String)
@@ -108,7 +109,7 @@ module Bench
             "#{kase.id}: #{lane_name} cannot run on #{runner}"
           end
         end
-        problems << "#{kase.id}: #{lane_name} mounts the Namespace cache volume without cache paths" if lane.setup.include?("namespace-cache") && lane.paths.empty? && kase.shared.empty?
+        problems << "#{kase.id}: #{lane_name} mounts the Namespace cache volume without cache paths" if kase.setups(lane).include?("namespace-cache") && lane.paths.empty? && kase.shared.empty?
         problems += (runners - Array(kase.runs[lane.seed])).map { "#{kase.id}: #{lane_name} seeds from #{lane.seed}, which does not run on #{it}" } if lane.seed
         problems << "#{kase.id}: #{lane_name} reads #{lane.reads["lane"]} on #{lane.reads["runner"]}, which this case does not run" if lane.reads.is_a?(Hash) && !Array(kase.runs[lane.reads["lane"]]).include?(lane.reads["runner"])
         return problems unless lane.boringcache?

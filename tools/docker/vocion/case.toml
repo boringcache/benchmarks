@@ -1,12 +1,14 @@
 repo = "vocion/vocion-core"
 branch = "main"
 start_sha = "f87b683e434d056355ca97015aa908aeed5c8ed4"
-rolling_series = 2
+rolling_series = 3
+setup = ["ghcr"]
 prepare = [
   "ruby overlay/prepare.rb",
+  "ruby overlay/publish.rb prepare",
   "sudo fallocate -l 8G /mnt/vocion-swapfile && sudo chmod 600 /mnt/vocion-swapfile && sudo mkswap /mnt/vocion-swapfile && sudo swapon /mnt/vocion-swapfile && free -h",
 ]
-check = "docker image inspect vocion-benchmark:local && docker run --rm --entrypoint sh vocion-benchmark:local -c 'test -s /app/packages/core/server.js && test -d /app/packages/core/.next/static'"
+check = "ruby overlay/publish.rb check"
 
 [runs]
 boringcache-docker = ["github"]
@@ -14,3 +16,4 @@ boringcache-docker-plus = ["github"]
 gha = ["github"]
 gha-plus = ["github"]
 ghcr = ["github"]
+ghcr-min = ["github"]

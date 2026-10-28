@@ -3,6 +3,17 @@ require_relative "test_helper"
 class CLITest < Minitest::Test
   include BenchFixture
 
+  def test_case_setup_applies_to_every_lane_without_duplicates
+    path = "tools/demo/app/case.toml"
+    write path, "setup = [\"ghcr\"]\n" + File.read(File.join(@root, path))
+    path = "tools/demo/lanes/remote.toml"
+    write path, "setup = [\"buildx\", \"ghcr\"]\n" + File.read(File.join(@root, path))
+    setups = matrix("app").to_h { [it.fetch("lane"), it.fetch("setup")] }
+    assert_equal "ghcr", setups.fetch("boringcache-demo")
+    assert_equal "ghcr", setups.fetch("gha")
+    assert_equal "ghcr buildx", setups.fetch("remote")
+  end
+
   def test_matrix_lists_every_lane_and_runner_of_a_project_without_local
     assert_equal [
       { "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "", "label" => "github 4c · boringcache", "step" => "", "sha" => "", "cache_scope" => "", "continues" => "", "cadence" => "", "cli" => "" },

@@ -103,6 +103,7 @@ gha = ["github"]
 | `rolling_stride` | optional integer above 1: each rolling step moves this many first-parent commits, for upstreams that land more commits a day than a step can build; every lane builds the same commits |
 | `directory` | where the build command runs, relative to the plan directory, default `.` |
 | `prepare` | untimed commands before the build |
+| `setup` | shared setup names applied to every lane of this case, such as `ghcr` when every lane publishes its output image |
 | `check` | untimed output check after the build |
 | `shared` | paths every lane caches (dependencies), relative to the run directory |
 | `exclude` | paths under a cached path that Actions cache lanes leave out, relative to the run directory, matching the `exclude` of the BoringCache plan entry |

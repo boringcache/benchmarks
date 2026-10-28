@@ -1,0 +1,10 @@
+provider = "github-container-registry"
+label = "ghcr min"
+level = "base"
+actions_only = true
+runners = ["github", "github-arm"]
+setup = ["buildx", "ghcr"]
+args = ["--cache-from", "type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}", "--cache-to", "type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE},mode=min"]
+
+[warm]
+args = ["--cache-from", "type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}"]

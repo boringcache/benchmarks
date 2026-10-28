@@ -258,7 +258,23 @@ module Bench
         machine = { (lane.machine ? "runner_machine" : "machine") => { "cpu" => cpu_model, "cores" => Etc.nprocessors }.compact }
         return machine unless kase.tool.name == "docker"
 
-        { **machine, "image_platform" => image_platform, "buildx_builder" => buildx_builder }.compact
+        { **machine, "image_platform" => image_platform, "image_publication" => image_publication, "buildx_builder" => buildx_builder }.compact
+      end
+
+      def image_publication
+        command = adapter.fetch("command")
+        return unless command.include?("--push")
+
+        metadata = command.each_cons(2).find { |flag, _| flag == "--metadata-file" }&.last
+        tag = command.each_cons(2).find { |flag, _| %w[--tag -t].include?(flag) }&.last
+        return unless metadata && tag
+
+        path = File.expand_path(metadata, build_dir)
+        return unless File.file?(path)
+
+        { "tag" => tag, "digest" => JSON.parse(File.read(path)).fetch("containerimage.digest") }
+      rescue JSON::ParserError, KeyError
+        nil
       end
 
       def cpu_model

@@ -9,7 +9,9 @@ command = [
   "docker", "buildx", "build",
   "--file", "overlay/Dockerfile",
   "--build-arg", "NEXT_PUBLIC_APP_URL=https://example.com",
+  "--build-arg", "VOCION_BUILD_FS_CACHE=0",
   "--provenance", "false",
   "--tag", "vocion-benchmark:local",
-  "--load", "upstream",
+  "--metadata-file", "overlay/image-metadata.json",
+  "--push", "upstream",
 ]

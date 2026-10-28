@@ -43,6 +43,14 @@ module Bench
       config.fetch("prepare", [])
     end
 
+    def setup
+      config.fetch("setup", [])
+    end
+
+    def setups(lane)
+      [*setup, *lane.setup].uniq
+    end
+
     def check
       config.fetch("check", "")
     end

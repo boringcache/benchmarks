@@ -155,7 +155,7 @@ module Bench
           kase.runs.flat_map do |lane_name, runners|
             lane = kase.tool.lane(lane_name)
             Array(runners).select { planned?(kase, lane, it, rolling, rerun) }.map do |runner|
-              { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets, "setup" => lane.setup.join(" "),
+              { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets, "setup" => kase.setups(lane).join(" "),
                 "label" => job_label(kase, lane, runner),
                 "step" => step&.to_s || "", "sha" => sha || "", "cache_scope" => rolling&.read_scope(lane, runner) || "", "continues" => rolling&.continues?(lane, runner) ? "true" : "",
                 "cadence" => rolling && kase.nightly?(lane.name, runner) ? "nightly" : "", "cli" => options[:cli] || @catalog.case_cli(kase) || "" }
@@ -207,7 +207,7 @@ module Bench
               raise Error, "unknown runner #{runner}" unless @catalog.runners.key?(runner)
               raise Error, "samples require an Actions runner" if runner == "local"
               { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets,
-                "setup" => lane.setup.join(" "), "label" => job_label(kase, lane, runner), "step" => source.fetch("step").to_s, "sha" => sha,
+                "setup" => kase.setups(lane).join(" "), "label" => job_label(kase, lane, runner), "step" => source.fetch("step").to_s, "sha" => sha,
                 "cache_scope" => lane.reads ? source.fetch("cache_scope") : "#{lane.name}-#{runner}-sample", "continues" => "true", "cadence" => "sample",
                 "source" => JSON.generate(source), "cli" => @catalog.case_cli(kase) || "" }
             end
@@ -245,8 +245,8 @@ module Bench
       def restored_keys
         options = parse(defaults)
         repo = ENV.fetch("GITHUB_REPOSITORY") { raise Error, "restored-keys needs GITHUB_REPOSITORY" }
-        pending = result_records(options[:results]).select do |_, record, _, lane|
-          lane.setup.include?("cache-dance") && record["phase"] == ROLLING && record["cache_restore_tracked"] && record.key?("cache_restored_key") && record["cache_restored_key"].nil?
+        pending = result_records(options[:results]).select do |_, record, kase, lane|
+          kase.setups(lane).include?("cache-dance") && record["phase"] == ROLLING && record["cache_restore_tracked"] && record.key?("cache_restored_key") && record["cache_restored_key"].nil?
         end
         pending.group_by { |_, record, _, _| record["run_url"].to_s[%r{/runs/(\d+)\z}, 1] }.each do |run_id, group|
           next unless run_id
@@ -398,7 +398,7 @@ module Bench
           outputs.merge!("tool" => kase.tool.name, "provider" => lane.provider, "build_dir" => phase_run.build_dir,
                          "restore_key" => restore_keys.join("\n"), "cache_key" => [base_key, phase_run.step, (ENV["GITHUB_RUN_ID"] if phase_run.phase == "sample")].compact.join("-"),
                          "artifact_key" => ["#{kase.id.tr("/", "-")}-#{phase_run.scope}", phase_run.step].compact.join("-"),
-                         "cache_paths" => phase_run.cache_paths.join("\n"), "cache_dance_map" => JSON.generate(lane.setup.include?("cache-dance") ? phase_run.cache_dance_map(File.join(ENV.fetch("RUNNER_TEMP", "/tmp"), "cache-dance")) : {}), "setup" => lane.setup.join(" "), "boringcache_version" => @catalog.versions.fetch("boringcache"))
+                         "cache_paths" => phase_run.cache_paths.join("\n"), "cache_dance_map" => JSON.generate(kase.setups(lane).include?("cache-dance") ? phase_run.cache_dance_map(File.join(ENV.fetch("RUNNER_TEMP", "/tmp"), "cache-dance")) : {}), "setup" => kase.setups(lane).join(" "), "boringcache_version" => @catalog.versions.fetch("boringcache"))
           File.open(ENV.fetch("GITHUB_ENV"), "a") { |file| phase_run.exported_env.each { |key, value| file.puts "#{key}=#{value}" } }
         end
         File.open(ENV.fetch("GITHUB_OUTPUT"), "a") { |file| outputs.each { |key, value| file.puts "#{key}<<BENCH_EOF\n#{value}\nBENCH_EOF" } }
