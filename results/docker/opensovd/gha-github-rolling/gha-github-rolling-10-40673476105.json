@@ -1,0 +1,52 @@
+{
+  "adapter_command": "docker",
+  "case": "opensovd",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "layers"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 10,
+  "scope": "gha-github-rolling",
+  "cache_scope": "gha-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "eclipse-opensovd/classic-diagnostic-adapter",
+  "sha": "5d8d4c063555ea3a28df11f14fbbc0f5fa7c5c3d",
+  "seconds": 215.816,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    },
+    "image_platform": "linux/amd64",
+    "buildx_builder": {
+      "name": "builder-5c26c1b1-8688-4444-8b7b-4dcb5d5898c5",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-5c26c1b1-8688-4444-8b7b-4dcb5d5898c50",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "6c2b980dcb3fa2a08c013175bbaef6be2e35d553",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/40673476105",
+  "attempt": 1,
+  "started_at": "2026-10-28T10:37:39Z"
+}
