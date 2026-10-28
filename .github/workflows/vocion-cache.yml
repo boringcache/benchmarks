@@ -1,0 +1,48 @@
+name: Vocion filesystem cache diagnostic
+
+on:
+  workflow_dispatch:
+    inputs:
+      order:
+        description: Sequential trial order on one runner
+        type: choice
+        options: [forward, reverse]
+        default: forward
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/results/
+      - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8
+        with:
+          ruby-version: '4.0.7'
+      - name: Configure swap
+        run: |
+          sudo fallocate -l 8G /mnt/vocion-swapfile
+          sudo chmod 600 /mnt/vocion-swapfile
+          sudo mkswap /mnt/vocion-swapfile
+          sudo swapon /mnt/vocion-swapfile
+          free -h
+          df -h
+      - name: Compare cache state and storage
+        env:
+          TRIAL_ORDER: ${{ inputs.order }}
+        run: ruby tools/docker/vocion/cache-diagnostic.rb "$RUNNER_TEMP/vocion-cache"
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: vocion-cache-diagnostic-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/vocion-cache/results
+          if-no-files-found: error
+          retention-days: 90
