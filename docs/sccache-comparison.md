@@ -65,3 +65,41 @@ gh workflow run project.yml --ref sccache-comparison \
   -f tool=Rust/Cargo -f project=cargo/zed -f mode=fresh \
   -f lane=boringcache-sccache-019-client -f cli=v1.45.0
 ```
+
+## Compiler jobserver probe
+
+On October 28, a local macOS ARM64 probe used Rust 1.98.1, stock sccache
+binaries, the local disk cache, and a dependency-free library plus executable.
+`cargo build --release --offline -j 1` invoked a `rustc` shim that recorded
+`CARGO_MAKEFLAGS` before executing the real compiler. BoringCache was not in
+this probe. All four builds exited successfully.
+
+| Sccache | Execution mode | Final executable compiler's `CARGO_MAKEFLAGS` |
+|---|---|---|
+| 0.17.0 | Server | Present, with jobserver file descriptors |
+| 0.18.0 | Server | Unset |
+| 0.19.0 | Server | Unset |
+| 0.19.0 | Client | Unset |
+
+The actual library compilation received jobserver settings in every mode. The
+0.18.0 and 0.19.0 dependency/output probes did not.
+
+In [sccache 0.19.0's fallback compilation](https://github.com/mozilla/sccache/blob/v0.19.0/src/commands.rs#L638),
+`new_command_sync` runs an unhandled compilation without `share_jobserver()`.
+[Process spawning](https://github.com/mozilla/sccache/blob/v0.19.0/src/mock_command.rs#L275)
+removes the inherited jobserver environment and restores it only when sharing
+is requested. Client-side mode uses the same fallback. This establishes loss
+of compiler jobserver configuration independently of BoringCache; it does not
+yet establish the cause of the Zed runner shutdowns.
+
+Follow-up Zed runs:
+
+- [0.18.0 with live memory samples](https://github.com/boringcache/benchmarks/actions/runs/40676156716)
+- [0.19.0 with live memory samples](https://github.com/boringcache/benchmarks/actions/runs/40676167996)
+- [0.19.0 client-side mode](https://github.com/boringcache/benchmarks/actions/runs/40677590043)
+
+The passing 0.17.0 cold job retained 499 five-second samples. The largest
+observed `rustc` RSS was 8,574,244 KiB (8.18 GiB); the lowest observed system
+`MemAvailable` was 6,937,780 KiB (6.62 GiB). The machine reported 16,367,524 KiB
+of RAM and 3,145,724 KiB of swap. These are sampled observations, not exact
+high-water marks.
