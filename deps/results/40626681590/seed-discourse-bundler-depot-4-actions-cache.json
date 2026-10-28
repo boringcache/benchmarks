@@ -1,0 +1,50 @@
+{
+  "name": "seed-discourse-bundler-depot-4-actions-cache",
+  "kind": "seed",
+  "case": "discourse-bundler",
+  "tool": "bundler",
+  "repo": "discourse/discourse",
+  "sha": "bab418487a463eede4c7d2f6415fe2eb966a3883",
+  "before_sha": "bab418487a463eede4c7d2f6415fe2eb966a3883",
+  "after_sha": "bbb722e4322eba62306788b6da410655e4d4d343",
+  "lockfile": "Gemfile.lock",
+  "lane": "actions-cache",
+  "runner": "depot-4",
+  "machine": "depot 4c",
+  "producer": "depot-4",
+  "cache_backend": "depot",
+  "key": "deps-40626681590-discourse-bundler-depot-4",
+  "run_id": "40626681590",
+  "step": 0,
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/40626681590",
+  "recorded_at": "2026-10-28T03:27:37Z",
+  "versions": {
+    "actions_cache": "6.1.0"
+  },
+  "observed": {
+    "cpu": "AMD EPYC 9R45 96-Core Processor",
+    "cores": 4,
+    "disk_free_bytes": 97664630784
+  },
+  "install": {
+    "seconds": 35.864,
+    "network_bytes": 287372270,
+    "step_ok": true,
+    "ok": true
+  },
+  "save": {
+    "seconds": 7.51,
+    "network_bytes": 561972822,
+    "step_ok": true,
+    "ok": true
+  },
+  "exit_status": 0,
+  "output_ok": true,
+  "cache": {
+    "bytes": 1168542298,
+    "files": 35440
+  },
+  "cache_restored_key": "",
+  "harness_commit": "f8886313332f1d60430c59d969071c5c00f19748"
+}
