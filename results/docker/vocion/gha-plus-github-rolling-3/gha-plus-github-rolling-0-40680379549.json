@@ -1,0 +1,60 @@
+{
+  "adapter_command": "docker",
+  "case": "vocion",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "capabilities": [
+    "layers",
+    "mount-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 0,
+  "scope": "gha-plus-github-rolling-3",
+  "cache_scope": "gha-plus-github-rolling-3",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "cache_restore_tracked": true,
+  "repo": "vocion/vocion-core",
+  "sha": "f87b683e434d056355ca97015aa908aeed5c8ed4",
+  "seconds": 1039.69,
+  "cache_save_timing": "post-job",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) 6973P-C",
+      "cores": 4
+    },
+    "image_platform": "linux/amd64",
+    "image_publication": {
+      "tag": "ghcr.io/boringcache/benchmarks-vocion/docker-vocion-gha-plus-github-rolling-3:f87b683e434d056355ca97015aa908aeed5c8ed4",
+      "digest": "sha256:343c18008e122499222322e6b7d590c833d4513b71c5f26c17c377665acf06b7"
+    },
+    "buildx_builder": {
+      "name": "builder-fbc6b909-1564-4038-8c85-ab1137f7a896",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-fbc6b909-1564-4038-8c85-ab1137f7a8960",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "6388d76cdb96dd7830fd1626d408f1748020427b",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/40680379549",
+  "attempt": 1,
+  "started_at": "2026-10-28T11:42:33Z",
+  "job_conclusion": "success",
+  "post_job_save_seconds": 191.633
+}
