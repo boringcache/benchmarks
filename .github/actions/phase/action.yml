@@ -271,6 +271,12 @@ runs:
       env:
         PROVIDER: ${{ steps.prepare.outputs.provider }}
       run: |
+        if [ -f "$RUNNER_TEMP/diagnostics/samples.log" ]; then
+          cat "$RUNNER_TEMP/diagnostics/machine.txt"
+          tail -n +1 -f "$RUNNER_TEMP/diagnostics/samples.log" &
+          samples_pid=$!
+          trap 'kill "$samples_pid" 2>/dev/null || true; wait "$samples_pid" 2>/dev/null || true' EXIT
+        fi
         if [ "$PROVIDER" = boringcache ]; then
           boringcache ci run --oidc-provider github-actions -- bundle exec bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
         else

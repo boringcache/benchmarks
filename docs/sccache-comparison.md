@@ -19,6 +19,9 @@ select sccache before installation. Preparation checks the installed version.
 The sampler records observed RSS maxima; it does not measure exact process
 high-water marks between samples. Each job retains its machine description,
 samples, build log and result. Failed phases remain part of the comparison.
+The build step also streams machine details and samples into its job log,
+so readings already received by GitHub remain available if the runner stops
+before it can upload diagnostics. Build exit status is preserved.
 
 ```sh
 gh workflow run project.yml --ref sccache-comparison \
@@ -30,3 +33,18 @@ gh workflow run project.yml --ref sccache-comparison \
 Branch runs upload artifacts without publishing results to `main`. Experimental
 lanes are excluded from the public report. One sample per version is a screening
 comparison and does not establish repeatable performance differences.
+
+The 0.18.0 and 0.19.0 cold jobs in [run 40670513475](https://github.com/boringcache/benchmarks/actions/runs/40670513475)
+ended after runner shutdown signals at 10:48:34 and 10:55:10 UTC on October 28.
+Diagnostics upload was skipped, so those attempts have no retained memory
+samples. Both cancelled attempts are preserved. Follow-ups use the same source,
+tools and runner with the added live memory log. Each version gets a separate
+workflow so one cancelled runner does not prevent another version's warm job:
+
+```sh
+for lane in boringcache-sccache-018 boringcache-sccache-019; do
+  gh workflow run project.yml --ref sccache-comparison \
+    -f tool=Rust/Cargo -f project=cargo/zed -f mode=fresh \
+    -f lane="$lane" -f cli=v1.45.0
+done
+```
