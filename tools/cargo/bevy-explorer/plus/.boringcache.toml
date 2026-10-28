@@ -1,0 +1,33 @@
+workspace = "boringcache/benchmarks"
+
+[entries.cargo-registry-cache]
+tag = "bevy-explorer-cargo-registry-cache"
+
+[entries.cargo-registry-index]
+tag = "bevy-explorer-cargo-registry-index"
+
+[entries.cargo-git-db]
+tag = "bevy-explorer-cargo-git-db"
+
+[entries.cargo-target]
+kind = "cargo-target"
+tag = "bevy-explorer-cargo-target"
+path = "upstream/target"
+
+[profiles.cargo-product]
+entries = ["cargo-registry-cache", "cargo-registry-index", "cargo-git-db", "cargo-target"]
+
+[adapters.sccache]
+fail-on-cache-error = true
+tag = "bevy-explorer-sccache"
+no-git = true
+
+[adapters.cargo]
+fail-on-cache-error = true
+tag = "bevy-explorer-cargo"
+profiles = ["cargo-product"]
+compiler-cache = "sccache"
+target-budget = "25GiB"
+no-git = true
+metadata-hints = ["benchmark=bevy-explorer", "upstream-job=package"]
+command = ["cargo", "build", "--release", "--locked", "--package", "dcl_deno_ipc", "--package", "decentra-bevy"]

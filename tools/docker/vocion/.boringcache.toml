@@ -1,0 +1,15 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+fail-on-cache-error = true
+tag = "vocion-docker"
+no-git = true
+metadata-hints = ["benchmark=vocion", "upstream-job=push-app-image"]
+command = [
+  "docker", "buildx", "build",
+  "--file", "upstream/packages/core/Dockerfile",
+  "--build-arg", "NEXT_PUBLIC_APP_URL=https://example.com",
+  "--provenance", "false",
+  "--tag", "vocion-benchmark:local",
+  "--load", "upstream",
+]

@@ -1,0 +1,11 @@
+repo = "eclipse-opensovd/classic-diagnostic-adapter"
+branch = "main"
+start_sha = "eabb5f40cabf8a2de441400c24f1dddd7fd2e79e"
+prepare = ["cp upstream/testcontainer/cda/Dockerfile overlay/Dockerfile && git apply --no-index --directory=overlay overlay/cache.patch"]
+check = "docker image inspect opensovd-benchmark:local && docker run --rm --entrypoint sh opensovd-benchmark:local -c 'test -x /app/opensovd-cda && test -x /app/entrypoint.sh'"
+
+[runs]
+boringcache-docker = ["github"]
+boringcache-docker-plus = ["github"]
+gha = ["github"]
+gha-plus = ["github"]

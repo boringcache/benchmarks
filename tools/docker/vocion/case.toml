@@ -1,0 +1,11 @@
+repo = "vocion/vocion-core"
+branch = "main"
+start_sha = "f87b683e434d056355ca97015aa908aeed5c8ed4"
+check = "docker image inspect vocion-benchmark:local && docker run --rm --entrypoint sh vocion-benchmark:local -c 'test -s /app/packages/core/server.js && test -d /app/packages/core/.next/static'"
+
+[runs]
+boringcache-docker = ["github"]
+boringcache-docker-plus = ["github"]
+gha = ["github"]
+gha-plus = ["github"]
+ghcr = ["github"]

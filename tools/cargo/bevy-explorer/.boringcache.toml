@@ -1,0 +1,18 @@
+workspace = "boringcache/benchmarks"
+
+[profiles.compiler-only]
+entries = []
+
+[adapters.sccache]
+fail-on-cache-error = true
+tag = "bevy-explorer-sccache"
+no-git = true
+
+[adapters.cargo]
+fail-on-cache-error = true
+tag = "bevy-explorer-cargo"
+profiles = ["compiler-only"]
+compiler-cache = "sccache"
+no-git = true
+metadata-hints = ["benchmark=bevy-explorer", "upstream-job=package"]
+command = ["cargo", "build", "--release", "--locked", "--package", "dcl_deno_ipc", "--package", "decentra-bevy"]

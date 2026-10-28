@@ -1,0 +1,12 @@
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -75,3 +75,3 @@
+     --mount=type=cache,target=/usr/local/cargo/git,sharing=locked \
+-    --mount=type=cache,target=$SCCACHE_DIR,sharing=locked \
++    --mount=type=cache,target=/sccache,sharing=locked \
+     export RUSTFLAGS="$RUSTFLAGS"; \
+@@ -128,3 +128,3 @@
+     --mount=type=cache,target=/usr/local/cargo/git,sharing=locked \
+-    --mount=type=cache,target=$SCCACHE_DIR,sharing=locked \
++    --mount=type=cache,target=/sccache,sharing=locked \
+     export SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH} && \
