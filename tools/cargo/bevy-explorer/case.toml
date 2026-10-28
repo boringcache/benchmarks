@@ -1,17 +1,21 @@
 repo = "decentraland/bevy-explorer"
 branch = "main"
 start_sha = "09a9359f914ac9a2948d4e67dab77c93af0fbbbf"
+rolling_series = 2
 directory = "upstream"
 prepare = [
   "if [ \"${RUNNER_ENVIRONMENT:-}\" = github-hosted ]; then sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL; fi",
   "mise trust && mise install",
-  "sudo apt-get update && sudo apt-get install -y --no-install-recommends libasound2-dev libudev-dev ninja-build clang cmake pkg-config libssl-dev libx11-dev libgl1-mesa-dev libxext-dev libavcodec-dev libavformat-dev libavutil-dev libavfilter-dev libavdevice-dev protobuf-compiler",
+  "sudo apt-get update && sudo apt-get install -y --no-install-recommends libasound2-dev libudev-dev ninja-build clang cmake pkg-config libssl-dev libx11-dev libgl1-mesa-dev libxext-dev libavcodec-dev libavformat-dev libavutil-dev libavfilter-dev libavdevice-dev protobuf-compiler libprotobuf-dev",
+  "\"$PROTOC\" --version && \"$PROTOC\" --proto_path=upstream/crates/dcl_component/src/proto --proto_path=\"$PROTOC_INCLUDE\" --descriptor_set_out=bevy-protos.pb upstream/crates/dcl_component/src/proto/decentraland/sdk/components/asset_load.proto",
   "CARGO_HOME=\"$BENCH_DIR/cef-cargo\" RUSTC_WRAPPER= cargo install export-cef-dir --version 139.8.0+139.0.40 --locked --root cef-tools --target-dir cef-tools-target && cef-tools/bin/export-cef-dir --force \"$CEF_PATH\"",
 ]
 check = "test -x upstream/target/release/decentra-bevy && test -x upstream/target/release/decentra-bevy-cef && test -x upstream/target/release/dcl_deno_ipc && test -z \"$(git -C upstream status --porcelain=v1 --untracked-files=all)\""
 
 [env]
 CARGO_TERM_COLOR = "always"
+PROTOC = "/usr/bin/protoc"
+PROTOC_INCLUDE = "/usr/include"
 CEF_PATH = "${BENCH_DIR}/cef"
 LD_LIBRARY_PATH = "${BENCH_DIR}/cef"
 

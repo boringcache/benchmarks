@@ -7,7 +7,7 @@ no-git = true
 metadata-hints = ["benchmark=vocion", "upstream-job=push-app-image"]
 command = [
   "docker", "buildx", "build",
-  "--file", "upstream/packages/core/Dockerfile",
+  "--file", "overlay/Dockerfile",
   "--build-arg", "NEXT_PUBLIC_APP_URL=https://example.com",
   "--provenance", "false",
   "--tag", "vocion-benchmark:local",
