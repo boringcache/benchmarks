@@ -1,0 +1,10 @@
+provider = "boringcache"
+level = "plus"
+plan = "plus"
+label = "boringcache plus sccache 0.18.0"
+experimental = true
+prepare = ['sccache --version && test "$(sccache --version)" = "sccache 0.18.0"']
+
+[env]
+BORINGCACHE_ARCHIVE_SELECTIVE_READS = "1"
+MISE_SCCACHE_VERSION = "0.18.0"

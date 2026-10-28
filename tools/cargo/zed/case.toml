@@ -18,6 +18,9 @@ CC = "clang"
 CXX = "clang++"
 
 [runs]
+boringcache-sccache-017 = ["github"]
+boringcache-sccache-018 = ["github"]
+boringcache-sccache-019 = ["github"]
 boringcache-cargo = ["github", "local"]
 boringcache-cargo-plus = ["github", "local"]
 gha = ["github"]
