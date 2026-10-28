@@ -1,0 +1,44 @@
+{
+  "adapter_command": "cargo",
+  "case": "bevy-explorer",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 2,
+  "scope": "gha-plus-github-rolling",
+  "cache_scope": "gha-plus-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "cargo-bevy-explorer-gha-plus-github-rolling-1",
+  "cache_restore_tracked": true,
+  "repo": "decentraland/bevy-explorer",
+  "sha": "2c6eec1596f90820640b2c2cd982c37fda0f25aa",
+  "seconds": 104.156,
+  "cache_save_timing": "in-phase",
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "d2b85ada1912086430f8d619a9e565321a9117c7",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/40659660676",
+  "attempt": 1,
+  "started_at": "2026-10-28T08:55:12Z"
+}
