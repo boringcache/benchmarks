@@ -1,0 +1,44 @@
+{
+  "name": "verify-mastodon-bundler-blacksmith-4-actions-cache",
+  "kind": "verify",
+  "case": "mastodon-bundler",
+  "tool": "bundler",
+  "repo": "mastodon/mastodon",
+  "sha": "bcbf3651da6d2e9d9e7966e8e97fb59bbe7665e0",
+  "before_sha": "85cc1449181c774a226ae42ec19dca3a2f7cce26",
+  "after_sha": "bcbf3651da6d2e9d9e7966e8e97fb59bbe7665e0",
+  "lockfile": "Gemfile.lock",
+  "lane": "actions-cache",
+  "runner": "blacksmith-4",
+  "machine": "blacksmith 4c",
+  "producer": "blacksmith-4",
+  "cache_backend": "blacksmith",
+  "key": "deps-40812139234-mastodon-bundler-blacksmith-4",
+  "run_id": "40812139234",
+  "step": 0,
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/40812139234",
+  "recorded_at": "2026-10-29T03:29:10Z",
+  "versions": {
+    "actions_cache": "6.1.0"
+  },
+  "observed": {
+    "cpu": "AMD EPYC",
+    "cores": 4,
+    "disk_free_bytes": 86771154944
+  },
+  "restore": {
+    "seconds": 1.309,
+    "network_bytes": 81723371,
+    "step_ok": true,
+    "ok": true
+  },
+  "exit_status": 0,
+  "output_ok": true,
+  "cache": {
+    "bytes": 190065854,
+    "files": 19550
+  },
+  "cache_restored_key": "deps-40812139234-mastodon-bundler-blacksmith-4-25edb554c0c76b4c",
+  "harness_commit": "816bf13650196c466c53944abec6cf870d2c0d64"
+}
