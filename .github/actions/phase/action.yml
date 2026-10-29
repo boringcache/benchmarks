@@ -172,6 +172,13 @@ runs:
         for asset in "${assets[@]}"; do grep " $asset\$" SHA256SUMS; done | shasum -a 256 --check
         install -m 0755 "${assets[0]}" "$dir/boringcache"
         if [ "${#assets[@]}" -gt 1 ]; then install -m 0644 "${assets[1]}" "$dir/libboringcache_xcode_cas.dylib"; fi
+        if [ -n "${CANDIDATE_CLI_ARTIFACT:-}" ]; then
+          candidate="$RUNNER_TEMP/boringcache-candidate"
+          "$dir/boringcache" ci run --oidc-provider github-actions -- \
+            "$dir/boringcache" artifact pull "$CANDIDATE_CLI_ARTIFACT" "$candidate" --workspace boringcache/benchmarks
+          install -m 0755 "$candidate/${assets[0]}" "$dir/boringcache"
+          "$dir/boringcache" --version
+        fi
         echo "$dir" >> "$GITHUB_PATH"
 
     - id: sampler

@@ -34,13 +34,21 @@ on:
         type: string
         required: false
         default: ""
+      cli_artifact:
+        description: BoringCache artifact id of a candidate CLI to run instead of the pinned release, fresh and preflight only; never recorded (optional)
+        type: string
+        required: false
+        default: ""
       step:
         description: rolling only, re-run this recorded step with the current harness for lanes without a passing record (optional)
         type: string
         required: false
         default: ""
 
-run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}${{ inputs.step && format(' step {0}', inputs.step) || '' }}${{ inputs.cli && format(' [{0}]', inputs.cli) || '' }}
+run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}${{ inputs.step && format(' step {0}', inputs.step) || '' }}${{ inputs.cli && format(' [{0}]', inputs.cli) || '' }}${{ inputs.cli_artifact && format(' [{0}]', inputs.cli_artifact) || '' }}
+
+env:
+  CANDIDATE_CLI_ARTIFACT: ${{ inputs.cli_artifact }}
 
 concurrency:
   group: ${{ (inputs.mode == 'rolling' || inputs.mode == 'sample') && format('rolling-{0}-{1}', inputs.tool, inputs.project) || format('run-{0}', github.run_id) }}
@@ -72,6 +80,8 @@ jobs:
           ROLLING: ${{ inputs.mode == 'rolling' && 'true' || '' }}
           LANE: ${{ inputs.lane }}
           CLI: ${{ inputs.cli }}
+          CLI_ARTIFACT: ${{ inputs.cli_artifact }}
+          FRESH: ${{ (inputs.mode == 'fresh' || inputs.mode == 'preflight') && 'true' || '' }}
           STEP: ${{ inputs.step }}
           SAMPLE: ${{ inputs.mode == 'sample' && 'true' || '' }}
           RUNNER: ${{ inputs.runner }}
@@ -79,6 +89,7 @@ jobs:
         run: |
           bash scripts/checkout-records.sh
           if [ -n "$RUNNER" ] && [ -z "$SAMPLE" ]; then echo 'runner selection requires sample mode' >&2; exit 1; fi
+          if [ -n "$CLI_ARTIFACT" ] && { [ -z "$FRESH" ] || [ -n "$CLI" ]; }; then echo 'cli_artifact requires fresh or preflight mode and no cli tag' >&2; exit 1; fi
           matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${SAMPLE:+--sample} ${RUNNER:+--runner "$RUNNER"} ${SHA:+--sha "$SHA"} ${LANE:+--lane "$LANE"} ${CLI:+--cli "$CLI"} ${STEP:+--step "$STEP"} --results results)
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
           if [ "$matrix" = '[]' ]; then
@@ -199,7 +210,7 @@ jobs:
 
   publish:
     needs: [plan, collect]
-    if: ${{ !cancelled() && needs.collect.result == 'success' && github.ref == 'refs/heads/main' }}
+    if: ${{ !cancelled() && needs.collect.result == 'success' && github.ref == 'refs/heads/main' && inputs.cli_artifact == '' }}
     runs-on: ubuntu-24.04
     permissions:
       contents: write
