@@ -1,0 +1,42 @@
+{
+  "adapter_command": "xcode",
+  "case": "obs-studio",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "compilation-cache"
+  ],
+  "runner": "macos",
+  "runner_label": "macos-26",
+  "machine": "github macos 3c",
+  "phase": "rolling",
+  "step": 45,
+  "scope": "gha-macos-rolling-2",
+  "cache_scope": "gha-macos-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": "xcode-obs-studio-gha-macos-rolling-2-44",
+  "cache_restore_tracked": true,
+  "repo": "obsproject/obs-studio",
+  "sha": "65c320b46e1af5c7a555161aea6182cdf7a8c524",
+  "seconds": 566.981,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Apple M1 (Virtual)",
+      "cores": 3
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "f16d41fea229f78c5fb5ece387474d343f624d64",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/40950496608",
+  "attempt": 1,
+  "started_at": "2026-10-29T20:37:23Z"
+}
