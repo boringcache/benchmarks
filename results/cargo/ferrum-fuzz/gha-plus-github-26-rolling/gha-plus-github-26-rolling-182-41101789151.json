@@ -1,0 +1,44 @@
+{
+  "adapter_command": "cargo",
+  "case": "ferrum-fuzz",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "runner": "github-26",
+  "runner_label": "ubuntu-26.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 182,
+  "scope": "gha-plus-github-26-rolling",
+  "cache_scope": "gha-plus-github-26-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "cargo-ferrum-fuzz-gha-plus-github-26-rolling-181",
+  "cache_restore_tracked": true,
+  "repo": "ferrum-edge/ferrum-edge",
+  "sha": "e34f73944923c659f15110de4831f5685598a324",
+  "seconds": 3721.213,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "dd0e7cb9b8f1ad2082ce612a14b9eb7bb875d41f",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/41101789151",
+  "attempt": 1,
+  "started_at": "2026-10-30T17:55:49Z"
+}
