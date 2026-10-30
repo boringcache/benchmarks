@@ -1,0 +1,57 @@
+{
+  "name": "update-posthog-pnpm-blacksmith-4-boringcache",
+  "kind": "update",
+  "case": "posthog-pnpm",
+  "tool": "pnpm",
+  "repo": "PostHog/posthog",
+  "sha": "41457ecc938b31430e5966e82fe6356dddd9af1b",
+  "before_sha": "5871475311c8664a32c7132e94bc17451e8c03d5",
+  "after_sha": "41457ecc938b31430e5966e82fe6356dddd9af1b",
+  "lockfile": "pnpm-lock.yaml",
+  "lane": "boringcache",
+  "runner": "blacksmith-4",
+  "machine": "blacksmith 4c",
+  "producer": "blacksmith-4",
+  "cache_backend": "boringcache",
+  "key": "deps-40997364368-posthog-pnpm-blacksmith-4",
+  "run_id": "40997364368",
+  "step": 0,
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/40997364368",
+  "recorded_at": "2026-10-30T03:33:39Z",
+  "versions": {
+    "boringcache": "1.46.0"
+  },
+  "observed": {
+    "cpu": "AMD EPYC",
+    "cores": 4,
+    "disk_free_bytes": 85257203712
+  },
+  "auth_seconds": 0.582,
+  "restore": {
+    "seconds": 32.833,
+    "network_bytes": 829102327,
+    "step_ok": true,
+    "ok": true
+  },
+  "install": {
+    "seconds": 2.968,
+    "network_bytes": 936667,
+    "step_ok": true,
+    "ok": true
+  },
+  "save": {
+    "seconds": 236.42,
+    "network_bytes": 71490616,
+    "step_ok": false,
+    "ok": false
+  },
+  "exit_status": 1,
+  "output_ok": false,
+  "cache": {
+    "bytes": 2720950667,
+    "files": 163161
+  },
+  "cache_restored_key": "",
+  "harness_commit": "62a761e6cb7cda0c4422e9003f1d9d433fc97a61"
+}
