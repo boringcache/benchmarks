@@ -3,7 +3,7 @@ branch = "main"
 start_sha = "1bbdd38b729cade706ca39c2682a8fd15a1e738f"
 directory = "upstream"
 prepare = [
-  "mise trust && mise install",
+  "ruby \"$BENCH_ROOT/tools/pants/backend-ai/prepare.rb\" && mise trust && mise install",
   "mkdir -p \"$BENCH_DIR/.bin\" && ln -sf \"$(mise which scie-pants)\" \"$BENCH_DIR/.bin/pants\"",
   "cd upstream && PANTS_NAMED_CACHES_DIR=\"$(mktemp -d)\" PANTS_LOCAL_STORE_DIR=\"$(mktemp -d)\" pants --version",
 ]
@@ -15,7 +15,7 @@ PATH = "${BENCH_DIR}/.bin:${PATH}"
 PANTS_CONFIG_FILES = "pants.ci.toml"
 PANTS_NAMED_CACHES_DIR = "${BENCH_DIR}/.pants-named-caches"
 PANTS_LOCAL_STORE_DIR = "${BENCH_DIR}/.pants-local-store"
-PANTS_PYTHON_BOOTSTRAP_SEARCH_PATH = "[\"${HOME}/.local/share/mise/installs/python/3.13.7/bin\"]"
+PANTS_PYTHON_BOOTSTRAP_SEARCH_PATH = "[\"<PATH>\"]"
 
 [runs]
 boringcache-pants = ["github", "local"]

@@ -13,6 +13,10 @@ and saves the original store without replacing an existing backup. A repair
 failure stops preparation. The same preparation applies to every provider lane.
 Earlier result records retain their original harness and toolchain selection.
 
+The Backend.AI Pants case installs the exact CPython version required by the
+checked-out source's `pants.toml`. This applies to every provider lane and keeps
+fresh runs on the original interpreter while rolling runs follow upstream.
+
 ```
 tools/<tool>/
   tool.toml               display name and levels: the capability sets lanes implement
