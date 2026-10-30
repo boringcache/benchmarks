@@ -14,21 +14,7 @@ runs:
       with:
         ruby-version: '4.0.7'
         bundler-cache: true
-    - shell: bash
-      env:
-        PROVIDER: ${{ inputs.provider }}
-      run: |
-        case "$PROVIDER" in
-          boringcache) printf '%s' "$BORINGCACHE_REGISTRY_TOKEN" | docker login registry.boringcache.com --username boringcache --password-stdin ;;
-          ghcr) printf '%s' "$GH_REGISTRY_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin ;;
-          depot) printf '%s' "$DEPOT_TOKEN" | docker login rklzkpbkjv.registry.depot.dev --username x-token --password-stdin ;;
-          ecr)
-            test -n "$ECR_REPOSITORY"
-            aws ecr get-login-password --region us-east-1 | docker login "${ECR_REPOSITORY%%/*}" --username AWS --password-stdin
-            ;;
-          *) exit 1 ;;
-        esac
-    - if: inputs.provider == 'boringcache' && inputs.operation == 'push'
+    - if: inputs.provider == 'boringcache'
       shell: bash
       run: |
         version=$(bundle exec ruby -rtoml-rb -e 'puts TomlRB.load_file("versions.toml").fetch("boringcache")')
@@ -43,9 +29,23 @@ runs:
     - shell: bash
       env:
         PROVIDER: ${{ inputs.provider }}
+      run: |
+        case "$PROVIDER" in
+          boringcache) boringcache docker login ;;
+          ghcr) printf '%s' "$GH_REGISTRY_TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin ;;
+          depot) printf '%s' "$DEPOT_TOKEN" | docker login rklzkpbkjv.registry.depot.dev --username x-token --password-stdin ;;
+          ecr)
+            test -n "$ECR_REPOSITORY"
+            aws ecr get-login-password --region us-east-1 | docker login "${ECR_REPOSITORY%%/*}" --username AWS --password-stdin
+            ;;
+          *) exit 1 ;;
+        esac
+    - shell: bash
+      env:
+        PROVIDER: ${{ inputs.provider }}
         OPERATION: ${{ inputs.operation }}
       run: |
-        if [ "$PROVIDER" = boringcache ] && [ "$OPERATION" = push ]; then
+        if [ "$PROVIDER" = boringcache ]; then
           boringcache ci run --oidc-provider github-actions -- ruby scripts/registry-benchmark.rb "$PROVIDER" "$OPERATION"
         else
           ruby scripts/registry-benchmark.rb "$PROVIDER" "$OPERATION"
