@@ -56,7 +56,6 @@ jobs:
       matrix:
         provider: ${{ fromJSON(needs.plan.outputs.providers) }}
     env: &registry_env
-      BORINGCACHE_REGISTRY_TOKEN: ${{ matrix.provider == 'boringcache' && secrets.BORINGCACHE_REGISTRY_TOKEN || '' }}
       DEPOT_TOKEN: ${{ matrix.provider == 'depot' && secrets.DEPOT_TOKEN || '' }}
       GH_REGISTRY_TOKEN: ${{ matrix.provider == 'ghcr' && github.token || '' }}
       ECR_REPOSITORY: ${{ vars.REGISTRY_BENCHMARK_ECR_REPOSITORY }}

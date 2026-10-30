@@ -39,9 +39,11 @@ Dispatch with `gh workflow run registry.yml -f provider=all`, or select
 Each job uploads its JSON record as `registry-<provider>-<operation>` for 14 days.
 Failed authentication or source preparation produces no timed record.
 
-The BoringCache push uses the repository's OIDC trust and the CLI version in
-`versions.toml`. `BORINGCACHE_REGISTRY_TOKEN` authenticates Docker's manifest
-verification and pull. It is no longer used by a build-cache lane. Depot uses
+The BoringCache push and pull use the repository's OIDC trust and the CLI version
+in `versions.toml`. `boringcache docker login` registers the Docker credential
+helper, and `boringcache ci run` supplies short-lived Registry credentials for
+publication, Docker's manifest verification and pull. No static BoringCache token
+is required. Depot uses
 `DEPOT_TOKEN` and the `Benchmarks` organization's standard registry. GHCR uses
 the workflow token. Secrets are passed only to their provider's jobs.
 
