@@ -16,6 +16,8 @@ Earlier result records retain their original harness and toolchain selection.
 The Backend.AI Pants case installs the exact CPython version required by the
 checked-out source's `pants.toml`. This applies to every provider lane and keeps
 fresh runs on the original interpreter while rolling runs follow upstream.
+Pants discovers the installed interpreter through a link in the run's `.bin`
+directory so its isolated probes do not need to execute mise shims.
 
 ```
 tools/<tool>/
