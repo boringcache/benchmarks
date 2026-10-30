@@ -1,0 +1,1754 @@
+{
+  "adapter_command": "gradle",
+  "case": "opentelemetry-java",
+  "lane": "boringcache-gradle",
+  "provider": "boringcache",
+  "level": "base",
+  "capabilities": [
+    "build-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 65,
+  "scope": "boringcache-gradle-github-rolling",
+  "cache_scope": "boringcache-gradle-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "open-telemetry/opentelemetry-java",
+  "sha": "3e2772d1997350df9345b7c2df0a9406f3aa0972",
+  "seconds": 964.955,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1793370548370,
+      "run_id": "41069759174",
+      "session_id": "proxy-summary-67dc7647-6e03-4260-a41a-d8cd0682c722",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 929282,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "gradle",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 91.9,
+          "cpu_iowait_percent": 0.1,
+          "cpu_pressure_percent": 70.0,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 1.1,
+          "disk_read_mb": 333.1,
+          "disk_written_mb": 6232.0,
+          "interval_ms": 964023,
+          "io_pressure_percent": 0.2,
+          "memory_pressure_percent": 0.0,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "disk_available_gb": 84,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15984
+      },
+      "proxy": {
+        "adapter": "gradle",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 929282,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 813,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 80,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "upload_session_commit_blobs": 0,
+          "upload_session_commit_manifest": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 47,
+          "cache_blobs_download_urls": 81,
+          "cache_blobs_upload_urls": 58,
+          "cache_finalize_publish": 156,
+          "cache_flush_upload": 106,
+          "cache_kv_entries_current_version": 183,
+          "cache_kv_entries_download_urls": 322,
+          "cache_kv_entries_upsert": 60,
+          "cache_kv_entry_reads": 110,
+          "cache_rollups_ingest": 91,
+          "upload_session_commit_blobs": 79,
+          "upload_session_commit_manifest": 91
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 64,
+          "cache_blobs_download_urls": 110,
+          "cache_blobs_upload_urls": 76,
+          "cache_finalize_publish": 156,
+          "cache_flush_upload": 106,
+          "cache_kv_entries_current_version": 183,
+          "cache_kv_entries_download_urls": 322,
+          "cache_kv_entries_upsert": 110,
+          "cache_kv_entry_reads": 110,
+          "cache_rollups_ingest": 443,
+          "upload_session_commit_blobs": 79,
+          "upload_session_commit_manifest": 91
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 550,
+          "cache_blobs_download_urls": 2,
+          "cache_blobs_upload_urls": 590,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entries_upsert": 38,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 35,
+          "upload_session_commit_blobs": 1,
+          "upload_session_commit_manifest": 1
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "upload_session_commit_blobs": 0,
+          "upload_session_commit_manifest": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 1222,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "upload_session_commit_blobs": 0,
+          "upload_session_commit_manifest": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 47,
+          "cache_blobs_download_urls": 81,
+          "cache_blobs_upload_urls": 58,
+          "cache_finalize_publish": 156,
+          "cache_flush_upload": 106,
+          "cache_kv_entries_current_version": 183,
+          "cache_kv_entries_download_urls": 322,
+          "cache_kv_entries_upsert": 60,
+          "cache_kv_entry_reads": 110,
+          "cache_rollups_ingest": 91,
+          "upload_session_commit_blobs": 79,
+          "upload_session_commit_manifest": 91
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 64,
+          "cache_blobs_download_urls": 110,
+          "cache_blobs_upload_urls": 76,
+          "cache_finalize_publish": 156,
+          "cache_flush_upload": 106,
+          "cache_kv_entries_current_version": 183,
+          "cache_kv_entries_download_urls": 322,
+          "cache_kv_entries_upsert": 110,
+          "cache_kv_entry_reads": 110,
+          "cache_rollups_ingest": 443,
+          "upload_session_commit_blobs": 79,
+          "upload_session_commit_manifest": 91
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 550,
+          "cache_blobs_download_urls": 2,
+          "cache_blobs_upload_urls": 590,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entries_upsert": 38,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 35,
+          "upload_session_commit_blobs": 1,
+          "upload_session_commit_manifest": 1
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "upload_session_commit_blobs": 0,
+          "upload_session_commit_manifest": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 1222,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 397
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 251046,
+        "startup_prefetch_blobs_per_sec": 479,
+        "startup_prefetch_bytes_per_sec": 120271632,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 267,
+        "startup_prefetch_concurrency_adjustment_count": 1,
+        "startup_prefetch_concurrency_adjustments": "shared_download_policy:64->80",
+        "startup_prefetch_concurrency_reason": "machine_governor",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_deferred_trial_blobs": 0,
+        "startup_prefetch_deferred_trial_bytes": 0,
+        "startup_prefetch_demand_max_wait_ms": 0,
+        "startup_prefetch_demand_wait_ms": 0,
+        "startup_prefetch_demand_waits": 0,
+        "startup_prefetch_duration_ms": 1697,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 80,
+        "startup_prefetch_generation": 28,
+        "startup_prefetch_hedge_wins": 0,
+        "startup_prefetch_hedges": 0,
+        "startup_prefetch_initial_concurrency": 64,
+        "startup_prefetch_inserted": 813,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 80,
+        "startup_prefetch_mode": "recent-reads",
+        "startup_prefetch_observation_count": 2,
+        "startup_prefetch_recent_read_blobs": 782,
+        "startup_prefetch_recent_read_bytes": 163690053,
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 813,
+        "startup_prefetch_target_bytes": 204100960,
+        "startup_prefetch_total_unique_blobs": 1676,
+        "startup_prefetch_trial_budget_bytes": 327380106,
+        "startup_prefetch_unplanned_blobs": 0,
+        "startup_prefetch_unplanned_bytes": 0,
+        "startup_prefetch_unused_blobs": 620,
+        "startup_prefetch_unused_bytes": 191691669,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 813,
+        "startup_prefetch_used_blobs": 193,
+        "startup_prefetch_used_bytes": 12409291,
+        "startup_prefetch_write_trial_blobs": 31,
+        "startup_prefetch_write_trial_bytes": 40410907
+      },
+      "kv_upload": {
+        "kv_upload_allowed_concurrency_max": 1,
+        "kv_upload_already_present_blobs": 595,
+        "kv_upload_batches": 38,
+        "kv_upload_blobs_per_sec": 0,
+        "kv_upload_concurrency_reason": "adaptive_ramp",
+        "kv_upload_concurrency_source": "auto",
+        "kv_upload_duration_ms": 2307,
+        "kv_upload_failed_blobs": 0,
+        "kv_upload_final_concurrency_max": 1,
+        "kv_upload_initial_concurrency_max": 1,
+        "kv_upload_missing_local_blobs": 0,
+        "kv_upload_requested_blobs": 1,
+        "kv_upload_uploaded_blobs": 1,
+        "kv_upload_uploaded_bytes": 4146300,
+        "kv_upload_writethrough_failure_bytes": 0,
+        "kv_upload_writethrough_failure_count": 0,
+        "kv_upload_writethrough_pressure_skip_bytes": 0,
+        "kv_upload_writethrough_pressure_skip_count": 0,
+        "kv_upload_writethrough_uploaded_blobs": 596,
+        "kv_upload_writethrough_uploaded_bytes": 151686591
+      },
+      "singleflight": {
+        "singleflight_kv_download_leaders": 813,
+        "singleflight_kv_lookup_leaders": 597
+      },
+      "kv_lookup": {
+        "kv_lookup_gradle_after_refresh_miss": 596,
+        "kv_lookup_gradle_published_fast_hit": 193,
+        "kv_lookup_gradle_published_fast_miss": 596
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 12409291,
+          "blob_read_local_count": 193,
+          "blob_read_local_hit_rate_pct": 19,
+          "blob_read_remote_avg_ms": 94,
+          "blob_read_remote_bytes": 204100960,
+          "blob_read_remote_count": 813
+        },
+        "blob_read_cache_bytes": 355787551,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "schema_version": "native_tool_evidence.v1",
+        "source": "gradle_task_events",
+        "task_spans": {
+          "byte_cap": 32768,
+          "cap": 128,
+          "coverage": "completed_task_events",
+          "emitted_spans": 84,
+          "schema_version": "gradle_task_spans.v1",
+          "source": "gradle_task_events",
+          "spans": [
+            {
+              "completed_at_ms": 1793369655802,
+              "duration_ms": 10,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369655792,
+              "state": "skipped",
+              "task_id": "sha256:ad82a100af35c6aa28b693047a6f87f606b6e0d806e54a6b2268f66f1a03d2ad",
+              "task_path": ":buildSrc:checkKotlinGradlePluginConfigurationErrors"
+            },
+            {
+              "completed_at_ms": 1793369656680,
+              "duration_ms": 863,
+              "execution_reasons": [],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369655817,
+              "state": "cached",
+              "task_id": "sha256:813d571d9a7bc20aee365f70bca2edf09353bed3f1da155cab0b0a82cdb2ab4a",
+              "task_path": ":buildSrc:generateExternalPluginSpecBuilders"
+            },
+            {
+              "completed_at_ms": 1793369656877,
+              "duration_ms": 195,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369656682,
+              "state": "executed",
+              "task_id": "sha256:23e191e5c04a92ed884be61d98da0a36448015100bb490a374846570ac1c967d",
+              "task_path": ":buildSrc:extractPrecompiledScriptPluginPlugins"
+            },
+            {
+              "completed_at_ms": 1793369662765,
+              "duration_ms": 5885,
+              "execution_reasons": [],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369656880,
+              "state": "cached",
+              "task_id": "sha256:bd34fa7b2d8368ff3a74265ce4008ebbdac4e63c0030fbcb1ce963e91f1ca178",
+              "task_path": ":buildSrc:compilePluginsBlocks"
+            },
+            {
+              "completed_at_ms": 1793369678132,
+              "duration_ms": 15366,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369662766,
+              "state": "executed",
+              "task_id": "sha256:4c076f06c785f33e5db763043f0ffffd7dcd1a6fca8007eebfb23aea326a2a43",
+              "task_path": ":buildSrc:generatePrecompiledScriptPluginAccessors"
+            },
+            {
+              "completed_at_ms": 1793369678148,
+              "duration_ms": 15,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369678133,
+              "state": "executed",
+              "task_id": "sha256:358c801648bf211c374c35043e69fee87bd0064e02033043ded88c5298c75fe9",
+              "task_path": ":buildSrc:generateScriptPluginAdapters"
+            },
+            {
+              "completed_at_ms": 1793369678910,
+              "duration_ms": 17,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369678893,
+              "state": "executed",
+              "task_id": "sha256:e0aec2790de8d30eb141f78a3e4bf88335ff9722ccd00382f36732dab4a4adc7",
+              "task_path": ":buildSrc:pluginDescriptors"
+            },
+            {
+              "completed_at_ms": 1793369678947,
+              "duration_ms": 36,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369678911,
+              "state": "executed",
+              "task_id": "sha256:ee691b9cd9d34f1a45a86993992a7920e27e0563131fa93573bdb8632d288bf7",
+              "task_path": ":buildSrc:processResources"
+            },
+            {
+              "completed_at_ms": 1793369706337,
+              "duration_ms": 28187,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369678150,
+              "state": "executed",
+              "task_id": "sha256:52972787cca5fa6e6f5ecaafa1e38649aa40a38f893071251098beda3989f0f4",
+              "task_path": ":buildSrc:compileKotlin"
+            },
+            {
+              "completed_at_ms": 1793369706343,
+              "duration_ms": 4,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369706339,
+              "state": "skipped",
+              "task_id": "sha256:cf5bd62b84903138121e9c5617a760e46fde6cbed34e4d245e399e7f7235a093",
+              "task_path": ":buildSrc:compileJava"
+            },
+            {
+              "completed_at_ms": 1793369706347,
+              "duration_ms": 2,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369706345,
+              "state": "skipped",
+              "task_id": "sha256:66c23dfe3b68e7bd4bae27302026041f6b3f81204aa12fa8fc6490253bc1ec46",
+              "task_path": ":buildSrc:compileGroovy"
+            },
+            {
+              "completed_at_ms": 1793369706347,
+              "duration_ms": 0,
+              "execution_reasons": [],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369706347,
+              "state": "executed",
+              "task_id": "sha256:0a75ca20879bf2683c9775dba839b991295fe5a9d8453d0f841162f5fdede9b8",
+              "task_path": ":buildSrc:classes"
+            },
+            {
+              "completed_at_ms": 1793369706590,
+              "duration_ms": 242,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369706348,
+              "state": "executed",
+              "task_id": "sha256:efc63b59c77164cb3270ad28deca25149e8ddf3fc0f6a5c56ff054228ca6f604",
+              "task_path": ":buildSrc:jar"
+            },
+            {
+              "completed_at_ms": 1793369737654,
+              "duration_ms": 0,
+              "execution_reasons": [],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369737654,
+              "state": "up_to_date",
+              "task_id": "sha256:d6c363b23b2d24b2a824db5d1d61148e4a7de7d7c48e63960b84a0f3f62c34e8",
+              "task_path": ":assemble"
+            },
+            {
+              "completed_at_ms": 1793369737737,
+              "duration_ms": 84,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369737653,
+              "state": "executed",
+              "task_id": "sha256:8965d30a074a8431b1d700338f9163320cc9cc9053e60a7cd990922897a908e0",
+              "task_path": ":spotlessJava"
+            },
+            {
+              "completed_at_ms": 1793369737748,
+              "duration_ms": 9,
+              "execution_reasons": [
+                "no_declared_outputs"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369737739,
+              "state": "executed",
+              "task_id": "sha256:b084dfc9e0db0588bffbc6de0a51e2abbc2346aef55468756af6b61bb21f3825",
+              "task_path": ":spotlessJavaCheck"
+            },
+            {
+              "completed_at_ms": 1793369737771,
+              "duration_ms": 18,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369737753,
+              "state": "executed",
+              "task_id": "sha256:dcdbed4dfa7e050c996a76c16b1180d0496da78bbb9ad3b49ec6015d3fd0a2fa",
+              "task_path": ":custom-checks:processResources"
+            },
+            {
+              "completed_at_ms": 1793369737790,
+              "duration_ms": 17,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369737773,
+              "state": "executed",
+              "task_id": "sha256:c5584fb3ca9da73e33771b040974ef71978ee85ac6ab697e034b5dd63c4e1b8a",
+              "task_path": ":opencensus-shim:generateOtelVersionClass"
+            },
+            {
+              "completed_at_ms": 1793369737804,
+              "duration_ms": 13,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369737791,
+              "state": "executed",
+              "task_id": "sha256:4634b99289b11d5a37af5888c687a68d83fc5a25b3e1fc385110206a7ee4491b",
+              "task_path": ":sdk:common:generateOtelVersionClass"
+            },
+            {
+              "completed_at_ms": 1793369737820,
+              "duration_ms": 15,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369737805,
+              "state": "executed",
+              "task_id": "sha256:8499e08480c426f3270d9866dc373a2b01241058b638be0e44b6dbbb551b33bd",
+              "task_path": ":opentracing-shim:generateOtelVersionClass"
+            },
+            {
+              "completed_at_ms": 1793369737905,
+              "duration_ms": 252,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369737653,
+              "state": "executed",
+              "task_id": "sha256:98d8afef5786f8ffa5e1ff8d55dc466fd9b4986b6e42c014e60d0a74a25662ff",
+              "task_path": ":spotlessMisc"
+            },
+            {
+              "completed_at_ms": 1793369737906,
+              "duration_ms": 0,
+              "execution_reasons": [
+                "no_declared_outputs"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369737906,
+              "state": "executed",
+              "task_id": "sha256:c5fc4a07ff9d26f4de5baa13d5ca52f5c73bb4ff9687870db9b3936b4c1aaff4",
+              "task_path": ":spotlessMiscCheck"
+            },
+            {
+              "completed_at_ms": 1793369737908,
+              "duration_ms": 1,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369737907,
+              "state": "skipped",
+              "task_id": "sha256:be465669ed672971346daa0459a5c558a0da4c0bc013d15627ece54fb3d903cb",
+              "task_path": ":extensions:kotlin:checkKotlinGradlePluginConfigurationErrors"
+            },
+            {
+              "completed_at_ms": 1793369737969,
+              "duration_ms": 52,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369737917,
+              "state": "executed",
+              "task_id": "sha256:86d59aa431ba57148da68f30b33e8b3c9f57262322270cfafcfa4f8c0c99d682",
+              "task_path": ":sdk-extensions:declarative-config:copyResourceConfiguration"
+            },
+            {
+              "completed_at_ms": 1793369738885,
+              "duration_ms": 915,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369737970,
+              "state": "executed",
+              "task_id": "sha256:afd48f29ec5ac27979156e718bded22d2a6a328d58b5f8980664d27348efb343",
+              "task_path": ":sdk-extensions:jaeger-remote-sampler:generateMainProtos"
+            },
+            {
+              "completed_at_ms": 1793369738895,
+              "duration_ms": 8,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369738887,
+              "state": "skipped",
+              "task_id": "sha256:89811ad8f38c3affb44dd8448d976a18ac6f7dd7a3c562b994480f063db21a76",
+              "task_path": ":common:processResources"
+            },
+            {
+              "completed_at_ms": 1793369738900,
+              "duration_ms": 4,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369738896,
+              "state": "skipped",
+              "task_id": "sha256:e543525335b5e6d0b6b39b83416b41892085c4aa674b00d8bfb9fe27ee885b67",
+              "task_path": ":context:processResources"
+            },
+            {
+              "completed_at_ms": 1793369738916,
+              "duration_ms": 14,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369738902,
+              "state": "executed",
+              "task_id": "sha256:d126aac0e01aa14a7336b4cc56a8e296b8e54749a57e0c2fa21a7660e4d6b78f",
+              "task_path": ":api:all:processResources"
+            },
+            {
+              "completed_at_ms": 1793369738928,
+              "duration_ms": 11,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369738917,
+              "state": "executed",
+              "task_id": "sha256:8df354b623c0614f34dd4b128a30974493368a4250cc7de232e435827874edd2",
+              "task_path": ":api:incubator:processResources"
+            },
+            {
+              "completed_at_ms": 1793369738944,
+              "duration_ms": 15,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369738929,
+              "state": "executed",
+              "task_id": "sha256:7d1fd895852e1f0353769b95f034aea69b6d9a20aac40e2aff6dd43549ffe857",
+              "task_path": ":exporters:common:processResources"
+            },
+            {
+              "completed_at_ms": 1793369738946,
+              "duration_ms": 1,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369738945,
+              "state": "skipped",
+              "task_id": "sha256:ec5e027c453fd514e0f21c2cf9dce81d838c1f6f43f4362e376aef83ee67f4d8",
+              "task_path": ":sdk:all:processResources"
+            },
+            {
+              "completed_at_ms": 1793369738948,
+              "duration_ms": 2,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369738946,
+              "state": "skipped",
+              "task_id": "sha256:8c7194d1277853dbeb422a08cd82273d7981b1c6e12ca62d0d5a7c07c24e5607",
+              "task_path": ":sdk:common:processResources"
+            },
+            {
+              "completed_at_ms": 1793369738953,
+              "duration_ms": 4,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369738949,
+              "state": "skipped",
+              "task_id": "sha256:25232b7e1ac97927045f8072354096f82780ab7b5bf0e2d81a5378763e72a642",
+              "task_path": ":sdk:logs:processResources"
+            },
+            {
+              "completed_at_ms": 1793369738955,
+              "duration_ms": 1,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369738954,
+              "state": "skipped",
+              "task_id": "sha256:5123b9d9f5325ae75f43f10d2ac24fb115b04a36d0b106f42b826daae1f50ae3",
+              "task_path": ":sdk:metrics:processResources"
+            },
+            {
+              "completed_at_ms": 1793369738957,
+              "duration_ms": 1,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369738956,
+              "state": "skipped",
+              "task_id": "sha256:770042390768236cf5c345a3d931d1e1e0c46aaa2ceba1a4ceef7e623ef2a7ce",
+              "task_path": ":sdk:trace:processResources"
+            },
+            {
+              "completed_at_ms": 1793369738958,
+              "duration_ms": 1136,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369737822,
+              "state": "executed",
+              "task_id": "sha256:a2ebaf34820ade980bfb0a3062600a1b148c4f902cee1da662480fe5b72e1129",
+              "task_path": ":exporters:otlp:common:generateMainProtos"
+            },
+            {
+              "completed_at_ms": 1793369738966,
+              "duration_ms": 8,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369738958,
+              "state": "executed",
+              "task_id": "sha256:faa4eb0f434ed5d92b4787fe6781b5cf59d1699ce1015c7a2eb0ece5a90c301b",
+              "task_path": ":sdk-extensions:autoconfigure:processResources"
+            },
+            {
+              "completed_at_ms": 1793369738966,
+              "duration_ms": 7,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369738959,
+              "state": "skipped",
+              "task_id": "sha256:5c54a0f7a733928da5a60ab750b96a7553b92f8686e3bed1effd7d09016fbfaf",
+              "task_path": ":sdk-extensions:autoconfigure-spi:processResources"
+            },
+            {
+              "completed_at_ms": 1793369738975,
+              "duration_ms": 6,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369738969,
+              "state": "skipped",
+              "task_id": "sha256:5427022a9a56a17ad6de9917f3ef8e3d1fc373d5079f2e9df8a14a968e8dbe85",
+              "task_path": ":sdk-extensions:incubator:processResources"
+            },
+            {
+              "completed_at_ms": 1793369738976,
+              "duration_ms": 1,
+              "execution_reasons": [],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369738975,
+              "state": "up_to_date",
+              "task_id": "sha256:529f5ef8fa843542f43b495a7292d941e6b6c70ebd531d3757b6c22eeaf327f3",
+              "task_path": ":sdk-extensions:jaeger-remote-sampler:protobufDummy"
+            },
+            {
+              "completed_at_ms": 1793369738978,
+              "duration_ms": 11,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369738967,
+              "state": "executed",
+              "task_id": "sha256:ec800268b4458ea38b9dbdf7ef403a4ce7d540c030c1b40c933a0ddaac13c864",
+              "task_path": ":sdk-extensions:declarative-config:processResources"
+            },
+            {
+              "completed_at_ms": 1793369738987,
+              "duration_ms": 11,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369738976,
+              "state": "executed",
+              "task_id": "sha256:7b081fb1539580618d2d216289f0a0ca9784866e2532a6438bef577e09183a86",
+              "task_path": ":exporters:sender:okhttp:processResources"
+            },
+            {
+              "completed_at_ms": 1793369738991,
+              "duration_ms": 12,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369738979,
+              "state": "executed",
+              "task_id": "sha256:ad053bf84186914c2a52f671836abc34dd371710e158b816f3f38da548d12bb2",
+              "task_path": ":sdk-extensions:jaeger-remote-sampler:extractProto"
+            },
+            {
+              "completed_at_ms": 1793369738999,
+              "duration_ms": 8,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369738991,
+              "state": "executed",
+              "task_id": "sha256:e0dd1642d212571d87e740507a90d56fd3441193d3298ba3fdc1acef239d53ba",
+              "task_path": ":exporters:otlp:all:generateOtelVersionClass"
+            },
+            {
+              "completed_at_ms": 1793369739006,
+              "duration_ms": 6,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369739000,
+              "state": "skipped",
+              "task_id": "sha256:83b908379e72476e1140f566eddae98c323ee457ac9e7f88a56e24ea756c9a36",
+              "task_path": ":all:processResources"
+            },
+            {
+              "completed_at_ms": 1793369739016,
+              "duration_ms": 9,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739007,
+              "state": "executed",
+              "task_id": "sha256:79204e37b1f16c7c45b1fd05c7813b9759a578ea65d1705f266cf5e06e796729",
+              "task_path": ":common:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739028,
+              "duration_ms": 12,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739016,
+              "state": "executed",
+              "task_id": "sha256:5dbec41b82f835fe0377915b6e24e52e4b2e569d0598c83dc79d944efb497831",
+              "task_path": ":context:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739040,
+              "duration_ms": 11,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739029,
+              "state": "executed",
+              "task_id": "sha256:ce2ef2e660695de78352ff14cdc63e3e23d6ba5276a3f3725cdbece409b17798",
+              "task_path": ":opencensus-shim:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739041,
+              "duration_ms": 1,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369739040,
+              "state": "skipped",
+              "task_id": "sha256:338248150eecd88be729e97892da0153ff30fa14d8faa4ac12cd7954661c9b19",
+              "task_path": ":opencensus-shim:processResources"
+            },
+            {
+              "completed_at_ms": 1793369739048,
+              "duration_ms": 7,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739041,
+              "state": "executed",
+              "task_id": "sha256:ab3c9c154c91ac1e59ba3d3d6ff53939f1ef681d97f5dc9e5d0d0c71fa0369e4",
+              "task_path": ":api:all:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739060,
+              "duration_ms": 12,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739048,
+              "state": "executed",
+              "task_id": "sha256:dfa27183b6fcd6135f3959cee5c3acbff0912c738ff26faf199db5797c6b1518",
+              "task_path": ":api:incubator:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739069,
+              "duration_ms": 8,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739061,
+              "state": "executed",
+              "task_id": "sha256:c8a0a7c5cd96e3b4729dd54d5ca2572dd71f3b6ee5a97eabf30731d13211d94e",
+              "task_path": ":extensions:trace-propagators:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739082,
+              "duration_ms": 12,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739070,
+              "state": "executed",
+              "task_id": "sha256:c8f61ebb54216d5e835afabcb686ef0994e4b5c6a90931e243bd28abca544f95",
+              "task_path": ":extensions:trace-propagators:processResources"
+            },
+            {
+              "completed_at_ms": 1793369739090,
+              "duration_ms": 8,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739082,
+              "state": "executed",
+              "task_id": "sha256:8d14eaee61dec4955985af1a19fbf06be1ee38c8e896b76756d86b93a0803ec1",
+              "task_path": ":sdk:all:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739099,
+              "duration_ms": 8,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739091,
+              "state": "executed",
+              "task_id": "sha256:57b72487cf56206dd8235f91384d5a70d5c654e8220ec36c52872c3dca81a614",
+              "task_path": ":sdk:common:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739105,
+              "duration_ms": 6,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739099,
+              "state": "executed",
+              "task_id": "sha256:546afd9f89775c0c094d09da759a937da85a94627c7de8d83173468d2850f7c1",
+              "task_path": ":sdk:logs:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739111,
+              "duration_ms": 6,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739105,
+              "state": "executed",
+              "task_id": "sha256:201f4483b043c9a1c033f4e626dcaec00660bb4c7f8b6cd1d6ae0ab6199d77b8",
+              "task_path": ":sdk:metrics:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739117,
+              "duration_ms": 6,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739111,
+              "state": "executed",
+              "task_id": "sha256:56678f973ef41478893fbe4874a25ffa515cd8deb35cd815fc041c84ea937d45",
+              "task_path": ":sdk:trace:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739130,
+              "duration_ms": 12,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739118,
+              "state": "executed",
+              "task_id": "sha256:e4e1060c39b52ae33eac3b90396ce2bce956c2b6cf147ebcc249d7d8eab87bf7",
+              "task_path": ":sdk:trace-shaded-deps:processResources"
+            },
+            {
+              "completed_at_ms": 1793369739136,
+              "duration_ms": 6,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739130,
+              "state": "executed",
+              "task_id": "sha256:de3b820b307e9439294465f616687fa4b4c83a7fabb7197bcd8c86651618e57f",
+              "task_path": ":sdk-extensions:autoconfigure-spi:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739142,
+              "duration_ms": 6,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739136,
+              "state": "executed",
+              "task_id": "sha256:8b15cb6ba1d3f7724c60214936a2429943fd4051d5c5d1f08de6743df6d22eb8",
+              "task_path": ":opentracing-shim:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739143,
+              "duration_ms": 1,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369739142,
+              "state": "skipped",
+              "task_id": "sha256:6169605c494ccb39b0d17ec7311522622724043630d8e75535c7d42ff147a9ed",
+              "task_path": ":opentracing-shim:processResources"
+            },
+            {
+              "completed_at_ms": 1793369739149,
+              "duration_ms": 6,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739143,
+              "state": "executed",
+              "task_id": "sha256:47aae0bbb8bb5e392764cb4e9a55a61bdfd48726720c4ba855c264f158085221",
+              "task_path": ":exporters:common:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739153,
+              "duration_ms": 4,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369739149,
+              "state": "skipped",
+              "task_id": "sha256:a72e7d4668015f7fca90aaf218078dd00a09139985f53c0c42319e315a2c0cf0",
+              "task_path": ":exporters:common:processJava9Resources"
+            },
+            {
+              "completed_at_ms": 1793369739156,
+              "duration_ms": 2,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369739154,
+              "state": "skipped",
+              "task_id": "sha256:ec632b99ac1ccb522c189f48ea471ad935f25bbcfadef42a930dc2c51a84c0cd",
+              "task_path": ":exporters:common:compile-stub:processResources"
+            },
+            {
+              "completed_at_ms": 1793369739162,
+              "duration_ms": 5,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739157,
+              "state": "executed",
+              "task_id": "sha256:f109b5e604f4b2b3688f19b051d04d31b1dd599da898bf79ebed13510c59fed0",
+              "task_path": ":exporters:logging:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739174,
+              "duration_ms": 12,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739162,
+              "state": "executed",
+              "task_id": "sha256:067d71d748023d29b79529cf234bf9a56d54232326770448bdc7956caae5a9ad",
+              "task_path": ":exporters:logging:processResources"
+            },
+            {
+              "completed_at_ms": 1793369739180,
+              "duration_ms": 5,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739175,
+              "state": "executed",
+              "task_id": "sha256:51aedcb71e8d503300d96a2a3141729221b2da3a0ab6892f5fbfbd19658ac20a",
+              "task_path": ":exporters:logging-otlp:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739193,
+              "duration_ms": 13,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739180,
+              "state": "executed",
+              "task_id": "sha256:1ffd11f11f838a70125364efc712a6a800786fc204a92bf0987edba72577b850",
+              "task_path": ":exporters:logging-otlp:processResources"
+            },
+            {
+              "completed_at_ms": 1793369739200,
+              "duration_ms": 7,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739193,
+              "state": "executed",
+              "task_id": "sha256:ea4386357cd0ed036e0c7ef07dadc1013680fd121ff3e2e462f24161701a905a",
+              "task_path": ":exporters:otlp:common:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739202,
+              "duration_ms": 2,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369739200,
+              "state": "skipped",
+              "task_id": "sha256:ea57c82c966b9ac5b9e1c7fbcaf02779a784ac912de6aaa55e5cc4651a75762a",
+              "task_path": ":exporters:otlp:common:processResources"
+            },
+            {
+              "completed_at_ms": 1793369739212,
+              "duration_ms": 7,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739205,
+              "state": "executed",
+              "task_id": "sha256:1f6dd62d153e41a688948c0fc1154aa54a3d4647c2ef54d2d9cf269fae322175",
+              "task_path": ":exporters:prometheus:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739225,
+              "duration_ms": 13,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739212,
+              "state": "executed",
+              "task_id": "sha256:8f0ea0a76529b346a49895194c4e677cb5979c836ef3749cfe6fc30e00b5ce88",
+              "task_path": ":exporters:prometheus:processResources"
+            },
+            {
+              "completed_at_ms": 1793369739231,
+              "duration_ms": 6,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739225,
+              "state": "executed",
+              "task_id": "sha256:3ac0b18eaaa14767d250284230ea5f0babde37dde23e2b7249b6666b71818129",
+              "task_path": ":extensions:kotlin:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739232,
+              "duration_ms": 1,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369739231,
+              "state": "skipped",
+              "task_id": "sha256:cd725b51a1b653662a8edf8b694dcafb26819e0b2fcabf0b7d96b9096d996d6e",
+              "task_path": ":extensions:kotlin:processResources"
+            },
+            {
+              "completed_at_ms": 1793369739241,
+              "duration_ms": 8,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739233,
+              "state": "executed",
+              "task_id": "sha256:b59d3eead6bb8b130f9cab5b7aede5f817b756d458757a07419f6aa7e06f5fe9",
+              "task_path": ":sdk:profiles:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739242,
+              "duration_ms": 1,
+              "execution_reasons": [],
+              "reasons_state": "not_reported",
+              "started_at_ms": 1793369739241,
+              "state": "skipped",
+              "task_id": "sha256:2db73ae6d83a977e0fdb1c2d64f34c7f0aebee6c9d011ed54f9437c39d8d6c1c",
+              "task_path": ":sdk:profiles:processResources"
+            },
+            {
+              "completed_at_ms": 1793369739249,
+              "duration_ms": 7,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739242,
+              "state": "executed",
+              "task_id": "sha256:61ddb90b20987ec847087ea9ff8b953dfd3be3f8ca4c9cf79a57eab6cacbb906",
+              "task_path": ":sdk:testing:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739256,
+              "duration_ms": 6,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739250,
+              "state": "executed",
+              "task_id": "sha256:4659260596068c4184e8287f134852425be8f8f6d9a86f8e362306f49d2bedaa",
+              "task_path": ":sdk:testing:processResources"
+            },
+            {
+              "completed_at_ms": 1793369739262,
+              "duration_ms": 5,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739257,
+              "state": "executed",
+              "task_id": "sha256:425438b5beadb71fe703ca1bd6d663a0b7398bcbf5e41bd5c40c93f65cef152f",
+              "task_path": ":sdk-extensions:autoconfigure:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739266,
+              "duration_ms": 4,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739262,
+              "state": "executed",
+              "task_id": "sha256:c6a738b5b07c62292de9ed3c462d05fc9364c9fbddce2d3cc930f50b509f0f3b",
+              "task_path": ":sdk-extensions:declarative-config:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739273,
+              "duration_ms": 7,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739266,
+              "state": "executed",
+              "task_id": "sha256:b57e8c6b807d06c5811b1eecbef051fd5b08113aa530e8ce3d9b574511c7d33d",
+              "task_path": ":sdk-extensions:incubator:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739280,
+              "duration_ms": 7,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739273,
+              "state": "executed",
+              "task_id": "sha256:f951e36c51c46b9ea81601fd9fa8bbeea0692b45a4a1226348cd860ac0a4ee0b",
+              "task_path": ":sdk-extensions:jaeger-remote-sampler:generateVersionResource"
+            },
+            {
+              "completed_at_ms": 1793369739293,
+              "duration_ms": 11,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369739282,
+              "state": "executed",
+              "task_id": "sha256:e8d31e51c65a825149c2118a1d085f4a4d57ba366634f4719dfb92a67925c295",
+              "task_path": ":sdk-extensions:jaeger-remote-sampler:processProtoResources"
+            }
+          ],
+          "sum_duration_ms": 3208664,
+          "top": [
+            {
+              "completed_at_ms": 1793370543156,
+              "duration_ms": 380145,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370163011,
+              "state": "executed",
+              "task_id": "sha256:dcb96eb79d0090d7d537e166f3725f0bdaf612e40fff7ddf53a02c975aad7645",
+              "task_path": ":sdk:metrics:testIncubating"
+            },
+            {
+              "completed_at_ms": 1793370424382,
+              "duration_ms": 70315,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370354067,
+              "state": "executed",
+              "task_id": "sha256:06518a64c75a047942b355ea399a455efbdc34893f84cd7a5ab32f9882448b7f",
+              "task_path": ":exporters:otlp:all:testSpanPipeline"
+            },
+            {
+              "completed_at_ms": 1793370312391,
+              "duration_ms": 63129,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370249262,
+              "state": "executed",
+              "task_id": "sha256:7c03b987c48e78ec7bb8f40212e0a8aa011d6003a664cdd067f3dd9c04a8c207",
+              "task_path": ":sdk-extensions:autoconfigure:testFullConfig"
+            },
+            {
+              "completed_at_ms": 1793370095736,
+              "duration_ms": 49362,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370046374,
+              "state": "executed",
+              "task_id": "sha256:2c9a71fa566c00f1c347fb36efb858f21ae4d04dfea4b36d3e3ebe780d9a61e8",
+              "task_path": ":exporters:prometheus:test"
+            },
+            {
+              "completed_at_ms": 1793370507048,
+              "duration_ms": 49211,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370457837,
+              "state": "executed",
+              "task_id": "sha256:f16e10c86eef8836b231436e221f2b07979b2e069d4f2f9eaed08610d577d105",
+              "task_path": ":exporters:otlp:all:testOkHttpVersionLATEST"
+            },
+            {
+              "completed_at_ms": 1793370347565,
+              "duration_ms": 48791,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370298774,
+              "state": "executed",
+              "task_id": "sha256:7a733dd69e710cd0706ce093c3dbcb0bc514b0e8387e6379f8b601856268fbb0",
+              "task_path": ":sdk-extensions:declarative-config:test"
+            },
+            {
+              "completed_at_ms": 1793370498655,
+              "duration_ms": 46542,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370452113,
+              "state": "executed",
+              "task_id": "sha256:c5e715538b8f41780a9541a81c200dc36760c268f26c973093e4799fd1fca717",
+              "task_path": ":exporters:otlp:all:testOkHttpVersion4.11.0"
+            },
+            {
+              "completed_at_ms": 1793369975952,
+              "duration_ms": 43460,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369932492,
+              "state": "executed",
+              "task_id": "sha256:9a3ecd9a440659c77c97d061aa33a139da279b284c1a7d7661a7cdcbec1f8e27",
+              "task_path": ":opencensus-shim:test"
+            },
+            {
+              "completed_at_ms": 1793370432256,
+              "duration_ms": 37720,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370394536,
+              "state": "executed",
+              "task_id": "sha256:bd8f38d3df6a7c75df84e57cee28357e09afc9b1b3a5bf7ff0aaa5ad58b60bbe",
+              "task_path": ":exporters:otlp:all:testGrpcNetty"
+            },
+            {
+              "completed_at_ms": 1793370260904,
+              "duration_ms": 37059,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370223845,
+              "state": "executed",
+              "task_id": "sha256:8ff5d32423740e2f6d69819ab2068659f3d93af0455b960709129d9c010b9071",
+              "task_path": ":sdk:trace:test"
+            },
+            {
+              "completed_at_ms": 1793369865126,
+              "duration_ms": 36171,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369828955,
+              "state": "executed",
+              "task_id": "sha256:f5198ebe9700d46b8c41b8267f79dab1bee69cc2e304abaea5fde8b4aba245c3",
+              "task_path": ":sdk:metrics:compileJava"
+            },
+            {
+              "completed_at_ms": 1793370452110,
+              "duration_ms": 33591,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370418519,
+              "state": "executed",
+              "task_id": "sha256:631cf2a1c64bef52aba3fef9ea14e0505888dbc96169a0f776c80535c418e5b6",
+              "task_path": ":exporters:otlp:all:testGrpcNettyShaded"
+            },
+            {
+              "completed_at_ms": 1793370457836,
+              "duration_ms": 33454,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370424382,
+              "state": "executed",
+              "task_id": "sha256:ebad385eb1b615df5db296229d1b9872a6ba171e352b9124bcf3b53d07f50842",
+              "task_path": ":exporters:otlp:all:testGrpcOkhttp"
+            },
+            {
+              "completed_at_ms": 1793370184272,
+              "duration_ms": 32789,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370151483,
+              "state": "executed",
+              "task_id": "sha256:394e0c1f38670a1504fa5aaca174d16c2af5c3074a58e0c58dfe8d54d012c9a7",
+              "task_path": ":sdk:metrics:compileTestJava"
+            },
+            {
+              "completed_at_ms": 1793370127171,
+              "duration_ms": 32035,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370095136,
+              "state": "executed",
+              "task_id": "sha256:689f9bdca311116cc168eff57f85590199af622284417e03388a437c4f5b394f",
+              "task_path": ":integration-tests:otlp:test"
+            },
+            {
+              "completed_at_ms": 1793370040885,
+              "duration_ms": 31635,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370009250,
+              "state": "executed",
+              "task_id": "sha256:862d7f1231aa5ff89ca3fe733c0d95f7487efd692e42dbe56a9a794e65a88bc4",
+              "task_path": ":exporters:common:test"
+            },
+            {
+              "completed_at_ms": 1793370125894,
+              "duration_ms": 30292,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370095602,
+              "state": "executed",
+              "task_id": "sha256:d4967d2bb7c7884a2ef2fc83c762727fc33f00716819d93e78c5d9c9471a5a5b",
+              "task_path": ":integration-tests:otlp:testGrpcJava"
+            },
+            {
+              "completed_at_ms": 1793370461283,
+              "duration_ms": 29026,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793370432257,
+              "state": "executed",
+              "task_id": "sha256:25575dfa1629bd27d09ca1976c0f1156530db8fc1b68ba79ba08e5eda32826b8",
+              "task_path": ":exporters:otlp:all:testJdkHttpSender"
+            },
+            {
+              "completed_at_ms": 1793369706337,
+              "duration_ms": 28187,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369678150,
+              "state": "executed",
+              "task_id": "sha256:52972787cca5fa6e6f5ecaafa1e38649aa40a38f893071251098beda3989f0f4",
+              "task_path": ":buildSrc:compileKotlin"
+            },
+            {
+              "completed_at_ms": 1793369831354,
+              "duration_ms": 27239,
+              "execution_reasons": [
+                "no_history"
+              ],
+              "incremental": false,
+              "reasons_state": "reported",
+              "started_at_ms": 1793369804115,
+              "state": "executed",
+              "task_id": "sha256:abc9f6b9729020505ca2e63701fac7e26935e082eb57a397f602552aab5e8de3",
+              "task_path": ":extensions:kotlin:compileKotlin"
+            }
+          ],
+          "top_scope": "all_observed_spans",
+          "total_spans": 1503,
+          "truncated": true
+        },
+        "tasks_executed": 1288,
+        "tasks_failed": 0,
+        "tasks_from_cache": 5,
+        "tasks_skipped": 182,
+        "tasks_total": 1503,
+        "tasks_up_to_date": 28,
+        "tool": "gradle",
+        "tool_version": "9.8.2"
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "gradle",
+          "candidates": [
+            {
+              "confidence": "high",
+              "evidence": {
+                "bytes_read": 12409291,
+                "hit_rate": 24.5,
+                "hits": 193,
+                "misses": 596
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 929282,
+            "errors": 0,
+            "hit_rate": 24.5,
+            "hits": 193,
+            "misses": 596,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 596
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 24.5,
+          "hits": 193,
+          "likely_reason": "mixed_existing_and_new_work",
+          "misses": 596,
+          "state": "warm_mixed",
+          "writes": 596
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [
+    "boringcache-gradle-github-rolling-65-41069759174.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.46.0"
+  },
+  "harness": {
+    "commit": "6ffb4f03552fef027951d60c1d132fb71ed2105c",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/41069759174",
+  "attempt": 1,
+  "started_at": "2026-10-30T14:13:03Z"
+}

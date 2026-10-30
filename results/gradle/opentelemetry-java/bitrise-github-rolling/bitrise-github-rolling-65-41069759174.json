@@ -1,0 +1,42 @@
+{
+  "adapter_command": "gradle",
+  "case": "opentelemetry-java",
+  "lane": "bitrise",
+  "provider": "bitrise",
+  "level": "base",
+  "capabilities": [
+    "build-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 65,
+  "scope": "bitrise-github-rolling",
+  "cache_scope": "bitrise-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "gradle-opentelemetry-java-bitrise-github-rolling-64",
+  "cache_restore_tracked": true,
+  "repo": "open-telemetry/opentelemetry-java",
+  "sha": "3e2772d1997350df9345b7c2df0a9406f3aa0972",
+  "seconds": 815.835,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "6ffb4f03552fef027951d60c1d132fb71ed2105c",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/41069759174",
+  "attempt": 1,
+  "started_at": "2026-10-30T14:13:09Z"
+}
