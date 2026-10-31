@@ -1,0 +1,56 @@
+{
+  "name": "update-posthog-uv-github-actions-cache",
+  "kind": "update",
+  "case": "posthog-uv",
+  "tool": "uv",
+  "repo": "PostHog/posthog",
+  "sha": "582cbcd576b94d016f228628cb251bf49d3ca4df",
+  "before_sha": "86b8aa0e7fd02b6203aca88ece559a43e15320aa",
+  "after_sha": "582cbcd576b94d016f228628cb251bf49d3ca4df",
+  "lockfile": "uv.lock",
+  "lane": "actions-cache",
+  "runner": "github",
+  "machine": "github 4c",
+  "producer": "github",
+  "cache_backend": "github",
+  "key": "deps-41164011011-posthog-uv-github",
+  "run_id": "41164011011",
+  "step": 0,
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/41164011011",
+  "recorded_at": "2026-10-31T03:24:34Z",
+  "versions": {
+    "actions_cache": "6.1.0"
+  },
+  "observed": {
+    "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+    "cores": 4,
+    "disk_free_bytes": 90157674496
+  },
+  "restore": {
+    "seconds": 15.428,
+    "network_bytes": 1043355386,
+    "step_ok": true,
+    "ok": true
+  },
+  "install": {
+    "seconds": 2.218,
+    "network_bytes": 365783,
+    "step_ok": true,
+    "ok": true
+  },
+  "save": {
+    "seconds": 12.53,
+    "network_bytes": 1043345272,
+    "step_ok": true,
+    "ok": true
+  },
+  "exit_status": 0,
+  "output_ok": true,
+  "cache": {
+    "bytes": 3582256706,
+    "files": 66757
+  },
+  "cache_restored_key": "deps-41164011011-posthog-uv-github-2b330808c3e07edb",
+  "harness_commit": "493c67cdf98fbc4af586601aef2362c767c94641"
+}
