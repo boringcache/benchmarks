@@ -1,0 +1,16 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.bazel]
+fail-on-cache-error = true
+tag = "llvm-bazel"
+no-platform = true
+no-git = true
+metadata-hints = ["benchmark=llvm", "workload=clang"]
+command = [
+  "/usr/bin/bazelisk",
+  "--bazelrc=../../../bench.bazelrc",
+  "build",
+  "--config=ci",
+  "--sandbox_base=",
+  "@llvm-project//clang:clang",
+]

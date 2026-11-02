@@ -1,0 +1,21 @@
+repo = "llvm/llvm-project"
+branch = "main"
+start_sha = "b611c15f2d6a6b98989b6272ac61ce9b514a03ae"
+rolling_stride = 20
+directory = "upstream/utils/bazel"
+prepare = [
+  '{ echo "startup --output_user_root=$BENCH_DIR/.bazel/output-root"; echo "startup --output_base=$BENCH_DIR/.bazel/output-base"; echo "${BAZEL_LANE_RC:-}"; echo "${BAZEL_PHASE_RC:-}"; } > bench.bazelrc',
+  "sudo apt-get update && sudo apt-get install --no-install-recommends -y clang lld libmpfr-dev libpfm4-dev m4 libedit-dev",
+  "curl -fsSL https://github.com/bazelbuild/bazelisk/releases/download/v1.27.0/bazelisk-amd64.deb -o bazelisk.deb && echo 'd8b00ea975c823e15263c80200ac42979e17368547fbff4ab177af035badfa83  bazelisk.deb' | sha256sum --check && sudo apt-get install -y ./bazelisk.deb && rm bazelisk.deb",
+  "cd upstream/utils/bazel && /usr/bin/bazelisk --version",
+]
+check = "clang=$(find -L upstream/utils/bazel/bazel-bin/external -maxdepth 3 -path '*/clang/clang' -type f | head -n 1) && test -x \"$clang\" && \"$clang\" --version"
+
+[env]
+CC = "clang"
+CXX = "clang++"
+
+[runs]
+boringcache-bazel = ["github"]
+gha = ["github"]
+nativelink = ["github"]
