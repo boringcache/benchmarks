@@ -1,6 +1,7 @@
 repo = "llvm/llvm-project"
 branch = "main"
-start_sha = "5236af5727170cc1bf62d5bfc1de05c4d27f28aa"
+start_sha = "b611c15f2d6a6b98989b6272ac61ce9b514a03ae"
+rolling_stride = 20
 directory = "upstream"
 prepare = [
   "sudo apt-get update && sudo apt-get install --no-install-recommends -y clang-22 lld-22",
