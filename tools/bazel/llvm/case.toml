@@ -4,7 +4,7 @@ start_sha = "b611c15f2d6a6b98989b6272ac61ce9b514a03ae"
 rolling_stride = 20
 directory = "upstream/utils/bazel"
 prepare = [
-  '{ echo "startup --output_user_root=$BENCH_DIR/.bazel/output-root"; echo "startup --output_base=$BENCH_DIR/.bazel/output-base"; echo "${BAZEL_LANE_RC:-}"; echo "${BAZEL_PHASE_RC:-}"; } > bench.bazelrc',
+  '{ echo "startup --output_user_root=$BENCH_DIR/.bazel/output-root"; echo "startup --output_base=$BENCH_DIR/.bazel/output-base"; echo "build --jobs=64"; echo "${BAZEL_LANE_RC:-}"; echo "${BAZEL_PHASE_RC:-}"; } > bench.bazelrc',
   'sed -i "s/^llvm_configure(name = \"llvm-project\")\$/llvm_configure(name = \"llvm-project\", targets = [\"X86\"])/" upstream/utils/bazel/MODULE.bazel && grep -qxF "llvm_configure(name = \"llvm-project\", targets = [\"X86\"])" upstream/utils/bazel/MODULE.bazel',
   "sudo apt-get update && sudo apt-get install --no-install-recommends -y clang lld libmpfr-dev libpfm4-dev m4 libedit-dev",
   "curl -fsSL https://github.com/bazelbuild/bazelisk/releases/download/v1.27.0/bazelisk-amd64.deb -o bazelisk.deb && echo 'd8b00ea975c823e15263c80200ac42979e17368547fbff4ab177af035badfa83  bazelisk.deb' | sha256sum --check && sudo apt-get install -y ./bazelisk.deb && rm bazelisk.deb",
