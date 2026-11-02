@@ -1,4 +1,4 @@
-bazel = ["grpc"]
+bazel = ["grpc", "llvm"]
 buck2 = ["executorch"]
 cargo = ["deno", "ferrum-edge", "zed"]
 ccache = ["llvm", "obs-studio", "osquery"]
