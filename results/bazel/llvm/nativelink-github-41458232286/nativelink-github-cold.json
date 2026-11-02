@@ -1,0 +1,41 @@
+{
+  "adapter_command": "bazel",
+  "case": "llvm",
+  "lane": "nativelink",
+  "provider": "nativelink",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "cold",
+  "step": null,
+  "scope": "nativelink-github-41458232286",
+  "cache_scope": "nativelink-github-41458232286",
+  "cache_seeded": null,
+  "cache_restored_key": null,
+  "repo": "llvm/llvm-project",
+  "sha": "b611c15f2d6a6b98989b6272ac61ce9b514a03ae",
+  "seconds": 7937.867,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "d9e64379d4b558896b78345201339defd0d05aff",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/41458232286",
+  "attempt": 1,
+  "started_at": "2026-11-02T14:05:03Z"
+}
