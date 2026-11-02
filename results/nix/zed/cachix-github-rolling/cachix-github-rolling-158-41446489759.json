@@ -1,0 +1,41 @@
+{
+  "adapter_command": "nix",
+  "case": "zed",
+  "lane": "cachix",
+  "provider": "cachix",
+  "level": "base",
+  "capabilities": [
+    "binary-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 158,
+  "scope": "cachix-github-rolling",
+  "cache_scope": "cachix-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "zed-industries/zed",
+  "sha": "9e23c1f43edc9d7f5360b2bdc8c26d340748d051",
+  "seconds": 3614.191,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "18479fd6252d37712cd31cdbac3f1f0241d6a40d",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/41446489759",
+  "attempt": 1,
+  "started_at": "2026-11-02T12:40:55Z"
+}
