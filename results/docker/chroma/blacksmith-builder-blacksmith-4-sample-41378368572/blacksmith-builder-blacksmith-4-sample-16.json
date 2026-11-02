@@ -1,0 +1,55 @@
+{
+  "adapter_command": "docker",
+  "case": "chroma",
+  "lane": "blacksmith-builder",
+  "provider": "blacksmith",
+  "level": "base",
+  "capabilities": [
+    "layers"
+  ],
+  "runner": "blacksmith-4",
+  "runner_label": "blacksmith-4vcpu-ubuntu-2404",
+  "machine": "blacksmith 4c",
+  "phase": "sample",
+  "step": 16,
+  "scope": "blacksmith-builder-blacksmith-4-sample-41378368572",
+  "cache_scope": "blacksmith-builder-blacksmith-4-sample",
+  "cache_seeded": null,
+  "cache_restored_key": null,
+  "repo": "chroma-core/chroma",
+  "sha": "52ce8448cb38a498f1660d55ea80df25b78f000a",
+  "seconds": 2084.321,
+  "cache_save_timing": "post-job",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC",
+      "cores": 4
+    },
+    "image_platform": "linux/amd64",
+    "buildx_builder": {
+      "name": "blacksmith-mvynb9o5",
+      "driver": "remote",
+      "nodes": [
+        {
+          "name": "blacksmith-mvynb9o50",
+          "endpoint": "tcp://127.0.0.1:1234"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "cadence": "sample",
+  "harness": {
+    "commit": "dadf0ecbe797f1195d915b94adcc63081ab23b29",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/41378368572",
+  "attempt": 1,
+  "started_at": "2026-11-02T02:34:26Z",
+  "job_conclusion": "success",
+  "post_job_save_seconds": 2.081
+}
