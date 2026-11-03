@@ -3,6 +3,7 @@ require "fileutils"
 require "json"
 require "net/http"
 require "timeout"
+require_relative "../lib/bench/native_link"
 
 VERSION = "1.7.4"
 SHA256 = "a8b0d2d6c3131b0a7d0437b64697819eb5f5cbf703a9a3240c2b01e81dcc3d34"
@@ -10,7 +11,7 @@ INSTANCE = "main"
 
 state = File.join(ENV.fetch("RUNNER_TEMP"), "nativelink")
 account = URI(ENV.fetch("R2_ENDPOINT")).host.split(".").first
-prefix = "nativelink/#{ENV.fetch("BENCH_CASE")}"
+prefix = Bench::NativeLink.prefix(ENV)
 FileUtils.mkdir_p(state)
 
 archive = File.join(state, "release.tar.gz")
