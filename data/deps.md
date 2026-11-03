@@ -110,52 +110,58 @@
 
 | Lane | Cache backend | Runner | Cache from | Before | After | Source CPU | Consumer CPU | Version | Samples | Failed | Restore before s | Install s | Save s | Save network MB | Restore after s | Restore after network MB | Cache MB | Cache files |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| actions-cache | blacksmith | blacksmith 4c | blacksmith-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | AMD EPYC | 6.1.0 | 2 | 0 | 8.26 | 4.511 | 5.843 | 723 | 10.243 | 724 | 2721 | 163161.0 |
+| actions-cache | blacksmith | blacksmith 4c | blacksmith-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | AMD EPYC | 6.1.0 | 3 | 0 | 9.579 | 5.612 | 7.011 | 723 | 5.001 | 724 | 2721 | 163161 |
 | actions-cache | blacksmith | blacksmith 4c | blacksmith-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | Intel(R) Xeon(R) Processor | 6.1.0 | 1 | 0 | 6.744 | 3.943 | 5.194 | 723 | 10.531 | 724 | 2721 | 163161 |
 | actions-cache | blacksmith | blacksmith 4c | blacksmith-4 | 5871475311c8 | 41457ecc938b | Intel(R) Xeon(R) Processor | AMD EPYC | 6.1.0 | 1 | 0 | 7.555 | 3.286 | 4.965 | 723 | 5.876 | 724 | 2721 | 163161 |
 | actions-cache | actions-cache | depot 4c | depot-4 | 5871475311c8 | 41457ecc938b | AMD EPYC 9R45 96-Core Processor | AMD EPYC 9R45 96-Core Processor | 6.1.0 | 1 | 0 | 5.682 | 3.599 | 12.236 | 750 | 5.824 | 761 | 2721 | 163161 |
 | actions-cache | depot | depot 4c | depot-4 | 5871475311c8 | 41457ecc938b | AMD EPYC 9R45 | AMD EPYC 9R45 96-Core Processor | 6.1.0 | 1 | 0 | 11.717 | 7.144 | 10.511 | 759 | 5.68 | 763 | 2721 | 163161 |
-| actions-cache | depot | depot 4c | depot-4 | 5871475311c8 | 41457ecc938b | AMD EPYC 9R45 96-Core Processor | AMD EPYC 9R45 96-Core Processor | 6.1.0 | 3 | 0 | 4.986 | 3.089 | 11.026 | 756 | 5.373 | 761 | 2721 | 163161 |
+| actions-cache | depot | depot 4c | depot-4 | 5871475311c8 | 41457ecc938b | AMD EPYC 9R45 96-Core Processor | AMD EPYC 9R45 96-Core Processor | 6.1.0 | 4 | 0 | 4.903 | 3.091 | 10.898 | 755 | 5.395 | 759 | 2721 | 163161.0 |
 | actions-cache | actions-cache | github 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V74 80-Core Processor | AMD EPYC 9V74 80-Core Processor | 6.1.0 | 1 | 0 | 18.573 | 21.919 | 8.717 | 757 | 19.995 | 757 | 2721 | 163161 |
 | actions-cache | github | github 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 7763 64-Core Processor | AMD EPYC 7763 64-Core Processor | 6.1.0 | 1 | 0 | 14.999 | 13.806 | 11.468 | 757 | 13.168 | 752 | 2721 | 163161 |
 | actions-cache | github | github 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 7763 64-Core Processor | AMD EPYC 9V74 80-Core Processor | 6.1.0 | 1 | 0 | 17.173 | 14.167 | 17.298 | 757 | 17.211 | 757 | 2721 | 163161 |
 | actions-cache | github | github 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 7763 64-Core Processor | Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz | 6.1.0 | 1 | 0 | 15.676 | 13.171 | 12.399 | 757 | 13.084 | 757 | 2721 | 163161 |
+| actions-cache | github | github 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V74 80-Core Processor | INTEL(R) XEON(R) PLATINUM 8573C | 6.1.0 | 1 | 0 | 19.955 | 23.758 | 9.123 | 757 | 19.951 | 757 | 2721 | 163161 |
 | actions-cache | github | github 4c | github | 5871475311c8 | 41457ecc938b | Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz | AMD EPYC 9V74 80-Core Processor | 6.1.0 | 1 | 0 | 13.342 | 11.155 | 12.052 | 757 | 21.027 | 757 | 2721 | 163161 |
 | actions-cache | github | namespace 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 7763 64-Core Processor | AMD EPYC | 6.1.0 | 3 | 0 | 15.676 | 13.806 | 12.399 | 757 | 18.696 | 726 | 2721 | 163161 |
+| actions-cache | github | namespace 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V74 80-Core Processor | AMD EPYC | 6.1.0 | 1 | 0 | 19.955 | 23.758 | 9.123 | 757 | 21.956 | 726 | 2721 | 163161 |
 | actions-cache | github | namespace 4c | github | 5871475311c8 | 41457ecc938b | Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz | AMD EPYC | 6.1.0 | 1 | 0 | 13.342 | 11.155 | 12.052 | 757 | 21.261 | 726 | 2721 | 163161 |
 | actions-cache | actions-cache | namespace 4c | namespace-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | AMD EPYC | 6.1.0 | 1 | 0 | 18.612 | 4.992 | 7.441 | 736 | 20.895 | 725 | 2721 | 163161 |
-| actions-cache | github | namespace 4c | namespace-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | AMD EPYC | 6.1.0 | 4 | 0 | 19.232 | 5.332 | 7.446 | 729 | 18.965 | 725 | 2721 | 163161.0 |
+| actions-cache | github | namespace 4c | namespace-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | AMD EPYC | 6.1.0 | 5 | 0 | 18.73 | 5.685 | 7.529 | 729 | 19.204 | 725 | 2721 | 163161 |
 | boringcache | boringcache | blacksmith 4c | blacksmith-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | AMD EPYC | 1.43.1 | 1 | 0 | 10.315 | 3.745 | 9.481 | 72 | 10.024 | 817 | 2721 | 163161 |
 | boringcache | boringcache | blacksmith 4c | blacksmith-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | AMD EPYC | 1.43.2 | 1 | 0 | 10.478 | 3.374 | 9.38 | 73 | 9.257 | 815 | 2721 | 163161 |
 | boringcache | boringcache | blacksmith 4c | blacksmith-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | AMD EPYC | 1.44.0 | 1 | 0 | 13.976 | 4.134 | 11.761 | 74 | 10.562 | 819 | 2721 | 163161 |
-| boringcache | boringcache | blacksmith 4c | blacksmith-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | Intel(R) Xeon(R) Processor | 1.46.0 | 1 | 1 | - | - | - | - | - | - | - | - |
+| boringcache | boringcache | blacksmith 4c | blacksmith-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | Intel(R) Xeon(R) Processor | 1.46.0 | 2 | 1 | 9.339 | 3.483 | 7.419 | 73 | 8.944 | 845 | 2721 | 163161 |
 | boringcache | boringcache | blacksmith 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 7763 64-Core Processor | AMD EPYC | 1.43.1 | 1 | 0 | 14.504 | 13.914 | 9.458 | 76 | 10.034 | 816 | 2721 | 163161 |
 | boringcache | boringcache | blacksmith 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 7763 64-Core Processor | AMD EPYC | 1.44.0 | 1 | 0 | 15.508 | 13.695 | 11.575 | 78 | 12.462 | 819 | 2721 | 163161 |
 | boringcache | boringcache | blacksmith 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V45 96-Core Processor | AMD EPYC | 1.43.2 | 1 | 0 | 19.071 | 16.773 | 9.864 | 76 | 11.317 | 817 | 2721 | 163161 |
 | boringcache | boringcache | blacksmith 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V45 96-Core Processor | AMD EPYC | 1.46.0 | 1 | 0 | 34.442 | 17.42 | 172.848 | 96 | 27.877 | 827 | 2721 | 163161 |
+| boringcache | boringcache | blacksmith 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V74 80-Core Processor | AMD EPYC | 1.46.0 | 1 | 0 | 18.911 | 27.572 | 9.189 | 75 | 8.972 | 815 | 2721 | 163161 |
 | boringcache | boringcache | depot 4c | depot-4 | 5871475311c8 | 41457ecc938b | AMD EPYC 9R45 96-Core Processor | AMD EPYC 9R45 | 1.43.1 | 1 | 0 | 12.926 | 3.349 | 6.025 | 76 | 11.532 | 843 | 2721 | 163161 |
 | boringcache | boringcache | depot 4c | depot-4 | 5871475311c8 | 41457ecc938b | AMD EPYC 9R45 96-Core Processor | AMD EPYC 9R45 96-Core Processor | 1.42.2 | 1 | 0 | 10.06 | 3.274 | 6.539 | 75 | 9.528 | 861 | 2721 | 163161 |
 | boringcache | boringcache | depot 4c | depot-4 | 5871475311c8 | 41457ecc938b | AMD EPYC 9R45 96-Core Processor | AMD EPYC 9R45 96-Core Processor | 1.43.2 | 1 | 0 | 8.912 | 3.651 | 7.407 | 76 | 7.087 | 857 | 2721 | 163161 |
 | boringcache | boringcache | depot 4c | depot-4 | 5871475311c8 | 41457ecc938b | AMD EPYC 9R45 96-Core Processor | AMD EPYC 9R45 96-Core Processor | 1.44.0 | 1 | 0 | 9.675 | 3.037 | 7.538 | 76 | 7.841 | 862 | 2721 | 163161 |
-| boringcache | boringcache | depot 4c | depot-4 | 5871475311c8 | 41457ecc938b | AMD EPYC 9R45 96-Core Processor | AMD EPYC 9R45 96-Core Processor | 1.46.0 | 1 | 0 | 14.484 | 3.088 | 6.405 | 76 | 7.501 | 861 | 2721 | 163161 |
+| boringcache | boringcache | depot 4c | depot-4 | 5871475311c8 | 41457ecc938b | AMD EPYC 9R45 96-Core Processor | AMD EPYC 9R45 96-Core Processor | 1.46.0 | 2 | 0 | 12.164 | 5.476 | 5.96 | 77 | 7.198 | 862 | 2721 | 163161.0 |
 | boringcache | boringcache | depot 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 7763 64-Core Processor | AMD EPYC 9R45 96-Core Processor | 1.43.1 | 1 | 0 | 14.504 | 13.914 | 9.458 | 76 | 8.435 | 859 | 2721 | 163161 |
 | boringcache | boringcache | depot 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 7763 64-Core Processor | AMD EPYC 9R45 96-Core Processor | 1.44.0 | 1 | 0 | 15.508 | 13.695 | 11.575 | 78 | 6.293 | 865 | 2721 | 163161 |
 | boringcache | boringcache | depot 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V45 96-Core Processor | AMD EPYC 9R45 96-Core Processor | 1.43.2 | 1 | 0 | 19.071 | 16.773 | 9.864 | 76 | 7.137 | 857 | 2721 | 163161 |
 | boringcache | boringcache | depot 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V45 96-Core Processor | AMD EPYC 9R45 96-Core Processor | 1.46.0 | 1 | 0 | 34.442 | 17.42 | 172.848 | 96 | 7.154 | 860 | 2721 | 163161 |
+| boringcache | boringcache | depot 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V74 80-Core Processor | AMD EPYC 9R45 96-Core Processor | 1.46.0 | 1 | 0 | 18.911 | 27.572 | 9.189 | 75 | 6.94 | 863 | 2721 | 163161 |
 | boringcache | boringcache | github 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 7763 64-Core Processor | AMD EPYC 7763 64-Core Processor | 1.44.0 | 1 | 0 | 15.508 | 13.695 | 11.575 | 78 | 12.908 | 852 | 2721 | 163161 |
 | boringcache | boringcache | github 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 7763 64-Core Processor | AMD EPYC 9V74 80-Core Processor | 1.43.1 | 1 | 0 | 14.504 | 13.914 | 9.458 | 76 | 17.105 | 849 | 2721 | 163161 |
 | boringcache | boringcache | github 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V45 96-Core Processor | AMD EPYC 7763 64-Core Processor | 1.42.2 | 1 | 0 | 19.344 | 17.308 | 8.94 | 76 | 23.707 | 849 | 2721 | 163161 |
 | boringcache | boringcache | github 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V45 96-Core Processor | AMD EPYC 7763 64-Core Processor | 1.43.2 | 1 | 0 | 19.071 | 16.773 | 9.864 | 76 | 14.762 | 850 | 2721 | 163161 |
 | boringcache | boringcache | github 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V45 96-Core Processor | AMD EPYC 7763 64-Core Processor | 1.46.0 | 1 | 0 | 34.442 | 17.42 | 172.848 | 96 | 16.821 | 850 | 2721 | 163161 |
+| boringcache | boringcache | github 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V74 80-Core Processor | Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz | 1.46.0 | 1 | 0 | 18.911 | 27.572 | 9.189 | 75 | 13.416 | 849 | 2721 | 163161 |
 | boringcache | boringcache | namespace 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 7763 64-Core Processor | AMD EPYC | 1.43.1 | 1 | 0 | 14.504 | 13.914 | 9.458 | 76 | 13.319 | 815 | 2721 | 163161 |
 | boringcache | boringcache | namespace 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 7763 64-Core Processor | AMD EPYC | 1.44.0 | 1 | 0 | 15.508 | 13.695 | 11.575 | 78 | 12.138 | 818 | 2721 | 163161 |
 | boringcache | boringcache | namespace 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V45 96-Core Processor | AMD EPYC | 1.43.2 | 1 | 0 | 19.071 | 16.773 | 9.864 | 76 | 11.335 | 815 | 2721 | 163161 |
 | boringcache | boringcache | namespace 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V45 96-Core Processor | AMD EPYC | 1.46.0 | 1 | 0 | 34.442 | 17.42 | 172.848 | 96 | 28.31 | 819 | 2721 | 163161 |
+| boringcache | boringcache | namespace 4c | github | 5871475311c8 | 41457ecc938b | AMD EPYC 9V74 80-Core Processor | AMD EPYC | 1.46.0 | 1 | 0 | 18.911 | 27.572 | 9.189 | 75 | 12.187 | 816 | 2721 | 163161 |
 | boringcache | boringcache | namespace 4c | namespace-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | AMD EPYC | 1.42.2 | 1 | 0 | 22.116 | 4.877 | 6.772 | 73 | 20.184 | 816 | 2721 | 163161 |
 | boringcache | boringcache | namespace 4c | namespace-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | AMD EPYC | 1.43.1 | 1 | 0 | 10.912 | 4.686 | 6.782 | 72 | 11.851 | 815 | 2721 | 163161 |
 | boringcache | boringcache | namespace 4c | namespace-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | AMD EPYC | 1.43.2 | 1 | 0 | 13.419 | 5.691 | 7.66 | 74 | 11.215 | 815 | 2721 | 163161 |
 | boringcache | boringcache | namespace 4c | namespace-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | AMD EPYC | 1.44.0 | 1 | 0 | 12.897 | 4.843 | 18.724 | 78 | 13.887 | 817 | 2721 | 163161 |
-| boringcache | boringcache | namespace 4c | namespace-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | AMD EPYC | 1.46.0 | 1 | 1 | - | - | - | - | - | - | - | - |
+| boringcache | boringcache | namespace 4c | namespace-4 | 5871475311c8 | 41457ecc938b | AMD EPYC | AMD EPYC | 1.46.0 | 2 | 1 | 12.623 | 5.412 | 6.777 | 74 | 11.924 | 816 | 2721 | 163161 |
 
 ## posthog-uv
 
