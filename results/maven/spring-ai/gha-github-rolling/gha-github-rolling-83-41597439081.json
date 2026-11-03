@@ -1,0 +1,42 @@
+{
+  "adapter_command": "maven",
+  "case": "spring-ai",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "build-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 83,
+  "scope": "gha-github-rolling",
+  "cache_scope": "gha-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "maven-spring-ai-gha-github-rolling-82",
+  "cache_restore_tracked": true,
+  "repo": "spring-projects/spring-ai",
+  "sha": "7b1c7d135f56d7388a0427b6fa2bd1c7de3515bd",
+  "seconds": 92.484,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "292730a6f6ee10f03a23c2b798dd2289034584e3",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/41597439081",
+  "attempt": 1,
+  "started_at": "2026-11-03T07:37:36Z"
+}
