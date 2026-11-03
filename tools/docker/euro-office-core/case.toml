@@ -1,0 +1,16 @@
+project = "euro-office"
+repo = "Euro-Office/DocumentServer"
+branch = "main"
+start_sha = "4b107f80ec6edf2b9856f4e23c54fe809383de09"
+prepare = [
+  "git -C upstream submodule update --init --depth 1 core",
+  "ruby overlay/prepare.rb",
+]
+check = "docker run --rm --network none --entrypoint sh euro-office-core-benchmark:local -c 'test -x /package/bin/x2t && test -x /package/tools/allfontsgen'"
+
+[runs]
+boringcache-docker = ["github"]
+boringcache-docker-plus = ["github"]
+gha = ["github"]
+gha-plus = ["github"]
+ghcr = ["github"]

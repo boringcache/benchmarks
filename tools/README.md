@@ -133,6 +133,25 @@ the script before verification or cleanup.
 
 ## Adding
 
+The Euro-Office project has two Docker cases at the same DocumentServer commit.
+`euro-office-core` builds the upstream `core` Dockerfile target with the arguments
+resolved by its Bake target, then checks `x2t` and `allfontsgen`. Its plus plan
+adds ccache launchers and a ccache mount to a generated Dockerfile; both plus
+providers use that file and preserve the existing build and vcpkg mounts.
+All lanes retain upstream's anonymous S3 dependency downloads.
+`euro-office` builds the upstream `standalone` Bake target, including packaging,
+and checks the installed converter and document service. It derives version
+arguments and the OS update stamp from the pinned source. Submodules stay at
+their recorded commits. Both cases currently run on GitHub amd64.
+
+The standalone comparison uses one cache scope per Bake target, following
+[Docker's GHA scope guidance](https://docs.docker.com/build/cache/backends/gha/#scope)
+and [registry cache setup](https://docs.docker.com/build/cache/backends/registry/).
+Cold and rolling runs export `mode=max`; warm runs only import. The core plus
+comparison uses the shared [buildkit-cache-dance setup](https://github.com/reproducible-containers/buildkit-cache-dance).
+The workload comes from [DocumentServer's build workflow](https://github.com/Euro-Office/DocumentServer/blob/4b107f80ec6edf2b9856f4e23c54fe809383de09/.github/workflows/build.yml)
+and [build-time issue](https://github.com/Euro-Office/DocumentServer/issues/450).
+
 - A case: copy an existing case directory, change `case.toml` and `.boringcache.toml`, run `bin/bench check`.
 - A lane: copy a lane file in the same tool, change `provider`, `env` and `runners`.
 - A tool: add `tools/<tool>/tool.toml`, a `boringcache-<tool>` lane and one case.

@@ -1,0 +1,39 @@
+provider = "github-container-registry"
+label = "ghcr"
+level = "base"
+actions_only = true
+runners = ["github", "github-arm"]
+setup = ["buildx", "ghcr"]
+args = [
+  "--set=core.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-core",
+  "--set=core-wasm.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-core-wasm",
+  "--set=sdkjs.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-sdkjs",
+  "--set=web-apps.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-web-apps",
+  "--set=server.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-server",
+  "--set=example.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-example",
+  "--set=bundle.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-bundle",
+  "--set=packages.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-packages",
+  "--set=standalone.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-standalone",
+  "--set=core.cache-to=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-core,mode=max",
+  "--set=core-wasm.cache-to=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-core-wasm,mode=max",
+  "--set=sdkjs.cache-to=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-sdkjs,mode=max",
+  "--set=web-apps.cache-to=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-web-apps,mode=max",
+  "--set=server.cache-to=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-server,mode=max",
+  "--set=example.cache-to=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-example,mode=max",
+  "--set=bundle.cache-to=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-bundle,mode=max",
+  "--set=packages.cache-to=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-packages,mode=max",
+  "--set=standalone.cache-to=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-standalone,mode=max"
+]
+
+[warm]
+args = [
+  "--set=core.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-core",
+  "--set=core-wasm.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-core-wasm",
+  "--set=sdkjs.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-sdkjs",
+  "--set=web-apps.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-web-apps",
+  "--set=server.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-server",
+  "--set=example.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-example",
+  "--set=bundle.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-bundle",
+  "--set=packages.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-packages",
+  "--set=standalone.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-standalone"
+]
