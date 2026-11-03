@@ -37,15 +37,59 @@ class EuroOfficePreparationTest < Minitest::Test
       lane = TomlRB.load_file(File.join(Bench::ROOT, "tools/docker/lanes/#{provider}-bake-euro-office.toml"))
       reads = lane.fetch("warm").fetch("args")
       writes = lane.fetch("args").grep(/\.cache-to=/)
-      assert_equal 9, reads.size
-      assert_equal 9, writes.size
+      assert_equal 10, reads.size
+      assert_equal 10, writes.size
       assert reads.all? { it.include?(".cache-from=") }
-      assert_equal 9, reads.map { it.split("=", 3).last }.uniq.size
+      assert_equal 10, reads.map { it.split("=", 3).last }.uniq.size
       assert_equal reads.map { it.split(".").first }.sort, writes.map { it.split(".").first }.sort
     end
   end
 
+  def test_standalone_keeps_resolved_build_inputs_without_embedded_cache_backends
+    prepare_standalone do |dir, definition, output, status|
+      assert status.success?, output
+      actual = JSON.parse(File.read(File.join(dir, "overlay/build.json")))
+      expected = Marshal.load(Marshal.dump(definition))
+      expected.fetch("target").each_value { it.delete("cache-from"); it.delete("cache-to") }
+      assert_equal expected, actual
+      args = JSON.parse(File.read(File.join(dir, "overlay/version.json"))).dig("target", "_common", "args")
+      assert_equal({ "PRODUCT_VERSION" => "9.3.6", "BUILD_NUMBER" => "0~rc.1", "OS_UPDATE_STAMP" => "2026-11-03" }, args)
+      command = TomlRB.load_file(File.join(Bench::ROOT, "tools/docker/euro-office/.boringcache.toml")).dig("adapters", "docker", "command")
+      refute command.any? { it.match?(/cache-(from|to)/) }
+    end
+  end
+
+  def test_failed_bake_resolution_stops_preparation
+    prepare_standalone(resolve: false) do |dir, _, output, status|
+      refute status.success?
+      assert_includes output, "Cannot resolve standalone Bake targets"
+      refute File.exist?(File.join(dir, "overlay/build.json"))
+    end
+  end
+
   private
+    def prepare_standalone(resolve: true)
+      Dir.mktmpdir("euro-office") do |dir|
+        %w[upstream overlay bin].each { FileUtils.mkdir_p(File.join(dir, it)) }
+        File.write(File.join(dir, "upstream/VERSION"), "9.3.6-rc.1\n")
+        definition = { "target" => {
+          "core" => { "context" => "upstream", "dockerfile" => "core/.docker/core.bake.Dockerfile", "args" => { "BUILD_ROOT" => "/package" }, "cache-from" => [{ "type" => "local", "src" => ".cache/core" }], "cache-to" => [{ "type" => "local", "dest" => ".cache/core" }] },
+          "standalone" => { "context" => "upstream", "contexts" => { "core" => "target:core" }, "tags" => ["euro-office-benchmark:local"], "output" => [{ "type" => "docker" }], "cache-from" => [{ "type" => "local", "src" => ".cache/docs" }] },
+        } }
+        File.write(File.join(dir, "bin/git"), "#!/bin/sh\nprintf '2026-11-03\\n'\n")
+        File.write(File.join(dir, "bin/docker"), <<~RUBY)
+          #!#{RbConfig.ruby}
+          abort "Expected Bake inspection" unless ARGV[0, 2] == %w[buildx bake] && ARGV.include?("--print")
+          exit 1 unless #{resolve}
+          puts #{JSON.generate(definition).inspect}
+        RUBY
+        %w[git docker].each { File.chmod(0o755, File.join(dir, "bin", it)) }
+        script = File.join(Bench::ROOT, "tools/docker/euro-office/overlay/prepare.rb")
+        output, status = Open3.capture2e({ "PATH" => "#{dir}/bin:#{ENV.fetch("PATH")}" }, RbConfig.ruby, script, chdir: dir)
+        yield dir, definition, output, status
+      end
+    end
+
     def prepare_core(plus: true, replace: nil)
       Dir.mktmpdir("euro-office") do |dir|
         FileUtils.mkdir_p(File.join(dir, "upstream/core/.docker"))

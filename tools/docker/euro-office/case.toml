@@ -1,6 +1,6 @@
 repo = "Euro-Office/DocumentServer"
 branch = "main"
-start_sha = "4b107f80ec6edf2b9856f4e23c54fe809383de09"
+start_sha = "17072307716b1ab0396f857f396c82f6d1b62293"
 prepare = [
   "git -C upstream submodule update --init --recursive --depth 1 --jobs 4",
   "ruby overlay/prepare.rb",

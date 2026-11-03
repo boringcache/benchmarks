@@ -5,6 +5,7 @@ actions_only = true
 runners = ["github", "github-arm"]
 setup = ["buildx", "ghcr"]
 args = [
+  "--set=brand-icons.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-brand-icons",
   "--set=core.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-core",
   "--set=core-wasm.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-core-wasm",
   "--set=sdkjs.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-sdkjs",
@@ -14,6 +15,7 @@ args = [
   "--set=bundle.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-bundle",
   "--set=packages.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-packages",
   "--set=standalone.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-standalone",
+  "--set=brand-icons.cache-to=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-brand-icons,mode=max",
   "--set=core.cache-to=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-core,mode=max",
   "--set=core-wasm.cache-to=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-core-wasm,mode=max",
   "--set=sdkjs.cache-to=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-sdkjs,mode=max",
@@ -27,6 +29,7 @@ args = [
 
 [warm]
 args = [
+  "--set=brand-icons.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-brand-icons",
   "--set=core.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-core",
   "--set=core-wasm.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-core-wasm",
   "--set=sdkjs.cache-from=type=registry,ref=ghcr.io/${GITHUB_REPOSITORY}-cache:${BENCH_SCOPE}-sdkjs",

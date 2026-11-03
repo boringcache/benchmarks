@@ -133,16 +133,22 @@ the script before verification or cleanup.
 
 ## Adding
 
-The Euro-Office project has two Docker cases at the same DocumentServer commit.
+The Euro-Office project has two Docker cases starting at DocumentServer
+`17072307716b1ab0396f857f396c82f6d1b62293` (21 October 2026), thirty first-parent
+commits before `4b107f80ec6edf2b9856f4e23c54fe809383de09`. The rolling history
+includes the seed and thirty later commits, with four distinct core revisions.
 `euro-office-core` builds the upstream `core` Dockerfile target with the arguments
 resolved by its Bake target, then checks `x2t` and `allfontsgen`. Its plus plan
 adds ccache launchers and a ccache mount to a generated Dockerfile; both plus
 providers use that file and preserve the existing build and vcpkg mounts.
-All lanes retain upstream's anonymous S3 dependency downloads.
+All lanes retain the dependency downloads and builds defined at each revision.
+The history crosses upstream's migration to anonymous S3 dependency downloads.
 `euro-office` builds the upstream `standalone` Bake target, including packaging,
 and checks the installed converter and document service. It derives version
-arguments and the OS update stamp from the pinned source. Submodules stay at
-their recorded commits. Both cases currently run on GitHub amd64.
+arguments and the OS update stamp from the pinned source. Preparation resolves
+the upstream Bake graph to JSON and removes its local cache backends; every lane
+builds that same definition with its provider's cache configuration. Submodules
+stay at their recorded commits. Both cases currently run on GitHub amd64.
 
 The standalone comparison uses one cache scope per Bake target, following
 [Docker's GHA scope guidance](https://docs.docker.com/build/cache/backends/gha/#scope)

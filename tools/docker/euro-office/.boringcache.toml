@@ -7,13 +7,6 @@ no-git = true
 metadata-hints = ["benchmark=euro-office", "upstream-job=standalone"]
 command = [
   "docker", "buildx", "bake",
-  "--file", "upstream/build/docker-bake.hcl",
-  "--file", "overlay/version.json",
-  "--set=*.context=upstream",
-  "--set=*.cache-from=",
-  "--set=*.cache-to=",
-  "--set=*.tags=",
-  "--set=standalone.tags=euro-office-benchmark:local",
-  "--set=standalone.output=type=docker",
+  "--file", "overlay/build.json",
   "standalone",
 ]
