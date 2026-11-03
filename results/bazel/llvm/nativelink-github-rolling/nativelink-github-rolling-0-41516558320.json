@@ -37,5 +37,6 @@
   },
   "run_url": "https://github.com/boringcache/benchmarks/actions/runs/41516558320",
   "attempt": 1,
-  "started_at": "2026-11-02T20:12:01Z"
+  "started_at": "2026-11-02T20:12:01Z",
+  "excluded": "Not a cold build: the NativeLink store under nativelink/bazel/llvm/ was shared with fresh runs 41458232286 and 41494248980, which had already built this commit, so all 5,667 actions were remote cache hits (job log: 6573 processes: 5667 remote cache hit, 906 internal)."
 }
