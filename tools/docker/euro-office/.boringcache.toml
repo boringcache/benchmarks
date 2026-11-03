@@ -1,0 +1,12 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+fail-on-cache-error = true
+tag = "euro-office-docker"
+no-git = true
+metadata-hints = ["benchmark=euro-office", "upstream-job=standalone"]
+command = [
+  "docker", "buildx", "bake",
+  "--file", "overlay/build.json",
+  "standalone",
+]
