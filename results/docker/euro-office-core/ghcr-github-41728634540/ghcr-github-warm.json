@@ -1,0 +1,52 @@
+{
+  "adapter_command": "docker",
+  "case": "euro-office-core",
+  "lane": "ghcr",
+  "provider": "github-container-registry",
+  "level": "base",
+  "capabilities": [
+    "layers"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "warm",
+  "step": null,
+  "scope": "ghcr-github-41728634540",
+  "cache_scope": "ghcr-github-41728634540",
+  "cache_seeded": null,
+  "cache_restored_key": null,
+  "repo": "Euro-Office/DocumentServer",
+  "sha": "4b107f80ec6edf2b9856f4e23c54fe809383de09",
+  "seconds": 51.848,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+      "cores": 4
+    },
+    "image_platform": "linux/amd64",
+    "buildx_builder": {
+      "name": "builder-bda272b4-b8c5-46a5-b126-a78e9966fd14",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-bda272b4-b8c5-46a5-b126-a78e9966fd140",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "e8c27fef09deb017a72b9f4ad317f9f86749fb20",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/41728634540",
+  "attempt": 1,
+  "started_at": "2026-11-03T23:42:07Z"
+}
