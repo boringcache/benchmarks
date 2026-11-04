@@ -133,7 +133,7 @@ the script before verification or cleanup.
 
 ## Adding
 
-The Euro-Office project has two Docker cases starting at DocumentServer
+The Euro-Office Docker cases start at DocumentServer
 `17072307716b1ab0396f857f396c82f6d1b62293` (21 October 2026), thirty first-parent
 commits before `4b107f80ec6edf2b9856f4e23c54fe809383de09`. The rolling history
 includes the seed and thirty later commits, with four distinct core revisions.
@@ -150,11 +150,25 @@ the upstream Bake graph to JSON and removes its local cache backends; every lane
 builds that same definition with its provider's cache configuration. Submodules
 stay at their recorded commits. Both cases currently run on GitHub amd64.
 
+`euro-office-cache` runs a separate full-image history at the same source start.
+It compares GHCR layers, GHCR layers with native ccache and cache-dance, and
+BoringCache layers with ccache tool caching and mount persistence. Both plus
+lanes use the same pinned ccache binaries, enable native C/C++ launchers and
+retain the existing WASM launchers. The BoringCache lane stores compiler results
+remotely without archiving local ccache directories. Both plus lanes persist
+native build state, vcpkg packages, WASM build state, the Emscripten cache and
+npm downloads. The native control also archives its two local compiler caches.
+Cache-dance discovers mounts across the resolved Bake targets and expands their
+build arguments. Its extraction and archive saving remain part of the reported
+elapsed time. The original layer-only and isolated-core records stay separate.
+
 The standalone comparison uses one cache scope per Bake target, following
 [Docker's GHA scope guidance](https://docs.docker.com/build/cache/backends/gha/#scope)
 and [registry cache setup](https://docs.docker.com/build/cache/backends/registry/).
 Cold and rolling runs export `mode=max`; warm runs only import. The core plus
 comparison uses the shared [buildkit-cache-dance setup](https://github.com/reproducible-containers/buildkit-cache-dance).
+The full-image plus comparison uses the same native mount-persistence setup
+with GHCR layers and the [BoringCache Docker tool-cache interface](https://boringcache.com/docs/adapters/docker).
 The workload comes from [DocumentServer's build workflow](https://github.com/Euro-Office/DocumentServer/blob/4b107f80ec6edf2b9856f4e23c54fe809383de09/.github/workflows/build.yml)
 and [build-time issue](https://github.com/Euro-Office/DocumentServer/issues/450).
 

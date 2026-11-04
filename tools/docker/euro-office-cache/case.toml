@@ -1,0 +1,13 @@
+repo = "Euro-Office/DocumentServer"
+branch = "main"
+start_sha = "17072307716b1ab0396f857f396c82f6d1b62293"
+prepare = [
+  "git -C upstream submodule update --init --recursive --depth 1 --jobs 4",
+  "ruby overlay/prepare.rb",
+]
+check = "docker run --rm --network none --entrypoint sh euro-office-benchmark:local -c 'test -x /var/www/euro-office/documentserver/server/FileConverter/bin/x2t && test -x /var/www/euro-office/documentserver/server/DocService/docservice'"
+
+[runs]
+boringcache-docker-plus = ["github"]
+ghcr-bake-euro-office-plus = ["github"]
+ghcr-bake-euro-office = ["github"]

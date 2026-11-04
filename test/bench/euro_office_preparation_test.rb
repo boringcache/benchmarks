@@ -1,5 +1,6 @@
 require_relative "test_helper"
 require "open3"
+require_relative "../../tools/docker/shared/euro-office-cache"
 
 class EuroOfficePreparationTest < Minitest::Test
   def test_plus_preserves_source_and_adds_compiler_and_mount_caches
@@ -33,8 +34,8 @@ class EuroOfficePreparationTest < Minitest::Test
   end
 
   def test_bake_lanes_keep_separate_target_caches_and_warm_does_not_publish
-    %w[gha ghcr].each do |provider|
-      lane = TomlRB.load_file(File.join(Bench::ROOT, "tools/docker/lanes/#{provider}-bake-euro-office.toml"))
+    %w[gha-bake-euro-office ghcr-bake-euro-office ghcr-bake-euro-office-plus].each do |name|
+      lane = TomlRB.load_file(File.join(Bench::ROOT, "tools/docker/lanes/#{name}.toml"))
       reads = lane.fetch("warm").fetch("args")
       writes = lane.fetch("args").grep(/\.cache-to=/)
       assert_equal 10, reads.size
@@ -67,13 +68,55 @@ class EuroOfficePreparationTest < Minitest::Test
     end
   end
 
+  def test_combined_cache_keeps_build_state_without_archiving_remote_compiler_results
+    prepare_standalone(plus: true) do |dir, _, output, status|
+      assert status.success?, output
+      targets = JSON.parse(File.read(File.join(dir, "overlay/build.json"))).fetch("target")
+      core = File.read(File.join(dir, "overlay/core.Dockerfile"))
+      wasm = File.read(File.join(dir, "overlay/core-wasm.Dockerfile"))
+      assert_includes core, "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+      assert_includes core, "target=/build-cache"
+      refute_includes core, "target=/root/.cache/ccache"
+      assert_includes wasm, "target=/build-cache-wasm"
+      assert_includes wasm, "target=/em-cache"
+      refute_includes wasm, "target=/ccache"
+      assert_includes wasm, "COPY bench-ccache/ccache /usr/local/bin/ccache"
+      assert_includes wasm, "ccache --zero-stats"
+      assert File.exist?(File.join(dir, "staged"))
+      assert_equal "2", targets.dig("core-wasm", "args", "CACHE_BUST")
+      assert_equal "../overlay/core.Dockerfile", targets.dig("core", "dockerfile")
+    end
+  end
+
+  def test_native_control_archives_compiler_caches_as_well_as_build_state
+    prepare_standalone(plus: true, local_cache: true) do |dir, _, output, status|
+      assert status.success?, output
+      targets = JSON.parse(File.read(File.join(dir, "overlay/build.json"))).fetch("target")
+      assert_includes File.read(File.join(dir, "overlay/core.Dockerfile")), "target=/root/.cache/ccache"
+      assert_includes File.read(File.join(dir, "overlay/core-wasm.Dockerfile")), "id=wasm-ccache,target=/ccache"
+    end
+  end
+
   private
-    def prepare_standalone(resolve: true)
+    def prepare_standalone(resolve: true, plus: false, local_cache: false)
       Dir.mktmpdir("euro-office") do |dir|
-        %w[upstream overlay bin].each { FileUtils.mkdir_p(File.join(dir, it)) }
+        %w[upstream/core/.docker overlay bin].each { FileUtils.mkdir_p(File.join(dir, it)) }
         File.write(File.join(dir, "upstream/VERSION"), "9.3.6-rc.1\n")
+        File.write(File.join(dir, ".boringcache.toml"), "[adapters.docker]\ntool-cache = #{plus ? '["ccache:test"]' : '[]'}\n")
+        File.write(File.join(dir, "upstream/core/.docker/core.bake.Dockerfile"), core_source)
+        File.write(File.join(dir, "upstream/core/.docker/core-wasm.bake.Dockerfile"), <<~'DOCKERFILE')
+          FROM emsdk AS core-wasm
+              COPY core /core
+              RUN --mount=type=cache,id=wasm-build-cache-${CACHE_BUST},target=/build-cache-wasm \
+                  --mount=type=cache,id=wasm-ccache,target=/ccache \
+                  --mount=type=cache,id=wasm-em-cache,target=/em-cache <<EOF
+                  cmake --build . -- -j$(nproc)
+                  ccache --show-stats
+          EOF
+        DOCKERFILE
         definition = { "target" => {
           "core" => { "context" => "upstream", "dockerfile" => "core/.docker/core.bake.Dockerfile", "args" => { "BUILD_ROOT" => "/package" }, "cache-from" => [{ "type" => "local", "src" => ".cache/core" }], "cache-to" => [{ "type" => "local", "dest" => ".cache/core" }] },
+          "core-wasm" => { "context" => "upstream", "dockerfile" => "core/.docker/core-wasm.bake.Dockerfile", "args" => { "CACHE_BUST" => "2" } },
           "standalone" => { "context" => "upstream", "contexts" => { "core" => "target:core" }, "tags" => ["euro-office-benchmark:local"], "output" => [{ "type" => "docker" }], "cache-from" => [{ "type" => "local", "src" => ".cache/docs" }] },
         } }
         File.write(File.join(dir, "bin/git"), "#!/bin/sh\nprintf '2026-11-03\\n'\n")
@@ -84,8 +127,9 @@ class EuroOfficePreparationTest < Minitest::Test
           puts #{JSON.generate(definition).inspect}
         RUBY
         %w[git docker].each { File.chmod(0o755, File.join(dir, "bin", it)) }
-        script = File.join(Bench::ROOT, "tools/docker/euro-office/overlay/prepare.rb")
-        output, status = Open3.capture2e({ "PATH" => "#{dir}/bin:#{ENV.fetch("PATH")}" }, RbConfig.ruby, script, chdir: dir)
+        stage_stub(dir)
+        script = File.join(Bench::ROOT, "tools/docker/shared/prepare-euro-office.rb")
+        output, status = Open3.capture2e({ "PATH" => "#{dir}/bin:#{ENV.fetch("PATH")}", "BENCH_ROOT" => dir, "EURO_OFFICE_LOCAL_CCACHE" => local_cache ? "1" : nil }, RbConfig.ruby, script, chdir: dir)
         yield dir, definition, output, status
       end
     end
@@ -94,23 +138,32 @@ class EuroOfficePreparationTest < Minitest::Test
       Dir.mktmpdir("euro-office") do |dir|
         FileUtils.mkdir_p(File.join(dir, "upstream/core/.docker"))
         FileUtils.mkdir_p(File.join(dir, "overlay"))
-        source = <<~DOCKERFILE
-          FROM core-base AS core
-          COPY core /core
-          RUN --mount=type=cache,target=/build-cache \\
-              --mount=type=cache,target=/nuget-cache,id=vcpkg-binary-cache \\
-              cmake -DCMAKE_BUILD_TYPE=Release \\
-              /core && cmake --build . && cp -r package/* /package
-        DOCKERFILE
+        source = core_source
         source = source.sub("cmake --build .", replace) if replace
         File.write(File.join(dir, "upstream/core/.docker/core.bake.Dockerfile"), source)
         File.write(File.join(dir, ".boringcache.toml"), "[adapters.docker]\nmount-cache = #{plus}\n")
-        helper = File.join(dir, "tools/docker/shared/stage-ccache-binary.sh")
-        FileUtils.mkdir_p(File.dirname(helper))
-        File.write(helper, "touch staged\n")
+        stage_stub(dir)
+        FileUtils.cp(File.join(Bench::ROOT, "tools/docker/shared/euro-office-cache.rb"), File.join(dir, "tools/docker/shared"))
         script = File.join(Bench::ROOT, "tools/docker/euro-office-core/overlay/prepare.rb")
         output, status = Open3.capture2e({ "BENCH_ROOT" => dir }, RbConfig.ruby, script, chdir: dir)
         yield dir, source, output, status
       end
+    end
+
+    def core_source
+      <<~DOCKERFILE
+        FROM core-base AS core
+        COPY core /core
+        RUN --mount=type=cache,target=/build-cache \\
+            --mount=type=cache,target=/nuget-cache,id=vcpkg-binary-cache \\
+            cmake -DCMAKE_BUILD_TYPE=Release \\
+            /core && cmake --build . && cp -r package/* /package
+      DOCKERFILE
+    end
+
+    def stage_stub(dir)
+      helper = File.join(dir, "tools/docker/shared/stage-ccache-binary.sh")
+      FileUtils.mkdir_p(File.dirname(helper))
+      File.write(helper, "touch staged\n")
     end
 end
