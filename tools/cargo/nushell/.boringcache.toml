@@ -1,0 +1,18 @@
+workspace = "boringcache/benchmarks"
+
+[profiles.compiler-only]
+entries = []
+
+[adapters.sccache]
+fail-on-cache-error = true
+tag = "nushell-sccache"
+no-git = true
+
+[adapters.cargo]
+fail-on-cache-error = true
+tag = "nushell-cargo"
+profiles = ["compiler-only"]
+compiler-cache = "sccache"
+no-git = true
+metadata-hints = ["benchmark=nushell", "upstream-job=root"]
+command = ["cargo", "--config", ".cargo/ci.toml", "build", "--workspace", "--all-targets", "--profile", "ci"]

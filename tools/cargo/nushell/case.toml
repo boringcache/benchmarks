@@ -1,0 +1,24 @@
+repo = "nushell/nushell"
+branch = "main"
+start_sha = "168db974bad0181a35f4ccd735db0a20cb999d24"
+directory = "upstream"
+script = ["bash", "../overlay/ci.sh"]
+prepare = [
+  "mise trust && mise install",
+  "cd upstream && rustup show active-toolchain && cargo metadata --no-deps --format-version 1 > /dev/null",
+]
+check = "test -x upstream/target/ci/nu && upstream/target/ci/nu --version && test -z \"$(git -C upstream status --porcelain=v1 --untracked-files=all)\""
+
+[env]
+CARGO_TERM_COLOR = "always"
+CARGO_INCREMENTAL = "0"
+RUSTUP_TOOLCHAIN = "1.97.1"
+NU_LOG_LEVEL = "DEBUG"
+NU_TEST_SKIP_DEPS_BUILD = "true"
+NUSHELL_CARGO_PROFILE = "ci"
+
+[runs]
+boringcache-cargo = ["github"]
+boringcache-cargo-plus = ["github"]
+gha = ["github"]
+gha-plus = ["github"]
