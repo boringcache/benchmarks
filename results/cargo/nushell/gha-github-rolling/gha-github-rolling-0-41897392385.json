@@ -37,5 +37,6 @@
   },
   "run_url": "https://github.com/boringcache/benchmarks/actions/runs/41897392385",
   "attempt": 1,
-  "started_at": "2026-11-04T19:30:23Z"
+  "started_at": "2026-11-04T19:30:23Z",
+  "excluded": "sccache reported 0 hits and 4,113 cache write errors for 4,113 misses; no compiler cache was saved."
 }

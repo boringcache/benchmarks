@@ -5,12 +5,12 @@ entries = []
 
 [adapters.sccache]
 fail-on-cache-error = true
-tag = "nushell-sccache"
+tag = "nu-sccache"
 no-git = true
 
 [adapters.cargo]
 fail-on-cache-error = true
-tag = "nushell-cargo"
+tag = "nu-cargo"
 profiles = ["compiler-only"]
 compiler-cache = "sccache"
 no-git = true

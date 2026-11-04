@@ -1,17 +1,17 @@
 workspace = "boringcache/benchmarks"
 
 [entries.cargo-registry-cache]
-tag = "nushell-cargo-registry-cache"
+tag = "nu-cargo-registry-cache"
 
 [entries.cargo-registry-index]
-tag = "nushell-cargo-registry-index"
+tag = "nu-cargo-registry-index"
 
 [entries.cargo-git-db]
-tag = "nushell-cargo-git-db"
+tag = "nu-cargo-git-db"
 
 [entries.cargo-target]
 kind = "cargo-target"
-tag = "nushell-cargo-target"
+tag = "nu-cargo-target"
 path = "upstream/target"
 
 [profiles.cargo-product]
@@ -19,12 +19,12 @@ entries = ["cargo-registry-cache", "cargo-registry-index", "cargo-git-db", "carg
 
 [adapters.sccache]
 fail-on-cache-error = true
-tag = "nushell-sccache"
+tag = "nu-sccache"
 no-git = true
 
 [adapters.cargo]
 fail-on-cache-error = true
-tag = "nushell-cargo"
+tag = "nu-cargo"
 profiles = ["cargo-product"]
 compiler-cache = "sccache"
 target-budget = "20GiB"
