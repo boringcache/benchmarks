@@ -1,0 +1,19 @@
+repo = "unkeyed/unkey"
+branch = "main"
+start_sha = "d0b1e2997c93944393afefb341c37cae1cb107d5"
+directory = "upstream"
+prepare = ["cd upstream && ./dev/install-mise && mise trust .mise/config.toml && mise install --locked --yes go github:chronark/rask github:golangci/golangci-lint"]
+check = "test -x upstream/bin/unkey && upstream/bin/unkey --help > /dev/null && test -z \"$(git -C upstream status --porcelain=v1 --untracked-files=no)\""
+shared = [".go/mod-cache", ".rask-cache", "upstream/.cache/golangci-lint"]
+
+[env]
+GOCACHE = "${BENCH_DIR}/.go/build-cache"
+GOMODCACHE = "${BENCH_DIR}/.go/mod-cache"
+GOCACHEPROG = ""
+RASK_CACHE_DIR = "${BENCH_DIR}/.rask-cache"
+UNKEY_LINT_CACHE = "${BENCH_DIR}/upstream/.cache/golangci-lint"
+
+[runs]
+boringcache-go = ["depot-8"]
+archive-cache = ["depot-8"]
+depot-cache-replay = ["depot-8"]

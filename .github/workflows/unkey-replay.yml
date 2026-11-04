@@ -1,0 +1,94 @@
+name: Unkey commit replay
+
+on:
+  workflow_call:
+    inputs:
+      step:
+        type: string
+        required: true
+      series:
+        type: string
+        required: true
+    secrets:
+      DEPOT_TOKEN:
+        required: true
+  workflow_dispatch:
+    inputs:
+      step:
+        description: Frozen commit position, oldest first
+        type: choice
+        options: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        required: true
+      series:
+        description: Unique series identifier, reused only for its successive steps
+        type: string
+        required: true
+
+run-name: Unkey commit replay ${{ inputs.series }} step ${{ inputs.step }}
+
+concurrency:
+  group: unkey-replay-${{ inputs.series }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  replay:
+    name: ${{ matrix.lane }} step ${{ inputs.step }}
+    runs-on: depot-ubuntu-24.04-8
+    timeout-minutes: 40
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - lane: archive-cache
+            setup: ""
+          - lane: depot-cache-replay
+            setup: depot
+          - lane: boringcache-go
+            setup: ""
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      DEPOT_TOKEN: ${{ matrix.lane == 'depot-cache-replay' && secrets.DEPOT_TOKEN || '' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/results/
+      - id: source
+        shell: bash
+        env:
+          STEP: ${{ inputs.step }}
+          SERIES: ${{ inputs.series }}
+        run: |
+          [[ "$SERIES" =~ ^[a-z0-9-]+$ ]]
+          [[ "$STEP" =~ ^[0-9]$ ]]
+          test "$GITHUB_RUN_ATTEMPT" = 1
+          ruby -rjson -e 'puts "sha=#{JSON.parse(File.read("tools/go/unkey/commits.json")).fetch(Integer(ENV.fetch("STEP"))).fetch("sha")}"' >> "$GITHUB_OUTPUT"
+          mkdir -p "$RUNNER_TEMP/unkey-evidence"
+          { lscpu; free -m; docker version; } > "$RUNNER_TEMP/unkey-evidence/machine.txt"
+      - uses: ./.github/actions/phase
+        with:
+          case: go/unkey
+          lane: ${{ matrix.lane }}
+          runner: depot-8
+          setup: ${{ matrix.setup }}
+          phase: rolling
+          run-id: ${{ github.run_id }}
+          sha: ${{ steps.source.outputs.sha }}
+          step: ${{ inputs.step }}
+          cache-scope: ${{ matrix.lane }}-depot-8-${{ inputs.series }}
+          continues: ${{ inputs.step != '0' && 'true' || '' }}
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: unkey-diagnostics-${{ matrix.lane }}-${{ inputs.step }}
+          path: ${{ runner.temp }}/unkey-evidence
+          if-no-files-found: error

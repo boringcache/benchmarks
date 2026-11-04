@@ -1,0 +1,25 @@
+workspace = "boringcache/benchmarks"
+
+[entries.go-mod-cache]
+tag = "unkey-go-mod-cache"
+path-env = "GOMODCACHE"
+
+[entries.rask]
+tag = "unkey-rask"
+path-env = "RASK_CACHE_DIR"
+
+[entries.lint]
+tag = "unkey-lint"
+path-env = "UNKEY_LINT_CACHE"
+
+[profiles.deps]
+entries = ["go-mod-cache", "rask", "lint"]
+
+[adapters.go]
+fail-on-cache-error = true
+tag = "unkey-go"
+profiles = ["deps"]
+no-platform = true
+no-git = true
+metadata-hints = ["benchmark=unkey-go", "upstream-step=mise-build-and-test"]
+command = ["bash", "-ec", "mkdir -p \"$RUNNER_TEMP/unkey-evidence\"; /usr/bin/time -v -o \"$RUNNER_TEMP/unkey-evidence/build.time\" mise run build; /usr/bin/time -v -o \"$RUNNER_TEMP/unkey-evidence/test.time\" mise run test"]

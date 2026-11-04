@@ -1,0 +1,8 @@
+provider = "depot"
+level = "base"
+runners = ["depot-8"]
+secrets = ["DEPOT_TOKEN"]
+setup = ["depot"]
+
+[env]
+GOCACHEPROG = "depot gocache --verbose"

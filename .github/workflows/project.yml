@@ -14,7 +14,7 @@ on:
       mode:
         description: fresh (cold then warm), rolling (next commit), sample (completed GitHub commit), or preflight (setup probes)
         type: choice
-        options: [fresh, rolling, sample, preflight]
+        options: [fresh, rolling, sample, preflight, replay]
         default: fresh
       lane:
         description: only these lanes, space separated (optional, for debugging one lane)
@@ -39,6 +39,10 @@ on:
         type: string
         required: false
         default: ""
+      series:
+        description: Unique bounded replay identifier (Unkey replay only)
+        type: string
+        default: ""
 
 run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}${{ inputs.step && format(' step {0}', inputs.step) || '' }}${{ inputs.cli && format(' [{0}]', inputs.cli) || '' }}
 
@@ -50,7 +54,20 @@ permissions:
   contents: read
 
 jobs:
+  unkey_replay:
+    if: inputs.mode == 'replay' && inputs.tool == 'Go' && inputs.project == 'unkey'
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/unkey-replay.yml
+    with:
+      step: ${{ inputs.step }}
+      series: ${{ inputs.series }}
+    secrets:
+      DEPOT_TOKEN: ${{ secrets.DEPOT_TOKEN }}
+
   plan:
+    if: inputs.mode != 'replay'
     runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
