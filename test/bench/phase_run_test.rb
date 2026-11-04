@@ -427,6 +427,32 @@ class PhaseRunTest < Minitest::Test
     assert_equal "skip demo/app gha on local: needs GitHub Actions\n", out.string
   end
 
+  def test_cache_dance_reads_resolved_bake_targets_and_mount_arguments
+    write "tools/demo/app/.boringcache.toml", <<~TOML
+      [adapters.demo]
+      tag = "demo-app"
+      command = ["docker", "buildx", "bake", "--file", "overlay/build.json", "app"]
+    TOML
+    write "tools/demo/app/overlay/deps.Dockerfile", "FROM scratch\nRUN --mount=type=cache,target=/deps true\n"
+    inline = <<~'DOCKERFILE'
+      FROM scratch
+      ARG CACHE_BUST=1
+      RUN --mount=type=cache,id=wasm-${CACHE_BUST},target=/build-cache-wasm \
+          --mount=type=cache,id=ccache-$TARGETARCH,target=/ccache true
+    DOCKERFILE
+    write "tools/demo/app/overlay/build.json", JSON.generate("target" => {
+      "app" => { "dockerfile-inline" => inline, "args" => { "CACHE_BUST" => "2" } },
+      "same" => { "dockerfile-inline" => inline, "args" => { "CACHE_BUST" => "2" } },
+      "deps" => { "context" => "overlay", "dockerfile" => "deps.Dockerfile" },
+    })
+    kase = catalog.find_case("demo/app")
+    run = Bench::PhaseRun.new(kase, kase.tool.lane("boringcache-demo"), phase: "cold", runner: "local", scope: "test",
+                             work_root: File.join(@root, ".work"), results_dir: File.join(@root, "results"))
+    with_fixture_env { run.prepare }
+    arch = { "x86_64" => "amd64", "aarch64" => "arm64", "arm64" => "arm64" }.fetch(Etc.uname[:machine])
+    assert_equal ["wasm-2", "ccache-#{arch}", "/deps"], run.cache_dance_map("/cache").values.map { it.fetch("id") }
+  end
+
   private
     def cli(*argv, out: StringIO.new)
       Bench::CLI.new([*argv, "--results", File.join(@root, "tmp/results"), "--work", File.join(@root, ".work")], catalog:, out:).call

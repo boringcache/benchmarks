@@ -86,11 +86,17 @@ module Bench
 
       arch = { "x86_64" => "amd64", "aarch64" => "arm64", "arm64" => "arm64" }.fetch(Etc.uname[:machine])
       platform = { "TARGETPLATFORM" => "linux/#{arch}", "TARGETARCH" => arch, "TARGETOS" => "linux" }
-      File.readlines(dockerfile).grep_v(/\A\s*#/).join.scan(/--mount=(\S+)/).flatten.filter_map do |mount|
-        options = mount.split(",").to_h { [*it.split("=", 2), nil].first(2) }
-        next unless options["type"] == "cache"
+      cache_dance_sources.flat_map do |source, args|
+        defaults = source.scan(/^\s*ARG\s+(\w+)=([^\s]+)\s*$/).to_h
+        variables = defaults.merge(platform).merge(args.compact)
+        source.lines.grep_v(/\A\s*#/).join.scan(/--mount=(\S+)/).flatten.filter_map do |mount|
+          options = mount.split(",").to_h { [*it.split("=", 2), nil].first(2) }
+          next unless options["type"] == "cache"
 
-        options.values_at("id", "target", "dst", "destination").compact.first&.gsub(/\$\{?(TARGETPLATFORM|TARGETARCH|TARGETOS)\}?/) { platform.fetch($1) }
+          options.values_at("id", "target", "dst", "destination").compact.first&.gsub(/\$\{?(\w+)\}?/) do
+            variables.fetch($1) { raise Error, "cache-dance cannot resolve mount variable #{$1}" }
+          end
+        end
       end.uniq.to_h { [File.join(root, it), { "id" => it, "target" => "/var/cache-target" }] }
     end
 
@@ -100,6 +106,17 @@ module Bench
     end
 
     private
+      def cache_dance_sources
+        return [[File.read(dockerfile), {}]] unless adapter.fetch("command").include?("bake")
+
+        JSON.parse(File.read(dockerfile)).fetch("target").values.map do |target|
+          source = target["dockerfile-inline"] || File.read(File.expand_path(
+            target.fetch("dockerfile", "Dockerfile"), File.expand_path(target.fetch("context", "."), workspace.dir)
+          ))
+          [source, target.fetch("args", {})]
+        end
+      end
+
       def retry_suffix
         "attempt-#{attempt}" if attempt.to_i > 1
       end
