@@ -211,6 +211,35 @@ A preflight run (`<tool> - <project> (preflight)`) runs every lane's setup and `
 
 The collect job runs on main and branches, adds post-job save durations, and uploads `recorded-results-<attempt>`. The publish job downloads that artifact and writes records only on main. Branch results require review before they are added to the repository.
 
+## Nushell Cargo history
+
+`cargo/nushell` starts at `168db974bad0181a35f4ccd735db0a20cb999d24`,
+30 first-parent commits before the inspected November 4 head
+`c27defbfe692c7de80e488f33b2f52906e8a7836`. Rolling builds visit every commit.
+Fresh builds use that starting source for both cold and warm phases.
+
+Every lane runs the root job's Cargo formatting, check, Clippy, build, tests
+and doctests, with its `ci` profile and `.cargo/ci.toml`. Source files are
+unchanged. Rust is 1.97.1 and sccache is 0.17.0. Incremental compilation is off
+in all lanes so sccache can cache compiler outputs. The output check runs
+`nu --version` and verifies the checkout is clean. The standard-library and
+Python virtualenv tests, fuzz jobs, WASM job and artifact upload are outside
+this measurement.
+
+The base lanes compare BoringCache and GitHub Actions compiler caches. The plus
+lanes also cache Cargo registry downloads, Git dependencies and `target`.
+All use GitHub's `ubuntu-24.04` runners. These are the shared Cargo benchmark
+cache configurations, not upstream's `Swatinem/rust-cache` configuration.
+Restore, Cargo commands and cache publication are timed; setup is separate.
+Warm runs restore without publishing. The Linux results do not reproduce the
+Windows runner comparison in the linked discussion or measure full CI time.
+
+Sources: [Nushell root CI](https://github.com/nushell/nushell/blob/168db974bad0181a35f4ccd735db0a20cb999d24/.github/workflows/ci.yml),
+[runner comparison](https://github.com/nushell/nushell/pull/18810),
+[osquery context](https://github.com/osquery/osquery/issues/9104#issuecomment-6626417651),
+[sccache GitHub cache](https://github.com/mozilla/sccache/blob/v0.17.0/docs/GHA.md),
+[BoringCache Cargo setup](https://boringcache.com/docs/adapters/cargo).
+
 ## Weekly runner samples
 
 `samples.yml` dispatches PostHog on Depot, Zed on Namespace, and Chroma on Blacksmith every Monday at 02:31 UTC. Each also rebuilds the same commit on GitHub using the same BoringCache scope. Regular GitHub rolling builds continue producing that scope. Sample and rolling workflows share a project concurrency group, and the scheduler treats both as active work. A sample refuses an excluded or failed latest source, or a source older than the latest recorded project step.
