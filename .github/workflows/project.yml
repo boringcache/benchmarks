@@ -63,6 +63,7 @@ jobs:
     with:
       step: ${{ inputs.step }}
       series: ${{ inputs.series }}
+      depot-only: ${{ inputs.lane == 'depot-cache-replay' }}
     secrets:
       DEPOT_TOKEN: ${{ secrets.DEPOT_TOKEN }}
 

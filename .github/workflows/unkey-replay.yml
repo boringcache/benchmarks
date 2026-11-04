@@ -9,6 +9,9 @@ on:
       series:
         type: string
         required: true
+      depot-only:
+        type: boolean
+        default: false
     secrets:
       DEPOT_TOKEN:
         required: true
@@ -23,6 +26,10 @@ on:
         description: Unique series identifier, reused only for its successive steps
         type: string
         required: true
+      depot-only:
+        description: Continue the Depot control after another lane fails
+        type: boolean
+        default: false
 
 run-name: Unkey commit replay ${{ inputs.series }} step ${{ inputs.step }}
 
@@ -44,13 +51,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - lane: archive-cache
-            setup: ""
-          - lane: depot-cache-replay
-            setup: depot
-          - lane: boringcache-go
-            setup: ""
+        include: ${{ fromJSON(inputs.depot-only && '[{"lane":"depot-cache-replay","setup":"depot"}]' || '[{"lane":"archive-cache","setup":""},{"lane":"depot-cache-replay","setup":"depot"},{"lane":"boringcache-go","setup":""}]') }}
     env:
       GITHUB_TOKEN: ${{ github.token }}
       DEPOT_TOKEN: ${{ matrix.lane == 'depot-cache-replay' && secrets.DEPOT_TOKEN || '' }}

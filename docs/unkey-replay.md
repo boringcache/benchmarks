@@ -55,3 +55,10 @@ low measured CPU use alone does not identify network or container waiting.
 Rask's summary provides suite cache outcomes. Cache setup, restore, build and
 save retain the harness timing boundary; preparation and job wall time are
 separate context.
+
+Seed run `41835646331` completed the Depot lane. Its archive lane failed an
+integration-test assertion; its BoringCache lane failed while lint loaded Go
+export files. A continuation can select `-f lane=depot-cache-replay` through
+`project.yml` to retain the successful seed and finish the source sequence.
+This selection changes no source, cache identity, command or preparation.
+The resulting series is a Depot control, with no paired BoringCache speedup.
