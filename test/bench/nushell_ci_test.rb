@@ -29,7 +29,43 @@ class NushellCiTest < Minitest::Test
     assert calls.grep(/^boringcache /).all? { it.include?("--skip-save") }
   end
 
+  def test_output_check_accepts_native_and_windows_executables
+    ["nu", "nu.exe"].each do |name|
+      output_check(name:) do |dir, status|
+        assert status.success?
+        File.write(File.join(dir, "upstream/changed.txt"), "changed")
+        _, dirty_status = Open3.capture2e("bash", check_script, chdir: dir)
+        refute dirty_status.success?
+      end
+    end
+  end
+
+  def test_output_check_requires_a_working_executable
+    output_check(name: nil) { |_, status| refute status.success? }
+    output_check(name: "nu.exe", exit_status: 1) { |_, status| refute status.success? }
+  end
+
   private
+    def check_script
+      File.join(Bench::ROOT, "tools/cargo/nushell/overlay/check.sh")
+    end
+
+    def output_check(name:, exit_status: 0)
+      Dir.mktmpdir("nu-check") do |dir|
+        upstream = File.join(dir, "upstream")
+        FileUtils.mkdir_p(File.join(upstream, "target/ci"))
+        Bench.git("init", "--quiet", chdir: upstream)
+        File.write(File.join(upstream, ".git/info/exclude"), "/target/\n")
+        if name
+          binary = File.join(upstream, "target/ci", name)
+          File.write(binary, "#!/usr/bin/env bash\nexit #{exit_status}\n")
+          File.chmod(0o755, binary)
+        end
+        _, status = Open3.capture2e("bash", check_script, chdir: dir)
+        yield dir, status
+      end
+    end
+
     def run_ci(extra_env = {})
       Dir.mktmpdir("nushell-ci") do |dir|
         File.write(File.join(dir, "cargo"), <<~BASH)

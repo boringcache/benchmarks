@@ -59,7 +59,12 @@ runs:
         CADENCE: ${{ inputs.cadence }}
         CACHE_SOURCE: ${{ inputs.cache-source }}
       run: |
-        echo "$HOME/.local/share/mise/shims" >> "$GITHUB_PATH"
+        work="$HOME/w"
+        results="$RUNNER_TEMP/results"
+        if [ "$RUNNER_OS" = Windows ]; then
+          work=$(cygpath -m "$work")
+          results=$(cygpath -m "$results")
+        fi
         {
           echo "BENCH_CADENCE=$CADENCE"
           echo "BENCH_CACHE_SOURCE=$CACHE_SOURCE"
@@ -68,9 +73,9 @@ runs:
           echo "BENCH_RUNNER=$RUNNER"
           echo "BENCH_PHASE=$PHASE"
           echo "BENCH_RUN_ID=$RUN_ID"
-          echo "BENCH_WORK=$HOME/w"
-          echo "BENCH_RESULTS=$RUNNER_TEMP/results"
-          echo "MISE_TRUSTED_CONFIG_PATHS=$HOME/w"
+          echo "BENCH_WORK=$work"
+          echo "BENCH_RESULTS=$results"
+          echo "MISE_TRUSTED_CONFIG_PATHS=$work"
           echo "MISE_YES=1"
         } >> "$GITHUB_ENV"
 
@@ -159,19 +164,23 @@ runs:
         CLI_RELEASE: ${{ inputs.cli-release }}
       run: |
         if [ -n "$CLI_RELEASE" ]; then echo "BENCH_CLI_RELEASE=$CLI_RELEASE" >> "$GITHUB_ENV"; fi
+        executable=boringcache
         case "$(uname -s)-$(uname -m)" in
           Linux-x86_64) assets=(boringcache-linux-amd64) ;;
           Linux-aarch64) assets=(boringcache-linux-arm64) ;;
           Darwin-*) assets=(boringcache-macos-universal libboringcache_xcode_cas-macos-universal.dylib) ;;
+          MINGW*-x86_64|MSYS*-x86_64) assets=(boringcache-windows-amd64.exe); executable=boringcache.exe ;;
+          *) echo "no BoringCache CLI asset for $(uname -s)-$(uname -m)" >&2; exit 1 ;;
         esac
         dir="$RUNNER_TEMP/boringcache-cli"
         base="https://github.com/boringcache/cli/releases/download/$VERSION"
         mkdir -p "$dir"
         cd "$dir"
         curl --fail --silent --show-error --location --retry 3 --remote-name-all "$base/SHA256SUMS" "${assets[@]/#/$base/}"
-        for asset in "${assets[@]}"; do grep " $asset\$" SHA256SUMS; done | shasum -a 256 --check
-        install -m 0755 "${assets[0]}" "$dir/boringcache"
+        ruby "$GITHUB_WORKSPACE/scripts/verify-checksums.rb" SHA256SUMS "${assets[@]}"
+        install -m 0755 "${assets[0]}" "$dir/$executable"
         if [ "${#assets[@]}" -gt 1 ]; then install -m 0644 "${assets[1]}" "$dir/libboringcache_xcode_cas.dylib"; fi
+        if [ "$RUNNER_OS" = Windows ]; then dir=$(cygpath -m "$dir"); fi
         echo "$dir" >> "$GITHUB_PATH"
 
     - id: sampler
@@ -272,7 +281,7 @@ runs:
         PROVIDER: ${{ steps.prepare.outputs.provider }}
       run: |
         if [ "$PROVIDER" = boringcache ]; then
-          boringcache ci run --oidc-provider github-actions -- bundle exec bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
+          boringcache ci run --oidc-provider github-actions -- ruby -S bundle exec bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
         else
           bundle exec bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
         fi

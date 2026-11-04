@@ -8,7 +8,7 @@ prepare = [
   "mise trust && mise install",
   "cd upstream && rustup show active-toolchain && cargo metadata --no-deps --format-version 1 > /dev/null",
 ]
-check = "test -x upstream/target/ci/nu && upstream/target/ci/nu --version && test -z \"$(git -C upstream status --porcelain=v1 --untracked-files=all)\""
+check = "bash overlay/check.sh"
 
 [env]
 CARGO_TERM_COLOR = "always"
@@ -19,7 +19,7 @@ NU_TEST_SKIP_DEPS_BUILD = "true"
 NUSHELL_CARGO_PROFILE = "ci"
 
 [runs]
-boringcache-cargo = ["github"]
-boringcache-cargo-plus = ["github"]
-gha = ["github"]
-gha-plus = ["github"]
+boringcache-cargo = ["github", "macos", "windows"]
+boringcache-cargo-plus = ["github", "macos", "windows"]
+gha = ["github", "macos", "windows"]
+gha-plus = ["github", "macos", "windows"]

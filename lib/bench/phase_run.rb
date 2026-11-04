@@ -295,6 +295,11 @@ module Bench
       end
 
       def cpu_model
+        if Gem.win_platform?
+          output, status = Open3.capture2("pwsh", "-NoLogo", "-NoProfile", "-Command", "(Get-CimInstance Win32_Processor | Select-Object -First 1).Name")
+          return output.strip if status.success? && !output.strip.empty?
+        end
+
         lscpu = (Open3.capture2("lscpu").first rescue "")[/^Model name:\s*(.+)$/, 1]
         cpuinfo = File.exist?("/proc/cpuinfo") ? File.read("/proc/cpuinfo")[/^model name\s*:\s*(.+)$/, 1] : nil
         sysctl = (Open3.capture2("sysctl", "-n", "machdep.cpu.brand_string").first rescue "") unless lscpu || cpuinfo

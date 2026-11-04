@@ -22,7 +22,7 @@ on:
         required: false
         default: ""
       runner:
-        description: sample only, runner keys such as github depot-8 (optional)
+        description: fresh, preflight or sample runner keys such as github macos windows (optional)
         type: string
         default: ""
       sha:
@@ -78,7 +78,7 @@ jobs:
           SHA: ${{ inputs.sha }}
         run: |
           bash scripts/checkout-records.sh
-          if [ -n "$RUNNER" ] && [ -z "$SAMPLE" ]; then echo 'runner selection requires sample mode' >&2; exit 1; fi
+          if [ -n "$RUNNER" ] && [ -n "$ROLLING" ]; then echo 'rolling runs use every configured runner' >&2; exit 1; fi
           matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${SAMPLE:+--sample} ${RUNNER:+--runner "$RUNNER"} ${SHA:+--sha "$SHA"} ${LANE:+--lane "$LANE"} ${CLI:+--cli "$CLI"} ${STEP:+--step "$STEP"} --results results)
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
           if [ "$matrix" = '[]' ]; then

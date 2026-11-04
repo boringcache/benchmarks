@@ -228,11 +228,18 @@ this measurement.
 
 The base lanes compare BoringCache and GitHub Actions compiler caches. The plus
 lanes also cache Cargo registry downloads, Git dependencies and `target`.
-All use GitHub's `ubuntu-24.04` runners. These are the shared Cargo benchmark
-cache configurations, not upstream's `Swatinem/rust-cache` configuration.
+Each lane runs on GitHub's `ubuntu-24.04`, `macos-26` and `windows-2025` runners,
+using the runner's native Rust target. Each platform has separate cache scopes
+and records. These are the shared Cargo benchmark cache configurations, not
+upstream's `Swatinem/rust-cache` configuration.
 Restore, Cargo commands and cache publication are timed; setup is separate.
-Warm runs restore without publishing. The Linux results do not reproduce the
-Windows runner comparison in the linked discussion or measure full CI time.
+Warm runs restore without publishing. Compare providers within one platform;
+these runs do not reproduce the linked runner comparison or measure full CI time.
+
+Fresh and preflight dispatches accept `runner=macos windows` to select those
+platforms. Rolling runs include every configured platform. Series 2 starts
+from the same source with new cache scopes and `nu` cache tags; earlier records
+remain available.
 
 Sources: [Nushell root CI](https://github.com/nushell/nushell/blob/168db974bad0181a35f4ccd735db0a20cb999d24/.github/workflows/ci.yml),
 [runner comparison](https://github.com/nushell/nushell/pull/18810),

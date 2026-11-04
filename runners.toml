@@ -14,6 +14,10 @@ machine = "github 4c"
 label = "macos-26"
 machine = "github macos 3c"
 
+[windows]
+label = "windows-2025"
+machine = "github windows 4c"
+
 [depot-4]
 label = "depot-ubuntu-24.04-4"
 machine = "depot 4c"
