@@ -155,7 +155,7 @@ runs:
             RECORDED="$PWD/results"
           fi
         fi
-        bundle exec bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" ${SHA:+--sha "$SHA" --step "$STEP"} ${CACHE_SCOPE:+--cache-scope "$CACHE_SCOPE"} ${CONTINUES:+--continues} ${RECORDED:+--recorded "$RECORDED"} --github
+        bundle exec ruby bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" ${SHA:+--sha "$SHA" --step "$STEP"} ${CACHE_SCOPE:+--cache-scope "$CACHE_SCOPE"} ${CONTINUES:+--continues} ${RECORDED:+--recorded "$RECORDED"} --github
 
     - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache'
       shell: bash
@@ -169,7 +169,7 @@ runs:
           Linux-x86_64) assets=(boringcache-linux-amd64) ;;
           Linux-aarch64) assets=(boringcache-linux-arm64) ;;
           Darwin-*) assets=(boringcache-macos-universal libboringcache_xcode_cas-macos-universal.dylib) ;;
-          MINGW*-x86_64|MSYS*-x86_64) assets=(boringcache-windows-amd64.exe); executable=boringcache.exe ;;
+          MINGW*-x86_64|MSYS*-x86_64|UCRT*-x86_64) assets=(boringcache-windows-amd64.exe); executable=boringcache.exe ;;
           *) echo "no BoringCache CLI asset for $(uname -s)-$(uname -m)" >&2; exit 1 ;;
         esac
         dir="$RUNNER_TEMP/boringcache-cli"
@@ -204,7 +204,7 @@ runs:
 
     - if: steps.prepare.outputs.ready == 'true'
       shell: bash
-      run: bundle exec bin/bench start "$BENCH_CASE" --lane "$BENCH_LANE"
+      run: bundle exec ruby bin/bench start "$BENCH_CASE" --lane "$BENCH_LANE"
 
     - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'blacksmith-builder')
       uses: useblacksmith/setup-docker-builder@19215110ab936351210feebdfa5b440b4493e184
@@ -242,7 +242,7 @@ runs:
 
     - if: inputs.phase == 'preflight'
       shell: bash
-      run: bundle exec bin/bench probe "$BENCH_CASE" --lane "$BENCH_LANE" --run-id "$BENCH_RUN_ID"
+      run: bundle exec ruby bin/bench probe "$BENCH_CASE" --lane "$BENCH_LANE" --run-id "$BENCH_RUN_ID"
 
     - id: actions-cache-restore
       if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != '' && !contains(inputs.setup, 'namespace-cache')
@@ -281,9 +281,9 @@ runs:
         PROVIDER: ${{ steps.prepare.outputs.provider }}
       run: |
         if [ "$PROVIDER" = boringcache ]; then
-          boringcache ci run --oidc-provider github-actions -- ruby -S bundle exec bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
+          boringcache ci run --oidc-provider github-actions -- ruby -S bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
         else
-          bundle exec bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
+          bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
         fi
 
     - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != '' && !contains(inputs.setup, 'namespace-cache') && inputs.phase != 'warm'
@@ -298,7 +298,7 @@ runs:
         BUILD_FAILED: ${{ steps.build.outcome == 'failure' }}
         BENCH_CACHE_RESTORE_TRACKED: ${{ steps.actions-cache-restore.outcome == 'success' || steps.dance-restore.outcome == 'success' }}
         BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
-      run: bundle exec bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
+      run: bundle exec ruby bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
 
     - if: always() && steps.sampler.outcome == 'success'
       shell: bash

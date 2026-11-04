@@ -7,7 +7,8 @@ class CliInstallTest < Minitest::Test
     [
       ["Linux", "x86_64", "Linux", ["boringcache-linux-amd64"], "boringcache"],
       ["Darwin", "arm64", "macOS", ["boringcache-macos-universal", "libboringcache_xcode_cas-macos-universal.dylib"], "boringcache"],
-      ["MINGW64_NT-10.0", "x86_64", "Windows", ["boringcache-windows-amd64.exe"], "boringcache.exe"]
+      ["MINGW64_NT-10.0", "x86_64", "Windows", ["boringcache-windows-amd64.exe"], "boringcache.exe"],
+      ["UCRT64_NT-10.0", "x86_64", "Windows", ["boringcache-windows-amd64.exe"], "boringcache.exe"]
     ].each do |system, arch, runner_os, assets, executable|
       install(system:, arch:, runner_os:, assets:) do |dir, output, status|
         assert status.success?, output
