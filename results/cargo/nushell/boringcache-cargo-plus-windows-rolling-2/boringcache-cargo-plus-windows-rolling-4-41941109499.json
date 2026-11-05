@@ -1,0 +1,53 @@
+{
+  "adapter_command": "cargo",
+  "case": "nushell",
+  "lane": "boringcache-cargo-plus",
+  "provider": "boringcache",
+  "level": "plus",
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "runner": "windows",
+  "runner_label": "windows-2025",
+  "machine": "github windows 4c",
+  "phase": "rolling",
+  "step": 4,
+  "scope": "boringcache-cargo-plus-windows-rolling-2",
+  "cache_scope": "boringcache-cargo-plus-windows-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "nushell/nushell",
+  "sha": "befc11d3a5b67e13d98c9a93d0b658da1b2afff7",
+  "seconds": 67.321,
+  "cache_save_timing": "in-phase",
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [
+    "boringcache-cargo-plus-windows-rolling-4-41941109499.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.47.0"
+  },
+  "product_env": {
+    "BORINGCACHE_ARCHIVE_SELECTIVE_READS": "1"
+  },
+  "plan_settings": {
+    "target-budget": "20GiB"
+  },
+  "harness": {
+    "commit": "f0055cb969fb676ca89252b1d4b436e95c7f4668",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/41941109499",
+  "attempt": 1,
+  "started_at": "2026-11-05T00:28:27Z"
+}
