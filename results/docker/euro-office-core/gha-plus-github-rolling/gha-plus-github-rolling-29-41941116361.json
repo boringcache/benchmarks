@@ -1,0 +1,56 @@
+{
+  "adapter_command": "docker",
+  "case": "euro-office-core",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "capabilities": [
+    "layers",
+    "tool-cache",
+    "mount-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 29,
+  "scope": "gha-plus-github-rolling",
+  "cache_scope": "gha-plus-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "docker-euro-office-core-gha-plus-github-rolling-21",
+  "cache_restore_tracked": true,
+  "repo": "Euro-Office/DocumentServer",
+  "sha": "1e7a6176c7658f4057b121e0ee87a7c2e0bdd504",
+  "seconds": 312.795,
+  "cache_save_timing": "post-job",
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    },
+    "buildx_builder": {
+      "name": "builder-e9d50b07-7cb3-48ad-ac95-32e92300b0a4",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-e9d50b07-7cb3-48ad-ac95-32e92300b0a40",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "f0055cb969fb676ca89252b1d4b436e95c7f4668",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/41941116361",
+  "attempt": 1,
+  "started_at": "2026-11-05T00:26:00Z",
+  "job_conclusion": "failure",
+  "post_job_save_seconds": 0.0
+}
