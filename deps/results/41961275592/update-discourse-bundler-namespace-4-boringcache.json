@@ -1,0 +1,57 @@
+{
+  "name": "update-discourse-bundler-namespace-4-boringcache",
+  "kind": "update",
+  "case": "discourse-bundler",
+  "tool": "bundler",
+  "repo": "discourse/discourse",
+  "sha": "bbb722e4322eba62306788b6da410655e4d4d343",
+  "before_sha": "bab418487a463eede4c7d2f6415fe2eb966a3883",
+  "after_sha": "bbb722e4322eba62306788b6da410655e4d4d343",
+  "lockfile": "Gemfile.lock",
+  "lane": "boringcache",
+  "runner": "namespace-4",
+  "machine": "namespace 4c",
+  "producer": "namespace-4",
+  "cache_backend": "boringcache",
+  "key": "deps-41961275592-discourse-bundler-namespace-4",
+  "run_id": "41961275592",
+  "step": 0,
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/41961275592",
+  "recorded_at": "2026-11-05T03:26:21Z",
+  "versions": {
+    "boringcache": "1.47.0"
+  },
+  "observed": {
+    "cpu": "AMD EPYC",
+    "cores": 4,
+    "disk_free_bytes": 100146225152
+  },
+  "auth_seconds": 0.214,
+  "restore": {
+    "seconds": 6.72,
+    "network_bytes": 512620922,
+    "step_ok": true,
+    "ok": true
+  },
+  "install": {
+    "seconds": 3.623,
+    "network_bytes": 33398900,
+    "step_ok": true,
+    "ok": true
+  },
+  "save": {
+    "seconds": 3.462,
+    "network_bytes": 15737334,
+    "step_ok": true,
+    "ok": true
+  },
+  "exit_status": 0,
+  "output_ok": true,
+  "cache": {
+    "bytes": 1176849045,
+    "files": 37004
+  },
+  "cache_restored_key": "",
+  "harness_commit": "1b2817f27b784a61783dc9ea51925a01b2940abb"
+}
