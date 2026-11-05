@@ -1,0 +1,42 @@
+{
+  "adapter_command": "sbt",
+  "case": "play",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 59,
+  "scope": "gha-github-rolling-2",
+  "cache_scope": "gha-github-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": "sbt-play-gha-github-rolling-2-58",
+  "cache_restore_tracked": true,
+  "repo": "playframework/playframework",
+  "sha": "7ad72918f3e51564397a2df9c48a994309c6e5de",
+  "seconds": 618.625,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "d81ad6918a7e9f047451787c1e76852c18cddf36",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/41993029809",
+  "attempt": 1,
+  "started_at": "2026-11-05T08:16:18Z"
+}
