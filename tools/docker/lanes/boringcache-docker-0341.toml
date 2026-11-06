@@ -1,0 +1,7 @@
+provider = "boringcache"
+level = "base"
+label = "boringcache BuildKit 0.34.1 candidate"
+experimental = true
+
+[env]
+BORINGCACHE_MANAGED_BUILDKIT_IMAGE = "ghcr.io/boringcache/buildkit@sha256:339a3e32a06f7b1a0f72beef1cfcc9b6900484f38afcdfc19ebf80e39e194959"
