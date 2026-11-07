@@ -26,9 +26,9 @@
 | cargo | deno | gha-plus | github | 24 | e7b39ebd55c85aaf6a29290c1f5a99e2e21e09dd | unmeasured | 2026-10-26T11:46:04Z | 1 | passed | 1983.953 | https://github.com/boringcache/benchmarks/actions/runs/40317327599 |
 | cargo | deno | kache | github | 24 | e7b39ebd55c85aaf6a29290c1f5a99e2e21e09dd | unmeasured | 2026-10-26T11:46:11Z | 1 | passed | 1255.8 | https://github.com/boringcache/benchmarks/actions/runs/40317327599 |
 | cargo | deno | mbx | github | 24 | e7b39ebd55c85aaf6a29290c1f5a99e2e21e09dd | unmeasured | 2026-10-26T11:45:59Z | 1 | passed | 2050.526 | https://github.com/boringcache/benchmarks/actions/runs/40317327599 |
-| cargo | ferrum-fuzz | boringcache-cargo | github-26 | 271 | fc3c575ab8b9b51a615528117be2e2745929d86b | 1.47.0 | 2026-11-06T22:13:44Z | 1 | passed | 1917.625 | https://github.com/boringcache/benchmarks/actions/runs/42302486994 |
-| cargo | ferrum-fuzz | boringcache-cargo-plus | github-26 | 271 | fc3c575ab8b9b51a615528117be2e2745929d86b | 1.47.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 2026-11-06T22:12:12Z | 1 | passed | 563.12 | https://github.com/boringcache/benchmarks/actions/runs/42302486994 |
-| cargo | ferrum-fuzz | gha-plus | github-26 | 271 | fc3c575ab8b9b51a615528117be2e2745929d86b | unmeasured | 2026-11-06T22:12:23Z | 1 | passed | 788.739 | https://github.com/boringcache/benchmarks/actions/runs/42302486994 |
+| cargo | ferrum-fuzz | boringcache-cargo | github-26 | 272 | 940ae96883b56dde022c63ccd410da65d83c5eeb | 1.47.0 | 2026-11-07T11:11:09Z | 1 | passed | 1580.931 | https://github.com/boringcache/benchmarks/actions/runs/42366887149 |
+| cargo | ferrum-fuzz | boringcache-cargo-plus | github-26 | 272 | 940ae96883b56dde022c63ccd410da65d83c5eeb | 1.47.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 2026-11-07T11:13:12Z | 1 | passed | 654.33 | https://github.com/boringcache/benchmarks/actions/runs/42366887149 |
+| cargo | ferrum-fuzz | gha-plus | github-26 | 272 | 940ae96883b56dde022c63ccd410da65d83c5eeb | unmeasured | 2026-11-07T11:11:24Z | 1 | passed | 1318.289 | https://github.com/boringcache/benchmarks/actions/runs/42366887149 |
 | cargo | nushell | boringcache-cargo | github | 33 | 192e5533546f89eddbb65cc73359aca1598a3076 | 1.47.0 | 2026-11-06T12:50:58Z | 1 | passed | 834.165 | https://github.com/boringcache/benchmarks/actions/runs/42220681077 |
 | cargo | nushell | boringcache-cargo | macos | 33 | 192e5533546f89eddbb65cc73359aca1598a3076 | 1.47.0 | 2026-11-06T12:51:14Z | 1 | passed | 1430.741 | https://github.com/boringcache/benchmarks/actions/runs/42220681077 |
 | cargo | nushell | boringcache-cargo | windows | 33 | 192e5533546f89eddbb65cc73359aca1598a3076 | 1.47.0 | 2026-11-06T12:51:49Z | 1 | passed | 1847.254 | https://github.com/boringcache/benchmarks/actions/runs/42220681077 |
@@ -165,9 +165,9 @@
 | docker | posthog | gha-plus | github-arm | 505 | 9d1e9b4711f7cd282d99d615ddbebb3bf2ae2210 | unmeasured | 2026-11-07T02:14:15Z | 1 | passed | 2074.651 | https://github.com/boringcache/benchmarks/actions/runs/42328097009 |
 | docker | posthog | ghcr | github | 505 | 9d1e9b4711f7cd282d99d615ddbebb3bf2ae2210 | unmeasured | 2026-11-07T02:15:41Z | 1 | passed | 1365.056 | https://github.com/boringcache/benchmarks/actions/runs/42328097009 |
 | docker | posthog | ghcr | github-arm | 505 | 9d1e9b4711f7cd282d99d615ddbebb3bf2ae2210 | unmeasured | 2026-11-07T02:14:43Z | 1 | passed | 1151.068 | https://github.com/boringcache/benchmarks/actions/runs/42328097009 |
-| docker | qdrant | boringcache-docker | github | 295 | b4ebd966f3dea2543cd89798eeb3a21168130cff | 1.47.0 | 2026-11-06T18:14:05Z | 1 | passed | 278.786 | https://github.com/boringcache/benchmarks/actions/runs/42268653347 |
-| docker | qdrant | gha | github | 295 | b4ebd966f3dea2543cd89798eeb3a21168130cff | unmeasured | 2026-11-06T18:14:19Z | 1 | passed | 360.943 | https://github.com/boringcache/benchmarks/actions/runs/42268653347 |
-| docker | qdrant | ghcr | github | 295 | b4ebd966f3dea2543cd89798eeb3a21168130cff | unmeasured | 2026-11-06T18:14:10Z | 1 | passed | 244.453 | https://github.com/boringcache/benchmarks/actions/runs/42268653347 |
+| docker | qdrant | boringcache-docker | github | 296 | ca7faee30b7d7616b4533b69ce42e378de90c8d0 | 1.47.0 | 2026-11-07T11:20:58Z | 1 | passed | 252.718 | https://github.com/boringcache/benchmarks/actions/runs/42367735261 |
+| docker | qdrant | gha | github | 296 | ca7faee30b7d7616b4533b69ce42e378de90c8d0 | unmeasured | 2026-11-07T11:21:09Z | 1 | passed | 372.951 | https://github.com/boringcache/benchmarks/actions/runs/42367735261 |
+| docker | qdrant | ghcr | github | 296 | ca7faee30b7d7616b4533b69ce42e378de90c8d0 | unmeasured | 2026-11-07T11:21:10Z | 1 | passed | 314.674 | https://github.com/boringcache/benchmarks/actions/runs/42367735261 |
 | docker | vocion | boringcache-docker | github | 1 | dbada6a11fcaaf934123fd99feb8c8c1a6e46d23 | 1.45.0 | 2026-10-28T12:16:43Z | 1 | passed | 341.148 | https://github.com/boringcache/benchmarks/actions/runs/40686377453 |
 | docker | vocion | boringcache-docker-plus | github | 1 | dbada6a11fcaaf934123fd99feb8c8c1a6e46d23 | 1.45.0 | 2026-10-28T12:16:54Z | 1 | passed | 433.005 | https://github.com/boringcache/benchmarks/actions/runs/40686377453 |
 | docker | vocion | gha | github | 1 | dbada6a11fcaaf934123fd99feb8c8c1a6e46d23 | unmeasured | 2026-10-28T12:16:52Z | 1 | passed | 504.877 | https://github.com/boringcache/benchmarks/actions/runs/40686377453 |
@@ -195,8 +195,8 @@
 | pants | backend-ai | boringcache-pants | github | 429 | 69e869fcf3d1ed798d30d36fb7e9bed20d40dde1 | 1.47.0 | 2026-11-06T09:13:43Z | 1 | failed | unmeasured | https://github.com/boringcache/benchmarks/actions/runs/42193264686 |
 | pants | backend-ai | depot-cache | github | 429 | 69e869fcf3d1ed798d30d36fb7e9bed20d40dde1 | unmeasured | 2026-11-06T09:13:40Z | 1 | passed | 152.561 | https://github.com/boringcache/benchmarks/actions/runs/42193264686 |
 | pants | backend-ai | nativelink | github | 429 | 69e869fcf3d1ed798d30d36fb7e9bed20d40dde1 | unmeasured | 2026-11-06T09:13:52Z | 1 | passed | 167.5 | https://github.com/boringcache/benchmarks/actions/runs/42193264686 |
-| sbt | lila | boringcache-sbt | github | 625 | cf8d300f010e20b6d02f0f9f5c94605ddea8ca3a | 1.47.0 | 2026-11-07T11:09:24Z | 1 | passed | 132.491 | https://github.com/boringcache/benchmarks/actions/runs/42366891870 |
-| sbt | lila | gha | github | 625 | cf8d300f010e20b6d02f0f9f5c94605ddea8ca3a | unmeasured | 2026-11-07T11:09:28Z | 1 | passed | 194.274 | https://github.com/boringcache/benchmarks/actions/runs/42366891870 |
+| sbt | lila | boringcache-sbt | github | 629 | 25b170885206a2c6932154b38fb14de58a0bd085 | 1.47.0 | 2026-11-07T12:14:27Z | 1 | passed | 206.008 | https://github.com/boringcache/benchmarks/actions/runs/42371483151 |
+| sbt | lila | gha | github | 629 | 25b170885206a2c6932154b38fb14de58a0bd085 | unmeasured | 2026-11-07T12:14:25Z | 1 | passed | 202.341 | https://github.com/boringcache/benchmarks/actions/runs/42371483151 |
 | sbt | play | boringcache-sbt | github | 61 | c7741739585dddbeeb8bad867aeaf95f6561746e | 1.47.0 | 2026-11-05T09:51:31Z | 1 | passed | 87.914 | https://github.com/boringcache/benchmarks/actions/runs/42005696849 |
 | sbt | play | gha | github | 61 | c7741739585dddbeeb8bad867aeaf95f6561746e | unmeasured | 2026-11-05T09:51:37Z | 1 | passed | 75.645 | https://github.com/boringcache/benchmarks/actions/runs/42005696849 |
 | turbo | n8n | boringcache-turbo | github | 1810 | 3895cb31de5731c8425e56e56ff6f1dad1e2aa50 | 1.47.0 | 2026-11-07T02:37:19Z | 1 | passed | 63.457 | https://github.com/boringcache/benchmarks/actions/runs/42330058315 |
@@ -3450,6 +3450,7 @@
 | cargo | ferrum-fuzz | boringcache-cargo | base | github-26 | rolling | 27 | 881c97b98cda | 1.42.0 | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 1419.295 | 1419.295 | 1419.295 | 0 |
 | cargo | ferrum-fuzz | boringcache-cargo | base | github-26 | rolling | 270 | ea3a65c40448 | 1.47.0 | 1 | false | in-phase | github 4c | INTEL(R) XEON(R) PLATINUM 8573C | 4 | 1 | 0 | 0 | 2306.581 | 2306.581 | 2306.581 | 0 |
 | cargo | ferrum-fuzz | boringcache-cargo | base | github-26 | rolling | 271 | fc3c575ab8b9 | 1.47.0 | 1 | false | in-phase | github 4c | Intel(R) Xeon(R) 6973P-C | 4 | 1 | 0 | 0 | 1917.625 | 1917.625 | 1917.625 | 0 |
+| cargo | ferrum-fuzz | boringcache-cargo | base | github-26 | rolling | 272 | 940ae96883b5 | 1.47.0 | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 1580.931 | 1580.931 | 1580.931 | 0 |
 | cargo | ferrum-fuzz | boringcache-cargo | base | github-26 | rolling | 28 | 769c38ea35d0 | 1.42.0 | 1 | false | in-phase | github 4c | INTEL(R) XEON(R) PLATINUM 8573C | 4 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured | - |
 | cargo | ferrum-fuzz | boringcache-cargo | base | github-26 | rolling | 29 | 90a1ba21a8d3 | 1.42.0 | 1 | false | in-phase | github 4c | AMD EPYC 9V45 96-Core Processor | 4 | 1 | 0 | 0 | 2860.322 | 2860.322 | 2860.322 | 0 |
 | cargo | ferrum-fuzz | boringcache-cargo | base | github-26 | rolling | 3 | c4f9e8f8329a | 1.42.0 | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 1425.465 | 1425.465 | 1425.465 | 0 |
@@ -3724,6 +3725,7 @@
 | cargo | ferrum-fuzz | boringcache-cargo-plus | plus | github-26 | rolling | 27 | 881c97b98cda | 1.42.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured | 0 |
 | cargo | ferrum-fuzz | boringcache-cargo-plus | plus | github-26 | rolling | 270 | ea3a65c40448 | 1.47.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 1 | false | in-phase | github 4c | INTEL(R) XEON(R) PLATINUM 8573C | 4 | 1 | 0 | 0 | 1015.285 | 1015.285 | 1015.285 | 0 |
 | cargo | ferrum-fuzz | boringcache-cargo-plus | plus | github-26 | rolling | 271 | fc3c575ab8b9 | 1.47.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 563.12 | 563.12 | 563.12 | 0 |
+| cargo | ferrum-fuzz | boringcache-cargo-plus | plus | github-26 | rolling | 272 | 940ae96883b5 | 1.47.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 1 | false | in-phase | github 4c | AMD EPYC 9V74 80-Core Processor | 4 | 1 | 0 | 0 | 654.33 | 654.33 | 654.33 | 0 |
 | cargo | ferrum-fuzz | boringcache-cargo-plus | plus | github-26 | rolling | 28 | 769c38ea35d0 | 1.42.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured | - |
 | cargo | ferrum-fuzz | boringcache-cargo-plus | plus | github-26 | rolling | 29 | 90a1ba21a8d3 | 1.42.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 1 | false | in-phase | github 4c | AMD EPYC 9V74 80-Core Processor | 4 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured | 0 |
 | cargo | ferrum-fuzz | boringcache-cargo-plus | plus | github-26 | rolling | 3 | c4f9e8f8329a | 1.42.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 1 | false | in-phase | github 4c | AMD EPYC 9V45 96-Core Processor | 4 | 1 | 0 | 0 | 721.741 | 721.741 | 721.741 | 0 |
@@ -3991,6 +3993,7 @@
 | cargo | ferrum-fuzz | gha-plus | plus | github-26 | rolling | 269 | 8da189e8df2f | - | 1 | false | in-phase | github 4c | AMD EPYC 9V74 80-Core Processor | 4 | 1 | 0 | 0 | 2707.39 | 2707.39 | 2707.39 | - |
 | cargo | ferrum-fuzz | gha-plus | plus | github-26 | rolling | 270 | ea3a65c40448 | - | 1 | false | in-phase | github 4c | Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz | 4 | 1 | 0 | 0 | 713.918 | 713.918 | 713.918 | - |
 | cargo | ferrum-fuzz | gha-plus | plus | github-26 | rolling | 271 | fc3c575ab8b9 | - | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 788.739 | 788.739 | 788.739 | - |
+| cargo | ferrum-fuzz | gha-plus | plus | github-26 | rolling | 272 | 940ae96883b5 | - | 1 | false | in-phase | github 4c | INTEL(R) XEON(R) PLATINUM 8573C | 4 | 1 | 0 | 0 | 1318.289 | 1318.289 | 1318.289 | - |
 | cargo | ferrum-fuzz | gha-plus | plus | github-26 | rolling | 28 | 769c38ea35d0 | - | 1 | false | in-phase | github 4c | Intel(R) Xeon(R) 6973P-C | 4 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured | - |
 | cargo | ferrum-fuzz | gha-plus | plus | github-26 | rolling | 3 | c4f9e8f8329a | - | 1 | false | in-phase | github 4c | Intel(R) Xeon(R) 6973P-C | 4 | 1 | 0 | 0 | 1478.125 | 1478.125 | 1478.125 | - |
 | cargo | ferrum-fuzz | gha-plus | plus | github-26 | rolling | 31 | 1de151092d4f | - | 1 | false | in-phase | github 4c | Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz | 4 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured | - |
@@ -55891,6 +55894,7 @@
 | docker | qdrant | boringcache-docker | base | github | rolling | 293 | 0e8058b5914e | 1.47.0 | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 244.648 | 244.648 | 244.648 | 0 |
 | docker | qdrant | boringcache-docker | base | github | rolling | 294 | e65b08b56110 | 1.47.0 | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 239.29 | 239.29 | 239.29 | 0 |
 | docker | qdrant | boringcache-docker | base | github | rolling | 295 | b4ebd966f3de | 1.47.0 | 1 | false | in-phase | github 4c | Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz | 4 | 1 | 0 | 0 | 278.786 | 278.786 | 278.786 | 0 |
+| docker | qdrant | boringcache-docker | base | github | rolling | 296 | ca7faee30b7d | 1.47.0 | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 252.718 | 252.718 | 252.718 | 0 |
 | docker | qdrant | boringcache-docker | base | github | rolling | 3 | f23e8b508aa9 | 1.40.1 | 1 | true | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 226.706 | 226.706 | 226.706 | 0 |
 | docker | qdrant | boringcache-docker | base | github | rolling | 30 | 35e0ec99464b | 1.40.1 | 1 | true | in-phase | github 4c | AMD EPYC 9V45 96-Core Processor | 4 | 1 | 0 | 0 | 382.733 | 382.733 | 382.733 | 0 |
 | docker | qdrant | boringcache-docker | base | github | rolling | 31 | 48199a3c2d41 | 1.40.1 | 1 | false | in-phase | github 4c | AMD EPYC 9V74 80-Core Processor | 4 | 1 | 0 | 0 | 494.229 | 494.229 | 494.229 | 0 |
@@ -56191,6 +56195,7 @@
 | docker | qdrant | gha | base | github | rolling | 293 | 0e8058b5914e | - | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 320.386 | 320.386 | 320.386 | - |
 | docker | qdrant | gha | base | github | rolling | 294 | e65b08b56110 | - | 1 | false | in-phase | github 4c | INTEL(R) XEON(R) PLATINUM 8573C | 4 | 1 | 0 | 0 | 345.738 | 345.738 | 345.738 | - |
 | docker | qdrant | gha | base | github | rolling | 295 | b4ebd966f3de | - | 1 | false | in-phase | github 4c | AMD EPYC 9V74 80-Core Processor | 4 | 1 | 0 | 0 | 360.943 | 360.943 | 360.943 | - |
+| docker | qdrant | gha | base | github | rolling | 296 | ca7faee30b7d | - | 1 | false | in-phase | github 4c | AMD EPYC 9V74 80-Core Processor | 4 | 1 | 0 | 0 | 372.951 | 372.951 | 372.951 | - |
 | docker | qdrant | gha | base | github | rolling | 3 | f23e8b508aa9 | - | 1 | true | in-phase | github 4c | AMD EPYC 9V74 80-Core Processor | 4 | 1 | 0 | 0 | 391.999 | 391.999 | 391.999 | - |
 | docker | qdrant | gha | base | github | rolling | 30 | 35e0ec99464b | - | 1 | true | in-phase | github 4c | Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz | 4 | 1 | 0 | 0 | 740.497 | 740.497 | 740.497 | - |
 | docker | qdrant | gha | base | github | rolling | 31 | 48199a3c2d41 | - | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 831.535 | 831.535 | 831.535 | - |
@@ -56489,6 +56494,7 @@
 | docker | qdrant | ghcr | base | github | rolling | 293 | 0e8058b5914e | - | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 298.749 | 298.749 | 298.749 | - |
 | docker | qdrant | ghcr | base | github | rolling | 294 | e65b08b56110 | - | 1 | false | in-phase | github 4c | INTEL(R) XEON(R) PLATINUM 8573C | 4 | 1 | 0 | 0 | 260.998 | 260.998 | 260.998 | - |
 | docker | qdrant | ghcr | base | github | rolling | 295 | b4ebd966f3de | - | 1 | false | in-phase | github 4c | AMD EPYC 9V45 96-Core Processor | 4 | 1 | 0 | 0 | 244.453 | 244.453 | 244.453 | - |
+| docker | qdrant | ghcr | base | github | rolling | 296 | ca7faee30b7d | - | 1 | false | in-phase | github 4c | INTEL(R) XEON(R) PLATINUM 8573C | 4 | 1 | 0 | 0 | 314.674 | 314.674 | 314.674 | - |
 | docker | qdrant | ghcr | base | github | rolling | 3 | f23e8b508aa9 | - | 1 | true | in-phase | github 4c | AMD EPYC 9V45 96-Core Processor | 4 | 1 | 0 | 0 | 227.268 | 227.268 | 227.268 | - |
 | docker | qdrant | ghcr | base | github | rolling | 30 | 35e0ec99464b | - | 1 | true | in-phase | github 4c | Intel(R) Xeon(R) 6973P-C | 4 | 1 | 0 | 0 | 495.211 | 495.211 | 495.211 | - |
 | docker | qdrant | ghcr | base | github | rolling | 31 | 48199a3c2d41 | - | 1 | false | in-phase | github 4c | AMD EPYC 9V45 96-Core Processor | 4 | 1 | 0 | 0 | 464.929 | 464.929 | 464.929 | - |
@@ -62466,6 +62472,10 @@
 | sbt | lila | boringcache-sbt | base | github | rolling | 623 | 9bf10c0272e8 | 1.47.0 | 1 | false | in-phase | github 4c | INTEL(R) XEON(R) PLATINUM 8573C | 4 | 1 | 0 | 0 | 112.003 | 112.003 | 112.003 | 0 |
 | sbt | lila | boringcache-sbt | base | github | rolling | 624 | 35b04439df3d | 1.47.0 | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 138.971 | 138.971 | 138.971 | 0 |
 | sbt | lila | boringcache-sbt | base | github | rolling | 625 | cf8d300f010e | 1.47.0 | 1 | false | in-phase | github 4c | AMD EPYC 9V45 96-Core Processor | 4 | 1 | 0 | 0 | 132.491 | 132.491 | 132.491 | 0 |
+| sbt | lila | boringcache-sbt | base | github | rolling | 626 | 249f2d1749fe | 1.47.0 | 1 | false | in-phase | github 4c | Intel(R) Xeon(R) 6973P-C | 4 | 1 | 0 | 0 | 309.348 | 309.348 | 309.348 | 0 |
+| sbt | lila | boringcache-sbt | base | github | rolling | 627 | 9ed1f3bc9abd | 1.47.0 | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 201.255 | 201.255 | 201.255 | 0 |
+| sbt | lila | boringcache-sbt | base | github | rolling | 628 | 320b8534001e | 1.47.0 | 1 | false | in-phase | github 4c | Intel(R) Xeon(R) 6973P-C | 4 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured | 0 |
+| sbt | lila | boringcache-sbt | base | github | rolling | 629 | 25b170885206 | 1.47.0 | 1 | false | in-phase | github 4c | INTEL(R) XEON(R) PLATINUM 8573C | 4 | 1 | 0 | 0 | 206.008 | 206.008 | 206.008 | 0 |
 | sbt | lila | boringcache-sbt | base | github | rolling | 63 | 95265fc155f9 | 1.41.0 | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 116.703 | 116.703 | 116.703 | 0 |
 | sbt | lila | boringcache-sbt | base | github | rolling | 64 | 567c73aba47e | 1.41.0 | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 118.916 | 118.916 | 118.916 | 0 |
 | sbt | lila | boringcache-sbt | base | github | rolling | 65 | a3c809666fbc | 1.41.0 | 1 | false | in-phase | github 4c | AMD EPYC 9V74 80-Core Processor | 4 | 1 | 0 | 0 | 126.208 | 126.208 | 126.208 | 0 |
@@ -63091,6 +63101,10 @@
 | sbt | lila | gha | base | github | rolling | 623 | 9bf10c0272e8 | - | 1 | false | in-phase | github 4c | AMD EPYC 9V45 96-Core Processor | 4 | 1 | 0 | 0 | 76.854 | 76.854 | 76.854 | - |
 | sbt | lila | gha | base | github | rolling | 624 | 35b04439df3d | - | 1 | false | in-phase | github 4c | Intel(R) Xeon(R) 6973P-C | 4 | 1 | 0 | 0 | 86.36 | 86.36 | 86.36 | - |
 | sbt | lila | gha | base | github | rolling | 625 | cf8d300f010e | - | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 194.274 | 194.274 | 194.274 | - |
+| sbt | lila | gha | base | github | rolling | 626 | 249f2d1749fe | - | 1 | false | in-phase | github 4c | AMD EPYC 9V74 80-Core Processor | 4 | 1 | 0 | 0 | 340.653 | 340.653 | 340.653 | - |
+| sbt | lila | gha | base | github | rolling | 627 | 9ed1f3bc9abd | - | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 180.369 | 180.369 | 180.369 | - |
+| sbt | lila | gha | base | github | rolling | 628 | 320b8534001e | - | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured | - |
+| sbt | lila | gha | base | github | rolling | 629 | 25b170885206 | - | 1 | false | in-phase | github 4c | AMD EPYC 9V74 80-Core Processor | 4 | 1 | 0 | 0 | 202.341 | 202.341 | 202.341 | - |
 | sbt | lila | gha | base | github | rolling | 63 | 95265fc155f9 | - | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 115.346 | 115.346 | 115.346 | - |
 | sbt | lila | gha | base | github | rolling | 64 | 567c73aba47e | - | 1 | false | in-phase | github 4c | AMD EPYC 9V45 96-Core Processor | 4 | 1 | 0 | 0 | 81.296 | 81.296 | 81.296 | - |
 | sbt | lila | gha | base | github | rolling | 65 | a3c809666fbc | - | 1 | false | in-phase | github 4c | AMD EPYC 7763 64-Core Processor | 4 | 1 | 0 | 0 | 174.2 | 174.2 | 174.2 | - |
@@ -70814,9 +70828,9 @@ Rolling steps at which every lane on the runner passed, each on its own rolling 
 | cargo | ferrum-fuzz | github-26 | rolling | 1.46.0, 1.46.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 26 | 166 | 191 | boringcache-cargo | base | github 4c | 3922.691 | 1423.648 | 4763.923 | 0 |
 | cargo | ferrum-fuzz | github-26 | rolling | 1.46.0, 1.46.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 26 | 166 | 191 | boringcache-cargo-plus | plus | github 4c | 3186.934 | 486.701 | 3989.753 | 0 |
 | cargo | ferrum-fuzz | github-26 | rolling | 1.46.0, 1.46.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 26 | 166 | 191 | gha-plus | plus | github 4c | 3314.116 | 1131.531 | 4115.366 | 0 |
-| cargo | ferrum-fuzz | github-26 | rolling | 1.47.0, 1.47.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 14 | 258 | 271 | boringcache-cargo | base | github 4c | 3780.198 | 1757.518 | 5209.744 | 0 |
-| cargo | ferrum-fuzz | github-26 | rolling | 1.47.0, 1.47.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 14 | 258 | 271 | boringcache-cargo-plus | plus | github 4c | 2701.837 | 466.779 | 3446.067 | 0 |
-| cargo | ferrum-fuzz | github-26 | rolling | 1.47.0, 1.47.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 14 | 258 | 271 | gha-plus | plus | github 4c | 3028.694 | 713.918 | 3259.073 | 0 |
+| cargo | ferrum-fuzz | github-26 | rolling | 1.47.0, 1.47.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 15 | 258 | 272 | boringcache-cargo | base | github 4c | 3754.38 | 1580.931 | 5209.744 | 0 |
+| cargo | ferrum-fuzz | github-26 | rolling | 1.47.0, 1.47.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 15 | 258 | 272 | boringcache-cargo-plus | plus | github 4c | 2445.864 | 466.779 | 3446.067 | 0 |
+| cargo | ferrum-fuzz | github-26 | rolling | 1.47.0, 1.47.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=25GiB | 15 | 258 | 272 | gha-plus | plus | github 4c | 3018.252 | 713.918 | 3259.073 | 0 |
 | cargo | nushell | github | rolling-2 | 1.47.0, 1.47.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=20GiB | 33 | 1 | 33 | boringcache-cargo | base | github 4c | 897.196 | 659.879 | 1127.348 | 0 |
 | cargo | nushell | github | rolling-2 | 1.47.0, 1.47.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=20GiB | 33 | 1 | 33 | boringcache-cargo-plus | plus | github 4c | 589.529 | 337.719 | 698.079 | 0 |
 | cargo | nushell | github | rolling-2 | 1.47.0, 1.47.0 BORINGCACHE_ARCHIVE_SELECTIVE_READS=1 target-budget=20GiB | 33 | 1 | 33 | gha | base | github 4c | 783.448 | 633.844 | 1291.196 | 0 |
@@ -71982,9 +71996,9 @@ Rolling steps at which every lane on the runner passed, each on its own rolling 
 | docker | qdrant | github | rolling | 1.46.0 | 38 | 240 | 277 | boringcache-docker | base | github 4c | 244.928 | 15.466 | 717.541 | 0 |
 | docker | qdrant | github | rolling | 1.46.0 | 38 | 240 | 277 | gha | base | github 4c | 330.346 | 11.772 | 812.478 | 0 |
 | docker | qdrant | github | rolling | 1.46.0 | 38 | 240 | 277 | ghcr | base | github 4c | 292.654 | 10.068 | 690.268 | 0 |
-| docker | qdrant | github | rolling | 1.47.0 | 18 | 278 | 295 | boringcache-docker | base | github 4c | 267.013 | 22.739 | 645.757 | 0 |
-| docker | qdrant | github | rolling | 1.47.0 | 18 | 278 | 295 | gha | base | github 4c | 356.063 | 14.208 | 869.065 | 0 |
-| docker | qdrant | github | rolling | 1.47.0 | 18 | 278 | 295 | ghcr | base | github 4c | 288.958 | 16.862 | 732.913 | 0 |
+| docker | qdrant | github | rolling | 1.47.0 | 19 | 278 | 296 | boringcache-docker | base | github 4c | 255.24 | 22.739 | 645.757 | 0 |
+| docker | qdrant | github | rolling | 1.47.0 | 19 | 278 | 296 | gha | base | github 4c | 360.943 | 14.208 | 869.065 | 0 |
+| docker | qdrant | github | rolling | 1.47.0 | 19 | 278 | 296 | ghcr | base | github 4c | 292.231 | 16.862 | 732.913 | 0 |
 | docker | vocion | github | rolling-2 | 1.45.0 | 4 | 1 | 4 | boringcache-docker | base | github 4c | 512.291 | 436.82 | 529.312 | 0 |
 | docker | vocion | github | rolling-2 | 1.45.0 | 4 | 1 | 4 | boringcache-docker-plus | plus | github 4c | 832.198 | 414.949 | 1070.281 | 0 |
 | docker | vocion | github | rolling-2 | 1.45.0 | 4 | 1 | 4 | gha | base | github 4c | 745.266 | 699.53 | 961.18 | 0 |
@@ -72242,8 +72256,8 @@ Rolling steps at which every lane on the runner passed, each on its own rolling 
 | sbt | lila | github | rolling-2 | 1.45.0 | 32 | 471 | 502 | gha | base | github 4c | 177.779 | 116.968 | 431.256 | 0 |
 | sbt | lila | github | rolling-2 | 1.46.0 | 84 | 503 | 595 | boringcache-sbt | base | github 4c | 163.866 | 92.207 | 407.477 | 0 |
 | sbt | lila | github | rolling-2 | 1.46.0 | 84 | 503 | 595 | gha | base | github 4c | 168.625 | 78.453 | 477.215 | 0 |
-| sbt | lila | github | rolling-2 | 1.47.0 | 29 | 596 | 625 | boringcache-sbt | base | github 4c | 138.505 | 86.27 | 262.343 | 0 |
-| sbt | lila | github | rolling-2 | 1.47.0 | 29 | 596 | 625 | gha | base | github 4c | 134.467 | 70.512 | 271.842 | 0 |
+| sbt | lila | github | rolling-2 | 1.47.0 | 32 | 596 | 629 | boringcache-sbt | base | github 4c | 144.291 | 86.27 | 309.348 | 0 |
+| sbt | lila | github | rolling-2 | 1.47.0 | 32 | 596 | 629 | gha | base | github 4c | 156.647 | 70.512 | 340.653 | 0 |
 | sbt | play | github | rolling-2 | 1.41.0 | 28 | 1 | 29 | boringcache-sbt | base | github 4c | 105.231 | 55.432 | 553.366 | 0 |
 | sbt | play | github | rolling-2 | 1.41.0 | 28 | 1 | 29 | gha | base | github 4c | 93.231 | 49.025 | 588.478 | 0 |
 | sbt | play | github | rolling-2 | 1.42.2 | 2 | 30 | 31 | boringcache-sbt | base | github 4c | 127.023 | 99.116 | 154.93 | 0 |
