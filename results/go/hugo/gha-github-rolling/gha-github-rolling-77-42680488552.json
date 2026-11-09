@@ -1,0 +1,42 @@
+{
+  "adapter_command": "go",
+  "case": "hugo",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "build-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 77,
+  "scope": "gha-github-rolling",
+  "cache_scope": "gha-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "go-hugo-gha-github-rolling-76",
+  "cache_restore_tracked": true,
+  "repo": "gohugoio/hugo",
+  "sha": "d5ba1aaa9f2cbccf8bc4da1844c1cd6a17411cbc",
+  "seconds": 96.87,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "a797fe71615b27a8022f5e4a2388688d6c2b5f66",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/42680488552",
+  "attempt": 1,
+  "started_at": "2026-11-09T19:09:43Z"
+}
