@@ -1,0 +1,56 @@
+{
+  "adapter_command": "docker",
+  "case": "immich",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "capabilities": [
+    "layers",
+    "mount-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 377,
+  "scope": "gha-plus-github-rolling",
+  "cache_scope": "gha-plus-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "docker-immich-gha-plus-github-rolling-376",
+  "cache_restore_tracked": true,
+  "repo": "immich-app/immich",
+  "sha": "f6dfe1a93ede809b9487abe570d6fa1dbdee40c9",
+  "seconds": 240.737,
+  "cache_save_timing": "post-job",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    },
+    "image_platform": "linux/amd64",
+    "buildx_builder": {
+      "name": "builder-cf295199-97f3-41a5-8003-2ab46e1d21b4",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-cf295199-97f3-41a5-8003-2ab46e1d21b40",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "c0df0ec7925319a15f6dcd153d393aaf85f78a15",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/42633975720",
+  "attempt": 1,
+  "started_at": "2026-11-09T14:23:07Z",
+  "job_conclusion": "success",
+  "post_job_save_seconds": 148.868
+}
