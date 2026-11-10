@@ -1,0 +1,1585 @@
+{
+  "adapter_command": "docker",
+  "case": "immich-base-images",
+  "lane": "boringcache-docker-plus",
+  "provider": "boringcache",
+  "level": "plus",
+  "capabilities": [
+    "layers",
+    "tool-cache",
+    "mount-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 11,
+  "scope": "boringcache-docker-plus-github-rolling",
+  "cache_scope": "boringcache-docker-plus-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "immich-app/base-images",
+  "sha": "45d296c53bfd6bf8b2133db56067b58a8daa65f2",
+  "seconds": 39.833,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1794314411722,
+      "run_id": "42817482414",
+      "session_id": "proxy-summary-6bdca518-ab08-4356-8349-18a840dd51c4",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 31785,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "docker-registry",
+      "adapter": "oci",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 27.5,
+          "cpu_iowait_percent": 4.7,
+          "cpu_pressure_percent": 8.3,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 21.8,
+          "disk_read_mb": 126.5,
+          "disk_written_mb": 4565.2,
+          "interval_ms": 38221,
+          "io_pressure_percent": 7.4,
+          "memory_pressure_percent": 0.0,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "disk_available_gb": 85,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15984
+      },
+      "proxy": {
+        "adapter": "oci",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 31785,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "docker-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 35,
+        "storage_download_failed_attempts": 2,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 7,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_check": 0,
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_rollups_ingest": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_check": 101,
+          "cache_blobs_commit": 109,
+          "cache_blobs_download_urls": 149,
+          "cache_blobs_upload_urls": 112,
+          "cache_rollups_ingest": 166
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_check": 235,
+          "cache_blobs_commit": 119,
+          "cache_blobs_download_urls": 149,
+          "cache_blobs_upload_urls": 284,
+          "cache_rollups_ingest": 471
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_check": 22,
+          "cache_blobs_commit": 3,
+          "cache_blobs_download_urls": 1,
+          "cache_blobs_upload_urls": 36,
+          "cache_rollups_ingest": 3
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_check": 0,
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_rollups_ingest": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 65,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_check": 0,
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_rollups_ingest": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_check": 101,
+          "cache_blobs_commit": 109,
+          "cache_blobs_download_urls": 149,
+          "cache_blobs_upload_urls": 112,
+          "cache_rollups_ingest": 166
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_check": 235,
+          "cache_blobs_commit": 119,
+          "cache_blobs_download_urls": 149,
+          "cache_blobs_upload_urls": 284,
+          "cache_rollups_ingest": 471
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_check": 22,
+          "cache_blobs_commit": 3,
+          "cache_blobs_download_urls": 1,
+          "cache_blobs_upload_urls": 36,
+          "cache_rollups_ingest": 3
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_check": 0,
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_rollups_ingest": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 65,
+        "total_retry_count": 0
+      },
+      "storage": {
+        "body_duration_ms": 566,
+        "body_duration_ms_p50": 0,
+        "body_duration_ms_p90": 1000,
+        "body_duration_ms_p95": 10000,
+        "body_duration_ms_p99": 10000,
+        "body_duration_ms_sum": 15866,
+        "body_idle_timeout_count": 0,
+        "body_read_throughput_mbps": 323.72,
+        "bytes": 642019917,
+        "client_send_count": 0,
+        "client_send_duration_ms_sum": 0,
+        "client_send_timeout_count": 0,
+        "delivery": "direct",
+        "delivery_counts": {
+          "direct": 28
+        },
+        "direction": "download",
+        "error_count": 0,
+        "fallback_count": 0,
+        "object_kind": "oci_blob",
+        "object_size_band": "small",
+        "object_size_band_bytes": {
+          "large": 492797688,
+          "medium": 113561039,
+          "small": 35661190
+        },
+        "object_size_band_counts": {
+          "large": 2,
+          "medium": 3,
+          "small": 23
+        },
+        "oci_engine_cache_promotion_count": 28,
+        "oci_engine_cache_promotion_duration_ms": 5,
+        "oci_engine_local_spool_bytes": 642019917,
+        "oci_engine_local_spool_write_duration_ms": 1,
+        "oci_engine_storage_delivery": "direct",
+        "oci_engine_storage_delivery_count": 28,
+        "oci_engine_storage_delivery_direct_count": 28,
+        "oci_engine_storage_get_body_duration_ms": 15866,
+        "oci_engine_storage_get_body_duration_ms_p50": 0,
+        "oci_engine_storage_get_body_duration_ms_p90": 1000,
+        "oci_engine_storage_get_body_duration_ms_p95": 10000,
+        "oci_engine_storage_get_body_duration_ms_p99": 10000,
+        "oci_engine_storage_get_bytes": 642019917,
+        "oci_engine_storage_get_count": 28,
+        "oci_engine_storage_get_task_duration_ms": 8036,
+        "oci_engine_storage_get_task_duration_ms_p50": 1,
+        "oci_engine_storage_get_task_duration_ms_p90": 1000,
+        "oci_engine_storage_get_task_duration_ms_p95": 5000,
+        "oci_engine_storage_get_task_duration_ms_p99": 5000,
+        "oci_engine_storage_get_transfer_duration_us": 15505961,
+        "oci_engine_storage_get_ttfb_ms": 7449,
+        "oci_engine_storage_get_ttfb_ms_p50": 500,
+        "oci_engine_storage_get_ttfb_ms_p90": 1000,
+        "oci_engine_storage_get_ttfb_ms_p95": 1000,
+        "oci_engine_storage_get_ttfb_ms_p99": 1000,
+        "oci_engine_storage_object_size_band": "small",
+        "oci_engine_storage_object_size_band_count": 23,
+        "oci_engine_storage_object_size_band_large_bytes": 492797688,
+        "oci_engine_storage_object_size_band_large_count": 2,
+        "oci_engine_storage_object_size_band_medium_bytes": 113561039,
+        "oci_engine_storage_object_size_band_medium_count": 3,
+        "oci_engine_storage_object_size_band_small_bytes": 35661190,
+        "oci_engine_storage_object_size_band_small_count": 23,
+        "oci_engine_storage_probe_bytes": 33886975,
+        "oci_engine_storage_probe_count": 8,
+        "oci_engine_storage_probe_duration_ms": 1923,
+        "oci_engine_storage_probe_enabled_count": 35,
+        "oci_engine_storage_probe_setup_count": 35,
+        "oci_engine_storage_range_rescue_bytes": 492724749,
+        "oci_engine_storage_range_rescue_completed_count": 2,
+        "oci_engine_storage_range_rescue_duration_ms": 13408,
+        "oci_engine_storage_range_rescue_segment_count": 7,
+        "oci_engine_storage_range_rescue_segment_duration_ms_p50": 2000,
+        "oci_engine_storage_range_rescue_segment_duration_ms_p90": 5000,
+        "oci_engine_storage_range_rescue_segment_duration_ms_p95": 5000,
+        "oci_engine_storage_range_rescue_segment_duration_ms_p99": 5000,
+        "oci_engine_storage_range_rescue_started_count": 2,
+        "oci_engine_storage_ranged_default_started_count": 2,
+        "oci_engine_storage_region": "sjc1",
+        "oci_engine_storage_region_count": 28,
+        "oci_engine_storage_source": "origin",
+        "oci_engine_storage_source_count": 28,
+        "oci_engine_storage_source_origin_count": 28,
+        "read_outcome": "ok",
+        "region": "sjc1",
+        "request_count": 28,
+        "retry_count": 0,
+        "source": "origin",
+        "source_counts": {
+          "origin": 28
+        },
+        "task_duration_ms": 287,
+        "task_duration_ms_p50": 1,
+        "task_duration_ms_p90": 1000,
+        "task_duration_ms_p95": 5000,
+        "task_duration_ms_p99": 5000,
+        "task_duration_ms_sum": 8036,
+        "throughput_basis": "transfer_elapsed",
+        "throughput_mbps": 331.237730831388,
+        "timeout_count": 0,
+        "transfer_duration_us_sum": 15505961,
+        "ttfb_ms": 266,
+        "ttfb_ms_p50": 500,
+        "ttfb_ms_p90": 1000,
+        "ttfb_ms_p95": 1000,
+        "ttfb_ms_p99": 1000,
+        "ttfb_ms_sum": 7449,
+        "writethrough": {
+          "already_present_count": 12,
+          "blob_count": 3,
+          "bytes": 4390415,
+          "direction": "upload",
+          "object_kind": "oci_blob_writethrough",
+          "request_count": 3
+        }
+      },
+      "lifecycle": {
+        "publication_drain_duration_ms": 0
+      },
+      "oci": {
+        "buildkit_enrichment": "export_uploaded_blobs",
+        "oci_body_demand_observations": 28,
+        "oci_body_demand_observed_bytes": 642019917,
+        "oci_body_demand_prefetch_already_local": 0,
+        "oci_body_demand_prefetch_deferred": 0,
+        "oci_body_demand_prefetch_deferred_bytes": 0,
+        "oci_body_demand_prefetch_duration_ms": 0,
+        "oci_body_demand_prefetch_failures": 0,
+        "oci_body_demand_prefetch_final_concurrency": 0,
+        "oci_body_demand_prefetch_inserted": 0,
+        "oci_body_demand_prefetch_inserted_bytes": 0,
+        "oci_body_demand_prefetch_max_observed_concurrency": 0,
+        "oci_body_demand_prefetch_pressure_deferred": 0,
+        "oci_body_demand_prefetch_pressure_deferred_bytes": 0,
+        "oci_body_demand_prefetch_scheduled": 0,
+        "oci_body_demand_prefetch_scheduled_bytes": 0,
+        "oci_body_demand_prefetch_scheduled_digests": 0,
+        "oci_body_demand_prefetch_triggers": 0,
+        "oci_body_hint_late_hints": 0,
+        "oci_body_hint_unused_bytes": 0,
+        "oci_body_hint_unused_hints": 0,
+        "oci_body_hint_warm_hits": 0,
+        "oci_body_hint_wasted_bytes": 0,
+        "oci_body_hint_wasted_hints": 0,
+        "oci_body_local_bytes": 0,
+        "oci_body_local_duration_ms": 0,
+        "oci_body_local_hits": 0,
+        "oci_body_remote_bytes": 642019917,
+        "oci_body_remote_duration_ms": 15500,
+        "oci_body_remote_fetches": 28,
+        "oci_body_unhinted_demands": 0,
+        "oci_engine_blob_head_duration_ms": 5181,
+        "oci_engine_blob_head_hits": 23,
+        "oci_engine_blob_head_requests": 23,
+        "oci_engine_blob_local_reads": 28,
+        "oci_engine_blob_read_throughs": 28,
+        "oci_engine_blob_remote_fetched_bytes": 642019917,
+        "oci_engine_blob_remote_reads": 28,
+        "oci_engine_blob_served_bytes": 1284039834,
+        "oci_engine_blob_writethrough_upload_already_present_count": 12,
+        "oci_engine_blob_writethrough_upload_blob_count": 3,
+        "oci_engine_blob_writethrough_upload_bytes": 4390415,
+        "oci_engine_blob_writethrough_upload_request_count": 3,
+        "oci_engine_borrowed_upload_session_bytes": 19201,
+        "oci_engine_borrowed_upload_session_count": 1,
+        "oci_engine_cache_promotion_count": 28,
+        "oci_engine_cache_promotion_duration_ms": 5,
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_engine_local_spool_bytes": 642019917,
+        "oci_engine_local_spool_write_duration_ms": 1,
+        "oci_engine_storage_delivery": "direct",
+        "oci_engine_storage_delivery_count": 28,
+        "oci_engine_storage_delivery_direct_count": 28,
+        "oci_engine_storage_get_body_duration_ms": 15866,
+        "oci_engine_storage_get_body_duration_ms_p50": 0,
+        "oci_engine_storage_get_body_duration_ms_p90": 1000,
+        "oci_engine_storage_get_body_duration_ms_p95": 10000,
+        "oci_engine_storage_get_body_duration_ms_p99": 10000,
+        "oci_engine_storage_get_bytes": 642019917,
+        "oci_engine_storage_get_count": 28,
+        "oci_engine_storage_get_task_duration_ms": 8036,
+        "oci_engine_storage_get_task_duration_ms_p50": 1,
+        "oci_engine_storage_get_task_duration_ms_p90": 1000,
+        "oci_engine_storage_get_task_duration_ms_p95": 5000,
+        "oci_engine_storage_get_task_duration_ms_p99": 5000,
+        "oci_engine_storage_get_transfer_duration_us": 15505961,
+        "oci_engine_storage_get_ttfb_ms": 7449,
+        "oci_engine_storage_get_ttfb_ms_p50": 500,
+        "oci_engine_storage_get_ttfb_ms_p90": 1000,
+        "oci_engine_storage_get_ttfb_ms_p95": 1000,
+        "oci_engine_storage_get_ttfb_ms_p99": 1000,
+        "oci_engine_storage_object_size_band": "small",
+        "oci_engine_storage_object_size_band_count": 23,
+        "oci_engine_storage_object_size_band_large_bytes": 492797688,
+        "oci_engine_storage_object_size_band_large_count": 2,
+        "oci_engine_storage_object_size_band_medium_bytes": 113561039,
+        "oci_engine_storage_object_size_band_medium_count": 3,
+        "oci_engine_storage_object_size_band_small_bytes": 35661190,
+        "oci_engine_storage_object_size_band_small_count": 23,
+        "oci_engine_storage_probe_bytes": 33886975,
+        "oci_engine_storage_probe_count": 8,
+        "oci_engine_storage_probe_duration_ms": 1923,
+        "oci_engine_storage_probe_enabled_count": 35,
+        "oci_engine_storage_probe_setup_count": 35,
+        "oci_engine_storage_range_rescue_bytes": 492724749,
+        "oci_engine_storage_range_rescue_completed_count": 2,
+        "oci_engine_storage_range_rescue_duration_ms": 13408,
+        "oci_engine_storage_range_rescue_segment_count": 7,
+        "oci_engine_storage_range_rescue_segment_duration_ms_p50": 2000,
+        "oci_engine_storage_range_rescue_segment_duration_ms_p90": 5000,
+        "oci_engine_storage_range_rescue_segment_duration_ms_p95": 5000,
+        "oci_engine_storage_range_rescue_segment_duration_ms_p99": 5000,
+        "oci_engine_storage_range_rescue_started_count": 2,
+        "oci_engine_storage_ranged_default_started_count": 2,
+        "oci_engine_storage_region": "sjc1",
+        "oci_engine_storage_region_count": 28,
+        "oci_engine_storage_source": "origin",
+        "oci_engine_storage_source_count": 28,
+        "oci_engine_storage_source_origin_count": 28,
+        "oci_engine_stream_through_bytes": 642019917,
+        "oci_engine_stream_through_count": 28,
+        "oci_engine_upload_post_bytes": 247402038,
+        "oci_engine_upload_post_duration_ms": 235,
+        "oci_engine_upload_post_first_byte_observations": 15,
+        "oci_engine_upload_post_requests": 15,
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 0,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 0,
+        "startup_prefetch_concurrency_adjustment_count": 0,
+        "startup_prefetch_duration_ms": 0,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 0,
+        "startup_prefetch_hedge_wins": 0,
+        "startup_prefetch_hedges": 0,
+        "startup_prefetch_initial_concurrency": 0,
+        "startup_prefetch_inserted": 0,
+        "startup_prefetch_max_concurrency": 0,
+        "startup_prefetch_max_observed_concurrency": 0,
+        "startup_prefetch_oci_body_cold_blobs": 35,
+        "startup_prefetch_oci_body_duration_ms": 0,
+        "startup_prefetch_oci_body_failures": 0,
+        "startup_prefetch_oci_body_inserted": 0,
+        "startup_prefetch_oci_body_target_blobs": 0,
+        "startup_prefetch_oci_body_target_bytes": 0,
+        "startup_prefetch_oci_cold_blobs": 35,
+        "startup_prefetch_oci_duration_ms": 796,
+        "startup_prefetch_oci_failures": 0,
+        "startup_prefetch_oci_hydration": "metadata-only",
+        "startup_prefetch_oci_inserted": 0,
+        "startup_prefetch_oci_refs": 1,
+        "startup_prefetch_oci_total_unique_blobs": 35,
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 0,
+        "startup_prefetch_target_bytes": 0,
+        "startup_prefetch_total_unique_blobs": 0,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 0
+      },
+      "kv_upload": {},
+      "singleflight": {
+        "singleflight_oci_blob_spool_leaders": 28,
+        "singleflight_oci_blob_spool_post_flight_local_hits": 28,
+        "singleflight_oci_manifest_leaders": 1
+      },
+      "kv_lookup": {},
+      "local_cache": {
+        "blob_read": {},
+        "blob_read_cache_bytes": 642019917,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {
+          "oci_body_demand_observations": 28,
+          "oci_body_demand_observed_bytes": 642019917,
+          "oci_body_demand_prefetch_already_local": 0,
+          "oci_body_demand_prefetch_deferred": 0,
+          "oci_body_demand_prefetch_deferred_bytes": 0,
+          "oci_body_demand_prefetch_duration_ms": 0,
+          "oci_body_demand_prefetch_failures": 0,
+          "oci_body_demand_prefetch_final_concurrency": 0,
+          "oci_body_demand_prefetch_inserted": 0,
+          "oci_body_demand_prefetch_inserted_bytes": 0,
+          "oci_body_demand_prefetch_max_observed_concurrency": 0,
+          "oci_body_demand_prefetch_pressure_deferred": 0,
+          "oci_body_demand_prefetch_pressure_deferred_bytes": 0,
+          "oci_body_demand_prefetch_scheduled": 0,
+          "oci_body_demand_prefetch_scheduled_bytes": 0,
+          "oci_body_demand_prefetch_scheduled_digests": 0,
+          "oci_body_demand_prefetch_triggers": 0,
+          "oci_body_hint_late_hints": 0,
+          "oci_body_hint_unused_bytes": 0,
+          "oci_body_hint_unused_hints": 0,
+          "oci_body_hint_warm_hits": 0,
+          "oci_body_hint_wasted_bytes": 0,
+          "oci_body_hint_wasted_hints": 0,
+          "oci_body_local_bytes": 0,
+          "oci_body_local_duration_ms": 0,
+          "oci_body_local_hits": 0,
+          "oci_body_remote_bytes": 642019917,
+          "oci_body_remote_duration_ms": 15500,
+          "oci_body_remote_fetches": 28,
+          "oci_body_unhinted_demands": 0
+        }
+      },
+      "buildkit": {
+        "blob_head_duration_ms": 5181,
+        "blob_head_errors": 0,
+        "blob_head_hits": 23,
+        "blob_head_misses": 0,
+        "blob_head_requests": 23,
+        "buildkit_cache_backend": "boringcache",
+        "cache_graph": "buildkit-boringcache",
+        "cache_need_planner": {
+          "cache_need_feedback": {
+            "demand_observations": 28,
+            "demand_observed_bytes": 642019917,
+            "duration_ms": 0,
+            "final_concurrency": 0,
+            "hint_outcomes": {
+              "late_hints": 0,
+              "unhinted_demands": 0,
+              "unused_hint_bytes": 0,
+              "unused_hints": 0,
+              "warm_hits": 0,
+              "wasted_hint_bytes": 0,
+              "wasted_hints": 0
+            },
+            "hydrated_by_prefetch": 0,
+            "hydrated_bytes": 0,
+            "max_observed_concurrency": 0,
+            "outcome_confidence": "proxy_per_digest",
+            "prefetch_failures": 0,
+            "schema_version": "buildkit_cache_need_feedback.v1",
+            "unhinted_demand_observations": 0,
+            "warm_preexisting": 0
+          },
+          "cache_need_plan": {
+            "needs": [],
+            "schema_version": "buildkit_cache_need_plan.v1"
+          },
+          "forecast": {
+            "class": "not_enough_evidence",
+            "confidence": "annotation_only_proxy_per_digest",
+            "schema_version": "buildkit_cache_need_forecast.v1"
+          },
+          "hint_accounting": {
+            "accepted_digests": 0,
+            "deferred": 0,
+            "deferred_bytes": 0,
+            "planned_records": 0,
+            "pressure_deferred": 0,
+            "pressure_deferred_bytes": 0,
+            "records": 0,
+            "requests": 0,
+            "scheduled": 0,
+            "scheduled_bytes": 0,
+            "unknown_digests": 0
+          },
+          "schema_version": "buildkit_cache_need_planner.v1"
+        },
+        "cache_read_hits": 54,
+        "cache_read_misses": 0,
+        "cache_write_bytes": 247402038,
+        "cache_write_count": 15,
+        "cache_write_degraded_count": 0,
+        "canonical_rewrite_count": 0,
+        "canonical_rewrite_layers": 0,
+        "local_body_bytes": 0,
+        "local_body_hits": 0,
+        "mount_accepted": 0,
+        "mount_attempts": 0,
+        "mount_created": 0,
+        "mount_remote_error": 0,
+        "mount_remote_locator": 0,
+        "mount_remote_miss": 0,
+        "mountcache": {
+          "archive_tags": [],
+          "byte_cap": 8192,
+          "cache_ids": [],
+          "configure_events": 3,
+          "configured": true,
+          "emitted_archive_tags": 0,
+          "emitted_cache_ids": 0,
+          "emitted_samples": 0,
+          "hydrate_compressed_bytes": 0,
+          "hydrate_download_ms": 0,
+          "hydrate_errors": 0,
+          "hydrate_extract_ms": 0,
+          "hydrate_hits": 0,
+          "hydrate_miss_all": 0,
+          "hydrate_misses": 0,
+          "hydrate_requests": 0,
+          "hydrate_skips": 0,
+          "hydrate_spool_ms": 0,
+          "hydrate_total_ms": 0,
+          "plans": 0,
+          "prewarm_compressed_bytes": 0,
+          "prewarm_errors": 0,
+          "prewarm_misses": 0,
+          "prewarm_reason_counts": {},
+          "prewarm_staged": 0,
+          "prewarm_started": 0,
+          "publish_archive_built": 0,
+          "publish_archive_ms": 0,
+          "publish_compressed_bytes": 0,
+          "publish_done": 0,
+          "publish_encoded_bytes": 0,
+          "publish_errors": 0,
+          "publish_marks": 0,
+          "publish_skip_reason_counts": {},
+          "publish_skips": 0,
+          "publish_total_ms": 0,
+          "publish_transferred_bytes": 0,
+          "publish_upload_ms": 0,
+          "samples": [],
+          "schema_version": "buildkit_mountcache.v1",
+          "skipped_unsafe_symlinks": 0,
+          "source": "managed_buildkit_trace",
+          "total_archive_tags": 0,
+          "total_cache_ids": 0,
+          "total_samples": 0,
+          "transfer_counts": {},
+          "truncated": false,
+          "worker_exits": 0,
+          "worker_outcome_counts": {},
+          "worker_result_counts": {},
+          "worker_timeouts": 0,
+          "write_tracking_changed": 0,
+          "write_tracking_complete": 0,
+          "write_tracking_unreliable": 0
+        },
+        "prewarm": {
+          "body_active": 0,
+          "body_active_max": 1,
+          "body_backlog_reliefs": 0,
+          "body_downshifts": 0,
+          "body_max_seconds": 0.0,
+          "body_phase": "cache-only",
+          "body_prepared": 4,
+          "body_scaleups": 0,
+          "body_slots_current": 1,
+          "body_slots_max": 8,
+          "body_spool": {
+            "bytes": 0,
+            "files": 0,
+            "free_disk_bytes": 89430573056,
+            "free_disk_floor_bytes": 268435456,
+            "limit_bytes": 2147483648,
+            "limit_files": 64,
+            "observed_at": "2026-11-10T12:39:49.064213637Z",
+            "peak_bytes": 277824314,
+            "peak_files": 5,
+            "scope": "daemon",
+            "skipped_bodies": 0
+          },
+          "body_time_seconds": 0.1,
+          "body_wait_max_seconds": 0.0,
+          "body_wait_seconds": 0.0,
+          "cache_only_transitions": 1,
+          "canceled": 0,
+          "committed_bodies": 3,
+          "cpu_pressure_seconds": 0.0,
+          "daemon_rss_peak_bytes": 102555648,
+          "deferred": 4,
+          "dropped": 0,
+          "failed": 0,
+          "image_output_overlap_seconds": 0.0,
+          "io_pressure_seconds": 0.0,
+          "max_queue_depth": 1,
+          "memory_headroom_min_bytes": 15310614528,
+          "memory_limited_seconds": 0.0,
+          "memory_pressure_seconds": 0.0,
+          "memory_samples": 30,
+          "observed_summaries": 1,
+          "owned_bodies": 33,
+          "owned_body_bytes": 650781546,
+          "owned_body_max": 277824314,
+          "owned_body_skipped": 0,
+          "prepared": 0,
+          "queue_depth": 0,
+          "queued": 4,
+          "remote_probe_failed": 0,
+          "remote_probe_misses": 0,
+          "remote_reuse_bytes": 398989093,
+          "remote_reuse_hits": 15,
+          "resolve_max_seconds": 0.0,
+          "resolve_time_seconds": 0.0,
+          "resolved": 0,
+          "resource_admission": {
+            "cache_upload": {
+              "active": 0,
+              "active_peak": 4,
+              "cpu_pressure": "unknown",
+              "cpu_pressure_seconds": 0,
+              "daemon_rss_peak_bytes": 79093760,
+              "io_pressure": "unknown",
+              "io_pressure_seconds": 0,
+              "limit": 7,
+              "max": 8,
+              "memory_headroom_min_bytes": 15102963712,
+              "memory_limited_seconds": 0,
+              "memory_pressure": "low",
+              "memory_pressure_seconds": 0,
+              "observed_at": "2026-11-10T12:40:11.090265346Z",
+              "queued": 0,
+              "scope": "daemon",
+              "wait_ms": 0
+            },
+            "cache_work": {
+              "active": 0,
+              "active_peak": 1,
+              "cpu_pressure": "unknown",
+              "cpu_pressure_seconds": 0,
+              "daemon_rss_peak_bytes": 69226496,
+              "io_pressure": "high",
+              "io_pressure_seconds": 2,
+              "limit": 2,
+              "max": 8,
+              "memory_headroom_min_bytes": 15588786176,
+              "memory_limited_seconds": 0,
+              "memory_pressure": "low",
+              "memory_pressure_seconds": 0,
+              "observed_at": "2026-11-10T12:39:41.841787898Z",
+              "queued": 0,
+              "scope": "daemon",
+              "wait_ms": 0
+            }
+          },
+          "reused": 0,
+          "schema_version": "buildkit_prewarm_counters.v1",
+          "shared_upload_reused": 7,
+          "shared_upload_reused_bytes": 8780120,
+          "shared_upload_waits": 7,
+          "slot_limit_max": 1,
+          "slot_limit_min": 1,
+          "source": "managed_buildkit_progress",
+          "upload_max_seconds": 0.2,
+          "upload_time_seconds": 0.3,
+          "uploaded": 12,
+          "workers_current": 24,
+          "workers_max": 24
+        },
+        "remote_body_bytes": 642019917,
+        "remote_body_duration_ms": 15500,
+        "remote_body_fetches": 28,
+        "run_classification": "export_uploaded_blobs",
+        "schema_version": "buildkit_proxy_evidence.v1",
+        "storage_body_duration_ms": 15866,
+        "storage_body_idle_timeouts": 0,
+        "storage_client_send_count": 0,
+        "storage_client_send_duration_ms": 0,
+        "storage_client_send_timeouts": 0,
+        "storage_download_bytes": 642019917,
+        "storage_task_duration_ms": 8036,
+        "storage_upload_already_present_count": 0,
+        "storage_upload_blob_count": 0,
+        "storage_upload_bytes": 0,
+        "storage_upload_duration_ms": 0,
+        "storage_upload_error_count": 0,
+        "storage_upload_header_regions": null,
+        "storage_upload_location_policy": null,
+        "storage_upload_requested_regions": null,
+        "storage_upload_requests": 0,
+        "storage_upload_retry_count": 0,
+        "storage_upload_synced_regions": null,
+        "storage_writethrough_upload_bytes": 4390415,
+        "tool_caches": {
+          "ccache": {
+            "adapter": "ccache",
+            "classification": {
+              "bottleneck": {
+                "adapter": "ccache",
+                "candidates": [],
+                "evidence": {
+                  "duration_ms": 30854,
+                  "errors": 0,
+                  "hit_rate": 0.0,
+                  "hits": 0,
+                  "misses": 0,
+                  "write_degraded": 0,
+                  "write_errors": 0,
+                  "writes": 0
+                },
+                "primary_bottleneck": null,
+                "state": "no_cache_reads"
+              },
+              "cache_key_lookup": {
+                "state": "not_applicable"
+              },
+              "cache_temperature": {
+                "errors": 0,
+                "hit_rate": 0.0,
+                "hits": 0,
+                "likely_reason": "no_restore_or_lookup_work",
+                "misses": 0,
+                "state": "no_cache_reads",
+                "writes": 0
+              },
+              "issue_candidates": [],
+              "primary_bottleneck": null
+            },
+            "lifecycle": {
+              "publication_drain_duration_ms": 0
+            },
+            "local_cache": "remote-only",
+            "schema_version": "buildkit_tool_cache_evidence.v1",
+            "tool": "ccache"
+          }
+        },
+        "upload_body_aborts": 0,
+        "upload_body_bytes": 247402038,
+        "upload_duration_ms": 235,
+        "upload_first_byte_latency_ms": 0,
+        "upload_first_byte_observations": 15,
+        "upload_patch_bytes": 0,
+        "upload_post_bytes": 247402038,
+        "upload_put_bytes": 0,
+        "upload_requests": 15,
+        "vertex_spans": {
+          "byte_cap": 32768,
+          "cached_count": 29,
+          "cached_duration_ms": 282,
+          "cap": 512,
+          "duplicate_records_dropped": 38,
+          "emitted_spans": 38,
+          "error_count": 0,
+          "executed_count": 9,
+          "executed_duration_ms": 30062,
+          "identity_confidence": "vertex_digest",
+          "load_duration_ms": 6474,
+          "loaded_count": 1,
+          "raw_span_records": 76,
+          "schema_version": "buildkit_vertex_spans.v1",
+          "source": "managed_buildkit_trace",
+          "spans": [
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:39:40.71864597Z",
+              "duration_ms": 0,
+              "name": "[internal] load build definition from server.Dockerfile",
+              "started_at": "2026-11-10T12:39:40.718614441Z",
+              "state": "executed",
+              "vertex_digest": "sha256:f23c624389175f9a337836f3242744f3f2124b328449f236c97969bca5d4752c"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:39:41.470783864Z",
+              "duration_ms": 741,
+              "name": "[internal] load metadata for docker.io/library/node:24.21.0-trixie-slim@sha256:db3ae80f5d8df06e04dabdf7b44cbf008d32de168",
+              "started_at": "2026-11-10T12:39:40.729694074Z",
+              "state": "executed",
+              "vertex_digest": "sha256:1345520dcd3101780bd76ac12b789ac2d105050b8fb651d91cd40332a099c7a6"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:39:41.471357328Z",
+              "duration_ms": 0,
+              "name": "[internal] load .dockerignore",
+              "started_at": "2026-11-10T12:39:41.471308016Z",
+              "state": "executed",
+              "vertex_digest": "sha256:f765c44aa18fb5b33f397add40b98f00dda58655f36a911147daaae22d748b21"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:39:41.486481422Z",
+              "duration_ms": 0,
+              "name": "[internal] load build context",
+              "started_at": "2026-11-10T12:39:41.486442538Z",
+              "state": "executed",
+              "vertex_digest": "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:39:41.7056679Z",
+              "duration_ms": 220,
+              "name": "importing cache manifest from boringcache:7552199835838211069",
+              "started_at": "2026-11-10T12:39:41.484941084Z",
+              "state": "executed",
+              "vertex_digest": "sha256:f949f3b2634e487abaaba40d314c45cd3b8901fd652a509a15a0ee0aa9a44441"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:39:41.710401983Z",
+              "duration_ms": 4,
+              "name": "[base 1/9] FROM docker.io/library/node:24.21.0-trixie-slim@sha256:db3ae80f5d8df06e04dabdf7b44cbf008d32de168205fa0294444a",
+              "started_at": "2026-11-10T12:39:41.706220204Z",
+              "state": "executed",
+              "vertex_digest": "sha256:93ed101d5852b5a080f42bc04dd213dd6a35535d2ecbbae7f2efad91ea434e06"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:39:42.293590491Z",
+              "duration_ms": 586,
+              "name": "[base 5/9] ADD --chmod=644 https://www.postgresql.org/media/keys/ACCC4CF8.asc /usr/share/postgresql-common/pgdg/apt.post",
+              "started_at": "2026-11-10T12:39:41.706798179Z",
+              "state": "executed",
+              "vertex_digest": "sha256:5d14eb174f9f009cab8163929c7e38b23001ecf7db2a8db5e349867924a049d1"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:93ed101d5852b5a080f42bc04dd213dd6a35535d2ecbbae7f2efad91ea434e06"
+              ],
+              "name": "[base 2/9] WORKDIR /usr/src/app",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:7846c4b833322dbbeb31b3cd7bd032b325fac8b422dc90c52d0c8693f84e7dbe"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:7846c4b833322dbbeb31b3cd7bd032b325fac8b422dc90c52d0c8693f84e7dbe",
+                "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+              ],
+              "name": "[base 3/9] COPY configure-apt.sh ./",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:2c681debdd23650300c6e7e29f3f8bf8664010043ca6c77d4419e12e7a94b7ef"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:2c681debdd23650300c6e7e29f3f8bf8664010043ca6c77d4419e12e7a94b7ef"
+              ],
+              "name": "[base 4/9] RUN mkdir -p /usr/share/postgresql-common/pgdg",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:95ce6eedb2bca5fe88df291b02a4f41f25f2aed0a4d1379f2c08984e2c385e3d"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:95ce6eedb2bca5fe88df291b02a4f41f25f2aed0a4d1379f2c08984e2c385e3d",
+                "sha256:5d14eb174f9f009cab8163929c7e38b23001ecf7db2a8db5e349867924a049d1"
+              ],
+              "name": "[base 5/9] ADD --chmod=644 https://www.postgresql.org/media/keys/ACCC4CF8.asc /usr/share/postgresql-common/pgdg/apt.post",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:392e7940493e48e7698249c968e43a920558a73bf796f051f54cbc81febd58b2"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:392e7940493e48e7698249c968e43a920558a73bf796f051f54cbc81febd58b2"
+              ],
+              "name": "[base 6/9] RUN ./configure-apt.sh &&   apt-get update &&   apt-get install --no-install-recommends -yqq ca-certificates ",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:ccc1a8108fbbb1d4cb9604d357c602a33413f82f15669d5382f20c4308045f77"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:ccc1a8108fbbb1d4cb9604d357c602a33413f82f15669d5382f20c4308045f77",
+                "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+              ],
+              "name": "[base 7/9] COPY ccache /usr/bin/ccache",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:5ccf21f8cf6e4461915d9d16fea742ced2cc01743c87912d1ac09affc7241747"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:5ccf21f8cf6e4461915d9d16fea742ced2cc01743c87912d1ac09affc7241747",
+                "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+              ],
+              "name": "[base 8/9] COPY ccache-storage-http /usr/bin/ccache-storage-http",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:5f87cd1d3dbb745e5e65bc016ea878ffacf76325becd75e40fd132b9752a4e70"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:5f87cd1d3dbb745e5e65bc016ea878ffacf76325becd75e40fd132b9752a4e70"
+              ],
+              "name": "[base 9/9] RUN chmod 0755 /usr/bin/ccache /usr/bin/ccache-storage-http &&   ccache --version | grep -F \"ccache version 4",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:015e52e3c37e4e76649f77a453c9641e2218fc0f5ffa7710563da989c450002e"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:015e52e3c37e4e76649f77a453c9641e2218fc0f5ffa7710563da989c450002e",
+                "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+              ],
+              "name": "[libraw 1/2] COPY sources/libraw.json sources/libraw.sh ./",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:0a9923567c85804febaa13ba4930399e443456ef2727c39613700edb0ac4c9e9"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:0a9923567c85804febaa13ba4930399e443456ef2727c39613700edb0ac4c9e9"
+              ],
+              "name": "[libraw 2/2] RUN --mount=type=cache,id=immich-base-images-ccache,target=/root/.cache/ccache ./libraw.sh",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:0c607cefff19e39861647915c093ed038e066c177e27ab6d8079d7979b46815d"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:015e52e3c37e4e76649f77a453c9641e2218fc0f5ffa7710563da989c450002e",
+                "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+              ],
+              "name": "[libheif 1/2] COPY sources/libheif.json sources/libheif.sh ./",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:0a2b60e764a8a3825c6f8373852f6d365c37d983331905a9db33f61a1d01fad3"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:0a2b60e764a8a3825c6f8373852f6d365c37d983331905a9db33f61a1d01fad3"
+              ],
+              "name": "[libheif 2/2] RUN --mount=type=cache,id=immich-base-images-ccache,target=/root/.cache/ccache ./libheif.sh",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:8fa0740feca07a9af58b18e985a812b72dcf6bb3c577b934c849f1cefdc50e5d"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:0c607cefff19e39861647915c093ed038e066c177e27ab6d8079d7979b46815d",
+                "sha256:8fa0740feca07a9af58b18e985a812b72dcf6bb3c577b934c849f1cefdc50e5d"
+              ],
+              "name": "[imagemagick 1/9] COPY --from=libheif /usr/local/lib/ /usr/local/lib/libheif/",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:98ff7454da70350421c222ffdc37299f8d66181dc497c7937a938c35723351ea"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:98ff7454da70350421c222ffdc37299f8d66181dc497c7937a938c35723351ea",
+                "sha256:8fa0740feca07a9af58b18e985a812b72dcf6bb3c577b934c849f1cefdc50e5d"
+              ],
+              "name": "[imagemagick 2/9] COPY --from=libheif /usr/local/include/libheif/ /usr/local/include/libheif/",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:bf294b92aacff5c3597d235085e32155fd44e4fefc1de781cacd4e210f21fc14"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:015e52e3c37e4e76649f77a453c9641e2218fc0f5ffa7710563da989c450002e",
+                "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+              ],
+              "name": "[libjxl 1/2] COPY sources/libjxl.json sources/libjxl.sh ./",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:2b6e7185169f6c5dfd5b517a83c7e54e52249fe19fd17466582e04757d90a7ae"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:2b6e7185169f6c5dfd5b517a83c7e54e52249fe19fd17466582e04757d90a7ae"
+              ],
+              "name": "[libjxl 2/2] RUN --mount=type=cache,id=immich-base-images-ccache,target=/root/.cache/ccache ./libjxl.sh",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:e591015fb9744363e99d7da7041d195c40ca7db0f3be1a34d6cc5a10ff1ea129"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:bf294b92aacff5c3597d235085e32155fd44e4fefc1de781cacd4e210f21fc14",
+                "sha256:e591015fb9744363e99d7da7041d195c40ca7db0f3be1a34d6cc5a10ff1ea129"
+              ],
+              "name": "[imagemagick 3/9] COPY --from=libjxl /usr/local/lib/ /usr/local/lib/libjxl/",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:0fd470becfae72a559a6f13b55a14e7f9b61f8355c0e724ca12c62d44a3de9d6"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:0fd470becfae72a559a6f13b55a14e7f9b61f8355c0e724ca12c62d44a3de9d6",
+                "sha256:e591015fb9744363e99d7da7041d195c40ca7db0f3be1a34d6cc5a10ff1ea129"
+              ],
+              "name": "[imagemagick 4/9] COPY --from=libjxl /usr/local/include/jxl/ /usr/local/include/jxl/",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:2bf2ff41f402d34ba3eb0adbfaa587c75ffb6ba4916d63bf4c7c8131dae8a672"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:015e52e3c37e4e76649f77a453c9641e2218fc0f5ffa7710563da989c450002e",
+                "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+              ],
+              "name": "[jpegli 1/3] COPY sources/jpegli.json sources/jpegli.sh ./",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:2eaa6be1a0aeaf973559b422eaee03f8eff2261fbe6b0d0871cd7c8862eccdf0"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:2eaa6be1a0aeaf973559b422eaee03f8eff2261fbe6b0d0871cd7c8862eccdf0",
+                "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+              ],
+              "name": "[jpegli 2/3] COPY sources/jpegli-patches/ ./jpegli-patches/",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:de97b2ac51ca510a864c137000cf78bb4ccb8a8cb53aa37f26f6b56bf093e2db"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:de97b2ac51ca510a864c137000cf78bb4ccb8a8cb53aa37f26f6b56bf093e2db"
+              ],
+              "name": "[jpegli 3/3] RUN --mount=type=cache,id=immich-base-images-ccache,target=/root/.cache/ccache ./jpegli.sh",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:60d667684e334968e7cf5453b6b911ce9c2dda8c20f2bb64bc86c7c2efd8eb03"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:2bf2ff41f402d34ba3eb0adbfaa587c75ffb6ba4916d63bf4c7c8131dae8a672",
+                "sha256:60d667684e334968e7cf5453b6b911ce9c2dda8c20f2bb64bc86c7c2efd8eb03"
+              ],
+              "name": "[imagemagick 5/9] COPY --from=jpegli /usr/local/lib/ /usr/local/lib/jpegli/",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:cb738d4e9227e05ac23ee0b523c09505146bac156d44beec76b62bbf3719f605"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:cb738d4e9227e05ac23ee0b523c09505146bac156d44beec76b62bbf3719f605",
+                "sha256:60d667684e334968e7cf5453b6b911ce9c2dda8c20f2bb64bc86c7c2efd8eb03"
+              ],
+              "name": "[imagemagick 6/9] COPY --from=jpegli /usr/local/include/jconfig.h /usr/local/include/jmorecfg.h /usr/local/include/jpegl",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:31b9eb101903756f03d29dc79c3fbbdd2b181df56400216b806abe63f4c464af"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:31b9eb101903756f03d29dc79c3fbbdd2b181df56400216b806abe63f4c464af"
+              ],
+              "name": "[imagemagick 7/9] RUN cp -r /usr/local/lib/libheif/libheif* /usr/local/lib/libjxl/libjxl* /usr/local/lib/jpegli/libjpeg.",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:0932f642b1c7aa1f824e5dd5f98d651dff0dbf4632def3a0bad5a571a0defba2"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:0932f642b1c7aa1f824e5dd5f98d651dff0dbf4632def3a0bad5a571a0defba2",
+                "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+              ],
+              "name": "[imagemagick 8/9] COPY sources/imagemagick.json sources/imagemagick.sh ./",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:0608e6f4050d0c0bf047f1444358e778976f4b6b6eb5cdee918bce3748d67f06"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:0608e6f4050d0c0bf047f1444358e778976f4b6b6eb5cdee918bce3748d67f06"
+              ],
+              "name": "[imagemagick 9/9] RUN --mount=type=cache,id=immich-base-images-ccache,target=/root/.cache/ccache ./imagemagick.sh",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:d2b0519cc01d9447196c7255c00aa9ac7c4b81a783b0e050f24c2fe1b39564d9"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:d2b0519cc01d9447196c7255c00aa9ac7c4b81a783b0e050f24c2fe1b39564d9",
+                "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+              ],
+              "name": "[libvips 1/3] COPY sources/libvips.json sources/libvips.sh ./",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:821583c9391ed40c757c0f1a89ad4ce6d1eec45cb627789a65614926da1a54dc"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:821583c9391ed40c757c0f1a89ad4ce6d1eec45cb627789a65614926da1a54dc",
+                "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+              ],
+              "name": "[libvips 2/3] COPY sources/libvips-patches/ ./libvips-patches/",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:7642d2e9c3a9884778038379ca055c86ebfb0603fd162b2dcf75d5a81d12931d"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.57914953Z",
+              "duration_ms": 282,
+              "inputs": [
+                "sha256:7642d2e9c3a9884778038379ca055c86ebfb0603fd162b2dcf75d5a81d12931d"
+              ],
+              "load_duration_ms": 6474,
+              "name": "[libvips 3/3] RUN --mount=type=cache,id=immich-base-images-ccache,target=/root/.cache/ccache ./libvips.sh",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:ee9f4da60212f0bbcfcf9a5861f61bb225eb5710b26bce0afd906feb47803aa7"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:40:10.154569494Z",
+              "duration_ms": 27574,
+              "name": "exporting to docker image format",
+              "started_at": "2026-11-10T12:39:42.579866493Z",
+              "state": "executed",
+              "vertex_digest": "sha256:ece7f924604b8914230cbeda95aaae7436bae5ac3d43cf5e61975f2ed7971bbf"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:40:11.091883972Z",
+              "duration_ms": 937,
+              "name": "exporting cache to boringcache",
+              "started_at": "2026-11-10T12:40:10.154613206Z",
+              "state": "executed",
+              "vertex_digest": "sha256:5c75afa432e8d9d457a4c4b4b4d759474a4dbbbb863d975d8d0043b87bb4609b"
+            }
+          ],
+          "sum_duration_ms": 30344,
+          "top": [
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:40:10.154569494Z",
+              "duration_ms": 27574,
+              "name": "exporting to docker image format",
+              "started_at": "2026-11-10T12:39:42.579866493Z",
+              "state": "executed",
+              "vertex_digest": "sha256:ece7f924604b8914230cbeda95aaae7436bae5ac3d43cf5e61975f2ed7971bbf"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.57914953Z",
+              "duration_ms": 282,
+              "inputs": [
+                "sha256:7642d2e9c3a9884778038379ca055c86ebfb0603fd162b2dcf75d5a81d12931d"
+              ],
+              "load_duration_ms": 6474,
+              "name": "[libvips 3/3] RUN --mount=type=cache,id=immich-base-images-ccache,target=/root/.cache/ccache ./libvips.sh",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:ee9f4da60212f0bbcfcf9a5861f61bb225eb5710b26bce0afd906feb47803aa7"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:40:11.091883972Z",
+              "duration_ms": 937,
+              "name": "exporting cache to boringcache",
+              "started_at": "2026-11-10T12:40:10.154613206Z",
+              "state": "executed",
+              "vertex_digest": "sha256:5c75afa432e8d9d457a4c4b4b4d759474a4dbbbb863d975d8d0043b87bb4609b"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:39:41.470783864Z",
+              "duration_ms": 741,
+              "name": "[internal] load metadata for docker.io/library/node:24.21.0-trixie-slim@sha256:db3ae80f5d8df06e04dabdf7b44cbf008d32de168",
+              "started_at": "2026-11-10T12:39:40.729694074Z",
+              "state": "executed",
+              "vertex_digest": "sha256:1345520dcd3101780bd76ac12b789ac2d105050b8fb651d91cd40332a099c7a6"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:39:42.293590491Z",
+              "duration_ms": 586,
+              "name": "[base 5/9] ADD --chmod=644 https://www.postgresql.org/media/keys/ACCC4CF8.asc /usr/share/postgresql-common/pgdg/apt.post",
+              "started_at": "2026-11-10T12:39:41.706798179Z",
+              "state": "executed",
+              "vertex_digest": "sha256:5d14eb174f9f009cab8163929c7e38b23001ecf7db2a8db5e349867924a049d1"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:39:41.7056679Z",
+              "duration_ms": 220,
+              "name": "importing cache manifest from boringcache:7552199835838211069",
+              "started_at": "2026-11-10T12:39:41.484941084Z",
+              "state": "executed",
+              "vertex_digest": "sha256:f949f3b2634e487abaaba40d314c45cd3b8901fd652a509a15a0ee0aa9a44441"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:39:41.710401983Z",
+              "duration_ms": 4,
+              "name": "[base 1/9] FROM docker.io/library/node:24.21.0-trixie-slim@sha256:db3ae80f5d8df06e04dabdf7b44cbf008d32de168205fa0294444a",
+              "started_at": "2026-11-10T12:39:41.706220204Z",
+              "state": "executed",
+              "vertex_digest": "sha256:93ed101d5852b5a080f42bc04dd213dd6a35535d2ecbbae7f2efad91ea434e06"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:39:40.71864597Z",
+              "duration_ms": 0,
+              "name": "[internal] load build definition from server.Dockerfile",
+              "started_at": "2026-11-10T12:39:40.718614441Z",
+              "state": "executed",
+              "vertex_digest": "sha256:f23c624389175f9a337836f3242744f3f2124b328449f236c97969bca5d4752c"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:39:41.471357328Z",
+              "duration_ms": 0,
+              "name": "[internal] load .dockerignore",
+              "started_at": "2026-11-10T12:39:41.471308016Z",
+              "state": "executed",
+              "vertex_digest": "sha256:f765c44aa18fb5b33f397add40b98f00dda58655f36a911147daaae22d748b21"
+            },
+            {
+              "cached": false,
+              "completed_at": "2026-11-10T12:39:41.486481422Z",
+              "duration_ms": 0,
+              "name": "[internal] load build context",
+              "started_at": "2026-11-10T12:39:41.486442538Z",
+              "state": "executed",
+              "vertex_digest": "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:93ed101d5852b5a080f42bc04dd213dd6a35535d2ecbbae7f2efad91ea434e06"
+              ],
+              "name": "[base 2/9] WORKDIR /usr/src/app",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:7846c4b833322dbbeb31b3cd7bd032b325fac8b422dc90c52d0c8693f84e7dbe"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:7846c4b833322dbbeb31b3cd7bd032b325fac8b422dc90c52d0c8693f84e7dbe",
+                "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+              ],
+              "name": "[base 3/9] COPY configure-apt.sh ./",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:2c681debdd23650300c6e7e29f3f8bf8664010043ca6c77d4419e12e7a94b7ef"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:2c681debdd23650300c6e7e29f3f8bf8664010043ca6c77d4419e12e7a94b7ef"
+              ],
+              "name": "[base 4/9] RUN mkdir -p /usr/share/postgresql-common/pgdg",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:95ce6eedb2bca5fe88df291b02a4f41f25f2aed0a4d1379f2c08984e2c385e3d"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:95ce6eedb2bca5fe88df291b02a4f41f25f2aed0a4d1379f2c08984e2c385e3d",
+                "sha256:5d14eb174f9f009cab8163929c7e38b23001ecf7db2a8db5e349867924a049d1"
+              ],
+              "name": "[base 5/9] ADD --chmod=644 https://www.postgresql.org/media/keys/ACCC4CF8.asc /usr/share/postgresql-common/pgdg/apt.post",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:392e7940493e48e7698249c968e43a920558a73bf796f051f54cbc81febd58b2"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:392e7940493e48e7698249c968e43a920558a73bf796f051f54cbc81febd58b2"
+              ],
+              "name": "[base 6/9] RUN ./configure-apt.sh &&   apt-get update &&   apt-get install --no-install-recommends -yqq ca-certificates ",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:ccc1a8108fbbb1d4cb9604d357c602a33413f82f15669d5382f20c4308045f77"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:ccc1a8108fbbb1d4cb9604d357c602a33413f82f15669d5382f20c4308045f77",
+                "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+              ],
+              "name": "[base 7/9] COPY ccache /usr/bin/ccache",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:5ccf21f8cf6e4461915d9d16fea742ced2cc01743c87912d1ac09affc7241747"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:5ccf21f8cf6e4461915d9d16fea742ced2cc01743c87912d1ac09affc7241747",
+                "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+              ],
+              "name": "[base 8/9] COPY ccache-storage-http /usr/bin/ccache-storage-http",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:5f87cd1d3dbb745e5e65bc016ea878ffacf76325becd75e40fd132b9752a4e70"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:5f87cd1d3dbb745e5e65bc016ea878ffacf76325becd75e40fd132b9752a4e70"
+              ],
+              "name": "[base 9/9] RUN chmod 0755 /usr/bin/ccache /usr/bin/ccache-storage-http &&   ccache --version | grep -F \"ccache version 4",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:015e52e3c37e4e76649f77a453c9641e2218fc0f5ffa7710563da989c450002e"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:015e52e3c37e4e76649f77a453c9641e2218fc0f5ffa7710563da989c450002e",
+                "sha256:12973679eae8876141857c01776522b454e8846a858c6b993ee53b57dd648958"
+              ],
+              "name": "[libraw 1/2] COPY sources/libraw.json sources/libraw.sh ./",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:0a9923567c85804febaa13ba4930399e443456ef2727c39613700edb0ac4c9e9"
+            },
+            {
+              "cached": true,
+              "completed_at": "2026-11-10T12:39:42.296614511Z",
+              "duration_ms": 0,
+              "inputs": [
+                "sha256:0a9923567c85804febaa13ba4930399e443456ef2727c39613700edb0ac4c9e9"
+              ],
+              "name": "[libraw 2/2] RUN --mount=type=cache,id=immich-base-images-ccache,target=/root/.cache/ccache ./libraw.sh",
+              "started_at": "2026-11-10T12:39:42.296614511Z",
+              "state": "cached",
+              "vertex_digest": "sha256:0c607cefff19e39861647915c093ed038e066c177e27ab6d8079d7979b46815d"
+            }
+          ],
+          "top_scope": "all_observed_spans",
+          "total_spans": 38,
+          "truncated": false
+        },
+        "vertex_timing": {
+          "command_succeeded": true,
+          "schema_version": "buildkit_vertex_timing.v1",
+          "status": "reported"
+        }
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "oci",
+          "candidates": [],
+          "evidence": {
+            "duration_ms": 31785,
+            "errors": 0,
+            "hit_rate": 100.0,
+            "hits": 54,
+            "misses": 0,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 15
+          },
+          "primary_bottleneck": null,
+          "state": "cache_side_clear"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 100.0,
+          "hits": 54,
+          "likely_reason": "all_reads_hit",
+          "misses": 0,
+          "state": "hot",
+          "writes": 15
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": null
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4
+    },
+    "image_platform": "linux/amd64"
+  },
+  "evidence": [
+    "boringcache-docker-plus-github-rolling-11-42817482414.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.47.0"
+  },
+  "harness": {
+    "commit": "a14fce47a5f7a052a6239496427f3a4efeb4899e",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/42817482414",
+  "attempt": 1,
+  "started_at": "2026-11-10T12:39:32Z"
+}
