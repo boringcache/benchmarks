@@ -1,0 +1,42 @@
+{
+  "adapter_command": "ccache",
+  "case": "obs-studio",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "remote-storage"
+  ],
+  "runner": "github-26",
+  "runner_label": "ubuntu-26.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 73,
+  "scope": "gha-github-26-rolling-2",
+  "cache_scope": "gha-github-26-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": "ccache-obs-studio-gha-github-26-rolling-2-72",
+  "cache_restore_tracked": true,
+  "repo": "obsproject/obs-studio",
+  "sha": "427c6e5f05a52bc63510e225e5191fe651a13120",
+  "seconds": 166.169,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V45 96-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "41438ba0e3fb07ee87fdd49b5a1692f070a7f5ca",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/42862016090",
+  "attempt": 1,
+  "started_at": "2026-11-10T17:11:58Z"
+}
