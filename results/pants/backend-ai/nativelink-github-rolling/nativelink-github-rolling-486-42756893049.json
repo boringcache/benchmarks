@@ -1,0 +1,42 @@
+{
+  "adapter_command": "pants",
+  "case": "backend-ai",
+  "lane": "nativelink",
+  "provider": "nativelink",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 486,
+  "scope": "nativelink-github-rolling",
+  "cache_scope": "nativelink-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "pants-backend-ai-nativelink-github-rolling-485",
+  "cache_restore_tracked": true,
+  "repo": "lablup/backend.ai",
+  "sha": "72b635dc638dea0474ec070406da8f99166cb25c",
+  "seconds": 152.479,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "26b41fde9768aa7fa2d77aae163f43a3d82fca16",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/42756893049",
+  "attempt": 1,
+  "started_at": "2026-11-10T04:37:28Z"
+}
