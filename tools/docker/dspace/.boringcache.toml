@@ -8,7 +8,6 @@ metadata-hints = ["benchmark=dspace", "upstream-job=dspace"]
 command = [
   "docker", "buildx", "build",
   "--file", "upstream/Dockerfile",
-  "--build-arg", "DOCKER_REGISTRY=ghcr.io",
   "--tag", "dspace-benchmark:local",
   "--load",
   "upstream",

@@ -273,8 +273,11 @@ Every lane builds upstream's CI image with the source unchanged.
   and target cache mounts the Dockerfile already declares; there is no overlay.
 - `fred` follows the `swift` branch and builds the `knowledge-flow-backend`
   image listed in `.github/docker-images.json`, with its build argument.
-- `dspace` builds the root Dockerfile on amd64 and arm64 runners with
-  `DOCKER_REGISTRY=ghcr.io`, as upstream's reusable build does. Its build stage
+- `dspace` builds the root Dockerfile on amd64 and arm64 runners, as
+  upstream's reusable build does. Upstream CI sets `DOCKER_REGISTRY=ghcr.io`;
+  that registry's `dspace-dependencies` image refused an anonymous pull (401)
+  in [run 42874265880](https://github.com/boringcache/benchmarks/actions/runs/42874265880),
+  so the case keeps the Dockerfile's default, `docker.io`. Its build stage
   starts from the published `dspace-dependencies:latest` image, which upstream
   rebuilds. Lanes of one step pull it at about the same time; steps on
   different days can start from different dependency images. Upstream exports
