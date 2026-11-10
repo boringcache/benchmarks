@@ -1,0 +1,15 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+fail-on-cache-error = true
+tag = "fred-knowledge-flow-backend-docker"
+no-git = true
+metadata-hints = ["benchmark=fred-knowledge-flow-backend", "upstream-job=build"]
+command = [
+  "docker", "buildx", "build",
+  "--file", "upstream/apps/knowledge-flow-backend/dockerfiles/Dockerfile-prod",
+  "--build-arg", "PRODUCTION_FASTAPI_DOCS_ENABLED=false",
+  "--tag", "fred-knowledge-flow-backend-benchmark:local",
+  "--load",
+  "upstream",
+]

@@ -1,0 +1,12 @@
+repo = "honeybee-studio/honeybeepf-llm"
+branch = "main"
+start_sha = "b3cb83737e0efa8d40342e57ef5b60c4f9b7c7c0"
+rolling_stride = 3
+check = "docker image inspect honeybeepf-llm-benchmark:local"
+
+[runs]
+boringcache-docker = ["github", "local"]
+boringcache-docker-plus = ["github", "local"]
+gha = ["github"]
+gha-plus = ["github"]
+ghcr = ["github"]

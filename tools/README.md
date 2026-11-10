@@ -247,6 +247,45 @@ Sources: [Nushell root CI](https://github.com/nushell/nushell/blob/168db974bad01
 [sccache GitHub cache](https://github.com/mozilla/sccache/blob/v0.17.0/docs/GHA.md),
 [BoringCache Cargo setup](https://boringcache.com/docs/adapters/cargo).
 
+## Docker cases started from recent history
+
+Four Docker cases added on 10 November 2026 start before the upstream head
+inspected that day, so each series begins with ten rolling steps of existing
+history. `start_sha` is ten strides of first-parent commits before that head.
+The stride follows the first-parent commits each branch received in the seven
+days before the cases were added.
+
+| Case | Branch head inspected | First-parent commits in 7 days | Stride | Start |
+| --- | --- | --- | --- | --- |
+| `docker/gram` | `765f9d6a971d0002bb20a2fa5282003486a9c208` | 282 | 10 | 100 commits before head |
+| `docker/honeybeepf-llm` | `d671d307c97d939cfcc4ed88f72be3e22b6238c7` | 73 | 3 | 30 commits before head |
+| `docker/fred` | `43a0d105e95419faf1a66bf5d9e65f594fb95631` | 27 | 2 | 20 commits before head |
+| `docker/dspace` | `ef95eb4edd924854b98ce5c6f9712114f2dda421` | 3 | every commit | 10 commits before head |
+
+Every lane builds upstream's CI image with the source unchanged.
+
+- `gram` builds `agents/code-runner/Dockerfile`, the image of the `validate`
+  job's "Build smoke-test image" step. Upstream runs that step only when the
+  image's paths change; rolling builds it at every tenth commit.
+- `honeybeepf-llm` builds the root Dockerfile for amd64 with provenance off,
+  as upstream pull requests do. Its builder stage pins an x86-64 toolchain, so
+  the case has no arm64 runner. The plus lanes persist the apt, Cargo registry
+  and target cache mounts the Dockerfile already declares; there is no overlay.
+- `fred` follows the `swift` branch and builds the `knowledge-flow-backend`
+  image listed in `.github/docker-images.json`, with its build argument.
+- `dspace` builds the root Dockerfile on amd64 and arm64 runners with
+  `DOCKER_REGISTRY=ghcr.io`, as upstream's reusable build does. Its build stage
+  starts from the published `dspace-dependencies:latest` image, which upstream
+  rebuilds. Lanes of one step pull it at about the same time; steps on
+  different days can start from different dependency images. Upstream exports
+  its GitHub Actions cache with `mode=min`; the shared `gha` and `ghcr` lanes
+  export `mode=max`.
+
+Sources: [Gram code runner workflow](https://github.com/speakeasy-api/gram/blob/2f2e8c27cfa973101fe639618aa2a3d623f2c4b7/.github/workflows/code-runner.yaml),
+[honeybeepf-llm image workflow](https://github.com/honeybee-studio/honeybeepf-llm/blob/b3cb83737e0efa8d40342e57ef5b60c4f9b7c7c0/.github/workflows/docker-publish.yml),
+[Fred image list](https://github.com/ThalesGroup/fred/blob/3d18384205a469f691bbf3ca3cb697911bc6b257/.github/docker-images.json),
+[DSpace reusable image build](https://github.com/DSpace/DSpace/blob/622fc02e14914a990eba0bc175c2f5dfecf702de/.github/workflows/reusable-docker-build.yml).
+
 ## Weekly runner samples
 
 `samples.yml` dispatches PostHog on Depot, Zed on Namespace, and Chroma on Blacksmith every Monday at 02:31 UTC. Each also rebuilds the same commit on GitHub using the same BoringCache scope. Regular GitHub rolling builds continue producing that scope. Sample and rolling workflows share a project concurrency group, and the scheduler treats both as active work. A sample refuses an excluded or failed latest source, or a source older than the latest recorded project step.
