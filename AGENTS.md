@@ -40,6 +40,7 @@ This repository benchmarks BoringCache against other cache providers on real pro
 - A failed build or output check is recorded first, then fails its job. A failure in `prepare` leaves no record; that lane continues at the next step.
 - Re-run a failed rolling job only before the next step of that project starts. A re-run of an older step skips its build once a newer step is recorded for that lane, so it can never overwrite the newer cache.
 - Rolling dispatches must use the tool's display title, such as `Rust/Cargo`, so manual runs share the scheduler's concurrency group.
+- Rolling and sample runs dispatch only from `main`. The plan job refuses any other ref: those runs read the records on `main` and write the cache scopes that `main` uses, so a branch run would replay step 0 and fill scopes that `main`'s step 0 expects to be empty. Test a harness change on a branch with `mode=fresh` or `mode=preflight`.
 - A job re-run uses the harness from its original commit. To re-run a recorded step with a harness fix, dispatch `-f mode=rolling -f step=<N>`: it builds that step's commit for lanes without a passing record at that step or a newer recorded step.
 
 ## Test a CLI canary

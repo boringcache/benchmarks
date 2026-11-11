@@ -76,7 +76,12 @@ jobs:
           SAMPLE: ${{ inputs.mode == 'sample' && 'true' || '' }}
           RUNNER: ${{ inputs.runner }}
           SHA: ${{ inputs.sha }}
+          REF: ${{ github.ref }}
         run: |
+          if { [ -n "$ROLLING" ] || [ -n "$SAMPLE" ]; } && [ "$REF" != refs/heads/main ]; then
+            echo "::error::Rolling and sample runs continue the series on main: they read its records, publish records only to main and write its cache scopes. Dispatch them with --ref main; this run used $REF."
+            exit 1
+          fi
           bash scripts/checkout-records.sh
           if [ -n "$RUNNER" ] && [ -n "$ROLLING" ]; then echo 'rolling runs use every configured runner' >&2; exit 1; fi
           matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${SAMPLE:+--sample} ${RUNNER:+--runner "$RUNNER"} ${SHA:+--sha "$SHA"} ${LANE:+--lane "$LANE"} ${CLI:+--cli "$CLI"} ${STEP:+--step "$STEP"} --results results)
