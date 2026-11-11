@@ -1,0 +1,52 @@
+{
+  "adapter_command": "docker",
+  "case": "honeybeepf-llm",
+  "lane": "ghcr",
+  "provider": "github-container-registry",
+  "level": "base",
+  "capabilities": [
+    "layers"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 12,
+  "scope": "ghcr-github-rolling",
+  "cache_scope": "ghcr-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "honeybee-studio/honeybeepf-llm",
+  "sha": "c8fbe183cf8852243ffda13d2075c0cb1ab5b18d",
+  "seconds": 212.063,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    },
+    "image_platform": "linux/amd64",
+    "buildx_builder": {
+      "name": "builder-59a05265-dc6f-4bc6-9947-c7b38b7601a0",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-59a05265-dc6f-4bc6-9947-c7b38b7601a00",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "0f6d9de013c433db7033adc231995234ee8aa3db",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/43102498346",
+  "attempt": 1,
+  "started_at": "2026-11-11T21:23:48Z"
+}
