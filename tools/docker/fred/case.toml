@@ -1,0 +1,10 @@
+repo = "ThalesGroup/fred"
+branch = "swift"
+start_sha = "3d18384205a469f691bbf3ca3cb697911bc6b257"
+rolling_stride = 2
+check = "docker image inspect fred-knowledge-flow-backend-benchmark:local"
+
+[runs]
+boringcache-docker = ["github", "local"]
+gha = ["github"]
+ghcr = ["github"]

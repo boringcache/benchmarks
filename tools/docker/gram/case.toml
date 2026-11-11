@@ -1,0 +1,10 @@
+repo = "speakeasy-api/gram"
+branch = "main"
+start_sha = "2f2e8c27cfa973101fe639618aa2a3d623f2c4b7"
+rolling_stride = 10
+check = "docker image inspect gram-code-runner:test"
+
+[runs]
+boringcache-docker = ["github", "local"]
+gha = ["github"]
+ghcr = ["github"]

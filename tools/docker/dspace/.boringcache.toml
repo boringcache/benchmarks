@@ -1,0 +1,14 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+fail-on-cache-error = true
+tag = "dspace-docker"
+no-git = true
+metadata-hints = ["benchmark=dspace", "upstream-job=dspace"]
+command = [
+  "docker", "buildx", "build",
+  "--file", "upstream/Dockerfile",
+  "--tag", "dspace-benchmark:local",
+  "--load",
+  "upstream",
+]
