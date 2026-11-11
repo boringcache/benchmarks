@@ -1,0 +1,42 @@
+{
+  "adapter_command": "ccache",
+  "case": "llvm",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "remote-storage"
+  ],
+  "runner": "github-26",
+  "runner_label": "ubuntu-26.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 130,
+  "scope": "gha-github-26-rolling",
+  "cache_scope": "gha-github-26-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "ccache-llvm-gha-github-26-rolling-129",
+  "cache_restore_tracked": true,
+  "repo": "llvm/llvm-project",
+  "sha": "42fce66cf11f93f5ecea3552418dac8d7e091d51",
+  "seconds": 1711.803,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "7cdc92e56c9fc74a15cfc47b412520ed6ff40c91",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/43032721127",
+  "attempt": 1,
+  "started_at": "2026-11-11T13:54:59Z"
+}
