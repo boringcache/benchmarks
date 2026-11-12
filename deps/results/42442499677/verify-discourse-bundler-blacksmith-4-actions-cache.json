@@ -1,0 +1,44 @@
+{
+  "name": "verify-discourse-bundler-blacksmith-4-actions-cache",
+  "kind": "verify",
+  "case": "discourse-bundler",
+  "tool": "bundler",
+  "repo": "discourse/discourse",
+  "sha": "bbb722e4322eba62306788b6da410655e4d4d343",
+  "before_sha": "bab418487a463eede4c7d2f6415fe2eb966a3883",
+  "after_sha": "bbb722e4322eba62306788b6da410655e4d4d343",
+  "lockfile": "Gemfile.lock",
+  "lane": "actions-cache",
+  "runner": "blacksmith-4",
+  "machine": "blacksmith 4c",
+  "producer": "blacksmith-4",
+  "cache_backend": "blacksmith",
+  "key": "deps-42442499677-discourse-bundler-blacksmith-4",
+  "run_id": "42442499677",
+  "step": 0,
+  "attempt": 1,
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/42442499677",
+  "recorded_at": "2026-11-11T03:24:49Z",
+  "versions": {
+    "actions_cache": "6.1.0"
+  },
+  "observed": {
+    "cpu": "AMD EPYC",
+    "cores": 4,
+    "disk_free_bytes": 86440235008
+  },
+  "restore": {
+    "seconds": 3.736,
+    "network_bytes": 540031444,
+    "step_ok": true,
+    "ok": true
+  },
+  "exit_status": 0,
+  "output_ok": true,
+  "cache": {
+    "bytes": 1176848956,
+    "files": 37004
+  },
+  "cache_restored_key": "deps-42442499677-discourse-bundler-blacksmith-4-1cb216052eaa1297",
+  "harness_commit": "7a55e3233f10d1543e9a27127563ecd82b6142f6"
+}
