@@ -1,9 +1,12 @@
 repo = "DSpace/DSpace"
 branch = "main"
 start_sha = "622fc02e14914a990eba0bc175c2f5dfecf702de"
+rolling_series = 2
+prepare = ["bash \"$BENCH_ROOT/tools/docker/dspace/prepare.sh\""]
 check = "docker image inspect dspace-benchmark:local"
 
 [runs]
 boringcache-docker = ["github", "github-arm", "local"]
+boringcache-docker-plus = ["github", "github-arm", "local"]
 gha = ["github", "github-arm"]
 ghcr = ["github", "github-arm"]

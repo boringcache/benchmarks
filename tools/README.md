@@ -262,7 +262,7 @@ days before the cases were added.
 | `docker/fred` | `43a0d105e95419faf1a66bf5d9e65f594fb95631` | 27 | 2 | 20 commits before head |
 | `docker/dspace` | `ef95eb4edd924854b98ce5c6f9712114f2dda421` | 3 | every commit | 10 commits before head |
 
-Every lane builds upstream's CI image with the source unchanged.
+Every base lane builds upstream's CI image with the source unchanged.
 
 - `gram` builds `agents/code-runner/Dockerfile`, the image of the `validate`
   job's "Build smoke-test image" step. Upstream runs that step only when the
@@ -283,11 +283,27 @@ Every lane builds upstream's CI image with the source unchanged.
   different days can start from different dependency images. Upstream exports
   its GitHub Actions cache with `mode=min`; the shared `gha` and `ghcr` lanes
   export `mode=max`.
+- The `dspace` plus lane adds the BoringCache Maven tool cache to the layer
+  cache. Preparation writes `overlay/dspace-maven.Dockerfile` from each step's
+  upstream Dockerfile. After the source copy it adds `.mvn/extensions.xml`
+  with Maven build cache extension 1.3.0. The `mvn package` command gains
+  `-Dmaven.build.cache.alwaysRunPlugins=maven-assembly-plugin:single`, because
+  the Dockerfile moves `dspace/target/dspace-installer`, which that goal
+  creates, even when the build cache restores the `dspace` module.
+  Preparation fails if either upstream line changes. There is no `gha-plus`
+  lane. The build runs as the non-root `dspace` user. cache-dance creates the
+  restored cache mount as root before the build, so that user cannot write a
+  persisted local build cache. A `uid` or `mode` option gives the mount a
+  different identity that cache-dance does not restore. Adding the plus lane
+  set `rolling_series = 2`, so every DSpace lane restarted from `start_sha`
+  with an empty cache.
 
 Sources: [Gram code runner workflow](https://github.com/speakeasy-api/gram/blob/2f2e8c27cfa973101fe639618aa2a3d623f2c4b7/.github/workflows/code-runner.yaml),
 [honeybeepf-llm image workflow](https://github.com/honeybee-studio/honeybeepf-llm/blob/b3cb83737e0efa8d40342e57ef5b60c4f9b7c7c0/.github/workflows/docker-publish.yml),
 [Fred image list](https://github.com/ThalesGroup/fred/blob/3d18384205a469f691bbf3ca3cb697911bc6b257/.github/docker-images.json),
-[DSpace reusable image build](https://github.com/DSpace/DSpace/blob/622fc02e14914a990eba0bc175c2f5dfecf702de/.github/workflows/reusable-docker-build.yml).
+[DSpace reusable image build](https://github.com/DSpace/DSpace/blob/622fc02e14914a990eba0bc175c2f5dfecf702de/.github/workflows/reusable-docker-build.yml),
+[BoringCache Docker tool caches](https://boringcache.com/docs/adapters/docker),
+[Maven build cache extension parameters](https://maven.apache.org/extensions/maven-build-cache-extension/parameters.html).
 
 ## Weekly runner samples
 
