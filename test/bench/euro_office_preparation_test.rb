@@ -17,6 +17,27 @@ class EuroOfficePreparationTest < Minitest::Test
     end
   end
 
+  def test_plus_turns_on_the_upstream_ccache_switch_of_the_build_script_core
+    prepare_core(source: build_script_core_source) do |dir, source, output, status|
+      assert status.success?, output
+      assert_equal source, File.read(File.join(dir, "upstream/core/.docker/core.bake.Dockerfile"))
+      dockerfile = File.read(File.join(dir, "overlay/core.Dockerfile"))
+      assert_includes dockerfile, "FROM core-base AS core\nCOPY bench-ccache/ccache /usr/local/bin/ccache\nCOPY bench-ccache/ccache-storage-http /usr/local/bin/ccache-storage-http\n"
+      assert_includes dockerfile, "    ARG CORE_CCACHE=1\n"
+      assert_includes dockerfile, "--mount=type=cache,target=/ccache,id=core-ccache"
+      assert_includes dockerfile, "id=vcpkg-binary-cache"
+      assert_equal source.lines.size + 2, dockerfile.lines.size
+    end
+  end
+
+  def test_build_script_core_without_its_ccache_switch_stops_preparation
+    prepare_core(source: build_script_core_source.sub("    ARG CORE_CCACHE\n", "")) do |dir, _, output, status|
+      refute status.success?
+      assert_includes output, "core Dockerfile changed"
+      refute File.exist?(File.join(dir, "overlay/core.Dockerfile"))
+    end
+  end
+
   def test_changed_compile_step_stops_preparation
     prepare_core(replace: "cmake --build . --parallel") do |dir, _, output, status|
       refute status.success?
@@ -97,13 +118,30 @@ class EuroOfficePreparationTest < Minitest::Test
     end
   end
 
+  def test_combined_cache_leaves_the_build_script_core_compiler_cache_remote
+    prepare_standalone(plus: true, core: build_script_core_source) do |dir, _, output, status|
+      assert status.success?, output
+      core = File.read(File.join(dir, "overlay/core.Dockerfile"))
+      assert_includes core, "    ARG CORE_CCACHE=1\n"
+      assert_includes core, "target=/build-cache"
+      refute_includes core, "target=/ccache"
+    end
+  end
+
+  def test_native_control_keeps_the_build_script_core_compiler_cache_mount
+    prepare_standalone(plus: true, local_cache: true, core: build_script_core_source) do |dir, _, output, status|
+      assert status.success?, output
+      assert_includes File.read(File.join(dir, "overlay/core.Dockerfile")), "--mount=type=cache,target=/ccache,id=core-ccache"
+    end
+  end
+
   private
-    def prepare_standalone(resolve: true, plus: false, local_cache: false)
+    def prepare_standalone(resolve: true, plus: false, local_cache: false, core: core_source)
       Dir.mktmpdir("euro-office") do |dir|
         %w[upstream/core/.docker overlay bin].each { FileUtils.mkdir_p(File.join(dir, it)) }
         File.write(File.join(dir, "upstream/VERSION"), "9.3.6-rc.1\n")
         File.write(File.join(dir, ".boringcache.toml"), "[adapters.docker]\ntool-cache = #{plus ? '["ccache:test"]' : '[]'}\n")
-        File.write(File.join(dir, "upstream/core/.docker/core.bake.Dockerfile"), core_source)
+        File.write(File.join(dir, "upstream/core/.docker/core.bake.Dockerfile"), core)
         File.write(File.join(dir, "upstream/core/.docker/core-wasm.bake.Dockerfile"), <<~'DOCKERFILE')
           FROM emsdk AS core-wasm
               COPY core /core
@@ -134,11 +172,10 @@ class EuroOfficePreparationTest < Minitest::Test
       end
     end
 
-    def prepare_core(plus: true, replace: nil)
+    def prepare_core(plus: true, replace: nil, source: core_source)
       Dir.mktmpdir("euro-office") do |dir|
         FileUtils.mkdir_p(File.join(dir, "upstream/core/.docker"))
         FileUtils.mkdir_p(File.join(dir, "overlay"))
-        source = core_source
         source = source.sub("cmake --build .", replace) if replace
         File.write(File.join(dir, "upstream/core/.docker/core.bake.Dockerfile"), source)
         File.write(File.join(dir, ".boringcache.toml"), "[adapters.docker]\nmount-cache = #{plus}\n")
@@ -158,6 +195,26 @@ class EuroOfficePreparationTest < Minitest::Test
             --mount=type=cache,target=/nuget-cache,id=vcpkg-binary-cache \\
             cmake -DCMAKE_BUILD_TYPE=Release \\
             /core && cmake --build . && cp -r package/* /package
+      DOCKERFILE
+    end
+
+    def build_script_core_source
+      <<~'DOCKERFILE'
+        FROM core-base AS core
+
+            COPY core /core
+
+            ARG CORE_CCACHE
+            RUN --mount=type=cache,target=/build-cache \
+                --mount=type=cache,target=/nuget-cache,id=vcpkg-binary-cache \
+                --mount=type=cache,target=/ccache,id=core-ccache \
+                --mount=type=secret,id=remote_cache_s3_access_key \
+                export CCACHE_DIR=/ccache CCACHE_MAXSIZE=2G && \
+                mkdir -p ${BUILD_ROOT} && \
+                ${CORE_CCACHE:+ccache --zero-stats} && \
+                /core/scripts/build.sh --build-dir /build-cache --output /build-cache/package ${CORE_CCACHE:+--ccache} && \
+                ${CORE_CCACHE:+ccache --show-stats} && \
+                cp -r /build-cache/package/* ${BUILD_ROOT}
       DOCKERFILE
     end
 
