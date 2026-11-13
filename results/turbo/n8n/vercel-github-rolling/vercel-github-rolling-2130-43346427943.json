@@ -1,0 +1,42 @@
+{
+  "adapter_command": "turbo",
+  "case": "n8n",
+  "lane": "vercel",
+  "provider": "vercel",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 2130,
+  "scope": "vercel-github-rolling",
+  "cache_scope": "vercel-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "turbo-n8n-vercel-github-rolling-2129",
+  "cache_restore_tracked": true,
+  "repo": "n8n-io/n8n",
+  "sha": "ff2a075df601216a63eaec03c827131b25c97d9e",
+  "seconds": 104.075,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "06f69bcf8e7c725a6a23df3aab440651263a17a9",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/43346427943",
+  "attempt": 1,
+  "started_at": "2026-11-13T01:39:41Z"
+}
