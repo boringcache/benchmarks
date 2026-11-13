@@ -1,7 +1,7 @@
 repo = "nushell/nushell"
 branch = "main"
-start_sha = "168db974bad0181a35f4ccd735db0a20cb999d24"
-rolling_series = 2
+start_sha = "396a7588af811612ebfc6de5b090d4f5674d6e51"
+rolling_series = 3
 directory = "upstream"
 script = ["bash", "../overlay/ci.sh"]
 prepare = [

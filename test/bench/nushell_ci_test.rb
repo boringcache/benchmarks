@@ -8,8 +8,8 @@ class NushellCiTest < Minitest::Test
     assert cached_status.success?
     assert_equal native.grep(/^cargo /), cached.grep(/^cargo /)
     calls = cached.grep(/^boringcache /)
-    assert_equal 5, calls.size
-    assert_includes calls.first, "--skip-save -- --config .cargo/ci.toml check"
+    assert_equal 3, calls.size
+    assert_includes calls.first, "--skip-save -- --config .cargo/ci.toml build"
     refute_includes calls.first, "--skip-restore"
     assert calls.drop(1).all? { it.include?("--skip-restore") }
     assert_includes calls.last, "test --workspace --doc --profile ci"
