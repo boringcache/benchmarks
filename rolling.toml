@@ -6,7 +6,6 @@ docker = ["chroma", "discourse", "dspace", "duckgres", "euro-office", "euro-offi
 go = ["hugo"]
 gradle = ["opentelemetry-java"]
 maven = ["spring-ai"]
-moon = ["zitadel"]
 nix = ["zed"]
 nx = ["storybook"]
 pants = ["backend-ai"]
