@@ -1,0 +1,51 @@
+{
+  "adapter_command": "docker",
+  "case": "n8n-runners-distroless",
+  "lane": "ghcr",
+  "provider": "github-container-registry",
+  "level": "base",
+  "capabilities": [
+    "layers"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 2130,
+  "scope": "ghcr-github-rolling",
+  "cache_scope": "ghcr-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "n8n-io/n8n",
+  "sha": "ff2a075df601216a63eaec03c827131b25c97d9e",
+  "seconds": 0.929,
+  "cache_save_timing": "in-phase",
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    },
+    "buildx_builder": {
+      "name": "builder-fbbfa51a-5ab9-4ea9-8165-0128bdcbd039",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-fbbfa51a-5ab9-4ea9-8165-0128bdcbd0390",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "e13df22170394bc2cc9388f4174f0e8cceb10572",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/43342848578",
+  "attempt": 1,
+  "started_at": "2026-11-13T01:15:16Z"
+}
