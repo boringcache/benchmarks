@@ -322,6 +322,9 @@ Manual samples can select configured larger runners:
 ```sh
 gh workflow run project.yml --ref main -f tool=Docker -f project=chroma -f mode=sample -f runner=blacksmith-8
 gh workflow run project.yml --ref main -f tool=Rust/Cargo -f project=zed -f mode=sample -f lane=boringcache-cargo-plus-reader -f runner=namespace-8
+gh workflow run project.yml --ref main -f tool=Docker -f project=chroma -f mode=sample -f runner=blacksmith-16
+gh workflow run project.yml --ref main -f tool=Rust/Cargo -f project=zed -f mode=sample -f runner=namespace-32x64,namespace-32x64-cache
+gh workflow run project.yml --ref main -f tool=Rust/Cargo -f project=zed -f mode=sample -f lane=boringcache-cargo-plus-reader -f runner=namespace-16x32
 ```
 
 Use the exact tool title and project key so manual samples share rolling concurrency. Namespace's 8-core BoringCache profile and 8-core cache-volume runner are separate configurations; matching core count alone does not establish matching memory or swap.
