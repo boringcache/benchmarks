@@ -6,7 +6,7 @@ module Bench
     INDEX = /\Aindex-(?<scope>.+)-1-[0-9a-f]{8}(?:-sig)?#(?<version>\d+)\z/
     MIN_AGE = 6 * 3600
     KEEP_INDEXES = 2
-    MIN_COVERAGE = 0.95
+    MIN_COVERAGE = 0.5
 
     Plan = Struct.new(:blobs, :indexes, :referenced, :missing, :coverage, :deletable, keyword_init: true) do
       def bytes

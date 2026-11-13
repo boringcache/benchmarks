@@ -131,6 +131,14 @@ objects before the next target. These files were already excluded from every
 provider's cache; the shared dependency artifacts remain. Failed targets stop
 the script before verification or cleanup.
 
+The n8n Docker cases build each upstream Dockerfile with the build arguments
+that its target in `docker/docker-bake.hcl` resolves at the checked-out commit:
+`n8n`, `runners` and `runners-distroless`. Upstream keeps its base image pins
+only in that file, and the Dockerfiles have no defaults for them. Preparation
+adds the resolved arguments to the run's plan command, so every lane builds
+the same images. It stops if the target builds a different Dockerfile or the
+plan already sets one of its arguments.
+
 ## Adding
 
 The Euro-Office Docker cases start at DocumentServer
@@ -141,6 +149,10 @@ includes the seed and thirty later commits, with four distinct core revisions.
 resolved by its Bake target, then checks `x2t` and `allfontsgen`. Its plus plan
 adds ccache launchers and a ccache mount to a generated Dockerfile; both plus
 providers use that file and preserve the existing build and vcpkg mounts.
+Core revisions that declare `CORE_CCACHE` compile through ccache themselves.
+For those, the generated Dockerfile copies the pinned ccache binaries and sets
+`CORE_CCACHE=1`. It keeps upstream's `core-ccache` mount only for lanes that
+archive local compiler caches.
 All lanes retain the dependency downloads and builds defined at each revision.
 The history crosses upstream's migration to anonymous S3 dependency downloads.
 `euro-office` builds the upstream `standalone` Bake target, including packaging,
