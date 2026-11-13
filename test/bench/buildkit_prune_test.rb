@@ -41,6 +41,15 @@ class BuildkitPruneTest < Minitest::Test
     assert_equal [2, 0.0, false], [result.missing, result.coverage, result.deletable]
   end
 
+  def test_blobs_evicted_after_their_index_was_written_do_not_stop_the_prune
+    indexes = [index("docker-app-gha-github-rolling", 1)]
+    layers = { indexes.first["key"] => %w[sha256:aa sha256:bb sha256:cc sha256:dd sha256:ee] }
+    result = plan(layers:, blobs: [blob("aa"), blob("bb"), blob("cc"), blob("ff")], indexes:)
+
+    assert_equal [2, 0.6, true], [result.missing, result.coverage, result.deletable]
+    assert_equal %w[sha256:ff], result.blobs.map { it["key"].delete_prefix("buildkit-blob-1-") }
+  end
+
   def test_the_newest_index_is_chosen_by_its_version_number
     indexes = [index("docker-app-gha-github-rolling", 9), index("docker-app-gha-github-rolling", 10)]
 
