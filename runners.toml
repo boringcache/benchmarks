@@ -57,6 +57,21 @@ label = "blacksmith-8vcpu-ubuntu-2404"
 machine = "blacksmith 8c"
 env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
+[blacksmith-16]
+label = "blacksmith-16vcpu-ubuntu-2404"
+machine = "blacksmith 16c"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
+[namespace-16x32]
+label = "nscloud-ubuntu-24.04-amd64-16x32"
+machine = "namespace 16c"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
+[namespace-32x64]
+label = "nscloud-ubuntu-24.04-amd64-32x64"
+machine = "namespace 32c"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
 [namespace-4x16-cache]
 label = ["nscloud-ubuntu-24.04-amd64-4x16-with-cache", "nscloud-cache-tag-zed-sample", "nscloud-cache-size-100gb"]
 machine = "namespace 4c"
@@ -64,3 +79,7 @@ machine = "namespace 4c"
 [namespace-8x16-cache]
 label = ["nscloud-ubuntu-24.04-amd64-8x16-with-cache", "nscloud-cache-tag-zed-sample-8c", "nscloud-cache-size-100gb"]
 machine = "namespace 8c"
+
+[namespace-32x64-cache]
+label = ["nscloud-ubuntu-24.04-amd64-32x64-with-cache", "nscloud-cache-tag-zed-sample-32c", "nscloud-cache-size-100gb"]
+machine = "namespace 32c"

@@ -2,6 +2,6 @@ provider = "boringcache"
 level = "plus"
 plan = "plus"
 label = "boringcache plus · GitHub cache"
-runners = ["github", "depot-4", "depot-8", "namespace-4", "namespace-8", "blacksmith-4", "blacksmith-8"]
+runners = ["github", "depot-4", "depot-8", "namespace-4", "namespace-8", "blacksmith-4", "blacksmith-8", "blacksmith-16"]
 actions_only = true
 reads = { lane = "boringcache-docker-plus", runner = "github" }
