@@ -1,0 +1,41 @@
+{
+  "adapter_command": "cargo",
+  "case": "nushell",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "compiler-cache"
+  ],
+  "runner": "macos",
+  "runner_label": "macos-26",
+  "machine": "github macos 3c",
+  "phase": "rolling",
+  "step": 5,
+  "scope": "gha-macos-rolling-3",
+  "cache_scope": "gha-macos-rolling-3",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "nushell/nushell",
+  "sha": "b212ff63c01a1d4926c591cf26354eb32ee4c197",
+  "seconds": 740.906,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Apple M1 (Virtual)",
+      "cores": 3
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "4b2a4990c61318fd944bdb17c785692dc2b93354",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/43512120664",
+  "attempt": 1,
+  "started_at": "2026-11-13T21:37:18Z"
+}
