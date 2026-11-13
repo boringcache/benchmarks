@@ -225,18 +225,17 @@ The collect job runs on main and branches, adds post-job save durations, and upl
 
 ## Nushell Cargo history
 
-`cargo/nushell` starts at `168db974bad0181a35f4ccd735db0a20cb999d24`,
-30 first-parent commits before the inspected November 4 head
-`c27defbfe692c7de80e488f33b2f52906e8a7836`. Rolling builds visit every commit.
+`cargo/nushell` starts at `396a7588af811612ebfc6de5b090d4f5674d6e51`, the
+November 12 upstream commit that moved formatting and Clippy out of the root
+job into a parallel lint job. Rolling builds visit every commit.
 Fresh builds use that starting source for both cold and warm phases.
 
-Every lane runs the root job's Cargo formatting, check, Clippy, build, tests
-and doctests, with its `ci` profile and `.cargo/ci.toml`. Source files are
-unchanged. Rust is 1.97.1 and sccache is 0.17.0. Incremental compilation is off
-in all lanes so sccache can cache compiler outputs. The output check runs
-`nu --version` and verifies the checkout is clean. The standard-library and
-Python virtualenv tests, fuzz jobs, WASM job and artifact upload are outside
-this measurement.
+Every lane runs the root job's Cargo build, tests and doctests, with its `ci`
+profile and `.cargo/ci.toml`. Source files are unchanged. Rust is 1.97.1 and
+sccache is 0.17.0. Incremental compilation is off in all lanes so sccache can
+cache compiler outputs. The output check runs `nu --version` and verifies the
+checkout is clean. The lint job, standard-library and Python virtualenv tests,
+fuzz jobs, WASM job and artifact upload are outside this measurement.
 
 The base lanes compare BoringCache and GitHub Actions compiler caches. The plus
 lanes also cache Cargo registry downloads, Git dependencies and `target`.
@@ -249,11 +248,14 @@ Warm runs restore without publishing. Compare providers within one platform;
 these runs do not reproduce the linked runner comparison or measure full CI time.
 
 Fresh and preflight dispatches accept `runner=macos windows` to select those
-platforms. Rolling runs include every configured platform. Series 2 starts
-from the same source with new cache scopes and `nu` cache tags; earlier records
-remain available.
+platforms. Rolling runs include every configured platform. Series 2 started
+from `168db974bad0181a35f4ccd735db0a20cb999d24` with new cache scopes and `nu`
+cache tags, and ran formatting, check and Clippy before the build, as the root
+job did then. Series 3 follows upstream's split root job from its new starting
+source with new cache scopes. Earlier records remain available.
 
-Sources: [Nushell root CI](https://github.com/nushell/nushell/blob/168db974bad0181a35f4ccd735db0a20cb999d24/.github/workflows/ci.yml),
+Sources: [Nushell root CI](https://github.com/nushell/nushell/blob/396a7588af811612ebfc6de5b090d4f5674d6e51/.github/workflows/ci.yml),
+[lint job split](https://github.com/nushell/nushell/pull/19453),
 [runner comparison](https://github.com/nushell/nushell/pull/18810),
 [osquery context](https://github.com/osquery/osquery/issues/9104#issuecomment-6626417651),
 [sccache GitHub cache](https://github.com/mozilla/sccache/blob/v0.17.0/docs/GHA.md),

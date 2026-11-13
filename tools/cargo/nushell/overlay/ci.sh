@@ -13,9 +13,6 @@ cargo_step() {
   $BENCH_BORINGCACHE "${flags[@]}" -- --config .cargo/ci.toml "$@"
 }
 
-cargo fmt --all --check
-cargo_step restore no-save check --workspace --all-targets --profile ci
-cargo_step no-restore no-save clippy --workspace --all-targets --profile ci -- -D warnings
-cargo_step no-restore no-save build --workspace --all-targets --profile ci
+cargo_step restore no-save build --workspace --all-targets --profile ci
 cargo_step no-restore no-save test --workspace --all-targets --profile ci
 cargo_step no-restore save test --workspace --doc --profile ci
