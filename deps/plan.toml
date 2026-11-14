@@ -69,3 +69,16 @@ steps = [["85cc1449181c774a226ae42ec19dca3a2f7cce26", "bcbf3651da6d2e9d9e7966e8e
 BUNDLE_PATH = "vendor/bundle"
 BUNDLE_DEPLOYMENT = "true"
 BUNDLE_WITHOUT = "development"
+
+[cases.dspace-maven]
+repo = "DSpace/DSpace"
+tool = "maven"
+lockfile = "pom.xml"
+path = ".m2/repository"
+setup = ["mvn --version"]
+install = "mvn --no-transfer-progress -V install -P-assembly"
+check = "mvn --offline --no-transfer-progress install -P-assembly"
+steps = [["22aedb23e85cc568aed721ff85449f03f387f379", "f53cd6574d6c122275ae6e257bbaab4b498735db"]]
+
+[cases.dspace-maven.env]
+MAVEN_OPTS = "-Xmx1024M -Dmaven.repo.local=${DIR}/.m2/repository"

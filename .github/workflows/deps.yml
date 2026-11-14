@@ -100,6 +100,7 @@ jobs:
           sparse-checkout: |
             .github
             scripts
+            tools/shared
       - uses: ./.github/actions/deps
         with:
           job: ${{ toJSON(matrix) }}

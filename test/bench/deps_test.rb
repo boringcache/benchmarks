@@ -41,6 +41,27 @@ class DepsTest < Minitest::Test
     end
   end
 
+  def test_maven_case_keys_on_the_root_pom_and_keeps_its_repository_in_the_run_directory
+    with_job("update", "dspace-maven") do |job, _dir|
+      File.write(File.join(job.upstream, "pom.xml"), "<project/>\n")
+      digest = Digest::SHA256.hexdigest("<project/>\n")[0, 16]
+      assert_equal "key=deps-123-dspace-maven-github-#{digest}\nrestore_key=deps-123-dspace-maven-github-\n", job.keys
+      assert_match %r{\AMAVEN_OPTS=-Xmx1024M -Dmaven\.repo\.local=/.+/bench-deps/dspace-maven/\.m2/repository\n\z}, job.env_lines
+    end
+  end
+
+  def test_maven_setup_pins_the_jdk_action_and_the_maven_archive
+    require "yaml"
+    steps = YAML.load_file(File.join(Throughput::ROOT, ".github/actions/deps/action.yml")).fetch("runs").fetch("steps").select { it["if"].to_s.include?("tool == 'maven'") }
+    assert_match(/\Aactions\/setup-java@[0-9a-f]{40}\z/, steps.fetch(0).fetch("uses"))
+    install = steps.fetch(1)
+    assert_match(/\A[0-9a-f]{128}\z/, install.fetch("env").fetch("MAVEN_SHA512"))
+    assert_includes install.fetch("run"), "sha512sum --check"
+    assert_includes install.fetch("run"), "tools/shared/JavaCaTrust.java --apply"
+    workflow = File.read(File.join(Throughput::ROOT, ".github/workflows/deps.yml"))
+    assert_includes workflow, "            tools/shared\n      - uses: ./.github/actions/deps"
+  end
+
   def test_update_records_restore_install_and_save_and_the_cache_size
     with_job("update", "posthog-pnpm") do |job, dir|
       FileUtils.mkdir_p(File.join("bench-deps", "posthog-pnpm", ".pnpm-store", "v10"))
@@ -71,10 +92,11 @@ class DepsTest < Minitest::Test
         "install" => { "seconds" => 30.0, "ok" => true }, "save" => { "seconds" => 5.0, "network_bytes" => 50_000_000, "ok" => true })))
       File.write(File.join(dir, "verify.json"), JSON.generate(base.merge("kind" => "verify", "restore" => { "seconds" => 21.0, "network_bytes" => 900_000_000, "ok" => true },
         "cache" => { "bytes" => 2_000_000_000, "files" => 250_000 })))
-      File.write(File.join(dir, "seed.json"), JSON.generate(base.merge("kind" => "seed", "save" => { "seconds" => 99.0, "ok" => true })))
+      File.write(File.join(dir, "seed.json"), JSON.generate(base.merge("kind" => "seed", "install" => { "seconds" => 120.0, "ok" => true },
+        "save" => { "seconds" => 99.0, "ok" => true })))
       markdown = DepsReport.new(dir).markdown
       assert_includes markdown, "## posthog-pnpm"
-      assert_includes markdown, "| boringcache | boringcache | github 4c | - | - | - | - | - | 1.42.0 | 1 | 0 | 20.0 | 30.0 | 5.0 | 50 | 21.0 | 900 | 2000 | 250000 |"
+      assert_includes markdown, "| boringcache | boringcache | github 4c | - | - | - | - | - | 1.42.0 | 1 | 0 | 120.0 | 20.0 | 30.0 | 5.0 | 50 | 21.0 | 900 | 2000 | 250000 |"
       refute_includes markdown, "99.0"
     end
   end

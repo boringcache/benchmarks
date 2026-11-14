@@ -358,8 +358,19 @@ Use the exact tool title and project key so manual samples share rolling concurr
 
 ## Daily dependency benchmarks
 
-`deps.yml` runs at 03:17 UTC daily, rotating one of the four dependency cases per day across GitHub, Depot, Namespace and Blacksmith. Each case installs the before-lockfile snapshot, restores it for the after-lockfile install, saves the updated cache, then restores and verifies that cache in a new job. Manual runs can select a case and runner keys; an empty case runs all cases.
+`deps.yml` runs at 03:17 UTC daily, rotating one of the five dependency cases per day across GitHub, Depot, Namespace and Blacksmith. Each case installs the before-lockfile snapshot, restores it for the after-lockfile install, saves the updated cache, then restores and verifies that cache in a new job. Manual runs can select a case and runner keys; an empty case runs all cases.
 
 Additional verification jobs restore the GitHub-produced BoringCache on all three other providers. The actions/cache comparison runs across providers only where they share the same backend. Depot and Blacksmith provide separate Actions-compatible cache stores; records identify those backends instead of calling every actions/cache invocation GitHub storage.
 
 The dependency report groups exact source pairs, consumer CPU, CLI/action version, backend and cache source. Only complete passing seed, update and verification cycles contribute timings. Failed or missing stages count as failed samples. For cross-provider rows, install and save describe the source runner; the final restore describes the consumer runner. Records retain the matched Actions key and harness commit. Native Namespace volumes and Blacksmith Docker volumes are build experiments, not dependency archive backends.
+
+"Seed install s" is the install of the earlier snapshot with an empty cache; "Install s" is the install of the later snapshot after restoring the seed cache. Both come from the same complete cycles.
+
+`dspace-maven` runs `mvn install -P-assembly` on Temurin 21 with Maven 3.9.11: the command of DSpace's `Build` workflow without its test flags and coverage profile, so modules compile and no tests run. The seed starts from an empty local repository at `22aedb23e85cc568aed721ff85449f03f387f379`. The update builds `f53cd6574d6c122275ae6e257bbaab4b498735db`, which changes one dependency version in the root `pom.xml`. The cached path is the whole local repository, including the DSpace modules the build installs, as in upstream's `~/.m2/repository` cache. The verify job repeats the build with `--offline`.
+
+Upstream caches that directory through `actions/setup-java` with `cache: maven`, which restores only an exact key computed from the POM files. The actions-cache lane here saves under a key that includes the root `pom.xml` digest and restores by key prefix, as every case in this benchmark does, so it measures a restore after a POM change and does not reproduce upstream's cache misses.
+
+Sources: [DSpace Build workflow](https://github.com/DSpace/DSpace/blob/22aedb23e85cc568aed721ff85449f03f387f379/.github/workflows/build.yml),
+[the dependency update](https://github.com/DSpace/DSpace/commit/f53cd6574d6c122275ae6e257bbaab4b498735db),
+[upstream's cache-miss report](https://github.com/DSpace/DSpace/issues/13225),
+[setup-java dependency caching](https://github.com/actions/setup-java#caching-packages-dependencies).

@@ -175,7 +175,7 @@ class DepsJob < ThroughputJob
 end
 
 class DepsReport
-  COLUMNS = ["Lane", "Cache backend", "Runner", "Cache from", "Before", "After", "Source CPU", "Consumer CPU", "Version", "Samples", "Failed", "Restore before s", "Install s", "Save s", "Save network MB",
+  COLUMNS = ["Lane", "Cache backend", "Runner", "Cache from", "Before", "After", "Source CPU", "Consumer CPU", "Version", "Samples", "Failed", "Seed install s", "Restore before s", "Install s", "Save s", "Save network MB",
              "Restore after s", "Restore after network MB", "Cache MB", "Cache files"].freeze
 
   def initialize(results_dir)
@@ -204,11 +204,12 @@ class DepsReport
     end
     groups.sort_by { |key, _| key.map(&:to_s) }.map do |(kase, lane, machine, producer, backend, before, after, source_cpu, cpu, version), group|
       complete = group.select { |cycle| cycle.all? { it && it["exit_status"] == 0 && it["output_ok"] == true } }
+      seed = complete.map { it[0] }
       update = complete.map { it[1] }
       verify = complete.map { it[2] }
       { "case" => kase, "lane" => lane, "machine" => machine, "producer" => producer, "backend" => backend, "before" => before, "after" => after, "source_cpu" => source_cpu, "cpu" => cpu,
         "version" => version, "samples" => group.size, "failed" => group.size - complete.size,
-        "restore_before" => seconds(update, "restore"), "install" => seconds(update, "install"), "save" => seconds(update, "save"),
+        "seed_install" => seconds(seed, "install"), "restore_before" => seconds(update, "restore"), "install" => seconds(update, "install"), "save" => seconds(update, "save"),
         "save_network" => megabytes(update, "save"), "restore_after" => seconds(verify, "restore"), "restore_after_network" => megabytes(verify, "restore"),
         "cache_bytes" => median(verify.filter_map { it.dig("cache", "bytes") }), "cache_files" => median(verify.filter_map { it.dig("cache", "files") }) }
     end
@@ -219,7 +220,7 @@ class DepsReport
     rows.group_by { it["case"] }.each do |kase, rows|
       body = rows.map do |row|
         [*row.values_at("lane", "backend", "machine", "producer"), row["before"]&.slice(0, 12), row["after"]&.slice(0, 12),
-         *row.values_at("source_cpu", "cpu", "version", "samples", "failed", "restore_before", "install", "save", "save_network", "restore_after", "restore_after_network"),
+         *row.values_at("source_cpu", "cpu", "version", "samples", "failed", "seed_install", "restore_before", "install", "save", "save_network", "restore_after", "restore_after_network"),
          row["cache_bytes"] ? (row["cache_bytes"] / 1e6).round : nil, row["cache_files"]].map { it.nil? ? "-" : it }
       end
       lines += ["## #{kase}", "", line(COLUMNS), line(COLUMNS.map { "---" }), *body.map { line(it) }, ""]

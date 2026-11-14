@@ -54,6 +54,23 @@ runs:
       with:
         version: '0.12.13'
         enable-cache: false
+    - if: fromJSON(inputs.job).tool == 'maven'
+      uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+      with:
+        distribution: temurin
+        java-version: '21'
+    - if: fromJSON(inputs.job).tool == 'maven'
+      shell: bash
+      env:
+        MAVEN_VERSION: '3.9.11'
+        MAVEN_SHA512: bcfe4fe305c962ace56ac7b5fc7a08b87d5abd8b7e89027ab251069faebee516b0ded8961445d6d91ec1985dfe30f8153268843c89aa392733d1a3ec956c9978
+      run: |
+        archive="$RUNNER_TEMP/apache-maven-$MAVEN_VERSION-bin.tar.gz"
+        curl --fail --silent --show-error --location --retry 3 --output "$archive" "https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz"
+        echo "$MAVEN_SHA512  $archive" | sha512sum --check --quiet
+        tar -xzf "$archive" -C "$RUNNER_TEMP"
+        echo "$RUNNER_TEMP/apache-maven-$MAVEN_VERSION/bin" >> "$GITHUB_PATH"
+        "$JAVA_HOME/bin/java" tools/shared/JavaCaTrust.java --apply
     - if: fromJSON(inputs.job).tool == 'bundler'
       uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
       with:
