@@ -13,6 +13,8 @@ module Bench
   ROOT = File.expand_path("..", __dir__)
   PHASES = %w[cold warm].freeze
   ROLLING = "rolling"
+  REPLAY = "replay"
+  STOPPED = 124
 
   Error = Class.new(StandardError)
 

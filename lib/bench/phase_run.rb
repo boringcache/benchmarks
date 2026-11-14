@@ -11,10 +11,11 @@ module Bench
     def self.resume(kase, lane, work_root:, results_dir:, env: ENV)
       state = JSON.parse(File.read(File.join(work_root, kase.tool.name, kase.name, STATE)))
       new(kase, lane, phase: state["phase"], runner: state["runner"], scope: state["scope"], cache_scope: state["cache_scope"],
-                      seed_scope: state["seed_scope"], sha: state["sha"], step: state["step"], work_root:, results_dir:, env:)
+                      seed_scope: state["seed_scope"], sha: state["sha"], step: state["step"], read_only: state["read_only"] || false, work_root:, results_dir:, env:)
     end
 
-    def initialize(kase, lane, phase:, runner:, scope:, work_root:, results_dir:, cache_scope: nil, seed_scope: nil, sha: kase.start_sha, step: nil, env: ENV)
+    def initialize(kase, lane, phase:, runner:, scope:, work_root:, results_dir:, cache_scope: nil, seed_scope: nil, sha: kase.start_sha, step: nil,
+                   read_only: false, env: ENV)
       @kase = kase
       @lane = lane
       @phase = phase
@@ -26,6 +27,7 @@ module Bench
       @results_dir = results_dir
       @sha = sha
       @step = step
+      @read_only = read_only
       @env = env
     end
 
@@ -54,7 +56,10 @@ module Bench
     end
 
     def build
-      return $?&.exitstatus || 127 unless seed && system(environment, *command, chdir: build_dir)
+      return $?&.exitstatus || 127 unless seed
+
+      status = run_command
+      return status unless status.zero?
 
       lane.finish(phase).all? { shell(it, chdir: build_dir) } ? 0 : 1
     end
@@ -139,7 +144,7 @@ module Bench
 
       def save_state(extra = {})
         @state = { "phase" => phase, "runner" => runner, "scope" => scope, "cache_scope" => cache_scope, **({ "seed_scope" => seed_scope } if seed_scope),
-                   "sha" => sha, "step" => step, **extra }
+                   **({ "read_only" => true } if @read_only), "sha" => sha, "step" => step, **extra }
         File.write(state_path, JSON.generate(@state))
       end
 
@@ -168,8 +173,19 @@ module Bench
         ["bash", "-c", [restore, Shellwords.join(adapter.fetch("command")), (save unless read_only)].compact.join(" && ")]
       end
 
+      def run_command
+        pid = spawn(environment, *command, chdir: build_dir)
+        handlers = %w[INT TERM].to_h { |signal| [signal, trap(signal) { Process.kill(signal, pid) rescue nil }] }
+        Process.wait(pid)
+        $?.exitstatus || 127
+      rescue SystemCallError
+        127
+      ensure
+        handlers&.each { |signal, handler| trap(signal, handler) }
+      end
+
       def read_only
-        "--read-only" if phase == "warm" || lane.reads
+        "--read-only" if phase == "warm" || lane.reads || @read_only
       end
 
       def lane_program
@@ -231,7 +247,7 @@ module Bench
           "cache_scope" => cache_scope,
           "cache_seeded" => (cache_scope != scope && !lane.reads if phase == "rolling"),
           **({ "seed_scope" => seed_scope } if seed_scope),
-          **({ "read_only" => true } if lane.reads),
+          **({ "read_only" => true } if lane.reads || @read_only),
           **({ "cache_source" => JSON.parse(@env.fetch("BENCH_CACHE_SOURCE")) } if phase == "sample" && lane.reads && @env["BENCH_CACHE_SOURCE"]),
           "cache_restored_key" => (@env["BENCH_CACHE_RESTORED_KEY"] unless @env["BENCH_CACHE_RESTORED_KEY"].to_s.empty?),
           **({ "cache_restore_tracked" => true } if @env["BENCH_CACHE_RESTORE_TRACKED"] == "true"),

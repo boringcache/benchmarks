@@ -350,6 +350,23 @@ class CLITest < Minitest::Test
     assert_equal "remote builder", matrix("app", "--lane", "remote").first["label"]
   end
 
+  def test_replay_matrix_builds_one_commit_on_the_requested_runners_in_a_replay_scope
+    sha = "a" * 40
+    entries = matrix("app", "--replay", "--sha", sha, "--cache-scope", "replay-1", "--runner", "github", "--lane", "boringcache-demo")
+    assert_equal [{ "case" => "demo/app", "lane" => "boringcache-demo", "runner" => "github", "runs_on" => "ubuntu-24.04", "secrets" => [], "setup" => "",
+                    "label" => "github 4c · boringcache", "step" => "0", "sha" => sha, "cache_scope" => "replay-1", "continues" => "", "cadence" => "", "cli" => "" }], entries
+
+    assert_equal ["boringcache-demo"], matrix("app", "--replay", "--sha", sha, "--cache-scope", "replay-1", "--runner", "github").map { it["lane"] }
+
+    [[%W[--sha #{sha} --cache-scope boringcache-demo-github --runner github], "starting with replay-"],
+     [%W[--sha abc --cache-scope replay-1 --runner github], "full --sha"],
+     [%W[--sha #{sha} --cache-scope replay-1], "--replay needs --runner"],
+     [%W[--sha #{sha} --cache-scope replay-1 --runner github --rolling], "cannot be combined"]].each do |args, message|
+      _, err = capture_io { assert_equal 1, Bench::CLI.new(["matrix", "app", "--replay", *args], catalog:, out: StringIO.new).call }
+      assert_includes err, message
+    end
+  end
+
   def test_matrix_filters_by_lane
     assert_equal ["remote"], matrix("app", "--lane", "remote").map { it["lane"] }
     assert_equal ["boringcache-demo", "gha"], matrix("app", "--lane", "boringcache-demo gha").map { it["lane"] }

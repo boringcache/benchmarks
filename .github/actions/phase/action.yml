@@ -36,6 +36,12 @@ inputs:
   cache-source:
     required: false
     default: ""
+  read-only:
+    required: false
+    default: ""
+  stop-after:
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -148,6 +154,7 @@ runs:
         STEP: ${{ inputs.step }}
         CACHE_SCOPE: ${{ inputs.cache-scope }}
         CONTINUES: ${{ inputs.continues }}
+        READ_ONLY: ${{ inputs.read-only }}
       run: |
         if [ "$BENCH_PHASE" = rolling ]; then
           bash scripts/checkout-records.sh "results/$BENCH_CASE"
@@ -155,7 +162,7 @@ runs:
             RECORDED="$PWD/results"
           fi
         fi
-        bundle exec ruby bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" ${SHA:+--sha "$SHA" --step "$STEP"} ${CACHE_SCOPE:+--cache-scope "$CACHE_SCOPE"} ${CONTINUES:+--continues} ${RECORDED:+--recorded "$RECORDED"} --github
+        bundle exec ruby bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" ${SHA:+--sha "$SHA" --step "$STEP"} ${CACHE_SCOPE:+--cache-scope "$CACHE_SCOPE"} ${CONTINUES:+--continues} ${RECORDED:+--recorded "$RECORDED"} ${READ_ONLY:+--read-only} --github
 
     - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache'
       shell: bash
@@ -279,12 +286,24 @@ runs:
       shell: bash
       env:
         PROVIDER: ${{ steps.prepare.outputs.provider }}
+        STOP_AFTER: ${{ inputs.stop-after }}
       run: |
         if [ "$PROVIDER" = boringcache ]; then
-          boringcache ci run --oidc-provider github-actions -- ruby -S bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
+          command=(boringcache ci run --oidc-provider github-actions -- ruby -S bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE")
         else
-          bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
+          command=(bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE")
         fi
+        if [ -n "$STOP_AFTER" ] && ! [[ "$STOP_AFTER" =~ ^[1-9][0-9]*$ ]]; then
+          echo "::error::stop-after takes whole seconds, not $STOP_AFTER"
+          exit 1
+        fi
+        status=0
+        ${STOP_AFTER:+timeout --signal=INT --kill-after=60 "$STOP_AFTER"} "${command[@]}" || status=$?
+        if [ -n "$STOP_AFTER" ] && [ "$status" -eq 124 ]; then
+          echo "stopped=true" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+        exit "$status"
 
     - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != '' && !contains(inputs.setup, 'namespace-cache') && inputs.phase != 'warm'
       uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -298,7 +317,11 @@ runs:
         BUILD_FAILED: ${{ steps.build.outcome == 'failure' }}
         BENCH_CACHE_RESTORE_TRACKED: ${{ steps.actions-cache-restore.outcome == 'success' || steps.dance-restore.outcome == 'success' }}
         BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
-      run: bundle exec ruby bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
+        STOPPED: ${{ steps.build.outputs.stopped }}
+      run: |
+        status=0
+        if [ "$STOPPED" = true ]; then status=124; elif [ "$BUILD_FAILED" = true ]; then status=1; fi
+        bundle exec ruby bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$status"
 
     - if: always() && steps.sampler.outcome == 'success'
       shell: bash

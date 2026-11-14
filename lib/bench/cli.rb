@@ -12,7 +12,7 @@ module Bench
         bin/bench record <tool>/<case> --lane LANE --exit-status N
         bin/bench probe <tool>/<case> --lane LANE [--runner KEY] [--run-id ID]
         bin/bench label <runner>
-        bin/bench matrix <project|tool/case> [--tool TOOL] [--lane LANES] [--runner KEYS] [--rolling | --sample | --cli TAG]
+        bin/bench matrix <project|tool/case> [--tool TOOL] [--lane LANES] [--runner KEYS] [--rolling | --sample | --replay --sha SHA --cache-scope SCOPE | --cli TAG]
         bin/bench rolling-projects
         bin/bench image
         bin/bench report [--results DIR] [--out DIR]
@@ -105,6 +105,7 @@ module Bench
         record = PhaseRun.resume(kase, lane, work_root: options[:work], results_dir: options[:results]).record(exit_status)
         summarize(kase, lane, record)
         return 0 unless failed?(record)
+        return 0 if record["phase"] == REPLAY && exit_status == STOPPED
 
         @out.puts "::error title=#{kase.id} #{lane.name} #{record["phase"]}::exit_status=#{record["exit_status"]} output_ok=#{record["output_ok"].inspect}" if ENV["GITHUB_ACTIONS"] == "true"
         1
@@ -136,7 +137,8 @@ module Bench
       def matrix
         options = parse(defaults.except(:runner))
         return sample_matrix(options) if options[:sample]
-        raise Error, "matrix --sha requires --sample" if options[:sha]
+        return replay_matrix(options) if options[:replay]
+        raise Error, "matrix --sha requires --sample or --replay" if options[:sha]
         raise Error, "--cli takes a CLI release tag such as v1.41.0 or vcli-canary-<sha>" if options[:cli] && !options[:cli].match?(CLI_RELEASE)
         raise Error, "rolling keeps the pinned CLI; use --cli with fresh runs" if options[:cli] && options[:rolling]
         raise Error, "--step re-runs a recorded rolling step; add --rolling" if options[:step] && !options[:rolling]
@@ -176,6 +178,31 @@ module Bench
         return true unless kase.nightly?(lane.name, runner)
 
         rerun ? rolling.recorded?(lane, runner, rerun) : !rolling.ran_on?(lane, runner, @now.strftime("%F"))
+      end
+
+      def replay_matrix(options)
+        raise Error, "--replay cannot be combined with --rolling, --step or --cli" if options.values_at(:rolling, :step, :cli).any?
+        raise Error, "--replay needs a full --sha" unless options[:sha]&.match?(/\A[0-9a-f]{40}\z/)
+        raise Error, "--replay needs a --cache-scope starting with replay-" unless options[:cache_scope]&.match?(/\Areplay-[A-Za-z0-9_.-]+\z/)
+        requested = options[:runner]&.split(/[\s,]+/) || raise(Error, "--replay needs --runner")
+        lanes = options[:lane]&.split(/[\s,]+/)
+        cases = @catalog.project_cases(@argv.first || raise(Error, "matrix needs <project> or <tool>/<case>"), tool: options[:tool])
+        entries = cases.flat_map do |kase|
+          kase.runs.keys.map { kase.tool.lane(it) }.select { it.boringcache? && !it.reads && (lanes.nil? || lanes.include?(it.name)) }.flat_map do |lane|
+            requested.filter_map do |runner|
+              raise Error, "unknown runner #{runner}" unless @catalog.runners.key?(runner)
+              raise Error, "replays require an Actions runner" if runner == "local"
+              next unless lane.allows?(runner)
+
+              { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets,
+                "setup" => kase.setups(lane).join(" "), "label" => job_label(kase, lane, runner), "step" => "0", "sha" => options[:sha],
+                "cache_scope" => options[:cache_scope], "continues" => "", "cadence" => "", "cli" => @catalog.case_cli(kase) || "" }
+            end
+          end
+        end
+        raise Error, "no replay lanes match this selection" if entries.empty?
+        @out.puts JSON.generate(entries)
+        0
       end
 
       def sample_matrix(options)
@@ -367,6 +394,11 @@ module Bench
                               sha: options[:sha], step: Integer(options.fetch(:step)), **common)
         end
         raise Error, "#{kase.id} #{lane.name} reads another lane's rolling cache, so it runs rolling steps only" if lane.reads && phase != ROLLING
+        if phase == REPLAY
+          raise Error, "replays need --sha and --cache-scope from the replay matrix" unless options[:sha] && options[:cache_scope]
+          return PhaseRun.new(kase, lane, scope: "#{lane.name}-#{options[:runner]}-replay-#{options[:run_id]}", cache_scope: options[:cache_scope],
+                              sha: options[:sha], step: Integer(options[:step] || 0), read_only: options[:read_only] || false, **common)
+        end
         return PhaseRun.new(kase, lane, scope: "#{lane.name}-#{options[:runner]}-#{options[:run_id]}", **common) unless phase == ROLLING
 
         rolling = Rolling.new(kase, results_dir: options[:results], work_root: options[:work])
@@ -449,7 +481,7 @@ module Bench
           OptionParser.new do |opts|
             opts.on("--lane NAME") { options[:lane] = it }
             opts.on("--tool NAME") { options[:tool] = it }
-            opts.on("--phase PHASE", [*PHASES, ROLLING, "sample"]) { options[:phase] = it }
+            opts.on("--phase PHASE", [*PHASES, ROLLING, "sample", REPLAY]) { options[:phase] = it }
             opts.on("--runner KEY") { options[:runner] = it }
             opts.on("--run-id ID") { options[:run_id] = it }
             opts.on("--results DIR") { options[:results] = File.expand_path(it) }
@@ -458,9 +490,11 @@ module Bench
             opts.on("--container") { options[:container] = true }
             opts.on("--env-file PATH") { options[:env_file] = File.expand_path(it) }
             opts.on("--exit-status N") { options[:exit_status] = it }
+            opts.on("--read-only") { options[:read_only] = true }
             opts.on("--github") { options[:github] = true }
             opts.on("--rolling") { options[:rolling] = true }
             opts.on("--sample") { options[:sample] = true }
+            opts.on("--replay") { options[:replay] = true }
             opts.on("--sha SHA") { options[:sha] = it }
             opts.on("--step N") { options[:step] = it }
             opts.on("--cache-scope SCOPE") { options[:cache_scope] = it }

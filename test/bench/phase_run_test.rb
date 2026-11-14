@@ -1,4 +1,5 @@
 require_relative "test_helper"
+require "timeout"
 
 class PhaseRunTest < Minitest::Test
   include BenchFixture
@@ -210,6 +211,61 @@ class PhaseRunTest < Minitest::Test
     end
     assert_equal ["demo --read-only", "demo --read-only"], File.readlines(File.join(@root, "stub.log"), chomp: true)
     assert_empty Dir[File.join(@root, "tmp/results/demo/app/*-rolling/*.json")]
+  end
+
+  def test_a_replay_builds_the_given_commit_into_the_given_scope_and_reads_only_when_asked
+    second = commit_upstream("two")
+    with_fixture_env do
+      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "replay", "--sha", @upstream_sha, "--cache-scope", "replay-p1", "--run-id", "p1")
+      plan = TomlRB.load_file(File.join(@root, ".work/demo/app/.boringcache.toml"))
+      assert_equal "demo-app-replay-p1", plan.dig("adapters", "demo", "tag")
+      assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "replay", "--sha", second, "--cache-scope", "replay-p1", "--run-id", "p2",
+                         "--read-only")
+    end
+
+    assert_equal ["demo ", "demo --read-only"], File.readlines(File.join(@root, "stub.log"), chomp: true)
+    seed = record("boringcache-demo-local-replay-p1", "boringcache-demo-local-replay-0")
+    reader = record("boringcache-demo-local-replay-p2", "boringcache-demo-local-replay-0")
+    assert_equal [@upstream_sha, "replay-p1", nil, 0], seed.values_at("sha", "cache_scope", "read_only", "exit_status")
+    assert_equal [second, "replay-p1", true, 0], reader.values_at("sha", "cache_scope", "read_only", "exit_status")
+    assert_empty Dir[File.join(@root, "tmp/results/demo/app/*-rolling/*.json")]
+  end
+
+  def test_a_replay_stopped_at_its_time_limit_is_recorded_without_failing_the_step
+    with_fixture_env do
+      assert_equal 0, cli("prepare", "demo/app", "--lane", "boringcache-demo", "--phase", "replay", "--sha", @upstream_sha, "--cache-scope", "replay-p3", "--run-id", "p3")
+      assert_equal 0, cli("start", "demo/app", "--lane", "boringcache-demo")
+      assert_equal 0, cli("record", "demo/app", "--lane", "boringcache-demo", "--exit-status", "124")
+      assert_equal 0, cli("prepare", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r90")
+      assert_equal 0, cli("start", "demo/app", "--lane", "remote")
+      capture_io { assert_equal 1, cli("record", "demo/app", "--lane", "remote", "--exit-status", "124") }
+      _, err = capture_io { assert_equal 1, cli("prepare", "demo/app", "--lane", "remote", "--phase", "replay", "--sha", @upstream_sha, "--run-id", "r92") }
+      assert_includes err, "replays need --sha and --cache-scope from the replay matrix"
+    end
+
+    assert_equal [124, false], record("boringcache-demo-local-replay-p3", "boringcache-demo-local-replay-0").values_at("exit_status", "output_ok")
+  end
+
+  def test_an_interrupted_build_passes_the_signal_to_the_command_and_waits_for_it
+    write "bin/boringcache", <<~BASH
+      #!/usr/bin/env bash
+      if [ "$1" = "--version" ]; then echo "boringcache 9.9.9"; exit 0; fi
+      trap 'echo stopping >> "$STUB_LOG"; sleep 1; echo stopped >> "$STUB_LOG"; exit 7' INT
+      echo started >> "$STUB_LOG"
+      sleep 30 & wait
+    BASH
+    File.chmod(0o755, File.join(@root, "bin/boringcache"))
+    log = File.join(@root, "stub.log")
+    with_fixture_env do
+      assert_equal 0, cli("prepare", "demo/app", "--lane", "boringcache-demo", "--phase", "replay", "--sha", @upstream_sha, "--cache-scope", "replay-p4", "--run-id", "p4")
+      pid = fork { exit! cli("build", "demo/app", "--lane", "boringcache-demo") }
+      Timeout.timeout(10) { sleep 0.05 until File.exist?(log) && File.read(log).include?("started") }
+      Process.kill("INT", pid)
+      _, @status = Process.wait2(pid)
+    end
+
+    assert_equal %w[started stopping stopped], File.readlines(log, chomp: true)
+    assert_equal 7, @status.exitstatus
   end
 
   def test_a_seeded_lane_seeds_again_until_it_has_a_passing_step
