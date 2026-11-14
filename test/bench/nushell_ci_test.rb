@@ -29,6 +29,36 @@ class NushellCiTest < Minitest::Test
     assert calls.grep(/^boringcache /).all? { it.include?("--skip-save") }
   end
 
+  def test_doctests_run_after_the_binary_is_kept_and_target_is_pruned
+    kept = nil
+    _, status = run_ci { |dir| kept = File.read(File.join(dir, "out/nu")) }
+    assert status.success?
+    assert_equal "nu", kept
+  end
+
+  def test_prune_keeps_libraries_and_removes_executables
+    Dir.mktmpdir("nu-prune") do |dir|
+      profile = File.join(dir, "ci")
+      deps = File.join(profile, "deps")
+      FileUtils.mkdir_p([deps, File.join(profile, "examples"), File.join(profile, "build/serde-1111111111111111"), File.join(profile, ".fingerprint/nu-2222222222222222"), File.join(deps, "nu-3333333333333333.dSYM")])
+      kept = %w[libnu_protocol-aaaaaaaaaaaaaaaa.rlib libnu_protocol-aaaaaaaaaaaaaaaa.rmeta nu_protocol-aaaaaaaaaaaaaaaa.d
+        nu_derive_value-bbbbbbbbbbbbbbbb.dll nu_derive_value-bbbbbbbbbbbbbbbb.dll.lib nu_derive_value-bbbbbbbbbbbbbbbb.pdb
+        libserde_derive-cccccccccccccccc.so serde_derive-cccccccccccccccc.d]
+      removed = %w[nu_protocol-dddddddddddddddd nu_protocol-dddddddddddddddd.d tests-eeeeeeeeeeeeeeee.exe tests-eeeeeeeeeeeeeeee.pdb]
+      (kept + removed).each { File.write(File.join(deps, it), "") }
+      %w[nu nu.exe nu.pdb nu.d .cargo-lock].each { File.write(File.join(profile, it), "") }
+      _, status = Open3.capture2e("ruby", File.join(Bench::ROOT, "tools/cargo/nushell/overlay/prune.rb"), profile)
+      assert status.success?
+      assert_equal kept.sort, Dir.children(deps).sort
+      assert_equal %w[.cargo-lock .fingerprint build deps], Dir.children(profile).sort
+    end
+  end
+
+  def test_prune_accepts_a_missing_target
+    _, status = Open3.capture2e("ruby", File.join(Bench::ROOT, "tools/cargo/nushell/overlay/prune.rb"), File.join(Dir.tmpdir, "missing-nu-target"))
+    assert status.success?
+  end
+
   def test_output_check_accepts_native_and_windows_executables
     ["nu", "nu.exe"].each do |name|
       output_check(name:) do |dir, status|
@@ -53,11 +83,10 @@ class NushellCiTest < Minitest::Test
     def output_check(name:, exit_status: 0)
       Dir.mktmpdir("nu-check") do |dir|
         upstream = File.join(dir, "upstream")
-        FileUtils.mkdir_p(File.join(upstream, "target/ci"))
+        FileUtils.mkdir_p([upstream, File.join(dir, "out")])
         Bench.git("init", "--quiet", chdir: upstream)
-        File.write(File.join(upstream, ".git/info/exclude"), "/target/\n")
         if name
-          binary = File.join(upstream, "target/ci", name)
+          binary = File.join(dir, "out", name)
           File.write(binary, "#!/usr/bin/env bash\nexit #{exit_status}\n")
           File.chmod(0o755, binary)
         end
@@ -66,8 +95,11 @@ class NushellCiTest < Minitest::Test
       end
     end
 
-    def run_ci(extra_env = {})
+    def run_ci(extra_env = {}, &inspect)
       Dir.mktmpdir("nushell-ci") do |dir|
+        upstream = File.join(dir, "upstream")
+        FileUtils.mkdir_p(File.join(upstream, "target/ci"))
+        File.write(File.join(upstream, "target/ci/nu"), "nu")
         File.write(File.join(dir, "cargo"), <<~BASH)
           #!/usr/bin/env bash
           printf 'cargo %s\n' "$*" >> "$CALLS"
@@ -84,7 +116,8 @@ class NushellCiTest < Minitest::Test
         File.chmod(0o755, File.join(dir, "cargo"), File.join(dir, "boringcache"))
         env = { "PATH" => "#{dir}:#{ENV.fetch('PATH')}", "CALLS" => File.join(dir, "calls"),
           "BENCH_BORINGCACHE" => nil, "FAIL_COMMAND" => nil, **extra_env }
-        _, status = Open3.capture2e(env, "bash", File.join(Bench::ROOT, "tools/cargo/nushell/overlay/ci.sh"))
+        _, status = Open3.capture2e(env, "bash", File.join(Bench::ROOT, "tools/cargo/nushell/overlay/ci.sh"), chdir: upstream)
+        inspect&.call(dir)
         [File.readlines(env.fetch("CALLS"), chomp: true), status]
       end
     end
