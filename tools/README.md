@@ -233,8 +233,14 @@ Fresh builds use that starting source for both cold and warm phases.
 Every lane runs the root job's Cargo build, tests and doctests, with its `ci`
 profile and `.cargo/ci.toml`. Source files are unchanged. Rust is 1.97.1 and
 sccache is 0.17.0. Incremental compilation is off in all lanes so sccache can
-cache compiler outputs. The output check runs `nu --version` and verifies the
-checkout is clean. The lint job, standard-library and Python virtualenv tests,
+cache compiler outputs. After the tests, every lane copies `nu` out of
+`target` and removes the workspace's test executables, binaries, examples and
+their debug files from `target/ci`. Libraries and dependency outputs stay, so
+the doctests reuse them and the plus lanes cache them. Upstream stopped caching
+workspace crates for the same reason: they are rebuilt on most commits and make
+the Windows cache large. The doctests run last, because a BoringCache Cargo
+command publishes its cache when it ends. The output check runs the copied
+`nu --version` and verifies the checkout is clean. The lint job, standard-library and Python virtualenv tests,
 fuzz jobs, WASM job and artifact upload are outside this measurement.
 
 The base lanes compare BoringCache and GitHub Actions compiler caches. The plus
@@ -252,10 +258,17 @@ platforms. Rolling runs include every configured platform. Series 2 started
 from `168db974bad0181a35f4ccd735db0a20cb999d24` with new cache scopes and `nu`
 cache tags, and ran formatting, check and Clippy before the build, as the root
 job did then. Series 3 follows upstream's split root job from its new starting
-source with new cache scopes. Earlier records remain available.
+source with new cache scopes. Its Windows plus lanes cached every workspace
+executable and debug file: `gha-plus` ran out of disk on every step from 7 to
+12 ([run 43537134309](https://github.com/boringcache/benchmarks/actions/runs/43537134309)),
+and BoringCache plus failed at step 7 when a debug file passed the linker's
+size limit (`LNK1140`, [run 43522482334](https://github.com/boringcache/benchmarks/actions/runs/43522482334)).
+Series 4 starts from the same source with new cache scopes and removes those
+files before the cache is saved. Earlier records remain available.
 
 Sources: [Nushell root CI](https://github.com/nushell/nushell/blob/396a7588af811612ebfc6de5b090d4f5674d6e51/.github/workflows/ci.yml),
 [lint job split](https://github.com/nushell/nushell/pull/19453),
+[workspace crates left out of the cache](https://github.com/nushell/nushell/pull/19452),
 [runner comparison](https://github.com/nushell/nushell/pull/18810),
 [osquery context](https://github.com/osquery/osquery/issues/9104#issuecomment-6626417651),
 [sccache GitHub cache](https://github.com/mozilla/sccache/blob/v0.17.0/docs/GHA.md),
