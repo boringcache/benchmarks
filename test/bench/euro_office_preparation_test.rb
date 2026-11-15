@@ -3,6 +3,12 @@ require "open3"
 require_relative "../../tools/docker/shared/euro-office-cache"
 
 class EuroOfficePreparationTest < Minitest::Test
+  THIRD_PARTY = {
+    "common.cmake" => "--only=libxml2-wasm\n",
+    "Common/3dParty/build_3rdparty.py" => "def build(): pass\n",
+    "Common/3dParty/libxml2/nc-build.py" => "VERSION = '2.15.0'\n",
+  }.freeze
+
   def test_plus_preserves_source_and_adds_compiler_and_mount_caches
     prepare_core do |dir, source, output, status|
       assert status.success?, output
@@ -26,7 +32,36 @@ class EuroOfficePreparationTest < Minitest::Test
       assert_includes dockerfile, "    ARG CORE_CCACHE=1\n"
       assert_includes dockerfile, "--mount=type=cache,target=/ccache,id=core-ccache"
       assert_includes dockerfile, "id=vcpkg-binary-cache"
+      assert_includes dockerfile, "    RUN --mount=type=cache,id=build-cache-#{EuroOfficeCache.third_party_key(File.join(dir, "upstream/core"))},target=/build-cache \\\n"
       assert_equal source.lines.size + 2, dockerfile.lines.size
+    end
+  end
+
+  def test_third_party_key_follows_the_builder_and_its_dependency_list
+    Dir.mktmpdir("euro-office-core") do |core|
+      write_third_party(core)
+      File.write(File.join(core, "CMakeLists.txt"), "project(core)\n")
+      key = EuroOfficeCache.third_party_key(core)
+      assert_match(/\A\h{12}\z/, key)
+      File.write(File.join(core, "CMakeLists.txt"), "project(core)\nadd_subdirectory(x2t)\n")
+      assert_equal key, EuroOfficeCache.third_party_key(core)
+
+      File.write(File.join(core, "common.cmake"), "--only=libxml2-wasm,libjpeg-turbo-wasm\n")
+      listed = EuroOfficeCache.third_party_key(core)
+      refute_equal key, listed
+      File.write(File.join(core, "Common/3dParty/libxml2/nc-build.py"), "VERSION = '2.15.1'\n")
+      bumped = EuroOfficeCache.third_party_key(core)
+      refute_equal listed, bumped
+      write_third_party(core, "Common/3dParty/zlib-ng/nc-build.py" => "VERSION = '2.3.2'\n")
+      refute_equal bumped, EuroOfficeCache.third_party_key(core)
+    end
+  end
+
+  def test_core_without_the_third_party_builder_stops_preparation
+    prepare_core(source: build_script_core_source, third_party: {}) do |dir, _, output, status|
+      refute status.success?
+      assert_includes output, "core third-party builder changed"
+      refute File.exist?(File.join(dir, "overlay/core.Dockerfile"))
     end
   end
 
@@ -98,7 +133,8 @@ class EuroOfficePreparationTest < Minitest::Test
       assert_includes core, "-DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
       assert_includes core, "target=/build-cache"
       refute_includes core, "target=/root/.cache/ccache"
-      assert_includes wasm, "target=/build-cache-wasm"
+      key = EuroOfficeCache.third_party_key(File.join(dir, "upstream/core"))
+      assert_includes wasm, "--mount=type=cache,id=wasm-build-cache-${CACHE_BUST}-#{key},target=/build-cache-wasm \\\n"
       assert_includes wasm, "target=/em-cache"
       refute_includes wasm, "target=/ccache"
       assert_includes wasm, "COPY bench-ccache/ccache /usr/local/bin/ccache"
@@ -123,7 +159,7 @@ class EuroOfficePreparationTest < Minitest::Test
       assert status.success?, output
       core = File.read(File.join(dir, "overlay/core.Dockerfile"))
       assert_includes core, "    ARG CORE_CCACHE=1\n"
-      assert_includes core, "target=/build-cache"
+      assert_includes core, "id=build-cache-#{EuroOfficeCache.third_party_key(File.join(dir, "upstream/core"))},target=/build-cache"
       refute_includes core, "target=/ccache"
     end
   end
@@ -139,6 +175,7 @@ class EuroOfficePreparationTest < Minitest::Test
     def prepare_standalone(resolve: true, plus: false, local_cache: false, core: core_source)
       Dir.mktmpdir("euro-office") do |dir|
         %w[upstream/core/.docker overlay bin].each { FileUtils.mkdir_p(File.join(dir, it)) }
+        write_third_party(File.join(dir, "upstream/core"))
         File.write(File.join(dir, "upstream/VERSION"), "9.3.6-rc.1\n")
         File.write(File.join(dir, ".boringcache.toml"), "[adapters.docker]\ntool-cache = #{plus ? '["ccache:test"]' : '[]'}\n")
         File.write(File.join(dir, "upstream/core/.docker/core.bake.Dockerfile"), core)
@@ -172,9 +209,10 @@ class EuroOfficePreparationTest < Minitest::Test
       end
     end
 
-    def prepare_core(plus: true, replace: nil, source: core_source)
+    def prepare_core(plus: true, replace: nil, source: core_source, third_party: THIRD_PARTY)
       Dir.mktmpdir("euro-office") do |dir|
         FileUtils.mkdir_p(File.join(dir, "upstream/core/.docker"))
+        write_third_party(File.join(dir, "upstream/core"), third_party)
         FileUtils.mkdir_p(File.join(dir, "overlay"))
         source = source.sub("cmake --build .", replace) if replace
         File.write(File.join(dir, "upstream/core/.docker/core.bake.Dockerfile"), source)
@@ -216,6 +254,13 @@ class EuroOfficePreparationTest < Minitest::Test
                 ${CORE_CCACHE:+ccache --show-stats} && \
                 cp -r /build-cache/package/* ${BUILD_ROOT}
       DOCKERFILE
+    end
+
+    def write_third_party(core, files = THIRD_PARTY)
+      files.each do |path, content|
+        FileUtils.mkdir_p(File.dirname(File.join(core, path)))
+        File.write(File.join(core, path), content)
+      end
     end
 
     def stage_stub(dir)

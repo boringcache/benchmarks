@@ -40,10 +40,11 @@ plan = TomlRB.load_file(".boringcache.toml").fetch("adapters").fetch("docker")
 if Array(plan["tool-cache"]).any?
   require_relative "euro-office-cache"
   local_cache = ENV["EURO_OFFICE_LOCAL_CCACHE"] == "1"
+  third_party = EuroOfficeCache.third_party_key("upstream/core")
   { "core" => :core, "core-wasm" => :wasm }.each do |name, method|
     target = definition.fetch("target").fetch(name)
     path = File.join(target.fetch("context"), target.fetch("dockerfile"))
-    File.write("overlay/#{name}.Dockerfile", EuroOfficeCache.public_send(method, File.read(path), local_cache:))
+    File.write("overlay/#{name}.Dockerfile", EuroOfficeCache.public_send(method, File.read(path), third_party:, local_cache:))
     target["dockerfile"] = "../overlay/#{name}.Dockerfile"
   end
   system("bash", File.join(ENV.fetch("BENCH_ROOT"), "tools/docker/shared/stage-ccache-binary.sh"), "upstream/bench-ccache", exception: true)

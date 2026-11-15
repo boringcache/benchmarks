@@ -10,6 +10,7 @@ module Bench
         bin/bench start <tool>/<case> --lane LANE
         bin/bench build <tool>/<case> --lane LANE
         bin/bench record <tool>/<case> --lane LANE --exit-status N
+        bin/bench prune-cache-dance <tool>/<case> --lane LANE
         bin/bench probe <tool>/<case> --lane LANE [--runner KEY] [--run-id ID]
         bin/bench label <runner>
         bin/bench matrix <project|tool/case> [--tool TOOL] [--lane LANES] [--runner KEYS] [--rolling | --sample | --cli TAG]
@@ -40,6 +41,7 @@ module Bench
       when "start" then resumed { it.start; 0 }
       when "build" then resumed(&:build)
       when "record" then record
+      when "prune-cache-dance" then resumed { prune_cache_dance(it) }
       when "probe" then probe
       when "label" then label
       when "matrix" then matrix
@@ -108,6 +110,18 @@ module Bench
 
         @out.puts "::error title=#{kase.id} #{lane.name} #{record["phase"]}::exit_status=#{record["exit_status"]} output_ok=#{record["output_ok"].inspect}" if ENV["GITHUB_ACTIONS"] == "true"
         1
+      end
+
+      def prune_cache_dance(phase_run)
+        return 0 unless phase_run.kase.setups(phase_run.lane).include?("cache-dance")
+
+        root = cache_dance_root
+        phase_run.prune_cache_dance(root).each { @out.puts "cache-dance: removed #{it.delete_prefix("#{File.expand_path(root)}/")}" }
+        0
+      end
+
+      def cache_dance_root
+        File.join(ENV.fetch("RUNNER_TEMP", "/tmp"), "cache-dance")
       end
 
       def failed?(record)
@@ -398,7 +412,7 @@ module Bench
           outputs.merge!("tool" => kase.tool.name, "provider" => lane.provider, "build_dir" => phase_run.build_dir,
                          "restore_key" => restore_keys.join("\n"), "cache_key" => [base_key, phase_run.step, (ENV["GITHUB_RUN_ID"] if phase_run.phase == "sample")].compact.join("-"),
                          "artifact_key" => ["#{kase.id.tr("/", "-")}-#{phase_run.scope}", phase_run.step].compact.join("-"),
-                         "cache_paths" => phase_run.cache_paths.join("\n"), "cache_dance_map" => JSON.generate(kase.setups(lane).include?("cache-dance") ? phase_run.cache_dance_map(File.join(ENV.fetch("RUNNER_TEMP", "/tmp"), "cache-dance")) : {}), "setup" => kase.setups(lane).join(" "), "boringcache_version" => @catalog.versions.fetch("boringcache"))
+                         "cache_paths" => phase_run.cache_paths.join("\n"), "cache_dance_map" => JSON.generate(kase.setups(lane).include?("cache-dance") ? phase_run.cache_dance_map(cache_dance_root) : {}), "setup" => kase.setups(lane).join(" "), "boringcache_version" => @catalog.versions.fetch("boringcache"))
           File.open(ENV.fetch("GITHUB_ENV"), "a") { |file| phase_run.exported_env.each { |key, value| file.puts "#{key}=#{value}" } }
         end
         File.open(ENV.fetch("GITHUB_OUTPUT"), "a") { |file| outputs.each { |key, value| file.puts "#{key}<<BENCH_EOF\n#{value}\nBENCH_EOF" } }

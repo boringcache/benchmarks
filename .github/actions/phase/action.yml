@@ -300,6 +300,10 @@ runs:
         BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
       run: bundle exec ruby bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
 
+    - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance') && inputs.phase != 'warm'
+      shell: bash
+      run: bundle exec ruby bin/bench prune-cache-dance "$BENCH_CASE" --lane "$BENCH_LANE"
+
     - if: always() && steps.sampler.outcome == 'success'
       shell: bash
       env:

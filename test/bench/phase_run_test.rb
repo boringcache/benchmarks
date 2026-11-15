@@ -453,6 +453,68 @@ class PhaseRunTest < Minitest::Test
     assert_equal ["wasm-2", "ccache-#{arch}", "/deps"], run.cache_dance_map("/cache").values.map { it.fetch("id") }
   end
 
+  def test_cache_dance_prune_drops_restored_mounts_the_dockerfile_no_longer_declares
+    write "tools/demo/app/.boringcache.toml", <<~TOML
+      [adapters.demo]
+      tag = "demo-app"
+      command = ["docker", "buildx", "build", "--file", "overlay/app.Dockerfile", "upstream"]
+    TOML
+    write "tools/demo/app/overlay/app.Dockerfile", <<~'DOCKERFILE'
+      FROM scratch
+      RUN --mount=type=cache,id=build-cache-new,target=/build-cache \
+          --mount=type=cache,target=/go/pkg/mod true
+    DOCKERFILE
+    kase = catalog.find_case("demo/app")
+    run = Bench::PhaseRun.new(kase, kase.tool.lane("boringcache-demo"), phase: "cold", runner: "local", scope: "test",
+                             work_root: File.join(@root, ".work"), results_dir: File.join(@root, "results"))
+    with_fixture_env { run.prepare }
+    root = File.join(@root, "cache-dance")
+    %w[build-cache-new/state build-cache/state go/pkg/mod/cache go/pkg/old/cache go/other].each do |path|
+      FileUtils.mkdir_p(File.dirname(File.join(root, path)))
+      File.write(File.join(root, path), "x")
+    end
+    files = -> { Dir.glob("**/*", base: root).select { File.file?(File.join(root, it)) }.sort }
+
+    assert_equal %w[build-cache go/other go/pkg/old].map { File.join(root, it) }, run.prune_cache_dance(root)
+    assert_equal %w[build-cache-new/state go/pkg/mod/cache], files.()
+
+    File.write(File.join(@root, ".work/demo/app/overlay/app.Dockerfile"), "FROM scratch\nRUN true\n")
+    assert_equal [], run.prune_cache_dance(root)
+    assert_equal %w[build-cache-new/state go/pkg/mod/cache], files.()
+  end
+
+  def test_prune_cache_dance_only_touches_cache_dance_lanes
+    write "tools/demo/app/.boringcache.toml", <<~TOML
+      workspace = "boringcache/benchmarks"
+      [adapters.demo]
+      tag = "demo-app"
+      command = ["docker", "buildx", "build", "--file", "overlay/app.Dockerfile", "upstream"]
+    TOML
+    write "tools/demo/app/overlay/app.Dockerfile", "FROM scratch\nRUN --mount=type=cache,id=deps-2,target=/deps true\n"
+    write "tools/demo/lanes/remote.toml", %(provider = "remote"\nlevel = "base"\nsecrets = ["REMOTE_TOKEN"]\nsetup = ["cache-dance"]\n[env]\nDEMO_CACHE = "${REMOTE_TOKEN}"\n)
+    root = File.join(@root, "runner/cache-dance")
+    stale = File.join(root, "deps-1/state")
+    prune = lambda do |lane|
+      FileUtils.mkdir_p([File.dirname(stale), File.join(root, "deps-2")])
+      File.write(stale, "x")
+      out = StringIO.new
+      with_fixture_env do
+        ENV.update("GITHUB_OUTPUT" => File.join(@root, "github_output"), "GITHUB_ENV" => File.join(@root, "github_env"), "RUNNER_TEMP" => File.join(@root, "runner"))
+        assert_equal 0, cli("prepare", "demo/app", "--lane", lane, "--phase", "cold", "--run-id", "r60", "--github")
+        assert_equal 0, cli("prune-cache-dance", "demo/app", "--lane", lane, out:)
+      ensure
+        %w[GITHUB_OUTPUT GITHUB_ENV RUNNER_TEMP].each { ENV.delete(it) }
+      end
+      out.string
+    end
+
+    assert_equal "", prune.("boringcache-demo")
+    assert File.exist?(stale)
+    assert_equal "cache-dance: removed deps-1\n", prune.("remote")
+    refute File.exist?(File.dirname(stale))
+    assert File.directory?(File.join(root, "deps-2"))
+  end
+
   private
     def cli(*argv, out: StringIO.new)
       Bench::CLI.new([*argv, "--results", File.join(@root, "tmp/results"), "--work", File.join(@root, ".work")], catalog:, out:).call
