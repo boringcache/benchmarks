@@ -67,7 +67,7 @@ TURBO_CACHE = "local:rw,remote:r"
 | `env`, `warm.env` | environment for the build, and extra environment for warm |
 | `paths` | GitHub Actions cache lanes: tool cache paths to save and restore, relative to the run directory |
 | `args`, `warm.args` | arguments appended to the plan command, and the warm replacement (for example `--cache-from`/`--cache-to`) |
-| `setup` | workflow setup the lane needs: `buildx` (Buildx builder), `actions-runtime` (Actions cache credentials for type=gha and sccache), `cache-dance` (restore the plan Dockerfile cache mounts from the Actions cache after the timer starts, recording the matched key, and save them after the job), `namespace-cache` (mount the case `shared` paths from the runner profile Namespace cache volume), `ghcr` (log in to GHCR), `depot` (Depot CLI), `vercel` (Vercel Remote Cache token through OIDC), `namespace` (Namespace CLI and remote Buildx builder), `nix` (Nix), `cachix` (Cachix CLI and substituter, no push), `bitrise` (Bitrise Build Cache CLI; the lane activates Bazel, Gradle or Xcode), `nativelink` (local NativeLink server backed by R2) before the timer; `kache` and `mbx` run their actions after the timer starts because they restore cache data |
+| `setup` | workflow setup the lane needs: `buildx` (Buildx builder), `actions-runtime` (Actions cache credentials for type=gha and sccache), `cache-dance` (restore the plan Dockerfile cache mounts from the Actions cache after the timer starts, recording the matched key, and save them after the job; restored mount directories that the Dockerfile no longer declares are deleted after the record so they are not saved again), `namespace-cache` (mount the case `shared` paths from the runner profile Namespace cache volume), `ghcr` (log in to GHCR), `depot` (Depot CLI), `vercel` (Vercel Remote Cache token through OIDC), `namespace` (Namespace CLI and remote Buildx builder), `nix` (Nix), `cachix` (Cachix CLI and substituter, no push), `bitrise` (Bitrise Build Cache CLI; the lane activates Bazel, Gradle or Xcode), `nativelink` (local NativeLink server backed by R2) before the timer; `kache` and `mbx` run their actions after the timer starts because they restore cache data |
 | `phases` | BoringCache lanes only: run `boringcache <tool> --phase restore`, then the plan command, then `--phase save` (no save on warm), for upstream scripts that run several tool commands, such as Zed's bundle script with Cargo |
 | `program`, `replaces` | `program` replaces the leading `replaces` words of the plan command, for example `depot` for `docker buildx` or `mbx` for `cargo` |
 | `wrap`, `cold.wrap` | command prefix around the build, for example `cachix watch-exec <cache> --` on cold |
@@ -153,6 +153,10 @@ Core revisions that declare `CORE_CCACHE` compile through ccache themselves.
 For those, the generated Dockerfile copies the pinned ccache binaries and sets
 `CORE_CCACHE=1`. It keeps upstream's `core-ccache` mount only for lanes that
 archive local compiler caches.
+CMake runs upstream's third-party builder only once per build directory, so
+the generated Dockerfile names the build-state mount after a hash of
+`core/common.cmake` and `core/Common/3dParty`. A change to the builder or its
+dependency list starts the plus lanes with an empty build directory.
 All lanes retain the dependency downloads and builds defined at each revision.
 The history crosses upstream's migration to anonymous S3 dependency downloads.
 `euro-office` builds the upstream `standalone` Bake target, including packaging,
@@ -169,7 +173,9 @@ lanes use the same pinned ccache binaries, enable native C/C++ launchers and
 retain the existing WASM launchers. The BoringCache lane stores compiler results
 remotely without archiving local ccache directories. Both plus lanes persist
 native build state, vcpkg packages, WASM build state, the Emscripten cache and
-npm downloads. The native control also archives its two local compiler caches.
+npm downloads. The native and WASM build-state mounts are named after the same
+third-party builder hash. The native control also archives its two local
+compiler caches.
 Cache-dance discovers mounts across the resolved Bake targets and expands their
 build arguments. Its extraction and archive saving remain part of the reported
 elapsed time. The original layer-only and isolated-core records stay separate.

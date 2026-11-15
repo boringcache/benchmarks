@@ -100,6 +100,27 @@ module Bench
       end.uniq.to_h { [File.join(root, it), { "id" => it, "target" => "/var/cache-target" }] }
     end
 
+    def prune_cache_dance(root)
+      keep = cache_dance_map(root).keys.map { File.expand_path(it) }
+      return [] if keep.empty? || !File.directory?(root)
+
+      stale = []
+      visit = lambda do |dir|
+        Dir.children(dir).sort.each do |name|
+          path = File.join(dir, name)
+          next if keep.include?(path)
+
+          if File.directory?(path) && !File.symlink?(path) && keep.any? { it.start_with?("#{path}/") }
+            visit.(path)
+          else
+            stale << path
+          end
+        end
+      end
+      visit.(File.expand_path(root))
+      stale.each { FileUtils.rm_rf(it) }
+    end
+
     def cache_paths
       paths = [*lane.paths, *kase.shared].map { File.expand_path(it, workspace.dir) }
       paths.empty? ? paths : paths + kase.exclude.map { "!#{File.expand_path(it, workspace.dir)}" }
