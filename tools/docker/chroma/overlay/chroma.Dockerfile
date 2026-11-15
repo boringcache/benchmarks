@@ -105,8 +105,6 @@ COPY rust/ rust/
 # BoringCache persists Cargo's registry, Git checkouts, and target output across
 # ephemeral builders. Target output is architecture-scoped to prevent mixing it.
 # END BORINGCACHE BENCHMARK CARGO CACHE MOUNTS
-ENV BORINGCACHE_DIAGNOSTIC_LEVEL=info
-ENV CARGO_LOG=cargo::core::compiler::fingerprint=info
 RUN --mount=type=cache,id=chroma-target-${TARGETARCH},sharing=locked,target=/chroma/target \
   --mount=type=cache,sharing=locked,target=/usr/local/cargo/registry/ \
   --mount=type=cache,sharing=locked,target=/usr/local/cargo/git/ \
@@ -117,9 +115,7 @@ RUN --mount=type=cache,id=chroma-target-${TARGETARCH},sharing=locked,target=/chr
   fi && \
   build_target=$( [ "${ADDRESS_SANITIZER}" = "1" ] && echo '--target x86_64-unknown-linux-gnu' || echo '' ) && \
   release_flag=$( [ "$RELEASE_MODE" = "1" ] && echo '--release' || echo '' ) && \
-  find -L rust/types -type f -printf '%T@ %p\n' | sort -n | tail -3 && \
-  (grep -h 'rerun-if' target/release/build/chroma-types-*/output || echo 'no rerun-if lines') && \
-  cargo build -v ${build_target} --workspace $(printf -- '--exclude %s ' $EXCLUDED_PACKAGES) ${release_flag} && \
+  cargo build ${build_target} --workspace $(printf -- '--exclude %s ' $EXCLUDED_PACKAGES) ${release_flag} && \
   if [ -n "$LOG_SERVICE_CARGO_FEATURES" ]; then \
   cargo build ${build_target} -p chroma-log-service --bin log_service --features "$LOG_SERVICE_CARGO_FEATURES" ${release_flag}; \
   fi && \
