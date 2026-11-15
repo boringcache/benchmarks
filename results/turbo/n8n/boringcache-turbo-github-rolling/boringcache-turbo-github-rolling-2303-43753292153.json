@@ -1,0 +1,838 @@
+{
+  "adapter_command": "turbo",
+  "case": "n8n",
+  "lane": "boringcache-turbo",
+  "provider": "boringcache",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 2303,
+  "scope": "boringcache-turbo-github-rolling",
+  "cache_scope": "boringcache-turbo-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "n8n-io/n8n",
+  "sha": "c46e2579d1bec17921583174d3106745ab70565f",
+  "seconds": 150.744,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1794771553966,
+      "run_id": "43753292153",
+      "session_id": "proxy-summary-95d5874e-e3f1-4bf6-ad5c-5433fc2ed914",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 121866,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "turborepo",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 58.7,
+          "cpu_iowait_percent": 10.7,
+          "cpu_pressure_percent": 36.4,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 29.5,
+          "disk_read_mb": 4.5,
+          "disk_written_mb": 10140.2,
+          "interval_ms": 149273,
+          "io_pressure_percent": 15.1,
+          "memory_pressure_percent": 0.0,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 9V45 96-Core Processor",
+        "disk_available_gb": 83,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15984
+      },
+      "proxy": {
+        "adapter": "turborepo",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 121866,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_max_in_flight": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 162,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 64,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 105,
+          "cache_blobs_download_urls": 901,
+          "cache_blobs_upload_urls": 116,
+          "cache_finalize_publish": 283,
+          "cache_flush_upload": 162,
+          "cache_kv_entries_current_version": 170,
+          "cache_kv_entries_download_urls": 356,
+          "cache_kv_entries_upsert": 119,
+          "cache_kv_entry_reads": 117,
+          "cache_rollups_ingest": 191,
+          "cache_session_evidence_confirm": 130,
+          "cache_session_evidence_prepare": 243
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 140,
+          "cache_blobs_download_urls": 901,
+          "cache_blobs_upload_urls": 156,
+          "cache_finalize_publish": 283,
+          "cache_flush_upload": 162,
+          "cache_kv_entries_current_version": 170,
+          "cache_kv_entries_download_urls": 356,
+          "cache_kv_entries_upsert": 198,
+          "cache_kv_entry_reads": 117,
+          "cache_rollups_ingest": 440,
+          "cache_session_evidence_confirm": 283,
+          "cache_session_evidence_prepare": 281
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 46,
+          "cache_blobs_download_urls": 1,
+          "cache_blobs_upload_urls": 60,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entries_upsert": 12,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 7,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 135,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 105,
+          "cache_blobs_download_urls": 901,
+          "cache_blobs_upload_urls": 116,
+          "cache_finalize_publish": 283,
+          "cache_flush_upload": 162,
+          "cache_kv_entries_current_version": 170,
+          "cache_kv_entries_download_urls": 356,
+          "cache_kv_entries_upsert": 119,
+          "cache_kv_entry_reads": 117,
+          "cache_rollups_ingest": 191,
+          "cache_session_evidence_confirm": 130,
+          "cache_session_evidence_prepare": 243
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 140,
+          "cache_blobs_download_urls": 901,
+          "cache_blobs_upload_urls": 156,
+          "cache_finalize_publish": 283,
+          "cache_flush_upload": 162,
+          "cache_kv_entries_current_version": 170,
+          "cache_kv_entries_download_urls": 356,
+          "cache_kv_entries_upsert": 198,
+          "cache_kv_entry_reads": 117,
+          "cache_rollups_ingest": 440,
+          "cache_session_evidence_confirm": 283,
+          "cache_session_evidence_prepare": 281
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 46,
+          "cache_blobs_download_urls": 1,
+          "cache_blobs_upload_urls": 60,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entries_upsert": 12,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 7,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 135,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 294
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 328110,
+        "startup_prefetch_blobs_per_sec": 156,
+        "startup_prefetch_bytes_per_sec": 51306850,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 162,
+        "startup_prefetch_concurrency_adjustment_count": 0,
+        "startup_prefetch_concurrency_reason": "machine_governor",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_deferred_trial_blobs": 0,
+        "startup_prefetch_deferred_trial_bytes": 0,
+        "startup_prefetch_demand_max_wait_ms": 0,
+        "startup_prefetch_demand_wait_ms": 0,
+        "startup_prefetch_demand_waits": 0,
+        "startup_prefetch_duration_ms": 1036,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 64,
+        "startup_prefetch_generation": 1905,
+        "startup_prefetch_hedge_wins": 0,
+        "startup_prefetch_hedges": 0,
+        "startup_prefetch_initial_concurrency": 64,
+        "startup_prefetch_inserted": 162,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 64,
+        "startup_prefetch_mode": "recent-reads",
+        "startup_prefetch_observation_count": 2,
+        "startup_prefetch_recent_read_blobs": 162,
+        "startup_prefetch_recent_read_bytes": 53153897,
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 162,
+        "startup_prefetch_target_bytes": 53153897,
+        "startup_prefetch_total_unique_blobs": 12499,
+        "startup_prefetch_trial_budget_bytes": 134217728,
+        "startup_prefetch_unplanned_blobs": 0,
+        "startup_prefetch_unplanned_bytes": 0,
+        "startup_prefetch_unused_blobs": 94,
+        "startup_prefetch_unused_bytes": 50736357,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 162,
+        "startup_prefetch_used_blobs": 68,
+        "startup_prefetch_used_bytes": 2417540,
+        "startup_prefetch_write_trial_blobs": 0,
+        "startup_prefetch_write_trial_bytes": 0
+      },
+      "kv_upload": {
+        "kv_upload_allowed_concurrency_max": 1,
+        "kv_upload_already_present_blobs": 94,
+        "kv_upload_batches": 12,
+        "kv_upload_blobs_per_sec": 0,
+        "kv_upload_concurrency_reason": "adaptive_ramp",
+        "kv_upload_concurrency_source": "auto",
+        "kv_upload_duration_ms": 1272,
+        "kv_upload_failed_blobs": 0,
+        "kv_upload_final_concurrency_max": 1,
+        "kv_upload_initial_concurrency_max": 1,
+        "kv_upload_missing_local_blobs": 0,
+        "kv_upload_requested_blobs": 0,
+        "kv_upload_uploaded_blobs": 0,
+        "kv_upload_uploaded_bytes": 0,
+        "kv_upload_writethrough_failure_bytes": 0,
+        "kv_upload_writethrough_failure_count": 0,
+        "kv_upload_writethrough_pressure_skip_bytes": 0,
+        "kv_upload_writethrough_pressure_skip_count": 0,
+        "kv_upload_writethrough_uploaded_blobs": 92,
+        "kv_upload_writethrough_uploaded_bytes": 50581630
+      },
+      "singleflight": {
+        "singleflight_kv_download_leaders": 162,
+        "singleflight_kv_lookup_leaders": 47
+      },
+      "kv_lookup": {
+        "kv_lookup_turbo_after_refresh_miss": 47,
+        "kv_lookup_turbo_published_fast_hit": 34,
+        "kv_lookup_turbo_published_fast_miss": 47
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 2417540,
+          "blob_read_local_count": 68,
+          "blob_read_local_hit_rate_pct": 30,
+          "blob_read_remote_avg_ms": 249,
+          "blob_read_remote_bytes": 53153897,
+          "blob_read_remote_count": 162
+        },
+        "blob_read_cache_bytes": 103735527,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "schema_version": "native_tool_evidence.v1",
+        "source": "turbo_run_summary",
+        "summary_version": "1",
+        "tasks_cached_without_source": 0,
+        "tasks_executed": 47,
+        "tasks_failed": 0,
+        "tasks_local_cache_hits": 0,
+        "tasks_remote_cache_hits": 34,
+        "tasks_total": 81,
+        "tool": "turborepo",
+        "tool_version": "2.11.4"
+      },
+      "unit_evidence": {
+        "capabilities": {
+          "cache_source": true,
+          "critical_path": true,
+          "dependencies": true,
+          "execution_reasons": false,
+          "scheduling": false,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": true
+        },
+        "collection_state": "reported",
+        "counts": {
+          "cached": 34,
+          "cached_local": 0,
+          "cached_remote": 34,
+          "executed": 47,
+          "failed": 0,
+          "observed": 81,
+          "scope": "tasks"
+        },
+        "critical_path": {
+          "completed_at_ms": 1794771536073,
+          "ready_gap_ms": 45,
+          "source": "turbo_task_dependencies",
+          "started_at_ms": 1794771455248,
+          "truncated": false,
+          "unit_count": 14,
+          "unit_duration_ms": 80780,
+          "units": [
+            {
+              "duration_ms": 4,
+              "id": "@n8n/vitest-config#build",
+              "label": "@n8n/vitest-config#build"
+            },
+            {
+              "duration_ms": 12,
+              "id": "@n8n/eslint-plugin-design-system#build",
+              "label": "@n8n/eslint-plugin-design-system#build"
+            },
+            {
+              "duration_ms": 34,
+              "id": "@n8n/eslint-config#build",
+              "label": "@n8n/eslint-config#build"
+            },
+            {
+              "duration_ms": 3,
+              "id": "@n8n/oxlint-config#build",
+              "label": "@n8n/oxlint-config#build"
+            },
+            {
+              "duration_ms": 24,
+              "id": "@n8n/constants#build",
+              "label": "@n8n/constants#build"
+            },
+            {
+              "duration_ms": 41,
+              "id": "@n8n/utils#build",
+              "label": "@n8n/utils#build"
+            },
+            {
+              "duration_ms": 49,
+              "id": "@n8n/expression-runtime#build",
+              "label": "@n8n/expression-runtime#build"
+            },
+            {
+              "duration_ms": 1117,
+              "id": "n8n-workflow#build",
+              "label": "n8n-workflow#build"
+            },
+            {
+              "duration_ms": 9345,
+              "id": "@n8n/i18n#build",
+              "label": "@n8n/i18n#build"
+            },
+            {
+              "duration_ms": 13640,
+              "id": "@n8n/composables#build",
+              "label": "@n8n/composables#build"
+            },
+            {
+              "duration_ms": 15213,
+              "id": "@n8n/design-system#build",
+              "label": "@n8n/design-system#build"
+            },
+            {
+              "duration_ms": 10560,
+              "id": "@n8n/chat#build",
+              "label": "@n8n/chat#build"
+            },
+            {
+              "duration_ms": 17382,
+              "id": "n8n-editor-ui#build",
+              "label": "n8n-editor-ui#build"
+            },
+            {
+              "duration_ms": 13356,
+              "id": "n8n#build",
+              "label": "n8n#build"
+            }
+          ]
+        },
+        "ranking_scope": "all_observed_units",
+        "schema_version": "unit_evidence.v1",
+        "source": "turbo_run_summary",
+        "tool": "turborepo",
+        "tool_version": "2.11.4",
+        "truncated": true,
+        "unit_kind": "task",
+        "units": [
+          {
+            "attributes": {
+              "dependency_count": 16,
+              "package": "n8n-nodes-base",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771508600,
+            "duration_ms": 37314,
+            "id": "n8n-nodes-base#build",
+            "label": "n8n-nodes-base#build",
+            "started_at_ms": 1794771471286,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 12,
+              "package": "@n8n/stores",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771500281,
+            "duration_ms": 20714,
+            "id": "@n8n/stores#build",
+            "label": "@n8n/stores#build",
+            "started_at_ms": 1794771479567,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 37,
+              "package": "n8n-editor-ui",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771522717,
+            "critical_path": true,
+            "duration_ms": 17382,
+            "id": "n8n-editor-ui#build",
+            "label": "n8n-editor-ui#build",
+            "started_at_ms": 1794771505335,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 8,
+              "package": "@n8n/design-system",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771494774,
+            "critical_path": true,
+            "duration_ms": 15213,
+            "id": "@n8n/design-system#build",
+            "label": "@n8n/design-system#build",
+            "started_at_ms": 1794771479561,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 10,
+              "package": "@n8n/composables",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771479557,
+            "critical_path": true,
+            "duration_ms": 13640,
+            "id": "@n8n/composables#build",
+            "label": "@n8n/composables#build",
+            "started_at_ms": 1794771465917,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 51,
+              "package": "n8n",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771536073,
+            "critical_path": true,
+            "duration_ms": 13356,
+            "id": "n8n#build",
+            "label": "n8n#build",
+            "started_at_ms": 1794771522717,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 11,
+              "package": "@n8n/rest-api-client",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771478641,
+            "duration_ms": 12723,
+            "id": "@n8n/rest-api-client#build",
+            "label": "@n8n/rest-api-client#build",
+            "started_at_ms": 1794771465918,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 13,
+              "package": "@n8n/n8n-nodes-langchain",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771519208,
+            "duration_ms": 10610,
+            "id": "@n8n/n8n-nodes-langchain#build",
+            "label": "@n8n/n8n-nodes-langchain#build",
+            "started_at_ms": 1794771508598,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 6,
+              "package": "@n8n/chat",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771505335,
+            "critical_path": true,
+            "duration_ms": 10560,
+            "id": "@n8n/chat#build",
+            "label": "@n8n/chat#build",
+            "started_at_ms": 1794771494775,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 4,
+              "package": "@n8n/mcp-browser-extension",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771504801,
+            "duration_ms": 10027,
+            "id": "@n8n/mcp-browser-extension#build",
+            "label": "@n8n/mcp-browser-extension#build",
+            "started_at_ms": 1794771494774,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 5,
+              "package": "@n8n/i18n",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771465916,
+            "critical_path": true,
+            "duration_ms": 9345,
+            "id": "@n8n/i18n#build",
+            "label": "@n8n/i18n#build",
+            "started_at_ms": 1794771456571,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 5,
+              "package": "@n8n/mcp-apps",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771503948,
+            "duration_ms": 9174,
+            "id": "@n8n/mcp-apps#build",
+            "label": "@n8n/mcp-apps#build",
+            "started_at_ms": 1794771494774,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 12,
+              "package": "@n8n/ai-workflow-builder",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771479338,
+            "duration_ms": 8595,
+            "id": "@n8n/ai-workflow-builder#build",
+            "label": "@n8n/ai-workflow-builder#build",
+            "started_at_ms": 1794771470743,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 11,
+              "package": "@n8n/instance-ai",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771486358,
+            "duration_ms": 8064,
+            "id": "@n8n/instance-ai#build",
+            "label": "@n8n/instance-ai#build",
+            "started_at_ms": 1794771478294,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 17,
+              "package": "@n8n/db",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771479204,
+            "duration_ms": 7921,
+            "id": "@n8n/db#build",
+            "label": "@n8n/db#build",
+            "started_at_ms": 1794771471283,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 7,
+              "package": "@n8n/agents",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771478306,
+            "duration_ms": 7561,
+            "id": "@n8n/agents#build",
+            "label": "@n8n/agents#build",
+            "started_at_ms": 1794771470745,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 4,
+              "package": "@n8n/cli",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771467374,
+            "duration_ms": 4985,
+            "id": "@n8n/cli#build",
+            "label": "@n8n/cli#build",
+            "started_at_ms": 1794771462389,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 7,
+              "package": "@n8n/api-types",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771462389,
+            "duration_ms": 4611,
+            "id": "@n8n/api-types#build",
+            "label": "@n8n/api-types#build",
+            "started_at_ms": 1794771457778,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 10,
+              "package": "@n8n/task-runner",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771475641,
+            "duration_ms": 4355,
+            "id": "@n8n/task-runner#build",
+            "label": "@n8n/task-runner#build",
+            "started_at_ms": 1794771471286,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 12,
+              "package": "@n8n/backend-test-utils",
+              "task": "build"
+            },
+            "completed_at_ms": 1794771483513,
+            "duration_ms": 4310,
+            "id": "@n8n/backend-test-utils#build",
+            "label": "@n8n/backend-test-utils#build",
+            "started_at_ms": 1794771479203,
+            "state": "executed"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "turborepo",
+          "candidates": [
+            {
+              "confidence": "high",
+              "evidence": {
+                "bytes_read": 2415102,
+                "hit_rate": 42.0,
+                "hits": 34,
+                "misses": 47
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 121866,
+            "errors": 0,
+            "hit_rate": 42.0,
+            "hits": 34,
+            "misses": 47,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 94
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 42.0,
+          "hits": 34,
+          "likely_reason": "mixed_existing_and_new_work",
+          "misses": 47,
+          "state": "warm_mixed",
+          "writes": 94
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V45 96-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [
+    "boringcache-turbo-github-rolling-2303-43753292153.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.1"
+  },
+  "harness": {
+    "commit": "d6bab766cafde877822cb934cad7219dc1fec8b2",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/43753292153",
+  "attempt": 1,
+  "started_at": "2026-11-15T19:36:43Z"
+}
