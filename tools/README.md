@@ -237,8 +237,10 @@ job into a parallel lint job. Rolling builds visit every commit.
 Fresh builds use that starting source for both cold and warm phases.
 
 Every lane runs the root job's Cargo build, tests and doctests, with its `ci`
-profile and `.cargo/ci.toml`. Source files are unchanged. Rust is 1.97.1 and
-sccache is 0.17.0. Incremental compilation is off in all lanes so sccache can
+profile and `.cargo/ci.toml`. Source files are unchanged. Setup installs the exact
+Rust version pinned by each source commit's `rust-toolchain.toml`; floating
+channels fail preparation. All lanes use that version and sccache 0.17.0.
+Incremental compilation is off in all lanes so sccache can
 cache compiler outputs. After the tests, every lane copies `nu` out of
 `target` and removes the workspace's test executables, binaries, examples and
 their debug files from `target/ci`. Libraries and dependency outputs stay, so
