@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "output_kind": "workspace_session_units",
+  "diagnostic_surface": "workspace_reporting",
+  "workspace_source": {
+    "kind": "explicit"
+  },
+  "evidence": {
+    "cli_session_id": "01a1e2b8-0a3c-765e-9279-231879f0dcda",
+    "declared_records": 0,
+    "expires_at": "2027-02-14T04:57:57Z",
+    "generation": 1,
+    "kind": "unit_records",
+    "records_truncated": false,
+    "run_uid": "local:boringcache/benchmarks:01a1e2b8-0a3c-765e-9279-231879f0dcda",
+    "state": "parsed",
+    "stored_records": 0,
+    "tool": "ccache",
+    "unit_kind": "build_action"
+  },
+  "order": "position",
+  "session_id": "proxy-summary-54ec2977-e9f1-45dd-a1cd-fb965cfc845f",
+  "units": [],
+  "workspace": {
+    "full_path": "boringcache/benchmarks"
+  }
+}

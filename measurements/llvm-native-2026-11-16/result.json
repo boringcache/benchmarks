@@ -1,0 +1,182 @@
+{
+  "schema_version": "native_build_controls.v1",
+  "experimental": true,
+  "date": "2026-11-16",
+  "provider_comparison": false,
+  "samples_per_arm": 1,
+  "machine": {
+    "provider": "AWS",
+    "instance_type": "m7g.8xlarge",
+    "region": "eu-west-2",
+    "architecture": "aarch64",
+    "logical_cpus": 32,
+    "memory_gib": 128,
+    "storage": "200 GiB encrypted gp3",
+    "filesystem": "ext4"
+  },
+  "source": {
+    "repository": "https://github.com/llvm/llvm-project",
+    "commit": "f32560faaa230b6743e4336d0321ddc55da380f5",
+    "modified": false
+  },
+  "configuration": {
+    "cmake": [
+      "cmake",
+      "-G",
+      "Ninja",
+      "-S",
+      "/tmp/source/workloads/llvm/llvm",
+      "-B",
+      "/tmp/source/workloads/llvm-build",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DLLVM_ENABLE_PROJECTS=clang",
+      "-DLLVM_TARGETS_TO_BUILD=AArch64",
+      "-DLLVM_INCLUDE_TESTS=OFF",
+      "-DLLVM_INCLUDE_BENCHMARKS=OFF",
+      "-DLLVM_ENABLE_TERMINFO=OFF",
+      "-DCMAKE_C_COMPILER=clang-18",
+      "-DCMAKE_CXX_COMPILER=clang++-18",
+      "-DLLVM_USE_LINKER=lld-18",
+      "-DCMAKE_C_COMPILER_LAUNCHER=/tmp/source/workloads/tools/ccache-4.14.3-linux-aarch64-glibc/ccache",
+      "-DCMAKE_CXX_COMPILER_LAUNCHER=/tmp/source/workloads/tools/ccache-4.14.3-linux-aarch64-glibc/ccache",
+      "-DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON"
+    ],
+    "build": [
+      "ninja",
+      "-C",
+      "/tmp/source/workloads/llvm-build",
+      "-j",
+      "24",
+      "clang"
+    ],
+    "ccache_version": "4.14.3",
+    "ccache_archive_sha256": "5af4c73f9a2c2ed27c17e48cf06868202738fecf8036cfbcdd7eb679930670cb",
+    "environment": {
+      "CCACHE_MAXSIZE": "20G",
+      "CCACHE_COMPILERCHECK": "content",
+      "CCACHE_DIR": "/tmp/source/workloads/ccache"
+    }
+  },
+  "timed_operations": [
+    {
+      "name": "no-pch-configure",
+      "command": [
+        "cmake",
+        "-G",
+        "Ninja",
+        "-S",
+        "/tmp/source/workloads/llvm/llvm",
+        "-B",
+        "/tmp/source/workloads/llvm-build",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DLLVM_ENABLE_PROJECTS=clang",
+        "-DLLVM_TARGETS_TO_BUILD=AArch64",
+        "-DLLVM_INCLUDE_TESTS=OFF",
+        "-DLLVM_INCLUDE_BENCHMARKS=OFF",
+        "-DLLVM_ENABLE_TERMINFO=OFF",
+        "-DCMAKE_C_COMPILER=clang-18",
+        "-DCMAKE_CXX_COMPILER=clang++-18",
+        "-DLLVM_USE_LINKER=lld-18",
+        "-DCMAKE_C_COMPILER_LAUNCHER=/tmp/source/workloads/tools/ccache-4.14.3-linux-aarch64-glibc/ccache",
+        "-DCMAKE_CXX_COMPILER_LAUNCHER=/tmp/source/workloads/tools/ccache-4.14.3-linux-aarch64-glibc/ccache",
+        "-DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON"
+      ],
+      "seconds": 17.595288136999898,
+      "exit": 0
+    },
+    {
+      "name": "no-pch-seed",
+      "command": [
+        "ninja",
+        "-C",
+        "/tmp/source/workloads/llvm-build",
+        "-j",
+        "24",
+        "clang"
+      ],
+      "seconds": 779.7875331860005,
+      "exit": 0
+    },
+    {
+      "name": "no-pch-noop-0",
+      "command": [
+        "ninja",
+        "-C",
+        "/tmp/source/workloads/llvm-build",
+        "-j",
+        "24",
+        "clang"
+      ],
+      "seconds": 0.5718677469994873,
+      "exit": 0
+    },
+    {
+      "name": "no-pch-noop-1",
+      "command": [
+        "ninja",
+        "-C",
+        "/tmp/source/workloads/llvm-build",
+        "-j",
+        "24",
+        "clang"
+      ],
+      "seconds": 0.5721404850000908,
+      "exit": 0
+    },
+    {
+      "name": "no-pch-fresh-configure",
+      "command": [
+        "cmake",
+        "-G",
+        "Ninja",
+        "-S",
+        "/tmp/source/workloads/llvm/llvm",
+        "-B",
+        "/tmp/source/workloads/llvm-build",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DLLVM_ENABLE_PROJECTS=clang",
+        "-DLLVM_TARGETS_TO_BUILD=AArch64",
+        "-DLLVM_INCLUDE_TESTS=OFF",
+        "-DLLVM_INCLUDE_BENCHMARKS=OFF",
+        "-DLLVM_ENABLE_TERMINFO=OFF",
+        "-DCMAKE_C_COMPILER=clang-18",
+        "-DCMAKE_CXX_COMPILER=clang++-18",
+        "-DLLVM_USE_LINKER=lld-18",
+        "-DCMAKE_C_COMPILER_LAUNCHER=/tmp/source/workloads/tools/ccache-4.14.3-linux-aarch64-glibc/ccache",
+        "-DCMAKE_CXX_COMPILER_LAUNCHER=/tmp/source/workloads/tools/ccache-4.14.3-linux-aarch64-glibc/ccache",
+        "-DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON"
+      ],
+      "seconds": 17.511407197999688,
+      "exit": 0
+    },
+    {
+      "name": "no-pch-compiler-warm",
+      "command": [
+        "ninja",
+        "-C",
+        "/tmp/source/workloads/llvm-build",
+        "-j",
+        "24",
+        "clang"
+      ],
+      "seconds": 19.721958696999536,
+      "exit": 0
+    }
+  ],
+  "output_check": {
+    "seed_and_warm_sha256": "e19b409b7dc26172c3e6e848f1f614398f2516ba21fb04aa934a3a47e0d5c9fc",
+    "matched": true
+  },
+  "excluded_operations": [
+    "upstream checkout",
+    "tool installation",
+    "output hash verification",
+    "network cache transfer",
+    "native build-state materialization",
+    "source validation"
+  ],
+  "stats_file": "ccache-warm.json",
+  "raw_ninja_log": "warm.ninja.log.gz",
+  "seed_cache": "9 existing direct hits,3121 cache misses;not an empty-cache cold baseline",
+  "seed_stats_file": "ccache-seed.json"
+}

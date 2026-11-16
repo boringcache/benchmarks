@@ -1,0 +1,525 @@
+{
+  "schema_version": 1,
+  "output_kind": "workspace_session_units",
+  "diagnostic_surface": "workspace_reporting",
+  "workspace_source": {
+    "kind": "explicit"
+  },
+  "evidence": {
+    "cli_session_id": "01a1e2ef-c63c-7540-8278-82801c4f2f1a",
+    "declared_records": 33,
+    "expires_at": "2027-02-14T05:59:11Z",
+    "generation": 1,
+    "kind": "unit_records",
+    "records_truncated": false,
+    "run_uid": "local:boringcache/benchmarks:01a1e2ef-c63c-7540-8278-82801c4f2f1a",
+    "state": "parsed",
+    "stored_records": 33,
+    "tool": "ccache",
+    "unit_kind": "compilation"
+  },
+  "order": "position",
+  "session_id": "proxy-summary-c475b935-c884-4bdf-b5f3-e1abbc7c3b7e",
+  "units": [
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:0",
+      "key": "53636db2f67af6b80cf76fb47a4ab737e0bd359d40f8ad7349950a8a1d475442",
+      "label": ".../ccache/src/depfile_parser.cc",
+      "position": 0,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:1",
+      "key": "aa0186db313b31c8811089557c1cd65837991fcad4a9acde510eaf2c7b4f16ec",
+      "label": ".../ccache/src/clparser.cc",
+      "position": 1,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:2",
+      "key": "6eede8d16de04b85df10812dd827ac05519c414b64c8e161f709a6229a2df2d6",
+      "label": ".../ccache/src/lexer.cc",
+      "position": 2,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:3",
+      "key": "fdfda950e02c7c18cf6d277a3e740b4be59f1c3a50d39ba46f5218cf58f59b55",
+      "label": ".../ccache/src/debug_flags.cc",
+      "position": 3,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:4",
+      "key": "596e45c6fc7bf3780470c5f34d108351e59ab08a5469e039d1afd836cdacf5f5",
+      "label": ".../ccache/src/deps_log.cc",
+      "position": 4,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:5",
+      "key": "ef44c44d0e216834c0a3d0ed0e5d7ebefecb9942cc5d33459e8cec9035ec73f4",
+      "label": ".../ccache/src/clean.cc",
+      "position": 5,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:6",
+      "key": "2e701a7e9855db7fa69cc6e73e0d55f86117f1e593a3133c257ad32e79d35af4",
+      "label": ".../ccache/src/build_log.cc",
+      "position": 6,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:7",
+      "key": "704b1e66abdd8a3df9dfec027309df9e056598875efad13c8ba61502767798c9",
+      "label": ".../ccache/src/dyndep.cc",
+      "position": 7,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "cache_source": "remote",
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "lookup": "preprocessed",
+          "remote_storage": "hit",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:8",
+      "key": "192b932fa13209bcd91fcf7d712e137d8ef394ae2a817e36f072315ea9e1b0ba",
+      "label": ".../ccache/src/json.cc",
+      "position": 8,
+      "record_kind": "work_unit",
+      "state": "cached"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:9",
+      "key": "648d0df81361c5b781590c7285c0457dc76c33ed9a4b3c452fbc3d78955bd58a",
+      "label": ".../ccache/src/dyndep_parser.cc",
+      "position": 9,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:10",
+      "key": "de22475c69b543cc11917621bc7efbcbf9aa7ac200e802e4c60a678abab91d67",
+      "label": ".../ccache/src/elide_middle.cc",
+      "position": 10,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:11",
+      "key": "a491c5d74fd49bbf5c78e3d303ee28aca9583dfc6223cc65f24059d858c5045e",
+      "label": ".../ccache/src/edit_distance.cc",
+      "position": 11,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:12",
+      "key": "f5feeae30b71f9096d4b46382424b4387166ab2663a4601d4f2b7f1c6c7168b8",
+      "label": ".../ccache/src/disk_interface.cc",
+      "position": 12,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:13",
+      "key": "5792a332a431f1d43f9fb1f322d9417803086763b7ac13633150d41c17806f0e",
+      "label": ".../ccache/src/jobserver.cc",
+      "position": 13,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:14",
+      "key": "8e1645305c2a39c79b7bb9e1ab3d8a30f27b317ee9ba9beaa8af12b3a3c36305",
+      "label": ".../ccache/src/line_printer.cc",
+      "position": 14,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:15",
+      "key": "12e1c78369d5d2926abde8841cf74897d03681981a7ee201d503b5775f9e9552",
+      "label": ".../ccache/src/metrics.cc",
+      "position": 15,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:16",
+      "key": "2afb30d8312099a7adee4c5b1424a40d01fac2eb1c90cfd46e2655fa47744dfc",
+      "label": ".../ccache/src/build.cc",
+      "position": 16,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:17",
+      "key": "e7b426521345576ee60ba5c7c5ec7b99d5bbf457cb983bcb8b1692459eef91ee",
+      "label": ".../ccache/src/eval_env.cc",
+      "position": 17,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:18",
+      "key": "77927338022f2eb3dcf7d6aaa2fa7118c1b07ce8e71935df0e27eb4a94621d62",
+      "label": ".../ccache/src/graphviz.cc",
+      "position": 18,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:19",
+      "key": "fd12670f313c30e2c42c3f376f45d3fc97d05382469ded14eff8742e3aae9ffb",
+      "label": ".../ccache/src/parser.cc",
+      "position": 19,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:20",
+      "key": "71a3f5a8eb3ceaf435b58caca6766dae653636aedb38043d28bfd3b813ba06c6",
+      "label": ".../ccache/src/manifest_parser.cc",
+      "position": 20,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:21",
+      "key": "435341d34578cae837e56a6b6a2aedc0a2927626ac7b4c7750efe530c68d89d2",
+      "label": ".../ccache/src/version.cc",
+      "position": 21,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:22",
+      "key": "62fb3c98bb9f68194faec59574d625d4d44395bcae1f11caf826d9276f7e3fe3",
+      "label": ".../ccache/src/string_piece_util.cc",
+      "position": 22,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:23",
+      "key": "598849d358880eb813643cd2d8ddfd64b1d0d8a2766a63feb09006b2a2c90d30",
+      "label": ".../ccache/src/util.cc",
+      "position": 23,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:24",
+      "key": "41b580b6b7a0023a72de3c28db342caa82b88c98f6bb7f5f71fd79c583308564",
+      "label": ".../ccache/src/graph.cc",
+      "position": 24,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:25",
+      "key": "00a24cbec2ae93e215cf42664f90957f18de22aef0423c544796803a8e5256ba",
+      "label": ".../ccache/src/jobserver-posix.cc",
+      "position": 25,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:26",
+      "key": "64d595a2330f20e5e4deeb18e56751d872bf71910e52b2d2570dba8fa135214a",
+      "label": ".../ccache/src/real_command_runner.cc",
+      "position": 26,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:27",
+      "key": "97085e93055e8b081be6a28edcca7fdd59ecb8ea14fdb93240b0e9afcef8f5a5",
+      "label": ".../ccache/src/missing_deps.cc",
+      "position": 27,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:28",
+      "key": "c36d79b754bf400fbbc46c8297c1ff1a432be595b38ff9f6edda4d22e2e6b264",
+      "label": ".../ccache/src/status_printer.cc",
+      "position": 28,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:29",
+      "key": "7cb93caff583a25a0be1e9ce95597279c2efe8272a70fb7efc0fc7abc126871c",
+      "label": ".../ccache/src/state.cc",
+      "position": 29,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:30",
+      "key": "f6735c50ee44343a286d15508cde7f5a0061cae23a1bd3774945ff226e40d61e",
+      "label": ".../ccache/src/subprocess-posix.cc",
+      "position": 30,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:31",
+      "key": "6d0a5db3eb117cbdc98b2bac6a4ebee4b68036eab075a0e8b3ee6ab14867b2f7",
+      "label": ".../ccache/src/browse.cc",
+      "position": 31,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:32",
+      "key": "74020ee5c17033f4423c18b3c05972a65bd0a261b790429e203c107ecd9e5fce",
+      "label": ".../ccache/src/ninja.cc",
+      "position": 32,
+      "record_kind": "work_unit",
+      "state": "executed"
+    }
+  ],
+  "workspace": {
+    "full_path": "boringcache/benchmarks"
+  }
+}

@@ -54,6 +54,7 @@ module Bench
     end
 
     def build
+      FileUtils.rm_f(native_evidence_path) if native_export?
       return $?&.exitstatus || 127 unless seed && system(environment, *command, chdir: build_dir)
 
       lane.finish(phase).all? { shell(it, chdir: build_dir) } ? 0 : 1
@@ -183,7 +184,7 @@ module Bench
       def command
         return [*lane.wrap(phase, environment), *kase.script] if kase.script
         return [*lane.wrap(phase, environment), *lane_program, *lane.args(phase, environment)] unless lane.boringcache?
-        return ["boringcache", kase.tool.name, *lane.cli_args, *read_only] unless lane.phases?
+        return ["boringcache", kase.tool.name, *lane.cli_args, "--native-tool-evidence-json", native_evidence_path, *read_only] unless lane.phases?
 
         restore, save = %w[restore save].map { Shellwords.join(["boringcache", kase.tool.name, *lane.cli_args, "--phase", it]) }
         ["bash", "-c", [restore, Shellwords.join(adapter.fetch("command")), (save unless read_only)].compact.join(" && ")]
@@ -235,6 +236,29 @@ module Bench
         record_path.sub(/\.json\z/, ".boringcache.jsonl")
       end
 
+      def native_export?
+        lane.boringcache? && !lane.phases? && !kase.script
+      end
+
+      def native_evidence_path
+        File.expand_path(record_path.sub(/\.json\z/, ".native-tool.json"))
+      end
+
+      def native_evidence
+        return {} unless native_export?
+        return { "state" => "missing" } unless File.file?(native_evidence_path)
+        return { "state" => "unavailable", "reason" => "file_limit" } if File.size(native_evidence_path) > 64 * 1024 * 1024
+
+        native = JSON.parse(File.read(native_evidence_path))
+        block = native.is_a?(Hash) ? native["unit_evidence"] : nil
+        return { "state" => "not_reported", "reason" => "unit_evidence_not_exported" } unless block.is_a?(Hash) && block["schema_version"] == "unit_evidence.v1"
+
+        { "state" => block["collection_state"], "unit_evidence" => block,
+          "build_actions" => native.dig("build_actions", "unit_evidence"), "file" => File.basename(native_evidence_path) }.compact
+      rescue JSON::ParserError, SystemCallError, IOError
+        { "state" => "unavailable", "reason" => "unreadable_export" }
+      end
+
       def write_record(started_at:, seconds:, exit_status:)
         record = {
           "adapter_command" => kase.tool.name,
@@ -264,7 +288,7 @@ module Bench
           "output_ok" => output_ok(exit_status),
           "provider_reported" => provider_reported,
           "observed" => observed,
-          "evidence" => File.exist?(evidence_path) ? [File.basename(evidence_path)] : [],
+          "evidence" => [evidence_path, *(native_export? ? [native_evidence_path] : [])].select { File.file?(it) }.map { File.basename(it) },
           "versions" => { "boringcache" => boringcache_version, "boringcache_release" => (@env["BENCH_CLI_RELEASE"] if boringcache_version) }.compact,
           **({ "product_env" => product_env } if product_env),
           **({ "plan_settings" => plan_settings } if plan_settings),
@@ -289,7 +313,7 @@ module Bench
       end
 
       def provider_reported
-        { "cache_session_summary" => session_summary }.compact
+        { "cache_session_summary" => session_summary, "native_evidence" => (native_evidence if native_export?) }.compact
       end
 
       def observed

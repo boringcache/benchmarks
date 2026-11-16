@@ -1,0 +1,101 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "adapter": "ccache",
+      "step": 0,
+      "session_id": "proxy-summary-2f5a3240-bf31-47e3-b52a-f941b8323317",
+      "stored_records": 31,
+      "state": "parsed",
+      "exact_records_match": true
+    },
+    {
+      "adapter": "ccache",
+      "step": 1,
+      "session_id": "proxy-summary-54ec2977-e9f1-45dd-a1cd-fb965cfc845f",
+      "stored_records": 0,
+      "state": "parsed",
+      "exact_records_match": true
+    },
+    {
+      "adapter": "ccache",
+      "step": 2,
+      "session_id": "proxy-summary-497edf85-49e4-4167-b126-bae3fdc5b822",
+      "stored_records": 35,
+      "state": "parsed",
+      "exact_records_match": true
+    },
+    {
+      "adapter": "ccache",
+      "step": 3,
+      "session_id": "proxy-summary-5a1244ff-7b89-4bc2-94d0-2ec8aa273de9",
+      "stored_records": 15,
+      "state": "parsed",
+      "exact_records_match": true
+    },
+    {
+      "adapter": "ccache",
+      "step": 4,
+      "session_id": "proxy-summary-ec5dc49d-1612-47f9-8582-db39ca84eddf",
+      "stored_records": 2,
+      "state": "parsed",
+      "exact_records_match": true
+    },
+    {
+      "adapter": "ccache",
+      "step": 5,
+      "session_id": "proxy-summary-b2cbc951-a857-4f04-8700-e3002b113ee1",
+      "stored_records": 0,
+      "state": "parsed",
+      "exact_records_match": true
+    },
+    {
+      "adapter": "sccache",
+      "step": 0,
+      "session_id": "proxy-summary-59729422-348a-4dab-9356-20312b1b2261",
+      "stored_records": 31,
+      "state": "parsed",
+      "exact_records_match": true
+    },
+    {
+      "adapter": "sccache",
+      "step": 1,
+      "session_id": "proxy-summary-939c447d-edc3-436a-95b7-24c0b920a40c",
+      "stored_records": 0,
+      "state": "parsed",
+      "exact_records_match": true
+    },
+    {
+      "adapter": "sccache",
+      "step": 2,
+      "session_id": "proxy-summary-7cbf46cb-201d-4edc-8040-1d8215b63e5f",
+      "stored_records": 35,
+      "state": "parsed",
+      "exact_records_match": true
+    },
+    {
+      "adapter": "sccache",
+      "step": 3,
+      "session_id": "proxy-summary-da284b16-d5d4-472b-a41f-73305d35328a",
+      "stored_records": 15,
+      "state": "parsed",
+      "exact_records_match": true
+    },
+    {
+      "adapter": "sccache",
+      "step": 4,
+      "session_id": "proxy-summary-f8a9a0c5-dbcf-4761-aa40-05e41441ca6c",
+      "stored_records": 2,
+      "state": "parsed",
+      "exact_records_match": true
+    },
+    {
+      "adapter": "sccache",
+      "step": 5,
+      "session_id": "proxy-summary-52036e09-909c-4b8b-b1b7-064704f05da2",
+      "stored_records": 0,
+      "state": "parsed",
+      "exact_records_match": true
+    }
+  ]
+}

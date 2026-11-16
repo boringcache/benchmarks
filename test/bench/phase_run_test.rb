@@ -3,6 +3,20 @@ require_relative "test_helper"
 class PhaseRunTest < Minitest::Test
   include BenchFixture
 
+  def test_native_product_export_is_retained_without_a_tool_specific_parser
+    script = File.read(File.join(@root, "bin/boringcache"))
+    native = { "unit_evidence" => { "schema_version" => "unit_evidence.v1", "source" => "native_fixture", "collection_state" => "reported", "counts" => { "observed" => 25 } },
+      "unit_records" => { "schema_version" => "unit_records.v1", "records" => Array.new(25) { { "id" => it.to_s, "state" => "executed" } } },
+      "build_actions" => { "unit_evidence" => { "schema_version" => "unit_evidence.v1", "collection_state" => "reported", "counts" => { "observed" => 2 } } } }
+    script << "printf '%s\\n' #{Shellwords.escape(JSON.generate(native))} > \"$native_export_path\"\n"
+    write "bin/boringcache", script
+    with_fixture_env { assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-demo", "--phase", "cold", "--run-id", "native") }
+    result = record("boringcache-demo-local-native", "boringcache-demo-local-cold")
+    assert_equal 25, result.dig("provider_reported", "native_evidence", "unit_evidence", "counts", "observed")
+    assert_includes result.fetch("evidence"), "boringcache-demo-local-cold.native-tool.json"
+    assert_equal 2, result.dig("provider_reported", "native_evidence", "build_actions", "counts", "observed")
+  end
+
   def test_boringcache_lane_runs_cold_then_warm_read_only
     with_fixture_env do
       assert_equal 0, cli("run", "demo/app", "--lane", "boringcache-demo", "--run-id", "r1")

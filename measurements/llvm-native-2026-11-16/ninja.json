@@ -1,0 +1,217 @@
+{
+  "schema_version": "ninja_timing.v1",
+  "source": "ninja_log",
+  "collection_state": "complete",
+  "log_version": 5,
+  "scope": "successful_edges_in_one_ninja_invocation",
+  "exit_status": 0,
+  "commands": 4737,
+  "outputs": 6169,
+  "summed_edge_ms": 428641,
+  "top_steps": [
+    {
+      "start_ms": 2153,
+      "finish_ms": 10019,
+      "duration_ms": 7866,
+      "command_hash": "6b9050bbd705b911",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenInstrInfo.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenInstrInfo.inc"
+      ]
+    },
+    {
+      "start_ms": 2166,
+      "finish_ms": 9262,
+      "duration_ms": 7096,
+      "command_hash": "bb7ce9f10985de40",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenSubtargetInfo.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenSubtargetInfo.inc"
+      ]
+    },
+    {
+      "start_ms": 1958,
+      "finish_ms": 8741,
+      "duration_ms": 6783,
+      "command_hash": "12a6e8c0d562b5b8",
+      "outputs": [
+        "lib/MC/MCParser/CMakeFiles/LLVMMCParser.dir/AsmParser.cpp.o"
+      ]
+    },
+    {
+      "start_ms": 2151,
+      "finish_ms": 5815,
+      "duration_ms": 3664,
+      "command_hash": "4d993975d4f42b06",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenDAGISel.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenDAGISel.inc"
+      ]
+    },
+    {
+      "start_ms": 2153,
+      "finish_ms": 4737,
+      "duration_ms": 2584,
+      "command_hash": "7fe678270affb656",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenGlobalISel.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenGlobalISel.inc"
+      ]
+    },
+    {
+      "start_ms": 2152,
+      "finish_ms": 4055,
+      "duration_ms": 1903,
+      "command_hash": "fd23763b871d06e5",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenFastISel.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenFastISel.inc"
+      ]
+    },
+    {
+      "start_ms": 11746,
+      "finish_ms": 12975,
+      "duration_ms": 1229,
+      "command_hash": "c04aaad66777a91f",
+      "outputs": [
+        "lib/libclangSema.a"
+      ]
+    },
+    {
+      "start_ms": 2149,
+      "finish_ms": 3203,
+      "duration_ms": 1054,
+      "command_hash": "1d33ba3b59c81f57",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenAsmMatcher.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenAsmMatcher.inc"
+      ]
+    },
+    {
+      "start_ms": 2149,
+      "finish_ms": 3108,
+      "duration_ms": 959,
+      "command_hash": "948b3fa27b8c2028",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenAsmWriter.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenAsmWriter.inc"
+      ]
+    },
+    {
+      "start_ms": 2151,
+      "finish_ms": 3028,
+      "duration_ms": 877,
+      "command_hash": "ad2b09b5a379fa27",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenDisassemblerTables.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenDisassemblerTables.inc"
+      ]
+    },
+    {
+      "start_ms": 2150,
+      "finish_ms": 3025,
+      "duration_ms": 875,
+      "command_hash": "c01d066bcf7b8b9c",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenAsmWriter1.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenAsmWriter1.inc"
+      ]
+    },
+    {
+      "start_ms": 2162,
+      "finish_ms": 3022,
+      "duration_ms": 860,
+      "command_hash": "c7e27df70a6bd1d5",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenRegisterInfo.inc",
+        "lib/Target/AArch64/AArch64GenRegisterInfoEnums.inc",
+        "lib/Target/AArch64/AArch64GenRegisterInfoHeader.inc",
+        "lib/Target/AArch64/AArch64GenRegisterInfoMCDesc.inc",
+        "lib/Target/AArch64/AArch64GenRegisterInfoTargetDesc.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenRegisterInfo.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenRegisterInfoEnums.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenRegisterInfoHeader.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenRegisterInfoMCDesc.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenRegisterInfoTargetDesc.inc"
+      ]
+    },
+    {
+      "start_ms": 2154,
+      "finish_ms": 2958,
+      "duration_ms": 804,
+      "command_hash": "8e2c3a6ed178d588",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenMCCodeEmitter.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenMCCodeEmitter.inc"
+      ]
+    },
+    {
+      "start_ms": 2177,
+      "finish_ms": 2972,
+      "duration_ms": 795,
+      "command_hash": "dfd63f63b718ca60",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenSystemOperands.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenSystemOperands.inc"
+      ]
+    },
+    {
+      "start_ms": 13484,
+      "finish_ms": 14274,
+      "duration_ms": 790,
+      "command_hash": "9b0808a99540e6b7",
+      "outputs": [
+        "lib/libclangCodeGen.a"
+      ]
+    },
+    {
+      "start_ms": 2155,
+      "finish_ms": 2938,
+      "duration_ms": 783,
+      "command_hash": "361f33ad67e9534a",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenO0PreLegalizeGICombiner.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenO0PreLegalizeGICombiner.inc"
+      ]
+    },
+    {
+      "start_ms": 2161,
+      "finish_ms": 2940,
+      "duration_ms": 779,
+      "command_hash": "bd77600604a8b9a4",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenPreLegalizeGICombiner.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenPreLegalizeGICombiner.inc"
+      ]
+    },
+    {
+      "start_ms": 17631,
+      "finish_ms": 18410,
+      "duration_ms": 779,
+      "command_hash": "58f25e8c83ed79a7",
+      "outputs": [
+        "tools/clang/lib/CIR/CodeGen/CMakeFiles/obj.clangCIR.dir/CIRGenStmtOpenMP.cpp.o"
+      ]
+    },
+    {
+      "start_ms": 2161,
+      "finish_ms": 2932,
+      "duration_ms": 771,
+      "command_hash": "7862a45bf9af9e2a",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenPostLegalizeGILowering.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenPostLegalizeGILowering.inc"
+      ]
+    },
+    {
+      "start_ms": 2156,
+      "finish_ms": 2926,
+      "duration_ms": 770,
+      "command_hash": "a64c468216415e82",
+      "outputs": [
+        "lib/Target/AArch64/AArch64GenPostLegalizeGICombiner.inc",
+        "/tmp/source/workloads/llvm-build/lib/Target/AArch64/AArch64GenPostLegalizeGICombiner.inc"
+      ]
+    }
+  ]
+}

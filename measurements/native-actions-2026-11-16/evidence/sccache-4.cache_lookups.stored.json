@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "output_kind": "workspace_session_units",
+  "diagnostic_surface": "workspace_reporting",
+  "workspace_source": {
+    "kind": "explicit"
+  },
+  "evidence": {
+    "cli_session_id": "01a1e2f2-a17b-7125-9d89-a31d5d71c534",
+    "declared_records": 2,
+    "expires_at": "2027-02-14T06:02:00Z",
+    "generation": 1,
+    "kind": "cache_lookups",
+    "records_truncated": false,
+    "run_uid": "local:boringcache/benchmarks:01a1e2f2-a17b-7125-9d89-a31d5d71c534",
+    "state": "parsed",
+    "stored_records": 2,
+    "tool": "sccache",
+    "unit_kind": "compilation"
+  },
+  "order": "position",
+  "session_id": "proxy-summary-5ee54abd-bd90-41fc-92f7-7062b3f97f71",
+  "units": [
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "bytes": 0,
+          "operation": "get",
+          "tool": "sccache"
+        }
+      },
+      "duration_ms": 0,
+      "id": "lookup:0",
+      "key": "076de30ef9b8143c40f686b424dff0584522d92069be9986b834771515373ab0",
+      "label": "f/b/7/fb740b7e0448fe34ee7dd40035",
+      "position": 0,
+      "record_kind": "cache_lookup",
+      "started_at_ms": 1794808915553,
+      "state": "missed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "bytes": 15151,
+          "operation": "put",
+          "tool": "sccache"
+        }
+      },
+      "duration_ms": 1,
+      "id": "lookup:1",
+      "key": "076de30ef9b8143c40f686b424dff0584522d92069be9986b834771515373ab0",
+      "label": "f/b/7/fb740b7e0448fe34ee7dd40035",
+      "position": 1,
+      "record_kind": "cache_lookup",
+      "started_at_ms": 1794808916149,
+      "state": "stored"
+    }
+  ],
+  "workspace": {
+    "full_path": "boringcache/benchmarks"
+  }
+}

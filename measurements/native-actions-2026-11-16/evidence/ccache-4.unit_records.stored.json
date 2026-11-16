@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "output_kind": "workspace_session_units",
+  "diagnostic_surface": "workspace_reporting",
+  "workspace_source": {
+    "kind": "explicit"
+  },
+  "evidence": {
+    "cli_session_id": "01a1e2f0-7f3a-753a-b35a-453f35c69cfd",
+    "declared_records": 1,
+    "expires_at": "2027-02-14T05:59:42Z",
+    "generation": 1,
+    "kind": "unit_records",
+    "records_truncated": false,
+    "run_uid": "local:boringcache/benchmarks:01a1e2f0-7f3a-753a-b35a-453f35c69cfd",
+    "state": "parsed",
+    "stored_records": 1,
+    "tool": "ccache",
+    "unit_kind": "compilation"
+  },
+  "order": "position",
+  "session_id": "proxy-summary-985962c3-7a59-4772-a35a-f5f49451183b",
+  "units": [
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "remote_storage": "miss",
+          "remote_storage_write": true
+        }
+      },
+      "id": "ccache:0",
+      "key": "435341d34578cae837e56a6b6a2aedc0a2927626ac7b4c7750efe530c68d89d2",
+      "label": ".../ccache/src/version.cc",
+      "position": 0,
+      "record_kind": "work_unit",
+      "state": "executed"
+    }
+  ],
+  "workspace": {
+    "full_path": "boringcache/benchmarks"
+  }
+}

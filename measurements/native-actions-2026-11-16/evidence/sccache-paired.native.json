@@ -1,0 +1,647 @@
+{
+  "average_cache_read_hit_seconds": 0.009,
+  "average_cache_write_seconds": 0.0,
+  "average_compiler_seconds": 0.0,
+  "build_actions": {
+    "unit_evidence": {
+      "build_succeeded": true,
+      "capabilities": {
+        "cache_source": false,
+        "critical_path": false,
+        "dependencies": false,
+        "execution_reasons": false,
+        "scheduling": false,
+        "unit_identity": true,
+        "unit_outcome": true,
+        "unit_timing": true
+      },
+      "collection_state": "reported",
+      "counts": {
+        "executed": 35,
+        "observed": 35,
+        "scope": "observed_successful_ninja_edges"
+      },
+      "invocation": {
+        "failed_edges": "not_listed",
+        "log_unchanged": false,
+        "log_version": 7,
+        "summed_edge_ms": 35836,
+        "up_to_date_units": "not_listed"
+      },
+      "ranking_scope": "all_observed_units",
+      "schema_version": "unit_evidence.v1",
+      "source": "ninja_log",
+      "tool": "ninja",
+      "truncated": true,
+      "unit_kind": "build_action",
+      "units": [
+        {
+          "attributes": {
+            "command_hash": "daf1fe1c85dc2760",
+            "output_count": 1
+          },
+          "duration_ms": 4726,
+          "id": "ninja-34",
+          "label": "ninja",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "373acd0b5b7ee0d1",
+            "output_count": 1
+          },
+          "duration_ms": 1820,
+          "id": "ninja-11",
+          "label": "CMakeFiles/libninja.dir/src/debug_flags.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "64e474eb845f13d7",
+            "output_count": 1
+          },
+          "duration_ms": 1699,
+          "id": "ninja-8",
+          "label": "CMakeFiles/libninja.dir/src/deps_log.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "5f05437241760694",
+            "output_count": 1
+          },
+          "duration_ms": 1622,
+          "id": "ninja-7",
+          "label": "CMakeFiles/libninja.dir/src/dyndep.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "3d6c43c083761214",
+            "output_count": 1
+          },
+          "duration_ms": 1354,
+          "id": "ninja-6",
+          "label": "CMakeFiles/libninja-re2c.dir/src/depfile_parser.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "4f994388c5c96b1c",
+            "output_count": 1
+          },
+          "duration_ms": 1337,
+          "id": "ninja-4",
+          "label": "CMakeFiles/libninja.dir/src/build_log.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "853c61d73cc8b649",
+            "output_count": 1
+          },
+          "duration_ms": 1336,
+          "id": "ninja-3",
+          "label": "CMakeFiles/libninja-re2c.dir/src/lexer.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "63361ec4725e7d00",
+            "output_count": 1
+          },
+          "duration_ms": 1333,
+          "id": "ninja-5",
+          "label": "CMakeFiles/libninja.dir/src/clean.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "1eef953aa89e656d",
+            "output_count": 1
+          },
+          "duration_ms": 1216,
+          "id": "ninja-1",
+          "label": "CMakeFiles/libninja.dir/src/build.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "5a33fc6adc5eb3a8",
+            "output_count": 1
+          },
+          "duration_ms": 1206,
+          "id": "ninja-2",
+          "label": "CMakeFiles/libninja.dir/src/dyndep_parser.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "24246bfc0a1f55d5",
+            "output_count": 1
+          },
+          "duration_ms": 1075,
+          "id": "ninja-0",
+          "label": "CMakeFiles/libninja.dir/src/clparser.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "6f1c3ba6607924e8",
+            "output_count": 1
+          },
+          "duration_ms": 1055,
+          "id": "ninja-24",
+          "label": "CMakeFiles/libninja.dir/src/missing_deps.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "c443f4c9c63adbd3",
+            "output_count": 1
+          },
+          "duration_ms": 1037,
+          "id": "ninja-17",
+          "label": "CMakeFiles/libninja.dir/src/graphviz.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "8b58bba4b7fe35cb",
+            "output_count": 1
+          },
+          "duration_ms": 970,
+          "id": "ninja-16",
+          "label": "CMakeFiles/libninja.dir/src/jobserver.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "58e48cdf138f4764",
+            "output_count": 1
+          },
+          "duration_ms": 925,
+          "id": "ninja-23",
+          "label": "CMakeFiles/libninja.dir/src/parser.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "81fa4cfff1eb4768",
+            "output_count": 1
+          },
+          "duration_ms": 888,
+          "id": "ninja-13",
+          "label": "CMakeFiles/libninja.dir/src/disk_interface.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "b0f0b79165720a9b",
+            "output_count": 1
+          },
+          "duration_ms": 881,
+          "id": "ninja-14",
+          "label": "CMakeFiles/libninja.dir/src/graph.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "67b58d102fbe9534",
+            "output_count": 1
+          },
+          "duration_ms": 879,
+          "id": "ninja-20",
+          "label": "CMakeFiles/libninja.dir/src/metrics.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "67978ab2a618dea1",
+            "output_count": 1
+          },
+          "duration_ms": 876,
+          "id": "ninja-22",
+          "label": "CMakeFiles/libninja.dir/src/real_command_runner.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "758e50510fd61ddc",
+            "output_count": 1
+          },
+          "duration_ms": 868,
+          "id": "ninja-19",
+          "label": "CMakeFiles/libninja.dir/src/manifest_parser.cc.o",
+          "state": "executed"
+        }
+      ]
+    },
+    "unit_records": {
+      "records": [
+        {
+          "attributes": {
+            "command_hash": "24246bfc0a1f55d5",
+            "output_count": 1
+          },
+          "duration_ms": 1075,
+          "id": "ninja-0",
+          "label": "CMakeFiles/libninja.dir/src/clparser.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "1eef953aa89e656d",
+            "output_count": 1
+          },
+          "duration_ms": 1216,
+          "id": "ninja-1",
+          "label": "CMakeFiles/libninja.dir/src/build.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "5a33fc6adc5eb3a8",
+            "output_count": 1
+          },
+          "duration_ms": 1206,
+          "id": "ninja-2",
+          "label": "CMakeFiles/libninja.dir/src/dyndep_parser.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "853c61d73cc8b649",
+            "output_count": 1
+          },
+          "duration_ms": 1336,
+          "id": "ninja-3",
+          "label": "CMakeFiles/libninja-re2c.dir/src/lexer.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "4f994388c5c96b1c",
+            "output_count": 1
+          },
+          "duration_ms": 1337,
+          "id": "ninja-4",
+          "label": "CMakeFiles/libninja.dir/src/build_log.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "63361ec4725e7d00",
+            "output_count": 1
+          },
+          "duration_ms": 1333,
+          "id": "ninja-5",
+          "label": "CMakeFiles/libninja.dir/src/clean.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "3d6c43c083761214",
+            "output_count": 1
+          },
+          "duration_ms": 1354,
+          "id": "ninja-6",
+          "label": "CMakeFiles/libninja-re2c.dir/src/depfile_parser.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "5f05437241760694",
+            "output_count": 1
+          },
+          "duration_ms": 1622,
+          "id": "ninja-7",
+          "label": "CMakeFiles/libninja.dir/src/dyndep.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "64e474eb845f13d7",
+            "output_count": 1
+          },
+          "duration_ms": 1699,
+          "id": "ninja-8",
+          "label": "CMakeFiles/libninja.dir/src/deps_log.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "9aa750a9d7ab2988",
+            "output_count": 1
+          },
+          "duration_ms": 542,
+          "id": "ninja-9",
+          "label": "CMakeFiles/libninja.dir/src/elide_middle.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "6aab73d08afc562a",
+            "output_count": 1
+          },
+          "duration_ms": 622,
+          "id": "ninja-10",
+          "label": "CMakeFiles/libninja.dir/src/edit_distance.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "373acd0b5b7ee0d1",
+            "output_count": 1
+          },
+          "duration_ms": 1820,
+          "id": "ninja-11",
+          "label": "CMakeFiles/libninja.dir/src/debug_flags.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "a0084023097a02da",
+            "output_count": 1
+          },
+          "duration_ms": 639,
+          "id": "ninja-12",
+          "label": "CMakeFiles/libninja.dir/src/eval_env.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "81fa4cfff1eb4768",
+            "output_count": 1
+          },
+          "duration_ms": 888,
+          "id": "ninja-13",
+          "label": "CMakeFiles/libninja.dir/src/disk_interface.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "b0f0b79165720a9b",
+            "output_count": 1
+          },
+          "duration_ms": 881,
+          "id": "ninja-14",
+          "label": "CMakeFiles/libninja.dir/src/graph.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "388b585f16e5d1a3",
+            "output_count": 1
+          },
+          "duration_ms": 601,
+          "id": "ninja-15",
+          "label": "CMakeFiles/libninja.dir/src/json.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "8b58bba4b7fe35cb",
+            "output_count": 1
+          },
+          "duration_ms": 970,
+          "id": "ninja-16",
+          "label": "CMakeFiles/libninja.dir/src/jobserver.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "c443f4c9c63adbd3",
+            "output_count": 1
+          },
+          "duration_ms": 1037,
+          "id": "ninja-17",
+          "label": "CMakeFiles/libninja.dir/src/graphviz.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "dd21acf8806a2555",
+            "output_count": 1
+          },
+          "duration_ms": 746,
+          "id": "ninja-18",
+          "label": "CMakeFiles/libninja.dir/src/line_printer.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "758e50510fd61ddc",
+            "output_count": 1
+          },
+          "duration_ms": 868,
+          "id": "ninja-19",
+          "label": "CMakeFiles/libninja.dir/src/manifest_parser.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "67b58d102fbe9534",
+            "output_count": 1
+          },
+          "duration_ms": 879,
+          "id": "ninja-20",
+          "label": "CMakeFiles/libninja.dir/src/metrics.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "7b28b3787b71a6b4",
+            "output_count": 1
+          },
+          "duration_ms": 528,
+          "id": "ninja-21",
+          "label": "CMakeFiles/libninja.dir/src/string_piece_util.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "67978ab2a618dea1",
+            "output_count": 1
+          },
+          "duration_ms": 876,
+          "id": "ninja-22",
+          "label": "CMakeFiles/libninja.dir/src/real_command_runner.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "58e48cdf138f4764",
+            "output_count": 1
+          },
+          "duration_ms": 925,
+          "id": "ninja-23",
+          "label": "CMakeFiles/libninja.dir/src/parser.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "6f1c3ba6607924e8",
+            "output_count": 1
+          },
+          "duration_ms": 1055,
+          "id": "ninja-24",
+          "label": "CMakeFiles/libninja.dir/src/missing_deps.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "d51dd0627fa4a53b",
+            "output_count": 1
+          },
+          "duration_ms": 780,
+          "id": "ninja-25",
+          "label": "CMakeFiles/libninja.dir/src/state.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "507b07e64c59751",
+            "output_count": 1
+          },
+          "duration_ms": 766,
+          "id": "ninja-26",
+          "label": "CMakeFiles/libninja.dir/src/status_printer.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "34bc1483abd6ba05",
+            "output_count": 1
+          },
+          "duration_ms": 674,
+          "id": "ninja-27",
+          "label": "CMakeFiles/libninja.dir/src/util.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "cca448bc47516b50",
+            "output_count": 1
+          },
+          "duration_ms": 647,
+          "id": "ninja-28",
+          "label": "CMakeFiles/libninja.dir/src/version.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "ad5184b4e37c305c",
+            "output_count": 1
+          },
+          "duration_ms": 481,
+          "id": "ninja-29",
+          "label": "CMakeFiles/libninja.dir/src/jobserver-posix.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "71107ff1acfc4ea4",
+            "output_count": 1
+          },
+          "duration_ms": 417,
+          "id": "ninja-30",
+          "label": "CMakeFiles/libninja.dir/src/subprocess-posix.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "4fc8ee03587f5d54",
+            "output_count": 2
+          },
+          "duration_ms": 156,
+          "id": "ninja-31",
+          "label": "build/browse_py.h",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "ed07ccc1c5412b88",
+            "output_count": 1
+          },
+          "duration_ms": 551,
+          "id": "ninja-32",
+          "label": "CMakeFiles/ninja.dir/src/browse.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "dd48cf1a00cb82ae",
+            "output_count": 1
+          },
+          "duration_ms": 583,
+          "id": "ninja-33",
+          "label": "CMakeFiles/ninja.dir/src/ninja.cc.o",
+          "state": "executed"
+        },
+        {
+          "attributes": {
+            "command_hash": "daf1fe1c85dc2760",
+            "output_count": 1
+          },
+          "duration_ms": 4726,
+          "id": "ninja-34",
+          "label": "ninja",
+          "state": "executed"
+        }
+      ],
+      "schema_version": "unit_records.v1",
+      "source": "ninja_log",
+      "tool": "ninja",
+      "truncated": false,
+      "unit_kind": "build_action"
+    }
+  },
+  "cache_errors": 0,
+  "cache_hits": 33,
+  "cache_misses": 0,
+  "cache_read_errors": 0,
+  "cache_timeouts": 0,
+  "cache_write_errors": 0,
+  "compile_requests": 33,
+  "compile_requests_executed": 33,
+  "hit_counts": {
+    "c_cpp": 33
+  },
+  "hit_rate": 100.0,
+  "non_cacheable_calls": 0,
+  "proxy_cache_read_errors": 0,
+  "proxy_cache_write_errors": 0,
+  "schema_version": "native_tool_evidence.v1",
+  "stats_source": "sccache --show-stats",
+  "tool": "sccache",
+  "unit_evidence": {
+    "capabilities": {
+      "cache_source": false,
+      "critical_path": false,
+      "dependencies": false,
+      "execution_reasons": false,
+      "scheduling": false,
+      "unit_identity": false,
+      "unit_outcome": false,
+      "unit_timing": false
+    },
+    "collection_state": "not_reported",
+    "counts": {
+      "cached": 33,
+      "executed": 33,
+      "missed": 0,
+      "non_cacheable": 0,
+      "observed": 33,
+      "scope": "compile_requests"
+    },
+    "ranking_scope": "all_observed_units",
+    "reason": "aggregate_only",
+    "schema_version": "unit_evidence.v1",
+    "source": "sccache_stats",
+    "tool": "sccache",
+    "truncated": true,
+    "unit_kind": "compilation",
+    "units": []
+  }
+}

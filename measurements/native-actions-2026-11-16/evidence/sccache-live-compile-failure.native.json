@@ -1,0 +1,75 @@
+{
+  "average_cache_read_hit_seconds": 0.0,
+  "average_cache_write_seconds": 0.0,
+  "average_compiler_seconds": 0.0,
+  "build_actions": {
+    "unit_evidence": {
+      "build_succeeded": false,
+      "capabilities": {
+        "cache_source": false,
+        "critical_path": false,
+        "dependencies": false,
+        "execution_reasons": false,
+        "scheduling": false,
+        "unit_identity": false,
+        "unit_outcome": false,
+        "unit_timing": false
+      },
+      "collection_state": "not_reported",
+      "counts": {
+        "observed": 0
+      },
+      "ranking_scope": "all_observed_units",
+      "reason": "ninja_log_rewritten",
+      "schema_version": "unit_evidence.v1",
+      "source": "ninja_log",
+      "tool": "ninja",
+      "truncated": false,
+      "unit_kind": "build_action",
+      "units": []
+    }
+  },
+  "cache_errors": 1,
+  "cache_hits": 0,
+  "cache_misses": 0,
+  "cache_read_errors": 0,
+  "cache_timeouts": 0,
+  "cache_write_errors": 0,
+  "compile_requests": 1,
+  "compile_requests_executed": 1,
+  "non_cacheable_calls": 0,
+  "proxy_cache_read_errors": 0,
+  "proxy_cache_write_errors": 0,
+  "schema_version": "native_tool_evidence.v1",
+  "stats_source": "sccache --show-stats",
+  "tool": "sccache",
+  "unit_evidence": {
+    "capabilities": {
+      "cache_source": false,
+      "critical_path": false,
+      "dependencies": false,
+      "execution_reasons": false,
+      "scheduling": false,
+      "unit_identity": false,
+      "unit_outcome": false,
+      "unit_timing": false
+    },
+    "collection_state": "not_reported",
+    "counts": {
+      "cached": 0,
+      "executed": 1,
+      "missed": 0,
+      "non_cacheable": 0,
+      "observed": 1,
+      "scope": "compile_requests"
+    },
+    "ranking_scope": "all_observed_units",
+    "reason": "aggregate_only",
+    "schema_version": "unit_evidence.v1",
+    "source": "sccache_stats",
+    "tool": "sccache",
+    "truncated": true,
+    "unit_kind": "compilation",
+    "units": []
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "output_kind": "workspace_session_units",
+  "diagnostic_surface": "workspace_reporting",
+  "workspace_source": {
+    "kind": "explicit"
+  },
+  "evidence": {
+    "cli_session_id": "01a1e2ba-162f-713f-9f13-5535d3c808f9",
+    "declared_records": 2,
+    "expires_at": "2027-02-14T05:00:15Z",
+    "generation": 1,
+    "kind": "unit_records",
+    "records_truncated": false,
+    "run_uid": "local:boringcache/benchmarks:01a1e2ba-162f-713f-9f13-5535d3c808f9",
+    "state": "parsed",
+    "stored_records": 2,
+    "tool": "sccache",
+    "unit_kind": "build_action"
+  },
+  "order": "position",
+  "session_id": "proxy-summary-f8a9a0c5-dbcf-4761-aa40-05e41441ca6c",
+  "units": [
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "3198645625795303",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 1626,
+      "id": "ninja-0",
+      "label": "CMakeFiles/libninja.dir/src/version.cc.o",
+      "position": 0,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "daf1fe1c85dc2760",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 2797,
+      "id": "ninja-1",
+      "label": "ninja",
+      "position": 1,
+      "record_kind": "work_unit",
+      "state": "executed"
+    }
+  ],
+  "workspace": {
+    "full_path": "boringcache/benchmarks"
+  }
+}

@@ -7,6 +7,18 @@ module BenchFixture
     #!/usr/bin/env bash
     if [ "$1" = "--version" ]; then echo "boringcache 9.9.9"; exit 0; fi
     tool="$1"; shift
+    native_export_path=""
+    cache_arguments=()
+    while [ "$#" -gt 0 ]; do
+      if [ "$1" = "--native-tool-evidence-json" ]; then
+        native_export_path="$2"
+        shift 2
+      else
+        cache_arguments+=("$1")
+        shift
+      fi
+    done
+    set -- "${cache_arguments[@]}"
     echo "$tool $*" >> "$STUB_LOG"
     echo '{"operation":"cache_blob_read"}' > "$BORINGCACHE_OBSERVABILITY_JSONL_PATH"
     echo '{"operation":"cache_session_summary","duration_ms":7}' >> "$BORINGCACHE_OBSERVABILITY_JSONL_PATH"

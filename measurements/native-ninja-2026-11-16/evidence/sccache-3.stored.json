@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "output_kind": "workspace_session_units",
+  "diagnostic_surface": "workspace_reporting",
+  "workspace_source": {
+    "kind": "explicit"
+  },
+  "evidence": {
+    "cli_session_id": "01a1e2b9-ba3b-701c-8fe5-bc25abb3fcce",
+    "declared_records": 15,
+    "expires_at": "2027-02-14T05:00:04Z",
+    "generation": 1,
+    "kind": "unit_records",
+    "records_truncated": false,
+    "run_uid": "local:boringcache/benchmarks:01a1e2b9-ba3b-701c-8fe5-bc25abb3fcce",
+    "state": "parsed",
+    "stored_records": 15,
+    "tool": "sccache",
+    "unit_kind": "build_action"
+  },
+  "order": "position",
+  "session_id": "proxy-summary-da284b16-d5d4-472b-a41f-73305d35328a",
+  "units": [
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "5c79a77b091b3cbb",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 2041,
+      "id": "ninja-0",
+      "label": "CMakeFiles/libninja.dir/src/edit_distance.cc.o",
+      "position": 0,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "7aaac5f2c68004b6",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 2478,
+      "id": "ninja-1",
+      "label": "CMakeFiles/libninja.dir/src/disk_interface.cc.o",
+      "position": 1,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "967bb212596c8f94",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 3567,
+      "id": "ninja-2",
+      "label": "CMakeFiles/libninja.dir/src/deps_log.cc.o",
+      "position": 2,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "4f9a2499030465e1",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 3692,
+      "id": "ninja-3",
+      "label": "CMakeFiles/libninja.dir/src/build_log.cc.o",
+      "position": 3,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "dd8c673608c3f43e",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 3876,
+      "id": "ninja-4",
+      "label": "CMakeFiles/libninja.dir/src/dyndep.cc.o",
+      "position": 4,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "633e0335be014cb0",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 4486,
+      "id": "ninja-5",
+      "label": "CMakeFiles/libninja.dir/src/manifest_parser.cc.o",
+      "position": 5,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "a649a0837ec897bb",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 4916,
+      "id": "ninja-6",
+      "label": "CMakeFiles/libninja.dir/src/missing_deps.cc.o",
+      "position": 6,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "532fcd0119af71a2",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 5838,
+      "id": "ninja-7",
+      "label": "CMakeFiles/libninja.dir/src/clean.cc.o",
+      "position": 7,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "53403d3730ca919c",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 5845,
+      "id": "ninja-8",
+      "label": "CMakeFiles/libninja.dir/src/graph.cc.o",
+      "position": 8,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "b6b4aef1c7da8368",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 2761,
+      "id": "ninja-9",
+      "label": "CMakeFiles/libninja.dir/src/jobserver-posix.cc.o",
+      "position": 9,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "c355121bd6cfba6c",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 3909,
+      "id": "ninja-10",
+      "label": "CMakeFiles/libninja.dir/src/util.cc.o",
+      "position": 10,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "e673b9708755e7dd",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 4583,
+      "id": "ninja-11",
+      "label": "CMakeFiles/libninja.dir/src/parser.cc.o",
+      "position": 11,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "59b05fa5904522e5",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 8877,
+      "id": "ninja-12",
+      "label": "CMakeFiles/libninja.dir/src/build.cc.o",
+      "position": 12,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "bf8544596407e39c",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 4927,
+      "id": "ninja-13",
+      "label": "CMakeFiles/ninja.dir/src/ninja.cc.o",
+      "position": 13,
+      "record_kind": "work_unit",
+      "state": "executed"
+    },
+    {
+      "critical_path": false,
+      "details": {
+        "attributes": {
+          "command_hash": "daf1fe1c85dc2760",
+          "output_count": 1
+        }
+      },
+      "duration_ms": 2502,
+      "id": "ninja-14",
+      "label": "ninja",
+      "position": 14,
+      "record_kind": "work_unit",
+      "state": "executed"
+    }
+  ],
+  "workspace": {
+    "full_path": "boringcache/benchmarks"
+  }
+}

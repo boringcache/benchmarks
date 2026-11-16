@@ -23,6 +23,23 @@ Experimental lanes are excluded from the report. A matched step must use the sam
 
 New Actions records set `cache_restore_tracked` when the harness ran an Actions cache restore. A missing key after that scope's first step is a seed failure even if the scope has never restored successfully. Older records lack that distinction; the report identifies their restoring scopes from successful restored keys. Providers without a tracked restored key cannot be classified by this field.
 
+## Product unit evidence
+
+Wrapped BoringCache lanes request the CLI's existing native-evidence JSON export.
+The result retains its `unit_evidence.v1` summary under
+`provider_reported.native_evidence`; the complete product output, including any
+`unit_records.v1` carrier, is listed in `evidence`. The harness reads the common
+product format and contains no build-tool log parser.
+
+Writing this requested export is included in each BoringCache lane's timed
+command. Other providers keep their existing native evidence commands.
+
+Missing, unreadable and older exports stay explicit and never become zero work.
+Script and separate restore/save lanes do not request this local export. Other
+providers keep their native commands. These files contain only our benchmark
+jobs' evidence. Source-specific collection options require a CLI version that
+supports them before they are added to a rolling plan.
+
 ## Runner samples
 
 Weekly and manual samples appear as individual runs in `samples` and the Runner samples table, apart from rolling medians. Rows retain source commit, cache source, observed CPU and cores, timed operations, exit status and output check. Missing post-job timing is unmeasured, not zero. The selected GitHub source run is metadata for a mutable cache tag, not an immutable version identifier.
