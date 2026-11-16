@@ -1,0 +1,797 @@
+{
+  "adapter_command": "gradle",
+  "case": "opentelemetry-java",
+  "lane": "boringcache-gradle",
+  "provider": "boringcache",
+  "level": "base",
+  "capabilities": [
+    "build-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 87,
+  "scope": "boringcache-gradle-github-rolling",
+  "cache_scope": "boringcache-gradle-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "open-telemetry/opentelemetry-java",
+  "sha": "f91b537c45b0fc10000fc47abd3989782f3c5dd1",
+  "seconds": 132.039,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1794840626871,
+      "run_id": "43889355591",
+      "session_id": "proxy-summary-c111a2bd-cf4b-4717-8249-c51e21596156",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 121849,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "gradle",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 59.7,
+          "cpu_iowait_percent": 6.5,
+          "cpu_pressure_percent": 25.6,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 27.4,
+          "disk_read_mb": 137.8,
+          "disk_written_mb": 6158.7,
+          "interval_ms": 130803,
+          "io_pressure_percent": 12.2,
+          "memory_pressure_percent": 0.0,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+        "disk_available_gb": 83,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15984
+      },
+      "proxy": {
+        "adapter": "gradle",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 121849,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_max_in_flight": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 815,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 160,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 69,
+          "cache_blobs_download_urls": 133,
+          "cache_blobs_upload_urls": 84,
+          "cache_finalize_publish": 243,
+          "cache_flush_upload": 109,
+          "cache_kv_entries_current_version": 240,
+          "cache_kv_entries_download_urls": 558,
+          "cache_kv_entries_upsert": 81,
+          "cache_kv_entry_reads": 365,
+          "cache_rollups_ingest": 136,
+          "cache_session_evidence_confirm": 102,
+          "cache_session_evidence_prepare": 83
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 110,
+          "cache_blobs_download_urls": 196,
+          "cache_blobs_upload_urls": 208,
+          "cache_finalize_publish": 243,
+          "cache_flush_upload": 109,
+          "cache_kv_entries_current_version": 240,
+          "cache_kv_entries_download_urls": 558,
+          "cache_kv_entries_upsert": 81,
+          "cache_kv_entry_reads": 365,
+          "cache_rollups_ingest": 204,
+          "cache_session_evidence_confirm": 115,
+          "cache_session_evidence_prepare": 84
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 2,
+          "cache_blobs_download_urls": 2,
+          "cache_blobs_upload_urls": 4,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entries_upsert": 1,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 9,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 27,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 69,
+          "cache_blobs_download_urls": 133,
+          "cache_blobs_upload_urls": 84,
+          "cache_finalize_publish": 243,
+          "cache_flush_upload": 109,
+          "cache_kv_entries_current_version": 240,
+          "cache_kv_entries_download_urls": 558,
+          "cache_kv_entries_upsert": 81,
+          "cache_kv_entry_reads": 365,
+          "cache_rollups_ingest": 136,
+          "cache_session_evidence_confirm": 102,
+          "cache_session_evidence_prepare": 83
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 110,
+          "cache_blobs_download_urls": 196,
+          "cache_blobs_upload_urls": 208,
+          "cache_finalize_publish": 243,
+          "cache_flush_upload": 109,
+          "cache_kv_entries_current_version": 240,
+          "cache_kv_entries_download_urls": 558,
+          "cache_kv_entries_upsert": 81,
+          "cache_kv_entry_reads": 365,
+          "cache_rollups_ingest": 204,
+          "cache_session_evidence_confirm": 115,
+          "cache_session_evidence_prepare": 84
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 2,
+          "cache_blobs_download_urls": 2,
+          "cache_blobs_upload_urls": 4,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entries_upsert": 1,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 9,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 27,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 607
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 201846,
+        "startup_prefetch_blobs_per_sec": 426,
+        "startup_prefetch_bytes_per_sec": 86083337,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 332,
+        "startup_prefetch_concurrency_adjustment_count": 2,
+        "startup_prefetch_concurrency_adjustments": "shared_download_policy:64->80,shared_download_policy:80->160",
+        "startup_prefetch_concurrency_reason": "machine_governor",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_deferred_trial_blobs": 0,
+        "startup_prefetch_deferred_trial_bytes": 0,
+        "startup_prefetch_demand_max_wait_ms": 0,
+        "startup_prefetch_demand_wait_ms": 0,
+        "startup_prefetch_demand_waits": 0,
+        "startup_prefetch_duration_ms": 1911,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 160,
+        "startup_prefetch_generation": 50,
+        "startup_prefetch_hedge_wins": 0,
+        "startup_prefetch_hedges": 0,
+        "startup_prefetch_initial_concurrency": 64,
+        "startup_prefetch_inserted": 815,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 160,
+        "startup_prefetch_mode": "recent-reads",
+        "startup_prefetch_observation_count": 2,
+        "startup_prefetch_recent_read_blobs": 796,
+        "startup_prefetch_recent_read_bytes": 158884269,
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 815,
+        "startup_prefetch_target_bytes": 164505258,
+        "startup_prefetch_total_unique_blobs": 3224,
+        "startup_prefetch_trial_budget_bytes": 317768538,
+        "startup_prefetch_unplanned_blobs": 0,
+        "startup_prefetch_unplanned_bytes": 0,
+        "startup_prefetch_unused_blobs": 5,
+        "startup_prefetch_unused_bytes": 191372,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 815,
+        "startup_prefetch_used_blobs": 810,
+        "startup_prefetch_used_bytes": 164313886,
+        "startup_prefetch_write_trial_blobs": 19,
+        "startup_prefetch_write_trial_bytes": 5620989
+      },
+      "kv_upload": {
+        "kv_upload_allowed_concurrency_max": 1,
+        "kv_upload_already_present_blobs": 1,
+        "kv_upload_batches": 1,
+        "kv_upload_blobs_per_sec": 0,
+        "kv_upload_concurrency_reason": "adaptive_ramp",
+        "kv_upload_concurrency_source": "auto",
+        "kv_upload_duration_ms": 59,
+        "kv_upload_failed_blobs": 0,
+        "kv_upload_final_concurrency_max": 1,
+        "kv_upload_initial_concurrency_max": 1,
+        "kv_upload_missing_local_blobs": 0,
+        "kv_upload_requested_blobs": 0,
+        "kv_upload_uploaded_blobs": 0,
+        "kv_upload_uploaded_bytes": 0,
+        "kv_upload_writethrough_failure_bytes": 0,
+        "kv_upload_writethrough_failure_count": 0,
+        "kv_upload_writethrough_pressure_skip_bytes": 0,
+        "kv_upload_writethrough_pressure_skip_count": 0,
+        "kv_upload_writethrough_uploaded_blobs": 1,
+        "kv_upload_writethrough_uploaded_bytes": 493
+      },
+      "singleflight": {
+        "singleflight_kv_download_leaders": 815,
+        "singleflight_kv_index_refresh_leaders": 1,
+        "singleflight_kv_lookup_leaders": 1
+      },
+      "kv_lookup": {
+        "kv_lookup_gradle_after_refresh_miss": 1,
+        "kv_lookup_gradle_published_fast_hit": 810,
+        "kv_lookup_gradle_published_fast_miss": 1
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 164313886,
+          "blob_read_local_count": 810,
+          "blob_read_local_hit_rate_pct": 50,
+          "blob_read_remote_avg_ms": 165,
+          "blob_read_remote_bytes": 164505258,
+          "blob_read_remote_count": 815
+        },
+        "blob_read_cache_bytes": 164505751,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "count_scope": "completed_task_events",
+        "invocation_id": "237c222a-e6be-4e67-910d-eb8e1fd79b23",
+        "schema_version": "native_tool_evidence.v1",
+        "source": "gradle_task_events",
+        "task_spans": {
+          "byte_cap": 32768,
+          "cap": 128,
+          "coverage": "completed_task_events",
+          "emitted_spans": 85,
+          "schema_version": "gradle_task_spans.v1",
+          "source": "gradle_task_events",
+          "sum_duration_ms": 140121,
+          "top_scope": "all_observed_spans",
+          "total_spans": 1554,
+          "truncated": true,
+          "units_in": "unit_evidence"
+        },
+        "tasks_executed": 461,
+        "tasks_failed": 0,
+        "tasks_from_cache": 575,
+        "tasks_skipped": 186,
+        "tasks_total": 1554,
+        "tasks_up_to_date": 332,
+        "tool": "gradle",
+        "tool_version": "9.9.0"
+      },
+      "unit_evidence": {
+        "capabilities": {
+          "cache_source": false,
+          "critical_path": false,
+          "dependencies": false,
+          "execution_reasons": true,
+          "scheduling": false,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": true
+        },
+        "collection_state": "reported",
+        "counts": {
+          "cached": 575,
+          "executed": 461,
+          "failed": 0,
+          "observed": 1554,
+          "scope": "completed_task_events",
+          "skipped": 186,
+          "up_to_date": 332
+        },
+        "ranking_scope": "all_observed_units",
+        "schema_version": "unit_evidence.v1",
+        "source": "gradle_task_events",
+        "tool": "gradle",
+        "tool_version": "9.9.0",
+        "truncated": true,
+        "unit_kind": "task",
+        "units": [
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "completed_at_ms": 1794840605981,
+            "duration_ms": 10383,
+            "id": "sha256:1a20016f788ba246655e3a2d061dc9e6633a64db16129bb11152e18f3db32da8",
+            "key": "1a20016f788ba246655e3a2d061dc9e6633a64db16129bb11152e18f3db32da8",
+            "label": ":common:jApiCmp",
+            "reasons": [
+              "no_history"
+            ],
+            "started_at_ms": 1794840595598,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "completed_at_ms": 1794840605329,
+            "duration_ms": 9725,
+            "id": "sha256:9c745458c7abfda2083a8fbee27e61ed240515d8c56e0867fa8d1fae8a4fcc9d",
+            "key": "9c745458c7abfda2083a8fbee27e61ed240515d8c56e0867fa8d1fae8a4fcc9d",
+            "label": ":context:jApiCmp",
+            "reasons": [
+              "no_history"
+            ],
+            "started_at_ms": 1794840595604,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "completed_at_ms": 1794840606994,
+            "duration_ms": 9531,
+            "id": "sha256:cacd44dd5d8de0a25a5b8f74833aee1dbab363417924435b072dd02a65827000",
+            "key": "cacd44dd5d8de0a25a5b8f74833aee1dbab363417924435b072dd02a65827000",
+            "label": ":opentracing-shim:jApiCmp",
+            "reasons": [
+              "no_history"
+            ],
+            "started_at_ms": 1794840597463,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "completed_at_ms": 1794840611125,
+            "duration_ms": 9158,
+            "id": "sha256:c45a5cf4032a1149cc40b65f63d82e5e6e18b6dd284919a43ea19410ac893998",
+            "key": "c45a5cf4032a1149cc40b65f63d82e5e6e18b6dd284919a43ea19410ac893998",
+            "label": ":api:all:jApiCmp",
+            "reasons": [
+              "no_history"
+            ],
+            "started_at_ms": 1794840601967,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "cache_source": "unknown",
+            "completed_at_ms": 1794840547392,
+            "duration_ms": 4599,
+            "id": "sha256:bd34fa7b2d8368ff3a74265ce4008ebbdac4e63c0030fbcb1ce963e91f1ca178",
+            "key": "bd34fa7b2d8368ff3a74265ce4008ebbdac4e63c0030fbcb1ce963e91f1ca178",
+            "label": ":buildSrc:compilePluginsBlocks",
+            "started_at_ms": 1794840542793,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "cache_source": "unknown",
+            "completed_at_ms": 1794840551070,
+            "duration_ms": 3677,
+            "id": "sha256:4c076f06c785f33e5db763043f0ffffd7dcd1a6fca8007eebfb23aea326a2a43",
+            "key": "4c076f06c785f33e5db763043f0ffffd7dcd1a6fca8007eebfb23aea326a2a43",
+            "label": ":buildSrc:generatePrecompiledScriptPluginAccessors",
+            "started_at_ms": 1794840547393,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "completed_at_ms": 1794840608948,
+            "duration_ms": 2480,
+            "id": "sha256:8030a485d05ac1c9f8079ae40c887d97833134b3c38336f4715538901d96b1d2",
+            "key": "8030a485d05ac1c9f8079ae40c887d97833134b3c38336f4715538901d96b1d2",
+            "label": ":exporters:common:jApiCmp",
+            "reasons": [
+              "no_history"
+            ],
+            "started_at_ms": 1794840606468,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "completed_at_ms": 1794840609557,
+            "duration_ms": 2381,
+            "id": "sha256:0dac03a022368f5694675660056d2dfdc08c10d7f26e4d36132bc196ec62416b",
+            "key": "0dac03a022368f5694675660056d2dfdc08c10d7f26e4d36132bc196ec62416b",
+            "label": ":exporters:logging:jApiCmp",
+            "reasons": [
+              "no_history"
+            ],
+            "started_at_ms": 1794840607176,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "completed_at_ms": 1794840610121,
+            "duration_ms": 2279,
+            "id": "sha256:65ea8fb98099d562687d60a15e65aa4b9802b1d580069e263e2f6db9080fa0bf",
+            "key": "65ea8fb98099d562687d60a15e65aa4b9802b1d580069e263e2f6db9080fa0bf",
+            "label": ":exporters:logging-otlp:jApiCmp",
+            "reasons": [
+              "no_history"
+            ],
+            "started_at_ms": 1794840607842,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "cache_source": "unknown",
+            "completed_at_ms": 1794840590665,
+            "duration_ms": 2000,
+            "id": "sha256:05bda17413f587650012908e0829dd23aef2300ce0c04bb525495f90a3195214",
+            "key": "05bda17413f587650012908e0829dd23aef2300ce0c04bb525495f90a3195214",
+            "label": ":custom-checks:compileJava",
+            "started_at_ms": 1794840588665,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "cache_source": "unknown",
+            "completed_at_ms": 1794840597715,
+            "duration_ms": 1983,
+            "id": "sha256:a65e69ec2eb85192af997ee00a5aa80efa0cf0ee77eb94dc625d03ddabc92aa0",
+            "key": "a65e69ec2eb85192af997ee00a5aa80efa0cf0ee77eb94dc625d03ddabc92aa0",
+            "label": ":integration-tests:compileTestJava",
+            "started_at_ms": 1794840595732,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "completed_at_ms": 1794840615482,
+            "duration_ms": 1887,
+            "id": "sha256:34074e14e6ebb6d23e3d34366b4d6b2ae1f96bed01b36d7d44918dd1d0506402",
+            "key": "34074e14e6ebb6d23e3d34366b4d6b2ae1f96bed01b36d7d44918dd1d0506402",
+            "label": ":sdk:common:jApiCmp",
+            "reasons": [
+              "no_history"
+            ],
+            "started_at_ms": 1794840613595,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "completed_at_ms": 1794840592360,
+            "duration_ms": 1762,
+            "id": "sha256:6fc924510c15a1a448d3a7d6cdcf9cfbaba50cf39a21fd700e92b02ab51bb834",
+            "key": "6fc924510c15a1a448d3a7d6cdcf9cfbaba50cf39a21fd700e92b02ab51bb834",
+            "label": ":sdk-extensions:jaeger-remote-sampler:extractIncludeTestProto",
+            "reasons": [
+              "no_history"
+            ],
+            "started_at_ms": 1794840590598,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "completed_at_ms": 1794840617219,
+            "duration_ms": 1714,
+            "id": "sha256:136d17aa2a9abc1ab2cd39f28406d022ccc99c3bc4926ae9e38f71b18acffa49",
+            "key": "136d17aa2a9abc1ab2cd39f28406d022ccc99c3bc4926ae9e38f71b18acffa49",
+            "label": ":sdk:testing:jApiCmp",
+            "reasons": [
+              "no_history"
+            ],
+            "started_at_ms": 1794840615505,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "completed_at_ms": 1794840616506,
+            "duration_ms": 1700,
+            "id": "sha256:c1cc384ad3a77aef14bd1ed90d757a4c5bd06e437d7b95fda91656a481dde378",
+            "key": "c1cc384ad3a77aef14bd1ed90d757a4c5bd06e437d7b95fda91656a481dde378",
+            "label": ":sdk:metrics:jApiCmp",
+            "reasons": [
+              "no_history"
+            ],
+            "started_at_ms": 1794840614806,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "completed_at_ms": 1794840592310,
+            "duration_ms": 1663,
+            "id": "sha256:d9939b3435c163044fcf147018893005a0c45314303c0c92947414a635ae54e6",
+            "key": "d9939b3435c163044fcf147018893005a0c45314303c0c92947414a635ae54e6",
+            "label": ":sdk-extensions:jaeger-remote-sampler:extractIncludeTestGrpcNettyProto",
+            "reasons": [
+              "no_history"
+            ],
+            "started_at_ms": 1794840590647,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "cache_source": "unknown",
+            "completed_at_ms": 1794840593234,
+            "duration_ms": 1660,
+            "id": "sha256:abc9f6b9729020505ca2e63701fac7e26935e082eb57a397f602552aab5e8de3",
+            "key": "abc9f6b9729020505ca2e63701fac7e26935e082eb57a397f602552aab5e8de3",
+            "label": ":extensions:kotlin:compileKotlin",
+            "started_at_ms": 1794840591574,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "completed_at_ms": 1794840611675,
+            "duration_ms": 1553,
+            "id": "sha256:1019d6fffd9ce5731812298312697c54e665b15699f77d9fa115e0d35c408fa2",
+            "key": "1019d6fffd9ce5731812298312697c54e665b15699f77d9fa115e0d35c408fa2",
+            "label": ":extensions:kotlin:jApiCmp",
+            "reasons": [
+              "no_history"
+            ],
+            "started_at_ms": 1794840610122,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "completed_at_ms": 1794840615399,
+            "duration_ms": 1499,
+            "id": "sha256:3a4fcc8112620e1bce42c4dd9726f92c8b23c893ec7fe22ef67ada79c49f40d8",
+            "key": "3a4fcc8112620e1bce42c4dd9726f92c8b23c893ec7fe22ef67ada79c49f40d8",
+            "label": ":sdk:logs:jApiCmp",
+            "reasons": [
+              "no_history"
+            ],
+            "started_at_ms": 1794840613900,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "incremental": false
+            },
+            "completed_at_ms": 1794840618382,
+            "duration_ms": 1404,
+            "id": "sha256:ee3163c7e2925c5bfd3f11cde3bdb39a32542b2f9ecf9ade6a3b4f902ec10210",
+            "key": "ee3163c7e2925c5bfd3f11cde3bdb39a32542b2f9ecf9ade6a3b4f902ec10210",
+            "label": ":sdk-extensions:autoconfigure:jApiCmp",
+            "reasons": [
+              "no_history"
+            ],
+            "started_at_ms": 1794840616978,
+            "state": "executed"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "gradle",
+          "candidates": [
+            {
+              "confidence": "low",
+              "evidence": {
+                "bytes_read": 164313886,
+                "hit_rate": 99.9,
+                "hits": 810,
+                "misses": 1
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 121849,
+            "errors": 0,
+            "hit_rate": 99.9,
+            "hits": 810,
+            "misses": 1,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 1
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 99.9,
+          "hits": 810,
+          "likely_reason": "partial_key_churn_or_new_work",
+          "misses": 1,
+          "state": "mostly_hot_with_misses",
+          "writes": 1
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [
+    "boringcache-gradle-github-rolling-87-43889355591.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "harness": {
+    "commit": "58dfde796eb755872c35309606c2085938d2b166",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/43889355591",
+  "attempt": 1,
+  "started_at": "2026-11-16T14:48:15Z"
+}
