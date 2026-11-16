@@ -1,0 +1,742 @@
+{
+  "adapter_command": "ccache",
+  "case": "llvm",
+  "lane": "boringcache-ccache",
+  "provider": "boringcache",
+  "level": "base",
+  "capabilities": [
+    "remote-storage"
+  ],
+  "runner": "github-26",
+  "runner_label": "ubuntu-26.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 184,
+  "scope": "boringcache-ccache-github-26-rolling",
+  "cache_scope": "boringcache-ccache-github-26-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "llvm/llvm-project",
+  "sha": "e333da58aee7735c097ded845e71c8b17506f858",
+  "seconds": 2880.928,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1794859848130,
+      "run_id": "43938264025",
+      "session_id": "proxy-summary-00efa9fa-795a-4759-8ea6-8f58b700635e",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 2878921,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "ccache",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 98.2,
+          "cpu_iowait_percent": 0.1,
+          "cpu_pressure_percent": 79.4,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 1.5,
+          "disk_read_mb": 198.6,
+          "disk_written_mb": 6094.0,
+          "interval_ms": 2879349,
+          "io_pressure_percent": 0.5,
+          "memory_pressure_percent": 0.0,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+        "disk_available_gb": 83,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15983
+      },
+      "proxy": {
+        "adapter": "ccache",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 2878921,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_max_in_flight": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 7412,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 800,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 116,
+          "cache_blobs_upload_urls": 125,
+          "cache_kv_entries_current_version": 2895,
+          "cache_kv_entries_download_urls": 1848,
+          "cache_kv_entries_upsert": 133,
+          "cache_kv_entry_reads": 3056,
+          "cache_rollups_ingest": 145,
+          "cache_session_evidence_confirm": 177,
+          "cache_session_evidence_prepare": 112
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 142,
+          "cache_blobs_upload_urls": 183,
+          "cache_kv_entries_current_version": 2895,
+          "cache_kv_entries_download_urls": 1951,
+          "cache_kv_entries_upsert": 172,
+          "cache_kv_entry_reads": 3056,
+          "cache_rollups_ingest": 567,
+          "cache_session_evidence_confirm": 183,
+          "cache_session_evidence_prepare": 115
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 1121,
+          "cache_blobs_upload_urls": 1637,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 4,
+          "cache_kv_entries_upsert": 516,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 95,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 3379,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 116,
+          "cache_blobs_upload_urls": 125,
+          "cache_kv_entries_current_version": 2895,
+          "cache_kv_entries_download_urls": 1848,
+          "cache_kv_entries_upsert": 133,
+          "cache_kv_entry_reads": 3056,
+          "cache_rollups_ingest": 145,
+          "cache_session_evidence_confirm": 177,
+          "cache_session_evidence_prepare": 112
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 142,
+          "cache_blobs_upload_urls": 183,
+          "cache_kv_entries_current_version": 2895,
+          "cache_kv_entries_download_urls": 1951,
+          "cache_kv_entries_upsert": 172,
+          "cache_kv_entry_reads": 3056,
+          "cache_rollups_ingest": 567,
+          "cache_session_evidence_confirm": 183,
+          "cache_session_evidence_prepare": 115
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 1121,
+          "cache_blobs_upload_urls": 1637,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 4,
+          "cache_kv_entries_upsert": 516,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 95,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 3379,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 5964
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 32056,
+        "startup_prefetch_blobs_per_sec": 1057,
+        "startup_prefetch_bytes_per_sec": 33914080,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 2000,
+        "startup_prefetch_concurrency_adjustment_count": 3,
+        "startup_prefetch_concurrency_adjustments": "shared_download_policy:256->320,shared_download_policy:320->400,shared_download_policy:400->800",
+        "startup_prefetch_concurrency_reason": "many_small_blobs_rtt_bound",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_deferred_trial_blobs": 0,
+        "startup_prefetch_deferred_trial_bytes": 0,
+        "startup_prefetch_demand_max_wait_ms": 0,
+        "startup_prefetch_demand_wait_ms": 0,
+        "startup_prefetch_demand_waits": 0,
+        "startup_prefetch_duration_ms": 7006,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 800,
+        "startup_prefetch_generation": 184,
+        "startup_prefetch_hedge_wins": 0,
+        "startup_prefetch_hedges": 0,
+        "startup_prefetch_initial_concurrency": 256,
+        "startup_prefetch_inserted": 7412,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 800,
+        "startup_prefetch_mode": "recent-reads",
+        "startup_prefetch_observation_count": 2,
+        "startup_prefetch_recent_read_blobs": 4676,
+        "startup_prefetch_recent_read_bytes": 134469196,
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 7412,
+        "startup_prefetch_target_bytes": 237602045,
+        "startup_prefetch_total_unique_blobs": 82894,
+        "startup_prefetch_trial_budget_bytes": 268938392,
+        "startup_prefetch_unplanned_blobs": 0,
+        "startup_prefetch_unplanned_bytes": 0,
+        "startup_prefetch_unused_blobs": 1469,
+        "startup_prefetch_unused_bytes": 76493164,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 7412,
+        "startup_prefetch_used_blobs": 5943,
+        "startup_prefetch_used_bytes": 161108881,
+        "startup_prefetch_write_trial_blobs": 2736,
+        "startup_prefetch_write_trial_bytes": 103132849
+      },
+      "kv_upload": {
+        "kv_upload_allowed_concurrency_max": 1,
+        "kv_upload_already_present_blobs": 2123,
+        "kv_upload_batches": 516,
+        "kv_upload_blobs_per_sec": 0,
+        "kv_upload_concurrency_reason": "adaptive_ramp",
+        "kv_upload_concurrency_source": "auto",
+        "kv_upload_duration_ms": 59201,
+        "kv_upload_failed_blobs": 0,
+        "kv_upload_final_concurrency_max": 1,
+        "kv_upload_initial_concurrency_max": 1,
+        "kv_upload_missing_local_blobs": 0,
+        "kv_upload_requested_blobs": 0,
+        "kv_upload_uploaded_blobs": 0,
+        "kv_upload_uploaded_bytes": 0,
+        "kv_upload_writethrough_failure_bytes": 0,
+        "kv_upload_writethrough_failure_count": 0,
+        "kv_upload_writethrough_pressure_skip_bytes": 0,
+        "kv_upload_writethrough_pressure_skip_count": 0,
+        "kv_upload_writethrough_uploaded_blobs": 2123,
+        "kv_upload_writethrough_uploaded_bytes": 85508928
+      },
+      "singleflight": {
+        "singleflight_kv_download_leaders": 7412,
+        "singleflight_kv_index_refresh_leaders": 1,
+        "singleflight_kv_lookup_leaders": 2185
+      },
+      "kv_lookup": {
+        "kv_lookup_ccache_after_refresh_miss": 2185,
+        "kv_lookup_ccache_published_fast_hit": 5945,
+        "kv_lookup_ccache_published_fast_miss": 2185
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 161122128,
+          "blob_read_local_count": 5945,
+          "blob_read_local_hit_rate_pct": 45,
+          "blob_read_remote_avg_ms": 526,
+          "blob_read_remote_bytes": 237602045,
+          "blob_read_remote_count": 7412
+        },
+        "blob_read_cache_bytes": 323110973,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "cache_errors": 0,
+        "cache_hits": 2925,
+        "cache_misses": 1143,
+        "cache_timeouts": 0,
+        "cacheable_requests": 4068,
+        "compile_requests": 4069,
+        "counters": {
+          "autoconf_test": 0,
+          "bad_compiler_arguments": 0,
+          "bad_input_file": 0,
+          "bad_output_file": 0,
+          "cache_miss": 1143,
+          "cache_size_kibibyte": 0,
+          "called_for_link": 0,
+          "called_for_preprocessing": 0,
+          "cleanups_performed": 0,
+          "compile_failed": 0,
+          "compiler_check_failed": 0,
+          "compiler_produced_empty_output": 0,
+          "compiler_produced_no_output": 0,
+          "compiler_produced_stdout": 0,
+          "could_not_find_compiler": 0,
+          "could_not_use_modules": 0,
+          "could_not_use_precompiled_header": 0,
+          "direct_cache_hit": 2050,
+          "direct_cache_miss": 2019,
+          "disabled": 0,
+          "error_hashing_extra_file": 0,
+          "files_in_cache": 0,
+          "internal_error": 0,
+          "local_storage_hit": 0,
+          "local_storage_miss": 0,
+          "local_storage_read_hit": 0,
+          "local_storage_read_miss": 0,
+          "local_storage_write": 0,
+          "max_cache_size_kibibyte": 5242880,
+          "max_files_in_cache": 0,
+          "missing_cache_file": 0,
+          "modified_input_file": 0,
+          "multiple_source_files": 0,
+          "no_input_file": 0,
+          "output_to_stdout": 0,
+          "preprocessed_cache_hit": 875,
+          "preprocessed_cache_miss": 1143,
+          "preprocessor_error": 0,
+          "recache": 0,
+          "remote_storage_error": 0,
+          "remote_storage_hit": 2925,
+          "remote_storage_miss": 1143,
+          "remote_storage_read_hit": 5945,
+          "remote_storage_read_miss": 2185,
+          "remote_storage_timeout": 0,
+          "remote_storage_write": 2123,
+          "stats_updated_timestamp": 1794859834,
+          "stats_zeroed_timestamp": 0,
+          "unsupported_code_directive": 1,
+          "unsupported_compiler_option": 0,
+          "unsupported_environment_variable": 0,
+          "unsupported_source_encoding": 0,
+          "unsupported_source_language": 0
+        },
+        "hit_rate": 0.7190265486725663,
+        "non_cacheable_calls": 1,
+        "remote_storage_hits": 2925,
+        "remote_storage_misses": 1143,
+        "remote_storage_reads_hit": 5945,
+        "remote_storage_reads_miss": 2185,
+        "remote_storage_writes": 2123,
+        "schema_version": "native_tool_evidence.v1",
+        "stats_source": "ccache --print-log-stats --format=json",
+        "tool": "ccache"
+      },
+      "unit_evidence": {
+        "capabilities": {
+          "cache_source": true,
+          "critical_path": false,
+          "dependencies": false,
+          "execution_reasons": true,
+          "scheduling": false,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": false
+        },
+        "collection_state": "reported",
+        "counts": {
+          "cached": 2925,
+          "cached_remote": 2925,
+          "executed": 1143,
+          "failed": 0,
+          "observed": 4069,
+          "scope": "ccache_invocations",
+          "skipped": 1
+        },
+        "ranking_scope": "all_observed_units",
+        "schema_version": "unit_evidence.v1",
+        "source": "ccache_stats_log",
+        "tool": "ccache",
+        "truncated": true,
+        "unit_kind": "compilation",
+        "units": [
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:0",
+            "key": "6deab9fa99ebe716a650fa706e2fc06155b8a09183cd1e5272de84c48104333d",
+            "label": ".../lib/Demangle/DLangDemangle.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:1",
+            "key": "63c449e7c1619c70fbf3ae41f970f637b32485dc31c02ccc449d6670a8370791",
+            "label": ".../lib/Demangle/MicrosoftDemangleNodes.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:2",
+            "key": "b7958205664c25ddd382cd14a2713fdd6e6f7791fd058c2fd007d62e60743ccc",
+            "label": ".../lib/Demangle/RustDemangle.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:3",
+            "key": "94667683d1b55f4a71e9fa247d2cbaedd16c2ed907eb72d906582cdef3b4ad45",
+            "label": ".../lib/Demangle/ItaniumDemangle.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:4",
+            "key": "69b87fece8f2df1182463afa3ab5704bc8ba4833dac15062c9e5e42782a12c87",
+            "label": ".../lib/Support/ABIBreak.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:5",
+            "key": "0773f99a52a509d51986325157f6c9bf47ca4eece1a1ef19dd4add3cfda09062",
+            "label": ".../lib/Demangle/MicrosoftDemangle.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:6",
+            "key": "a81aa08f25bfe0ce81a6a780be635eab2cc6971fde1635635903e997e41969ec",
+            "label": ".../lib/Support/AMDGPUMetadata.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:7",
+            "key": "3fd625374e8703d50d730978ed02380af86c1967827a41f44afdae2e0a066cbf",
+            "label": ".../lib/Support/APInt.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:8",
+            "key": "95b189d4e563c5e0d6465a8268c968eac06dfad24631f4883779a2394ba5f523",
+            "label": ".../lib/Demangle/Demangle.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:9",
+            "key": "75c29632bc739b4dd6a33556fc081538b554da32626c5f19521dee7e2d9eec0e",
+            "label": ".../lib/Support/APFixedPoint.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:10",
+            "key": "c59bd5ce0a53c6b859f8ca4fa0bde2e53ab727799bbc4db67f65f3b32dfeeb9f",
+            "label": ".../lib/Support/APSInt.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:11",
+            "key": "3d0f70648e190538cf72e3a54bba4c5496493f8ecd71141cec771414efbe7eae",
+            "label": ".../lib/Support/AArch64AttributeParser.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:12",
+            "key": "adcca914198fd0a52c70af3132e1e9bfe180571c449a7d84d0fe29655c3bed99",
+            "label": ".../lib/Support/ARMBuildAttributes.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:13",
+            "key": "31f819e89be79ae56a88ebc4ddac07888abb7806a6e0a3d12cdb6e02486534ee",
+            "label": ".../lib/Support/AArch64BuildAttributes.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:14",
+            "key": "f3260e900e339120bec7ba86bea8442beca985be0603a82058b7c7fdab668413",
+            "label": ".../lib/Support/ARMAttributeParser.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:15",
+            "key": "543405b0820be4f6d803b7144a4fbb42017e0c05a5eab2f010fd0ff305c3526c",
+            "label": ".../lib/Support/ARMWinEH.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:16",
+            "key": "a420d8b75ac934751a9ebfb2c724c8ed97603f5fde7ee1c9802e3aaed8e18d73",
+            "label": ".../lib/Support/Allocator.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:17",
+            "key": "10ad14c223374428a4488e06380ef055f87fc977b86410f74aec21c82d43eefb",
+            "label": ".../lib/Support/AllocToken.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:18",
+            "key": "37944865829fbd4b7e4b70d7bc16f6cce5259e85136bfbce9c8e2cc056bdc91b",
+            "label": ".../lib/Support/AutoConvert.cpp",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "lookup": "direct",
+              "remote_storage": "hit"
+            },
+            "cache_source": "remote",
+            "id": "ccache:19",
+            "key": "acc62d1c14c11b3f93f48747fd2e73e786fa3b96800ab12d5f3577c0d3bcd885",
+            "label": ".../lib/Support/Base64.cpp",
+            "state": "cached"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "ccache",
+          "candidates": [
+            {
+              "confidence": "medium",
+              "evidence": {
+                "bytes_read": 161122128,
+                "hit_rate": 73.1,
+                "hits": 5945,
+                "misses": 2185
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 2878921,
+            "errors": 0,
+            "hit_rate": 73.1,
+            "hits": 5945,
+            "misses": 2185,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 2123
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 73.1,
+          "hits": 5945,
+          "likely_reason": "mixed_existing_and_new_work",
+          "misses": 2185,
+          "state": "warm_mixed",
+          "writes": 2123
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [
+    "boringcache-ccache-github-26-rolling-184-43938264025.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "harness": {
+    "commit": "36ffd434a59c5622c7f0c5d1950856a4016dfc1d",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/43938264025",
+  "attempt": 1,
+  "started_at": "2026-11-16T19:22:47Z"
+}
