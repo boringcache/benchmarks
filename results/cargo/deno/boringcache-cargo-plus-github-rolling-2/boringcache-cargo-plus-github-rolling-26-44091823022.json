@@ -1,0 +1,949 @@
+{
+  "adapter_command": "cargo",
+  "case": "deno",
+  "lane": "boringcache-cargo-plus",
+  "provider": "boringcache",
+  "level": "plus",
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 26,
+  "scope": "boringcache-cargo-plus-github-rolling-2",
+  "cache_scope": "boringcache-cargo-plus-github-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "denoland/deno",
+  "sha": "a37e99b214f00d0c07b882ec662f0a6bddc4d226",
+  "seconds": 1129.091,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1794922883528,
+      "run_id": "44091823022",
+      "session_id": "proxy-summary-1438e881-d64e-44ac-b082-7c8fde3a27f7",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 1104331,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "sccache",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 29.3,
+          "cpu_iowait_percent": 0.6,
+          "cpu_pressure_percent": 0.7,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 2.3,
+          "disk_read_mb": 555.5,
+          "disk_written_mb": 11361.3,
+          "interval_ms": 1127686,
+          "io_pressure_percent": 1.1,
+          "memory_pressure_percent": 0.0,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "disk_available_gb": 84,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15984
+      },
+      "proxy": {
+        "adapter": "sccache",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 1104331,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_max_in_flight": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 8,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 8,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 75,
+          "cache_blobs_download_urls": 147,
+          "cache_blobs_upload_urls": 117,
+          "cache_finalize_publish": 495,
+          "cache_flush_upload": 101,
+          "cache_kv_entries_current_version": 95,
+          "cache_kv_entries_download_urls": 150,
+          "cache_kv_entries_upsert": 94,
+          "cache_rollups_ingest": 131,
+          "cache_session_evidence_confirm": 106,
+          "cache_session_evidence_prepare": 82
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 136,
+          "cache_blobs_download_urls": 666,
+          "cache_blobs_upload_urls": 392,
+          "cache_finalize_publish": 495,
+          "cache_flush_upload": 101,
+          "cache_kv_entries_current_version": 95,
+          "cache_kv_entries_download_urls": 150,
+          "cache_kv_entries_upsert": 94,
+          "cache_rollups_ingest": 266,
+          "cache_session_evidence_confirm": 109,
+          "cache_session_evidence_prepare": 85
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 20,
+          "cache_blobs_download_urls": 3,
+          "cache_blobs_upload_urls": 24,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entries_upsert": 1,
+          "cache_rollups_ingest": 12,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 68,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 75,
+          "cache_blobs_download_urls": 147,
+          "cache_blobs_upload_urls": 117,
+          "cache_finalize_publish": 495,
+          "cache_flush_upload": 101,
+          "cache_kv_entries_current_version": 95,
+          "cache_kv_entries_download_urls": 150,
+          "cache_kv_entries_upsert": 94,
+          "cache_rollups_ingest": 131,
+          "cache_session_evidence_confirm": 106,
+          "cache_session_evidence_prepare": 82
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 136,
+          "cache_blobs_download_urls": 666,
+          "cache_blobs_upload_urls": 392,
+          "cache_finalize_publish": 495,
+          "cache_flush_upload": 101,
+          "cache_kv_entries_current_version": 95,
+          "cache_kv_entries_download_urls": 150,
+          "cache_kv_entries_upsert": 94,
+          "cache_rollups_ingest": 266,
+          "cache_session_evidence_confirm": 109,
+          "cache_session_evidence_prepare": 85
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 20,
+          "cache_blobs_download_urls": 3,
+          "cache_blobs_upload_urls": 24,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entries_upsert": 1,
+          "cache_rollups_ingest": 12,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 68,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 177
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 2361,
+        "startup_prefetch_blobs_per_sec": 41,
+        "startup_prefetch_bytes_per_sec": 96866,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 8,
+        "startup_prefetch_concurrency_adjustment_count": 0,
+        "startup_prefetch_concurrency_reason": "machine_governor",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_deferred_trial_blobs": 0,
+        "startup_prefetch_deferred_trial_bytes": 0,
+        "startup_prefetch_demand_max_wait_ms": 0,
+        "startup_prefetch_demand_wait_ms": 0,
+        "startup_prefetch_demand_waits": 0,
+        "startup_prefetch_duration_ms": 195,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 8,
+        "startup_prefetch_generation": 13,
+        "startup_prefetch_hedge_wins": 0,
+        "startup_prefetch_hedges": 0,
+        "startup_prefetch_initial_concurrency": 8,
+        "startup_prefetch_inserted": 8,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 8,
+        "startup_prefetch_mode": "recent-reads",
+        "startup_prefetch_observation_count": 2,
+        "startup_prefetch_recent_read_blobs": 8,
+        "startup_prefetch_recent_read_bytes": 18889,
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 8,
+        "startup_prefetch_target_bytes": 18889,
+        "startup_prefetch_total_unique_blobs": 3224,
+        "startup_prefetch_trial_budget_bytes": 134217728,
+        "startup_prefetch_unplanned_blobs": 0,
+        "startup_prefetch_unplanned_bytes": 0,
+        "startup_prefetch_unused_blobs": 8,
+        "startup_prefetch_unused_bytes": 18889,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 8,
+        "startup_prefetch_used_blobs": 0,
+        "startup_prefetch_used_bytes": 0,
+        "startup_prefetch_write_trial_blobs": 0,
+        "startup_prefetch_write_trial_bytes": 0
+      },
+      "kv_upload": {
+        "kv_upload_allowed_concurrency_max": 1,
+        "kv_upload_already_present_blobs": 1,
+        "kv_upload_batches": 1,
+        "kv_upload_blobs_per_sec": 0,
+        "kv_upload_concurrency_reason": "adaptive_ramp",
+        "kv_upload_concurrency_source": "auto",
+        "kv_upload_duration_ms": 73,
+        "kv_upload_failed_blobs": 0,
+        "kv_upload_final_concurrency_max": 1,
+        "kv_upload_initial_concurrency_max": 1,
+        "kv_upload_missing_local_blobs": 0,
+        "kv_upload_requested_blobs": 0,
+        "kv_upload_uploaded_blobs": 0,
+        "kv_upload_uploaded_bytes": 0,
+        "kv_upload_writethrough_failure_bytes": 0,
+        "kv_upload_writethrough_failure_count": 0,
+        "kv_upload_writethrough_pressure_skip_bytes": 0,
+        "kv_upload_writethrough_pressure_skip_count": 0,
+        "kv_upload_writethrough_uploaded_blobs": 1,
+        "kv_upload_writethrough_uploaded_bytes": 67526909
+      },
+      "singleflight": {
+        "singleflight_kv_download_leaders": 8,
+        "singleflight_kv_lookup_leaders": 1
+      },
+      "kv_lookup": {
+        "kv_lookup_sccache_after_refresh_miss": 1,
+        "kv_lookup_sccache_published_fast_miss": 1
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 0,
+          "blob_read_local_count": 0,
+          "blob_read_local_hit_rate_pct": 0,
+          "blob_read_remote_avg_ms": 114,
+          "blob_read_remote_bytes": 18889,
+          "blob_read_remote_count": 8
+        },
+        "blob_read_cache_bytes": 67545798,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "average_cache_read_hit_seconds": 0.0,
+        "average_cache_write_seconds": 0.088,
+        "average_compiler_seconds": 247.189,
+        "cache_errors": 0,
+        "cache_hits": 0,
+        "cache_misses": 1,
+        "cache_read_errors": 0,
+        "cache_timeouts": 0,
+        "cache_write_errors": 0,
+        "compile_requests": 5,
+        "compile_requests_executed": 1,
+        "hit_rate": 0.0,
+        "miss_counts": {
+          "rust": 1
+        },
+        "non_cacheable_calls": 3,
+        "non_cacheable_reasons": {
+          "-": 1,
+          "crate-type": 1,
+          "missing input": 1
+        },
+        "proxy_cache_read_errors": 0,
+        "proxy_cache_write_errors": 0,
+        "schema_version": "native_tool_evidence.v1",
+        "stats_source": "sccache --show-stats",
+        "tool": "sccache"
+      },
+      "unit_evidence": {
+        "build_succeeded": true,
+        "capabilities": {
+          "cache_source": false,
+          "critical_path": true,
+          "dependencies": false,
+          "execution_reasons": false,
+          "scheduling": true,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": true
+        },
+        "collection_state": "reported",
+        "counts": {
+          "executed": 2,
+          "observed": 1822,
+          "scope": "cargo_units",
+          "up_to_date": 1820
+        },
+        "critical_path": {
+          "end_offset_ms": 1090040,
+          "metadata_edges": 0,
+          "ready_gap_ms": 0,
+          "source": "cargo_unblocked_units",
+          "start_offset_ms": 7900,
+          "truncated": false,
+          "unit_count": 2,
+          "unit_duration_ms": 1082140,
+          "units": [
+            {
+              "duration_ms": 250110,
+              "id": "cargo-unit:326",
+              "label": "deno v2.9.8"
+            },
+            {
+              "duration_ms": 832030,
+              "id": "cargo-unit:327",
+              "label": "deno v2.9.8 deno \"bin\""
+            }
+          ]
+        },
+        "invocation": {
+          "host": "x86_64-unknown-linux-gnu",
+          "profile": "release",
+          "report_owner": "boringcache",
+          "target": "x86_64-unknown-linux-gnu",
+          "time_precision_ms": 10,
+          "total_time_ms": 1090000,
+          "units_total": 1822
+        },
+        "ranking_scope": "all_observed_units",
+        "scheduling": {
+          "average_active": 0.99,
+          "jobs": 4,
+          "max_concurrency": 1,
+          "ncpu": 4,
+          "waiting_ms": 0,
+          "waiting_unit_ms": 0
+        },
+        "schema_version": "unit_evidence.v1",
+        "source": "cargo_timings_report",
+        "tool": "cargo",
+        "tool_version": "1.95.0",
+        "truncated": true,
+        "unit_kind": "crate_unit",
+        "units": [
+          {
+            "attributes": {
+              "crate_name": "deno",
+              "crate_version": "2.9.8",
+              "features": [
+                "__runtime_defaults",
+                "__vendored_zlib_ng",
+                "default",
+                "deno_panic",
+                "panic-trace",
+                "panic-trace-frame-pointer",
+                "upgrade",
+                "v8"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 258010,
+              "target_kind": "deno \"bin\""
+            },
+            "completed_at_ms": 1794922870539,
+            "critical_path": true,
+            "duration_ms": 832030,
+            "id": "cargo-unit:327",
+            "key": "b6edc5d6b1430f44042226aea95e87b787d8382b17fd941ffa2cf8425dfd295a",
+            "label": "deno v2.9.8 deno \"bin\"",
+            "started_at_ms": 1794922038509,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "deno",
+              "crate_version": "2.9.8",
+              "features": [
+                "__runtime_defaults",
+                "__vendored_zlib_ng",
+                "default",
+                "deno_panic",
+                "panic-trace",
+                "panic-trace-frame-pointer",
+                "upgrade",
+                "v8"
+              ],
+              "frontend_ms": 250100,
+              "mode": "todo",
+              "start_offset_ms": 7900,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794922038509,
+            "critical_path": true,
+            "duration_ms": 250110,
+            "id": "cargo-unit:326",
+            "key": "5b8e75e1ab200066a0c0f4c33f396a3c6e8bf28b7355522544f440e5ba22c432",
+            "label": "deno v2.9.8",
+            "started_at_ms": 1794921788399,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "num-complex",
+              "crate_version": "0.4.6",
+              "features": [
+                "std"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:1032",
+            "key": "3f80e51fcef941393b32faf87afd54793f90b6c75a94859b1acbb507f4f3d23a",
+            "label": "num-complex v0.4.6",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "zune-core",
+              "crate_version": "0.4.12",
+              "features": [
+                "std"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:1819",
+            "key": "8a31374123c266bbd5e68f43a135d2246840d503d4261d6f6c7235386725cb34",
+            "label": "zune-core v0.4.12",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "adler",
+              "crate_version": "1.0.2",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:2",
+            "key": "29eb36800c5ec61fb702ef68332a4e7e14b4bbf7f5c15db0a3332da6678a06bb",
+            "label": "adler v1.0.2",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "adler",
+              "crate_version": "1.0.2",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:3",
+            "key": "29eb36800c5ec61fb702ef68332a4e7e14b4bbf7f5c15db0a3332da6678a06bb",
+            "label": "adler v1.0.2",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "adler2",
+              "crate_version": "2.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:4",
+            "key": "c13369b8f0bf915cdfbc33d855a361fd9087692a34137fe294e1fcec7494c00a",
+            "label": "adler2 v2.0.0",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "adler2",
+              "crate_version": "2.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:5",
+            "key": "c13369b8f0bf915cdfbc33d855a361fd9087692a34137fe294e1fcec7494c00a",
+            "label": "adler2 v2.0.0",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "adler2",
+              "crate_version": "2.0.1",
+              "features": [
+                "core",
+                "rustc-dep-of-std"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:6",
+            "key": "ffc0dc9385c80e042053ccbce14a34e83f23d51d34d09ff58abd0d13a5894317",
+            "label": "adler2 v2.0.1",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "aead",
+              "crate_version": "0.5.2",
+              "features": [
+                "alloc",
+                "getrandom",
+                "rand_core"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:7",
+            "key": "4b2480ab24f2a4eb73484e24b88e2801dfd646ef16820291db930fcc5170ceda",
+            "label": "aead v0.5.2",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "aead",
+              "crate_version": "0.5.2",
+              "features": [
+                "alloc",
+                "getrandom",
+                "rand_core"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:8",
+            "key": "4b2480ab24f2a4eb73484e24b88e2801dfd646ef16820291db930fcc5170ceda",
+            "label": "aead v0.5.2",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "aead-gcm-stream",
+              "crate_version": "0.4.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:9",
+            "key": "49697bc21d38a5b62dfbdc323400c95d1e46a5933cd7f570d7f6ad1d1b6afaba",
+            "label": "aead-gcm-stream v0.4.0",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "aead-gcm-stream",
+              "crate_version": "0.4.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:10",
+            "key": "49697bc21d38a5b62dfbdc323400c95d1e46a5933cd7f570d7f6ad1d1b6afaba",
+            "label": "aead-gcm-stream v0.4.0",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "aes",
+              "crate_version": "0.8.3",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:11",
+            "key": "4c2f068f91ab4148c7990580cff26bbe0c6ad91a8c53becb9f742807140bdedf",
+            "label": "aes v0.8.3",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "aes",
+              "crate_version": "0.8.3",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:12",
+            "key": "4c2f068f91ab4148c7990580cff26bbe0c6ad91a8c53becb9f742807140bdedf",
+            "label": "aes v0.8.3",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "aes-gcm",
+              "crate_version": "0.10.3",
+              "features": [
+                "aes",
+                "alloc",
+                "default",
+                "getrandom",
+                "rand_core"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:13",
+            "key": "946fde1fcc462988385feb790734368c7a52fdf3962c6d69ae494942f6b59c80",
+            "label": "aes-gcm v0.10.3",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "aes-gcm",
+              "crate_version": "0.10.3",
+              "features": [
+                "aes",
+                "alloc",
+                "default",
+                "getrandom",
+                "rand_core"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:14",
+            "key": "946fde1fcc462988385feb790734368c7a52fdf3962c6d69ae494942f6b59c80",
+            "label": "aes-gcm v0.10.3",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "aes-kw",
+              "crate_version": "0.2.1",
+              "features": [
+                "alloc"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:15",
+            "key": "9186354e2bd9f37b2c52b17b4f5b79b93b4e9ba27fd1fd6d20d007f57144d0a8",
+            "label": "aes-kw v0.2.1",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "aes-kw",
+              "crate_version": "0.2.1",
+              "features": [
+                "alloc"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:16",
+            "key": "9186354e2bd9f37b2c52b17b4f5b79b93b4e9ba27fd1fd6d20d007f57144d0a8",
+            "label": "aes-kw v0.2.1",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "ahash",
+              "crate_version": "0.8.11",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794921780499,
+            "duration_ms": 0,
+            "id": "cargo-unit:17",
+            "key": "7f11d36ebbb43d49518f6e26e50362e4f00b929e5a0fc99f1f7cd5c13518fca2",
+            "label": "ahash v0.8.11",
+            "started_at_ms": 1794921780499,
+            "state": "executed"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "sccache",
+          "candidates": [
+            {
+              "confidence": "high",
+              "evidence": {
+                "bytes_read": 0,
+                "hit_rate": 0.0,
+                "hits": 0,
+                "misses": 1
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 1104331,
+            "errors": 0,
+            "hit_rate": 0.0,
+            "hits": 0,
+            "misses": 1,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 1
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 0.0,
+          "hits": 0,
+          "likely_reason": "no_hits_for_requested_keys",
+          "misses": 1,
+          "state": "cold",
+          "writes": 1
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [
+    "boringcache-cargo-plus-github-rolling-26-44091823022.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "product_env": {
+    "BORINGCACHE_ARCHIVE_SELECTIVE_READS": "1"
+  },
+  "plan_settings": {
+    "target-budget": "20GiB"
+  },
+  "harness": {
+    "commit": "53c0cd673ddd84e263e431a19d36c6a8f44dde4a",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/44091823022",
+  "attempt": 1,
+  "started_at": "2026-11-17T13:22:35Z"
+}
