@@ -1,0 +1,947 @@
+{
+  "adapter_command": "cargo",
+  "case": "zed",
+  "lane": "boringcache-cargo-plus",
+  "provider": "boringcache",
+  "level": "plus",
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 237,
+  "scope": "boringcache-cargo-plus-github-rolling",
+  "cache_scope": "boringcache-cargo-plus-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "zed-industries/zed",
+  "sha": "6e7c5d3ae8578753601f192e72555948fd7a5e99",
+  "seconds": 1260.624,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1794901671603,
+      "run_id": "44038144424",
+      "session_id": "proxy-summary-3250df65-107c-4689-b55f-ee616081c092",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 1084062,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "sccache",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 69.0,
+          "cpu_iowait_percent": 8.4,
+          "cpu_pressure_percent": 18.1,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 24.2,
+          "disk_read_mb": 10174.9,
+          "disk_written_mb": 40602.2,
+          "interval_ms": 1257190,
+          "io_pressure_percent": 15.2,
+          "memory_pressure_percent": 0.6,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+        "disk_available_gb": 101,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15984
+      },
+      "proxy": {
+        "adapter": "sccache",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 1084062,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 1,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 1,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 1,
+        "kv_demand_url_blobs": 1,
+        "kv_demand_url_max_batch_size": 1,
+        "kv_demand_url_max_in_flight": 1,
+        "kv_demand_url_requests": 1,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 3,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 2,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 121,
+          "cache_blobs_download_urls": 187,
+          "cache_blobs_upload_urls": 157,
+          "cache_finalize_publish": 1092,
+          "cache_flush_upload": 157,
+          "cache_kv_entries_current_version": 131,
+          "cache_kv_entries_download_urls": 114,
+          "cache_kv_entries_upsert": 117,
+          "cache_kv_entry_reads": 112,
+          "cache_rollups_ingest": 167,
+          "cache_session_evidence_confirm": 151,
+          "cache_session_evidence_prepare": 107
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 285,
+          "cache_blobs_download_urls": 1314,
+          "cache_blobs_upload_urls": 698,
+          "cache_finalize_publish": 1092,
+          "cache_flush_upload": 157,
+          "cache_kv_entries_current_version": 131,
+          "cache_kv_entries_download_urls": 122,
+          "cache_kv_entries_upsert": 144,
+          "cache_kv_entry_reads": 112,
+          "cache_rollups_ingest": 286,
+          "cache_session_evidence_confirm": 192,
+          "cache_session_evidence_prepare": 110
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 26,
+          "cache_blobs_download_urls": 6,
+          "cache_blobs_upload_urls": 41,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 2,
+          "cache_kv_entries_upsert": 6,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 18,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 107,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 121,
+          "cache_blobs_download_urls": 187,
+          "cache_blobs_upload_urls": 157,
+          "cache_finalize_publish": 1092,
+          "cache_flush_upload": 157,
+          "cache_kv_entries_current_version": 131,
+          "cache_kv_entries_download_urls": 114,
+          "cache_kv_entries_upsert": 117,
+          "cache_kv_entry_reads": 112,
+          "cache_rollups_ingest": 167,
+          "cache_session_evidence_confirm": 151,
+          "cache_session_evidence_prepare": 107
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 285,
+          "cache_blobs_download_urls": 1314,
+          "cache_blobs_upload_urls": 698,
+          "cache_finalize_publish": 1092,
+          "cache_flush_upload": 157,
+          "cache_kv_entries_current_version": 131,
+          "cache_kv_entries_download_urls": 122,
+          "cache_kv_entries_upsert": 144,
+          "cache_kv_entry_reads": 112,
+          "cache_rollups_ingest": 286,
+          "cache_session_evidence_confirm": 192,
+          "cache_session_evidence_prepare": 110
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 26,
+          "cache_blobs_download_urls": 6,
+          "cache_blobs_upload_urls": 41,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 2,
+          "cache_kv_entries_upsert": 6,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 18,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 107,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 274
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 835327,
+        "startup_prefetch_blobs_per_sec": 3,
+        "startup_prefetch_bytes_per_sec": 2761411,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 2,
+        "startup_prefetch_concurrency_adjustment_count": 0,
+        "startup_prefetch_concurrency_reason": "machine_governor",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_deferred_trial_blobs": 0,
+        "startup_prefetch_deferred_trial_bytes": 0,
+        "startup_prefetch_demand_max_wait_ms": 569,
+        "startup_prefetch_demand_wait_ms": 569,
+        "startup_prefetch_demand_waits": 1,
+        "startup_prefetch_duration_ms": 605,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 2,
+        "startup_prefetch_generation": 123,
+        "startup_prefetch_hedge_wins": 0,
+        "startup_prefetch_hedges": 0,
+        "startup_prefetch_initial_concurrency": 2,
+        "startup_prefetch_inserted": 2,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 2,
+        "startup_prefetch_mode": "recent-reads",
+        "startup_prefetch_observation_count": 2,
+        "startup_prefetch_recent_read_blobs": 2,
+        "startup_prefetch_recent_read_bytes": 1670654,
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 2,
+        "startup_prefetch_target_bytes": 1670654,
+        "startup_prefetch_total_unique_blobs": 5683,
+        "startup_prefetch_trial_budget_bytes": 134217728,
+        "startup_prefetch_unplanned_blobs": 1,
+        "startup_prefetch_unplanned_bytes": 9051784,
+        "startup_prefetch_unused_blobs": 0,
+        "startup_prefetch_unused_bytes": 0,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 2,
+        "startup_prefetch_used_blobs": 2,
+        "startup_prefetch_used_bytes": 1670654,
+        "startup_prefetch_write_trial_blobs": 0,
+        "startup_prefetch_write_trial_bytes": 0
+      },
+      "kv_upload": {
+        "kv_upload_allowed_concurrency_max": 1,
+        "kv_upload_already_present_blobs": 6,
+        "kv_upload_batches": 6,
+        "kv_upload_blobs_per_sec": 0,
+        "kv_upload_concurrency_reason": "adaptive_ramp",
+        "kv_upload_concurrency_source": "auto",
+        "kv_upload_duration_ms": 656,
+        "kv_upload_failed_blobs": 0,
+        "kv_upload_final_concurrency_max": 1,
+        "kv_upload_initial_concurrency_max": 1,
+        "kv_upload_missing_local_blobs": 0,
+        "kv_upload_requested_blobs": 0,
+        "kv_upload_uploaded_blobs": 0,
+        "kv_upload_uploaded_bytes": 0,
+        "kv_upload_writethrough_failure_bytes": 0,
+        "kv_upload_writethrough_failure_count": 0,
+        "kv_upload_writethrough_pressure_skip_bytes": 0,
+        "kv_upload_writethrough_pressure_skip_count": 0,
+        "kv_upload_writethrough_uploaded_blobs": 6,
+        "kv_upload_writethrough_uploaded_bytes": 113524987
+      },
+      "singleflight": {
+        "singleflight_kv_download_leaders": 3,
+        "singleflight_kv_lookup_leaders": 6,
+        "singleflight_kv_url_leaders": 1
+      },
+      "kv_lookup": {
+        "kv_lookup_sccache_after_refresh_miss": 6,
+        "kv_lookup_sccache_published_fast_hit": 3,
+        "kv_lookup_sccache_published_fast_miss": 6
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 1670654,
+          "blob_read_local_count": 2,
+          "blob_read_local_hit_rate_pct": 40,
+          "blob_read_remote_avg_ms": 553,
+          "blob_read_remote_bytes": 10722438,
+          "blob_read_remote_count": 3
+        },
+        "blob_read_cache_bytes": 124247425,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "average_cache_read_hit_seconds": 0.196,
+        "average_cache_write_seconds": 0.02,
+        "average_compiler_seconds": 52.858,
+        "cache_errors": 0,
+        "cache_hits": 3,
+        "cache_misses": 6,
+        "cache_read_errors": 0,
+        "cache_timeouts": 0,
+        "cache_write_errors": 0,
+        "compile_requests": 15,
+        "compile_requests_executed": 9,
+        "hit_counts": {
+          "rust": 3
+        },
+        "hit_rate": 33.3,
+        "miss_counts": {
+          "rust": 6
+        },
+        "non_cacheable_calls": 6,
+        "non_cacheable_reasons": {
+          "-": 2,
+          "crate-type": 3,
+          "missing input": 1
+        },
+        "proxy_cache_read_errors": 0,
+        "proxy_cache_write_errors": 0,
+        "schema_version": "native_tool_evidence.v1",
+        "stats_source": "sccache --show-stats",
+        "tool": "sccache"
+      },
+      "unit_evidence": {
+        "build_succeeded": true,
+        "capabilities": {
+          "cache_source": false,
+          "critical_path": true,
+          "dependencies": false,
+          "execution_reasons": false,
+          "scheduling": true,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": true
+        },
+        "collection_state": "reported",
+        "counts": {
+          "executed": 15,
+          "observed": 1748,
+          "scope": "cargo_units",
+          "up_to_date": 1733
+        },
+        "critical_path": {
+          "end_offset_ms": 1004870,
+          "metadata_edges": 2,
+          "ready_gap_ms": 0,
+          "source": "cargo_unblocked_units",
+          "start_offset_ms": 15620,
+          "truncated": false,
+          "unit_count": 4,
+          "unit_duration_ms": 989250,
+          "units": [
+            {
+              "duration_ms": 64850,
+              "id": "cargo-unit:14",
+              "label": "agent v0.1.0"
+            },
+            {
+              "duration_ms": 118580,
+              "id": "cargo-unit:21",
+              "label": "agent_ui v0.1.0"
+            },
+            {
+              "duration_ms": 20110,
+              "id": "cargo-unit:1241",
+              "label": "sidebar v0.1.0"
+            },
+            {
+              "duration_ms": 785710,
+              "id": "cargo-unit:1680",
+              "label": "zed v1.30.0 zed \"bin\""
+            }
+          ]
+        },
+        "invocation": {
+          "host": "x86_64-unknown-linux-gnu",
+          "profile": "release",
+          "report_owner": "boringcache",
+          "target": "x86_64-unknown-linux-gnu",
+          "time_precision_ms": 10,
+          "total_time_ms": 1004900,
+          "units_total": 1748
+        },
+        "ranking_scope": "all_observed_units",
+        "scheduling": {
+          "average_active": 1.11,
+          "jobs": 4,
+          "max_concurrency": 4,
+          "ncpu": 4,
+          "waiting_ms": 420,
+          "waiting_unit_ms": 430
+        },
+        "schema_version": "unit_evidence.v1",
+        "source": "cargo_timings_report",
+        "tool": "cargo",
+        "tool_version": "1.98.1",
+        "truncated": true,
+        "unit_kind": "crate_unit",
+        "units": [
+          {
+            "attributes": {
+              "crate_name": "zed",
+              "crate_version": "1.30.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 219160,
+              "target_kind": "zed \"bin\""
+            },
+            "completed_at_ms": 1794901594430,
+            "critical_path": true,
+            "duration_ms": 785710,
+            "id": "cargo-unit:1680",
+            "key": "c6bd6b8aa34e595d7ddba0a8155c60ba33c1953680444afe751b302fddc402ea",
+            "label": "zed v1.30.0 zed \"bin\"",
+            "started_at_ms": 1794900808720,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "agent_ui",
+              "crate_version": "0.1.0",
+              "features": [
+                "audio"
+              ],
+              "frontend_ms": 118570,
+              "mode": "todo",
+              "start_offset_ms": 80480,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794900788620,
+            "critical_path": true,
+            "duration_ms": 118580,
+            "id": "cargo-unit:21",
+            "key": "8095dcc0c68233a93cec308065bf9742a623a3626cfe6e3d2683204e50c0720a",
+            "label": "agent_ui v0.1.0",
+            "started_at_ms": 1794900670040,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "git_ui",
+              "crate_version": "0.1.0",
+              "features": [
+                "call"
+              ],
+              "frontend_ms": 66620,
+              "mode": "todo",
+              "start_offset_ms": 16320,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794900672500,
+            "duration_ms": 66620,
+            "id": "cargo-unit:487",
+            "key": "313cc85825321d6690a21bfbdfe6032f4efc334a6d234bd7860add538c66044c",
+            "label": "git_ui v0.1.0",
+            "started_at_ms": 1794900605880,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "agent",
+              "crate_version": "0.1.0",
+              "features": [],
+              "frontend_ms": 64850,
+              "mode": "todo",
+              "start_offset_ms": 15620,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794900670030,
+            "critical_path": true,
+            "duration_ms": 64850,
+            "id": "cargo-unit:14",
+            "key": "d2dcb0dbe92850f8bad7633a4ac60d142de8a7912717dfd6ddde25f136d0e9ad",
+            "label": "agent v0.1.0",
+            "started_at_ms": 1794900605180,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "settings_ui",
+              "crate_version": "0.1.0",
+              "features": [
+                "default"
+              ],
+              "frontend_ms": 49660,
+              "mode": "todo",
+              "start_offset_ms": 80470,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794900719700,
+            "duration_ms": 49670,
+            "id": "cargo-unit:1231",
+            "key": "1f8d900438a0cf1509e01aa802902fd9bc1f7062bebcb79e404bf4964a1a0795",
+            "label": "settings_ui v0.1.0",
+            "started_at_ms": 1794900670030,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "sidebar",
+              "crate_version": "0.1.0",
+              "features": [
+                "default"
+              ],
+              "frontend_ms": 20110,
+              "mode": "todo",
+              "start_offset_ms": 199050,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794900808720,
+            "critical_path": true,
+            "duration_ms": 20110,
+            "id": "cargo-unit:1241",
+            "key": "53f74476817f1456da648bd907da1502e4dc7d450ef5d568a5afa60a737eb28f",
+            "label": "sidebar v0.1.0",
+            "started_at_ms": 1794900788610,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "acp_tools",
+              "crate_version": "0.1.0",
+              "features": [],
+              "frontend_ms": 5140,
+              "mode": "todo",
+              "start_offset_ms": 199050,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794900793750,
+            "duration_ms": 5140,
+            "id": "cargo-unit:5",
+            "key": "01611471dfe069a5cce534dd54014d90ae914d8b5a2eb20b292fb09b32999d4a",
+            "label": "acp_tools v0.1.0",
+            "started_at_ms": 1794900788610,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "zed",
+              "crate_version": "1.30.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 15630,
+              "target_kind": "build-script"
+            },
+            "completed_at_ms": 1794900607420,
+            "duration_ms": 2230,
+            "id": "cargo-unit:1681",
+            "key": "8443f2daa58b0e0e35c031402327038c65e5b6c4ef624423ea695440686d9c58",
+            "label": "zed v1.30.0 build-script",
+            "started_at_ms": 1794900605190,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 70,
+              "crate_name": "languages",
+              "crate_version": "0.1.0",
+              "features": [
+                "load-grammars",
+                "tree-sitter",
+                "tree-sitter-gitcommit"
+              ],
+              "frontend_ms": 1340,
+              "mode": "todo",
+              "start_offset_ms": 16700,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794900607670,
+            "duration_ms": 1410,
+            "id": "cargo-unit:691",
+            "key": "25430cb429b4ecc5be9cccf0884729b30036cca11af05914f2ecd350a594b714",
+            "label": "languages v0.1.0",
+            "started_at_ms": 1794900606260,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "cli",
+              "crate_version": "0.1.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 15630,
+              "target_kind": "build-script"
+            },
+            "completed_at_ms": 1794900606160,
+            "duration_ms": 970,
+            "id": "cargo-unit:198",
+            "key": "65c5b1176ec8df2c0b34901588f3494f7f2e535c803f9bb0cf7644b66c03b513",
+            "label": "cli v0.1.0 build-script",
+            "started_at_ms": 1794900605190,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "pet",
+              "crate_version": "0.1.0",
+              "features": [],
+              "frontend_ms": 660,
+              "mode": "todo",
+              "start_offset_ms": 15640,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794900605860,
+            "duration_ms": 660,
+            "id": "cargo-unit:929",
+            "key": "6965761dfce8e46976a30967bd68ea8f32d8e79e5aaa0c8e9c8c16d0cfda70a4",
+            "label": "pet v0.1.0",
+            "started_at_ms": 1794900605200,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "zed",
+              "crate_version": "1.30.0",
+              "features": [],
+              "mode": "run-custom-build",
+              "start_offset_ms": 17870,
+              "target_kind": "build-script (run)"
+            },
+            "completed_at_ms": 1794900607710,
+            "duration_ms": 280,
+            "id": "cargo-unit:1682",
+            "key": "72d4f54713544917435be4814ac6ce41bee00c0e7e949a7464709e5be2899312",
+            "label": "zed v1.30.0 build-script (run)",
+            "started_at_ms": 1794900607430,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "cli",
+              "crate_version": "0.1.0",
+              "features": [],
+              "frontend_ms": 80,
+              "mode": "todo",
+              "start_offset_ms": 16620,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794900606260,
+            "duration_ms": 80,
+            "id": "cargo-unit:197",
+            "key": "335907b6dfb230e80b035f1731b3d438ecd40a8c50d55169bc1af7667f077a14",
+            "label": "cli v0.1.0",
+            "started_at_ms": 1794900606180,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "pet",
+              "crate_version": "0.1.0",
+              "features": [],
+              "mode": "run-custom-build",
+              "start_offset_ms": 15610,
+              "target_kind": "build-script (run)"
+            },
+            "completed_at_ms": 1794900605200,
+            "duration_ms": 30,
+            "id": "cargo-unit:931",
+            "key": "6ae41a6773eb70fb3fe15d75287e31c8d6d9b851c3158773fde52d2eb70f3ce0",
+            "label": "pet v0.1.0 build-script (run)",
+            "started_at_ms": 1794900605170,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "cli",
+              "crate_version": "0.1.0",
+              "features": [],
+              "mode": "run-custom-build",
+              "start_offset_ms": 16610,
+              "target_kind": "build-script (run)"
+            },
+            "completed_at_ms": 1794900606180,
+            "duration_ms": 10,
+            "id": "cargo-unit:199",
+            "key": "ebeb9f87d13f9c9f2a40619e5510a71a8d4714eb23634876b5b427b93abbcbbd",
+            "label": "cli v0.1.0 build-script (run)",
+            "started_at_ms": 1794900606170,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "pollster",
+              "crate_version": "0.4.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794900589560,
+            "duration_ms": 0,
+            "id": "cargo-unit:992",
+            "key": "dd5e2bf5a4c8c938cd2e49f13227e316b47ebf7cb5f5d843057da64c08c920a1",
+            "label": "pollster v0.4.0",
+            "started_at_ms": 1794900589560,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "zstd-sys",
+              "crate_version": "2.0.16+zstd.1.5.7",
+              "features": [
+                "legacy",
+                "std",
+                "zdict_builder"
+              ],
+              "mode": "run-custom-build",
+              "start_offset_ms": 0,
+              "target_kind": "build-script (run)",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794900589560,
+            "duration_ms": 0,
+            "id": "cargo-unit:1732",
+            "key": "44a29614456a32f7c64e61b25a0e0b62fcd337f8395007f778b6a467c1f5fe89",
+            "label": "zstd-sys v2.0.16+zstd.1.5.7 build-script (run)",
+            "started_at_ms": 1794900589560,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "accesskit_consumer",
+              "crate_version": "0.38.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794900589560,
+            "duration_ms": 0,
+            "id": "cargo-unit:2",
+            "key": "5eb778e47dc04db28fceb24a35f1fccd4a62bcca1873eba2e26dd8178cb323f8",
+            "label": "accesskit_consumer v0.38.0",
+            "started_at_ms": 1794900589560,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "accesskit_unix",
+              "crate_version": "0.22.1",
+              "features": [
+                "async-io",
+                "default"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794900589560,
+            "duration_ms": 0,
+            "id": "cargo-unit:3",
+            "key": "d7a927ae4cdc505d2b16dd776e2f47b4a605a98f69a8e9d16d20719827b2a400",
+            "label": "accesskit_unix v0.22.1",
+            "started_at_ms": 1794900589560,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "acp_thread",
+              "crate_version": "0.1.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794900589560,
+            "duration_ms": 0,
+            "id": "cargo-unit:4",
+            "key": "3434fcf478fdca7bd8b41ca3b111234fa14e8d3fe06a761ba4b9e04deae6bc7a",
+            "label": "acp_thread v0.1.0",
+            "started_at_ms": 1794900589560,
+            "state": "executed"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "sccache",
+          "candidates": [
+            {
+              "confidence": "high",
+              "evidence": {
+                "bytes_read": 10722438,
+                "hit_rate": 33.3,
+                "hits": 3,
+                "misses": 6
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 1084062,
+            "errors": 0,
+            "hit_rate": 33.3,
+            "hits": 3,
+            "misses": 6,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 6
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 33.3,
+          "hits": 3,
+          "likely_reason": "mixed_existing_and_new_work",
+          "misses": 6,
+          "state": "warm_mixed",
+          "writes": 6
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [
+    "boringcache-cargo-plus-github-rolling-237-44038144424.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "product_env": {
+    "BORINGCACHE_ARCHIVE_SELECTIVE_READS": "1"
+  },
+  "plan_settings": {
+    "target-budget": "25GiB"
+  },
+  "harness": {
+    "commit": "c96db4d0b59556d85ab489f3e2d0f8db338f8d93",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/44038144424",
+  "attempt": 1,
+  "started_at": "2026-11-17T07:26:53Z"
+}
