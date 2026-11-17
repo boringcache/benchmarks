@@ -1,0 +1,1011 @@
+{
+  "adapter_command": "cargo",
+  "case": "deno",
+  "lane": "boringcache-cargo-plus",
+  "provider": "boringcache",
+  "level": "plus",
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 25,
+  "scope": "boringcache-cargo-plus-github-rolling-2",
+  "cache_scope": "boringcache-cargo-plus-github-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "denoland/deno",
+  "sha": "c79d6dd7de2ae9de044990e912aaf23e111fc382",
+  "seconds": 2159.442,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1794920855760,
+      "run_id": "44083627824",
+      "session_id": "proxy-summary-14267511-24a6-4b3e-a1bd-0eb57f548e65",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 2154921,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "sccache",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 66.0,
+          "cpu_iowait_percent": 1.7,
+          "cpu_pressure_percent": 17.3,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 8.8,
+          "disk_read_mb": 8179.6,
+          "disk_written_mb": 17992.3,
+          "interval_ms": 2156726,
+          "io_pressure_percent": 3.3,
+          "memory_pressure_percent": 0.3,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+        "disk_available_gb": 84,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15984
+      },
+      "proxy": {
+        "adapter": "sccache",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 2154921,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_max_in_flight": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 0,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 0,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 125,
+          "cache_blobs_upload_urls": 134,
+          "cache_finalize_publish": 249,
+          "cache_flush_upload": 155,
+          "cache_kv_entries_current_version": 969,
+          "cache_kv_entries_upsert": 138,
+          "cache_kv_entry_reads": 195,
+          "cache_rollups_ingest": 163,
+          "cache_session_evidence_confirm": 161,
+          "cache_session_evidence_prepare": 136
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 150,
+          "cache_blobs_upload_urls": 164,
+          "cache_finalize_publish": 407,
+          "cache_flush_upload": 166,
+          "cache_kv_entries_current_version": 969,
+          "cache_kv_entries_upsert": 552,
+          "cache_kv_entry_reads": 195,
+          "cache_rollups_ingest": 310,
+          "cache_session_evidence_confirm": 171,
+          "cache_session_evidence_prepare": 151
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 3123,
+          "cache_blobs_upload_urls": 3217,
+          "cache_finalize_publish": 3,
+          "cache_flush_upload": 3,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_upsert": 56,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 43,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 6451,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 125,
+          "cache_blobs_upload_urls": 134,
+          "cache_finalize_publish": 249,
+          "cache_flush_upload": 155,
+          "cache_kv_entries_current_version": 969,
+          "cache_kv_entries_upsert": 138,
+          "cache_kv_entry_reads": 195,
+          "cache_rollups_ingest": 163,
+          "cache_session_evidence_confirm": 161,
+          "cache_session_evidence_prepare": 136
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 150,
+          "cache_blobs_upload_urls": 164,
+          "cache_finalize_publish": 407,
+          "cache_flush_upload": 166,
+          "cache_kv_entries_current_version": 969,
+          "cache_kv_entries_upsert": 552,
+          "cache_kv_entry_reads": 195,
+          "cache_rollups_ingest": 310,
+          "cache_session_evidence_confirm": 171,
+          "cache_session_evidence_prepare": 151
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 3123,
+          "cache_blobs_upload_urls": 3217,
+          "cache_finalize_publish": 3,
+          "cache_flush_upload": 3,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_upsert": 56,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 43,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 6451,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 1171
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_demand_max_wait_ms": 0,
+        "startup_prefetch_demand_wait_ms": 0,
+        "startup_prefetch_demand_waits": 0,
+        "startup_prefetch_unplanned_blobs": 8,
+        "startup_prefetch_unplanned_bytes": 18889,
+        "startup_prefetch_unused_blobs": 0,
+        "startup_prefetch_unused_bytes": 0,
+        "startup_prefetch_used_blobs": 0,
+        "startup_prefetch_used_bytes": 0
+      },
+      "kv_upload": {
+        "kv_upload_allowed_concurrency_max": 1,
+        "kv_upload_already_present_blobs": 3232,
+        "kv_upload_batches": 56,
+        "kv_upload_blobs_per_sec": 0,
+        "kv_upload_concurrency_reason": "adaptive_ramp",
+        "kv_upload_concurrency_source": "auto",
+        "kv_upload_duration_ms": 7668,
+        "kv_upload_failed_blobs": 0,
+        "kv_upload_final_concurrency_max": 1,
+        "kv_upload_initial_concurrency_max": 1,
+        "kv_upload_missing_local_blobs": 0,
+        "kv_upload_requested_blobs": 0,
+        "kv_upload_uploaded_blobs": 0,
+        "kv_upload_uploaded_bytes": 0,
+        "kv_upload_writethrough_failure_bytes": 0,
+        "kv_upload_writethrough_failure_count": 0,
+        "kv_upload_writethrough_pressure_skip_bytes": 0,
+        "kv_upload_writethrough_pressure_skip_count": 0,
+        "kv_upload_writethrough_uploaded_blobs": 3194,
+        "kv_upload_writethrough_uploaded_bytes": 1377280830
+      },
+      "singleflight": {
+        "singleflight_kv_lookup_leaders": 3242
+      },
+      "kv_lookup": {
+        "kv_lookup_sccache_after_refresh_miss": 3241,
+        "kv_lookup_sccache_pending_hit": 56,
+        "kv_lookup_sccache_published_fast_hit": 9,
+        "kv_lookup_sccache_published_fast_miss": 3241
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 19863,
+          "blob_read_local_count": 9,
+          "blob_read_local_hit_rate_pct": 100,
+          "blob_read_remote_avg_ms": 0,
+          "blob_read_remote_bytes": 0,
+          "blob_read_remote_count": 0
+        },
+        "blob_read_cache_bytes": 1436060201,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "average_cache_read_hit_seconds": 0.0,
+        "average_cache_write_seconds": 0.004,
+        "average_compiler_seconds": 0.695,
+        "cache_errors": 20,
+        "cache_hits": 65,
+        "cache_misses": 3233,
+        "cache_read_errors": 0,
+        "cache_timeouts": 0,
+        "cache_write_errors": 0,
+        "compile_requests": 3589,
+        "compile_requests_executed": 3326,
+        "hit_counts": {
+          "assembler": 4,
+          "c_cpp": 57,
+          "rust": 4
+        },
+        "hit_rate": 2.0,
+        "miss_counts": {
+          "assembler": 460,
+          "c_cpp": 1320,
+          "rust": 1453
+        },
+        "non_cacheable_calls": 232,
+        "non_cacheable_reasons": {
+          "-": 17,
+          "-E": 8,
+          "-o": 3,
+          "argument parse": 4,
+          "crate-type": 195,
+          "missing emit": 2,
+          "missing input": 3
+        },
+        "proxy_cache_read_errors": 0,
+        "proxy_cache_write_errors": 0,
+        "schema_version": "native_tool_evidence.v1",
+        "stats_source": "sccache --show-stats",
+        "tool": "sccache"
+      },
+      "unit_evidence": {
+        "build_succeeded": true,
+        "capabilities": {
+          "cache_source": false,
+          "critical_path": true,
+          "dependencies": false,
+          "execution_reasons": false,
+          "scheduling": true,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": true
+        },
+        "collection_state": "reported",
+        "counts": {
+          "executed": 1822,
+          "observed": 1822,
+          "scope": "cargo_units",
+          "up_to_date": 0
+        },
+        "critical_path": {
+          "end_offset_ms": 2086390,
+          "metadata_edges": 7,
+          "ready_gap_ms": 125840,
+          "source": "cargo_unblocked_units",
+          "start_offset_ms": 70380,
+          "truncated": false,
+          "unit_count": 15,
+          "unit_duration_ms": 1469780,
+          "units": [
+            {
+              "duration_ms": 130,
+              "id": "cargo-unit:4",
+              "label": "adler2 v2.0.0"
+            },
+            {
+              "duration_ms": 770,
+              "id": "cargo-unit:975",
+              "label": "miniz_oxide v0.8.8"
+            },
+            {
+              "duration_ms": 98520,
+              "id": "cargo-unit:1692",
+              "label": "v8 v150.4.0 build-script"
+            },
+            {
+              "duration_ms": 1540,
+              "id": "cargo-unit:1690",
+              "label": "v8 v150.4.0 build-script (run)"
+            },
+            {
+              "duration_ms": 3510,
+              "id": "cargo-unit:1688",
+              "label": "v8 v150.4.0"
+            },
+            {
+              "duration_ms": 110,
+              "id": "cargo-unit:458",
+              "label": "deno_v8 v0.5.0"
+            },
+            {
+              "duration_ms": 670,
+              "id": "cargo-unit:1387",
+              "label": "serde_v8 v0.322.0"
+            },
+            {
+              "duration_ms": 12030,
+              "id": "cargo-unit:344",
+              "label": "deno_core v0.413.0"
+            },
+            {
+              "duration_ms": 150,
+              "id": "cargo-unit:464",
+              "label": "deno_webidl v0.260.0"
+            },
+            {
+              "duration_ms": 15660,
+              "id": "cargo-unit:435",
+              "label": "deno_runtime v0.268.0"
+            },
+            {
+              "duration_ms": 279230,
+              "id": "cargo-unit:442",
+              "label": "deno_snapshots v0.75.0 build-script"
+            },
+            {
+              "duration_ms": 64250,
+              "id": "cargo-unit:443",
+              "label": "deno_snapshots v0.75.0 build-script (run)"
+            },
+            {
+              "duration_ms": 290,
+              "id": "cargo-unit:441",
+              "label": "deno_snapshots v0.75.0"
+            },
+            {
+              "duration_ms": 234040,
+              "id": "cargo-unit:326",
+              "label": "deno v2.9.8"
+            },
+            {
+              "duration_ms": 758880,
+              "id": "cargo-unit:327",
+              "label": "deno v2.9.8 deno \"bin\""
+            }
+          ]
+        },
+        "invocation": {
+          "host": "x86_64-unknown-linux-gnu",
+          "profile": "release",
+          "report_owner": "boringcache",
+          "target": "x86_64-unknown-linux-gnu",
+          "time_precision_ms": 10,
+          "total_time_ms": 2086400,
+          "units_total": 1822
+        },
+        "ranking_scope": "all_observed_units",
+        "scheduling": {
+          "average_active": 2.64,
+          "jobs": 4,
+          "max_concurrency": 5,
+          "ncpu": 4,
+          "waiting_ms": 929300,
+          "waiting_unit_ms": 201942770
+        },
+        "schema_version": "unit_evidence.v1",
+        "source": "cargo_timings_report",
+        "tool": "cargo",
+        "tool_version": "1.95.0",
+        "truncated": true,
+        "unit_kind": "crate_unit",
+        "units": [
+          {
+            "attributes": {
+              "crate_name": "deno",
+              "crate_version": "2.9.8",
+              "features": [
+                "__runtime_defaults",
+                "__vendored_zlib_ng",
+                "default",
+                "deno_panic",
+                "panic-trace",
+                "panic-trace-frame-pointer",
+                "upgrade",
+                "v8"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 1327510,
+              "target_kind": "deno \"bin\""
+            },
+            "completed_at_ms": 1794920787656,
+            "critical_path": true,
+            "duration_ms": 758880,
+            "id": "cargo-unit:327",
+            "key": "b6edc5d6b1430f44042226aea95e87b787d8382b17fd941ffa2cf8425dfd295a",
+            "label": "deno v2.9.8 deno \"bin\"",
+            "started_at_ms": 1794920028776,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "denort",
+              "crate_version": "2.9.8",
+              "features": [
+                "default",
+                "v8"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 1102040,
+              "target_kind": "denort \"bin\""
+            },
+            "completed_at_ms": 1794920330636,
+            "duration_ms": 527330,
+            "id": "cargo-unit:482",
+            "key": "552462c4bb4d0948f09f28b4ed0595d4c8bc318fbdff849492216984dd91b91b",
+            "label": "denort v2.9.8 denort \"bin\"",
+            "started_at_ms": 1794919803306,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "deno_snapshots",
+              "crate_version": "0.75.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 749740,
+              "target_kind": "build-script"
+            },
+            "completed_at_ms": 1794919730236,
+            "critical_path": true,
+            "duration_ms": 279230,
+            "id": "cargo-unit:442",
+            "key": "74d65b5ca357b1e160cd0f726ba2f357d882fc9c1f825d931437e736edfea400",
+            "label": "deno_snapshots v0.75.0 build-script",
+            "started_at_ms": 1794919451006,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "deno",
+              "crate_version": "2.9.8",
+              "features": [
+                "__runtime_defaults",
+                "__vendored_zlib_ng",
+                "default",
+                "deno_panic",
+                "panic-trace",
+                "panic-trace-frame-pointer",
+                "upgrade",
+                "v8"
+              ],
+              "frontend_ms": 234030,
+              "mode": "todo",
+              "start_offset_ms": 1093470,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794920028776,
+            "critical_path": true,
+            "duration_ms": 234040,
+            "id": "cargo-unit:326",
+            "key": "5b8e75e1ab200066a0c0f4c33f396a3c6e8bf28b7355522544f440e5ba22c432",
+            "label": "deno v2.9.8",
+            "started_at_ms": 1794919794736,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "aws-lc-sys",
+              "crate_version": "0.40.0",
+              "features": [
+                "all-bindings",
+                "default",
+                "prebuilt-nasm"
+              ],
+              "mode": "run-custom-build",
+              "start_offset_ms": 556450,
+              "target_kind": "build-script (run)",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794919411066,
+            "duration_ms": 153350,
+            "id": "cargo-unit:80",
+            "key": "d907f31366b7c20d91455cc1447b29f6aab4dc8d6279b51b6e27168d3541a87f",
+            "label": "aws-lc-sys v0.40.0 build-script (run)",
+            "started_at_ms": 1794919257716,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "aws-lc-sys",
+              "crate_version": "0.46.0",
+              "features": [
+                "prebuilt-nasm"
+              ],
+              "mode": "run-custom-build",
+              "start_offset_ms": 177020,
+              "target_kind": "build-script (run)",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794919019416,
+            "duration_ms": 141130,
+            "id": "cargo-unit:85",
+            "key": "c32e5f7645c1e0c9f75b5a36fd79a02047c6de4965e2bcd96d86bb5bf5ab41d3",
+            "label": "aws-lc-sys v0.46.0 build-script (run)",
+            "started_at_ms": 1794918878286,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "aws-lc-sys",
+              "crate_version": "0.46.0",
+              "features": [
+                "prebuilt-nasm"
+              ],
+              "mode": "run-custom-build",
+              "start_offset_ms": 196430,
+              "target_kind": "build-script (run)",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794919025556,
+            "duration_ms": 127860,
+            "id": "cargo-unit:83",
+            "key": "c32e5f7645c1e0c9f75b5a36fd79a02047c6de4965e2bcd96d86bb5bf5ab41d3",
+            "label": "aws-lc-sys v0.46.0 build-script (run)",
+            "started_at_ms": 1794918897696,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "aws-lc-sys",
+              "crate_version": "0.40.0",
+              "features": [
+                "all-bindings",
+                "default",
+                "prebuilt-nasm"
+              ],
+              "mode": "run-custom-build",
+              "start_offset_ms": 401240,
+              "target_kind": "build-script (run)",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794919230216,
+            "duration_ms": 127710,
+            "id": "cargo-unit:78",
+            "key": "d907f31366b7c20d91455cc1447b29f6aab4dc8d6279b51b6e27168d3541a87f",
+            "label": "aws-lc-sys v0.40.0 build-script (run)",
+            "started_at_ms": 1794919102506,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "v8",
+              "crate_version": "150.4.0",
+              "features": [
+                "simdutf",
+                "use_custom_libcxx"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 80040,
+              "target_kind": "build-script"
+            },
+            "completed_at_ms": 1794918879826,
+            "critical_path": true,
+            "duration_ms": 98520,
+            "id": "cargo-unit:1692",
+            "key": "6e5edcd127534b33645e133a9e77b0e58a2d6487528bd1d15b994e517b5b0bfb",
+            "label": "v8 v150.4.0 build-script",
+            "started_at_ms": 1794918781306,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "test_server",
+              "crate_version": "0.1.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 945490,
+              "target_kind": "test_server \"bin\""
+            },
+            "completed_at_ms": 1794919732256,
+            "duration_ms": 85500,
+            "id": "cargo-unit:1555",
+            "key": "243a59a887c719b4a60b1be271c58ca98007d4f65dde9d2877781688bf8cc77d",
+            "label": "test_server v0.1.0 test_server \"bin\"",
+            "started_at_ms": 1794919646756,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "deno_snapshots",
+              "crate_version": "0.75.0",
+              "features": [],
+              "mode": "run-custom-build",
+              "start_offset_ms": 1028970,
+              "target_kind": "build-script (run)"
+            },
+            "completed_at_ms": 1794919794486,
+            "critical_path": true,
+            "duration_ms": 64250,
+            "id": "cargo-unit:443",
+            "key": "149501ca961a403c88b90cd42550832095a0efb1fcf24473fdb3da1e6c4228de",
+            "label": "deno_snapshots v0.75.0 build-script (run)",
+            "started_at_ms": 1794919730236,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "deno_runtime",
+              "crate_version": "0.268.0",
+              "features": [],
+              "frontend_ms": 60880,
+              "mode": "todo",
+              "start_offset_ms": 774630,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794919536786,
+            "duration_ms": 60890,
+            "id": "cargo-unit:436",
+            "key": "39fb8bb660de3a6a846af650cc7bf9197d75c27d19fe0c4e63a758eb3d7d4932",
+            "label": "deno_runtime v0.268.0",
+            "started_at_ms": 1794919475896,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "deno",
+              "crate_version": "2.9.8",
+              "features": [
+                "__runtime_defaults",
+                "__vendored_zlib_ng",
+                "default",
+                "deno_panic",
+                "panic-trace",
+                "panic-trace-frame-pointer",
+                "upgrade",
+                "v8"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 813210,
+              "target_kind": "build-script"
+            },
+            "completed_at_ms": 1794919563506,
+            "duration_ms": 49030,
+            "id": "cargo-unit:328",
+            "key": "65cd8a0068bd650cb9c9b9d524c63725459ab7a7ab99d29957a7ad8381574e51",
+            "label": "deno v2.9.8 build-script",
+            "started_at_ms": 1794919514476,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "deno_node",
+              "crate_version": "0.198.0",
+              "features": [
+                "sync_fs"
+              ],
+              "frontend_ms": 41880,
+              "mode": "todo",
+              "start_offset_ms": 726400,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794919469556,
+            "duration_ms": 41890,
+            "id": "cargo-unit:402",
+            "key": "24aa464159eac0ef59b188697399dad1749a107f66190f176baa9d70ac9c2a43",
+            "label": "deno_node v0.198.0",
+            "started_at_ms": 1794919427666,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "denort",
+              "crate_version": "2.9.8",
+              "features": [
+                "default",
+                "v8"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 823970,
+              "target_kind": "build-script"
+            },
+            "completed_at_ms": 1794919563626,
+            "duration_ms": 38390,
+            "id": "cargo-unit:483",
+            "key": "012ae86ad99a4c779af325e2ba7b01b152936e14e0099b874ffc7ac11fa0ec2e",
+            "label": "denort v2.9.8 build-script",
+            "started_at_ms": 1794919525236,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "deno_doc",
+              "crate_version": "0.207.0",
+              "features": [
+                "comrak",
+                "default",
+                "rust"
+              ],
+              "frontend_ms": 34780,
+              "mode": "todo",
+              "start_offset_ms": 868540,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794919604596,
+            "duration_ms": 34790,
+            "id": "cargo-unit:352",
+            "key": "166961e6f8168278a1c08a79f46cc79759298d0f07206c2de535d0cd183d18a7",
+            "label": "deno_doc v0.207.0",
+            "started_at_ms": 1794919569806,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "deno_crypto",
+              "crate_version": "0.274.0",
+              "features": [],
+              "frontend_ms": 32150,
+              "mode": "todo",
+              "start_offset_ms": 715130,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794919448546,
+            "duration_ms": 32150,
+            "id": "cargo-unit:349",
+            "key": "761e72ffeee302c9c7496eaa3ce04f14b07a88ac4ab15ded764f3f1b3e7d935c",
+            "label": "deno_crypto v0.274.0",
+            "started_at_ms": 1794919416396,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "wgpu-core",
+              "crate_version": "29.0.1",
+              "features": [
+                "default",
+                "gles",
+                "macro_rules_attribute",
+                "replay",
+                "serde",
+                "std",
+                "strict_asserts",
+                "trace"
+              ],
+              "features_truncated": true,
+              "frontend_ms": 28930,
+              "mode": "todo",
+              "start_offset_ms": 662150,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794919392346,
+            "duration_ms": 28930,
+            "id": "cargo-unit:1726",
+            "key": "4607f69f7fbb462878f2810f711f6400ad262572579459498f4591363792c470",
+            "label": "wgpu-core v29.0.1",
+            "started_at_ms": 1794919363416,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "deno_lint",
+              "crate_version": "0.84.1",
+              "features": [
+                "default"
+              ],
+              "frontend_ms": 26810,
+              "mode": "todo",
+              "start_offset_ms": 899670,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1794919627756,
+            "duration_ms": 26820,
+            "id": "cargo-unit:385",
+            "key": "6ab52fd3a5bc8f27758ca4ed14a8a7551a0d3b51b68eac93931fc17c74758aed",
+            "label": "deno_lint v0.84.1",
+            "started_at_ms": 1794919600936,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "cranelift-codegen",
+              "crate_version": "0.117.2",
+              "features": [
+                "gimli",
+                "std",
+                "unwind"
+              ],
+              "frontend_ms": 26640,
+              "mode": "todo",
+              "start_offset_ms": 605360,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1794919333266,
+            "duration_ms": 26640,
+            "id": "cargo-unit:248",
+            "key": "90dd1de580b384f909a8910343565a914bfb93c2567d3fffcdefe46ad67a17e5",
+            "label": "cranelift-codegen v0.117.2",
+            "started_at_ms": 1794919306626,
+            "state": "executed"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "sccache",
+          "candidates": [
+            {
+              "confidence": "high",
+              "evidence": {
+                "bytes_read": 3339668,
+                "hit_rate": 2.0,
+                "hits": 65,
+                "misses": 3241
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 2154921,
+            "errors": 0,
+            "hit_rate": 2.0,
+            "hits": 65,
+            "misses": 3241,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 3233
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 2.0,
+          "hits": 65,
+          "likely_reason": "mixed_existing_and_new_work",
+          "misses": 3241,
+          "state": "warm_mixed",
+          "writes": 3233
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [
+    "boringcache-cargo-plus-github-rolling-25-44083627824.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "product_env": {
+    "BORINGCACHE_ARCHIVE_SELECTIVE_READS": "1"
+  },
+  "plan_settings": {
+    "target-budget": "20GiB"
+  },
+  "harness": {
+    "commit": "123e53c923ad11308a49aa42b5fbc5b6107af442",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/44083627824",
+  "attempt": 1,
+  "started_at": "2026-11-17T12:31:37Z"
+}
