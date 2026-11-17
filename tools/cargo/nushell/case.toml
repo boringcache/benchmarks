@@ -5,7 +5,7 @@ rolling_series = 4
 directory = "upstream"
 script = ["bash", "../overlay/ci.sh"]
 prepare = [
-  "mise trust && mise install",
+  "ruby \"$BENCH_ROOT/tools/cargo/nushell/prepare.rb\" && mise trust && mise install",
   "cd upstream && rustup show active-toolchain && cargo metadata --no-deps --format-version 1 > /dev/null",
 ]
 check = "bash overlay/check.sh"
@@ -13,7 +13,6 @@ check = "bash overlay/check.sh"
 [env]
 CARGO_TERM_COLOR = "always"
 CARGO_INCREMENTAL = "0"
-RUSTUP_TOOLCHAIN = "1.97.1"
 NU_LOG_LEVEL = "DEBUG"
 NU_TEST_SKIP_DEPS_BUILD = "true"
 NUSHELL_CARGO_PROFILE = "ci"
