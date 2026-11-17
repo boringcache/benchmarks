@@ -8,5 +8,6 @@ check = "docker image inspect dspace-benchmark:local"
 [runs]
 boringcache-docker = ["github", "github-arm", "local"]
 boringcache-docker-plus = ["github", "github-arm", "local"]
+boringcache-docker-plus-ondemand = ["github"]
 gha = ["github", "github-arm"]
 ghcr = ["github", "github-arm"]

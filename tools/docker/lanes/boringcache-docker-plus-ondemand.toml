@@ -1,0 +1,6 @@
+provider = "boringcache"
+level = "plus"
+plan = "plus"
+label = "boringcache plus on-demand"
+cli_args = ["--on-demand"]
+experimental = true
