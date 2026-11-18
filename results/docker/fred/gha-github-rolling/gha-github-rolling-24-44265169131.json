@@ -1,0 +1,52 @@
+{
+  "adapter_command": "docker",
+  "case": "fred",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "layers"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 24,
+  "scope": "gha-github-rolling",
+  "cache_scope": "gha-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "ThalesGroup/fred",
+  "sha": "f3edaebac0d03d4e9ae681bb0053668663ff1f47",
+  "seconds": 749.094,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    },
+    "image_platform": "linux/amd64",
+    "buildx_builder": {
+      "name": "builder-eacc2a7a-cda6-4a9c-96d1-2bc7c119dc8a",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-eacc2a7a-cda6-4a9c-96d1-2bc7c119dc8a0",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "7927c31733fec4a22b2eb995ab128f1e8a7413d5",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/44265169131",
+  "attempt": 1,
+  "started_at": "2026-11-18T08:14:54Z"
+}
