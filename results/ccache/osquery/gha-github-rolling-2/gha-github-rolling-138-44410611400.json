@@ -1,0 +1,42 @@
+{
+  "adapter_command": "ccache",
+  "case": "osquery",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "remote-storage"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 138,
+  "scope": "gha-github-rolling-2",
+  "cache_scope": "gha-github-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": "ccache-osquery-gha-github-rolling-2-137",
+  "cache_restore_tracked": true,
+  "repo": "osquery/osquery",
+  "sha": "1b4b6c0f9bee7f479f335474ac982992fdf8e94a",
+  "seconds": 1282.651,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "fc77d551b751aae2a4ec9ec7ddba6553136a0baf",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/44410611400",
+  "attempt": 1,
+  "started_at": "2026-11-18T22:23:34Z"
+}
