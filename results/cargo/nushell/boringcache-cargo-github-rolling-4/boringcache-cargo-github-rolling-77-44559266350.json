@@ -1,0 +1,924 @@
+{
+  "adapter_command": "cargo",
+  "case": "nushell",
+  "lane": "boringcache-cargo",
+  "provider": "boringcache",
+  "level": "base",
+  "capabilities": [
+    "compiler-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 77,
+  "scope": "boringcache-cargo-github-rolling-4",
+  "cache_scope": "boringcache-cargo-github-rolling-4",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "nushell/nushell",
+  "sha": "d45f4c09d21cb5ea3d55754702e5ae7c6d3a4182",
+  "seconds": 136.282,
+  "cache_save_timing": "in-phase",
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1795103617456,
+      "run_id": "44559266350",
+      "session_id": "proxy-summary-93f52ecc-a86f-43cd-9736-e8d75c874df6",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 134388,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "sccache",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 75.0,
+          "cpu_iowait_percent": 3.4,
+          "cpu_pressure_percent": 27.9,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 36.9,
+          "disk_read_mb": 184.4,
+          "disk_written_mb": 10096.9,
+          "interval_ms": 134849,
+          "io_pressure_percent": 11.0,
+          "memory_pressure_percent": 0.0,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+        "disk_available_gb": 84,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15984
+      },
+      "proxy": {
+        "adapter": "sccache",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 134388,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_max_in_flight": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 1678,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 128,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 115,
+          "cache_blobs_upload_urls": 112,
+          "cache_kv_entries_current_version": 559,
+          "cache_kv_entries_download_urls": 1104,
+          "cache_kv_entries_upsert": 116,
+          "cache_kv_entry_reads": 587,
+          "cache_rollups_ingest": 144,
+          "cache_session_evidence_confirm": 129,
+          "cache_session_evidence_prepare": 111
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 120,
+          "cache_blobs_upload_urls": 124,
+          "cache_kv_entries_current_version": 559,
+          "cache_kv_entries_download_urls": 1104,
+          "cache_kv_entries_upsert": 129,
+          "cache_kv_entry_reads": 587,
+          "cache_rollups_ingest": 291,
+          "cache_session_evidence_confirm": 164,
+          "cache_session_evidence_prepare": 114
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 3,
+          "cache_blobs_upload_urls": 6,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entries_upsert": 3,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 5,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 24,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 115,
+          "cache_blobs_upload_urls": 112,
+          "cache_kv_entries_current_version": 559,
+          "cache_kv_entries_download_urls": 1104,
+          "cache_kv_entries_upsert": 116,
+          "cache_kv_entry_reads": 587,
+          "cache_rollups_ingest": 144,
+          "cache_session_evidence_confirm": 129,
+          "cache_session_evidence_prepare": 111
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 120,
+          "cache_blobs_upload_urls": 124,
+          "cache_kv_entries_current_version": 559,
+          "cache_kv_entries_download_urls": 1104,
+          "cache_kv_entries_upsert": 129,
+          "cache_kv_entry_reads": 587,
+          "cache_rollups_ingest": 291,
+          "cache_session_evidence_confirm": 164,
+          "cache_session_evidence_prepare": 114
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 3,
+          "cache_blobs_upload_urls": 6,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entries_upsert": 3,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 5,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 24,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 1150
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 523192,
+        "startup_prefetch_blobs_per_sec": 352,
+        "startup_prefetch_bytes_per_sec": 184397676,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 128,
+        "startup_prefetch_concurrency_adjustment_count": 2,
+        "startup_prefetch_concurrency_adjustments": "shared_download_policy:64->80,shared_download_policy:80->128",
+        "startup_prefetch_concurrency_reason": "many_small_blobs_io_bound",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_demand_max_wait_ms": 0,
+        "startup_prefetch_demand_wait_ms": 0,
+        "startup_prefetch_demand_waits": 0,
+        "startup_prefetch_duration_ms": 4761,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 128,
+        "startup_prefetch_hedge_wins": 0,
+        "startup_prefetch_hedges": 0,
+        "startup_prefetch_initial_concurrency": 64,
+        "startup_prefetch_inserted": 1678,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 128,
+        "startup_prefetch_mode": "current-version",
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 1678,
+        "startup_prefetch_target_bytes": 877917338,
+        "startup_prefetch_total_unique_blobs": 3454,
+        "startup_prefetch_unplanned_blobs": 0,
+        "startup_prefetch_unplanned_bytes": 0,
+        "startup_prefetch_unused_blobs": 47,
+        "startup_prefetch_unused_bytes": 91035611,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 1678,
+        "startup_prefetch_used_blobs": 1631,
+        "startup_prefetch_used_bytes": 786881727
+      },
+      "kv_upload": {
+        "kv_upload_allowed_concurrency_max": 1,
+        "kv_upload_already_present_blobs": 3,
+        "kv_upload_batches": 3,
+        "kv_upload_blobs_per_sec": 0,
+        "kv_upload_concurrency_reason": "adaptive_ramp",
+        "kv_upload_concurrency_source": "auto",
+        "kv_upload_duration_ms": 333,
+        "kv_upload_failed_blobs": 0,
+        "kv_upload_final_concurrency_max": 1,
+        "kv_upload_initial_concurrency_max": 1,
+        "kv_upload_missing_local_blobs": 0,
+        "kv_upload_requested_blobs": 0,
+        "kv_upload_uploaded_blobs": 0,
+        "kv_upload_uploaded_bytes": 0,
+        "kv_upload_writethrough_failure_bytes": 0,
+        "kv_upload_writethrough_failure_count": 0,
+        "kv_upload_writethrough_pressure_skip_bytes": 0,
+        "kv_upload_writethrough_pressure_skip_count": 0,
+        "kv_upload_writethrough_uploaded_blobs": 3,
+        "kv_upload_writethrough_uploaded_bytes": 2913573
+      },
+      "singleflight": {
+        "singleflight_kv_download_leaders": 1678,
+        "singleflight_kv_index_refresh_leaders": 1,
+        "singleflight_kv_lookup_leaders": 7
+      },
+      "kv_lookup": {
+        "kv_lookup_sccache_after_refresh_miss": 7,
+        "kv_lookup_sccache_published_fast_hit": 1640,
+        "kv_lookup_sccache_published_fast_miss": 7
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 786893473,
+          "blob_read_local_count": 1640,
+          "blob_read_local_hit_rate_pct": 49,
+          "blob_read_remote_avg_ms": 262,
+          "blob_read_remote_bytes": 877917338,
+          "blob_read_remote_count": 1678
+        },
+        "blob_read_cache_bytes": 880830911,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "average_cache_read_hit_seconds": 0.001,
+        "average_cache_write_seconds": 0.007,
+        "average_compiler_seconds": 0.99,
+        "cache_errors": 0,
+        "cache_hits": 1640,
+        "cache_misses": 3,
+        "cache_read_errors": 0,
+        "cache_timeouts": 0,
+        "cache_write_errors": 0,
+        "compile_requests": 1869,
+        "compile_requests_executed": 1647,
+        "hit_counts": {
+          "assembler": 141,
+          "c_cpp": 637,
+          "rust": 862
+        },
+        "hit_rate": 99.8,
+        "miss_counts": {
+          "rust": 3
+        },
+        "non_cacheable_calls": 214,
+        "non_cacheable_reasons": {
+          "-": 11,
+          "-E": 1,
+          "-o": 3,
+          "crate-type": 193,
+          "missing emit": 1,
+          "missing input": 5
+        },
+        "proxy_cache_read_errors": 0,
+        "proxy_cache_write_errors": 0,
+        "schema_version": "native_tool_evidence.v1",
+        "stats_source": "sccache --show-stats",
+        "tool": "sccache"
+      },
+      "unit_evidence": {
+        "build_succeeded": false,
+        "capabilities": {
+          "cache_source": false,
+          "critical_path": true,
+          "dependencies": false,
+          "execution_reasons": false,
+          "scheduling": true,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": true
+        },
+        "collection_state": "reported",
+        "counts": {
+          "executed": 1262,
+          "observed": 1262,
+          "scope": "cargo_units",
+          "up_to_date": 0
+        },
+        "critical_path": {
+          "end_offset_ms": 124010,
+          "metadata_edges": 1,
+          "ready_gap_ms": 38670,
+          "source": "cargo_unblocked_units",
+          "start_offset_ms": 72980,
+          "truncated": false,
+          "unit_count": 3,
+          "unit_duration_ms": 12360,
+          "units": [
+            {
+              "duration_ms": 90,
+              "id": "cargo-unit:320",
+              "label": "glob-match v0.2.1"
+            },
+            {
+              "duration_ms": 140,
+              "id": "cargo-unit:1042",
+              "label": "tango-bench v0.9.0"
+            },
+            {
+              "duration_ms": 12130,
+              "id": "cargo-unit:526",
+              "label": "nu v0.117.1 tests \"test\" (test)"
+            }
+          ]
+        },
+        "invocation": {
+          "host": "x86_64-unknown-linux-gnu",
+          "profile": "ci",
+          "report_owner": "boringcache",
+          "target": "x86_64-unknown-linux-gnu",
+          "time_precision_ms": 10,
+          "total_time_ms": 124000,
+          "units_total": 1262
+        },
+        "ranking_scope": "all_observed_units",
+        "scheduling": {
+          "average_active": 3.23,
+          "jobs": 4,
+          "max_concurrency": 5,
+          "ncpu": 4,
+          "waiting_ms": 104660,
+          "waiting_unit_ms": 7285360
+        },
+        "schema_version": "unit_evidence.v1",
+        "source": "cargo_timings_report",
+        "tool": "cargo",
+        "tool_version": "1.98.1",
+        "truncated": true,
+        "unit_kind": "crate_unit",
+        "units": [
+          {
+            "attributes": {
+              "crate_name": "aws-lc-sys",
+              "crate_version": "0.45.0",
+              "features": [
+                "prebuilt-nasm"
+              ],
+              "mode": "run-custom-build",
+              "start_offset_ms": 21670,
+              "target_kind": "build-script (run)"
+            },
+            "completed_at_ms": 1795103553669,
+            "duration_ms": 41830,
+            "id": "cargo-unit:53",
+            "key": "9ef0bd5e1d3360c3671a26173aa30fc769ec27c42500208257101e4f2fcd6f06",
+            "label": "aws-lc-sys v0.45.0 build-script (run)",
+            "started_at_ms": 1795103511839,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "nu-command",
+              "crate_version": "0.117.1",
+              "features": [
+                "aegis-password-generator",
+                "crossterm",
+                "default",
+                "dns-lookup",
+                "getrandom",
+                "js",
+                "multipart-rs",
+                "network"
+              ],
+              "features_truncated": true,
+              "mode": "todo",
+              "start_offset_ms": 79870,
+              "target_kind": "nu_command \"lib\" (test)"
+            },
+            "completed_at_ms": 1795103594819,
+            "duration_ms": 24780,
+            "id": "cargo-unit:551",
+            "key": "8f69a585e1fff047d8cc36dfdd27d52c49f3e800a4fa01ad2883889461ebb4c3",
+            "label": "nu-command v0.117.1 nu_command \"lib\" (test)",
+            "started_at_ms": 1795103570039,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "libgit2-sys",
+              "crate_version": "0.18.7+1.9.6",
+              "features": [
+                "vendored"
+              ],
+              "mode": "run-custom-build",
+              "start_offset_ms": 30970,
+              "target_kind": "build-script (run)"
+            },
+            "completed_at_ms": 1795103543179,
+            "duration_ms": 22040,
+            "id": "cargo-unit:429",
+            "key": "3a97b809bbc718be551d26f0466c9a07b16746385e5daabff3e97ad5cac5410d",
+            "label": "libgit2-sys v0.18.7+1.9.6 build-script (run)",
+            "started_at_ms": 1795103521139,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "nu_plugin_polars",
+              "crate_version": "0.117.1",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 76980,
+              "target_kind": "nu_plugin_polars \"bin\""
+            },
+            "completed_at_ms": 1795103584149,
+            "duration_ms": 17000,
+            "id": "cargo-unit:661",
+            "key": "2dff8cc3dd057e40cd8c78cfa55d3617a09817b400f521715ef6fc635aa88461",
+            "label": "nu_plugin_polars v0.117.1 nu_plugin_polars \"bin\"",
+            "started_at_ms": 1795103567149,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "nu_plugin_polars",
+              "crate_version": "0.117.1",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 94430,
+              "target_kind": "nu_plugin_polars \"lib\" (test)"
+            },
+            "completed_at_ms": 1795103600929,
+            "duration_ms": 16330,
+            "id": "cargo-unit:658",
+            "key": "5ec5c1c858fb6197b8e6225dfe4a080ef6aa8845de54c656c3a3576ab27f4298",
+            "label": "nu_plugin_polars v0.117.1 nu_plugin_polars \"lib\" (test)",
+            "started_at_ms": 1795103584599,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "nu_plugin_gstat",
+              "crate_version": "0.117.1",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 97730,
+              "target_kind": "nu_plugin_gstat \"bin\""
+            },
+            "completed_at_ms": 1795103601939,
+            "duration_ms": 14040,
+            "id": "cargo-unit:653",
+            "key": "37a7b798dbcb8995db680d550e978ff2144d93fe0b580db86872fa52fff94f80",
+            "label": "nu_plugin_gstat v0.117.1 nu_plugin_gstat \"bin\"",
+            "started_at_ms": 1795103587899,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "curl-sys",
+              "crate_version": "0.4.85+curl-8.18.0",
+              "features": [
+                "openssl-sys",
+                "ssl"
+              ],
+              "mode": "run-custom-build",
+              "start_offset_ms": 61290,
+              "target_kind": "build-script (run)"
+            },
+            "completed_at_ms": 1795103564729,
+            "duration_ms": 13270,
+            "id": "cargo-unit:193",
+            "key": "e8a8c2e68ae7a089d8b3acf09de39bdae5533eea504d69312eac004f20b5673e",
+            "label": "curl-sys v0.4.85+curl-8.18.0 build-script (run)",
+            "started_at_ms": 1795103551459,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "nu",
+              "crate_version": "0.117.1",
+              "features": [
+                "dap",
+                "default",
+                "lsp",
+                "mcp",
+                "network",
+                "plugin",
+                "rustls-tls",
+                "sqlite"
+              ],
+              "features_truncated": true,
+              "mode": "todo",
+              "start_offset_ms": 111880,
+              "target_kind": "tests \"test\" (test)"
+            },
+            "completed_at_ms": 1795103614179,
+            "critical_path": true,
+            "duration_ms": 12130,
+            "id": "cargo-unit:526",
+            "key": "e867209d35a0ca26df54b983f6e8ce9a59db79c68ea59ad4b98f7a1c6942ea52",
+            "label": "nu v0.117.1 tests \"test\" (test)",
+            "started_at_ms": 1795103602049,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "nu_plugin_example",
+              "crate_version": "0.117.1",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 85670,
+              "target_kind": "nu_plugin_example \"bin\""
+            },
+            "completed_at_ms": 1795103587459,
+            "duration_ms": 11620,
+            "id": "cargo-unit:645",
+            "key": "3cc57874f6c9c4b8cf45988d71b1b23ce7b04c3cbb9e55879ef29a442fe002e8",
+            "label": "nu_plugin_example v0.117.1 nu_plugin_example \"bin\"",
+            "started_at_ms": 1795103575839,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "nu_plugin_formats",
+              "crate_version": "0.117.1",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 105590,
+              "target_kind": "nu_plugin_formats \"bin\""
+            },
+            "completed_at_ms": 1795103606309,
+            "duration_ms": 10550,
+            "id": "cargo-unit:649",
+            "key": "0f248d7b80b1b7146a57889e31fdb64ea23025600366db21bdc3040f007cbae7",
+            "label": "nu_plugin_formats v0.117.1 nu_plugin_formats \"bin\"",
+            "started_at_ms": 1795103595759,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "nu_plugin_inc",
+              "crate_version": "0.117.1",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 80810,
+              "target_kind": "nu_plugin_inc \"bin\""
+            },
+            "completed_at_ms": 1795103575839,
+            "duration_ms": 4860,
+            "id": "cargo-unit:657",
+            "key": "79cec04d81dddcd05f286ae25e233931798bf78e73b559d2f7248d2ecd7bac34",
+            "label": "nu_plugin_inc v0.117.1 nu_plugin_inc \"bin\"",
+            "started_at_ms": 1795103570979,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "ring",
+              "crate_version": "0.17.14",
+              "features": [
+                "alloc",
+                "default",
+                "dev_urandom_fallback",
+                "std"
+              ],
+              "mode": "run-custom-build",
+              "start_offset_ms": 21400,
+              "target_kind": "build-script (run)"
+            },
+            "completed_at_ms": 1795103515819,
+            "duration_ms": 4250,
+            "id": "cargo-unit:893",
+            "key": "7bd754ffc597df6367d3e9ba5128fd046f36c5725710d4d7e1af9bde104a1050",
+            "label": "ring v0.17.14 build-script (run)",
+            "started_at_ms": 1795103511569,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "nu_plugin_query",
+              "crate_version": "0.117.1",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 75710,
+              "target_kind": "nu_plugin_query \"bin\""
+            },
+            "completed_at_ms": 1795103570039,
+            "duration_ms": 4160,
+            "id": "cargo-unit:665",
+            "key": "8e8424588f530c264a9862614f771ecfc27fee58354dab62aefc152f5d72729b",
+            "label": "nu_plugin_query v0.117.1 nu_plugin_query \"bin\"",
+            "started_at_ms": 1795103565879,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "zstd-sys",
+              "crate_version": "2.1.2+zstd.1.5.7",
+              "features": [
+                "legacy",
+                "std",
+                "zdict_builder"
+              ],
+              "mode": "run-custom-build",
+              "start_offset_ms": 54820,
+              "target_kind": "build-script (run)"
+            },
+            "completed_at_ms": 1795103549059,
+            "duration_ms": 4070,
+            "id": "cargo-unit:1260",
+            "key": "30156745465812e73cc1044cf2831bbd44fba8b53e4f6cd4e08a6f960eae8cc0",
+            "label": "zstd-sys v2.1.2+zstd.1.5.7 build-script (run)",
+            "started_at_ms": 1795103544989,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "nu-cmd-lang",
+              "crate_version": "0.117.1",
+              "features": [
+                "default",
+                "os",
+                "plugin"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 74020,
+              "target_kind": "nu_cmd_lang \"lib\" (test)"
+            },
+            "completed_at_ms": 1795103567819,
+            "duration_ms": 3630,
+            "id": "cargo-unit:541",
+            "key": "7e34f37639870fbec6fdecc27533835fe68811b083aef9562229f42339ef7114",
+            "label": "nu-cmd-lang v0.117.1 nu_cmd_lang \"lib\" (test)",
+            "started_at_ms": 1795103564189,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "nu_plugin_polars",
+              "crate_version": "0.117.1",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 74160,
+              "target_kind": "nu_plugin_polars \"bin\" (test)"
+            },
+            "completed_at_ms": 1795103567689,
+            "duration_ms": 3360,
+            "id": "cargo-unit:660",
+            "key": "e3ea5c5fcf1d71bd2c4cb710e38610a212b6c083d21359b828d3267f06192cb1",
+            "label": "nu_plugin_polars v0.117.1 nu_plugin_polars \"bin\" (test)",
+            "started_at_ms": 1795103564329,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "nu",
+              "crate_version": "0.117.1",
+              "features": [
+                "dap",
+                "default",
+                "lsp",
+                "mcp",
+                "network",
+                "plugin",
+                "rustls-tls",
+                "sqlite"
+              ],
+              "features_truncated": true,
+              "mode": "todo",
+              "start_offset_ms": 111800,
+              "target_kind": "nu \"bin\" (test)"
+            },
+            "completed_at_ms": 1795103604819,
+            "duration_ms": 2850,
+            "id": "cargo-unit:524",
+            "key": "a04fb6c0bfeb4168246cb1f1e5de77ca19c0e4bf306298c570efe3efa6371d9d",
+            "label": "nu v0.117.1 nu \"bin\" (test)",
+            "started_at_ms": 1795103601969,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "nu-cmd-lang",
+              "crate_version": "0.117.1",
+              "features": [
+                "default",
+                "os",
+                "plugin"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 77550,
+              "target_kind": "main \"test\" (test)"
+            },
+            "completed_at_ms": 1795103570509,
+            "duration_ms": 2790,
+            "id": "cargo-unit:543",
+            "key": "44bc4c5a0dcccccac514a73352c058e5edf12d1f73e2fd21671a4955debf98fb",
+            "label": "nu-cmd-lang v0.117.1 main \"test\" (test)",
+            "started_at_ms": 1795103567719,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "serde_derive",
+              "crate_version": "1.0.229",
+              "features": [
+                "default"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 7950,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795103500389,
+            "duration_ms": 2270,
+            "id": "cargo-unit:953",
+            "key": "cd7447d52a786be1cd277e86b0a9d0679bb75766dd80133f12dfe5fa3cc11d41",
+            "label": "serde_derive v1.0.229",
+            "started_at_ms": 1795103498119,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "nu-test-support",
+              "crate_version": "0.117.1",
+              "features": [
+                "network",
+                "nu-cli",
+                "os",
+                "plugin",
+                "rustls-tls"
+              ],
+              "frontend_ms": 2020,
+              "mode": "todo",
+              "start_offset_ms": 66220,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795103558409,
+            "duration_ms": 2020,
+            "id": "cargo-unit:625",
+            "key": "9a9edef711f862a954f290aa1ed7aad0c751b9a99253066f5e42040806eaa371",
+            "label": "nu-test-support v0.117.1",
+            "started_at_ms": 1795103556389,
+            "state": "executed"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "sccache",
+          "candidates": [
+            {
+              "confidence": "low",
+              "evidence": {
+                "bytes_read": 786893473,
+                "hit_rate": 99.6,
+                "hits": 1640,
+                "misses": 7
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 134388,
+            "errors": 0,
+            "hit_rate": 99.6,
+            "hits": 1640,
+            "misses": 7,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 3
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 99.6,
+          "hits": 1640,
+          "likely_reason": "partial_key_churn_or_new_work",
+          "misses": 7,
+          "state": "mostly_hot_with_misses",
+          "writes": 3
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [
+    "boringcache-cargo-github-rolling-77-44559266350.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "harness": {
+    "commit": "f02c66a4fe6ec5dfeed2b2a8ede1e37b21b50560",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/44559266350",
+  "attempt": 1,
+  "started_at": "2026-11-19T15:51:21Z"
+}
