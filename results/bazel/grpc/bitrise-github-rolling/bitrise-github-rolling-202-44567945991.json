@@ -1,0 +1,41 @@
+{
+  "adapter_command": "bazel",
+  "case": "grpc",
+  "lane": "bitrise",
+  "provider": "bitrise",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 202,
+  "scope": "bitrise-github-rolling",
+  "cache_scope": "bitrise-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "grpc/grpc",
+  "sha": "2d1fdd03059266a7b0499579f09bc7bc1b12df2e",
+  "seconds": 32.104,
+  "cache_save_timing": "in-phase",
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "650d39aa8041286ef5c165aeab8c82e60de1e197",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/44567945991",
+  "attempt": 1,
+  "started_at": "2026-11-19T16:37:19Z"
+}
