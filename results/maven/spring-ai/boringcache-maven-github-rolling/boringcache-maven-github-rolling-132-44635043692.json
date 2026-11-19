@@ -1,0 +1,763 @@
+{
+  "adapter_command": "maven",
+  "case": "spring-ai",
+  "lane": "boringcache-maven",
+  "provider": "boringcache",
+  "level": "base",
+  "capabilities": [
+    "build-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 132,
+  "scope": "boringcache-maven-github-rolling",
+  "cache_scope": "boringcache-maven-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "spring-projects/spring-ai",
+  "sha": "0c902b3348d160fa3e8b9f2593262c036d42ff29",
+  "seconds": 169.003,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1795129957264,
+      "run_id": "44635043692",
+      "session_id": "proxy-summary-eda89231-900b-4cee-acc4-f593deded2f5",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 152710,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "maven",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 59.9,
+          "cpu_iowait_percent": 5.5,
+          "cpu_pressure_percent": 5.3,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 19.1,
+          "disk_read_mb": 0.4,
+          "disk_written_mb": 6249.3,
+          "interval_ms": 167986,
+          "io_pressure_percent": 9.8,
+          "memory_pressure_percent": 0.0,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+        "disk_available_gb": 83,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15984
+      },
+      "proxy": {
+        "adapter": "maven",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 152710,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_max_in_flight": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 805,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 118,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 42,
+          "cache_blobs_download_urls": 72,
+          "cache_blobs_upload_urls": 53,
+          "cache_finalize_publish": 232,
+          "cache_flush_upload": 82,
+          "cache_kv_entries_current_version": 217,
+          "cache_kv_entries_download_urls": 1626,
+          "cache_kv_entries_upsert": 59,
+          "cache_kv_entry_reads": 169,
+          "cache_rollups_ingest": 86,
+          "cache_session_evidence_confirm": 67,
+          "cache_session_evidence_prepare": 47
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 62,
+          "cache_blobs_download_urls": 198,
+          "cache_blobs_upload_urls": 88,
+          "cache_finalize_publish": 232,
+          "cache_flush_upload": 82,
+          "cache_kv_entries_current_version": 217,
+          "cache_kv_entries_download_urls": 1626,
+          "cache_kv_entries_upsert": 89,
+          "cache_kv_entry_reads": 169,
+          "cache_rollups_ingest": 154,
+          "cache_session_evidence_confirm": 70,
+          "cache_session_evidence_prepare": 47
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 74,
+          "cache_blobs_download_urls": 2,
+          "cache_blobs_upload_urls": 96,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entries_upsert": 21,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 10,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 212,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 42,
+          "cache_blobs_download_urls": 72,
+          "cache_blobs_upload_urls": 53,
+          "cache_finalize_publish": 232,
+          "cache_flush_upload": 82,
+          "cache_kv_entries_current_version": 217,
+          "cache_kv_entries_download_urls": 1626,
+          "cache_kv_entries_upsert": 59,
+          "cache_kv_entry_reads": 169,
+          "cache_rollups_ingest": 86,
+          "cache_session_evidence_confirm": 67,
+          "cache_session_evidence_prepare": 47
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 62,
+          "cache_blobs_download_urls": 198,
+          "cache_blobs_upload_urls": 88,
+          "cache_finalize_publish": 232,
+          "cache_flush_upload": 82,
+          "cache_kv_entries_current_version": 217,
+          "cache_kv_entries_download_urls": 1626,
+          "cache_kv_entries_upsert": 89,
+          "cache_kv_entry_reads": 169,
+          "cache_rollups_ingest": 154,
+          "cache_session_evidence_confirm": 70,
+          "cache_session_evidence_prepare": 47
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 74,
+          "cache_blobs_download_urls": 2,
+          "cache_blobs_upload_urls": 96,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entries_upsert": 21,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 10,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 212,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 388
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 284946,
+        "startup_prefetch_blobs_per_sec": 457,
+        "startup_prefetch_bytes_per_sec": 130478787,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 235,
+        "startup_prefetch_concurrency_adjustment_count": 2,
+        "startup_prefetch_concurrency_adjustments": "shared_download_policy:64->80,shared_download_policy:80->160",
+        "startup_prefetch_concurrency_reason": "machine_governor",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_deferred_trial_blobs": 0,
+        "startup_prefetch_deferred_trial_bytes": 0,
+        "startup_prefetch_demand_max_wait_ms": 0,
+        "startup_prefetch_demand_wait_ms": 0,
+        "startup_prefetch_demand_waits": 0,
+        "startup_prefetch_duration_ms": 1758,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 160,
+        "startup_prefetch_generation": 88,
+        "startup_prefetch_hedge_wins": 0,
+        "startup_prefetch_hedges": 0,
+        "startup_prefetch_initial_concurrency": 64,
+        "startup_prefetch_inserted": 805,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 118,
+        "startup_prefetch_mode": "recent-reads",
+        "startup_prefetch_observation_count": 2,
+        "startup_prefetch_recent_read_blobs": 620,
+        "startup_prefetch_recent_read_bytes": 216761593,
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 805,
+        "startup_prefetch_target_bytes": 229381708,
+        "startup_prefetch_total_unique_blobs": 1524,
+        "startup_prefetch_trial_budget_bytes": 433523186,
+        "startup_prefetch_unplanned_blobs": 0,
+        "startup_prefetch_unplanned_bytes": 0,
+        "startup_prefetch_unused_blobs": 386,
+        "startup_prefetch_unused_bytes": 24982265,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 805,
+        "startup_prefetch_used_blobs": 419,
+        "startup_prefetch_used_bytes": 204399443,
+        "startup_prefetch_write_trial_blobs": 185,
+        "startup_prefetch_write_trial_bytes": 12620115
+      },
+      "kv_upload": {
+        "kv_upload_allowed_concurrency_max": 1,
+        "kv_upload_already_present_blobs": 205,
+        "kv_upload_batches": 21,
+        "kv_upload_blobs_per_sec": 0,
+        "kv_upload_concurrency_reason": "adaptive_ramp",
+        "kv_upload_concurrency_source": "auto",
+        "kv_upload_duration_ms": 789,
+        "kv_upload_failed_blobs": 0,
+        "kv_upload_final_concurrency_max": 1,
+        "kv_upload_initial_concurrency_max": 1,
+        "kv_upload_missing_local_blobs": 0,
+        "kv_upload_requested_blobs": 0,
+        "kv_upload_uploaded_blobs": 0,
+        "kv_upload_uploaded_bytes": 0,
+        "kv_upload_writethrough_failure_bytes": 0,
+        "kv_upload_writethrough_failure_count": 0,
+        "kv_upload_writethrough_pressure_skip_bytes": 0,
+        "kv_upload_writethrough_pressure_skip_count": 0,
+        "kv_upload_writethrough_uploaded_blobs": 71,
+        "kv_upload_writethrough_uploaded_bytes": 5300298
+      },
+      "singleflight": {
+        "singleflight_kv_download_leaders": 805,
+        "singleflight_kv_lookup_leaders": 62
+      },
+      "kv_lookup": {
+        "kv_lookup_maven_after_refresh_miss": 62,
+        "kv_lookup_maven_published_fast_hit": 419,
+        "kv_lookup_maven_published_fast_miss": 62
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 204399443,
+          "blob_read_local_count": 419,
+          "blob_read_local_hit_rate_pct": 34,
+          "blob_read_remote_avg_ms": 107,
+          "blob_read_remote_bytes": 229381708,
+          "blob_read_remote_count": 805
+        },
+        "blob_read_cache_bytes": 234682006,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "schema_version": "native_tool_evidence.v1",
+        "source": "maven_cache_report",
+        "tool": "maven"
+      },
+      "unit_evidence": {
+        "build_succeeded": true,
+        "capabilities": {
+          "cache_source": true,
+          "critical_path": false,
+          "dependencies": false,
+          "execution_reasons": false,
+          "scheduling": false,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": false
+        },
+        "collection_state": "reported",
+        "counts": {
+          "cached": 122,
+          "cached_local": 0,
+          "cached_remote": 122,
+          "executed": 62,
+          "observed": 184,
+          "scope": "modules"
+        },
+        "ranking_scope": "all_observed_units",
+        "schema_version": "unit_evidence.v1",
+        "source": "maven_cache_report",
+        "tool": "maven",
+        "truncated": true,
+        "unit_kind": "module",
+        "units": [
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-starter-vector-store-cassandra",
+              "checksum": "776ce6950cbea713",
+              "checksum_matched": true,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": true
+            },
+            "cache_source": "remote",
+            "id": "maven-module:0",
+            "key": "453f6e52f4c15fff8e30539766e908a2c78f401a8f23b4bad6b140303a93dcfd",
+            "label": "org.springframework.ai:spring-ai-starter-vector-store-cassandra",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-starter-model-deepseek",
+              "checksum": "ffe84f9b242049c1",
+              "checksum_matched": false,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": false,
+              "shared_to_remote": true
+            },
+            "id": "maven-module:1",
+            "key": "5ab133537dcdd6ab46d1d53fa03f2168299d32594e3bb11c91775eb9b775872d",
+            "label": "org.springframework.ai:spring-ai-starter-model-deepseek",
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-starter-model-vertex-ai-embedding",
+              "checksum": "3ab626b00fa2b4cb",
+              "checksum_matched": true,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": true
+            },
+            "cache_source": "remote",
+            "id": "maven-module:2",
+            "key": "4fbd23c2f7b8ed3fccc7007df9c1cc511221dde48315fddb6aae4d4df6320248",
+            "label": "org.springframework.ai:spring-ai-starter-model-vertex-ai-embedding",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-parent",
+              "checksum": "a1c89e4023858d90",
+              "checksum_matched": true,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": true
+            },
+            "cache_source": "remote",
+            "id": "maven-module:3",
+            "key": "70cb24f4be49357e711e48e5808529a566eb5bded610c617e5b38fe07f6a9faf",
+            "label": "org.springframework.ai:spring-ai-parent",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-starter-vector-store-s3",
+              "checksum": "c0ec974b0a46b348",
+              "checksum_matched": true,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": true
+            },
+            "cache_source": "remote",
+            "id": "maven-module:4",
+            "key": "7c3d66e82679de9bbc3eda59f119c7d1a779b20b84f3b8587992d3c1456fa8b8",
+            "label": "org.springframework.ai:spring-ai-starter-vector-store-s3",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-autoconfigure-model-vertex-ai",
+              "checksum": "1e7d334305e36d20",
+              "checksum_matched": true,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": true
+            },
+            "cache_source": "remote",
+            "id": "maven-module:5",
+            "key": "cd5b1e2dda1893d6f41729b1b3b4d6f771ff31fc3cc8d1c49727dada8ec0f751",
+            "label": "org.springframework.ai:spring-ai-autoconfigure-model-vertex-ai",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-elevenlabs",
+              "checksum": "38b01a6ef7d34f99",
+              "checksum_matched": true,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": true
+            },
+            "cache_source": "remote",
+            "id": "maven-module:6",
+            "key": "2bfc247342dd9e4cdaee61fbd46af52bcc5f7dd75fc10b31954c16707c66a5dd",
+            "label": "org.springframework.ai:spring-ai-elevenlabs",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-autoconfigure-model-session-jdbc",
+              "checksum": "dc5954302c8b82d3",
+              "checksum_matched": true,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": true
+            },
+            "cache_source": "remote",
+            "id": "maven-module:7",
+            "key": "a085deffb8adab28da62ced3fcf9333839e8fb0d7b73431d2ffe2b9ee2345a39",
+            "label": "org.springframework.ai:spring-ai-autoconfigure-model-session-jdbc",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-anthropic",
+              "checksum": "c1d0c2199ceac9a8",
+              "checksum_matched": false,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": false,
+              "shared_to_remote": true
+            },
+            "id": "maven-module:8",
+            "key": "c9fd01a32cbf2b210ba8d9b9629ec3c53477457ed9495ad56d38a81c9b99d06b",
+            "label": "org.springframework.ai:spring-ai-anthropic",
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-mariadb-store",
+              "checksum": "ab3f7e64e659bdca",
+              "checksum_matched": false,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": false,
+              "shared_to_remote": true
+            },
+            "id": "maven-module:9",
+            "key": "bfd813af7a6d5cd8622af73b2f76dd4ffdb906b79fcff5a8a92c71cc666524a7",
+            "label": "org.springframework.ai:spring-ai-mariadb-store",
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-model-chat-memory-repository-mongodb",
+              "checksum": "427176b8a4850345",
+              "checksum_matched": true,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": true
+            },
+            "cache_source": "remote",
+            "id": "maven-module:10",
+            "key": "15e721b109046642e864d973fe261ed1c5a18db2f2b69c6c2ec42902916f0148",
+            "label": "org.springframework.ai:spring-ai-model-chat-memory-repository-mongodb",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-autoconfigure-vector-store-mongodb-atlas",
+              "checksum": "dc89c27cedd03d32",
+              "checksum_matched": false,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": false,
+              "shared_to_remote": true
+            },
+            "id": "maven-module:11",
+            "key": "bf637c196e40027b4a888ce396111fe7f01b76123b9a280ccf37dbb7e3982bb7",
+            "label": "org.springframework.ai:spring-ai-autoconfigure-vector-store-mongodb-atlas",
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-starter-vector-store-pgvector",
+              "checksum": "c7940d8df79c164f",
+              "checksum_matched": false,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": false,
+              "shared_to_remote": true
+            },
+            "id": "maven-module:12",
+            "key": "144e7ca23579c4d53501c1b2e658ca4cb5dce199b1168293df08fc88792ab144",
+            "label": "org.springframework.ai:spring-ai-starter-vector-store-pgvector",
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-transformers",
+              "checksum": "b865c7053ab90f7c",
+              "checksum_matched": true,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": true
+            },
+            "cache_source": "remote",
+            "id": "maven-module:13",
+            "key": "5859144f0383313200e29b99b2635af09f205b5c43e245086ca8fb802bceb222",
+            "label": "org.springframework.ai:spring-ai-transformers",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-weaviate-store",
+              "checksum": "04914c5b5a36dab2",
+              "checksum_matched": true,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": true
+            },
+            "cache_source": "remote",
+            "id": "maven-module:14",
+            "key": "98a26b3f1e1d2caed712d0c665e9b1516b77e6c2a505637b34abae855422ad90",
+            "label": "org.springframework.ai:spring-ai-weaviate-store",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-starter-vector-store-weaviate",
+              "checksum": "90ae572cb41f7a0c",
+              "checksum_matched": true,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": true
+            },
+            "cache_source": "remote",
+            "id": "maven-module:15",
+            "key": "b852fc7fd7dd4bf6b9c3990ce1089e80b24704fe964812eeeec0fc377d69c893",
+            "label": "org.springframework.ai:spring-ai-starter-vector-store-weaviate",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-tool-search-advisor",
+              "checksum": "e16d81229730fb9b",
+              "checksum_matched": false,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": false,
+              "shared_to_remote": true
+            },
+            "id": "maven-module:16",
+            "key": "d9ee364fa78894f17011495bb33b8fd119d7e27c7dcc9f9e127c2d306e020ba9",
+            "label": "org.springframework.ai:spring-ai-tool-search-advisor",
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-autoconfigure-model-google-genai",
+              "checksum": "6c63ced2241cdd29",
+              "checksum_matched": true,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": true
+            },
+            "cache_source": "remote",
+            "id": "maven-module:17",
+            "key": "5167599bf966b41996ff511cb12ef4901afefdc88f9f76cf89a72bc111dcadcf",
+            "label": "org.springframework.ai:spring-ai-autoconfigure-model-google-genai",
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-starter-vector-store-milvus",
+              "checksum": "12f30e23ce09ab9c",
+              "checksum_matched": false,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": false,
+              "shared_to_remote": true
+            },
+            "id": "maven-module:18",
+            "key": "9f097b0e42fc104e434427f23eee3ac873be00f95a950fc3dbda3f72a27a9c6a",
+            "label": "org.springframework.ai:spring-ai-starter-vector-store-milvus",
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "artifact_id": "spring-ai-model-chat-memory-repository-redis",
+              "checksum": "13dba85c17bd9d17",
+              "checksum_matched": true,
+              "group_id": "org.springframework.ai",
+              "lifecycle_matched": true
+            },
+            "cache_source": "remote",
+            "id": "maven-module:19",
+            "key": "f34bd1b17855dc1d15929aeae1e8e7dd9fb6eb939630627c83e3e849f1cd11c4",
+            "label": "org.springframework.ai:spring-ai-model-chat-memory-repository-redis",
+            "state": "cached"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "maven",
+          "candidates": [
+            {
+              "confidence": "medium",
+              "evidence": {
+                "bytes_read": 204399443,
+                "hit_rate": 87.1,
+                "hits": 419,
+                "misses": 62
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 152710,
+            "errors": 0,
+            "hit_rate": 87.1,
+            "hits": 419,
+            "misses": 62,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 205
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 87.1,
+          "hits": 419,
+          "likely_reason": "mixed_existing_and_new_work",
+          "misses": 62,
+          "state": "warm_mixed",
+          "writes": 205
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [
+    "boringcache-maven-github-rolling-132-44635043692.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "harness": {
+    "commit": "29e114da12e88d60c6d8f0a5f03b2010690ec192",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/44635043692",
+  "attempt": 1,
+  "started_at": "2026-11-19T23:09:48Z"
+}
