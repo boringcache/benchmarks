@@ -1,0 +1,819 @@
+{
+  "adapter_command": "bazel",
+  "case": "llvm",
+  "lane": "boringcache-bazel",
+  "provider": "boringcache",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 202,
+  "scope": "boringcache-bazel-github-rolling",
+  "cache_scope": "boringcache-bazel-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "llvm/llvm-project",
+  "sha": "d959de9b8894662e745f70788c617ff6db305d8b",
+  "seconds": 9126.453,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1795131887196,
+      "run_id": "44615907759",
+      "session_id": "proxy-summary-76299669-c02f-4b07-9bab-cecbf38bc5d1",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 9123689,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "bazel",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 96.0,
+          "cpu_iowait_percent": 0.1,
+          "cpu_pressure_percent": 43.9,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 0.3,
+          "disk_read_mb": 164.8,
+          "disk_written_mb": 6008.7,
+          "interval_ms": 9124145,
+          "io_pressure_percent": 0.1,
+          "memory_pressure_percent": 0.0,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "disk_available_gb": 81,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15984
+      },
+      "proxy": {
+        "adapter": "bazel",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 9123689,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_max_in_flight": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 27923,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 320,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 111,
+          "cache_blobs_upload_urls": 125,
+          "cache_kv_entries_current_version": 7801,
+          "cache_kv_entries_download_urls": 5280,
+          "cache_kv_entries_upsert": 132,
+          "cache_kv_entry_reads": 748,
+          "cache_rollups_ingest": 213,
+          "cache_session_evidence_confirm": 149,
+          "cache_session_evidence_prepare": 108
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 295,
+          "cache_blobs_upload_urls": 1341,
+          "cache_kv_entries_current_version": 7801,
+          "cache_kv_entries_download_urls": 6557,
+          "cache_kv_entries_upsert": 163,
+          "cache_kv_entry_reads": 748,
+          "cache_rollups_ingest": 2492,
+          "cache_session_evidence_confirm": 153,
+          "cache_session_evidence_prepare": 112
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 5029,
+          "cache_blobs_upload_urls": 6581,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 15,
+          "cache_kv_entries_upsert": 1256,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 302,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 13189,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 111,
+          "cache_blobs_upload_urls": 125,
+          "cache_kv_entries_current_version": 7801,
+          "cache_kv_entries_download_urls": 5280,
+          "cache_kv_entries_upsert": 132,
+          "cache_kv_entry_reads": 748,
+          "cache_rollups_ingest": 213,
+          "cache_session_evidence_confirm": 149,
+          "cache_session_evidence_prepare": 108
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 295,
+          "cache_blobs_upload_urls": 1341,
+          "cache_kv_entries_current_version": 7801,
+          "cache_kv_entries_download_urls": 6557,
+          "cache_kv_entries_upsert": 163,
+          "cache_kv_entry_reads": 748,
+          "cache_rollups_ingest": 2492,
+          "cache_session_evidence_confirm": 153,
+          "cache_session_evidence_prepare": 112
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 5029,
+          "cache_blobs_upload_urls": 6581,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 15,
+          "cache_kv_entries_upsert": 1256,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 302,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 13189,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "miss_reason_counts": {
+          "action_cache_key_absent_from_warmed_cache": 5053
+        },
+        "publication_drain_duration_ms": 12463
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 18787,
+        "startup_prefetch_average_blob_bytes": 56303,
+        "startup_prefetch_blobs_per_sec": 804,
+        "startup_prefetch_bytes_per_sec": 138405819,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 256,
+        "startup_prefetch_concurrency_adjustment_count": 4,
+        "startup_prefetch_concurrency_adjustments": "shared_download_policy:256->320,shared_download_policy:64->80,shared_download_policy:80->160,shared_download_policy:160->256",
+        "startup_prefetch_concurrency_reason": "many_small_blobs_io_bound",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_demand_max_wait_ms": 0,
+        "startup_prefetch_demand_wait_ms": 0,
+        "startup_prefetch_demand_waits": 0,
+        "startup_prefetch_duration_ms": 11359,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 256,
+        "startup_prefetch_hedge_wins": 0,
+        "startup_prefetch_hedges": 0,
+        "startup_prefetch_initial_concurrency": 64,
+        "startup_prefetch_inserted": 9136,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 256,
+        "startup_prefetch_mode": "bazel-action-closure",
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 27923,
+        "startup_prefetch_target_bytes": 1572151703,
+        "startup_prefetch_total_unique_blobs": 578387,
+        "startup_prefetch_unplanned_blobs": 0,
+        "startup_prefetch_unplanned_bytes": 0,
+        "startup_prefetch_unused_blobs": 26292,
+        "startup_prefetch_unused_bytes": 1526733148,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 9136,
+        "startup_prefetch_used_blobs": 1631,
+        "startup_prefetch_used_bytes": 45418555
+      },
+      "kv_upload": {
+        "kv_upload_allowed_concurrency_max": 1,
+        "kv_upload_already_present_blobs": 23234,
+        "kv_upload_batches": 1256,
+        "kv_upload_blobs_per_sec": 0,
+        "kv_upload_concurrency_reason": "adaptive_ramp",
+        "kv_upload_concurrency_source": "auto",
+        "kv_upload_duration_ms": 168400,
+        "kv_upload_failed_blobs": 0,
+        "kv_upload_final_concurrency_max": 1,
+        "kv_upload_initial_concurrency_max": 1,
+        "kv_upload_missing_local_blobs": 0,
+        "kv_upload_requested_blobs": 0,
+        "kv_upload_uploaded_blobs": 0,
+        "kv_upload_uploaded_bytes": 0,
+        "kv_upload_writethrough_failure_bytes": 0,
+        "kv_upload_writethrough_failure_count": 0,
+        "kv_upload_writethrough_pressure_skip_bytes": 0,
+        "kv_upload_writethrough_pressure_skip_count": 0,
+        "kv_upload_writethrough_uploaded_blobs": 10363,
+        "kv_upload_writethrough_uploaded_bytes": 213639194
+      },
+      "singleflight": {
+        "singleflight_kv_download_leaders": 27923,
+        "singleflight_kv_index_refresh_leaders": 1,
+        "singleflight_kv_lookup_leaders": 5053
+      },
+      "kv_lookup": {
+        "kv_lookup_bazel_ac_after_refresh_miss": 5053,
+        "kv_lookup_bazel_ac_published_fast_hit": 676,
+        "kv_lookup_bazel_ac_published_fast_miss": 5053,
+        "kv_lookup_bazel_cas_published_fast_hit": 958
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 56056713,
+          "blob_read_local_count": 20421,
+          "blob_read_local_hit_rate_pct": 42,
+          "blob_read_remote_avg_ms": 126,
+          "blob_read_remote_bytes": 1572151703,
+          "blob_read_remote_count": 27923
+        },
+        "blob_read_cache_bytes": 1826252858,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "schema_version": "native_tool_evidence.v1",
+        "source": "bazel_execution_log",
+        "tool": "bazel"
+      },
+      "unit_evidence": {
+        "build_succeeded": true,
+        "capabilities": {
+          "cache_source": true,
+          "critical_path": false,
+          "dependencies": false,
+          "execution_reasons": false,
+          "scheduling": false,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": true
+        },
+        "collection_state": "reported",
+        "counts": {
+          "cached": 676,
+          "cached_local": 0,
+          "cached_remote": 676,
+          "executed": 5053,
+          "failed": 0,
+          "observed": 5729,
+          "scope": "spawns"
+        },
+        "ranking_scope": "all_observed_units",
+        "schema_version": "unit_evidence.v1",
+        "source": "bazel_execution_log",
+        "tool": "bazel",
+        "tool_version": "9.3.2",
+        "truncated": true,
+        "unit_kind": "action",
+        "units": [
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/llvm/_objs/Vectorize/SLPVectorizer.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795126321976,
+            "duration_ms": 125099,
+            "id": "bazel-spawn:4132",
+            "key": "1d02d03fd7a8dacb567d78d8dd9761af9ca201336556c9f417a7a6429a131252",
+            "label": "@@+llvm_configure+llvm-project//llvm:Vectorize CppCompile",
+            "started_at_ms": 1795126196877,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/sema/SemaOpenMP.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795129601726,
+            "duration_ms": 95600,
+            "id": "bazel-spawn:5214",
+            "key": "6593eb15d99f3d413f220e1c6e020708dc4334fc83de004ddd0d77b4918991a2",
+            "label": "@@+llvm_configure+llvm-project//clang:sema CppCompile",
+            "started_at_ms": 1795129506126,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/sema/SemaExpr.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795130165198,
+            "duration_ms": 93324,
+            "id": "bazel-spawn:5358",
+            "key": "2baa715f14110c3a100772f332c1a3a99f020458087bb802c91f0dce5fba4fa7",
+            "label": "@@+llvm_configure+llvm-project//clang:sema CppCompile",
+            "started_at_ms": 1795130071874,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/llvm/_objs/Passes/PassBuilder.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795128304929,
+            "duration_ms": 83730,
+            "id": "bazel-spawn:4856",
+            "key": "9d0b0c4fcc0d56b84ee73ffe329180bdcfd4b26c99c6d1f439afeb4e9a5bc016",
+            "label": "@@+llvm_configure+llvm-project//llvm:Passes CppCompile",
+            "started_at_ms": 1795128221199,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/llvm/_objs/X86CodeGen/X86ISelLowering.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795127650916,
+            "duration_ms": 82168,
+            "id": "bazel-spawn:4659",
+            "key": "8a2b3e91321f8f7b8621be3dd8a685bf5ef85c994bcc8f9216c7fd24ce87da3a",
+            "label": "@@+llvm_configure+llvm-project//llvm:X86CodeGen CppCompile",
+            "started_at_ms": 1795127568748,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/ast/Interp.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795127575094,
+            "duration_ms": 77254,
+            "id": "bazel-spawn:4641",
+            "key": "148903f57ce7bc33c84bf975ded9232d3c2c554bf569a86a98198a6a6da420cb",
+            "label": "@@+llvm_configure+llvm-project//clang:ast CppCompile",
+            "started_at_ms": 1795127497840,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/codegen/CodeGenModule.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795131496576,
+            "duration_ms": 69614,
+            "id": "bazel-spawn:5635",
+            "key": "a75040514d3015850c0a4f40e92c78755ad38cc583237482f577314cb717e6e9",
+            "label": "@@+llvm_configure+llvm-project//clang:codegen CppCompile",
+            "started_at_ms": 1795131426962,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/sema/SemaConcept.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795130094935,
+            "duration_ms": 67610,
+            "id": "bazel-spawn:5342",
+            "key": "604fcdc4545ae9fcf66f53a2862af42dad3d9e97715ead5f61d6d067d03d8938",
+            "label": "@@+llvm_configure+llvm-project//clang:sema CppCompile",
+            "started_at_ms": 1795130027325,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/sema/SemaTemplateInstantiate.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795129040526,
+            "duration_ms": 66706,
+            "id": "bazel-spawn:5093",
+            "key": "eef372913d0b642cccfeb9b6b7917dd719dbc527e3fe556344c59bf2f24fe17a",
+            "label": "@@+llvm_configure+llvm-project//clang:sema CppCompile",
+            "started_at_ms": 1795128973820,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/serialization/ASTReader.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795128878003,
+            "duration_ms": 61817,
+            "id": "bazel-spawn:5064",
+            "key": "b820119cfbec9050f5d3ad043e27b5744692922c6ff4cef5c62128e12633090e",
+            "label": "@@+llvm_configure+llvm-project//clang:serialization CppCompile",
+            "started_at_ms": 1795128816186,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/codegen/CGDebugInfo.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795130937398,
+            "duration_ms": 61005,
+            "id": "bazel-spawn:5536",
+            "key": "a5dc2734710ecb1eb6c2ef8dd79e73bedd0eef0619ef3ec753fa609e47f5a534",
+            "label": "@@+llvm_configure+llvm-project//clang:codegen CppCompile",
+            "started_at_ms": 1795130876393,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/sema/SemaTemplate.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795129214528,
+            "duration_ms": 60824,
+            "id": "bazel-spawn:5128",
+            "key": "d64cef95dbcc5e7cc1f67cae92489bb56c9277810aec5ad79edef66631bec5ad",
+            "label": "@@+llvm_configure+llvm-project//clang:sema CppCompile",
+            "started_at_ms": 1795129153704,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/ast/AttrImpl.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795127265144,
+            "duration_ms": 58713,
+            "id": "bazel-spawn:4556",
+            "key": "33f79fb63e986cc7346e8256c974c1b20f0af0511bc42e177a110f5b7d7469b8",
+            "label": "@@+llvm_configure+llvm-project//clang:ast CppCompile",
+            "started_at_ms": 1795127206431,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/extract_api/ExtractAPIConsumer.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795130111700,
+            "duration_ms": 57990,
+            "id": "bazel-spawn:5345",
+            "key": "ee2f46cd1ec508b6a97a8afc1aa16ce0c016e81e3d63560cab97dcd20e5c4ad1",
+            "label": "@@+llvm_configure+llvm-project//clang:extract_api CppCompile",
+            "started_at_ms": 1795130053710,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/sema/SemaTemplateDeduction.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795129153489,
+            "duration_ms": 57813,
+            "id": "bazel-spawn:5117",
+            "key": "3a27e57dd1c885317ece4595dcdda268602c181d4b2cc712b961dbc78fec998b",
+            "label": "@@+llvm_configure+llvm-project//clang:sema CppCompile",
+            "started_at_ms": 1795129095676,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/sema/SemaTemplateInstantiateDecl.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795128972093,
+            "duration_ms": 55859,
+            "id": "bazel-spawn:5079",
+            "key": "4090d38d7b74ec0ce864380871d5d5f95e9c09f9370fc9bab9cdc7080d1da1bd",
+            "label": "@@+llvm_configure+llvm-project//clang:sema CppCompile",
+            "started_at_ms": 1795128916234,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/ast/ExprConstant.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795128152610,
+            "duration_ms": 53592,
+            "id": "bazel-spawn:4814",
+            "key": "06fb82a3150594c63c34b08cd341c714af4c0b03c6bd7564f32fa28f969cb1bd",
+            "label": "@@+llvm_configure+llvm-project//clang:ast CppCompile",
+            "started_at_ms": 1795128099018,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/serialization/ASTWriter.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795128988569,
+            "duration_ms": 52284,
+            "id": "bazel-spawn:5082",
+            "key": "4245dc31a579c7e6babbdd4b3828f4da08f2be45fa0484f3804c6e066c9dc143",
+            "label": "@@+llvm_configure+llvm-project//clang:serialization CppCompile",
+            "started_at_ms": 1795128936285,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/codegen/CGOpenMPRuntime.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795131304298,
+            "duration_ms": 51286,
+            "id": "bazel-spawn:5605",
+            "key": "40f55e709004968ce61d41599d088fe744ce43c6c4718254d6529a2d39b1a2ee",
+            "label": "@@+llvm_configure+llvm-project//clang:codegen CppCompile",
+            "started_at_ms": 1795131253012,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-fastbuild/bin/external/+llvm_configure+llvm-project/clang/_objs/ast/EvalEmitter.pic.d",
+              "remotable": true,
+              "runner": "processwrapper-sandbox"
+            },
+            "completed_at_ms": 1795127466986,
+            "duration_ms": 51212,
+            "id": "bazel-spawn:4615",
+            "key": "9fdc32a3f06ec2b1dc7f2b9872e96ca32d4346d4fa51fcdd67c73ac9a270b4fc",
+            "label": "@@+llvm_configure+llvm-project//clang:ast CppCompile",
+            "started_at_ms": 1795127415774,
+            "state": "executed"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "bazel",
+          "candidates": [
+            {
+              "confidence": "high",
+              "evidence": {
+                "bytes_read": 45480682,
+                "hit_rate": 24.4,
+                "hits": 1634,
+                "misses": 5053
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 9123689,
+            "errors": 0,
+            "hit_rate": 24.4,
+            "hits": 1634,
+            "misses": 5053,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 23234
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "cas": {
+            "customer_action_required": false,
+            "errors": 0,
+            "evidence": {
+              "absent_from_warmed_cache": 0,
+              "action_cache_hits": 676,
+              "integrity_misses": 0,
+              "recent_negative_cache_misses": 0,
+              "shared_lookup_wait_misses": 0,
+              "warmed_cache_hits": 958,
+              "warmed_cache_misses_before_refresh": 0,
+              "warmed_cache_refresh_hits": 0,
+              "warmed_cache_refresh_misses": 0
+            },
+            "hits": 958,
+            "misses": 0,
+            "owner": "none",
+            "requests": 958,
+            "scope": "cas",
+            "state": "cas_hot"
+          },
+          "confidence": "high",
+          "customer_action_required": false,
+          "diagnosis": "Bazel asked for action-cache keys that were absent from the published cache tag, then wrote matching action-cache entries in the same run.",
+          "errors": 0,
+          "evidence": {
+            "absent_from_published_tag": 5053,
+            "absent_from_warmed_cache": 5053,
+            "integrity_misses": 0,
+            "published_tag_hits": 676,
+            "published_tag_misses_before_refresh": 5053,
+            "published_tag_refresh_hits": 0,
+            "published_tag_refresh_misses": 5053,
+            "recent_negative_cache_misses": 0,
+            "same_run_action_cache_writes": 5053,
+            "shared_lookup_wait_misses": 0,
+            "warmed_cache_hits": 676,
+            "warmed_cache_misses_before_refresh": 5053,
+            "warmed_cache_refresh_hits": 0,
+            "warmed_cache_refresh_misses": 5053
+          },
+          "hits": 676,
+          "misses": 5053,
+          "next_step": "No service action needed. Treat this as a rolling cache population run; compare benchmark history and tag retention if it repeats unexpectedly.",
+          "owner": "none",
+          "requests": 5729,
+          "scope": "action_cache",
+          "state": "action_cache_repopulated_this_run",
+          "tool": "bazel"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 24.4,
+          "hits": 1634,
+          "likely_reason": "mixed_existing_and_new_work",
+          "misses": 5053,
+          "state": "warm_mixed",
+          "writes": 23234
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [
+    "boringcache-bazel-github-rolling-202-44615907759.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "harness": {
+    "commit": "bff8b6b34d2fc776f05e11d36d335f49b0d8106e",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/44615907759",
+  "attempt": 1,
+  "started_at": "2026-11-19T21:12:41Z"
+}
