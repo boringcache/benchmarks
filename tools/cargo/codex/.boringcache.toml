@@ -14,5 +14,5 @@ tag = "codex-cargo"
 profiles = ["compiler-only"]
 compiler-cache = "sccache"
 no-git = true
-metadata-hints = ["benchmark=codex", "workload=workspace-tests"]
-command = ["cargo", "test", "--workspace", "--locked"]
+metadata-hints = ["benchmark=codex", "workload=workspace-test-build"]
+command = ["cargo", "test", "--workspace", "--locked", "--no-run"]
