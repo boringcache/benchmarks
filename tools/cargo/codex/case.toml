@@ -12,6 +12,7 @@ prepare = [
 check = "test -x upstream/codex-rs/target/debug/codex"
 
 [env]
+MISE_SCCACHE_VERSION = "0.17.0"
 CARGO_INCREMENTAL = "0"
 CARGO_PROFILE_TEST_DEBUG = "0"
 CARGO_NET_GIT_FETCH_WITH_CLI = "true"
