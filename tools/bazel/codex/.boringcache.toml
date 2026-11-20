@@ -1,0 +1,21 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.bazel]
+fail-on-cache-error = true
+tag = "codex-bazel"
+no-platform = true
+no-git = true
+metadata-hints = ["benchmark=codex", "workload=workspace-tests"]
+command = [
+  "../bazel",
+  "--bazelrc=../bench.bazelrc",
+  "--noexperimental_remote_repo_contents_cache",
+  "test",
+  "--jobs=4",
+  "--test_env=INSTA_UPDATE=no",
+  "--test_tag_filters=-argument-comment-lint",
+  "--build_event_json_file=../build-events.json",
+  "--",
+  "//...",
+  "-//third_party/v8:all",
+]
