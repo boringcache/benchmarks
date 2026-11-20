@@ -1,0 +1,24 @@
+repo = "openai/codex"
+branch = "main"
+start_sha = "db263d4f5471f4fd2e91ae0955556ace66aeb1c5"
+directory = "upstream/codex-rs"
+prepare = [
+  'bash "$BENCH_ROOT/tools/shared/codex-linux.sh"',
+  "sudo apt-get install -y --no-install-recommends libasound2-dev libgstreamer-plugins-base1.0-dev protobuf-compiler",
+  "mise trust && mise install",
+  "cd upstream/codex-rs && rustup show active-toolchain",
+  'bash "$BENCH_ROOT/tools/cargo/codex/prepare-v8.sh"',
+]
+check = "test -x upstream/codex-rs/target/debug/codex"
+
+[env]
+CARGO_INCREMENTAL = "0"
+CARGO_PROFILE_TEST_DEBUG = "0"
+CARGO_NET_GIT_FETCH_WITH_CLI = "true"
+RUST_MIN_STACK = "8388608"
+RUSTY_V8_ARCHIVE = "${BENCH_DIR}/v8/librusty_v8_ptrcomp_sandbox_release_x86_64-unknown-linux-gnu.a.gz"
+RUSTY_V8_SRC_BINDING_PATH = "${BENCH_DIR}/v8/src_binding_ptrcomp_sandbox_release_x86_64-unknown-linux-gnu.rs"
+
+[runs]
+boringcache-cargo = ["github-26"]
+gha = ["github-26"]
