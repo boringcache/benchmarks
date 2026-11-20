@@ -22,13 +22,11 @@ class NushellCiTest < Minitest::Test
     assert calls.grep(/^boringcache /).all? { it.include?("--read-only") }
   end
 
-  def test_windows_tests_get_the_same_long_temp_path_with_each_provider
+  def test_windows_tests_use_the_runner_temp_path_outside_the_user_profile
     ["boringcache cargo", nil].each do |adapter|
-      calls, status = run_ci("RUNNER_OS" => "Windows", "BENCH_BORINGCACHE" => adapter) do |dir|
-        assert File.directory?(File.join(dir, "test-temp"))
-      end
+      calls, status = run_ci("RUNNER_OS" => "Windows", "RUNNER_TEMP" => 'D:\a\_temp', "BENCH_BORINGCACHE" => adapter)
       assert status.success?
-      assert_equal ["temp C:\\Bench\\test-temp C:\\Bench\\test-temp"] * 3, calls.grep(/^temp /)
+      assert_equal ['temp D:\a\_temp D:\a\_temp'] * 3, calls.grep(/^temp /)
     end
   end
 
@@ -126,7 +124,7 @@ class NushellCiTest < Minitest::Test
         BASH
         File.write(File.join(dir, "cygpath"), <<~'BASH')
           #!/usr/bin/env bash
-          [ "$*" = "-alw ../test-temp" ] && printf '%s\n' 'C:\Bench\test-temp'
+          [ "$1" = -alw ] && [ "$2" = 'D:\a\_temp' ] && printf '%s\n' "$2"
         BASH
         %w[cargo boringcache cygpath].each { |script| File.chmod(0o755, File.join(dir, script)) }
         env = { "PATH" => "#{dir}:#{ENV.fetch('PATH')}", "CALLS" => File.join(dir, "calls"),

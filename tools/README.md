@@ -34,8 +34,10 @@ revision, run `bundle exec ruby scripts/check-upstream.rb <case> <sha>`.
 
 PostHog's GitHub-hosted jobs add 4 GiB of swap before cache setup and timing.
 Every GitHub-hosted lane gets the same swap allocation for the frontend build.
-Nushell's Windows jobs give the upstream tests a long-form temporary directory
-path so the test fixtures use the same path spelling as Windows canonicalization.
+Nushell's Windows jobs give the upstream tests the long form of `RUNNER_TEMP`.
+That keeps the path outside the user profile, so the REPL tests see the full
+path in the terminal title, and the path tests see the same spelling as
+Windows canonicalization.
 
 ```
 tools/<tool>/

@@ -3,8 +3,7 @@ set -euo pipefail
 overlay=$(cd "$(dirname "$0")" && pwd)
 
 if [ "${RUNNER_OS:-}" = Windows ]; then
-  mkdir -p ../test-temp
-  temp_dir=$(cygpath -alw ../test-temp)
+  temp_dir=$(cygpath -alw "${RUNNER_TEMP:?}")
   export TMP="$temp_dir" TEMP="$temp_dir"
 fi
 
