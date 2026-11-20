@@ -1,0 +1,38 @@
+{
+  "adapter_command": "bazel",
+  "case": "codex",
+  "lane": "boringcache-bazel",
+  "provider": "boringcache",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 0,
+  "scope": "boringcache-bazel-github-rolling-2",
+  "cache_scope": "boringcache-bazel-github-rolling-2",
+  "repo": "openai/codex",
+  "sha": "db263d4f5471f4fd2e91ae0955556ace66aeb1c5",
+  "seconds": null,
+  "cache_save_timing": "in-phase",
+  "exit_status": null,
+  "output_ok": null,
+  "job_conclusion": "cancelled",
+  "provider_reported": {},
+  "observed": {},
+  "evidence": [
+    "boringcache-bazel-github-rolling-0-44787743175.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "harness": {
+    "commit": "84ce1dffcee2e83c06b81e8a5a437f1018b27d6f"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/44787743175",
+  "attempt": 1,
+  "started_at": "2026-11-20T17:59:00Z"
+}
