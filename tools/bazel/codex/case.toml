@@ -1,11 +1,13 @@
 repo = "openai/codex"
 branch = "main"
 start_sha = "db263d4f5471f4fd2e91ae0955556ace66aeb1c5"
+rolling_series = 2
 directory = "upstream"
 prepare = [
   'bash "$BENCH_ROOT/tools/shared/codex-linux.sh"',
   'curl -fsSL --retry 3 https://github.com/bazelbuild/bazel/releases/download/9.2.0/bazel-9.2.0-linux-x86_64 -o bazel && echo "7668a95db1250f12c40407251e4e203b4ec8bf39bc495d2f485b2d8c99048694  bazel" | sha256sum --check && chmod +x bazel',
   'printf "%s\n" "build --disk_cache=" "${BAZEL_LANE_RC:-}" "${BAZEL_PHASE_RC:-}" > bench.bazelrc',
+  'printf "test --build_metadata=COMMIT_SHA=%s\n" "$(git -C upstream rev-parse HEAD)" >> bench.bazelrc',
   'test "$(./bazel --version)" = "bazel $(cat upstream/.bazelversion)"',
 ]
 check = '''jq --stream -en 'first(inputs | select(.[0] == ["testSummary","overallStatus"] and .[1] == "PASSED"))' build-events.json > /dev/null'''
