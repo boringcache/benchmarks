@@ -44,10 +44,7 @@ module EuroOfficeCache
       "    COPY core /core\n" => "    COPY bench-ccache/ccache /usr/local/bin/ccache\n    COPY bench-ccache/ccache-storage-http /usr/local/bin/ccache-storage-http\n    ENV CCACHE_DIR=/ccache\n    COPY core /core\n",
       "id=wasm-build-cache-${CACHE_BUST},target=/build-cache-wasm" => "id=wasm-build-cache-${CACHE_BUST}-#{third_party},target=/build-cache-wasm",
     }
-    if source.include?("/core/scripts/build.sh --wasm --ccache ")
-      abort "core-wasm Dockerfile changed: expected ccache statistics around the WASM build" unless
-        source.scan("        ccache --zero-stats\n").size == 1 && source.scan("        ccache --show-stats\n").size == 1
-    else
+    unless source.include?("        ccache --zero-stats\n        /core/scripts/build.sh --wasm --ccache ")
       build = "        cmake --build . -- -j$(nproc)\n"
       replacements[build] = "        ccache --zero-stats\n#{build}"
     end
