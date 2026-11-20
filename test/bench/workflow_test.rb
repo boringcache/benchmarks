@@ -3,6 +3,17 @@ require "open3"
 require "yaml"
 
 class WorkflowTest < Minitest::Test
+  def test_expired_bazel_job_budget_still_allows_the_record_step
+    steps = YAML.load_file(File.expand_path("../../.github/actions/phase/action.yml", __dir__)).dig("runs", "steps")
+    build = steps.find { it["id"] == "build" }
+    assert build.fetch("continue-on-error")
+    assert steps.drop(steps.index(build) + 1).any? { it["run"]&.include?("bin/bench record") }
+
+    env = { "BENCH_CASE" => "bazel/codex", "BENCH_BAZEL_DEADLINE" => (Time.now.to_i - 1).to_s }
+    _, status = Open3.capture2e(env, "bash", "-e", "-o", "pipefail", "-c", build.fetch("run"))
+    assert_equal 124, status.exitstatus
+  end
+
   def test_branch_runs_collect_post_job_timings_without_publishing_to_main
     workflow = YAML.load_file(File.expand_path("../../.github/workflows/project.yml", __dir__), aliases: true)
     collect = workflow.fetch("jobs").fetch("collect")
