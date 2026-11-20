@@ -1,0 +1,40 @@
+name: Upstream benchmark compatibility
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/upstream.yml"
+      - "scripts/check-upstream.rb"
+      - "tools/docker/**"
+      - "tools/pants/backend-ai/**"
+      - "tools/cargo/nushell/**"
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compatibility:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        case: [docker/euro-office-cache, docker/llama-cpp, docker/posthog, pants/backend-ai, cargo/nushell]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/results/
+      - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
+        with:
+          bundler-cache: true
+      - run: bundle exec ruby scripts/check-upstream.rb "$BENCH_CASE"
+        env:
+          BENCH_CASE: ${{ matrix.case }}
+          GH_TOKEN: ${{ github.token }}

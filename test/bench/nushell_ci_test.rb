@@ -22,6 +22,16 @@ class NushellCiTest < Minitest::Test
     assert calls.grep(/^boringcache /).all? { it.include?("--read-only") }
   end
 
+  def test_windows_tests_get_the_same_long_temp_path_with_each_provider
+    ["boringcache cargo", nil].each do |adapter|
+      calls, status = run_ci("RUNNER_OS" => "Windows", "BENCH_BORINGCACHE" => adapter) do |dir|
+        assert File.directory?(File.join(dir, "test-temp"))
+      end
+      assert status.success?
+      assert_equal ["temp C:\\Bench\\test-temp C:\\Bench\\test-temp"] * 3, calls.grep(/^temp /)
+    end
+  end
+
   def test_failed_test_stops_before_doctests_and_save
     calls, status = run_ci("BENCH_BORINGCACHE" => "boringcache cargo", "FAIL_COMMAND" => "test")
     assert_equal 42, status.exitstatus
@@ -103,6 +113,7 @@ class NushellCiTest < Minitest::Test
         File.write(File.join(dir, "cargo"), <<~BASH)
           #!/usr/bin/env bash
           printf 'cargo %s\n' "$*" >> "$CALLS"
+          if [ "${RUNNER_OS:-}" = Windows ]; then printf 'temp %s %s\n' "$TMP" "$TEMP" >> "$CALLS"; fi
           [ "$1" != --config ] || shift 2
           [ "$1" != "${FAIL_COMMAND:-}" ] || exit 42
         BASH
@@ -113,9 +124,13 @@ class NushellCiTest < Minitest::Test
           shift
           exec cargo "$@"
         BASH
-        File.chmod(0o755, File.join(dir, "cargo"), File.join(dir, "boringcache"))
+        File.write(File.join(dir, "cygpath"), <<~'BASH')
+          #!/usr/bin/env bash
+          [ "$*" = "-alw ../test-temp" ] && printf '%s\n' 'C:\Bench\test-temp'
+        BASH
+        %w[cargo boringcache cygpath].each { |script| File.chmod(0o755, File.join(dir, script)) }
         env = { "PATH" => "#{dir}:#{ENV.fetch('PATH')}", "CALLS" => File.join(dir, "calls"),
-          "BENCH_BORINGCACHE" => nil, "FAIL_COMMAND" => nil, **extra_env }
+          "BENCH_BORINGCACHE" => nil, "FAIL_COMMAND" => nil, "RUNNER_OS" => nil, **extra_env }
         _, status = Open3.capture2e(env, "bash", File.join(Bench::ROOT, "tools/cargo/nushell/overlay/ci.sh"), chdir: upstream)
         inspect&.call(dir)
         [File.readlines(env.fetch("CALLS"), chomp: true), status]

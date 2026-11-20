@@ -18,6 +18,24 @@ checked-out source's `pants.toml`. This applies to every provider lane and keeps
 fresh runs on the original interpreter while rolling runs follow upstream.
 Pants discovers the installed interpreter through a link in the run's `.bin`
 directory so its isolated probes do not need to execute mise shims.
+Each lane runs the [upstream packaging command](https://github.com/lablup/backend.ai/blob/2dd550539fbfcb6d1feb685bd4c75b7ede5da9cd/.github/workflows/build-test.yml)
+and checks for a nonempty Backend.AI package. This starts a separate
+rolling series for packaging. BoringCache scopes the named-cache archive to
+`pants.toml`, `pants.ci.toml` and the upstream Python lockfiles, so a dependency
+or interpreter change starts a new archive.
+
+The `Upstream benchmark compatibility` workflow checks the Euro-Office,
+llama.cpp and PostHog overlays, Backend.AI's packaging command, and Nushell's
+Cargo commands against their current upstream branches every day.
+It also runs when a pull request changes their setup.
+The check prints the exact upstream commit and runs without
+benchmark provider credentials or recorded timings. To check a specific
+revision, run `bundle exec ruby scripts/check-upstream.rb <case> <sha>`.
+
+PostHog's GitHub-hosted jobs add 4 GiB of swap before cache setup and timing.
+Every GitHub-hosted lane gets the same swap allocation for the frontend build.
+Nushell's Windows jobs give the upstream tests a long-form temporary directory
+path so the test fixtures use the same path spelling as Windows canonicalization.
 
 ```
 tools/<tool>/
