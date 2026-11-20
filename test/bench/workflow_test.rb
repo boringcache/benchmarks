@@ -3,6 +3,31 @@ require "open3"
 require "yaml"
 
 class WorkflowTest < Minitest::Test
+  def test_missing_archive_is_excluded_after_the_timer_stops
+    steps = YAML.load_file(File.expand_path("../../.github/actions/phase/action.yml", __dir__)).dig("runs", "steps")
+    lookup = steps.find { it["id"] == "saved-archive" }
+    assert lookup.dig("with", "lookup-only")
+    assert_operator steps.index(lookup), :>, steps.index { it["run"]&.include?("bin/bench record ") }
+
+    Dir.mktmpdir do |dir|
+      path = File.join(dir, "record.json")
+      script = File.expand_path("../../scripts/record-archive-save.rb", __dir__)
+      original = { "seconds" => 24.5, "run_url" => "https://example.com/run" }
+      ["true", "false", ""].each do |hit|
+        File.write(path, JSON.generate(original))
+        _, status = Open3.capture2e(RbConfig.ruby, script, path, "target-1", hit)
+        record = JSON.parse(File.read(path))
+        assert_equal(hit == "true", status.success?)
+        assert_equal 24.5, record["seconds"]
+        if status.success?
+          assert_equal "target-1", record.fetch("cache_saved_key")
+        else
+          assert_includes record.fetch("excluded"), "target-1"
+        end
+      end
+    end
+  end
+
   def test_expired_bazel_job_budget_still_allows_the_record_step
     steps = YAML.load_file(File.expand_path("../../.github/actions/phase/action.yml", __dir__)).dig("runs", "steps")
     build = steps.find { it["id"] == "build" }

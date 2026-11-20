@@ -409,7 +409,7 @@ module Bench
         if phase_run
           base_key = "#{kase.id.tr("/", "-")}-#{phase_run.cache_scope}"
           restore_keys = phase_run.phase != ROLLING ? [base_key] : (continues ? ["#{base_key}-"] : [])
-          outputs.merge!("tool" => kase.tool.name, "provider" => lane.provider, "build_dir" => phase_run.build_dir,
+          outputs.merge!("tool" => kase.tool.name, "provider" => lane.provider, "build_dir" => phase_run.build_dir, "record_path" => phase_run.record_path,
                          "restore_key" => restore_keys.join("\n"), "cache_key" => [base_key, phase_run.step, (ENV["GITHUB_RUN_ID"] if phase_run.phase == "sample")].compact.join("-"),
                          "artifact_key" => ["#{kase.id.tr("/", "-")}-#{phase_run.scope}", phase_run.step].compact.join("-"),
                          "cache_paths" => phase_run.cache_paths.join("\n"), "cache_dance_map" => JSON.generate(kase.setups(lane).include?("cache-dance") ? phase_run.cache_dance_map(cache_dance_root) : {}), "setup" => kase.setups(lane).join(" "), "boringcache_version" => @catalog.versions.fetch("boringcache"))

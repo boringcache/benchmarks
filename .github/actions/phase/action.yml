@@ -303,7 +303,8 @@ runs:
           "${limit[@]}" bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
         fi
 
-    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != '' && !contains(inputs.setup, 'namespace-cache') && inputs.phase != 'warm'
+    - id: actions-cache-save
+      if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != '' && !contains(inputs.setup, 'namespace-cache') && inputs.phase != 'warm'
       uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ steps.prepare.outputs.cache_paths }}
@@ -316,6 +317,23 @@ runs:
         BENCH_CACHE_RESTORE_TRACKED: ${{ steps.actions-cache-restore.outcome == 'success' || steps.dance-restore.outcome == 'success' }}
         BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
       run: bundle exec ruby bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
+
+    - id: saved-archive
+      if: (inputs.case == 'cargo/codex' || inputs.case == 'bazel/codex') && steps.actions-cache-save.outcome == 'success'
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      continue-on-error: true
+      with:
+        path: ${{ steps.prepare.outputs.cache_paths }}
+        key: ${{ steps.prepare.outputs.cache_key }}
+        lookup-only: true
+
+    - if: steps.saved-archive.outcome == 'success' || steps.saved-archive.outcome == 'failure'
+      shell: bash
+      env:
+        RECORD: ${{ steps.prepare.outputs.record_path }}
+        KEY: ${{ steps.prepare.outputs.cache_key }}
+        CACHE_HIT: ${{ steps.saved-archive.outputs.cache-hit }}
+      run: ruby scripts/record-archive-save.rb "$RECORD" "$KEY" "$CACHE_HIT"
 
     - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance') && inputs.phase != 'warm'
       shell: bash
