@@ -1,7 +1,7 @@
 repo = "openai/codex"
 branch = "main"
 start_sha = "db263d4f5471f4fd2e91ae0955556ace66aeb1c5"
-rolling_series = 2
+rolling_series = 3
 directory = "upstream/codex-rs"
 prepare = [
   'bash "$BENCH_ROOT/tools/shared/codex-linux.sh"',
@@ -10,11 +10,12 @@ prepare = [
   "cd upstream/codex-rs && rustup show active-toolchain",
   'bash "$BENCH_ROOT/tools/cargo/codex/prepare-v8.sh"',
 ]
-check = '''test -x upstream/codex-rs/target/debug/codex && test -n "$(find upstream/codex-rs/target/debug/deps -type f -executable -name 'codex_core-*' -print -quit)"'''
+check = '''test -x "$CARGO_TARGET_DIR/debug/codex" && test -n "$(find "$CARGO_TARGET_DIR/debug/deps" -type f -executable -name 'codex_core-*' -print -quit)"'''
 
 [env]
 MISE_SCCACHE_VERSION = "0.17.0"
 CARGO_INCREMENTAL = "0"
+CARGO_TARGET_DIR = "${BENCH_DIR}/upstream/target"
 CARGO_PROFILE_TEST_DEBUG = "0"
 CARGO_NET_GIT_FETCH_WITH_CLI = "true"
 RUST_MIN_STACK = "8388608"
@@ -23,4 +24,6 @@ RUSTY_V8_SRC_BINDING_PATH = "${BENCH_DIR}/v8/src_binding_ptrcomp_sandbox_release
 
 [runs]
 boringcache-cargo = ["github-26"]
+boringcache-cargo-plus = ["github-26"]
 gha = ["github-26"]
+gha-plus = ["github-26"]
