@@ -280,6 +280,13 @@ runs:
       env:
         PROVIDER: ${{ steps.prepare.outputs.provider }}
       run: |
+        case "$BENCH_CASE" in
+          bazel/codex|cargo/codex)
+            bash scripts/build-sampler.sh /dev/stdout 30 &
+            sampler_pid=$!
+            trap 'kill "$sampler_pid" 2>/dev/null || true' EXIT
+            ;;
+        esac
         if [ "$PROVIDER" = boringcache ]; then
           boringcache ci run --oidc-provider github-actions -- ruby -S bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
         else
