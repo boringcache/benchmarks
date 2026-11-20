@@ -1,4 +1,5 @@
 {
+  "excluded": "cargo_target_save_skipped: https://github.com/boringcache/benchmarks/actions/runs/44781776283/job/136463030706",
   "adapter_command": "cargo",
   "case": "codex",
   "lane": "boringcache-cargo-plus",

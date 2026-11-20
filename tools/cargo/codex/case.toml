@@ -1,16 +1,22 @@
 repo = "openai/codex"
 branch = "main"
 start_sha = "db263d4f5471f4fd2e91ae0955556ace66aeb1c5"
-rolling_series = 3
+rolling_series = 4
 directory = "upstream/codex-rs"
 prepare = [
   'bash "$BENCH_ROOT/tools/shared/codex-linux.sh"',
   "sudo apt-get install -y --no-install-recommends libasound2-dev libgstreamer-plugins-base1.0-dev protobuf-compiler",
   "mise trust && mise install",
   "cd upstream/codex-rs && rustup show active-toolchain",
+  'printf "%s\n" /target/ >> upstream/.git/info/exclude',
   'bash "$BENCH_ROOT/tools/cargo/codex/prepare-v8.sh"',
 ]
-check = '''test -x "$CARGO_TARGET_DIR/debug/codex" && test -n "$(find "$CARGO_TARGET_DIR/debug/deps" -type f -executable -name 'codex_core-*' -print -quit)"'''
+check = '''
+test -x "$CARGO_TARGET_DIR/debug/codex" &&
+test -n "$(find "$CARGO_TARGET_DIR/debug/deps" -type f -perm -0100 -name 'codex_core-*' -print -quit)" &&
+test -z "$(git -C upstream status --porcelain=v1 --untracked-files=normal)" &&
+{ [ "$BENCH_LANE" != "boringcache-cargo-plus" ] || test -s "$CARGO_TARGET_DIR/.boringcache/cargo-freshness-v2.json"; }
+'''
 
 [env]
 MISE_SCCACHE_VERSION = "0.17.0"
