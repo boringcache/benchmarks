@@ -145,6 +145,30 @@ class EuroOfficePreparationTest < Minitest::Test
     end
   end
 
+  def test_wasm_build_script_keeps_its_compiler_cache_and_statistics
+    build = "/core/scripts/build.sh --wasm --ccache --build-dir /build-cache-wasm --output /build-cache-wasm/dist"
+    source = <<~'DOCKERFILE'
+      FROM emsdk AS core-wasm
+          COPY core /core
+          RUN --mount=type=cache,id=wasm-build-cache-${CACHE_BUST},target=/build-cache-wasm \
+              --mount=type=cache,id=wasm-ccache,target=/ccache \
+              --mount=type=secret,id=remote_cache_s3_secret_key <<EOF
+              ccache --zero-stats
+              /core/scripts/build.sh --wasm --ccache --build-dir /build-cache-wasm --output /build-cache-wasm/dist
+              ccache --show-stats
+      EOF
+    DOCKERFILE
+
+    [true, false].each do |local_cache|
+      overlay = EuroOfficeCache.wasm(source, third_party: "abc", local_cache:)
+      assert_includes overlay, "COPY bench-ccache/ccache /usr/local/bin/ccache"
+      assert_includes overlay, "wasm-build-cache-${CACHE_BUST}-abc"
+      assert_equal local_cache, overlay.include?("id=wasm-ccache,target=/ccache")
+      assert_equal 1, overlay.scan("ccache --zero-stats").size
+      assert_includes overlay, "ccache --zero-stats\n        #{build}\n        ccache --show-stats"
+    end
+  end
+
   def test_native_control_archives_compiler_caches_as_well_as_build_state
     prepare_standalone(plus: true, local_cache: true) do |dir, _, output, status|
       assert status.success?, output
