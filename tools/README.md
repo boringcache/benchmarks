@@ -37,7 +37,9 @@ Every GitHub-hosted lane gets the same swap allocation for the frontend build.
 Nushell's Windows jobs give the upstream tests the long form of `RUNNER_TEMP`.
 That keeps the path outside the user profile, so the REPL tests see the full
 path in the terminal title, and the path tests see the same spelling as
-Windows canonicalization.
+Windows canonicalization. These jobs also use plain diagnostics
+(`NO_GRAPHICS=1`) so the IDE tests see complete error phrases regardless of
+the temporary path length.
 
 ```
 tools/<tool>/
