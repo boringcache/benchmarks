@@ -4,7 +4,7 @@ overlay=$(cd "$(dirname "$0")" && pwd)
 
 if [ "${RUNNER_OS:-}" = Windows ]; then
   temp_dir=$(cygpath -alw "${RUNNER_TEMP:?}")
-  export TMP="$temp_dir" TEMP="$temp_dir"
+  export TMP="$temp_dir" TEMP="$temp_dir" NO_GRAPHICS=1
 fi
 
 cargo_step() {

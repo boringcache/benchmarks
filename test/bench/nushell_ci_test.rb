@@ -22,11 +22,12 @@ class NushellCiTest < Minitest::Test
     assert calls.grep(/^boringcache /).all? { it.include?("--read-only") }
   end
 
-  def test_windows_tests_use_the_runner_temp_path_outside_the_user_profile
+  def test_windows_lanes_use_the_runner_temp_path_and_plain_diagnostics
     ["boringcache cargo", nil].each do |adapter|
       calls, status = run_ci("RUNNER_OS" => "Windows", "RUNNER_TEMP" => 'D:\a\_temp', "BENCH_BORINGCACHE" => adapter)
       assert status.success?
       assert_equal ['temp D:\a\_temp D:\a\_temp'] * 3, calls.grep(/^temp /)
+      assert_equal ["no-graphics 1"] * 3, calls.grep(/^no-graphics /)
     end
   end
 
@@ -111,7 +112,9 @@ class NushellCiTest < Minitest::Test
         File.write(File.join(dir, "cargo"), <<~BASH)
           #!/usr/bin/env bash
           printf 'cargo %s\n' "$*" >> "$CALLS"
-          if [ "${RUNNER_OS:-}" = Windows ]; then printf 'temp %s %s\n' "$TMP" "$TEMP" >> "$CALLS"; fi
+          if [ "${RUNNER_OS:-}" = Windows ]; then
+            printf 'temp %s %s\nno-graphics %s\n' "$TMP" "$TEMP" "${NO_GRAPHICS:-}" >> "$CALLS"
+          fi
           [ "$1" != --config ] || shift 2
           [ "$1" != "${FAIL_COMMAND:-}" ] || exit 42
         BASH
@@ -128,7 +131,7 @@ class NushellCiTest < Minitest::Test
         BASH
         %w[cargo boringcache cygpath].each { |script| File.chmod(0o755, File.join(dir, script)) }
         env = { "PATH" => "#{dir}:#{ENV.fetch('PATH')}", "CALLS" => File.join(dir, "calls"),
-          "BENCH_BORINGCACHE" => nil, "FAIL_COMMAND" => nil, "RUNNER_OS" => nil, **extra_env }
+          "BENCH_BORINGCACHE" => nil, "FAIL_COMMAND" => nil, "RUNNER_OS" => nil, "NO_GRAPHICS" => nil, **extra_env }
         _, status = Open3.capture2e(env, "bash", File.join(Bench::ROOT, "tools/cargo/nushell/overlay/ci.sh"), chdir: upstream)
         inspect&.call(dir)
         [File.readlines(env.fetch("CALLS"), chomp: true), status]
