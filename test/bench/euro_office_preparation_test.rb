@@ -171,6 +171,29 @@ class EuroOfficePreparationTest < Minitest::Test
     end
   end
 
+  def test_wasm_build_script_keeps_upstream_statistics_and_controls_the_local_mount
+    source = <<~'DOCKERFILE'
+      FROM emsdk AS core-wasm
+          COPY core /core
+          RUN --mount=type=cache,id=wasm-build-cache-${CACHE_BUST},target=/build-cache-wasm \
+              --mount=type=cache,id=wasm-ccache,target=/ccache \
+              --mount=type=secret,id=remote_cache_s3_access_key <<EOF
+              ccache --zero-stats
+              /core/scripts/build.sh --wasm --ccache --build-dir /build-cache-wasm
+              ccache --show-stats
+      EOF
+    DOCKERFILE
+    remote = EuroOfficeCache.wasm(source, third_party: "key", local_cache: false)
+    local = EuroOfficeCache.wasm(source, third_party: "key")
+
+    assert_equal 1, remote.scan("ccache --zero-stats").size
+    assert_equal 1, remote.scan("ccache --show-stats").size
+    assert_includes remote, "/core/scripts/build.sh --wasm --ccache --build-dir /build-cache-wasm"
+    assert_includes remote, "id=wasm-build-cache-${CACHE_BUST}-key"
+    refute_includes remote, "target=/ccache"
+    assert_includes local, "id=wasm-ccache,target=/ccache"
+  end
+
   private
     def prepare_standalone(resolve: true, plus: false, local_cache: false, core: core_source)
       Dir.mktmpdir("euro-office") do |dir|

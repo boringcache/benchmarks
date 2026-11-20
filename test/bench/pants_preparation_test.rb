@@ -34,14 +34,35 @@ class PantsPreparationTest < Minitest::Test
     end
   end
 
+  def test_named_cache_key_follows_python_pants_config_and_lockfiles
+    tag = named_cache_tag("CPython==3.13.18")
+
+    assert_equal tag, named_cache_tag("CPython==3.13.18")
+    assert_match(/\Abackend-ai-pants-named-caches-existing-scope-[a-f0-9]{16}\z/, tag)
+    refute_equal tag, named_cache_tag("CPython==3.13.7")
+    refute_equal tag, named_cache_tag("CPython==3.13.18", lock: "changed")
+  end
+
   private
-    def prepare(constraint)
+    def named_cache_tag(constraint, lock: "unchanged")
+      prepare(constraint, lock:) do |dir|
+        return TomlRB.load_file(File.join(dir, ".boringcache.toml")).dig("entries", "pants-named-caches", "tag")
+      end
+    end
+
+    def prepare(constraint, lock: "unchanged")
       Dir.mktmpdir("pants-python") do |dir|
         FileUtils.mkdir_p([File.join(dir, "upstream"), File.join(dir, "bin")])
         File.write(File.join(dir, "installed-python"), "#!/bin/sh\necho installed-python\n")
         File.chmod(0o755, File.join(dir, "installed-python"))
         FileUtils.cp(File.join(Bench::ROOT, "tools/pants/backend-ai/mise.toml"), dir)
         File.write(File.join(dir, "upstream/pants.toml"), TomlRB.dump("python" => { "interpreter_constraints" => [constraint] }))
+        File.write(File.join(dir, "upstream/pants.ci.toml"), "[GLOBAL]\ncolors = true\n")
+        File.write(File.join(dir, "upstream/python.lock"), lock)
+        File.write(File.join(dir, ".boringcache.toml"), <<~TOML)
+          [entries.pants-named-caches]
+          tag = "backend-ai-pants-named-caches-existing-scope"
+        TOML
         calls = File.join(dir, "calls")
         mise = File.join(dir, "bin/mise")
         File.write(mise, <<~SH)

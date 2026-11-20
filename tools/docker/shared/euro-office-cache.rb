@@ -42,9 +42,15 @@ module EuroOfficeCache
   def self.wasm(source, third_party:, local_cache: true)
     replacements = {
       "    COPY core /core\n" => "    COPY bench-ccache/ccache /usr/local/bin/ccache\n    COPY bench-ccache/ccache-storage-http /usr/local/bin/ccache-storage-http\n    ENV CCACHE_DIR=/ccache\n    COPY core /core\n",
-      "        cmake --build . -- -j$(nproc)\n" => "        ccache --zero-stats\n        cmake --build . -- -j$(nproc)\n",
       "id=wasm-build-cache-${CACHE_BUST},target=/build-cache-wasm" => "id=wasm-build-cache-${CACHE_BUST}-#{third_party},target=/build-cache-wasm",
     }
+    if source.include?("/core/scripts/build.sh --wasm --ccache ")
+      abort "core-wasm Dockerfile changed: expected ccache statistics around the WASM build" unless
+        source.scan("        ccache --zero-stats\n").size == 1 && source.scan("        ccache --show-stats\n").size == 1
+    else
+      build = "        cmake --build . -- -j$(nproc)\n"
+      replacements[build] = "        ccache --zero-stats\n#{build}"
+    end
     replacements["        --mount=type=cache,id=wasm-ccache,target=/ccache \\\n"] = "" unless local_cache
     replace(source, replacements, "core-wasm")
   end

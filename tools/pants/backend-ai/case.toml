@@ -1,13 +1,14 @@
 repo = "lablup/backend.ai"
 branch = "main"
-start_sha = "1bbdd38b729cade706ca39c2682a8fd15a1e738f"
+start_sha = "2dd550539fbfcb6d1feb685bd4c75b7ede5da9cd"
+rolling_series = 2
 directory = "upstream"
 prepare = [
   "ruby \"$BENCH_ROOT/tools/pants/backend-ai/prepare.rb\" && mise trust && mise install",
   "mkdir -p \"$BENCH_DIR/.bin\" && ln -sf \"$(mise which scie-pants)\" \"$BENCH_DIR/.bin/pants\" && interpreter=$(mise which python) && ln -sf \"$interpreter\" \"$BENCH_DIR/.bin/python3\"",
   "cd upstream && PANTS_NAMED_CACHES_DIR=\"$(mktemp -d)\" PANTS_LOCAL_STORE_DIR=\"$(mktemp -d)\" pants --version",
 ]
-check = "test -s upstream/.pants.d/workdir/pants.log"
+check = "for artifact in upstream/dist/backendai-*; do if [ -f \"$artifact\" ] && [ -s \"$artifact\" ]; then exit 0; fi; done; exit 1"
 shared = [".pants-named-caches"]
 
 [env]
