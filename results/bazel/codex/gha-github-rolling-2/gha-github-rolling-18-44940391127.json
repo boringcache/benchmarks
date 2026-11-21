@@ -1,0 +1,42 @@
+{
+  "adapter_command": "bazel",
+  "case": "codex",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 18,
+  "scope": "gha-github-rolling-2",
+  "cache_scope": "gha-github-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": "bazel-codex-gha-github-rolling-2-1",
+  "cache_restore_tracked": true,
+  "repo": "openai/codex",
+  "sha": "ffa05c8bfb7572f1b4139e775324bfd284f1cbe5",
+  "seconds": 4153.67,
+  "cache_save_timing": "in-phase",
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) 6973P-C",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "37d93020b0926fe4d6e1a57be36d5c56f34e315b",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/44940391127",
+  "attempt": 1,
+  "started_at": "2026-11-21T19:24:28Z"
+}
