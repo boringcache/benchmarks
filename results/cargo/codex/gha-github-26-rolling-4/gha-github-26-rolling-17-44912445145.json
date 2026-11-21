@@ -1,0 +1,41 @@
+{
+  "adapter_command": "cargo",
+  "case": "codex",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "compiler-cache"
+  ],
+  "runner": "github-26",
+  "runner_label": "ubuntu-26.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 17,
+  "scope": "gha-github-26-rolling-4",
+  "cache_scope": "gha-github-26-rolling-4",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "openai/codex",
+  "sha": "a0a30c40e8dbcc44af52e2df64dcce64368d4422",
+  "seconds": 1393.535,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "610f7cea4d8185e3df406c9d364a7a0ca68d32c7",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/44912445145",
+  "attempt": 1,
+  "started_at": "2026-11-21T14:12:58Z"
+}

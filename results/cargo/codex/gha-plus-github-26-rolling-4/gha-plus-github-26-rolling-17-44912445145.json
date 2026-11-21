@@ -1,0 +1,45 @@
+{
+  "adapter_command": "cargo",
+  "case": "codex",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "runner": "github-26",
+  "runner_label": "ubuntu-26.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 17,
+  "scope": "gha-plus-github-26-rolling-4",
+  "cache_scope": "gha-plus-github-26-rolling-4",
+  "cache_seeded": false,
+  "cache_restored_key": "cargo-codex-gha-plus-github-26-rolling-4-0",
+  "cache_restore_tracked": true,
+  "repo": "openai/codex",
+  "sha": "a0a30c40e8dbcc44af52e2df64dcce64368d4422",
+  "seconds": 1623.869,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "610f7cea4d8185e3df406c9d364a7a0ca68d32c7",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/44912445145",
+  "attempt": 1,
+  "started_at": "2026-11-21T14:12:39Z",
+  "excluded": "GitHub Actions Cache could not confirm cargo-codex-gha-plus-github-26-rolling-4-17 after the save. https://github.com/boringcache/benchmarks/actions/runs/44912445145"
+}
