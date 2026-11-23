@@ -348,6 +348,9 @@ runs:
         mountpoint -q "$storage" || exit 0
         df -hT "$storage" "$RUNNER_TEMP"
         sudo btrfs filesystem usage -b "$storage"
+        for path in "$BENCH_BAZEL_IMAGE" "$RUNNER_TEMP" "$BENCH_WORK/bazel/codex" "$HOME/.cache" "$HOME/.boringcache" /tmp; do
+          if [[ -e "$path" ]]; then sudo du -sx --block-size=1 "$path"; fi
+        done
         shopt -s nullglob
         dirs=("$storage"/build/*/execroot/*/bazel-out "$storage"/build/*/external "$storage"/build/*/sandbox)
         for dir in "$storage/disk-cache" "$storage/repository-cache" "$storage/repo-contents" "${dirs[@]}"; do

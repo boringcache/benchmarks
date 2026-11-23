@@ -13,6 +13,7 @@ truncate -s "$size" "$image"
 mkfs.btrfs --quiet --nodiscard "$image"
 sudo mount -o loop,noatime,compress=zstd:1 "$image" "$storage"
 sudo chown "$(id -u):$(id -g)" "$storage"
+printf 'BENCH_BAZEL_IMAGE=%s\n' "$image" >> "$GITHUB_ENV"
 printf '%s\n' \
   "startup --output_user_root=$storage/build" \
   "common --repository_cache=$storage/repository-cache" \
