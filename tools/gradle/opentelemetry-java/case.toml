@@ -10,7 +10,7 @@ shared = [".gradle-user-home/caches/modules-2", ".gradle-user-home/wrapper/dists
 CI = "true"
 DISABLE_REMOTE_BUILD_CACHE = "true"
 GRADLE_USER_HOME = "${BENCH_DIR}/.gradle-user-home"
-JAVA_HOME = "${HOME}/.local/share/mise/installs/java/temurin-25.0.4+101.0.LTS"
+JAVA_HOME = "${HOME}/.local/share/mise/installs/java/temurin-25.0.4.1+1.0.LTS"
 TEST_JAVA_HOME = "${HOME}/.local/share/mise/installs/java/zulu-21.52.15.0"
 
 [runs]
