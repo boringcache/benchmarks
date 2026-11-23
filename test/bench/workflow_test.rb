@@ -39,6 +39,37 @@ class WorkflowTest < Minitest::Test
     assert_equal 124, status.exitstatus
   end
 
+  def test_remote_cache_tokens_bypass_oidc_and_fail_if_a_required_token_is_missing
+    steps = YAML.load_file(File.expand_path("../../.github/actions/phase/action.yml", __dir__)).dig("runs", "steps")
+    script = steps.find { it["id"] == "build" }.fetch("run")
+    stubs = <<~'BASH'
+      bundle() { printf 'direct build\n'; }
+      boringcache() { printf 'OIDC build\n'; }
+    BASH
+    env = {
+      "BENCH_CASE" => "docker/posthog-runners", "BENCH_LANE" => "boringcache-docker-plus-hetzner",
+      "BENCH_PHASE" => "rolling", "PROVIDER" => "boringcache", "STATIC_CACHE_AUTH" => "true",
+      "BORINGCACHE_RESTORE_TOKEN" => "restore", "BORINGCACHE_SAVE_TOKEN" => "save"
+    }
+
+    output, status = Open3.capture2e(env, "bash", "-e", "-c", stubs + script)
+    assert status.success?
+    assert_equal "direct build\n", output
+
+    env["BORINGCACHE_SAVE_TOKEN"] = ""
+    output, status = Open3.capture2e(env, "bash", "-e", "-c", stubs + script)
+    refute status.success?
+    assert_includes output, "missing a required cache token"
+
+    output, status = Open3.capture2e(env.merge("BENCH_PHASE" => "warm"), "bash", "-e", "-c", stubs + script)
+    assert status.success?
+    assert_equal "direct build\n", output
+
+    output, status = Open3.capture2e(env.merge("STATIC_CACHE_AUTH" => "false", "BORINGCACHE_RESTORE_TOKEN" => ""), "bash", "-e", "-c", stubs + script)
+    assert status.success?
+    assert_equal "OIDC build\n", output
+  end
+
   def test_branch_runs_collect_post_job_timings_without_publishing_to_main
     workflow = YAML.load_file(File.expand_path("../../.github/workflows/project.yml", __dir__), aliases: true)
     collect = workflow.fetch("jobs").fetch("collect")

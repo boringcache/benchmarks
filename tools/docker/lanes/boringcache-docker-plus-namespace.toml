@@ -5,6 +5,7 @@ label = "boringcache plus · namespace remote"
 machine = "namespace instance 8x32"
 actions_only = true
 runners = ["github"]
+secrets = ["POSTHOG_REMOTE_RESTORE_TOKEN", "POSTHOG_REMOTE_SAVE_TOKEN"]
 setup = ["nsc"]
 cli_args = ["--remote=namespace"]
 probe = ["nsc auth check-login"]

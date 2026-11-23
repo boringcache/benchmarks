@@ -11,6 +11,8 @@ check = "docker image inspect posthog-benchmark:local"
 
 [runs]
 boringcache-docker-plus = ["depot-8", "blacksmith-8", "namespace-8x32", "ubicloud-8", "incredibuild"]
+boringcache-docker-plus-namespace = ["github"]
+boringcache-docker-plus-hetzner = ["github"]
 depot-builder-plus = ["depot-8"]
 blacksmith-builder-plus = ["blacksmith-8"]
 namespace-builder-plus = ["namespace-8x32-builder"]

@@ -36,6 +36,15 @@ inputs:
   cache-source:
     required: false
     default: ""
+  static-cache-auth:
+    required: false
+    default: "false"
+  cache-restore-token:
+    required: false
+    default: ""
+  cache-save-token:
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -287,6 +296,9 @@ runs:
       shell: bash
       env:
         PROVIDER: ${{ steps.prepare.outputs.provider }}
+        STATIC_CACHE_AUTH: ${{ inputs.static-cache-auth == 'true' && steps.prepare.outputs.boringcache_version == '1.48.2' }}
+        BORINGCACHE_RESTORE_TOKEN: ${{ steps.prepare.outputs.boringcache_version == '1.48.2' && inputs.cache-restore-token || '' }}
+        BORINGCACHE_SAVE_TOKEN: ${{ steps.prepare.outputs.boringcache_version == '1.48.2' && inputs.cache-save-token || '' }}
       run: |
         limit=()
         if [ "$BENCH_CASE" = bazel/codex ]; then
@@ -301,7 +313,13 @@ runs:
             trap 'kill "$sampler_pid" 2>/dev/null || true' EXIT
             ;;
         esac
-        if [ "$PROVIDER" = boringcache ]; then
+        if [ "$STATIC_CACHE_AUTH" = true ]; then
+          if [ -z "$BORINGCACHE_RESTORE_TOKEN" ] || { [ "$BENCH_PHASE" != warm ] && [ -z "$BORINGCACHE_SAVE_TOKEN" ]; }; then
+            echo "::error::The PostHog remote lane is missing a required cache token."
+            exit 1
+          fi
+          "${limit[@]}" bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
+        elif [ "$PROVIDER" = boringcache ]; then
           "${limit[@]}" boringcache ci run --oidc-provider github-actions -- ruby -S bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
         else
           "${limit[@]}" bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
