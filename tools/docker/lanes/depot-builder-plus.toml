@@ -8,3 +8,6 @@ setup = ["depot"]
 program = ["depot"]
 replaces = ["docker", "buildx"]
 args = ["--project", "${DEPOT_RUNNERS_PROJECT_ID}"]
+
+[cold]
+prepare = ["depot cache reset --project \"$DEPOT_RUNNERS_PROJECT_ID\""]

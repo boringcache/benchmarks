@@ -28,12 +28,12 @@ configure() {
 
 connect() {
   configure
-  ssh -o BatchMode=yes "$alias_name" "pkill -x buildkitd || true; rm -rf $state_dir /tmp/bc-buildkit-*; test ! -e $state_dir"
+  ssh -o BatchMode=yes "$alias_name" "if pgrep -x 'boringcache|buildkitd' > /dev/null; then echo 'The Hetzner worker is running another build' >&2; exit 1; fi; rm -rf $state_dir /tmp/bc-buildkit-*; test ! -e $state_dir"
   ssh -o BatchMode=yes "$alias_name" 'lscpu | grep -E "^(Model name|CPU\(s\)):"; free -m | sed -n 2p; df -BG --output=size,avail / | tail -1' \
     | ruby -rjson -e '
       text = STDIN.read
       size, avail = text.lines.last.split.map { it.delete_suffix("G").to_i }
-      machine = { "provider" => "hetzner", "server_type" => ENV.fetch("HETZNER_SERVER_TYPE", "ccx33"), "fresh_state" => true,
+      machine = { "provider" => "hetzner", "fresh_state" => true,
                   "cpu" => text[/^Model name:\s*(.+)$/, 1]&.strip, "cores" => text[/^CPU\(s\):\s*(\d+)/, 1]&.to_i,
                   "memory_mb" => text[/^Mem:\s+(\d+)/, 1]&.to_i, "disk_gb" => size, "disk_free_gb" => avail }.compact
       File.write(ARGV[0], JSON.generate(machine))
@@ -52,7 +52,7 @@ create() {
   {
     echo '#cloud-config'
     echo 'ssh_deletekeys: true'
-    echo 'ssh_genkeytypes: []'
+    echo 'ssh_genkeytypes: [ed25519]'
     echo 'ssh_keys:'
     echo '  ed25519_private: |'
     sed 's/^/    /' "$keys/host_ed25519"
@@ -65,9 +65,31 @@ create() {
     --location "${HETZNER_LOCATION:-ash}" --ssh-key "$name" --user-data-from-file "$keys/user-data.yml" \
     --label purpose=benchmark --label "benchmark=$series" > /dev/null
   rm "$keys/user-data.yml"
+  echo "$alias_name $(cut -d' ' -f1,2 "$keys/host_ed25519.pub")" > "$keys/known_hosts"
+  for _ in $(seq 60); do
+    if laptop_ssh true 2> /dev/null; then break; fi
+    sleep 5
+  done
+  rotate
   gh secret set HETZNER_SSH_KEY --repo "$repo" < "$keys/id_ed25519"
   hcloud server ip "$name" | gh secret set HETZNER_HOST --repo "$repo"
-  cut -d' ' -f1,2 "$keys/host_ed25519.pub" | gh secret set HETZNER_HOST_KEY --repo "$repo"
+}
+
+laptop_ssh() {
+  ssh -o BatchMode=yes -o ConnectTimeout=5 -o "HostName=$(hcloud server ip "$name")" -o User=root \
+    -o "IdentityFile=$keys/id_ed25519" -o IdentitiesOnly=yes -o "UserKnownHostsFile=$keys/known_hosts" \
+    -o "HostKeyAlias=$alias_name" -o StrictHostKeyChecking=yes "$alias_name" "$@"
+}
+
+rotate() {
+  keys="${HETZNER_KEY_DIR:-$HOME/.ssh/$name}"
+  repo="${HETZNER_REPO:-boringcache/benchmarks}"
+  laptop_ssh '{ cloud-init status --wait > /dev/null; test $? -ne 1; } && rm -f /etc/ssh/ssh_host_* && ssh-keygen -q -t ed25519 -N "" -f /etc/ssh/ssh_host_ed25519_key && systemctl restart ssh && cut -d" " -f1,2 /etc/ssh/ssh_host_ed25519_key.pub' > "$keys/host_ed25519.pub.new"
+  grep -q '^ssh-ed25519 ' "$keys/host_ed25519.pub.new"
+  mv "$keys/host_ed25519.pub.new" "$keys/host_ed25519.pub"
+  echo "$alias_name $(cat "$keys/host_ed25519.pub")" > "$keys/known_hosts"
+  laptop_ssh true
+  gh secret set HETZNER_HOST_KEY --repo "$repo" < "$keys/host_ed25519.pub"
 }
 
 delete() {
@@ -82,6 +104,7 @@ case "${1:-}" in
   probe) configure ;;
   connect) connect ;;
   create) create ;;
+  rotate) rotate ;;
   delete) delete ;;
-  *) echo "usage: hetzner-worker.sh probe|connect|create|delete" >&2; exit 2 ;;
+  *) echo "usage: hetzner-worker.sh probe|connect|create|rotate|delete" >&2; exit 2 ;;
 esac
