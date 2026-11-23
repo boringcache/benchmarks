@@ -1,0 +1,785 @@
+{
+  "adapter_command": "bazel",
+  "case": "grpc",
+  "lane": "boringcache-bazel-ondemand",
+  "provider": "boringcache",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 216,
+  "scope": "boringcache-bazel-ondemand-github-rolling",
+  "cache_scope": "boringcache-bazel-ondemand-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "grpc/grpc",
+  "sha": "2f2301eef31223e89227537a77090f942b982815",
+  "seconds": 910.936,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1795435611134,
+      "run_id": "45168776491",
+      "session_id": "proxy-summary-e8dada05-e68f-4745-8a9d-2a93a23994c7",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 909093,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "bazel",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 7.1,
+          "cpu_iowait_percent": 0.0,
+          "cpu_pressure_percent": 3.8,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 0.6,
+          "disk_read_mb": 57.9,
+          "disk_written_mb": 3268.7,
+          "interval_ms": 909473,
+          "io_pressure_percent": 0.1,
+          "memory_pressure_percent": 0.0,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+        "disk_available_gb": 84,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15983
+      },
+      "proxy": {
+        "adapter": "bazel",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 909093,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 10,
+        "kv_demand_download_completed": 8234,
+        "kv_demand_download_current_concurrency": 4,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "workload",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 256,
+        "kv_demand_download_max_observed_queued": 210,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 8300,
+        "kv_demand_url_blobs": 13499,
+        "kv_demand_url_max_batch_size": 383,
+        "kv_demand_url_max_in_flight": 4,
+        "kv_demand_url_requests": 13499,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 18800,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 256,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_kv_entries_current_version": 2419,
+          "cache_kv_entries_download_urls": 147,
+          "cache_kv_entry_reads": 4910,
+          "cache_rollups_ingest": 112,
+          "cache_session_evidence_confirm": 219,
+          "cache_session_evidence_prepare": 161
+        },
+        "p95_ms_by_operation": {
+          "cache_kv_entries_current_version": 2419,
+          "cache_kv_entries_download_urls": 186,
+          "cache_kv_entry_reads": 4910,
+          "cache_rollups_ingest": 343,
+          "cache_session_evidence_confirm": 226,
+          "cache_session_evidence_prepare": 167
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 8300,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 31,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 8337,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_kv_entries_current_version": 2419,
+          "cache_kv_entries_download_urls": 147,
+          "cache_kv_entry_reads": 4910,
+          "cache_rollups_ingest": 112,
+          "cache_session_evidence_confirm": 219,
+          "cache_session_evidence_prepare": 161
+        },
+        "p95_ms_by_operation": {
+          "cache_kv_entries_current_version": 2419,
+          "cache_kv_entries_download_urls": 186,
+          "cache_kv_entry_reads": 4910,
+          "cache_rollups_ingest": 343,
+          "cache_session_evidence_confirm": 226,
+          "cache_session_evidence_prepare": 167
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 8300,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 31,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 8337,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "product_behavior_reason_counts": {
+          "warmed_cache_refresh_recovered_action_cache_lookup": 4
+        },
+        "publication_drain_duration_ms": 7355
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_demand_max_wait_ms": 1403,
+        "startup_prefetch_demand_wait_ms": 1792510,
+        "startup_prefetch_demand_waits": 8234,
+        "startup_prefetch_unplanned_blobs": 8234,
+        "startup_prefetch_unplanned_bytes": 126708934,
+        "startup_prefetch_unused_blobs": 0,
+        "startup_prefetch_unused_bytes": 0,
+        "startup_prefetch_used_blobs": 0,
+        "startup_prefetch_used_bytes": 0
+      },
+      "kv_upload": {},
+      "singleflight": {
+        "singleflight_kv_download_leaders": 8234,
+        "singleflight_kv_lookup_follower_wait_p50_ms": 2569,
+        "singleflight_kv_lookup_follower_wait_p95_ms": 2571,
+        "singleflight_kv_lookup_followers": 3,
+        "singleflight_kv_lookup_leaders": 5,
+        "singleflight_kv_url_leaders": 4270
+      },
+      "kv_lookup": {
+        "kv_lookup_bazel_ac_after_refresh_hit": 4,
+        "kv_lookup_bazel_ac_published_fast_hit": 4265,
+        "kv_lookup_bazel_ac_published_fast_miss": 4,
+        "kv_lookup_bazel_cas_published_fast_hit": 3971
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 138133,
+          "blob_read_local_count": 6,
+          "blob_read_local_hit_rate_pct": 0,
+          "blob_read_remote_avg_ms": 217,
+          "blob_read_remote_bytes": 126708934,
+          "blob_read_remote_count": 8234
+        },
+        "blob_read_cache_bytes": 126708934,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "schema_version": "native_tool_evidence.v1",
+        "source": "bazel_execution_log",
+        "tool": "bazel"
+      },
+      "unit_evidence": {
+        "build_succeeded": true,
+        "capabilities": {
+          "cache_source": true,
+          "critical_path": false,
+          "dependencies": false,
+          "execution_reasons": false,
+          "scheduling": false,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": true
+        },
+        "collection_state": "reported",
+        "counts": {
+          "cached": 4269,
+          "cached_local": 0,
+          "cached_remote": 4269,
+          "executed": 0,
+          "failed": 0,
+          "observed": 4269,
+          "scope": "spawns"
+        },
+        "ranking_scope": "all_observed_units",
+        "schema_version": "unit_evidence.v1",
+        "source": "bazel_execution_log",
+        "tool": "bazel",
+        "tool_version": "8.7.0",
+        "truncated": true,
+        "unit_kind": "action",
+        "units": [
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt/bin/external/protobuf+/upb/mem/_objs/mem/alloc.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794589895002,
+            "duration_ms": 3963,
+            "id": "bazel-spawn:1",
+            "key": "ade8d2aae0b320366a326a7a8b4f97c5d5074e2e9074ddfc14195c4c6ca9aa65",
+            "label": "@@protobuf+//upb/mem:mem CppCompile",
+            "started_at_ms": 1794589891039,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt-exec-ST-d57f47055a04/bin/external/zlib+/_objs/z/zutil.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794589894814,
+            "duration_ms": 3773,
+            "id": "bazel-spawn:2",
+            "key": "f7d89595874f8d0a62a84824d2389b0fc457860138ec35ddecc0e0e129af7d07",
+            "label": "@@zlib+//:z CppCompile",
+            "started_at_ms": 1794589891041,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt/bin/external/prometheus-cpp+/core/_objs/core/builder.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794589911752,
+            "duration_ms": 3752,
+            "id": "bazel-spawn:3",
+            "key": "3436f37a175858dc719305803dc8bfe9c8b28db5365369cc1f5e4e0077e954f9",
+            "label": "@@prometheus-cpp+//core:core CppCompile",
+            "started_at_ms": 1794589908000,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt-exec-ST-d57f47055a04/bin/external/zlib+/_objs/z/uncompr.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794589894979,
+            "duration_ms": 3534,
+            "id": "bazel-spawn:0",
+            "key": "15f18e695305821b58b0341a72183f25d4597691b99557d023023d60a7ed45ad",
+            "label": "@@zlib+//:z CppCompile",
+            "started_at_ms": 1794589891445,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "GoStdlib",
+              "output": "bazel-out/k8-opt-exec-ST-020102668b12/bin/external/rules_go+/stdlib_/pkg",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794590544488,
+            "duration_ms": 3191,
+            "id": "bazel-spawn:2540",
+            "key": "d999b0ea4aef529b5622c9dec3af030aa22204aacfca5cf9b004977b42ed7573",
+            "label": "@@rules_go+//:stdlib GoStdlib",
+            "started_at_ms": 1794590541297,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt-exec-ST-d57f47055a04/bin/external/zlib+/_objs/z/inftrees.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794589895329,
+            "duration_ms": 2192,
+            "id": "bazel-spawn:14",
+            "key": "bc50dfb8e93a12d2b171641f4d9516e4413264099b406eb1588750c815653cd5",
+            "label": "@@zlib+//:z CppCompile",
+            "started_at_ms": 1794589893137,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt/bin/_objs/grpc++_base/client_callback.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1795426433640,
+            "duration_ms": 2058,
+            "id": "bazel-spawn:4112",
+            "key": "1d028295d3b294563b3a34a913622d231f54f8836559d57853fd21dd3335714a",
+            "label": "//:grpc++_base CppCompile",
+            "started_at_ms": 1795426431582,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppLink",
+              "output": "bazel-out/k8-opt/bin/examples/cpp/csm/csm_greeter_server",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1795426591631,
+            "duration_ms": 2007,
+            "id": "bazel-spawn:4268",
+            "key": "68cdc5b8331fec3af744dc05d8a5f0f799834460fbc37c11b4d47688e41dbdb8",
+            "label": "//examples/cpp/csm:csm_greeter_server CppLink",
+            "started_at_ms": 1795426589624,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt/bin/_objs/grpc_security_base/composite_channel_credentials.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1795425976684,
+            "duration_ms": 1883,
+            "id": "bazel-spawn:3840",
+            "key": "9f54e9123b9118530bd5aac631548b58b76f934d17ca755a6c52ea8490f3c816",
+            "label": "//:grpc_security_base CppCompile",
+            "started_at_ms": 1795425974801,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt-exec-ST-d57f47055a04/bin/external/abseil-cpp+/absl/status/_objs/status/status_internal.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794589957904,
+            "duration_ms": 1875,
+            "id": "bazel-spawn:1145",
+            "key": "850b7184bce361df933e78411e68bbf15edc68a040cae0304590c93a3cb291c0",
+            "label": "@@abseil-cpp+//absl/status:status CppCompile",
+            "started_at_ms": 1794589956029,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt/bin/external/abseil-cpp+/absl/strings/_objs/str_format_internal/arg.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794589945680,
+            "duration_ms": 1840,
+            "id": "bazel-spawn:1180",
+            "key": "449cf36e42817eec12f84b989de995270b1f276d945634035ecafd54a5d9d058",
+            "label": "@@abseil-cpp+//absl/strings:str_format_internal CppCompile",
+            "started_at_ms": 1794589943840,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "GenProto",
+              "output": "bazel-out/k8-opt/bin/external/envoy_api+/envoy/config/listener/v3/api_listener.upb_minitable.c",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794590595819,
+            "duration_ms": 1822,
+            "id": "bazel-spawn:2248",
+            "key": "8df7a992f7016db009bda0a902308e70d28600f7e3cd765ed2d64097162625c7",
+            "label": "@@envoy_api+//envoy/config/listener/v3:pkg GenProto",
+            "started_at_ms": 1794590593997,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt/bin/external/google_cloud_cpp+/google/cloud/monitoring/_objs/google_cloud_cpp_monitoring/dashboards_sources.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1795426567406,
+            "duration_ms": 1813,
+            "id": "bazel-spawn:4185",
+            "key": "11214696689df50ec3fc708c9e64c1f6a901d2e137c86d3187496bbe24f9e036",
+            "label": "@@google_cloud_cpp+//google/cloud/monitoring:google_cloud_cpp_monitoring CppCompile",
+            "started_at_ms": 1795426565593,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt/bin/external/opentelemetry-cpp+/sdk/src/metrics/_objs/metrics/base2_exponential_histogram_indexer.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794589975929,
+            "duration_ms": 1758,
+            "id": "bazel-spawn:1762",
+            "key": "ada41ce2d3a84f4ec310bd4a329bfc4ccd913907a5320061ea7c0bba26d60d3a",
+            "label": "@@opentelemetry-cpp+//sdk/src/metrics:metrics CppCompile",
+            "started_at_ms": 1794589974171,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt-exec-ST-020102668b12/bin/external/abseil-cpp+/absl/numeric/_objs/int128/int128.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794589967248,
+            "duration_ms": 1737,
+            "id": "bazel-spawn:828",
+            "key": "46ec4e01f3fe93740a65ccd13eef39a9948d39fb566e05459750137e390f39fe",
+            "label": "@@abseil-cpp+//absl/numeric:int128 CppCompile",
+            "started_at_ms": 1794589965511,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt/bin/external/envoy_api+/envoy/type/http/v3/_objs/pkg.upbdefs/cookie.upbdefs.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794590711846,
+            "duration_ms": 1653,
+            "id": "bazel-spawn:3099",
+            "key": "2415a0768e3b65f3154321f5fd6e591332155696658f89730845fe28dd9b5a6c",
+            "label": "@@envoy_api+//envoy/type/http/v3:pkg CppCompile",
+            "started_at_ms": 1794590710193,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt/bin/external/googleapis+/google/monitoring/dashboard/v1/_objs/dashboard_proto/drilldowns.pb.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794590714293,
+            "duration_ms": 1623,
+            "id": "bazel-spawn:3169",
+            "key": "696461021f1ece7443548189217c0a9196f4e4b19a87eeeb4540ff1ed53de0d0",
+            "label": "@@googleapis+//google/monitoring/dashboard/v1:dashboard_proto CppCompile",
+            "started_at_ms": 1794590712670,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt/bin/external/xds+/udpa/annotations/_objs/pkg.upb_minitable/migrate.upb_minitable.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794590655821,
+            "duration_ms": 1620,
+            "id": "bazel-spawn:2643",
+            "key": "c3a3fbd831c7f37abe9c877c80e46f51cb33ccc872a90726380e7b1c0d6b5c98",
+            "label": "@@xds+//udpa/annotations:pkg CppCompile",
+            "started_at_ms": 1794590654201,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt/bin/external/protobuf+/src/google/protobuf/_objs/protobuf/generated_message_reflection.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794590137606,
+            "duration_ms": 1608,
+            "id": "bazel-spawn:2509",
+            "key": "1cbb1fcfd05bd2f4ddc69a051e06a2abbf5fbab234fe670c0e7136a62f17d906",
+            "label": "@@protobuf+//src/google/protobuf:protobuf CppCompile",
+            "started_at_ms": 1794590135998,
+            "state": "cached"
+          },
+          {
+            "attributes": {
+              "cacheable": true,
+              "mnemonic": "CppCompile",
+              "output": "bazel-out/k8-opt/bin/external/envoy_api+/envoy/config/endpoint/v3/_objs/pkg_cc_proto/endpoint.pb.validate.d",
+              "remotable": true,
+              "runner": "remote cache hit"
+            },
+            "cache_source": "remote",
+            "completed_at_ms": 1794590971119,
+            "duration_ms": 1595,
+            "id": "bazel-spawn:4226",
+            "key": "5333d2d9c436ac067eeafc0407325041cbba09e30115ea113ba1a56b572c6abc",
+            "label": "@@envoy_api+//envoy/config/endpoint/v3:pkg_cc_proto CppCompile",
+            "started_at_ms": 1794590969524,
+            "state": "cached"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "bazel",
+          "candidates": [
+            {
+              "confidence": "low",
+              "evidence": {
+                "duration_ms": 909093,
+                "hit_rate": 100.0,
+                "hits": 8238,
+                "misses": 0
+              },
+              "kind": "needs_native_diagnostics",
+              "summary": "Cache-side reads were hot; remaining time likely sits in the native tool or runner."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 909093,
+            "errors": 0,
+            "hit_rate": 100.0,
+            "hits": 8238,
+            "misses": 0,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 0
+          },
+          "primary_bottleneck": "needs_native_diagnostics",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "cas": {
+            "customer_action_required": false,
+            "errors": 0,
+            "evidence": {
+              "absent_from_warmed_cache": 0,
+              "action_cache_hits": 4269,
+              "integrity_misses": 0,
+              "recent_negative_cache_misses": 0,
+              "shared_lookup_wait_misses": 0,
+              "warmed_cache_hits": 3971,
+              "warmed_cache_misses_before_refresh": 0,
+              "warmed_cache_refresh_hits": 0,
+              "warmed_cache_refresh_misses": 0
+            },
+            "hits": 3969,
+            "misses": 0,
+            "owner": "none",
+            "requests": 3969,
+            "scope": "cas",
+            "state": "cas_hot"
+          },
+          "confidence": "high",
+          "customer_action_required": false,
+          "diagnosis": "Bazel asked for action-cache keys that were missing from the published cache tag view, and BoringCache recovered them by refreshing that tag.",
+          "errors": 0,
+          "evidence": {
+            "absent_from_published_tag": 0,
+            "absent_from_warmed_cache": 0,
+            "integrity_misses": 0,
+            "published_tag_hits": 4265,
+            "published_tag_misses_before_refresh": 4,
+            "published_tag_refresh_hits": 4,
+            "published_tag_refresh_misses": 0,
+            "recent_negative_cache_misses": 0,
+            "same_run_action_cache_writes": 0,
+            "shared_lookup_wait_misses": 0,
+            "warmed_cache_hits": 4265,
+            "warmed_cache_misses_before_refresh": 4,
+            "warmed_cache_refresh_hits": 4,
+            "warmed_cache_refresh_misses": 0
+          },
+          "hits": 4269,
+          "misses": 0,
+          "next_step": "No workflow change is needed; inspect why the published cache tag view was stale if this repeats.",
+          "owner": "boringcache",
+          "requests": 4269,
+          "scope": "action_cache",
+          "state": "warmed_cache_refresh_recovered_action_cache_lookup",
+          "tool": "bazel"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 100.0,
+          "hits": 8238,
+          "likely_reason": "all_reads_hit",
+          "misses": 0,
+          "state": "hot",
+          "writes": 0
+        },
+        "issue_candidates": [
+          {
+            "customer_action_required": false,
+            "evidence": {
+              "published_tag_refresh_hits": 4,
+              "warmed_cache_refresh_hits": 4
+            },
+            "evidence_refs": [
+              "classification.cache_key_lookup",
+              "kv_lookup"
+            ],
+            "kind": "bazel_action_cache_warmed_cache_refresh_recovered_lookup",
+            "next_step": "No workflow change is needed; inspect published-tag refresh evidence if this repeats.",
+            "owner": "boringcache",
+            "summary": "BoringCache had to refresh the published cache tag before Bazel action-cache keys became visible."
+          }
+        ],
+        "primary_bottleneck": "needs_native_diagnostics"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+      "cores": 4
+    }
+  },
+  "evidence": [
+    "boringcache-bazel-ondemand-github-rolling-216-45168776491.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "product_args": [
+    "--on-demand"
+  ],
+  "experimental": true,
+  "harness": {
+    "commit": "f3b576a12c3acf0dc70e328286c3ef067e3a51a3",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45168776491",
+  "attempt": 1,
+  "started_at": "2026-11-23T11:51:40Z"
+}
