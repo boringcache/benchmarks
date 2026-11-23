@@ -153,6 +153,13 @@ runs:
       shell: bash
       run: docker buildx ls
 
+    - name: Record PostHog runner hardware
+      if: inputs.case == 'docker/posthog-runners' && inputs.runner != 'github'
+      shell: bash
+      run: |
+        LC_ALL=C lscpu | grep -E '^(Architecture|CPU\(s\)|Vendor ID|Model name|CPU family|Model|Stepping|Thread\(s\) per core):'
+        free -m
+
     - id: prepare
       if: inputs.phase != 'preflight'
       shell: bash
