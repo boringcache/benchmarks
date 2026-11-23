@@ -5,7 +5,6 @@ rolling_stride = 20
 rolling_series = 4
 setup = ["ghcr"]
 prepare = [
-  "if [ \"${RUNNER_ENVIRONMENT:-}\" = github-hosted ]; then df -h / && sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL && df -h /; fi",
   "bash \"$BENCH_ROOT/tools/docker/shared/posthog/prepare.sh\"",
   "ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" prepare posthog-runners",
 ]
