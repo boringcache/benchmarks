@@ -1,0 +1,66 @@
+{
+  "adapter_command": "docker",
+  "case": "posthog-runners",
+  "lane": "boringcache-docker-plus-scaleway",
+  "provider": "boringcache",
+  "level": "plus",
+  "capabilities": [
+    "layers",
+    "tool-cache",
+    "mount-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "scaleway standard3 8c",
+  "phase": "rolling",
+  "step": 2,
+  "scope": "boringcache-docker-plus-scaleway-github-rolling-4",
+  "cache_scope": "boringcache-docker-plus-scaleway-github-rolling-4",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "PostHog/posthog",
+  "sha": "611e18da96cb0827d87e5424db67fb8d07438f8e",
+  "seconds": 474.931,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "runner_machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 83
+    },
+    "remote_machine": {
+      "provider": "scaleway",
+      "fresh_state": true,
+      "cpu": "AMD EPYC 9555P 64-Core Processor",
+      "cpu_family": 26,
+      "cpu_model_id": 2,
+      "cores": 8,
+      "memory_mb": 32089,
+      "disk_gb": 216,
+      "disk_free_gb": 214
+    },
+    "image_publication": {
+      "tag": "ghcr.io/boringcache/benchmarks-posthog-runners/docker-posthog-runners-boringcache-docker-plus-scaleway-github-rolling-4:611e18da96cb0827d87e5424db67fb8d07438f8e",
+      "digest": "sha256:af34d943b227bfe7d27978cdd941272da6928797b18f10c0f9949399de68b72b"
+    }
+  },
+  "evidence": [],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "product_args": [
+    "--remote=scaleway"
+  ],
+  "harness": {
+    "commit": "358f613e99e953329a07b7663a12d29c0b367159",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45218835171",
+  "attempt": 1,
+  "started_at": "2026-11-23T16:40:45Z"
+}

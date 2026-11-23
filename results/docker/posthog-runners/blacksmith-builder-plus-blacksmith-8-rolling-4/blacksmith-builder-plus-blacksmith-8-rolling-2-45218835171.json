@@ -1,0 +1,62 @@
+{
+  "adapter_command": "docker",
+  "case": "posthog-runners",
+  "lane": "blacksmith-builder-plus",
+  "provider": "blacksmith",
+  "level": "plus",
+  "capabilities": [
+    "layers",
+    "tool-cache",
+    "mount-cache"
+  ],
+  "runner": "blacksmith-8",
+  "runner_label": "blacksmith-8vcpu-ubuntu-2404",
+  "machine": "blacksmith 8c",
+  "phase": "rolling",
+  "step": 2,
+  "scope": "blacksmith-builder-plus-blacksmith-8-rolling-4",
+  "cache_scope": "blacksmith-builder-plus-blacksmith-8-rolling-4",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "PostHog/posthog",
+  "sha": "611e18da96cb0827d87e5424db67fb8d07438f8e",
+  "seconds": 289.574,
+  "cache_save_timing": "post-job",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC",
+      "cores": 8,
+      "memory_mb": 31689,
+      "disk_gb": 245,
+      "disk_free_gb": 170
+    },
+    "image_publication": {
+      "tag": "ghcr.io/boringcache/benchmarks-posthog-runners/docker-posthog-runners-blacksmith-builder-plus-blacksmith-8-rolling-4:611e18da96cb0827d87e5424db67fb8d07438f8e",
+      "digest": "sha256:45c3a76fd31583e30a1bbfb1382ffa4954a6402ee1cb3b28fd0ed681554dc4b0"
+    },
+    "buildx_builder": {
+      "name": "blacksmith-mwthrtcu",
+      "driver": "remote",
+      "nodes": [
+        {
+          "name": "blacksmith-mwthrtcu0",
+          "endpoint": "tcp://127.0.0.1:1234"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "358f613e99e953329a07b7663a12d29c0b367159",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45218835171",
+  "attempt": 1,
+  "started_at": "2026-11-23T16:40:13Z",
+  "job_conclusion": "success",
+  "post_job_save_seconds": 2.813
+}
