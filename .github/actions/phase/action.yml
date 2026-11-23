@@ -318,6 +318,20 @@ runs:
         BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
       run: bundle exec ruby bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
 
+    - if: always() && inputs.case == 'bazel/codex' && steps.prepare.outputs.ready == 'true'
+      continue-on-error: true
+      shell: bash
+      run: |
+        storage="$BENCH_WORK/bazel/codex/.bazel"
+        mountpoint -q "$storage" || exit 0
+        df -hT "$storage" "$RUNNER_TEMP"
+        sudo btrfs filesystem usage -b "$storage"
+        shopt -s nullglob
+        dirs=("$storage"/build/*/execroot/*/bazel-out "$storage"/build/*/external "$storage"/build/*/sandbox)
+        for dir in "$storage/disk-cache" "$storage/repository-cache" "$storage/repo-contents" "${dirs[@]}"; do
+          if [[ -d "$dir" ]]; then sudo du -sx --apparent-size --block-size=1 "$dir"; fi
+        done
+
     - id: saved-archive
       if: (inputs.case == 'cargo/codex' || inputs.case == 'bazel/codex') && steps.actions-cache-save.outcome == 'success'
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0

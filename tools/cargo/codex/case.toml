@@ -1,7 +1,7 @@
 repo = "openai/codex"
 branch = "main"
 start_sha = "db263d4f5471f4fd2e91ae0955556ace66aeb1c5"
-rolling_series = 4
+rolling_series = 5
 directory = "upstream/codex-rs"
 prepare = [
   'bash "$BENCH_ROOT/tools/shared/codex-linux.sh"',
@@ -20,6 +20,7 @@ test -z "$(git -C upstream status --porcelain=v1 --untracked-files=normal)" &&
 
 [env]
 MISE_SCCACHE_VERSION = "0.17.0"
+CARGO_BUILD_JOBS = "2"
 CARGO_INCREMENTAL = "0"
 CARGO_TARGET_DIR = "${BENCH_DIR}/upstream/target"
 CARGO_PROFILE_TEST_DEBUG = "0"
