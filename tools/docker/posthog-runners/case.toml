@@ -2,12 +2,14 @@ repo = "PostHog/posthog"
 branch = "master"
 start_sha = "08ea5803ec5e1ef5c7789e9fd094c2c4c52f5d42"
 rolling_stride = 20
-rolling_series = 3
+rolling_series = 4
+setup = ["ghcr"]
 prepare = [
   "if [ \"${RUNNER_ENVIRONMENT:-}\" = github-hosted ]; then df -h / && sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL && df -h /; fi",
   "bash \"$BENCH_ROOT/tools/docker/shared/posthog/prepare.sh\"",
+  "ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" prepare posthog-runners",
 ]
-check = "docker image inspect posthog-benchmark:local"
+check = "ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" check linux/amd64"
 
 [runs]
 boringcache-docker-plus = ["depot-8", "blacksmith-8", "namespace-8x32", "ubicloud-8", "incredibuild"]

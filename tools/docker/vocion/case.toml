@@ -5,10 +5,10 @@ rolling_series = 3
 setup = ["ghcr"]
 prepare = [
   "ruby overlay/prepare.rb",
-  "ruby overlay/publish.rb prepare",
+  "ruby \"$BENCH_ROOT/tools/docker/vocion/overlay/publish.rb\" prepare",
   "sudo fallocate -l 8G /mnt/vocion-swapfile && sudo chmod 600 /mnt/vocion-swapfile && sudo mkswap /mnt/vocion-swapfile && sudo swapon /mnt/vocion-swapfile && free -h",
 ]
-check = "ruby overlay/publish.rb check"
+check = "ruby \"$BENCH_ROOT/tools/docker/vocion/overlay/publish.rb\" check"
 
 [runs]
 boringcache-docker = ["github"]

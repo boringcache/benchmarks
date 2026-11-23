@@ -358,7 +358,7 @@ module Bench
         tag = adapter.fetch("command").each_cons(2).find { |flag, _| %w[--tag -t].include?(flag) }&.last
         return unless tag
 
-        output, status = Open3.capture2(environment, "docker", "image", "inspect", "--format", "{{.Os}}/{{.Architecture}}", tag)
+        output, _, status = Open3.capture3(environment, "docker", "image", "inspect", "--format", "{{.Os}}/{{.Architecture}}", tag)
         output.strip if status.success?
       rescue Errno::ENOENT
         nil
