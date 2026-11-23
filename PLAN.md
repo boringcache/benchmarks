@@ -37,7 +37,8 @@ Current procedures and comparison limits are in [tools/README.md](tools/README.m
 
 | Case | Restart | Reason |
 | --- | --- | --- |
-| Docker PostHog on vendor runners | Series 2, 2026-11-23 | The first seed run was cancelled after the remote lanes failed. Series 2 uses new cache scopes. Namespace and Hetzner use temporary workspace restore and save tokens on CLI 1.48.2, which requires those credentials for remote builds. Both lanes seed at step 0. Switch them to GitHub OIDC after a CLI release supports forwarding those credentials. |
+| Docker PostHog on vendor runners | Series 3, 2026-11-23 | The series 2 seed was cancelled. The new seed is `08ea5803ec5e`, 120 first-parent commits behind `33329a89a49c`. Five further builds advance 20 commits each, ending at `4ee6e9f65397`. The series uses new cache scopes. Namespace and Hetzner use temporary workspace restore and save tokens with CLI 1.48.2. Switch those lanes to GitHub OIDC after a CLI release supports forwarding those credentials. |
+| Docker PostHog on vendor runners | Series 2, 2026-11-23 | The first seed run was cancelled after the remote lanes failed. Series 2 used new cache scopes. |
 | ccache osquery | Series 2, 2026-10-15 | Both lanes add `-Xclang -fno-pch-timestamp`, as documented for Clang PCH by ccache. The source remains `6b8969bb09ba5d3c01277ad04e55b87b4021f934`; step 0 starts with separate empty caches. Original-series records remain. The [last original-series run](https://github.com/boringcache/benchmarks/actions/runs/38742473859) was cancelled before starting this series. |
 | Cargo Deno | Series 2, 2026-10-09 | CLI 1.40.2. |
 | sbt Lichess and Play | Series 2, 2026-10-09 | CLI 1.41.0; Play's version pin moved to `version.sbt`. |

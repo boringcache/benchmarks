@@ -1,8 +1,8 @@
 repo = "PostHog/posthog"
 branch = "master"
-start_sha = "07b327219000672280cfab3a8484573b9a399d05"
+start_sha = "08ea5803ec5e1ef5c7789e9fd094c2c4c52f5d42"
 rolling_stride = 20
-rolling_series = 2
+rolling_series = 3
 prepare = [
   "if [ \"${RUNNER_ENVIRONMENT:-}\" = github-hosted ]; then df -h / && sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL && df -h /; fi",
   "bash \"$BENCH_ROOT/tools/docker/shared/posthog/prepare.sh\"",
