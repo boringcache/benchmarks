@@ -1,0 +1,60 @@
+{
+  "adapter_command": "docker",
+  "case": "posthog-runners",
+  "lane": "namespace-builder-plus",
+  "provider": "namespace",
+  "level": "plus",
+  "capabilities": [
+    "layers",
+    "tool-cache",
+    "mount-cache"
+  ],
+  "runner": "namespace-8x32-builder",
+  "runner_label": "namespace-profile-posthog-8x32-builder",
+  "machine": "namespace builder",
+  "phase": "rolling",
+  "step": 1,
+  "scope": "namespace-builder-plus-namespace-8x32-builder-rolling-4",
+  "cache_scope": "namespace-builder-plus-namespace-8x32-builder-rolling-4",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "PostHog/posthog",
+  "sha": "c0f44809ff0099c596fabe956b3741911b933037",
+  "seconds": 350.546,
+  "cache_save_timing": "in-phase",
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "runner_machine": {
+      "cpu": "AMD EPYC",
+      "cores": 8,
+      "memory_mb": 32156,
+      "disk_gb": 157,
+      "disk_free_gb": 155
+    },
+    "buildx_builder": {
+      "name": "nsc-remote",
+      "driver": "remote",
+      "nodes": [
+        {
+          "name": "amd64",
+          "endpoint": "tcp://amd64.build.iad3-a.namespaceapis.com:443"
+        },
+        {
+          "name": "arm64",
+          "endpoint": "tcp://arm64.build.iad3-a.namespaceapis.com:443"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "48356d0dded8ab938d9e9bc1fb5e2dfa1712626f",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45204470887",
+  "attempt": 1,
+  "started_at": "2026-11-23T15:24:07Z"
+}
