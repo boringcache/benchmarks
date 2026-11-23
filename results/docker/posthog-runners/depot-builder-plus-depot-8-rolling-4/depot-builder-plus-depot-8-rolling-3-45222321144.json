@@ -1,0 +1,50 @@
+{
+  "adapter_command": "docker",
+  "case": "posthog-runners",
+  "lane": "depot-builder-plus",
+  "provider": "depot",
+  "level": "plus",
+  "capabilities": [
+    "layers",
+    "tool-cache",
+    "mount-cache"
+  ],
+  "runner": "depot-8",
+  "runner_label": "depot-ubuntu-24.04-8",
+  "machine": "depot builder 16c",
+  "phase": "rolling",
+  "step": 3,
+  "scope": "depot-builder-plus-depot-8-rolling-4",
+  "cache_scope": "depot-builder-plus-depot-8-rolling-4",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "PostHog/posthog",
+  "sha": "0562836ba812ee79531037302f9766ce34704024",
+  "seconds": 436.577,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "runner_machine": {
+      "cpu": "Intel(R) Xeon(R) 6975P-C",
+      "cores": 8,
+      "memory_mb": 63257,
+      "disk_gb": 146,
+      "disk_free_gb": 78
+    },
+    "image_publication": {
+      "tag": "ghcr.io/boringcache/benchmarks-posthog-runners/docker-posthog-runners-depot-builder-plus-depot-8-rolling-4:0562836ba812ee79531037302f9766ce34704024",
+      "digest": "sha256:474dbbca9ce940ab6397e8b579d68860598ad5115d72f7a2ec7f450b779325f2"
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "1851680d55d7821102278a32547c7dc964b13ff8",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45222321144",
+  "attempt": 1,
+  "started_at": "2026-11-23T16:59:39Z"
+}
