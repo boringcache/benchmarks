@@ -1,0 +1,51 @@
+{
+  "adapter_command": "docker",
+  "case": "posthog-runners",
+  "lane": "boringcache-docker-plus-namespace",
+  "provider": "boringcache",
+  "level": "plus",
+  "capabilities": [
+    "layers",
+    "tool-cache",
+    "mount-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "namespace instance 8x32",
+  "phase": "rolling",
+  "step": 0,
+  "scope": "boringcache-docker-plus-namespace-github-rolling-4",
+  "cache_scope": "boringcache-docker-plus-namespace-github-rolling-4",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "PostHog/posthog",
+  "sha": "08ea5803ec5e1ef5c7789e9fd094c2c4c52f5d42",
+  "seconds": 1.507,
+  "cache_save_timing": "in-phase",
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "runner_machine": {
+      "cpu": "AMD EPYC 9V45 96-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 105
+    }
+  },
+  "evidence": [],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "product_args": [
+    "--remote=namespace"
+  ],
+  "harness": {
+    "commit": "961f651128fc829271155c286666a644b15902db",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45192664756",
+  "attempt": 1,
+  "started_at": "2026-11-23T14:21:26Z"
+}
