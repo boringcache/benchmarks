@@ -37,3 +37,12 @@ fallback = "fail"
 
 [remotes.hetzner.worker]
 timeout-seconds = 5400
+
+[remotes.scaleway]
+provider = "ssh"
+host = "bench-scaleway"
+user = "root"
+fallback = "fail"
+
+[remotes.scaleway.worker]
+timeout-seconds = 5400

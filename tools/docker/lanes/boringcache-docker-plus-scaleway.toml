@@ -1,0 +1,11 @@
+provider = "boringcache"
+level = "plus"
+plan = "plus-remote"
+label = "boringcache plus · scaleway remote"
+machine = "scaleway standard3 8c"
+actions_only = true
+runners = ["github"]
+secrets = ["SCALEWAY_SSH_KEY", "SCALEWAY_HOST", "SCALEWAY_HOST_KEY", "POSTHOG_REMOTE_RESTORE_TOKEN", "POSTHOG_REMOTE_SAVE_TOKEN"]
+setup = ["scaleway"]
+cli_args = ["--remote=scaleway"]
+probe = ["bash \"$BENCH_ROOT/scripts/ssh-build-worker.sh\" probe scaleway"]

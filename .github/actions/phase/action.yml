@@ -226,6 +226,10 @@ runs:
       shell: bash
       run: bash scripts/hetzner-worker.sh connect
 
+    - if: steps.prepare.outputs.ready == 'true' && contains(format(' {0} ', inputs.setup), ' scaleway ')
+      shell: bash
+      run: bash scripts/ssh-build-worker.sh connect scaleway
+
     - if: steps.prepare.outputs.ready == 'true'
       shell: bash
       run: bundle exec ruby bin/bench start "$BENCH_CASE" --lane "$BENCH_LANE"

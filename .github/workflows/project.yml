@@ -117,6 +117,9 @@ jobs:
       HETZNER_SSH_KEY: ${{ contains(matrix.secrets, 'HETZNER_SSH_KEY') && secrets.HETZNER_SSH_KEY || '' }}
       HETZNER_HOST: ${{ contains(matrix.secrets, 'HETZNER_HOST') && secrets.HETZNER_HOST || '' }}
       HETZNER_HOST_KEY: ${{ contains(matrix.secrets, 'HETZNER_HOST_KEY') && secrets.HETZNER_HOST_KEY || '' }}
+      SSH_WORKER_KEY: ${{ contains(matrix.secrets, 'SCALEWAY_SSH_KEY') && secrets.SCALEWAY_SSH_KEY || '' }}
+      SSH_WORKER_HOST: ${{ contains(matrix.secrets, 'SCALEWAY_HOST') && secrets.SCALEWAY_HOST || '' }}
+      SSH_WORKER_HOST_KEY: ${{ contains(matrix.secrets, 'SCALEWAY_HOST_KEY') && secrets.SCALEWAY_HOST_KEY || '' }}
       BITRISE_BUILD_CACHE_AUTH_TOKEN: ${{ contains(matrix.secrets, 'BITRISE_BUILD_CACHE_AUTH_TOKEN') && secrets.BITRISE_BUILD_CACHE_AUTH_TOKEN || '' }}
       BITRISE_BUILD_CACHE_WORKSPACE_ID: ${{ contains(matrix.secrets, 'BITRISE_BUILD_CACHE_WORKSPACE_ID') && vars.BITRISE_BUILD_CACHE_WORKSPACE_ID || '' }}
       TURBO_NAME: ${{ contains(matrix.secrets, 'TURBO_NAME') && secrets.TURBO_NAME || '' }}

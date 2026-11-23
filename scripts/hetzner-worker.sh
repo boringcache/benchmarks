@@ -3,43 +3,10 @@ set -euo pipefail
 series="${HETZNER_SERIES:-posthog-runners}"
 name="bench-${series}"
 alias_name=bench-hetzner
-state_dir=/var/cache/boringcache/buildkit-state
 
-configure() {
-  dir="${RUNNER_TEMP:?}/hetzner-worker"
-  mkdir -p "$dir" "$HOME/.ssh"
-  chmod 700 "$dir" "$HOME/.ssh"
-  printf '%s\n' "${HETZNER_SSH_KEY:?}" > "$dir/id_ed25519"
-  chmod 600 "$dir/id_ed25519"
-  echo "$alias_name ${HETZNER_HOST_KEY:?}" > "$dir/known_hosts"
-  {
-    echo "Host $alias_name"
-    echo "  HostName ${HETZNER_HOST:?}"
-    echo "  User root"
-    echo "  IdentityFile $dir/id_ed25519"
-    echo "  IdentitiesOnly yes"
-    echo "  UserKnownHostsFile $dir/known_hosts"
-    echo "  HostKeyAlias $alias_name"
-    echo "  StrictHostKeyChecking yes"
-  } >> "$HOME/.ssh/config"
-  chmod 600 "$HOME/.ssh/config"
-  ssh -o BatchMode=yes -o ConnectTimeout=15 "$alias_name" true
-}
-
-connect() {
-  configure
-  ssh -o BatchMode=yes "$alias_name" "if pgrep -x 'boringcache|buildkitd' > /dev/null; then echo 'The Hetzner worker is running another build' >&2; exit 1; fi; rm -rf $state_dir /tmp/bc-buildkit-*; test ! -e $state_dir"
-  ssh -o BatchMode=yes "$alias_name" 'lscpu | grep -E "^(Model name|CPU\(s\)):"; free -m | sed -n 2p; df -BG --output=size,avail / | tail -1' \
-    | ruby -rjson -e '
-      text = STDIN.read
-      size, avail = text.lines.last.split.map { it.delete_suffix("G").to_i }
-      machine = { "provider" => "hetzner", "fresh_state" => true,
-                  "cpu" => text[/^Model name:\s*(.+)$/, 1]&.strip, "cores" => text[/^CPU\(s\):\s*(\d+)/, 1]&.to_i,
-                  "memory_mb" => text[/^Mem:\s+(\d+)/, 1]&.to_i, "disk_gb" => size, "disk_free_gb" => avail }.compact
-      File.write(ARGV[0], JSON.generate(machine))
-      puts JSON.pretty_generate(machine)
-    ' "$dir/worker.json"
-  if [ -n "${GITHUB_ENV:-}" ]; then echo "BENCH_REMOTE_MACHINE=$dir/worker.json" >> "$GITHUB_ENV"; fi
+worker() {
+  SSH_WORKER_KEY="${HETZNER_SSH_KEY:?}" SSH_WORKER_HOST="${HETZNER_HOST:?}" SSH_WORKER_HOST_KEY="${HETZNER_HOST_KEY:?}" \
+    bash "$(dirname "$0")/ssh-build-worker.sh" "$1" hetzner
 }
 
 create() {
@@ -101,8 +68,7 @@ delete() {
 }
 
 case "${1:-}" in
-  probe) configure ;;
-  connect) connect ;;
+  probe|connect) worker "$1" ;;
   create) create ;;
   rotate) rotate ;;
   delete) delete ;;
