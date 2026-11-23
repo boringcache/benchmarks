@@ -2,6 +2,7 @@ repo = "PostHog/posthog"
 branch = "master"
 start_sha = "07b327219000672280cfab3a8484573b9a399d05"
 rolling_stride = 20
+rolling_series = 2
 prepare = [
   "if [ \"${RUNNER_ENVIRONMENT:-}\" = github-hosted ]; then df -h / && sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL && df -h /; fi",
   "bash \"$BENCH_ROOT/tools/docker/shared/posthog/prepare.sh\"",
@@ -10,8 +11,6 @@ check = "docker image inspect posthog-benchmark:local"
 
 [runs]
 boringcache-docker-plus = ["depot-8", "blacksmith-8", "namespace-8x32", "ubicloud-8", "incredibuild"]
-boringcache-docker-plus-namespace = ["github"]
-boringcache-docker-plus-hetzner = ["github"]
 depot-builder-plus = ["depot-8"]
 blacksmith-builder-plus = ["blacksmith-8"]
 namespace-builder-plus = ["namespace-8x32-builder"]
