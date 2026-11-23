@@ -101,7 +101,7 @@ runs:
       with:
         team: ${{ env.TURBO_TEAM_ID }}
 
-    - if: contains(format(' {0} ', inputs.setup), ' namespace ')
+    - if: contains(format(' {0} ', inputs.setup), ' namespace ') || contains(format(' {0} ', inputs.setup), ' nsc ')
       uses: namespacelabs/nscloud-setup@df198f982fcecfb8264bea3f1274b56a61b6dfdc # v0
 
     - if: contains(format(' {0} ', inputs.setup), ' namespace ')
@@ -205,6 +205,10 @@ runs:
         key: ${{ steps.prepare.outputs.cache_key }}
         restore-keys: ${{ steps.prepare.outputs.restore_key }}
         lookup-only: true
+
+    - if: steps.prepare.outputs.ready == 'true' && contains(format(' {0} ', inputs.setup), ' hetzner ')
+      shell: bash
+      run: bash scripts/hetzner-worker.sh connect
 
     - if: steps.prepare.outputs.ready == 'true'
       shell: bash

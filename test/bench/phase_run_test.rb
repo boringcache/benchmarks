@@ -318,6 +318,31 @@ class PhaseRunTest < Minitest::Test
     assert_equal Etc.nprocessors, builder.dig("observed", "runner_machine", "cores")
   end
 
+  def test_records_the_memory_and_disk_beside_the_cpu
+    with_fixture_env { cli("run", "demo/app", "--lane", "remote", "--phase", "cold", "--run-id", "r43") }
+
+    machine = record("remote-local-r43", "remote-local-cold").dig("observed", "machine")
+    assert_operator machine["memory_mb"], :>, 0
+    assert_operator machine["disk_gb"], :>, 0
+    assert_operator machine["disk_free_gb"], :<=, machine["disk_gb"]
+  end
+
+  def test_a_remote_worker_lane_records_the_worker_machine
+    write "tools/demo/lanes/builder.toml", %(provider = "acme"\nlevel = "base"\nmachine = "acme worker"\n)
+    worker = File.join(@root, "worker.json")
+    File.write(worker, JSON.generate("provider" => "hetzner", "server_type" => "ccx33", "cores" => 8, "memory_mb" => 31_000))
+    with_fixture_env do
+      ENV["BENCH_REMOTE_MACHINE"] = worker
+      cli("run", "demo/app", "--lane", "builder", "--phase", "cold", "--run-id", "r44")
+    ensure
+      ENV.delete("BENCH_REMOTE_MACHINE")
+    end
+
+    observed = record("builder-local-r44", "builder-local-cold")["observed"]
+    assert_equal({ "provider" => "hetzner", "server_type" => "ccx33", "cores" => 8, "memory_mb" => 31_000 }, observed["remote_machine"])
+    assert_equal Etc.nprocessors, observed.dig("runner_machine", "cores")
+  end
+
   def test_a_boringcache_lane_passes_its_env_to_the_cli_and_records_the_product_settings
     write "tools/demo/app/.boringcache.toml", File.read(File.join(@root, "tools/demo/app/.boringcache.toml")).sub(%(tag = "demo-app"), %(tag = "demo-app"\ntarget-budget = "25GiB"))
     write "tools/demo/lanes/boringcache-demo.toml", %(provider = "boringcache"\nlevel = "base"\n[env]\nBORINGCACHE_ARCHIVE_SELECTIVE_READS = "1"\n)

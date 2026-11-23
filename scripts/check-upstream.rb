@@ -34,10 +34,9 @@ when "docker/llama-cpp"
   end
 when "docker/posthog"
   Dir.mktmpdir("posthog-overlay") do |dir|
-    FileUtils.cp_r(kase.overlay_dir, dir)
     FileUtils.mkdir_p(File.join(dir, "upstream"))
     File.write(File.join(dir, "upstream/Dockerfile"), upstream_file(repo, sha, "Dockerfile"))
-    system("bash", "overlay/prepare.sh", chdir: dir, exception: true)
+    system("bash", File.join(kase.tool.dir, "shared/posthog/prepare.sh"), chdir: dir, exception: true)
   end
 when "pants/backend-ai"
   workflow = YAML.safe_load(upstream_file(repo, sha, ".github/workflows/build-test.yml"), aliases: true)

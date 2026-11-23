@@ -20,8 +20,9 @@ class PosthogOverlayTest < Minitest::Test
 
   def setup
     @dir = Dir.mktmpdir("posthog-overlay")
-    @case_dir = File.expand_path("../../tools/docker/posthog", __dir__)
-    FileUtils.cp_r(File.join(@case_dir, "overlay"), @dir)
+    @root = File.expand_path("../..", __dir__)
+    @case_dir = File.join(@root, "tools/docker/posthog")
+    @patch = File.join(@root, "tools/docker/shared/posthog/cache.patch")
     FileUtils.mkdir_p(File.join(@dir, "upstream"))
     File.write(File.join(@dir, "upstream/Dockerfile"), SOURCE)
   end
@@ -39,7 +40,7 @@ class PosthogOverlayTest < Minitest::Test
     assert_equal 2, generated.scan("--mount=type=secret,id=boringcache-tool-cache-env").size
     assert_equal SOURCE, File.read(File.join(@dir, "upstream/Dockerfile"))
 
-    output, status = Open3.capture2e("git", "apply", "--reverse", "--no-index", "--directory=overlay", "overlay/cache.patch", chdir: @dir)
+    output, status = Open3.capture2e("git", "apply", "--reverse", "--no-index", "--directory=overlay", @patch, chdir: @dir)
     assert status.success?, output
     assert_equal SOURCE, File.read(File.join(@dir, "overlay/PostHog.Dockerfile"))
   end
@@ -66,7 +67,7 @@ class PosthogOverlayTest < Minitest::Test
     assert_equal 2, generated.scan("--mount=type=secret,id=boringcache-tool-cache-env").size
     assert_equal source, File.read(File.join(@dir, "upstream/Dockerfile"))
 
-    output, status = Open3.capture2e("git", "apply", "--reverse", "--no-index", "--directory=overlay", "overlay/cache.patch", chdir: @dir)
+    output, status = Open3.capture2e("git", "apply", "--reverse", "--no-index", "--directory=overlay", @patch, chdir: @dir)
     assert status.success?, output
     assert_equal source, File.read(File.join(@dir, "overlay/PostHog.Dockerfile"))
   end
@@ -82,6 +83,6 @@ class PosthogOverlayTest < Minitest::Test
   private
     def prepare
       commands = TomlRB.load_file(File.join(@case_dir, "case.toml")).fetch("prepare")
-      Open3.capture2e({ "RUNNER_ENVIRONMENT" => nil }, "bash", "-ec", commands.join("\n"), chdir: @dir)
+      Open3.capture2e({ "RUNNER_ENVIRONMENT" => nil, "BENCH_ROOT" => @root }, "bash", "-ec", commands.join("\n"), chdir: @dir)
     end
 end

@@ -1,0 +1,10 @@
+provider = "boringcache"
+level = "plus"
+plan = "plus-remote"
+label = "boringcache plus · namespace remote"
+machine = "namespace instance 8x32"
+actions_only = true
+runners = ["github"]
+setup = ["nsc"]
+cli_args = ["--remote=namespace"]
+probe = ["nsc auth check-login"]

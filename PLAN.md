@@ -27,6 +27,12 @@ Current procedures and comparison limits are in [tools/README.md](tools/README.m
 | Zed on Namespace: the 4 vCPU / 16 GB lanes use 16 GB of swap | 2026-10-15 | `namespace-4x16` uses the profile `namespace-profile-zed-4x16-swap` (4 vCPU, 16 GB, Ubuntu 24.04, no cache volume, 16384 MB swap) for the BoringCache, plus and Depot Cache lanes. The build sampler records swap use. The cache-volume lane keeps its own labelled runner without swap. |
 | Ferrum: free the GitHub runner's preinstalled SDKs before the build | 2026-10-15 | Every Ferrum fuzz binary takes about 3.4 GB with the sanitizer and debug info, so the plus lane's target reached 76.6 GB during the fuzz runs. The case removes Android, .NET, GHC and CodeQL first, as the Zed case does, for every lane and before the timer starts. |
 
+## Added cases
+
+| Case | Date | Reason |
+| --- | --- | --- |
+| Docker PostHog on vendor runners, `docker/posthog-runners` | 2026-11-23 | Compares BoringCache plus on each vendor's runner with that vendor's default Docker cache, on 8 vCPU / 32 GB runners: Depot (`depot-ubuntu-24.04-8`) against the Depot builder, Blacksmith (`blacksmith-8vcpu-ubuntu-2404`) against its sticky-disk builder, Namespace (profile `posthog-8x32`) against the Namespace Remote Builder (profile `posthog-8x32-builder`, which restores the Namespace builder lane removed on 2026-10-19), and Ubicloud (`ubicloud-standard-8`) and Incredibuild against `type=gha` with cache-dance mounts. Vendor builders keep their default sizes; the Depot builder is 16 CPU / 32 GB. Two lanes build with `boringcache docker --remote=NAME` from a GitHub runner: a Namespace 8x32 instance that the CLI allocates inside the timer, and one long-lived Hetzner CCX33 (8 dedicated vCPU, 32 GB, Ashburn) whose stored BuildKit state is deleted before each build, so both use BoringCache as their only cache. Every lane builds the plus overlay Dockerfile. All plan tags, the Depot project `posthog-runners` and the Blacksmith run-scope keys are new, so step 0 starts empty. The series starts at `07b327219000`, 100 first-parent commits behind PostHog `master` on this date, with stride 20: one seed and five steps. The case is not in `rolling.toml`; runs are dispatched with `mode=rolling`. |
+
 ## Restarted series
 
 | Case | Restart | Reason |

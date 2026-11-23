@@ -83,3 +83,22 @@ machine = "namespace 8c"
 [namespace-32x64-cache]
 label = ["nscloud-ubuntu-24.04-amd64-32x64-with-cache", "nscloud-cache-tag-zed-sample-32c", "nscloud-cache-size-100gb"]
 machine = "namespace 32c"
+
+[namespace-8x32]
+label = "namespace-profile-posthog-8x32"
+machine = "namespace 8c"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
+[namespace-8x32-builder]
+label = "namespace-profile-posthog-8x32-builder"
+machine = "namespace 8c"
+
+[ubicloud-8]
+label = "ubicloud-standard-8"
+machine = "ubicloud 8c"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
+[incredibuild]
+label = "incredibuild-ubuntu-2404"
+machine = "incredibuild"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }

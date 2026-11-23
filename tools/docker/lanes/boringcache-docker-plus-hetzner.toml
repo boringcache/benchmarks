@@ -1,0 +1,11 @@
+provider = "boringcache"
+level = "plus"
+plan = "plus-remote"
+label = "boringcache plus · hetzner remote"
+machine = "hetzner ccx33 8c"
+actions_only = true
+runners = ["github"]
+secrets = ["HETZNER_SSH_KEY", "HETZNER_HOST", "HETZNER_HOST_KEY"]
+setup = ["hetzner"]
+cli_args = ["--remote=hetzner"]
+probe = ["bash \"$BENCH_ROOT/scripts/hetzner-worker.sh\" probe"]

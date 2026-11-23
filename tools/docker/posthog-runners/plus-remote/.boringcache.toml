@@ -1,0 +1,37 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+fail-on-cache-error = true
+tag = "posthog-runners-docker"
+no-git = true
+metadata-hints = ["benchmark=posthog-runners", "upstream-job=build-image-amd64"]
+tool-cache = ["turbo:posthog-runners-turbo"]
+mount-cache = true
+command = [
+  "docker", "buildx", "build",
+  "--file", "overlay/PostHog.Dockerfile",
+  "--provenance", "false",
+  "--tag", "posthog-benchmark:local",
+  "--load",
+  "upstream",
+]
+
+[remotes.namespace]
+provider = "namespace"
+region = "us"
+architecture = "amd64"
+cpus = 8
+memory-mb = 32768
+fallback = "fail"
+
+[remotes.namespace.worker]
+timeout-seconds = 5400
+
+[remotes.hetzner]
+provider = "ssh"
+host = "bench-hetzner"
+user = "root"
+fallback = "fail"
+
+[remotes.hetzner.worker]
+timeout-seconds = 5400

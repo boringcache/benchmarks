@@ -1,0 +1,10 @@
+provider = "depot"
+level = "plus"
+plan = "plus"
+machine = "depot builder 16c"
+runners = ["depot-8"]
+secrets = ["DEPOT_TOKEN", "DEPOT_RUNNERS_PROJECT_ID"]
+setup = ["depot"]
+program = ["depot"]
+replaces = ["docker", "buildx"]
+args = ["--project", "${DEPOT_RUNNERS_PROJECT_ID}"]

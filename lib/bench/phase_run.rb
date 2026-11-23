@@ -293,7 +293,8 @@ module Bench
       end
 
       def observed
-        machine = { (lane.machine ? "runner_machine" : "machine") => { "cpu" => cpu_model, "cores" => Etc.nprocessors }.compact }
+        machine = { (lane.machine ? "runner_machine" : "machine") => { "cpu" => cpu_model, "cores" => Etc.nprocessors, "memory_mb" => memory_mb, **disk }.compact,
+                    "remote_machine" => remote_machine }.compact
         return machine unless kase.tool.name == "docker"
 
         { **machine, "image_platform" => image_platform, "image_publication" => image_publication, "buildx_builder" => buildx_builder }.compact
@@ -325,6 +326,32 @@ module Bench
         cpuinfo = File.exist?("/proc/cpuinfo") ? File.read("/proc/cpuinfo")[/^model name\s*:\s*(.+)$/, 1] : nil
         sysctl = (Open3.capture2("sysctl", "-n", "machdep.cpu.brand_string").first rescue "") unless lscpu || cpuinfo
         [lscpu, cpuinfo, sysctl].map { it.to_s.strip }.find { !it.empty? && it != "-" }
+      end
+
+      def memory_mb
+        if File.exist?("/proc/meminfo")
+          kilobytes = File.read("/proc/meminfo")[/^MemTotal:\s+(\d+) kB$/, 1]
+          return kilobytes.to_i / 1024 if kilobytes
+        end
+        bytes = (Open3.capture2("sysctl", "-n", "hw.memsize").first rescue "").strip
+        bytes.match?(/\A\d+\z/) ? bytes.to_i / 1024 / 1024 : nil
+      end
+
+      def disk
+        output, status = Open3.capture2("df", "-Pk", workspace.dir)
+        return {} unless status.success?
+
+        total, available = output.lines.last.split.values_at(1, 3).map { it.to_i / 1024 / 1024 }
+        { "disk_gb" => total, "disk_free_gb" => available }
+      rescue Errno::ENOENT
+        {}
+      end
+
+      def remote_machine
+        path = @env["BENCH_REMOTE_MACHINE"].to_s
+        JSON.parse(File.read(path)) if !path.empty? && File.file?(path)
+      rescue JSON::ParserError
+        nil
       end
 
       def image_platform

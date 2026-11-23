@@ -1,0 +1,6 @@
+provider = "namespace"
+level = "plus"
+plan = "plus"
+machine = "namespace builder"
+actions_only = true
+runners = ["namespace-8x32-builder"]
