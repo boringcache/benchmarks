@@ -1,0 +1,46 @@
+{
+  "adapter_command": "cargo",
+  "case": "zed",
+  "lane": "kache",
+  "provider": "kache",
+  "level": "base",
+  "capabilities": [
+    "compiler-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 274,
+  "scope": "kache-github-rolling",
+  "cache_scope": "kache-github-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "zed-industries/zed",
+  "sha": "8057df9a20f588a7226b95223c35e07a734ac02d",
+  "seconds": 335.448,
+  "cache_save_timing": "post-job",
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) 6973P-C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 86
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "c58ad15bf6aae4be552f9475a6ee4f38828e51f1",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45273692902",
+  "attempt": 1,
+  "started_at": "2026-11-23T21:54:54Z",
+  "job_conclusion": "failure",
+  "post_job_save_seconds": 57.077
+}
