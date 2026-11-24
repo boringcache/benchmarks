@@ -95,7 +95,7 @@ class WorkflowTest < Minitest::Test
     assert_equal "read", collect.dig("permissions", "actions")
     assert collect.fetch("steps").any? { it["run"]&.include?("bin/bench post-job-saves") }
     artifact = collect.fetch("steps").find { it["uses"]&.start_with?("actions/upload-artifact@") }
-    assert_equal "recorded-results-${{ github.run_attempt }}", artifact.dig("with", "name")
+    assert_equal "recorded-results-${{ inputs.replay_step != '' && format('step-{0}-', inputs.replay_step) || '' }}${{ github.run_attempt }}", artifact.dig("with", "name")
     assert_equal %w[plan collect], publish.fetch("needs")
     assert_includes publish.fetch("if"), "needs.collect.result == 'success'"
     assert_includes publish.fetch("if"), "github.ref == 'refs/heads/main'"
@@ -107,7 +107,7 @@ class WorkflowTest < Minitest::Test
     workflow = YAML.load_file(File.expand_path("../../.github/workflows/project.yml", __dir__), aliases: true)
     step = workflow.dig("jobs", "plan", "steps").find { it["id"] == "matrix" }
     assert_equal "${{ github.ref }}", step.dig("env", "REF")
-    guard = step.fetch("run").split("bash scripts/checkout-records.sh").first
+    guard = step.fetch("run").split('if [ -n "$REPLAY_STEP" ]; then').first
 
     [["rolling", "refs/heads/topic", false], ["sample", "refs/heads/topic", false], ["rolling", "refs/tags/v1", false],
      ["rolling", "refs/heads/main", true], ["sample", "refs/heads/main", true], ["fresh", "refs/heads/topic", true],

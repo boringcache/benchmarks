@@ -20,7 +20,7 @@ class PosthogPublishTest < Minitest::Test
     FileUtils.mkdir_p(File.join(@root, "overlay"))
     Dir.chdir(@root) do
       DockerImagePublication.prepare("posthog-runners",
-        "GITHUB_REPOSITORY" => "example/benchmarks", "BENCH_SCOPE" => "docker-posthog-runners-hetzner-github-rolling-4")
+        { "GITHUB_REPOSITORY" => "example/benchmarks", "BENCH_SCOPE" => "docker-posthog-runners-hetzner-github-rolling-4" })
       image = "ghcr.io/example/benchmarks-posthog-runners/docker-posthog-runners-hetzner-github-rolling-4:#{@upstream_sha}"
       assert_equal image, DockerImagePublication.image_tag
       prepared = TomlRB.load_file(".boringcache.toml").dig("adapters", "docker", "command")

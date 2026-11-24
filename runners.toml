@@ -103,6 +103,11 @@ label = "incredibuild-ubuntu-2404"
 machine = "incredibuild"
 env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
+[avrea-8]
+label = "avrea-ubuntu-24.04-8-vcpu"
+machine = "avrea 8c"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
 [incredibuild-macos]
 label = "incredibuild-macos-latest"
 machine = "incredibuild macos"

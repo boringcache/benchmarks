@@ -288,7 +288,9 @@ module Bench
       end
 
       def record_job(jobs, record, kase, lane)
-        jobs[["#{record["phase"]}: #{job_label(kase, lane, record["runner"])}", [record["attempt"].to_i, 1].max]]
+        name = "#{record["phase"]}: #{job_label(kase, lane, record["runner"])}"
+        name = "Step #{record["step"]} / #{name}" if record["runner"] == "avrea-8" && record["phase"] == ROLLING
+        jobs[[name, [record["attempt"].to_i, 1].max]]
       end
 
       def prune_caches

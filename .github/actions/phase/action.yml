@@ -146,7 +146,7 @@ runs:
       shell: bash
       run: ruby scripts/nativelink.rb
 
-    - if: contains(inputs.setup, 'ghcr')
+    - if: contains(inputs.setup, 'ghcr') && (!contains(inputs.setup, 'boringcache-registry') || inputs.lane == 'avrea-cache-plus')
       uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
       with:
         registry: ghcr.io
@@ -206,6 +206,10 @@ runs:
         if [ "${#assets[@]}" -gt 1 ]; then install -m 0644 "${assets[1]}" "$dir/libboringcache_xcode_cas.dylib"; fi
         if [ "$RUNNER_OS" = Windows ]; then dir=$(cygpath -m "$dir"); fi
         echo "$dir" >> "$GITHUB_PATH"
+
+    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache' && contains(inputs.setup, 'boringcache-registry')
+      shell: bash
+      run: boringcache docker login
 
     - id: sampler
       if: steps.prepare.outputs.ready == 'true' && runner.os == 'Linux' && (startsWith(inputs.case, 'bazel/codex') || inputs.case == 'cargo/codex' || inputs.case == 'cargo/ferrum-fuzz' || inputs.case == 'ccache/osquery')

@@ -1,0 +1,56 @@
+name: Docker - posthog-runners (Avrea rolling)
+
+on:
+  push:
+    branches: [posthog-avrea]
+    paths: [.github/workflows/posthog-avrea.yml]
+
+permissions:
+  contents: write
+  actions: write
+  id-token: write
+  packages: write
+
+jobs:
+  seed:
+    name: Step 0
+    uses: ./.github/workflows/project.yml
+    with:
+      tool: Docker
+      project: posthog-runners
+      mode: rolling
+      replay_step: '0'
+      sha: 08ea5803ec5e1ef5c7789e9fd094c2c4c52f5d42
+
+  step_1:
+    name: Step 1
+    needs: seed
+    uses: ./.github/workflows/project.yml
+    with:
+      tool: Docker
+      project: posthog-runners
+      mode: rolling
+      replay_step: '1'
+      sha: c0f44809ff0099c596fabe956b3741911b933037
+
+  step_2:
+    name: Step 2
+    needs: step_1
+    uses: ./.github/workflows/project.yml
+    with:
+      tool: Docker
+      project: posthog-runners
+      mode: rolling
+      replay_step: '2'
+      sha: 611e18da96cb0827d87e5424db67fb8d07438f8e
+
+  step_3:
+    name: Step 3
+    needs: step_2
+    uses: ./.github/workflows/project.yml
+    with:
+      tool: Docker
+      project: posthog-runners
+      mode: rolling
+      replay_step: '3'
+      sha: 0562836ba812ee79531037302f9766ce34704024

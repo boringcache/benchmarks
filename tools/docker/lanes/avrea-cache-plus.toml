@@ -1,0 +1,11 @@
+provider = "avrea"
+level = "plus"
+plan = "plus"
+actions_only = true
+runners = ["avrea-8"]
+setup = ["buildx", "actions-runtime", "cache-dance"]
+post_job_save = ["reproducible-containers/buildkit-cache-dance", "dance-cache"]
+args = ["--cache-from", "type=gha,url_v2=https://cache.avrea.com/,scope=${BENCH_SCOPE}", "--cache-to", "type=gha,url_v2=https://cache.avrea.com/,scope=${BENCH_SCOPE},mode=max"]
+
+[warm]
+args = ["--cache-from", "type=gha,url_v2=https://cache.avrea.com/,scope=${BENCH_SCOPE}"]
