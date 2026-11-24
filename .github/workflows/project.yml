@@ -103,9 +103,13 @@ jobs:
           fi
           if [ -n "$RUNNER" ] && [ -n "$ROLLING" ]; then echo 'rolling runs use every configured runner' >&2; exit 1; fi
           matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${SAMPLE:+--sample} ${RUNNER:+--runner "$RUNNER"} ${SHA:+--sha "$SHA"} ${LANE:+--lane "$LANE"} ${CLI:+--cli "$CLI"} ${STEP:+--step "$STEP"} --results "$records")
-          if [ -n "$replay_sha" ] && ! jq -e --arg sha "$replay_sha" 'length == 2 and all(.[]; .sha == $sha and .runner == "incredibuild")' <<< "$matrix" >/dev/null; then
-            echo "The PostHog rolling plan does not contain both Incredibuild lanes at $replay_sha." >&2
-            exit 1
+          if [ -n "$replay_sha" ]; then
+            expected_lanes='["boringcache-docker-plus","gha-plus"]'
+            if [ "$LANE" = boringcache-docker-plus ]; then expected_lanes='["boringcache-docker-plus"]'; fi
+            if ! jq -e --arg sha "$replay_sha" --argjson lanes "$expected_lanes" '(map(.lane) | sort) == $lanes and all(.[]; .sha == $sha and .runner == "incredibuild")' <<< "$matrix" >/dev/null; then
+              echo "The PostHog rolling plan does not match the selected Incredibuild lanes at $replay_sha." >&2
+              exit 1
+            fi
           fi
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
           if [ "$matrix" = '[]' ]; then
