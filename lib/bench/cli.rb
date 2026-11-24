@@ -13,7 +13,7 @@ module Bench
         bin/bench prune-cache-dance <tool>/<case> --lane LANE
         bin/bench probe <tool>/<case> --lane LANE [--runner KEY] [--run-id ID]
         bin/bench label <runner>
-        bin/bench matrix <project|tool/case> [--tool TOOL] [--lane LANES] [--runner KEYS] [--rolling | --sample | --cli TAG]
+        bin/bench matrix <project|tool/case> [--tool TOOL] [--lane LANES] [--runner KEYS] [--rolling | --sample | --series] [--cli TAG]
         bin/bench rolling-projects
         bin/bench image
         bin/bench report [--results DIR] [--out DIR]
@@ -149,6 +149,7 @@ module Bench
 
       def matrix
         options = parse(defaults.except(:runner))
+        raise Error, "--series uses a fresh cache scope" if options[:series] && (options[:rolling] || options[:sample])
         return sample_matrix(options) if options[:sample]
         raise Error, "matrix --sha requires --sample" if options[:sha]
         raise Error, "--cli takes a CLI release tag such as v1.41.0 or vcli-canary-<sha>" if options[:cli] && !options[:cli].match?(CLI_RELEASE)
@@ -166,11 +167,12 @@ module Bench
           next [] if rolling && position.nil?
 
           step, sha = position
+          series = Upstream.new(kase, root: options[:work]).next_three(kase.start_sha) if options[:series]
           kase.runs.flat_map do |lane_name, runners|
             lane = kase.tool.lane(lane_name)
             Array(runners).select { planned?(kase, lane, it, rolling, rerun) }.map do |runner|
               { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets, "setup" => kase.setups(lane).join(" "),
-                "label" => job_label(kase, lane, runner),
+                **({ "series" => series } if series), "label" => job_label(kase, lane, runner),
                 "step" => step&.to_s || "", "sha" => sha || "", "cache_scope" => rolling&.read_scope(lane, runner) || "", "continues" => rolling&.continues?(lane, runner) ? "true" : "",
                 "cadence" => rolling && kase.nightly?(lane.name, runner) ? "nightly" : "", "cli" => options[:cli] || @catalog.case_cli(kase) || "" }
             end
@@ -473,6 +475,7 @@ module Bench
             opts.on("--env-file PATH") { options[:env_file] = File.expand_path(it) }
             opts.on("--exit-status N") { options[:exit_status] = it }
             opts.on("--github") { options[:github] = true }
+            opts.on("--series") { options[:series] = true }
             opts.on("--rolling") { options[:rolling] = true }
             opts.on("--sample") { options[:sample] = true }
             opts.on("--sha SHA") { options[:sha] = it }

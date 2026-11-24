@@ -168,6 +168,15 @@ class CLITest < Minitest::Test
                   ["gha", "0", @upstream_sha, "gha-github-rolling-2", ""]], entries
   end
 
+  def test_branch_series_plans_three_changes_at_the_case_stride_without_shared_scopes
+    changes = (1..6).map { |i| commit_upstream("change #{i}") }
+    write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]", "rolling_stride = 2\n\n[runs]")
+    entry = matrix("app", "--series", "--lane", "boringcache-demo").fetch(0)
+    assert_equal [changes[1], changes[3], changes[5]], entry.fetch("series").values.map { it.fetch("sha") }
+    assert_equal %w[1 2 3], entry.fetch("series").values.map { it.fetch("step") }
+    assert_equal "", entry.fetch("cache_scope")
+  end
+
   def test_a_rolling_stride_moves_every_lane_that_many_commits_per_step
     commit_upstream("two")
     %w[boringcache-demo remote gha].each { rolling_record(it, 0, @upstream_sha) }

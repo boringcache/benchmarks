@@ -173,7 +173,7 @@ runs:
         CACHE_SCOPE: ${{ inputs.cache-scope }}
         CONTINUES: ${{ inputs.continues }}
       run: |
-        if [ "$BENCH_PHASE" = rolling ]; then
+        if [ "$BENCH_PHASE" = rolling ] && [ -z "${BENCH_BRANCH_SERIES:-}" ]; then
           bash scripts/checkout-records.sh "results/$BENCH_CASE"
           if [ -d "results/$BENCH_CASE" ]; then
             RECORDED="$PWD/results"

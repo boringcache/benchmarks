@@ -89,7 +89,7 @@ class WorkflowTest < Minitest::Test
     collect = workflow.fetch("jobs").fetch("collect")
     publish = workflow.fetch("jobs").fetch("publish")
 
-    assert_equal %w[plan cold warm rolling], collect.fetch("needs")
+    assert_equal %w[plan cold warm rolling roll_1 roll_2 roll_3], collect.fetch("needs")
     refute_includes collect.fetch("if"), "refs/heads/main"
     assert_equal "read", collect.dig("permissions", "contents")
     assert_equal "read", collect.dig("permissions", "actions")
@@ -111,11 +111,12 @@ class WorkflowTest < Minitest::Test
 
     [["rolling", "refs/heads/topic", false], ["sample", "refs/heads/topic", false], ["rolling", "refs/tags/v1", false],
      ["rolling", "refs/heads/main", true], ["sample", "refs/heads/main", true], ["fresh", "refs/heads/topic", true],
-     ["preflight", "refs/heads/topic", true]].each do |mode, ref, allowed|
-      env = { "REF" => ref, "ROLLING" => mode == "rolling" ? "true" : "", "SAMPLE" => mode == "sample" ? "true" : "" }
+     ["preflight", "refs/heads/topic", true], ["series", "refs/heads/topic", true], ["series", "refs/heads/main", false],
+     ["series", "refs/tags/v1", false]].each do |mode, ref, allowed|
+      env = { "REF" => ref, "ROLLING" => mode == "rolling" ? "true" : "", "SAMPLE" => mode == "sample" ? "true" : "", "BENCH_BRANCH_SERIES" => mode == "series" ? "true" : "" }
       output, status = Open3.capture2e(env, "bash", "-c", guard)
       assert_equal allowed, status.success?, "#{mode} on #{ref}: #{output}"
-      assert_includes output, "--ref main" unless allowed
+      assert_includes output, mode == "series" ? "branch other than main" : "--ref main" unless allowed
     end
   end
 end

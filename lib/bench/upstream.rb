@@ -9,6 +9,15 @@ module Bench
       commits_after(after)[(@kase.rolling_stride || 1) - 1]
     end
 
+    def next_three(after)
+      commits = commits_after(after)
+      stride = @kase.rolling_stride || 1
+      (1..3).to_h do |step|
+        sha = commits[(step * stride) - 1] || raise(Error, "#{@kase.id} has fewer than three rolling steps after #{after}")
+        ["roll_#{step}", { "step" => step.to_s, "sha" => sha }]
+      end
+    end
+
     def commits_after(after)
       init unless File.exist?(File.join(@dir, "HEAD"))
       Bench.git("fetch", "--quiet", "--filter=tree:0", "origin", @kase.branch, chdir: @dir)

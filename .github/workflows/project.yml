@@ -12,9 +12,9 @@ on:
         type: string
         required: true
       mode:
-        description: fresh (cold then warm), rolling (next commit), sample (completed GitHub commit), or preflight (setup probes)
+        description: fresh (cold then warm), rolling (next commit), sample (completed GitHub commit), series (cold, warm and three rolling commits on a branch), or preflight (setup probes)
         type: choice
-        options: [fresh, rolling, sample, preflight]
+        options: [fresh, series, rolling, sample, preflight]
         default: fresh
       lane:
         description: only these lanes, space separated (optional, for debugging one lane)
@@ -35,7 +35,7 @@ on:
         required: false
         default: ""
       cli_artifact:
-        description: Immutable benchmark workspace CLI artifact for a fresh branch run
+        description: Immutable benchmark workspace CLI artifact for a fresh or series branch run
         type: string
         default: ""
       step:
@@ -47,6 +47,7 @@ on:
 run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}${{ inputs.step && format(' step {0}', inputs.step) || '' }}${{ inputs.cli && format(' [{0}]', inputs.cli) || '' }}${{ inputs.cli_artifact && format(' [{0}]', inputs.cli_artifact) || '' }}
 
 env:
+  BENCH_BRANCH_SERIES: ${{ inputs.mode == 'series' && 'true' || '' }}
   CANDIDATE_CLI_ARTIFACT: ${{ inputs.cli_artifact }}
 
 concurrency:
@@ -93,9 +94,13 @@ jobs:
             echo 'Select a branch, fresh or preflight mode, and an immutable CLI artifact without a release tag.' >&2
             exit 1
           fi
+          if [ -n "$BENCH_BRANCH_SERIES" ] && { [ "$REF" = refs/heads/main ] || [[ "$REF" != refs/heads/* ]]; }; then
+            echo 'Run a comparison series from a branch other than main.' >&2
+            exit 1
+          fi
           bash scripts/checkout-records.sh
           if [ -n "$RUNNER" ] && [ -n "$ROLLING" ]; then echo 'rolling runs use every configured runner' >&2; exit 1; fi
-          matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${SAMPLE:+--sample} ${RUNNER:+--runner "$RUNNER"} ${SHA:+--sha "$SHA"} ${LANE:+--lane "$LANE"} ${CLI:+--cli "$CLI"} ${STEP:+--step "$STEP"} --results results)
+          matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${BENCH_BRANCH_SERIES:+--series} ${SAMPLE:+--sample} ${RUNNER:+--runner "$RUNNER"} ${SHA:+--sha "$SHA"} ${LANE:+--lane "$LANE"} ${CLI:+--cli "$CLI"} ${STEP:+--step "$STEP"} --results results)
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
           if [ "$matrix" = '[]' ]; then
             echo 'No benchmark jobs are due for this selection.' >> "$GITHUB_STEP_SUMMARY"
@@ -103,7 +108,7 @@ jobs:
 
   cold:
     needs: plan
-    if: ${{ (inputs.mode == 'fresh' || inputs.mode == 'preflight') && needs.plan.outputs.matrix != '[]' }}
+    if: ${{ (inputs.mode == 'fresh' || inputs.mode == 'series' || inputs.mode == 'preflight') && needs.plan.outputs.matrix != '[]' }}
     name: "${{ inputs.mode == 'preflight' && 'preflight' || 'cold' }}: ${{ matrix.label }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 180
@@ -154,13 +159,13 @@ jobs:
           lane: ${{ matrix.lane }}
           runner: ${{ matrix.runner }}
           setup: ${{ matrix.setup }}
-          phase: ${{ (inputs.mode == 'preflight' || inputs.mode == 'sample') && inputs.mode || github.job }}
+          phase: ${{ startsWith(github.job, 'roll_') && 'rolling' || (inputs.mode == 'preflight' || inputs.mode == 'sample') && inputs.mode || github.job }}
           run-id: ${{ github.run_id }}
-          sha: ${{ matrix.sha }}
-          step: ${{ matrix.step }}
-          cache-scope: ${{ matrix.cache_scope }}
+          sha: ${{ matrix.series[github.job].sha || matrix.sha }}
+          step: ${{ matrix.series[github.job].step || matrix.step }}
+          cache-scope: ${{ inputs.mode == 'series' && format('{0}-{1}-{2}', matrix.lane, matrix.runner, github.run_id) || matrix.cache_scope }}
           cli-release: ${{ matrix.cli }}
-          continues: ${{ matrix.continues }}
+          continues: ${{ startsWith(github.job, 'roll_') && 'true' || matrix.continues }}
           cadence: ${{ matrix.cadence }}
           cache-source: ${{ matrix.source }}
           static-cache-auth: ${{ github.ref == 'refs/heads/main' && matrix.case == 'docker/posthog-runners' && matrix.cli == '' && contains(matrix.secrets, 'POSTHOG_REMOTE_RESTORE_TOKEN') }}
@@ -169,7 +174,7 @@ jobs:
 
   warm:
     needs: [plan, cold]
-    if: ${{ !cancelled() && inputs.mode == 'fresh' && needs.plan.outputs.matrix != '[]' }}
+    if: ${{ !cancelled() && (inputs.mode == 'fresh' || inputs.mode == 'series') && needs.plan.outputs.matrix != '[]' }}
     name: "warm: ${{ matrix.label }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 180
@@ -189,8 +194,41 @@ jobs:
     env: *secrets
     steps: *steps
 
+  roll_1:
+    needs: [plan, warm]
+    if: ${{ !cancelled() && inputs.mode == 'series' && needs.plan.result == 'success' && needs.plan.outputs.matrix != '[]' }}
+    name: "rolling 1: ${{ matrix.label }}"
+    runs-on: ${{ matrix.runs_on }}
+    timeout-minutes: 180
+    permissions: *lane_permissions
+    strategy: *matrix
+    env: *secrets
+    steps: *steps
+
+  roll_2:
+    needs: [plan, roll_1]
+    if: ${{ !cancelled() && inputs.mode == 'series' && needs.plan.result == 'success' && needs.plan.outputs.matrix != '[]' }}
+    name: "rolling 2: ${{ matrix.label }}"
+    runs-on: ${{ matrix.runs_on }}
+    timeout-minutes: 180
+    permissions: *lane_permissions
+    strategy: *matrix
+    env: *secrets
+    steps: *steps
+
+  roll_3:
+    needs: [plan, roll_2]
+    if: ${{ !cancelled() && inputs.mode == 'series' && needs.plan.result == 'success' && needs.plan.outputs.matrix != '[]' }}
+    name: "rolling 3: ${{ matrix.label }}"
+    runs-on: ${{ matrix.runs_on }}
+    timeout-minutes: 180
+    permissions: *lane_permissions
+    strategy: *matrix
+    env: *secrets
+    steps: *steps
+
   collect:
-    needs: [plan, cold, warm, rolling]
+    needs: [plan, cold, warm, rolling, roll_1, roll_2, roll_3]
     if: ${{ !cancelled() && needs.plan.result == 'success' && inputs.mode != 'preflight' && needs.plan.outputs.matrix != '[]' }}
     runs-on: ubuntu-24.04
     permissions:

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+[ -z "${BENCH_BRANCH_SERIES:-}" ] || exit 0
 path=${1:-results}
 git fetch --quiet --depth=1 origin main
 rm -rf results
