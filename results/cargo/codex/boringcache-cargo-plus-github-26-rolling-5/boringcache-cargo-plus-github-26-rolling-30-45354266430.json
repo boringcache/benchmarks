@@ -1,0 +1,896 @@
+{
+  "adapter_command": "cargo",
+  "case": "codex",
+  "lane": "boringcache-cargo-plus",
+  "provider": "boringcache",
+  "level": "plus",
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "runner": "github-26",
+  "runner_label": "ubuntu-26.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 30,
+  "scope": "boringcache-cargo-plus-github-26-rolling-5",
+  "cache_scope": "boringcache-cargo-plus-github-26-rolling-5",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "repo": "openai/codex",
+  "sha": "d402acbebac03429169dec70eb977e3c1f5b6f40",
+  "seconds": 526.861,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1795508713850,
+      "run_id": "45354266430",
+      "session_id": "proxy-summary-f1d028fc-2d01-4ac0-9add-64a9ff4bedb3",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 365474,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "sccache",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 53.2,
+          "cpu_iowait_percent": 14.2,
+          "cpu_pressure_percent": 12.4,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 41.7,
+          "disk_read_mb": 18819.6,
+          "disk_written_mb": 76430.9,
+          "interval_ms": 525176,
+          "io_pressure_percent": 20.8,
+          "memory_pressure_percent": 3.8,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "disk_available_gb": 104,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15983
+      },
+      "proxy": {
+        "adapter": "sccache",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 365474,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 1,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 1,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 1,
+        "kv_demand_url_blobs": 1,
+        "kv_demand_url_max_batch_size": 1,
+        "kv_demand_url_max_in_flight": 1,
+        "kv_demand_url_requests": 1,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 6,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 5,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 45,
+          "cache_blobs_download_urls": 284,
+          "cache_blobs_upload_urls": 61,
+          "cache_finalize_publish": 2221,
+          "cache_flush_upload": 69,
+          "cache_kv_entries_current_version": 59,
+          "cache_kv_entries_download_urls": 53,
+          "cache_kv_entries_upsert": 83,
+          "cache_kv_entry_reads": 45,
+          "cache_rollups_ingest": 81,
+          "cache_session_evidence_confirm": 104,
+          "cache_session_evidence_prepare": 58
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 101,
+          "cache_blobs_download_urls": 1062,
+          "cache_blobs_upload_urls": 433,
+          "cache_finalize_publish": 2221,
+          "cache_flush_upload": 69,
+          "cache_kv_entries_current_version": 59,
+          "cache_kv_entries_download_urls": 74,
+          "cache_kv_entries_upsert": 193,
+          "cache_kv_entry_reads": 45,
+          "cache_rollups_ingest": 280,
+          "cache_session_evidence_confirm": 114,
+          "cache_session_evidence_prepare": 58
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 135,
+          "cache_blobs_download_urls": 8,
+          "cache_blobs_upload_urls": 156,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 2,
+          "cache_kv_entries_upsert": 3,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 13,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 325,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 45,
+          "cache_blobs_download_urls": 284,
+          "cache_blobs_upload_urls": 61,
+          "cache_finalize_publish": 2221,
+          "cache_flush_upload": 69,
+          "cache_kv_entries_current_version": 59,
+          "cache_kv_entries_download_urls": 53,
+          "cache_kv_entries_upsert": 83,
+          "cache_kv_entry_reads": 45,
+          "cache_rollups_ingest": 81,
+          "cache_session_evidence_confirm": 104,
+          "cache_session_evidence_prepare": 58
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 101,
+          "cache_blobs_download_urls": 1062,
+          "cache_blobs_upload_urls": 433,
+          "cache_finalize_publish": 2221,
+          "cache_flush_upload": 69,
+          "cache_kv_entries_current_version": 59,
+          "cache_kv_entries_download_urls": 74,
+          "cache_kv_entries_upsert": 193,
+          "cache_kv_entry_reads": 45,
+          "cache_rollups_ingest": 280,
+          "cache_session_evidence_confirm": 114,
+          "cache_session_evidence_prepare": 58
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 135,
+          "cache_blobs_download_urls": 8,
+          "cache_blobs_upload_urls": 156,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 2,
+          "cache_kv_entries_upsert": 3,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 13,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 325,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 127
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 6896190,
+        "startup_prefetch_blobs_per_sec": 10,
+        "startup_prefetch_bytes_per_sec": 74795991,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 5,
+        "startup_prefetch_concurrency_adjustment_count": 0,
+        "startup_prefetch_concurrency_reason": "medium_blobs",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_deferred_trial_blobs": 0,
+        "startup_prefetch_deferred_trial_bytes": 0,
+        "startup_prefetch_demand_max_wait_ms": 275,
+        "startup_prefetch_demand_wait_ms": 275,
+        "startup_prefetch_demand_waits": 1,
+        "startup_prefetch_duration_ms": 461,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 5,
+        "startup_prefetch_generation": 30,
+        "startup_prefetch_hedge_wins": 0,
+        "startup_prefetch_hedges": 0,
+        "startup_prefetch_initial_concurrency": 5,
+        "startup_prefetch_inserted": 5,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 5,
+        "startup_prefetch_mode": "recent-reads",
+        "startup_prefetch_observation_count": 2,
+        "startup_prefetch_recent_read_blobs": 5,
+        "startup_prefetch_recent_read_bytes": 34480952,
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 5,
+        "startup_prefetch_target_bytes": 34480952,
+        "startup_prefetch_total_unique_blobs": 3159,
+        "startup_prefetch_trial_budget_bytes": 134217728,
+        "startup_prefetch_unplanned_blobs": 1,
+        "startup_prefetch_unplanned_bytes": 2581845,
+        "startup_prefetch_unused_blobs": 3,
+        "startup_prefetch_unused_bytes": 2727303,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 5,
+        "startup_prefetch_used_blobs": 2,
+        "startup_prefetch_used_bytes": 31753649,
+        "startup_prefetch_write_trial_blobs": 0,
+        "startup_prefetch_write_trial_bytes": 0
+      },
+      "kv_upload": {
+        "kv_upload_allowed_concurrency_max": 1,
+        "kv_upload_already_present_blobs": 3,
+        "kv_upload_batches": 3,
+        "kv_upload_blobs_per_sec": 0,
+        "kv_upload_concurrency_reason": "adaptive_ramp",
+        "kv_upload_concurrency_source": "auto",
+        "kv_upload_duration_ms": 135,
+        "kv_upload_failed_blobs": 0,
+        "kv_upload_final_concurrency_max": 1,
+        "kv_upload_initial_concurrency_max": 1,
+        "kv_upload_missing_local_blobs": 0,
+        "kv_upload_requested_blobs": 0,
+        "kv_upload_uploaded_blobs": 0,
+        "kv_upload_uploaded_bytes": 0,
+        "kv_upload_writethrough_failure_bytes": 0,
+        "kv_upload_writethrough_failure_count": 0,
+        "kv_upload_writethrough_pressure_skip_bytes": 0,
+        "kv_upload_writethrough_pressure_skip_count": 0,
+        "kv_upload_writethrough_uploaded_blobs": 2,
+        "kv_upload_writethrough_uploaded_bytes": 58575614
+      },
+      "singleflight": {
+        "singleflight_kv_download_leaders": 6,
+        "singleflight_kv_lookup_leaders": 3,
+        "singleflight_kv_url_leaders": 1
+      },
+      "kv_lookup": {
+        "kv_lookup_sccache_after_refresh_miss": 3,
+        "kv_lookup_sccache_published_fast_hit": 3,
+        "kv_lookup_sccache_published_fast_miss": 3
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 31753649,
+          "blob_read_local_count": 2,
+          "blob_read_local_hit_rate_pct": 25,
+          "blob_read_remote_avg_ms": 238,
+          "blob_read_remote_bytes": 37062797,
+          "blob_read_remote_count": 6
+        },
+        "blob_read_cache_bytes": 97383692,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "average_cache_read_hit_seconds": 0.108,
+        "average_cache_write_seconds": 0.022,
+        "average_compiler_seconds": 26.033,
+        "cache_errors": 0,
+        "cache_hits": 3,
+        "cache_misses": 3,
+        "cache_read_errors": 0,
+        "cache_timeouts": 0,
+        "cache_write_errors": 0,
+        "compile_requests": 77,
+        "compile_requests_executed": 6,
+        "hit_counts": {
+          "rust": 3
+        },
+        "hit_rate": 50.0,
+        "miss_counts": {
+          "rust": 3
+        },
+        "non_cacheable_calls": 71,
+        "non_cacheable_reasons": {
+          "-": 1,
+          "crate-type": 69,
+          "missing input": 1
+        },
+        "proxy_cache_read_errors": 0,
+        "proxy_cache_write_errors": 0,
+        "schema_version": "native_tool_evidence.v1",
+        "stats_source": "sccache --show-stats",
+        "tool": "sccache"
+      },
+      "unit_evidence": {
+        "build_succeeded": true,
+        "capabilities": {
+          "cache_source": false,
+          "critical_path": true,
+          "dependencies": false,
+          "execution_reasons": false,
+          "scheduling": true,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": true
+        },
+        "collection_state": "reported",
+        "counts": {
+          "executed": 75,
+          "observed": 75,
+          "scope": "cargo_units",
+          "up_to_date": 1890
+        },
+        "critical_path": {
+          "end_offset_ms": 313940,
+          "metadata_edges": 0,
+          "ready_gap_ms": 0,
+          "source": "cargo_unblocked_units",
+          "start_offset_ms": 70460,
+          "truncated": false,
+          "unit_count": 1,
+          "unit_duration_ms": 243480,
+          "units": [
+            {
+              "duration_ms": 243480,
+              "id": "cargo-unit:625",
+              "label": "codex-tui v0.0.0 codex_tui \"lib\" (test)"
+            }
+          ]
+        },
+        "invocation": {
+          "host": "x86_64-unknown-linux-gnu",
+          "profile": "test",
+          "report_owner": "boringcache",
+          "target": "x86_64-unknown-linux-gnu",
+          "time_precision_ms": 10,
+          "total_time_ms": 313900,
+          "units_total": 1965
+        },
+        "ranking_scope": "all_observed_units",
+        "scheduling": {
+          "average_active": 1.9,
+          "jobs": 2,
+          "max_concurrency": 3,
+          "ncpu": 4,
+          "waiting_ms": 220670,
+          "waiting_unit_ms": 4344270
+        },
+        "schema_version": "unit_evidence.v1",
+        "source": "cargo_timings_report",
+        "tool": "cargo",
+        "tool_version": "1.99.1",
+        "truncated": true,
+        "unit_kind": "crate_unit",
+        "units": [
+          {
+            "attributes": {
+              "crate_name": "codex-tui",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 70460,
+              "target_kind": "codex_tui \"lib\" (test)"
+            },
+            "completed_at_ms": 1795508663493,
+            "critical_path": true,
+            "duration_ms": 243480,
+            "id": "cargo-unit:625",
+            "key": "dce2fa18b1dc5873bc9af1eb896fd4a568842471a1382771077cf584ff3e8778",
+            "label": "codex-tui v0.0.0 codex_tui \"lib\" (test)",
+            "started_at_ms": 1795508420013,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 20,
+              "crate_name": "codex-tui",
+              "crate_version": "0.0.0",
+              "features": [],
+              "frontend_ms": 77540,
+              "mode": "todo",
+              "start_offset_ms": 22620,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795508449733,
+            "duration_ms": 77560,
+            "id": "cargo-unit:626",
+            "key": "cd2f0cc2f16f0ce0d54b80f14c36c996c71d0e2bf32e6dc507df10ff2ef6c78a",
+            "label": "codex-tui v0.0.0",
+            "started_at_ms": 1795508372173,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-cli",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 146430,
+              "target_kind": "codex \"bin\""
+            },
+            "completed_at_ms": 1795508523613,
+            "duration_ms": 27630,
+            "id": "cargo-unit:263",
+            "key": "6b2b0c76ca2100ba5c45434f3b44d46bcf11a058c449db4ae8535d1fabfd05bd",
+            "label": "codex-cli v0.0.0 codex \"bin\"",
+            "started_at_ms": 1795508495983,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-cloud-tasks",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 259940,
+              "target_kind": "codex_cloud_tasks \"lib\" (test)"
+            },
+            "completed_at_ms": 1795508623733,
+            "duration_ms": 14240,
+            "id": "cargo-unit:310",
+            "key": "baed28e88dceb87234f707b416deecae2923c72b6551615cf7149d2f76223c9f",
+            "label": "codex-cloud-tasks v0.0.0 codex_cloud_tasks \"lib\" (test)",
+            "started_at_ms": 1795508609493,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-cli",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 213250,
+              "target_kind": "codex \"bin\" (test)"
+            },
+            "completed_at_ms": 1795508575173,
+            "duration_ms": 12370,
+            "id": "cargo-unit:262",
+            "key": "09ecace69644db92a12d2042e52a94512eb474aec46b729429177c67c6600005",
+            "label": "codex-cli v0.0.0 codex \"bin\" (test)",
+            "started_at_ms": 1795508562803,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-tui",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 274570,
+              "target_kind": "codex-tui \"bin\""
+            },
+            "completed_at_ms": 1795508635253,
+            "duration_ms": 11130,
+            "id": "cargo-unit:628",
+            "key": "85e9af2b429a690ffb05aff39d155d7dbd9e6a8506c3ea7584af707f68607c1f",
+            "label": "codex-tui v0.0.0 codex-tui \"bin\"",
+            "started_at_ms": 1795508624123,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 31810,
+              "target_kind": "grpc_timing \"test\" (test)"
+            },
+            "completed_at_ms": 1795508387683,
+            "duration_ms": 6320,
+            "id": "cargo-unit:325",
+            "key": "a6049b1a1b4db1f9138d756e0bac5f703247c6468dc3815adfa82b20c12a26af",
+            "label": "codex-code-mode-host v0.0.0 grpc_timing \"test\" (test)",
+            "started_at_ms": 1795508381363,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-tui",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 253430,
+              "target_kind": "all \"test\" (test)"
+            },
+            "completed_at_ms": 1795508609273,
+            "duration_ms": 6290,
+            "id": "cargo-unit:631",
+            "key": "9927f20fd4a585fcc3ad0f587d91204314e0e6c27e3b1e3698df24f88bc69576",
+            "label": "codex-tui v0.0.0 all \"test\" (test)",
+            "started_at_ms": 1795508602983,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-cli",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 241450,
+              "target_kind": "codex_cli \"lib\" (test)"
+            },
+            "completed_at_ms": 1795508597223,
+            "duration_ms": 6220,
+            "id": "cargo-unit:260",
+            "key": "b0bf89ba0eaef3b8875f6e3f904e93df8ebdba8561ff1dfaad1daf0453683843",
+            "label": "codex-cli v0.0.0 codex_cli \"lib\" (test)",
+            "started_at_ms": 1795508591003,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-cli",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 128080,
+              "target_kind": "queue \"test\" (test)"
+            },
+            "completed_at_ms": 1795508483593,
+            "duration_ms": 5960,
+            "id": "cargo-unit:293",
+            "key": "ed4c4b81588ca94ad609c9e8d242077cb337b7da98719dd505b6712b82d5be83",
+            "label": "codex-cli v0.0.0 queue \"test\" (test)",
+            "started_at_ms": 1795508477633,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-runtime",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 64320,
+              "target_kind": "codex_code_mode_runtime \"lib\" (test)"
+            },
+            "completed_at_ms": 1795508419463,
+            "duration_ms": 5590,
+            "id": "cargo-unit:334",
+            "key": "1f76d5e979db20f8f0608c7b9fb611710a30c73fe08388716d3808c8b1ae1ef2",
+            "label": "codex-code-mode-runtime v0.0.0 codex_code_mode_runtime \"lib\" (test)",
+            "started_at_ms": 1795508413873,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-cli",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 181580,
+              "target_kind": "rollout_trace \"test\" (test)"
+            },
+            "completed_at_ms": 1795508536113,
+            "duration_ms": 4980,
+            "id": "cargo-unit:294",
+            "key": "76999f5be343149d494944b3fcbbde37d60173e3823847f338862742b056e5f4",
+            "label": "codex-cli v0.0.0 rollout_trace \"test\" (test)",
+            "started_at_ms": 1795508531133,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 38130,
+              "target_kind": "grpc \"test\" (test)"
+            },
+            "completed_at_ms": 1795508392573,
+            "duration_ms": 4890,
+            "id": "cargo-unit:322",
+            "key": "033ca575625ef958d19c9cbba76a697a68fecc020e9089191a5a8daa840d0deb",
+            "label": "codex-code-mode-host v0.0.0 grpc \"test\" (test)",
+            "started_at_ms": 1795508387683,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-cli",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 134380,
+              "target_kind": "exec_server \"test\" (test)"
+            },
+            "completed_at_ms": 1795508488483,
+            "duration_ms": 4550,
+            "id": "cargo-unit:280",
+            "key": "5f2209c064dc7af5466832f69e91a895448617cc9cd1c5fba15e1737c45ab7d4",
+            "label": "codex-cli v0.0.0 exec_server \"test\" (test)",
+            "started_at_ms": 1795508483933,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 54970,
+              "target_kind": "codex_code_mode_host \"lib\" (test)"
+            },
+            "completed_at_ms": 1795508409053,
+            "duration_ms": 4530,
+            "id": "cargo-unit:317",
+            "key": "75761be40633f02103365976879ca7c59018712e25e8bfbdc933d0b81b50fce3",
+            "label": "codex-code-mode-host v0.0.0 codex_code_mode_host \"lib\" (test)",
+            "started_at_ms": 1795508404523,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-cli",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 237030,
+              "target_kind": "plugin_cli \"test\" (test)"
+            },
+            "completed_at_ms": 1795508590993,
+            "duration_ms": 4410,
+            "id": "cargo-unit:292",
+            "key": "62fa219cb18d8b21bee0bf9bba035b2a3855328ab78a71152f928006a304156c",
+            "label": "codex-cli v0.0.0 plugin_cli \"test\" (test)",
+            "started_at_ms": 1795508586583,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-cli",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 106490,
+              "target_kind": "doctor_path_safety \"test\" (test)"
+            },
+            "completed_at_ms": 1795508460363,
+            "duration_ms": 4320,
+            "id": "cargo-unit:279",
+            "key": "877b1948df274304066ec627f3e5bf1d1c0963ad4d00ececbcc767dcc2c33c44",
+            "label": "codex-cli v0.0.0 doctor_path_safety \"test\" (test)",
+            "started_at_ms": 1795508456043,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-cli",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 196750,
+              "target_kind": "worktree \"test\" (test)"
+            },
+            "completed_at_ms": 1795508550573,
+            "duration_ms": 4270,
+            "id": "cargo-unit:301",
+            "key": "a5bbd0dc474f4928c602fa691fd675bc3c987bdaa55f2cc53a7657e74e7dd4b6",
+            "label": "codex-cli v0.0.0 worktree \"test\" (test)",
+            "started_at_ms": 1795508546303,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-cli",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 110810,
+              "target_kind": "mcp_list \"test\" (test)"
+            },
+            "completed_at_ms": 1795508464563,
+            "duration_ms": 4200,
+            "id": "cargo-unit:289",
+            "key": "70ee2338670be3c6defb245fec41934ed06a930e2b9ca5d25edabd5d0fcd876e",
+            "label": "codex-cli v0.0.0 mcp_list \"test\" (test)",
+            "started_at_ms": 1795508460363,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-cli",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 138930,
+              "target_kind": "mcp_login \"test\" (test)"
+            },
+            "completed_at_ms": 1795508492573,
+            "duration_ms": 4090,
+            "id": "cargo-unit:290",
+            "key": "e6670c7c53869dfff95da8eee61310d15adcb54afa8bd480c2e55f5425141ec9",
+            "label": "codex-cli v0.0.0 mcp_login \"test\" (test)",
+            "started_at_ms": 1795508488483,
+            "state": "executed"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "sccache",
+          "candidates": [
+            {
+              "confidence": "medium",
+              "evidence": {
+                "bytes_read": 34335494,
+                "hit_rate": 50.0,
+                "hits": 3,
+                "misses": 3
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 365474,
+            "errors": 0,
+            "hit_rate": 50.0,
+            "hits": 3,
+            "misses": 3,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 3
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 50.0,
+          "hits": 3,
+          "likely_reason": "mixed_existing_and_new_work",
+          "misses": 3,
+          "state": "warm_mixed",
+          "writes": 3
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 44
+    }
+  },
+  "evidence": [
+    "boringcache-cargo-plus-github-26-rolling-30-45354266430.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "product_env": {
+    "BORINGCACHE_ARCHIVE_SELECTIVE_READS": "1"
+  },
+  "plan_settings": {
+    "target-budget": "55GiB"
+  },
+  "harness": {
+    "commit": "2948118d97667864e877d1b8eaa3beef47beb38b",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45354266430",
+  "attempt": 1,
+  "started_at": "2026-11-24T08:16:28Z"
+}
