@@ -3,12 +3,12 @@ branch = "master"
 start_sha = "08ea5803ec5e1ef5c7789e9fd094c2c4c52f5d42"
 rolling_stride = 20
 rolling_series = 4
-setup = ["boringcache-registry"]
+setup = ["ghcr", "boringcache-registry"]
 prepare = [
   "bash \"$BENCH_ROOT/tools/docker/shared/posthog/prepare.sh\"",
-  "ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" prepare posthog-runners boringcache",
+  "registry=ghcr; if [ \"$BENCH_LANE\" = boringcache-docker-plus ]; then registry=boringcache; fi; ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" prepare posthog-runners \"$registry\"",
 ]
-check = "boringcache ci run --oidc-provider github-actions -- ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" check linux/amd64"
+check = "ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" check linux/amd64"
 
 [runs]
 boringcache-docker-plus = ["incredibuild"]

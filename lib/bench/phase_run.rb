@@ -190,7 +190,11 @@ module Bench
       end
 
       def read_only
-        "--read-only" if phase == "warm" || lane.reads
+        return "--read-only" if lane.reads
+        return unless phase == "warm"
+        return if kase.tool.name == "docker" && adapter["publish-image"]
+
+        "--read-only"
       end
 
       def lane_program
@@ -209,7 +213,7 @@ module Bench
 
       def environment
         @environment ||= begin
-          base = @env.to_h.merge(kase.tool.catalog.runner_env(runner), "BENCH_ROOT" => kase.tool.catalog.root, "BENCH_CASE" => kase.id, "BENCH_DIR" => workspace.dir, "BENCH_SCOPE" => "#{kase.tool.name}-#{kase.name}-#{cache_scope}")
+          base = @env.to_h.merge(kase.tool.catalog.runner_env(runner), "BENCH_ROOT" => kase.tool.catalog.root, "BENCH_CASE" => kase.id, "BENCH_LANE" => lane.name, "BENCH_DIR" => workspace.dir, "BENCH_SCOPE" => "#{kase.tool.name}-#{kase.name}-#{cache_scope}")
           shared = base.merge(kase.env(base))
           shared.merge(lane.env(phase, shared), lane.boringcache? ? { "BORINGCACHE_OBSERVABILITY_JSONL_PATH" => evidence_path, **script_boringcache } : {})
         end
@@ -302,10 +306,10 @@ module Bench
 
       def image_publication
         command = adapter.fetch("command")
-        return unless command.include?("--push")
+        tag = adapter["publish-image"]
+        tag ||= command.each_cons(2).find { |flag, _| %w[--tag -t].include?(flag) }&.last if command.include?("--push")
 
         metadata = command.each_cons(2).find { |flag, _| flag == "--metadata-file" }&.last
-        tag = command.each_cons(2).find { |flag, _| %w[--tag -t].include?(flag) }&.last
         return unless metadata && tag
 
         path = File.expand_path(metadata, build_dir)

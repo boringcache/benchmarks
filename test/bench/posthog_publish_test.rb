@@ -27,12 +27,14 @@ class PosthogPublishTest < Minitest::Test
       assert_includes prepared.each_cons(2).to_a, ["--tag", image]
 
       DockerImagePublication.prepare("posthog-runners",
-        { "GITHUB_REPOSITORY" => "example/benchmarks", "BENCH_SCOPE" => "docker-posthog-runners-gha-plus-incredibuild-123" },
+        { "GITHUB_REPOSITORY" => "example/benchmarks", "BENCH_SCOPE" => "docker-posthog-runners-boringcache-docker-plus-incredibuild-123" },
         registry: "boringcache")
-      image = "registry.boringcache.com/boringcache/benchmarks/docker-posthog-runners-gha-plus-incredibuild-123:#{@upstream_sha}"
+      image = "registry.boringcache.com/boringcache/benchmarks/docker-posthog-runners-boringcache-docker-plus-incredibuild-123:#{@upstream_sha}"
       assert_equal image, DockerImagePublication.image_tag
-      prepared = TomlRB.load_file(".boringcache.toml").dig("adapters", "docker", "command")
-      assert_includes prepared.each_cons(2).to_a, ["--tag", image]
+      prepared = TomlRB.load_file(".boringcache.toml").dig("adapters", "docker")
+      assert_equal image, prepared.fetch("publish-image")
+      assert_includes prepared.fetch("command").each_cons(2).to_a, ["--metadata-file", "overlay/image-metadata.json"]
+      assert_empty prepared.fetch("command") & %w[--tag --push --load]
     end
   end
 

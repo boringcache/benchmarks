@@ -13,17 +13,24 @@ module DockerImagePublication
     raise "Could not resolve the upstream commit" unless status.success? && sha.strip.match?(/\A[0-9a-f]{40}\z/)
 
     plan = TomlRB.load_file(".boringcache.toml")
+    adapter = plan.fetch("adapters").fetch("docker")
     image_repository = case registry
     when "ghcr" then "ghcr.io/#{repository}-#{package}/#{scope}"
     when "boringcache" then "registry.boringcache.com/#{plan.fetch('workspace')}/#{scope}"
     else raise "Unknown image registry #{registry.inspect}"
     end
     image = "#{image_repository}:#{sha.strip}"
-    command = plan.fetch("adapters").fetch("docker").fetch("command")
+    command = adapter.fetch("command")
     index = command.index("--tag") or raise "The build has no image tag"
     raise "The build must push its output image" unless command.include?("--push") && !command.include?("--load")
 
-    command[index + 1] = image
+    if registry == "boringcache"
+      command.slice!(index, 2)
+      command.delete("--push")
+      adapter["publish-image"] = image
+    else
+      command[index + 1] = image
+    end
     File.write(".boringcache.toml", TomlRB.dump(plan))
     File.write("overlay/image.txt", image + "\n")
   end
@@ -41,7 +48,11 @@ module DockerImagePublication
 
   def self.verify(platform)
     reference = image_reference
-    output, status = Open3.capture2("docker", "buildx", "imagetools", "inspect", "--format", "{{json .Image}}", reference)
+    command = ["docker", "buildx", "imagetools", "inspect", "--format", "{{json .Image}}", reference]
+    if reference.start_with?("registry.boringcache.com/")
+      command.unshift("boringcache", "ci", "run", "--oidc-provider", "github-actions", "--")
+    end
+    output, status = Open3.capture2(*command)
     raise "Could not inspect the published image" unless status.success?
 
     actual = JSON.parse(output).values_at("os", "architecture").join("/")

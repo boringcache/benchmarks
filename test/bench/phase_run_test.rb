@@ -19,6 +19,33 @@ class PhaseRunTest < Minitest::Test
     refute cold.key?("plan_settings")
   end
 
+  def test_warm_docker_image_publication_requires_write_access
+    FileUtils.cp_r(File.join(@root, "tools/demo"), File.join(@root, "tools/docker"))
+    image = "registry.boringcache.com/boringcache/benchmarks/posthog:test"
+    digest = "sha256:#{'a' * 64}"
+    write "tools/docker/app/.boringcache.toml", <<~TOML
+      workspace = "boringcache/benchmarks"
+      [adapters.docker]
+      tag = "docker-app"
+      publish-image = "#{image}"
+      command = ["docker", "buildx", "build", "--metadata-file", "image-metadata.json", "upstream"]
+    TOML
+    write "tools/docker/app/overlay/image-metadata.json", JSON.generate("containerimage.digest" => digest)
+    plan = File.join(@root, "tools/docker/app/.boringcache.toml")
+    case_path = File.join(@root, "tools/docker/app/case.toml")
+    File.write(case_path, File.read(case_path).sub("test -f upstream/README", "cp overlay/image-metadata.json image-metadata.json"))
+
+    with_fixture_env do
+      assert_equal 0, cli("run", "docker/app", "--lane", "boringcache-demo", "--phase", "warm", "--run-id", "r1")
+      File.write(plan, File.read(plan).lines.reject { it.start_with?("publish-image") }.join)
+      assert_equal 0, cli("run", "docker/app", "--lane", "boringcache-demo", "--phase", "warm", "--run-id", "r2")
+    end
+
+    assert_equal ["docker ", "docker --read-only"], File.readlines(File.join(@root, "stub.log"), chomp: true)
+    result = JSON.parse(File.read(File.join(@root, "tmp/results/docker/app/boringcache-demo-local-r1/boringcache-demo-local-warm.json")))
+    assert_equal({ "tag" => image, "digest" => digest }, result.dig("observed", "image_publication"))
+  end
+
   def test_a_phases_lane_runs_the_plan_command_between_the_restore_and_save_phases
     write "tools/demo/lanes/boringcache-phases.toml", %(provider = "boringcache"\nlevel = "base"\nphases = true\n)
     write "tools/demo/app/case.toml", File.read(File.join(@root, "tools/demo/app/case.toml")).sub("[runs]\n", "[runs]\nboringcache-phases = [\"local\"]\n")
