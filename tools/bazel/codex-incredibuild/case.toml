@@ -1,0 +1,20 @@
+repo = "openai/codex"
+branch = "main"
+start_sha = "5716c2e22898b263d638099995b18f7902bdb671"
+directory = "upstream"
+prepare = [
+  'bash "$BENCH_ROOT/tools/shared/codex-linux.sh"',
+  'curl -fsSL --retry 3 https://github.com/bazelbuild/bazel/releases/download/9.3.3/bazel-9.3.3-linux-x86_64 -o bazel && echo "24f30faa845410547a4fdeaa8d083e2eb9e95438b996ca76a0102ff8ef171334  bazel" | sha256sum --check && chmod +x bazel',
+  'printf "%s\n" "build --disk_cache=" "${BAZEL_LANE_RC:-}" "${BAZEL_PHASE_RC:-}" > bench.bazelrc',
+  'bash "$BENCH_ROOT/tools/bazel/codex/storage.sh"',
+  'printf "test --build_metadata=COMMIT_SHA=%s\n" "$(git -C upstream rev-parse HEAD)" >> bench.bazelrc',
+  'test "$(./bazel --version)" = "bazel $(cat upstream/.bazelversion)"',
+]
+check = '''jq --stream -en 'first(inputs | select(.[0] == ["testSummary","overallStatus"] and .[1] == "PASSED"))' build-events.json > /dev/null'''
+
+[env]
+CODEX_COMPAT_RELEASES = '{"latest":{"version":"0.171.0","sha256":"8391d67757496bfd14893eca6cbf0c96994bf2627566ff1f018f70600c9ef6b3"},"historical":{"version":"0.156.0","sha256":"e8b744b03adb90b296bf632c8a29167e75ea1b9d2980e49d3dfc6e84f5dba749"}}'
+
+[runs]
+boringcache-bazel = ["incredibuild"]
+gha = ["incredibuild"]

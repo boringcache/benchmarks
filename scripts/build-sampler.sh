@@ -15,8 +15,8 @@ while :; do
     echo
     awk '$1 == "oom_kill" { print $1, $2 }' /proc/vmstat
     df -Pk "${BENCH_WORK:-.}" | awk 'NR == 2 { print "disk_available_kib", $4 }'
-    if [[ ${BENCH_CASE:-} == bazel/codex && -d "$BENCH_WORK/bazel/codex/.bazel" ]]; then
-      df -Pk "$BENCH_WORK/bazel/codex/.bazel" | awk 'NR == 2 { print "bazel_disk_available_kib", $4 }'
+    if [[ ${BENCH_CASE:-} == bazel/codex* && -d "$BENCH_WORK/$BENCH_CASE/.bazel" ]]; then
+      df -Pk "$BENCH_WORK/$BENCH_CASE/.bazel" | awk 'NR == 2 { print "bazel_disk_available_kib", $4 }'
       if [[ -f ${BENCH_BAZEL_IMAGE:-} ]]; then du -k "$BENCH_BAZEL_IMAGE" | awk '{ print "bazel_image_allocated_kib", $1 }'; fi
     fi
     ps -eo pid=,ppid=,etimes=,times=,rss=,stat=,comm=,wchan= | awk '$7 ~ /^(boringcache|sccache|cargo|rustc|clang|cc|c\+\+|cmake|make|ninja|git|ld|ld\.lld|lld|mold|build-script-)/'

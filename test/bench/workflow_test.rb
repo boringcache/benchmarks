@@ -34,9 +34,11 @@ class WorkflowTest < Minitest::Test
     assert build.fetch("continue-on-error")
     assert steps.drop(steps.index(build) + 1).any? { it["run"]&.include?("bin/bench record") }
 
-    env = { "BENCH_CASE" => "bazel/codex", "BENCH_BAZEL_DEADLINE" => (Time.now.to_i - 1).to_s }
-    _, status = Open3.capture2e(env, "bash", "-e", "-o", "pipefail", "-c", build.fetch("run"))
-    assert_equal 124, status.exitstatus
+    %w[bazel/codex bazel/codex-incredibuild].each do |kase|
+      env = { "BENCH_CASE" => kase, "BENCH_BAZEL_DEADLINE" => (Time.now.to_i - 1).to_s }
+      _, status = Open3.capture2e(env, "bash", "-e", "-o", "pipefail", "-c", build.fetch("run"))
+      assert_equal 124, status.exitstatus
+    end
   end
 
   def test_remote_cache_tokens_bypass_oidc_and_fail_if_a_required_token_is_missing

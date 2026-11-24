@@ -1,7 +1,7 @@
 provider = "github-actions-cache"
 level = "base"
 actions_only = true
-runners = ["github"]
+runners = ["github", "incredibuild"]
 paths = [".bazel/disk-cache"]
 
 [env]

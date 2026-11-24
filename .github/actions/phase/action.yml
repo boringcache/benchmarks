@@ -49,7 +49,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - if: inputs.case == 'bazel/codex' && inputs.phase != 'preflight'
+    - if: startsWith(inputs.case, 'bazel/codex') && inputs.phase != 'preflight'
       shell: bash
       run: echo "BENCH_BAZEL_DEADLINE=$(( $(date +%s) + 120 * 60 ))" >> "$GITHUB_ENV"
 
@@ -312,13 +312,13 @@ runs:
         BORINGCACHE_SAVE_TOKEN: ${{ steps.prepare.outputs.boringcache_version == '1.48.2' && inputs.cache-save-token || '' }}
       run: |
         limit=()
-        if [ "$BENCH_CASE" = bazel/codex ]; then
+        if [[ "$BENCH_CASE" == bazel/codex* ]]; then
           remaining=$((BENCH_BAZEL_DEADLINE - $(date +%s)))
           (( remaining > 0 )) || exit 124
           limit=(timeout --signal=INT --kill-after=30s "${remaining}s")
         fi
         case "$BENCH_CASE" in
-          bazel/codex|cargo/codex)
+          bazel/codex*|cargo/codex)
             bash scripts/build-sampler.sh /dev/stdout 30 &
             sampler_pid=$!
             trap 'kill "$sampler_pid" 2>/dev/null || true' EXIT
@@ -351,15 +351,15 @@ runs:
         BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
       run: bundle exec ruby bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
 
-    - if: always() && inputs.case == 'bazel/codex' && steps.prepare.outputs.ready == 'true'
+    - if: always() && startsWith(inputs.case, 'bazel/codex') && steps.prepare.outputs.ready == 'true'
       continue-on-error: true
       shell: bash
       run: |
-        storage="$BENCH_WORK/bazel/codex/.bazel"
+        storage="$BENCH_WORK/$BENCH_CASE/.bazel"
         mountpoint -q "$storage" || exit 0
         df -hT "$storage" "$RUNNER_TEMP"
         sudo btrfs filesystem usage -b "$storage"
-        for path in "$BENCH_BAZEL_IMAGE" "$RUNNER_TEMP" "$BENCH_WORK/bazel/codex" "$HOME/.cache" "$HOME/.boringcache" /tmp; do
+        for path in "$BENCH_BAZEL_IMAGE" "$RUNNER_TEMP" "$BENCH_WORK/$BENCH_CASE" "$HOME/.cache" "$HOME/.boringcache" /tmp; do
           if [[ -e "$path" ]]; then sudo du -sx --block-size=1 "$path"; fi
         done
         shopt -s nullglob
@@ -369,7 +369,7 @@ runs:
         done
 
     - id: saved-archive
-      if: (inputs.case == 'cargo/codex' || inputs.case == 'bazel/codex') && steps.actions-cache-save.outcome == 'success'
+      if: (inputs.case == 'cargo/codex' || startsWith(inputs.case, 'bazel/codex')) && steps.actions-cache-save.outcome == 'success'
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       continue-on-error: true
       with:

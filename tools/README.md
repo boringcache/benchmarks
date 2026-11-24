@@ -251,6 +251,25 @@ A preflight run (`<tool> - <project> (preflight)`) runs every lane's setup and `
 
 The collect job runs on main and branches, adds post-job save durations, and uploads `recorded-results-<attempt>`. The publish job downloads that artifact and writes records only on main. Branch results require review before they are added to the repository.
 
+## Incredibuild runners
+
+`bazel/codex-incredibuild` runs the Codex workspace test command on the
+Incredibuild Ubuntu 24.04 runner with BoringCache Bazel and GitHub Actions
+Cache. Its cold baseline is `5716c2e22898b263d638099995b18f7902bdb671`, 30
+first-parent commits before `e351ffa4b625325575e2a49e8b554e45c1c73b88`. Later
+steps build one first-parent commit at a time. The GitHub-hosted Bazel case
+keeps its own definition and records.
+
+`cargo/codex` adds BoringCache and GitHub Actions Cache on Incredibuild Ubuntu
+24.04 to its current series. `cargo/nushell` adds BoringCache Plus on
+Incredibuild Ubuntu 24.04, macOS and Windows 2022. Each new runner has a separate
+cache scope. Its first build seeds that scope at the scheduled source commit.
+
+Sources: [Incredibuild CI runners](https://www.incredibuild.com/ci-runners),
+[Nushell runner labels](https://github.com/nushell/nushell/blob/1a76df915653a5e2dad31bb24c7faca4b51b6aa3/.github/workflows/ci.yml),
+[GitHub Actions Cache](https://github.com/actions/cache/tree/55cc8345863c7cc4c66a329aec7e433d2d1c52a9),
+[sccache GitHub cache](https://github.com/mozilla/sccache/blob/v0.17.0/docs/GHA.md).
+
 ## Nushell Cargo history
 
 `cargo/nushell` starts at `396a7588af811612ebfc6de5b090d4f5674d6e51`, the
@@ -275,7 +294,7 @@ fuzz jobs, WASM job and artifact upload are outside this measurement.
 
 The base lanes compare BoringCache and GitHub Actions compiler caches. The plus
 lanes also cache Cargo registry downloads, Git dependencies and `target`.
-Each lane runs on GitHub's `ubuntu-24.04`, `macos-26` and `windows-2025` runners,
+All four lanes run on GitHub's `ubuntu-24.04`, `macos-26` and `windows-2025` runners,
 using the runner's native Rust target. Each platform has separate cache scopes
 and records. These are the shared Cargo benchmark cache configurations, not
 upstream's `Swatinem/rust-cache` configuration.
