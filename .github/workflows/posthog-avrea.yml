@@ -3,7 +3,9 @@ name: Docker - posthog-runners (Avrea rolling)
 on:
   push:
     branches: [posthog-avrea]
-    paths: [.github/workflows/posthog-avrea.yml]
+    paths:
+      - .github/workflows/posthog-avrea.yml
+      - .github/workflows/project.yml
 
 permissions:
   contents: write

@@ -106,7 +106,7 @@ jobs:
               exit 1
             fi
             bash scripts/checkout-records.sh results/docker/posthog-runners/boringcache-docker-plus-incredibuild-rolling-4 553799ce20de409993b30061c8d83dd46451a8ec
-            matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" --rolling --step "$REPLAY_STEP")
+            matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" --rolling --step "$REPLAY_STEP" --results results)
             matrix=$(jq -ce --arg step "$REPLAY_STEP" --arg sha "$SHA" '
               select((map(.lane) | sort) == ["avrea-cache-plus", "boringcache-docker-plus"] and all(.[]; .sha == $sha and .step == $step and .runner == "avrea-8"))
               | map(.continues = (if $step == "0" then "" else "true" end))

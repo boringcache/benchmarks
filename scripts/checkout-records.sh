@@ -2,7 +2,8 @@
 set -euo pipefail
 
 path=${1:-results}
-git fetch --quiet --depth=1 origin main
+ref=${2:-main}
+git fetch --quiet --depth=1 origin "$ref"
 rm -rf results
 git cat-file -e "FETCH_HEAD:$path" 2>/dev/null || exit 0
 blobs=$(git ls-tree -r FETCH_HEAD -- "$path" | awk -F '\t' '$2 ~ /\.json$/ { split($1, entry, " "); print entry[3] }')
