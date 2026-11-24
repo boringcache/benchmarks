@@ -3,7 +3,7 @@ require "open3"
 require "toml-rb"
 
 module DockerImagePublication
-  def self.prepare(package, env = ENV)
+  def self.prepare(package, env = ENV, registry: "ghcr")
     repository = env.fetch("GITHUB_REPOSITORY")
     scope = env.fetch("BENCH_SCOPE")
     raise "Invalid GitHub repository" unless repository.match?(%r{\A[a-z0-9-]+/[a-z0-9_.-]+\z})
@@ -12,8 +12,13 @@ module DockerImagePublication
     sha, status = Open3.capture2("git", "-C", "upstream", "rev-parse", "HEAD")
     raise "Could not resolve the upstream commit" unless status.success? && sha.strip.match?(/\A[0-9a-f]{40}\z/)
 
-    image = "ghcr.io/#{repository}-#{package}/#{scope}:#{sha.strip}"
     plan = TomlRB.load_file(".boringcache.toml")
+    image_repository = case registry
+    when "ghcr" then "ghcr.io/#{repository}-#{package}/#{scope}"
+    when "boringcache" then "registry.boringcache.com/#{plan.fetch('workspace')}/#{scope}"
+    else raise "Unknown image registry #{registry.inspect}"
+    end
+    image = "#{image_repository}:#{sha.strip}"
     command = plan.fetch("adapters").fetch("docker").fetch("command")
     index = command.index("--tag") or raise "The build has no image tag"
     raise "The build must push its output image" unless command.include?("--push") && !command.include?("--load")
@@ -48,7 +53,7 @@ end
 
 if $PROGRAM_NAME == __FILE__
   case ARGV.fetch(0)
-  when "prepare" then DockerImagePublication.prepare(ARGV.fetch(1))
+  when "prepare" then DockerImagePublication.prepare(ARGV.fetch(1), registry: ARGV.fetch(2, "ghcr"))
   when "check" then DockerImagePublication.verify(ARGV.fetch(1))
   else raise "Expected prepare or check"
   end

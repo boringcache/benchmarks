@@ -3,17 +3,13 @@ branch = "master"
 start_sha = "08ea5803ec5e1ef5c7789e9fd094c2c4c52f5d42"
 rolling_stride = 20
 rolling_series = 4
-setup = ["ghcr"]
+setup = ["boringcache-registry"]
 prepare = [
   "bash \"$BENCH_ROOT/tools/docker/shared/posthog/prepare.sh\"",
-  "ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" prepare posthog-runners",
+  "ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" prepare posthog-runners boringcache",
 ]
-check = "ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" check linux/amd64"
+check = "boringcache ci run --oidc-provider github-actions -- ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" check linux/amd64"
 
 [runs]
-boringcache-docker-plus = ["depot-8", "blacksmith-8", "namespace-8x32"]
-boringcache-docker-plus-namespace = ["github"]
-boringcache-docker-plus-scaleway = ["github"]
-depot-builder-plus = ["depot-8"]
-blacksmith-builder-plus = ["blacksmith-8"]
-namespace-builder-plus = ["namespace-8x32-builder"]
+boringcache-docker-plus = ["incredibuild"]
+gha-plus = ["incredibuild"]

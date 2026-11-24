@@ -177,7 +177,7 @@ runs:
         fi
         bundle exec ruby bin/bench prepare "$BENCH_CASE" --lane "$BENCH_LANE" --phase "$BENCH_PHASE" --run-id "$BENCH_RUN_ID" ${SHA:+--sha "$SHA" --step "$STEP"} ${CACHE_SCOPE:+--cache-scope "$CACHE_SCOPE"} ${CONTINUES:+--continues} ${RECORDED:+--recorded "$RECORDED"} --github
 
-    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache'
+    - if: steps.prepare.outputs.ready == 'true' && (steps.prepare.outputs.provider == 'boringcache' || contains(inputs.setup, 'boringcache-registry'))
       shell: bash
       env:
         VERSION: ${{ inputs.cli-release || format('v{0}', steps.prepare.outputs.boringcache_version) }}
@@ -202,6 +202,10 @@ runs:
         if [ "${#assets[@]}" -gt 1 ]; then install -m 0644 "${assets[1]}" "$dir/libboringcache_xcode_cas.dylib"; fi
         if [ "$RUNNER_OS" = Windows ]; then dir=$(cygpath -m "$dir"); fi
         echo "$dir" >> "$GITHUB_PATH"
+
+    - if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'boringcache-registry')
+      shell: bash
+      run: boringcache docker login
 
     - id: sampler
       if: steps.prepare.outputs.ready == 'true' && (inputs.case == 'cargo/ferrum-fuzz' || inputs.case == 'ccache/osquery')
@@ -307,6 +311,7 @@ runs:
       shell: bash
       env:
         PROVIDER: ${{ steps.prepare.outputs.provider }}
+        BORINGCACHE_IMAGE_REGISTRY: ${{ contains(inputs.setup, 'boringcache-registry') }}
         STATIC_CACHE_AUTH: ${{ inputs.static-cache-auth == 'true' && steps.prepare.outputs.boringcache_version == '1.48.2' }}
         BORINGCACHE_RESTORE_TOKEN: ${{ steps.prepare.outputs.boringcache_version == '1.48.2' && inputs.cache-restore-token || '' }}
         BORINGCACHE_SAVE_TOKEN: ${{ steps.prepare.outputs.boringcache_version == '1.48.2' && inputs.cache-save-token || '' }}
@@ -330,7 +335,7 @@ runs:
             exit 1
           fi
           "${limit[@]}" bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
-        elif [ "$PROVIDER" = boringcache ]; then
+        elif [ "$PROVIDER" = boringcache ] || [ "$BORINGCACHE_IMAGE_REGISTRY" = true ]; then
           "${limit[@]}" boringcache ci run --oidc-provider github-actions -- ruby -S bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
         else
           "${limit[@]}" bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
