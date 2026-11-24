@@ -4,6 +4,7 @@ actions_only = true
 runners = ["github", "github-26", "macos", "windows", "namespace-8", "incredibuild"]
 finish = ["sccache --show-stats"]
 setup = ["actions-runtime"]
+probe = ['bash "$BENCH_ROOT/tools/cargo/codex/probe-runner.sh"']
 
 [env]
 SCCACHE_GHA_ENABLED = "true"
