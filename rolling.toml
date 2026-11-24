@@ -1,4 +1,4 @@
-bazel = ["codex-incredibuild", "grpc", "llvm"]
+bazel = ["grpc", "llvm"]
 buck2 = ["executorch"]
 cargo = ["codex", "deno", "ferrum-edge", "nushell", "zed"]
 ccache = ["llvm", "obs-studio", "osquery"]

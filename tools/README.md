@@ -260,6 +260,11 @@ first-parent commits before `e351ffa4b625325575e2a49e8b554e45c1c73b88`. Later
 steps build one first-parent commit at a time. The GitHub-hosted Bazel case
 keeps its own definition and records.
 
+Automatic rolling is paused until an Incredibuild runner can create
+unprivileged user namespaces and has enough disk for the full test suite.
+The GitHub Actions Cache seed failed on both requirements.
+[Seed job](https://github.com/boringcache/benchmarks/actions/runs/45408428372/job/138495808413).
+
 `cargo/codex` adds BoringCache and GitHub Actions Cache on Incredibuild Ubuntu
 24.04 to its current series. `cargo/nushell` adds BoringCache Plus on
 Incredibuild Ubuntu 24.04, macOS and Windows 2022. Each new runner has a separate
