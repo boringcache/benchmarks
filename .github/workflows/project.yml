@@ -26,7 +26,7 @@ on:
         type: string
         default: ""
       sha:
-        description: sample only, full SHA of a newer upstream first-parent commit (optional)
+        description: sample upstream SHA or expected upstream SHA for the PostHog replay (optional)
         type: string
         default: ""
       cli:
@@ -78,13 +78,27 @@ jobs:
           SHA: ${{ inputs.sha }}
           REF: ${{ github.ref }}
         run: |
-          if { [ -n "$ROLLING" ] || [ -n "$SAMPLE" ]; } && [ "$REF" != refs/heads/main ]; then
+          replay_sha=
+          if [ "$REF" = refs/heads/posthog-incredibuild-registry ] && [ -n "$ROLLING" ] && [ "$TOOL" = Docker ] && [ "$PROJECT" = posthog-runners ]; then
+            if [[ ! "$SHA" =~ ^[0-9a-f]{40}$ ]] || [ -n "$STEP" ]; then
+              echo 'The PostHog rolling replay needs the full expected PostHog SHA and no step override.' >&2
+              exit 1
+            fi
+            replay_sha="$SHA"
+            SHA=
+            bash scripts/checkout-records.sh results/docker/posthog-runners posthog-incredibuild-registry
+          elif { [ -n "$ROLLING" ] || [ -n "$SAMPLE" ]; } && [ "$REF" != refs/heads/main ]; then
             echo "::error::Rolling and sample runs continue the series on main: they read its records, publish records only to main and write its cache scopes. Dispatch them with --ref main; this run used $REF."
             exit 1
+          else
+            bash scripts/checkout-records.sh
           fi
-          bash scripts/checkout-records.sh
           if [ -n "$RUNNER" ] && [ -n "$ROLLING" ]; then echo 'rolling runs use every configured runner' >&2; exit 1; fi
           matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${SAMPLE:+--sample} ${RUNNER:+--runner "$RUNNER"} ${SHA:+--sha "$SHA"} ${LANE:+--lane "$LANE"} ${CLI:+--cli "$CLI"} ${STEP:+--step "$STEP"} --results results)
+          if [ -n "$replay_sha" ] && ! jq -e --arg sha "$replay_sha" 'length == 2 and all(.[]; .sha == $sha and .runner == "incredibuild")' <<< "$matrix" >/dev/null; then
+            echo "The PostHog rolling plan does not contain both Incredibuild lanes at $replay_sha." >&2
+            exit 1
+          fi
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
           if [ "$matrix" = '[]' ]; then
             echo 'No benchmark jobs are due for this selection.' >> "$GITHUB_STEP_SUMMARY"

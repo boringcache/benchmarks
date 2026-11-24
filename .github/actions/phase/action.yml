@@ -170,7 +170,11 @@ runs:
         CONTINUES: ${{ inputs.continues }}
       run: |
         if [ "$BENCH_PHASE" = rolling ]; then
-          bash scripts/checkout-records.sh "results/$BENCH_CASE"
+          records_ref=main
+          if [ "$BENCH_CASE" = docker/posthog-runners ] && [ "$GITHUB_REF_NAME" = posthog-incredibuild-registry ]; then
+            records_ref="$GITHUB_REF_NAME"
+          fi
+          bash scripts/checkout-records.sh "results/$BENCH_CASE" "$records_ref"
           if [ -d "results/$BENCH_CASE" ]; then
             RECORDED="$PWD/results"
           fi
