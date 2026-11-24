@@ -34,13 +34,20 @@ on:
         type: string
         required: false
         default: ""
+      cli_artifact:
+        description: Immutable benchmark workspace CLI artifact for a fresh branch run
+        type: string
+        default: ""
       step:
         description: rolling only, re-run this recorded step with the current harness for lanes without a passing record (optional)
         type: string
         required: false
         default: ""
 
-run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}${{ inputs.step && format(' step {0}', inputs.step) || '' }}${{ inputs.cli && format(' [{0}]', inputs.cli) || '' }}
+run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}${{ inputs.step && format(' step {0}', inputs.step) || '' }}${{ inputs.cli && format(' [{0}]', inputs.cli) || '' }}${{ inputs.cli_artifact && format(' [{0}]', inputs.cli_artifact) || '' }}
+
+env:
+  CANDIDATE_CLI_ARTIFACT: ${{ inputs.cli_artifact }}
 
 concurrency:
   group: ${{ (inputs.mode == 'rolling' || inputs.mode == 'sample') && format('rolling-{0}-{1}', inputs.tool, inputs.project) || format('run-{0}', github.run_id) }}
@@ -80,6 +87,10 @@ jobs:
         run: |
           if { [ -n "$ROLLING" ] || [ -n "$SAMPLE" ]; } && [ "$REF" != refs/heads/main ]; then
             echo "::error::Rolling and sample runs continue the series on main: they read its records, publish records only to main and write its cache scopes. Dispatch them with --ref main; this run used $REF."
+            exit 1
+          fi
+          if [ -n "$CANDIDATE_CLI_ARTIFACT" ] && { [ "$REF" = refs/heads/main ] || [ "$GITHUB_EVENT_NAME" != workflow_dispatch ] || [ -n "$ROLLING$SAMPLE$CLI" ] || ! [[ "$CANDIDATE_CLI_ARTIFACT" =~ ^art_[0-9a-f]{24}$ ]]; }; then
+            echo 'Select a branch, fresh or preflight mode, and an immutable CLI artifact without a release tag.' >&2
             exit 1
           fi
           bash scripts/checkout-records.sh

@@ -204,11 +204,21 @@ runs:
         ruby "$GITHUB_WORKSPACE/scripts/verify-checksums.rb" SHA256SUMS "${assets[@]}"
         install -m 0755 "${assets[0]}" "$dir/$executable"
         if [ "${#assets[@]}" -gt 1 ]; then install -m 0644 "${assets[1]}" "$dir/libboringcache_xcode_cas.dylib"; fi
+        if [ -n "${CANDIDATE_CLI_ARTIFACT:-}" ]; then
+          candidate="$RUNNER_TEMP/boringcache-candidate"
+          "$dir/$executable" ci run --oidc-provider github-actions -- \
+            "$dir/$executable" artifact pull "$CANDIDATE_CLI_ARTIFACT" "$candidate" --workspace boringcache/benchmarks
+          (cd "$candidate" && ruby "$GITHUB_WORKSPACE/scripts/verify-checksums.rb" SHA256SUMS "${assets[@]}")
+          install -m 0755 "$candidate/${assets[0]}" "$dir/$executable"
+          "$dir/$executable" --version
+          shasum -a 256 "$dir/$executable"
+          echo "BENCH_CLI_RELEASE=$CANDIDATE_CLI_ARTIFACT" >> "$GITHUB_ENV"
+        fi
         if [ "$RUNNER_OS" = Windows ]; then dir=$(cygpath -m "$dir"); fi
         echo "$dir" >> "$GITHUB_PATH"
 
     - id: sampler
-      if: steps.prepare.outputs.ready == 'true' && runner.os == 'Linux' && (startsWith(inputs.case, 'bazel/codex') || inputs.case == 'cargo/codex' || inputs.case == 'cargo/ferrum-fuzz' || inputs.case == 'ccache/osquery')
+      if: steps.prepare.outputs.ready == 'true' && runner.os == 'Linux' && (startsWith(inputs.case, 'bazel/codex') || inputs.case == 'cargo/codex' || inputs.case == 'cargo/ferrum-fuzz' || inputs.case == 'cargo/zed' || inputs.case == 'ccache/osquery')
       shell: bash
       run: |
         interval=5
