@@ -1,0 +1,45 @@
+{
+  "adapter_command": "sbt",
+  "case": "lila",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "capabilities": [
+    "remote-cache"
+  ],
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 870,
+  "scope": "gha-github-rolling-2",
+  "cache_scope": "gha-github-rolling-2",
+  "cache_seeded": false,
+  "cache_restored_key": "sbt-lila-gha-github-rolling-2-869",
+  "cache_restore_tracked": true,
+  "repo": "lichess-org/lila",
+  "sha": "a85e6dcccd547f66976fa54b72b4b4b2bb6919e4",
+  "seconds": 448.801,
+  "cache_save_timing": "in-phase",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 67
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "3abf4b6ce5658e02a686893466e7f023a0c319c7",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45477881786",
+  "attempt": 1,
+  "started_at": "2026-11-24T20:11:38Z"
+}
