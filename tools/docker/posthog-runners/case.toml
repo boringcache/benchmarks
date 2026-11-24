@@ -2,7 +2,7 @@ repo = "PostHog/posthog"
 branch = "master"
 start_sha = "08ea5803ec5e1ef5c7789e9fd094c2c4c52f5d42"
 rolling_stride = 20
-rolling_series = 5
+rolling_series = 4
 setup = ["ghcr", "boringcache-registry"]
 prepare = [
   "bash \"$BENCH_ROOT/tools/docker/shared/posthog/prepare.sh\"",
