@@ -1,0 +1,47 @@
+{
+  "adapter_command": "cargo",
+  "case": "ferrum-fuzz",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "runner": "github-26",
+  "runner_label": "ubuntu-26.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 451,
+  "scope": "gha-plus-github-26-rolling",
+  "cache_scope": "gha-plus-github-26-rolling",
+  "cache_seeded": false,
+  "cache_restored_key": "cargo-ferrum-fuzz-gha-plus-github-26-rolling-417",
+  "cache_restore_tracked": true,
+  "repo": "ferrum-edge/ferrum-edge",
+  "sha": "75f23cb1598ce21116e7d9d40cccb637b2aad980",
+  "seconds": 3769.246,
+  "cache_save_timing": "in-phase",
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 2
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "f233ffd94d5108234b0a8c05d0e47c1c7682f024",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45445467376",
+  "attempt": 1,
+  "started_at": "2026-11-24T17:13:48Z"
+}
