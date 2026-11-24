@@ -41,6 +41,18 @@ class WorkflowTest < Minitest::Test
     end
   end
 
+  def test_resource_samples_go_to_a_diagnostics_artifact
+    steps = YAML.load_file(File.expand_path("../../.github/actions/phase/action.yml", __dir__)).dig("runs", "steps")
+    sampler = steps.find { it["id"] == "sampler" }
+    build = steps.find { it["id"] == "build" }
+    artifact = steps.find { it.dig("with", "name").to_s.start_with?("diagnostics-") }
+    assert_includes sampler.fetch("if"), "startsWith(inputs.case, 'bazel/codex')"
+    assert_includes sampler.fetch("if"), "inputs.case == 'cargo/codex'"
+    assert_includes sampler.fetch("run"), 'build-sampler.sh "$dir/samples.log" "$interval" > /dev/null 2>&1'
+    refute_includes build.fetch("run"), "build-sampler.sh"
+    assert_equal "${{ runner.temp }}/diagnostics", artifact.dig("with", "path")
+  end
+
   def test_remote_cache_tokens_bypass_oidc_and_fail_if_a_required_token_is_missing
     steps = YAML.load_file(File.expand_path("../../.github/actions/phase/action.yml", __dir__)).dig("runs", "steps")
     script = steps.find { it["id"] == "build" }.fetch("run")

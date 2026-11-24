@@ -208,13 +208,17 @@ runs:
         echo "$dir" >> "$GITHUB_PATH"
 
     - id: sampler
-      if: steps.prepare.outputs.ready == 'true' && (inputs.case == 'cargo/ferrum-fuzz' || inputs.case == 'ccache/osquery')
+      if: steps.prepare.outputs.ready == 'true' && runner.os == 'Linux' && (startsWith(inputs.case, 'bazel/codex') || inputs.case == 'cargo/codex' || inputs.case == 'cargo/ferrum-fuzz' || inputs.case == 'ccache/osquery')
       shell: bash
       run: |
+        interval=5
+        case "$BENCH_CASE" in
+          bazel/codex*|cargo/codex) interval=30 ;;
+        esac
         dir="$RUNNER_TEMP/diagnostics"
         mkdir -p "$dir"
         { lscpu; awk -F: '/^(vendor_id|cpu family|model|model name|stepping|microcode)[[:space:]]*:/ && !seen[$1]++' /proc/cpuinfo; free -m; } > "$dir/machine.txt"
-        nohup bash scripts/build-sampler.sh "$dir/samples.log" > /dev/null 2>&1 &
+        nohup bash scripts/build-sampler.sh "$dir/samples.log" "$interval" > /dev/null 2>&1 &
         echo "pid=$!" >> "$GITHUB_OUTPUT"
 
     - id: dance-cache
@@ -321,13 +325,6 @@ runs:
           (( remaining > 0 )) || exit 124
           limit=(timeout --signal=INT --kill-after=30s "${remaining}s")
         fi
-        case "$BENCH_CASE" in
-          bazel/codex*|cargo/codex)
-            bash scripts/build-sampler.sh /dev/stdout 30 &
-            sampler_pid=$!
-            trap 'kill "$sampler_pid" 2>/dev/null || true' EXIT
-            ;;
-        esac
         if [ "$STATIC_CACHE_AUTH" = true ]; then
           if [ -z "$BORINGCACHE_RESTORE_TOKEN" ] || { [ "$BENCH_PHASE" != warm ] && [ -z "$BORINGCACHE_SAVE_TOKEN" ]; }; then
             echo "::error::The PostHog remote lane is missing a required cache token."
@@ -400,6 +397,10 @@ runs:
         BUILD_DIR: ${{ steps.prepare.outputs.build_dir }}
       run: |
         kill "$PID" 2>/dev/null || true
+        case "$BENCH_CASE" in
+          cargo/ferrum-fuzz|ccache/osquery) ;;
+          *) exit 0 ;;
+        esac
         target="$BENCH_DIR/upstream/target"
         if [ -d "$target" ]; then { du -sb "$target"; find "$target" -maxdepth 3 -type d -name incremental -exec du -sb {} +; } > "$RUNNER_TEMP/diagnostics/target-sizes.txt" 2>/dev/null || true; fi
         timings="$BUILD_DIR/target/cargo-timings"

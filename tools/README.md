@@ -251,6 +251,9 @@ A preflight run (`<tool> - <project> (preflight)`) runs every lane's setup and `
 
 The collect job runs on main and branches, adds post-job save durations, and uploads `recorded-results-<attempt>`. The publish job downloads that artifact and writes records only on main. Branch results require review before they are added to the repository.
 
+Linux resource samples for Codex, Ferrum fuzzing, and osquery are in
+the job's `diagnostics-*` artifact. Build output appears in the job log.
+
 ## Incredibuild runners
 
 `bazel/codex-incredibuild` runs the Codex workspace test command on the
