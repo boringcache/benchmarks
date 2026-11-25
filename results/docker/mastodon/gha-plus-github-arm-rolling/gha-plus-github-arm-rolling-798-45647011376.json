@@ -1,0 +1,65 @@
+{
+  "adapter_command": "docker",
+  "case": "mastodon",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "runner": "github-arm",
+  "runner_label": "ubuntu-24.04-arm",
+  "machine": "github arm 4c",
+  "phase": "rolling",
+  "step": 798,
+  "scope": "gha-plus-github-arm-rolling",
+  "cache_scope": "gha-plus-github-arm-rolling",
+  "cache_seeded": false,
+  "repo": "mastodon/mastodon",
+  "sha": "45b42f3eebea1943eee6395a658c3723afce3995",
+  "cache_save_timing": "post-job",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45647011376",
+  "attempt": 1,
+  "capabilities": [
+    "layers",
+    "tool-cache",
+    "mount-cache"
+  ],
+  "cache_restored_key": "docker-mastodon-gha-plus-github-arm-rolling-797",
+  "cache_restore_tracked": true,
+  "seconds": 210.62,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Neoverse-N2",
+      "cores": 4,
+      "memory_mb": 15941,
+      "disk_gb": 144,
+      "disk_free_gb": 97
+    },
+    "image_platform": "linux/arm64",
+    "buildx_builder": {
+      "name": "builder-199c4aff-57d8-4c29-a1c6-63c31b3b93aa",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-199c4aff-57d8-4c29-a1c6-63c31b3b93aa0",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "bf996dc08be72a0c046b2ca4717e80bcb0e42e76",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-25T15:37:36Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45647011376/job/139321132872",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-25T15:37:02Z",
+  "job_completed_at": "2026-11-25T15:42:51Z",
+  "queue_seconds": 5.0,
+  "job_seconds": 349.0,
+  "post_job_save_seconds": 47.181
+}
