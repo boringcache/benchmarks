@@ -1,0 +1,51 @@
+{
+  "adapter_command": "gradle",
+  "case": "opentelemetry-java",
+  "lane": "bitrise",
+  "provider": "bitrise",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 107,
+  "scope": "bitrise-github-rolling",
+  "cache_scope": "bitrise-github-rolling",
+  "cache_seeded": false,
+  "repo": "open-telemetry/opentelemetry-java",
+  "sha": "a92b6443d26befa5e62520e4366506bbcd23c273",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45720607697",
+  "attempt": 1,
+  "capabilities": [
+    "build-cache"
+  ],
+  "cache_restored_key": "gradle-opentelemetry-java-bitrise-github-rolling-106",
+  "cache_restore_tracked": true,
+  "seconds": 781.078,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 79
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "0920770556385026740ea434ecc5e716bf86c90a",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-25T23:22:09Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45720607697/job/139578105051",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-25T23:21:34Z",
+  "job_completed_at": "2026-11-25T23:35:14Z",
+  "queue_seconds": 3.0,
+  "job_seconds": 820.0
+}

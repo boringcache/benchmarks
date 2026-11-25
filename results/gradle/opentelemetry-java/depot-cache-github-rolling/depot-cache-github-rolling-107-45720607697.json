@@ -1,0 +1,51 @@
+{
+  "adapter_command": "gradle",
+  "case": "opentelemetry-java",
+  "lane": "depot-cache",
+  "provider": "depot",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 107,
+  "scope": "depot-cache-github-rolling",
+  "cache_scope": "depot-cache-github-rolling",
+  "cache_seeded": false,
+  "repo": "open-telemetry/opentelemetry-java",
+  "sha": "a92b6443d26befa5e62520e4366506bbcd23c273",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45720607697",
+  "attempt": 1,
+  "capabilities": [
+    "build-cache"
+  ],
+  "cache_restored_key": "gradle-opentelemetry-java-depot-cache-github-rolling-106",
+  "cache_restore_tracked": true,
+  "seconds": 408.64,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 81
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "0920770556385026740ea434ecc5e716bf86c90a",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-25T23:22:02Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45720607697/job/139578105049",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-25T23:21:33Z",
+  "job_completed_at": "2026-11-25T23:28:55Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 442.0
+}
