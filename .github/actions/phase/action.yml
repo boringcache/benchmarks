@@ -506,7 +506,7 @@ runs:
         LANE: ${{ inputs.lane }}
         RUNNER: ${{ inputs.runner }}
         PHASE: ${{ inputs.phase }}
-        OUTCOME: ${{ failure() && 'setup_failure' || 'skipped' }}
+        OUTCOME: ${{ steps.prepare.outputs.ready == 'false' && 'skipped' || 'setup_failure' }}
       run: |
         dir="$RUNNER_TEMP/results/$CASE"
         mkdir -p "$dir"

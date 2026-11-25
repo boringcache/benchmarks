@@ -101,6 +101,14 @@ class WorkflowTest < Minitest::Test
     end
   end
 
+  def test_phase_state_uses_the_preparation_output_to_distinguish_an_intentional_skip
+    steps = YAML.load_file(File.expand_path("../../.github/actions/phase/action.yml", __dir__)).dig("runs", "steps")
+    state = steps.find { it["id"] == "phase-state" }
+
+    assert_includes state.fetch("if"), "failure()"
+    assert_equal "${{ steps.prepare.outputs.ready == 'false' && 'skipped' || 'setup_failure' }}", state.dig("env", "OUTCOME")
+  end
+
   def test_branch_runs_collect_post_job_timings_without_publishing_to_main
     workflow = YAML.load_file(File.expand_path("../../.github/workflows/project.yml", __dir__), aliases: true)
     collect = workflow.fetch("jobs").fetch("collect")
