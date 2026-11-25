@@ -43,6 +43,7 @@ RUSTC_BOOTSTRAP = "1"
 DENO_SNAPSHOT_MINIFY_SOURCES = "1"
 
 [runs]
+boringcache-cargo-plus-mounted = ["github"]
 boringcache-cargo = ["github"]
 boringcache-cargo-plus = ["github"]
 gha = ["github"]

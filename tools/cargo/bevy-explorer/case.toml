@@ -20,6 +20,7 @@ CEF_PATH = "${BENCH_DIR}/cef"
 LD_LIBRARY_PATH = "${BENCH_DIR}/cef"
 
 [runs]
+boringcache-cargo-plus-mounted = ["github"]
 boringcache-cargo = ["github"]
 boringcache-cargo-plus = ["github"]
 gha = ["github"]

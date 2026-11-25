@@ -2,7 +2,6 @@ module Bench
   class MountedTarget
     LANE = "boringcache-cargo-plus-mounted"
     BAZEL_LANE = "boringcache-bazel-mounted"
-    BUDGET = { "nushell" => "3GiB", "zed" => "6GiB", "ferrum-fuzz" => "12GiB", "codex" => "24GiB" }.freeze
     READY = "benchmark-target-mounted"
     HOLD = 'mountpoint -q -- "$1" && [ "$(findmnt -n -o SOURCE --mountpoint "$1")" = boringcache-archive ] && echo benchmark-target-mounted && read -r decision && { [ "$decision" = publish ] || exit 75; }'
 
@@ -19,7 +18,7 @@ module Bench
 
     def initialize(kase, workspace, scope, phase)
       @bazel = kase.tool.name == "bazel"
-      @budget = @bazel ? "8GiB" : BUDGET.fetch(kase.name)
+      @budget = @bazel ? "8GiB" : "auto"
       if kase.name == "zed"
         @budget = ENV["BENCH_ZED_MOUNT_BUDGET"] unless ENV["BENCH_ZED_MOUNT_BUDGET"].to_s.empty?
       end
