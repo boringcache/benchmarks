@@ -36,7 +36,7 @@ module Bench
     private
       def write_plan
         plan = self.class.scope_plan(TomlRB.load_file(kase.plan_path(lane)), scope)
-        MountedTarget.remove_archive(plan) if lane.name == MountedTarget::LANE
+        MountedTarget.require_target_entry(plan) if lane.name == MountedTarget::LANE
         File.write(plan_path, TomlRB.dump(plan))
       end
 

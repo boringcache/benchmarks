@@ -10,12 +10,10 @@ module Bench
       [LANE, BAZEL_LANE].include?(name)
     end
 
-    def self.remove_archive(plan)
+    def self.require_target_entry(plan)
       targets = plan.fetch("entries").select { |_, entry| entry["kind"] == "cargo-target" }.keys
       raise Error, "Mounted Cargo requires one target entry" unless targets.size == 1
 
-      plan.fetch("entries").delete(targets.first)
-      plan.fetch("profiles").each_value { |profile| profile.fetch("entries").delete(targets.first) }
       plan
     end
 

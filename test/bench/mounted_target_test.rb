@@ -1,19 +1,18 @@
 require_relative "test_helper"
 
 class MountedTargetTest < Minitest::Test
-  def test_replaces_only_the_target_and_keeps_sccache_dependencies_and_pruning
+  def test_keeps_the_target_entry_so_the_adapter_records_mounted_source_freshness
     root = File.expand_path("../..", __dir__)
     %w[nushell zed codex ferrum-fuzz].each do |project|
       plan = TomlRB.load_file(File.join(root, "tools/cargo", project, "plus/.boringcache.toml"))
-      expected = plan.fetch("entries").reject { |_, entry| entry["kind"] == "cargo-target" }
-      adapters = Marshal.load(Marshal.dump(plan.fetch("adapters")))
+      expected = Marshal.load(Marshal.dump(plan))
 
-      Bench::MountedTarget.remove_archive(plan)
+      Bench::MountedTarget.require_target_entry(plan)
 
-      assert_equal expected, plan.fetch("entries")
-      assert_equal expected.keys, plan.dig("profiles", "cargo-product", "entries")
-      assert_equal adapters, plan.fetch("adapters")
+      assert_equal expected, plan
     end
+    plan = { "entries" => {}, "profiles" => {} }
+    assert_raises(Bench::Error) { Bench::MountedTarget.require_target_entry(plan) }
   end
 
   def test_a_seed_needs_complete_pruning_usage
