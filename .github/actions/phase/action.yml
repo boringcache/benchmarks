@@ -51,7 +51,9 @@ runs:
   steps:
     - if: inputs.case == 'cargo/codex' && inputs.runner == 'incredibuild' && inputs.phase != 'preflight'
       shell: bash
-      run: echo "BENCH_CARGO_DEADLINE=$(( $(date +%s) + 90 * 60 ))" >> "$GITHUB_ENV"
+      run: |
+        echo "BENCH_CARGO_DEADLINE=$(( $(date +%s) + 90 * 60 ))" >> "$GITHUB_ENV"
+        echo "IB_CONSOLE_SKIP=1" >> "$GITHUB_ENV"
 
     - if: startsWith(inputs.case, 'bazel/codex') && inputs.phase != 'preflight'
       shell: bash

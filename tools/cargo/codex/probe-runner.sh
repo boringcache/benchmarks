@@ -63,7 +63,11 @@ probe() (
     export PATH
     for name in $(compgen -e | grep -E '^(IB|INCREDIBUILD)_' || true); do unset "$name"; done
   fi
+  if [[ "$variant" == console-skip-* ]]; then
+    export IB_CONSOLE_SKIP=${variant#console-skip-}
+  fi
   type -a cargo > "$diagnostics/$trial.cargo.txt" 2>&1 || true
+  cargo --version > "$diagnostics/$trial.version.txt" 2>&1 || true
   if [[ "$variant" == server-first ]]; then
     "$sccache" --start-server > "$diagnostics/$trial.start.txt" 2>&1 || exit 1
   fi
@@ -99,4 +103,6 @@ done
 probe plain default clean || failed=1
 probe sccache default clean || failed=1
 probe sccache default server-first || failed=1
+probe sccache default console-skip-1 || failed=1
+probe sccache default console-skip-true || failed=1
 exit "$failed"

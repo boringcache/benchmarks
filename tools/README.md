@@ -283,15 +283,19 @@ sccache at the inherited file-descriptor limit and at 10,000. Each build has
 These four builds use the runner's existing interception settings. The probe
 then repeats plain Cargo and sccache at the inherited limit with the
 Incredibuild command directory removed from `PATH` and `IB_*` and
-`INCREDIBUILD_*` variables unset. A last sccache build keeps the interception
-settings and starts the sccache server before Cargo. Its artifact contains
+`INCREDIBUILD_*` variables unset. Another sccache build keeps the interception
+settings and starts the sccache server before Cargo. Two more set
+`IB_CONSOLE_SKIP` to `1` and to `true` with the interception settings
+otherwise unchanged. Its artifact contains
 executable resolution, the Incredibuild command directory listing, sccache
 debug logs, process samples, exit statuses and durations. In the earlier probe, the Incredibuild sccache build stalled at both
 limits. The no-sccache trial at 10,000 compiled in 2.11 seconds. The
 GitHub-hosted sccache builds passed at both limits.
 [Earlier Cargo probe](https://github.com/boringcache/benchmarks/actions/runs/45427772712).
-Full Incredibuild Cargo phases require the inherited-limit sccache smoke and
-start their timed build with the remaining portion of a 90-minute job budget.
+Full Incredibuild Cargo phases set `IB_CONSOLE_SKIP=1`, so the runner's Cargo
+command runs Cargo without `ib_console`. They require the inherited-limit
+sccache smoke and start their timed build with the remaining portion of a
+90-minute job budget.
 
 The Codex Bazel preflight tests unprivileged user, mount and PID namespaces
 and requires 128 GiB free in the trial workspace. The BoringCache lane caps its
