@@ -280,9 +280,13 @@ gh workflow run project.yml -f tool=Docker -f project=posthog-runners -f mode=pr
 The Codex Cargo probe builds a dependency-free crate with and without local
 sccache at the inherited file-descriptor limit and at 10,000. Each build has
 60 seconds before termination and its own target directory, socket, and cache.
-The probe uses the runner's existing interception settings. Its artifact
-contains executable resolution, sccache debug logs, process samples and exit
-statuses. In the earlier probe, the Incredibuild sccache build stalled at both
+These four builds use the runner's existing interception settings. The probe
+then repeats plain Cargo and sccache at the inherited limit with the
+Incredibuild command directory removed from `PATH` and `IB_*` and
+`INCREDIBUILD_*` variables unset. A last sccache build keeps the interception
+settings and starts the sccache server before Cargo. Its artifact contains
+executable resolution, the Incredibuild command directory listing, sccache
+debug logs, process samples, exit statuses and durations. In the earlier probe, the Incredibuild sccache build stalled at both
 limits. The no-sccache trial at 10,000 compiled in 2.11 seconds. The
 GitHub-hosted sccache builds passed at both limits.
 [Earlier Cargo probe](https://github.com/boringcache/benchmarks/actions/runs/45427772712).

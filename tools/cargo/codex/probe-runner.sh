@@ -19,12 +19,23 @@ else
 fi
 
 sccache=$(mise which sccache)
+ib_accel=/ib-workspace/incredibuild/ib-accel/bin
 cd "$probe_dir"
 {
   type -a cargo rustc ib_console || true
   printf 'sccache=%s\n' "$sccache"
   "$sccache" --version
   printf 'soft_nofile=%s\n' "$(ulimit -Sn)"
+  ls -l "$ib_accel" 2>&1 || true
+  file "$ib_accel/cargo" 2>&1 || true
+  printf 'cargo shim names:\n'
+  grep -aoE '\b(IB|INCREDIBUILD)_[A-Z0-9_]+' "$ib_accel/cargo" 2>/dev/null | sort -u || true
+  printf 'environment names:\n'
+  compgen -e | grep -E '^(IB|INCREDIBUILD|LD_PRELOAD)' || true
+  printf 'ld.so.preload:\n'
+  cat /etc/ld.so.preload 2>/dev/null || true
+  printf 'cargo rustc-wrapper config:\n'
+  grep -s -n 'rustc-wrapper' "$HOME/.cargo/config.toml" "$HOME/.cargo/config" || true
 } > "$diagnostics/executables.txt"
 
 mkdir src
@@ -33,8 +44,8 @@ printf 'version = 4\n\n[[package]]\nname = "runner-probe"\nversion = "0.1.0"\n' 
 printf 'fn main() {}\n' > src/main.rs
 
 probe() (
-  wrapper=$1 limit=$2
-  trial="$wrapper-$limit"
+  wrapper=$1 limit=$2 variant=${3:-}
+  trial="$wrapper-$limit${variant:+-$variant}"
   if [[ "$limit" == limited ]]; then
     ulimit -Sn 10000 || exit 1
   fi
@@ -47,6 +58,15 @@ probe() (
   export CARGO_INCREMENTAL=0 CARGO_BUILD_INCREMENTAL=false
   if [[ "$wrapper" == sccache ]]; then export RUSTC_WRAPPER="$sccache"; fi
   export CARGO_TARGET_DIR="$probe_dir/target-$trial"
+  if [[ "$variant" == clean ]]; then
+    PATH=$(tr ':' '\n' <<< "$PATH" | grep -vxF "$ib_accel" | paste -sd: -)
+    export PATH
+    for name in $(compgen -e | grep -E '^(IB|INCREDIBUILD)_' || true); do unset "$name"; done
+  fi
+  type -a cargo > "$diagnostics/$trial.cargo.txt" 2>&1 || true
+  if [[ "$variant" == server-first ]]; then
+    "$sccache" --start-server > "$diagnostics/$trial.start.txt" 2>&1 || exit 1
+  fi
   timeout --kill-after=5s 60s cargo test --locked --offline --no-run &
   pid=$!
   (
@@ -57,10 +77,11 @@ probe() (
   ) > "$diagnostics/$trial.processes.log" &
   sampler=$!
   status=0
+  started=$SECONDS
   wait "$pid" || status=$?
   kill "$sampler" 2>/dev/null || true
   if [[ "$wrapper" == sccache ]]; then timeout --kill-after=2s 3s "$sccache" --stop-server >/dev/null 2>&1 || true; fi
-  printf 'Cargo probe %s exited %s\n' "$trial" "$status" | tee -a "$diagnostics/outcomes.txt"
+  printf 'Cargo probe %s exited %s after %ss\n' "$trial" "$status" "$((SECONDS - started))" | tee -a "$diagnostics/outcomes.txt"
   exit "$status"
 )
 
@@ -75,4 +96,7 @@ for limit in default limited; do
     probe "$wrapper" "$limit" || failed=1
   done
 done
+probe plain default clean || failed=1
+probe sccache default clean || failed=1
+probe sccache default server-first || failed=1
 exit "$failed"
