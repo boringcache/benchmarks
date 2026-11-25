@@ -3,6 +3,21 @@ set -u
 
 out=$1
 interval=${2:-5}
+clock_ticks=$(getconf CLK_TCK)
+
+sample_zed() {
+  local pid arg
+  while read -r pid; do
+    while IFS= read -r -d '' arg; do
+      if [[ $arg == --crate-name ]]; then
+        if IFS= read -r -d '' arg && [[ $arg == zed ]]; then
+          awk -v hz="$clock_ticks" '{ print "rustc_zed", $1, $14 + $15, hz }' "/proc/$pid/stat" 2>/dev/null
+        fi
+        break
+      fi
+    done < "/proc/$pid/cmdline" 2>/dev/null
+  done < <(ps -C rustc -o pid=)
+}
 
 while :; do
   {
@@ -20,6 +35,7 @@ while :; do
       if [[ -f ${BENCH_BAZEL_IMAGE:-} ]]; then du -k "$BENCH_BAZEL_IMAGE" | awk '{ print "bazel_image_allocated_kib", $1 }'; fi
     fi
     ps -eo pid=,ppid=,etimes=,times=,rss=,stat=,comm=,wchan= | awk '$7 ~ /^(boringcache|sccache|cargo|rustc|clang|cc|c\+\+|cmake|make|ninja|git|ld|ld\.lld|lld|mold|build-script-)/'
+    if [[ ${BENCH_CASE:-} == cargo/zed ]]; then sample_zed; fi
   } >> "$out"
   sleep "$interval" >/dev/null 2>&1
 done

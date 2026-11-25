@@ -92,6 +92,15 @@ class WorkflowTest < Minitest::Test
     end
   end
 
+  def test_zed_budget_trial_only_runs_the_cold_phase
+    workflow = YAML.load_file(File.expand_path("../../.github/workflows/project.yml", __dir__), aliases: true)
+    input = workflow.dig(true, "workflow_dispatch", "inputs", "mounted_budget")
+    assert_equal ["series", "auto", "6GiB"], input.fetch("options")
+    assert_equal "series", input.fetch("default")
+    assert_includes workflow.dig("jobs", "warm", "if"), "inputs.mounted_budget == 'series'"
+    refute_includes workflow.dig("jobs", "cold", "if"), "mounted_budget"
+  end
+
   def test_branch_runs_collect_post_job_timings_without_publishing_to_main
     workflow = YAML.load_file(File.expand_path("../../.github/workflows/project.yml", __dir__), aliases: true)
     collect = workflow.fetch("jobs").fetch("collect")

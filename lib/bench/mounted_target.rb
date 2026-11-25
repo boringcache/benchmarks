@@ -22,6 +22,9 @@ module Bench
     def initialize(kase, workspace, scope, phase)
       @bazel = kase.tool.name == "bazel"
       @budget = @bazel ? "8GiB" : BUDGET.fetch(kase.name)
+      if kase.name == "zed"
+        @budget = ENV["BENCH_ZED_MOUNT_BUDGET"] unless ENV["BENCH_ZED_MOUNT_BUDGET"].to_s.empty?
+      end
       @workspace = workspace
       @tag = "mounted-#{kase.name}-#{scope}"
       @phase = phase
@@ -38,11 +41,12 @@ module Bench
       FileUtils.mkdir_p([@mount, File.dirname(@receipt)])
       raise Error, "Output directory already contains files before mounting" unless Dir.empty?(@mount)
       File.write(File.join(File.dirname(@receipt), "archive-mountpoint"), @mount)
-      puts "Mounting #{@mount} with a #{@budget} writable-file budget"
+      puts "Mounting #{@mount} with writable spool budget #{@budget}"
 
       spool = Dir.mktmpdir("mounted-target-", ENV.fetch("RUNNER_TEMP"))
+      budget_args = @budget == "auto" ? [] : ["--disk-budget", @budget]
       args = ["boringcache", "archive-mount", "boringcache/benchmarks", @tag, @mount, "--spool", spool,
-              "--disk-budget", @budget, "--receipt", @receipt, "--", "sh", "-c", HOLD, "bench", @mount]
+              *budget_args, "--receipt", @receipt, "--", "sh", "-c", HOLD, "bench", @mount]
       passed = false
       status = Open3.popen2(*args) do |input, output, process|
         begin

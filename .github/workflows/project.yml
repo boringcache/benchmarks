@@ -38,17 +38,23 @@ on:
         description: Immutable benchmark workspace CLI artifact for a fresh or series branch run
         type: string
         default: ""
+      mounted_budget:
+        description: Run a cold Zed mounted trial with automatic sizing or a 6 GiB cap
+        type: choice
+        options: [series, auto, 6GiB]
+        default: series
       step:
         description: rolling only, re-run this recorded step with the current harness for lanes without a passing record (optional)
         type: string
         required: false
         default: ""
 
-run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}${{ inputs.step && format(' step {0}', inputs.step) || '' }}${{ inputs.cli && format(' [{0}]', inputs.cli) || '' }}${{ inputs.cli_artifact && format(' [{0}]', inputs.cli_artifact) || '' }}
+run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}${{ inputs.step && format(' step {0}', inputs.step) || '' }}${{ inputs.cli && format(' [{0}]', inputs.cli) || '' }}${{ inputs.cli_artifact && format(' [{0}]', inputs.cli_artifact) || '' }}${{ inputs.mounted_budget != 'series' && format(' [cold {0}]', inputs.mounted_budget) || '' }}
 
 env:
   BENCH_BRANCH_SERIES: ${{ inputs.mode == 'series' && 'true' || '' }}
   CANDIDATE_CLI_ARTIFACT: ${{ inputs.cli_artifact }}
+  BENCH_ZED_MOUNT_BUDGET: ${{ inputs.mounted_budget != 'series' && inputs.mounted_budget || '' }}
 
 concurrency:
   group: ${{ (inputs.mode == 'rolling' || inputs.mode == 'sample') && format('rolling-{0}-{1}', inputs.tool, inputs.project) || format('run-{0}', github.run_id) }}
@@ -105,6 +111,10 @@ jobs:
           fi
           if [[ "$LANE" == *plus-mounted* ]] && { [ -z "$CANDIDATE_CLI_ARTIFACT" ] || [ -z "$BENCH_BRANCH_SERIES" ]; }; then
             echo 'The mounted Cargo comparison requires a branch series and a candidate artifact.' >&2
+            exit 1
+          fi
+          if [ -n "$BENCH_ZED_MOUNT_BUDGET" ] && { [ "$PROJECT" != zed ] || [ "$LANE" != boringcache-cargo-plus-mounted ] || [ "$RUNNER" != github ]; }; then
+            echo 'Select Zed, the mounted Cargo lane and the github runner for the cold disk budget trial.' >&2
             exit 1
           fi
           bash scripts/checkout-records.sh
@@ -183,7 +193,7 @@ jobs:
 
   warm:
     needs: [plan, cold]
-    if: ${{ !cancelled() && (!endsWith(inputs.lane, '-mounted') || needs.cold.result == 'success') && (inputs.mode == 'fresh' || inputs.mode == 'series') && needs.plan.outputs.matrix != '[]' }}
+    if: ${{ !cancelled() && inputs.mounted_budget == 'series' && (!endsWith(inputs.lane, '-mounted') || needs.cold.result == 'success') && (inputs.mode == 'fresh' || inputs.mode == 'series') && needs.plan.outputs.matrix != '[]' }}
     name: "warm: ${{ matrix.label }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 180
