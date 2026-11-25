@@ -1,0 +1,51 @@
+{
+  "adapter_command": "ccache",
+  "case": "osquery",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 163,
+  "scope": "gha-github-rolling-2",
+  "cache_scope": "gha-github-rolling-2",
+  "cache_seeded": false,
+  "repo": "osquery/osquery",
+  "sha": "0fa9e3f658e8c55dbac8907e6a72ee8b9e257896",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45716652533",
+  "attempt": 1,
+  "capabilities": [
+    "remote-storage"
+  ],
+  "cache_restored_key": "ccache-osquery-gha-github-rolling-2-162",
+  "cache_restore_tracked": true,
+  "seconds": 925.892,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 89
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "4dbd428b9807dddb4c357165739fe25cc04c11e7",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-25T22:54:12Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45716652533/job/139564716864",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-25T22:51:50Z",
+  "job_completed_at": "2026-11-25T23:09:43Z",
+  "queue_seconds": 1.0,
+  "job_seconds": 1073.0
+}
