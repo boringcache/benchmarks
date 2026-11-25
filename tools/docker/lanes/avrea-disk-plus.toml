@@ -1,0 +1,6 @@
+provider = "avrea"
+level = "plus"
+plan = "plus"
+actions_only = true
+runners = ["avrea-8"]
+setup = ["avrea-disk"]

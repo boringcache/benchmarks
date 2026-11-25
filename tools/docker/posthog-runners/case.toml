@@ -11,5 +11,4 @@ prepare = [
 check = "ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" check linux/amd64"
 
 [runs]
-boringcache-docker-plus = ["avrea-8"]
-avrea-cache-plus = ["avrea-8"]
+avrea-disk-plus = ["avrea-8"]

@@ -103,6 +103,38 @@ runs:
     - if: contains(inputs.setup, 'buildx')
       uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
+    - if: contains(format(' {0} ', inputs.setup), ' avrea-disk ')
+      uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      with:
+        name: ${{ inputs.lane }}
+        keep-state: true
+
+    - if: contains(format(' {0} ', inputs.setup), ' avrea-disk ')
+      shell: bash
+      env:
+        STEP: ${{ inputs.step }}
+      run: |
+        [ -n "${PERSISTENT_DISK_PATH:-}" ] || { echo "::error::No Avrea persistent disk is attached"; exit 1; }
+        echo "PERSISTENT_DISK_PATH=$PERSISTENT_DISK_PATH"
+        df -h
+        findmnt -T /var/lib/docker || true
+        findmnt -T /var/lib/containerd || true
+        docker info --format '{{.DockerRootDir}} {{.Driver}}'
+        docker buildx ls
+        docker buildx inspect
+        docker volume ls --filter name=buildx_buildkit_
+        docker buildx du | tail -n 3
+        [[ "$STEP" =~ ^[0-9]+$ ]] || { echo "::error::The Avrea disk lane needs a rolling step"; exit 1; }
+        expected=""
+        for ((i = 0; i < STEP; i++)); do expected+="bench-step-$i"$'\n'; done
+        expected=${expected%$'\n'}
+        actual=$(docker volume ls --quiet --filter name=bench-step- | sort -V)
+        if [ "$actual" != "$expected" ]; then
+          echo "::error::Step $STEP expected disk markers [${expected//$'\n'/ }] and found [${actual//$'\n'/ }]"
+          exit 1
+        fi
+        docker volume create "bench-step-$STEP"
+
     - if: contains(inputs.setup, 'actions-runtime')
       uses: crazy-max/ghaction-github-runtime@04d248b84655b509d8c44dc1d6f990c879747487 # v4.0.0
 
@@ -146,7 +178,7 @@ runs:
       shell: bash
       run: ruby scripts/nativelink.rb
 
-    - if: contains(inputs.setup, 'ghcr') && (!contains(inputs.setup, 'boringcache-registry') || inputs.lane == 'avrea-cache-plus')
+    - if: contains(inputs.setup, 'ghcr') && (!contains(inputs.setup, 'boringcache-registry') || inputs.lane == 'avrea-cache-plus' || inputs.lane == 'avrea-disk-plus')
       uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
       with:
         registry: ghcr.io

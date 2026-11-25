@@ -1,10 +1,10 @@
-name: Docker - posthog-runners (Avrea rolling)
+name: Docker - posthog-runners (Avrea disk rolling)
 
 on:
   push:
-    branches: [posthog-avrea]
+    branches: [posthog-avrea-disk]
     paths:
-      - .github/workflows/posthog-avrea.yml
+      - .github/workflows/posthog-avrea-disk.yml
       - .github/workflows/project.yml
 
 permissions:
