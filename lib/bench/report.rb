@@ -1,7 +1,7 @@
 module Bench
   class Report
-    KEY = %w[adapter_command case lane level runner phase step sha boringcache attempt cache_seeded cache_save_timing machine cpu cores].freeze
-    COLUMNS = %w[Tool Case Lane Level Runner Phase Step Commit CLI Attempt From\ fresh\ run Save Machine CPU Cores Samples Failed Seed\ failed Timed\ median\ s Timed\ min\ s Timed\ max\ s Cache\ API\ errors].freeze
+    KEY = %w[adapter_command case lane level runner phase step sha boringcache attempt cache_seeded cache_save_timing machine cpu cores memory_mb disk_gb].freeze
+    COLUMNS = %w[Tool Case Lane Level Runner Phase Step Commit CLI Attempt From\ fresh\ run Save Machine CPU Cores Memory\ MiB Disk\ GiB Samples Failed Outcomes Seed\ failed Timed\ median\ s Timed\ min\ s Timed\ max\ s Cache\ API\ errors].freeze
     MATCHED = %w[adapter_command case runner series boringcache steps first_step last_step lane level machine median_seconds min_seconds max_seconds cache_api_error_steps].freeze
     MATCHED_COLUMNS = %w[Tool Case Runner Series CLI Steps First\ step Last\ step Lane Level Machine Timed\ median\ s Timed\ min\ s Timed\ max\ s Steps\ with\ cache\ API\ errors].freeze
     READ_ONLY = %w[adapter_command case lane level machine reads boringcache steps first_step last_step median_seconds source_median_seconds cache_api_error_steps].freeze
@@ -57,17 +57,18 @@ module Bench
     def markdown
       table = rows.map do |row|
         row.merge("sha" => row["sha"]&.slice(0, 12)).values_at(*KEY).map { it.nil? ? "-" : it } +
-          row.values_at("samples", "failed", "seed_failed", "median_seconds", "min_seconds", "max_seconds").map { it.nil? ? "unmeasured" : it } +
+          row.values_at("samples", "failed") + [row["outcomes"].empty? ? "-" : row["outcomes"].map { |status, count| "#{status} (#{count})" }.join(", ")] +
+          row.values_at("seed_failed", "median_seconds", "min_seconds", "max_seconds").map { it.nil? ? "unmeasured" : it } +
           [row["cache_api_errors"] || "-"]
       end
       matched_table = matched.map { |row| row.values_at(*MATCHED).map { it.nil? ? "-" : it } }
       read_only_table = read_only.map { |row| row.values_at(*READ_ONLY).map { it.nil? ? "-" : it } }
-      latest_columns = %w[Tool Case Lane Runner Step Commit CLI Started Attempt Status Seconds Run]
-      latest_rows = latest.map { it.values_at("adapter_command", "case", "lane", "runner", "step", "sha", "boringcache", "started_at", "attempt", "status", "seconds", "run_url").map { |value| value.nil? ? "unmeasured" : value } }
+      latest_columns = %w[Tool Case Lane Runner Step Commit CLI Started Attempt Status Seconds Queue\ s Job\ s Run]
+      latest_rows = latest.map { it.values_at("adapter_command", "case", "lane", "runner", "step", "sha", "boringcache", "started_at", "attempt", "status", "seconds", "queue_seconds", "job_seconds", "run_url").map { |value| value.nil? ? "unmeasured" : value } }
       ["# Benchmark results", "", "## Latest recorded rolling attempts", "", line(latest_columns), line(latest_columns.map { "---" }), *latest_rows.map { line(it) }, "",
        "## Measurements", "", line(COLUMNS), line(COLUMNS.map { "---" }), *table.map { line(it) }, "",
        "## Matched rolling steps", "",
-       "Rolling steps at which every lane on the runner passed, each on its own rolling cache after that cache's first step. Steps continued from a fresh run's cache and Actions cache steps that restored nothing are left out. Times include post-job saves.", "",
+       "Rolling steps at which every lane on the runner passed, each on its own rolling cache after that cache's first step. Steps continued from a fresh run's cache and Actions cache steps that restored nothing are left out. Steps with different recorded image registries are left out. Times include post-job saves.", "",
        line(MATCHED_COLUMNS), line(MATCHED_COLUMNS.map { "---" }), *matched_table.map { line(it) }, "",
        "## Historical shared-cache builds", "",
        "Historical builds using another runner's cache, paired with that runner's passing build at the same commit. These timings exclude cache saves.", "",
@@ -81,6 +82,8 @@ module Bench
           record = group.max_by { [it["started_at"].to_s, it["step"].to_i, it["attempt"].to_i] }
           status = if record["excluded"]
             "excluded"
+          elsif record["outcome"]
+            record["outcome"]
           elsif !passed?(record)
             "failed"
           elsif save_timing(record) == "post-job" || !timed_seconds(record)
@@ -90,14 +93,14 @@ module Bench
           else
             "passed"
           end
-          record.slice("adapter_command", "case", "lane", "runner", "step", "sha", "started_at", "attempt", "run_url", "excluded").merge(
+          record.slice("adapter_command", "case", "lane", "runner", "step", "sha", "started_at", "attempt", "run_url", "excluded", "job_url", "job_conclusion", "queue_seconds", "job_seconds").merge(
             "boringcache" => cli(record), "status" => status, "seconds" => (timed_seconds(record) if status == "passed"))
         end.sort_by { it.values_at("adapter_command", "case", "lane", "runner") }
     end
 
     def samples
       records.select { it["phase"] == "sample" }.map do |record|
-        record.slice("adapter_command", "case", "lane", "level", "runner", "machine", "sha", "step", "run_url", "started_at", "cache_source", "exit_status", "output_ok", "job_conclusion").merge(
+        record.slice("adapter_command", "case", "lane", "level", "runner", "machine", "sha", "step", "run_url", "started_at", "cache_source", "exit_status", "output_ok", "job_conclusion", "outcome", "job_url", "queue_seconds", "job_seconds").merge(
           "boringcache" => cli(record), "cpu" => record.dig("observed", "machine", "cpu"), "cores" => record.dig("observed", "machine", "cores"),
           "cache" => record["read_only"] ? "GitHub build" : record["provider"], "operations" => record["read_only"] ? "restore, build" : "restore, build, save",
           "seconds" => (timed_seconds(record) if passed?(record) && save_timing(record) != "post-job"))
@@ -123,7 +126,7 @@ module Bench
       def key(record)
         [*record.values_at(*%w[adapter_command case lane level runner phase step sha]), cli(record),
          [record["attempt"].to_i, 1].max, record["cache_seeded"], save_timing(record), record["machine"],
-         record.dig("observed", "machine", "cpu"), record.dig("observed", "machine", "cores")]
+         *record.fetch("observed", {}).fetch("machine", {}).values_at("cpu", "cores", "memory_mb", "disk_gb")]
       end
 
       def cli(record)
@@ -145,6 +148,7 @@ module Bench
         KEY.zip(key).to_h.merge(
           "samples" => group.size,
           "failed" => group.count { !passed?(it) },
+          "outcomes" => group.filter_map { it["outcome"] }.tally,
           "seed_failed" => group.count { passed?(it) && !seeded?(it) },
           "median_seconds" => median(seconds),
           "min_seconds" => seconds.first,
@@ -168,6 +172,8 @@ module Bench
             by_lane = at_step.select { matchable?(it) }.group_by { it["lane"] }.transform_values { |tries| tries.min_by { it["attempt"].to_i } }.slice(*lanes)
             next unless lanes.size >= 2 && lanes.all? { by_lane.key?(it) }
             next unless by_lane.values.map { it["sha"] }.uniq.size == 1
+            registries = by_lane.values.filter_map { it.dig("observed", "image_publication", "tag")&.split("/", 2)&.first }
+            next if registries.uniq.size > 1
 
             cli = by_lane.values.filter_map { cli(it) }.uniq.sort.join(", ")
             [[tool, kase, runner, series, (cli unless cli.empty?), lanes], step, by_lane]
@@ -190,7 +196,7 @@ module Bench
       end
 
       def first_steps
-        @first_steps ||= records.select { it["phase"] == ROLLING && it["step"] }.group_by { it.values_at("adapter_command", "case", "cache_scope") }
+        @first_steps ||= rolling_measurements.group_by { it.values_at("adapter_command", "case", "cache_scope") }
           .transform_values { |group| group.map { it["step"] }.min }
       end
 
@@ -216,8 +222,12 @@ module Bench
       end
 
       def restoring_scopes
-        @restoring_scopes ||= records.select { it["phase"] == ROLLING }.group_by { it.values_at("adapter_command", "case", "cache_scope") }
+        @restoring_scopes ||= rolling_measurements.group_by { it.values_at("adapter_command", "case", "cache_scope") }
           .select { |_, group| group.any? { it["cache_restored_key"] } }.transform_values { |group| group.filter_map { it["step"] }.min }
+      end
+
+      def rolling_measurements
+        @rolling_measurements ||= records.select { it["phase"] == ROLLING && it["step"] && !it["outcome"] }
       end
 
       def median(values)

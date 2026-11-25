@@ -84,6 +84,23 @@ class WorkflowTest < Minitest::Test
     assert_equal "OIDC build\n", output
   end
 
+  def test_failed_build_records_its_exit_status_without_publishing_an_archive
+    steps = YAML.load_file(File.expand_path("../../.github/actions/phase/action.yml", __dir__)).dig("runs", "steps")
+    build = steps.find { it["id"] == "build" }
+    save = steps.find { it["id"] == "actions-cache-save" }
+    record = steps.find { it["run"]&.include?("bin/bench record") }
+    assert_includes save.fetch("if"), "steps.build.outcome == 'success'"
+    assert_includes record.fetch("if"), "!cancelled()"
+
+    Dir.mktmpdir do |dir|
+      output = File.join(dir, "output")
+      env = { "BENCH_CASE" => "cargo/codex", "BENCH_CARGO_DEADLINE" => (Time.now.to_i - 1).to_s, "GITHUB_OUTPUT" => output }
+      _, status = Open3.capture2e(env, "bash", "-e", "-o", "pipefail", "-c", build.fetch("run"))
+      assert_equal 124, status.exitstatus
+      assert_equal "exit-status=124\n", File.read(output)
+    end
+  end
+
   def test_branch_runs_collect_post_job_timings_without_publishing_to_main
     workflow = YAML.load_file(File.expand_path("../../.github/workflows/project.yml", __dir__), aliases: true)
     collect = workflow.fetch("jobs").fetch("collect")
@@ -93,6 +110,7 @@ class WorkflowTest < Minitest::Test
     refute_includes collect.fetch("if"), "refs/heads/main"
     assert_equal "read", collect.dig("permissions", "contents")
     assert_equal "read", collect.dig("permissions", "actions")
+    assert collect.fetch("steps").any? { it["run"]&.include?("bin/bench collect-jobs") }
     assert collect.fetch("steps").any? { it["run"]&.include?("bin/bench post-job-saves") }
     artifact = collect.fetch("steps").find { it["uses"]&.start_with?("actions/upload-artifact@") }
     assert_equal "recorded-results-${{ github.run_attempt }}", artifact.dig("with", "name")

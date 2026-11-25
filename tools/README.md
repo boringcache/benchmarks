@@ -100,7 +100,7 @@ TURBO_CACHE = "local:rw,remote:r"
 | `reads` | BoringCache lanes only: `{ lane = "<lane>", runner = "<runner key>" }`, a source with the same level, plan, env and `cli_args`. Sample builds use its completed rolling cache with `--read-only`; records include the selected source run and commit. Legacy rolling builds using this setting retain their original previous-step behavior. |
 | `cache_keys` | GitHub Actions cache key prefixes the lane's own action saves under, naming `${BENCH_SCOPE}`, such as `kache-${BENCH_SCOPE}-v`; after a rolling step the publish job keeps only the newest entry under each |
 | `post_job_save` | actions (`owner/repo`) or step ids that save the lane cache only after the job, such as `reproducible-containers/buildkit-cache-dance`; the collect job records their logged durations as `post_job_save_seconds` and the final `job_conclusion`. Reports include these durations and exclude failed jobs from timings and matched steps. |
-| `probe` | credential and connection checks for a preflight run; they run in the run directory without a checkout |
+| `probe` | lane credential and connection checks for a preflight run; they run in the run directory without an upstream checkout |
 | `prepare`, `cold.prepare` | untimed commands the lane runs after the case `prepare`, for every phase or one phase |
 
 ## case.toml
@@ -136,7 +136,7 @@ gha = ["github"]
 | `shared` | paths every lane caches (dependencies), relative to the run directory |
 | `exclude` | paths under a cached path that Actions cache lanes leave out, relative to the run directory, matching the `exclude` of the BoringCache plan entry |
 | `env` | environment for every lane; `${BENCH_DIR}` is the run directory; `${BENCH_SCOPE}` is the run-scoped cache identity (tool, case, lane, runner, run) |
-| `runs` | lane name to the runner keys it runs on |
+| `runs` | lane name to the runner keys it runs on; keys marked `qualification = true` require a single explicit runner in fresh or preflight mode |
 | `script` | optional command every lane runs instead of the plan command, for a build of several tool commands, such as `["bash", "../overlay/fuzz-smoke.sh"]`; BoringCache lanes get `BENCH_BORINGCACHE`, the `boringcache <tool>` prefix with the lane's `cli_args` and `--read-only` on warm, and the script runs each tool command through it with `--skip-restore` and `--skip-save` so only the first restores and the last saves; other lanes run the tool directly |
 | `samples` | lane name to runner keys from `runs` reserved for `mode=sample`; excluded from fresh and rolling matrices. Weekly samples select the latest completed GitHub source commit, including when upstream has no newer commit. |
 | `nightly` | lane name to runner keys from `runs` that roll only at the first rolling step of each UTC day, on their usual fixed scope; their records carry `"cadence": "nightly"` and the report matches them with each other under the runner `nightly`, without holding back the lanes that run every step |
@@ -247,36 +247,72 @@ gh workflow run project.yml -f tool=Docker -f project=Hugo
 gh workflow run project.yml -f tool=Nix -f project=Zed -f mode=preflight
 ```
 
-A preflight run (`<tool> - <project> (preflight)`) runs every lane's setup and `probe` with the lane's secrets and no checkout or build, so missing keys and auth problems show up in minutes. A cold phase refuses to run on a rerun attempt, because the run's cache scope may already hold data; dispatch a fresh run instead.
+A preflight run (`<tool> - <project> (preflight)`) runs lane setup, credential checks and workload capability probes without checking out or building the upstream project. A cold phase refuses to run on a rerun attempt, because the run's cache scope may already hold data; dispatch a fresh run instead.
 
-The collect job runs on main and branches, adds post-job save durations, and uploads `recorded-results-<attempt>`. The publish job downloads that artifact and writes records only on main. Branch results require review before they are added to the repository.
+The collect job runs on main and branches. It keeps measured phase times and
+adds job status, job URLs, queue and assigned-job times where available, and
+logged post-job save durations. When a terminal job supplies no measurement,
+the collector records its outcome as `timeout`, `cancelled`, `setup_failure`,
+or `no_result`. These entries omit phase time and cannot seed a benchmark
+comparison. Measurement rows group by the recorded RAM and total disk
+capacity. The publish job writes `recorded-results-<attempt>` to the
+repository on main. Branch results require review before they are added.
 
 Linux resource samples for Codex, Ferrum fuzzing, and osquery are in
 the job's `diagnostics-*` artifact. Build output appears in the job log.
 
-## Incredibuild runners
+## Incredibuild qualification
 
-`bazel/codex-incredibuild` runs the Codex workspace test command on the
-Incredibuild Ubuntu 24.04 runner with BoringCache Bazel and GitHub Actions
-Cache. Its cold baseline is `5716c2e22898b263d638099995b18f7902bdb671`, 30
-first-parent commits before `e351ffa4b625325575e2a49e8b554e45c1c73b88`. Later
-steps build one first-parent commit at a time. The GitHub-hosted Bazel case
-keeps its own definition and records.
+Incredibuild runners require one explicit runner key per project dispatch.
+They remain in the report and are excluded from scheduled rolling and sample
+runs. Run `incredibuild-availability.yml` for one of `linux`, `windows`, or
+`macos`. A GitHub-hosted job records the assignment result and cancels the
+availability run if the runner is still unassigned after 15 minutes.
 
-Automatic rolling is paused until an Incredibuild runner can create
-unprivileged user namespaces and has enough disk for the full test suite.
-The GitHub Actions Cache seed failed on both requirements.
-[Seed job](https://github.com/boringcache/benchmarks/actions/runs/45408428372/job/138495808413).
+```sh
+gh workflow run incredibuild-availability.yml -f runner=linux
+gh workflow run project.yml -f tool=Rust/Cargo -f project=codex -f mode=preflight -f lane=gha -f runner=incredibuild
+gh workflow run project.yml -f tool=Rust/Cargo -f project=codex -f mode=preflight -f lane=gha -f runner=github-26
+gh workflow run project.yml -f tool=Bazel -f project=codex-incredibuild -f mode=preflight -f runner=incredibuild
+gh workflow run project.yml -f tool=Docker -f project=posthog-runners -f mode=preflight -f runner=incredibuild
+```
 
-`cargo/codex` adds BoringCache and GitHub Actions Cache on Incredibuild Ubuntu
-24.04 to its current series. `cargo/nushell` adds BoringCache Plus on
-Incredibuild Ubuntu 24.04, macOS and Windows 2022. Each new runner has a separate
-cache scope. Its first build seeds that scope at the scheduled source commit.
+The Codex Cargo probe builds a dependency-free crate with and without local
+sccache at the inherited file-descriptor limit and at 10,000. Each build has
+60 seconds before termination and its own target directory, socket, and cache.
+The probe uses the runner's existing interception settings. Its artifact
+contains executable resolution, sccache debug logs, process samples and exit
+statuses. In the earlier probe, the Incredibuild sccache build stalled at both
+limits. The no-sccache trial at 10,000 compiled in 2.11 seconds. The
+GitHub-hosted sccache builds passed at both limits.
+[Earlier Cargo probe](https://github.com/boringcache/benchmarks/actions/runs/45427772712).
+Full Incredibuild Cargo phases require the inherited-limit sccache smoke and
+start their timed build with the remaining portion of a 90-minute job budget.
 
-Sources: [Incredibuild CI runners](https://www.incredibuild.com/ci-runners),
-[Nushell runner labels](https://github.com/nushell/nushell/blob/1a76df915653a5e2dad31bb24c7faca4b51b6aa3/.github/workflows/ci.yml),
-[GitHub Actions Cache](https://github.com/actions/cache/tree/55cc8345863c7cc4c66a329aec7e433d2d1c52a9),
-[sccache GitHub cache](https://github.com/mozilla/sccache/blob/v0.17.0/docs/GHA.md).
+The Codex Bazel preflight tests unprivileged user, mount and PID namespaces
+and requires 128 GiB free in the trial workspace. The BoringCache lane caps its
+local blob read cache at 8 GiB and reduces the cap to keep 120 GiB available
+when the build starts. This is an initial trial budget. Both providers use the
+same Bazel directory layout. GitHub-hosted Codex Bazel uses loop-mounted
+compressed Btrfs. Incredibuild Codex Bazel uses its native workspace
+filesystem. Disk capacity and I/O timings apply to the recorded storage setup.
+[Codex Bazel seed](https://github.com/boringcache/benchmarks/actions/runs/45408428372).
+
+PostHog Docker trial phases require eight effective x86-64 CPUs, at least
+30 GiB of effective memory, and 120 GiB free on the Docker data filesystem.
+Fresh qualification uses GHCR for both image outputs. The GitHub-hosted
+PostHog preflight checks swap activation on a file in the runner temp
+directory. The retained series 4 replay used BoringCache Registry in the
+BoringCache lane and GHCR in the GitHub Actions Cache lane. The report retains
+each measurement and omits rolling steps with different recorded registries
+from the matched table. The replay's four paired
+phases and two additional BoringCache rolling phases passed publication checks
+on the 32-GB runner, with zero swap.
+[Replay plan](https://github.com/boringcache/benchmarks/blob/16449fec3fdc1bf479ab6ad3104580f55e08b992/tools/docker/posthog-runners/case.toml).
+
+Linux trial artifacts record the reported image version where available, cgroup
+v2 limits and pressure, and backing mounts for the workspace and temporary
+storage. The Docker sampler includes local BuildKit processes where visible.
 
 ## Nushell Cargo history
 

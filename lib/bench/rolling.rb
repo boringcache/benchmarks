@@ -64,7 +64,7 @@ module Bench
     end
 
     def continues?(lane, runner)
-      records(File.join(cache_scope(lane, runner), "*.json")).any? { it["cache_scope"] == cache_scope(lane, runner) }
+      records(File.join(cache_scope(lane, runner), "*.json")).any? { it["cache_scope"] == cache_scope(lane, runner) && !it["outcome"] }
     end
 
     private

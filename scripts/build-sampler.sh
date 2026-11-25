@@ -3,11 +3,20 @@ set -u
 
 out=$1
 interval=${2:-5}
+resources="$(dirname "$0")/linux-resources.sh"
 
 while :; do
   {
     echo "=== $(date -u +%FT%T.%3NZ)"
     head -1 /proc/stat
+    if [[ ${BENCH_RUNNER:-} == incredibuild ]]; then
+      bash "$resources" cgroup "$$"
+      if [[ ${BENCH_CASE:-} == docker/* ]]; then
+        while read -r pid; do
+          bash "$resources" cgroup "$pid"
+        done < <(ps -C buildkitd -o pid=)
+      fi
+    fi
     for kind in cpu memory io; do
       if [ -r "/proc/pressure/$kind" ]; then sed "s/^/psi.$kind /" "/proc/pressure/$kind"; fi
     done
@@ -15,11 +24,14 @@ while :; do
     echo
     awk '$1 == "oom_kill" { print $1, $2 }' /proc/vmstat
     df -Pk "${BENCH_WORK:-.}" | awk 'NR == 2 { print "disk_available_kib", $4 }'
+    for path in "${CARGO_TARGET_DIR:-}" "${RUNNER_TEMP:-}" "${TMPDIR:-/tmp}"; do
+      if [[ -d "$path" ]]; then df -Pk "$path" | awk -v path="$path" 'NR == 2 { print "storage_available_kib", $4, path }'; fi
+    done
     if [[ ${BENCH_CASE:-} == bazel/codex* && -d "$BENCH_WORK/$BENCH_CASE/.bazel" ]]; then
       df -Pk "$BENCH_WORK/$BENCH_CASE/.bazel" | awk 'NR == 2 { print "bazel_disk_available_kib", $4 }'
       if [[ -f ${BENCH_BAZEL_IMAGE:-} ]]; then du -k "$BENCH_BAZEL_IMAGE" | awk '{ print "bazel_image_allocated_kib", $1 }'; fi
     fi
-    ps -eo pid=,ppid=,etimes=,times=,rss=,stat=,comm=,wchan= | awk '$7 ~ /^(boringcache|sccache|cargo|rustc|clang|cc|c\+\+|cmake|make|ninja|git|ld|ld\.lld|lld|mold|build-script-)/'
+    ps -eo pid=,ppid=,etimes=,times=,rss=,stat=,comm=,wchan= | awk '$7 ~ /^(boringcache|sccache|cargo|rustc|clang|cc|c\+\+|cmake|make|ninja|git|ib_console|buildkitd|ld|ld\.lld|lld|mold|build-script-)/'
   } >> "$out"
   sleep "$interval" >/dev/null 2>&1
 done

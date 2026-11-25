@@ -137,7 +137,8 @@ jobs:
           sparse-checkout: |
             /*
             !/results/
-      - uses: ./.github/actions/phase
+      - name: Build benchmark phase
+        uses: ./.github/actions/phase
         with:
           case: ${{ matrix.case }}
           lane: ${{ matrix.lane }}
@@ -180,8 +181,10 @@ jobs:
 
   collect:
     needs: [plan, cold, warm, rolling]
-    if: ${{ !cancelled() && needs.plan.result == 'success' && inputs.mode != 'preflight' && needs.plan.outputs.matrix != '[]' }}
+    if: ${{ always() && needs.plan.result == 'success' && inputs.mode != 'preflight' && needs.plan.outputs.matrix != '[]' }}
     runs-on: ubuntu-24.04
+    outputs:
+      has-results: ${{ steps.files.outputs.present }}
     permissions:
       contents: read
       actions: read
@@ -201,12 +204,26 @@ jobs:
       - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1.327.0
         with:
           bundler-cache: true
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.run_id }}
+          MODE: ${{ inputs.mode }}
+          MATRIX: ${{ needs.plan.outputs.matrix }}
+        run: |
+          printf '%s\n' "$MATRIX" > "$RUNNER_TEMP/bench-matrix.json"
+          bundle exec bin/bench collect-jobs --run-id "$RUN_ID" --mode "$MODE" --matrix "$RUNNER_TEMP/bench-matrix.json" --results results
       - continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
           RUN_ID: ${{ github.run_id }}
         run: bundle exec bin/bench post-job-saves --run-id "$RUN_ID" --results results
-      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+      - id: files
+        run: |
+          if [[ -n "$(find results -type f -print -quit 2>/dev/null)" ]]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.files.outputs.present == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: recorded-results-${{ github.run_attempt }}
           path: results
@@ -214,7 +231,7 @@ jobs:
 
   publish:
     needs: [plan, collect]
-    if: ${{ !cancelled() && needs.collect.result == 'success' && github.ref == 'refs/heads/main' }}
+    if: ${{ !cancelled() && needs.collect.result == 'success' && needs.collect.outputs.has-results == 'true' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-24.04
     permissions:
       contents: write
