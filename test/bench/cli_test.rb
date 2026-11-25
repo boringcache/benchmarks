@@ -22,6 +22,83 @@ class CLITest < Minitest::Test
     ], matrix("app")
   end
 
+  def test_qualification_runners_require_an_explicit_single_runner
+    path = "runners.toml"
+    write path, File.read(File.join(@root, path)) + %([trial]\nlabel = "trial-linux"\nmachine = "trial"\nqualification = true\n)
+    path = "tools/demo/app/case.toml"
+    write path, File.read(File.join(@root, path)).sub('remote = ["local", "github"]', 'remote = ["local", "github", "trial"]')
+
+    assert_equal ["github"], matrix("app").map { it["runner"] }.uniq
+    assert_equal ["github"], matrix("app", "--rolling").map { it["runner"] }.uniq
+    assert_equal [["remote", "trial"]], matrix("app", "--runner", "trial").map { it.values_at("lane", "runner") }
+    _, error = capture_io do
+      assert_equal 1, Bench::CLI.new(%w[matrix app --runner github,trial], catalog:, out: StringIO.new).call
+    end
+    assert_includes error, "select one qualification runner"
+  end
+
+  def test_collect_jobs_preserves_measurements_and_records_missing_jobs_only_for_the_selected_attempt
+    entries = matrix("app", "--rolling")
+    gha = entries.find { it["lane"] == "gha" }
+    demo = entries.find { it["lane"] == "boringcache-demo" }
+    remote = entries.find { it["lane"] == "remote" }
+    write "matrix.json", JSON.generate(entries)
+    measured = "tmp/results/demo/app/#{demo["cache_scope"]}/boringcache-demo-github-rolling-0-42-attempt-2.json"
+    write measured, JSON.generate("seconds" => 12, "exit_status" => 0, "output_ok" => true)
+    marker = "tmp/results/demo/app/remote-github-rolling-2.phase-state"
+    write marker, "setup_failure\n"
+    base = { "run_attempt" => 2, "created_at" => "2026-11-25T09:00:00Z", "started_at" => "2026-11-25T09:02:00Z",
+             "completed_at" => "2026-11-25T09:05:00Z", "runner_id" => 12, "html_url" => "https://example.test/jobs/123" }
+    jobs = [[gha, "timed_out", 2], [gha, "success", 1], [demo, "failure", 2], [remote, "failure", 2]].map do |entry, conclusion, attempt|
+      base.merge("name" => "rolling: #{entry.fetch("label")}", "conclusion" => conclusion, "run_attempt" => attempt)
+    end
+    results = File.join(@root, "tmp/results")
+    with_fixture_env do
+      ENV.update("GITHUB_REPOSITORY" => "boringcache/benchmarks", "GITHUB_RUN_ATTEMPT" => "2")
+      gh = ->(*args) { assert_includes args.join(" "), "runs/42/jobs?filter=all"; jobs.map(&:to_json).join("\n") }
+      Bench.stub(:gh, gh) do
+        assert_equal 0, Bench::CLI.new(%W[collect-jobs --run-id 42 --mode rolling --matrix #{@root}/matrix.json --results #{results}], catalog:).call
+      end
+    ensure
+      ENV.delete("GITHUB_REPOSITORY")
+    end
+
+    report = Bench::Report.new(results)
+    records = report.records.to_h { [it["lane"], it] }
+    assert_equal [12, 0, true, "failure", 120, 180], JSON.parse(File.read(File.join(@root, measured))).values_at(
+      "seconds", "exit_status", "output_ok", "job_conclusion", "queue_seconds", "job_seconds"
+    )
+    assert_equal ["timeout", nil, nil, @upstream_sha, 2], records.fetch("gha").values_at("outcome", "seconds", "exit_status", "sha", "attempt")
+    assert_equal "setup_failure", records.fetch("remote").fetch("outcome")
+    assert_equal ["setup_failure", "timeout"], report.latest.map { it["status"] }.sort
+    assert_empty report.matched
+    refute File.exist?(File.join(@root, marker))
+    refute Bench::Rolling.new(catalog.find_case("demo/app"), results_dir: results, work_root: @root).continues?(catalog.tool("demo").lane("gha"), "github")
+  end
+
+  def test_collect_jobs_keeps_the_selected_source_when_a_sample_has_no_measurement
+    write "tools/demo/lanes/boringcache-reader.toml", %(provider = "boringcache"\nlevel = "base"\nreads = { lane = "boringcache-demo", runner = "github" }\n)
+    source = { "sha" => @upstream_sha, "run_url" => "https://example.test/runs/41" }
+    label = "github 4c · boringcache"
+    write "matrix.json", JSON.generate([
+      { "case" => "demo/app", "lane" => "boringcache-reader", "runner" => "github", "label" => label, "sha" => @upstream_sha, "step" => "1",
+        "cache_scope" => "boringcache-demo-github-rolling", "source" => JSON.generate(source) }
+    ])
+    results = File.join(@root, "tmp/results")
+    with_fixture_env do
+      ENV["GITHUB_REPOSITORY"] = "boringcache/benchmarks"
+      job = { "name" => "sample: #{label}", "run_attempt" => 1, "conclusion" => "success" }.to_json
+      Bench.stub(:gh, job) do
+        assert_equal 0, Bench::CLI.new(%W[collect-jobs --run-id 42 --mode sample --matrix #{@root}/matrix.json --results #{results}], catalog:).call
+      end
+    ensure
+      ENV.delete("GITHUB_REPOSITORY")
+    end
+
+    sample, = Bench::Report.new(results).samples
+    assert_equal ["no_result", source, nil], sample.values_at("outcome", "cache_source", "seconds")
+  end
+
   def test_report_excludes_experimental_lanes_even_before_the_record_flag_was_added
     path = "tools/demo/lanes/boringcache-demo.toml"
     write path, File.read(File.join(@root, path)) + "experimental = true\n"

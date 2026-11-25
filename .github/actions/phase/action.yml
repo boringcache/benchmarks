@@ -49,6 +49,10 @@ inputs:
 runs:
   using: composite
   steps:
+    - if: inputs.case == 'cargo/codex' && inputs.runner == 'incredibuild' && inputs.phase != 'preflight'
+      shell: bash
+      run: echo "BENCH_CARGO_DEADLINE=$(( $(date +%s) + 90 * 60 ))" >> "$GITHUB_ENV"
+
     - if: startsWith(inputs.case, 'bazel/codex') && inputs.phase != 'preflight'
       shell: bash
       run: echo "BENCH_BAZEL_DEADLINE=$(( $(date +%s) + 120 * 60 ))" >> "$GITHUB_ENV"
@@ -99,6 +103,42 @@ runs:
     - if: runner.os == 'Linux'
       shell: bash
       run: printf 'Acquire::Retries "5";\nAcquire::http::Timeout "60";\nAcquire::https::Timeout "60";\n' | sudo tee /etc/apt/apt.conf.d/80-bench-timeouts > /dev/null
+
+    - if: runner.os == 'Linux' && inputs.runner == 'incredibuild'
+      shell: bash
+      run: |
+        mkdir -p "$RUNNER_TEMP/diagnostics"
+        {
+          printf 'image_os=%s image_version=%s\n' "${ImageOS:-unknown}" "${ImageVersion:-unknown}"
+          cat /etc/os-release
+          lscpu
+          free -m
+          type -a ib_console cargo docker || true
+          bash scripts/linux-resources.sh cgroup "$$"
+          bash scripts/linux-resources.sh mounts "$GITHUB_WORKSPACE" "$BENCH_WORK" "$RUNNER_TEMP" "${TMPDIR:-/tmp}"
+        } > "$RUNNER_TEMP/diagnostics/runner.txt"
+
+    - if: inputs.case == 'bazel/codex-incredibuild'
+      shell: bash
+      run: bash tools/bazel/codex/probe-runner.sh "$BENCH_WORK"
+      env:
+        BENCH_ROOT: ${{ github.workspace }}
+
+    - if: inputs.case == 'docker/posthog' && inputs.phase == 'preflight' && (inputs.runner == 'github' || inputs.runner == 'github-arm')
+      shell: bash
+      run: bash tools/docker/posthog/overlay/swap.sh preflight
+
+    - if: inputs.case == 'docker/posthog-runners' && inputs.runner == 'incredibuild'
+      shell: bash
+      run: bash tools/docker/shared/posthog/probe-runner.sh
+      env:
+        BENCH_ROOT: ${{ github.workspace }}
+
+    - if: inputs.case == 'cargo/codex' && inputs.phase == 'preflight' && (inputs.runner == 'incredibuild' || inputs.runner == 'github-26')
+      shell: bash
+      run: bash tools/cargo/codex/probe-runner.sh preflight
+      env:
+        BENCH_ROOT: ${{ github.workspace }}
 
     - if: contains(inputs.setup, 'buildx')
       uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
@@ -208,7 +248,7 @@ runs:
         echo "$dir" >> "$GITHUB_PATH"
 
     - id: sampler
-      if: steps.prepare.outputs.ready == 'true' && runner.os == 'Linux' && (startsWith(inputs.case, 'bazel/codex') || inputs.case == 'cargo/codex' || inputs.case == 'cargo/ferrum-fuzz' || inputs.case == 'ccache/osquery')
+      if: steps.prepare.outputs.ready == 'true' && runner.os == 'Linux' && (startsWith(inputs.case, 'bazel/codex') || inputs.case == 'cargo/codex' || inputs.case == 'cargo/ferrum-fuzz' || inputs.case == 'ccache/osquery' || (inputs.case == 'docker/posthog-runners' && inputs.runner == 'incredibuild'))
       shell: bash
       run: |
         interval=5
@@ -218,8 +258,17 @@ runs:
         dir="$RUNNER_TEMP/diagnostics"
         mkdir -p "$dir"
         { lscpu; awk -F: '/^(vendor_id|cpu family|model|model name|stepping|microcode)[[:space:]]*:/ && !seen[$1]++' /proc/cpuinfo; free -m; } > "$dir/machine.txt"
+        {
+          bash scripts/linux-resources.sh mounts "$BENCH_DIR" "$RUNNER_TEMP" "${TMPDIR:-/tmp}" "${CARGO_TARGET_DIR:-}" "$BENCH_DIR/.bazel"
+          if [[ "$BENCH_CASE" == docker/* ]]; then bash scripts/linux-resources.sh docker; fi
+        } >> "$dir/machine.txt"
         nohup bash scripts/build-sampler.sh "$dir/samples.log" "$interval" > /dev/null 2>&1 &
         echo "pid=$!" >> "$GITHUB_OUTPUT"
+
+    - if: steps.prepare.outputs.ready == 'true' && inputs.case == 'cargo/codex' && inputs.runner == 'incredibuild'
+      shell: bash
+      working-directory: ${{ steps.prepare.outputs.build_dir }}
+      run: bash "$BENCH_ROOT/tools/cargo/codex/probe-runner.sh" smoke
 
     - id: dance-cache
       if: steps.prepare.outputs.ready == 'true' && contains(inputs.setup, 'cache-dance') && inputs.phase != 'warm'
@@ -237,6 +286,10 @@ runs:
     - if: steps.prepare.outputs.ready == 'true' && contains(format(' {0} ', inputs.setup), ' scaleway ')
       shell: bash
       run: bash scripts/ssh-build-worker.sh connect scaleway
+
+    - if: steps.prepare.outputs.ready == 'true' && inputs.case == 'bazel/codex-incredibuild' && steps.prepare.outputs.provider == 'boringcache'
+      shell: bash
+      run: bash tools/bazel/codex/storage.sh read-cache
 
     - if: steps.prepare.outputs.ready == 'true'
       shell: bash
@@ -319,38 +372,46 @@ runs:
         BORINGCACHE_RESTORE_TOKEN: ${{ steps.prepare.outputs.boringcache_version == '1.48.2' && inputs.cache-restore-token || '' }}
         BORINGCACHE_SAVE_TOKEN: ${{ steps.prepare.outputs.boringcache_version == '1.48.2' && inputs.cache-save-token || '' }}
       run: |
-        limit=()
-        if [[ "$BENCH_CASE" == bazel/codex* ]]; then
-          remaining=$((BENCH_BAZEL_DEADLINE - $(date +%s)))
-          (( remaining > 0 )) || exit 124
-          limit=(timeout --signal=INT --kill-after=30s "${remaining}s")
-        fi
-        if [ "$STATIC_CACHE_AUTH" = true ]; then
-          if [ -z "$BORINGCACHE_RESTORE_TOKEN" ] || { [ "$BENCH_PHASE" != warm ] && [ -z "$BORINGCACHE_SAVE_TOKEN" ]; }; then
-            echo "::error::The PostHog remote lane is missing a required cache token."
-            exit 1
+        build() {
+          limit=()
+          deadline=${BENCH_BAZEL_DEADLINE:-${BENCH_CARGO_DEADLINE:-}}
+          if [[ -n "$deadline" ]]; then
+            remaining=$((deadline - $(date +%s)))
+            (( remaining > 0 )) || return 124
+            limit=(timeout --signal=INT --kill-after=30s "${remaining}s")
           fi
-          "${limit[@]}" bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
-        elif [ "$PROVIDER" = boringcache ]; then
-          "${limit[@]}" boringcache ci run --oidc-provider github-actions -- ruby -S bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
-        else
-          "${limit[@]}" bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
-        fi
+          if [ "$STATIC_CACHE_AUTH" = true ]; then
+            if [ -z "$BORINGCACHE_RESTORE_TOKEN" ] || { [ "$BENCH_PHASE" != warm ] && [ -z "$BORINGCACHE_SAVE_TOKEN" ]; }; then
+              echo "::error::The PostHog remote lane is missing a required cache token."
+              return 1
+            fi
+            "${limit[@]}" bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
+          elif [ "$PROVIDER" = boringcache ]; then
+            "${limit[@]}" boringcache ci run --oidc-provider github-actions -- ruby -S bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
+          else
+            "${limit[@]}" bundle exec ruby bin/bench build "$BENCH_CASE" --lane "$BENCH_LANE"
+          fi
+        }
+        status=0
+        build || status=$?
+        if [[ "$status" == 137 && -n "$deadline" ]] && (( $(date +%s) >= deadline )); then status=124; fi
+        if [[ -n "${GITHUB_OUTPUT:-}" ]]; then echo "exit-status=$status" >> "$GITHUB_OUTPUT"; fi
+        exit "$status"
 
     - id: actions-cache-save
-      if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != '' && !contains(inputs.setup, 'namespace-cache') && inputs.phase != 'warm'
+      if: steps.build.outcome == 'success' && steps.prepare.outputs.provider != 'boringcache' && steps.prepare.outputs.cache_paths != '' && !contains(inputs.setup, 'namespace-cache') && inputs.phase != 'warm'
       uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ steps.prepare.outputs.cache_paths }}
         key: ${{ steps.prepare.outputs.cache_key }}
 
-    - if: steps.prepare.outputs.ready == 'true'
+    - if: ${{ !cancelled() && steps.build.outputs.exit-status != '' }}
       shell: bash
       env:
-        BUILD_FAILED: ${{ steps.build.outcome == 'failure' }}
+        BUILD_STATUS: ${{ steps.build.outputs.exit-status }}
         BENCH_CACHE_RESTORE_TRACKED: ${{ steps.actions-cache-restore.outcome == 'success' || steps.dance-restore.outcome == 'success' }}
         BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
-      run: bundle exec ruby bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
+      run: bundle exec ruby bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$BUILD_STATUS"
 
     - if: always() && startsWith(inputs.case, 'bazel/codex') && steps.prepare.outputs.ready == 'true'
       continue-on-error: true
@@ -407,10 +468,10 @@ runs:
         if [ -f "$timings/cargo-timing.html" ]; then cp "$timings/cargo-timing.html" "$RUNNER_TEMP/diagnostics/"; fi
         rm -rf "$timings"
 
-    - if: always() && steps.sampler.outcome == 'success'
+    - if: always() && (steps.sampler.outcome == 'success' || (runner.os == 'Linux' && (inputs.runner == 'incredibuild' || (inputs.case == 'cargo/codex' && inputs.phase == 'preflight'))))
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
-        name: diagnostics-${{ steps.prepare.outputs.artifact_key }}-${{ inputs.phase }}-${{ github.run_attempt }}
+        name: diagnostics-${{ steps.prepare.outputs.artifact_key || format('{0}-{1}-{2}', inputs.lane, inputs.runner, strategy.job-index) }}-${{ inputs.phase }}-${{ github.run_attempt }}
         path: ${{ runner.temp }}/diagnostics
         retention-days: 14
         if-no-files-found: warn
@@ -437,9 +498,23 @@ runs:
         retention-days: 14
         if-no-files-found: error
 
-    - if: always() && steps.prepare.outputs.ready == 'true'
+    - id: phase-state
+      if: ${{ !cancelled() && steps.build.outcome == 'skipped' && inputs.phase != 'preflight' && (failure() || steps.prepare.outputs.ready == 'false') }}
+      shell: bash
+      env:
+        CASE: ${{ inputs.case }}
+        LANE: ${{ inputs.lane }}
+        RUNNER: ${{ inputs.runner }}
+        PHASE: ${{ inputs.phase }}
+        OUTCOME: ${{ steps.prepare.outputs.ready == 'false' && 'skipped' || 'setup_failure' }}
+      run: |
+        dir="$RUNNER_TEMP/results/$CASE"
+        mkdir -p "$dir"
+        printf '%s\n' "$OUTCOME" > "$dir/$LANE-$RUNNER-$PHASE-$GITHUB_RUN_ATTEMPT.phase-state"
+
+    - if: always() && (steps.prepare.outputs.ready == 'true' || steps.phase-state.outcome == 'success')
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
-        name: results-${{ steps.prepare.outputs.artifact_key }}-${{ inputs.phase }}-${{ github.run_attempt }}
+        name: results-${{ steps.prepare.outputs.artifact_key || format('{0}-{1}-{2}', inputs.lane, inputs.runner, strategy.job-index) }}-${{ inputs.phase }}-${{ github.run_attempt }}
         path: ${{ runner.temp }}/results
         if-no-files-found: warn

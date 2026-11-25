@@ -1,0 +1,82 @@
+name: Incredibuild runner availability
+
+on:
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: Incredibuild platform
+        type: choice
+        options: [linux, windows, macos]
+        required: true
+
+run-name: Incredibuild availability (${{ inputs.runner }})
+
+permissions: {}
+
+jobs:
+  assignment:
+    name: Runner assignment
+    runs-on: ${{ inputs.runner == 'linux' && 'incredibuild-ubuntu-2404' || inputs.runner == 'windows' && 'incredibuild-windows-2022' || 'incredibuild-macos-latest' }}
+    timeout-minutes: 2
+    steps:
+      - shell: bash
+        run: printf 'Assigned to %s %s\n' "$RUNNER_OS" "$RUNNER_ARCH"
+
+  deadline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      actions: write
+    steps:
+      - id: watch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PLATFORM: ${{ inputs.runner }}
+        run: |
+          endpoint="repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT/jobs"
+          deadline=$(($(date +%s) + 900))
+          while true; do
+            job=
+            if ! job=$(timeout --kill-after=2s 15s gh api "$endpoint" --jq '.jobs[] | select(.name == "Runner assignment") | {id, html_url, status, conclusion, runner_id, created_at, started_at}'); then
+              job=
+            fi
+            now=$(date +%s)
+            status=$(jq -r '.status // empty' <<< "$job")
+            if [[ -n "$status" ]]; then
+              created=$(date -d "$(jq -r '.created_at' <<< "$job")" +%s)
+              deadline=$((created + 900))
+            fi
+            outcome=
+            if [[ -n "$status" ]] && [[ $(jq -r '.runner_id // 0' <<< "$job") != 0 ]] && [[ "$status" == 'in_progress' || "$status" == 'completed' ]]; then
+              started=$(date -d "$(jq -r '.started_at' <<< "$job")" +%s)
+              queue=$((started - created))
+              outcome=assigned
+              if (( queue >= 900 )); then outcome=queue_timeout; fi
+              job=$(jq --argjson queue "$queue" '. + {queue_seconds: $queue}' <<< "$job")
+            elif [[ "$status" == 'completed' ]]; then
+              outcome=unassigned
+            elif (( now >= deadline )); then
+              outcome=queue_timeout
+              if [[ -z "$status" ]]; then outcome=unobserved; fi
+              echo "cancel=true" >> "$GITHUB_OUTPUT"
+            fi
+            if [[ -n "$outcome" ]]; then
+              printf 'Incredibuild %s assignment outcome after a 900-second queue deadline is %s.\n' "$PLATFORM" "$outcome" >> "$GITHUB_STEP_SUMMARY"
+              jq -n --argjson job "${job:-null}" --arg platform "$PLATFORM" --arg outcome "$outcome" \
+                '{platform: $platform, outcome: $outcome, queue_deadline_seconds: 900, job: $job}' > "$RUNNER_TEMP/availability.json"
+              echo "outcome=$outcome" >> "$GITHUB_OUTPUT"
+              break
+            fi
+            sleep 15
+          done
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: incredibuild-availability-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/availability.json
+          if-no-files-found: error
+      - if: steps.watch.outputs.cancel == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method POST "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/cancel"
+      - if: steps.watch.outputs.outcome != 'assigned'
+        run: exit 1

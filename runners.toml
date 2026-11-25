@@ -99,14 +99,17 @@ machine = "ubicloud 8c"
 env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
 [incredibuild]
+qualification = true
 label = "incredibuild-ubuntu-2404"
 machine = "incredibuild"
 env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
 [incredibuild-macos]
+qualification = true
 label = "incredibuild-macos-latest"
 machine = "incredibuild macos"
 
 [incredibuild-windows]
+qualification = true
 label = "incredibuild-windows-2022"
 machine = "incredibuild windows"

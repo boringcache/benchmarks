@@ -1,0 +1,63 @@
+{
+  "adapter_command": "docker",
+  "case": "posthog-runners",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "capabilities": [
+    "layers",
+    "tool-cache",
+    "mount-cache"
+  ],
+  "runner": "incredibuild",
+  "runner_label": "incredibuild-ubuntu-2404",
+  "machine": "incredibuild",
+  "phase": "rolling",
+  "step": 0,
+  "scope": "gha-plus-incredibuild-rolling-4",
+  "cache_scope": "gha-plus-incredibuild-rolling-4",
+  "cache_seeded": false,
+  "cache_restored_key": null,
+  "cache_restore_tracked": true,
+  "repo": "PostHog/posthog",
+  "sha": "08ea5803ec5e1ef5c7789e9fd094c2c4c52f5d42",
+  "seconds": 1521.921,
+  "cache_save_timing": "post-job",
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC",
+      "cores": 8,
+      "memory_mb": 32156,
+      "disk_gb": 157,
+      "disk_free_gb": 107
+    },
+    "image_publication": {
+      "tag": "ghcr.io/boringcache/benchmarks-posthog-runners/docker-posthog-runners-gha-plus-incredibuild-rolling-4:08ea5803ec5e1ef5c7789e9fd094c2c4c52f5d42",
+      "digest": "sha256:8ed88c813b0f8f0f6f7cde6a6ab67a9f35b51760b67a6c33a7ac6739676b38f8"
+    },
+    "buildx_builder": {
+      "name": "builder-340485ba-a4e9-47d8-a138-c9224c9a9403",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-340485ba-a4e9-47d8-a138-c9224c9a94030",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "bb5ff3447ba38d77378aea46ca8676b070a2d7a8",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45405774135",
+  "attempt": 1,
+  "started_at": "2026-11-24T13:42:53Z",
+  "job_conclusion": "success",
+  "post_job_save_seconds": 368.966
+}

@@ -1,0 +1,37 @@
+{
+  "adapter_command": "cargo",
+  "case": "codex",
+  "lane": "boringcache-cargo",
+  "provider": "boringcache",
+  "level": "base",
+  "runner": "incredibuild",
+  "runner_label": "incredibuild-ubuntu-2404",
+  "machine": "incredibuild",
+  "phase": "rolling",
+  "step": 39,
+  "scope": "boringcache-cargo-incredibuild-rolling-5",
+  "cache_scope": "boringcache-cargo-incredibuild-rolling-5",
+  "cache_seeded": false,
+  "repo": "openai/codex",
+  "sha": "1c0c806028d5d585c574f85e5c8e979dbb2205be",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45461355940",
+  "attempt": 1,
+  "outcome": "cancelled",
+  "seconds": null,
+  "exit_status": null,
+  "output_ok": null,
+  "started_at": "2026-11-24T18:37:30Z",
+  "evidence": [
+    "boringcache-cargo-incredibuild-rolling-39-45461355940.boringcache.jsonl"
+  ],
+  "harness": {
+    "commit": "4c31a674eb8b9a526d922edfa4f7bbb12424e538"
+  },
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45461355940/job/138685004568",
+  "job_conclusion": "cancelled",
+  "job_started_at": "2026-11-24T18:37:30Z",
+  "job_completed_at": "2026-11-24T21:37:47Z",
+  "queue_seconds": 11.0,
+  "job_seconds": 10817.0
+}

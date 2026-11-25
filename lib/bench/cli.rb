@@ -17,6 +17,7 @@ module Bench
         bin/bench rolling-projects
         bin/bench image
         bin/bench report [--results DIR] [--out DIR]
+        bin/bench collect-jobs --matrix FILE --mode MODE --run-id ID [--results DIR]
         bin/bench post-job-saves --run-id ID [--results DIR]
         bin/bench restored-keys [--results DIR]
         bin/bench prune-caches --run-id ID [--results DIR]
@@ -46,6 +47,7 @@ module Bench
       when "label" then label
       when "matrix" then matrix
       when "report" then report
+      when "collect-jobs" then collect_jobs
       when "post-job-saves" then post_job_saves
       when "restored-keys" then restored_keys
       when "prune-caches" then prune_caches
@@ -160,15 +162,21 @@ module Bench
         if options[:rolling] && options[:tool] && cases.any? { !it.tool.title.casecmp?(options[:tool]) }
           raise Error, "rolling requires the tool title #{cases.first.tool.title.inspect} so every dispatch uses the same concurrency group"
         end
+        runners = options[:runner]&.split(/[\s,]+/)
+        if runners && runners.size > 1 && runners.any? { @catalog.runners.dig(it, "qualification") }
+          raise Error, "select one qualification runner per run"
+        end
         entries = cases.flat_map do |kase|
           rolling = Rolling.new(kase, results_dir: options[:results], work_root: options[:work]) if options[:rolling]
           position = rolling ? (rerun ? rolling.recorded_step(rerun) || raise(Error, "#{kase.id} has no rolling step #{rerun}") : rolling.next_step) : []
           next [] if rolling && position.nil?
 
           step, sha = position
-          kase.runs.flat_map do |lane_name, runners|
+          kase.runs.flat_map do |lane_name, configured|
             lane = kase.tool.lane(lane_name)
-            Array(runners).select { planned?(kase, lane, it, rolling, rerun) }.map do |runner|
+            Array(configured).select { |runner| planned?(kase, lane, runner, rolling, rerun) }.filter_map do |runner|
+              next if @catalog.runners.dig(runner, "qualification") && (rolling || runners != [runner])
+
               { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets, "setup" => kase.setups(lane).join(" "),
                 "label" => job_label(kase, lane, runner),
                 "step" => step&.to_s || "", "sha" => sha || "", "cache_scope" => rolling&.read_scope(lane, runner) || "", "continues" => rolling&.continues?(lane, runner) ? "true" : "",
@@ -177,7 +185,6 @@ module Bench
           end
         end
         lanes = options[:lane]&.split(/[\s,]+/)
-        runners = options[:runner]&.split(/[\s,]+/)
         @out.puts JSON.generate(entries.select { (lanes.nil? || lanes.include?(it["lane"])) && (runners.nil? || runners.include?(it["runner"])) })
         0
       end
@@ -218,6 +225,7 @@ module Bench
             runners = requested || configured
             runners.filter_map do |runner|
               next unless lane.allows?(runner)
+              raise Error, "#{runner} requires a fresh or preflight run" if @catalog.runners.dig(runner, "qualification")
               raise Error, "unknown runner #{runner}" unless @catalog.runners.key?(runner)
               raise Error, "samples require an Actions runner" if runner == "local"
               { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets,
@@ -236,10 +244,89 @@ module Bench
         [(kase.name unless kase.name == kase.project), lane.machine || @catalog.runner_machine(runner), (lane.label unless lane.machine)].compact.join(" · ")
       end
 
+      def collect_jobs
+        options = parse(defaults)
+        matrix = JSON.parse(File.read(options[:matrix] || raise(Error, "collect-jobs needs --matrix")))
+        phases = case options[:mode]
+        when "fresh" then PHASES
+        when "rolling", "sample" then [options[:mode]]
+        else raise Error, "collect-jobs needs --mode fresh, rolling or sample"
+        end
+        repo = ENV.fetch("GITHUB_REPOSITORY") { raise Error, "collect-jobs needs GITHUB_REPOSITORY" }
+        attempt = ENV.fetch("GITHUB_RUN_ATTEMPT", "1").to_i
+        jobs = run_jobs(repo, options[:run_id])
+        matrix.each do |entry|
+          kase = @catalog.find_case(entry.fetch("case"))
+          lane = kase.tool.lane(entry.fetch("lane"))
+          runner = entry.fetch("runner")
+          phases.each do |phase|
+            job = jobs[["#{phase}: #{entry.fetch("label")}", attempt]]
+            next unless job && job["conclusion"] && job["conclusion"] != "skipped"
+
+            env = ENV.to_h.merge("GITHUB_RUN_ID" => options[:run_id], "BENCH_CADENCE" => entry["cadence"], "BENCH_CACHE_SOURCE" => entry["source"],
+                                 "GITHUB_RUN_ATTEMPT" => attempt.to_s)
+            scope = case phase
+            when ROLLING then Rolling.scope(lane, runner, kase.rolling_series)
+            when "sample" then "#{lane.name}-#{runner}-sample-#{options[:run_id]}"
+            else "#{lane.name}-#{runner}-#{options[:run_id]}"
+            end
+            run = PhaseRun.new(kase, lane, phase:, runner:, scope:, work_root: options[:work], results_dir: options[:results],
+                               cache_scope: presence(entry["cache_scope"]), sha: presence(entry["sha"]) || kase.start_sha,
+                               step: presence(entry["step"])&.to_i, env:)
+            details = job_details(job)
+            if File.file?(run.record_path)
+              record = JSON.parse(File.read(run.record_path))
+              File.write(run.record_path, JSON.pretty_generate(record.merge(details.except("assigned_at", "created_at"))) + "\n")
+            else
+              next if job["conclusion"] == "success" && job.fetch("steps", []).any? { it["name"] == "Build benchmark phase" && it["conclusion"] == "skipped" }
+
+              marker = File.join(options[:results], kase.id, "#{lane.name}-#{runner}-#{phase}-#{attempt}.phase-state")
+              state = File.read(marker).strip if File.file?(marker)
+              next if state == "skipped" && job["conclusion"] == "success"
+
+              run.record_missing(details, missing_outcome(job, setup_failed: state == "setup_failure"))
+            end
+          end
+        end
+        Dir.glob(File.join(options[:results], "**", "*.phase-state")).each { FileUtils.rm_f(it) }
+        0
+      end
+
+      def presence(value)
+        value unless value.to_s.empty?
+      end
+
+      def job_details(job)
+        created, started, completed = job.values_at("created_at", "started_at", "completed_at")
+        assigned = started if job["runner_id"].to_i.positive?
+        {
+          "created_at" => created, "assigned_at" => assigned,
+          "job_url" => job["html_url"], "job_conclusion" => job.fetch("conclusion"),
+          "job_started_at" => assigned, "job_completed_at" => completed,
+          "queue_seconds" => ((Time.iso8601(assigned) - Time.iso8601(created)).round(3) if assigned && created),
+          "job_seconds" => ((Time.iso8601(completed) - Time.iso8601(assigned)).round(3) if assigned && completed)
+        }
+      end
+
+      def missing_outcome(job, setup_failed:)
+        case job.fetch("conclusion")
+        when "timed_out" then "timeout"
+        when "cancelled" then "cancelled"
+        else
+          steps = job.fetch("steps", [])
+          phase_steps = ["Build benchmark phase", "Run ./.github/actions/phase"]
+          if setup_failed || (steps.any? { it["conclusion"] == "failure" } && steps.none? { phase_steps.include?(it["name"]) && it["conclusion"] != "skipped" })
+            "setup_failure"
+          else
+            "no_result"
+          end
+        end
+      end
+
       def post_job_saves
         options = parse(defaults)
         repo = ENV.fetch("GITHUB_REPOSITORY") { raise Error, "post-job-saves needs GITHUB_REPOSITORY" }
-        pending = run_records(options[:run_id], options[:results]).select { |_, record, _, lane| lane.post_job_save.any? && (!record.key?("post_job_save_seconds") || !record.key?("job_conclusion")) }
+        pending = run_records(options[:run_id], options[:results]).select { |_, record, _, lane| !record["outcome"] && lane.post_job_save.any? && (!record.key?("post_job_save_seconds") || !record.key?("job_conclusion")) }
         return 0 if pending.empty?
 
         jobs = run_jobs(repo, options[:run_id])
@@ -283,7 +370,7 @@ module Bench
       end
 
       def run_jobs(repo, run_id)
-        Bench.gh("api", "--paginate", "repos/#{repo}/actions/runs/#{run_id}/jobs?filter=all&per_page=100", "--jq", ".jobs[] | {id, name, run_attempt, conclusion}")
+        Bench.gh("api", "--paginate", "repos/#{repo}/actions/runs/#{run_id}/jobs?filter=all&per_page=100", "--jq", ".jobs[] | {id, name, run_attempt, conclusion, runner_id, html_url, created_at, started_at, completed_at, steps}")
           .lines.to_h { job = JSON.parse(it); [[job["name"], job["run_attempt"]], job] }
       end
 
@@ -296,7 +383,7 @@ module Bench
         repo = ENV.fetch("GITHUB_REPOSITORY") { raise Error, "prune-caches needs GITHUB_REPOSITORY" }
         prune = CachePrune.new(repo)
         run_records(options[:run_id], options[:results]).each do |_, record, kase, lane|
-          next if lane.boringcache? || record["phase"] != ROLLING
+          next if lane.boringcache? || record["phase"] != ROLLING || record["outcome"]
 
           scope = "#{kase.tool.name}-#{kase.name}-#{record["cache_scope"]}"
           deleted = prune.call(scope:, step: record["step"], prefixes: lane.cache_keys("BENCH_SCOPE" => scope))
@@ -468,6 +555,8 @@ module Bench
             opts.on("--run-id ID") { options[:run_id] = it }
             opts.on("--results DIR") { options[:results] = File.expand_path(it) }
             opts.on("--work DIR") { options[:work] = File.expand_path(it) }
+            opts.on("--matrix FILE") { options[:matrix] = it }
+            opts.on("--mode MODE") { options[:mode] = it }
             opts.on("--out DIR") { options[:out] = File.expand_path(it) }
             opts.on("--container") { options[:container] = true }
             opts.on("--env-file PATH") { options[:env_file] = File.expand_path(it) }

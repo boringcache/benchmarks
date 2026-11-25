@@ -211,7 +211,7 @@ class ReportTest < Minitest::Test
     record "a.json", seconds: 5.0, exit_status: 2, output_ok: false
 
     assert_includes Bench::Report.new(@dir).markdown,
-                    "| docker | posthog | gha | base | github | cold | - | aaaaaaaaaaaa | 1.40.1 | 1 | - | post-job | github 4c | AMD EPYC 7763 | 4 | 1 | 1 | 0 | unmeasured | unmeasured | unmeasured | - |\n"
+                    "| docker | posthog | gha | base | github | cold | - | aaaaaaaaaaaa | 1.40.1 | 1 | - | post-job | github 4c | AMD EPYC 7763 | 4 | - | - | 1 | 1 | - | 0 | unmeasured | unmeasured | unmeasured | - |\n"
   end
 
   def test_rows_carry_the_cache_api_errors_the_product_reported
@@ -268,6 +268,41 @@ class ReportTest < Minitest::Test
     end
 
     assert_empty Bench::Report.new(@dir).matched
+  end
+
+  def test_measurements_separate_different_machine_capacities
+    record "16gb.json", seconds: 1.0, exit_status: 1, output_ok: false, memory_mb: 16_052, disk_gb: 94
+    record "32gb.json", seconds: 2.0, memory_mb: 32_156, disk_gb: 157
+
+    assert_equal [[16_052, 94, 1], [32_156, 157, 0]], Bench::Report.new(@dir).rows.map { it.values_at("memory_mb", "disk_gb", "failed") }
+  end
+
+  def test_unmeasured_attempts_do_not_make_the_first_build_a_warm_rolling_match
+    %w[boringcache-docker gha].each do |lane|
+      scope = "#{lane}-github-rolling"
+      record "#{lane}-0.json", lane:, phase: "rolling", save: "in-phase", scope:, step: 0, seconds: nil, exit_status: nil, output_ok: nil, outcome: "setup_failure"
+      record "#{lane}-1.json", lane:, phase: "rolling", save: "in-phase", scope:, step: 1, seconds: 10.0
+    end
+
+    report = Bench::Report.new(@dir)
+    assert_empty report.matched
+    assert_equal 4, report.rows.size
+  end
+
+  def test_matched_steps_exclude_different_image_registries_and_keep_each_measurement
+    %w[boringcache-docker gha].each do |lane|
+      (0..2).each do |step|
+        registry = lane == "boringcache-docker" && step == 1 ? "registry.boringcache.com" : "ghcr.io"
+        record "#{lane}-#{step}.json", lane:, seconds: 10.0, phase: "rolling", step:, scope: "#{lane}-github-rolling",
+                                       save: "in-phase", image_tag: "#{registry}/example/#{lane}:tag"
+      end
+    end
+
+    report = Bench::Report.new(@dir)
+    assert_equal [1, 1], report.matched.map { it["steps"] }
+    assert_equal [2, 2], report.matched.map { it["first_step"] }
+    assert_equal 6, report.rows.size
+    assert report.rows.all? { it["median_seconds"] == 10.0 }
   end
 
   def test_a_lane_that_joins_later_starts_a_new_matched_group_and_keeps_the_earlier_steps
@@ -333,14 +368,14 @@ class ReportTest < Minitest::Test
 
   private
     def record(name, seconds:, exit_status: 0, output_ok: true, phase: "cold", scope: "gha-github-1", sha: "a" * 40, step: nil, lane: "gha", cache_scope: scope,
-               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job", restored: nil, post_job_save: nil, errors: nil, experimental: false, restore_tracked: false, job_conclusion: nil, runner: "github", cadence: nil, read_only: nil, started_at: nil)
+               boringcache: "1.40.1", release: nil, attempt: nil, cpu: "AMD EPYC 7763", save: "post-job", restored: nil, post_job_save: nil, errors: nil, experimental: false, restore_tracked: false, job_conclusion: nil, runner: "github", cadence: nil, read_only: nil, started_at: nil, image_tag: nil, memory_mb: nil, disk_gb: nil, outcome: nil)
       File.write(File.join(@dir, name), JSON.generate({
         "adapter_command" => "docker", "case" => "posthog", "lane" => lane, "level" => "base", "runner" => runner,
         "phase" => phase, "step" => step, "scope" => scope, "cache_scope" => cache_scope, "sha" => sha, "seconds" => seconds, "attempt" => attempt, "experimental" => experimental, "cache_restore_tracked" => restore_tracked,
         "exit_status" => exit_status, "output_ok" => output_ok, "cache_save_timing" => save, "machine" => { "depot-8" => "depot 8c", "namespace-4" => "namespace 4c" }.fetch(runner, "github 4c"),
-        "observed" => { "machine" => { "cpu" => cpu, "cores" => 4 } }, "versions" => { "boringcache" => boringcache, "boringcache_release" => release }.compact
+        "observed" => { "machine" => { "cpu" => cpu, "cores" => 4, "memory_mb" => memory_mb, "disk_gb" => disk_gb }.compact, **({ "image_publication" => { "tag" => image_tag } } if image_tag) }, "versions" => { "boringcache" => boringcache, "boringcache_release" => release }.compact
       }.merge(restored == :unrecorded ? {} : { "cache_restored_key" => restored }, post_job_save ? { "post_job_save_seconds" => post_job_save } : {},
-              job_conclusion ? { "job_conclusion" => job_conclusion } : {}, cadence ? { "cadence" => cadence } : {}, read_only ? { "read_only" => true } : {}, started_at ? { "started_at" => started_at } : {},
+              job_conclusion ? { "job_conclusion" => job_conclusion } : {}, outcome ? { "outcome" => outcome } : {}, cadence ? { "cadence" => cadence } : {}, read_only ? { "read_only" => true } : {}, started_at ? { "started_at" => started_at } : {},
               errors ? { "provider_reported" => { "cache_session_summary" => { "backend_api" => { "total_error_count" => errors } } } } : {})))
     end
 end

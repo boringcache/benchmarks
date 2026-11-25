@@ -64,6 +64,16 @@ module Bench
       write_record(started_at: state.fetch("started_at"), seconds:, exit_status:)
     end
 
+    def record_missing(job, outcome)
+      persist_record(record_identity.merge(
+        "outcome" => outcome, "seconds" => nil, "exit_status" => nil, "output_ok" => nil,
+        "started_at" => job.fetch("assigned_at") || job.fetch("created_at"),
+        "evidence" => File.exist?(evidence_path) ? [File.basename(evidence_path)] : [],
+        "harness" => { "commit" => harness_commit }.compact,
+        **job.reject { |key, _| key == "assigned_at" || key == "created_at" }
+      ))
+    end
+
     def record_path
       File.join(@results_dir, kase.tool.name, kase.name, scope, "#{[lane.name, runner, phase, step, rolling_run, retry_suffix].compact.join("-")}.json")
     end
@@ -235,14 +245,13 @@ module Bench
         record_path.sub(/\.json\z/, ".boringcache.jsonl")
       end
 
-      def write_record(started_at:, seconds:, exit_status:)
-        record = {
+      def record_identity
+        {
           "adapter_command" => kase.tool.name,
           "case" => kase.name,
           "lane" => lane.name,
           "provider" => lane.provider,
           "level" => lane.level,
-          "capabilities" => lane.capabilities.reject { PLAN_CAPABILITIES.include?(it) && !adapter[it] },
           "runner" => runner,
           "runner_label" => kase.tool.catalog.runner_label(runner),
           "machine" => lane.machine || kase.tool.catalog.runner_machine(runner),
@@ -254,13 +263,24 @@ module Bench
           **({ "seed_scope" => seed_scope } if seed_scope),
           **({ "read_only" => true } if lane.reads),
           **({ "cache_source" => JSON.parse(@env.fetch("BENCH_CACHE_SOURCE")) } if phase == "sample" && lane.reads && @env["BENCH_CACHE_SOURCE"]),
-          "cache_restored_key" => (@env["BENCH_CACHE_RESTORED_KEY"] unless @env["BENCH_CACHE_RESTORED_KEY"].to_s.empty?),
-          **({ "cache_restore_tracked" => true } if @env["BENCH_CACHE_RESTORE_TRACKED"] == "true"),
           "repo" => kase.repo,
           "sha" => sha,
-          "seconds" => seconds,
           "cache_save_timing" => lane.cache_save_timing,
+          **({ "experimental" => true } if lane.experimental?),
+          **({ "cadence" => @env["BENCH_CADENCE"] } unless @env["BENCH_CADENCE"].to_s.empty?),
+          "run_url" => run_url,
+          "attempt" => attempt
+        }
+      end
+
+      def write_record(started_at:, seconds:, exit_status:)
+        persist_record(record_identity.merge(
+          "capabilities" => lane.capabilities.reject { PLAN_CAPABILITIES.include?(it) && !adapter[it] },
+          "cache_restored_key" => (@env["BENCH_CACHE_RESTORED_KEY"] unless @env["BENCH_CACHE_RESTORED_KEY"].to_s.empty?),
+          **({ "cache_restore_tracked" => true } if @env["BENCH_CACHE_RESTORE_TRACKED"] == "true"),
+          "seconds" => seconds,
           "exit_status" => exit_status,
+          **({ "outcome" => "timeout" } if exit_status == 124),
           "output_ok" => output_ok(exit_status),
           "provider_reported" => provider_reported,
           "observed" => observed,
@@ -269,19 +289,22 @@ module Bench
           **({ "product_env" => product_env } if product_env),
           **({ "plan_settings" => plan_settings } if plan_settings),
           **({ "product_args" => lane.cli_args } if lane.boringcache? && lane.cli_args.any?),
-          **({ "experimental" => true } if lane.experimental?),
-          **({ "cadence" => @env["BENCH_CADENCE"] } unless @env["BENCH_CADENCE"].to_s.empty?),
           "harness" => { "commit" => harness_commit, "timer" => TIMER }.compact,
-          "run_url" => run_url,
-          "attempt" => attempt,
           "started_at" => started_at
-        }
+        ))
+      end
+
+      def persist_record(record)
+        FileUtils.mkdir_p(File.dirname(record_path))
         File.write(record_path, JSON.pretty_generate(record) + "\n")
         record
       end
 
       def product_env
-        lane.env(phase, environment).select { |key, _| key.start_with?("BORINGCACHE_") }.then { it unless it.empty? } if lane.boringcache?
+        return unless lane.boringcache?
+
+        lane.env(phase, environment).select { |key, _| key.start_with?("BORINGCACHE_") }
+          .merge(@env.slice("BORINGCACHE_BLOB_READ_CACHE_MAX_BYTES")).then { it unless it.empty? }
       end
 
       def plan_settings
