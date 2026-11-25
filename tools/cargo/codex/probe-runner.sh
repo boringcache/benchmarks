@@ -44,6 +44,7 @@ probe() (
   export SCCACHE_IDLE_TIMEOUT=15
   export SCCACHE_LOG=debug SCCACHE_ERROR_LOG="$diagnostics/$trial.sccache.log"
   export RUSTC_WRAPPER="" RUSTC_WORKSPACE_WRAPPER=""
+  export CARGO_INCREMENTAL=0 CARGO_BUILD_INCREMENTAL=0
   if [[ "$wrapper" == sccache ]]; then export RUSTC_WRAPPER="$sccache"; fi
   export CARGO_TARGET_DIR="$probe_dir/target-$trial"
   timeout --kill-after=5s 60s cargo test --locked --offline --no-run &
