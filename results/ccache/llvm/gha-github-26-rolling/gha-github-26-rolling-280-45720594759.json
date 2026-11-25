@@ -1,0 +1,51 @@
+{
+  "adapter_command": "ccache",
+  "case": "llvm",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "runner": "github-26",
+  "runner_label": "ubuntu-26.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 280,
+  "scope": "gha-github-26-rolling",
+  "cache_scope": "gha-github-26-rolling",
+  "cache_seeded": false,
+  "repo": "llvm/llvm-project",
+  "sha": "cc45e189bc99870d26d50c5e3a3d215068e74880",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45720594759",
+  "attempt": 1,
+  "capabilities": [
+    "remote-storage"
+  ],
+  "cache_restored_key": "ccache-llvm-gha-github-26-rolling-279",
+  "cache_restore_tracked": true,
+  "seconds": 1032.464,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) 6973P-C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 73
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "0920770556385026740ea434ecc5e716bf86c90a",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-25T23:23:14Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45720594759/job/139578203762",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-25T23:21:46Z",
+  "job_completed_at": "2026-11-25T23:40:30Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 1124.0
+}
