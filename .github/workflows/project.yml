@@ -18,6 +18,10 @@ on:
       sha:
         type: string
         required: true
+      cli_artifact:
+        type: string
+        required: false
+        default: ""
   workflow_dispatch:
     inputs:
       tool:
@@ -58,6 +62,9 @@ on:
         default: ""
 
 run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}${{ inputs.step && format(' step {0}', inputs.step) || '' }}${{ inputs.cli && format(' [{0}]', inputs.cli) || '' }}
+
+env:
+  CANDIDATE_CLI_ARTIFACT: ${{ inputs.cli_artifact }}
 
 concurrency:
   group: ${{ (inputs.mode == 'rolling' || inputs.mode == 'sample') && format('rolling-{0}-{1}', inputs.tool, inputs.project) || format('run-{0}', github.run_id) }}
@@ -101,8 +108,8 @@ jobs:
             exit 1
           fi
           if [ -n "$REPLAY_STEP" ]; then
-            if [ "$REF" != refs/heads/posthog-daytona ] || [ "$GITHUB_RUN_ATTEMPT" != 1 ] || [ -z "$ROLLING" ] || [ "$TOOL" != Docker ] || [ "$PROJECT" != posthog-runners ] || [[ ! "$REPLAY_STEP" =~ ^[0-3]$ ]] || [[ ! "$SHA" =~ ^[0-9a-f]{40}$ ]]; then
-              echo 'The Daytona replay requires its benchmark branch, first attempt, step and expected upstream commit.' >&2
+            if [ "$REF" != refs/heads/posthog-daytona ] || [ "$GITHUB_RUN_ATTEMPT" != 1 ] || [ -z "$ROLLING" ] || [ "$TOOL" != Docker ] || [ "$PROJECT" != posthog-runners ] || [[ ! "$REPLAY_STEP" =~ ^[0-3]$ ]] || [[ ! "$SHA" =~ ^[0-9a-f]{40}$ ]] || [[ ! "$CANDIDATE_CLI_ARTIFACT" =~ ^art_[0-9a-f]{24}$ ]]; then
+              echo 'The Daytona replay requires its benchmark branch, first attempt, step, expected upstream commit and candidate CLI artifact.' >&2
               exit 1
             fi
             bash scripts/checkout-records.sh results/docker/posthog-runners/boringcache-docker-plus-incredibuild-rolling-4 553799ce20de409993b30061c8d83dd46451a8ec

@@ -6,7 +6,7 @@ rolling_series = 4
 setup = ["ghcr", "boringcache-registry"]
 prepare = [
   "bash \"$BENCH_ROOT/tools/docker/shared/posthog/prepare.sh\"",
-  "registry=ghcr; if [ \"$BENCH_LANE\" = boringcache-docker-plus ]; then registry=boringcache; fi; ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" prepare posthog-runners \"$registry\"",
+  "registry=ghcr; if [ \"$BENCH_LANE\" = boringcache-docker-plus ] || [ \"$BENCH_LANE\" = boringcache-docker-plus-daytona ]; then registry=boringcache; fi; ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" prepare posthog-runners \"$registry\"",
 ]
 check = "ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" check linux/amd64"
 

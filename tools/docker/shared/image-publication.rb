@@ -49,7 +49,7 @@ module DockerImagePublication
   def self.verify(platform)
     reference = image_reference
     command = ["docker", "buildx", "imagetools", "inspect", "--format", "{{json .Image}}", reference]
-    if reference.start_with?("registry.boringcache.com/")
+    if reference.start_with?("registry.boringcache.com/") && ENV.fetch("BORINGCACHE_RESTORE_TOKEN", "").empty?
       command.unshift("boringcache", "ci", "run", "--oidc-provider", "github-actions", "--")
     end
     output, status = Open3.capture2(*command)

@@ -178,7 +178,7 @@ runs:
       shell: bash
       run: ruby scripts/nativelink.rb
 
-    - if: contains(inputs.setup, 'ghcr') && (!contains(inputs.setup, 'boringcache-registry') || inputs.lane == 'avrea-cache-plus' || inputs.lane == 'avrea-disk-plus' || inputs.lane == 'boringcache-docker-plus-daytona')
+    - if: contains(inputs.setup, 'ghcr') && (!contains(inputs.setup, 'boringcache-registry') || inputs.lane == 'avrea-cache-plus' || inputs.lane == 'avrea-disk-plus')
       uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
       with:
         registry: ghcr.io
@@ -218,6 +218,7 @@ runs:
       env:
         VERSION: ${{ inputs.cli-release || format('v{0}', steps.prepare.outputs.boringcache_version) }}
         CLI_RELEASE: ${{ inputs.cli-release }}
+        CANDIDATE_RESTORE_TOKEN: ${{ inputs.cache-restore-token }}
       run: |
         if [ -n "$CLI_RELEASE" ]; then echo "BENCH_CLI_RELEASE=$CLI_RELEASE" >> "$GITHUB_ENV"; fi
         executable=boringcache
@@ -236,10 +237,22 @@ runs:
         ruby "$GITHUB_WORKSPACE/scripts/verify-checksums.rb" SHA256SUMS "${assets[@]}"
         install -m 0755 "${assets[0]}" "$dir/$executable"
         if [ "${#assets[@]}" -gt 1 ]; then install -m 0644 "${assets[1]}" "$dir/libboringcache_xcode_cas.dylib"; fi
+        if [ -n "${CANDIDATE_CLI_ARTIFACT:-}" ]; then
+          [[ "$CANDIDATE_CLI_ARTIFACT" =~ ^art_[0-9a-f]{24}$ ]] || { echo "::error::Invalid candidate CLI artifact id"; exit 1; }
+          candidate="$RUNNER_TEMP/boringcache-candidate"
+          pull=("$dir/$executable" artifact pull "$CANDIDATE_CLI_ARTIFACT" "$candidate" --workspace boringcache/benchmarks)
+          if [ -n "$CANDIDATE_RESTORE_TOKEN" ]; then
+            BORINGCACHE_RESTORE_TOKEN="$CANDIDATE_RESTORE_TOKEN" "${pull[@]}"
+          else
+            "$dir/$executable" ci run --oidc-provider github-actions -- "${pull[@]}"
+          fi
+          install -m 0755 "$candidate/${assets[0]}" "$dir/$executable"
+          "$dir/$executable" --version
+        fi
         if [ "$RUNNER_OS" = Windows ]; then dir=$(cygpath -m "$dir"); fi
         echo "$dir" >> "$GITHUB_PATH"
 
-    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache' && contains(inputs.setup, 'boringcache-registry') && inputs.lane == 'boringcache-docker-plus'
+    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache' && contains(inputs.setup, 'boringcache-registry') && (inputs.lane == 'boringcache-docker-plus' || inputs.lane == 'boringcache-docker-plus-daytona')
       shell: bash
       run: boringcache docker login
 
