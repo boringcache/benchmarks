@@ -30,6 +30,7 @@ RUSTY_V8_ARCHIVE = "${BENCH_DIR}/v8/librusty_v8_ptrcomp_sandbox_release_x86_64-u
 RUSTY_V8_SRC_BINDING_PATH = "${BENCH_DIR}/v8/src_binding_ptrcomp_sandbox_release_x86_64-unknown-linux-gnu.rs"
 
 [runs]
+boringcache-cargo-plus-mounted = ["github-26"]
 boringcache-cargo = ["github-26", "incredibuild"]
 boringcache-cargo-plus = ["github-26"]
 gha = ["github-26", "incredibuild"]

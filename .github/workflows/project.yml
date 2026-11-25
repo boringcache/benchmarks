@@ -98,6 +98,10 @@ jobs:
             echo 'Run a comparison series from a branch other than main.' >&2
             exit 1
           fi
+          if [[ "$LANE" == *plus-mounted* ]] && { [ -z "$CANDIDATE_CLI_ARTIFACT" ] || [ -z "$BENCH_BRANCH_SERIES" ]; }; then
+            echo 'The mounted Cargo comparison requires a branch series and a candidate artifact.' >&2
+            exit 1
+          fi
           bash scripts/checkout-records.sh
           if [ -n "$RUNNER" ] && [ -n "$ROLLING" ]; then echo 'rolling runs use every configured runner' >&2; exit 1; fi
           matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${BENCH_BRANCH_SERIES:+--series} ${SAMPLE:+--sample} ${RUNNER:+--runner "$RUNNER"} ${SHA:+--sha "$SHA"} ${LANE:+--lane "$LANE"} ${CLI:+--cli "$CLI"} ${STEP:+--step "$STEP"} --results results)

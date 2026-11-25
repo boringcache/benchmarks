@@ -18,6 +18,7 @@ NU_TEST_SKIP_DEPS_BUILD = "true"
 NUSHELL_CARGO_PROFILE = "ci"
 
 [runs]
+boringcache-cargo-plus-mounted = ["github"]
 boringcache-cargo = ["github", "macos", "windows"]
 boringcache-cargo-plus = ["github", "macos", "windows", "incredibuild", "incredibuild-macos", "incredibuild-windows"]
 gha = ["github", "macos", "windows"]

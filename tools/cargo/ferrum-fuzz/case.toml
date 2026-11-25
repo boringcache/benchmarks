@@ -45,6 +45,7 @@ CARGO_TARGET_DIR = "${BENCH_DIR}/upstream/target"
 RUSTFLAGS = ""
 
 [runs]
+boringcache-cargo-plus-mounted = ["github-26"]
 boringcache-cargo = ["github-26"]
 boringcache-cargo-plus = ["github-26"]
 gha-plus = ["github-26"]

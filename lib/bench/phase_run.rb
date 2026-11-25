@@ -54,6 +54,12 @@ module Bench
     end
 
     def build
+      return build_on_mount if lane.name == MountedTarget::LANE
+
+      build_command
+    end
+
+    def build_command
       return $?&.exitstatus || 127 unless seed && system(environment, *command, chdir: build_dir)
 
       lane.finish(phase).all? { shell(it, chdir: build_dir) } ? 0 : 1
@@ -127,6 +133,15 @@ module Bench
     end
 
     private
+      def build_on_mount
+        actual = MountedTarget.new(kase, workspace, cache_scope, phase)
+        check_env = environment.slice("PATH", "HOME", "CARGO_TARGET_DIR", "BENCH_DIR", "BENCH_LANE")
+        ok = actual.run do
+          build_command.zero? && system(check_env, "bash", "-c", kase.check, chdir: workspace.dir, unsetenv_others: true)
+        end
+        ok ? 0 : 1
+      end
+
       def cache_dance_sources
         return [[File.read(dockerfile), {}]] unless adapter.fetch("command").include?("bake")
 
@@ -227,6 +242,8 @@ module Bench
 
       def output_ok(exit_status)
         return false unless exit_status.zero?
+
+        return true if lane.name == MountedTarget::LANE
 
         kase.check.empty? ? nil : shell(kase.check)
       end
