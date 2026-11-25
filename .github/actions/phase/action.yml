@@ -217,7 +217,7 @@ runs:
         if [ "$RUNNER_OS" = Windows ]; then dir=$(cygpath -m "$dir"); fi
         echo "$dir" >> "$GITHUB_PATH"
 
-    - if: inputs.lane == 'boringcache-cargo-plus-mounted'
+    - if: endsWith(inputs.lane, '-mounted')
       shell: bash
       run: |
         [ -c /dev/fuse ]
@@ -368,13 +368,14 @@ runs:
         BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
       run: bundle exec ruby bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$([ "$BUILD_FAILED" = true ] && echo 1 || echo 0)"
 
-    - name: Verify a compiled library from a fresh archive mount
-      if: steps.build.outcome == 'success' && inputs.lane == 'boringcache-cargo-plus-mounted' && inputs.phase != 'warm'
+    - name: Verify a build output from a fresh archive mount
+      if: steps.build.outcome == 'success' && endsWith(inputs.lane, '-mounted') && inputs.phase != 'warm'
       shell: bash
       run: |
         dir="$RUNNER_TEMP/diagnostics"
         tag=$(jq -er '.entries[0].tag' "$dir/archive-mount.json")
-        boringcache ci run --oidc-provider github-actions -- boringcache archive-mount boringcache/benchmarks "$tag" "$BENCH_DIR/upstream/target" --read-only --spool "$RUNNER_TEMP/verify-spool" --receipt "$dir/archive-reopen.json" -- sha256sum -c "$dir/archive-library.sha256"
+        boringcache ci run --oidc-provider github-actions -- boringcache archive-mount boringcache/benchmarks "$tag" "$(cat "$dir/archive-mountpoint")" --read-only --spool "$RUNNER_TEMP/verify-spool" --receipt "$dir/archive-reopen.json" -- sha256sum -c "$dir/archive-library.sha256"
+        jq -e '.entries[0].archive_mount | .read_only and .chunk_download_bytes > 0' "$dir/archive-reopen.json" > /dev/null
 
     - if: always() && startsWith(inputs.case, 'bazel/codex') && steps.prepare.outputs.ready == 'true'
       continue-on-error: true

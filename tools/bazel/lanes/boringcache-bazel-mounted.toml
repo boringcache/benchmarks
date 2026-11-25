@@ -1,0 +1,4 @@
+provider = "boringcache"
+level = "base"
+label = "boringcache mounted outputs"
+experimental = true

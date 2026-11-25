@@ -84,6 +84,14 @@ class WorkflowTest < Minitest::Test
     assert_equal "OIDC build\n", output
   end
 
+  def test_mounted_series_stops_after_a_failed_phase
+    jobs = YAML.load_file(File.expand_path("../../.github/workflows/project.yml", __dir__), aliases: true).fetch("jobs")
+    %w[cold warm roll_1 roll_2 roll_3].each_cons(2) do |previous, current|
+      gate = current == "warm" ? "!endsWith(inputs.lane, '-mounted')" : "inputs.lane != 'boringcache-cargo-plus-mounted'"
+      assert_includes jobs.fetch(current).fetch("if"), "#{gate} || needs.#{previous}.result == 'success'"
+    end
+  end
+
   def test_branch_runs_collect_post_job_timings_without_publishing_to_main
     workflow = YAML.load_file(File.expand_path("../../.github/workflows/project.yml", __dir__), aliases: true)
     collect = workflow.fetch("jobs").fetch("collect")

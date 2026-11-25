@@ -170,7 +170,10 @@ module Bench
           series = Upstream.new(kase, root: options[:work]).next_three(kase.start_sha) if options[:series]
           kase.runs.flat_map do |lane_name, runners|
             lane = kase.tool.lane(lane_name)
-            next [] if lane_name == MountedTarget::LANE && !(options[:series] && options[:lane].to_s.split(/[\s,]+/).include?(lane_name))
+            if MountedTarget.lane?(lane_name)
+              next [] unless options[:lane].to_s.split(/[\s,]+/).include?(lane_name)
+              next [] if rolling || (lane_name == MountedTarget::LANE && !options[:series])
+            end
 
             Array(runners).select { planned?(kase, lane, it, rolling, rerun) }.map do |runner|
               { "case" => kase.id, "lane" => lane.name, "runner" => runner, "runs_on" => @catalog.runner_label(runner), "secrets" => lane.secrets, "setup" => kase.setups(lane).join(" "),

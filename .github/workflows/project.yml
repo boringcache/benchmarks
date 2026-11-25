@@ -75,6 +75,7 @@ jobs:
           bundler-cache: true
       - id: matrix
         env:
+          MODE: ${{ inputs.mode }}
           TOOL: ${{ inputs.tool }}
           PROJECT: ${{ inputs.project }}
           ROLLING: ${{ inputs.mode == 'rolling' && 'true' || '' }}
@@ -96,6 +97,10 @@ jobs:
           fi
           if [ -n "$BENCH_BRANCH_SERIES" ] && { [ "$REF" = refs/heads/main ] || [[ "$REF" != refs/heads/* ]]; }; then
             echo 'Run a comparison series from a branch other than main.' >&2
+            exit 1
+          fi
+          if [[ "$LANE" == *bazel-mounted* ]] && { [ -z "$CANDIDATE_CLI_ARTIFACT" ] || [ "$MODE" != fresh ]; }; then
+            echo 'Select fresh mode and a candidate artifact for the mounted Bazel benchmark.' >&2
             exit 1
           fi
           if [[ "$LANE" == *plus-mounted* ]] && { [ -z "$CANDIDATE_CLI_ARTIFACT" ] || [ -z "$BENCH_BRANCH_SERIES" ]; }; then
@@ -178,7 +183,7 @@ jobs:
 
   warm:
     needs: [plan, cold]
-    if: ${{ !cancelled() && (inputs.mode == 'fresh' || inputs.mode == 'series') && needs.plan.outputs.matrix != '[]' }}
+    if: ${{ !cancelled() && (!endsWith(inputs.lane, '-mounted') || needs.cold.result == 'success') && (inputs.mode == 'fresh' || inputs.mode == 'series') && needs.plan.outputs.matrix != '[]' }}
     name: "warm: ${{ matrix.label }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 180
@@ -200,7 +205,7 @@ jobs:
 
   roll_1:
     needs: [plan, warm]
-    if: ${{ !cancelled() && inputs.mode == 'series' && needs.plan.result == 'success' && needs.plan.outputs.matrix != '[]' }}
+    if: ${{ !cancelled() && (inputs.lane != 'boringcache-cargo-plus-mounted' || needs.warm.result == 'success') && inputs.mode == 'series' && needs.plan.result == 'success' && needs.plan.outputs.matrix != '[]' }}
     name: "rolling 1: ${{ matrix.label }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 180
@@ -211,7 +216,7 @@ jobs:
 
   roll_2:
     needs: [plan, roll_1]
-    if: ${{ !cancelled() && inputs.mode == 'series' && needs.plan.result == 'success' && needs.plan.outputs.matrix != '[]' }}
+    if: ${{ !cancelled() && (inputs.lane != 'boringcache-cargo-plus-mounted' || needs.roll_1.result == 'success') && inputs.mode == 'series' && needs.plan.result == 'success' && needs.plan.outputs.matrix != '[]' }}
     name: "rolling 2: ${{ matrix.label }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 180
@@ -222,7 +227,7 @@ jobs:
 
   roll_3:
     needs: [plan, roll_2]
-    if: ${{ !cancelled() && inputs.mode == 'series' && needs.plan.result == 'success' && needs.plan.outputs.matrix != '[]' }}
+    if: ${{ !cancelled() && (inputs.lane != 'boringcache-cargo-plus-mounted' || needs.roll_2.result == 'success') && inputs.mode == 'series' && needs.plan.result == 'success' && needs.plan.outputs.matrix != '[]' }}
     name: "rolling 3: ${{ matrix.label }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 180

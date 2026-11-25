@@ -54,7 +54,7 @@ module Bench
     end
 
     def build
-      return build_on_mount if lane.name == MountedTarget::LANE
+      return build_on_mount if MountedTarget.lane?(lane.name)
 
       build_command
     end
@@ -243,7 +243,7 @@ module Bench
       def output_ok(exit_status)
         return false unless exit_status.zero?
 
-        return true if lane.name == MountedTarget::LANE
+        return true if MountedTarget.lane?(lane.name)
 
         kase.check.empty? ? nil : shell(kase.check)
       end
