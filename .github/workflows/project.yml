@@ -39,17 +39,21 @@ on:
         type: string
         default: ""
       mounted_budget:
-        description: Run a cold Zed mounted trial with automatic sizing or a 6 GiB cap
+        description: Select the budget for a cold Zed trial or a rolling continuation
         type: choice
         options: [series, auto, 6GiB]
         default: series
+      zed_seed_run:
+        description: Continue a successful automatic-budget Zed cold run at its next commit
+        type: string
+        default: ""
       step:
         description: rolling only, re-run this recorded step with the current harness for lanes without a passing record (optional)
         type: string
         required: false
         default: ""
 
-run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}${{ inputs.step && format(' step {0}', inputs.step) || '' }}${{ inputs.cli && format(' [{0}]', inputs.cli) || '' }}${{ inputs.cli_artifact && format(' [{0}]', inputs.cli_artifact) || '' }}${{ inputs.mounted_budget != 'series' && format(' [cold {0}]', inputs.mounted_budget) || '' }}
+run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}${{ inputs.step && format(' step {0}', inputs.step) || '' }}${{ inputs.cli && format(' [{0}]', inputs.cli) || '' }}${{ inputs.cli_artifact && format(' [{0}]', inputs.cli_artifact) || '' }}${{ inputs.zed_seed_run && format(' [rolling from {0}]', inputs.zed_seed_run) || inputs.mounted_budget != 'series' && format(' [cold {0}]', inputs.mounted_budget) || '' }}
 
 env:
   BENCH_BRANCH_SERIES: ${{ inputs.mode == 'series' && 'true' || '' }}
@@ -57,7 +61,7 @@ env:
   BENCH_ZED_MOUNT_BUDGET: ${{ inputs.mounted_budget != 'series' && inputs.mounted_budget || '' }}
 
 concurrency:
-  group: ${{ (inputs.mode == 'rolling' || inputs.mode == 'sample') && format('rolling-{0}-{1}', inputs.tool, inputs.project) || format('run-{0}', github.run_id) }}
+  group: ${{ inputs.zed_seed_run && format('zed-seed-{0}', inputs.zed_seed_run) || (inputs.mode == 'rolling' || inputs.mode == 'sample') && format('rolling-{0}-{1}', inputs.tool, inputs.project) || format('run-{0}', github.run_id) }}
   cancel-in-progress: false
 
 permissions:
@@ -66,8 +70,13 @@ permissions:
 jobs:
   plan:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
+      seed_scope: ${{ steps.matrix.outputs.seed_scope }}
+      seed_root: ${{ steps.matrix.outputs.seed_root }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -92,6 +101,8 @@ jobs:
           RUNNER: ${{ inputs.runner }}
           SHA: ${{ inputs.sha }}
           REF: ${{ github.ref }}
+          ZED_SEED_RUN: ${{ inputs.zed_seed_run }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           if { [ -n "$ROLLING" ] || [ -n "$SAMPLE" ]; } && [ "$REF" != refs/heads/main ]; then
             echo "::error::Rolling and sample runs continue the series on main: they read its records, publish records only to main and write its cache scopes. Dispatch them with --ref main; this run used $REF."
@@ -121,13 +132,24 @@ jobs:
           if [ -n "$RUNNER" ] && [ -n "$ROLLING" ]; then echo 'rolling runs use every configured runner' >&2; exit 1; fi
           matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" ${ROLLING:+--rolling} ${BENCH_BRANCH_SERIES:+--series} ${SAMPLE:+--sample} ${RUNNER:+--runner "$RUNNER"} ${SHA:+--sha "$SHA"} ${LANE:+--lane "$LANE"} ${CLI:+--cli "$CLI"} ${STEP:+--step "$STEP"} --results results)
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          if [ -n "$ZED_SEED_RUN" ]; then
+            if [ "$MODE" != series ] || [ "$BENCH_ZED_MOUNT_BUDGET" != auto ] || ! [[ "$ZED_SEED_RUN" =~ ^[1-9][0-9]{0,18}$ ]]; then
+              echo 'Select series mode, automatic budget and a numeric cold Zed run ID.' >&2
+              exit 1
+            fi
+            jq -e 'length == 1 and (.[0].series.roll_1.sha | type == "string" and length == 40)' <<< "$matrix" > /dev/null
+            start_sha=$(bundle exec ruby -r toml-rb -e 'puts TomlRB.load_file("tools/cargo/zed/case.toml").fetch("start_sha")')
+            seed_root=$(bash scripts/verify-zed-seed.sh "$ZED_SEED_RUN" "$start_sha")
+            echo "seed_scope=boringcache-cargo-plus-mounted-github-$ZED_SEED_RUN" >> "$GITHUB_OUTPUT"
+            echo "seed_root=$seed_root" >> "$GITHUB_OUTPUT"
+          fi
           if [ "$matrix" = '[]' ]; then
             echo 'No benchmark jobs are due for this selection.' >> "$GITHUB_STEP_SUMMARY"
           fi
 
   cold:
     needs: plan
-    if: ${{ (inputs.mode == 'fresh' || inputs.mode == 'series' || inputs.mode == 'preflight') && needs.plan.outputs.matrix != '[]' }}
+    if: ${{ !inputs.zed_seed_run && (inputs.mode == 'fresh' || inputs.mode == 'series' || inputs.mode == 'preflight') && needs.plan.outputs.matrix != '[]' }}
     name: "${{ inputs.mode == 'preflight' && 'preflight' || 'cold' }}: ${{ matrix.label }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 180
@@ -173,6 +195,8 @@ jobs:
             /*
             !/results/
       - uses: ./.github/actions/phase
+        env:
+          BENCH_ZED_SEED_ROOT: ${{ github.job == 'roll_1' && needs.plan.outputs.seed_root || '' }}
         with:
           case: ${{ matrix.case }}
           lane: ${{ matrix.lane }}
@@ -182,7 +206,7 @@ jobs:
           run-id: ${{ github.run_id }}
           sha: ${{ matrix.series[github.job].sha || matrix.sha }}
           step: ${{ matrix.series[github.job].step || matrix.step }}
-          cache-scope: ${{ inputs.mode == 'series' && format('{0}-{1}-{2}', matrix.lane, matrix.runner, github.run_id) || matrix.cache_scope }}
+          cache-scope: ${{ needs.plan.outputs.seed_scope || inputs.mode == 'series' && format('{0}-{1}-{2}', matrix.lane, matrix.runner, github.run_id) || matrix.cache_scope }}
           cli-release: ${{ matrix.cli }}
           continues: ${{ startsWith(github.job, 'roll_') && 'true' || matrix.continues }}
           cadence: ${{ matrix.cadence }}
@@ -215,7 +239,7 @@ jobs:
 
   roll_1:
     needs: [plan, warm]
-    if: ${{ !cancelled() && (inputs.lane != 'boringcache-cargo-plus-mounted' || needs.warm.result == 'success') && inputs.mode == 'series' && needs.plan.result == 'success' && needs.plan.outputs.matrix != '[]' }}
+    if: ${{ !cancelled() && (needs.plan.outputs.seed_root != '' || inputs.lane != 'boringcache-cargo-plus-mounted' || needs.warm.result == 'success') && inputs.mode == 'series' && needs.plan.result == 'success' && needs.plan.outputs.matrix != '[]' }}
     name: "rolling 1: ${{ matrix.label }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 180
@@ -226,7 +250,7 @@ jobs:
 
   roll_2:
     needs: [plan, roll_1]
-    if: ${{ !cancelled() && (inputs.lane != 'boringcache-cargo-plus-mounted' || needs.roll_1.result == 'success') && inputs.mode == 'series' && needs.plan.result == 'success' && needs.plan.outputs.matrix != '[]' }}
+    if: ${{ !cancelled() && !inputs.zed_seed_run && (inputs.lane != 'boringcache-cargo-plus-mounted' || needs.roll_1.result == 'success') && inputs.mode == 'series' && needs.plan.result == 'success' && needs.plan.outputs.matrix != '[]' }}
     name: "rolling 2: ${{ matrix.label }}"
     runs-on: ${{ matrix.runs_on }}
     timeout-minutes: 180

@@ -101,6 +101,16 @@ class WorkflowTest < Minitest::Test
     refute_includes workflow.dig("jobs", "cold", "if"), "mounted_budget"
   end
 
+  def test_zed_seed_skips_cold_and_runs_one_verified_rolling_step
+    jobs = YAML.load_file(File.expand_path("../../.github/workflows/project.yml", __dir__), aliases: true).fetch("jobs")
+    assert_includes jobs.dig("cold", "if"), "!inputs.zed_seed_run"
+    assert_includes jobs.dig("roll_1", "if"), "needs.plan.outputs.seed_root != ''"
+    assert_includes jobs.dig("roll_2", "if"), "!inputs.zed_seed_run"
+    phase = jobs.dig("roll_1", "steps").find { |step| step["uses"] == "./.github/actions/phase" }
+    assert_includes phase.dig("with", "cache-scope"), "needs.plan.outputs.seed_scope"
+    assert_includes phase.dig("env", "BENCH_ZED_SEED_ROOT"), "needs.plan.outputs.seed_root"
+  end
+
   def test_branch_runs_collect_post_job_timings_without_publishing_to_main
     workflow = YAML.load_file(File.expand_path("../../.github/workflows/project.yml", __dir__), aliases: true)
     collect = workflow.fetch("jobs").fetch("collect")

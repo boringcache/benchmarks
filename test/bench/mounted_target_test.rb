@@ -1,21 +1,34 @@
 require_relative "test_helper"
 
 class MountedTargetTest < Minitest::Test
-  def test_removes_the_target_archive_and_disables_pruning_only_on_cold_mounts
+  def test_replaces_only_the_target_and_keeps_sccache_dependencies_and_pruning
     root = File.expand_path("../..", __dir__)
     %w[nushell zed codex ferrum-fuzz].each do |project|
-      %w[cold warm rolling].each do |phase|
-        plan = TomlRB.load_file(File.join(root, "tools/cargo", project, "plus/.boringcache.toml"))
-        expected = plan.fetch("entries").reject { |_, entry| entry["kind"] == "cargo-target" }
-        adapters = Marshal.load(Marshal.dump(plan.fetch("adapters")))
-        adapters.fetch("cargo")["target-budget"] = "0" if phase == "cold"
+      plan = TomlRB.load_file(File.join(root, "tools/cargo", project, "plus/.boringcache.toml"))
+      expected = plan.fetch("entries").reject { |_, entry| entry["kind"] == "cargo-target" }
+      adapters = Marshal.load(Marshal.dump(plan.fetch("adapters")))
 
-        Bench::MountedTarget.configure_cargo_plan(plan, phase:)
+      Bench::MountedTarget.remove_archive(plan)
 
-        assert_equal expected, plan.fetch("entries")
-        assert_equal expected.keys, plan.dig("profiles", "cargo-product", "entries")
-        assert_equal adapters, plan.fetch("adapters")
-      end
+      assert_equal expected, plan.fetch("entries")
+      assert_equal expected.keys, plan.dig("profiles", "cargo-product", "entries")
+      assert_equal adapters, plan.fetch("adapters")
+    end
+  end
+
+  def test_a_seed_needs_complete_pruning_usage
+    Dir.mktmpdir do |root|
+      mount = File.join(root, "target")
+      FileUtils.mkdir_p(File.join(mount, ".boringcache"))
+      target = Bench::MountedTarget.allocate
+      target.instance_variable_set(:@mount, mount)
+
+      assert_raises(Bench::Error) { target.send(:check_seed_usage) }
+      record = File.join(mount, ".boringcache", "cargo-pruning-v1.json")
+      File.write(record, JSON.generate("version" => 1, "complete" => false, "groups" => { "debug/a" => {} }))
+      assert_raises(Bench::Error) { target.send(:check_seed_usage) }
+      File.write(record, JSON.generate("version" => 1, "complete" => true, "groups" => { "debug/a" => {} }))
+      target.send(:check_seed_usage)
     end
   end
   def test_bazel_mount_uses_the_output_path_reported_by_the_benchmark_binary

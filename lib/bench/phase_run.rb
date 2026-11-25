@@ -38,7 +38,7 @@ module Bench
     def prepare
       raise Error, "#{kase.id}: cold cannot be retried within a run because its cache scope may already hold data; dispatch a fresh run" if phase == "cold" && @env["GITHUB_RUN_ATTEMPT"].to_i > 1
 
-      workspace.prepare(sha, phase:)
+      workspace.prepare(sha)
       FileUtils.mkdir_p(File.dirname(record_path))
       [*kase.prepare, *lane.prepare(phase)].each { shell(it) or raise Error, "#{kase.id}: prepare failed: #{it}" }
       save_state

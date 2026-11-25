@@ -10,14 +10,12 @@ module Bench
       [LANE, BAZEL_LANE].include?(name)
     end
 
-    def self.configure_cargo_plan(plan, phase:)
+    def self.remove_archive(plan)
       targets = plan.fetch("entries").select { |_, entry| entry["kind"] == "cargo-target" }.keys
       raise Error, "Mounted Cargo requires one target entry" unless targets.size == 1
 
       plan.fetch("entries").delete(targets.first)
       plan.fetch("profiles").each_value { |profile| profile.fetch("entries").delete(targets.first) }
-      # A cold mount starts with an empty target and has no older Cargo outputs to prune.
-      plan.fetch("adapters").fetch("cargo")["target-budget"] = "0" if phase == "cold"
       plan
     end
 
@@ -30,6 +28,7 @@ module Bench
       @workspace = workspace
       @tag = "mounted-#{kase.name}-#{scope}"
       @phase = phase
+      @seed_root = ENV["BENCH_ZED_SEED_ROOT"].to_s
       @receipt = File.join(ENV.fetch("RUNNER_TEMP"), "diagnostics", "archive-mount.json")
     end
 
@@ -37,7 +36,7 @@ module Bench
       branch = ENV["GITHUB_REF"].to_s
       raise Error, "Select a candidate artifact on a qualification branch" unless branch.start_with?("refs/heads/") && branch != "refs/heads/main" && ENV["CANDIDATE_CLI_ARTIFACT"].to_s.match?(/\Aart_[0-9a-f]{24}\z/)
       raise Error, "Mounted Cargo requires a branch series" unless @bazel || ENV["BENCH_BRANCH_SERIES"] == "true"
-      return false unless @phase == "cold" || system("boringcache", "check", "boringcache/benchmarks", @tag, "--no-platform", "--no-git", "--fail-on-miss")
+      return false unless @phase == "cold" || check_catalog
 
       @mount = @bazel ? bazel_output_path : File.join(@workspace.upstream_dir, "target")
       FileUtils.mkdir_p([@mount, File.dirname(@receipt)])
@@ -53,6 +52,7 @@ module Bench
       status = Open3.popen2(*args) do |input, output, process|
         begin
           ready = output.each_line.any? { |line| line.chomp == READY }
+          check_seed_usage if ready && !@seed_root.empty?
           passed = ready && yield
           save_digest if passed && @phase != "warm"
           input.puts(passed && @phase != "warm" ? "publish" : "discard") if ready
@@ -68,12 +68,34 @@ module Bench
       entry = doc.fetch("entries").fetch(0)
       mount = entry.fetch("archive_mount")
       return false if @bazel && @phase == "cold" && mount.fetch("stats").fetch("peak_resident_bytes").zero?
+      return false unless @seed_root.empty? || mount["initial_root"] == @seed_root
 
       entry.fetch("error_count").to_i.zero? && (@phase == "cold" ? mount["initial_root"].nil? : !mount["initial_root"].nil?) &&
         (@phase == "warm" ? mount["initial_root"] == mount["final_root"] : !mount["final_root"].nil?)
     end
 
     private
+      def check_seed_usage
+        path = File.join(@mount, ".boringcache", "cargo-pruning-v1.json")
+        record = JSON.parse(File.read(path)) if File.file?(path)
+        return if record && record["version"] == 1 && record["complete"] && !record.fetch("groups").empty?
+
+        raise Error, "The cold Zed mount has no complete Cargo pruning record"
+      end
+
+      def check_catalog
+        args = ["boringcache", "check", "boringcache/benchmarks", @tag, "--no-platform", "--no-git", "--fail-on-miss"]
+        return system(*args) if @seed_root.empty?
+
+        output, status = Open3.capture2(*args, "--json")
+        matches = status.success? && JSON.parse(output).fetch("results").any? do |entry|
+          entry["tag"] == @tag && entry["manifest_root_digest"] == @seed_root
+        end
+        raise Error, "The mounted catalog no longer matches the verified cold run" unless matches
+
+        true
+      end
+
       def bazel_output_path
         env = ENV.to_h.slice("PATH", "HOME", "USER", "TMPDIR", "LANG")
         output, status = Open3.capture2(env, "../bazel", "--bazelrc=../bench.bazelrc", "info", "output_path",

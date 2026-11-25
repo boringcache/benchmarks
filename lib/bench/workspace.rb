@@ -17,10 +17,10 @@ module Bench
       @dir = File.join(root, kase.tool.name, kase.name)
     end
 
-    def prepare(sha, phase:)
+    def prepare(sha)
       FileUtils.rm_rf(dir)
       FileUtils.mkdir_p(dir)
-      write_plan(phase)
+      write_plan
       copy_overlay
       checkout(sha)
     end
@@ -34,9 +34,9 @@ module Bench
     end
 
     private
-      def write_plan(phase)
+      def write_plan
         plan = self.class.scope_plan(TomlRB.load_file(kase.plan_path(lane)), scope)
-        MountedTarget.configure_cargo_plan(plan, phase:) if lane.name == MountedTarget::LANE
+        MountedTarget.remove_archive(plan) if lane.name == MountedTarget::LANE
         File.write(plan_path, TomlRB.dump(plan))
       end
 
