@@ -10,12 +10,14 @@ module Bench
       [LANE, BAZEL_LANE].include?(name)
     end
 
-    def self.remove_archive(plan)
+    def self.configure_cargo_plan(plan, phase:)
       targets = plan.fetch("entries").select { |_, entry| entry["kind"] == "cargo-target" }.keys
       raise Error, "Mounted Cargo requires one target entry" unless targets.size == 1
 
       plan.fetch("entries").delete(targets.first)
       plan.fetch("profiles").each_value { |profile| profile.fetch("entries").delete(targets.first) }
+      # A cold mount starts with an empty target and has no older Cargo outputs to prune.
+      plan.fetch("adapters").fetch("cargo")["target-budget"] = "0" if phase == "cold"
       plan
     end
 
