@@ -1,0 +1,50 @@
+{
+  "adapter_command": "buck2",
+  "case": "executorch",
+  "lane": "nativelink",
+  "provider": "nativelink",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 1389,
+  "scope": "nativelink-github-rolling",
+  "cache_scope": "nativelink-github-rolling",
+  "cache_seeded": false,
+  "repo": "pytorch/executorch",
+  "sha": "3469d3614b7f004b8d770e62c1147c795cf87333",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45654074602",
+  "attempt": 1,
+  "capabilities": [
+    "remote-cache"
+  ],
+  "cache_restored_key": null,
+  "seconds": 6.704,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 79
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "2dc6eaf458f18e1b18c3bcf576fd8ad893bd2ca2",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-25T16:31:43Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45654074602/job/139346569438",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-25T16:28:37Z",
+  "job_completed_at": "2026-11-25T16:31:53Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 196.0
+}
