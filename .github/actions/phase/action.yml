@@ -178,7 +178,7 @@ runs:
       shell: bash
       run: ruby scripts/nativelink.rb
 
-    - if: contains(inputs.setup, 'ghcr') && (!contains(inputs.setup, 'boringcache-registry') || inputs.lane == 'avrea-cache-plus' || inputs.lane == 'avrea-disk-plus')
+    - if: contains(inputs.setup, 'ghcr') && (!contains(inputs.setup, 'boringcache-registry') || inputs.lane == 'avrea-cache-plus' || inputs.lane == 'avrea-disk-plus' || inputs.lane == 'boringcache-docker-plus-daytona')
       uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
       with:
         registry: ghcr.io
@@ -239,7 +239,7 @@ runs:
         if [ "$RUNNER_OS" = Windows ]; then dir=$(cygpath -m "$dir"); fi
         echo "$dir" >> "$GITHUB_PATH"
 
-    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache' && contains(inputs.setup, 'boringcache-registry')
+    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache' && contains(inputs.setup, 'boringcache-registry') && inputs.lane == 'boringcache-docker-plus'
       shell: bash
       run: boringcache docker login
 

@@ -1,10 +1,10 @@
-name: Docker - posthog-runners (Avrea disk rolling)
+name: Docker - posthog-runners (Daytona remote rolling)
 
 on:
   push:
-    branches: [posthog-avrea-disk]
+    branches: [posthog-daytona]
     paths:
-      - .github/workflows/posthog-avrea-disk.yml
+      - .github/workflows/posthog-daytona.yml
       - .github/workflows/project.yml
 
 permissions:
@@ -23,6 +23,7 @@ jobs:
       mode: rolling
       replay_step: '0'
       sha: 08ea5803ec5e1ef5c7789e9fd094c2c4c52f5d42
+    secrets: inherit
 
   step_1:
     name: Step 1
@@ -34,6 +35,7 @@ jobs:
       mode: rolling
       replay_step: '1'
       sha: c0f44809ff0099c596fabe956b3741911b933037
+    secrets: inherit
 
   step_2:
     name: Step 2
@@ -45,6 +47,7 @@ jobs:
       mode: rolling
       replay_step: '2'
       sha: 611e18da96cb0827d87e5424db67fb8d07438f8e
+    secrets: inherit
 
   step_3:
     name: Step 3
@@ -56,3 +59,4 @@ jobs:
       mode: rolling
       replay_step: '3'
       sha: 0562836ba812ee79531037302f9766ce34704024
+    secrets: inherit

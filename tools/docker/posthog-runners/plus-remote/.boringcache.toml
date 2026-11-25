@@ -46,3 +46,14 @@ fallback = "fail"
 
 [remotes.scaleway.worker]
 timeout-seconds = 5400
+
+[remotes.daytona]
+provider = "daytona"
+region = "us"
+cpus = 8
+memory-mb = 32768
+disk-gb = 100
+fallback = "fail"
+
+[remotes.daytona.worker]
+timeout-seconds = 3000

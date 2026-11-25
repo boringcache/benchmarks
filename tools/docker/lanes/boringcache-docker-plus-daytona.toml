@@ -1,0 +1,9 @@
+provider = "boringcache"
+level = "plus"
+plan = "plus-remote"
+label = "boringcache plus · daytona remote"
+machine = "daytona 8c 32gb"
+actions_only = true
+runners = ["github"]
+secrets = ["DAYTONA_API_KEY", "POSTHOG_REMOTE_RESTORE_TOKEN", "POSTHOG_REMOTE_SAVE_TOKEN"]
+cli_args = ["--remote=daytona"]
