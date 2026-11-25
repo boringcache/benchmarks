@@ -137,7 +137,8 @@ jobs:
               echo 'Select series mode, automatic budget and a numeric cold Zed run ID.' >&2
               exit 1
             fi
-            jq -e 'length == 1 and (.[0].series.roll_1.sha | type == "string" and length == 40)' <<< "$matrix" > /dev/null
+            jq -e 'length == 1 and (.[0] | .case == "cargo/zed" and .lane == "boringcache-cargo-plus-mounted"
+              and .runner == "github" and (.series.roll_1.sha | test("^[0-9a-f]{40}$")))' <<< "$matrix" > /dev/null
             start_sha=$(bundle exec ruby -r toml-rb -e 'puts TomlRB.load_file("tools/cargo/zed/case.toml").fetch("start_sha")')
             seed_root=$(bash scripts/verify-zed-seed.sh "$ZED_SEED_RUN" "$start_sha")
             echo "seed_scope=boringcache-cargo-plus-mounted-github-$ZED_SEED_RUN" >> "$GITHUB_OUTPUT"
@@ -195,8 +196,6 @@ jobs:
             /*
             !/results/
       - uses: ./.github/actions/phase
-        env:
-          BENCH_ZED_SEED_ROOT: ${{ github.job == 'roll_1' && needs.plan.outputs.seed_root || '' }}
         with:
           case: ${{ matrix.case }}
           lane: ${{ matrix.lane }}
@@ -207,6 +206,7 @@ jobs:
           sha: ${{ matrix.series[github.job].sha || matrix.sha }}
           step: ${{ matrix.series[github.job].step || matrix.step }}
           cache-scope: ${{ needs.plan.outputs.seed_scope || inputs.mode == 'series' && format('{0}-{1}-{2}', matrix.lane, matrix.runner, github.run_id) || matrix.cache_scope }}
+          zed-seed-root: ${{ github.job == 'roll_1' && needs.plan.outputs.seed_root || '' }}
           cli-release: ${{ matrix.cli }}
           continues: ${{ startsWith(github.job, 'roll_') && 'true' || matrix.continues }}
           cadence: ${{ matrix.cadence }}

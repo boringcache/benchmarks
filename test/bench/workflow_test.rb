@@ -108,7 +108,10 @@ class WorkflowTest < Minitest::Test
     assert_includes jobs.dig("roll_2", "if"), "!inputs.zed_seed_run"
     phase = jobs.dig("roll_1", "steps").find { |step| step["uses"] == "./.github/actions/phase" }
     assert_includes phase.dig("with", "cache-scope"), "needs.plan.outputs.seed_scope"
-    assert_includes phase.dig("env", "BENCH_ZED_SEED_ROOT"), "needs.plan.outputs.seed_root"
+    assert_includes phase.dig("with", "zed-seed-root"), "needs.plan.outputs.seed_root"
+    action = YAML.load_file(File.expand_path("../../.github/actions/phase/action.yml", __dir__))
+    build = action.dig("runs", "steps").find { |step| step["id"] == "build" }
+    assert_equal "${{ inputs.zed-seed-root }}", build.dig("env", "BENCH_ZED_SEED_ROOT")
   end
 
   def test_branch_runs_collect_post_job_timings_without_publishing_to_main

@@ -29,6 +29,11 @@ module Bench
       @tag = "mounted-#{kase.name}-#{scope}"
       @phase = phase
       @seed_root = ENV["BENCH_ZED_SEED_ROOT"].to_s
+      run_id = ENV["GITHUB_RUN_ID"]
+      if kase.name == "zed" && phase == "rolling" && run_id && !scope.end_with?("-#{run_id}") &&
+          !@seed_root.match?(/\Asha256:[0-9a-f]{64}\z/)
+        raise Error, "A rolling build from another Zed run requires its verified catalog root"
+      end
       @receipt = File.join(ENV.fetch("RUNNER_TEMP"), "diagnostics", "archive-mount.json")
     end
 
@@ -55,6 +60,7 @@ module Bench
           check_seed_usage if ready && !@seed_root.empty?
           passed = ready && yield
           save_digest if passed && @phase != "warm"
+          check_catalog if passed && !@seed_root.empty?
           input.puts(passed && @phase != "warm" ? "publish" : "discard") if ready
         ensure
           input.close

@@ -31,6 +31,21 @@ class MountedTargetTest < Minitest::Test
       target.send(:check_seed_usage)
     end
   end
+
+  def test_a_rolling_build_needs_a_verified_root_to_reuse_another_runs_scope
+    keys = %w[GITHUB_RUN_ID BENCH_ZED_SEED_ROOT RUNNER_TEMP]
+    previous = ENV.to_h.slice(*keys)
+    Dir.mktmpdir do |root|
+      ENV.update("GITHUB_RUN_ID" => "101", "BENCH_ZED_SEED_ROOT" => nil, "RUNNER_TEMP" => root)
+      kase = Struct.new(:name, :tool).new("zed", Struct.new(:name).new("cargo"))
+      assert_raises(Bench::Error) { Bench::MountedTarget.new(kase, nil, "test-100", "rolling") }
+      Bench::MountedTarget.new(kase, nil, "test-101", "rolling")
+      ENV["BENCH_ZED_SEED_ROOT"] = "sha256:#{'a' * 64}"
+      Bench::MountedTarget.new(kase, nil, "test-100", "rolling")
+    end
+  ensure
+    keys.each { |key| ENV[key] = previous[key] }
+  end
   def test_bazel_mount_uses_the_output_path_reported_by_the_benchmark_binary
     Dir.mktmpdir do |root|
       upstream = File.join(root, "upstream")
