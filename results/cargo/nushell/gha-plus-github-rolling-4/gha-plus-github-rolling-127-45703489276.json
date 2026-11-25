@@ -1,0 +1,53 @@
+{
+  "adapter_command": "cargo",
+  "case": "nushell",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 127,
+  "scope": "gha-plus-github-rolling-4",
+  "cache_scope": "gha-plus-github-rolling-4",
+  "cache_seeded": false,
+  "repo": "nushell/nushell",
+  "sha": "6c5aee3872fbadebc6586dc8df33b1ba9b8dfe3c",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45703489276",
+  "attempt": 1,
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "cache_restored_key": "cargo-nushell-gha-plus-github-rolling-4-126",
+  "cache_restore_tracked": true,
+  "seconds": 673.561,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 63
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "bc9ba90beb6c98fa320338b203eec21e1d04a877",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-25T21:22:10Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45703489276/job/139519829436",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-25T21:21:45Z",
+  "job_completed_at": "2026-11-25T21:33:33Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 708.0
+}
