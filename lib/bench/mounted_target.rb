@@ -2,7 +2,7 @@ module Bench
   class MountedTarget
     LANE = "boringcache-cargo-plus-mounted"
     BAZEL_LANE = "boringcache-bazel-mounted"
-    BUDGET = { "nushell" => "3GiB", "zed" => "6GiB", "ferrum-fuzz" => "12GiB", "codex" => "24GiB" }.freeze
+    BUDGET = { "nushell" => "3GiB", "nushell-path" => "128MiB", "zed" => "6GiB", "ferrum-fuzz" => "12GiB", "codex" => "24GiB" }.freeze
     READY = "benchmark-target-mounted"
     HOLD = 'mountpoint -q -- "$1" && [ "$(findmnt -n -o SOURCE --mountpoint "$1")" = boringcache-archive ] && echo benchmark-target-mounted && read -r decision && { [ "$decision" = publish ] || exit 75; }'
 

@@ -1,0 +1,19 @@
+repo = "nushell/nushell"
+branch = "main"
+start_sha = "396a7588af811612ebfc6de5b090d4f5674d6e51"
+directory = "upstream"
+prepare = [
+  "ruby \"$BENCH_ROOT/tools/cargo/nushell/prepare.rb\" && mise trust && mise install",
+]
+check = '''
+test -n "$(find upstream/target/debug/deps -maxdepth 1 -type f -name 'nu_path-*' -executable -print -quit)" &&
+  test -z "$(git -C upstream status --porcelain=v1 --untracked-files=all)"
+'''
+
+[env]
+CARGO_TERM_COLOR = "always"
+CARGO_INCREMENTAL = "0"
+
+[runs]
+boringcache-cargo-plus = ["github"]
+boringcache-cargo-plus-mounted = ["github"]
