@@ -136,10 +136,8 @@ module Bench
       def build_on_mount
         actual = MountedTarget.new(kase, workspace, cache_scope, phase)
         check_env = environment.slice("PATH", "HOME", "CARGO_TARGET_DIR", "BENCH_DIR", "BENCH_LANE")
-        ok = actual.run do
-          build_command.zero? && system(check_env, "bash", "-c", kase.check, chdir: workspace.dir, unsetenv_others: true)
-        end
-        ok ? 0 : 1
+        check = MountedTarget::Check.new(env: check_env, command: kase.check, dir: workspace.dir)
+        actual.run(check) { build_command.zero? } ? 0 : 1
       end
 
       def cache_dance_sources
@@ -277,6 +275,7 @@ module Bench
           "sha" => sha,
           "seconds" => seconds,
           "cache_save_timing" => lane.cache_save_timing,
+          **({ "mounted_verify_seconds" => MountedTarget.verify_seconds } if MountedTarget.lane?(lane.name) && MountedTarget.verify_seconds),
           "exit_status" => exit_status,
           "output_ok" => output_ok(exit_status),
           "provider_reported" => provider_reported,

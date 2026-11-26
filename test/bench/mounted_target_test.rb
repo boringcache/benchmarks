@@ -73,6 +73,47 @@ class MountedTargetTest < Minitest::Test
     end
   end
 
+  def test_the_fresh_mount_reruns_the_case_check_with_the_same_environment
+    Dir.mktmpdir do |root|
+      workspace = File.join(root, "work dir")
+      FileUtils.mkdir_p([File.join(workspace, "target"), File.join(root, "diagnostics")])
+      check = Bench::MountedTarget::Check.new(env: { "PATH" => ENV.fetch("PATH"), "BENCH_LANE" => "it's mounted" },
+                                              command: 'test -x target/app && test "$BENCH_LANE" = "it'"'"'s mounted" && test -z "$HOME"',
+                                              dir: workspace)
+      target = Bench::MountedTarget.allocate
+      target.instance_variable_set(:@bazel, false)
+      target.instance_variable_set(:@receipt, File.join(root, "diagnostics", "archive-mount.json"))
+
+      assert target.send(:save_check, check)
+      script = File.join(root, "diagnostics", "archive-check.sh")
+      refute check.call
+      refute system("bash", script)
+      File.write(File.join(workspace, "target", "app"), "")
+      File.chmod(0o755, File.join(workspace, "target", "app"))
+      assert check.call
+      assert system("bash", script)
+    end
+  end
+
+  def test_verification_time_is_recorded_apart_from_the_timed_build
+    Dir.mktmpdir do |root|
+      FileUtils.mkdir_p(File.join(root, "diagnostics"))
+      target = Bench::MountedTarget.allocate
+      target.instance_variable_set(:@verify_seconds, 0.0)
+      previous = ENV["RUNNER_TEMP"]
+      begin
+        ENV["RUNNER_TEMP"] = root
+        assert_nil Bench::MountedTarget.verify_seconds
+        assert_equal :checked, target.send(:verifying) { sleep 0.05; :checked }
+        assert_raises(Bench::Error) { target.send(:verifying) { raise Bench::Error, "mismatch" } }
+        File.write(File.join(root, "diagnostics", "archive-verify-seconds"), target.instance_variable_get(:@verify_seconds).round(3).to_s)
+        assert_operator Bench::MountedTarget.verify_seconds, :>=, 0.05
+      ensure
+        ENV["RUNNER_TEMP"] = previous
+      end
+    end
+  end
+
   def test_a_rolling_build_needs_a_verified_root_to_reuse_another_runs_scope
     keys = %w[GITHUB_RUN_ID BENCH_ZED_SEED_ROOT RUNNER_TEMP]
     previous = ENV.to_h.slice(*keys)

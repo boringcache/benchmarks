@@ -378,7 +378,7 @@ runs:
       run: |
         dir="$RUNNER_TEMP/diagnostics"
         tag=$(jq -er '.entries[0].tag' "$dir/archive-mount.json")
-        boringcache ci run --oidc-provider github-actions -- boringcache archive-mount boringcache/benchmarks "$tag" "$(cat "$dir/archive-mountpoint")" --read-only --spool "$RUNNER_TEMP/verify-spool" --receipt "$dir/archive-reopen.json" -- sha256sum -c "$dir/archive-library.sha256"
+        boringcache ci run --oidc-provider github-actions -- boringcache archive-mount boringcache/benchmarks "$tag" "$(cat "$dir/archive-mountpoint")" --read-only --spool "$RUNNER_TEMP/verify-spool" --receipt "$dir/archive-reopen.json" -- bash -c 'sha256sum -c "$1" && { [ ! -f "$2" ] || bash "$2"; }' verify "$dir/archive-library.sha256" "$dir/archive-check.sh"
         jq -e '.entries[0].archive_mount | .read_only and .chunk_download_bytes > 0' "$dir/archive-reopen.json" > /dev/null
 
     - if: always() && startsWith(inputs.case, 'bazel/codex') && steps.prepare.outputs.ready == 'true'

@@ -5,8 +5,24 @@ module Bench
     READY = "benchmark-target-mounted"
     HOLD = 'mountpoint -q -- "$1" && [ "$(findmnt -n -o SOURCE --mountpoint "$1")" = boringcache-archive ] && echo benchmark-target-mounted && read -r decision && { [ "$decision" = publish ] || exit 75; }'
 
+    Check = Data.define(:env, :command, :dir) do
+      def call
+        system(env, "bash", "-c", command, chdir: dir, unsetenv_others: true)
+      end
+
+      def script
+        exports = env.map { |key, value| "#{key}=#{Shellwords.escape(value)}" }.join(" ")
+        "cd #{Shellwords.escape(dir)} && exec env -i #{exports} bash -c #{Shellwords.escape(command)}\n"
+      end
+    end
+
     def self.lane?(name)
       [LANE, BAZEL_LANE].include?(name)
+    end
+
+    def self.verify_seconds
+      path = File.join(ENV.fetch("RUNNER_TEMP"), "diagnostics", "archive-verify-seconds")
+      File.file?(path) ? Float(File.read(path)) : nil
     end
 
     def self.require_target_entry(plan)
@@ -32,13 +48,14 @@ module Bench
         raise Error, "A rolling build from another Zed run requires its verified catalog root"
       end
       @receipt = File.join(ENV.fetch("RUNNER_TEMP"), "diagnostics", "archive-mount.json")
+      @verify_seconds = 0.0
     end
 
-    def run
+    def run(check)
       branch = ENV["GITHUB_REF"].to_s
       raise Error, "Select a candidate artifact on a qualification branch" unless branch.start_with?("refs/heads/") && branch != "refs/heads/main" && ENV["CANDIDATE_CLI_ARTIFACT"].to_s.match?(/\Aart_[0-9a-f]{24}\z/)
       raise Error, "Mounted Cargo requires a branch series" unless @bazel || ENV["BENCH_BRANCH_SERIES"] == "true"
-      return false unless @phase == "cold" || check_catalog
+      return false unless @phase == "cold" || verifying { check_catalog }
 
       @mount = @bazel ? bazel_output_path : File.join(@workspace.upstream_dir, "target")
       FileUtils.mkdir_p([@mount, File.dirname(@receipt)])
@@ -55,9 +72,10 @@ module Bench
         begin
           ready = output.each_line.any? { |line| line.chomp == READY }
           check_seed_usage if ready && !@seed_root.empty?
-          passed = ready && yield
-          save_digest if passed && @phase != "warm"
-          check_catalog if passed && !@seed_root.empty?
+          passed = ready && yield && verifying do
+            check.call && (@phase == "warm" || (save_digest && save_check(check))) &&
+              (@seed_root.empty? || check_catalog)
+          end
           input.puts(passed && @phase != "warm" ? "publish" : "discard") if ready
         ensure
           input.close
@@ -65,6 +83,7 @@ module Bench
         output.each_line { |line| $stdout.write(line) }
         process.value
       end
+      File.write(File.join(File.dirname(@receipt), "archive-verify-seconds"), @verify_seconds.round(3).to_s)
       return false unless passed && status.exitstatus == (@phase == "warm" ? 75 : 0) && File.file?(@receipt)
 
       doc = JSON.parse(File.read(@receipt))
@@ -78,6 +97,18 @@ module Bench
     end
 
     private
+      def verifying
+        started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        yield
+      ensure
+        @verify_seconds += Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+      end
+
+      def save_check(check)
+        File.write(File.join(File.dirname(@receipt), "archive-check.sh"), check.script) unless @bazel || check.command.empty?
+        true
+      end
+
       def check_seed_usage
         path = File.join(@mount, ".boringcache", "cargo-pruning-v1.json")
         record = JSON.parse(File.read(path)) if File.file?(path)
@@ -119,6 +150,7 @@ module Bench
         end
 
         File.write(File.join(File.dirname(@receipt), "archive-library.sha256"), "#{Digest::SHA256.file(output).hexdigest}  #{output}\n")
+        true
       end
   end
 end
