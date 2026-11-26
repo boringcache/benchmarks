@@ -98,6 +98,10 @@ label = "ubicloud-standard-8"
 machine = "ubicloud 8c"
 env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
+[avrea-macos-8]
+label = "avrea-macos-26-8-vcpu"
+machine = "avrea macos 8c"
+
 [incredibuild]
 qualification = true
 label = "incredibuild-ubuntu-2404"

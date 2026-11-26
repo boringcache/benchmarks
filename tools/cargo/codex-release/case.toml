@@ -27,7 +27,7 @@ RUSTY_V8_ARCHIVE = "${BENCH_DIR}/v8/librusty_v8_ptrcomp_sandbox_release_aarch64-
 RUSTY_V8_SRC_BINDING_PATH = "${BENCH_DIR}/v8/src_binding_ptrcomp_sandbox_release_aarch64-apple-darwin.rs"
 
 [runs]
-boringcache-cargo = ["macos"]
-boringcache-cargo-plus = ["macos"]
-gha = ["macos"]
-gha-plus = ["macos"]
+boringcache-cargo = ["avrea-macos-8"]
+boringcache-cargo-plus = ["avrea-macos-8"]
+gha = ["avrea-macos-8"]
+gha-plus = ["avrea-macos-8"]

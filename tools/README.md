@@ -393,12 +393,14 @@ does in the release job.
 Rolling steps move 20 first-parent commits. Upstream `main` received about 60
 commits a day in the week before the case started and made two or three
 releases a day, so one step approximates one release interval. Upstream runs
-this build on `macos-15-xlarge`, a 5-core M2 Pro. These lanes run on GitHub's
-standard `macos-26` runner, which has 3 cores, so absolute times differ from
-upstream's. The base lanes compare compiler caches. The plus lanes also cache
-Cargo registry downloads, Git dependencies and `target`. Restore, the Cargo
-build and cache publication are timed; signing, packaging and the other
-release targets are outside this measurement.
+this build on `macos-15-xlarge`, a 5-core M2 Pro. These lanes run on Avrea's
+`avrea-macos-26-8-vcpu` runner, an Apple M5 Max with 8 vCPUs and 24 GB of
+memory, so absolute times differ from upstream's. GitHub's standard `macos-26`
+runner, with 3 cores and 7 GB, did not finish a cold build within the
+180-minute job limit. The base lanes compare compiler caches. The plus lanes
+also cache Cargo registry downloads, Git dependencies and `target`. Restore,
+the Cargo build and cache publication are timed; signing, packaging and the
+other release targets are outside this measurement.
 
 Sources: [release workflow](https://github.com/openai/codex/blob/dd6d2c3d66fbd04963cb62a16d80213846242b90/.github/workflows/rust-release.yml),
 [rusty_v8 setup](https://github.com/openai/codex/blob/dd6d2c3d66fbd04963cb62a16d80213846242b90/.github/actions/setup-rusty-v8/action.yml),
