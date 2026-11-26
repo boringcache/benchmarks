@@ -19,6 +19,7 @@ for bin in codex codex-code-mode-host codex-exec-server codex-responses-api-prox
 '''
 
 [env]
+MISE_SCCACHE_VERSION = "0.17.0"
 CARGO_TARGET_DIR = "${BENCH_DIR}/upstream/target"
 CARGO_NET_GIT_FETCH_WITH_CLI = "true"
 CARGO_PROFILE_RELEASE_SPLIT_DEBUGINFO = "packed"
