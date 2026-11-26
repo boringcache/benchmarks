@@ -1,0 +1,51 @@
+{
+  "adapter_command": "turbo",
+  "case": "n8n",
+  "lane": "vercel",
+  "provider": "vercel",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 3030,
+  "scope": "vercel-github-rolling",
+  "cache_scope": "vercel-github-rolling",
+  "cache_seeded": false,
+  "repo": "n8n-io/n8n",
+  "sha": "f1f4621e44020754184c3dc79e432f865bcfc375",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45783381066",
+  "attempt": 1,
+  "capabilities": [
+    "remote-cache"
+  ],
+  "cache_restored_key": "turbo-n8n-vercel-github-rolling-3029",
+  "cache_restore_tracked": true,
+  "seconds": 95.243,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 78
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "3b7d08a0bd5db0dd6a5e08b90e6d676142ee4d24",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-26T08:29:27Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45783381066/job/139784438957",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-26T08:28:53Z",
+  "job_completed_at": "2026-11-26T08:31:05Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 132.0
+}
