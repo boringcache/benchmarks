@@ -1,0 +1,10 @@
+provider = "boringcache"
+level = "plus"
+plan = "plus-remote"
+label = "boringcache plus · avrea remote"
+machine = "avrea 8c 30gb"
+actions_only = true
+runners = ["github"]
+secrets = ["AVR_TOKEN", "AVR_ORG", "POSTHOG_REMOTE_RESTORE_TOKEN", "POSTHOG_REMOTE_SAVE_TOKEN"]
+cli_args = ["--remote=avrea"]
+prepare = ["ruby \"$BENCH_ROOT/tools/docker/posthog-runners/remote-candidate.rb\" avrea"]

@@ -68,3 +68,11 @@ fallback = "fail"
 
 [remotes.luxor.worker]
 timeout-seconds = 3000
+
+[remotes.avrea]
+provider = "avrea"
+size = "8-vcpu"
+fallback = "fail"
+
+[remotes.avrea.worker]
+timeout-seconds = 3000

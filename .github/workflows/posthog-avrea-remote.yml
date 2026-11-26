@@ -1,10 +1,10 @@
-name: Docker - posthog-runners (Luxor remote rolling)
+name: Docker - posthog-runners (Avrea remote rolling)
 
 on:
   push:
-    branches: [posthog-luxor-remote]
+    branches: [posthog-avrea-remote]
     paths:
-      - .github/workflows/posthog-luxor-remote.yml
+      - .github/workflows/posthog-avrea-remote.yml
       - .github/workflows/project.yml
   workflow_dispatch:
 

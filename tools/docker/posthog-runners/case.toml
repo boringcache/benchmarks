@@ -6,9 +6,9 @@ rolling_series = 4
 setup = ["ghcr", "boringcache-registry"]
 prepare = [
   "bash \"$BENCH_ROOT/tools/docker/shared/posthog/prepare.sh\"",
-  "registry=ghcr; if [ \"$BENCH_LANE\" = boringcache-docker-plus ] || [ \"$BENCH_LANE\" = boringcache-docker-plus-daytona ] || [ \"$BENCH_LANE\" = boringcache-docker-plus-luxor-remote ]; then registry=boringcache; fi; ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" prepare posthog-runners \"$registry\"",
+  "registry=ghcr; if [ \"$BENCH_LANE\" = boringcache-docker-plus ] || [ \"$BENCH_LANE\" = boringcache-docker-plus-daytona ] || [ \"$BENCH_LANE\" = boringcache-docker-plus-luxor-remote ] || [ \"$BENCH_LANE\" = boringcache-docker-plus-avrea-remote ]; then registry=boringcache; fi; ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" prepare posthog-runners \"$registry\"",
 ]
 check = "ruby \"$BENCH_ROOT/tools/docker/shared/image-publication.rb\" check linux/amd64"
 
 [runs]
-boringcache-docker-plus-luxor-remote = ["github"]
+boringcache-docker-plus-avrea-remote = ["github"]
