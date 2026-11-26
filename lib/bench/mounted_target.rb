@@ -111,7 +111,7 @@ module Bench
       end
 
       def save_digest
-        pattern = @bazel ? "*/testlogs/**/test.log" : "**/deps/*.rlib"
+        pattern = @bazel ? "*/testlogs/**/test.log" : "**/*.rlib"
         matches = Dir.glob(pattern, base: @mount).map { |path| File.join(@mount, path) }
         output = matches.select { |path| File.lstat(path).file? && File.size(path).positive? }.min_by { |path| [File.size(path), path] }
         unless output

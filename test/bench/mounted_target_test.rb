@@ -54,6 +54,25 @@ class MountedTargetTest < Minitest::Test
     end
   end
 
+  def test_the_checksum_finds_libraries_in_the_build_directory_layout
+    Dir.mktmpdir do |root|
+      mount = File.join(root, "target")
+      out = File.join(mount, "x86_64-unknown-linux-gnu", "release", "build", "itoa", "959b3b83ff293ec3", "out")
+      FileUtils.mkdir_p([out, File.join(root, "diagnostics")])
+      library = File.join(out, "libitoa-959b3b83ff293ec3.rlib")
+      File.write(library, "rlib")
+      target = Bench::MountedTarget.allocate
+      target.instance_variable_set(:@mount, mount)
+      target.instance_variable_set(:@bazel, false)
+      target.instance_variable_set(:@receipt, File.join(root, "diagnostics", "archive-mount.json"))
+
+      target.send(:save_digest)
+
+      assert_equal "#{Digest::SHA256.file(library).hexdigest}  #{library}\n",
+                   File.read(File.join(root, "diagnostics", "archive-library.sha256"))
+    end
+  end
+
   def test_a_rolling_build_needs_a_verified_root_to_reuse_another_runs_scope
     keys = %w[GITHUB_RUN_ID BENCH_ZED_SEED_ROOT RUNNER_TEMP]
     previous = ENV.to_h.slice(*keys)
