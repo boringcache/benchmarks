@@ -41,6 +41,13 @@ jobs:
           sync
           echo "marker=$marker" >> "$GITHUB_OUTPUT"
 
+      - if: always()
+        run: |
+          for file in "$RUNNER_TEMP"/_runner_file_commands/step_summary_*; do
+            [ -s "$file" ] && { echo "== $(basename "$file")"; cat "$file"; }
+          done
+          true
+
   read:
     name: luxor sticky disk read
     needs: write
@@ -69,3 +76,10 @@ jobs:
             echo "::error::The read job did not see the marker written by the previous job."
             exit 1
           fi
+
+      - if: always()
+        run: |
+          for file in "$RUNNER_TEMP"/_runner_file_commands/step_summary_*; do
+            [ -s "$file" ] && { echo "== $(basename "$file")"; cat "$file"; }
+          done
+          true
