@@ -1,0 +1,50 @@
+{
+  "adapter_command": "cargo",
+  "case": "codex",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "runner": "github-26",
+  "runner_label": "ubuntu-26.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 92,
+  "scope": "gha-github-26-rolling-5",
+  "cache_scope": "gha-github-26-rolling-5",
+  "cache_seeded": false,
+  "repo": "openai/codex",
+  "sha": "227fa4e805d44988b0888390f41afe1358e9d24d",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45904101833",
+  "attempt": 1,
+  "capabilities": [
+    "compiler-cache"
+  ],
+  "cache_restored_key": null,
+  "seconds": 1559.74,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 57
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "46aea610754850b698acb8355b4743d32d9a344b",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-26T22:22:48Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45904101833/job/140196909951",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-26T22:20:57Z",
+  "job_completed_at": "2026-11-26T22:48:56Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 1679.0
+}
