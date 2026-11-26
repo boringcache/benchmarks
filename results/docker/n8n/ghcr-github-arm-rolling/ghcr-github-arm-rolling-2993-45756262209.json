@@ -1,0 +1,61 @@
+{
+  "adapter_command": "docker",
+  "case": "n8n",
+  "lane": "ghcr",
+  "provider": "github-container-registry",
+  "level": "base",
+  "runner": "github-arm",
+  "runner_label": "ubuntu-24.04-arm",
+  "machine": "github arm 4c",
+  "phase": "rolling",
+  "step": 2993,
+  "scope": "ghcr-github-arm-rolling",
+  "cache_scope": "ghcr-github-arm-rolling",
+  "cache_seeded": false,
+  "repo": "n8n-io/n8n",
+  "sha": "0f9d4cab21859b1754125ad661c87d1f01f70520",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45756262209",
+  "attempt": 1,
+  "capabilities": [
+    "layers"
+  ],
+  "cache_restored_key": null,
+  "seconds": 143.005,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Neoverse-N2",
+      "cores": 4,
+      "memory_mb": 15941,
+      "disk_gb": 144,
+      "disk_free_gb": 91
+    },
+    "image_platform": "linux/arm64",
+    "buildx_builder": {
+      "name": "builder-86f05a56-0532-4358-b3cc-62b5c48ed08d",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-86f05a56-0532-4358-b3cc-62b5c48ed08d0",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "16aacf41118e31d035b403050f402d35d819b357",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-26T04:41:13Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45756262209/job/139695902815",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-26T04:37:35Z",
+  "job_completed_at": "2026-11-26T04:43:55Z",
+  "queue_seconds": 4.0,
+  "job_seconds": 380.0
+}
