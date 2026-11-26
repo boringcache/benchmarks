@@ -108,6 +108,16 @@ label = "avrea-ubuntu-24.04-8-vcpu"
 machine = "avrea 8c"
 env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
+[luxor-16x32]
+label = "luxor-ubuntu-large-plus-16c-32g"
+machine = "luxor 16c"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
+[luxor-8x16]
+label = "luxor-ubuntu-large-8c-16g"
+machine = "luxor 8c"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
 [incredibuild-macos]
 label = "incredibuild-macos-latest"
 machine = "incredibuild macos"

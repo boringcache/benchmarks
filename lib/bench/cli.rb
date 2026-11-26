@@ -289,7 +289,7 @@ module Bench
 
       def record_job(jobs, record, kase, lane)
         name = "#{record["phase"]}: #{job_label(kase, lane, record["runner"])}"
-        name = "Step #{record["step"]} / #{name}" if record["runner"] == "avrea-8" && record["phase"] == ROLLING
+        name = "Step #{record["step"]} / #{name}" if %w[luxor-16x32 luxor-8x16].include?(record["runner"]) && record["phase"] == ROLLING
         jobs[[name, [record["attempt"].to_i, 1].max]]
       end
 

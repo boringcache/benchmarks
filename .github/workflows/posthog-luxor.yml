@@ -1,11 +1,12 @@
-name: Docker - posthog-runners (Avrea rolling)
+name: Docker - posthog-runners (Luxor rolling)
 
 on:
   push:
-    branches: [posthog-avrea]
+    branches: [posthog-luxor]
     paths:
-      - .github/workflows/posthog-avrea.yml
+      - .github/workflows/posthog-luxor.yml
       - .github/workflows/project.yml
+  workflow_dispatch:
 
 permissions:
   contents: write
