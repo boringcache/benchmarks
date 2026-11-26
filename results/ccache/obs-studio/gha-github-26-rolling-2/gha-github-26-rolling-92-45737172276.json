@@ -1,0 +1,51 @@
+{
+  "adapter_command": "ccache",
+  "case": "obs-studio",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "runner": "github-26",
+  "runner_label": "ubuntu-26.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 92,
+  "scope": "gha-github-26-rolling-2",
+  "cache_scope": "gha-github-26-rolling-2",
+  "cache_seeded": false,
+  "repo": "obsproject/obs-studio",
+  "sha": "b10b958cdec9ba4ee0c3dcee6430d7d10681575a",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45737172276",
+  "attempt": 1,
+  "capabilities": [
+    "remote-storage"
+  ],
+  "cache_restored_key": "ccache-obs-studio-gha-github-26-rolling-2-91",
+  "cache_restore_tracked": true,
+  "seconds": 224.677,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 76
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "d2535b39a88706ee8c2b1029b44a3475a21015a1",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-26T01:41:18Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45737172276/job/139633404798",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-26T01:39:53Z",
+  "job_completed_at": "2026-11-26T01:45:07Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 314.0
+}
