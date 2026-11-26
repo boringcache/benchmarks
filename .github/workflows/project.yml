@@ -18,6 +18,9 @@ on:
       sha:
         type: string
         required: true
+      harness_ref:
+        type: string
+        required: true
   workflow_dispatch:
     inputs:
       tool:
@@ -60,7 +63,7 @@ on:
 run-name: ${{ inputs.tool }} - ${{ inputs.project }}${{ inputs.mode != 'fresh' && format(' ({0})', inputs.mode) || '' }}${{ inputs.step && format(' step {0}', inputs.step) || '' }}${{ inputs.cli && format(' [{0}]', inputs.cli) || '' }}
 
 concurrency:
-  group: ${{ (inputs.mode == 'rolling' || inputs.mode == 'sample') && format('rolling-{0}-{1}', inputs.tool, inputs.project) || format('run-{0}', github.run_id) }}
+  group: ${{ inputs.replay_step != '' && format('replay-{0}-{1}', inputs.tool, inputs.project) || (inputs.mode == 'rolling' || inputs.mode == 'sample') && format('rolling-{0}-{1}', inputs.tool, inputs.project) || format('run-{0}', github.run_id) }}
   cancel-in-progress: false
 
 permissions:
@@ -74,6 +77,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.harness_ref }}
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -95,20 +99,21 @@ jobs:
           SHA: ${{ inputs.sha }}
           REF: ${{ github.ref }}
           REPLAY_STEP: ${{ inputs.replay_step }}
+          HARNESS_REF: ${{ inputs.harness_ref }}
         run: |
           if [ -z "$REPLAY_STEP" ] && { [ -n "$ROLLING" ] || [ -n "$SAMPLE" ]; } && [ "$REF" != refs/heads/main ]; then
             echo "::error::Rolling and sample runs continue the series on main: they read its records, publish records only to main and write its cache scopes. Dispatch them with --ref main; this run used $REF."
             exit 1
           fi
           if [ -n "$REPLAY_STEP" ]; then
-            if [ "$REF" != refs/heads/posthog-luxor ] || [ "$GITHUB_RUN_ATTEMPT" != 1 ] || [ -z "$ROLLING" ] || [ "$TOOL" != Docker ] || [ "$PROJECT" != posthog-runners ] || [[ ! "$REPLAY_STEP" =~ ^[0-3]$ ]] || [[ ! "$SHA" =~ ^[0-9a-f]{40}$ ]]; then
-              echo 'The Luxor replay requires its benchmark branch, first attempt, step and expected upstream commit.' >&2
+            if [ "$REF" != refs/heads/main ] || [[ ! "$HARNESS_REF" =~ ^[0-9a-f]{40}$ ]] || [ "$GITHUB_RUN_ATTEMPT" != 1 ] || [ -z "$ROLLING" ] || [ "$TOOL" != Docker ] || [ "$PROJECT" != posthog-runners ] || [[ ! "$REPLAY_STEP" =~ ^[0-3]$ ]] || [[ ! "$SHA" =~ ^[0-9a-f]{40}$ ]]; then
+              echo 'The Luxor disk replay runs from main with a pinned harness commit, on its first attempt, with a step and its expected upstream commit, because Luxor publishes sticky disks only from the default branch.' >&2
               exit 1
             fi
             bash scripts/checkout-records.sh results/docker/posthog-runners/boringcache-docker-plus-incredibuild-rolling-4 553799ce20de409993b30061c8d83dd46451a8ec
             matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" --rolling --step "$REPLAY_STEP" --results results)
             matrix=$(jq -ce --arg step "$REPLAY_STEP" --arg sha "$SHA" '
-              select((map([.lane, .runner]) | sort) == [["boringcache-docker-plus", "luxor-16x32"], ["boringcache-docker-plus", "luxor-8x16"], ["luxor-cache-plus", "luxor-16x32"], ["luxor-cache-plus", "luxor-8x16"]] and all(.[]; .sha == $sha and .step == $step))
+              select((map([.lane, .runner]) | sort) == [["luxor-disk-plus", "luxor-16x32"], ["luxor-disk-plus", "luxor-8x16"]] and all(.[]; .sha == $sha and .step == $step))
               | map(.continues = (if $step == "0" then "" else "true" end))
             ' <<< "$matrix")
             echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
@@ -164,6 +169,7 @@ jobs:
     steps: &steps
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.harness_ref }}
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -220,6 +226,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.harness_ref }}
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -246,7 +253,7 @@ jobs:
 
   publish:
     needs: [plan, collect]
-    if: ${{ !cancelled() && needs.collect.result == 'success' && github.ref == 'refs/heads/main' }}
+    if: ${{ !cancelled() && needs.collect.result == 'success' && github.ref == 'refs/heads/main' && inputs.replay_step == '' }}
     runs-on: ubuntu-24.04
     permissions:
       contents: write

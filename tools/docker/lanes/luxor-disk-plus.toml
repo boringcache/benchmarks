@@ -1,0 +1,7 @@
+provider = "luxor"
+level = "plus"
+plan = "plus"
+actions_only = true
+runners = ["luxor-16x32", "luxor-8x16"]
+setup = ["luxor-disk"]
+post_job_save = ["luxor-disk"]
