@@ -384,11 +384,15 @@ not public; it is unset in every lane, which changes only that embedded value.
 
 Upstream release tags are a `main` commit plus one change that sets
 `[workspace.package] version` in `codex-rs/Cargo.toml`. Before the timer
-starts, preparation sets that version to `0.0.0-bench.g<commit>` for the
-checked-out commit. Each step therefore rebuilds every workspace crate, as
-each release does, and the output check runs `codex --version` to confirm the
-stamp. Cargo then updates `Cargo.lock` for the new workspace version, as it
-does in the release job.
+starts, preparation sets that version to `0.0.0-bench.g<commit>` in
+`Cargo.toml` and in the workspace entries of `Cargo.lock`, then commits both
+in the benchmark checkout with the upstream commit's date, as a release tag
+adds one commit to `main`. The build starts from a clean checkout, which
+BoringCache requires before it saves `target`, and `STABLE_GIT_COMMIT` names
+that commit. Upstream's release build updates those `Cargo.lock` entries
+itself; here that happens before the timer. Each step therefore rebuilds every
+workspace crate, as each release does, and the output check runs
+`codex --version` to confirm the stamp.
 
 Rolling steps move 20 first-parent commits. Upstream `main` received about 60
 commits a day in the week before the case started and made two or three
