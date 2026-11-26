@@ -1,0 +1,54 @@
+{
+  "adapter_command": "cargo",
+  "case": "codex",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "runner": "github-26",
+  "runner_label": "ubuntu-26.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 72,
+  "scope": "gha-plus-github-26-rolling-5",
+  "cache_scope": "gha-plus-github-26-rolling-5",
+  "cache_seeded": false,
+  "repo": "openai/codex",
+  "sha": "43d8b78241444f7268e75c87ca0f5f7d8138cef7",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45773506112",
+  "attempt": 1,
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "cache_restored_key": "cargo-codex-gha-plus-github-26-rolling-5-0",
+  "cache_restore_tracked": true,
+  "seconds": 1575.604,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 14
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "982686990feb1b5a44d3d4f0fc2cacd47d8746ea",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-26T07:14:24Z",
+  "excluded": "GitHub Actions Cache could not confirm cargo-codex-gha-plus-github-26-rolling-5-72 after the save. https://github.com/boringcache/benchmarks/actions/runs/45773506112",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45773506112/job/139751837565",
+  "job_conclusion": "failure",
+  "job_started_at": "2026-11-26T07:12:32Z",
+  "job_completed_at": "2026-11-26T07:40:46Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 1694.0
+}
