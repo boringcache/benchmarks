@@ -1,0 +1,53 @@
+{
+  "adapter_command": "cargo",
+  "case": "zed",
+  "lane": "mbx",
+  "provider": "mbx",
+  "level": "plus",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 290,
+  "scope": "mbx-github-rolling",
+  "cache_scope": "mbx-github-rolling",
+  "cache_seeded": false,
+  "repo": "zed-industries/zed",
+  "sha": "a3ce8d5e88e35697b2ba1cf9cb3c6816089b8281",
+  "cache_save_timing": "post-job",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45731390507",
+  "attempt": 1,
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "cache_restored_key": null,
+  "seconds": 779.89,
+  "exit_status": 101,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 22
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "56ffe935f1655cc64bffc51f5dcfc660713db8ac",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-26T00:51:48Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45731390507/job/139614279018",
+  "job_conclusion": "failure",
+  "job_started_at": "2026-11-26T00:49:34Z",
+  "job_completed_at": "2026-11-26T01:04:53Z",
+  "queue_seconds": 3.0,
+  "job_seconds": 919.0,
+  "post_job_save_seconds": 0.0
+}
