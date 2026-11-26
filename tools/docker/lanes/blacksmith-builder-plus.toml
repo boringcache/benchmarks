@@ -2,6 +2,6 @@ provider = "blacksmith"
 level = "plus"
 plan = "plus"
 actions_only = true
-runners = ["blacksmith-8"]
+runners = ["blacksmith-8", "blacksmith-8-arm"]
 setup = ["blacksmith-builder"]
 post_job_save = ["useblacksmith/setup-docker-builder"]

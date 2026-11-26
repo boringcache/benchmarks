@@ -57,6 +57,11 @@ label = "blacksmith-8vcpu-ubuntu-2404"
 machine = "blacksmith 8c"
 env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
 
+[blacksmith-8-arm]
+label = "blacksmith-8vcpu-ubuntu-2404-arm"
+machine = "blacksmith arm 8c"
+env = { BORINGCACHE_EPHEMERAL_PRIVILEGED_RUNNER = "1" }
+
 [blacksmith-16]
 label = "blacksmith-16vcpu-ubuntu-2404"
 machine = "blacksmith 16c"
