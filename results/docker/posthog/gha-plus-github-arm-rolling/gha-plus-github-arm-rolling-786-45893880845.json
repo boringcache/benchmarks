@@ -1,0 +1,65 @@
+{
+  "adapter_command": "docker",
+  "case": "posthog",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "runner": "github-arm",
+  "runner_label": "ubuntu-24.04-arm",
+  "machine": "github arm 4c",
+  "phase": "rolling",
+  "step": 786,
+  "scope": "gha-plus-github-arm-rolling",
+  "cache_scope": "gha-plus-github-arm-rolling",
+  "cache_seeded": false,
+  "repo": "PostHog/posthog",
+  "sha": "3863d4cf7eac21bb8b286fd1f0d10ec9c96dd2d3",
+  "cache_save_timing": "post-job",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45893880845",
+  "attempt": 1,
+  "capabilities": [
+    "layers",
+    "tool-cache",
+    "mount-cache"
+  ],
+  "cache_restored_key": "docker-posthog-gha-plus-github-arm-rolling-785",
+  "cache_restore_tracked": true,
+  "seconds": 1824.18,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Neoverse-N2",
+      "cores": 4,
+      "memory_mb": 15941,
+      "disk_gb": 144,
+      "disk_free_gb": 36
+    },
+    "image_platform": "linux/arm64",
+    "buildx_builder": {
+      "name": "builder-05611ab2-8c11-492b-a7d0-89d4f20aac09",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-05611ab2-8c11-492b-a7d0-89d4f20aac090",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "fcaeed37e2c1fdf095ebd1c6b7f217418c6f8d34",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-26T20:52:03Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45893880845/job/140163248413",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-26T20:51:06Z",
+  "job_completed_at": "2026-11-26T21:34:18Z",
+  "queue_seconds": 5.0,
+  "job_seconds": 2592.0,
+  "post_job_save_seconds": 685.059
+}
