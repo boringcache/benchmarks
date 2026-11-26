@@ -1,0 +1,72 @@
+name: Docker - posthog-runners (Luxor sticky disk replay)
+
+on:
+  workflow_dispatch:
+    inputs:
+      step:
+        description: Replay step
+        type: choice
+        required: true
+        options: ['0', '1', '2', '3']
+
+permissions:
+  contents: write
+  actions: write
+  id-token: write
+  packages: write
+
+concurrency:
+  group: posthog-luxor-disk
+  cancel-in-progress: false
+
+jobs:
+  disk:
+    name: "Disk for step ${{ inputs.step }}: ${{ matrix.runner }}"
+    runs-on: ${{ matrix.label }}
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: luxor-16x32
+            label: luxor-ubuntu-large-plus-16c-32g
+          - runner: luxor-8x16
+            label: luxor-ubuntu-large-8c-16g
+    steps:
+      - id: disk
+        uses: LuxorLabs/stickydisk@3a52fa83275bcafc0953ab1afed6ca137718eced # v1.0.10
+        with:
+          key: luxor-disk-plus-${{ matrix.runner }}-rolling-4
+          path: ~/.cache/luxor-disk-gate
+          commit: never
+          fail-on-error: true
+      - env:
+          STEP: ${{ inputs.step }}
+          SOURCE: ${{ steps.disk.outputs.source }}
+          GENERATION: ${{ steps.disk.outputs.generation }}
+        run: |
+          want="readonly"
+          [ "$STEP" = 0 ] && want="miss"
+          expected=""
+          for ((i = 0; i < STEP; i++)); do expected+="bench-step-$i"$'\n'; done
+          expected=${expected%$'\n'}
+          actual=$(sudo find "$HOME/.cache/luxor-disk-gate" -maxdepth 1 -name 'bench-step-*' -printf '%f\n' | sort -V)
+          echo "source=$SOURCE generation=${GENERATION:-none} markers=[${actual//$'\n'/ }]"
+          if [ "$SOURCE" != "$want" ] || [ "$actual" != "$expected" ]; then
+            echo "::error::The disk is not ready for step $STEP: expected a $want disk with markers [${expected//$'\n'/ }]"
+            exit 1
+          fi
+
+  replay:
+    name: Step ${{ inputs.step }}
+    needs: disk
+    uses: boringcache/benchmarks/.github/workflows/project.yml@65de4ef30e33a5db71f2532c9780442f5b81e9bb
+    with:
+      tool: Docker
+      project: posthog-runners
+      mode: rolling
+      replay_step: ${{ inputs.step }}
+      sha: ${{ fromJSON('["08ea5803ec5e1ef5c7789e9fd094c2c4c52f5d42", "c0f44809ff0099c596fabe956b3741911b933037", "611e18da96cb0827d87e5424db67fb8d07438f8e", "0562836ba812ee79531037302f9766ce34704024"]')[fromJSON(inputs.step)] }}
+      harness_ref: 65de4ef30e33a5db71f2532c9780442f5b81e9bb
