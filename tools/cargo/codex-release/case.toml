@@ -1,0 +1,32 @@
+repo = "openai/codex"
+branch = "main"
+start_sha = "dd6d2c3d66fbd04963cb62a16d80213846242b90"
+rolling_stride = 20
+directory = "upstream/codex-rs"
+script = ["bash", "../../overlay/release-build.sh"]
+prepare = [
+  "mise trust && mise install",
+  "cd upstream/codex-rs && rustup show active-toolchain",
+  'printf "%s\n" /target/ >> upstream/.git/info/exclude',
+  'bash "$BENCH_ROOT/tools/cargo/shared/codex-rusty-v8.sh" aarch64-apple-darwin',
+  'bash "$BENCH_ROOT/tools/cargo/codex-release/stamp-version.sh"',
+]
+check = '''
+release="$CARGO_TARGET_DIR/aarch64-apple-darwin/release" &&
+for bin in codex codex-code-mode-host codex-exec-server codex-responses-api-proxy; do test -x "$release/$bin" || exit 1; done &&
+"$release/codex" --version | grep -F "$(cat release-version)" &&
+{ [ "$BENCH_LANE" != "boringcache-cargo-plus" ] || test -s "$CARGO_TARGET_DIR/.boringcache/cargo-freshness-v2.json"; }
+'''
+
+[env]
+CARGO_TARGET_DIR = "${BENCH_DIR}/upstream/target"
+CARGO_NET_GIT_FETCH_WITH_CLI = "true"
+CARGO_PROFILE_RELEASE_SPLIT_DEBUGINFO = "packed"
+RUSTY_V8_ARCHIVE = "${BENCH_DIR}/v8/librusty_v8_ptrcomp_sandbox_release_aarch64-apple-darwin.a.gz"
+RUSTY_V8_SRC_BINDING_PATH = "${BENCH_DIR}/v8/src_binding_ptrcomp_sandbox_release_aarch64-apple-darwin.rs"
+
+[runs]
+boringcache-cargo = ["macos"]
+boringcache-cargo-plus = ["macos"]
+gha = ["macos"]
+gha-plus = ["macos"]

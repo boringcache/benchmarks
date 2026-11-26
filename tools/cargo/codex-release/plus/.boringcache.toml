@@ -1,0 +1,33 @@
+workspace = "boringcache/benchmarks"
+
+[entries.cargo-registry-cache]
+tag = "codex-release-cargo-registry-cache"
+
+[entries.cargo-registry-index]
+tag = "codex-release-cargo-registry-index"
+
+[entries.cargo-git-db]
+tag = "codex-release-cargo-git-db"
+
+[entries.cargo-target]
+kind = "cargo-target"
+tag = "codex-release-cargo-target"
+path-env = "CARGO_TARGET_DIR"
+
+[profiles.cargo-product]
+entries = ["cargo-registry-cache", "cargo-registry-index", "cargo-git-db", "cargo-target"]
+
+[adapters.sccache]
+fail-on-cache-error = true
+tag = "codex-release-sccache"
+no-git = true
+
+[adapters.cargo]
+fail-on-cache-error = true
+tag = "codex-release-cargo"
+profiles = ["cargo-product"]
+compiler-cache = "sccache"
+target-budget = "20GiB"
+no-git = true
+metadata-hints = ["benchmark=codex-release", "workload=release-build"]
+command = ["cargo", "build", "--target", "aarch64-apple-darwin", "--release", "--timings", "--bin", "codex", "--bin", "codex-code-mode-host", "--bin", "codex-exec-server", "--bin", "codex-responses-api-proxy"]

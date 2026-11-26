@@ -1,0 +1,18 @@
+workspace = "boringcache/benchmarks"
+
+[profiles.compiler-only]
+entries = []
+
+[adapters.sccache]
+fail-on-cache-error = true
+tag = "codex-release-sccache"
+no-git = true
+
+[adapters.cargo]
+fail-on-cache-error = true
+tag = "codex-release-cargo"
+profiles = ["compiler-only"]
+compiler-cache = "sccache"
+no-git = true
+metadata-hints = ["benchmark=codex-release", "workload=release-build"]
+command = ["cargo", "build", "--target", "aarch64-apple-darwin", "--release", "--timings", "--bin", "codex", "--bin", "codex-code-mode-host", "--bin", "codex-exec-server", "--bin", "codex-responses-api-proxy"]
