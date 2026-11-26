@@ -6,6 +6,10 @@ machine = "github 4c"
 label = "ubuntu-24.04-arm"
 machine = "github arm 4c"
 
+[github-arm-8c]
+label = "ubuntu-26-arm-8c"
+machine = "github arm 8c"
+
 [github-26]
 label = "ubuntu-26.04"
 machine = "github 4c"

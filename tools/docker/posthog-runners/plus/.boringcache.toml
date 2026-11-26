@@ -4,13 +4,13 @@ workspace = "boringcache/benchmarks"
 fail-on-cache-error = true
 tag = "posthog-runners-docker"
 no-git = true
-metadata-hints = ["benchmark=posthog-runners", "upstream-job=build-image-amd64"]
+metadata-hints = ["benchmark=posthog-runners", "upstream-job=build-image-arm64"]
 tool-cache = ["turbo:posthog-runners-turbo"]
 mount-cache = true
 command = [
   "docker", "buildx", "build",
   "--file", "overlay/PostHog.Dockerfile",
-  "--platform", "linux/amd64",
+  "--platform", "linux/arm64",
   "--provenance", "false",
   "--tag", "posthog-benchmark:local",
   "--metadata-file", "overlay/image-metadata.json",
