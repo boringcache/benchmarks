@@ -1,0 +1,50 @@
+{
+  "adapter_command": "nix",
+  "case": "zed",
+  "lane": "cachix",
+  "provider": "cachix",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 276,
+  "scope": "cachix-github-rolling",
+  "cache_scope": "cachix-github-rolling",
+  "cache_seeded": false,
+  "repo": "zed-industries/zed",
+  "sha": "e4fa16422543ab77b129d7f4ad825630b993ecdd",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45807999152",
+  "attempt": 1,
+  "capabilities": [
+    "binary-cache"
+  ],
+  "cache_restored_key": null,
+  "seconds": 5988.62,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 65
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "465e50f6e2342ca9076c51a08f090e4c283da739",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-26T11:10:52Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45807999152/job/139868575357",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-26T11:10:18Z",
+  "job_completed_at": "2026-11-26T12:50:45Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 6027.0
+}
