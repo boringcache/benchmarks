@@ -1,0 +1,51 @@
+{
+  "adapter_command": "sbt",
+  "case": "lila",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 888,
+  "scope": "gha-github-rolling-2",
+  "cache_scope": "gha-github-rolling-2",
+  "cache_seeded": false,
+  "repo": "lichess-org/lila",
+  "sha": "b23a58e94deadd6879343b4963bbe14923d3b833",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45822098509",
+  "attempt": 1,
+  "capabilities": [
+    "remote-cache"
+  ],
+  "cache_restored_key": "sbt-lila-gha-github-rolling-2-887",
+  "cache_restore_tracked": true,
+  "seconds": 622.242,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 65
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "3eae921caa0222c5c33b664898401749fe2394c6",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-26T12:43:20Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45822098509/job/139917110805",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-26T12:42:51Z",
+  "job_completed_at": "2026-11-26T12:53:46Z",
+  "queue_seconds": 1.0,
+  "job_seconds": 655.0
+}
