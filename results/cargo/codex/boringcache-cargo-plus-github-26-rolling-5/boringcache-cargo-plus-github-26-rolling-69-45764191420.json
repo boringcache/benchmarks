@@ -1,0 +1,826 @@
+{
+  "adapter_command": "cargo",
+  "case": "codex",
+  "lane": "boringcache-cargo-plus",
+  "provider": "boringcache",
+  "level": "plus",
+  "runner": "github-26",
+  "runner_label": "ubuntu-26.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 69,
+  "scope": "boringcache-cargo-plus-github-26-rolling-5",
+  "cache_scope": "boringcache-cargo-plus-github-26-rolling-5",
+  "cache_seeded": false,
+  "repo": "openai/codex",
+  "sha": "f63f8b9bc663eaf4dfd606e64afd61c5d0e1b249",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45764191420",
+  "attempt": 1,
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "cache_restored_key": null,
+  "seconds": 418.339,
+  "exit_status": 101,
+  "output_ok": false,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1795672845354,
+      "run_id": "45764191420",
+      "session_id": "proxy-summary-d830bdbe-445f-45c4-97fe-2d9a690ca4be",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 70644,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "sccache",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 19.0,
+          "cpu_iowait_percent": 35.4,
+          "cpu_pressure_percent": 2.6,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 86.1,
+          "disk_read_mb": 4390.1,
+          "disk_written_mb": 63750.8,
+          "interval_ms": 416936,
+          "io_pressure_percent": 61.6,
+          "memory_pressure_percent": 0.4,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
+        "disk_available_gb": 104,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15982
+      },
+      "proxy": {
+        "adapter": "sccache",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 70644,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_max_in_flight": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 3,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 3,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_download_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_download_urls": 549,
+          "cache_kv_entries_current_version": 95,
+          "cache_kv_entries_download_urls": 93,
+          "cache_kv_entry_reads": 77,
+          "cache_rollups_ingest": 113,
+          "cache_session_evidence_confirm": 130,
+          "cache_session_evidence_prepare": 95
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_download_urls": 961,
+          "cache_kv_entries_current_version": 95,
+          "cache_kv_entries_download_urls": 93,
+          "cache_kv_entry_reads": 77,
+          "cache_rollups_ingest": 131,
+          "cache_session_evidence_confirm": 214,
+          "cache_session_evidence_prepare": 99
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_download_urls": 8,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 7,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_download_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 22,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_download_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_download_urls": 549,
+          "cache_kv_entries_current_version": 95,
+          "cache_kv_entries_download_urls": 93,
+          "cache_kv_entry_reads": 77,
+          "cache_rollups_ingest": 113,
+          "cache_session_evidence_confirm": 130,
+          "cache_session_evidence_prepare": 95
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_download_urls": 961,
+          "cache_kv_entries_current_version": 95,
+          "cache_kv_entries_download_urls": 93,
+          "cache_kv_entry_reads": 77,
+          "cache_rollups_ingest": 131,
+          "cache_session_evidence_confirm": 214,
+          "cache_session_evidence_prepare": 99
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_download_urls": 8,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 7,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_download_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 22,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 173
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 11444963,
+        "startup_prefetch_blobs_per_sec": 4,
+        "startup_prefetch_bytes_per_sec": 50716234,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 3,
+        "startup_prefetch_concurrency_adjustment_count": 0,
+        "startup_prefetch_concurrency_reason": "large_blobs",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_deferred_trial_blobs": 0,
+        "startup_prefetch_deferred_trial_bytes": 0,
+        "startup_prefetch_demand_max_wait_ms": 0,
+        "startup_prefetch_demand_wait_ms": 0,
+        "startup_prefetch_demand_waits": 0,
+        "startup_prefetch_duration_ms": 677,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 3,
+        "startup_prefetch_generation": 71,
+        "startup_prefetch_hedge_wins": 0,
+        "startup_prefetch_hedges": 0,
+        "startup_prefetch_initial_concurrency": 3,
+        "startup_prefetch_inserted": 3,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 3,
+        "startup_prefetch_mode": "recent-reads",
+        "startup_prefetch_observation_count": 2,
+        "startup_prefetch_recent_read_blobs": 3,
+        "startup_prefetch_recent_read_bytes": 34334891,
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 3,
+        "startup_prefetch_target_bytes": 34334891,
+        "startup_prefetch_total_unique_blobs": 5103,
+        "startup_prefetch_trial_budget_bytes": 134217728,
+        "startup_prefetch_unplanned_blobs": 0,
+        "startup_prefetch_unplanned_bytes": 0,
+        "startup_prefetch_unused_blobs": 0,
+        "startup_prefetch_unused_bytes": 0,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 3,
+        "startup_prefetch_used_blobs": 3,
+        "startup_prefetch_used_bytes": 34334891,
+        "startup_prefetch_write_trial_blobs": 0,
+        "startup_prefetch_write_trial_bytes": 0
+      },
+      "kv_upload": {},
+      "singleflight": {
+        "singleflight_kv_download_leaders": 3,
+        "singleflight_kv_index_refresh_leaders": 1,
+        "singleflight_kv_lookup_leaders": 1
+      },
+      "kv_lookup": {
+        "kv_lookup_sccache_after_refresh_miss": 1,
+        "kv_lookup_sccache_published_fast_hit": 3,
+        "kv_lookup_sccache_published_fast_miss": 1
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 34334891,
+          "blob_read_local_count": 3,
+          "blob_read_local_hit_rate_pct": 50,
+          "blob_read_remote_avg_ms": 601,
+          "blob_read_remote_bytes": 34334891,
+          "blob_read_remote_count": 3
+        },
+        "blob_read_cache_bytes": 34334891,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "average_cache_read_hit_seconds": 0.014,
+        "average_cache_write_seconds": 0.0,
+        "average_compiler_seconds": 0.0,
+        "cache_errors": 0,
+        "cache_hits": 3,
+        "cache_misses": 0,
+        "cache_read_errors": 0,
+        "cache_timeouts": 0,
+        "cache_write_errors": 0,
+        "compile_requests": 21,
+        "compile_requests_executed": 4,
+        "hit_counts": {
+          "rust": 3
+        },
+        "hit_rate": 100.0,
+        "non_cacheable_calls": 17,
+        "non_cacheable_reasons": {
+          "-": 1,
+          "crate-type": 15,
+          "missing input": 1
+        },
+        "proxy_cache_read_errors": 0,
+        "proxy_cache_write_errors": 0,
+        "schema_version": "native_tool_evidence.v1",
+        "stats_source": "sccache --show-stats",
+        "tool": "sccache"
+      },
+      "unit_evidence": {
+        "build_succeeded": false,
+        "capabilities": {
+          "cache_source": false,
+          "critical_path": true,
+          "dependencies": false,
+          "execution_reasons": false,
+          "scheduling": true,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": true
+        },
+        "collection_state": "reported",
+        "counts": {
+          "executed": 75,
+          "observed": 19,
+          "scope": "cargo_units",
+          "up_to_date": 1891
+        },
+        "critical_path": {
+          "end_offset_ms": 66860,
+          "metadata_edges": 0,
+          "ready_gap_ms": 37920,
+          "source": "cargo_unblocked_units",
+          "start_offset_ms": 25780,
+          "truncated": false,
+          "unit_count": 2,
+          "unit_duration_ms": 3160,
+          "units": [
+            {
+              "duration_ms": 2180,
+              "id": "cargo-unit:335",
+              "label": "codex-code-mode-runtime v0.0.0"
+            },
+            {
+              "duration_ms": 980,
+              "id": "cargo-unit:338",
+              "label": "codex-code-mode-runtime v0.0.0 settled \"test\" (test)"
+            }
+          ]
+        },
+        "invocation": {
+          "host": "x86_64-unknown-linux-gnu",
+          "profile": "test",
+          "report_owner": "boringcache",
+          "target": "x86_64-unknown-linux-gnu",
+          "time_precision_ms": 10,
+          "total_time_ms": 66900,
+          "units_total": 1966
+        },
+        "ranking_scope": "all_observed_units",
+        "scheduling": {
+          "average_active": 1.0,
+          "jobs": 2,
+          "max_concurrency": 2,
+          "ncpu": 4,
+          "waiting_ms": 37920,
+          "waiting_unit_ms": 326540
+        },
+        "schema_version": "unit_evidence.v1",
+        "source": "cargo_timings_report",
+        "tool": "cargo",
+        "tool_version": "1.99.1",
+        "truncated": false,
+        "unit_kind": "crate_unit",
+        "units": [
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 31570,
+              "target_kind": "grpc_timing \"test\" (test)"
+            },
+            "completed_at_ms": 1795672819060,
+            "duration_ms": 10640,
+            "id": "cargo-unit:325",
+            "key": "a6049b1a1b4db1f9138d756e0bac5f703247c6468dc3815adfa82b20c12a26af",
+            "label": "codex-code-mode-host v0.0.0 grpc_timing \"test\" (test)",
+            "started_at_ms": 1795672808420,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 42210,
+              "target_kind": "grpc \"test\" (test)"
+            },
+            "completed_at_ms": 1795672823150,
+            "duration_ms": 4090,
+            "id": "cargo-unit:322",
+            "key": "033ca575625ef958d19c9cbba76a697a68fecc020e9089191a5a8daa840d0deb",
+            "label": "codex-code-mode-host v0.0.0 grpc \"test\" (test)",
+            "started_at_ms": 1795672819060,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 60220,
+              "target_kind": "codex_code_mode_host \"lib\" (test)"
+            },
+            "completed_at_ms": 1795672840730,
+            "duration_ms": 3660,
+            "id": "cargo-unit:317",
+            "key": "75761be40633f02103365976879ca7c59018712e25e8bfbdc933d0b81b50fce3",
+            "label": "codex-code-mode-host v0.0.0 codex_code_mode_host \"lib\" (test)",
+            "started_at_ms": 1795672837070,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 28240,
+              "target_kind": "ui_plugin_wire \"test\" (test)"
+            },
+            "completed_at_ms": 1795672808420,
+            "duration_ms": 3330,
+            "id": "cargo-unit:328",
+            "key": "c9d1e8999b8c033e633f524a397625a3f598c7d3fcce1c694dd294e788952f4c",
+            "label": "codex-code-mode-host v0.0.0 ui_plugin_wire \"test\" (test)",
+            "started_at_ms": 1795672805090,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 46290,
+              "target_kind": "stdio \"test\" (test)"
+            },
+            "completed_at_ms": 1795672826320,
+            "duration_ms": 3180,
+            "id": "cargo-unit:327",
+            "key": "9ba354e3231182bc6206d2ef43a2126df51f4d33768f52aebdd6205d31856df6",
+            "label": "codex-code-mode-host v0.0.0 stdio \"test\" (test)",
+            "started_at_ms": 1795672823140,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 50380,
+              "target_kind": "capacity \"test\" (test)"
+            },
+            "completed_at_ms": 1795672830150,
+            "duration_ms": 2920,
+            "id": "cargo-unit:321",
+            "key": "5d8771cdb89aba3d67e4ef591de40ef25552e52163c7c08be0f645f63b96b87b",
+            "label": "codex-code-mode-host v0.0.0 capacity \"test\" (test)",
+            "started_at_ms": 1795672827230,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 53510,
+              "target_kind": "settled \"test\" (test)"
+            },
+            "completed_at_ms": 1795672833150,
+            "duration_ms": 2790,
+            "id": "cargo-unit:326",
+            "key": "cb2043df03ca92295f942d2774c70601c2bf18ba5c2ba2575752c96a746ac59e",
+            "label": "codex-code-mode-host v0.0.0 settled \"test\" (test)",
+            "started_at_ms": 1795672830360,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "codex-code-mode-runtime",
+              "crate_version": "0.0.0",
+              "features": [],
+              "frontend_ms": 2180,
+              "mode": "todo",
+              "start_offset_ms": 25780,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795672804810,
+            "critical_path": true,
+            "duration_ms": 2180,
+            "id": "cargo-unit:335",
+            "key": "44f4ca08e72438b7694b8d55b1805e9af4fe6ae39761e8eb2c895a23c52ce9f4",
+            "label": "codex-code-mode-runtime v0.0.0",
+            "started_at_ms": 1795672802630,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 58060,
+              "target_kind": "codex-code-mode-host \"bin\""
+            },
+            "completed_at_ms": 1795672837070,
+            "duration_ms": 2160,
+            "id": "cargo-unit:320",
+            "key": "855db97ec598919f8bba9aa80843093a751d6c4021ffea85fb4885af3a5ad110",
+            "label": "codex-code-mode-host v0.0.0 codex-code-mode-host \"bin\"",
+            "started_at_ms": 1795672834910,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "v8",
+              "crate_version": "152.2.0",
+              "features": [
+                "default",
+                "use_custom_libcxx",
+                "v8_enable_pointer_compression",
+                "v8_enable_sandbox"
+              ],
+              "frontend_ms": 1610,
+              "mode": "todo",
+              "start_offset_ms": 24160,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795672802620,
+            "duration_ms": 1610,
+            "id": "cargo-unit:1861",
+            "key": "75b1686d09b9f4544056b5a232d614e911a3e4fa2e0129708315c06a023957b3",
+            "label": "v8 v152.2.0",
+            "started_at_ms": 1795672801010,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 57020,
+              "target_kind": "grpc_notifications \"test\" (test)"
+            },
+            "completed_at_ms": 1795672834910,
+            "duration_ms": 1040,
+            "id": "cargo-unit:323",
+            "key": "45eb43e7d2ff9d73ff8fa4cd041187958c652f44bdb57905e38a945d28e5abc9",
+            "label": "codex-code-mode-host v0.0.0 grpc_notifications \"test\" (test)",
+            "started_at_ms": 1795672833870,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-runtime",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 64840,
+              "target_kind": "tool_preloads \"test\" (test)"
+            },
+            "completed_at_ms": 1795672842730,
+            "duration_ms": 1040,
+            "id": "cargo-unit:339",
+            "key": "6f7257d912792820f00e4bce1833cdab3d51c58808624e737e2b075417bd4d9b",
+            "label": "codex-code-mode-runtime v0.0.0 tool_preloads \"test\" (test)",
+            "started_at_ms": 1795672841690,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-runtime",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 65880,
+              "target_kind": "settled \"test\" (test)"
+            },
+            "completed_at_ms": 1795672843710,
+            "critical_path": true,
+            "duration_ms": 980,
+            "id": "cargo-unit:338",
+            "key": "680f65e77958902db67879a71c08d0a1c3f89fe34664836a09cf4381037f84e3",
+            "label": "codex-code-mode-runtime v0.0.0 settled \"test\" (test)",
+            "started_at_ms": 1795672842730,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-runtime",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 63880,
+              "target_kind": "array_sort \"test\" (test)"
+            },
+            "completed_at_ms": 1795672841690,
+            "duration_ms": 960,
+            "id": "cargo-unit:336",
+            "key": "b1982f2a3296017f48280eb191c0ea2b989c27bcc4bf4acadf0bdac66579ba01",
+            "label": "codex-code-mode-runtime v0.0.0 array_sort \"test\" (test)",
+            "started_at_ms": 1795672840730,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 49470,
+              "target_kind": "grpc_tcp \"test\" (test)"
+            },
+            "completed_at_ms": 1795672827230,
+            "duration_ms": 910,
+            "id": "cargo-unit:324",
+            "key": "6e1735fc9ed3743cb5458a0c77559739fc03a75a82470ba63c33b7de6c1be25b",
+            "label": "codex-code-mode-host v0.0.0 grpc_tcp \"test\" (test)",
+            "started_at_ms": 1795672826320,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 56300,
+              "target_kind": "codex-code-mode-host \"bin\" (test)"
+            },
+            "completed_at_ms": 1795672833870,
+            "duration_ms": 720,
+            "id": "cargo-unit:319",
+            "key": "df89fb840d40dd5dd63e011726925c08ab225e5661299aa249d5f485c9560746",
+            "label": "codex-code-mode-host v0.0.0 codex-code-mode-host \"bin\" (test)",
+            "started_at_ms": 1795672833150,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 20,
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "frontend_ms": 250,
+              "mode": "todo",
+              "start_offset_ms": 27960,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795672805080,
+            "duration_ms": 270,
+            "id": "cargo-unit:318",
+            "key": "d582d4657d24f414a481f64f37f7ce246b61918eb6bd7b4eb0a4232bbd558030",
+            "label": "codex-code-mode-host v0.0.0",
+            "started_at_ms": 1795672804810,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-code-mode-host",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 53300,
+              "target_kind": "ui_sandbox \"test\" (test)"
+            },
+            "completed_at_ms": 1795672830350,
+            "duration_ms": 200,
+            "id": "cargo-unit:329",
+            "key": "3df44ba1fd72bf2d8e3242fd93ee86803268940e321a0b767c071010f2f535b7",
+            "label": "codex-code-mode-host v0.0.0 ui_sandbox \"test\" (test)",
+            "started_at_ms": 1795672830150,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "codex-tui",
+              "crate_version": "0.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 24170,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795672801020,
+            "duration_ms": 0,
+            "id": "cargo-unit:627",
+            "key": "cd2f0cc2f16f0ce0d54b80f14c36c996c71d0e2bf32e6dc507df10ff2ef6c78a",
+            "label": "codex-tui v0.0.0",
+            "started_at_ms": 1795672801020,
+            "state": "executed"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "sccache",
+          "candidates": [
+            {
+              "confidence": "medium",
+              "evidence": {
+                "bytes_read": 34334891,
+                "hit_rate": 75.0,
+                "hits": 3,
+                "misses": 1
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 70644,
+            "errors": 0,
+            "hit_rate": 75.0,
+            "hits": 3,
+            "misses": 1,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 0
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 75.0,
+          "hits": 3,
+          "likely_reason": "mixed_existing_and_new_work",
+          "misses": 1,
+          "state": "warm_mixed",
+          "writes": 0
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 44
+    }
+  },
+  "evidence": [
+    "boringcache-cargo-plus-github-26-rolling-69-45764191420.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "product_env": {
+    "BORINGCACHE_ARCHIVE_SELECTIVE_READS": "1"
+  },
+  "plan_settings": {
+    "target-budget": "55GiB"
+  },
+  "harness": {
+    "commit": "cf9c2d875006d323a0183a8a572072f490fba03a",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-26T05:53:47Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45764191420/job/139721282009",
+  "job_conclusion": "failure",
+  "job_started_at": "2026-11-26T05:51:14Z",
+  "job_completed_at": "2026-11-26T06:00:50Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 576.0
+}
