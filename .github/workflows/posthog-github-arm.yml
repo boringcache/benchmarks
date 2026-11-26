@@ -6,6 +6,7 @@ on:
     paths:
       - .github/workflows/posthog-github-arm.yml
       - .github/workflows/project.yml
+      - runners.toml
 
 permissions:
   contents: write
