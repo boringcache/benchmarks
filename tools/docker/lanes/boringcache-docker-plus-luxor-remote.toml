@@ -1,0 +1,10 @@
+provider = "boringcache"
+level = "plus"
+plan = "plus-remote"
+label = "boringcache plus · luxor remote"
+machine = "luxor 8c 32gb"
+actions_only = true
+runners = ["github"]
+secrets = ["LUXOR_API_KEY", "POSTHOG_REMOTE_RESTORE_TOKEN", "POSTHOG_REMOTE_SAVE_TOKEN"]
+cli_args = ["--remote=luxor"]
+prepare = ["ruby \"$BENCH_ROOT/tools/docker/posthog-runners/remote-candidate.rb\" luxor"]

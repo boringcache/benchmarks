@@ -1,10 +1,10 @@
-name: Docker - posthog-runners (Daytona remote rolling)
+name: Docker - posthog-runners (Luxor remote rolling)
 
 on:
   push:
-    branches: [posthog-daytona]
+    branches: [posthog-luxor-remote]
     paths:
-      - .github/workflows/posthog-daytona.yml
+      - .github/workflows/posthog-luxor-remote.yml
       - .github/workflows/project.yml
   workflow_dispatch:
 
@@ -24,7 +24,7 @@ jobs:
       mode: rolling
       replay_step: '0'
       sha: 08ea5803ec5e1ef5c7789e9fd094c2c4c52f5d42
-      cli_artifact: art_88343ef47d3c90951aa8d731
+      cli_artifact: art_707b5fd00a10477ad22ac990
     secrets: inherit
 
   step_1:
@@ -37,7 +37,7 @@ jobs:
       mode: rolling
       replay_step: '1'
       sha: c0f44809ff0099c596fabe956b3741911b933037
-      cli_artifact: art_88343ef47d3c90951aa8d731
+      cli_artifact: art_707b5fd00a10477ad22ac990
     secrets: inherit
 
   step_2:
@@ -50,7 +50,7 @@ jobs:
       mode: rolling
       replay_step: '2'
       sha: 611e18da96cb0827d87e5424db67fb8d07438f8e
-      cli_artifact: art_88343ef47d3c90951aa8d731
+      cli_artifact: art_707b5fd00a10477ad22ac990
     secrets: inherit
 
   step_3:
@@ -63,5 +63,5 @@ jobs:
       mode: rolling
       replay_step: '3'
       sha: 0562836ba812ee79531037302f9766ce34704024
-      cli_artifact: art_88343ef47d3c90951aa8d731
+      cli_artifact: art_707b5fd00a10477ad22ac990
     secrets: inherit

@@ -252,7 +252,7 @@ runs:
         if [ "$RUNNER_OS" = Windows ]; then dir=$(cygpath -m "$dir"); fi
         echo "$dir" >> "$GITHUB_PATH"
 
-    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache' && contains(inputs.setup, 'boringcache-registry') && (inputs.lane == 'boringcache-docker-plus' || inputs.lane == 'boringcache-docker-plus-daytona')
+    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache' && contains(inputs.setup, 'boringcache-registry') && (inputs.lane == 'boringcache-docker-plus' || inputs.lane == 'boringcache-docker-plus-daytona' || inputs.lane == 'boringcache-docker-plus-luxor-remote')
       shell: bash
       run: boringcache docker login
 

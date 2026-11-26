@@ -7,4 +7,4 @@ actions_only = true
 runners = ["github"]
 secrets = ["DAYTONA_API_KEY", "POSTHOG_REMOTE_RESTORE_TOKEN", "POSTHOG_REMOTE_SAVE_TOKEN"]
 cli_args = ["--remote=daytona"]
-prepare = ["ruby \"$BENCH_ROOT/tools/docker/posthog-runners/daytona-remote.rb\""]
+prepare = ["ruby \"$BENCH_ROOT/tools/docker/posthog-runners/remote-candidate.rb\" daytona"]
