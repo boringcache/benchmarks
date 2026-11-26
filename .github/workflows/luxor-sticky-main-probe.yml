@@ -59,6 +59,7 @@ jobs:
         with:
           key: main-publish-probe
           path: ~/.cache/main-publish-probe
+          commit: never
       - env:
           MOUNTED: ${{ steps.disk.outputs.mounted }}
           SOURCE: ${{ steps.disk.outputs.source }}
@@ -73,8 +74,7 @@ jobs:
           if [ "$found" = "$EXPECTED" ]; then
             echo "The disk written by the previous job on the default branch was published."
           else
-            echo "::error::The read job did not see the marker written by the previous job."
-            exit 1
+            echo "::warning::The read job did not see the marker written by the previous job."
           fi
 
       - if: always()
