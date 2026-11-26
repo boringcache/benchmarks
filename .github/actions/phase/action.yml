@@ -242,6 +242,18 @@ runs:
       shell: bash
       run: bash scripts/ssh-build-worker.sh connect scaleway
 
+    - if: steps.prepare.outputs.ready == 'true' && steps.prepare.outputs.provider == 'boringcache' && startsWith(inputs.runner, 'luxor-')
+      shell: bash
+      env:
+        BUILD_DIR: ${{ steps.prepare.outputs.build_dir }}
+      run: |
+        default="$HOME/.docker/buildx/buildkitd.default.toml"
+        [ -f "$default" ] || { echo "::error::The Luxor runner has no $default"; exit 1; }
+        cp "$default" "$BUILD_DIR/buildkitd.toml"
+        config="$RUNNER_TEMP/boringcache-buildx"
+        mkdir -p "$config"
+        echo "BUILDX_CONFIG=$config" >> "$GITHUB_ENV"
+
     - if: steps.prepare.outputs.ready == 'true'
       shell: bash
       run: bundle exec ruby bin/bench start "$BENCH_CASE" --lane "$BENCH_LANE"
