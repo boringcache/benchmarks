@@ -1,0 +1,51 @@
+{
+  "adapter_command": "xcode",
+  "case": "obs-studio",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "runner": "macos",
+  "runner_label": "macos-26",
+  "machine": "github macos 3c",
+  "phase": "rolling",
+  "step": 91,
+  "scope": "gha-macos-rolling-2",
+  "cache_scope": "gha-macos-rolling-2",
+  "cache_seeded": false,
+  "repo": "obsproject/obs-studio",
+  "sha": "83b3b4368f33e3eba97380ef4ddda0743be5a9fb",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45737188449",
+  "attempt": 1,
+  "capabilities": [
+    "compilation-cache"
+  ],
+  "cache_restored_key": "xcode-obs-studio-gha-macos-rolling-2-90",
+  "cache_restore_tracked": true,
+  "seconds": 274.006,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Apple M1 (Virtual)",
+      "cores": 3,
+      "memory_mb": 7168,
+      "disk_gb": 319,
+      "disk_free_gb": 89
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "d2535b39a88706ee8c2b1029b44a3475a21015a1",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-26T01:40:52Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45737188449/job/139633459569",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-26T01:40:03Z",
+  "job_completed_at": "2026-11-26T01:45:32Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 329.0
+}
