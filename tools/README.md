@@ -397,7 +397,8 @@ workspace crate, as each release does, and the output check runs
 Rolling steps move 20 first-parent commits. Upstream `main` received about 60
 commits a day in the week before the case started and made two or three
 releases a day, so one step approximates one release interval. Upstream runs
-this build on `macos-15-xlarge`, a 5-core M2 Pro. These lanes run on Avrea's
+this build on `macos-15-xlarge`, an Apple M2 with 5 vCPUs and 14 GB of
+memory. These lanes run on Avrea's
 `avrea-macos-26-8-vcpu` runner, an Apple M5 Max with 8 vCPUs and 24 GB of
 memory, so absolute times differ from upstream's. GitHub's standard `macos-26`
 runner, with 3 cores and 7 GB, did not finish a cold build within the
