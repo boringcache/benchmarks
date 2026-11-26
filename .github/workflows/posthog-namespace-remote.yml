@@ -1,12 +1,10 @@
-name: Docker - posthog-runners (Luxor remote rolling)
+name: Docker - posthog-runners (Namespace remote rolling)
 
 on:
   push:
-    branches: [posthog-luxor-remote]
+    branches: [posthog-namespace-replay]
     paths:
-      - .github/workflows/posthog-luxor-remote.yml
-      - .github/workflows/project.yml
-  workflow_dispatch:
+      - .github/workflows/posthog-namespace-remote.yml
 
 permissions:
   contents: write
@@ -23,8 +21,8 @@ jobs:
       project: posthog-runners
       mode: rolling
       replay_step: '0'
+      replay_lane: boringcache-docker-plus-namespace
       sha: 08ea5803ec5e1ef5c7789e9fd094c2c4c52f5d42
-      cli_artifact: art_707b5fd00a10477ad22ac990
     secrets: inherit
 
   step_1:
@@ -36,8 +34,8 @@ jobs:
       project: posthog-runners
       mode: rolling
       replay_step: '1'
+      replay_lane: boringcache-docker-plus-namespace
       sha: c0f44809ff0099c596fabe956b3741911b933037
-      cli_artifact: art_707b5fd00a10477ad22ac990
     secrets: inherit
 
   step_2:
@@ -49,8 +47,8 @@ jobs:
       project: posthog-runners
       mode: rolling
       replay_step: '2'
+      replay_lane: boringcache-docker-plus-namespace
       sha: 611e18da96cb0827d87e5424db67fb8d07438f8e
-      cli_artifact: art_707b5fd00a10477ad22ac990
     secrets: inherit
 
   step_3:
@@ -62,6 +60,6 @@ jobs:
       project: posthog-runners
       mode: rolling
       replay_step: '3'
+      replay_lane: boringcache-docker-plus-namespace
       sha: 0562836ba812ee79531037302f9766ce34704024
-      cli_artifact: art_707b5fd00a10477ad22ac990
     secrets: inherit

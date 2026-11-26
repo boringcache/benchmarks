@@ -15,6 +15,9 @@ on:
       replay_step:
         type: string
         required: true
+      replay_lane:
+        type: string
+        required: true
       sha:
         type: string
         required: true
@@ -102,20 +105,29 @@ jobs:
           SHA: ${{ inputs.sha }}
           REF: ${{ github.ref }}
           REPLAY_STEP: ${{ inputs.replay_step }}
+          REPLAY_LANE: ${{ inputs.replay_lane }}
         run: |
           if [ -z "$REPLAY_STEP" ] && { [ -n "$ROLLING" ] || [ -n "$SAMPLE" ]; } && [ "$REF" != refs/heads/main ]; then
             echo "::error::Rolling and sample runs continue the series on main: they read its records, publish records only to main and write its cache scopes. Dispatch them with --ref main; this run used $REF."
             exit 1
           fi
           if [ -n "$REPLAY_STEP" ]; then
-            if [ "$REF" != refs/heads/posthog-luxor-remote ] || [ "$GITHUB_RUN_ATTEMPT" != 1 ] || [ -z "$ROLLING" ] || [ "$TOOL" != Docker ] || [ "$PROJECT" != posthog-runners ] || [[ ! "$REPLAY_STEP" =~ ^[0-3]$ ]] || [[ ! "$SHA" =~ ^[0-9a-f]{40}$ ]] || [[ ! "$CANDIDATE_CLI_ARTIFACT" =~ ^art_[0-9a-f]{24}$ ]]; then
-              echo 'The Luxor replay requires its benchmark branch, first attempt, step, expected upstream commit and candidate CLI artifact.' >&2
+            case "$REPLAY_LANE" in
+              boringcache-docker-plus-namespace) replay_runner=github ;;
+              namespace-builder-plus) replay_runner=namespace-8x32-builder ;;
+              *) replay_runner="" ;;
+            esac
+            if [ "$REF" != refs/heads/posthog-namespace-replay ] || [ "$GITHUB_RUN_ATTEMPT" != 1 ] || [ -z "$ROLLING" ] || [ "$TOOL" != Docker ] || [ "$PROJECT" != posthog-runners ] || [[ ! "$REPLAY_STEP" =~ ^[0-3]$ ]] || [[ ! "$SHA" =~ ^[0-9a-f]{40}$ ]] || [ -z "$replay_runner" ] || [ -n "$CANDIDATE_CLI_ARTIFACT" ]; then
+              echo 'The Namespace replay requires its benchmark branch, first attempt, step, expected upstream commit, one Namespace lane and the released CLI.' >&2
               exit 1
             fi
             bash scripts/checkout-records.sh results/docker/posthog-runners/boringcache-docker-plus-incredibuild-rolling-4 553799ce20de409993b30061c8d83dd46451a8ec
+            mkdir -p results/docker/posthog-runners/replay-steps-rolling-5
+            cp results/docker/posthog-runners/boringcache-docker-plus-incredibuild-rolling-4/*-rolling-[0-3]-*.json results/docker/posthog-runners/replay-steps-rolling-5/
             matrix=$(bundle exec bin/bench matrix "$PROJECT" --tool "$TOOL" --rolling --step "$REPLAY_STEP" --results results)
-            matrix=$(jq -ce --arg step "$REPLAY_STEP" --arg sha "$SHA" '
-              select((map(.lane) | sort) == ["boringcache-docker-plus-luxor-remote"] and all(.[]; .sha == $sha and .step == $step and .runner == "github"))
+            matrix=$(jq -ce --arg step "$REPLAY_STEP" --arg sha "$SHA" --arg lane "$REPLAY_LANE" --arg runner "$replay_runner" '
+              map(select(.lane == $lane))
+              | select(length == 1 and all(.[]; .sha == $sha and .step == $step and .runner == $runner))
               | map(.continues = (if $step == "0" then "" else "true" end))
             ' <<< "$matrix")
             echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
@@ -193,9 +205,9 @@ jobs:
           continues: ${{ matrix.continues }}
           cadence: ${{ matrix.cadence }}
           cache-source: ${{ matrix.source }}
-          static-cache-auth: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/posthog-luxor-remote') && matrix.case == 'docker/posthog-runners' && matrix.cli == '' && contains(matrix.secrets, 'POSTHOG_REMOTE_RESTORE_TOKEN') }}
-          cache-restore-token: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/posthog-luxor-remote') && matrix.case == 'docker/posthog-runners' && matrix.cli == '' && inputs.mode != 'preflight' && contains(matrix.secrets, 'POSTHOG_REMOTE_RESTORE_TOKEN') && secrets.POSTHOG_REMOTE_RESTORE_TOKEN || '' }}
-          cache-save-token: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/posthog-luxor-remote') && matrix.case == 'docker/posthog-runners' && matrix.cli == '' && inputs.mode != 'preflight' && github.job != 'warm' && contains(matrix.secrets, 'POSTHOG_REMOTE_SAVE_TOKEN') && secrets.POSTHOG_REMOTE_SAVE_TOKEN || '' }}
+          static-cache-auth: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/posthog-namespace-replay') && matrix.case == 'docker/posthog-runners' && matrix.cli == '' && contains(matrix.secrets, 'POSTHOG_REMOTE_RESTORE_TOKEN') }}
+          cache-restore-token: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/posthog-namespace-replay') && matrix.case == 'docker/posthog-runners' && matrix.cli == '' && inputs.mode != 'preflight' && contains(matrix.secrets, 'POSTHOG_REMOTE_RESTORE_TOKEN') && secrets.POSTHOG_REMOTE_RESTORE_TOKEN || '' }}
+          cache-save-token: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/posthog-namespace-replay') && matrix.case == 'docker/posthog-runners' && matrix.cli == '' && inputs.mode != 'preflight' && github.job != 'warm' && contains(matrix.secrets, 'POSTHOG_REMOTE_SAVE_TOKEN') && secrets.POSTHOG_REMOTE_SAVE_TOKEN || '' }}
 
   warm:
     needs: [plan, cold]
