@@ -31,6 +31,29 @@ class MountedTargetTest < Minitest::Test
     end
   end
 
+  def test_the_checksum_covers_the_smallest_library_at_any_depth_and_size
+    Dir.mktmpdir do |root|
+      mount = File.join(root, "target")
+      deps = File.join(mount, "x86_64-unknown-linux-gnu", "release", "deps")
+      FileUtils.mkdir_p([deps, File.join(root, "diagnostics")])
+      File.write(File.join(deps, "libempty.rlib"), "")
+      File.write(File.join(deps, "liblarge.rlib"), "x" * (3 * 1024 * 1024))
+      File.write(File.join(deps, "liblarger.rlib"), "x" * (4 * 1024 * 1024))
+      target = Bench::MountedTarget.allocate
+      target.instance_variable_set(:@mount, mount)
+      target.instance_variable_set(:@bazel, false)
+      target.instance_variable_set(:@receipt, File.join(root, "diagnostics", "archive-mount.json"))
+
+      target.send(:save_digest)
+
+      recorded = File.read(File.join(root, "diagnostics", "archive-library.sha256"))
+      assert_equal "#{Digest::SHA256.file(File.join(deps, 'liblarge.rlib')).hexdigest}  #{File.join(deps, 'liblarge.rlib')}\n", recorded
+      FileUtils.rm([File.join(deps, "liblarge.rlib"), File.join(deps, "liblarger.rlib")])
+      error = assert_raises(Bench::Error) { target.send(:save_digest) }
+      assert_match "1 paths match", error.message
+    end
+  end
+
   def test_a_rolling_build_needs_a_verified_root_to_reuse_another_runs_scope
     keys = %w[GITHUB_RUN_ID BENCH_ZED_SEED_ROOT RUNNER_TEMP]
     previous = ENV.to_h.slice(*keys)

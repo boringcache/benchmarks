@@ -112,10 +112,11 @@ module Bench
 
       def save_digest
         pattern = @bazel ? "*/testlogs/**/test.log" : "**/deps/*.rlib"
-        output = Dir.glob(pattern, base: @mount).lazy.map { |path| File.join(@mount, path) }.find do |path|
-          File.lstat(path).file? && File.size(path).between?(1, 2 * 1024 * 1024)
+        matches = Dir.glob(pattern, base: @mount).map { |path| File.join(@mount, path) }
+        output = matches.select { |path| File.lstat(path).file? && File.size(path).positive? }.min_by { |path| [File.size(path), path] }
+        unless output
+          raise Error, "The mounted output has no matching file for checksum verification (#{matches.size} paths match #{pattern})"
         end
-        raise Error, "The mounted output has no matching file for checksum verification" unless output
 
         File.write(File.join(File.dirname(@receipt), "archive-library.sha256"), "#{Digest::SHA256.file(output).hexdigest}  #{output}\n")
       end
