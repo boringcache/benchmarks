@@ -5,6 +5,7 @@ on:
     branches: [posthog-namespace-replay]
     paths:
       - .github/workflows/posthog-namespace-remote.yml
+      - tools/docker/posthog-runners/plus-remote/.boringcache.toml
 
 permissions:
   contents: write

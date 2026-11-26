@@ -46,25 +46,3 @@ fallback = "fail"
 
 [remotes.scaleway.worker]
 timeout-seconds = 5400
-
-[remotes.daytona]
-provider = "daytona"
-region = "us-east-ash-1"
-cpus = 8
-memory-mb = 32768
-disk-gb = 100
-fallback = "fail"
-
-[remotes.daytona.worker]
-timeout-seconds = 3000
-storage-path = "/var/lib/containerd"
-
-[remotes.luxor]
-provider = "luxor"
-cpus = 8
-memory-mb = 32768
-disk-gb = 100
-fallback = "fail"
-
-[remotes.luxor.worker]
-timeout-seconds = 3000
