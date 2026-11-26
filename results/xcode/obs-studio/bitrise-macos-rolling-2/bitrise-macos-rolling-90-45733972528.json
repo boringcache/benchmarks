@@ -1,0 +1,50 @@
+{
+  "adapter_command": "xcode",
+  "case": "obs-studio",
+  "lane": "bitrise",
+  "provider": "bitrise",
+  "level": "base",
+  "runner": "macos",
+  "runner_label": "macos-26",
+  "machine": "github macos 3c",
+  "phase": "rolling",
+  "step": 90,
+  "scope": "bitrise-macos-rolling-2",
+  "cache_scope": "bitrise-macos-rolling-2",
+  "cache_seeded": false,
+  "repo": "obsproject/obs-studio",
+  "sha": "d0e1c13d048273e1a1d78762020f534e1e9b67db",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45733972528",
+  "attempt": 1,
+  "capabilities": [
+    "compilation-cache"
+  ],
+  "cache_restored_key": null,
+  "seconds": 655.187,
+  "exit_status": 2,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Apple M1 (Virtual)",
+      "cores": 3,
+      "memory_mb": 7168,
+      "disk_gb": 319,
+      "disk_free_gb": 93
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "d11ddf6e73667578249ec15fc535cb3bc39463e0",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-26T01:12:59Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45733972528/job/139622957083",
+  "job_conclusion": "failure",
+  "job_started_at": "2026-11-26T01:11:53Z",
+  "job_completed_at": "2026-11-26T01:24:01Z",
+  "queue_seconds": 3.0,
+  "job_seconds": 728.0
+}
