@@ -1,0 +1,17 @@
+workspace = "boringcache/benchmarks"
+
+[entries.go-mod-cache]
+tag = "zitadel-go-mod-cache"
+path-env = "GOMODCACHE"
+
+[profiles.deps]
+entries = ["go-mod-cache"]
+
+[adapters.go]
+fail-on-cache-error = true
+tag = "zitadel-go"
+profiles = ["deps"]
+no-platform = true
+no-git = true
+metadata-hints = ["benchmark=zitadel-go", "upstream-task=server-build"]
+command = ["go", "build", "-trimpath", "-o", "../../../out/nextgen", "."]

@@ -1,0 +1,31 @@
+workspace = "boringcache/benchmarks"
+
+[entries.cargo-registry-cache]
+tag = "posthog-mcp-cargo-registry-cache"
+
+[entries.cargo-registry-index]
+tag = "posthog-mcp-cargo-registry-index"
+
+[entries.cargo-git-db]
+tag = "posthog-mcp-cargo-git-db"
+
+[entries.cargo-target]
+kind = "cargo-target"
+tag = "posthog-mcp-cargo-target"
+path = "upstream/target"
+
+[profiles.cargo-product]
+entries = ["cargo-registry-cache", "cargo-registry-index", "cargo-git-db", "cargo-target"]
+
+[profiles.compiler-only]
+entries = []
+
+[adapters.cargo]
+fail-on-cache-error = true
+tag = "posthog-mcp-cargo"
+profiles = ["cargo-product"]
+compiler-cache = "sccache"
+target-budget = "20GiB"
+no-git = true
+metadata-hints = ["benchmark=posthog-mcp", "lane=cargo-product"]
+command = ["cargo", "build", "-p", "feature-flags"]

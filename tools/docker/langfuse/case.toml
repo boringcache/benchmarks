@@ -1,0 +1,12 @@
+repo = "langfuse/langfuse"
+branch = "main"
+start_sha = "71dbd5593f0deafc839d86391495f1d7731869db"
+prepare = [
+  'if [ "${RUNNER_ENVIRONMENT:-}" = github-hosted ]; then bash "$BENCH_ROOT/tools/shared/swap.sh"; fi',
+]
+check = "docker image inspect langfuse-web-benchmark:local"
+
+[runs]
+boringcache-docker = ["github", "github-arm", "local"]
+gha = ["github", "github-arm"]
+ghcr = ["github", "github-arm"]

@@ -1,0 +1,24 @@
+repo = "qdrant/qdrant"
+branch = "dev"
+start_sha = "a4869c807e7c6a364d84cdf2b33af052b284142a"
+directory = "upstream"
+prepare = [
+  "sudo apt-get update && sudo apt-get install -y --no-install-recommends protobuf-compiler clang cmake libclang-dev",
+  "mise trust && mise install",
+  'printf "%s\n" /target/ >> upstream/.git/info/exclude',
+]
+check = '''
+test -n "$(find "$CARGO_TARGET_DIR/debug/deps" -type f -perm -0100 -name 'qdrant-*' -print -quit)" &&
+test -z "$(git -C upstream status --porcelain=v1 --untracked-files=normal)"
+'''
+
+[env]
+CARGO_TERM_COLOR = "always"
+CARGO_INCREMENTAL = "0"
+CARGO_TARGET_DIR = "${BENCH_DIR}/upstream/target"
+
+[runs]
+boringcache-cargo = ["github", "local"]
+boringcache-cargo-plus = ["github", "local"]
+gha = ["github"]
+gha-plus = ["github"]

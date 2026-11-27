@@ -1,0 +1,25 @@
+repo = "PostHog/posthog"
+branch = "master"
+start_sha = "9701f3c2276a33c721ca58f8ab13bf27d1918029"
+directory = "upstream/rust"
+prepare = [
+  "sudo apt-get update && sudo apt-get install -y --no-install-recommends protobuf-compiler",
+  "mise trust && mise install",
+  'printf "%s\n" /target/ >> upstream/.git/info/exclude',
+]
+check = '''
+test -x "$CARGO_TARGET_DIR/debug/feature-flags" &&
+test -z "$(git -C upstream status --porcelain=v1 --untracked-files=normal)"
+'''
+
+[env]
+CARGO_TERM_COLOR = "always"
+CARGO_INCREMENTAL = "0"
+CARGO_TARGET_DIR = "${BENCH_DIR}/upstream/target"
+RUSTFLAGS = "-C debug-assertions=no"
+
+[runs]
+boringcache-cargo = ["github", "local"]
+boringcache-cargo-plus = ["github", "local"]
+gha = ["github"]
+gha-plus = ["github"]

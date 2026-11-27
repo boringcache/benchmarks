@@ -1,0 +1,14 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+fail-on-cache-error = true
+tag = "langfuse-web-docker"
+no-git = true
+metadata-hints = ["benchmark=langfuse-web", "upstream-job=web-docker"]
+command = [
+  "docker", "buildx", "build",
+  "--file", "upstream/web/Dockerfile",
+  "--tag", "langfuse-web-benchmark:local",
+  "--load",
+  "upstream",
+]

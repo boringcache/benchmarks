@@ -213,8 +213,12 @@ module Bench
       end
 
       def adapter
-        @adapter ||= TomlRB.load_file(workspace.plan_path).dig("adapters", kase.tool.name) or
-          raise Error, "#{kase.id}: #{kase.plan_path(lane)} has no [adapters.#{kase.tool.name}]"
+        @adapter ||= begin
+          plan = TomlRB.load_file(workspace.plan_path)
+          plan.dig("adapters", kase.tool.name) ||
+            (plan.dig("profiles", "build") if kase.tool.name == "run") or
+            raise Error, "#{kase.id}: #{kase.plan_path(lane)} has no [adapters.#{kase.tool.name}]"
+        end
       end
 
       def environment
