@@ -1,0 +1,51 @@
+{
+  "adapter_command": "run",
+  "case": "appsmith",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "runner": "blacksmith-8",
+  "runner_label": "blacksmith-8vcpu-ubuntu-2404",
+  "machine": "blacksmith 8c",
+  "phase": "rolling",
+  "step": 6,
+  "scope": "gha-blacksmith-8-rolling",
+  "cache_scope": "gha-blacksmith-8-rolling",
+  "cache_seeded": false,
+  "repo": "appsmithorg/appsmith",
+  "sha": "74926c0cfb53185f503c4d0a64923278bdedd47b",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46081948230",
+  "attempt": 1,
+  "capabilities": [
+    "archive"
+  ],
+  "cache_restored_key": "run-appsmith-gha-blacksmith-8-rolling-5",
+  "cache_restore_tracked": true,
+  "seconds": 60.327,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC",
+      "cores": 8,
+      "memory_mb": 31689,
+      "disk_gb": 245,
+      "disk_free_gb": 161
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "d29aa74619628737dfd53c344f41ed22fadf3010",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-27T23:22:21Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46081948230/job/140782920256",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-27T23:21:21Z",
+  "job_completed_at": "2026-11-27T23:23:26Z",
+  "queue_seconds": 5.0,
+  "job_seconds": 125.0
+}
