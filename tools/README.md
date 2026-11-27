@@ -498,6 +498,14 @@ gh workflow run project.yml --ref main -f tool=Rust/Cargo -f project=zed -f mode
 
 Use the exact tool title and project key so manual samples share rolling concurrency. Namespace's 8-core BoringCache profile and 8-core cache-volume runner are separate configurations; matching core count alone does not establish matching memory or swap.
 
+### Runner storage cleanup
+
+- Depot can save a project image when `--load` brings the result back to the runner. After recording and verifying the local image, the PostHog Depot lane removes the saved image for that build ID when present. The builder cache stays available for the next sample. [Depot build commands](https://depot.dev/docs/cli/reference/container-builds)
+- Blacksmith gives each custom Docker cache key its own disk. After a manual replay, evict its exact key under **Storage → Sticky Disks** once the series has finished. Keep the Chroma sample key while the weekly comparison is active. The runner deletion action's Docker option targets the repository's default key. [Blacksmith Docker caching](https://docs.blacksmith.sh/blacksmith-caching/docker-builds) · [Deletion action](https://github.com/useblacksmith/stickydisk-delete)
+- Namespace cache volumes can be released by tag in the workspace. Keep the Zed sample volume while the weekly comparison uses it. Review **Cache Volumes** after a one-off experiment and release its volume when no subsequent job needs it. [Namespace cache volumes](https://namespace.so/changelog)
+- Luxor sticky disk generations expire after seven days without a mount. The dashboard can clear an exact key after a replay. Preserve it between replay steps. [Luxor sticky disks](https://luxor.ai/docs/runners/sticky-disks)
+- Avrea bills for provisioned persistent disks even when idle. Disable the default disk in repository settings when an experiment finishes and review any named disks there. A reset provisions a replacement and resumes storage charges. [Avrea persistent disks](https://docs.avrea.com/persistent-disks/)
+
 ## Daily dependency benchmarks
 
 `deps.yml` runs at 03:17 UTC daily, rotating one of the four dependency cases per day across GitHub, Depot, Namespace and Blacksmith. Each case installs the before-lockfile snapshot, restores it for the after-lockfile install, saves the updated cache, then restores and verifies that cache in a new job. Manual runs can select a case and runner keys; an empty case runs all cases.

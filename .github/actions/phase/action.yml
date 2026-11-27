@@ -413,6 +413,28 @@ runs:
         BENCH_CACHE_RESTORED_KEY: ${{ steps.actions-cache-restore.outputs.cache-matched-key || steps.dance-restore.outputs.cache-matched-key }}
       run: bundle exec ruby bin/bench record "$BENCH_CASE" --lane "$BENCH_LANE" --exit-status "$BUILD_STATUS"
 
+    - name: Remove the Depot image saved by load
+      if: always() && inputs.lane == 'depot-builder' && steps.prepare.outputs.ready == 'true'
+      shell: bash
+      run: |
+        metadata="$BENCH_DIR/.depot-build.json"
+        [[ -f "$metadata" ]] || exit 0
+        project="$DEPOT_DOCKER_PROJECT_ID"
+        if [[ ! "$project" =~ ^[a-z0-9]+$ ]]; then
+          echo 'The Depot project ID must contain lowercase letters or digits.' >&2
+          exit 1
+        fi
+        build=$(jq -er --arg project "$project" '
+          ."depot.build" | select(.projectID == $project) | .buildID | select(test("^[a-z0-9]+$"))
+        ' "$metadata")
+        image="registry.depot.dev/$project:$build"
+        images=$(depot image list --project "$project" --output json)
+        [[ "$images" != 'No images found' ]] || exit 0
+        tags=$(jq -r '.[].tag' <<< "$images")
+        if grep -Fxq -- "$image" <<< "$tags"; then
+          timeout 30s depot image rm --project "$project" "$image"
+        fi
+
     - if: always() && startsWith(inputs.case, 'bazel/codex') && steps.prepare.outputs.ready == 'true'
       continue-on-error: true
       shell: bash

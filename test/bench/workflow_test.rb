@@ -3,6 +3,37 @@ require "open3"
 require "yaml"
 
 class WorkflowTest < Minitest::Test
+  def test_depot_cleanup_removes_only_the_image_for_the_recorded_build
+    steps = YAML.load_file(File.join(Bench::ROOT, ".github/actions/phase/action.yml")).dig("runs", "steps")
+    cleanup = steps.find { it["name"] == "Remove the Depot image saved by load" }
+    assert_operator steps.index(cleanup), :>, steps.index { it["run"]&.include?("bin/bench record ") }
+    assert_includes cleanup.fetch("if"), "inputs.lane == 'depot-builder'"
+
+    Dir.mktmpdir do |dir|
+      metadata = File.join(dir, ".depot-build.json")
+      File.write(metadata, JSON.generate("depot.build" => { "projectID" => "project1", "buildID" => "build2" }))
+      image = "registry.depot.dev/project1:build2"
+      other = "registry.depot.dev/project1:build20"
+      stubs = <<~'BASH'
+        depot() { printf '%s\n' "$IMAGES"; }
+        timeout() { printf '%s\n' "$*"; }
+      BASH
+      env = { "BENCH_DIR" => dir, "DEPOT_DOCKER_PROJECT_ID" => "project1" }
+      script = stubs + cleanup.fetch("run")
+
+      [[other, image], [other]].each do |tags|
+        output, status = Open3.capture2e(env.merge("IMAGES" => JSON.generate(tags.map { |tag| { "tag" => tag } })), "bash", "-e", "-c", script)
+        assert status.success?, output
+        expected = tags.include?(image) ? "30s depot image rm --project project1 #{image}\n" : ""
+        assert_equal expected, output
+      end
+
+      output, status = Open3.capture2e(env.merge("DEPOT_DOCKER_PROJECT_ID" => "anotherproject"), "bash", "-e", "-c", script)
+      refute status.success?
+      assert_empty output
+    end
+  end
+
   def test_missing_archive_is_excluded_after_the_timer_stops
     steps = YAML.load_file(File.expand_path("../../.github/actions/phase/action.yml", __dir__)).dig("runs", "steps")
     lookup = steps.find { it["id"] == "saved-archive" }

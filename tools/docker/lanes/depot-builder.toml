@@ -6,7 +6,7 @@ secrets = ["DEPOT_TOKEN", "DEPOT_DOCKER_PROJECT_ID"]
 setup = ["depot"]
 program = ["depot"]
 replaces = ["docker", "buildx"]
-args = ["--project", "${DEPOT_DOCKER_PROJECT_ID}"]
+args = ["--project", "${DEPOT_DOCKER_PROJECT_ID}", "--metadata-file", "${BENCH_DIR}/.depot-build.json"]
 
 [cold]
 prepare = ["depot cache reset --project \"$DEPOT_DOCKER_PROJECT_ID\""]
