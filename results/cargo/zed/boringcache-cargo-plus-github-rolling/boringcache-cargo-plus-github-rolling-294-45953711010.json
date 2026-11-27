@@ -1,0 +1,965 @@
+{
+  "adapter_command": "cargo",
+  "case": "zed",
+  "lane": "boringcache-cargo-plus",
+  "provider": "boringcache",
+  "level": "plus",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 294,
+  "scope": "boringcache-cargo-plus-github-rolling",
+  "cache_scope": "boringcache-cargo-plus-github-rolling",
+  "cache_seeded": false,
+  "repo": "zed-industries/zed",
+  "sha": "b47d9288336ac4a37d6365ca753ada32dde2b618",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45953711010",
+  "attempt": 1,
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "cache_restored_key": null,
+  "seconds": 123.281,
+  "exit_status": 101,
+  "output_ok": false,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1795762151454,
+      "run_id": "45953711010",
+      "session_id": "proxy-summary-1230a74d-d6b8-4bed-9264-574a11e19ebc",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 23627,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "sccache",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 40.1,
+          "cpu_iowait_percent": 16.2,
+          "cpu_pressure_percent": 6.0,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 55.6,
+          "disk_read_mb": 1311.8,
+          "disk_written_mb": 30573.2,
+          "interval_ms": 121766,
+          "io_pressure_percent": 25.5,
+          "memory_pressure_percent": 1.0,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "disk_available_gb": 101,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15984
+      },
+      "proxy": {
+        "adapter": "sccache",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 23627,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_max_in_flight": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 29,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 29,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_download_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_download_urls": 165,
+          "cache_kv_entries_current_version": 76,
+          "cache_kv_entries_download_urls": 95,
+          "cache_kv_entry_reads": 77,
+          "cache_rollups_ingest": 87,
+          "cache_session_evidence_confirm": 127,
+          "cache_session_evidence_prepare": 72
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_download_urls": 1036,
+          "cache_kv_entries_current_version": 76,
+          "cache_kv_entries_download_urls": 95,
+          "cache_kv_entry_reads": 77,
+          "cache_rollups_ingest": 116,
+          "cache_session_evidence_confirm": 131,
+          "cache_session_evidence_prepare": 94
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_download_urls": 6,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 5,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_download_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 18,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_download_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_download_urls": 165,
+          "cache_kv_entries_current_version": 76,
+          "cache_kv_entries_download_urls": 95,
+          "cache_kv_entry_reads": 77,
+          "cache_rollups_ingest": 87,
+          "cache_session_evidence_confirm": 127,
+          "cache_session_evidence_prepare": 72
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_download_urls": 1036,
+          "cache_kv_entries_current_version": 76,
+          "cache_kv_entries_download_urls": 95,
+          "cache_kv_entry_reads": 77,
+          "cache_rollups_ingest": 116,
+          "cache_session_evidence_confirm": 131,
+          "cache_session_evidence_prepare": 94
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_download_urls": 6,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 1,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 5,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_download_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 18,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 154
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 1264716,
+        "startup_prefetch_blobs_per_sec": 42,
+        "startup_prefetch_bytes_per_sec": 54255605,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 29,
+        "startup_prefetch_concurrency_adjustment_count": 0,
+        "startup_prefetch_concurrency_reason": "medium_blobs",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_demand_max_wait_ms": 0,
+        "startup_prefetch_demand_wait_ms": 0,
+        "startup_prefetch_demand_waits": 0,
+        "startup_prefetch_duration_ms": 676,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 29,
+        "startup_prefetch_hedge_wins": 0,
+        "startup_prefetch_hedges": 0,
+        "startup_prefetch_initial_concurrency": 29,
+        "startup_prefetch_inserted": 29,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 29,
+        "startup_prefetch_mode": "current-version",
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 29,
+        "startup_prefetch_target_bytes": 36676789,
+        "startup_prefetch_total_unique_blobs": 1726,
+        "startup_prefetch_unplanned_blobs": 0,
+        "startup_prefetch_unplanned_bytes": 0,
+        "startup_prefetch_unused_blobs": 3,
+        "startup_prefetch_unused_bytes": 1609564,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 29,
+        "startup_prefetch_used_blobs": 26,
+        "startup_prefetch_used_bytes": 35067225
+      },
+      "kv_upload": {},
+      "singleflight": {
+        "singleflight_kv_download_leaders": 29,
+        "singleflight_kv_lookup_leaders": 2
+      },
+      "kv_lookup": {
+        "kv_lookup_sccache_after_refresh_miss": 2,
+        "kv_lookup_sccache_published_fast_hit": 26,
+        "kv_lookup_sccache_published_fast_miss": 2
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 35067225,
+          "blob_read_local_count": 26,
+          "blob_read_local_hit_rate_pct": 47,
+          "blob_read_remote_avg_ms": 202,
+          "blob_read_remote_bytes": 36676789,
+          "blob_read_remote_count": 29
+        },
+        "blob_read_cache_bytes": 36676789,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "average_cache_read_hit_seconds": 0.004,
+        "average_cache_write_seconds": 0.0,
+        "average_compiler_seconds": 0.0,
+        "cache_errors": 0,
+        "cache_hits": 26,
+        "cache_misses": 0,
+        "cache_read_errors": 0,
+        "cache_timeouts": 0,
+        "cache_write_errors": 0,
+        "compile_requests": 33,
+        "compile_requests_executed": 28,
+        "hit_counts": {
+          "rust": 26
+        },
+        "hit_rate": 100.0,
+        "non_cacheable_calls": 5,
+        "non_cacheable_reasons": {
+          "-": 2,
+          "crate-type": 2,
+          "missing input": 1
+        },
+        "proxy_cache_read_errors": 0,
+        "proxy_cache_write_errors": 0,
+        "schema_version": "native_tool_evidence.v1",
+        "stats_source": "sccache --show-stats",
+        "tool": "sccache"
+      },
+      "unit_evidence": {
+        "build_succeeded": false,
+        "capabilities": {
+          "cache_source": false,
+          "critical_path": true,
+          "dependencies": false,
+          "execution_reasons": false,
+          "scheduling": true,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": true
+        },
+        "collection_state": "reported",
+        "counts": {
+          "executed": 357,
+          "observed": 1754,
+          "scope": "cargo_units",
+          "up_to_date": 1397
+        },
+        "critical_path": {
+          "end_offset_ms": 12280,
+          "metadata_edges": 5,
+          "ready_gap_ms": 0,
+          "source": "cargo_unblocked_units",
+          "start_offset_ms": 10230,
+          "truncated": false,
+          "unit_count": 7,
+          "unit_duration_ms": 1690,
+          "units": [
+            {
+              "duration_ms": 280,
+              "id": "cargo-unit:1491",
+              "label": "typenum v1.20.1"
+            },
+            {
+              "duration_ms": 110,
+              "id": "cargo-unit:469",
+              "label": "generic-array v0.14.7"
+            },
+            {
+              "duration_ms": 100,
+              "id": "cargo-unit:298",
+              "label": "crypto-common v0.1.6"
+            },
+            {
+              "duration_ms": 100,
+              "id": "cargo-unit:341",
+              "label": "digest v0.10.7"
+            },
+            {
+              "duration_ms": 250,
+              "id": "cargo-unit:1243",
+              "label": "sha2 v0.10.9"
+            },
+            {
+              "duration_ms": 110,
+              "id": "cargo-unit:1143",
+              "label": "rust-embed-utils v8.11.0"
+            },
+            {
+              "duration_ms": 740,
+              "id": "cargo-unit:1142",
+              "label": "rust-embed-impl v8.11.0"
+            }
+          ]
+        },
+        "invocation": {
+          "host": "x86_64-unknown-linux-gnu",
+          "profile": "release",
+          "report_owner": "boringcache",
+          "target": "x86_64-unknown-linux-gnu",
+          "time_precision_ms": 10,
+          "total_time_ms": 12300,
+          "units_total": 1754
+        },
+        "ranking_scope": "all_observed_units",
+        "scheduling": {
+          "average_active": 0.61,
+          "jobs": 4,
+          "max_concurrency": 5,
+          "ncpu": 4,
+          "waiting_ms": 800,
+          "waiting_unit_ms": 840
+        },
+        "schema_version": "unit_evidence.v1",
+        "source": "cargo_timings_report",
+        "tool": "cargo",
+        "tool_version": "1.98.1",
+        "truncated": true,
+        "unit_kind": "crate_unit",
+        "units": [
+          {
+            "attributes": {
+              "crate_name": "prost-derive",
+              "crate_version": "0.14.4",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 10720,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762141323,
+            "duration_ms": 1540,
+            "id": "cargo-unit:1041",
+            "key": "3ead8e9243a89e8dd6f88c34d7dece7910699d200715590f87e3f64ce6b658f1",
+            "label": "prost-derive v0.14.4",
+            "started_at_ms": 1795762139783,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "read-fonts",
+              "crate_version": "0.41.0",
+              "features": [
+                "experimental_font_api",
+                "std"
+              ],
+              "frontend_ms": 790,
+              "mode": "todo",
+              "start_offset_ms": 10060,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762139923,
+            "duration_ms": 800,
+            "id": "cargo-unit:1098",
+            "key": "23720b3260b693d88700d2eb42b6bbae5d09175a515b43c95bce0af57f4aec3b",
+            "label": "read-fonts v0.41.0",
+            "started_at_ms": 1795762139123,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "rust-embed-impl",
+              "crate_version": "8.11.0",
+              "features": [
+                "compression",
+                "include-exclude"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 11540,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762141343,
+            "critical_path": true,
+            "duration_ms": 740,
+            "id": "cargo-unit:1142",
+            "key": "d846792f367a0e16caf63e023a3b67c54c0b593ec7181f27672b68418c03f732",
+            "label": "rust-embed-impl v8.11.0",
+            "started_at_ms": 1795762140603,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "harfrust",
+              "crate_version": "0.12.0",
+              "features": [
+                "default",
+                "std"
+              ],
+              "frontend_ms": 410,
+              "mode": "todo",
+              "start_offset_ms": 10880,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762140363,
+            "duration_ms": 420,
+            "id": "cargo-unit:533",
+            "key": "4ff34cf38d1a87f39fc1210d221a070a942e8e49c77e8f03f0fc164bcb7dd719",
+            "label": "harfrust v0.12.0",
+            "started_at_ms": 1795762139943,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "usvg",
+              "crate_version": "0.49.0",
+              "features": [
+                "base64",
+                "flate2",
+                "fontdb",
+                "harfrust",
+                "memmap-fonts",
+                "skrifa",
+                "svgz",
+                "system-fonts"
+              ],
+              "features_truncated": true,
+              "frontend_ms": 350,
+              "mode": "todo",
+              "start_offset_ms": 11310,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762140723,
+            "duration_ms": 350,
+            "id": "cargo-unit:1528",
+            "key": "11e4b569972593177dc08a00b086c5b485b9cce68cb02aa9d860acd9e1df2043",
+            "label": "usvg v0.49.0",
+            "started_at_ms": 1795762140373,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "skrifa",
+              "crate_version": "0.44.0",
+              "features": [
+                "std"
+              ],
+              "frontend_ms": 320,
+              "mode": "todo",
+              "start_offset_ms": 10850,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762140233,
+            "duration_ms": 320,
+            "id": "cargo-unit:1264",
+            "key": "4d8fdc396687b72f3f371246d3bf632d3c7f113515255500461fa65b13007673",
+            "label": "skrifa v0.44.0",
+            "started_at_ms": 1795762139913,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "typenum",
+              "crate_version": "1.20.1",
+              "features": [
+                "const-generics"
+              ],
+              "frontend_ms": 270,
+              "mode": "todo",
+              "start_offset_ms": 9880,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762139223,
+            "duration_ms": 280,
+            "id": "cargo-unit:1492",
+            "key": "8fe0a7885ca5cec1e8fc4ecb0d17bd08970139fb99f6dfb47eba5c207fa194ba",
+            "label": "typenum v1.20.1",
+            "started_at_ms": 1795762138943,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "tiny-skia",
+              "crate_version": "0.12.0",
+              "features": [
+                "default",
+                "png-format",
+                "simd",
+                "std"
+              ],
+              "frontend_ms": 270,
+              "mode": "todo",
+              "start_offset_ms": 10210,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762139553,
+            "duration_ms": 280,
+            "id": "cargo-unit:1382",
+            "key": "5832fa62255a12828fc085e270c3ab9ded0199546699640a4827b54d49df2fc6",
+            "label": "tiny-skia v0.12.0",
+            "started_at_ms": 1795762139273,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "typenum",
+              "crate_version": "1.20.1",
+              "features": [],
+              "frontend_ms": 280,
+              "mode": "todo",
+              "start_offset_ms": 10230,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762139573,
+            "critical_path": true,
+            "duration_ms": 280,
+            "id": "cargo-unit:1491",
+            "key": "dd170952acc64f88327fe978cb7a57587a6ff0e90d9ee9334daa8d50bd06af6c",
+            "label": "typenum v1.20.1",
+            "started_at_ms": 1795762139293,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 110,
+              "crate_name": "sha2",
+              "crate_version": "0.10.9",
+              "features": [
+                "default",
+                "std"
+              ],
+              "frontend_ms": 140,
+              "mode": "todo",
+              "start_offset_ms": 11180,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1795762140493,
+            "critical_path": true,
+            "duration_ms": 250,
+            "id": "cargo-unit:1243",
+            "key": "739016f4933248d571793eea2b2917508937addf36a79a7730244ab68530e27e",
+            "label": "sha2 v0.10.9",
+            "started_at_ms": 1795762140243,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "resvg",
+              "crate_version": "0.49.0",
+              "features": [
+                "gif",
+                "image-webp",
+                "memmap-fonts",
+                "raster-images",
+                "system-fonts",
+                "text"
+              ],
+              "frontend_ms": 220,
+              "mode": "todo",
+              "start_offset_ms": 11670,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762140963,
+            "duration_ms": 230,
+            "id": "cargo-unit:1124",
+            "key": "d10dc1b653ba5948687dedae1ea31544ac8dcdace55c37021c4dca8b1ef73247",
+            "label": "resvg v0.49.0",
+            "started_at_ms": 1795762140733,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "font-types",
+              "crate_version": "0.12.7",
+              "features": [
+                "bytemuck",
+                "std"
+              ],
+              "frontend_ms": 160,
+              "mode": "todo",
+              "start_offset_ms": 9900,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762139133,
+            "duration_ms": 170,
+            "id": "cargo-unit:435",
+            "key": "18a1f80f95d63f705114358290be93445b7b32d65790b6e3fe7c77db8a483520",
+            "label": "font-types v0.12.7",
+            "started_at_ms": 1795762138963,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "sum_tree",
+              "crate_version": "0.1.0",
+              "features": [],
+              "frontend_ms": 150,
+              "mode": "todo",
+              "start_offset_ms": 9920,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762139133,
+            "duration_ms": 150,
+            "id": "cargo-unit:1312",
+            "key": "132129b719d7ad85c89b0e7e62ab39614b8c307f80026d76581d701abaef26a0",
+            "label": "sum_tree v0.1.0",
+            "started_at_ms": 1795762138983,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "generic-array",
+              "crate_version": "0.14.7",
+              "features": [
+                "more_lengths"
+              ],
+              "frontend_ms": 140,
+              "mode": "todo",
+              "start_offset_ms": 10150,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1795762139363,
+            "duration_ms": 150,
+            "id": "cargo-unit:470",
+            "key": "cb53d11f2332cbfb9280303dcc0df468635ce02b1d9f5c0fc912e7a47237700b",
+            "label": "generic-array v0.14.7",
+            "started_at_ms": 1795762139213,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "path",
+              "crate_version": "0.1.0",
+              "features": [
+                "serde"
+              ],
+              "frontend_ms": 150,
+              "mode": "todo",
+              "start_offset_ms": 10520,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762139733,
+            "duration_ms": 150,
+            "id": "cargo-unit:914",
+            "key": "8f8880ffd20d4b461e43c501f4b45429e0a662d36dbe36650e1978ecdc23d1ac",
+            "label": "path v0.1.0",
+            "started_at_ms": 1795762139583,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "tiny-skia-path",
+              "crate_version": "0.12.0",
+              "features": [
+                "default",
+                "std"
+              ],
+              "frontend_ms": 140,
+              "mode": "todo",
+              "start_offset_ms": 9920,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762139123,
+            "duration_ms": 140,
+            "id": "cargo-unit:1383",
+            "key": "de2aaaf2133d78b9665db196dd619e29467c343ababc56694a18985be4513611",
+            "label": "tiny-skia-path v0.12.0",
+            "started_at_ms": 1795762138983,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 10,
+              "crate_name": "imagesize",
+              "crate_version": "0.15.0",
+              "features": [
+                "aesprite",
+                "astc",
+                "atc",
+                "bmp",
+                "dds",
+                "default",
+                "eac",
+                "etc2"
+              ],
+              "features_truncated": true,
+              "frontend_ms": 120,
+              "mode": "todo",
+              "start_offset_ms": 10070,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762139263,
+            "duration_ms": 130,
+            "id": "cargo-unit:632",
+            "key": "73ce30886d6c52e6ecd66320fb3bbd1696d9bec927fe53573ef1b09f74456266",
+            "label": "imagesize v0.15.0",
+            "started_at_ms": 1795762139133,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "fontdb",
+              "crate_version": "0.24.0",
+              "features": [
+                "fontconfig",
+                "fontconfig-parser",
+                "fs",
+                "memmap",
+                "memmap2",
+                "std"
+              ],
+              "frontend_ms": 130,
+              "mode": "todo",
+              "start_offset_ms": 10080,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762139273,
+            "duration_ms": 130,
+            "id": "cargo-unit:438",
+            "key": "64ba9e83e8d4aa747f4396a60aabb878d66a40bdf08685540c7ccf2de4621663",
+            "label": "fontdb v0.24.0",
+            "started_at_ms": 1795762139143,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "sha2",
+              "crate_version": "0.10.9",
+              "features": [
+                "default",
+                "std"
+              ],
+              "frontend_ms": 130,
+              "mode": "todo",
+              "start_offset_ms": 10600,
+              "target_kind": "lib",
+              "unit_key_ambiguous": true
+            },
+            "completed_at_ms": 1795762139793,
+            "duration_ms": 130,
+            "id": "cargo-unit:1244",
+            "key": "739016f4933248d571793eea2b2917508937addf36a79a7730244ab68530e27e",
+            "label": "sha2 v0.10.9",
+            "started_at_ms": 1795762139663,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "codegen_ms": 0,
+              "crate_name": "digest",
+              "crate_version": "0.10.7",
+              "features": [
+                "alloc",
+                "block-buffer",
+                "const-oid",
+                "core-api",
+                "default",
+                "mac",
+                "oid",
+                "std"
+              ],
+              "features_truncated": true,
+              "frontend_ms": 110,
+              "mode": "todo",
+              "start_offset_ms": 10490,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795762139663,
+            "duration_ms": 110,
+            "id": "cargo-unit:342",
+            "key": "5b34d54f40be2f3cd5fda8f764a4e91f41f206e278eb2750412ed678817594d8",
+            "label": "digest v0.10.7",
+            "started_at_ms": 1795762139553,
+            "state": "executed"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "sccache",
+          "candidates": [
+            {
+              "confidence": "low",
+              "evidence": {
+                "bytes_read": 35067225,
+                "hit_rate": 92.9,
+                "hits": 26,
+                "misses": 2
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 23627,
+            "errors": 0,
+            "hit_rate": 92.9,
+            "hits": 26,
+            "misses": 2,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 0
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 92.9,
+          "hits": 26,
+          "likely_reason": "partial_key_churn_or_new_work",
+          "misses": 2,
+          "state": "mostly_hot_with_misses",
+          "writes": 0
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 73
+    }
+  },
+  "evidence": [
+    "boringcache-cargo-plus-github-rolling-294-45953711010.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "product_env": {
+    "BORINGCACHE_ARCHIVE_SELECTIVE_READS": "1"
+  },
+  "plan_settings": {
+    "target-budget": "25GiB"
+  },
+  "harness": {
+    "commit": "c25f13f1c2b062eecefcf8d9e054faf290ff88f7",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-27T06:47:08Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45953711010/job/140355478817",
+  "job_conclusion": "failure",
+  "job_started_at": "2026-11-27T06:44:30Z",
+  "job_completed_at": "2026-11-27T06:49:15Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 285.0
+}
