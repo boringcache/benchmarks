@@ -1,0 +1,51 @@
+{
+  "adapter_command": "turbo",
+  "case": "n8n",
+  "lane": "depot-cache",
+  "provider": "depot",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 3112,
+  "scope": "depot-cache-github-rolling",
+  "cache_scope": "depot-cache-github-rolling",
+  "cache_seeded": false,
+  "repo": "n8n-io/n8n",
+  "sha": "217c0e733ac24e405844b93e1d4e7c77b009167a",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45945361870",
+  "attempt": 1,
+  "capabilities": [
+    "remote-cache"
+  ],
+  "cache_restored_key": "turbo-n8n-depot-cache-github-rolling-3111",
+  "cache_restore_tracked": true,
+  "seconds": 204.759,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 77
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "50cf5b424110ffbc7a5cba3d9b8c579d94172025",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-27T05:23:27Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45945361870/job/140328981806",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-27T05:22:50Z",
+  "job_completed_at": "2026-11-27T05:26:56Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 246.0
+}
