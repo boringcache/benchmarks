@@ -2,6 +2,12 @@ require_relative "test_helper"
 require "yaml"
 
 class RegistryWorkflowTest < Minitest::Test
+  def test_registry_runs_queue_until_the_previous_run_finishes
+    workflow = YAML.load_file(File.join(Bench::ROOT, ".github/workflows/registry.yml"), aliases: true)
+    assert_equal({ "group" => "posthog-registry-transfer", "queue" => "max" }, workflow.fetch("concurrency"))
+    assert_includes workflow.dig("jobs", "pull", "needs"), "push"
+  end
+
   def test_both_registry_jobs_allow_oidc_without_static_boringcache_credentials
     workflow = YAML.load_file(File.join(Bench::ROOT, ".github/workflows/registry.yml"), aliases: true)
     %w[push pull].each do |operation|

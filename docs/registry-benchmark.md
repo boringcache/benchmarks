@@ -9,10 +9,13 @@ An unsuccessful command or output check fails the job and retains its record.
 
 BoringCache pushes use `boringcache docker push`; all pulls and the other
 providers' pushes use Docker. These are image-transfer measurements, separate
-from the rolling BuildKit cache comparisons. New repository names separate
-GHCR, Depot and BoringCache runs; provider-wide blob reuse may still occur.
-ECR uses a dedicated experiment repository with a run-specific tag. These
-measurements do not assert that provider storage was empty before a push.
+from the rolling BuildKit cache comparisons. Depot pushes and pulls use
+`registry-posthog:benchmark` on every run. The workflow queues overlapping runs
+so each pull finishes before the next push can replace the tag. Replacing the
+tag leaves the previous Depot manifest eligible for untagged image retention.
+GHCR and BoringCache use a repository per run. ECR uses a dedicated experiment
+repository with a run-specific tag. Pushes can reuse layers already stored by
+the provider.
 
 After a PostHog benchmark run publishes its results, it dispatches one registry
 comparison using the image built by `boringcache-docker` on `github`. Rolling

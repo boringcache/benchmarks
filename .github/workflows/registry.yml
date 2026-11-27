@@ -16,6 +16,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: posthog-registry-transfer
+  queue: max
+
 jobs:
   plan:
     runs-on: ubuntu-24.04

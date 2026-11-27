@@ -54,6 +54,19 @@ class RegistryBenchmarkTest < Minitest::Test
     assert_match "cannot be retried", error.message
   end
 
+  def test_depot_push_and_pull_reuse_one_tag_across_runs
+    ref = "#{@config.fetch('depot_registry')}/registry-posthog:benchmark"
+
+    %w[123 456].each do |run_id|
+      env = @env.merge("GITHUB_RUN_ID" => run_id)
+      push = RegistryBenchmark.new("depot", "push", config: @config, env:)
+      pull = RegistryBenchmark.new("depot", "pull", config: @config, env:)
+
+      assert_equal ["docker", "push", ref], push.command
+      assert_equal ["docker", "pull", "--platform", @config.fetch("platform"), ref], pull.command
+    end
+  end
+
   def test_built_image_uses_the_same_local_source_for_every_provider
     config = @config.merge("source" => RegistrySource::IMAGE, "source_run_id" => "456", "archive_sha256" => "a" * 64)
     env = @env.merge("SOURCE_RUN_ID" => "456")

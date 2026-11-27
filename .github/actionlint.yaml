@@ -1,0 +1,8 @@
+self-hosted-runner:
+  labels:
+    - luxor-ubuntu-large-plus-16c-32g
+    - luxor-ubuntu-large-8c-16g
+paths:
+  .github/workflows/registry.yml:
+    ignore:
+      - '^unexpected key "queue" for "concurrency" section\.'

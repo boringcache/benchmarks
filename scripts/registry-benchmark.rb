@@ -23,10 +23,11 @@ class RegistryBenchmark
   end
 
   def destination
+    return "#{@config.fetch('depot_registry')}/registry-posthog:benchmark" if @provider == "depot"
+
     host = case @provider
     when "boringcache" then "registry.boringcache.com/#{@config.fetch('workspace')}"
     when "ghcr" then "ghcr.io/#{@env.fetch('GITHUB_REPOSITORY')}"
-    when "depot" then @config.fetch("depot_registry")
     when "ecr" then @env.fetch("ECR_REPOSITORY")
     end
     @provider == "ecr" ? "#{host}:run-#{@run_id}" : "#{host}/registry-posthog-#{@run_id}:image"
