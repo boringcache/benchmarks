@@ -1,6 +1,7 @@
 repo = "qdrant/qdrant"
 branch = "dev"
 start_sha = "a4869c807e7c6a364d84cdf2b33af052b284142a"
+rolling_series = 2
 directory = "upstream"
 prepare = [
   "sudo apt-get update && sudo apt-get install -y --no-install-recommends clang cmake libclang-dev",

@@ -1,6 +1,7 @@
 repo = "Infisical/infisical"
 branch = "main"
 start_sha = "f388687047b5d24c44312f73861bfb0d789f7d25"
+rolling_series = 2
 prepare = [
   "ruby overlay/upgrade-apt-pins.rb upstream/Dockerfile.standalone-infisical",
   'if [ "${RUNNER_ENVIRONMENT:-}" = github-hosted ]; then bash "$BENCH_ROOT/tools/shared/swap.sh"; fi',
