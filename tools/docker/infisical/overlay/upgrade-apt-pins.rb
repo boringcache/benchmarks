@@ -1,0 +1,5 @@
+path = ARGV.fetch(0)
+dockerfile = File.read(path)
+dockerfile.sub!(/^    libssl3t64=3\.5\.7-1~deb13u3 /, "    libssl3t64=3.5.9-1~deb13u1 ")
+dockerfile.sub!(/^    libnghttp2-14=1\.64\.0-1\.1\+deb13u1 /, "    libnghttp2-14=1.64.0-1.1+deb13u2 ")
+File.write(path, dockerfile)

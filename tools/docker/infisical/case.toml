@@ -2,6 +2,7 @@ repo = "Infisical/infisical"
 branch = "main"
 start_sha = "f388687047b5d24c44312f73861bfb0d789f7d25"
 prepare = [
+  "ruby overlay/upgrade-apt-pins.rb upstream/Dockerfile.standalone-infisical",
   'if [ "${RUNNER_ENVIRONMENT:-}" = github-hosted ]; then bash "$BENCH_ROOT/tools/shared/swap.sh"; fi',
 ]
 check = "docker image inspect infisical-benchmark:local"
