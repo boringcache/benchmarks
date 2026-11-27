@@ -1,0 +1,53 @@
+{
+  "adapter_command": "cargo",
+  "case": "ferrum-fuzz",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "runner": "github-26",
+  "runner_label": "ubuntu-26.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 481,
+  "scope": "gha-plus-github-26-rolling",
+  "cache_scope": "gha-plus-github-26-rolling",
+  "cache_seeded": false,
+  "repo": "ferrum-edge/ferrum-edge",
+  "sha": "229278fa3b218b15f47467ddbaf166f5e2c94dfc",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46002006626",
+  "attempt": 1,
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "cache_restored_key": "cargo-ferrum-fuzz-gha-plus-github-26-rolling-454",
+  "cache_restore_tracked": true,
+  "seconds": 2895.897,
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) 6973P-C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 0
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "ec69e2e732fbbdaf4b1a1db18ce868481cec78b6",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-27T12:54:39Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46002006626/job/140516154382",
+  "job_conclusion": "failure",
+  "job_started_at": "2026-11-27T12:51:19Z",
+  "job_completed_at": "2026-11-27T13:43:03Z",
+  "queue_seconds": 1.0,
+  "job_seconds": 3104.0
+}
