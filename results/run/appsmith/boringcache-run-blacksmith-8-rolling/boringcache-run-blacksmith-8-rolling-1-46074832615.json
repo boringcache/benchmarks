@@ -1,0 +1,59 @@
+{
+  "adapter_command": "run",
+  "case": "appsmith",
+  "lane": "boringcache-run",
+  "provider": "boringcache",
+  "level": "base",
+  "runner": "blacksmith-8",
+  "runner_label": "blacksmith-8vcpu-ubuntu-2404",
+  "machine": "blacksmith 8c",
+  "phase": "rolling",
+  "step": 1,
+  "scope": "boringcache-run-blacksmith-8-rolling",
+  "cache_scope": "boringcache-run-blacksmith-8-rolling",
+  "cache_seeded": false,
+  "repo": "appsmithorg/appsmith",
+  "sha": "24325f906348065e7d6988a10e8eaa7d70374bee",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46074832615",
+  "attempt": 1,
+  "capabilities": [
+    "archive"
+  ],
+  "cache_restored_key": null,
+  "seconds": 59.453,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC",
+      "cores": 8,
+      "memory_mb": 31689,
+      "disk_gb": 245,
+      "disk_free_gb": 162
+    }
+  },
+  "evidence": [
+    "boringcache-run-blacksmith-8-rolling-1-46074832615.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "product_args": [
+    "--profile=build",
+    "--no-git",
+    "--fail-on-cache-error"
+  ],
+  "harness": {
+    "commit": "85985f9082029d7d986e091cfcc01cc063b6bae3",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-27T22:11:16Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46074832615/job/140760345218",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-27T22:10:12Z",
+  "job_completed_at": "2026-11-27T22:12:20Z",
+  "queue_seconds": 5.0,
+  "job_seconds": 128.0
+}
