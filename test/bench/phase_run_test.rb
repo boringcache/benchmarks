@@ -540,6 +540,47 @@ class PhaseRunTest < Minitest::Test
     assert File.directory?(File.join(root, "deps-2"))
   end
 
+  def test_run_tool_uses_build_profile_for_boringcache_and_gha_lanes
+    write "tools/run/tool.toml", %(name = "Archive"\n[levels]\nbase = ["archive"]\n)
+    write "tools/run/lanes/boringcache-run.toml", %(provider = "boringcache"\nlevel = "base"\ncli_args = ["--profile=build", "--no-git", "--fail-on-cache-error"]\n)
+    write "tools/run/lanes/gha.toml", %(provider = "github-actions-cache"\nlevel = "base"\n)
+    write "tools/run/app/case.toml", <<~TOML
+      repo = "#{File.join(@root, "upstream")}"
+      branch = "main"
+      start_sha = "#{@upstream_sha}"
+      check = "test -s upstream/out.txt"
+      shared = ["upstream/.cache"]
+      [runs]
+      boringcache-run = ["local"]
+      gha = ["local"]
+    TOML
+    write "tools/run/app/.boringcache.toml", <<~TOML
+      workspace = "boringcache/benchmarks"
+      [entries.app-cache]
+      tag = "app-cache"
+      path = "upstream/.cache"
+      [profiles.build]
+      entries = ["app-cache"]
+      command = ["bash", "-c", "echo built > upstream/out.txt"]
+    TOML
+
+    with_fixture_env do
+      assert_equal 0, cli("run", "run/app", "--lane", "boringcache-run", "--run-id", "r70")
+      assert_equal 0, cli("run", "run/app", "--lane", "gha", "--run-id", "r71")
+    end
+
+    cold = JSON.parse(File.read(File.join(@root, "tmp/results/run/app/boringcache-run-local-r70/boringcache-run-local-cold.json")))
+    warm = JSON.parse(File.read(File.join(@root, "tmp/results/run/app/boringcache-run-local-r70/boringcache-run-local-warm.json")))
+    gha = JSON.parse(File.read(File.join(@root, "tmp/results/run/app/gha-local-r71/gha-local-cold.json")))
+    assert_equal 0, cold["exit_status"]
+    assert_equal true, warm["output_ok"]
+    assert_equal true, gha["output_ok"]
+    assert_equal ["--profile=build", "--no-git", "--fail-on-cache-error"], cold["product_args"]
+    log = File.read(File.join(@root, "stub.log"))
+    assert_includes log, "run --profile=build --no-git --fail-on-cache-error\n"
+    assert_includes log, "run --profile=build --no-git --fail-on-cache-error --read-only\n"
+  end
+
   private
     def cli(*argv, out: StringIO.new)
       Bench::CLI.new([*argv, "--results", File.join(@root, "tmp/results"), "--work", File.join(@root, ".work")], catalog:, out:).call

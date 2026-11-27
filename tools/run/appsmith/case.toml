@@ -1,0 +1,20 @@
+repo = "appsmithorg/appsmith"
+branch = "release"
+start_sha = "69e1ed149fe506c312f482696b7cee63d11b6ce9"
+directory = "upstream/app/client"
+prepare = [
+  "if [ \"${RUNNER_ENVIRONMENT:-}\" = github-hosted ]; then bash \"$BENCH_ROOT/tools/shared/swap.sh\"; fi",
+  "mise trust && mise install && corepack enable",
+  "ruby overlay/apply-webpack-cache.rb",
+  "cd upstream/app/client && yarn install --immutable",
+]
+check = "test -s upstream/app/client/build/index.html"
+shared = ["upstream/app/client/node_modules/.cache"]
+
+[env]
+REACT_APP_ENVIRONMENT = "DEVELOPMENT"
+REACT_APP_VERSION_EDITION = "Community"
+
+[runs]
+boringcache-run = ["github", "blacksmith-8", "local"]
+gha = ["github", "blacksmith-8"]

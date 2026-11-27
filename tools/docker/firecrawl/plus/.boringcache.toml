@@ -1,0 +1,15 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+fail-on-cache-error = true
+tag = "firecrawl-docker"
+no-git = true
+metadata-hints = ["benchmark=firecrawl", "upstream-job=api-docker"]
+mount-cache = true
+command = [
+  "docker", "buildx", "build",
+  "--file", "upstream/apps/api/Dockerfile",
+  "--tag", "firecrawl-api-benchmark:local",
+  "--load",
+  "upstream/apps/api",
+]

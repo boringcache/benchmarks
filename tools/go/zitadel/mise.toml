@@ -1,0 +1,5 @@
+[tools]
+go = "1.27.4"
+
+[settings]
+go_set_gobin = false

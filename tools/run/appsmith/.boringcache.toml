@@ -1,0 +1,9 @@
+workspace = "boringcache/benchmarks"
+
+[entries.webpack-cache]
+tag = "appsmith-webpack-cache"
+path = "upstream/app/client/node_modules/.cache"
+
+[profiles.build]
+entries = ["webpack-cache"]
+command = ["yarn", "build"]

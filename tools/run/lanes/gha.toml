@@ -1,0 +1,4 @@
+provider = "github-actions-cache"
+level = "base"
+actions_only = true
+runners = ["github", "blacksmith-8"]

@@ -1,0 +1,20 @@
+repo = "zitadel/nextgen"
+branch = "main"
+start_sha = "054624f867bccdabe5a284fb9fe95934e3ddac2f"
+directory = "upstream/apps/api"
+prepare = [
+  "mise trust && mise install",
+  "mkdir -p out",
+]
+check = "test -x out/nextgen && test -z \"$(git -C upstream status --porcelain=v1 --untracked-files=all)\""
+shared = [".go/mod-cache"]
+
+[env]
+GOCACHE = "${BENCH_DIR}/.go/build-cache"
+GOMODCACHE = "${BENCH_DIR}/.go/mod-cache"
+GOTOOLCHAIN = "local"
+
+[runs]
+boringcache-go = ["github", "local"]
+gha = ["github"]
+depot-cache = ["github"]
