@@ -1,0 +1,51 @@
+{
+  "adapter_command": "nx",
+  "case": "storybook",
+  "lane": "depot-cache",
+  "provider": "depot",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 543,
+  "scope": "depot-cache-github-rolling",
+  "cache_scope": "depot-cache-github-rolling",
+  "cache_seeded": false,
+  "repo": "storybookjs/storybook",
+  "sha": "e532a20f39a68037597f41593f9aaca1a0223e46",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46006298888",
+  "attempt": 1,
+  "capabilities": [
+    "remote-cache"
+  ],
+  "cache_restored_key": "nx-storybook-depot-cache-github-rolling-542",
+  "cache_restore_tracked": true,
+  "seconds": 114.703,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 73
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "e59fa1906e60d280b3b0f94ad04ee0b1ec3f7af4",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-27T13:22:08Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46006298888/job/140530625948",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-27T13:21:40Z",
+  "job_completed_at": "2026-11-27T13:24:07Z",
+  "queue_seconds": 3.0,
+  "job_seconds": 147.0
+}
