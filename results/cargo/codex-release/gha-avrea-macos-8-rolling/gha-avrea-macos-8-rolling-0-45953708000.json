@@ -1,0 +1,50 @@
+{
+  "adapter_command": "cargo",
+  "case": "codex-release",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "runner": "avrea-macos-8",
+  "runner_label": "avrea-macos-26-8-vcpu",
+  "machine": "avrea macos 8c",
+  "phase": "rolling",
+  "step": 0,
+  "scope": "gha-avrea-macos-8-rolling",
+  "cache_scope": "gha-avrea-macos-8-rolling",
+  "cache_seeded": false,
+  "repo": "openai/codex",
+  "sha": "dd6d2c3d66fbd04963cb62a16d80213846242b90",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45953708000",
+  "attempt": 1,
+  "capabilities": [
+    "compiler-cache"
+  ],
+  "cache_restored_key": null,
+  "seconds": 1246.363,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Apple M5 Max (Virtual)",
+      "cores": 8,
+      "memory_mb": 24576,
+      "disk_gb": 336,
+      "disk_free_gb": 88
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "c25f13f1c2b062eecefcf8d9e054faf290ff88f7",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-27T06:46:27Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45953708000/job/140355550481",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-27T06:45:04Z",
+  "job_completed_at": "2026-11-27T07:06:56Z",
+  "queue_seconds": 23.0,
+  "job_seconds": 1312.0
+}
