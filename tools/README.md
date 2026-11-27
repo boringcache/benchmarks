@@ -13,6 +13,10 @@ and saves the original store without replacing an existing backup. A repair
 failure stops preparation. The same preparation applies to every provider lane.
 Earlier result records retain their original harness and toolchain selection.
 
+The Zed Cargo case installs the exact Rust version, components and targets
+declared in the checked-out source's `rust-toolchain.toml`. Every provider lane
+uses that toolchain for both fresh and rolling builds.
+
 The Backend.AI Pants case installs the exact CPython version required by the
 checked-out source's `pants.toml`. This applies to every provider lane and keeps
 fresh runs on the original interpreter while rolling runs follow upstream.

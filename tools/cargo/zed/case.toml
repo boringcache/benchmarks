@@ -5,8 +5,8 @@ rolling_stride = 3
 directory = "upstream"
 prepare = [
   "df -h / && if [ -d /usr/local/lib/android ]; then sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL; fi && df -h /",
-  "mise trust && mise install",
-  "cd upstream && ./script/linux",
+  "ruby \"$BENCH_ROOT/tools/cargo/shared/select-rust-toolchain.rb\" && mise trust && mise install",
+  "cd upstream && rustc --version && ./script/linux",
 ]
 check = "test -x upstream/target/release/zed && test -z \"$(git -C upstream status --porcelain=v1 --untracked-files=all)\""
 
