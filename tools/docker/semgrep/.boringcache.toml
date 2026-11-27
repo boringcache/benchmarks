@@ -1,0 +1,16 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+fail-on-cache-error = true
+tag = "semgrep-docker"
+no-git = true
+metadata-hints = ["benchmark=semgrep", "upstream-job=build-test-docker"]
+command = [
+  "docker", "buildx", "build",
+  "--file", "upstream/Dockerfile",
+  "--target", "semgrep-cli",
+  "--build-arg", "VCS_REF_HEAD_NAME=develop",
+  "--tag", "semgrep-benchmark:local",
+  "--load",
+  "upstream",
+]

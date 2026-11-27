@@ -1,0 +1,12 @@
+repo = "semgrep/semgrep"
+branch = "develop"
+start_sha = "6b7f2e059b17d542b74217c292168378ad21124f"
+prepare = [
+  "git -C upstream submodule update --init --depth=1",
+  "ruby overlay/set-build-revision.rb",
+]
+check = "docker run --rm --network none --entrypoint /usr/local/bin/semgrep-core semgrep-benchmark:local -version && docker run --rm --network none semgrep-benchmark:local >/dev/null"
+
+[runs]
+boringcache-docker = ["github", "github-arm", "local"]
+gha = ["github", "github-arm"]
