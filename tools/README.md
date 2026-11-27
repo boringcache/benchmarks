@@ -367,6 +367,51 @@ Sources: [Nushell root CI](https://github.com/nushell/nushell/blob/396a7588af811
 [sccache GitHub cache](https://github.com/mozilla/sccache/blob/v0.17.0/docs/GHA.md),
 [BoringCache Cargo setup](https://boringcache.com/docs/adapters/cargo).
 
+## Codex release builds
+
+`cargo/codex-release` starts at `dd6d2c3d66fbd04963cb62a16d80213846242b90`.
+Every lane runs the Cargo build from upstream's release workflow for the
+`aarch64-apple-darwin` primary bundle: `cargo build --target
+aarch64-apple-darwin --release --timings` for `codex`, `codex-code-mode-host`,
+`codex-exec-server` and `codex-responses-api-proxy`. The lanes use the
+workflow's `CARGO_PROFILE_RELEASE_SPLIT_DEBUGINFO=packed`,
+`CARGO_NET_GIT_FETCH_WITH_CLI=true` and `STABLE_GIT_COMMIT`, plus the
+checksum-verified rusty_v8 archive that upstream's `setup-rusty-v8` action
+downloads. `tools/cargo/shared/codex-rusty-v8.sh` follows that action for a
+given target. Upstream builds without `--locked`, so these lanes do too.
+Upstream also passes a Statsig client key from a repository variable that is
+not public; it is unset in every lane, which changes only that embedded value.
+
+Upstream release tags are a `main` commit plus one change that sets
+`[workspace.package] version` in `codex-rs/Cargo.toml`. Before the timer
+starts, preparation sets that version to `0.0.0-bench.g<commit>` in
+`Cargo.toml` and in the workspace entries of `Cargo.lock`, then commits both
+in the benchmark checkout with the upstream commit's date, as a release tag
+adds one commit to `main`. The build starts from a clean checkout, which
+BoringCache requires before it saves `target`, and `STABLE_GIT_COMMIT` names
+that commit. Upstream's release build updates those `Cargo.lock` entries
+itself; here that happens before the timer. Each step therefore rebuilds every
+workspace crate, as each release does, and the output check runs
+`codex --version` to confirm the stamp.
+
+Rolling steps move 20 first-parent commits. Upstream `main` received about 60
+commits a day in the week before the case started and made two or three
+releases a day, so one step approximates one release interval. Upstream runs
+this build on `macos-15-xlarge`, an Apple M2 with 5 vCPUs and 14 GB of
+memory. These lanes run on Avrea's
+`avrea-macos-26-8-vcpu` runner, an Apple M5 Max with 8 vCPUs and 24 GB of
+memory, so absolute times differ from upstream's. GitHub's standard `macos-26`
+runner, with 3 cores and 7 GB, did not finish a cold build within the
+180-minute job limit. The base lanes compare compiler caches. The plus lanes
+also cache Cargo registry downloads, Git dependencies and `target`. Restore,
+the Cargo build and cache publication are timed; signing, packaging and the
+other release targets are outside this measurement.
+
+Sources: [release workflow](https://github.com/openai/codex/blob/dd6d2c3d66fbd04963cb62a16d80213846242b90/.github/workflows/rust-release.yml),
+[rusty_v8 setup](https://github.com/openai/codex/blob/dd6d2c3d66fbd04963cb62a16d80213846242b90/.github/actions/setup-rusty-v8/action.yml),
+[sccache GitHub cache](https://github.com/mozilla/sccache/blob/v0.17.0/docs/GHA.md),
+[BoringCache Cargo setup](https://boringcache.com/docs/adapters/cargo).
+
 ## Docker cases started from recent history
 
 Four Docker cases added on 10 November 2026 start before the upstream head
