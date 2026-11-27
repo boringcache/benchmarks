@@ -1,0 +1,51 @@
+{
+  "adapter_command": "maven",
+  "case": "spring-ai",
+  "lane": "depot-cache",
+  "provider": "depot",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 162,
+  "scope": "depot-cache-github-rolling",
+  "cache_scope": "depot-cache-github-rolling",
+  "cache_seeded": false,
+  "repo": "spring-projects/spring-ai",
+  "sha": "ea0cc8cf7f729cd0fec0760212fac71d8a270b4c",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46013575196",
+  "attempt": 1,
+  "capabilities": [
+    "build-cache"
+  ],
+  "cache_restored_key": "maven-spring-ai-depot-cache-github-rolling-161",
+  "cache_restore_tracked": true,
+  "seconds": 154.45,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 81
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "d04094e88565d6eb7e61638c631e86a83fecf2ec",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-27T14:12:24Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46013575196/job/140555330946",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-27T14:11:43Z",
+  "job_completed_at": "2026-11-27T14:15:03Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 200.0
+}
