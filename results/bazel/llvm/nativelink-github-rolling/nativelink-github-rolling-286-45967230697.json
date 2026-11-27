@@ -1,0 +1,50 @@
+{
+  "adapter_command": "bazel",
+  "case": "llvm",
+  "lane": "nativelink",
+  "provider": "nativelink",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 286,
+  "scope": "nativelink-github-rolling",
+  "cache_scope": "nativelink-github-rolling",
+  "cache_seeded": false,
+  "repo": "llvm/llvm-project",
+  "sha": "f86a04c197e84e8c45f015f7051b84f30f30cabf",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/45967230697",
+  "attempt": 1,
+  "capabilities": [
+    "remote-cache"
+  ],
+  "cache_restored_key": null,
+  "seconds": 5663.038,
+  "exit_status": 1,
+  "output_ok": false,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 78
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "9f2113371531beece1a9495510f1ad28c0bca1fe",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-27T08:41:32Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/45967230697/job/140399231733",
+  "job_conclusion": "failure",
+  "job_started_at": "2026-11-27T08:39:42Z",
+  "job_completed_at": "2026-11-27T10:16:01Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 5779.0
+}
