@@ -1,9 +1,12 @@
 repo = "qdrant/qdrant"
 branch = "dev"
 start_sha = "a4869c807e7c6a364d84cdf2b33af052b284142a"
+rolling_series = 2
 directory = "upstream"
 prepare = [
-  "sudo apt-get update && sudo apt-get install -y --no-install-recommends protobuf-compiler clang cmake libclang-dev",
+  "sudo apt-get update && sudo apt-get install -y --no-install-recommends clang cmake libclang-dev",
+  "bash overlay/install-protoc.sh",
+  '"$PROTOC" -I upstream/lib/api/src/grpc/proto -I "$PROTOC_INCLUDE" --descriptor_set_out=/dev/null upstream/lib/api/src/grpc/proto/qdrant.proto',
   "mise trust && mise install",
   'printf "%s\n" /target/ >> upstream/.git/info/exclude',
 ]
@@ -16,6 +19,8 @@ test -z "$(git -C upstream status --porcelain=v1 --untracked-files=normal)"
 CARGO_TERM_COLOR = "always"
 CARGO_INCREMENTAL = "0"
 CARGO_TARGET_DIR = "${BENCH_DIR}/upstream/target"
+PROTOC = "${BENCH_DIR}/overlay/protoc/bin/protoc"
+PROTOC_INCLUDE = "${BENCH_DIR}/overlay/protoc/include"
 
 [runs]
 boringcache-cargo = ["github", "local"]
