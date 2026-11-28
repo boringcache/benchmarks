@@ -1,0 +1,64 @@
+{
+  "adapter_command": "docker",
+  "case": "honeybeepf-llm",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 37,
+  "scope": "gha-plus-github-rolling",
+  "cache_scope": "gha-plus-github-rolling",
+  "cache_seeded": false,
+  "repo": "honeybee-studio/honeybeepf-llm",
+  "sha": "c2d4e97cbff8bf02eb00d930db13771bd4d0e87f",
+  "cache_save_timing": "post-job",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46089810003",
+  "attempt": 1,
+  "capabilities": [
+    "layers",
+    "mount-cache"
+  ],
+  "cache_restored_key": null,
+  "cache_restore_tracked": true,
+  "seconds": 362.74,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V45 96-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 78
+    },
+    "image_platform": "linux/amd64",
+    "buildx_builder": {
+      "name": "builder-283152ff-200e-4af3-bd03-43ea70641a38",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-283152ff-200e-4af3-bd03-43ea70641a380",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "361fd72f2efb34af14858c863c39c510a6a7f746",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-28T00:49:25Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46089810003/job/140808113809",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-28T00:49:02Z",
+  "job_completed_at": "2026-11-28T00:56:45Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 463.0,
+  "post_job_save_seconds": 58.832
+}
