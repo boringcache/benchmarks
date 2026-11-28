@@ -48,6 +48,7 @@ Current procedures and comparison limits are in [tools/README.md](tools/README.m
 
 | Case | Restart | Reason |
 | --- | --- | --- |
+| Docker Firecrawl | Series 3 | Start at the original upstream commit with new cache scopes. The Plus Go build uses the image's default C compiler. The Rust stage still uses sccache. [Series 2 cold baseline](https://github.com/boringcache/benchmarks/actions/runs/46128793387) |
 | Docker Firecrawl, Hermes, Langfuse, Outline and Semgrep | Series 2 | Start at the original upstream commits with new cache scopes. Both Plus providers use the same Dockerfile changes. Firecrawl adds Go module and compiler reuse and sccache. Hermes preserves the pnpm store. Langfuse preserves the pnpm and Next caches and adds Turbo and Go tool caches. Outline preserves Yarn downloads. Semgrep preserves Dune build outputs and opam and pip downloads. |
 | Docker Infisical | Series 3 | Start at the original upstream commit with new cache scopes. Both Plus providers preserve npm downloads and frontend TypeScript build metadata. |
 | Go Zitadel, Cargo PostHog MCP and Archive Appsmith | Series 2 | Repeat the original upstream commits with empty series caches. Zitadel compares BoringCache and GitHub Actions Cache. The earlier Depot records remain available and used an organization-wide cache. |
