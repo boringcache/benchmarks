@@ -1,0 +1,62 @@
+{
+  "adapter_command": "docker",
+  "case": "hermes",
+  "lane": "blacksmith-builder",
+  "provider": "blacksmith",
+  "level": "base",
+  "runner": "blacksmith-4",
+  "runner_label": "blacksmith-4vcpu-ubuntu-2404",
+  "machine": "blacksmith 4c",
+  "phase": "rolling",
+  "step": 18,
+  "scope": "blacksmith-builder-blacksmith-4-rolling-2",
+  "cache_scope": "blacksmith-builder-blacksmith-4-rolling-2",
+  "cache_seeded": false,
+  "repo": "NousResearch/hermes-agent",
+  "sha": "d8e6cfa2b38ce365dd3a3bbc52eaa9974bc8bf8d",
+  "cache_save_timing": "post-job",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46153159883",
+  "attempt": 1,
+  "capabilities": [
+    "layers"
+  ],
+  "cache_restored_key": null,
+  "seconds": 23.603,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC",
+      "cores": 4,
+      "memory_mb": 15788,
+      "disk_gb": 149,
+      "disk_free_gb": 77
+    },
+    "image_platform": "linux/amd64",
+    "buildx_builder": {
+      "name": "blacksmith-mx0hm8zy",
+      "driver": "remote",
+      "nodes": [
+        {
+          "name": "blacksmith-mx0hm8zy0",
+          "endpoint": "tcp://127.0.0.1:1234"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "ab4fce9ec86fdd13c7d24e42b5c4db07eeeb6388",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-28T14:10:17Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46153159883/job/141004180153",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-28T14:09:55Z",
+  "job_completed_at": "2026-11-28T14:10:46Z",
+  "queue_seconds": 6.0,
+  "job_seconds": 51.0,
+  "post_job_save_seconds": 0.916
+}
