@@ -1,0 +1,50 @@
+{
+  "adapter_command": "cargo",
+  "case": "deno",
+  "lane": "depot-cache",
+  "provider": "depot",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 33,
+  "scope": "depot-cache-github-rolling-2",
+  "cache_scope": "depot-cache-github-rolling-2",
+  "cache_seeded": false,
+  "repo": "denoland/deno",
+  "sha": "4685539c0d60f86284c1ad160788a4590312a9c1",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46132347764",
+  "attempt": 1,
+  "capabilities": [
+    "compiler-cache"
+  ],
+  "cache_restored_key": null,
+  "seconds": 1989.943,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Intel(R) Xeon(R) 6973P-C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 74
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "3212c06ff4bb4d00364ebf9465bc839b0d5f4883",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-28T09:52:43Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46132347764/job/140940334326",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-28T09:51:43Z",
+  "job_completed_at": "2026-11-28T10:26:01Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 2058.0
+}
