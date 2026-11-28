@@ -1,0 +1,51 @@
+{
+  "adapter_command": "go",
+  "case": "zitadel",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 14,
+  "scope": "gha-github-rolling-2",
+  "cache_scope": "gha-github-rolling-2",
+  "cache_seeded": false,
+  "repo": "zitadel/nextgen",
+  "sha": "36e026f56078a129e12d4e7cef8963d8d8e55dd8",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46145650393",
+  "attempt": 1,
+  "capabilities": [
+    "build-cache"
+  ],
+  "cache_restored_key": "go-zitadel-gha-github-rolling-2-13",
+  "cache_restore_tracked": true,
+  "seconds": 23.283,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 81
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "f8c0c6dc7ab596de8081f81aa86c3e203a7c04b0",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-28T12:39:20Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46145650393/job/140981173713",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-28T12:38:56Z",
+  "job_completed_at": "2026-11-28T12:39:48Z",
+  "queue_seconds": 3.0,
+  "job_seconds": 52.0
+}
