@@ -1,0 +1,64 @@
+{
+  "adapter_command": "docker",
+  "case": "infisical",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "runner": "github-arm",
+  "runner_label": "ubuntu-24.04-arm",
+  "machine": "github arm 4c",
+  "phase": "rolling",
+  "step": 9,
+  "scope": "gha-plus-github-arm-rolling-3",
+  "cache_scope": "gha-plus-github-arm-rolling-3",
+  "cache_seeded": false,
+  "repo": "Infisical/infisical",
+  "sha": "826824c315f5506ccb51e3f439758920d1d2d644",
+  "cache_save_timing": "post-job",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46140718789",
+  "attempt": 1,
+  "capabilities": [
+    "layers",
+    "mount-cache"
+  ],
+  "cache_restored_key": "docker-infisical-gha-plus-github-arm-rolling-3-8",
+  "cache_restore_tracked": true,
+  "seconds": 269.905,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Neoverse-N2",
+      "cores": 4,
+      "memory_mb": 15941,
+      "disk_gb": 144,
+      "disk_free_gb": 85
+    },
+    "image_platform": "linux/arm64",
+    "buildx_builder": {
+      "name": "builder-43a48897-5735-4a29-9da8-1d70f50527a7",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-43a48897-5735-4a29-9da8-1d70f50527a70",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "c8d898fabc741ab9ad41d4704be14ffa63671ae1",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-28T11:38:43Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46140718789/job/140966018059",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-28T11:37:56Z",
+  "job_completed_at": "2026-11-28T11:44:22Z",
+  "queue_seconds": 4.0,
+  "job_seconds": 386.0,
+  "post_job_save_seconds": 32.73
+}
