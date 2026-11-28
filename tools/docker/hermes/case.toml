@@ -1,10 +1,14 @@
 repo = "NousResearch/hermes-agent"
 branch = "main"
 start_sha = "fed0bc22d3edfdfa445ecb171cd0397d2002be90"
+rolling_series = 2
+prepare = ["ruby overlay/prepare-cache.rb"]
 check = "docker image inspect hermes-slim-benchmark:local"
 
 [runs]
 boringcache-docker = ["github", "github-arm", "blacksmith-4", "local"]
+boringcache-docker-plus = ["github", "github-arm", "local"]
+gha-plus = ["github", "github-arm"]
 gha = ["github", "github-arm"]
 ghcr = ["github", "github-arm"]
 blacksmith-builder = ["blacksmith-4"]

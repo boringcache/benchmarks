@@ -1,0 +1,15 @@
+workspace = "boringcache/benchmarks"
+
+[adapters.docker]
+fail-on-cache-error = true
+tag = "outline-base-docker"
+no-git = true
+metadata-hints = ["benchmark=outline-base", "upstream-job=docker-base"]
+mount-cache = true
+command = [
+  "docker", "buildx", "build",
+  "--file", "upstream/Dockerfile.base",
+  "--tag", "outline-base-benchmark:local",
+  "--load",
+  "upstream",
+]
