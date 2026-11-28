@@ -1,0 +1,61 @@
+{
+  "adapter_command": "docker",
+  "case": "infisical",
+  "lane": "ghcr",
+  "provider": "github-container-registry",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 11,
+  "scope": "ghcr-github-rolling-2",
+  "cache_scope": "ghcr-github-rolling-2",
+  "cache_seeded": false,
+  "repo": "Infisical/infisical",
+  "sha": "33134ba39a3fbdcc560057e157970c96d745d6a1",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46095085491",
+  "attempt": 1,
+  "capabilities": [
+    "layers"
+  ],
+  "cache_restored_key": null,
+  "seconds": 248.127,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 64
+    },
+    "image_platform": "linux/amd64",
+    "buildx_builder": {
+      "name": "builder-59b93cf2-aaf8-430c-824e-97dc05274449",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-59b93cf2-aaf8-430c-824e-97dc052744490",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "abca90c184927ceed50a7817888f7f832c62dd36",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-28T01:51:43Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46095085491/job/140824687845",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-28T01:50:56Z",
+  "job_completed_at": "2026-11-28T01:56:39Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 343.0
+}
