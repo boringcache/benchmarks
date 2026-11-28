@@ -1,0 +1,897 @@
+{
+  "adapter_command": "go",
+  "case": "zitadel",
+  "lane": "boringcache-go",
+  "provider": "boringcache",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 0,
+  "scope": "boringcache-go-github-rolling-2",
+  "cache_scope": "boringcache-go-github-rolling-2",
+  "cache_seeded": false,
+  "repo": "zitadel/nextgen",
+  "sha": "054624f867bccdabe5a284fb9fe95934e3ddac2f",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46128809739",
+  "attempt": 1,
+  "capabilities": [
+    "build-cache"
+  ],
+  "cache_restored_key": null,
+  "seconds": 134.9,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1795856927624,
+      "run_id": "46128809739",
+      "session_id": "proxy-summary-b76d951e-f3f3-49b7-a3a1-6ef8ac479b9e",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 133306,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "gocache",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 85.0,
+          "cpu_iowait_percent": 0.4,
+          "cpu_pressure_percent": 53.0,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 5.4,
+          "disk_read_mb": 25.6,
+          "disk_written_mb": 4778.0,
+          "interval_ms": 133559,
+          "io_pressure_percent": 0.7,
+          "memory_pressure_percent": 0.0,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "disk_available_gb": 83,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15984
+      },
+      "proxy": {
+        "adapter": "gocache",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 133306,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_max_in_flight": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 0,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 0,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_upload_urls": 49,
+          "cache_finalize_publish": 215,
+          "cache_flush_upload": 79,
+          "cache_kv_entries_current_version": 342,
+          "cache_kv_entries_upsert": 58,
+          "cache_rollups_ingest": 298,
+          "cache_session_evidence_confirm": 155,
+          "cache_session_evidence_prepare": 47
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_upload_urls": 74,
+          "cache_finalize_publish": 215,
+          "cache_flush_upload": 79,
+          "cache_kv_entries_current_version": 342,
+          "cache_kv_entries_upsert": 128,
+          "cache_rollups_ingest": 912,
+          "cache_session_evidence_confirm": 291,
+          "cache_session_evidence_prepare": 48
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_upload_urls": 1100,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_upsert": 64,
+          "cache_rollups_ingest": 7,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 1178,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_upload_urls": 49,
+          "cache_finalize_publish": 215,
+          "cache_flush_upload": 79,
+          "cache_kv_entries_current_version": 342,
+          "cache_kv_entries_upsert": 58,
+          "cache_rollups_ingest": 298,
+          "cache_session_evidence_confirm": 155,
+          "cache_session_evidence_prepare": 47
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_upload_urls": 74,
+          "cache_finalize_publish": 215,
+          "cache_flush_upload": 79,
+          "cache_kv_entries_current_version": 342,
+          "cache_kv_entries_upsert": 128,
+          "cache_rollups_ingest": 912,
+          "cache_session_evidence_confirm": 291,
+          "cache_session_evidence_prepare": 48
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_upload_urls": 1100,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_upsert": 64,
+          "cache_rollups_ingest": 7,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 1178,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 465
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {},
+      "kv_upload": {
+        "kv_upload_allowed_concurrency_max": 1,
+        "kv_upload_already_present_blobs": 2699,
+        "kv_upload_batches": 63,
+        "kv_upload_blobs_per_sec": 0,
+        "kv_upload_concurrency_reason": "adaptive_ramp",
+        "kv_upload_concurrency_source": "auto",
+        "kv_upload_duration_ms": 2880,
+        "kv_upload_failed_blobs": 0,
+        "kv_upload_final_concurrency_max": 1,
+        "kv_upload_initial_concurrency_max": 1,
+        "kv_upload_missing_local_blobs": 0,
+        "kv_upload_requested_blobs": 0,
+        "kv_upload_uploaded_blobs": 0,
+        "kv_upload_uploaded_bytes": 0,
+        "kv_upload_writethrough_failure_bytes": 0,
+        "kv_upload_writethrough_failure_count": 0,
+        "kv_upload_writethrough_pressure_skip_bytes": 0,
+        "kv_upload_writethrough_pressure_skip_count": 0,
+        "kv_upload_writethrough_uploaded_blobs": 0,
+        "kv_upload_writethrough_uploaded_bytes": 0
+      },
+      "singleflight": {
+        "singleflight_kv_lookup_leaders": 1622
+      },
+      "kv_lookup": {
+        "kv_lookup_go_cache_after_refresh_miss": 1621,
+        "kv_lookup_go_cache_published_fast_miss": 1621
+      },
+      "local_cache": {
+        "blob_read": {},
+        "blob_read_cache_bytes": 1066518259,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "schema_version": "native_tool_evidence.v1",
+        "source": "go_action_graph",
+        "tool": "gocache"
+      },
+      "unit_evidence": {
+        "build_succeeded": true,
+        "capabilities": {
+          "cache_source": false,
+          "critical_path": true,
+          "dependencies": true,
+          "execution_reasons": false,
+          "scheduling": true,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": true
+        },
+        "collection_state": "reported",
+        "counts": {
+          "cached": 0,
+          "executed": 1176,
+          "failed": 0,
+          "observed": 2330,
+          "scope": "build_actions",
+          "skipped": 1154,
+          "up_to_date": 0
+        },
+        "critical_path": {
+          "completed_at_ms": 1795856921672,
+          "ready_gap_ms": 86110,
+          "source": "go_action_dependencies",
+          "started_at_ms": 1795856804095,
+          "truncated": true,
+          "unit_count": 44,
+          "unit_duration_ms": 31467,
+          "units": [
+            {
+              "duration_ms": 36,
+              "id": "go-action:19",
+              "label": "errors (build)"
+            },
+            {
+              "duration_ms": 20,
+              "id": "go-action:346",
+              "label": "internal/oserror (build)"
+            },
+            {
+              "duration_ms": 5,
+              "id": "go-action:1224",
+              "label": "syscall (build check cache)"
+            },
+            {
+              "duration_ms": 643,
+              "id": "go-action:74",
+              "label": "syscall (build)"
+            },
+            {
+              "duration_ms": 2,
+              "id": "go-action:1162",
+              "label": "time (build check cache)"
+            },
+            {
+              "duration_ms": 774,
+              "id": "go-action:12",
+              "label": "time (build)"
+            },
+            {
+              "duration_ms": 20,
+              "id": "go-action:1242",
+              "label": "internal/poll (build check cache)"
+            },
+            {
+              "duration_ms": 313,
+              "id": "go-action:92",
+              "label": "internal/poll (build)"
+            },
+            {
+              "duration_ms": 6,
+              "id": "go-action:1156",
+              "label": "os (build check cache)"
+            },
+            {
+              "duration_ms": 636,
+              "id": "go-action:6",
+              "label": "os (build)"
+            },
+            {
+              "duration_ms": 2,
+              "id": "go-action:1170",
+              "label": "fmt (build check cache)"
+            },
+            {
+              "duration_ms": 419,
+              "id": "go-action:20",
+              "label": "fmt (build)"
+            },
+            {
+              "duration_ms": 2,
+              "id": "go-action:1274",
+              "label": "math/big (build check cache)"
+            },
+            {
+              "duration_ms": 797,
+              "id": "go-action:124",
+              "label": "math/big (build)"
+            },
+            {
+              "duration_ms": 2,
+              "id": "go-action:2105",
+              "label": "github.com/remyoudompheng/bigfft (build check cache)"
+            },
+            {
+              "duration_ms": 105,
+              "id": "go-action:952",
+              "label": "github.com/remyoudompheng/bigfft (build)"
+            },
+            {
+              "duration_ms": 6,
+              "id": "go-action:1985",
+              "label": "modernc.org/mathutil (build check cache)"
+            },
+            {
+              "duration_ms": 496,
+              "id": "go-action:832",
+              "label": "modernc.org/mathutil (build)"
+            },
+            {
+              "duration_ms": 5,
+              "id": "go-action:1745",
+              "label": "modernc.org/libc (build check cache)"
+            },
+            {
+              "duration_ms": 6916,
+              "id": "go-action:592",
+              "label": "modernc.org/libc (build)"
+            },
+            {
+              "duration_ms": 20,
+              "id": "go-action:1747",
+              "label": "modernc.org/sqlite/lib (build check cache)"
+            },
+            {
+              "duration_ms": 8417,
+              "id": "go-action:594",
+              "label": "modernc.org/sqlite/lib (build)"
+            },
+            {
+              "duration_ms": 1,
+              "id": "go-action:1463",
+              "label": "modernc.org/sqlite (build check cache)"
+            },
+            {
+              "duration_ms": 443,
+              "id": "go-action:312",
+              "label": "modernc.org/sqlite (build)"
+            },
+            {
+              "duration_ms": 2,
+              "id": "go-action:1207",
+              "label": "github.com/zitadel/nextgen/internal/storage/dialect/sqlite (build check cache)"
+            },
+            {
+              "duration_ms": 3230,
+              "id": "go-action:57",
+              "label": "github.com/zitadel/nextgen/internal/storage/dialect/sqlite (build)"
+            },
+            {
+              "duration_ms": 24,
+              "id": "go-action:55",
+              "label": "github.com/zitadel/nextgen/internal/storage/dialect/all (build)"
+            },
+            {
+              "duration_ms": 1,
+              "id": "go-action:1153",
+              "label": "github.com/zitadel/nextgen/cmd/server (build check cache)"
+            },
+            {
+              "duration_ms": 1291,
+              "id": "go-action:4",
+              "label": "github.com/zitadel/nextgen/cmd/server (build)"
+            },
+            {
+              "duration_ms": 1,
+              "id": "go-action:1150",
+              "label": "github.com/zitadel/nextgen (build check cache)"
+            },
+            {
+              "duration_ms": 29,
+              "id": "go-action:2",
+              "label": "github.com/zitadel/nextgen (build)"
+            },
+            {
+              "duration_ms": 3351,
+              "id": "go-action:1",
+              "label": "github.com/zitadel/nextgen (link)"
+            }
+          ]
+        },
+        "ranking_scope": "all_observed_units",
+        "scheduling": {
+          "waiting_ms": 10646040
+        },
+        "schema_version": "unit_evidence.v1",
+        "source": "go_action_graph",
+        "tool": "go",
+        "truncated": true,
+        "unit_kind": "build_action",
+        "units": [
+          {
+            "attributes": {
+              "cpu_ms": 57876,
+              "dependency_count": 30,
+              "mode": "build",
+              "package": "github.com/zitadel/nextgen/internal/api/generated",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856866108,
+            "duration_ms": 39924,
+            "id": "go-action:29",
+            "key": "38a1dc29a95c05be7c23a7fd4099e28dc337ef4e6f6d793f426e2ec480bc8ce7",
+            "label": "github.com/zitadel/nextgen/internal/api/generated (build)",
+            "started_at_ms": 1795856826184,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 18599,
+              "dependency_count": 7,
+              "mode": "build",
+              "package": "modernc.org/sqlite/lib",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856913299,
+            "critical_path": true,
+            "duration_ms": 8417,
+            "id": "go-action:594",
+            "key": "01ebe81067b14365c18c0fee9da2087e09a02123616c6a3889d3553c9e6d6487",
+            "label": "modernc.org/sqlite/lib (build)",
+            "started_at_ms": 1795856904882,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 9529,
+              "dependency_count": 57,
+              "mode": "build",
+              "package": "github.com/zitadel/nextgen/internal/storage/dialect/postgres",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856893479,
+            "duration_ms": 7346,
+            "id": "go-action:290",
+            "key": "cc724665e7b4ef9444518d234541a34455d3d66b20fa0655920de838ea901d87",
+            "label": "github.com/zitadel/nextgen/internal/storage/dialect/postgres (build)",
+            "started_at_ms": 1795856886133,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 10436,
+              "dependency_count": 26,
+              "mode": "build",
+              "package": "modernc.org/libc",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856904862,
+            "critical_path": true,
+            "duration_ms": 6916,
+            "id": "go-action:592",
+            "key": "05e5a8769a351623449e613637f844dd6b6fcec0ef2d288ac1702b809e2be509",
+            "label": "modernc.org/libc (build)",
+            "started_at_ms": 1795856897946,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 8428,
+              "dependency_count": 23,
+              "mode": "build",
+              "package": "github.com/jackc/pgx/v5/pgtype",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856878237,
+            "duration_ms": 6037,
+            "id": "go-action:586",
+            "key": "83cc2a9f5fa3225b439bef3482dcf724d884e6ebe88cdc165eb74ef3324fedbe",
+            "label": "github.com/jackc/pgx/v5/pgtype (build)",
+            "started_at_ms": 1795856872200,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 9012,
+              "dependency_count": 48,
+              "mode": "build",
+              "package": "github.com/zitadel/nextgen/internal/storage/dialect/spanner",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856906216,
+            "duration_ms": 4926,
+            "id": "go-action:291",
+            "key": "21fabd29a1d7c24ae1e60a899258b7ebcee4f65f2c8536dc79252d131eb51ba6",
+            "label": "github.com/zitadel/nextgen/internal/storage/dialect/spanner (build)",
+            "started_at_ms": 1795856901290,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 6104,
+              "dependency_count": 35,
+              "mode": "build",
+              "package": "cel.dev/cel-go/common/types",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856872408,
+            "duration_ms": 4795,
+            "id": "go-action:270",
+            "key": "be3f0460e224b92430dc0101e225db9b7e723e67b1cc8c0cd2eee64850b6e90f",
+            "label": "cel.dev/cel-go/common/types (build)",
+            "started_at_ms": 1795856867613,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 2643,
+              "dependency_count": 6,
+              "mode": "build",
+              "package": "github.com/felixge/httpsnoop",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856854946,
+            "duration_ms": 4115,
+            "id": "go-action:472",
+            "key": "96479b855917e689b2aae769c21dc2a5c148b89b29d21cf731dd1c2ec2ed6d47",
+            "label": "github.com/felixge/httpsnoop (build)",
+            "started_at_ms": 1795856850831,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 5036,
+              "dependency_count": 60,
+              "mode": "build",
+              "package": "github.com/zitadel/nextgen/internal/service",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856884513,
+            "duration_ms": 3812,
+            "id": "go-action:51",
+            "key": "b84c56d3ede755bdded96bff701bee2c81979a536385a753886f8f058f320204",
+            "label": "github.com/zitadel/nextgen/internal/service (build)",
+            "started_at_ms": 1795856880701,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 4046,
+              "dependency_count": 29,
+              "mode": "build",
+              "package": "github.com/envoyproxy/go-control-plane/envoy/config/core/v3",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856886868,
+            "duration_ms": 3786,
+            "id": "go-action:998",
+            "key": "d51e2077e5a5713156ba4bea80fb4ea345618091d7ea98df9957bcf069f4dad5",
+            "label": "github.com/envoyproxy/go-control-plane/envoy/config/core/v3 (build)",
+            "started_at_ms": 1795856883082,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 2312,
+              "dependency_count": 30,
+              "mode": "build",
+              "package": "go.opentelemetry.io/otel/sdk/metric",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856854097,
+            "duration_ms": 3646,
+            "id": "go-action:262",
+            "key": "076495788deec26b5cf24964b80090a56fc3a9d618d6781c9967145753b48032",
+            "label": "go.opentelemetry.io/otel/sdk/metric (build)",
+            "started_at_ms": 1795856850451,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 4648,
+              "dependency_count": 1148,
+              "mode": "link",
+              "package": "github.com/zitadel/nextgen",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856921672,
+            "critical_path": true,
+            "duration_ms": 3351,
+            "id": "go-action:1",
+            "key": "59e11245755dbc73bff2ad74f38532159dffe488cc817620533bc284d0029ca2",
+            "label": "github.com/zitadel/nextgen (link)",
+            "started_at_ms": 1795856918321,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 4525,
+              "dependency_count": 54,
+              "mode": "build",
+              "package": "github.com/zitadel/nextgen/internal/domain",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856837701,
+            "duration_ms": 3298,
+            "id": "go-action:37",
+            "key": "dc87ee8ba0864f8fb2bd853671db253a14822dbeb2635a91e375522f17d914c1",
+            "label": "github.com/zitadel/nextgen/internal/domain (build)",
+            "started_at_ms": 1795856834403,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 7425,
+              "dependency_count": 51,
+              "mode": "build",
+              "package": "github.com/zitadel/nextgen/internal/storage/dialect/sqlite",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856916975,
+            "critical_path": true,
+            "duration_ms": 3230,
+            "id": "go-action:57",
+            "key": "67741272b92030f754a16670951ee895a7b101b7b472788154f907fabe5f97ee",
+            "label": "github.com/zitadel/nextgen/internal/storage/dialect/sqlite (build)",
+            "started_at_ms": 1795856913745,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 3828,
+              "dependency_count": 25,
+              "mode": "build",
+              "package": "github.com/google/go-tpm/tpm2",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856830876,
+            "duration_ms": 3177,
+            "id": "go-action:439",
+            "key": "801364a500cbc191e46a697fb791e2541eb08686f0cd8e6a675301c6be0d1432",
+            "label": "github.com/google/go-tpm/tpm2 (build)",
+            "started_at_ms": 1795856827699,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 6156,
+              "dependency_count": 90,
+              "mode": "build",
+              "package": "cloud.google.com/go/spanner",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856901289,
+            "duration_ms": 3116,
+            "id": "go-action:590",
+            "key": "108a0ccce37891ee74290a8fe0bd7c124a5d46bcadd6a65dfaf274ef38b7be2b",
+            "label": "cloud.google.com/go/spanner (build)",
+            "started_at_ms": 1795856898173,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 3016,
+              "dependency_count": 30,
+              "mode": "build",
+              "package": "github.com/envoyproxy/go-control-plane/envoy/config/route/v3",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856890224,
+            "duration_ms": 2962,
+            "id": "go-action:1062",
+            "key": "87e6b80f4da6432bfae12df2dcf54bef6b24d2ed15225fb93836c69c4e8c51dd",
+            "label": "github.com/envoyproxy/go-control-plane/envoy/config/route/v3 (build)",
+            "started_at_ms": 1795856887262,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 2723,
+              "dependency_count": 6,
+              "mode": "build",
+              "package": "cel.dev/cel-go/parser/gen",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856872042,
+            "duration_ms": 2837,
+            "id": "go-action:770",
+            "key": "d164d11ff9392c3289ec1e761bb63dddd5635639e5858125f1c997f83ed1ff9f",
+            "label": "cel.dev/cel-go/parser/gen (build)",
+            "started_at_ms": 1795856869205,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 5635,
+              "dependency_count": 27,
+              "mode": "build",
+              "package": "runtime",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856807380,
+            "critical_path": true,
+            "duration_ms": 2615,
+            "id": "go-action:7",
+            "key": "fc17bf000da04bc24d55f4552cbb9b914f5f08dea53285c80d5f7117c2903e44",
+            "label": "runtime (build)",
+            "started_at_ms": 1795856804765,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 2743,
+              "dependency_count": 50,
+              "mode": "build",
+              "package": "github.com/zitadel/nextgen/internal/api",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795856887255,
+            "duration_ms": 2508,
+            "id": "go-action:28",
+            "key": "71455d5af84fb1d6f38004233cef1d03bdf7f972ad9af9742e581aac3fe3aeec",
+            "label": "github.com/zitadel/nextgen/internal/api (build)",
+            "started_at_ms": 1795856884747,
+            "state": "executed"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "gocache",
+          "candidates": [
+            {
+              "confidence": "high",
+              "evidence": {
+                "bytes_read": 0,
+                "hit_rate": 0.0,
+                "hits": 0,
+                "misses": 1621
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 133306,
+            "errors": 0,
+            "hit_rate": 0.0,
+            "hits": 0,
+            "misses": 1621,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 3931
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 0.0,
+          "hits": 0,
+          "likely_reason": "no_hits_for_requested_keys",
+          "misses": 1621,
+          "state": "cold",
+          "writes": 3931
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 81
+    }
+  },
+  "evidence": [
+    "boringcache-go-github-rolling-0-46128809739.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "harness": {
+    "commit": "401e6daf9552e3030e15a86d8f599cfb48d7fd21",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-28T09:06:33Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46128809739/job/140929449989",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-28T09:06:15Z",
+  "job_completed_at": "2026-11-28T09:08:51Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 156.0
+}
