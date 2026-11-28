@@ -1,0 +1,53 @@
+{
+  "adapter_command": "cargo",
+  "case": "posthog-mcp",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 33,
+  "scope": "gha-plus-github-rolling",
+  "cache_scope": "gha-plus-github-rolling",
+  "cache_seeded": false,
+  "repo": "PostHog/posthog",
+  "sha": "824c00158fbd574c26878403efde58a360f1f93f",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46119979664",
+  "attempt": 1,
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "cache_restored_key": "cargo-posthog-mcp-gha-plus-github-rolling-32",
+  "cache_restore_tracked": true,
+  "seconds": 39.211,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "cores": 4,
+      "memory_mb": 15982,
+      "disk_gb": 144,
+      "disk_free_gb": 78
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "40d54ed5a9e3ae722102759dcf9fb972ae37fb93",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-28T07:12:34Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46119979664/job/140902371667",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-28T07:11:38Z",
+  "job_completed_at": "2026-11-28T07:13:17Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 99.0
+}
