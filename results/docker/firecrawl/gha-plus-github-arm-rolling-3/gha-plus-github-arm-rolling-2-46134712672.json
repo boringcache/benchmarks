@@ -1,0 +1,65 @@
+{
+  "adapter_command": "docker",
+  "case": "firecrawl",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "runner": "github-arm",
+  "runner_label": "ubuntu-24.04-arm",
+  "machine": "github arm 4c",
+  "phase": "rolling",
+  "step": 2,
+  "scope": "gha-plus-github-arm-rolling-3",
+  "cache_scope": "gha-plus-github-arm-rolling-3",
+  "cache_seeded": false,
+  "repo": "firecrawl/firecrawl",
+  "sha": "6a658149c52ee426cc275f8743599f36c8321f40",
+  "cache_save_timing": "post-job",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46134712672",
+  "attempt": 1,
+  "capabilities": [
+    "layers",
+    "tool-cache",
+    "mount-cache"
+  ],
+  "cache_restored_key": "docker-firecrawl-gha-plus-github-arm-rolling-3-1",
+  "cache_restore_tracked": true,
+  "seconds": 307.449,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "Neoverse-N2",
+      "cores": 4,
+      "memory_mb": 15941,
+      "disk_gb": 144,
+      "disk_free_gb": 96
+    },
+    "image_platform": "linux/arm64",
+    "buildx_builder": {
+      "name": "builder-94c9cf2b-1fb0-422c-aec4-12b4ad2cd2af",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-94c9cf2b-1fb0-422c-aec4-12b4ad2cd2af0",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "1ee517efbc62d425888e3010c54452555ce53a04",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-28T10:21:50Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46134712672/job/140947555528",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-28T10:21:28Z",
+  "job_completed_at": "2026-11-28T10:29:33Z",
+  "queue_seconds": 4.0,
+  "job_seconds": 485.0,
+  "post_job_save_seconds": 96.681
+}
