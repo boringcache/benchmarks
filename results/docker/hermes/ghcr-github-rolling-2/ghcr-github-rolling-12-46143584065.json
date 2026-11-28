@@ -1,0 +1,61 @@
+{
+  "adapter_command": "docker",
+  "case": "hermes",
+  "lane": "ghcr",
+  "provider": "github-container-registry",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 12,
+  "scope": "ghcr-github-rolling-2",
+  "cache_scope": "ghcr-github-rolling-2",
+  "cache_seeded": false,
+  "repo": "NousResearch/hermes-agent",
+  "sha": "c9a9b665b664a83d41acd880b376f72a6afb78d3",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46143584065",
+  "attempt": 1,
+  "capabilities": [
+    "layers"
+  ],
+  "cache_restored_key": null,
+  "seconds": 338.292,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V74 80-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 73
+    },
+    "image_platform": "linux/amd64",
+    "buildx_builder": {
+      "name": "builder-874e2bce-e76e-4e35-aff3-cceb23e091b9",
+      "driver": "docker-container",
+      "nodes": [
+        {
+          "name": "builder-874e2bce-e76e-4e35-aff3-cceb23e091b90",
+          "endpoint": "unix:///var/run/docker.sock"
+        }
+      ]
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "94d109f0797588813ce44b6c64a2bbd9ea4c5d80",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-28T12:15:04Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46143584065/job/140974885807",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-28T12:14:25Z",
+  "job_completed_at": "2026-11-28T12:21:17Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 412.0
+}
