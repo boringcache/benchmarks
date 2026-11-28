@@ -1,0 +1,53 @@
+{
+  "adapter_command": "cargo",
+  "case": "qdrant",
+  "lane": "gha-plus",
+  "provider": "github-actions-cache",
+  "level": "plus",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 8,
+  "scope": "gha-plus-github-rolling-3",
+  "cache_scope": "gha-plus-github-rolling-3",
+  "cache_seeded": false,
+  "repo": "qdrant/qdrant",
+  "sha": "3007d628fb725a111ce86abc7b221d60e02bc2d6",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46138514678",
+  "attempt": 1,
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "cache_restored_key": "cargo-qdrant-gha-plus-github-rolling-3-7",
+  "cache_restore_tracked": true,
+  "seconds": 215.782,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 74
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "04b539b4af9c56cf11db60f8cf601a92edcc13a8",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-28T11:10:50Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46138514678/job/140959269076",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-28T11:10:05Z",
+  "job_completed_at": "2026-11-28T11:14:31Z",
+  "queue_seconds": 3.0,
+  "job_seconds": 266.0
+}
