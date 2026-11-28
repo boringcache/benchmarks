@@ -1,0 +1,941 @@
+{
+  "adapter_command": "go",
+  "case": "zitadel",
+  "lane": "boringcache-go",
+  "provider": "boringcache",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 1,
+  "scope": "boringcache-go-github-rolling-2",
+  "cache_scope": "boringcache-go-github-rolling-2",
+  "cache_seeded": false,
+  "repo": "zitadel/nextgen",
+  "sha": "074a400c74c8929a5b3359fab0fb827c7ed2a8b6",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46130060210",
+  "attempt": 1,
+  "capabilities": [
+    "build-cache"
+  ],
+  "cache_restored_key": null,
+  "seconds": 48.962,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1795857782460,
+      "run_id": "46130060210",
+      "session_id": "proxy-summary-5ff1585a-6926-4951-83cd-7efc8a56931a",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 42179,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "gocache",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 52.1,
+          "cpu_iowait_percent": 1.7,
+          "cpu_pressure_percent": 14.3,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 16.6,
+          "disk_read_mb": 2.1,
+          "disk_written_mb": 4168.8,
+          "interval_ms": 47620,
+          "io_pressure_percent": 2.1,
+          "memory_pressure_percent": 0.0,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 7763 64-Core Processor",
+        "disk_available_gb": 83,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15984
+      },
+      "proxy": {
+        "adapter": "gocache",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 42179,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_max_in_flight": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 2609,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 164,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_download_urls": 132,
+          "cache_blobs_upload_urls": 84,
+          "cache_kv_entries_current_version": 383,
+          "cache_kv_entries_download_urls": 456,
+          "cache_kv_entries_upsert": 93,
+          "cache_kv_entry_reads": 376,
+          "cache_rollups_ingest": 122,
+          "cache_session_evidence_confirm": 106,
+          "cache_session_evidence_prepare": 78
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_download_urls": 132,
+          "cache_blobs_upload_urls": 92,
+          "cache_kv_entries_current_version": 383,
+          "cache_kv_entries_download_urls": 1212,
+          "cache_kv_entries_upsert": 153,
+          "cache_kv_entry_reads": 376,
+          "cache_rollups_ingest": 169,
+          "cache_session_evidence_confirm": 330,
+          "cache_session_evidence_prepare": 89
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_download_urls": 1,
+          "cache_blobs_upload_urls": 29,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 2,
+          "cache_kv_entries_upsert": 2,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 4,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 44,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_download_urls": 132,
+          "cache_blobs_upload_urls": 84,
+          "cache_kv_entries_current_version": 383,
+          "cache_kv_entries_download_urls": 456,
+          "cache_kv_entries_upsert": 93,
+          "cache_kv_entry_reads": 376,
+          "cache_rollups_ingest": 122,
+          "cache_session_evidence_confirm": 106,
+          "cache_session_evidence_prepare": 78
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_download_urls": 132,
+          "cache_blobs_upload_urls": 92,
+          "cache_kv_entries_current_version": 383,
+          "cache_kv_entries_download_urls": 1212,
+          "cache_kv_entries_upsert": 153,
+          "cache_kv_entry_reads": 376,
+          "cache_rollups_ingest": 169,
+          "cache_session_evidence_confirm": 330,
+          "cache_session_evidence_prepare": 89
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_download_urls": 1,
+          "cache_blobs_upload_urls": 29,
+          "cache_kv_entries_current_version": 1,
+          "cache_kv_entries_download_urls": 2,
+          "cache_kv_entries_upsert": 2,
+          "cache_kv_entry_reads": 1,
+          "cache_rollups_ingest": 4,
+          "cache_session_evidence_confirm": 2,
+          "cache_session_evidence_prepare": 2
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_kv_entries_current_version": 0,
+          "cache_kv_entries_download_urls": 0,
+          "cache_kv_entries_upsert": 0,
+          "cache_kv_entry_reads": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 44,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 943
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 408784,
+        "startup_prefetch_blobs_per_sec": 522,
+        "startup_prefetch_bytes_per_sec": 213602695,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 164,
+        "startup_prefetch_concurrency_adjustment_count": 3,
+        "startup_prefetch_concurrency_adjustments": "shared_download_policy:64->80,shared_download_policy:80->100,shared_download_policy:100->164",
+        "startup_prefetch_concurrency_reason": "many_small_blobs_io_bound",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_deferred_trial_blobs": 0,
+        "startup_prefetch_deferred_trial_bytes": 0,
+        "startup_prefetch_demand_max_wait_ms": 0,
+        "startup_prefetch_demand_wait_ms": 0,
+        "startup_prefetch_demand_waits": 0,
+        "startup_prefetch_duration_ms": 4993,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 164,
+        "startup_prefetch_generation": 1,
+        "startup_prefetch_hedge_wins": 0,
+        "startup_prefetch_hedges": 0,
+        "startup_prefetch_initial_concurrency": 64,
+        "startup_prefetch_inserted": 2609,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 164,
+        "startup_prefetch_mode": "recent-reads",
+        "startup_prefetch_observation_count": 1,
+        "startup_prefetch_recent_read_blobs": 0,
+        "startup_prefetch_recent_read_bytes": 0,
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 2609,
+        "startup_prefetch_target_bytes": 1066518259,
+        "startup_prefetch_total_unique_blobs": 2609,
+        "startup_prefetch_unplanned_blobs": 0,
+        "startup_prefetch_unplanned_bytes": 0,
+        "startup_prefetch_unused_blobs": 1092,
+        "startup_prefetch_unused_bytes": 183521573,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 2609,
+        "startup_prefetch_used_blobs": 1517,
+        "startup_prefetch_used_bytes": 882996686,
+        "startup_prefetch_write_trial_blobs": 2609,
+        "startup_prefetch_write_trial_bytes": 1066518259
+      },
+      "kv_upload": {
+        "kv_upload_allowed_concurrency_max": 1,
+        "kv_upload_already_present_blobs": 111,
+        "kv_upload_batches": 2,
+        "kv_upload_blobs_per_sec": 0,
+        "kv_upload_concurrency_reason": "adaptive_ramp",
+        "kv_upload_concurrency_source": "auto",
+        "kv_upload_duration_ms": 157,
+        "kv_upload_failed_blobs": 0,
+        "kv_upload_final_concurrency_max": 1,
+        "kv_upload_initial_concurrency_max": 1,
+        "kv_upload_missing_local_blobs": 0,
+        "kv_upload_requested_blobs": 0,
+        "kv_upload_uploaded_blobs": 0,
+        "kv_upload_uploaded_bytes": 0,
+        "kv_upload_writethrough_failure_bytes": 0,
+        "kv_upload_writethrough_failure_count": 0,
+        "kv_upload_writethrough_pressure_skip_bytes": 0,
+        "kv_upload_writethrough_pressure_skip_count": 0,
+        "kv_upload_writethrough_uploaded_blobs": 0,
+        "kv_upload_writethrough_uploaded_bytes": 0
+      },
+      "singleflight": {
+        "singleflight_kv_download_leaders": 2609,
+        "singleflight_kv_lookup_leaders": 97
+      },
+      "kv_lookup": {
+        "kv_lookup_go_cache_after_refresh_miss": 97,
+        "kv_lookup_go_cache_published_fast_hit": 2651,
+        "kv_lookup_go_cache_published_fast_miss": 97
+      },
+      "local_cache": {
+        "blob_read": {
+          "blob_read_local_avg_ms": 0,
+          "blob_read_local_bytes": 882996686,
+          "blob_read_local_count": 2651,
+          "blob_read_local_hit_rate_pct": 50,
+          "blob_read_remote_avg_ms": 130,
+          "blob_read_remote_bytes": 1066518259,
+          "blob_read_remote_count": 2609
+        },
+        "blob_read_cache_bytes": 1249579167,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "schema_version": "native_tool_evidence.v1",
+        "source": "go_action_graph",
+        "tool": "gocache"
+      },
+      "unit_evidence": {
+        "build_succeeded": true,
+        "capabilities": {
+          "cache_source": false,
+          "critical_path": true,
+          "dependencies": true,
+          "execution_reasons": false,
+          "scheduling": true,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": true
+        },
+        "collection_state": "reported",
+        "counts": {
+          "cached": 1135,
+          "executed": 14,
+          "failed": 0,
+          "observed": 2330,
+          "scope": "build_actions",
+          "skipped": 1181,
+          "up_to_date": 0
+        },
+        "critical_path": {
+          "completed_at_ms": 1795857778968,
+          "ready_gap_ms": 568,
+          "source": "go_action_dependencies",
+          "started_at_ms": 1795857748163,
+          "truncated": true,
+          "unit_count": 62,
+          "unit_duration_ms": 30237,
+          "units": [
+            {
+              "duration_ms": 15,
+              "id": "go-action:1311",
+              "label": "encoding/json/v2 (build check cache)"
+            },
+            {
+              "duration_ms": 0,
+              "id": "go-action:160",
+              "label": "encoding/json/v2 (build)"
+            },
+            {
+              "duration_ms": 6,
+              "id": "go-action:1167",
+              "label": "encoding/json (build check cache)"
+            },
+            {
+              "duration_ms": 0,
+              "id": "go-action:17",
+              "label": "encoding/json (build)"
+            },
+            {
+              "duration_ms": 6,
+              "id": "go-action:1479",
+              "label": "go.opentelemetry.io/otel/trace/internal/telemetry (build check cache)"
+            },
+            {
+              "duration_ms": 0,
+              "id": "go-action:328",
+              "label": "go.opentelemetry.io/otel/trace/internal/telemetry (build)"
+            },
+            {
+              "duration_ms": 6,
+              "id": "go-action:1214",
+              "label": "go.opentelemetry.io/otel/trace (build check cache)"
+            },
+            {
+              "duration_ms": 0,
+              "id": "go-action:64",
+              "label": "go.opentelemetry.io/otel/trace (build)"
+            },
+            {
+              "duration_ms": 11,
+              "id": "go-action:1702",
+              "label": "go.opentelemetry.io/otel/trace/noop (build check cache)"
+            },
+            {
+              "duration_ms": 0,
+              "id": "go-action:549",
+              "label": "go.opentelemetry.io/otel/trace/noop (build)"
+            },
+            {
+              "duration_ms": 9,
+              "id": "go-action:1788",
+              "label": "go.opentelemetry.io/auto/sdk (build check cache)"
+            },
+            {
+              "duration_ms": 0,
+              "id": "go-action:635",
+              "label": "go.opentelemetry.io/auto/sdk (build)"
+            },
+            {
+              "duration_ms": 9,
+              "id": "go-action:1568",
+              "label": "go.opentelemetry.io/otel/internal/global (build check cache)"
+            },
+            {
+              "duration_ms": 0,
+              "id": "go-action:416",
+              "label": "go.opentelemetry.io/otel/internal/global (build)"
+            },
+            {
+              "duration_ms": 5,
+              "id": "go-action:1356",
+              "label": "go.opentelemetry.io/otel (build check cache)"
+            },
+            {
+              "duration_ms": 0,
+              "id": "go-action:205",
+              "label": "go.opentelemetry.io/otel (build)"
+            },
+            {
+              "duration_ms": 13,
+              "id": "go-action:1179",
+              "label": "github.com/zitadel/nextgen/internal/api/generated (build check cache)"
+            },
+            {
+              "duration_ms": 22144,
+              "id": "go-action:29",
+              "label": "github.com/zitadel/nextgen/internal/api/generated (build)"
+            },
+            {
+              "duration_ms": 1,
+              "id": "go-action:1180",
+              "label": "github.com/zitadel/nextgen/internal/api/middleware (build check cache)"
+            },
+            {
+              "duration_ms": 107,
+              "id": "go-action:30",
+              "label": "github.com/zitadel/nextgen/internal/api/middleware (build)"
+            },
+            {
+              "duration_ms": 1,
+              "id": "go-action:1181",
+              "label": "github.com/zitadel/nextgen/internal/audit (build check cache)"
+            },
+            {
+              "duration_ms": 169,
+              "id": "go-action:31",
+              "label": "github.com/zitadel/nextgen/internal/audit (build)"
+            },
+            {
+              "duration_ms": 2,
+              "id": "go-action:1201",
+              "label": "github.com/zitadel/nextgen/internal/service (build check cache)"
+            },
+            {
+              "duration_ms": 1767,
+              "id": "go-action:51",
+              "label": "github.com/zitadel/nextgen/internal/service (build)"
+            },
+            {
+              "duration_ms": 14,
+              "id": "go-action:1344",
+              "label": "github.com/zitadel/nextgen/internal/authz/resolver (build check cache)"
+            },
+            {
+              "duration_ms": 0,
+              "id": "go-action:193",
+              "label": "github.com/zitadel/nextgen/internal/authz/resolver (build)"
+            },
+            {
+              "duration_ms": 6,
+              "id": "go-action:1178",
+              "label": "github.com/zitadel/nextgen/internal/api (build check cache)"
+            },
+            {
+              "duration_ms": 1247,
+              "id": "go-action:28",
+              "label": "github.com/zitadel/nextgen/internal/api (build)"
+            },
+            {
+              "duration_ms": 1287,
+              "id": "go-action:4",
+              "label": "github.com/zitadel/nextgen/cmd/server (build)"
+            },
+            {
+              "duration_ms": 1,
+              "id": "go-action:1150",
+              "label": "github.com/zitadel/nextgen (build check cache)"
+            },
+            {
+              "duration_ms": 28,
+              "id": "go-action:2",
+              "label": "github.com/zitadel/nextgen (build)"
+            },
+            {
+              "duration_ms": 3228,
+              "id": "go-action:1",
+              "label": "github.com/zitadel/nextgen (link)"
+            }
+          ]
+        },
+        "ranking_scope": "all_observed_units",
+        "scheduling": {
+          "waiting_ms": 671797
+        },
+        "schema_version": "unit_evidence.v1",
+        "source": "go_action_graph",
+        "tool": "go",
+        "truncated": true,
+        "unit_kind": "build_action",
+        "units": [
+          {
+            "attributes": {
+              "cpu_ms": 51209,
+              "dependency_count": 30,
+              "mode": "build",
+              "package": "github.com/zitadel/nextgen/internal/api/generated",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795857771109,
+            "critical_path": true,
+            "duration_ms": 22144,
+            "id": "go-action:29",
+            "key": "e29a4789083fb369251d33fd7bc0a7ec3acda254bc0565cb9a3ce055183af19b",
+            "label": "github.com/zitadel/nextgen/internal/api/generated (build)",
+            "started_at_ms": 1795857748965,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 4537,
+              "dependency_count": 1148,
+              "mode": "link",
+              "package": "github.com/zitadel/nextgen",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795857778968,
+            "critical_path": true,
+            "duration_ms": 3228,
+            "id": "go-action:1",
+            "key": "676a1634d4b2fa86737a2f26a641dbb5e497d2c8dee4116869d834e12ce09659",
+            "label": "github.com/zitadel/nextgen (link)",
+            "started_at_ms": 1795857775740,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 4186,
+              "dependency_count": 54,
+              "mode": "build",
+              "package": "github.com/zitadel/nextgen/internal/domain",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795857751690,
+            "duration_ms": 2379,
+            "id": "go-action:37",
+            "key": "5fa78037b320a6e3e7984b5f004e82840a60b81b5ada7eb075dfd1e901dbf9f4",
+            "label": "github.com/zitadel/nextgen/internal/domain (build)",
+            "started_at_ms": 1795857749311,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 4086,
+              "dependency_count": 60,
+              "mode": "build",
+              "package": "github.com/zitadel/nextgen/internal/service",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795857773156,
+            "critical_path": true,
+            "duration_ms": 1767,
+            "id": "go-action:51",
+            "key": "0595ac4c85a4830fa6f540d43312f2cdb4ccd76131c61bfe43584c8d0e7af82a",
+            "label": "github.com/zitadel/nextgen/internal/service (build)",
+            "started_at_ms": 1795857771389,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 2795,
+              "dependency_count": 70,
+              "mode": "build",
+              "package": "github.com/zitadel/nextgen/cmd/server",
+              "ready_wait_ms": 1
+            },
+            "completed_at_ms": 1795857775711,
+            "critical_path": true,
+            "duration_ms": 1287,
+            "id": "go-action:4",
+            "key": "5a3da0e34ab83271706eb1dad9d1068ec0dd536a97b8a7e71617009ae6767484",
+            "label": "github.com/zitadel/nextgen/cmd/server (build)",
+            "started_at_ms": 1795857774424,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 2501,
+              "dependency_count": 50,
+              "mode": "build",
+              "package": "github.com/zitadel/nextgen/internal/api",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795857774423,
+            "critical_path": true,
+            "duration_ms": 1247,
+            "id": "go-action:28",
+            "key": "02112a8fc559b6922156c3cba6c891b5ff8b026eb6821d4ada48f62d7c919e33",
+            "label": "github.com/zitadel/nextgen/internal/api (build)",
+            "started_at_ms": 1795857773176,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 530,
+              "dependency_count": 16,
+              "mode": "build",
+              "package": "github.com/zitadel/nextgen/internal/bootstrap/platform",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795857773531,
+            "duration_ms": 374,
+            "id": "go-action:32",
+            "key": "e4acd494d0795d4f27a5b77e1423b3460e3b6485c15c3bb5c61392e861bbe6e9",
+            "label": "github.com/zitadel/nextgen/internal/bootstrap/platform (build)",
+            "started_at_ms": 1795857773157,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 47,
+              "mode": "build check cache",
+              "package": "github.com/zitadel/nextgen/internal/storage/dialect/spanner",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795857773355,
+            "duration_ms": 177,
+            "id": "go-action:1442",
+            "label": "github.com/zitadel/nextgen/internal/storage/dialect/spanner (build check cache)",
+            "started_at_ms": 1795857773178,
+            "state": "skipped"
+          },
+          {
+            "attributes": {
+              "dependency_count": 56,
+              "mode": "build check cache",
+              "package": "github.com/zitadel/nextgen/internal/storage/dialect/postgres",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795857773354,
+            "duration_ms": 176,
+            "id": "go-action:1441",
+            "label": "github.com/zitadel/nextgen/internal/storage/dialect/postgres (build check cache)",
+            "started_at_ms": 1795857773178,
+            "state": "skipped"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 271,
+              "dependency_count": 32,
+              "mode": "build",
+              "package": "github.com/zitadel/nextgen/internal/audit",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795857771387,
+            "critical_path": true,
+            "duration_ms": 169,
+            "id": "go-action:31",
+            "key": "6487b4b2c22f3e3772a5ceac0845f5bb919a1239bed26ef27e38711ab479400a",
+            "label": "github.com/zitadel/nextgen/internal/audit (build)",
+            "started_at_ms": 1795857771218,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 4,
+              "mode": "build check cache",
+              "package": "runtime/cgo",
+              "ready_wait_ms": 217
+            },
+            "completed_at_ms": 1795857748630,
+            "duration_ms": 148,
+            "id": "go-action:1531",
+            "label": "runtime/cgo (build check cache)",
+            "started_at_ms": 1795857748482,
+            "state": "skipped"
+          },
+          {
+            "attributes": {
+              "dependency_count": 36,
+              "mode": "build check cache",
+              "package": "github.com/zitadel/nextgen/internal/instrumentation/zotel",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795857751691,
+            "duration_ms": 142,
+            "id": "go-action:1196",
+            "label": "github.com/zitadel/nextgen/internal/instrumentation/zotel (build check cache)",
+            "started_at_ms": 1795857751549,
+            "state": "skipped"
+          },
+          {
+            "attributes": {
+              "dependency_count": 3,
+              "mode": "build check cache",
+              "package": "github.com/zitadel/nextgen/internal/authz/compiler",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795857751692,
+            "duration_ms": 142,
+            "id": "go-action:1423",
+            "label": "github.com/zitadel/nextgen/internal/authz/compiler (build check cache)",
+            "started_at_ms": 1795857751550,
+            "state": "skipped"
+          },
+          {
+            "attributes": {
+              "dependency_count": 0,
+              "mode": "build check cache",
+              "package": "cloud.google.com/go/trace/internal",
+              "ready_wait_ms": 2547
+            },
+            "completed_at_ms": 1795857750830,
+            "duration_ms": 120,
+            "id": "go-action:1872",
+            "label": "cloud.google.com/go/trace/internal (build check cache)",
+            "started_at_ms": 1795857750710,
+            "state": "skipped"
+          },
+          {
+            "attributes": {
+              "dependency_count": 5,
+              "mode": "build check cache",
+              "package": "github.com/felixge/httpsnoop",
+              "ready_wait_ms": 1975
+            },
+            "completed_at_ms": 1795857750831,
+            "duration_ms": 116,
+            "id": "go-action:1624",
+            "label": "github.com/felixge/httpsnoop (build check cache)",
+            "started_at_ms": 1795857750715,
+            "state": "skipped"
+          },
+          {
+            "attributes": {
+              "dependency_count": 50,
+              "mode": "build check cache",
+              "package": "github.com/zitadel/nextgen/internal/storage/dialect/sqlite",
+              "ready_wait_ms": 176
+            },
+            "completed_at_ms": 1795857773469,
+            "duration_ms": 115,
+            "id": "go-action:1207",
+            "label": "github.com/zitadel/nextgen/internal/storage/dialect/sqlite (build check cache)",
+            "started_at_ms": 1795857773354,
+            "state": "skipped"
+          },
+          {
+            "attributes": {
+              "cpu_ms": 142,
+              "dependency_count": 18,
+              "mode": "build",
+              "package": "github.com/zitadel/nextgen/internal/api/middleware",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795857771217,
+            "critical_path": true,
+            "duration_ms": 107,
+            "id": "go-action:30",
+            "key": "cc001c52e7deb8239e6e78614f307632c6ab44847552212aca5a0644616e4bad",
+            "label": "github.com/zitadel/nextgen/internal/api/middleware (build)",
+            "started_at_ms": 1795857771110,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "dependency_count": 89,
+              "mode": "build check cache",
+              "package": "cloud.google.com/go/spanner",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795857752939,
+            "duration_ms": 90,
+            "id": "go-action:1743",
+            "label": "cloud.google.com/go/spanner (build check cache)",
+            "started_at_ms": 1795857752849,
+            "state": "skipped"
+          },
+          {
+            "attributes": {
+              "dependency_count": 25,
+              "mode": "build check cache",
+              "package": "modernc.org/libc",
+              "ready_wait_ms": 0
+            },
+            "completed_at_ms": 1795857752941,
+            "duration_ms": 90,
+            "id": "go-action:1745",
+            "label": "modernc.org/libc (build check cache)",
+            "started_at_ms": 1795857752851,
+            "state": "skipped"
+          },
+          {
+            "attributes": {
+              "dependency_count": 5,
+              "mode": "build check cache",
+              "package": "google.golang.org/grpc/encoding/gzip",
+              "ready_wait_ms": 863
+            },
+            "completed_at_ms": 1795857750648,
+            "duration_ms": 88,
+            "id": "go-action:1612",
+            "label": "google.golang.org/grpc/encoding/gzip (build check cache)",
+            "started_at_ms": 1795857750560,
+            "state": "skipped"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "gocache",
+          "candidates": [
+            {
+              "confidence": "low",
+              "evidence": {
+                "bytes_read": 882996686,
+                "hit_rate": 96.5,
+                "hits": 2651,
+                "misses": 97
+              },
+              "kind": "cache_miss_quality",
+              "summary": "The wrapped tool asked for cache keys that were not available in the published cache tag."
+            }
+          ],
+          "evidence": {
+            "duration_ms": 42179,
+            "errors": 0,
+            "hit_rate": 96.5,
+            "hits": 2651,
+            "misses": 97,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 123
+          },
+          "primary_bottleneck": "cache_miss_quality",
+          "state": "bottleneck_detected"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 96.5,
+          "hits": 2651,
+          "likely_reason": "partial_key_churn_or_new_work",
+          "misses": 97,
+          "state": "mostly_hot_with_misses",
+          "writes": 123
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": "cache_miss_quality"
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 7763 64-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 81
+    }
+  },
+  "evidence": [
+    "boringcache-go-github-rolling-1-46130060210.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "harness": {
+    "commit": "b9995b631b3891fbe3b8c227c0e69efd27b52080",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-28T09:22:14Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46130060210/job/140933182117",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-28T09:21:51Z",
+  "job_completed_at": "2026-11-28T09:23:07Z",
+  "queue_seconds": 3.0,
+  "job_seconds": 76.0
+}
