@@ -1,0 +1,826 @@
+{
+  "adapter_command": "cargo",
+  "case": "qdrant",
+  "lane": "boringcache-cargo-plus",
+  "provider": "boringcache",
+  "level": "plus",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 11,
+  "scope": "boringcache-cargo-plus-github-rolling-3",
+  "cache_scope": "boringcache-cargo-plus-github-rolling-3",
+  "cache_seeded": false,
+  "repo": "qdrant/qdrant",
+  "sha": "238225b6731a28c10e87acfb5af3301dae2c16aa",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46153157697",
+  "attempt": 1,
+  "capabilities": [
+    "compiler-cache",
+    "registry",
+    "target"
+  ],
+  "cache_restored_key": null,
+  "seconds": 63.596,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {
+    "cache_session_summary": {
+      "ts_ms": 1795875119377,
+      "run_id": "46153157697",
+      "session_id": "proxy-summary-21990be5-e9b8-42bf-a3da-9273e6c25886",
+      "trace_id": null,
+      "request_id": null,
+      "source": "cache_registry",
+      "operation": "cache_session_summary",
+      "method": "SUMMARY",
+      "path": "/_boringcache/session",
+      "status": null,
+      "status_class": null,
+      "duration_ms": 11164,
+      "request_bytes": null,
+      "response_bytes": null,
+      "batch_index": null,
+      "batch_count": null,
+      "batch_size": null,
+      "retry_count": null,
+      "workspace": "boringcache/benchmarks",
+      "tag": null,
+      "cache_entry_id": null,
+      "error": null,
+      "details": null,
+      "schema": "cache-session-v2",
+      "mode": "cache-registry",
+      "adapter": "sccache",
+      "runner": {
+        "arch": "x86_64",
+        "os": "linux"
+      },
+      "machine": {
+        "activity": {
+          "cpu_busy_percent": 13.6,
+          "cpu_iowait_percent": 43.4,
+          "cpu_pressure_percent": 1.6,
+          "cpu_steal_percent": 0.0,
+          "disk_busy_percent": 92.0,
+          "disk_read_mb": 0.4,
+          "disk_written_mb": 11864.3,
+          "interval_ms": 62321,
+          "io_pressure_percent": 66.6,
+          "memory_pressure_percent": 0.0,
+          "scope": "host"
+        },
+        "available_cpus": 4,
+        "cpu_model": "AMD EPYC 9V45 96-Core Processor",
+        "disk_available_gb": 83,
+        "disk_total_gb": 144,
+        "emulated": false,
+        "hosting": "github-hosted",
+        "memory_source": "host",
+        "memory_total_mb": 15984
+      },
+      "proxy": {
+        "adapter": "sccache",
+        "blob_download_max_concurrency": 10,
+        "blob_prefetch_concurrency_source": "auto",
+        "blob_prefetch_max_concurrency": 2000,
+        "duration_ms": 11164,
+        "fail_on_cache_error": true,
+        "h2_initial_connection_window_bytes": 33554432,
+        "h2_initial_stream_window_bytes": 2097152,
+        "h2_max_concurrent_streams": 1024,
+        "http2_enabled": true,
+        "http_transport": "h1+h2c-auto",
+        "hydration_policy": "metadata-only",
+        "kv_demand_download_adaptive": true,
+        "kv_demand_download_adjustment_count": 0,
+        "kv_demand_download_completed": 0,
+        "kv_demand_download_current_concurrency": 10,
+        "kv_demand_download_failures": 0,
+        "kv_demand_download_in_flight": 0,
+        "kv_demand_download_initial_concurrency": 10,
+        "kv_demand_download_last_adjustment": "hold",
+        "kv_demand_download_max_concurrency": 256,
+        "kv_demand_download_max_observed_in_flight": 0,
+        "kv_demand_download_max_observed_queued": 0,
+        "kv_demand_download_queued": 0,
+        "kv_demand_url_batches": 0,
+        "kv_demand_url_blobs": 0,
+        "kv_demand_url_max_batch_size": 0,
+        "kv_demand_url_max_in_flight": 0,
+        "kv_demand_url_requests": 0,
+        "mode": "cache-registry",
+        "oci_alias_promotion_refs": [],
+        "oci_stream_through_enabled": true,
+        "oci_stream_through_min_bytes": 1,
+        "oci_stream_through_mode": "full_body_always",
+        "read_only": false,
+        "storage_download_completed_attempts": 0,
+        "storage_download_failed_attempts": 0,
+        "storage_download_in_flight": 0,
+        "storage_download_max_concurrency": 2000,
+        "storage_download_max_observed_in_flight": 0,
+        "storage_download_max_observed_queued": 0,
+        "storage_download_queued": 0
+      },
+      "backend_api": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 94,
+          "cache_blobs_download_urls": 204,
+          "cache_blobs_upload_urls": 314,
+          "cache_finalize_publish": 475,
+          "cache_flush_upload": 132,
+          "cache_rollups_ingest": 127,
+          "cache_session_evidence_confirm": 184,
+          "cache_session_evidence_prepare": 118
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 94,
+          "cache_blobs_download_urls": 731,
+          "cache_blobs_upload_urls": 354,
+          "cache_finalize_publish": 475,
+          "cache_flush_upload": 132,
+          "cache_rollups_ingest": 248,
+          "cache_session_evidence_confirm": 184,
+          "cache_session_evidence_prepare": 118
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 1,
+          "cache_blobs_download_urls": 4,
+          "cache_blobs_upload_urls": 4,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_rollups_ingest": 9,
+          "cache_session_evidence_confirm": 1,
+          "cache_session_evidence_prepare": 1
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 22,
+        "total_retry_count": 0
+      },
+      "rails": {
+        "cache_operation_error_count": 0,
+        "error_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "p50_ms_by_operation": {
+          "cache_blobs_commit": 94,
+          "cache_blobs_download_urls": 204,
+          "cache_blobs_upload_urls": 314,
+          "cache_finalize_publish": 475,
+          "cache_flush_upload": 132,
+          "cache_rollups_ingest": 127,
+          "cache_session_evidence_confirm": 184,
+          "cache_session_evidence_prepare": 118
+        },
+        "p95_ms_by_operation": {
+          "cache_blobs_commit": 94,
+          "cache_blobs_download_urls": 731,
+          "cache_blobs_upload_urls": 354,
+          "cache_finalize_publish": 475,
+          "cache_flush_upload": 132,
+          "cache_rollups_ingest": 248,
+          "cache_session_evidence_confirm": 184,
+          "cache_session_evidence_prepare": 118
+        },
+        "reporting_error_count": 0,
+        "request_count_by_operation": {
+          "cache_blobs_commit": 1,
+          "cache_blobs_download_urls": 4,
+          "cache_blobs_upload_urls": 4,
+          "cache_finalize_publish": 1,
+          "cache_flush_upload": 1,
+          "cache_rollups_ingest": 9,
+          "cache_session_evidence_confirm": 1,
+          "cache_session_evidence_prepare": 1
+        },
+        "retry_count_by_operation": {
+          "cache_blobs_commit": 0,
+          "cache_blobs_download_urls": 0,
+          "cache_blobs_upload_urls": 0,
+          "cache_finalize_publish": 0,
+          "cache_flush_upload": 0,
+          "cache_rollups_ingest": 0,
+          "cache_session_evidence_confirm": 0,
+          "cache_session_evidence_prepare": 0
+        },
+        "total_error_count": 0,
+        "total_request_count": 22,
+        "total_retry_count": 0
+      },
+      "storage": {},
+      "lifecycle": {
+        "publication_drain_duration_ms": 0
+      },
+      "oci": {
+        "buildkit_enrichment": "not_applicable",
+        "oci_engine_hydration_policy": "metadata-only",
+        "oci_negative_generation": 0
+      },
+      "startup_prefetch": {
+        "startup_prefetch_already_local": 0,
+        "startup_prefetch_average_blob_bytes": 0,
+        "startup_prefetch_cold_blobs": 0,
+        "startup_prefetch_concurrency": 1,
+        "startup_prefetch_concurrency_adjustment_count": 0,
+        "startup_prefetch_concurrency_reason": "empty",
+        "startup_prefetch_concurrency_source": "auto",
+        "startup_prefetch_deferred_trial_blobs": 0,
+        "startup_prefetch_deferred_trial_bytes": 0,
+        "startup_prefetch_duration_ms": 0,
+        "startup_prefetch_failures": 0,
+        "startup_prefetch_final_concurrency": 0,
+        "startup_prefetch_generation": 8,
+        "startup_prefetch_hedge_wins": 0,
+        "startup_prefetch_hedges": 0,
+        "startup_prefetch_initial_concurrency": 1,
+        "startup_prefetch_inserted": 0,
+        "startup_prefetch_max_concurrency": 2000,
+        "startup_prefetch_max_observed_concurrency": 0,
+        "startup_prefetch_mode": "recent-reads",
+        "startup_prefetch_observation_count": 2,
+        "startup_prefetch_recent_read_blobs": 0,
+        "startup_prefetch_recent_read_bytes": 0,
+        "startup_prefetch_retries": 0,
+        "startup_prefetch_target_blobs": 0,
+        "startup_prefetch_target_bytes": 0,
+        "startup_prefetch_total_unique_blobs": 1573,
+        "startup_prefetch_trial_budget_bytes": 134217728,
+        "startup_prefetch_url_missing": 0,
+        "startup_prefetch_url_resolved": 0,
+        "startup_prefetch_write_trial_blobs": 0,
+        "startup_prefetch_write_trial_bytes": 0
+      },
+      "kv_upload": {},
+      "singleflight": {},
+      "kv_lookup": {},
+      "local_cache": {
+        "blob_read": {},
+        "blob_read_cache_bytes": 0,
+        "blob_read_cache_max_bytes": 68719476736,
+        "blob_read_memory_cache_bytes": 0,
+        "blob_read_memory_cache_max_bytes": 0,
+        "oci_body": {}
+      },
+      "buildkit": {
+        "run_classification": "not_applicable"
+      },
+      "native_tool": {
+        "average_cache_read_hit_seconds": 0.0,
+        "average_cache_write_seconds": 0.0,
+        "average_compiler_seconds": 0.0,
+        "cache_errors": 0,
+        "cache_hits": 0,
+        "cache_misses": 0,
+        "cache_read_errors": 0,
+        "cache_timeouts": 0,
+        "cache_write_errors": 0,
+        "compile_requests": 2,
+        "compile_requests_executed": 0,
+        "non_cacheable_calls": 2,
+        "non_cacheable_reasons": {
+          "-": 1,
+          "missing input": 1
+        },
+        "proxy_cache_read_errors": 0,
+        "proxy_cache_write_errors": 0,
+        "schema_version": "native_tool_evidence.v1",
+        "stats_source": "sccache --show-stats",
+        "tool": "sccache"
+      },
+      "unit_evidence": {
+        "build_succeeded": true,
+        "capabilities": {
+          "cache_source": false,
+          "critical_path": true,
+          "dependencies": false,
+          "execution_reasons": false,
+          "scheduling": true,
+          "unit_identity": true,
+          "unit_outcome": true,
+          "unit_timing": true
+        },
+        "collection_state": "reported",
+        "counts": {
+          "executed": 0,
+          "observed": 869,
+          "scope": "cargo_units",
+          "up_to_date": 869
+        },
+        "critical_path": {
+          "end_offset_ms": 0,
+          "metadata_edges": 0,
+          "ready_gap_ms": 0,
+          "source": "cargo_unblocked_units",
+          "start_offset_ms": 0,
+          "truncated": false,
+          "unit_count": 1,
+          "unit_duration_ms": 0,
+          "units": [
+            {
+              "duration_ms": 0,
+              "id": "cargo-unit:868",
+              "label": "zstd-sys v2.1.3+zstd.1.5.7 build-script (run)"
+            }
+          ]
+        },
+        "invocation": {
+          "host": "x86_64-unknown-linux-gnu",
+          "profile": "dev",
+          "report_owner": "boringcache",
+          "target": "x86_64-unknown-linux-gnu",
+          "time_precision_ms": 10,
+          "total_time_ms": 0,
+          "units_total": 869
+        },
+        "ranking_scope": "all_observed_units",
+        "scheduling": {
+          "jobs": 4,
+          "max_concurrency": 0,
+          "ncpu": 4,
+          "waiting_ms": 0,
+          "waiting_unit_ms": 0
+        },
+        "schema_version": "unit_evidence.v1",
+        "source": "cargo_timings_report",
+        "tool": "cargo",
+        "tool_version": "1.98.1",
+        "truncated": true,
+        "unit_kind": "crate_unit",
+        "units": [
+          {
+            "attributes": {
+              "crate_name": "actix-codec",
+              "crate_version": "0.5.2",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:0",
+            "key": "37ab142845408b5b8b21ced72b7e6c2f5d0a8cf4d83db2bb3cee6f02739ad14c",
+            "label": "actix-codec v0.5.2",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-cors",
+              "crate_version": "0.7.2",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:1",
+            "key": "a0ae6dc55a52be742a6735c8ea9afb28c3f0e69e58beacf1a942d0c022cac8e8",
+            "label": "actix-cors v0.7.2",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-files",
+              "crate_version": "0.7.5",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:2",
+            "key": "5eec8f496e55d49a5e87107e90d4c64c638cc581b225a55c5e949a5b82ea429d",
+            "label": "actix-files v0.7.5",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-http",
+              "crate_version": "3.21.0",
+              "features": [
+                "__compress",
+                "__tls",
+                "actix-tls",
+                "compress-brotli",
+                "compress-gzip",
+                "compress-zstd",
+                "default",
+                "http2"
+              ],
+              "features_truncated": true,
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:3",
+            "key": "f64298bae7358342940a91d8263915038784cf3743683d4b22355c3487144655",
+            "label": "actix-http v3.21.0",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-macros",
+              "crate_version": "0.2.4",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:4",
+            "key": "4a778133fab713f0b2eb54f3598ee248f8a8f13de89f0edcca5b2bc1021099e2",
+            "label": "actix-macros v0.2.4",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-multipart",
+              "crate_version": "0.8.9",
+              "features": [
+                "actix-multipart-derive",
+                "default",
+                "derive",
+                "tempfile"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:5",
+            "key": "dde6a1e0cc6c9fe4298d786b4ca5d9fda0816865f576b54ce4758ae17fccfa25",
+            "label": "actix-multipart v0.8.9",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-multipart-derive",
+              "crate_version": "0.8.2",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:6",
+            "key": "233a74d028b2635397e262ad459baa5efaa84ef4dec16c8f9e4402004631cbee",
+            "label": "actix-multipart-derive v0.8.2",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-router",
+              "crate_version": "0.5.4",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:7",
+            "key": "8f73f096ec72c05ed8b1941b47f423e3898131e589bbfb40e88be0983385f49b",
+            "label": "actix-router v0.5.4",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-router",
+              "crate_version": "0.5.4",
+              "features": [
+                "default",
+                "http",
+                "unicode"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:8",
+            "key": "e7420e9b3b1f5e7ac0753bdf408ea0ee00617d889dbfa8b93230a430f78f89c0",
+            "label": "actix-router v0.5.4",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-rt",
+              "crate_version": "2.11.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:9",
+            "key": "5c1bcc4bfd1e59e9dd0e696ed995447448cf905082d0540851dc9fae5174a73d",
+            "label": "actix-rt v2.11.0",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-server",
+              "crate_version": "2.7.0",
+              "features": [
+                "default"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:10",
+            "key": "b061d94af8c5d6f1f931e5cdc0bf24ff34b4f789fe5b8933e2ea73455644c4fe",
+            "label": "actix-server v2.7.0",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-service",
+              "crate_version": "2.0.3",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:11",
+            "key": "facc10520c63827228ac097f81d5637b46b5dcf4f5231ea480261fbd7b5637ef",
+            "label": "actix-service v2.0.3",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-tls",
+              "crate_version": "3.5.0",
+              "features": [
+                "accept",
+                "rustls-0_23"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:12",
+            "key": "96d217cf6fac390f0fd85b79fd71088932f64abafde62cc62d32196e9fd131f8",
+            "label": "actix-tls v3.5.0",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-utils",
+              "crate_version": "3.0.1",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:13",
+            "key": "7b85f02230d889356bb79df8521a868ac3a2ca6a67c340d95779de664087d754",
+            "label": "actix-utils v3.0.1",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-web",
+              "crate_version": "4.20.0",
+              "features": [
+                "__compress",
+                "__tls",
+                "actix-tls",
+                "compat",
+                "compat-routing-macros-force-pub",
+                "compress-brotli",
+                "compress-gzip",
+                "compress-zstd"
+              ],
+              "features_truncated": true,
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:14",
+            "key": "04ef43158113acbeb2108d95f9c8e343c423a6d71a761faa54b3a3c125b5c2c3",
+            "label": "actix-web v4.20.0",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-web-codegen",
+              "crate_version": "4.6.0",
+              "features": [
+                "compat-routing-macros-force-pub"
+              ],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:15",
+            "key": "59f9745d49195a7fcc2e4343b521147a514c1f90544e19473deff64a7b267c53",
+            "label": "actix-web-codegen v4.6.0",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-web-extras",
+              "crate_version": "0.1.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:16",
+            "key": "85ef5bc19c93eac670cea0a3a1647a43337c15c89485b48d3834898b517b6c36",
+            "label": "actix-web-extras v0.1.0",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "actix-web-validator",
+              "crate_version": "7.0.0",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:17",
+            "key": "64f9319d5dd829dfe7d3e442617d68f18852554a6212fd087d46a915afd3feeb",
+            "label": "actix-web-validator v7.0.0",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "addr2line",
+              "crate_version": "0.25.1",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:18",
+            "key": "b47b845b9449545fc1c0db938af6c975aa22a7b3c989d9f986b9f0345971db2e",
+            "label": "addr2line v0.25.1",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          },
+          {
+            "attributes": {
+              "crate_name": "adler2",
+              "crate_version": "2.0.1",
+              "features": [],
+              "mode": "todo",
+              "start_offset_ms": 0,
+              "target_kind": "lib"
+            },
+            "completed_at_ms": 1795875108781,
+            "duration_ms": 0,
+            "id": "cargo-unit:19",
+            "key": "03d10e9f5a0ae2c7f36e6c376cc0ca87942c2cf921d55760a364994d35599054",
+            "label": "adler2 v2.0.1",
+            "started_at_ms": 1795875108781,
+            "state": "executed"
+          }
+        ]
+      },
+      "classification": {
+        "bottleneck": {
+          "adapter": "sccache",
+          "candidates": [],
+          "evidence": {
+            "duration_ms": 11164,
+            "errors": 0,
+            "hit_rate": 0.0,
+            "hits": 0,
+            "misses": 0,
+            "write_degraded": 0,
+            "write_errors": 0,
+            "writes": 0
+          },
+          "primary_bottleneck": null,
+          "state": "no_cache_reads"
+        },
+        "cache_key_lookup": {
+          "state": "not_applicable"
+        },
+        "cache_temperature": {
+          "errors": 0,
+          "hit_rate": 0.0,
+          "hits": 0,
+          "likely_reason": "no_restore_or_lookup_work",
+          "misses": 0,
+          "state": "no_cache_reads",
+          "writes": 0
+        },
+        "issue_candidates": [],
+        "primary_bottleneck": null
+      }
+    }
+  },
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V45 96-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 73
+    }
+  },
+  "evidence": [
+    "boringcache-cargo-plus-github-rolling-11-46153157697.boringcache.jsonl"
+  ],
+  "versions": {
+    "boringcache": "1.48.2"
+  },
+  "product_env": {
+    "BORINGCACHE_ARCHIVE_SELECTIVE_READS": "1"
+  },
+  "plan_settings": {
+    "target-budget": "20GiB"
+  },
+  "harness": {
+    "commit": "ab4fce9ec86fdd13c7d24e42b5c4db07eeeb6388",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-28T14:10:56Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46153157697/job/141004274868",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-28T14:10:13Z",
+  "job_completed_at": "2026-11-28T14:12:04Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 111.0
+}
