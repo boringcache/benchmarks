@@ -6,6 +6,7 @@ tag = "firecrawl-docker"
 no-git = true
 metadata-hints = ["benchmark=firecrawl", "upstream-job=api-docker"]
 mount-cache = true
+tool-cache = ["go:firecrawl-go", "sccache:firecrawl-sccache"]
 command = [
   "docker", "buildx", "build",
   "--file", "upstream/apps/api/Dockerfile",

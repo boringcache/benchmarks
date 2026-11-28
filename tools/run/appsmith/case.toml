@@ -1,6 +1,7 @@
 repo = "appsmithorg/appsmith"
 branch = "release"
 start_sha = "69e1ed149fe506c312f482696b7cee63d11b6ce9"
+rolling_series = 2
 directory = "upstream/app/client"
 prepare = [
   "if [ \"${RUNNER_ENVIRONMENT:-}\" = github-hosted ]; then bash \"$BENCH_ROOT/tools/shared/swap.sh\"; fi",

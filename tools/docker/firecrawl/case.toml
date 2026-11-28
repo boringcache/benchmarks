@@ -1,6 +1,8 @@
 repo = "firecrawl/firecrawl"
 branch = "main"
 start_sha = "68291b7a8c27d60b848a58f26e271be808912735"
+rolling_series = 2
+prepare = ["ruby overlay/prepare-cache.rb"]
 check = "docker image inspect firecrawl-api-benchmark:local"
 
 [runs]

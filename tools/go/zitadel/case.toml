@@ -1,6 +1,7 @@
 repo = "zitadel/nextgen"
 branch = "main"
 start_sha = "054624f867bccdabe5a284fb9fe95934e3ddac2f"
+rolling_series = 2
 directory = "upstream/apps/api"
 prepare = [
   "mise trust && mise install",
@@ -17,4 +18,3 @@ GOTOOLCHAIN = "local"
 [runs]
 boringcache-go = ["github", "local"]
 gha = ["github"]
-depot-cache = ["github"]

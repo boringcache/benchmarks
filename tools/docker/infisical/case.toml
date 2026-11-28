@@ -1,14 +1,17 @@
 repo = "Infisical/infisical"
 branch = "main"
 start_sha = "f388687047b5d24c44312f73861bfb0d789f7d25"
-rolling_series = 2
+rolling_series = 3
 prepare = [
   "ruby overlay/upgrade-apt-pins.rb upstream/Dockerfile.standalone-infisical",
   'if [ "${RUNNER_ENVIRONMENT:-}" = github-hosted ]; then bash "$BENCH_ROOT/tools/shared/swap.sh"; fi',
+  "ruby overlay/prepare-cache.rb",
 ]
 check = "docker image inspect infisical-benchmark:local"
 
 [runs]
 boringcache-docker = ["github", "github-arm", "local"]
+boringcache-docker-plus = ["github", "github-arm", "local"]
+gha-plus = ["github", "github-arm"]
 gha = ["github", "github-arm"]
 ghcr = ["github", "github-arm"]

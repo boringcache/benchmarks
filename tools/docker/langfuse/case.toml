@@ -1,12 +1,16 @@
 repo = "langfuse/langfuse"
 branch = "main"
 start_sha = "71dbd5593f0deafc839d86391495f1d7731869db"
+rolling_series = 2
 prepare = [
   'if [ "${RUNNER_ENVIRONMENT:-}" = github-hosted ]; then bash "$BENCH_ROOT/tools/shared/swap.sh"; fi',
+  "ruby overlay/prepare-cache.rb",
 ]
 check = "docker image inspect langfuse-web-benchmark:local"
 
 [runs]
 boringcache-docker = ["github", "github-arm", "local"]
+boringcache-docker-plus = ["github", "github-arm", "local"]
+gha-plus = ["github", "github-arm"]
 gha = ["github", "github-arm"]
 ghcr = ["github", "github-arm"]
