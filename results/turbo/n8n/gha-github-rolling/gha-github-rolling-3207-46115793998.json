@@ -1,0 +1,51 @@
+{
+  "adapter_command": "turbo",
+  "case": "n8n",
+  "lane": "gha",
+  "provider": "github-actions-cache",
+  "level": "base",
+  "runner": "github",
+  "runner_label": "ubuntu-24.04",
+  "machine": "github 4c",
+  "phase": "rolling",
+  "step": 3207,
+  "scope": "gha-github-rolling",
+  "cache_scope": "gha-github-rolling",
+  "cache_seeded": false,
+  "repo": "n8n-io/n8n",
+  "sha": "9228ed07d57c6fc79cf63d05922402a817b4ef85",
+  "cache_save_timing": "in-phase",
+  "run_url": "https://github.com/boringcache/benchmarks/actions/runs/46115793998",
+  "attempt": 1,
+  "capabilities": [
+    "remote-cache"
+  ],
+  "cache_restored_key": "turbo-n8n-gha-github-rolling-3206",
+  "cache_restore_tracked": true,
+  "seconds": 242.17,
+  "exit_status": 0,
+  "output_ok": true,
+  "provider_reported": {},
+  "observed": {
+    "machine": {
+      "cpu": "AMD EPYC 9V45 96-Core Processor",
+      "cores": 4,
+      "memory_mb": 15983,
+      "disk_gb": 144,
+      "disk_free_gb": 70
+    }
+  },
+  "evidence": [],
+  "versions": {},
+  "harness": {
+    "commit": "5fc973245203fc1244beb60eee5eb9a8e362a08b",
+    "timer": "restore, build, save; post-job saves in post_job_save_seconds"
+  },
+  "started_at": "2026-11-28T06:17:34Z",
+  "job_url": "https://github.com/boringcache/benchmarks/actions/runs/46115793998/job/140889480428",
+  "job_conclusion": "success",
+  "job_started_at": "2026-11-28T06:17:04Z",
+  "job_completed_at": "2026-11-28T06:21:40Z",
+  "queue_seconds": 2.0,
+  "job_seconds": 276.0
+}
